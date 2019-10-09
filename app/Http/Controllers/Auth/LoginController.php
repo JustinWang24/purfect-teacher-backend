@@ -36,4 +36,14 @@ class LoginController extends Controller
     {
         $this->middleware('guest')->except('logout');
     }
+
+    /**
+     * 改变 Laravel auth 检查的用户表字段名, 从默认的 email 变为 mobile
+     *
+     * @return string
+     */
+    public function username()
+    {
+        return 'mobile';
+    }
 }

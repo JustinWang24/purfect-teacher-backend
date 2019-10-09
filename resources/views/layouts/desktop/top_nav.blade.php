@@ -237,8 +237,11 @@
                         </li>
                         <li class="divider"> </li>
                         <li>
-                            <a href="login.html">
+                            <a href="#" onclick="event.preventDefault();document.getElementById('logout-form').submit();">
                                 <i class="icon-logout"></i> 退出系统 </a>
+                            <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                                @csrf
+                            </form>
                         </li>
                     </ul>
                 </li>
