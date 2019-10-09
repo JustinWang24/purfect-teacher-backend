@@ -12,9 +12,9 @@
                     <span class="login100-form-title p-b-34 p-t-27">
 						用户登录
 					</span>
-                    <div class="wrap-input100 validate-input" data-validate="请输入用户名">
-                        <input id="email" type="email" class="input100 @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required autocomplete="email">
-                        @error('email')
+                    <div class="wrap-input100 validate-input" data-validate="请输入手机号码">
+                        <input id="email" placeholder="请输入手机号码" type="text" class="input100 @error('mobile') is-invalid @enderror" name="mobile" value="{{ old('mobile') }}" required autocomplete="mobile">
+                        @error('mobile')
                             <span class="invalid-feedback" role="alert">
                                 <strong>{{ $message }}</strong>
                             </span>
@@ -22,7 +22,7 @@
                         <span class="focus-input100" data-placeholder="&#xf207;"></span>
                     </div>
                     <div class="wrap-input100 validate-input" data-validate="请输入密码">
-                        <input id="password" type="password" class="input100 @error('password') is-invalid @enderror" name="password" required autocomplete="current-password">
+                        <input id="password" placeholder="请输入密码" type="password" class="input100 @error('password') is-invalid @enderror" name="password" required autocomplete="current-password">
                         @error('password')
                             <span class="invalid-feedback" role="alert">
                                 <strong>{{ $message }}</strong>
