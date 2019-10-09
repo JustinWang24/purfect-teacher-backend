@@ -1,8 +1,75 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="2befe211-0e2b-4e8e-bb64-309e3ed23a4e" name="Default" comment="" />
-    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
+    <list default="true" id="dcade06f-040a-4436-aa0b-887cf0073c4f" name="Default" comment="">
+      <change afterPath="$PROJECT_DIR$/resources/js/smart/js/app.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/js/smart/js/layout.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/js/smart/js/pages/calendar/calendar.min.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/js/smart/js/pages/chart/chartjs/chartjs-data.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/js/smart/js/pages/chart/chartjs/home-data.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/js/smart/js/pages/chart/chartjs/home-data2.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/js/smart/js/pages/chart/chartjs/home-data3.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/js/smart/js/pages/chart/echart/echart-data.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/js/smart/js/pages/chart/morris/morris_chart_data.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/js/smart/js/pages/extra-pages/login.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/js/smart/js/pages/extra-pages/pages.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/js/smart/js/pages/map/google-maps-data.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/js/smart/js/pages/map/vector-data.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/js/smart/js/pages/material-loading/material-loading.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/js/smart/js/pages/material-select/getmdl-select.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/js/smart/js/pages/owl-carousel/owl_data.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/js/smart/js/pages/select2/select2-init.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/js/smart/js/pages/sparkline/sparkline-data.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/js/smart/js/pages/steps/steps-data.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/js/smart/js/pages/summernote/summernote-data.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/js/smart/js/pages/table/table_data.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/js/smart/js/pages/treeview/treeview-data.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/js/smart/js/pages/validation/form-validation.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/js/smart/js/theme-color.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/sass/smart/css/material_style.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/sass/smart/css/pages/extra_pages.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/sass/smart/css/pages/formlayout.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/sass/smart/css/pages/inbox.min.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/sass/smart/css/pages/steps.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/sass/smart/css/pages/typography.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/sass/smart/css/plugins.min.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/sass/smart/css/responsive.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/sass/smart/css/theme/boxed/style.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/sass/smart/css/theme/boxed/theme-color.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/sass/smart/css/theme/boxed/theme_style.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/sass/smart/css/theme/collapse/style.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/sass/smart/css/theme/collapse/theme-color.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/sass/smart/css/theme/collapse/theme_style.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/sass/smart/css/theme/dark/style.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/sass/smart/css/theme/dark/theme-color.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/sass/smart/css/theme/dark/theme_style.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/sass/smart/css/theme/full/style.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/sass/smart/css/theme/full/theme-color.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/sass/smart/css/theme/full/theme_style.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/sass/smart/css/theme/hover/style.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/sass/smart/css/theme/hover/theme-color.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/sass/smart/css/theme/hover/theme_style.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/sass/smart/css/theme/light/style.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/sass/smart/css/theme/light/theme-color.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/sass/smart/css/theme/light/theme_style.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/sass/smart/css/theme/right/style.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/sass/smart/css/theme/right/theme-color.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/sass/smart/css/theme/right/theme_style.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/sass/smart/css/theme/rtl/rtl.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/sass/smart/css/theme/rtl/style.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/sass/smart/css/theme/rtl/theme-color.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/sass/smart/css/theme/rtl/theme_style.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/HomeController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/HomeController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/js/app.js" beforeDir="false" afterPath="$PROJECT_DIR$/resources/js/app.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/js/bootstrap.js" beforeDir="false" afterPath="$PROJECT_DIR$/resources/js/bootstrap.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/sass/app.scss" beforeDir="false" afterPath="$PROJECT_DIR$/resources/sass/app.scss" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/views/home.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/home.blade.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/views/layouts/app.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/layouts/app.blade.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/routes/web.php" beforeDir="false" afterPath="$PROJECT_DIR$/routes/web.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/webpack.mix.js" beforeDir="false" afterPath="$PROJECT_DIR$/webpack.mix.js" afterDir="false" />
+    </list>
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -14,11 +81,29 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="smart_basic.scss" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/resources/sass/smart/smart_basic.scss">
+      <file leaf-file-name="app.blade.php" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/resources/views/layouts/app.blade.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="88">
-              <caret line="4" column="36" selection-start-line="4" selection-start-column="36" selection-end-line="4" selection-end-column="36" />
+            <state relative-caret-position="374">
+              <caret line="17" column="79" lean-forward="true" selection-start-line="17" selection-start-column="79" selection-end-line="17" selection-end-column="79" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="app.scss" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/resources/sass/app.scss">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="110">
+              <caret line="5" lean-forward="true" selection-start-line="5" selection-end-line="5" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="app.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/resources/js/app.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="132">
+              <caret line="6" column="23" selection-start-line="6" selection-start-column="23" selection-end-line="6" selection-end-column="23" />
             </state>
           </provider>
         </entry>
@@ -26,53 +111,60 @@
       <file leaf-file-name="webpack.mix.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/webpack.mix.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="704">
-              <caret line="32" column="26" selection-start-line="32" selection-start-column="26" selection-end-line="32" selection-end-column="26" />
+            <state relative-caret-position="670">
+              <caret line="41" column="21" selection-start-line="41" selection-start-column="21" selection-end-line="41" selection-end-column="21" />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name=".gitignore" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/.gitignore">
+      <file leaf-file-name="bootstrap.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/resources/js/bootstrap.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="110">
-              <caret line="5" column="13" selection-start-line="5" selection-start-column="13" selection-end-line="5" selection-end-column="13" />
+            <state relative-caret-position="362">
+              <caret line="23" column="76" selection-start-line="23" selection-start-column="76" selection-end-line="23" selection-end-column="76" />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="extra_page.css" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/resources/sass/smart/extra_page.css">
+      <file leaf-file-name="home.blade.php" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/resources/views/home.blade.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="392">
-              <caret line="157" column="34" selection-start-line="157" selection-start-column="34" selection-end-line="157" selection-end-column="34" />
+            <state relative-caret-position="264">
+              <caret line="265" column="33" selection-start-line="265" selection-start-column="33" selection-end-line="265" selection-end-column="33" />
+              <folding>
+                <element signature="e#19119#19144#0#HTML" expanded="true" />
+                <element signature="e#38073#38078#0#HTML" expanded="true" />
+                <element signature="e#59988#59994#1#HTML" expanded="true" />
+                <element signature="e#60110#60116#1#HTML" expanded="true" />
+                <element signature="e#61038#61056#0#HTML" expanded="true" />
+                <element signature="e#62075#62093#0#HTML" expanded="true" />
+                <element signature="e#63109#63127#0#HTML" expanded="true" />
+                <element signature="e#64198#64216#0#HTML" expanded="true" />
+                <element signature="e#126639#126645#0#HTML" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="login.blade.php" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/resources/views/auth/login.blade.php">
+      <file leaf-file-name="welcome.blade.php" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/resources/views/welcome.blade.php">
+          <provider selected="true" editor-type-id="text-editor" />
+        </entry>
+      </file>
+      <file leaf-file-name="HomeController.php" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/Http/Controllers/HomeController.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="136">
-              <caret line="13" column="27" lean-forward="true" selection-start-line="13" selection-start-column="27" selection-end-line="13" selection-end-column="27" />
+            <state relative-caret-position="396">
+              <caret line="18" column="7" selection-start-line="18" selection-start-column="7" selection-end-line="18" selection-end-column="7" />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name=".env" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/.env">
+      <file leaf-file-name="web.php" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/routes/web.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="231">
-              <caret line="19" column="20" selection-start-line="19" selection-start-column="20" selection-end-line="19" selection-end-column="20" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="extra_page.blade.php" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/resources/views/layouts/extra_page.blade.php">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="286">
-              <caret line="13" column="6" selection-start-line="13" selection-start-column="6" selection-end-line="13" selection-end-column="6" />
+            <state relative-caret-position="154">
+              <caret line="16" selection-start-line="16" selection-end-line="16" />
             </state>
           </provider>
         </entry>
@@ -91,7 +183,11 @@
       <find>img</find>
       <find>gradient</find>
       <find>id=&quot;email&quot;</find>
+      <find>quick-setting</find>
     </findStrings>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
@@ -102,13 +198,11 @@
         <option value="$PROJECT_DIR$/.env" />
         <option value="$PROJECT_DIR$/resources/views/layouts/login.blade.php" />
         <option value="$PROJECT_DIR$/app/Http/Controllers/Controller.php" />
-        <option value="$PROJECT_DIR$/resources/views/layouts/app.blade.php" />
         <option value="$PROJECT_DIR$/resources/js/smart/README.md" />
         <option value="$PROJECT_DIR$/resources/sass/smart/README.md" />
         <option value="$PROJECT_DIR$/resources/sass/extra_page.scss" />
         <option value="$PROJECT_DIR$/resources/js/extra_page.js" />
         <option value="$PROJECT_DIR$/resources/js/smart/smart_basic.js" />
-        <option value="$PROJECT_DIR$/resources/sass/app.scss" />
         <option value="$PROJECT_DIR$/resources/sass/smart/smart_basic.scss" />
         <option value="$PROJECT_DIR$/package.json" />
         <option value="$PROJECT_DIR$/resources/sass/smart/extra_page.scss" />
@@ -117,10 +211,17 @@
         <option value="$PROJECT_DIR$/resources/views/auth/passwords/email.blade.php" />
         <option value="$PROJECT_DIR$/resources/views/auth/passwords/reset.blade.php" />
         <option value="$PROJECT_DIR$/resources/sass/smart/extra_page.css" />
-        <option value="$PROJECT_DIR$/webpack.mix.js" />
         <option value="$PROJECT_DIR$/resources/views/layouts/extra_page.blade.php" />
         <option value="$PROJECT_DIR$/resources/views/auth/login.blade.php" />
         <option value="$PROJECT_DIR$/.gitignore" />
+        <option value="$PROJECT_DIR$/app/Http/Controllers/HomeController.php" />
+        <option value="$PROJECT_DIR$/routes/web.php" />
+        <option value="$PROJECT_DIR$/webpack.mix.js" />
+        <option value="$PROJECT_DIR$/resources/js/app.js" />
+        <option value="$PROJECT_DIR$/resources/views/home.blade.php" />
+        <option value="$PROJECT_DIR$/resources/js/bootstrap.js" />
+        <option value="$PROJECT_DIR$/resources/views/layouts/app.blade.php" />
+        <option value="$PROJECT_DIR$/resources/sass/app.scss" />
       </list>
     </option>
   </component>
@@ -138,6 +239,7 @@
   <component name="NodePackageJsonFileManager">
     <packageJsonPaths>
       <path value="$PROJECT_DIR$/package.json" />
+      <path value="$PROJECT_DIR$/public/assets/plugins/jquery-toast/package.json" />
       <path value="$PROJECT_DIR$/resources/sass/smart/plugins/jquery-toast/package.json" />
     </packageJsonPaths>
   </component>
@@ -227,11 +329,12 @@
     </include_path>
   </component>
   <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="-1920" />
+    <option name="x" value="-1919" />
     <option name="y" value="-212" />
     <option name="width" value="1920" />
     <option name="height" value="1057" />
   </component>
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectView">
     <navigator proportions="" version="1">
       <foldersAlwaysOnTop value="true" />
@@ -270,12 +373,6 @@
             <path>
               <item name="super-admin" type="b2602c69:ProjectViewProjectNode" />
               <item name="super-admin" type="462c0819:PsiDirectoryNode" />
-              <item name="public" type="462c0819:PsiDirectoryNode" />
-              <item name="assets" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="super-admin" type="b2602c69:ProjectViewProjectNode" />
-              <item name="super-admin" type="462c0819:PsiDirectoryNode" />
               <item name="resources" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
@@ -309,21 +406,6 @@
               <item name="super-admin" type="462c0819:PsiDirectoryNode" />
               <item name="resources" type="462c0819:PsiDirectoryNode" />
               <item name="views" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="super-admin" type="b2602c69:ProjectViewProjectNode" />
-              <item name="super-admin" type="462c0819:PsiDirectoryNode" />
-              <item name="resources" type="462c0819:PsiDirectoryNode" />
-              <item name="views" type="462c0819:PsiDirectoryNode" />
-              <item name="auth" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="super-admin" type="b2602c69:ProjectViewProjectNode" />
-              <item name="super-admin" type="462c0819:PsiDirectoryNode" />
-              <item name="resources" type="462c0819:PsiDirectoryNode" />
-              <item name="views" type="462c0819:PsiDirectoryNode" />
-              <item name="auth" type="462c0819:PsiDirectoryNode" />
-              <item name="passwords" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="super-admin" type="b2602c69:ProjectViewProjectNode" />
@@ -332,6 +414,11 @@
               <item name="views" type="462c0819:PsiDirectoryNode" />
               <item name="layouts" type="462c0819:PsiDirectoryNode" />
             </path>
+            <path>
+              <item name="super-admin" type="b2602c69:ProjectViewProjectNode" />
+              <item name="super-admin" type="462c0819:PsiDirectoryNode" />
+              <item name="routes" type="462c0819:PsiDirectoryNode" />
+            </path>
           </expand>
           <select />
         </subPane>
@@ -339,16 +426,10 @@
       <pane id="Scope" />
     </panes>
   </component>
-  <component name="PropertiesComponent">
-    <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
-    <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
-    <property name="nodejs_npm_path_reset_for_default_project" value="true" />
-    <property name="nodejs_package_manager_path" value="npm" />
-  </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/resources/sass/smart" />
+      <recent name="$PROJECT_DIR$/resources/js/smart" />
       <recent name="$PROJECT_DIR$/app/BusinessLogic" />
       <recent name="$PROJECT_DIR$/app/Dao" />
     </key>
@@ -380,25 +461,25 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1570512040099</updated>
-      <workItem from="1570512041377" duration="8993000" />
+      <workItem from="1570512041377" duration="13995000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="8993000" />
+    <option name="totallyTimeSpent" value="13995000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-1920" y="-212" width="1920" height="1057" extended-state="6" />
+    <frame x="-1919" y="-212" width="1920" height="1057" extended-state="6" />
     <editor active="true" />
     <layout>
       <window_info anchor="bottom" id="TODO" order="11" />
       <window_info anchor="bottom" id="Event Log" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Database Changes" order="1" show_stripe_button="false" />
       <window_info anchor="bottom" id="Run" order="7" />
-      <window_info anchor="bottom" id="Version Control" order="4" show_stripe_button="false" />
+      <window_info anchor="bottom" id="Version Control" order="4" />
       <window_info id="npm" order="1" side_tool="true" />
       <window_info anchor="bottom" id="Terminal" order="3" />
-      <window_info active="true" content_ui="combo" id="Project" order="2" visible="true" weight="0.22376874" />
+      <window_info active="true" content_ui="combo" id="Project" order="2" visible="true" weight="0.16595289" />
       <window_info anchor="bottom" id="Docker" order="0" show_stripe_button="false" />
       <window_info anchor="right" id="Database" order="0" />
       <window_info anchor="bottom" id="Find" order="6" weight="0.3290735" />
@@ -483,18 +564,12 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/Http/Controllers/HomeController.php">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/Http/Controllers/Controller.php">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="396">
           <caret line="21" column="51" selection-start-line="21" selection-start-column="51" selection-end-line="21" selection-end-column="51" />
         </state>
       </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/resources/js/app.js">
-      <provider selected="true" editor-type-id="text-editor" />
     </entry>
     <entry file="file://$PROJECT_DIR$/resources/js/smart/README.md">
       <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
@@ -523,13 +598,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/resources/js/bootstrap.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="132">
-          <caret line="6" column="3" lean-forward="true" selection-start-line="6" selection-start-column="3" selection-end-line="6" selection-end-column="3" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/resources/js/smart/extra_page.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="406">
@@ -541,13 +609,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="198">
           <caret line="9" column="74" lean-forward="true" selection-start-line="9" selection-start-column="74" selection-end-line="9" selection-end-column="74" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/resources/sass/app.scss">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="88">
-          <caret line="4" column="36" selection-start-line="4" selection-start-column="36" selection-end-line="4" selection-end-column="36" />
         </state>
       </provider>
     </entry>
@@ -572,23 +633,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/resources/views/home.blade.php">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
     <entry file="file://$PROJECT_DIR$/resources/views/auth/passwords/email.blade.php">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="162">
           <caret line="18" selection-start-line="18" selection-end-line="18" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/resources/views/layouts/app.blade.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="396">
-          <caret line="67" column="12" selection-start-line="67" selection-start-column="12" selection-end-line="67" selection-end-column="29" />
-          <folding>
-            <element signature="n#nav#0;n#div#0;n#body#0;n#html#0;n#!!top" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -609,20 +657,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/webpack.mix.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="704">
-          <caret line="32" column="26" selection-start-line="32" selection-start-column="26" selection-end-line="32" selection-end-column="26" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/resources/views/layouts/extra_page.blade.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="286">
-          <caret line="13" column="6" selection-start-line="13" selection-start-column="6" selection-end-line="13" selection-end-column="6" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/resources/views/auth/login.blade.php">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="136">
@@ -639,8 +673,85 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/.gitignore">
       <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="396">
+          <caret line="18" lean-forward="true" selection-start-line="18" selection-end-line="18" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/resources/views/layouts/extra_page.blade.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="154">
+          <caret line="7" column="26" selection-start-line="7" selection-start-column="26" selection-end-line="7" selection-end-column="33" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/resources/views/welcome.blade.php">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/Http/Controllers/HomeController.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="396">
+          <caret line="18" column="7" selection-start-line="18" selection-start-column="7" selection-end-line="18" selection-end-column="7" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/routes/web.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="154">
+          <caret line="16" selection-start-line="16" selection-end-line="16" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/webpack.mix.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="670">
+          <caret line="41" column="21" selection-start-line="41" selection-start-column="21" selection-end-line="41" selection-end-column="21" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/resources/views/home.blade.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="264">
+          <caret line="265" column="33" selection-start-line="265" selection-start-column="33" selection-end-line="265" selection-end-column="33" />
+          <folding>
+            <element signature="e#19119#19144#0#HTML" expanded="true" />
+            <element signature="e#38073#38078#0#HTML" expanded="true" />
+            <element signature="e#59988#59994#1#HTML" expanded="true" />
+            <element signature="e#60110#60116#1#HTML" expanded="true" />
+            <element signature="e#61038#61056#0#HTML" expanded="true" />
+            <element signature="e#62075#62093#0#HTML" expanded="true" />
+            <element signature="e#63109#63127#0#HTML" expanded="true" />
+            <element signature="e#64198#64216#0#HTML" expanded="true" />
+            <element signature="e#126639#126645#0#HTML" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/resources/js/app.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="132">
+          <caret line="6" column="23" selection-start-line="6" selection-start-column="23" selection-end-line="6" selection-end-column="23" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/resources/js/bootstrap.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="362">
+          <caret line="23" column="76" selection-start-line="23" selection-start-column="76" selection-end-line="23" selection-end-column="76" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/resources/views/layouts/app.blade.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="374">
+          <caret line="17" column="79" lean-forward="true" selection-start-line="17" selection-start-column="79" selection-end-line="17" selection-end-column="79" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/resources/sass/app.scss">
+      <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="110">
-          <caret line="5" column="13" selection-start-line="5" selection-start-column="13" selection-end-line="5" selection-end-column="13" />
+          <caret line="5" lean-forward="true" selection-start-line="5" selection-end-line="5" />
         </state>
       </provider>
     </entry>
