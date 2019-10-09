@@ -1,17 +1,16 @@
-<!-- start header -->
 <div class="page-header navbar navbar-fixed-top">
     <div class="page-header-inner ">
         <!-- logo start -->
         <div class="page-logo">
             <a href="index.html">
                 <span class="logo-icon material-icons fa-rotate-45">school</span>
-                <span class="logo-default">Smart</span> </a>
+                <span class="logo-default">{{ env('APP_NAME') }}</span> </a>
         </div>
         <!-- logo end -->
         <ul class="nav navbar-nav navbar-left in">
             <li><a href="#" class="menu-toggler sidebar-toggler"><i class="icon-menu"></i></a></li>
         </ul>
-        <form class="search-form-opened" action="#" method="GET">
+        <form class="search-form-opened" action="#" method="GET" style="display: none;">
             <div class="input-group">
                 <input type="text" class="form-control" placeholder="Search..." name="query">
                 <span class="input-group-btn">
@@ -65,8 +64,8 @@
                     </a>
                     <ul class="dropdown-menu">
                         <li class="external">
-                            <h3><span class="bold">Notifications</span></h3>
-                            <span class="notification-label purple-bgcolor">New 6</span>
+                            <h3><span class="bold">通知消息</span></h3>
+                            <span class="notification-label purple-bgcolor">新 6</span>
                         </li>
                         <li>
                             <ul class="dropdown-menu-list small-slimscroll-style" data-handle-color="#637283">
@@ -124,7 +123,7 @@
                                 </li>
                             </ul>
                             <div class="dropdown-menu-footer">
-                                <a href="javascript:void(0)"> All notifications </a>
+                                <a href="javascript:void(0)"> 所有消息 </a>
                             </div>
                         </li>
                     </ul>
@@ -139,8 +138,8 @@
                     </a>
                     <ul class="dropdown-menu">
                         <li class="external">
-                            <h3><span class="bold">Messages</span></h3>
-                            <span class="notification-label cyan-bgcolor">New 2</span>
+                            <h3><span class="bold">电子邮件</span></h3>
+                            <span class="notification-label cyan-bgcolor">新 2</span>
                         </li>
                         <li>
                             <ul class="dropdown-menu-list small-slimscroll-style" data-handle-color="#637283">
@@ -207,7 +206,7 @@
                                 </li>
                             </ul>
                             <div class="dropdown-menu-footer">
-                                <a href="#"> All Messages </a>
+                                <a href="#"> 我的邮箱 </a>
                             </div>
                         </li>
                     </ul>
@@ -224,39 +223,26 @@
                     <ul class="dropdown-menu dropdown-menu-default">
                         <li>
                             <a href="user_profile.html">
-                                <i class="icon-user"></i> Profile </a>
+                                <i class="icon-user"></i> 我的个人资料 </a>
                         </li>
                         <li>
                             <a href="#">
-                                <i class="icon-settings"></i> Settings
+                                <i class="icon-settings"></i> 设置
                             </a>
                         </li>
                         <li>
                             <a href="#">
-                                <i class="icon-directions"></i> Help
+                                <i class="icon-directions"></i> 用户使用手册
                             </a>
                         </li>
                         <li class="divider"> </li>
                         <li>
-                            <a href="lock_screen.html">
-                                <i class="icon-lock"></i> Lock
-                            </a>
-                        </li>
-                        <li>
                             <a href="login.html">
-                                <i class="icon-logout"></i> Log Out </a>
+                                <i class="icon-logout"></i> 退出系统 </a>
                         </li>
                     </ul>
-                </li>
-                <!-- end manage user dropdown -->
-                <li class="dropdown dropdown-quick-sidebar-toggler">
-                    <a id="headerSettingButton" class="mdl-button mdl-js-button mdl-button--icon pull-right"
-                       data-upgraded=",MaterialButton">
-                        <i class="material-icons">more_vert</i>
-                    </a>
                 </li>
             </ul>
         </div>
     </div>
 </div>
-<!-- end header -->
