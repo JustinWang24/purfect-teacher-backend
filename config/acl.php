@@ -8,7 +8,7 @@ return [
      * to package's model. You can define your model here.
      */
 
-    'role'       => 'App\Models\Acl\Eloquent\Role', // 子定义的 Role 模型类
+    'role'       => 'App\Models\Acl\Role', // 子定义的 Role 模型类
     'permission' => 'App\Models\Acl\Permission',    // 自定义的 Permission 模型类
 
     /**
