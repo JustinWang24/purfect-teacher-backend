@@ -32,6 +32,15 @@ mix.copyDirectory(
     'resources/sass/smart/plugins',
     'public/assets/plugins'
 );
+mix.copyDirectory(
+    'resources/sass/smart/css',
+    'public/assets/css'
+);
+
+mix.copyDirectory(
+    'resources/js/smart/js',
+    'public/assets/js'
+);
 
 mix.copy('resources/sass/smart/extra_page.css','public/css/extra_page.css');
 mix.copy('resources/js/smart/extra_page.js','public/js/extra_page.js');
