@@ -1,9 +1,6 @@
 <?php
 /**
- * Created by PhpStorm.
- * User: justinwang
- * Date: 9/10/19
- * Time: 10:13 PM
+ * Created by Justin
  */
 
 namespace App\Dao\Users;
