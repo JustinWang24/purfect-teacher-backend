@@ -5,10 +5,19 @@ namespace App;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Kodeine\Acl\Traits\HasRole;
 
 class User extends Authenticatable
 {
-    use Notifiable;
+    use Notifiable, HasRole;
+
+    // 描述用户状态的常量
+    const STATUS_WAITING_FOR_MOBILE_TO_BE_VERIFIED = 1;
+    const STATUS_WAITING_FOR_MOBILE_TO_BE_VERIFIED_TEXT = '等待验证手机号';
+    const STATUS_WAITING_FOR_IDENTITY_TO_BE_VERIFIED = 2;
+    const STATUS_WAITING_FOR_IDENTITY_TO_BE_VERIFIED_TEXT = '等待验证身份证';
+    const STATUS_VERIFIED = 3;
+    const STATUS_VERIFIED_TEXT = '身份已验证';
 
     /**
      * The attributes that are mass assignable.
@@ -16,7 +25,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password',
+        'password','mobile_verified_at','mobile','uuid','status','type'
     ];
 
     /**
@@ -34,6 +43,6 @@ class User extends Authenticatable
      * @var array
      */
     protected $casts = [
-        'email_verified_at' => 'datetime',
+        'mobile_verified_at' => 'datetime',
     ];
 }
