@@ -90,7 +90,7 @@
                 <li class="nav-item">
                     <a href="/content/index" class="nav-link nav-toggle">
                         <i class="material-icons">dashboard</i>
-                        <span class="title">内容管理</span>
+                        <span class="title">内容管理1</span>
                         <span class="selected"></span>
                         <span class="arrow open"></span>
                     </a>
