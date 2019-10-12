@@ -69,7 +69,7 @@
                 <li class="nav-item">
                     <a href="/leaveSchool/index" class="nav-link nav-toggle">
                         <i class="material-icons">dashboard</i>
-                        <span class="title">离校管理</span>
+                        <span class="title">离校管理1</span>
                         <span class="selected"></span>
                         <span class="arrow open"></span>
                     </a>
@@ -84,7 +84,7 @@
                             <a href="dashboard2.html" class="nav-link ">
                                 <span class="title">离校管理 2</span>
                             </a>
-                        </li>
+                        </li>   
                     </ul>
                 </li>
                 <li class="nav-item">
