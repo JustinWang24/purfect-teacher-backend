@@ -21,684 +21,578 @@
                         </div>
                     </div>
                 </li>
-                <li class="nav-item start active open">
-                    <a href="#" class="nav-link nav-toggle">
+
+
+                <!--新增begin-->
+                <li class="nav-item">
+                    <a href="/recruitStu/index" class="nav-link nav-toggle">
                         <i class="material-icons">dashboard</i>
-                        <span class="title">Dashboard</span>
+                        <span class="title">招生管理</span>
                         <span class="selected"></span>
                         <span class="arrow open"></span>
                     </a>
                     <ul class="sub-menu">
                         <li class="nav-item active">
                             <a href="index.html" class="nav-link ">
-                                <span class="title">Dashboard 1</span>
+                                <span class="title">招生管理 1</span>
                                 <span class="selected"></span>
                             </a>
                         </li>
                         <li class="nav-item ">
                             <a href="dashboard2.html" class="nav-link ">
-                                <span class="title">Dashboard 2</span>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="dashboard3.html" class="nav-link ">
-                                <span class="title">Dashboard 3</span>
+                                <span class="title">招生管理 2</span>
                             </a>
                         </li>
                     </ul>
                 </li>
                 <li class="nav-item">
-                    <a href="event.html" class="nav-link nav-toggle"> <i class="material-icons">event</i>
-                        <span class="title">Event Management</span>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="#" class="nav-link nav-toggle"> <i class="material-icons">person</i>
-                        <span class="title">Professors</span> <span class="arrow"></span>
+                    <a href="/welcomeNewStu/index" class="nav-link nav-toggle">
+                        <i class="material-icons">dashboard</i>
+                        <span class="title">迎新管理</span>
+                        <span class="selected"></span>
+                        <span class="arrow open"></span>
                     </a>
                     <ul class="sub-menu">
-                        <li class="nav-item">
-                            <a href="all_professors.html" class="nav-link "> <span class="title">All
-												Professors</span>
+                        <li class="nav-item active">
+                            <a href="index.html" class="nav-link ">
+                                <span class="title">迎新管理 1</span>
+                                <span class="selected"></span>
                             </a>
                         </li>
-                        <li class="nav-item">
-                            <a href="add_professor.html" class="nav-link "> <span class="title">Add
-												Professor</span>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="add_professor_bootstrap.html" class="nav-link "> <span
-                                        class="title">Add Professor Bootstrap</span>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="edit_professor.html" class="nav-link "> <span class="title">Edit
-												Professor</span>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="professor_profile.html" class="nav-link "> <span class="title">About
-												Professor</span>
+                        <li class="nav-item ">
+                            <a href="dashboard2.html" class="nav-link ">
+                                <span class="title">迎新管理 2</span>
                             </a>
                         </li>
                     </ul>
                 </li>
                 <li class="nav-item">
-                    <a href="#" class="nav-link nav-toggle"><i class="material-icons">group</i>
-                        <span class="title">Students</span><span class="arrow"></span></a>
-                    <ul class="sub-menu">
-                        <li class="nav-item">
-                            <a href="all_students.html" class="nav-link "> <span class="title">All
-												Students</span>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="add_student.html" class="nav-link "> <span class="title">Add
-												Student</span>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="add_student_bootstrap.html" class="nav-link "> <span class="title">Add
-												Student Bootstrap</span>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="edit_student.html" class="nav-link "> <span class="title">Edit
-												Student</span>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="student_profile.html" class="nav-link "> <span class="title">About
-												Student</span>
-                            </a>
-                        </li>
-                    </ul>
-                </li>
-                <li class="nav-item">
-                    <a href="#" class="nav-link nav-toggle"> <i class="material-icons">school</i>
-                        <span class="title">Courses</span> <span class="arrow"></span>
-                        <span class="label label-rouded label-menu label-success">new</span>
+                    <a href="/leaveSchool/index" class="nav-link nav-toggle">
+                        <i class="material-icons">dashboard</i>
+                        <span class="title">离校管理1</span>
+                        <span class="selected"></span>
+                        <span class="arrow open"></span>
                     </a>
                     <ul class="sub-menu">
-                        <li class="nav-item">
-                            <a href="all_courses.html" class="nav-link "> <span class="title">All
-												Courses</span>
+                        <li class="nav-item active">
+                            <a href="index.html" class="nav-link ">
+                                <span class="title">离校管理 1</span>
+                                <span class="selected"></span>
                             </a>
                         </li>
-                        <li class="nav-item">
-                            <a href="add_course.html" class="nav-link "> <span class="title">Add
-												Course</span>
+                        <li class="nav-item ">
+                            <a href="dashboard2.html" class="nav-link ">
+                                <span class="title">离校管理 2</span>
                             </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="add_course_bootstrap.html" class="nav-link "> <span class="title">Add
-												Course Bootstrap</span>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="edit_course.html" class="nav-link "> <span class="title">Edit
-												Course</span>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="course_details.html" class="nav-link "> <span class="title">About
-												Course</span>
-                            </a>
-                        </li>
+                        </li>   
                     </ul>
                 </li>
                 <li class="nav-item">
-                    <a href="#" class="nav-link nav-toggle"> <i class="material-icons">local_library</i>
-                        <span class="title">Library</span> <span class="arrow"></span>
+                    <a href="/content/index" class="nav-link nav-toggle">
+                        <i class="material-icons">dashboard</i>
+                        <span class="title">内容管理1</span>
+                        <span class="selected"></span>
+                        <span class="arrow open"></span>
                     </a>
                     <ul class="sub-menu">
-                        <li class="nav-item">
-                            <a href="all_assets.html" class="nav-link "> <span class="title">All Library
-												Assets</span>
+                        <li class="nav-item active">
+                            <a href="index.html" class="nav-link ">
+                                <span class="title">内容管理 1</span>
+                                <span class="selected"></span>
                             </a>
                         </li>
-                        <li class="nav-item">
-                            <a href="add_library.html" class="nav-link "> <span class="title">Add Library
-												Asset</span>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="add_library_bootstrap.html" class="nav-link "> <span class="title">Add
-												Asset Bootstrap</span>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="edit_library.html" class="nav-link "> <span class="title">Edit
-												Asset</span>
+                        <li class="nav-item ">
+                            <a href="dashboard2.html" class="nav-link ">
+                                <span class="title">内容管理 2</span>
                             </a>
                         </li>
                     </ul>
                 </li>
                 <li class="nav-item">
-                    <a href="#" class="nav-link nav-toggle"> <i class="material-icons">business</i>
-                        <span class="title">Departments</span> <span class="arrow"></span>
+                    <a href="/teachingTask/index" class="nav-link nav-toggle">
+                        <i class="material-icons">dashboard</i>
+                        <span class="title">教务管理</span>
+                        <span class="selected"></span>
+                        <span class="arrow open"></span>
                     </a>
                     <ul class="sub-menu">
-                        <li class="nav-item">
-                            <a href="all_department.html" class="nav-link "> <span class="title">All
-												Departments</span>
+                        <li class="nav-item active">
+                            <a href="index.html" class="nav-link ">
+                                <span class="title">教务管理 1</span>
+                                <span class="selected"></span>
                             </a>
                         </li>
-                        <li class="nav-item">
-                            <a href="add_department.html" class="nav-link "> <span class="title">Add
-												Department</span>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="add_department_bootstrap.html" class="nav-link "> <span
-                                        class="title">Add Department Bootstrap</span>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="edit_department.html" class="nav-link "> <span class="title">Edit
-												Department</span>
+                        <li class="nav-item ">
+                            <a href="dashboard2.html" class="nav-link ">
+                                <span class="title">教务管理 2</span>
                             </a>
                         </li>
                     </ul>
                 </li>
                 <li class="nav-item">
-                    <a href="#" class="nav-link nav-toggle"> <i class="material-icons">face</i>
-                        <span class="title">Staff</span> <span class="arrow"></span>
+                    <a href="/teaching/index" class="nav-link nav-toggle">
+                        <i class="material-icons">dashboard</i>
+                        <span class="title">教学管理</span>
+                        <span class="selected"></span>
+                        <span class="arrow open"></span>
                     </a>
                     <ul class="sub-menu">
-                        <li class="nav-item">
-                            <a href="all_staffs.html" class="nav-link "> <span class="title">All
-												Staff</span>
+                        <li class="nav-item active">
+                            <a href="index.html" class="nav-link ">
+                                <span class="title">教学管理 1</span>
+                                <span class="selected"></span>
                             </a>
                         </li>
-                        <li class="nav-item">
-                            <a href="add_staff.html" class="nav-link "> <span class="title">Add Staff</span>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="add_staff_bootstrap.html" class="nav-link "> <span class="title">Add
-												Staff Bootstrap</span>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="edit_staff.html" class="nav-link "> <span class="title">Edit
-												Staff</span>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="staff_profile.html" class="nav-link "> <span class="title">Staff
-												Profile</span>
+                        <li class="nav-item ">
+                            <a href="dashboard2.html" class="nav-link ">
+                                <span class="title">教学管理 2</span>
                             </a>
                         </li>
                     </ul>
                 </li>
                 <li class="nav-item">
-                    <a href="#" class="nav-link nav-toggle"> <i
-                                class="material-icons">airline_seat_individual_suite</i>
-                        <span class="title">Holiday</span> <span class="arrow"></span>
+                    <a href="/work/index" class="nav-link nav-toggle">
+                        <i class="material-icons">dashboard</i>
+                        <span class="title">办公管理</span>
+                        <span class="selected"></span>
+                        <span class="arrow open"></span>
                     </a>
                     <ul class="sub-menu">
-                        <li class="nav-item">
-                            <a href="all_holidays.html" class="nav-link "> <span class="title">All
-												Holiday</span>
+                        <li class="nav-item active">
+                            <a href="index.html" class="nav-link ">
+                                <span class="title">办公管理 1</span>
+                                <span class="selected"></span>
                             </a>
                         </li>
-                        <li class="nav-item">
-                            <a href="add_holiday.html" class="nav-link "> <span class="title">Add
-												Holiday</span>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="add_holiday_bootstrap.html" class="nav-link "> <span class="title">Add
-												Holiday Bootstrap</span>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="edit_holiday.html" class="nav-link "> <span class="title">Edit
-												Holiday</span>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="holiday_calendar.html" class="nav-link "> <span class="title">Holiday
-												Calendar</span>
+                        <li class="nav-item ">
+                            <a href="dashboard2.html" class="nav-link ">
+                                <span class="title">办公管理 2</span>
                             </a>
                         </li>
                     </ul>
                 </li>
                 <li class="nav-item">
-                    <a href="#" class="nav-link nav-toggle">
-                        <i class="material-icons">email</i>
-                        <span class="title">Email</span>
-                        <span class="arrow"></span>
-                        <span class="label label-rouded label-menu label-danger">new</span>
+                    <a href="/equipment/index" class="nav-link nav-toggle">
+                        <i class="material-icons">dashboard</i>
+                        <span class="title">设备管理</span>
+                        <span class="selected"></span>
+                        <span class="arrow open"></span>
                     </a>
                     <ul class="sub-menu">
-                        <li class="nav-item">
-                            <a href="email_inbox.html" class="nav-link ">
-                                <span class="title">Inbox</span>
+                        <li class="nav-item active">
+                            <a href="index.html" class="nav-link ">
+                                <span class="title">设备管理 1</span>
+                                <span class="selected"></span>
                             </a>
                         </li>
-                        <li class="nav-item">
-                            <a href="email_view.html" class="nav-link ">
-                                <span class="title">View Mail</span>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="email_compose.html" class="nav-link ">
-                                <span class="title">Compose Mail</span>
+                        <li class="nav-item ">
+                            <a href="dashboard2.html" class="nav-link ">
+                                <span class="title">设备管理 2</span>
                             </a>
                         </li>
                     </ul>
                 </li>
                 <li class="nav-item">
-                    <a href="#" class="nav-link nav-toggle"> <i class="material-icons">monetization_on</i>
-                        <span class="title">Fees</span> <span class="arrow"></span>
+                    <a href="/repair/index" class="nav-link nav-toggle">
+                        <i class="material-icons">dashboard</i>
+                        <span class="title">报修管理</span>
+                        <span class="selected"></span>
+                        <span class="arrow open"></span>
                     </a>
                     <ul class="sub-menu">
-                        <li class="nav-item">
-                            <a href="fees_collection.html" class="nav-link "> <span class="title">Fees
-												Collection</span>
+                        <li class="nav-item active">
+                            <a href="index.html" class="nav-link ">
+                                <span class="title">报修管理 1</span>
+                                <span class="selected"></span>
                             </a>
                         </li>
-                        <li class="nav-item">
-                            <a href="add_fees.html" class="nav-link "> <span class="title">Add Fees </span>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="add_fees_bootstrap.html" class="nav-link "> <span class="title">Add
-												Fees Bootstrap</span>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="fees_receipt.html" class="nav-link "> <span class="title">Fee
-												Receipt</span>
+                        <li class="nav-item ">
+                            <a href="dashboard2.html" class="nav-link ">
+                                <span class="title">报修管理 2</span>
                             </a>
                         </li>
                     </ul>
                 </li>
                 <li class="nav-item">
-                    <a href="widget.html" class="nav-link nav-toggle"> <i class="material-icons">widgets</i>
-                        <span class="title">Widget</span>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="#" class="nav-link nav-toggle">
-                        <i class="material-icons">dvr</i>
-                        <span class="title">UI Elements</span>
-                        <span class="label label-rouded label-menu label-warning">new</span>
-                        <span class="arrow"></span>
+                    <a href="/account/index" class="nav-link nav-toggle">
+                        <i class="material-icons">dashboard</i>
+                        <span class="title">账户管理</span>
+                        <span class="selected"></span>
+                        <span class="arrow open"></span>
                     </a>
                     <ul class="sub-menu">
-                        <li class="nav-item">
-                            <a href="ui_buttons.html" class="nav-link ">
-                                <span class="title">Buttons</span>
+                        <li class="nav-item active">
+                            <a href="index.html" class="nav-link ">
+                                <span class="title">账户管理 1</span>
+                                <span class="selected"></span>
                             </a>
                         </li>
-                        <li class="nav-item">
-                            <a href="ui_tabs_accordions_navs.html" class="nav-link ">
-                                <span class="title">Tabs &amp; Accordions</span>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="ui_typography.html" class="nav-link ">
-                                <span class="title">Typography</span>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="notification.html" class="nav-link ">
-                                <span class="title">Notification</span>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="ui_icons.html" class="nav-link ">
-                                <span class="title">Icons</span>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="ui_panels.html" class="nav-link ">
-                                <span class="title">Panels</span>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="ui_grid.html" class="nav-link ">
-                                <span class="title">Grids</span>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="calendar.html" class="nav-link ">
-                                <span class="title">Calender</span>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="ui_tree.html" class="nav-link ">
-                                <span class="title">Tree View</span>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="ui_carousel.html" class="nav-link ">
-                                <span class="title">Carousel</span>
+                        <li class="nav-item ">
+                            <a href="dashboard2.html" class="nav-link ">
+                                <span class="title">账户管理 2</span>
                             </a>
                         </li>
                     </ul>
                 </li>
                 <li class="nav-item">
-                    <a href="#" class="nav-link nav-toggle">
-                        <i class="material-icons">store</i>
-                        <span class="title">Material Elements</span>
-                        <span class="arrow"></span>
+                    <a href="/getJob/index" class="nav-link nav-toggle">
+                        <i class="material-icons">dashboard</i>
+                        <span class="title">就业管理</span>
+                        <span class="selected"></span>
+                        <span class="arrow open"></span>
                     </a>
                     <ul class="sub-menu">
-                        <li class="nav-item">
-                            <a href="material_button.html" class="nav-link ">
-                                <span class="title">Buttons</span>
+                        <li class="nav-item active">
+                            <a href="index.html" class="nav-link ">
+                                <span class="title">就业管理 1</span>
+                                <span class="selected"></span>
                             </a>
                         </li>
-                        <li class="nav-item">
-                            <a href="material_tab.html" class="nav-link ">
-                                <span class="title">Tabs</span>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="material_chips.html" class="nav-link ">
-                                <span class="title">Chips</span>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="material_grid.html" class="nav-link ">
-                                <span class="title">Grid</span>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="material_icons.html" class="nav-link ">
-                                <span class="title">Icon</span>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="material_form.html" class="nav-link ">
-                                <span class="title">Form</span>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="material_datepicker.html" class="nav-link ">
-                                <span class="title">DatePicker</span>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="material_select.html" class="nav-link ">
-                                <span class="title">Select Item</span>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="material_loading.html" class="nav-link ">
-                                <span class="title">Loading</span>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="material_menu.html" class="nav-link ">
-                                <span class="title">Menu</span>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="material_slider.html" class="nav-link ">
-                                <span class="title">Slider</span>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="material_tables.html" class="nav-link ">
-                                <span class="title">Tables</span>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="material_toggle.html" class="nav-link ">
-                                <span class="title">Toggle</span>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="material_badges.html" class="nav-link ">
-                                <span class="title">Badges</span>
+                        <li class="nav-item ">
+                            <a href="dashboard2.html" class="nav-link ">
+                                <span class="title">就业管理 2</span>
                             </a>
                         </li>
                     </ul>
                 </li>
                 <li class="nav-item">
-                    <a href="javascript:;" class="nav-link nav-toggle">
-                        <i class="material-icons">subtitles</i>
-                        <span class="title">Forms </span>
-                        <span class="arrow"></span>
+                    <a href="/train/index" class="nav-link nav-toggle">
+                        <i class="material-icons">dashboard</i>
+                        <span class="title">培训管理</span>
+                        <span class="selected"></span>
+                        <span class="arrow open"></span>
                     </a>
                     <ul class="sub-menu">
-                        <li class="nav-item">
-                            <a href="layouts_form.html" class="nav-link ">
-                                <span class="title">Form Layout</span>
+                        <li class="nav-item active">
+                            <a href="index.html" class="nav-link ">
+                                <span class="title">培训管理 1</span>
+                                <span class="selected"></span>
                             </a>
                         </li>
-                        <li class="nav-item">
-                            <a href="advance_form.html" class="nav-link ">
-                                <span class="title">Advance Component</span>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="wizard.html" class="nav-link ">
-                                <span class="title">Form Wizard</span>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="validation_form.html" class="nav-link ">
-                                <span class="title">Form Validation</span>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="editable_form.html" class="nav-link ">
-                                <span class="title">Editor</span>
+                        <li class="nav-item ">
+                            <a href="dashboard2.html" class="nav-link ">
+                                <span class="title">培训管理 2</span>
                             </a>
                         </li>
                     </ul>
                 </li>
                 <li class="nav-item">
-                    <a href="javascript:;" class="nav-link nav-toggle">
-                        <i class="material-icons">list</i>
-                        <span class="title">Data Tables</span>
-                        <span class="arrow"></span>
+                    <a href="/schoolWeb/index" class="nav-link nav-toggle">
+                        <i class="material-icons">dashboard</i>
+                        <span class="title">校园网管理</span>
+                        <span class="selected"></span>
+                        <span class="arrow open"></span>
                     </a>
                     <ul class="sub-menu">
-                        <li class="nav-item">
-                            <a href="basic_table.html" class="nav-link ">
-                                <span class="title">Basic Tables</span>
+                        <li class="nav-item active">
+                            <a href="index.html" class="nav-link ">
+                                <span class="title">校园网管理 1</span>
+                                <span class="selected"></span>
                             </a>
                         </li>
-                        <li class="nav-item">
-                            <a href="advanced_table.html" class="nav-link ">
-                                <span class="title">Advance Tables</span>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="export_table.html" class="nav-link ">
-                                <span class="title">Export Tables</span>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="child_row_table.html" class="nav-link ">
-                                <span class="title">Child Row Tables</span>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="group_table.html" class="nav-link ">
-                                <span class="title">Grouping</span>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="tableData.html" class="nav-link ">
-                                <span class="title">Tables With Sourced Data</span>
+                        <li class="nav-item ">
+                            <a href="dashboard2.html" class="nav-link ">
+                                <span class="title">校园网管理 2</span>
                             </a>
                         </li>
                     </ul>
                 </li>
                 <li class="nav-item">
-                    <a href="javascript:;" class="nav-link nav-toggle">
-                        <i class="material-icons">timeline</i>
-                        <span class="title">Charts</span>
-                        <span class="arrow"></span>
+                    <a href="/ec/index" class="nav-link nav-toggle">
+                        <i class="material-icons">dashboard</i>
+                        <span class="title">电商管理</span>
+                        <span class="selected"></span>
+                        <span class="arrow open"></span>
                     </a>
                     <ul class="sub-menu">
-                        <li class="nav-item">
-                            <a href="charts_echarts.html" class="nav-link ">
-                                <span class="title">eCharts</span>
+                        <li class="nav-item active">
+                            <a href="index.html" class="nav-link ">
+                                <span class="title">电商管理 1</span>
+                                <span class="selected"></span>
                             </a>
                         </li>
-                        <li class="nav-item">
-                            <a href="charts_morris.html" class="nav-link ">
-                                <span class="title">Morris Charts</span>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="charts_chartjs.html" class="nav-link ">
-                                <span class="title">Chartjs</span>
+                        <li class="nav-item ">
+                            <a href="dashboard2.html" class="nav-link ">
+                                <span class="title">电商管理 2</span>
                             </a>
                         </li>
                     </ul>
                 </li>
                 <li class="nav-item">
-                    <a href="javascript:;" class="nav-link nav-toggle">
-                        <i class="material-icons">map</i>
-                        <span class="title">Maps</span>
-                        <span class="arrow"></span>
+                    <a href="/community/index" class="nav-link nav-toggle">
+                        <i class="material-icons">dashboard</i>
+                        <span class="title">社区管理</span>
+                        <span class="selected"></span>
+                        <span class="arrow open"></span>
                     </a>
                     <ul class="sub-menu">
-                        <li class="nav-item">
-                            <a href="google_maps.html" class="nav-link ">
-                                <span class="title">Google Maps</span>
+                        <li class="nav-item active">
+                            <a href="index.html" class="nav-link ">
+                                <span class="title">社区管理 1</span>
+                                <span class="selected"></span>
                             </a>
                         </li>
-                        <li class="nav-item">
-                            <a href="vector_maps.html" class="nav-link ">
-                                <span class="title">Vector Maps</span>
+                        <li class="nav-item ">
+                            <a href="dashboard2.html" class="nav-link ">
+                                <span class="title">社区管理 2</span>
                             </a>
                         </li>
                     </ul>
                 </li>
                 <li class="nav-item">
-                    <a href="javascript:;" class="nav-link nav-toggle"> <i
-                                class="material-icons">description</i>
-                        <span class="title">Extra pages</span>
-                        <span class="arrow"></span>
+                    <a href="/discount/index" class="nav-link nav-toggle">
+                        <i class="material-icons">dashboard</i>
+                        <span class="title">优惠管理</span>
+                        <span class="selected"></span>
+                        <span class="arrow open"></span>
                     </a>
                     <ul class="sub-menu">
-                        <li class="nav-item  ">
-                            <a href="login.html" class="nav-link "> <span class="title">Login</span>
+                        <li class="nav-item active">
+                            <a href="index.html" class="nav-link ">
+                                <span class="title">优惠管理 1</span>
+                                <span class="selected"></span>
                             </a>
                         </li>
-                        <li class="nav-item  ">
-                            <a href="sign_up.html" class="nav-link "> <span class="title">Sign Up</span>
-                            </a>
-                        </li>
-                        <li class="nav-item  ">
-                            <a href="forgot_password.html" class="nav-link "> <span class="title">Forgot
-												Password</span>
-                            </a>
-                        </li>
-                        <li class="nav-item"><a href="user_profile.html" class="nav-link "><span
-                                        class="title">Profile</span>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="contact.html" class="nav-link "> <span class="title">Contact Us</span>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="lock_screen.html" class="nav-link "> <span class="title">Lock
-												Screen</span>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="page-404.html" class="nav-link "> <span class="title">404 Page</span>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="page-500.html" class="nav-link "> <span class="title">500 Page</span>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="blank_page.html" class="nav-link "> <span class="title">Blank
-												Page</span>
+                        <li class="nav-item ">
+                            <a href="dashboard2.html" class="nav-link ">
+                                <span class="title">优惠管理 2</span>
                             </a>
                         </li>
                     </ul>
                 </li>
                 <li class="nav-item">
-                    <a href="javascript:;" class="nav-link nav-toggle">
-                        <i class="material-icons">slideshow</i>
-                        <span class="title">Multi Level Menu</span>
-                        <span class="arrow "></span>
+                    <a href="/vip/index" class="nav-link nav-toggle">
+                        <i class="material-icons">dashboard</i>
+                        <span class="title">会员管理</span>
+                        <span class="selected"></span>
+                        <span class="arrow open"></span>
                     </a>
                     <ul class="sub-menu">
-                        <li class="nav-item">
-                            <a href="javascript:;" class="nav-link nav-toggle">
-                                <i class="fa fa-university"></i> Item 1
-                                <span class="arrow"></span>
+                        <li class="nav-item active">
+                            <a href="index.html" class="nav-link ">
+                                <span class="title">会员管理 1</span>
+                                <span class="selected"></span>
                             </a>
-                            <ul class="sub-menu">
-                                <li class="nav-item">
-                                    <a href="javascript:;" class="nav-link nav-toggle">
-                                        <i class="fa fa-bell-o"></i> Arrow Toggle
-                                        <span class="arrow "></span>
-                                    </a>
-                                    <ul class="sub-menu">
-                                        <li class="nav-item">
-                                            <a href="javascript:;" class="nav-link">
-                                                <i class="fa fa-calculator"></i> Sample Link 1</a>
-                                        </li>
-                                        <li class="nav-item">
-                                            <a href="#" class="nav-link">
-                                                <i class="fa fa-clone"></i> Sample Link 2</a>
-                                        </li>
-                                        <li class="nav-item">
-                                            <a href="#" class="nav-link">
-                                                <i class="fa fa-cogs"></i> Sample Link 3</a>
-                                        </li>
-                                    </ul>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="#" class="nav-link">
-                                        <i class="fa fa-file-pdf-o"></i> Sample Link 1</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="#" class="nav-link">
-                                        <i class="fa fa-rss"></i> Sample Link 2</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="#" class="nav-link">
-                                        <i class="fa fa-hdd-o"></i> Sample Link 3</a>
-                                </li>
-                            </ul>
                         </li>
-                        <li class="nav-item">
-                            <a href="javascript:;" class="nav-link nav-toggle">
-                                <i class="fa fa-gavel"></i> Arrow Toggle
-                                <span class="arrow"></span>
+                        <li class="nav-item ">
+                            <a href="dashboard2.html" class="nav-link ">
+                                <span class="title">会员管理 2</span>
                             </a>
-                            <ul class="sub-menu">
-                                <li class="nav-item">
-                                    <a href="#" class="nav-link">
-                                        <i class="fa fa-paper-plane"></i> Sample Link 1</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="#" class="nav-link">
-                                        <i class="fa fa-power-off"></i> Sample Link 1</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="#" class="nav-link">
-                                        <i class="fa fa-recycle"></i> Sample Link 1
-                                    </a>
-                                </li>
-                            </ul>
-                        </li>
-                        <li class="nav-item">
-                            <a href="#" class="nav-link">
-                                <i class="fa fa-volume-up"></i> Item 3 </a>
                         </li>
                     </ul>
                 </li>
+                <li class="nav-item">
+                    <a href="/stuMoney/index" class="nav-link nav-toggle">
+                        <i class="material-icons">dashboard</i>
+                        <span class="title">学生币管理</span>
+                        <span class="selected"></span>
+                        <span class="arrow open"></span>
+                    </a>
+                    <ul class="sub-menu">
+                        <li class="nav-item active">
+                            <a href="index.html" class="nav-link ">
+                                <span class="title">学生币管理 1</span>
+                                <span class="selected"></span>
+                            </a>
+                        </li>
+                        <li class="nav-item ">
+                            <a href="dashboard2.html" class="nav-link ">
+                                <span class="title">学生币管理 2</span>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="nav-item">
+                    <a href="/customerService/index" class="nav-link nav-toggle">
+                        <i class="material-icons">dashboard</i>
+                        <span class="title">客服管理</span>
+                        <span class="selected"></span>
+                        <span class="arrow open"></span>
+                    </a>
+                    <ul class="sub-menu">
+                        <li class="nav-item active">
+                            <a href="index.html" class="nav-link ">
+                                <span class="title">客服管理 1</span>
+                                <span class="selected"></span>
+                            </a>
+                        </li>
+                        <li class="nav-item ">
+                            <a href="dashboard2.html" class="nav-link ">
+                                <span class="title">客服管理 2</span>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="nav-item">
+                    <a href="/resourcesBit/index" class="nav-link nav-toggle">
+                        <i class="material-icons">dashboard</i>
+                        <span class="title">资源位管理</span>
+                        <span class="selected"></span>
+                        <span class="arrow open"></span>
+                    </a>
+                    <ul class="sub-menu">
+                        <li class="nav-item active">
+                            <a href="index.html" class="nav-link ">
+                                <span class="title">资源位管理 1</span>
+                                <span class="selected"></span>
+                            </a>
+                        </li>
+                        <li class="nav-item ">
+                            <a href="dashboard2.html" class="nav-link ">
+                                <span class="title">资源位管理 2</span>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="nav-item">
+                    <a href="/user/index" class="nav-link nav-toggle">
+                        <i class="material-icons">dashboard</i>
+                        <span class="title">用户管理</span>
+                        <span class="selected"></span>
+                        <span class="arrow open"></span>
+                    </a>
+                    <ul class="sub-menu">
+                        <li class="nav-item active">
+                            <a href="index.html" class="nav-link ">
+                                <span class="title">用户管理 1</span>
+                                <span class="selected"></span>
+                            </a>
+                        </li>
+                        <li class="nav-item ">
+                            <a href="dashboard2.html" class="nav-link ">
+                                <span class="title">用户管理 2</span>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="nav-item">
+                    <a href="/baseSet/index" class="nav-link nav-toggle">
+                        <i class="material-icons">dashboard</i>
+                        <span class="title">基础设置管理</span>
+                        <span class="selected"></span>
+                        <span class="arrow open"></span>
+                    </a>
+                    <ul class="sub-menu">
+                        <li class="nav-item active">
+                            <a href="index.html" class="nav-link ">
+                                <span class="title">基础设置管理 1</span>
+                                <span class="selected"></span>
+                            </a>
+                        </li>
+                        <li class="nav-item ">
+                            <a href="dashboard2.html" class="nav-link ">
+                                <span class="title">基础设置管理 2</span>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="nav-item">
+                    <a href="/data/index" class="nav-link nav-toggle">
+                        <i class="material-icons">dashboard</i>
+                        <span class="title">数据管理</span>
+                        <span class="selected"></span>
+                        <span class="arrow open"></span>
+                    </a>
+                    <ul class="sub-menu">
+                        <li class="nav-item active">
+                            <a href="index.html" class="nav-link ">
+                                <span class="title">数据管理 1</span>
+                                <span class="selected"></span>
+                            </a>
+                        </li>
+                        <li class="nav-item ">
+                            <a href="dashboard2.html" class="nav-link ">
+                                <span class="title">数据管理 2</span>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="nav-item">
+                    <a href="/log/index" class="nav-link nav-toggle">
+                        <i class="material-icons">dashboard</i>
+                        <span class="title">日志管理</span>
+                        <span class="selected"></span>
+                        <span class="arrow open"></span>
+                    </a>
+                    <ul class="sub-menu">
+                        <li class="nav-item active">
+                            <a href="index.html" class="nav-link ">
+                                <span class="title">日志管理 1</span>
+                                <span class="selected"></span>
+                            </a>
+                        </li>
+                        <li class="nav-item ">
+                            <a href="dashboard2.html" class="nav-link ">
+                                <span class="title">日志管理 2</span>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="nav-item">
+                    <a href="/version/index" class="nav-link nav-toggle">
+                        <i class="material-icons">dashboard</i>
+                        <span class="title">版本管理</span>
+                        <span class="selected"></span>
+                        <span class="arrow open"></span>
+                    </a>
+                    <ul class="sub-menu">
+                        <li class="nav-item active">
+                            <a href="index.html" class="nav-link ">
+                                <span class="title">版本管理 1</span>
+                                <span class="selected"></span>
+                            </a>
+                        </li>
+                        <li class="nav-item ">
+                            <a href="dashboard2.html" class="nav-link ">
+                                <span class="title">版本管理 2</span>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="nav-item">
+                    <a href="/role/index" class="nav-link nav-toggle">
+                        <i class="material-icons">dashboard</i>
+                        <span class="title">角色管理</span>
+                        <span class="selected"></span>
+                        <span class="arrow open"></span>
+                    </a>
+                    <ul class="sub-menu">
+                        <li class="nav-item active">
+                            <a href="index.html" class="nav-link ">
+                                <span class="title">角色管理 1</span>
+                                <span class="selected"></span>
+                            </a>
+                        </li>
+                        <li class="nav-item ">
+                            <a href="dashboard2.html" class="nav-link ">
+                                <span class="title">角色管理 2</span>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="nav-item">
+                    <a href="/accountNumber/index" class="nav-link nav-toggle">
+                        <i class="material-icons">dashboard</i>
+                        <span class="title">账号管理</span>
+                        <span class="selected"></span>
+                        <span class="arrow open"></span>
+                    </a>
+                    <ul class="sub-menu">
+                        <li class="nav-item active">
+                            <a href="index.html" class="nav-link ">
+                                <span class="title">账号管理 1</span>
+                                <span class="selected"></span>
+                            </a>
+                        </li>
+                        <li class="nav-item ">
+                            <a href="dashboard2.html" class="nav-link ">
+                                <span class="title">账号管理 2</span>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                <!--新增end-->
+
             </ul>
         </div>
     </div>
