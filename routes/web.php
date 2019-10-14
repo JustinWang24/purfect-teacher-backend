@@ -176,7 +176,7 @@ Route::prefix('role')->group(function () {
 
 
 //账号管理
-Route::prefix('accountNumber')->group(function () {
+Route::prefix('accountNumber')->group(function () { 
     Route::get('index', 'AccountNumberController@index')->name('accountNumber.index');
 });
 
