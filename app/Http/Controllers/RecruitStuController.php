@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use app\Http\Requests\validateRecruitStuRequest;
 use View;
-use app\Http\Resources\RecruitStu;
 
 class RecruitStuController extends Controller
 {
@@ -12,6 +12,7 @@ class RecruitStuController extends Controller
     public function index(Request $request)
     {
         // dd(111);
+        //validateRecruitStuRequest
         return view('recruitStu.index');
     }
     
