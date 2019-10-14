@@ -3,15 +3,16 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Http\Requests\RecruitStuRequest;
 use View;
 use app\Http\Resources\RecruitStu;
+
 
 class RecruitStuController extends Controller
 {
     //招生管理
-    public function index(Request $request)
+    public function index(RecruitStuRequest $requets)
     {
-        // dd(111);
         return view('recruitStu.index');
     }
     
