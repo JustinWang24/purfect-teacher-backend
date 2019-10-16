@@ -2,6 +2,8 @@
 
 namespace Tests\Unit;
 
+use App\Dao\Users\RoleDao;
+use App\Models\Acl\Permission;
 use App\Models\Acl\Role;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -48,5 +50,51 @@ class PermissionTest extends TestCase
         $this->assertTrue($result, '能给运营人员用户赋予一般角色');
         $revoked = $dao->revokeRoleFromUser($op, Role::BUSINESS_INNER);
         $this->assertTrue($revoked, '能撤销运营人员用户的一般角色');
+    }
+
+    /**
+     * 可以从配置中加载权限
+     */
+    public function testItCanGetAllActionsAndPermissionsFromConfig(){
+        $actions = config('acl.actions');
+        $permissions = config('acl.permissions');
+        $this->assertIsArray($actions);
+        $this->assertIsArray($permissions);
+    }
+
+    public function testItCanGetRoleFromDao(){
+        $su = $this->_getRoleBySlug(Role::SUPER_ADMIN_SLUG);
+        $this->assertNotNull($su);
+    }
+
+    public function testItCanAssignPermissionToRole(){
+        $permission = new Permission();
+
+        $thePermission = $permission->create([
+            'name'=>'post',
+            'slug'=>[
+                'create'=>true,
+                'delete'=>false,
+            ],
+            'descriptions'=>'Manage posts'
+        ]);
+
+        $su = $this->_getRoleBySlug(Role::SUPER_ADMIN_SLUG);
+        $assigned = $su->assignPermission($thePermission);
+
+        $this->assertNotNull($assigned);
+
+        // 取消 permission
+        $revoked = $su->revokePermission($thePermission);
+        $this->assertEquals(1,$revoked);
+
+        // 删除 permission
+
+        $assigned->delete($thePermission->id);
+    }
+
+    private function _getRoleBySlug($slug){
+        $dao = new RoleDao();
+        return $dao->getBySlug($slug);
     }
 }

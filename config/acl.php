@@ -27,4 +27,17 @@ return [
      */
 		
     'cacheMinutes' => 1,
+
+    /**
+     * 系统预定义的权限
+     */
+    'permissions' => [
+        // 学校的基础数据
+        'students','teachers','schools','campuses','institutes','majors','buildings','rooms','roles','permissions',
+        // 附加的业务数据
+        'scenery',
+    ],
+    'actions'=>[
+        'create','view','update','delete','list'
+    ]
 ];
