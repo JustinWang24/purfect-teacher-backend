@@ -99,6 +99,28 @@
                     </ul>
                 </li>
                 <li class="nav-item">
+                    <a href="javascript:void(0);" class="nav-link nav-toggle">
+                        <i class="material-icons">dashboard</i>
+                        <span class="title">校园门户管理<span>
+                        <span class="selected"></span>
+                        <span class="arrow open"></span>
+                    </a>
+                    <ul class="sub-menu">
+                        <li class="nav-item active">
+                            <a href="/teacher/index" class="nav-link ">
+                                <span class="title">校园相册</span>
+                                <span class="selected"></span>
+                            </a>
+                        </li>
+                        <li class="nav-item ">
+                            <a href="dashboard2.html" class="nav-link ">
+                                <span class="title">学校简介</span>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+
+                <li class="nav-item">
                     <a href="/recruitStu/index" class="nav-link nav-toggle">
                         <i class="material-icons">dashboard</i>
                         <span class="title">招生管理</span>
@@ -119,6 +141,7 @@
                         </li>
                     </ul>
                 </li>
+
                 <li class="nav-item">
                     <a href="/welcomeNewStu/index" class="nav-link nav-toggle">
                         <i class="material-icons">dashboard</i>
@@ -158,7 +181,7 @@
                             <a href="dashboard2.html" class="nav-link ">
                                 <span class="title">离校管理 2</span>
                             </a>
-                        </li>   
+                        </li>
                     </ul>
                 </li>
                 <li class="nav-item">
