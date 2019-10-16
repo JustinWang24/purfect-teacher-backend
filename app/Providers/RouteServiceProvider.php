@@ -39,6 +39,10 @@ class RouteServiceProvider extends ServiceProvider
 
         $this->mapWebRoutes();
 
+        $this->mapAdminRoutes();
+
+        $this->mapTeacherRoutes();
+
         //
     }
 
@@ -70,4 +74,25 @@ class RouteServiceProvider extends ServiceProvider
              ->namespace($this->namespace)
              ->group(base_path('routes/api.php'));
     }
+
+    /**
+     * Admin
+     */
+    protected function mapAdminRoutes()
+    {
+        Route::middleware('web')
+             ->namespace($this->namespace. '\Admin')
+             ->group(base_path('routes/admin.php'));
+    }
+
+    /**
+     * Teacher
+     */
+    protected function mapTeacherRoutes()
+    {
+        Route::middleware('web')
+             ->namespace($this->namespace. '\Teacher')
+             ->group(base_path('routes/teacher.php'));
+    }
+
 }
