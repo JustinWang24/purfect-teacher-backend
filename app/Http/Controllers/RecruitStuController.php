@@ -2,17 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use app\Http\Requests\validateRecruitStuRequest;
-use View;
+use App\Http\Requests\RecruitStuRequest;
 
 class RecruitStuController extends Controller
 {
     //招生管理
-    public function index(Request $request)
+    public function index(RecruitStuRequest $requets)
     {
-        // dd(111);
-        //validateRecruitStuRequest
         return view('recruitStu.index');
     }
     
