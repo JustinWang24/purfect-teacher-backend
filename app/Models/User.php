@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Models\Acl\Role;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -45,4 +46,12 @@ class User extends Authenticatable
     protected $casts = [
         'mobile_verified_at' => 'datetime',
     ];
+
+    /**
+     * 获取当前用户的角色Slug
+     * @return string
+     */
+    public function getCurrentRoleSlug(){
+        return Role::GetRoleSlugByUserType($this->type);
+    }
 }
