@@ -18,8 +18,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 });
 
 
-#测试
-Route::get('ceshi', 'CeshiController@index');
+
 
 
 
