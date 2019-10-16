@@ -5,7 +5,7 @@
 <div id="app" class="page-wrapper">
     @include('layouts/desktop/top_nav')
     <div class="page-container">
-        @include('layouts/desktop/'.Auth::user()->getCurrentRoleName().'/sidebar')
+        @include('layouts/desktop/'.Auth::user()->getCurrentRoleSlug().'/sidebar')
         <div class="page-content-wrapper">
         @yield('content')
         </div>
