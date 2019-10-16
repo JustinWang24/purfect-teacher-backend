@@ -7,7 +7,12 @@
     <div class="page-container">
         @include('layouts/desktop/'.Auth::user()->getCurrentRoleSlug().'/sidebar')
         <div class="page-content-wrapper">
-        @yield('content')
+            <div class="page-content">
+                @if($autoThumbnail)
+                {{ \App\Utils\UI\Thumbnail::Print($pageTitle) }}
+                @endif
+                @yield('content')
+            </div>
         </div>
         @include('layouts/desktop/sidebar_chat')
     </div>
