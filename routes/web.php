@@ -15,9 +15,16 @@ Route::get('/', function () {
     return view('auth.login');
 });
 
+
 Auth::routes();
 
+// 主页
 Route::get('/home', 'HomeController@index')->name('home');
+
+// 校园风光
+//Route::get('/scenery', 'Admin\CampusSceneryController@index')->name('home');
+
+
 
 
 //招生管理
@@ -76,7 +83,7 @@ Route::prefix('repair')->group(function () {
 
 //账户管理
 Route::prefix('account')->group(function () {
-    Route::get('index', 'AccountController@index')->name('account.index');
+    Route::get('index', 'SchoolSceneryController@index')->name('account.index');
 });
 
 

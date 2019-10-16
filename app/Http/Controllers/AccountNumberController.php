@@ -7,7 +7,7 @@ use View;
 
 class AccountNumberController extends Controller
 {
-    //主页
+    // 校园风光
     public function index(Request $request)
     {
         return view('accountNumber.index');
