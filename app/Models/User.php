@@ -45,4 +45,12 @@ class User extends Authenticatable
     protected $casts = [
         'mobile_verified_at' => 'datetime',
     ];
+
+    /**
+     * 获取当前用户的角色名
+     * @return string
+     */
+    public function getCurrentRoleName(){
+        return 'admin';
+    }
 }
