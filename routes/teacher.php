@@ -4,7 +4,9 @@
 
 Route::prefix('teacher')->group(function () {
 
-    Route::get('index', 'SchoolSceneryController@index');
+    Route::get('index', 'SchoolSceneryController@index'); // 校园风采
+
+    Route::get('profile', 'SchoolSceneryController@profile'); // 学校简介
 
 
 });

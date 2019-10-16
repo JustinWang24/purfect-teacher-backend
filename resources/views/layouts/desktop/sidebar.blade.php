@@ -113,7 +113,7 @@
                             </a>
                         </li>
                         <li class="nav-item ">
-                            <a href="dashboard2.html" class="nav-link ">
+                            <a href="/teacher/profile" class="nav-link ">
                                 <span class="title">学校简介</span>
                             </a>
                         </li>
@@ -132,7 +132,7 @@
                             <a href="index.html" class="nav-link ">
                                 <span class="title">招生管理 1</span>
                                 <span class="selected"></span>
-                            </a>   
+                            </a>
                         </li>
                         <li class="nav-item ">
                             <a href="dashboard2.html" class="nav-link ">

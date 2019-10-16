@@ -9,6 +9,16 @@ class SchoolSceneryController extends Controller
 {
 
     /**
+     * 学校简介
+     */
+    public  function profile()
+    {
+        return view('Teacher.SchoolScenery.profile');
+    }
+
+
+
+    /**
      * 校园风采
      */
     public  function  index()
