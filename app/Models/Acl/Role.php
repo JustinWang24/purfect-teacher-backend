@@ -48,4 +48,37 @@ class Role extends BaseRole
 
     const BUSINESS_INNER_SLUG        = 'business_inner';  // 已认证 校内商家
     const BUSINESS_OUTER_SLUG        = 'business_outer';  // 已认证 校外商家
+
+    /**
+     * 返回指定角色的 slug 字符串
+     * @param $type
+     * @return string
+     */
+    public static function GetRoleSlugByUserType($type){
+        return self::AllTypes()[$type] ?? self::TEACHER_SLUG;
+    }
+
+    /**
+     * 获取所有的已定义角色列表
+     * @return array
+     */
+    public static function AllTypes(){
+        return [
+            self::SUPER_ADMIN => self::SUPER_ADMIN_SLUG,
+            self::ADMINISTRATOR => self::ADMINISTRATOR_SLUG,
+            self::OPERATOR => self::OPERATOR_SLUG,
+            self::VISITOR => self::VISITOR_SLUG,
+            self::REGISTERED_USER => self::REGISTERED_USER_SLUG,
+            self::VERIFIED_USER_STUDENT => self::VERIFIED_USER_STUDENT_SLUG,
+            self::VERIFIED_USER_CLASS_LEADER => self::VERIFIED_USER_CLASS_LEADER_SLUG,
+            self::VERIFIED_USER_CLASS_SECRETARY => self::VERIFIED_USER_CLASS_SECRETARY_SLUG,
+            self::TEACHER => self::TEACHER_SLUG,
+            self::EMPLOYEE => self::EMPLOYEE_SLUG,
+            self::SCHOOL_MANAGER => self::SCHOOL_MANAGER_SLUG,
+            self::COMPANY => self::COMPANY_SLUG,
+            self::DELIVERY => self::DELIVERY_SLUG,
+            self::BUSINESS_INNER => self::BUSINESS_INNER_SLUG,
+            self::BUSINESS_OUTER => self::BUSINESS_OUTER_SLUG,
+        ];
+    }
 }

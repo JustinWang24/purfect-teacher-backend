@@ -8,5 +8,4 @@ Route::prefix('teacher')->group(function () {
 
     Route::get('profile', 'SchoolSceneryController@profile'); // 学校简介
 
-
 });
