@@ -83,7 +83,7 @@ Route::prefix('repair')->group(function () {
 
 //账户管理
 Route::prefix('account')->group(function () {
-    Route::get('index', 'SchoolSceneryController@index')->name('account.index');
+//    Route::get('index', 'SchoolSceneryController@index')->name('account.index');
 });
 
 
