@@ -33,10 +33,11 @@ return [
      */
     'permissions' => [
         // 学校的基础数据
-        'students','teachers','scenery','schools','campuses','institutes','majors','buildings','rooms',
+        'students','teachers','schools','campuses','institutes','majors','buildings','rooms','roles','permissions',
         // 附加的业务数据
+        'scenery',
     ],
     'actions'=>[
-        'create','retrieve','update','delete',
+        'create','view','update','delete','list'
     ]
 ];
