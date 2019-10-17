@@ -13,7 +13,8 @@ class SchoolSceneryController extends Controller
      */
     public  function profile()
     {
-        return view('Teacher.SchoolScenery.profile');
+        $this->dataForView['pageTitle'] = '学校简介';
+        return view('Teacher.SchoolScenery.profile', $this->dataForView);
     }
 
 
@@ -23,6 +24,7 @@ class SchoolSceneryController extends Controller
      */
     public  function  index()
     {
-        return view('Teacher.SchoolScenery.index');
+        $this->dataForView['pageTitle'] = '校园相册';
+        return view('Teacher.SchoolScenery.index', $this->dataForView);
     }
 }
