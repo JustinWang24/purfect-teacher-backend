@@ -20,6 +20,9 @@ class User extends Authenticatable
     const STATUS_VERIFIED = 3;
     const STATUS_VERIFIED_TEXT = '身份已验证';
 
+    const TYPE_STUDENT  = 1;
+    const TYPE_EMPLOYEE = 2;
+
     /**
      * The attributes that are mass assignable.
      *

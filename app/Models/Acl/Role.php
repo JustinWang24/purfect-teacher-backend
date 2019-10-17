@@ -68,6 +68,8 @@ class Role extends BaseRole
     const BUSINESS_INNER_TEXT        = '已认证 校内商家';  // 已认证 校内商家
     const BUSINESS_OUTER_TEXT        = '已认证 校外商家';  // 已认证 校外商家
 
+    public $timestamps = false;
+
     /**
      * 返回指定角色的 slug 字符串
      * @param $type
