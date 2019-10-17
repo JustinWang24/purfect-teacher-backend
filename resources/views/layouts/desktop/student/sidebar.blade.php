@@ -106,13 +106,13 @@
                     </a>
                     <ul class="sub-menu">
                         <li class="nav-item active">
-                            <a href="/teacher/index" class="nav-link ">
+                            <a href="" class="nav-link ">
                                 <span class="title">校园相册</span>
                                 <span class="selected"></span>
                             </a>
                         </li>
                         <li class="nav-item ">
-                            <a href="dashboard2.html" class="nav-link ">
+                            <a href="" class="nav-link ">
                                 <span class="title">学校简介</span>
                             </a>
                         </li>
@@ -131,7 +131,7 @@
                             <a href="index.html" class="nav-link ">
                                 <span class="title">招生管理 1</span>
                                 <span class="selected"></span>
-                            </a>   
+                            </a>
                         </li>
                         <li class="nav-item ">
                             <a href="dashboard2.html" class="nav-link ">
