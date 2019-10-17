@@ -13,12 +13,18 @@
 <script src="{{ asset('assets/js/layout.js') }}"></script>
 <script src="{{ asset('assets/js/theme-color.js') }}"></script>
 <!-- material -->
-<script src="{{ asset('assets/plugins/material/material.min.js') }}"></script>
 <!-- chart js -->
-<script src="{{ asset('assets/plugins/chart-js/Chart.bundle.js') }}"></script>
-<script src="{{ asset('assets/plugins/chart-js/utils.js') }}"></script>
-<script src="{{ asset('assets/js/pages/chart/chartjs/home-data.js') }}"></script>
+@if($needChart??false)
+    <script src="{{ asset('assets/plugins/chart-js/Chart.bundle.js') }}"></script>
+    <script src="{{ asset('assets/plugins/chart-js/utils.js') }}"></script>
+    <script src="{{ asset('assets/js/pages/chart/chartjs/home-data.js') }}"></script>
+@endif
 <!-- summernote -->
+@if($needSummerNote??false)
 <script src="{{ asset('assets/plugins/summernote/summernote.js') }}"></script>
 <script src="{{ asset('assets/js/pages/summernote/summernote-data.js') }}"></script>
+@endif
+<!-- 漂亮的表单控件 -->
+<script src="{{ asset('assets/plugins/select2/js/select2.js') }}"></script>
+<script src="{{ asset('assets/js/pages/select2/select2-init.js') }}"></script>
 <script src="{{ asset('js/app.js') }}" defer></script>

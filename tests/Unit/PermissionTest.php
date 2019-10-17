@@ -62,11 +62,17 @@ class PermissionTest extends TestCase
         $this->assertIsArray($permissions);
     }
 
+    /**
+     * 可以通过 dao 获得角色
+     */
     public function testItCanGetRoleFromDao(){
         $su = $this->_getRoleBySlug(Role::SUPER_ADMIN_SLUG);
         $this->assertNotNull($su);
     }
 
+    /**
+     * 可以给角色赋予权限, 撤销权限
+     */
     public function testItCanAssignPermissionToRole(){
         $permission = new Permission();
 
