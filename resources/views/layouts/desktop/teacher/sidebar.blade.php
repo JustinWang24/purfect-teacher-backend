@@ -106,8 +106,7 @@
                     </a>
                     <ul class="sub-menu">
                         <li class="nav-item active">
-{{--                            {{ route('teacher.scenery.index') }}--}}
-                            <a href="123123.html" class="nav-link ">
+                            <a href="{{ route('teacher.scenery.index') }}" class="nav-link ">
                                 <span class="title">校园相册</span>
                                 <span class="selected"></span>
                             </a>
