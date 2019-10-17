@@ -1,10 +1,14 @@
+<?php
+use App\Utils\UI\WarningMessage;
+?>
+
 @extends('layouts.app')
 @section('content')
     <div class="row">
         {{-- 校园视频 --}}
 
         @if(empty($video))
-
+           {{WarningMessage::information('您的管理员还没有上传学校视频', '12', '12')}}
         @else
         <div class="col-sm-12 col-md-12">
             <div class="card-box">
@@ -22,7 +26,7 @@
 
         {{-- 校园照片 --}}
         @if(empty($img))
-
+            {{WarningMessage::information('您的管理员还没有上传学校照片', '12', '12')}}
         @else
         <div class="col-12 col-12">
             <div class="card-box">
