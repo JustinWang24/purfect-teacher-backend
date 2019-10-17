@@ -51,4 +51,12 @@ class MyStandardRequest extends FormRequest
     public function getSchoolId(){
         return $this->session()->get('school.id',null);
     }
+
+    /**
+     * 获取参数中的 uuid
+     * @return string
+     */
+    public function uuid(){
+        return $this->get('uuid',null);
+    }
 }
