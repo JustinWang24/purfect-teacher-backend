@@ -53,7 +53,7 @@ class RoleRequest extends MyStandardRequest
      * @return string
      */
     public function getCurrentRoleSlug(){
-        return $this->get('role_slug');
+        return $this->get('slug');
     }
 
     /**
