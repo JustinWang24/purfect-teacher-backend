@@ -32,9 +32,19 @@ class RolesController extends Controller
      */
     public function edit(RoleRequest $request){
         $dao = new RoleDao();
-        $role = $dao->getBySlug($request->get('slug'));
-        $this->dataForView['roles'] = $role;
+        $role = $dao->getBySlug($request->getCurrentRoleSlug());
+        $this->dataForView['role'] = $role;
         $this->dataForView['pageTitle'] = '编辑角色权限: '.$role->name;
+
+        // 系统预定义的权限
+        $this->dataForView['targets'] = config('acl.'.$request->get('slug'));
+        $this->dataForView['actions'] = config('acl.actions');
         return view('admin.roles.edit', $this->dataForView);
+    }
+
+    public function update_permission(RoleRequest $request){
+        $submittedPermissions = $request->getSubmittedPermissions();
+        $dao = new RoleDao();
+//        $role = $dao->getBySlug($request->getCurrentRoleSlug());
     }
 }
