@@ -4,8 +4,8 @@
 
 Route::prefix('teacher')->group(function () {
 
-    Route::get('index', 'SchoolSceneryController@index'); // 校园风采
+    Route::get('index', 'SchoolSceneryController@index')->name('teacher.scenery.index'); // 校园风采
 
-    Route::get('profile', 'SchoolSceneryController@profile'); // 学校简介
+    Route::get('profile', 'SchoolSceneryController@profile')->name('teacher.scenery.profile'); // 学校简介
 
 });
