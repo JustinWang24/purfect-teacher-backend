@@ -39,5 +39,24 @@ return [
     ],
     'actions'=>[
         'create','view','update','delete','list'
+    ],
+
+    /**
+     * 厂家操作人员的权限
+     */
+    'operator' => [
+        // 学校的基础数据
+        'students','teachers','campuses','institutes','majors','buildings','rooms',
+        // 附加的业务数据
+        'scenery',
+    ],
+    /**
+     * 学校管理员的权限
+     */
+    'school_admin' => [
+        // 学校的基础数据
+        'students','teachers','campuses','institutes','majors','buildings','rooms',
+        // 附加的业务数据
+        'scenery',
     ]
 ];

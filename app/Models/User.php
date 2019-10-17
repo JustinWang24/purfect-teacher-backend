@@ -78,4 +78,16 @@ class User extends Authenticatable
     public function isSchoolAdminOrAbove(){
         return in_array($this->getCurrentRoleSlug(), [Role::SUPER_ADMIN_SLUG, Role::OPERATOR_SLUG, Role::SCHOOL_MANAGER_SLUG]);
     }
+
+    /**
+     * 获取用户的默认首页 view
+     * @return string
+     */
+    public function getDefaultView(){
+        $viewPath = 'home';
+        if($this->isSuperAdmin()){
+            $viewPath = 'admin.schools.list';
+        }
+        return $viewPath;
+    }
 }

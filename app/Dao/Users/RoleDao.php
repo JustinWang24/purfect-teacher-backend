@@ -26,4 +26,8 @@ class RoleDao
     public function getByUserType($userType){
         return Role::find($userType);
     }
+
+    public function syncRolePermissions(){
+
+    }
 }
