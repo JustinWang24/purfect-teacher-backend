@@ -2,7 +2,7 @@
 namespace App\Dao\Schools;
 
 use App\User;
-use App\Models\Schools\School;
+use App\Models\School;
 
 class SchoolDao
 {

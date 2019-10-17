@@ -34,7 +34,7 @@ Button::Print(['id'=>'btnSubmit','text'=>trans('general.submit')], Button::TYPE_
                         <?php
 Anchor::Print(['text'=>trans('general.return'),'href'=>route('home'),'class'=>'pull-right'], Button::TYPE_SUCCESS,'arrow-circle-o-right')
                         ?>
-                        <p class="text-muted sub-title">上次更新: {{ $school->lastUpdatedBy->name ?? 'Admin' }}</p>
+                        <p class="text-muted sub-title">上次更新: {{ $school->last_updated_by ? $school->lastUpdatedBy->name : '超级管理员' }}</p>
                     </form>
                 </div>
             </div>

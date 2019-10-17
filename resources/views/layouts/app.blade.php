@@ -11,6 +11,7 @@
                 @if($autoThumbnail)
                 {{ \App\Utils\UI\Thumbnail::Print($pageTitle) }}
                 @endif
+                @include('reusable_elements.section.session_flash_msg')
                 @yield('content')
             </div>
         </div>
