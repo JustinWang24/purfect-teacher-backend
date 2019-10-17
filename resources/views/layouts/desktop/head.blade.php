@@ -12,15 +12,17 @@
     <link href="{{ asset('assets/plugins/bootstrap/css/bootstrap.min.css') }}" rel="stylesheet" type="text/css" />
     <link href="{{ asset('assets/plugins/summernote/summernote.css') }}" rel="stylesheet">
     <!-- Material Design Lite CSS -->
-    <link rel="stylesheet" href="{{ asset('assets/plugins/material/material.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('assets/css/material_style.css') }}">
     <!-- inbox style -->
     <link rel="stylesheet" href="{{ asset('assets/css/pages/inbox.min.css') }}">
     <!-- Theme Styles -->
     <link rel="stylesheet" href="{{ asset('assets/css/theme/hover/theme_style.css') }}">
-    <link rel="stylesheet" href="{{ asset('assets/css/plugins.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/theme/hover/style.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/plugins.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/pages/formlayout.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/responsive.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/theme/hover/theme-color.css') }}">
+    <!-- select 2 -->
+    <link rel="stylesheet" href="{{ asset('assets/plugins/select2/css/select2.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/plugins/select2/css/select2-bootstrap.min.css') }}">
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
 </head>

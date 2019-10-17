@@ -20,6 +20,7 @@ class Controller extends BaseController
         'currentMenu'=>null,        // 当前的被点选的菜单项
         'footer'=>null,             // 页脚的Block
         'the_referer'=>null,        // 跟踪客户的referer
-        'autoThumbnail'=>true,        // 跟踪客户的referer
+        'autoThumbnail'=>true,      // 是否自动生成面包屑部分
+        'needChart'=>false,         // 是否前端需要 Chart
     ];
 }
