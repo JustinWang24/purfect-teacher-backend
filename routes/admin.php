@@ -1,7 +1,6 @@
 <?php
 // 管理后台路由
 Route::prefix('admin')->group(function () {
-    Route::get('index', 'IndexController@index');
     // 学校管理
     Route::get('schools/statistic', 'SchoolsController@statistic')->name('admin.schools.statistic'); // 显示学校的统计信息
     Route::get('schools/add', 'SchoolsController@add')->name('admin.schools.add');    // 显示创建学校的界面

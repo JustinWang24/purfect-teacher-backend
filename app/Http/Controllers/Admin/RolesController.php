@@ -8,6 +8,7 @@ use App\Dao\Users\RoleDao;
 use App\Http\Requests\RoleRequest;
 use App\Http\Controllers\Controller;
 use App\Models\Acl\Role;
+use Illuminate\Support\Facades\Route;
 
 class RolesController extends Controller
 {
@@ -35,6 +36,8 @@ class RolesController extends Controller
         $role = $dao->getBySlug($request->getCurrentRoleSlug());
         $this->dataForView['role'] = $role;
         $this->dataForView['pageTitle'] = '编辑角色权限: '.$role->name;
+
+        dd(Route::getRoutes());
 
         // 系统预定义的权限
         $this->dataForView['targets'] = config('acl.'.$request->get('slug'));

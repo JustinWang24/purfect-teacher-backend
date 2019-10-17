@@ -5,6 +5,7 @@ namespace App\Models;
 use App\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Models\Schools\Campus;
 
 class School extends Model
 {
@@ -18,5 +19,9 @@ class School extends Model
      */
     public function lastUpdatedBy(){
         return $this->belongsTo(User::class,'last_updated_by');
+    }
+
+    public function campuses(){
+        return $this->hasMany(Campus::class);
     }
 }
