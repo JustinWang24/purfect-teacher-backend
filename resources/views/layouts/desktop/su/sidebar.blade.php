@@ -11,11 +11,11 @@
                 <li class="sidebar-user-panel">
                     <div class="user-panel">
                         <div class="pull-left image">
-                            <img src="../assets/img/dp.jpg" class="img-circle user-img-circle"
+                            <img src="{{ asset('assets/img/dp.jpg') }}" class="img-circle user-img-circle"
                                  alt="User Image" />
                         </div>
                         <div class="pull-left info">
-                            <p> Kiran Patel</p>
+                            <p>超级管理员</p>
                             <a href="#"><i class="fa fa-circle user-online"></i><span class="txtOnline">
 												Online</span></a>
                         </div>
@@ -24,95 +24,16 @@
 
                 <!--begin-->
                 <li class="nav-item">
-                    <a href="javascript:;" class="nav-link nav-toggle">
-                        <i class="material-icons">slideshow</i>
-                        <span class="title">Multi Level Menu</span>
-                        <span class="arrow "></span>
+                    <a href="{{ route('home') }}" class="nav-link nav-toggle"> <i class="material-icons">home</i>
+                        <span class="title">切换学校</span>
                     </a>
-                    <ul class="sub-menu">
-                        <li class="nav-item">
-                            <a href="javascript:;" class="nav-link nav-toggle">
-                                <i class="fa fa-university"></i> Item 1
-                                <span class="arrow"></span>
-                            </a>
-                            <ul class="sub-menu">
-                                <li class="nav-item">
-                                    <a href="javascript:;" class="nav-link nav-toggle">
-                                        <i class="fa fa-bell-o"></i> Arrow Toggle
-                                        <span class="arrow "></span>
-                                    </a>
-                                    <ul class="sub-menu">
-                                        <li class="nav-item">
-                                            <a href="javascript:;" class="nav-link">
-                                                <i class="fa fa-calculator"></i> Sample Link 1</a>
-                                        </li>
-                                        <li class="nav-item">
-                                            <a href="#" class="nav-link">
-                                                <i class="fa fa-clone"></i> Sample Link 2</a>
-                                        </li>
-                                        <li class="nav-item">
-                                            <a href="#" class="nav-link">
-                                                <i class="fa fa-cogs"></i> Sample Link 3</a>
-                                        </li>
-                                    </ul>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="#" class="nav-link">
-                                        <i class="fa fa-file-pdf-o"></i> Sample Link 1</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="#" class="nav-link">
-                                        <i class="fa fa-rss"></i> Sample Link 2</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="#" class="nav-link">
-                                        <i class="fa fa-hdd-o"></i> Sample Link 3</a>
-                                </li>
-                            </ul>
-                        </li>
-                        <li class="nav-item">
-                            <a href="javascript:;" class="nav-link nav-toggle">
-                                <i class="fa fa-gavel"></i> Arrow Toggle
-                                <span class="arrow"></span>
-                            </a>
-                            <ul class="sub-menu">
-                                <li class="nav-item">
-                                    <a href="#" class="nav-link">
-                                        <i class="fa fa-paper-plane"></i> Sample Link 1</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="#" class="nav-link">
-                                        <i class="fa fa-power-off"></i> Sample Link 1</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="#" class="nav-link">
-                                        <i class="fa fa-recycle"></i> Sample Link 1
-                                    </a>
-                                </li>
-                            </ul>
-                        </li>
-                        <li class="nav-item">
-                            <a href="#" class="nav-link">
-                                <i class="fa fa-volume-up"></i> Item 3 </a>
-                        </li>
-                    </ul>
                 </li>
-
+                @if(session('school.id'))
                 <li class="nav-item">
-                    <a href="/baseSet/index" class="nav-link nav-toggle">
-                        <i class="material-icons">dashboard</i>
-                        <span class="title">基础设置管理</span>
-                        <span class="selected"></span>
-                        <span class="arrow open"></span>
+                    <a href="{{ route('operator.school.view') }}" class="nav-link nav-toggle">
+                        <i class="material-icons">business</i>
+                        <span class="title">{{ session('school.name') }}</span>
                     </a>
-                    <ul class="sub-menu">
-                        <li class="nav-item active">
-                            <a href="{{ route('admin.roles.list') }}" class="nav-link ">
-                                <span class="title">角色与权限管理</span>
-                                <span class="selected"></span>
-                            </a>
-                        </li>
-                    </ul>
                 </li>
 
                 <li class="nav-item">
@@ -685,7 +606,7 @@
                         </li>
                     </ul>
                 </li>
-                <!--新增end-->
+                @endif
 
             </ul>
         </div>

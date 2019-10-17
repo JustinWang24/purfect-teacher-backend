@@ -26,7 +26,7 @@ class SchoolsController extends Controller
         $request->session()->put('school.id',$school->id);
         $request->session()->put('school.uuid',$school->uuid);
         $request->session()->put('school.name',$school->name);
-        return redirect()->route('home');
+        return redirect()->route('operator.school.view');
     }
 
     /**
