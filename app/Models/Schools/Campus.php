@@ -10,6 +10,6 @@ class Campus extends Model
     use SoftDeletes;
 
     protected $fillable = [
-        'school_id', 'name', 'description'
+        'school_id', 'name', 'description','last_updated_by'
     ];
 }

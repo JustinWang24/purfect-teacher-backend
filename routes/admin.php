@@ -4,6 +4,7 @@ Route::prefix('admin')->group(function () {
     Route::get('index', 'IndexController@index');
     // 学校管理
     Route::get('schools/statistic', 'SchoolsController@statistic')->name('admin.schools.statistic'); // 显示学校的统计信息
+    Route::get('schools/add', 'SchoolsController@add')->name('admin.schools.add');    // 显示创建学校的界面
     Route::get('schools/edit', 'SchoolsController@edit')->name('admin.schools.edit');    // 显示学校信息编辑的界面
     Route::get('schools/enter', 'SchoolsController@enter')->name('admin.schools.enter');  // 进入指定学校
     Route::post('schools/update', 'SchoolsController@update')->name('admin.schools.update');  // 进入指定学校
