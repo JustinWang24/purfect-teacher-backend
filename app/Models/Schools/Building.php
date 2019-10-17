@@ -1,0 +1,42 @@
+<?php
+
+namespace App\Models\Schools;
+
+use App\Models\Schools\School;
+use Illuminate\Database\Eloquent\Model;
+
+class Building extends Model
+{
+    const TYPE_CLASSROOM_BUILDING       = 1; // 教学楼
+    const TYPE_STUDENT_HOSTEL_BUILDING  = 2; // 宿舍楼
+    const TYPE_HALL                     = 3; // 礼堂, 会堂
+
+    protected $fillable = [
+        'school_id', 'name', 'campus_id','type'
+    ];
+    public $timestamps = false;
+
+    public function rooms(){
+        return $this->hasMany(Room::class);
+    }
+
+    /**
+     * 建筑所归属的校区
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo|null
+     */
+    public function campus(){
+        if($this->campus_id === 0){
+            return null;
+        }else{
+            return $this->belongsTo(Campus::class);
+        }
+    }
+
+    /**
+     * 建筑所归属的学校
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function school(){
+        return $this->belongsTo(School::class);
+    }
+}
