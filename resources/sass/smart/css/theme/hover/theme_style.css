@@ -4842,7 +4842,11 @@ table.valign-middle tbody tr td {
     transition: all .3s
 }
 
-.btn-default,
+.btn-default {
+    background-color: #eeeeee !important;
+    border: 1px solid #eeeeee !important;
+    color: #000000 !important;
+}
 .btn-default:hover,
 .btn-default:focus,
 .btn-default:active,
@@ -4861,12 +4865,41 @@ table.valign-middle tbody tr td {
 .open > .dropdown-toggle.btn-default.focus,
 .open > .dropdown-toggle.btn-default:focus,
 .open > .dropdown-toggle.btn-default:hover {
-  background-color: #e1e5ec !important;
-  border-color: #e1e5ec !important;
+    background-color: #e1e5ec !important;
+    border-color: #e1e5ec !important;
 }
+
+.btn-light-blue {
+    background-color: #4EA5FE !important;
+    border: 1px solid #4EA5FE !important;
+    color: #fff !important;
+}
+.btn-light-blue:hover,
+.btn-light-blue:focus,
+.btn-light-blue:active,
+.btn-light-blue.active,
+.btn-light-blue.focus,
+.btn-light-blue:active,
+.btn-light-blue:focus,
+.btn-light-blue:hover,
+.open > .dropdown-toggle.btn-light-blue,
+.btn-light-blue.active.focus,
+.btn-light-blue.active:focus,
+.btn-light-blue.active:hover,
+.btn-light-blue:active.focus,
+.btn-light-blue:active:focus,
+.btn-light-blue:active:hover,
+.open > .dropdown-toggle.btn-light-blue.focus,
+.open > .dropdown-toggle.btn-light-blue:focus,
+.open > .dropdown-toggle.btn-light-blue:hover {
+    background-color: #167ccb !important;
+    border: 1px solid #167ccb !important;
+    color: #fff !important;
+}
+
 .btn-primary {
-  background-color: #188ae2 !important;
-  border: 1px solid #188ae2 !important;
+  background-color: #0c83fc !important;
+  border: 1px solid #0c83fc !important;
   color: #fff !important;
 }
 .btn-primary:hover,
@@ -4883,8 +4916,8 @@ table.valign-middle tbody tr td {
   color: #fff !important;
 }
 .btn-success {
-  background-color: #4bd396 !important;
-  border: 1px solid #4bd396 !important;
+  background-color: #6DCC58 !important;
+  border: 1px solid #6DCC58 !important;
   color: #fff !important;
 }
 .btn-success:hover,
@@ -4901,8 +4934,8 @@ table.valign-middle tbody tr td {
   color: #fff !important;
 }
 .btn-info {
-  background-color: #3ac9d6 !important;
-  border: 1px solid #3ac9d6 !important;
+  background-color: #fe7b1c !important;
+  border: 1px solid #fe7b1c !important;
   color: #fff !important;
 }
 .btn-info:hover,
@@ -4914,10 +4947,11 @@ table.valign-middle tbody tr td {
 .btn-info:focus,
 .btn-info:hover,
 .open > .dropdown-toggle.btn-info {
-  background-color: #2abfcc !important;
-  border: 1px solid #2abfcc !important;
+  background-color: #f9c851 !important;
+  border: 1px solid #f9c851 !important;
   color: #fff !important;
 }
+
 .btn-warning {
   background-color: #f9c851 !important;
   border: 1px solid #f9c851 !important;
@@ -4937,8 +4971,8 @@ table.valign-middle tbody tr td {
   color: #fff !important;
 }
 .btn-danger {
-  background-color: #f5707a !important;
-  border: 1px solid #f5707a !important;
+  background-color: #fa3d3d !important;
+  border: 1px solid #fa3d3d !important;
   color: #fff !important;
 }
 .btn-danger:active,
