@@ -54,4 +54,28 @@ class User extends Authenticatable
     public function getCurrentRoleSlug(){
         return Role::GetRoleSlugByUserType($this->type);
     }
+
+    /**
+     * 判断当前用户是否为超级管理员
+     * @return bool
+     */
+    public function isSuperAdmin(){
+        return Role::SUPER_ADMIN_SLUG === $this->getCurrentRoleSlug();
+    }
+
+    /**
+     * 判断当前用户是否为厂家运营人员或更高权限角色
+     * @return bool
+     */
+    public function isOperatorOrAbove(){
+        return in_array($this->getCurrentRoleSlug(), [Role::SUPER_ADMIN_SLUG, Role::OPERATOR_SLUG]);
+    }
+
+    /**
+     * 判断当前用户是否为校方管理员或更高权限角色
+     * @return bool
+     */
+    public function isSchoolAdminOrAbove(){
+        return in_array($this->getCurrentRoleSlug(), [Role::SUPER_ADMIN_SLUG, Role::OPERATOR_SLUG, Role::SCHOOL_MANAGER_SLUG]);
+    }
 }
