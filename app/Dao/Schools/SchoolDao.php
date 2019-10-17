@@ -3,6 +3,8 @@ namespace App\Dao\Schools;
 
 use App\User;
 use App\Models\School;
+use Ramsey\Uuid\Uuid;
+use App\Models\Schools\Campus;
 
 class SchoolDao
 {
@@ -14,8 +16,38 @@ class SchoolDao
 
     public function getMySchools($onlyFirstOne = false){
         if($this->currentUser->isOperatorOrAbove()){
-            return School::all();
+            return School::orderBy('updated_at','desc')->get();
         }
+    }
+
+    /**
+     * @param $schoolData
+     * @param array $extra
+     * @return bool
+     */
+    public function createSchool($schoolData, $extra = []){
+        if($this->currentUser->isSuperAdmin()){
+            // 只有超级管理员能更新
+            try{
+                $schoolData['uuid'] = Uuid::uuid4()->toString();
+                $school =  School::create($schoolData);
+                // 学校创建成功之后, 创建一个默认的主校区
+                if($school){
+                    Campus::create([
+                        'school_id'=>$school->id,
+                        'last_updated_by'=>$this->currentUser->id,
+                        'name'=>'主校区',
+                        'description'=>$school->name.'主校区'
+                    ]);
+                    return $school;
+                }else{
+                    return false;
+                }
+            }catch (\Exception $exception){
+                return false;
+            }
+        }
+        return false;
     }
 
     /**
