@@ -37,7 +37,7 @@ use App\Utils\UI\Button;
                                         </td>
                                         <td>{{ $school->max_students_number }}</td>
                                         <td>{{ $school->max_employees_number }}</td>
-                                        <td>{{ $school->last_updated_by->mobile??'超级管理员' }} {{ $school->updated_at }}</td>
+                                        <td>{{ $school->last_updated_by ? $school->lastUpdatedBy->mobile : '超级管理员' }} {{ $school->updated_at }}</td>
                                         <td class="text-center">
                                             {{ Anchor::Print(['text'=>'编辑','href'=>route('admin.schools.edit',['uuid'=>$school->uuid])], Button::TYPE_PRIMARY,'edit') }}
                                             {{ Anchor::Print(['text'=>'进入','href'=>route('admin.schools.enter',['uuid'=>$school->uuid])], Button::TYPE_SUCCESS,'arrow-circle-o-right') }}

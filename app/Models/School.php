@@ -14,13 +14,9 @@ class School extends Model
     ];
 
     /**
-     * 最后更新学校信息的用户
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo|null
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function lastUpdatedBy(){
-        if($this->last_updated_by){
-            return $this->belongsTo(User::class,'last_updated_by');
-        }
-        return null;
+        return $this->belongsTo(User::class,'last_updated_by');
     }
 }
