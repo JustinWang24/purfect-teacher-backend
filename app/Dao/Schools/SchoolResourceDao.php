@@ -2,9 +2,7 @@
 
 namespace App\Dao\Schools;
 
-use App\Models\Schools\School;
 use App\Models\Schools\SchoolResource;
-
 
 class SchoolResourceDao
 {
