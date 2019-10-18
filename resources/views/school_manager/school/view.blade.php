@@ -46,10 +46,10 @@ use App\User;
                                             <a href="{{ route('school_manager.campus.institutes',['uuid'=>$campus->id]) }}">{{ count($campus->institutes) }}</a>
                                         </td>
                                         <td class="text-center">
-                                            <a href="{{ route('school_manager.campus.users',['type'=>User::TYPE_EMPLOYEE,'uuid'=>$campus->id]) }}">{{ $campus->employeesCount() }}</a>
+                                            <a href="{{ route('school_manager.campus.users',['type'=>User::TYPE_EMPLOYEE,'uuid'=>$campus->id,'by'=>'campus']) }}">{{ $campus->employeesCount() }}</a>
                                         </td>
                                         <td class="text-center">
-                                            <a href="{{ route('school_manager.campus.users',['type'=>User::TYPE_STUDENT,'uuid'=>$campus->id]) }}">{{ $campus->studentsCount() }}</a>
+                                            <a href="{{ route('school_manager.campus.users',['type'=>User::TYPE_STUDENT,'uuid'=>$campus->id,'by'=>'campus']) }}">{{ $campus->studentsCount() }}</a>
                                         </td>
                                         <td class="text-center">
                                             {{ Anchor::Print(['text'=>'编辑','href'=>route('school_manager.campus.edit',['uuid'=>$campus->id])], Button::TYPE_DEFAULT,'edit') }}
