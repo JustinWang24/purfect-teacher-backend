@@ -98,7 +98,7 @@ class RouteServiceProvider extends ServiceProvider
     protected function mapSchoolManagerRoutes()
     {
         Route::middleware('web')
-            ->namespace($this->namespace. '\SchoolManager')
+            ->namespace($this->namespace. '\Operator')
             ->group(base_path('routes/school_manager.php'));
     }
 
