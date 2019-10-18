@@ -9,50 +9,53 @@ use App\User;
         <div class="col-sm-12 col-md-12 col-xl-12">
             <div class="card-box">
                 <div class="card-head">
-                    <header>{{ session('school.name') }}</header>
+                    <header>校区名: {{ session('school.name') }} - {{ $campus->name }}</header>
                 </div>
 
                 <div class="card-body">
                     <div class="row">
                         <div class="row table-padding">
-                            <div class="col-md-6 col-sm-6 col-6">
-                                <a href="{{ route('operator.campus.add') }}" class="btn btn-primary">
-                                    创建新校区 <i class="fa fa-plus"></i>
+                            <div class="col-12">
+                                <a href="{{ route('operator.school.view') }}" class="btn btn-default">
+                                    返回 <i class="fa fa-arrow-circle-left"></i>
+                                </a>&nbsp;
+                                <a href="{{ route('operator.campus.add') }}" class="btn btn-primary pull-right">
+                                    创建新学院 <i class="fa fa-plus"></i>
                                 </a>
                             </div>
                         </div>
                         <div class="table-responsive">
-                            <table class="table table-striped table-bordered table-hover table-checkable order-column valign-middle"">
+                            <table class="table table-striped table-bordered table-hover table-checkable order-column valign-middle">
                                 <thead>
                                 <tr>
                                     <th>#</th>
-                                    <th>校区名称</th>
+                                    <th>学院名称</th>
                                     <th style="width: 300px;">简介</th>
-                                    <th>学院数</th>
-                                    <th>教职工总数</th>
-                                    <th>学生总数</th>
+                                    <th>院系数</th>
+                                    <th>教职工数</th>
+                                    <th>学生数</th>
                                     <th></th>
                                 </tr>
                                 </thead>
                                 <tbody>
-                                @foreach($school->campuses as $index=>$campus)
+                                @foreach($institutes as $index=>$institute)
                                     <tr>
                                         <td>{{ $index+1 }}</td>
                                         <td>
-                                            <a href="{{ route('operator.campus.view',['uuid'=>$school->uuid]) }}">{{ $campus->name }}</a>
+                                            <a href="{{ route('operator.campus.view',['uuid'=>$institute->id]) }}">{{ $institute->name }}</a>
                                         </td>
-                                        <td>{{ $campus->description }}</td>
+                                        <td>{{ $institute->description }}</td>
                                         <td class="text-center">
-                                            <a href="{{ route('operator.campus.institutes',['uuid'=>$campus->id]) }}">{{ count($campus->institutes) }}</a>
-                                        </td>
-                                        <td class="text-center">
-                                            <a href="{{ route('operator.campus.users',['type'=>User::TYPE_EMPLOYEE]) }}">{{ $campus->employeesCount() }}</a>
+                                            <a href="{{ route('operator.campus.institutes',['uuid'=>$institute->id]) }}">{{ count($institute->departments) }}</a>
                                         </td>
                                         <td class="text-center">
-                                            <a href="{{ route('operator.campus.users',['type'=>User::TYPE_EMPLOYEE]) }}">{{ $campus->studentsCount() }}</a>
+                                            <a href="{{ route('operator.campus.users',['type'=>User::TYPE_EMPLOYEE]) }}">{{ $institute->employeesCount() }}</a>
                                         </td>
                                         <td class="text-center">
-                                            {{ Anchor::Print(['text'=>'编辑','href'=>route('operator.campus.edit',['uuid'=>$campus->id])], Button::TYPE_DEFAULT,'edit') }}
+                                            <a href="{{ route('operator.campus.users',['type'=>User::TYPE_EMPLOYEE]) }}">{{ $institute->studentsCount() }}</a>
+                                        </td>
+                                        <td class="text-center">
+                                            {{ Anchor::Print(['text'=>'编辑','href'=>route('operator.campus.edit',['uuid'=>$institute->id])], Button::TYPE_DEFAULT,'edit') }}
                                         </td>
                                     </tr>
                                 @endforeach
