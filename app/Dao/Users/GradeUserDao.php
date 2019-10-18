@@ -23,6 +23,16 @@ class GradeUserDao
     }
 
     /**
+     * 根据给定的学院 id 值, 获取用户信息
+     * @param $id
+     * @param $type
+     * @return Collection
+     */
+    public function paginateUserByInstitute($id, $type){
+        return $this->_paginateUsersBy($type,'institute_id', $id);
+    }
+
+    /**
      * @param $type
      * @param $fieldName
      * @param $fieldValue

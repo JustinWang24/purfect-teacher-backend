@@ -9,7 +9,7 @@ use App\User;
         <div class="col-sm-12 col-md-12 col-xl-12">
             <div class="card-box">
                 <div class="card-head">
-                    <header>{{ $campus->name }}(学生总数: {{ $students->total() }})</header>
+                    <header>{{ $parent->name }}(学生总数: {{ $students->total() }})</header>
                 </div>
 
                 <div class="card-body">
@@ -50,7 +50,7 @@ use App\User;
                                         <td>{{ $gradeUser->user->status }}</td>
                                         <td>{{ $gradeUser->studyAt() }}</td>
                                         <td class="text-center">
-                                            <?php
+                                            @php
                                             Button::PrintGroup(
                                                 [
                                                     'text'=>'可执行操作',
@@ -63,7 +63,7 @@ use App\User;
                                                 ],
                                                 Button::TYPE_PRIMARY
                                             )
-                                            ?>
+                                            @endphp
                                         </td>
                                     </tr>
                                 @endforeach
