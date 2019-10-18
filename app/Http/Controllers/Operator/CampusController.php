@@ -27,7 +27,7 @@ class CampusController extends Controller
         $school = $dao->getSchoolById($request->session()->get('school.id'));
         if($school){
             $this->dataForView['school'] = $school;
-            return view('operator.school.view', $this->dataForView);
+            return view('school_manager.school.view', $this->dataForView);
         }
         else{
             return redirect()->route('home');
@@ -47,7 +47,7 @@ class CampusController extends Controller
         if($campus){
             $this->dataForView['campus'] = $campus;
             $this->dataForView['institutes'] = $instituteDao->getByCampus($campus);
-            return view('operator.school.institutes', $this->dataForView);
+            return view('school_manager.school.institutes', $this->dataForView);
         }
         else{
             FlashMessageBuilder::Push($request, FlashMessageBuilder::DANGER,'您操作的学院不存在');
@@ -60,15 +60,17 @@ class CampusController extends Controller
      */
     public function add(){
         $this->dataForView['campus'] = new Campus();
-        return view('operator.campus.add', $this->dataForView);
+        return view('school_manager.campus.add', $this->dataForView);
     }
 
     /**
      * 加载添加校区的表单
+     * @param CampusRequest $request
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function edit(CampusRequest $request){
         $this->dataForView['campus'] = Campus::find($request->uuid());
-        return view('operator.campus.edit', $this->dataForView);
+        return view('school_manager.campus.edit', $this->dataForView);
     }
 
     /**
@@ -93,6 +95,6 @@ class CampusController extends Controller
         }else{
             FlashMessageBuilder::Push($request, FlashMessageBuilder::DANGER,'无法保存校区'.$campusData['name']);
         }
-        return redirect()->route('operator.school.view');
+        return redirect()->route('school_manager.school.view');
     }
 }
