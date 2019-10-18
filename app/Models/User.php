@@ -3,6 +3,7 @@
 namespace App;
 
 use App\Models\Acl\Role;
+use App\Models\Students\StudentProfile;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -89,8 +90,33 @@ class User extends Authenticatable
     public function getDefaultView(){
         $viewPath = 'home';
         if($this->isSuperAdmin()){
+            // 超级管理员的首页
             $viewPath = 'admin.schools.list';
         }
+        elseif($this->isOperatorOrAbove()){
+            // 运营部人员的默认首页
+            $viewPath = 'operator.school.list';
+        }
+        elseif ($this->isSchoolAdminOrAbove()){
+            // 学校管理员的默认首页
+            $viewPath = 'school_manager.school.view';
+        }
         return $viewPath;
+    }
+
+    public function profile(){
+//        dd($this->type);
+        $roleSlug = $this->getCurrentRoleSlug();
+        if($roleSlug === Role::TEACHER_SLUG || $roleSlug === Role::EMPLOYEE_SLUG){
+            // 教师或者职工
+
+        }
+        elseif ($this->type === self::TYPE_STUDENT){
+            // 已认证学生
+            return $this->hasOne(StudentProfile::class);
+        }
+        else{
+            return null;
+        }
     }
 }

@@ -8,6 +8,7 @@
 
 namespace App\BusinessLogic\HomePage;
 use App\BusinessLogic\HomePage\Contracts\IHomePageLogic;
+use App\BusinessLogic\HomePage\Impl\OperatorHomePageLogic;
 use App\BusinessLogic\HomePage\Impl\SuHomePageLogic;
 use App\User;
 
@@ -21,6 +22,8 @@ class Factory
 
         if($user->isSuperAdmin()){
             $instance = new SuHomePageLogic($user);
+        }elseif($user->isOperatorOrAbove()){
+            $instance = new OperatorHomePageLogic($user);
         }
 
         return $instance;

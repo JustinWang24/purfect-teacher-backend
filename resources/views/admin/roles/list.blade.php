@@ -15,9 +15,7 @@ use App\Utils\UI\Button;
             <div class="card-body">
                 <div class="row">
                 <div class="table-scrollable">
-                    <table
-                            class="table table-striped table-bordered table-hover table-checkable order-column valign-middle"
-                            id="roles-table">
+                    <table class="table table-striped table-bordered table-hover table-checkable order-column valign-middle">
                         <thead>
                         <tr>
                             <th>#</th>
