@@ -8,11 +8,9 @@
 
 namespace App\Http\Controllers\Operator;
 
+use App\BusinessLogic\UsersListPage\Factory;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\MyStandardRequest;
-use App\User;
-use App\Dao\Users\GradeUserDao;
-use App\Dao\Schools\CampusDao;
 
 class UsersController extends Controller
 {
@@ -21,28 +19,17 @@ class UsersController extends Controller
         $this->middleware('auth');
     }
 
+    /**
+     * 加载用户列表的方法
+     * @param MyStandardRequest $request
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function users(MyStandardRequest $request){
-        $forType = intval($request->get('type'));
-
-        $viewPath = 'teacher.users.teachers';
-        $dao = new GradeUserDao();
-        $campusDao = new CampusDao($request->user());
-        $this->dataForView['campus'] = $campusDao->getCampusById($request->uuid());
-        $this->dataForView['returnPath'] = route('school_manager.school.view');
-        $this->dataForView['appendedParams'] = [
-            'type'=>$forType,'uuid'=>$request->uuid()
-        ];
-
-        if($forType === User::TYPE_STUDENT){
-            // 查看学生
-            $viewPath = 'teacher.users.students';
-            $this->dataForView['students'] = $dao->paginateUserByCampus($request->uuid(), User::TYPE_STUDENT);
-        }
-        elseif ($forType === User::TYPE_EMPLOYEE){
-            // 查看教职工
-            $this->dataForView['employees'] = $dao->paginateUserByCampus($request->uuid(), User::TYPE_EMPLOYEE);
-        }
-
-        return view($viewPath, $this->dataForView);
+        $logic = Factory::GetLogic($request);
+        $this->dataForView['parent'] = $logic->getParentModel();
+        $this->dataForView['returnPath'] = $logic->getReturnPath();
+        // 给 Pagination 用
+        $this->dataForView['appendedParams'] = $logic->getAppendedParams();
+        return view($logic->getViewPath(), array_merge($this->dataForView, $logic->getUsers()));
     }
 }

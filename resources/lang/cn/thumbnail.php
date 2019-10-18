@@ -4,6 +4,8 @@ return [
     'schools'  => '学校管理',
     'school'  => '学校管理',
     'campus'  => '校区管理',
+    'institute'  => '学院',
+    'users'  => '用户列表',
     'list'   => '列表',
     'add'    => '添加数据',
     'edit'   => '编辑数据',
