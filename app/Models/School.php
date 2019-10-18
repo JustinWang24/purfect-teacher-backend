@@ -22,6 +22,6 @@ class School extends Model
     }
 
     public function campuses(){
-        return $this->hasMany(Campus::class);
+        return $this->hasMany(Campus::class)->orderBy('name','asc');
     }
 }
