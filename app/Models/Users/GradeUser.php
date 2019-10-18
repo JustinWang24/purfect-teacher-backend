@@ -2,13 +2,13 @@
 
 namespace App\Models\Users;
 
-use App\Models\Schools\School;
+use App\Models\School;
 use App\Models\Schools\Campus;
 use App\Models\Schools\Department;
 use App\Models\Schools\Grade;
 use App\Models\Schools\Institute;
 use App\Models\Schools\Major;
-use App\Models\User;
+use App\User;
 use Illuminate\Database\Eloquent\Model;
 
 class GradeUser extends Model
@@ -78,5 +78,22 @@ class GradeUser extends Model
      */
     public function user(){
         return $this->belongsTo(User::class);
+    }
+
+    /**
+     * 返回教职工所工作的地方的描述
+     * @return string
+     */
+    public function workAt(){
+        return 'n.a';
+    }
+
+    /**
+     * 返回教职工所工作的地方的描述
+     * @return string
+     */
+    public function studyAt(){
+        return $this->institute->name . ' / ' . $this->department->name . ' / '
+            . $this->major->name . ' / ' . $this->grade->name;
     }
 }

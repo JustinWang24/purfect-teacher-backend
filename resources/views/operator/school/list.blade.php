@@ -13,16 +13,8 @@ use App\Utils\UI\Button;
 
                 <div class="card-body">
                     <div class="row">
-                        <div class="row table-padding">
-                            <div class="col-md-6 col-sm-6 col-6">
-                                <a href="{{ route('admin.schools.add') }}" class="btn btn-primary">
-                                    创建新学校 <i class="fa fa-plus"></i>
-                                </a>
-                            </div>
-                        </div>
                         <div class="table-responsive">
-                            <table
-                                    class="table table-striped table-bordered table-hover table-checkable order-column valign-middle">
+                            <table class="table table-striped table-bordered table-hover table-checkable order-column valign-middle">
                                 <thead>
                                 <tr>
                                     <th>#</th>
@@ -44,7 +36,6 @@ use App\Utils\UI\Button;
                                         <td>{{ $school->max_employees_number > 0 ? $school->max_employees_number : '不限' }}</td>
                                         <td>{{ $school->last_updated_by ? $school->lastUpdatedBy->mobile : '超级管理员' }} {{ $school->updated_at }}</td>
                                         <td class="text-center">
-                                            {{ Anchor::Print(['text'=>'编辑','href'=>route('admin.schools.edit',['uuid'=>$school->uuid])], Button::TYPE_DEFAULT,'edit') }}
                                             {{ Anchor::Print(['text'=>'进入','href'=>route('operator.schools.enter',['uuid'=>$school->uuid])], Button::TYPE_SUCCESS,'arrow-circle-o-right') }}
                                         </td>
                                     </tr>
