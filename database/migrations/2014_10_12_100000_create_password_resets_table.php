@@ -20,7 +20,7 @@ class CreatePasswordResetsTable extends Migration
                 $table->string('token');
                 $table->timestamp('created_at')->nullable();
             });
-            DB::statement(" ALTER TABLE password_resets comment '密码重置表' ");
+            DB::statement(" ALTER TABLE password_resets comment '密码重置表'");
         }
     }
 
