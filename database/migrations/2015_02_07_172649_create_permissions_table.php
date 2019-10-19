@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Support\Facades\DB;
 
 class CreatePermissionsTable extends Migration
 {
@@ -22,6 +23,8 @@ class CreatePermissionsTable extends Migration
             $table->text('description')->nullable();
             $table->timestamps();
         });
+
+        DB::statement(" ALTER TABLE permissions comment '权限表' ");
     }
 
     /**
