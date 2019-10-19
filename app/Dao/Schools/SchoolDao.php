@@ -18,6 +18,9 @@ class SchoolDao
         if($this->currentUser->isOperatorOrAbove()){
             return School::orderBy('updated_at','desc')->get();
         }
+        else{
+
+        }
     }
 
     /**

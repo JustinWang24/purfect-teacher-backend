@@ -9,11 +9,12 @@ use App\Utils\UI\Button;
         <div class="col-sm-12 col-md-12 col-xl-12">
             <div class="card-box">
                 <div class="card-head">
-                    <header>在学校 ({{ session('school.name') }}) 创建新校区</header>
+                    <header>修改学校 ({{ session('school.name') }}) 的校区 - {{ $campus->name }}</header>
                 </div>
                 <div class="card-body " id="bar-parent">
-                    <form action="{{ route('operator.campus.update') }}" method="post">
+                    <form action="{{ route('school_manager.campus.update') }}" method="post">
                         @csrf
+                        <input type="hidden" name="campus[id]" value="{{ $campus->id }}">
                         <div class="form-group">
                             <label for="school-name-input">校区名称</label>
                             <input required type="text" class="form-control" id="campus-name-input" value="{{ $campus->name }}" placeholder="学校名称" name="campus[name]">
@@ -26,7 +27,7 @@ use App\Utils\UI\Button;
                         Button::Print(['id'=>'btnSubmit','text'=>trans('general.submit')], Button::TYPE_PRIMARY);
                         ?>&nbsp;
                         <?php
-                        Anchor::Print(['text'=>trans('general.return'),'href'=>route('operator.school.view'),'class'=>'pull-right'], Button::TYPE_SUCCESS,'arrow-circle-o-right')
+                        Anchor::Print(['text'=>trans('general.return'),'href'=>route('school_manager.school.view'),'class'=>'pull-right'], Button::TYPE_SUCCESS,'arrow-circle-o-right')
                         ?>
                     </form>
                 </div>

@@ -6,27 +6,13 @@ use App\Http\Requests\SchoolRequest;
 use App\Http\Controllers\Controller;
 use App\Dao\Schools\SchoolDao;
 use App\Models\School;
+use App\Utils\FlashMessageBuilder;
 
 class SchoolsController extends Controller
 {
     public function __construct()
     {
         $this->middleware('auth');
-    }
-
-    /**
-     * 管理员选择某个学校作为操作对象
-     * @param SchoolRequest $request
-     * @return \Illuminate\Http\RedirectResponse
-     */
-    public function enter(SchoolRequest $request){
-        $dao = new SchoolDao($request->user());
-        $school = $dao->getSchoolByUuid($request->uuid());
-        // 获取学校
-        $request->session()->put('school.id',$school->id);
-        $request->session()->put('school.uuid',$school->uuid);
-        $request->session()->put('school.name',$school->name);
-        return redirect()->route('operator.school.view');
     }
 
     /**
@@ -67,11 +53,11 @@ class SchoolsController extends Controller
         }
 
         if($result){
-            // 更新成功
-            $request->session()->flash('msg',['content' => '学校"'.$schoolData['name'].'"信息保存成功!', 'status' => 'success']);
+            // 保存成功
+            FlashMessageBuilder::Push($request,FlashMessageBuilder::SUCCESS, '学校"'.$schoolData['name'].'"信息保存成功!');
         }
         else{
-            $request->session()->flash('msg',['content' => '学校"'.$schoolData['name'].'"信息保存失败!', 'status' => 'danger']);
+            FlashMessageBuilder::Push($request,FlashMessageBuilder::DANGER, '学校"'.$schoolData['name'].'"信息保存失败!');
         }
         return redirect()->route('home');
     }
