@@ -24,6 +24,18 @@ class MyStandardRequest extends FormRequest
     }
 
     /**
+     * Get the validation rules that apply to the request.
+     *
+     * @return array
+     */
+    public function rules()
+    {
+        return [
+            //
+        ];
+    }
+
+    /**
      * 获取系统允许的所有操作
      * @return \Illuminate\Config\Repository|mixed
      */
