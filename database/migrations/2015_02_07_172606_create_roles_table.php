@@ -3,6 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 use App\Models\Acl\Role;
+use Illuminate\Support\Facades\DB;
 
 class CreateRolesTable extends Migration
 {
@@ -17,11 +18,13 @@ class CreateRolesTable extends Migration
         if(!Schema::hasTable('roles')){
             Schema::create('roles', function (Blueprint $table) {
                 $table->increments('id');
-                $table->string('name')->unique();
-                $table->string('slug')->unique();
-                $table->text('description')->nullable();
+                $table->string('name')->unique()->comment('角色名称');
+                $table->string('slug')->unique()->comment('角色身份');
+                $table->text('description')->nullable()->comment('角色描述');
                 $table->timestamps();
             });
+
+            DB::statement(" ALTER TABLE roles comment '角色表' ");
         }
 
         $role = new Role();
