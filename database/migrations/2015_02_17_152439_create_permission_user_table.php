@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Support\Facades\DB;
 
 class CreatePermissionUserTable extends Migration {
 
@@ -18,6 +19,9 @@ class CreatePermissionUserTable extends Migration {
 			$table->integer('user_id')->unsigned()->index()->references('id')->on('users')->onDelete('cascade');
 			$table->timestamps();
 		});
+
+        DB::statement(" ALTER TABLE permission_user comment '权限-用户 关系表' ");
+
 	}
 
 	/**
