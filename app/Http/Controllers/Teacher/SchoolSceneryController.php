@@ -51,5 +51,4 @@ class SchoolSceneryController extends Controller
 
 
 
-
 }
