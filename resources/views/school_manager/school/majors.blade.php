@@ -16,10 +16,10 @@ use App\User;
                     <div class="row">
                         <div class="row table-padding">
                             <div class="col-12">
-                                <a href="{{ route('school_manager.school.view') }}" class="btn btn-default">
-                                    返回 <i class="fa fa-arrow-circle-left"></i>
+                                <a href="{{ url()->previous() }}" class="btn btn-default">
+                                    <i class="fa fa-arrow-circle-left"></i> 返回
                                 </a>&nbsp;
-                                <a href="{{ route('school_manager.major.add',['uuid'=>$parent->id]) }}" class="btn btn-primary pull-right">
+                                <a href="{{ route('school_manager.major.add',['uuid'=>$parent->id]) }}" class="btn btn-primary pull-right" id="btn-create-major-from-department">
                                     创建新专业 <i class="fa fa-plus"></i>
                                 </a>
                             </div>
@@ -46,16 +46,16 @@ use App\User;
                                         </td>
                                         <td>{{ $major->description }}</td>
                                         <td class="text-center">
-                                            <a href="{{ route('school_manager.major.grades',['uuid'=>$major->id,'by'=>'major']) }}">{{ count($major->grades) }}</a>
+                                            <a class="anchor-grades-counter" href="{{ route('school_manager.major.grades',['uuid'=>$major->id,'by'=>'major']) }}">{{ count($major->grades) }}</a>
                                         </td>
                                         <td class="text-center">
-                                            <a href="{{ route('school_manager.major.users',['type'=>User::TYPE_EMPLOYEE,'by'=>'major','uuid'=>$major->id]) }}">{{ $major->employeesCount() }}</a>
+                                            <a class="employees-counter" href="{{ route('school_manager.major.users',['type'=>User::TYPE_EMPLOYEE,'by'=>'major','uuid'=>$major->id]) }}">{{ $major->employeesCount() }}</a>
                                         </td>
                                         <td class="text-center">
-                                            <a href="{{ route('school_manager.major.users',['type'=>User::TYPE_STUDENT,'by'=>'major','uuid'=>$major->id]) }}">{{ $major->studentsCount() }}</a>
+                                            <a class="students-counter" href="{{ route('school_manager.major.users',['type'=>User::TYPE_STUDENT,'by'=>'major','uuid'=>$major->id]) }}">{{ $major->studentsCount() }}</a>
                                         </td>
                                         <td class="text-center">
-                                            {{ Anchor::Print(['text'=>'编辑','href'=>route('school_manager.major.edit',['uuid'=>$major->id])], Button::TYPE_DEFAULT,'edit') }}
+                                            {{ Anchor::Print(['text'=>'编辑','class'=>'btn-edit-major','href'=>route('school_manager.major.edit',['uuid'=>$major->id])], Button::TYPE_DEFAULT,'edit') }}
                                         </td>
                                     </tr>
                                 @endforeach
