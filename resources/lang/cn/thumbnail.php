@@ -10,6 +10,8 @@ return [
     'departments'  => '系列表',
     'majors'  => '专业列表',
     'major'  => '专业',
+    'grades'  => '班级列表',
+    'grade'  => '班级',
     'users'  => '用户列表',
     'list'   => '列表',
     'add'    => '添加数据',

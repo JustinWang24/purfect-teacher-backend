@@ -11,5 +11,7 @@ use App\Http\Requests\MyStandardRequest;
 
 class GradeRequest extends MyStandardRequest
 {
-
+    public function getFormData(){
+        return $this->get('grade');
+    }
 }
