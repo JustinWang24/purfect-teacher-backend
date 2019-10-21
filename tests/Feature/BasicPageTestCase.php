@@ -18,7 +18,7 @@ class BasicPageTestCase extends TestCase
     protected $superAdmin;
     protected $operator;
     protected $school;
-    protected $schoolSessionData;
+    protected $schoolSessionData = [];
 
     public function setUp(): void
     {
@@ -52,7 +52,7 @@ class BasicPageTestCase extends TestCase
     protected function setSchoolAsUser($user, $schoolId = 1){
         $schoolDao = new SchoolDao($user);
         $this->school = $schoolDao->getSchoolById($schoolId);
-        $this->schoolSessionData = [
+        $this->schoolSessionData['school'] = [
             'id'=>$this->school->id,
             'uuid'=>$this->school->uuid,
             'name'=>$this->school->name

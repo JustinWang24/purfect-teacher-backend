@@ -33,24 +33,12 @@
                 <li><a href="javascript:;" class="fullscreen-btn"><i class="fa fa-arrows-alt"></i></a></li>
                 <li class="dropdown language-switch">
                     <a class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false"> <img
-                                src="../assets/img/flags/gb.png" class="position-left" alt=""> English <span
+                                src="{{ asset('assets/img/flags/gb.png') }}" class="position-left" alt=""> English <span
                                 class="fa fa-angle-down"></span>
                     </a>
                     <ul class="dropdown-menu">
                         <li>
-                            <a class="deutsch"><img src="../assets/img/flags/de.png" alt=""> Deutsch</a>
-                        </li>
-                        <li>
-                            <a class="ukrainian"><img src="../assets/img/flags/ua.png" alt=""> Українська</a>
-                        </li>
-                        <li>
-                            <a class="english"><img src="../assets/img/flags/gb.png" alt=""> English</a>
-                        </li>
-                        <li>
-                            <a class="espana"><img src="../assets/img/flags/es.png" alt=""> España</a>
-                        </li>
-                        <li>
-                            <a class="russian"><img src="../assets/img/flags/ru.png" alt=""> Русский</a>
+                            <a class="deutsch"><img src="{{ asset('assets/img/flags/de.png') }}" alt=""> Deutsch</a>
                         </li>
                     </ul>
                 </li>
@@ -146,62 +134,13 @@
                                 <li>
                                     <a href="#">
 												<span class="photo">
-													<img src="../assets/img/prof/prof2.jpg" class="img-circle" alt="">
+													<img src="{{ asset('assets/img/prof/prof2.jpg') }}" class="img-circle" alt="">
 												</span>
                                         <span class="subject">
 													<span class="from"> Sarah Smith </span>
 													<span class="time">Just Now </span>
 												</span>
                                         <span class="message"> Jatin I found you on LinkedIn... </span>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="#">
-												<span class="photo">
-													<img src="../assets/img/prof/prof3.jpg" class="img-circle" alt="">
-												</span>
-                                        <span class="subject">
-													<span class="from"> John Deo </span>
-													<span class="time">16 mins </span>
-												</span>
-                                        <span class="message"> Fwd: Important Notice Regarding Your Domain
-													Name... </span>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="#">
-												<span class="photo">
-													<img src="../assets/img/prof/prof1.jpg" class="img-circle" alt="">
-												</span>
-                                        <span class="subject">
-													<span class="from"> Rajesh </span>
-													<span class="time">2 hrs </span>
-												</span>
-                                        <span class="message"> pls take a print of attachments. </span>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="#">
-												<span class="photo">
-													<img src="../assets/img/prof/prof8.jpg" class="img-circle" alt="">
-												</span>
-                                        <span class="subject">
-													<span class="from"> Lina Smith </span>
-													<span class="time">40 mins </span>
-												</span>
-                                        <span class="message"> Apply for Ortho Surgeon </span>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="#">
-												<span class="photo">
-													<img src="../assets/img/prof/prof5.jpg" class="img-circle" alt="">
-												</span>
-                                        <span class="subject">
-													<span class="from"> Jacob Ryan </span>
-													<span class="time">46 mins </span>
-												</span>
-                                        <span class="message"> Request for leave application. </span>
                                     </a>
                                 </li>
                             </ul>
@@ -216,7 +155,7 @@
                 <li class="dropdown dropdown-user">
                     <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown"
                        data-close-others="true">
-                        <img alt="" class="img-circle " src="../assets/img/dp.jpg" />
+                        <img alt="" class="img-circle " src="{{ asset('assets/img/dp.jpg') }}" />
                         <span class="username username-hide-on-mobile"> Kiran </span>
                         <i class="fa fa-angle-down"></i>
                     </a>
