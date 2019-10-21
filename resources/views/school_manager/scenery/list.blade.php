@@ -17,7 +17,7 @@ use App\Utils\UI\Button;
                                 <a href="{{ route('school_manager.school.view') }}" class="btn btn-default">
                                     返回 <i class="fa fa-arrow-circle-left"></i>
                                 </a>&nbsp;
-                                <a href="{{ route('school_manager.institute.add') }}" class="btn btn-primary pull-right">
+                                <a href="{{ route('scenery.add') }}" class="btn btn-primary pull-right">
                                     上传风采资源 <i class="fa fa-plus"></i>
                                 </a>
                             </div>
