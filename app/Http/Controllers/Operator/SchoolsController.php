@@ -21,11 +21,9 @@ class SchoolsController extends Controller
      */
     public function enter(SchoolRequest $request){
         $dao = new SchoolDao($request->user());
-        $school = $dao->getSchoolByUuid($request->uuid());
         // 获取学校
-        $request->session()->put('school.id',$school->id);
-        $request->session()->put('school.uuid',$school->uuid);
-        $request->session()->put('school.name',$school->name);
-        return redirect()->route('operator.school.view');
+        $school = $dao->getSchoolByUuid($request->uuid());
+        $school->savedInSession($request);
+        return redirect()->route('school_manager.school.view');
     }
 }
