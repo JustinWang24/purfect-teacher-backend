@@ -16,10 +16,10 @@ use App\User;
                     <div class="row">
                         <div class="row table-padding">
                             <div class="col-12">
-                                <a href="{{ route('school_manager.school.view') }}" class="btn btn-default">
-                                    返回 <i class="fa fa-arrow-circle-left"></i>
+                                <a href="{{ url()->previous() }}" class="btn btn-default">
+                                    <i class="fa fa-arrow-circle-left"></i> 返回
                                 </a>&nbsp;
-                                <a href="{{ route('school_manager.department.add') }}" class="btn btn-primary pull-right">
+                                <a href="{{ route('school_manager.department.add',['uuid'=>$parent->id]) }}" class="btn btn-primary pull-right" id="btn-create-department-from-institute">
                                     创建新系 <i class="fa fa-plus"></i>
                                 </a>
                             </div>
@@ -46,16 +46,16 @@ use App\User;
                                         </td>
                                         <td>{{ $department->description }}</td>
                                         <td class="text-center">
-                                            <a href="{{ route('school_manager.department.majors',['uuid'=>$department->id,'by'=>'department']) }}">{{ count($department->majors) }}</a>
+                                            <a class="anchor-majors-counter" href="{{ route('school_manager.department.majors',['uuid'=>$department->id,'by'=>'department']) }}">{{ count($department->majors) }}</a>
                                         </td>
                                         <td class="text-center">
-                                            <a href="{{ route('school_manager.institute.users',['type'=>User::TYPE_EMPLOYEE,'by'=>'department','uuid'=>$department->id]) }}">{{ $department->employeesCount() }}</a>
+                                            <a class="employees-counter" href="{{ route('school_manager.institute.users',['type'=>User::TYPE_EMPLOYEE,'by'=>'department','uuid'=>$department->id]) }}">{{ $department->employeesCount() }}</a>
                                         </td>
                                         <td class="text-center">
-                                            <a href="{{ route('school_manager.institute.users',['type'=>User::TYPE_STUDENT,'by'=>'department','uuid'=>$department->id]) }}">{{ $department->studentsCount() }}</a>
+                                            <a class="students-counter" href="{{ route('school_manager.institute.users',['type'=>User::TYPE_STUDENT,'by'=>'department','uuid'=>$department->id]) }}">{{ $department->studentsCount() }}</a>
                                         </td>
                                         <td class="text-center">
-                                            {{ Anchor::Print(['text'=>'编辑','href'=>route('school_manager.institute.edit',['uuid'=>$department->id])], Button::TYPE_DEFAULT,'edit') }}
+                                            {{ Anchor::Print(['text'=>'编辑','class'=>'btn-edit-major','href'=>route('school_manager.department.edit',['uuid'=>$department->id])], Button::TYPE_DEFAULT,'edit') }}
                                         </td>
                                     </tr>
                                 @endforeach

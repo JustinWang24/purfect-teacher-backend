@@ -19,6 +19,8 @@ Route::prefix('school_manager')->group(function () {
 
     // 系的管理
     Route::get('department/add', 'DepartmentsController@add')->name('school_manager.department.add');              // 添加系
+    Route::get('department/edit', 'DepartmentsController@edit')->name('school_manager.department.edit');              // 编辑系
+    Route::post('department/update', 'DepartmentsController@update')->name('school_manager.department.update');      // 保存系
     Route::get('department/majors', 'DepartmentsController@majors')->name('school_manager.department.majors');     // 系的专业列表
 
     // 专业管理
