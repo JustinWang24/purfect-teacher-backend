@@ -10,7 +10,7 @@ use App\Models\School;
 class Institute extends Model
 {
     protected $fillable = [
-        'school_id', 'campus_id', 'name', 'description'
+        'school_id', 'campus_id', 'name', 'description','last_updated_by'
     ];
 
     public function school(){
