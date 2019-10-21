@@ -56,10 +56,9 @@ class MajorsController extends Controller
     public function update(MajorRequest $request){
         $majorData = $request->getFormData();
         $dao = new MajorDao($request->user());
-        $uuid = $request->uuid();
+        $uuid = $majorData['department_id'];
 
         if(isset($majorData['id'])){
-            $uuid = $majorData['department_id'];
             // 更新专业的操作
             if($dao->updateMajor($majorData)){
                 FlashMessageBuilder::Push($request, FlashMessageBuilder::SUCCESS, $majorData['name'].'专业已经修改成功');
