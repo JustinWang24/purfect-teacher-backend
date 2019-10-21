@@ -2,8 +2,10 @@
 
 namespace App\Models\Schools;
 
-use App\Models\Schools\School;
+use App\Models\School;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Users\GradeUser;
+use App\User;
 
 class Grade extends Model
 {
@@ -18,5 +20,9 @@ class Grade extends Model
 
     public function major(){
         return $this->belongsTo(Major::class);
+    }
+
+    public function studentsCount(){
+        return GradeUser::where('grade_id', $this->id)->where('user_type',User::TYPE_STUDENT)->count();
     }
 }

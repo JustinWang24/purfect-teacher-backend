@@ -11,12 +11,11 @@ use App\User;
                 <div class="card-head">
                     <header>{{ session('school.name') }}</header>
                 </div>
-
                 <div class="card-body">
                     <div class="row">
                         <div class="row table-padding">
                             <div class="col-12">
-                                <a href="{{ route('school_manager.campus.add') }}" class="btn btn-primary">
+                                <a href="{{ route('school_manager.campus.add') }}" class="btn btn-primary" id="btn-create-campus-from-school">
                                     创建新校区 <i class="fa fa-plus"></i>
                                 </a>
                             </div>
@@ -37,22 +36,22 @@ use App\User;
                                 <tbody>
                                 @foreach($school->campuses as $index=>$campus)
                                     <tr>
-                                        <td>{{ $index+1 }}</td>
+                                        <td>{{ $campus->id }}</td>
                                         <td>
                                             {{ $campus->name }}
                                         </td>
                                         <td>{{ $campus->description }}</td>
                                         <td class="text-center">
-                                            <a href="{{ route('school_manager.campus.institutes',['uuid'=>$campus->id]) }}">{{ count($campus->institutes) }}</a>
+                                            <a class="anchor-institute-counter" href="{{ route('school_manager.campus.institutes',['uuid'=>$campus->id,'by'=>'campus']) }}">{{ count($campus->institutes) }}</a>
                                         </td>
                                         <td class="text-center">
-                                            <a href="{{ route('school_manager.campus.users',['type'=>User::TYPE_EMPLOYEE,'uuid'=>$campus->id,'by'=>'campus']) }}">{{ $campus->employeesCount() }}</a>
+                                            <a class="employees-counter" href="{{ route('school_manager.campus.users',['type'=>User::TYPE_EMPLOYEE,'uuid'=>$campus->id,'by'=>'campus']) }}">{{ $campus->employeesCount() }}</a>
                                         </td>
                                         <td class="text-center">
-                                            <a href="{{ route('school_manager.campus.users',['type'=>User::TYPE_STUDENT,'uuid'=>$campus->id,'by'=>'campus']) }}">{{ $campus->studentsCount() }}</a>
+                                            <a class="students-counter" href="{{ route('school_manager.campus.users',['type'=>User::TYPE_STUDENT,'uuid'=>$campus->id,'by'=>'campus']) }}">{{ $campus->studentsCount() }}</a>
                                         </td>
                                         <td class="text-center">
-                                            {{ Anchor::Print(['text'=>'编辑','href'=>route('school_manager.campus.edit',['uuid'=>$campus->id])], Button::TYPE_DEFAULT,'edit') }}
+                                            {{ Anchor::Print(['text'=>'编辑','class'=>'btn-edit-campus','href'=>route('school_manager.campus.edit',['uuid'=>$campus->id])], Button::TYPE_DEFAULT,'edit') }}
                                         </td>
                                     </tr>
                                 @endforeach

@@ -11,7 +11,7 @@ use Illuminate\Http\Request;
 use App\User;
 use App\Dao\Users\GradeUserDao;
 
-class TeachersListLogic extends AbstractUsersListLogic
+class TeachersListLogic extends AbstractDataListLogic
 {
     public function __construct(Request $request)
     {
@@ -21,7 +21,7 @@ class TeachersListLogic extends AbstractUsersListLogic
     public function getUsers()
     {
         $result = [];
-        $dao = new GradeUserDao();
+        $dao = new GradeUserDao($this->request->user());
         switch ($this->request->get('by')){
             case 'campus':
                 $result = $dao->paginateUserByCampus($this->id, User::TYPE_EMPLOYEE);
@@ -38,5 +38,10 @@ class TeachersListLogic extends AbstractUsersListLogic
     public function getViewPath()
     {
         return 'teacher.users.students';
+    }
+
+    public function getData()
+    {
+        return $this->getUsers();
     }
 }

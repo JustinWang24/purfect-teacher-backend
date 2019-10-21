@@ -8,11 +8,14 @@
 
 namespace App\BusinessLogic\UsersListPage\Impl;
 use App\BusinessLogic\UsersListPage\Contracts\IUsersListPageLogic;
+use App\Dao\Schools\DepartmentDao;
+use App\Dao\Schools\MajorDao;
 use Illuminate\Http\Request;
 use App\Dao\Schools\CampusDao;
 use App\Dao\Schools\InstituteDao;
+use App\Dao\Schools\GradeDao;
 
-abstract class AbstractUsersListLogic implements IUsersListPageLogic
+abstract class AbstractDataListLogic implements IUsersListPageLogic
 {
     /**
      * @var Request
@@ -43,6 +46,18 @@ abstract class AbstractUsersListLogic implements IUsersListPageLogic
                 $dao = new InstituteDao($user);
                 $result = $dao->getInstituteById($this->id);
                 break;
+            case 'department':
+                $dao = new DepartmentDao($user);
+                $result = $dao->getDepartmentById($this->id);
+                break;
+            case 'major':
+                $dao = new MajorDao($user);
+                $result = $dao->getMajorById($this->id);
+                break;
+            case 'grade':
+                $dao = new GradeDao($user);
+                $result = $dao->getGradeById($this->id);
+                break;
             default:
                 break;
         }
@@ -72,4 +87,6 @@ abstract class AbstractUsersListLogic implements IUsersListPageLogic
         }
         return route($path);
     }
+
+    public abstract function getData();
 }
