@@ -10,7 +10,7 @@ namespace Tests\Feature\CampusPages;
 
 use Tests\Feature\BasicPageTestCase;
 
-class DepartmentTestTest extends BasicPageTestCase
+class DepartmentTest extends BasicPageTestCase
 {
     /**
      * 测试在学院列表的页面上, 可以看到该学院的系列表
