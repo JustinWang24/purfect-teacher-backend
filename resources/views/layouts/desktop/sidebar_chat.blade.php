@@ -25,58 +25,12 @@
                             <h5 class="list-heading">Online</h5>
                         </div>
                         <ul class="media-list list-items">
-                            <li class="media"><img class="media-object" src="../assets/img/prof/prof3.jpg"
+                            <li class="media"><img class="media-object" src="{{ asset('assets/img/prof/prof3.jpg') }}"
                                                    width="35" height="35" alt="...">
                                 <i class="online dot"></i>
                                 <div class="media-body">
                                     <h5 class="media-heading">John Deo</h5>
                                     <div class="media-heading-sub">Spine Surgeon</div>
-                                </div>
-                            </li>
-                            <li class="media">
-                                <div class="media-status">
-                                    <span class="badge badge-success">5</span>
-                                </div> <img class="media-object" src="../assets/img/prof/prof1.jpg"
-                                            width="35" height="35" alt="...">
-                                <i class="busy dot"></i>
-                                <div class="media-body">
-                                    <h5 class="media-heading">Rajesh</h5>
-                                    <div class="media-heading-sub">Director</div>
-                                </div>
-                            </li>
-                            <li class="media"><img class="media-object" src="../assets/img/prof/prof5.jpg"
-                                                   width="35" height="35" alt="...">
-                                <i class="away dot"></i>
-                                <div class="media-body">
-                                    <h5 class="media-heading">Jacob Ryan</h5>
-                                    <div class="media-heading-sub">Ortho Surgeon</div>
-                                </div>
-                            </li>
-                            <li class="media">
-                                <div class="media-status">
-                                    <span class="badge badge-danger">8</span>
-                                </div> <img class="media-object" src="../assets/img/prof/prof4.jpg"
-                                            width="35" height="35" alt="...">
-                                <i class="online dot"></i>
-                                <div class="media-body">
-                                    <h5 class="media-heading">Kehn Anderson</h5>
-                                    <div class="media-heading-sub">CEO</div>
-                                </div>
-                            </li>
-                            <li class="media"><img class="media-object" src="../assets/img/prof/prof2.jpg"
-                                                   width="35" height="35" alt="...">
-                                <i class="busy dot"></i>
-                                <div class="media-body">
-                                    <h5 class="media-heading">Sarah Smith</h5>
-                                    <div class="media-heading-sub">Anaesthetics</div>
-                                </div>
-                            </li>
-                            <li class="media"><img class="media-object" src="../assets/img/prof/prof7.jpg"
-                                                   width="35" height="35" alt="...">
-                                <i class="online dot"></i>
-                                <div class="media-body">
-                                    <h5 class="media-heading">Vlad Cardella</h5>
-                                    <div class="media-heading-sub">Cardiologist</div>
                                 </div>
                             </li>
                         </ul>
@@ -87,43 +41,13 @@
                             <li class="media">
                                 <div class="media-status">
                                     <span class="badge badge-warning">4</span>
-                                </div> <img class="media-object" src="../assets/img/prof/prof6.jpg"
+                                </div> <img class="media-object" src="{{ asset('assets/img/prof/prof6.jpg') }}"
                                             width="35" height="35" alt="...">
                                 <i class="offline dot"></i>
                                 <div class="media-body">
                                     <h5 class="media-heading">Jennifer Maklen</h5>
                                     <div class="media-heading-sub">Nurse</div>
                                     <div class="media-heading-small">Last seen 01:20 AM</div>
-                                </div>
-                            </li>
-                            <li class="media"><img class="media-object" src="../assets/img/prof/prof8.jpg"
-                                                   width="35" height="35" alt="...">
-                                <i class="offline dot"></i>
-                                <div class="media-body">
-                                    <h5 class="media-heading">Lina Smith</h5>
-                                    <div class="media-heading-sub">Ortho Surgeon</div>
-                                    <div class="media-heading-small">Last seen 11:14 PM</div>
-                                </div>
-                            </li>
-                            <li class="media">
-                                <div class="media-status">
-                                    <span class="badge badge-success">9</span>
-                                </div> <img class="media-object" src="../assets/img/prof/prof9.jpg"
-                                            width="35" height="35" alt="...">
-                                <i class="offline dot"></i>
-                                <div class="media-body">
-                                    <h5 class="media-heading">Jeff Adam</h5>
-                                    <div class="media-heading-sub">Compounder</div>
-                                    <div class="media-heading-small">Last seen 3:31 PM</div>
-                                </div>
-                            </li>
-                            <li class="media"><img class="media-object" src="../assets/img/prof/prof10.jpg"
-                                                   width="35" height="35" alt="...">
-                                <i class="offline dot"></i>
-                                <div class="media-body">
-                                    <h5 class="media-heading">Anjelina Cardella</h5>
-                                    <div class="media-heading-sub">Physiotherapist</div>
-                                    <div class="media-heading-small">Last seen 7:45 PM</div>
                                 </div>
                             </li>
                         </ul>
