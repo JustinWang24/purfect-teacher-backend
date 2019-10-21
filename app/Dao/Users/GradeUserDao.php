@@ -10,6 +10,7 @@ namespace App\Dao\Users;
 use App\Models\Users\GradeUser;
 use Illuminate\Database\Eloquent\Collection;
 use App\User;
+use Illuminate\Support\Facades\DB;
 
 class GradeUserDao
 {
@@ -17,6 +18,18 @@ class GradeUserDao
     public function __construct(User $user)
     {
         $this->currentUser = $user;
+    }
+
+    /**
+     * 获取用户的学校信息
+     * @param null $userId
+     * @return \Illuminate\Support\Collection
+     */
+    public function getSchoolsId($userId = null){
+        if(is_null($userId)){
+            $userId = $this->currentUser->id;
+        }
+        return DB::table('grade_users')->select('school_id')->where('user_id',$userId)->get();
     }
 
     /**
