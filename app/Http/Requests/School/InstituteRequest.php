@@ -11,5 +11,7 @@ use App\Http\Requests\MyStandardRequest;
 
 class InstituteRequest extends MyStandardRequest
 {
-
+    public function getFormData(){
+        return $this->get('institute');
+    }
 }

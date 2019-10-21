@@ -7,9 +7,9 @@ Route::prefix('school_manager')->group(function () {
     Route::get('campus/add', 'CampusController@add')->name('school_manager.campus.add');                        // 添加校区
     Route::get('campus/edit', 'CampusController@edit')->name('school_manager.campus.edit');                     // 编辑校区
     Route::post('campus/update', 'CampusController@update')->name('school_manager.campus.update');              // 保存校区
-    Route::get('campus/institutes', 'CampusController@institutes')->name('school_manager.campus.institutes');   // 显示校区的包含的学院的信息
     Route::get('campus/users', 'UsersController@users')->name('school_manager.campus.users');                   // 显示校区的学生/教师列表
 
+    Route::get('campus/institutes', 'CampusController@institutes')->name('school_manager.campus.institutes');   // 显示校区的包含的学院的信息
     // 学院的管理
     Route::get('institute/edit', 'InstitutesController@edit')->name('school_manager.institute.edit');           // 编辑学院
     Route::get('institute/add', 'InstitutesController@add')->name('school_manager.institute.add');              // 添加学院
