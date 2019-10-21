@@ -16,10 +16,10 @@ use App\User;
                     <div class="row">
                         <div class="row table-padding">
                             <div class="col-12">
-                                <a href="{{ route('school_manager.school.view') }}" class="btn btn-default">
-                                    返回 <i class="fa fa-arrow-circle-left"></i>
+                                <a href="{{ url()->previous() }}" class="btn btn-default">
+                                    <i class="fa fa-arrow-circle-left"></i> 返回
                                 </a>&nbsp;
-                                <a href="{{ route('school_manager.grade.add',['uuid'=>$parent->id]) }}" class="btn btn-primary pull-right">
+                                <a href="{{ route('school_manager.grade.add',['uuid'=>$parent->id]) }}" class="btn btn-primary pull-right" id="btn-create-brade-from-major">
                                     创建班级 <i class="fa fa-plus"></i>
                                 </a>
                             </div>
@@ -29,7 +29,9 @@ use App\User;
                                 <thead>
                                 <tr>
                                     <th>#</th>
+                                    <th>入学年份</th>
                                     <th>班级名称</th>
+                                    <th style="width: 500px;">简介</th>
                                     <th class="text-center">学生数</th>
                                     <th></th>
                                 </tr>
@@ -38,14 +40,18 @@ use App\User;
                                 @foreach($grades as $index=>$grade)
                                     <tr>
                                         <td>{{ $index+1 }}</td>
+                                        <td>{{ $grade->year }} 年</td>
                                         <td>
                                             {{ $grade->name }}
                                         </td>
-                                        <td class="text-center">
-                                            <a href="{{ route('school_manager.grade.users',['type'=>User::TYPE_STUDENT,'by'=>'grade','uuid'=>$grade->id]) }}">{{ $grade->studentsCount() }}</a>
+                                        <td>
+                                            {{ $grade->description }}
                                         </td>
                                         <td class="text-center">
-                                            {{ Anchor::Print(['text'=>'编辑','href'=>route('school_manager.grade.edit',['uuid'=>$grade->id])], Button::TYPE_DEFAULT,'edit') }}
+                                            <a class="students-counter" href="{{ route('school_manager.grade.users',['type'=>User::TYPE_STUDENT,'by'=>'grade','uuid'=>$grade->id]) }}">{{ $grade->studentsCount() }}</a>
+                                        </td>
+                                        <td class="text-center">
+                                            {{ Anchor::Print(['text'=>'编辑','class'=>'btn-edit-grade','href'=>route('school_manager.grade.edit',['uuid'=>$grade->id])], Button::TYPE_DEFAULT,'edit') }}
                                         </td>
                                     </tr>
                                 @endforeach
