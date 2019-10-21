@@ -32,4 +32,9 @@ class SceneryController extends Controller
         return view('school_manager.scenery.list', $this->dataForView);
     }
 
+
+    public function add()
+    {
+       return view('school_manager.scenery.add', $this->dataForView);
+    }
 }
