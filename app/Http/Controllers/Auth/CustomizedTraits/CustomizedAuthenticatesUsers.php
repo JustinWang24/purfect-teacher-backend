@@ -51,9 +51,7 @@ trait CustomizedAuthenticatesUsers
                     // 获取学校
                     $dao = new SchoolDao($user);
                     $school = $dao->getSchoolById($schoolsId[0]->school_id);
-                    $request->session()->put('school.id',$school->id);
-                    $request->session()->put('school.uuid',$school->uuid);
-                    $request->session()->put('school.name',$school->name);
+                    $school->savedInSession($request);
                 }else{
                     // Todo: 非管理员用户同时在多个学校的处理方式: 让用户选择进入哪个学校
                 }
