@@ -761,3 +761,16 @@ jQuery(document).ready(function() {
         scrollTop: $(document).height()
     }, 1000);
 });
+
+// 需要被二次确认的按钮
+$(document).ready(function(){
+    const btnDelete= jQuery('.btn-need-confirm');
+    if(btnDelete.length > 0){
+        btnDelete.on('click',function(e){
+            e.preventDefault();
+            if(confirm('你确认要删除该条记录或作出的修改吗?')){
+                window.location.href = $(this).attr('href');
+            }
+        });
+    }
+});
