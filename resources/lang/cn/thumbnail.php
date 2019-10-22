@@ -24,5 +24,9 @@ return [
     'view'   => '查看',
     'delete' => '删除',
     'update' => '更新',
+
+    // 课程表相关
+    'timetable'=>'课程表',
+    'manager'=>'管理系统'
 ];
 
