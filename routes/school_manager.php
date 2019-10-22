@@ -46,5 +46,5 @@ Route::prefix('school_manager')->group(function () {
 
     // 学校风采管理
     Route::get('scenery/list', 'SceneryController@list')->name('scenery.list');      // 风采列表
-    Route::get('scenery/add', 'SceneryController@add')->name('scenery.add');      // 风采列表
+    Route::match(['get', 'post'], 'scenery/add', 'SceneryController@add')->name('scenery.add');      // 风采添加
 });

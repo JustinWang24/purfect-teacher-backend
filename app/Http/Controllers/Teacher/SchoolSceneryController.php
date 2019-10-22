@@ -22,7 +22,7 @@ class SchoolSceneryController extends Controller
 
         $teacherInfo = $teacherDao->getTeacherProfileByTeacherIdOrUuid(Auth::id());
         $schoolImg   = $schoolResourceDao->getSchoolImgBySchoolIdOrUuId($teacherInfo->getTeacherSchoolId());
-        $schoolVideo = $schoolResourceDao->getSchoolVideoSchoolIdOrUuId($teacherInfo->getTeacherSchoolId());
+        $schoolVideo = $schoolResourceDao->getSchoolVideoBySchoolIdOrUuId($teacherInfo->getTeacherSchoolId());
 
         if ($schoolVideo) {
             $this->dataForView['video'] = $schoolVideo->toArray();

@@ -1,6 +1,7 @@
 <?php
 use App\Utils\UI\Anchor;
 use App\Utils\UI\Button;
+use App\Models\Schools\SchoolResource;
 ?>
 
 @extends('layouts.app')
@@ -12,20 +13,70 @@ use App\Utils\UI\Button;
                     <header>在学校 ({{ session('school.name') }}) 添加资源</header>
                 </div>
                 <div class="card-body " id="bar-parent">
-                    <form action="{{ route('school_manager.campus.update') }}" method="post">
+                    <form action="{{ route('scenery.add') }}" method="post" enctype="multipart/form-data">
                         @csrf
                         <div class="form-group">
-                            <label for="school-name-input">校区名称</label>
-                            <input required type="text" class="form-control" id="campus-name-input" value="" placeholder="资源名称" name="">
+                            <label for="school-name-input">资源类型</label>
+                            <select class="form-control" name="type"  required>
+                                <option value="">Select...</option>
+                                <option value="{{SchoolResource::TYPE_IMAGE}}">图片</option>
+                                <option value="{{SchoolResource::TYPE_VIDEO}}">视频</option>
+                            </select>
                         </div>
-                        <div class="col-lg-12 p-t-20">
-                            <label class="control-label col-md-3">Course Photo </label>
-                            <div class="col-md-12">
-                                <div id="id_dropzone" class="dropzone dz-clickable"><div class="dz-default dz-message"><span>Drop files here to upload</span></div></div>
+
+                        <div id="image" style="">
+                            <div class="form-group">
+                                <lable for="">资源名称</lable>
+                                <input type="text"  class="form-control" name="name" required>
                             </div>
-						</div>
+                            <div class="form-group">
+                                <lable for="">宽度</lable>
+                                 <div class="input-group">
+                                    <input type="text"  class="form-control" name="width"  required >
+                                    <span class="input-group-addon">PX</span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <lable for="">高度</lable>
+                                 <div class="input-group">
+                                    <input type="text"  class="form-control" name="height"  required >
+                                    <span class="input-group-addon">PX</span>
+                                </div>
+                            </div>
+
+
+                            <div class="form-group">
+                                <label for="school-name-input">上传图片</label>
+                                <input type="file" class="form-control" name="image" required>
+                            </div>
+                        </div>
+
+{{--                        <div id="video" style="display:none;">--}}
+{{--                            <div class="form-group">--}}
+{{--                                <lable for="">资源名称</lable>--}}
+{{--                                <input type="text" class="form-control" name="name" required>--}}
+{{--                            </div>--}}
+{{--                            <div class="form-group">--}}
+{{--                                <lable for="">宽度</lable>--}}
+{{--                                <input type="text" class="form-control" name="width" required>--}}
+{{--                            </div>--}}
+{{--                            <div class="form-group">--}}
+{{--                                <lable for="">高度</lable>--}}
+{{--                                <input type="text" class="form-control" name="height" required>--}}
+{{--                            </div>--}}
+{{--                            <div class="form-group">--}}
+{{--                                <label for="school-name-input">上传视频</label>--}}
+{{--                                <input type="file" class="form-control" name="video" required>--}}
+{{--                            </div>--}}
+{{--                            <div class="form-group">--}}
+{{--                                <label for="school-name-input">上传视频封面</label>--}}
+{{--                                <input type="file" class="form-control" name="video_cover" required>--}}
+{{--                            </div>--}}
+{{--                        </div>--}}
+
+
                         <?php
-                        Button::Print(['id'=>'btnSubmit','text'=>trans('')], Button::TYPE_PRIMARY);
+                        Button::Print(['id'=>'btnSubmit','text'=>trans('general.submit')], Button::TYPE_PRIMARY);
                         ?>&nbsp;
                         <?php
                         Anchor::Print(['text'=>trans('general.return'),'href'=>route('school_manager.school.view'),'class'=>'pull-right'], Button::TYPE_SUCCESS,'arrow-circle-o-right')
@@ -36,3 +87,5 @@ use App\Utils\UI\Button;
         </div>
     </div>
 @endsection
+<script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+
