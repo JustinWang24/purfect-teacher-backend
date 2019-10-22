@@ -17,14 +17,31 @@ use App\Utils\UI\Button;
                         <input type="hidden" id="room-id-input" name="room[id]" value="{{ $room->id }}">
                         <input type="hidden" id="room-campus-id" name="room[campus_id]" value="{{ $building->campus->id }}">
                         <input type="hidden" id="room-building-id" name="room[building_id]" value="{{ $building->id }}">
-                        <div class="form-group">
-                            <label>房间类型</label>
-                            <select class="form-control" id="room-type-input" name="room[type]">
-                                @foreach(\App\Models\Schools\Room::AllTypes() as $type=>$text)
-                                    <option value="{{ $type }}" {{ $type == $room->type ? 'selected' : null }}>{{ $text }}</option>
-                                @endforeach
-                            </select>
+
+                        <div class="row">
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <label>房间类型</label>
+                                    <select class="form-control" id="room-type-input" name="room[type]">
+                                        @foreach(\App\Models\Schools\Room::AllTypes() as $type=>$text)
+                                            <option value="{{ $type }}">{{ $text }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <label for="room-seats-input">可容纳人数</label>
+                                    <div class="input-group mb-3">
+                                        <input required type="text" class="form-control" id="room-seats-input" value="{{ $room->seats }}" placeholder="房间最多可容纳人数" name="room[seats]">
+                                        <div class="input-group-append">
+                                            <span class="input-group-text">座位数/人数</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
+
                         <div class="form-group">
                             <label for="building-name-input">房间名称</label>
                             <input required type="text" class="form-control" id="room-name-input" value="{{ $room->name }}" placeholder="房间名称" name="room[name]">
