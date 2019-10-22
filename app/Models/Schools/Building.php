@@ -17,7 +17,7 @@ class Building extends Model
     public $timestamps = false;
 
     public function rooms(){
-        return $this->hasMany(Room::class);
+        return $this->hasMany(Room::class)->orderBy('name','asc');
     }
 
     /**
