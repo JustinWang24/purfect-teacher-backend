@@ -159,6 +159,12 @@ h6.block {
 .input-inline {
     vertical-align: middle
 }
+
+.badge-light {
+    color: #212529 !important;
+    background-color: #f8f9fa;
+}
+
 hr{
     margin: 20px 0
 }
