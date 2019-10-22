@@ -17,6 +17,19 @@ class BuildingsController extends Controller
     }
 
     /**
+     * 查看教学楼的教室
+     * @param BuildingRequest $request
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function rooms(BuildingRequest $request){
+        $dao = new BuildingDao($request->user());
+        $building = $dao->getBuildingById($request->uuid());
+        $this->dataForView['building'] = $building;
+        $this->dataForView['rooms'] = $building->rooms;
+        return view('school_manager.school.rooms', $this->dataForView);
+    }
+
+    /**
      * 加载添加建筑物的表单
      * @param BuildingRequest $request
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
@@ -38,7 +51,6 @@ class BuildingsController extends Controller
         $building = $dao->getBuildingById($request->uuid());
         $this->dataForView['building'] = $building;
         $this->dataForView['campus'] = $building->campus;
-
         return view('school_manager.building.edit', $this->dataForView);
     }
 

@@ -21,7 +21,7 @@ use App\Utils\UI\Button;
                         </div>
                         <div class="form-group">
                             <label for="building-desc-input">简介</label>
-                            <textarea class="form-control" name="building[description]" id="building-desc-input" cols="30" rows="10" placeholder="建筑简介">{{ $building->description }}</textarea>
+                            <textarea required class="form-control" name="building[description]" id="building-desc-input" cols="30" rows="10" placeholder="建筑简介">{{ $building->description }}</textarea>
                         </div>
                         <?php
                         Button::Print(['id'=>'btn-create-building','text'=>trans('general.submit')], Button::TYPE_PRIMARY);

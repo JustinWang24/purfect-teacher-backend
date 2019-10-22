@@ -21,8 +21,14 @@ Route::prefix('school_manager')->group(function () {
     // 建筑物的管理
     Route::get('building/edit', 'BuildingsController@edit')->name('school_manager.building.edit');           // 编辑建筑物
     Route::get('building/add', 'BuildingsController@add')->name('school_manager.building.add');              // 添加建筑物
-    Route::get('building/rooms', 'BuildingsController@rooms')->name('school_manager.building.rooms');              // 建筑物的房间
+    Route::get('building/rooms', 'BuildingsController@rooms')->name('school_manager.building.rooms');        // 建筑物的房间
     Route::post('building/update', 'BuildingsController@update')->name('school_manager.building.update');    // 保存建筑物
+
+    // 房间管理
+    Route::get('room/edit', 'RoomsController@edit')->name('school_manager.room.edit');           // 编辑房间
+    Route::get('room/add', 'RoomsController@add')->name('school_manager.room.add');              // 添加房间
+    Route::get('room/delete', 'RoomsController@delete')->name('school_manager.room.delete');     // 删除房间
+    Route::post('room/update', 'RoomsController@update')->name('school_manager.room.update');    // 保存房间
 
     // 系的管理
     Route::get('department/add', 'DepartmentsController@add')->name('school_manager.department.add');              // 添加系
