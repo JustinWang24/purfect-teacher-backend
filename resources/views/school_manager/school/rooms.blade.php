@@ -9,7 +9,7 @@ use App\User;
         <div class="col-sm-12 col-md-12 col-xl-12">
             <div class="card-box">
                 <div class="card-head">
-                    <header>{{ session('school.name') }} - {{ $parent->name }}</header>
+                    <header>{{ session('school.name') }} - {{ $building->name }}</header>
                 </div>
 
                 <div class="card-body">
@@ -19,8 +19,8 @@ use App\User;
                                 <a href="{{ url()->previous() }}" class="btn btn-default">
                                     <i class="fa fa-arrow-circle-left"></i> 返回
                                 </a>&nbsp;
-                                <a href="{{ route('school_manager.building.add',['uuid'=>$parent->id]) }}" class="btn btn-primary pull-right" id="btn-create-building-from-campus">
-                                    添加新楼 <i class="fa fa-plus"></i>
+                                <a href="{{ route('school_manager.room.add',['uuid'=>$building->id]) }}" class="btn btn-primary pull-right" id="btn-create-room-from-building">
+                                    添加新房间 <i class="fa fa-plus"></i>
                                 </a>
                             </div>
                         </div>
@@ -29,27 +29,22 @@ use App\User;
                                 <thead>
                                 <tr>
                                     <th>#</th>
-                                    <th>所在校区</th>
-                                    <th>建筑物名称</th>
-                                    <th style="width: 300px;">简介</th>
-                                    <th>房间数</th>
+                                    <th>房间名称</th>
+                                    <th>类型</th>
+                                    <th style="width: 300px;">房间简介</th>
                                     <th></th>
                                 </tr>
                                 </thead>
                                 <tbody>
-                                @foreach($buildings as $index=>$building)
+                                @foreach($rooms as $index=>$room)
                                     <tr>
                                         <td>{{ $index+1 }}</td>
-                                        <td>
-                                            {{ $parent->name }}
-                                        </td>
-                                        <td>{{ $building->name }}</td>
-                                        <td>{{ $building->description }}</td>
+                                        <td>{{ $room->name }}</td>
+                                        <td>{{ $room->getTypeText() }}</td>
+                                        <td>{{ $room->description }}</td>
                                         <td class="text-center">
-                                            <a class="anchor-rooms-counter" href="{{ route('school_manager.building.rooms',['uuid'=>$building->id,'by'=>'building']) }}">{{ count($building->rooms) }}</a>
-                                        </td>
-                                        <td class="text-center">
-                                            {{ Anchor::Print(['text'=>'编辑','class'=>'btn-edit-building','href'=>route('school_manager.building.edit',['uuid'=>$building->id])], Button::TYPE_DEFAULT,'edit') }}
+                                            {{ Anchor::Print(['text'=>'编辑','class'=>'btn-edit-room','href'=>route('school_manager.room.edit',['uuid'=>$room->id])], Button::TYPE_DEFAULT,'edit') }}
+                                            {{ Anchor::Print(['text'=>'删除','class'=>'btn-delete-room btn-need-confirm','href'=>route('school_manager.room.delete',['uuid'=>$room->id])], Button::TYPE_DANGER,'trash') }}
                                         </td>
                                     </tr>
                                 @endforeach
