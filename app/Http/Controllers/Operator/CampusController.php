@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Operator;
 
+use App\Dao\Schools\BuildingDao;
 use App\Http\Controllers\Controller;
 use App\Dao\Schools\SchoolDao;
 use App\Http\Requests\School\CampusRequest;
@@ -52,6 +53,22 @@ class CampusController extends Controller
         else{
             FlashMessageBuilder::Push($request, FlashMessageBuilder::DANGER,'您操作的学院不存在');
             return redirect()->route('home');
+        }
+    }
+
+    /**
+     * 列出学院的某一类建筑物
+     * @param CampusRequest $request
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function buildings(CampusRequest $request){
+        $dao = new CampusDao($request->user());
+        $campus = $dao->getCampusById($request->uuid());
+        if($campus){
+            $this->dataForView['parent'] = $campus;
+            $buildingDao = new BuildingDao($request->user());
+            $this->dataForView['buildings'] = $buildingDao->getBuildingsByType(intval($request->get('type')), $campus);
+            return view('school_manager.school.buildings', $this->dataForView);
         }
     }
 

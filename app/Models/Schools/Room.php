@@ -7,11 +7,12 @@ use Illuminate\Database\Eloquent\Model;
 class Room extends Model
 {
     const TYPE_CLASSROOM        = 1; // 教室
-    const TYPE_MEETING_ROOM     = 2; // 会议室
-    const TYPE_STUDENT_HOSTEL   = 3; // 学生宿舍
+    const TYPE_INTELLIGENT_CLASSROOM        = 2; //  智能教室
+    const TYPE_MEETING_ROOM     = 3; // 会议室
+    const TYPE_STUDENT_HOSTEL   = 4; // 学生宿舍
 
     protected $fillable = [
-        'school_id', 'name', 'campus_id','type','building_id'
+        'school_id', 'name', 'campus_id','type','building_id','description'
     ];
     public $timestamps = false;
 

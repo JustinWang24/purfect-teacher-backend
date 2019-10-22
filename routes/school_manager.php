@@ -9,6 +9,7 @@ Route::prefix('school_manager')->group(function () {
     Route::post('campus/update', 'CampusController@update')->name('school_manager.campus.update');              // 保存校区
     Route::get('campus/users', 'UsersController@users')->name('school_manager.campus.users');                   // 显示校区的学生/教师列表
 
+    Route::get('campus/buildings', 'CampusController@buildings')->name('school_manager.campus.buildings');   // 显示校区的包含的建筑信息
     Route::get('campus/institutes', 'CampusController@institutes')->name('school_manager.campus.institutes');   // 显示校区的包含的学院的信息
     // 学院的管理
     Route::get('institute/edit', 'InstitutesController@edit')->name('school_manager.institute.edit');           // 编辑学院
@@ -16,6 +17,12 @@ Route::prefix('school_manager')->group(function () {
     Route::post('institute/update', 'InstitutesController@update')->name('school_manager.institute.update');    // 保存学院
     Route::get('institute/users', 'UsersController@users')->name('school_manager.institute.users');        // 显示学院的学生/教师列表
     Route::get('institute/departments', 'InstitutesController@departments')->name('school_manager.institute.departments');  // 显示学院的所有系
+
+    // 建筑物的管理
+    Route::get('building/edit', 'BuildingsController@edit')->name('school_manager.building.edit');           // 编辑建筑物
+    Route::get('building/add', 'BuildingsController@add')->name('school_manager.building.add');              // 添加建筑物
+    Route::get('building/rooms', 'BuildingsController@rooms')->name('school_manager.building.rooms');              // 建筑物的房间
+    Route::post('building/update', 'BuildingsController@update')->name('school_manager.building.update');    // 保存建筑物
 
     // 系的管理
     Route::get('department/add', 'DepartmentsController@add')->name('school_manager.department.add');              // 添加系
