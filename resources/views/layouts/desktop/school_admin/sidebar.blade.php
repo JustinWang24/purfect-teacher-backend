@@ -104,19 +104,6 @@
                         <span class="selected"></span>
                         <span class="arrow open"></span>
                     </a>
-                    <ul class="sub-menu">
-                        <li class="nav-item active">
-                            <a href="123123" class="nav-link ">
-                                <span class="title">校园相册</span>
-                                <span class="selected"></span>
-                            </a>
-                        </li>
-                        <li class="nav-item ">
-                            <a href="12323" class="nav-link ">
-                                <span class="title">学校简介</span>
-                            </a>
-                        </li>
-                    </ul>
                 </li>
             </ul>
         </div>

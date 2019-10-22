@@ -4,7 +4,7 @@ use App\Utils\UI\Button;
 @extends('layouts.app')
 @section('content')
     <div class="row">
-        <div class="col-sm-12 col-md-12 col-xl-12">
+        <div class="col-sm-6 col-md-6 col-xl-6">
             <div class="card-box">
                 <div class="card-head">
                     <header>校区名: {{ session('school.name') }} </header>
@@ -28,7 +28,7 @@ use App\Utils\UI\Button;
                                 <tr>
                                     <th>资源名称</th>
                                     <th class="text-center">资源路径</th>
-                                    <th>操作</th>
+                                    <th class="text-center">操作</th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -36,7 +36,11 @@ use App\Utils\UI\Button;
                                     @foreach($data as $info)
                                         <td>{{$info['name']}}</td>
                                         <td class="text-center">
-                                            <a href="{{$info['path']}}"  target="_blank" title="点击查看">{{$info['path']}}</a>
+                                            <div class="">
+                                                <a href="#" class="thumbnail">
+                                                    <img src="{{$info['path']}}" width="80px" height="80px">
+                                                </a>
+                                          </div>
                                         </td>
                                         <td class="text-center">
                                             @php
@@ -46,6 +50,7 @@ use App\Utils\UI\Button;
                                                     'subs'=>[
                                                         ['url'=>route('school_manager.student.edit',['uuid'=>'123']),'text'=>'编辑'],
                                                         ['url'=>route('school_manager.student.suspend',['uuid'=>'123']),'text'=>'删除'],
+                                                        ['url'=>route('school_manager.student.suspend',['uuid'=>'123']),'text'=>'预览'],
                                                     ]
                                                 ],
                                                 Button::TYPE_PRIMARY
@@ -57,11 +62,11 @@ use App\Utils\UI\Button;
                                 </tbody>
                             </table>
                         </div>
-{{--                        <div class="row">--}}
-{{--                            <div class="col-12">--}}
-{{--                                {{ $students->appends($appendedParams)->links() }}--}}
-{{--                            </div>--}}
-{{--                        </div>--}}
+                        <div class="row">
+                            <div class="col-12">
+                                {{ $data->links() }}
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
