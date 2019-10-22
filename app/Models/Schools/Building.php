@@ -4,9 +4,11 @@ namespace App\Models\Schools;
 
 use App\Models\School;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Building extends Model
 {
+    use SoftDeletes;
     const TYPE_CLASSROOM_BUILDING       = 1; // 教学楼
     const TYPE_STUDENT_HOSTEL_BUILDING  = 2; // 宿舍楼
     const TYPE_HALL                     = 3; // 礼堂, 会堂
