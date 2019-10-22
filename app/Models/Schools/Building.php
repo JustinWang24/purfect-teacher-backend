@@ -2,7 +2,7 @@
 
 namespace App\Models\Schools;
 
-use App\Models\Schools\School;
+use App\Models\School;
 use Illuminate\Database\Eloquent\Model;
 
 class Building extends Model
@@ -12,7 +12,7 @@ class Building extends Model
     const TYPE_HALL                     = 3; // 礼堂, 会堂
 
     protected $fillable = [
-        'school_id', 'name', 'campus_id','type'
+        'school_id', 'name', 'campus_id','type','description'
     ];
     public $timestamps = false;
 
@@ -25,11 +25,7 @@ class Building extends Model
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo|null
      */
     public function campus(){
-        if($this->campus_id === 0){
-            return null;
-        }else{
-            return $this->belongsTo(Campus::class);
-        }
+        return $this->belongsTo(Campus::class);
     }
 
     /**
