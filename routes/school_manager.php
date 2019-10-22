@@ -56,4 +56,7 @@ Route::prefix('school_manager')->group(function () {
     Route::get('student/stop', 'StudentsController@stop')->name('school_manager.student.stop');             // 停课
     Route::get('student/reject', 'StudentsController@reject')->name('school_manager.student.reject');       // 退学
     Route::post('student/update', 'StudentsController@update')->name('school_manager.student.update');      // 保存学生
+
+    // 课程表管理
+    Route::get('timetable/manager', 'TimeTables\TimetablesController@manager')->name('school_manager.timetable.manager');           // 添加班级
 });
