@@ -12,7 +12,7 @@ use App\Utils\UI\Button;
                     <header>修改学校 ({{ session('school.name') }}) 的校区 - {{ $campus->name }}</header>
                 </div>
                 <div class="card-body " id="bar-parent">
-                    <form action="{{ route('school_manager.campus.update') }}" method="post">
+                    <form action="{{ route('school_manager.campus.update') }}" method="post" id="edit-campus-form">
                         @csrf
                         <input type="hidden" name="campus[id]" value="{{ $campus->id }}">
                         <div class="form-group">
@@ -21,13 +21,13 @@ use App\Utils\UI\Button;
                         </div>
                         <div class="form-group">
                             <label for="max-students">简介</label>
-                            <textarea class="form-control" name="campus[description]" id="" cols="30" rows="10" placeholder="学校简介">{{ $campus->description }}</textarea>
+                            <textarea class="form-control" name="campus[description]" id="campus-desc-input" cols="30" rows="10" placeholder="学校简介">{{ $campus->description }}</textarea>
                         </div>
                         <?php
-                        Button::Print(['id'=>'btnSubmit','text'=>trans('general.submit')], Button::TYPE_PRIMARY);
+                        Button::Print(['id'=>'btn-create-campus','text'=>trans('general.submit')], Button::TYPE_PRIMARY);
                         ?>&nbsp;
                         <?php
-                        Anchor::Print(['text'=>trans('general.return'),'href'=>route('school_manager.school.view'),'class'=>'pull-right'], Button::TYPE_SUCCESS,'arrow-circle-o-right')
+                        Anchor::Print(['text'=>trans('general.return'),'href'=>route('school_manager.school.view'),'class'=>'pull-right link-return'], Button::TYPE_SUCCESS,'arrow-circle-o-right')
                         ?>
                     </form>
                 </div>

@@ -69,32 +69,4 @@ class ButtonTest extends TestCase
         );
         $this->assertEquals($iconAndTextButton, $btn3);
     }
-
-    /**
-     * 测试打印按钮组
-     */
-    public function testItCanPrintButtonGroup(){
-        $btn = Button::PrintGroup([
-            'id'=>'haha',
-            'class'=>'hahaha',
-            'text'=>'test',
-            'subs'=>[
-                ['url'=>'lalla','text'=>'lalala'],
-                ['url'=>'lalla2','text'=>'lalala2'],
-            ]
-        ],Button::TYPE_DANGER, true);
-
-        $expect = '<div class="btn-group">
-    <button type="button" class="btn btn-danger  test">test</button>
-    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-        <i class="fa fa-angle-down"></i>
-    </button>
-    <ul class="dropdown-menu" role="menu" x-placement="bottom-start" style="position: absolute; transform: translate3d(79px, 39px, 0px); top: 0px; left: 0px; will-change: transform;">
-                    <li><a href="lalla" target="_blank">lalala</a></li>
-                    <li><a href="lalla2" target="_blank">lalala2</a></li>
-            </ul>
-</div>';
-
-        $this->assertEquals($expect, $btn);
-    }
 }
