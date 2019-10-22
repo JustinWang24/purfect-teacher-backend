@@ -17,6 +17,7 @@ class EnhanceBuildingAndRooms extends Migration
             $table->text('description')->comment('建筑物的描述');
         });
         Schema::table('rooms', function (Blueprint $table) {
+            $table->unsignedSmallInteger('seats')->default(1)->comment('房间可以容纳的人数');
             $table->text('description')->nullable()->comment('房间的描述');
         });
     }
