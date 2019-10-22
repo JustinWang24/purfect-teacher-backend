@@ -38,4 +38,31 @@ class InstituteDao
     public function getInstituteById($id){
         return Institute::find($id);
     }
+
+    /**
+     * 更新数据
+     * @param $data
+     * @param null $where
+     * @param null $whereValue
+     * @return mixed
+     */
+    public function updateInstitute($data, $where = null, $whereValue = null){
+        $data['last_updated_by'] = $this->currentUser->id;
+        $id = $data['id'];
+        unset($data['id']);
+        if($where && $whereValue){
+            return Institute::where($where,$whereValue)->update($data);
+        }
+        return Institute::where('id',$id)->update($data);
+    }
+
+    /**
+     * 创建学院数据
+     * @param $data
+     * @return mixed
+     */
+    public function createInstitute($data){
+        $data['last_updated_by'] = $this->currentUser->id;
+        return Institute::create($data);
+    }
 }

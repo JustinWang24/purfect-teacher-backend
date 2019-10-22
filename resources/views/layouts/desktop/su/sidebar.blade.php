@@ -30,7 +30,7 @@
                 </li>
                 @if(session('school.id'))
                 <li class="nav-item">
-                    <a href="{{ route('operator.school.view') }}" class="nav-link nav-toggle">
+                    <a href="{{ route('school_manager.school.view') }}" class="nav-link nav-toggle">
                         <i class="material-icons">business</i>
                         <span class="title">{{ session('school.name') }}</span>
                     </a>
