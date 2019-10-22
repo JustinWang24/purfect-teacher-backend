@@ -3,9 +3,11 @@
 namespace App\Models\Schools;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Room extends Model
 {
+    use SoftDeletes;
     const TYPE_CLASSROOM        = 1;                // 教室
     const TYPE_INTELLIGENT_CLASSROOM = 2;    // 智慧教室
     const TYPE_MEETING_ROOM     = 3;                // 会议室
@@ -19,7 +21,7 @@ class Room extends Model
     const TYPE_STUDENT_HOSTEL_TXT   = '学生宿舍';                //
 
     protected $fillable = [
-        'school_id', 'name', 'campus_id','type','building_id','description'
+        'school_id', 'name', 'campus_id','type','building_id','description','seats'
     ];
     public $timestamps = false;
 
