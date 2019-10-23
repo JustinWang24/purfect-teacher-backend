@@ -28,6 +28,7 @@ class CreateUsersTable extends Migration
                 $table->timestamp('mobile_verified_at')->nullable();
                 $table->rememberToken();
                 $table->timestamps();
+                $table->softDeletes();
             });
 
             DB::statement(" ALTER TABLE users comment '用户表' ");
