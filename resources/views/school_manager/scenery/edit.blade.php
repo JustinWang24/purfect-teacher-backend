@@ -13,7 +13,7 @@ use App\Models\Schools\SchoolResource;
                     <header>在学校 ({{ session('school.name') }}) 添加资源</header>
                 </div>
                 <div class="card-body " id="bar-parent">
-                    <form action="{{ route('scenery.save') }}" method="post" enctype="multipart/form-data">
+                    <form action="{{ route('school_manager.scenery.save') }}" method="post" enctype="multipart/form-data">
                         @csrf
                         <div class="form-group">
                             <label for="school-name-input">资源类型</label>

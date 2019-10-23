@@ -18,18 +18,16 @@ class SchoolResourceDao
     {
         if(is_string($schoolIdOrUuid) && strlen($schoolIdOrUuid) > 10) {
             $where['uuid'] = $schoolIdOrUuid;
-        }
-        elseif (is_int($schoolIdOrUuid)) {
+        } else {
             $where['school_id'] = $schoolIdOrUuid;
         }
+
         // 1 图片 2 视频 0 所有
         if ($condition == SchoolResource::TYPE_IMAGE) {
             $where['type'] = SchoolResource::TYPE_IMAGE;
         }
         elseif ($condition == SchoolResource::TYPE_VIDEO) {
             $where['type'] = SchoolResource::TYPE_VIDEO;
-        } else {
-            $where['type'] = SchoolResource::TYPE_ALL;
         }
 
         return SchoolResource::where($where)->get();
@@ -99,20 +97,16 @@ class SchoolResourceDao
      */
     public function addSchoolResource($data)
     {
-        $model = new SchoolResource;
-
-        $model->school_id = $data['school_id'];
-        $model->name      = $data['name'];
-        $model->type      = $data['type'];
-        $model->width     = $data['width'];
-        $model->height    = $data['height'];
-        $model->path      = $data['path'];
-        $model->size      = $data['size'];
-        $model->format    = $data['format'];
-
-        return $model->save();
+        return SchoolResource::create($data);
     }
 
+    /**
+     * 修改
+     * @param $data
+     */
+    public function  updateSchoolResource($data)
+    {
 
+    }
 
 }
