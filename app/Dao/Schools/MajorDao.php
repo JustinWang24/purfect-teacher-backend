@@ -40,6 +40,17 @@ class MajorDao
     }
 
     /**
+     * @param $schoolId
+     * @param bool $simple
+     * @return Collection
+     */
+    public function getMajorsBySchool($schoolId, $simple = true){
+        if($simple)
+            return Major::select(['id','name'])->where('school_id',$schoolId)->orderBy('name','asc')->get();
+        return Major::where('school_id',$schoolId)->orderBy('name','asc')->get();
+    }
+
+    /**
      * 创建新的专业
      * @param $majorData
      * @return Major
