@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Models\Schools\Campus;
 use Illuminate\Http\Request;
+use App\Models\Timetable\TimeSlot;
 
 class School extends Model
 {
@@ -24,6 +25,10 @@ class School extends Model
 
     public function campuses(){
         return $this->hasMany(Campus::class)->orderBy('name','asc');
+    }
+
+    public function timeFrame(){
+        return $this->hasMany(TimeSlot::class)->select(['id','name','type','from','to'])->orderBy('from','asc');
     }
 
     /**

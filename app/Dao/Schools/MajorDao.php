@@ -14,7 +14,12 @@ use Illuminate\Database\Eloquent\Collection;
 class MajorDao
 {
     private $currentUser;
-    public function __construct(User $user)
+
+    /**
+     * MajorDao constructor.
+     * @param User|null $user
+     */
+    public function __construct($user = null)
     {
         $this->currentUser = $user;
     }
@@ -37,6 +42,17 @@ class MajorDao
      */
     public function getMajorById($id){
         return Major::find($id);
+    }
+
+    /**
+     * @param $schoolId
+     * @param bool $simple
+     * @return Collection
+     */
+    public function getMajorsBySchool($schoolId, $simple = true){
+        if($simple)
+            return Major::select(['id','name'])->where('school_id',$schoolId)->orderBy('name','asc')->get();
+        return Major::where('school_id',$schoolId)->orderBy('name','asc')->get();
     }
 
     /**
