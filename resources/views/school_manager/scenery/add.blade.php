@@ -13,11 +13,11 @@ use App\Models\Schools\SchoolResource;
                     <header>在学校 ({{ session('school.name') }}) 添加资源</header>
                 </div>
                 <div class="card-body " id="bar-parent">
-                    <form action="{{ route('scenery.add') }}" method="post" enctype="multipart/form-data">
+                    <form action="{{ route('school_manager.scenery.save') }}" method="post" enctype="multipart/form-data">
                         @csrf
                         <div class="form-group">
                             <label for="school-name-input">资源类型</label>
-                            <select class="form-control" name="type"  required>
+                            <select class="form-control" name="scenery[type]"  required>
                                 <option value="">Select...</option>
                                 <option value="{{SchoolResource::TYPE_IMAGE}}">图片</option>
                                 <option value="{{SchoolResource::TYPE_VIDEO}}">视频</option>
@@ -27,23 +27,22 @@ use App\Models\Schools\SchoolResource;
                         <div id="image" style="">
                             <div class="form-group">
                                 <lable for="">资源名称</lable>
-                                <input type="text"  class="form-control" name="name" required>
+                                <input type="text"  class="form-control" name="scenery[name]" required>
                             </div>
                             <div class="form-group">
                                 <lable for="">宽度</lable>
                                  <div class="input-group">
-                                    <input type="text"  class="form-control" name="width"  required >
+                                    <input type="text"  class="form-control" name="scenery[width]"  required >
                                     <span class="input-group-addon">PX</span>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <lable for="">高度</lable>
                                  <div class="input-group">
-                                    <input type="text"  class="form-control" name="height"  required >
+                                    <input type="text"  class="form-control" name="scenery[height]"  required >
                                     <span class="input-group-addon">PX</span>
                                 </div>
                             </div>
-
 
                             <div class="form-group">
                                 <label for="school-name-input">上传图片</label>
@@ -54,15 +53,15 @@ use App\Models\Schools\SchoolResource;
 {{--                        <div id="video" style="display:none;">--}}
 {{--                            <div class="form-group">--}}
 {{--                                <lable for="">资源名称</lable>--}}
-{{--                                <input type="text" class="form-control" name="name" required>--}}
+{{--                                <input type="text" class="form-control" name="scenery[name]" required>--}}
 {{--                            </div>--}}
 {{--                            <div class="form-group">--}}
 {{--                                <lable for="">宽度</lable>--}}
-{{--                                <input type="text" class="form-control" name="width" required>--}}
+{{--                                <input type="text" class="form-control" name="scenery[width]" required>--}}
 {{--                            </div>--}}
 {{--                            <div class="form-group">--}}
 {{--                                <lable for="">高度</lable>--}}
-{{--                                <input type="text" class="form-control" name="height" required>--}}
+{{--                                <input type="text" class="form-control" name="scenery[height]" required>--}}
 {{--                            </div>--}}
 {{--                            <div class="form-group">--}}
 {{--                                <label for="school-name-input">上传视频</label>--}}
