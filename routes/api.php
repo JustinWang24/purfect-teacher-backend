@@ -21,5 +21,9 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 Route::any('/school/load-time-slots','Api\School\TimeSlotsController@load_by_school')->name('api.school.load.time.slots');
 // 获取某个学校所有的专业
 Route::any('/school/load-majors','Api\School\MajorsController@load_by_school')->name('api.school.load.majors');
+// 获取某个学校所有的专业
+Route::any('/school/load-courses','Api\School\CoursesController@load_courses')->name('api.school.load.courses');
 // 搜索某个学校的老师
 Route::any('/school/search-teachers','Api\School\TeachersController@search_by_name')->name('api.school.search.teachers');
+// 搜索某个学校的老师
+Route::any('/school/save-course','Api\School\CoursesController@save_course')->name('api.school.save.course');

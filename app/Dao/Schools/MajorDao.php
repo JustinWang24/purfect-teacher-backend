@@ -14,7 +14,12 @@ use Illuminate\Database\Eloquent\Collection;
 class MajorDao
 {
     private $currentUser;
-    public function __construct(User $user)
+
+    /**
+     * MajorDao constructor.
+     * @param User|null $user
+     */
+    public function __construct($user = null)
     {
         $this->currentUser = $user;
     }
