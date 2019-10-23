@@ -59,4 +59,5 @@ Route::prefix('school_manager')->group(function () {
 
     // 课程表管理
     Route::get('timetable/manager', 'TimeTables\TimetablesController@manager')->name('school_manager.timetable.manager');           // 添加班级
+    Route::get('timetable/manager/courses', 'TimeTables\CoursesController@manager')->name('school_manager.courses.manager');        // 课程班级
 });
