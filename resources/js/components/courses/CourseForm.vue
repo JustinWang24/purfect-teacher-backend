@@ -1,8 +1,15 @@
 <template>
     <div class="course-form-wrap">
+        <p class="course-form-title">课程登记表</p>
         <el-form :model="courseModel" :rules="rules" ref="courseModelForm" label-width="100px" class="course-form">
+            <el-form-item label="课程编号" prop="code">
+                <el-input v-model="courseModel.code" placeholder="必填: 课程编号, 请注意保证课程编号的唯一性"></el-input>
+            </el-form-item>
             <el-form-item label="课程名称" prop="name">
-                <el-input v-model="courseModel.name"></el-input>
+                <el-input v-model="courseModel.name" placeholder="必填: 课程名称"></el-input>
+            </el-form-item>
+            <el-form-item label="学分" prop="scores">
+                <el-input v-model="courseModel.scores" placeholder="选填: 课程学分"></el-input>
             </el-form-item>
             <el-form-item label="适用年级" prop="year">
                 <el-select v-model="courseModel.year" placeholder="课程针对哪个年级">
@@ -59,6 +66,10 @@
             <el-form-item label="课程概述">
                 <el-input type="textarea" v-model="courseModel.desc" placeholder="可选"></el-input>
             </el-form-item>
+            <el-form-item>
+                <el-button type="primary" @click="saveCourse">保存</el-button>
+                <el-button>取消</el-button>
+            </el-form-item>
         </el-form>
     </div>
 </template>
@@ -78,27 +89,35 @@
         data(){
             return {
                 courseModel: {
+                    id: null, // 课程 ID
+                    code: '', // 课程编号
                     name: '', // 课程名称
                     teachers: [], // 任课教师, 可以包含多个老师
-                    scores: '', // 学分
+                    scores: '0', // 学分
                     majors: [], // 所属专业, 一门课可以属于多个专业共享
                     optional: '0', // 必修还是选修
                     year: '',
                     term: '', // 学期
-                    desc: '', // 学期
+                    desc: '',  // 学期
                 },
                 rules:{
+                    code: [
+                        { required: true, message: '请输入课程编号', trigger: 'blur' }
+                    ],
                     name: [
                         { required: true, message: '请输入课程名称', trigger: 'blur' }
                     ],
-                    teachers: [
-                        { type: 'array', required: true, message: '请至少选择一个任课教师', trigger: 'change' }
-                    ],
-                    majors: [
-                        { type: 'array', required: true, message: '请至少选择一个所属专业', trigger: 'change' }
-                    ],
+                    // teachers: [
+                    //     { type: 'array', required: true, message: '请至少选择一个任课教师', trigger: 'change' }
+                    // ],
+                    // majors: [
+                    //     { type: 'array', required: true, message: '请至少选择一个所属专业', trigger: 'change' }
+                    // ],
                     year: [
                         { required: true, message: '请选择年级', trigger: 'change' }
+                    ],
+                    term: [
+                        { required: true, message: '请选择学期', trigger: 'change' }
                     ]
                 },
                 terms: ['第一学期','第二学期','第三学期','第四学期'],
@@ -112,23 +131,38 @@
             this._getAllMajors();
         },
         methods: {
+            // 保存当前的课程对象到服务器
+            saveCourse: function(){
+                axios.post(
+                    Constants.API.SAVE_COURSE,{course: this.courseModel, school: this.schoolId}
+                ).then(res => {
+                    if(res.data.error_no === Constants.AJAX_SUCCESS){
+                        // Todo 保存成功, 发布一个消息出去
+                    }
+                    else{
+                        this.$notify.error({
+                            title: '错误',
+                            message: '无法保存课程数据, 请稍候再试或联系管理员'
+                        });
+                    }
+                });
+            },
             // 远程搜索老师
             searchTeachers: function(teacherName){
                 if (teacherName !== '') {
                     this.loading = true;
                     // 从服务器获取老师信息
                     axios.post(
-
-                    );
-                    setTimeout(() => {
+                        Constants.API.SEARCH_TEACHERS_BY_NAME,
+                        {query: teacherName, school: this.schoolId, majors: this.majors}
+                    ).then(res => {
                         this.loading = false;
-                        this.options = this.list.filter(item => {
-                            return item.label.toLowerCase()
-                                .indexOf(query.toLowerCase()) > -1;
-                        });
-                    }, 200);
-                } else {
-                    this.teachers = [];
+                        if(res.data.error_no === Constants.AJAX_SUCCESS && res.data.data.teachers.length > 0){
+                            this.teachers = res.data.data.teachers;
+                        }else{
+                            this.teachers = [];
+                        }
+                    });
                 }
             },
             // 获取所有可能的专业列表
@@ -151,6 +185,12 @@
     }
 </script>
 
-<style scoped>
-
+<style scoped lang="scss">
+.course-form-wrap{
+    padding: 10px;
+    .course-form-title{
+        line-height: 30px;
+        font-size: 18px;
+    }
+}
 </style>
