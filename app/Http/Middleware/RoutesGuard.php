@@ -10,10 +10,11 @@ use App\Models\Acl\Role;
 class RoutesGuard
 {
     private $routesPrefixToBeProtected = [
-        'admin'         =>[Role::SUPER_ADMIN_SLUG],
-        'operator'      =>[Role::OPERATOR_SLUG, Role::SUPER_ADMIN_SLUG],
-        'school_manager'=>[Role::SCHOOL_MANAGER_SLUG, Role::OPERATOR_SLUG, Role::SUPER_ADMIN_SLUG],
-        'teacher'       =>[Role::TEACHER_SLUG,Role::SCHOOL_MANAGER_SLUG, Role::OPERATOR_SLUG, Role::SUPER_ADMIN_SLUG],
+        'admin'                     =>[Role::SUPER_ADMIN_SLUG],
+        Role::OPERATOR_SLUG         =>[Role::OPERATOR_SLUG, Role::SUPER_ADMIN_SLUG],
+        Role::ADMINISTRATOR_SLUG    =>[Role::OPERATOR_SLUG, Role::SUPER_ADMIN_SLUG, Role::ADMINISTRATOR_SLUG],
+        Role::OFFICE_MANAGER_SLUG   =>[Role::OPERATOR_SLUG, Role::SUPER_ADMIN_SLUG, Role::ADMINISTRATOR_SLUG, Role::OFFICE_MANAGER_SLUG],
+        Role::TEACHER_SLUG          =>[Role::OPERATOR_SLUG, Role::SUPER_ADMIN_SLUG, Role::ADMINISTRATOR_SLUG, Role::SCHOOL_MANAGER_SLUG, Role::TEACHER_SLUG]
     ];
     /**
      * Handle an incoming request.
