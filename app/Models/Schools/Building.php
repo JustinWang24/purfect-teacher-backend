@@ -2,22 +2,24 @@
 
 namespace App\Models\Schools;
 
-use App\Models\Schools\School;
+use App\Models\School;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Building extends Model
 {
+    use SoftDeletes;
     const TYPE_CLASSROOM_BUILDING       = 1; // 教学楼
     const TYPE_STUDENT_HOSTEL_BUILDING  = 2; // 宿舍楼
     const TYPE_HALL                     = 3; // 礼堂, 会堂
 
     protected $fillable = [
-        'school_id', 'name', 'campus_id','type'
+        'school_id', 'name', 'campus_id','type','description'
     ];
     public $timestamps = false;
 
     public function rooms(){
-        return $this->hasMany(Room::class);
+        return $this->hasMany(Room::class)->orderBy('name','asc');
     }
 
     /**
@@ -25,11 +27,7 @@ class Building extends Model
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo|null
      */
     public function campus(){
-        if($this->campus_id === 0){
-            return null;
-        }else{
-            return $this->belongsTo(Campus::class);
-        }
+        return $this->belongsTo(Campus::class);
     }
 
     /**
