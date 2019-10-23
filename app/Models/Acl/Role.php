@@ -11,6 +11,7 @@ class Role extends BaseRole
     // 系统定义的用户身份: 日常运营管理相关 (以下的常量值, 应永远与 roles 表中对应的记录值相同)
     const SUPER_ADMIN           = 1;  // 系统超级管理员
     const ADMINISTRATOR         = 2;  // 学校管理员
+    const SCHOOL_MANAGER        = 2; // 学校管理员 (日常教学管理岗)
     const OPERATOR              = 3;  // 日常操作人员
 
     // 系统定义的用户身份: 校内用户相关
@@ -22,7 +23,7 @@ class Role extends BaseRole
 
     const TEACHER               = 9;   // 已认证的教师
     const EMPLOYEE              = 10;  // 已认证的教工
-    const SCHOOL_MANAGER        = 11;  // 已认证的管理员 (日常教学管理岗)
+    const OFFICE_MANAGER        = 11;  // 已认证的管理员 (日常教学管理岗)
     const COMPANY               = 12;  // 已认证的企业 招生的用人单位等
     const DELIVERY              = 13;  // 已认证的配送员
 
@@ -30,7 +31,8 @@ class Role extends BaseRole
     const BUSINESS_OUTER        = 15;  // 已认证 校外商家
 
     const SUPER_ADMIN_SLUG           = 'su';  // 系统超级管理员
-    const ADMINISTRATOR_SLUG         = 'school_admin';  // 学校管理员
+    const ADMINISTRATOR_SLUG         = 'school_manager';  // 学校管理员
+    const SCHOOL_MANAGER_SLUG        = 'school_manager';  // 学校管理员, 由于一个以前的一个失误, 因此从新命名了
     const OPERATOR_SLUG              = 'operator';  // 日常操作人员
 
     // 系统定义的用户身份: 校内用户相关
@@ -42,7 +44,7 @@ class Role extends BaseRole
 
     const TEACHER_SLUG               = 'teacher';   // 已认证的教师
     const EMPLOYEE_SLUG              = 'school_employee';  // 已认证的教工
-    const SCHOOL_MANAGER_SLUG        = 'school_manager';  // 已认证的管理员 (日常教学管理岗)
+    const OFFICE_MANAGER_SLUG        = 'office_manager';  // 已认证的管理员 (日常教学管理岗)
     const COMPANY_SLUG               = 'company';  // 已认证的企业 招生的用人单位等
     const DELIVERY_SLUG              = 'delivery';  // 已认证的配送员
 
@@ -61,7 +63,7 @@ class Role extends BaseRole
 
     const TEACHER_TEXT               = '已认证的教师';   // 已认证的教师
     const EMPLOYEE_TEXT              = '已认证的教工';  // 已认证的教工
-    const SCHOOL_MANAGER_TEXT        = '已认证的管理员 (日常教学管理岗)';  // 已认证的管理员 (日常教学管理岗)
+    const SCHOOL_MANAGER_TEXT        = '已认证的部门管理员 (日常教学管理岗)';  // 已认证的管理员 (日常教学管理岗)
     const COMPANY_TEXT               = '已认证的企业 招生的用人单位';  // 已认证的企业 招生的用人单位等
     const DELIVERY_TEXT              = '已认证的配送员';  // 已认证的配送员
 
@@ -87,6 +89,7 @@ class Role extends BaseRole
         return [
             self::SUPER_ADMIN => self::SUPER_ADMIN_SLUG,
             self::ADMINISTRATOR => self::ADMINISTRATOR_SLUG,
+            self::SCHOOL_MANAGER => self::SCHOOL_MANAGER_SLUG,
             self::OPERATOR => self::OPERATOR_SLUG,
             self::VISITOR => self::VISITOR_SLUG,
             self::REGISTERED_USER => self::REGISTERED_USER_SLUG,
@@ -95,7 +98,7 @@ class Role extends BaseRole
             self::VERIFIED_USER_CLASS_SECRETARY => self::VERIFIED_USER_CLASS_SECRETARY_SLUG,
             self::TEACHER => self::TEACHER_SLUG,
             self::EMPLOYEE => self::EMPLOYEE_SLUG,
-            self::SCHOOL_MANAGER => self::SCHOOL_MANAGER_SLUG,
+            self::OFFICE_MANAGER => self::OFFICE_MANAGER_SLUG,
             self::COMPANY => self::COMPANY_SLUG,
             self::DELIVERY => self::DELIVERY_SLUG,
             self::BUSINESS_INNER => self::BUSINESS_INNER_SLUG,
@@ -119,7 +122,7 @@ class Role extends BaseRole
             self::VERIFIED_USER_CLASS_SECRETARY_SLUG => self::VERIFIED_USER_CLASS_SECRETARY_TEXT,
             self::TEACHER_SLUG => self::TEACHER_TEXT,
             self::EMPLOYEE_SLUG => self::EMPLOYEE_TEXT,
-            self::SCHOOL_MANAGER_SLUG => self::SCHOOL_MANAGER_TEXT,
+            self::OFFICE_MANAGER_SLUG => self::SCHOOL_MANAGER_TEXT,
             self::COMPANY_SLUG => self::COMPANY_TEXT,
             self::DELIVERY_SLUG => self::DELIVERY_TEXT,
             self::BUSINESS_INNER_SLUG => self::BUSINESS_INNER_TEXT,

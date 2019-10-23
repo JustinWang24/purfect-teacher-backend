@@ -35,7 +35,7 @@ class CreateRolesTable extends Migration
 
         $role = new Role();
         $role->name = '校方管理员';
-        $role->slug = Role::ADMINISTRATOR_SLUG;
+        $role->slug = Role::SCHOOL_MANAGER_SLUG;
         $role->description = '学校方系统管理员';
         $role->save();
 
@@ -88,8 +88,8 @@ class CreateRolesTable extends Migration
         $role->save();
 
         $role = new Role();
-        $role->name = '管理员';
-        $role->slug = Role::SCHOOL_MANAGER_SLUG;
+        $role->name = '部门管理员';
+        $role->slug = Role::OFFICE_MANAGER_SLUG;
         $role->description = '已认证的管理员用户';
         $role->save();
 
