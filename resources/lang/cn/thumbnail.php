@@ -25,6 +25,9 @@ return [
     'delete' => '删除',
     'update' => '更新',
 
+    //风采管理
+    'scenery' => '风采管理',
+
     // 课程表相关
     'timetable'=>'课程表',
     'manager'=>'管理系统'

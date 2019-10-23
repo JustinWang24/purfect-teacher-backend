@@ -27,7 +27,9 @@ class SchoolManagerHomePageLogic implements IHomePageLogic
         /**
          * 运营人员, 那么应该显示学校的列表, 引导管理员进入某所学校
          */
-        $this->data['schools'] = $dao->getMySchools();
+        $this->data['school'] = $dao->getMySchools();
         return $this->data;
     }
+
+
 }

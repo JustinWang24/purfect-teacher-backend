@@ -15,6 +15,7 @@ class Thumbnail extends BasicComponent
      * @return string
      */
     public static function Print($pageTitle, $codeOnly = false){
+
         $view = View::make('reusable_elements.section.thumbnail',[
             'pageTitle'=>$pageTitle,
             'words'=>explode('.',Route::currentRouteName())

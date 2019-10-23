@@ -31,7 +31,9 @@ class HomeController extends Controller
          * @var User $user
          */
         $user = $request->user();
+
         $logic = Factory::GetLogic($user);
+
         $data = $logic ? $logic->getDataForView() : [];
         return view($user->getDefaultView(), array_merge($this->dataForView, $data));
     }
