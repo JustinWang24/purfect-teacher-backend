@@ -47,6 +47,7 @@ trait CustomizedAuthenticatesUsers
                 // 该用户最多是个教师或者学生
                 $gradeUserDao = new GradeUserDao($user);
                 $schoolsId = $gradeUserDao->getSchoolsId();
+
                 if(count($schoolsId) === 1){
                     // 获取学校
                     $dao = new SchoolDao($user);
@@ -56,6 +57,7 @@ trait CustomizedAuthenticatesUsers
                     // Todo: 非管理员用户同时在多个学校的处理方式: 让用户选择进入哪个学校
                 }
             }
+
             return $this->sendLoginResponse($request);
         }
 

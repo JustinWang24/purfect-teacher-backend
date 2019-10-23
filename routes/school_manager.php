@@ -49,13 +49,21 @@ Route::prefix('school_manager')->group(function () {
     Route::post('grade/update', 'GradesController@update')->name('school_manager.grade.update');        // 编辑班级
     Route::get('grade/users', 'GradesController@users')->name('school_manager.grade.users');     // 班级的学生列表
 
-    // 学生管理: 只有 学校管理员以上级别的角色才可以添加,编辑,学生
+    // 学生管理: 只有 学校管理员以上级别的角色才可以添加,编辑,学生school_manager.scenery.edit
     Route::get('student/add', 'StudentsController@add')->name('school_manager.student.add');                // 添加学生
     Route::get('student/edit', 'StudentsController@edit')->name('school_manager.student.edit');             // 编辑学生
     Route::get('student/suspend', 'StudentsController@suspend')->name('school_manager.student.suspend');    // 休学
     Route::get('student/stop', 'StudentsController@stop')->name('school_manager.student.stop');             // 停课
     Route::get('student/reject', 'StudentsController@reject')->name('school_manager.student.reject');       // 退学
     Route::post('student/update', 'StudentsController@update')->name('school_manager.student.update');      // 保存学生
+
+    // 学校风采管理
+    Route::get('scenery/list', 'SceneryController@list')->name('school_manager.scenery.list');      // 风采列表
+    Route::get('scenery/add', 'SceneryController@add')->name('school_manager.scenery.add');         // 风采添加表单
+    Route::get('scenery/edit', 'SceneryController@edit')->name('school_manager.scenery.edit');      // 风采修改表单
+    Route::post('scenery/save', 'SceneryController@save')->name('school_manager.scenery.save');     // 风采保存
+
+
 
     // 课程表管理
     Route::get('timetable/manager', 'TimeTables\TimetablesController@manager')->name('school_manager.timetable.manager');           // 添加班级
