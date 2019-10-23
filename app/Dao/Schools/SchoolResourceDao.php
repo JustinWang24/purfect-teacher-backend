@@ -16,6 +16,7 @@ class SchoolResourceDao
      */
     public function getSchoolResourceBySchoolIdOrUuid($schoolIdOrUuid, $condition = 0)
     {
+
         if(is_string($schoolIdOrUuid) && strlen($schoolIdOrUuid) > 10) {
             $where['uuid'] = $schoolIdOrUuid;
         } else {
@@ -32,6 +33,17 @@ class SchoolResourceDao
 
         return SchoolResource::where($where)->get();
     }
+
+    /**
+     * 获取一条
+     * @param $id
+     * @return mixed
+     */
+    public function getOneSchoolResourceById($id)
+    {
+        return SchoolResource::find($id);
+    }
+
 
     /**
      * 获取学校所有图片

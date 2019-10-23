@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use App\Utils\Files\UploadFiles;
 use App\Utils\FlashMessageBuilder;
 use App\Models\Schools\SchoolResource;
+use Illuminate\Support\Facades\Auth;
 
 class SceneryController extends Controller
 {
@@ -24,8 +25,9 @@ class SceneryController extends Controller
      */
     public function list(Request $request)
     {
+
         $dao = new SchoolResourceDao;
-        $list = $dao->getPagingSchoolResourceBySchoolId($request->session()->get('school.id'));
+        $list = $dao->getPagingSchoolResourceBySchoolId(1);
 
         $this->dataForView['data']      =  $list;
         $this->dataForView['pageTitle'] = '学校风采管理';
@@ -51,7 +53,8 @@ class SceneryController extends Controller
     public function edit(Request $request)
     {
         $dao = new SchoolResourceDao;
-        $data = $dao->getSchoolResourceBySchoolIdOrUuid((Int) $request->get('id'));
+
+        $data = $dao->getOneSchoolResourceById((Int)$request->get('id'));
 
         if(empty($data->toArray())) {
 
@@ -68,6 +71,8 @@ class SceneryController extends Controller
 
     /**
      * 学校风采修改|插入
+     * @param Request $request
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function save(Request $request)
     {

@@ -20,26 +20,26 @@ use App\Models\Schools\SchoolResource;
                             <select class="form-control" name="scenery[type]"  required>
                                 <option value="">Select...</option>
                                 <option value="{{SchoolResource::TYPE_IMAGE}}">图片</option>
-                                <option value="{{SchoolResource::TYPE_VIDEO}}">视频</option>
+                                <option value="{{SchoolResource::TYPE_VIDEO}}" selected="selected" >视频</option>
                             </select>
                         </div>
 
                         <div id="image" style="">
                             <div class="form-group">
                                 <lable for="">资源名称</lable>
-                                <input type="text"  class="form-control" name="scenery[name]" required>
+                                <input type="text"  class="form-control" name="scenery[name]"  value="{{ $data->name }}"required>
                             </div>
                             <div class="form-group">
                                 <lable for="">宽度</lable>
                                  <div class="input-group">
-                                    <input type="text"  class="form-control" name="scenery[width]"  required >
+                                    <input type="text"  class="form-control" name="scenery[width]"  value="{{ $data->width }}" required>
                                     <span class="input-group-addon">PX</span>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <lable for="">高度</lable>
                                  <div class="input-group">
-                                    <input type="text"  class="form-control" name="scenery[height]"  required >
+                                    <input type="text"  class="form-control" name="scenery[height]" value="{{ $data->height }}" required>
                                     <span class="input-group-addon">PX</span>
                                 </div>
                             </div>
