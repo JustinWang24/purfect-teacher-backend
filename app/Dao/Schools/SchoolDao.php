@@ -5,7 +5,7 @@ use App\User;
 use App\Models\School;
 use Ramsey\Uuid\Uuid;
 use App\Models\Schools\Campus;
-
+use Illuminate\Http\Request;
 class SchoolDao
 {
     private $currentUser;
@@ -17,10 +17,13 @@ class SchoolDao
     public function getMySchools($onlyFirstOne = false){
         if($this->currentUser->isOperatorOrAbove()){
             return School::orderBy('updated_at','desc')->get();
+        }elseif ($this->currentUser->isSchoolAdminOrAbove()) {
+            return $this->getSchoolManagerDefaultSchool();
         }
-        else{
+    }
 
-        }
+    public function getSchoolManagerDefaultSchool(){
+        return School::find($this->currentUser->getSchoolId());
     }
 
     /**
@@ -89,7 +92,7 @@ class SchoolDao
     public function getSchoolById($id){
         return School::find($id);
     }
-    
+
     /**
      * 根据 uuid 或者 id 获取学校
      * @param $idOrUuid

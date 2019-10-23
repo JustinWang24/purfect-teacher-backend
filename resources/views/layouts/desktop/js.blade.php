@@ -28,3 +28,7 @@
 <script src="{{ asset('assets/plugins/select2/js/select2.js') }}"></script>
 <script src="{{ asset('assets/js/pages/select2/select2-init.js') }}"></script>
 <script src="{{ asset('js/app.js') }}" defer></script>
+
+<!-- dropzone -->
+<script src="{{ asset('assets/plugins/dropzone/dropzone.js') }}"></script>
+<script src="{{ asset('assets/plugins/dropzone/dropzone-call.js') }}"></script>

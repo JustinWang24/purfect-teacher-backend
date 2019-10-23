@@ -1,3 +1,4 @@
+<?php //use Illuminate\Support\Facades\Session;Session::flush(); ?>
 @extends('layouts.extra_page')
 
 @section('content')
