@@ -100,7 +100,7 @@
                 <li class="nav-item">
                     <a href="javascript:void(0);" class="nav-link nav-toggle">
                         <i class="material-icons">dashboard</i>
-                        <span class="title">校园门户管理<span>
+                        <span class="title">校园门户管理</span>
                         <span class="selected"></span>
                         <span class="arrow open"></span>
                     </a>
@@ -118,8 +118,27 @@
                         </li>
                     </ul>
                 </li>
-
                 <li class="nav-item">
+                    <a href="javascript:void(0);" class="nav-link nav-toggle">
+                        <i class="material-icons">dashboard</i>
+                        <span class="title">会议管理</span>
+                        <span class="selected"></span>
+                        <span class="arrow open"></span>
+                    </a>
+                    <ul class="sub-menu">
+                        <li class="nav-item active">
+                            <a href="{{ route('teacher.conference.index') }}" class="nav-link ">
+                                <span class="title">会议列表</span>
+                                <span class="selected"></span>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+
+
+
+
+               {{-- <li class="nav-item">
                     <a href="/recruitStu/index" class="nav-link nav-toggle">
                         <i class="material-icons">dashboard</i>
                         <span class="title">招生管理</span>
@@ -140,7 +159,6 @@
                         </li>
                     </ul>
                 </li>
-
                 <li class="nav-item">
                     <a href="/welcomeNewStu/index" class="nav-link nav-toggle">
                         <i class="material-icons">dashboard</i>
@@ -686,7 +704,7 @@
                             </a>
                         </li>
                     </ul>
-                </li>
+                </li>--}}
                 <!--新增end-->
 
             </ul>
