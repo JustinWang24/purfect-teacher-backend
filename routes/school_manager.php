@@ -63,6 +63,8 @@ Route::prefix('school_manager')->group(function () {
     Route::get('scenery/edit', 'SceneryController@edit')->name('school_manager.scenery.edit');      // 风采修改表单
     Route::post('scenery/save', 'SceneryController@save')->name('school_manager.scenery.save');     // 风采保存
 
+
+
     // 课程表管理
     Route::get('timetable/manager', 'TimeTables\TimetablesController@manager')->name('school_manager.timetable.manager');           // 添加班级
 });
