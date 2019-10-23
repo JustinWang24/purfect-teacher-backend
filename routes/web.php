@@ -23,3 +23,4 @@ Route::get('/home', 'HomeController@index')->name('home');
 
 // 校园风光
 //Route::get('/scenery', 'Admin\CampusSceneryController@index')->name('home');
+

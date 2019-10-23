@@ -25,4 +25,6 @@
     <link rel="stylesheet" href="{{ asset('assets/plugins/select2/css/select2.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/plugins/select2/css/select2-bootstrap.min.css') }}">
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+    <!-- dropzone -->
+    <link rel="stylesheet" href="{{ asset('assets/plugins/dropzone/dropzone.css') }}">
 </head>

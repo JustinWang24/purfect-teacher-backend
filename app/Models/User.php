@@ -119,4 +119,9 @@ class User extends Authenticatable
             return null;
         }
     }
+
+    public function getSchoolId()
+    {
+        return 1;
+    }
 }
