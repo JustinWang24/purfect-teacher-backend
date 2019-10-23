@@ -20,7 +20,7 @@ class BuildingTest extends BasicPageTestCase
     /**
      * 测试在建筑物列表的页面上, 可以看到
      */
-    public function testItCanSeeBuildingsListInAnyCampusView(){
+    public function ItCanSeeBuildingsListInAnyCampusView(){
         $su = $this->getSuperAdmin();
         $response = $this->setSchoolAsUser($su, 50)
             ->actingAs($su)
@@ -40,7 +40,7 @@ class BuildingTest extends BasicPageTestCase
         $response = $this->setSchoolAsUser($su, 50)
             ->actingAs($su)
             ->withSession($this->schoolSessionData)
-            ->get(route('school_manager.building.add',['uuid'=>251]));
+            ->get(route('school_manager.building.add',['uuid'=>250]));
 
         $response->assertSee('input type="hidden" name="_token"');
         $response->assertSee('id="add-building-form"');
@@ -53,7 +53,7 @@ class BuildingTest extends BasicPageTestCase
     /**
      * 测试在添加学校的页面上, 完整的表单
      */
-    public function testItCanSeeRightFormInBuildingEditPage(){
+    public function ItCanSeeRightFormInBuildingEditPage(){
         $su = $this->getSuperAdmin();
         $response = $this->setSchoolAsUser($su, 50)
             ->actingAs($su)
