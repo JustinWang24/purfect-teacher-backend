@@ -25,6 +25,7 @@ Vue.use(ElementUI);
 // files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default));
 
 // Vue.component('example-component', require('./components/ExampleComponent.vue').default);
+Vue.component('time-slots-manager', require('./components/timeline/TimeSlotsManager.vue').default);
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to
@@ -35,3 +36,10 @@ Vue.use(ElementUI);
 // const app = new Vue({
 //     el: '#app',
 // });
+
+// 学校时间段管理
+if(document.getElementById('school-time-slots-manager')){
+    new Vue({
+        el: '#school-time-slots-manager'
+    });
+}

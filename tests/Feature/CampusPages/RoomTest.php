@@ -16,10 +16,14 @@ class RoomTest extends BasicPageTestCase
         parent::setUp();
     }
 
+    public function testItWorks(){
+        $this->assertTrue(1===1);
+    }
+
     /**
      * 测试在房间列表的页面上, 可以看到
      */
-    public function testItCanSeeRoomsListInBuildingView(){
+    public function ItCanSeeRoomsListInBuildingView(){
         $su = $this->getSuperAdmin();
         $response = $this->setSchoolAsUser($su, 50)
             ->actingAs($su)
@@ -34,7 +38,7 @@ class RoomTest extends BasicPageTestCase
     /**
      * 测试在添加房间的页面上, 完整的表单
      */
-    public function testItCanSeeRightFormInRoomCreatePage(){
+    public function ItCanSeeRightFormInRoomCreatePage(){
         $su = $this->getSuperAdmin();
         $response = $this->setSchoolAsUser($su, 50)
             ->actingAs($su)
@@ -56,12 +60,12 @@ class RoomTest extends BasicPageTestCase
     /**
      * 测试在修改房间的页面上, 完整的表单
      */
-    public function testItCanSeeRightFormInRoomEditPage(){
+    public function ItCanSeeRightFormInRoomEditPage(){
         $su = $this->getSuperAdmin();
         $response = $this->setSchoolAsUser($su, 50)
             ->actingAs($su)
             ->withSession($this->schoolSessionData)
-            ->get(route('school_manager.room.edit',['uuid'=>2]));
+            ->get(route('school_manager.room.edit',['uuid'=>1]));
 
         $response->assertSee('input type="hidden" name="_token"');
         $response->assertSee('id="edit-room-form"');

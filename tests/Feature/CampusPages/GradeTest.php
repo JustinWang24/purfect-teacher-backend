@@ -37,7 +37,7 @@ class GradeTest extends BasicPageTestCase
         $response = $this->setSchoolAsUser($su, 50)
             ->actingAs($su)
             ->withSession($this->schoolSessionData)
-            ->get(route('school_manager.grade.edit',['uuid'=>24001]));
+            ->get(route('school_manager.grade.edit',['uuid'=>24000]));
 
         $response->assertSee('input type="hidden" name="_token"');
         $response->assertSee('id="edit-grade-form"');
