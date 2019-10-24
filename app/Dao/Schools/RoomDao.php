@@ -26,6 +26,17 @@ class RoomDao
         return Room::find($id);
     }
 
+
+    /**
+     * @param $map
+     * @return mixed
+     */
+    public function getRooms($map)
+    {
+        return Room::where($map)->get();
+    }
+
+
     /**
      * @param $data
      * @return Room
