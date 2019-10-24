@@ -16,18 +16,21 @@ class JsonBuilder
     /**
      * 返回成功JSON消息
      * @param  array|String $dataOrMessage
+     * @param  String $message
      * @return string
      */
-    public static function Success($dataOrMessage = 'OK'){
+    public static function Success($dataOrMessage=[], $message = 'OK'){
         if(is_array($dataOrMessage)){
             return json_encode([
-                'error_no' => self::CODE_SUCCESS,
+                'code' => self::CODE_SUCCESS,
+                'message' => $message,
                 'data' => $dataOrMessage
             ]);
         }else{
             return json_encode([
-                'error_no' => self::CODE_SUCCESS,
-                'msg' => $dataOrMessage
+                'code' => self::CODE_SUCCESS,
+                'message' => $dataOrMessage,
+                'data'=>[]
             ]);
         }
     }
@@ -40,13 +43,13 @@ class JsonBuilder
     public static function Error($dataOrMessage = 'Err'){
         if(is_array($dataOrMessage)){
             return json_encode([
-                'error_no' => self::CODE_ERROR,
-                'data' => $dataOrMessage
+                'code' => self::CODE_ERROR,
+                'message' => $dataOrMessage
             ]);
         }else{
             return json_encode([
-                'error_no' => self::CODE_ERROR,
-                'msg' => $dataOrMessage
+                'code' => self::CODE_ERROR,
+                'message' => $dataOrMessage
             ]);
         }
     }
