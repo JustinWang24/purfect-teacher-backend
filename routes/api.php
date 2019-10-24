@@ -22,6 +22,7 @@ Route::any('/school/load-time-slots','Api\School\TimeSlotsController@load_by_sch
 Route::any('/school/load-study-time-slots','Api\School\TimeSlotsController@load_study_time_slots')->name('api.school.load.study.time.slots');
 // 获取某个学校所有的专业
 Route::any('/school/load-majors','Api\School\MajorsController@load_by_school')->name('api.school.load.majors');
+Route::any('/school/load-major-grades','Api\School\MajorsController@load_major_grades')->name('api.school.load.major.grades');
 // 获取某个学校所有的专业
 Route::any('/school/load-courses','Api\School\CoursesController@load_courses')->name('api.school.load.courses');
 // 搜索某个学校的老师
