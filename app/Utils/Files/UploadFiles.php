@@ -2,9 +2,18 @@
 
 namespace App\Utils\Files;
 
+use GuzzleHttp\Client;
 
 class UploadFiles
 {
+
+    private $baseUrl;
+
+    public function __construct()
+    {
+        $this->baseUrl = 'http://files.test';
+    }
+
 
     /**
      * 上传文件
@@ -12,13 +21,13 @@ class UploadFiles
      * @param $category
      * @param $user
      * @param $file
-     * @param $keywords
-     * @param $description
+     * @param string $keywords
+     * @param string $description
+     * @return mixed
      */
     public function uploadFile($version, $category, $user, $file, $keywords = '', $description = '')
     {
-
-        $url  = 'https://assets.api.dev.pftytx.com/api/file/upload';
+        $url  = '/api/file/upload';
 
         if (strlen($keywords) > 1) {
             $data['keywords'] = $keywords;
@@ -32,25 +41,34 @@ class UploadFiles
             'version' => $version,
             'category'=> $category,
             'user'    => $user,
-            'file'    => $file,
         ];
 
-        $this->curl($url, $data);
-
+        return $this->makePostMultipart($url, $data, 'file', $file);
     }
 
-    public function curl($url, $data)
+    public function makePostMultipart($uri, $data, $fileFieldName, $filePath)
     {
+        $client = new Client();
+        $mData = [];
 
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $url);
-        curl_setopt($ch, CURLOPT_POST, true);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-        $output = curl_exec($ch);
-        curl_close($ch);
+        foreach ($data as $key => $v) {
+            $mData[] = [
+                'name'=>$key,
+                'contents'=>$v
+            ];
+        }
 
-        $output = json_encode($output);
+        $mData[] = ['name' => $fileFieldName, 'contents' =>fopen($filePath,'r')];
+dd($mData);
+        $result =  $client->request(
+            'post',
+            $this->baseUrl . $uri,
+            [
+                'multipart' => $mData
+            ]
+        );
+
+       return json_decode($result->getBody(), true);
     }
 
 

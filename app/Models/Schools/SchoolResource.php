@@ -13,5 +13,4 @@ class SchoolResource extends Model
     const TYPE_VIDEO  = 2;
     const PAGE_NUMBER = 1;
 
-
 }

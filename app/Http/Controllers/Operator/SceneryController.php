@@ -10,6 +10,7 @@ use App\Utils\Files\UploadFiles;
 use App\Utils\FlashMessageBuilder;
 use App\Models\Schools\SchoolResource;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class SceneryController extends Controller
 {
@@ -76,20 +77,31 @@ class SceneryController extends Controller
      */
     public function save(Request $request)
     {
+
         $sceneryData = $request->post('scenery');
         $sceneryData['school_id'] = $request->session()->get('school.id');
 
         if($sceneryData['type'] == SchoolResource::TYPE_IMAGE) {
-            $image = $request->file();
-            //  TODO :: 图片上传到静态服务器
-            $upload = ['file' => ['url' => 'www.baid.com', 'type' => 'jpg', 'size' => '1000000']];
-            $sceneryData['path'] = $upload['file']['url'];
-            $sceneryData['format'] = $upload['file']['type'];
-            $sceneryData['size'] = $upload['file']['size'];
+
+            $file = $request->file('image');
+
+            $ext      = $file->getClientOriginalExtension();
+            $filename = md5(time()) . '.' . $ext;
+            $path     = $file->move('storage', $filename);
+
+            $upload = new UploadFiles;
+            $uploadFile = $upload->uploadFile('1.0','e3a4ecd9-7203-4d2f-b97a-0091a06929f0','19bab179-4164-403e-9043-0e53318acd0a', $path);
+
+            if ($uploadFile['code'] == '1000') {
+                dump($uploadFile);die;
+            } else {
+                echo "上传失败";die;
+            }
+
         } else {
             // 视频
         }
-
+        exit('CG');
         $dao = new SchoolResourceDao();
         if (isset($sceneryData['id'])) {
             $result = $dao->updateSchoolResource($sceneryData);
