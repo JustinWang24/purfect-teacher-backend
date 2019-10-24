@@ -1,7 +1,7 @@
 <div class="row" id="school-timetable-previewer-app">
     <div class="col-4">
         <div class="card">
-            <timetable-item-form school-id="{{ $school->id }}">
+            <timetable-item-form school-id="{{ $school->id }}" user-uuid="{{ Auth::user()->uuid  }}">
             </timetable-item-form>
         </div>
     </div>

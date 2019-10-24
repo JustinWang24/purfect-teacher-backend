@@ -4,7 +4,7 @@
             <el-step title="时间" ></el-step>
             <el-step title="地点" ></el-step>
             <el-step title="班级" ></el-step>
-            <el-step title="课程" ></el-step>
+            <el-step title="确认" ></el-step>
         </el-steps>
         <el-form ref="timeTableItemForm" :model="timeTableItem" label-width="80px" class="the-form">
             <div v-show="currentStep===1">
@@ -78,6 +78,16 @@
                         <el-option :label="grade.name" :value="grade.id" :key="grade.id" v-for="grade in grades"></el-option>
                     </el-select>
                 </el-form-item>
+                <el-form-item label="课程">
+                    <el-select v-model="timeTableItem.course_id" style="width: 100%;">
+                        <el-option :label="course.name" :value="course.id" :key="course.id" v-for="course in courses"></el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item label="授课教师">
+                    <el-select v-model="timeTableItem.teacher_id" style="width: 100%;">
+                        <el-option :label="teacher.name" :value="teacher.id" :key="teacher.id" v-for="teacher in teachers"></el-option>
+                    </el-select>
+                </el-form-item>
             </div>
 
             <el-form-item>
@@ -98,6 +108,10 @@
             schoolId: {
                 type: String,
                 required: true
+            },
+            userUuid: {
+                type: String,
+                required: true
             }
         },
         data() {
@@ -113,12 +127,17 @@
                     // 地点
                     building_id:'',
                     room_id:'',
+                    grade_id:'',
+                    course_id:'',
+                    teacher_id:'',
                 },
                 timeSlots: [],
                 campuses: [],
                 rooms: [],
                 majors: [], // 哪些专业
                 grades: [], // 根据专业加载的候选班级
+                courses: [], // 根据专业加载的候选班级
+                teachers: [], // 根据专业加载的候选班级
             }
         },
 
@@ -131,10 +150,20 @@
             },
             'selectedMajor': function (newVal, oldVal) {
                 if(newVal !== oldVal){
-                    // 去加载房间
+                    // 去加载选定专业的班级和课程
                     this._getGradesByMajor(newVal);
+                    this._getCoursesByMajor(newVal);
+                    this.timeTableItem.grade_id = '';
+                    this.timeTableItem.course_id = '';
+                    this.timeTableItem.teacher_id = '';
                 }
-            }
+            },
+            'timeTableItem.course_id': function(newVal, oldVal){
+                if(newVal !== oldVal){
+                    // 去加载房间
+                    this._getTeachersByCourse(newVal);
+                }
+            },
         },
 
         created(){
@@ -199,6 +228,35 @@
                         this.grades = [];
                     }
                 })
+            },
+            // 根据专业获取课程
+            _getCoursesByMajor: function(){
+                axios.post(
+                    Constants.API.LOAD_COURSES_BY_MAJOR,{id: this.selectedMajor}
+                ).then( res => {
+                    if(res.data.code === Constants.AJAX_SUCCESS){
+                        this.courses = res.data.data.courses;
+                    }else{
+                        this.courses = [];
+                    }
+                })
+            },
+            _getTeachersByCourse: function(courseId){
+                if(courseId !== ''){
+                    // 传入了有效的 course id
+                    axios.post(
+                        Constants.API.LOAD_TEACHERS_BY_COURSE,{course: courseId}
+                    ).then( res => {
+                        if(res.data.code === Constants.AJAX_SUCCESS){
+                            this.teachers = res.data.data.teachers;
+                        }else{
+                            this.teachers = [];
+                        }
+                    })
+                }
+                else{
+                    this.teachers = [];
+                }
             },
             goToPrev: function(){
                 if(this.currentStep > 1){
