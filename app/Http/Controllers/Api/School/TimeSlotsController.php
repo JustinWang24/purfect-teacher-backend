@@ -2,8 +2,12 @@
 
 namespace App\Http\Controllers\Api\School;
 
+use App\Dao\Schools\SchoolDao;
+use App\User;
+use App\Utils\JsonBuilder;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+
 
 class TimeSlotsController extends Controller
 {
@@ -14,6 +18,16 @@ class TimeSlotsController extends Controller
      */
     public function load_by_school(Request $request){
         $schoolUuid = $request->get('school');
-        return $schoolUuid;
+
+        $schoolDao = new SchoolDao(new User());
+
+        $school = $schoolDao->getSchoolByUuid($schoolUuid);
+
+        if($school){
+            return JsonBuilder::Success(['time_frame'=>$school->timeFrame]);
+        }
+        else{
+            return JsonBuilder::Error();
+        }
     }
 }

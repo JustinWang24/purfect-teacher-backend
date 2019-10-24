@@ -1,5 +1,20 @@
 <template>
-    
+    <div class="block">
+        <h2 class="title-bar">上课时间表</h2>
+        <el-timeline class="frame-wrap">
+            <el-timeline-item
+                    v-for="(activity, index) in timeFrame"
+                    :key="index"
+                    :icon="activity.icon"
+                    :type="activity.type"
+                    :color="activity.color"
+                    :size="activity.size"
+                    :timestamp="activity.timestamp">
+                {{activity.content}}
+            </el-timeline-item>
+        </el-timeline>
+        <slot></slot>
+    </div>
 </template>
 <script>
     import {Constants} from '../../common/constants';
@@ -10,18 +25,52 @@
             school: {
                 type: String,
                 required: true
+            },
+            dotSize: {
+                type: String,
+                required: false,
+                default: 'normal'
             }
         },
         data() {
-            return {};
+            return {
+                timeFrame: []
+            };
         },
         mounted() {
             console.log('TimeSlotsManager Component mounted.' + this.school);
             console.log(Constants.AJAX_SUCCESS);
+
+            axios.post(
+                '/api/school/load-time-slots',{school: this.school}
+            ).then( res => {
+                _.each(res.data.data.time_frame, (item) => {
+                    this.timeFrame.push({
+                        timestamp: item.from + ' - ' + item.to,
+                        size: this.dotSize,
+                        // color: '#0bbd87',
+                        type: 'primary',
+                        icon: '',
+                        content: item.name
+                    });
+                })
+            })
+        },
+        methods: {
+
         }
     }
 </script>
 
-<style scoped>
-
+<style scoped lang="scss">
+.block{
+    margin: 10px;
+    .title-bar{
+        display: block;
+        line-height: 50px;
+    }
+    .frame-wrap{
+        margin-top: 20px;
+    }
+}
 </style>
