@@ -12,6 +12,11 @@ use App\User;
 use Illuminate\Database\Eloquent\Model;
 class Conference extends Model
 {
+    protected  $fillable=[
+        'title','school_id','user_id','room_id','sign_out','to','from','video','remark',
+    ];
+
+
     public function schools()
     {
         return $this->belongsTo(School::class, 'school_id','id');

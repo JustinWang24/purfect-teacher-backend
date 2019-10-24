@@ -20,5 +20,16 @@ class ConferenceDao
     }
 
 
-//    public function
+    /**
+     * 创建会议
+     * @param $data
+     * @return mixed
+     */
+    public function addConference($data)
+    {
+        return Conference::create($data);
+    }
+
+
+
 }
