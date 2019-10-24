@@ -38,22 +38,21 @@
             };
         },
         mounted() {
-            console.log('TimeSlotsManager Component mounted.' + this.school);
-            console.log(Constants.AJAX_SUCCESS);
-
             axios.post(
-                '/api/school/load-time-slots',{school: this.school}
+                Constants.API.LOAD_TIME_SLOTS_BY_SCHOOL,{school: this.school}
             ).then( res => {
-                _.each(res.data.data.time_frame, (item) => {
-                    this.timeFrame.push({
-                        timestamp: item.from + ' - ' + item.to,
-                        size: this.dotSize,
-                        // color: '#0bbd87',
-                        type: 'primary',
-                        icon: '',
-                        content: item.name
-                    });
-                })
+                if(res.data.code === Constants.AJAX_SUCCESS){
+                    _.each(res.data.data.time_frame, (item) => {
+                        this.timeFrame.push({
+                            timestamp: item.from + ' - ' + item.to,
+                            size: this.dotSize,
+                            // color: '#0bbd87',
+                            type: 'primary',
+                            icon: '',
+                            content: item.name
+                        });
+                    })
+                }
             })
         },
         methods: {
