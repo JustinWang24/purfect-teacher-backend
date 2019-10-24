@@ -34,6 +34,7 @@ use App\User;
                                 </tr>
                                 </thead>
                                 <tbody>
+                               
                                 @foreach($school->campuses as $index=>$campus)
                                     @php /** @var App\Models\Schools\Campus $campus */ @endphp
                                     <tr>

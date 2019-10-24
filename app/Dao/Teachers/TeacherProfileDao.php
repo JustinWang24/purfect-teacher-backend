@@ -2,8 +2,8 @@
 
 namespace App\Dao\Teachers;
 
-use App\User;
 use App\Models\Teachers\TeacherProfile;
+use Illuminate\Support\Facades\DB;
 
 /**
  * Class ShoolDao
@@ -11,11 +11,10 @@ use App\Models\Teachers\TeacherProfile;
  */
 class TeacherProfileDao
 {
-
     /**
      * 根据 uuid 或者 id 获取教师详情
-     * @param $idOrUuid
-     * @return School|null
+     * @param $teacherIdOrUuid
+     * @return TeacherProfile|null
      */
     public  function getTeacherProfileByTeacherIdOrUuid($teacherIdOrUuid)
     {
@@ -28,7 +27,25 @@ class TeacherProfileDao
         return null;
     }
 
+    /**
+     * @param $name
+     * @param $schoolId
+     * @return \Illuminate\Support\Collection
+     */
+    public function searchTeacherByNameSimple($name, $schoolId){
+        return DB::table('teacher_profiles')
+            ->select(DB::raw('teacher_id as id, name, avatar'))
+            ->where('school_id',$schoolId)
+            ->where('name','like','%'.$name.'%')
+            ->get();
+    }
 
-
-
+    /**
+     * 创建老师的 Profile 模型
+     * @param $data
+     * @return TeacherProfile
+     */
+    public function createProfile($data){
+        return TeacherProfile::create($data);
+    }
 }

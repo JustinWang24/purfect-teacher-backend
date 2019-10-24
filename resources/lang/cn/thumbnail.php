@@ -16,6 +16,8 @@ return [
     'building'  => '建筑物管理',
     'rooms'  => '房间列表',
     'room'  => '房间管理',
+    'courses'  => '课程列表',
+    'course'  => '课程管理',
     'users'  => '用户列表',
     'user'  => '用户管理',
     'list'   => '列表',
@@ -25,8 +27,11 @@ return [
     'delete' => '删除',
     'update' => '更新',
 
+    //风采管理
+    'scenery' => '风采管理',
+
     // 课程表相关
     'timetable'=>'课程表',
-    'manager'=>'管理系统'
+    'manager'=>'管理'
 ];
 
