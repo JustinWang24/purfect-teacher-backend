@@ -18,4 +18,9 @@ class MajorsController extends Controller
         $majorDao = new MajorDao(new User());
         return JsonBuilder::Success(['majors'=>$majorDao->getMajorsBySchool($request->get('id'))]);
     }
+
+    public function load_major_grades(Request $request){
+        $majorDao = new MajorDao(new User());
+        return JsonBuilder::Success(['grades'=>$majorDao->getMajorById($request->get('id'))->grades]);
+    }
 }

@@ -67,6 +67,19 @@
 
             </div>
 
+            <div v-show="currentStep===3">
+                <el-form-item label="专业">
+                    <el-select v-model="selectedMajor" style="width: 100%;">
+                        <el-option :label="major.name" :value="major.id" :key="major.id" v-for="major in majors"></el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item label="班级">
+                    <el-select v-model="timeTableItem.grade_id" style="width: 100%;">
+                        <el-option :label="grade.name" :value="grade.id" :key="grade.id" v-for="grade in grades"></el-option>
+                    </el-select>
+                </el-form-item>
+            </div>
+
             <el-form-item>
                 <el-button icon="el-icon-back" type="primary" @click="goToPrev" :disabled="currentStep===1">上一步</el-button>
                 <el-button icon="el-icon-right el-icon--right" type="primary" @click="goToNext" v-show="currentStep < 4">下一步</el-button>
@@ -90,6 +103,7 @@
         data() {
             return {
                 currentStep: 1,
+                selectedMajor: '',
                 timeTableItem: {
                     year:'',
                     term:'1',
@@ -103,6 +117,8 @@
                 timeSlots: [],
                 campuses: [],
                 rooms: [],
+                majors: [], // 哪些专业
+                grades: [], // 根据专业加载的候选班级
             }
         },
 
@@ -112,12 +128,19 @@
                     // 去加载房间
                     this._getRoomsByBuilding(newVal);
                 }
+            },
+            'selectedMajor': function (newVal, oldVal) {
+                if(newVal !== oldVal){
+                    // 去加载房间
+                    this._getGradesByMajor(newVal);
+                }
             }
         },
 
         created(){
             this._getAllBuildings();
             this._getAllTimeSlots();
+            this._getAllMajors();
             this.timeTableItem.year = (new Date()).getFullYear() + '';
         },
         methods: {
@@ -150,6 +173,30 @@
                         this.rooms = res.data.data.rooms;
                     }else{
                         this.rooms = [];
+                    }
+                })
+            },
+            // 获取专业
+            _getAllMajors: function(){
+                axios.post(
+                    Constants.API.LOAD_MAJORS_BY_SCHOOL,{id: this.schoolId}
+                ).then( res => {
+                    if(res.data.code === Constants.AJAX_SUCCESS){
+                        this.majors = res.data.data.majors;
+                    }else{
+                        this.majors = [];
+                    }
+                })
+            },
+            // 根据专业获取班级
+            _getGradesByMajor: function(){
+                axios.post(
+                    Constants.API.LOAD_GRADES_BY_MAJOR,{id: this.selectedMajor}
+                ).then( res => {
+                    if(res.data.code === Constants.AJAX_SUCCESS){
+                        this.grades = res.data.data.grades;
+                    }else{
+                        this.grades = [];
                     }
                 })
             },
