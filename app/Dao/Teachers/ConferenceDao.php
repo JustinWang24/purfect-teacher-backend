@@ -18,4 +18,7 @@ class ConferenceDao
         $list = $model->where($map)->with('users')->get();
         return $list;
     }
+
+
+//    public function
 }

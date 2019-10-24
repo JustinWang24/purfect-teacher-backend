@@ -36,10 +36,24 @@ class ConferenceController extends Controller
 
     }
 
-    public function add()
+    public function add(Request $request)
     {
-        echo 123;
+        if($request->isMethod('post'))
+        {
+            $data = $request->post();
+
+        }
+
         return view('teacher.conference.add', $this->dataForView);
+    }
+
+
+    public function conferenceUser(Request $request)
+    {
+        $from = $request->post('from');
+        $to = $request->post('to');
+        $dao = new ConferenceDao();
+
     }
 
 }
