@@ -103,9 +103,8 @@ class SchoolDao
         if(is_string($idOrUuid) && strlen($idOrUuid) > 10){
             return $this->getSchoolByUuid($idOrUuid);
         }
-        elseif (is_int($idOrUuid)){
+        else{
             return $this->getSchoolById($idOrUuid);
         }
-        return null;
     }
 }

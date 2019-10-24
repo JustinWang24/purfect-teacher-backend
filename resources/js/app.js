@@ -24,9 +24,10 @@ Vue.use(ElementUI);
 // const files = require.context('./', true, /\.vue$/i);
 // files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default));
 
-// Vue.component('example-component', require('./components/ExampleComponent.vue').default);
 Vue.component('time-slots-manager', require('./components/timeline/TimeSlotsManager.vue').default);
 Vue.component('courses-manager', require('./components/courses/CoursesManager.vue').default);
+Vue.component('timetable-previewer', require('./components/previewer/TimetablePreviewer.vue').default);
+Vue.component('timetable-item-form', require('./components/previewer/TimetableItemForm.vue').default);
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to
@@ -48,5 +49,11 @@ if(document.getElementById('school-time-slots-manager')){
 if(document.getElementById('school-courses-manager-app')){
     new Vue({
         el: '#school-courses-manager-app'
+    });
+}
+
+if(document.getElementById('school-timetable-previewer-app')){
+    new Vue({
+        el: '#school-timetable-previewer-app'
     });
 }

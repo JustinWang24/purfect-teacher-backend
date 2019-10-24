@@ -23,12 +23,21 @@ class School extends Model
         return $this->belongsTo(User::class,'last_updated_by');
     }
 
+    /**
+     * 学校包含的校区
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
     public function campuses(){
         return $this->hasMany(Campus::class)->orderBy('name','asc');
     }
 
+    /**
+     * 学校预制的时间段
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
     public function timeFrame(){
-        return $this->hasMany(TimeSlot::class)->select(['id','name','type','from','to'])->orderBy('from','asc');
+        return $this->hasMany(TimeSlot::class)->select(['id','name','type','from','to'])
+            ->orderBy('from','asc');
     }
 
     /**

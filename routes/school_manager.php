@@ -64,6 +64,12 @@ Route::prefix('school_manager')->group(function () {
     Route::post('scenery/save', 'SceneryController@save')->name('school_manager.scenery.save');     // 风采保存
 
     // 课程表管理
-    Route::get('timetable/manager', 'TimeTables\TimetablesController@manager')->name('school_manager.timetable.manager');           // 添加班级
-    Route::get('timetable/manager/courses', 'TimeTables\CoursesController@manager')->name('school_manager.courses.manager');        // 课程班级
+    Route::get('timetable/manager', 'TimeTables\TimetablesController@manager')->name('school_manager.timetable.manager');
+    // 添加课程表项目// 添加班级
+    Route::get('timetable/manager/preview', 'TimeTables\TimetablesController@preview')->name('school_manager.timetable.manager.preview');           // 添加班级
+    Route::get('timetable/manager/courses', 'TimeTables\CoursesController@manager')->name('school_manager.courses.manager');
+
+
+
+    // 课程班级
 });
