@@ -27,3 +27,4 @@ Route::any('/school/load-courses','Api\School\CoursesController@load_courses')->
 Route::any('/school/search-teachers','Api\School\TeachersController@search_by_name')->name('api.school.search.teachers');
 // 搜索某个学校的老师
 Route::any('/school/save-course','Api\School\CoursesController@save_course')->name('api.school.save.course');
+Route::any('/school/delete-course','Api\School\CoursesController@delete_course')->name('api.school.delete.course');

@@ -14,17 +14,28 @@ class CoursesController extends Controller
         $courseData['school_id'] = $request->get('school');
 
         $dao = new CourseDao();
-        $result = false;
         if(empty($courseData['id'])){
             // 创建新课程
             $result = $dao->createCourse($courseData);
         }
         else{
-            // Todo 更新操作
+            // 更新操作
+            $result = $dao->updateCourse($courseData);
         }
 
         return $result ?
-            JsonBuilder::Success() : JsonBuilder::Error();
+            JsonBuilder::Success(['id'=>$result->id??$courseData['id']]) : JsonBuilder::Error();
+    }
+
+    /**
+     * @param Request $request
+     * @return string
+     */
+    public function delete_course(Request $request){
+        $courseUuid = $request->get('course');
+        $dao = new CourseDao();
+        $result = $dao->deleteCourseByUuid($courseUuid);
+        return $result ? JsonBuilder::Success() : JsonBuilder::Error();
     }
 
     /**
