@@ -60,7 +60,7 @@ class ConferenceTest extends BasicPageTestCase
         $response = $this->setSchoolAsUser($user, 50)
             ->actingAs($user)
             ->withSession($this->schoolSessionData)
-            ->get(route('teacher.conference.getUser',$data));
+            ->get(route('teacher.conference.getUsers',$data));
 
         $result = json_decode($response->content(),true);
         $this->assertArrayHasKey('error_no', $result);
@@ -113,9 +113,6 @@ class ConferenceTest extends BasicPageTestCase
             ->withSession($this->schoolSessionData)
             ->post(route('teacher.conference.create',$data));
         dd($response->content());
-
-
-
     }
 
 
@@ -129,6 +126,7 @@ class ConferenceTest extends BasicPageTestCase
             'user_id'    => 1,
             'participant'=> [11,12,13],
             'sign_out'   => 0,
+            'video'      => 0,
             'remark'     => '',
 
         ];
