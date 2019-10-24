@@ -27,7 +27,6 @@ Vue.use(ElementUI);
 // Vue.component('example-component', require('./components/ExampleComponent.vue').default);
 Vue.component('time-slots-manager', require('./components/timeline/TimeSlotsManager.vue').default);
 Vue.component('courses-manager', require('./components/courses/CoursesManager.vue').default);
-Vue.component('courses-form', require('./components/courses/CourseForm.vue').default);
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to
