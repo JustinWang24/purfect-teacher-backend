@@ -15,6 +15,8 @@ use App\Models\Schools\SchoolResource;
                 <div class="card-body " id="bar-parent">
                     <form action="{{ route('school_manager.scenery.save') }}" method="post" enctype="multipart/form-data">
                         @csrf
+                         <input type="hidden" id="major-id-input" name="scenery[id]" value="{{ $data->id }}">
+
                         <div class="form-group">
                             <label for="school-name-input">资源类型</label>
                             <select class="form-control" name="scenery[type]"  required>
@@ -23,7 +25,6 @@ use App\Models\Schools\SchoolResource;
                                 <option value="{{SchoolResource::TYPE_VIDEO}}" selected="selected" >视频</option>
                             </select>
                         </div>
-
                         <div id="image" style="">
                             <div class="form-group">
                                 <lable for="">资源名称</lable>
@@ -44,25 +45,13 @@ use App\Models\Schools\SchoolResource;
                                 </div>
                             </div>
 
-                            <div class="form-group">
-                                <label for="school-name-input">上传图片</label>
-                                <input type="file" class="form-control" name="image" required>
-                            </div>
-                        </div>
+{{--                            <div class="form-group">--}}
+{{--                                <label for="school-name-input">上传图片</label>--}}
+{{--                                <input type="file" class="form-control" name="image" required>--}}
+{{--                            </div>--}}
+{{--                        </div>--}}
 
-{{--                        <div id="video" style="display:none;">--}}
-{{--                            <div class="form-group">--}}
-{{--                                <lable for="">资源名称</lable>--}}
-{{--                                <input type="text" class="form-control" name="scenery[name]" required>--}}
-{{--                            </div>--}}
-{{--                            <div class="form-group">--}}
-{{--                                <lable for="">宽度</lable>--}}
-{{--                                <input type="text" class="form-control" name="scenery[width]" required>--}}
-{{--                            </div>--}}
-{{--                            <div class="form-group">--}}
-{{--                                <lable for="">高度</lable>--}}
-{{--                                <input type="text" class="form-control" name="scenery[height]" required>--}}
-{{--                            </div>--}}
+{{--                        <div id="video" style="">--}}
 {{--                            <div class="form-group">--}}
 {{--                                <label for="school-name-input">上传视频</label>--}}
 {{--                                <input type="file" class="form-control" name="video" required>--}}

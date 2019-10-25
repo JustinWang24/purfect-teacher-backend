@@ -25,6 +25,7 @@ class HomeController extends Controller
      */
     public function index(Request $request)
     {
+
         $this->dataForView['needChart'] = true;
         // Todo: 用户登陆成功, 应该根据不同的用户角色, 跳转到不同的起始页
         /**
