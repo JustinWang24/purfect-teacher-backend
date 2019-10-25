@@ -48,6 +48,7 @@ class UploadFiles
 
     public function makePostMultipart($uri, $data, $fileFieldName, $filePath)
     {
+
         $client = new Client();
         $mData = [];
 
@@ -59,7 +60,7 @@ class UploadFiles
         }
 
         $mData[] = ['name' => $fileFieldName, 'contents' =>fopen($filePath,'r')];
-dd($mData);
+
         $result =  $client->request(
             'post',
             $this->baseUrl . $uri,

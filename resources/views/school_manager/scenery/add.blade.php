@@ -43,36 +43,22 @@ use App\Models\Schools\SchoolResource;
                                     <span class="input-group-addon">PX</span>
                                 </div>
                             </div>
-
-                            <div class="form-group">
-                                <label for="school-name-input">上传图片</label>
-                                <input type="file" class="form-control" name="image" required>
-                            </div>
+{{--                            <div class="form-group">--}}
+{{--                                <label for="school-name-input">上传图片</label>--}}
+{{--                                <input type="file" class="form-control" name="image" required>--}}
+{{--                            </div>--}}
                         </div>
 
-{{--                        <div id="video" style="display:none;">--}}
-{{--                            <div class="form-group">--}}
-{{--                                <lable for="">资源名称</lable>--}}
-{{--                                <input type="text" class="form-control" name="scenery[name]" required>--}}
-{{--                            </div>--}}
-{{--                            <div class="form-group">--}}
-{{--                                <lable for="">宽度</lable>--}}
-{{--                                <input type="text" class="form-control" name="scenery[width]" required>--}}
-{{--                            </div>--}}
-{{--                            <div class="form-group">--}}
-{{--                                <lable for="">高度</lable>--}}
-{{--                                <input type="text" class="form-control" name="scenery[height]" required>--}}
-{{--                            </div>--}}
-{{--                            <div class="form-group">--}}
-{{--                                <label for="school-name-input">上传视频</label>--}}
-{{--                                <input type="file" class="form-control" name="video" required>--}}
-{{--                            </div>--}}
-{{--                            <div class="form-group">--}}
-{{--                                <label for="school-name-input">上传视频封面</label>--}}
-{{--                                <input type="file" class="form-control" name="video_cover" required>--}}
-{{--                            </div>--}}
-{{--                        </div>--}}
-
+                        <div id="video">
+                            <div class="form-group">
+                                <label for="school-name-input">上传视频封面</label>
+                                <input type="file" class="form-control" name="video_cover" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="school-name-input">上传视频</label>
+                                <input type="file" class="form-control" name="video" required>
+                            </div>
+                        </div>
 
                         <?php
                         Button::Print(['id'=>'btnSubmit','text'=>trans('general.submit')], Button::TYPE_PRIMARY);
