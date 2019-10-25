@@ -37,3 +37,4 @@ Route::any('/school/delete-course','Api\School\CoursesController@delete_course')
 // 获取学校的所有建筑
 Route::any('/school/load-buildings','Api\School\LocationController@load_buildings')->name('api.school.load.buildings');
 Route::any('/school/load-building-rooms','Api\School\LocationController@load_building_rooms')->name('api.school.load.building.rooms');
+Route::any('/school/load-building-available-rooms','Api\School\LocationController@load_building_available_rooms')->name('api.school.load.building.available.rooms');

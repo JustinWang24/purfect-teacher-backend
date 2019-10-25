@@ -10,6 +10,7 @@ namespace App\Dao\Schools;
 use App\User;
 use App\Models\Schools\Room;
 use Illuminate\Support\Collection;
+use App\Models\Timetable\TimetableItem;
 
 class RoomDao
 {
@@ -25,6 +26,23 @@ class RoomDao
      */
     public function getRoomsByBuilding($buildingId){
         return Room::where('building_id',$buildingId)->get();
+    }
+
+    /**
+     * @param $year
+     * @param $term
+     * @param $weekdayIndex
+     * @param $timeSlotId
+     * @param $buildingId
+     * @return array
+     */
+    public function getBookedRoomsId($year, $term, $weekdayIndex, $timeSlotId, $buildingId){
+        return TimetableItem::select('room_id')->where('year',$year)
+            ->where('term',$term)
+            ->where('weekday_index',$weekdayIndex)
+            ->where('time_slot_id',$timeSlotId)
+            ->where('building_id',$buildingId)
+            ->get()->toArray();
     }
 
     /**
