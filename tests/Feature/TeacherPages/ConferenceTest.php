@@ -36,8 +36,9 @@ class ConferenceTest extends BasicPageTestCase
         $response->assertSee('input type="hidden" name="_token"');
         $response->assertSee('id="conference-title-input"');              //会议主题
         $response->assertSee('id="conference-room_id-input"');            //会议地点
-        $response->assertSee('id="conference-from-input"');               //会议开始时间
-        $response->assertSee('id="conference-to-input"');                 //会议结束时间
+        $response->assertSee('id="conference-date-input-date"');          //会议当天时间
+        $response->assertSee('id="conference-from-input-time"');          //会议开始时间
+        $response->assertSee('id="conference-to-input-time"');            //会议结束时间
         $response->assertSee('id="conference-user_id-input"');            //会议负责人
         $response->assertSee('id="conference-participant-select-array"'); //会议参会人
         $response->assertSee('id="conference-sign_out-radio"');           //会议结束签退
@@ -82,10 +83,13 @@ class ConferenceTest extends BasicPageTestCase
     public function testGetRoomsApi()
     {
         $user = $this->getSuperAdmin();
+        $date = Carbon::now()->format('Y-m-d');
+        $get = ['date'=>$date];
+
         $response = $this->setSchoolAsUser($user, 50)
             ->actingAs($user)
             ->withSession($this->schoolSessionData)
-            ->get(route('teacher.conference.getRooms'));
+            ->get(route('teacher.conference.getRooms',$get));
         $result = json_decode($response->content(),true);
         $this->assertArrayHasKey('error_no', $result);
         $this->assertArrayHasKey('data', $result);
@@ -105,17 +109,21 @@ class ConferenceTest extends BasicPageTestCase
     public function testAddConferenceApi()
     {
 
-        $data = $this->__createData();
+        $data = $this->__createConferenceData();
 
         $user = $this->getSuperAdmin();
         $response = $this->setSchoolAsUser($user, 50)
             ->actingAs($user)
             ->withSession($this->schoolSessionData)
             ->post(route('teacher.conference.create',$data));
-        dd($response->content());
+        $result = json_decode($response->content(),true);
+        dd($result);
     }
 
 
+    /**
+     * 获取会议列表接口
+     */
     public function testGetConferenceListApi()
     {
         $user = $this->getSuperAdmin();
@@ -123,24 +131,29 @@ class ConferenceTest extends BasicPageTestCase
             ->actingAs($user)
             ->withSession($this->schoolSessionData)
             ->get(route('teacher.conference.data'));
-        dd($response->content());
+        $result = json_decode($response->content(),true);
+        dd($result);
     }
 
 
-
-    public function __createData()
+    /**
+     * 会议数据
+     * @return array
+     */
+    public function __createConferenceData()
     {
         $data = [
             'title'      => Str::random(10),
             'room_id'    => 1,
-            'from'       => Carbon::now()->format('Y-m-d H:i:s'),
-            'to'         => Carbon::tomorrow()->format('Y-m-d 00:00:00'),
+            'date'       => Carbon::now()->format('Y-m-d'),
+            'from'       => Carbon::now()->format('H:i:s'),
+            'to'         => Carbon::parse('+5 minutes ')->format('H:i:s'),
             'user_id'    => 1,
             'participant'=> [11,12,13],
             'sign_out'   => 0,
             'video'      => 0,
             'remark'     => '',
-            'media_id'     => 1,
+            'media_id'   => 1,
 
         ];
         return  $data;

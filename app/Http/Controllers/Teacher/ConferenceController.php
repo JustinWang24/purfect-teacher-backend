@@ -28,7 +28,7 @@ class ConferenceController extends Controller
         $userId = Auth::id();
         $dao = new ConferenceDao();
         $map = ['user_id'=>$userId];
-        $list = $dao->getList($map,$schoolId)->toArray();
+        $list = $dao->getConferenceListByUser($map,$schoolId)->toArray();
 
         return JsonBuilder::Success($list);
 //        echo json_encode(['code'=>0,"count" => 1, "data" => $list]);die;
@@ -133,16 +133,36 @@ class ConferenceController extends Controller
 
 
     /**
-     * 获取会议室
+     * 获取会议室 把当前已预约的时间返回
      * @param ConferenceRequest $request
      * @return string
      */
     public function getRooms(ConferenceRequest $request)
     {
+        $date = $request->get('date');
+
         $roomDao = new RoomDao($request->user());
         $schoolId = 50;
         $map = ['school_id'=>$schoolId,'type'=>Room::TYPE_MEETING_ROOM];
         $list = $roomDao->getRooms($map)->toArray();
+        //查询开会的房间的时间
+        $conferenceDao = new ConferenceDao();
+        $map = ['date'=>$date,'school_id'=>$schoolId];
+
+        $field = ['from','to','room_id'];
+        $conferenceList = $conferenceDao->getConference($map,$field,'room_id')->toArray();
+
+        foreach ($list as $key => $val)
+        {
+            if(array_key_exists($val['id'],$conferenceList))
+            {
+                $list[$key]['time'] = $conferenceList[$val['id']];
+            }
+            else
+            {
+                $list[$key]['time'] = [];
+            }
+        }
         return JsonBuilder::Success($list);
     }
 
