@@ -16,7 +16,7 @@ class CreateConferencesTable extends Migration
     {
         if(!Schema::hasTable('conferences')) {
             Schema::create('conferences', function (Blueprint $table) {
-                $table->increments('id');
+                $table->bigIncrements('id');
                 $table->string('title', 50)->comment('会议主题');
                 $table->integer('school_id')->comment('学校ID');
                 $table->integer('user_id')->comment('会议负责人');
