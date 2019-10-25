@@ -17,5 +17,6 @@ export const Constants = {
         SEARCH_TEACHERS_BY_NAME: '/api/school/search-teachers',
         SAVE_COURSE: '/api/school/save-course',
         DELETE_COURSE: '/api/school/delete-course',
-    }
+    },
+    TERMS: ['第一学期','第二学期','第三学期','第四学期'],
 };
