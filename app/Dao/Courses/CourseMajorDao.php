@@ -31,4 +31,34 @@ class CourseMajorDao
         }
         return CourseMajor::where('major_id',$majorId)->get();
     }
+
+    /**
+     * 根据指定的专业 Major id 获取课程列表
+     * @param $majorId
+     * @param $termIdx
+     * @param bool $simple
+     * @return Collection|array
+     */
+    public function getCoursesByMajorAndTerm($majorId, $termIdx, $simple = true){
+        $cms =  DB::table('course_majors')
+            ->join('courses', function ($join) use ($termIdx) {
+                $join->on('courses.id', '=', 'course_majors.course_id')
+                    ->where('courses.term','=',$termIdx);
+            })
+            ->where('major_id',$majorId)
+            ->orderBy('course_majors.course_name','asc')
+            ->get();
+
+        $data = [];
+        if($simple){
+            foreach ($cms as $cm) {
+                $data[] = [
+                    'id'=>$cm->course_id,
+                    'name'=>$cm->name
+                ];
+            }
+        }
+
+        return $simple ? $data : $cms;
+    }
 }

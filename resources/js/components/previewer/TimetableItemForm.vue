@@ -164,6 +164,15 @@
                     this._getTeachersByCourse(newVal);
                 }
             },
+            'timeTableItem.term': function(newVal, oldVal){
+                // 当用户选择的学期发生变化时, 会导致专业的课程别表发生变化
+                if(newVal !== oldVal){
+                    // 根据专业和学期去刷新课程列表
+                    this._getCoursesByMajor(newVal);
+                    this.timeTableItem.course_id = ''; // 学期变了, 课程 id 值归零
+                    this.timeTableItem.teacher_id = ''; // 学期变了, 授课教师 id 值归零
+                }
+            },
         },
 
         created(){
@@ -219,27 +228,33 @@
             },
             // 根据专业获取班级
             _getGradesByMajor: function(){
-                axios.post(
-                    Constants.API.LOAD_GRADES_BY_MAJOR,{id: this.selectedMajor}
-                ).then( res => {
-                    if(res.data.code === Constants.AJAX_SUCCESS){
-                        this.grades = res.data.data.grades;
-                    }else{
-                        this.grades = [];
-                    }
-                })
+                // 根据选择的专业加载班级
+                if(this.selectedMajor !== ''){
+                    axios.post(
+                        Constants.API.LOAD_GRADES_BY_MAJOR,{id: this.selectedMajor}
+                    ).then( res => {
+                        if(res.data.code === Constants.AJAX_SUCCESS){
+                            this.grades = res.data.data.grades;
+                        }else{
+                            this.grades = [];
+                        }
+                    })
+                }
             },
             // 根据专业获取课程
             _getCoursesByMajor: function(){
-                axios.post(
-                    Constants.API.LOAD_COURSES_BY_MAJOR,{id: this.selectedMajor}
-                ).then( res => {
-                    if(res.data.code === Constants.AJAX_SUCCESS){
-                        this.courses = res.data.data.courses;
-                    }else{
-                        this.courses = [];
-                    }
-                })
+                // 获取课程的时候, 除了专业, 还有学期
+                if(this.selectedMajor !== '') {
+                    axios.post(
+                        Constants.API.LOAD_COURSES_BY_MAJOR,{id: this.selectedMajor, term: this.timeTableItem.term}
+                    ).then( res => {
+                        if(res.data.code === Constants.AJAX_SUCCESS){
+                            this.courses = res.data.data.courses;
+                        }else{
+                            this.courses = [];
+                        }
+                    })
+                }
             },
             _getTeachersByCourse: function(courseId){
                 if(courseId !== ''){

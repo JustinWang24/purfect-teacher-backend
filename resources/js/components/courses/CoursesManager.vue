@@ -146,7 +146,7 @@
                         { required: true, message: '请选择学期', trigger: 'change' }
                     ]
                 },
-                terms: ['第一学期','第二学期','第三学期','第四学期'],
+                terms: Constants.TERMS,
                 majors: [], // 所有可能的专业
                 teachers:[], // 被搜索出的老师
                 loading: false,

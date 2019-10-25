@@ -10,6 +10,7 @@ namespace App\Dao\Schools;
 use App\User;
 use App\Models\Users\GradeUser;
 use App\Models\Schools\Grade;
+use Illuminate\Support\Collection;
 
 class GradeDao
 {
@@ -25,6 +26,19 @@ class GradeDao
      */
     public function getGradeById($id){
         return Grade::find($id);
+    }
+
+    /**
+     * 根据给定的专业和年份获取班级
+     * @param $majorId
+     * @param $year
+     * @return Collection
+     */
+    public function getGradesByMajorAndYear($majorId, $year){
+        return Grade::where('major_id',$majorId)
+            ->where('year',$year)
+            ->orderBy('name','asc')
+            ->get();
     }
 
     /**
