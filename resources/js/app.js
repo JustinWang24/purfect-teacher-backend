@@ -26,10 +26,11 @@ Vue.use(ElementUI);
 
 // Vue.component('example-component', require('./components/ExampleComponent.vue').default);
 Vue.component('time-slots-manager', require('./components/timeline/TimeSlotsManager.vue').default);
+Vue.component('courses-manager', require('./components/courses/CoursesManager.vue').default);
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to
- * the page. Then, you may begin adding components to this application
+ * the page. Then, you may begin adding components to this applications
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
 
@@ -41,5 +42,11 @@ Vue.component('time-slots-manager', require('./components/timeline/TimeSlotsMana
 if(document.getElementById('school-time-slots-manager')){
     new Vue({
         el: '#school-time-slots-manager'
+    });
+}
+
+if(document.getElementById('school-courses-manager-app')){
+    new Vue({
+        el: '#school-courses-manager-app'
     });
 }
