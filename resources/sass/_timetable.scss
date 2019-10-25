@@ -6,11 +6,20 @@ $txt-blue: #3490dc;
   display: flex;
   .nav-item{
     background-color: white;
-    margin: 5px;
+    margin-right: 10px;
     .nav-link{
       color: $txt-color;
       &:hover{
         color: $txt-blue;
+      }
+    }
+  }
+  .active{
+    background: $txt-blue;
+    .nav-link{
+      color: white;
+      &:hover{
+        color: white;
       }
     }
   }

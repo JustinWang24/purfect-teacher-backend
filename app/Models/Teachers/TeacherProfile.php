@@ -6,6 +6,22 @@ use Illuminate\Database\Eloquent\Model;
 
 class TeacherProfile extends Model
 {
+    protected $fillable = [
+        'uuid',
+        'teacher_id',
+        'school_id',
+        'name',
+        'gender',
+        'country',
+        'state',
+        'city',
+        'postcode',
+        'address_line',
+        'address_in_school',
+        'device',
+        'birthday',
+        'avatar',
+    ];
 
     /**
      * 获取教师ID
