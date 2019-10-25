@@ -10,7 +10,7 @@ class ConferencesUser extends Model
 
 
     protected $fillable = [
-        'conference_id','user_id','school_id','status','from','to','begin','end',
+        'conference_id','user_id','school_id','status','date','from','to','begin','end',
     ];
 
 

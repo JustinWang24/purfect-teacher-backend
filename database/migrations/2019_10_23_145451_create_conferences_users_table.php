@@ -21,9 +21,10 @@ class CreateConferencesUsersTable extends Migration
                 $table->foreign('conference_id')->references('id')->on('conferences');
                 $table->integer('user_id')->comment('参会人ID');
                 $table->integer('school_id')->comment('学校ID');
-                $table->integer('status')->default(0)->comment('状态 0:未签到 1:签到');
-                $table->timestamp('from')->comment('会议开始时间')->nullable();
-                $table->timestamp('to')->comment('会议结束时间')->nullable();
+                $table->integer('status')->default(0)->comment('状态 0:未签到 1:已签到 2:已签退');
+                $table->date('date')->comment('会议当天时间')->nullable();
+                $table->time('from')->comment('会议开始时间')->nullable();
+                $table->time('to')->comment('会议结束时间')->nullable();
                 $table->timestamp('begin')->comment('开始签到时间')->nullable();
                 $table->timestamp('end')->comment('结束签到时间')->nullable();
                 $table->timestamps();

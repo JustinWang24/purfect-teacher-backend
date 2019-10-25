@@ -16,7 +16,12 @@ use App\Models\Teachers\ConferencesMedia;
 class ConferenceDao
 {
 
-    public function getList($map,$schoolId='')
+    /**
+     * @param $map
+     * @param string $schoolId
+     * @return mixed
+     */
+    public function getConferenceListByUser($map,$schoolId='')
     {
         $userModel = new User();
         if($userModel->isSchoolAdminOrAbove())
@@ -101,7 +106,8 @@ class ConferenceDao
                     'conference_id' => $s1->id,
                     'user_id'       => $val,
                     'school_id'     => $conferenceData['school_id'],
-                    'statue'        => 0,
+                    'status'        => 0,
+                    'date'          => $conferenceData['date'],
                     'from'          => $conferenceData['from'],
                     'to'            => $conferenceData['to'],
                 ];
@@ -128,6 +134,27 @@ class ConferenceDao
             return ['code'=>0,'msg'=>$msg];
         }
     }
+
+
+    /**
+     * 获取会议列表
+     * @param $map
+     * @param $field
+     * @param $groupBy
+     * @return mixed
+     */
+    public function getConference($map,$field,$groupBy='')
+    {
+        $model = new Conference();
+        $list = $model->where($map)->select($field)->get();
+        if(!empty($groupBy))
+        {
+            $list = $list->groupBy($groupBy);
+        }
+
+        return $list;
+    }
+
 
 
 }

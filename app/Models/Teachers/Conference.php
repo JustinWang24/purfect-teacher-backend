@@ -7,8 +7,17 @@ use App\User;
 use Illuminate\Database\Eloquent\Model;
 class Conference extends Model
 {
+
+    const STATUS_UNCHECK = 0;    //未审核
+    const STATUS_CHECK   = 1;    //审核
+    const STATUS_REFUSE  = 2;    //拒绝
+
+    const STATUS_UNCHECK_TEXT = '未审核';
+    const STATUS_CHECK_TEXT   = '已审核';
+    const STATUS_REFUSE_TEXT  = '拒绝';
+
     protected  $fillable=[
-        'title','school_id','user_id','room_id','sign_out','to','from','video','remark',
+        'title','school_id','user_id','room_id','sign_out','date','to','from','video','remark',
     ];
 
 
