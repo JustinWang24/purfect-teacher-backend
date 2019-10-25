@@ -16,9 +16,11 @@ class CreateConferencesMediasTable extends Migration
     {
         if(!Schema::hasTable('conferences_medias')) {
             Schema::create('conferences_medias', function (Blueprint $table) {
-                $table->increments('id');
-                $table->integer('conference_id')->comment('会议ID');
-                $table->integer('media_id')->comment('媒体ID');
+                $table->bigIncrements('id');
+                $table->unsignedBigInteger('conference_id')->comment('会议ID');
+                $table->foreign('conference_id')->references('id')->on('conferences');
+                $table->unsignedBigInteger('media_id')->comment('媒体ID');
+                $table->foreign('media_id')->references('id')->on('medias');
                 $table->timestamps();
             });
         }

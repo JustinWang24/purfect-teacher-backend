@@ -43,7 +43,7 @@ class ConferenceTest extends BasicPageTestCase
         $response->assertSee('id="conference-sign_out-radio"');           //会议结束签退
         $response->assertSee('id="conference-video-radio"');              //视频会议
         $response->assertSee('id="conference-remark-text"');              //特殊说明
-        $response->assertSee('id="conference-file-file"');                //附件
+        $response->assertSee('id="conference-media_id-file"');            //附件
     }
 
 
@@ -116,6 +116,18 @@ class ConferenceTest extends BasicPageTestCase
     }
 
 
+    public function testGetConferenceListApi()
+    {
+        $user = $this->getSuperAdmin();
+        $response = $this->setSchoolAsUser($user, 50)
+            ->actingAs($user)
+            ->withSession($this->schoolSessionData)
+            ->get(route('teacher.conference.data'));
+        dd($response->content());
+    }
+
+
+
     public function __createData()
     {
         $data = [
@@ -128,10 +140,14 @@ class ConferenceTest extends BasicPageTestCase
             'sign_out'   => 0,
             'video'      => 0,
             'remark'     => '',
+            'media_id'     => 1,
 
         ];
         return  $data;
     }
+
+
+
 
 }
 

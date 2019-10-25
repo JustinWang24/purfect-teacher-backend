@@ -16,8 +16,9 @@ class CreateConferencesUsersTable extends Migration
     {
         if(!Schema::hasTable('conferences_users')) {
             Schema::create('conferences_users', function (Blueprint $table) {
-                $table->increments('id');
-                $table->integer('conference_id')->comment('会议ID');
+                $table->bigIncrements('id');
+                $table->unsignedBigInteger('conference_id')->comment('会议ID');
+                $table->foreign('conference_id')->references('id')->on('conferences');
                 $table->integer('user_id')->comment('参会人ID');
                 $table->integer('school_id')->comment('学校ID');
                 $table->integer('status')->default(0)->comment('状态 0:未签到 1:签到');
