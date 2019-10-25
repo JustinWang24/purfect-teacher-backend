@@ -13,27 +13,23 @@
                 </el-form-item>
                 <el-form-item label="学期">
                     <el-select v-model="timeTableItem.term" style="width: 100%;">
-                        <el-option label="上学期" value="1"></el-option>
-                        <el-option label="下学期" value="2"></el-option>
+                        <el-option :label="theTerm" :value="(idx+1)" :key="theTerm" v-for="(theTerm, idx) in terms"></el-option>
                     </el-select>
                 </el-form-item>
                 <el-form-item label="重复周期">
                     <el-select v-model="timeTableItem.repeat_unit" style="width: 100%;">
-                        <el-option label="单周重复" value="1"></el-option>
-                        <el-option label="双周重复" value="2"></el-option>
-                        <el-option label="三周重复" value="3"></el-option>
-                        <el-option label="四周重复" value="4"></el-option>
+                        <el-option :label="repeatUnit"
+                                   :value="(idx+1)"
+                                   :key="repeatUnit"
+                                   v-for="(repeatUnit, idx) in repeatUnits"></el-option>
                     </el-select>
                 </el-form-item>
                 <el-form-item label="哪一天">
                     <el-select v-model="timeTableItem.weekday_index" style="width: 100%;">
-                        <el-option label="周一" value="1"></el-option>
-                        <el-option label="周二" value="2"></el-option>
-                        <el-option label="周三" value="3"></el-option>
-                        <el-option label="周四" value="4"></el-option>
-                        <el-option label="周五" value="5"></el-option>
-                        <el-option label="周六" value="6"></el-option>
-                        <el-option label="周日" value="0"></el-option>
+                        <el-option :label="theWeekday"
+                                   :value="(idx+1)"
+                                   :key="theWeekday"
+                                   v-for="(theWeekday, idx) in weekdays"></el-option>
                     </el-select>
                 </el-form-item>
                 <el-form-item label="时间段">
@@ -89,11 +85,35 @@
                     </el-select>
                 </el-form-item>
             </div>
+            <div v-show="currentStep===4" class="summary-wrap">
+                <p class="item-summary">您创建的课表详情</p>
+                <el-divider></el-divider>
+                <p class="item-text">
+                    <span class="label-text">有效期:</span> {{ timeTableItem.year }}年{{ termText }}
+                </p>
+                <p class="item-text">
+                    <span class="label-text">时间段:</span> {{ timeSlotText }} ({{ repeatUnitText }})
+                </p>
+                <el-divider></el-divider>
+                <p class="item-text">
+                    <span class="label-text">地点:</span> {{ locationText }}
+                </p>
+                <el-divider></el-divider>
+                <p class="item-text">
+                    <span class="label-text">上课班级:</span> {{ gradeInfoText }}
+                </p>
+                <p class="item-text">
+                    <span class="label-text">上课内容:</span> {{ courseText }}
+                </p>
+                <p class="item-text">
+                    <span class="label-text">授课老师:</span> {{ teacherText }}
+                </p>
+            </div>
 
             <el-form-item>
                 <el-button icon="el-icon-back" type="primary" @click="goToPrev" :disabled="currentStep===1">上一步</el-button>
                 <el-button icon="el-icon-right el-icon--right" type="primary" @click="goToNext" v-show="currentStep < 4">下一步</el-button>
-                <el-button icon="el-icon-document-add" type="primary" @click="saveItem" v-show="currentStep === 4">保存</el-button>
+                <el-button icon="el-icon-document-add" type="primary" @click="saveItem" v-show="currentStep === 4">我确认以上信息无误, 保存</el-button>
             </el-form-item>
         </el-form>
     </div>
@@ -101,6 +121,7 @@
 
 <script>
     import { Constants } from '../../common/constants';
+    import { Util } from '../../common/utils';
 
     export default {
         name: "TimetableItemForm",
@@ -120,9 +141,9 @@
                 selectedMajor: '',
                 timeTableItem: {
                     year:'',
-                    term:'1',
-                    repeat_unit:'1',
-                    weekday_index:'1',
+                    term:1,
+                    repeat_unit:1,
+                    weekday_index:1,
                     time_slot_id:'',
                     // 地点
                     building_id:'',
@@ -138,9 +159,13 @@
                 grades: [], // 根据专业加载的候选班级
                 courses: [], // 根据专业加载的候选班级
                 teachers: [], // 根据专业加载的候选班级
+                // 来自本地,暂无需远程加载的选项
+                terms:[],
+                repeatUnits:[],
+                weekdays:[],
             }
         },
-
+        // 监听
         watch: {
             'timeTableItem.building_id': function(newVal, oldVal){
                 if(newVal !== oldVal){
@@ -174,12 +199,82 @@
                 }
             },
         },
-
+        // 计算属性
+        computed: {
+            'termText': function(){
+                if(this.timeTableItem.term)
+                    return Util.GetTermText(this.timeTableItem.term);
+            },
+            'repeatUnitText': function () {
+                if(this.timeTableItem.repeat_unit)
+                    return Util.GetRepeatUnitText(this.timeTableItem.repeat_unit);
+            },
+            'timeSlotText': function () {
+                if(this.timeTableItem.time_slot_id !== ''){
+                    return Util.GetWeekdayText(this.timeTableItem.weekday_index) + ', '
+                        + Util.GetItemById(this.timeTableItem.time_slot_id, this.timeSlots).name;
+                }else{
+                    return '';
+                }
+            },
+            // 上课地点的表述
+            'locationText': function(){
+                let buildingText = '';
+                if(this.timeTableItem.building_id !== '' && this.timeTableItem.room_id !== ''){
+                    // 获取建筑物的文本
+                    const theBuildingId = this.timeTableItem.building_id;
+                    _.each(this.campuses, item => {
+                        if(item.buildings){
+                            const building = Util.GetItemById(theBuildingId, item.buildings);
+                            if(building){
+                                buildingText = item.campus + ', ' + building.name;
+                            }
+                        }
+                    });
+                    // 获取教室
+                    const theRoom = Util.GetItemById(this.timeTableItem.room_id, this.rooms);
+                    if(theRoom){
+                        buildingText += ', ' + theRoom.name;
+                    }
+                }
+                return buildingText;
+            },
+            // 上课班级的表述
+            'gradeInfoText': function(){
+                let result = '';
+                if(this.timeTableItem.grade_id !== ''){
+                    const theMajor = Util.GetItemById(parseInt(this.selectedMajor), this.majors);
+                    if(theMajor){
+                        result = theMajor.name + ' - ';
+                    }
+                    const theGrade = Util.GetItemById(this.timeTableItem.grade_id, this.grades);
+                    if(theGrade){
+                        result += theGrade.name;
+                    }
+                }
+                return result;
+            },
+            // 上课内容的表述
+            'courseText': function(){
+                if(this.timeTableItem.course_id !== ''){
+                    return Util.GetItemById(this.timeTableItem.course_id, this.courses).name;
+                }
+            },
+            // 授课教师的表述
+            'teacherText': function(){
+                if(this.timeTableItem.teacher_id !== ''){
+                    return Util.GetItemById(this.timeTableItem.teacher_id, this.teachers).name;
+                }
+            }
+        },
         created(){
             this._getAllBuildings();
             this._getAllTimeSlots();
             this._getAllMajors();
             this.timeTableItem.year = (new Date()).getFullYear() + '';
+            this.terms = Constants.TERMS;
+            this.repeatUnits = Constants.REPEAT_UNITS;
+            this.weekdays = Constants.WEEK_DAYS;
         },
         methods: {
             // 获取学校的所有时间段
@@ -204,8 +299,19 @@
             },
             // 获取某个建筑的所有房间
             _getRoomsByBuilding: function(buildingId){
+                // 获取房间时, 要根据前面一个步骤选择的时间段来进行判断.
+                // 如果给定年度的, 给定学期的, 给定时间段, 给定的建筑物内,
+                // 某个教室是可能被占用的, 因此被占用的不可以被返回
                 axios.post(
-                    Constants.API.LOAD_ROOMS_BY_BUILDING,{school: this.schoolId, building: buildingId}
+                    Constants.API.LOAD_AVAILABLE_ROOMS_BY_BUILDING,
+                    {
+                        school: this.schoolId,
+                        building: buildingId,
+                        year: this.timeTableItem.year,
+                        term: this.timeTableItem.term,
+                        weekday_index: this.timeTableItem.weekday_index,
+                        timeSlot: this.timeTableItem.time_slot_id
+                    }
                 ).then( res => {
                     if(res.data.code === Constants.AJAX_SUCCESS){
                         this.rooms = res.data.data.rooms;
@@ -285,7 +391,9 @@
             },
             saveItem: function(){
 
-            }
+            },
+            // 输出文字的方法
+
         }
     }
 </script>
@@ -294,6 +402,25 @@
 .timetable-item-form-wrap{
     .the-form{
         padding-right: 10px;
+        .summary-wrap{
+            padding: 14px;
+            .item-summary{
+                font-size: 18px;
+                font-weight: bold;
+                color: #3490dc;
+            }
+            .item-text{
+                font-size: 14px;
+                color: #888888;
+                line-height: 24px;
+                .label-text{
+                    color: #0c0c0c;
+                    font-weight: bold;
+                    width: 80px;
+                    display: inline-block;
+                }
+            }
+        }
     }
 }
 </style>

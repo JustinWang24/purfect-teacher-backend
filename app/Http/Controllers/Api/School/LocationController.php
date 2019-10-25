@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\School;
 
+use App\BusinessLogic\AvailableRooms\Factory;
 use App\Dao\Schools\RoomDao;
 use App\Utils\JsonBuilder;
 use Illuminate\Http\Request;
@@ -44,7 +45,31 @@ class LocationController extends Controller
      */
     public function load_building_rooms(Request $request){
         $buildingId = $request->get('building');
-        $dao = new RoomDao(new User());
-        return JsonBuilder::Success(['rooms'=>$dao->getRoomsByBuilding($buildingId)]);
+        return JsonBuilder::Success(['rooms'=>$this->_loadRooms($buildingId)]);
+    }
+
+    /**
+     * @param Request $request
+     * @return string
+     */
+    public function load_building_available_rooms(Request $request){
+        $logic = Factory::GetLogic($request);
+        return JsonBuilder::Success(['rooms'=>$logic->getAvailableRooms()]);
+    }
+
+    /**
+     * @param $buildingId
+     * @return \Illuminate\Support\Collection
+     */
+    private function _loadRooms($buildingId){
+        $dao = $this->_getRoomDao();
+        return $dao->getRoomsByBuilding($buildingId);
+    }
+
+    /**
+     * @return RoomDao
+     */
+    private function _getRoomDao(){
+        return new RoomDao(new User());
     }
 }
