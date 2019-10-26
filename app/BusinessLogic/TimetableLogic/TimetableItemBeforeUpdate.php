@@ -1,14 +1,17 @@
 <?php
 /**
- * 在Item 被插入到数据之前, 需要执行的业务逻辑
+ * Created by PhpStorm.
+ * User: justinwang
+ * Date: 26/10/19
+ * Time: 8:17 PM
  */
-namespace App\BusinessLogic\TimetableLogic;
 
+namespace App\BusinessLogic\TimetableLogic;
 use App\Dao\Timetable\TimetableItemDao;
 use Illuminate\Http\Request;
 use App\Dao\Users\UserDao;
 
-class TimetableItemBeforeCreate
+class TimetableItemBeforeUpdate
 {
     /**
      * @var Request
@@ -35,7 +38,7 @@ class TimetableItemBeforeCreate
     }
 
     /**
-     * Todo: 课程表项目创建之前的检查工作需要完成
+     * Todo: 课程表项目更新之前的检查工作需要完成
      * @return $this
      */
     public function check(){
@@ -45,16 +48,15 @@ class TimetableItemBeforeCreate
     }
 
     /**
-     * 创建 Item
-     * @return \App\Models\Timetable\TimetableItem
+     * 更新 Item
+     * @return false
      */
-    public function create(){
+    public function update(){
         if($this->checked){
             $dao = new TimetableItemDao();
-            $this->itemData['school_id'] = $this->schoolId;
             $this->itemData['last_updated_by'] = $this->currentUser->id;
-            return $dao->createTimetableItem($this->itemData);
+            return $dao->updateTimetableItem($this->itemData);
         }
-        return null;
+        return false;
     }
 }

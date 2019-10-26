@@ -21,12 +21,62 @@ class TimetableItemDao
     }
 
     /**
+     * @param $id
+     * @return TimetableItem
+     */
+    public function getItemById($id){
+        return TimetableItem::find($id);
+    }
+
+    /**
+     * @param $item
+     * @return TimetableItem|bool
+     */
+    public function cloneItem($item){
+        $origin = $this->getItemById($item['id']);
+        if($origin){
+            $fillable = $origin->getFillable();
+            $data = [];
+            foreach ($fillable as $fieldName) {
+                $data[$fieldName] = $origin->$fieldName;
+            }
+            $data['weekday_index'] = $item['weekday_index'];
+            $data['time_slot_id'] = $item['time_slot_id'];
+            return $this->createTimetableItem($data);
+        }
+        return false;
+    }
+
+    /**
      * 添加新的 Item
      * @param $data
      * @return TimetableItem
      */
     public function createTimetableItem($data){
         return TimetableItem::create($data);
+    }
+
+    /**
+     * 删除
+     * @param $id
+     * @return bool|null
+     */
+    public function deleteItem($id){
+        return TimetableItem::where('id',$id)->delete();
+    }
+
+    /**
+     * 更新课程表项
+     * @param $data
+     * @return bool
+     */
+    public function updateTimetableItem($data){
+        if(isset($data['id']) && $data['id']){
+            $id = $data['id'];
+            unset($data['id']);
+            return TimetableItem::where('id',$id)->update($data);
+        }
+        return false;
     }
 
     /**
@@ -63,7 +113,11 @@ class TimetableItemDao
                 'room'=>$row->room->name,
                 'room_id'=>$row->room_id,
                 'id'=>$row->id,
-                'published'=>$row->published
+                'published'=>$row->published,
+                'repeat_unit'=>$row->repeat_unit,
+                'optional'=>$row->course->optional,
+                'weekday_index'=>$row->weekday_index,
+                'time_slot_id'=>$row->time_slot_id,
             ];
         }
         return $result;

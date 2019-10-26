@@ -1,103 +1,109 @@
 <template>
     <div class="timetable-item-form-wrap">
         <el-steps :active="currentStep" finish-status="success" simple style="margin-bottom: 20px">
-            <el-step title="班级" ></el-step>
-            <el-step title="地点" ></el-step>
-            <el-step title="时间/课程" ></el-step>
+            <el-step title="班级/时间/课程/地点" ></el-step>
             <el-step title="确认" ></el-step>
         </el-steps>
         <el-form ref="timeTableItemForm" :model="timeTableItem" label-width="80px" class="the-form">
             <div v-show="currentStep===1">
-                <el-form-item label="年份">
-                    <el-input v-model="timeTableItem.year" style="width: 50%;"></el-input>
-                    <span class="help-text">请在这里输入课程表的年份, 一般就是今年</span>
-                </el-form-item>
-                <el-form-item label="学期">
-                    <el-select v-model="timeTableItem.term" style="width: 50%;">
-                        <el-option :label="theTerm" :value="(idx+1)" :key="theTerm" v-for="(theTerm, idx) in terms"></el-option>
-                    </el-select>
-                    <span class="help-text">请在这里输入课程表是对应哪个学期的</span>
-                </el-form-item>
+                <div class="row">
+                    <div class="col-4">
+                        <div class="card" style="margin-left:11px;box-shadow:none;padding-right:11px;padding-top:14px;">
+                            <el-form-item label="年份">
+                                <el-input v-model="timeTableItem.year" style="width: 100%;"></el-input>
+                                <span class="help-text">请在这里输入课程表的年份, 一般就是今年</span>
+                            </el-form-item>
+                            <el-form-item label="学期">
+                                <el-select v-model="timeTableItem.term" style="width: 100%;">
+                                    <el-option :label="theTerm" :value="(idx+1)" :key="theTerm" v-for="(theTerm, idx) in terms"></el-option>
+                                </el-select>
+                                <span class="help-text">请在这里输入课程表是对应哪个学期的</span>
+                            </el-form-item>
 
-                <el-form-item label="专业">
-                    <el-select v-model="selectedMajor" style="width: 50%;">
-                        <el-option :label="major.name" :value="major.id" :key="major.id" v-for="major in majors"></el-option>
-                    </el-select>
-                    <span class="help-text">说明: 请选择本次安排是对哪个专业的学生</span>
-                </el-form-item>
-                <el-form-item label="班级">
-                    <el-select v-model="timeTableItem.grade_id" style="width: 50%;">
-                        <el-option :label="grade.name" :value="grade.id" :key="grade.id" v-for="grade in grades"></el-option>
-                    </el-select>
-                    <span class="help-text">说明: 请选择是针对选定专业的哪个班级的</span>
-                </el-form-item>
+                            <el-form-item label="专业">
+                                <el-select v-model="selectedMajor" style="width: 100%;">
+                                    <el-option :label="major.name" :value="major.id" :key="major.id" v-for="major in majors"></el-option>
+                                </el-select>
+                                <span class="help-text">说明: 请选择本次安排是对哪个专业的学生</span>
+                            </el-form-item>
+                            <el-form-item label="班级">
+                                <el-select v-model="timeTableItem.grade_id" style="width: 100%;">
+                                    <el-option :label="grade.name" :value="grade.id" :key="grade.id" v-for="grade in grades"></el-option>
+                                </el-select>
+                                <span class="help-text">说明: 请选择是针对选定专业的哪个班级的</span>
+                            </el-form-item>
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <div class="card" style="margin-left:11px;box-shadow:none;padding-right:11px;padding-top:14px;">
+                        <el-form-item label="重复周期">
+                            <el-select v-model="timeTableItem.repeat_unit" style="width: 100%;">
+                                <el-option :label="repeatUnit"
+                                           :value="(idx+1)"
+                                           :key="repeatUnit"
+                                           v-for="(repeatUnit, idx) in repeatUnits"></el-option>
+                            </el-select>
+                            <span class="help-text">说明: 表示这个安排是每周都延续的</span>
+                        </el-form-item>
+                        <el-form-item label="哪一天">
+                            <el-select v-model="timeTableItem.weekday_index" style="width: 100%;">
+                                <el-option :label="theWeekday"
+                                           :value="(idx+1)"
+                                           :key="theWeekday"
+                                           v-for="(theWeekday, idx) in weekdays"></el-option>
+                            </el-select>
+                            <span class="help-text">说明: 指定本次安排是哪一天</span>
+                        </el-form-item>
+                        <el-form-item label="时间段">
+                            <el-select v-model="timeTableItem.time_slot_id" style="width: 100%;">
+                                <el-option :label="timeSlot.name" :value="timeSlot.id" :key="timeSlot.id" v-for="timeSlot in timeSlots"></el-option>
+                            </el-select>
+                            <span class="help-text">说明: 指定本次安排是针对一天中的那个时段的</span>
+                        </el-form-item>
+                        <el-form-item label="课程">
+                            <el-select v-model="timeTableItem.course_id" style="width: 100%;">
+                                <el-option :label="course.name" :value="course.id" :key="course.id" v-for="course in courses"></el-option>
+                            </el-select>
+                            <span class="help-text">说明: 请选择要教授哪门课程</span>
+                        </el-form-item>
+
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <div class="card" style="margin-left:11px;box-shadow:none;padding-right:11px;padding-top:14px;">
+                            <el-form-item label="授课教师">
+                                <el-select v-model="timeTableItem.teacher_id" style="width: 100%;">
+                                    <el-option :label="teacher.name" :value="teacher.id" :key="teacher.id" v-for="teacher in teachers"></el-option>
+                                </el-select>
+                                <span class="help-text">说明: 请选择授课的老师</span>
+                            </el-form-item>
+                            <el-form-item label="教学楼">
+                                <el-select v-model="timeTableItem.building_id" placeholder="请选择" style="width: 100%;">
+                                    <el-option-group
+                                            v-for="item in campuses"
+                                            :key="item.campus"
+                                            :label="item.campus">
+                                        <el-option
+                                                v-for="building in item.buildings"
+                                                :key="building.id"
+                                                :label="building.name"
+                                                :value="building.id">
+                                        </el-option>
+                                    </el-option-group>
+                                </el-select>
+                                <span class="help-text">说明: 请选择在哪栋楼上课</span>
+                            </el-form-item>
+                            <el-form-item label="教室/地点">
+                                <el-select v-model="timeTableItem.room_id" style="width: 100%;">
+                                    <el-option :label="room.name" :value="room.id" :key="room.id" v-for="room in rooms"></el-option>
+                                </el-select>
+                                <span class="help-text">说明: 请选择上面选择的楼的那个房间上课</span>
+                            </el-form-item>
+                        </div>
+                    </div>
+                </div>
             </div>
-
-            <div v-show="currentStep===2">
-                <el-form-item label="教学楼">
-                    <el-select v-model="timeTableItem.building_id" placeholder="请选择" style="width: 50%;">
-                        <el-option-group
-                                v-for="item in campuses"
-                                :key="item.campus"
-                                :label="item.campus">
-                            <el-option
-                                    v-for="building in item.buildings"
-                                    :key="building.id"
-                                    :label="building.name"
-                                    :value="building.id">
-                            </el-option>
-                        </el-option-group>
-                    </el-select>
-                    <span class="help-text">说明: 请选择在哪栋楼上课</span>
-                </el-form-item>
-                <el-form-item label="教室/地点">
-                    <el-select v-model="timeTableItem.room_id" style="width: 50%;">
-                        <el-option :label="room.name" :value="room.id" :key="room.id" v-for="room in rooms"></el-option>
-                    </el-select>
-                    <span class="help-text">说明: 请选择上面选择的楼的那个房间上课</span>
-                </el-form-item>
-            </div>
-
-            <div v-show="currentStep===3">
-                <el-form-item label="重复周期">
-                    <el-select v-model="timeTableItem.repeat_unit" style="width: 50%;">
-                        <el-option :label="repeatUnit"
-                                   :value="(idx+1)"
-                                   :key="repeatUnit"
-                                   v-for="(repeatUnit, idx) in repeatUnits"></el-option>
-                    </el-select>
-                    <span class="help-text">说明: 表示这个安排是每周都延续的</span>
-                </el-form-item>
-                <el-form-item label="哪一天">
-                    <el-select v-model="timeTableItem.weekday_index" style="width: 50%;">
-                        <el-option :label="theWeekday"
-                                   :value="(idx+1)"
-                                   :key="theWeekday"
-                                   v-for="(theWeekday, idx) in weekdays"></el-option>
-                    </el-select>
-                    <span class="help-text">说明: 指定本次安排是哪一天</span>
-                </el-form-item>
-                <el-form-item label="时间段">
-                    <el-select v-model="timeTableItem.time_slot_id" style="width: 50%;">
-                        <el-option :label="timeSlot.name" :value="timeSlot.id" :key="timeSlot.id" v-for="timeSlot in timeSlots"></el-option>
-                    </el-select>
-                    <span class="help-text">说明: 指定本次安排是针对一天中的那个时段的</span>
-                </el-form-item>
-
-                <el-form-item label="课程">
-                    <el-select v-model="timeTableItem.course_id" style="width: 50%;">
-                        <el-option :label="course.name" :value="course.id" :key="course.id" v-for="course in courses"></el-option>
-                    </el-select>
-                    <span class="help-text">说明: 请选择要教授哪门课程</span>
-                </el-form-item>
-                <el-form-item label="授课教师">
-                    <el-select v-model="timeTableItem.teacher_id" style="width: 50%;">
-                        <el-option :label="teacher.name" :value="teacher.id" :key="teacher.id" v-for="teacher in teachers"></el-option>
-                    </el-select>
-                    <span class="help-text">说明: 请选择授课的老师</span>
-                </el-form-item>
-            </div>
-            <div v-show="currentStep===4" class="summary-wrap">
+            <div v-show="currentStep===2" class="summary-wrap">
                 <p class="item-summary">您创建的课表详情</p>
                 <el-divider></el-divider>
                 <p class="item-text">
@@ -112,12 +118,8 @@
                 </p>
                 <el-divider></el-divider>
                 <p class="item-text">
-                    <span class="label-text">班级:</span> {{ gradeInfoText }}
-                </p>
-                <p class="item-text">
-                    <span class="label-text">课程:</span> {{ courseText }}
-                </p>
-                <p class="item-text">
+                    <span class="label-text">班级:</span> {{ gradeInfoText }},
+                    <span class="label-text">课程:</span> {{ courseText }},
                     <span class="label-text">授课老师:</span> {{ teacherText }}
                 </p>
                 <el-divider></el-divider>
@@ -129,16 +131,16 @@
                 <el-divider></el-divider>
             </div>
 
-            <el-form-item>
+            <el-form-item style="text-align: center;">
                 <el-button icon="el-icon-back" type="primary" @click="goToPrev" :disabled="currentStep===1">上一步</el-button>
-                <el-button icon="el-icon-right el-icon--right" type="primary" @click="goToNext" v-show="currentStep < 4">下一步</el-button>
-                <el-button :loading="savingActionInProgress" icon="el-icon-document-add" type="primary" @click="saveItem" v-show="currentStep === 4">我确认以上信息无误, 保存</el-button>
+                <el-button icon="el-icon-right el-icon--right" type="primary" @click="goToNext" v-show="currentStep === 1">下一步</el-button>
+                <el-button :loading="savingActionInProgress" icon="el-icon-document-add" type="primary" @click="saveItem" v-show="currentStep === 2">我确认以上信息无误, 保存</el-button>
                 <el-button :loading="reloading" icon="el-icon-refresh" @click="fireUpTimetableRefresh">刷新</el-button>
             </el-form-item>
         </el-form>
     </div>
 </template>
-
+RT!708!7
 <script>
     import { Constants } from '../../common/constants';
     import { Util } from '../../common/utils';
@@ -163,27 +165,29 @@
                 required: false,
                 default: false,
             },
+            shared: {
+                type: Object,
+                required: true,
+                default: {}
+            },
+            initWeekdayIndex: {
+                type: [Number,String],
+                required: true
+            },
+            initTimeSlotId: {
+                type: [Number,String],
+                required: true,
+            },
+            // 传递来的表单数据
+            timeTableItem: {
+                type: Object,
+                required: true,
+            }
         },
         data() {
             return {
                 currentStep: 1,
                 selectedMajor: '',
-                timeTableItem: {
-                    id: null,
-                    year:'',
-                    term:1,
-                    repeat_unit:1,
-                    weekday_index:1,
-                    time_slot_id:'',
-                    // 地点
-                    building_id:'',
-                    room_id:'',
-                    grade_id:'',
-                    course_id:'',
-                    teacher_id:'',
-                    published: false,
-                },
-                // timeSlots: [],
                 campuses: [],
                 rooms: [],
                 majors: [], // 哪些专业
@@ -199,6 +203,12 @@
         },
         // 监听
         watch: {
+            'initWeekdayIndex': function(newVal, oldVal){
+                this.timeTableItem.weekday_index = newVal;
+            },
+            'initTimeSlotId': function(newVal, oldVal){
+                this.timeTableItem.time_slot_id = newVal;
+            },
             'timeTableItem.building_id': function(newVal, oldVal){
                 if(newVal !== oldVal){
                     // 去加载房间
@@ -250,8 +260,12 @@
             },
             'timeSlotText': function () {
                 if(this.timeTableItem.time_slot_id !== ''){
-                    return Util.GetWeekdayText(this.timeTableItem.weekday_index) + ', '
-                        + Util.GetItemById(this.timeTableItem.time_slot_id, this.timeSlots).name;
+                    let txt =  Util.GetWeekdayText(this.timeTableItem.weekday_index) + ', ';
+                    let slot = Util.GetItemById(this.timeTableItem.time_slot_id, this.timeSlots);
+                    if(slot){
+                        txt += slot.name;
+                    }
+                    return txt;
                 }else{
                     return '';
                 }
@@ -296,13 +310,19 @@
             // 上课内容的表述
             'courseText': function(){
                 if(this.timeTableItem.course_id !== ''){
-                    return Util.GetItemById(this.timeTableItem.course_id, this.courses).name;
+                    let course = Util.GetItemById(this.timeTableItem.course_id, this.courses);
+                    if(!Util.isEmpty(course)){
+                        return course.name;
+                    }
                 }
             },
             // 授课教师的表述
             'teacherText': function(){
                 if(this.timeTableItem.teacher_id !== ''){
-                    return Util.GetItemById(this.timeTableItem.teacher_id, this.teachers).name;
+                    let teacher = Util.GetItemById(this.timeTableItem.teacher_id, this.teachers);
+                    if(!Util.isEmpty(teacher)){
+                        return teacher.name;
+                    }
                 }
             }
         },
@@ -420,8 +440,9 @@
             saveItem: function(){
                 // Todo: 课程表的 item, 保存之前应该做一些有效性检查
                 this.savingActionInProgress = true;
+                const isCreate = this.timeTableItem.id === null;
                 axios.post(
-                    Constants.API.TIMETABLE.SAVE_NEW,
+                    isCreate ? Constants.API.TIMETABLE.SAVE_NEW : Constants.API.TIMETABLE.UPDATE,
                     {timetableItem: this.timeTableItem, school: this.schoolId, user: this.userUuid}
                 ).then(res => {
                     if(Util.isAjaxResOk(res)){
@@ -433,6 +454,7 @@
                         }else{
                             this.$emit('item-updated', this._getPayload());
                         }
+                        this.currentStep = 1;
                     }
                     this.savingActionInProgress = false;
                 });
@@ -444,7 +466,6 @@
             },
             _getPayload: function(){
                 return {
-                    timetableItem: this.timeTableItem,
                     grade:{
                         id: this.timeTableItem.grade_id,
                         name: this.gradeInfoText
@@ -460,7 +481,9 @@
     .the-form{
         padding-right: 10px;
         .summary-wrap{
-            padding: 14px;
+            padding-top: 14px;
+            padding-left: 20%;
+            padding-right: 20%;
             .item-summary{
                 font-size: 18px;
                 font-weight: bold;
