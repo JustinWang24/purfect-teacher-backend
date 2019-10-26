@@ -54,6 +54,17 @@ class TimetableItemsController extends Controller
     }
 
     /**
+     * 克隆项目
+     * @param Request $request
+     * @return string
+     */
+    public function clone_item(Request $request){
+        $dao = new TimetableItemDao();
+        $result = $dao->cloneItem($request->get('item'));
+        return $result ? JsonBuilder::Success() : JsonBuilder::Error();
+    }
+
+    /**
      * 加载整个课程表
      * @param Request $request
      * @return string

@@ -29,6 +29,25 @@ class TimetableItemDao
     }
 
     /**
+     * @param $item
+     * @return TimetableItem|bool
+     */
+    public function cloneItem($item){
+        $origin = $this->getItemById($item['id']);
+        if($origin){
+            $fillable = $origin->getFillable();
+            $data = [];
+            foreach ($fillable as $fieldName) {
+                $data[$fieldName] = $origin->$fieldName;
+            }
+            $data['weekday_index'] = $item['weekday_index'];
+            $data['time_slot_id'] = $item['time_slot_id'];
+            return $this->createTimetableItem($data);
+        }
+        return false;
+    }
+
+    /**
      * 添加新的 Item
      * @param $data
      * @return TimetableItem
@@ -96,7 +115,9 @@ class TimetableItemDao
                 'id'=>$row->id,
                 'published'=>$row->published,
                 'repeat_unit'=>$row->repeat_unit,
-                'optional'=>$row->course->optional
+                'optional'=>$row->course->optional,
+                'weekday_index'=>$row->weekday_index,
+                'time_slot_id'=>$row->time_slot_id,
             ];
         }
         return $result;

@@ -76,6 +76,10 @@ Route::prefix('timetable')->group(function () {
     Route::post('/save-timetable-item','Api\Timetable\TimetableItemsController@save')
         ->name('api.timetable.save.item');
 
+    // 克隆项目
+    Route::post('/clone-timetable-item','Api\Timetable\TimetableItemsController@clone_item')
+        ->name('api.timetable.clone.item');
+
     // 删除课程表项的接口
     Route::post('/delete-timetable-item','Api\Timetable\TimetableItemsController@delete')
         ->name('api.timetable.delete.item');

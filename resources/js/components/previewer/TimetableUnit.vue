@@ -13,7 +13,7 @@
                 trigger="click">
             <p>
                 <el-button icon="el-icon-edit" size="mini" v-if="!unit.published" v-on:click="editUnit">编辑</el-button>
-                <el-button icon="el-icon-edit" size="mini" type="success" v-on:click="cloneUnit">克隆</el-button>
+                <el-button icon="el-icon-document-copy" size="mini" type="success" v-on:click="cloneUnit">克隆</el-button>
                 <el-button icon="el-icon-share" type="primary" size="mini" v-if="unit.published" v-on:click="createSpecialCase">临时调课</el-button>
                 <el-button icon="el-icon-delete" type="danger" size="mini" v-on:click="deleteUnit">删除</el-button>
             </p>
@@ -82,6 +82,7 @@
                 this.popupVisible = false;
                 Util.pageScrollTo(0); // 移动到页面顶部
             },
+            // 克隆当前的 unit, 只能改变上课的时间和地点
             cloneUnit: function () {
                 this.$emit('clone-for-current-unit',{unit: this.unit});
             },

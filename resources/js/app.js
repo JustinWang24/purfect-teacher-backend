@@ -138,12 +138,15 @@ if(document.getElementById('school-timetable-previewer-app')){
             // 刷新课程表数据
             refreshTimetableHandler: function(payload){
                 // 把数据保存到缓存中
-                this.subTitle = payload.grade.name;
+                if(!Util.isEmpty(payload)){
+                    this.subTitle = payload.grade.name;
+                }
+
                 this.reloading = true;
                 axios.post(
                     Constants.API.TIMETABLE.LOAD_TIMETABLE,
                     {
-                        grade: payload.grade.id,
+                        grade: this.timeTableItem.grade_id,
                         year: this.timeTableItem.year,
                         term: this.timeTableItem.term,
                         school: this.schoolId
