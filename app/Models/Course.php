@@ -20,6 +20,10 @@ class Course extends Model
         'desc','school_id'
     ];
 
+    public $casts = [
+        'optional' => 'boolean', // 是否选修课
+    ];
+
     public function majors(){
         return $this->hasMany(CourseMajor::class)->select(DB::raw('major_id as id, major_name as name'));
     }

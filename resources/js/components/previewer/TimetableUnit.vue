@@ -18,6 +18,10 @@
                 <el-button icon="el-icon-delete" type="danger" size="mini" v-on:click="deleteUnit">删除</el-button>
             </p>
             <div class="unit-content" slot="reference">
+                <p class="text-center no-margin" style="margin-top: -10px;">
+<text-badge :text="optionalText" :color="optionalColor"></text-badge>
+<text-badge v-if="this.unit.repeat_unit === 2" text="单双周" color="primary"></text-badge>
+                </p>
                 <p class="text-center no-margin">{{ unit.course }}</p>
                 <p class="text-center no-margin">老师: {{ unit.teacher }}</p>
                 <p class="text-center no-margin">地点: {{ unit.building }}</p>
@@ -30,14 +34,24 @@
 <script>
     import { Constants } from '../../common/constants';
     import { Util } from '../../common/utils';
+    import TextBadge from '../misc/TextBadge';
 
     export default {
         name: "TimetableUnit",
+        components:{
+            TextBadge
+        },
         props: ['unit','weekday','rowIndex'],
         computed: {
             'switchStatusButtonText': function(){
                 return this.unit.published;
-            }
+            },
+            'optionalText': function () {
+                return this.unit.optional ? '选修' : '必修';
+            },
+            'optionalColor': function(){
+                return this.unit.optional ? 'default' : 'danger';
+            },
         },
         data(){
             return {
@@ -109,8 +123,8 @@
 <style scoped lang="scss">
     .timetable-unit-wrap{
         display: block;
-        padding: 10px 0 10px 0;
-        height: 120px;
+        padding: 20px 0 10px 0;
+        height: 140px;
         border: solid 1px #f1f3f7;
         background-color: #F5F7FA;
         color: #888888;
