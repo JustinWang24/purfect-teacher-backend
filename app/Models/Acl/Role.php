@@ -11,7 +11,7 @@ class Role extends BaseRole
     // 系统定义的用户身份: 日常运营管理相关 (以下的常量值, 应永远与 roles 表中对应的记录值相同)
     const SUPER_ADMIN           = 1;  // 系统超级管理员
     const ADMINISTRATOR         = 2;  // 学校管理员
-    const SCHOOL_MANAGER        = 2; // 学校管理员 (日常教学管理岗)
+    const SCHOOL_MANAGER        = 2;  // 学校管理员 (日常教学管理岗)
     const OPERATOR              = 3;  // 日常操作人员
 
     // 系统定义的用户身份: 校内用户相关

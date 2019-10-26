@@ -18,8 +18,13 @@ export const Constants = {
         SEARCH_TEACHERS_BY_NAME: '/api/school/search-teachers',
         SAVE_COURSE: '/api/school/save-course',
         DELETE_COURSE: '/api/school/delete-course',
+        // 课程表专有
+        TIMETABLE: {
+            SAVE_NEW: '/api/timetable/save-timetable-time',
+            LOAD_TIMETABLE: '/api/timetable/load', // 加载课程表
+        }
     },
     TERMS: ['第一学期','第二学期','第三学期','第四学期'],
     REPEAT_UNITS: ['单周重复','双周重复','三周重复','四周重复'],
-    WEEK_DAYS: ['周日','周一','周二','周三','周四','周五','周六',],
+    WEEK_DAYS: ['周一','周二','周三','周四','周五','周六','周日',],
 };

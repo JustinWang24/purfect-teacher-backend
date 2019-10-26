@@ -10,6 +10,7 @@ namespace App\BusinessLogic\AvailableRooms\TimetableApi;
 
 use App\BusinessLogic\AvailableRooms\Contracts\IQueryAvailableRooms;
 use App\Dao\Schools\RoomDao;
+use App\Dao\Timetable\TimetableItemDao;
 use App\User;
 use Illuminate\Http\Request;
 
@@ -22,6 +23,7 @@ class QueryAvailableClassrooms implements IQueryAvailableRooms
     protected $timeSlotId;
 
     protected $roomDao;
+    protected $timetableItemDao;
 
     public function __construct(Request $request)
     {
@@ -31,6 +33,7 @@ class QueryAvailableClassrooms implements IQueryAvailableRooms
         $this->weekdayIndex = $request->get('weekday_index');
         $this->timeSlotId = $request->get('timeSlot');
         $this->roomDao = new RoomDao(new User());
+        $this->timetableItemDao = new TimetableItemDao();
     }
 
     /**
@@ -41,9 +44,9 @@ class QueryAvailableClassrooms implements IQueryAvailableRooms
     {
         $rooms = $this->roomDao->getRoomsByBuilding($this->buildingId); // 获取所有的房间
 
-        // 获取所有被占用的房间的 id
-        $bookedRoomsId = $this->roomDao->getBookedRoomsId(
-            $this->year, $this->term, $this->weekdayIndex, $this->timeSlotId, $this->buildingId
+        // 获取所有被占用的房间的 id, 是确认被占用
+        $bookedRoomsId = $this->timetableItemDao->getBookedRoomsId(
+            $this->year, $this->term, $this->weekdayIndex, $this->timeSlotId, $this->buildingId, true
         );
 
         if(!empty($bookedRoomsId)){
