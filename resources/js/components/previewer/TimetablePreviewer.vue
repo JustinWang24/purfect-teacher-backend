@@ -5,7 +5,11 @@
         <div class="timetable-wrap mb-4">
             <time-slots-column :time-slots="timeSlots" class="first-column"></time-slots-column>
             <div v-for="(rows, idx) in timetable" :key="idx" class="the-column">
-                <timetable-column :rows="rows" :weekday="idx"></timetable-column>
+                <timetable-column
+                        :rows="rows"
+                        :weekday="idx"
+                        v-on:create-new-for-current-column="createNewForCurrentColumnHandler"
+                ></timetable-column>
             </div>
         </div>
     </div>
@@ -43,7 +47,9 @@
 
         },
         methods: {
-
+            createNewForCurrentColumnHandler: function(payload){
+                this.$emit('create-new-by-click',payload);
+            }
         }
     }
 </script>

@@ -937,7 +937,7 @@ body {
 }
 .page-header.navbar.navbar-fixed-top,
 .page-header.navbar.navbar-static-top {
-    z-index: 8999;
+    z-index: 1999;
 }
 .sidemenu-closed.sidemenu-closed-hidelogo .page-header.navbar .page-logo {
     padding: 0
