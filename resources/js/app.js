@@ -24,9 +24,10 @@ Vue.use(ElementUI);
 // const files = require.context('./', true, /\.vue$/i);
 // files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default));
 
-// Vue.component('example-component', require('./components/ExampleComponent.vue').default);
 Vue.component('time-slots-manager', require('./components/timeline/TimeSlotsManager.vue').default);
 Vue.component('courses-manager', require('./components/courses/CoursesManager.vue').default);
+Vue.component('timetable-previewer', require('./components/previewer/TimetablePreviewer.vue').default);
+Vue.component('timetable-item-form', require('./components/previewer/TimetableItemForm.vue').default);
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to
@@ -38,6 +39,9 @@ Vue.component('courses-manager', require('./components/courses/CoursesManager.vu
 //     el: '#app',
 // });
 
+import { Constants } from './common/constants';
+import { Util } from './common/utils';
+
 // 学校时间段管理
 if(document.getElementById('school-time-slots-manager')){
     new Vue({
@@ -48,5 +52,94 @@ if(document.getElementById('school-time-slots-manager')){
 if(document.getElementById('school-courses-manager-app')){
     new Vue({
         el: '#school-courses-manager-app'
+    });
+}
+
+if(document.getElementById('school-timetable-previewer-app')){
+    new Vue({
+        el: '#school-timetable-previewer-app',
+        data() {
+            return {
+                timetable: [],
+                lastEvent: null, // 上一次的事件类型: 更新还是新建
+                timeSlots: [],
+                subTitle: '',
+                schoolId: null,
+                reloading: false, // 只是课程表的预览数据是否整备加载中
+            }
+        },
+        created() {
+            this.schoolId = document.getElementById('current-school-id').dataset.school;
+            this._getAllTimeSlots(this.schoolId);
+            for (let i = 0; i < 7; i++) {
+                let rows = [];
+                for (let j = 0; j < 8; j++) {
+                    rows.push({});
+                }
+                this.timetable.push(rows);
+            }
+        },
+        methods: {
+            // 条目新增的事件处理
+            newItemCreatedHandler: function(payload){
+                this.subTitle = payload.grade.name;
+                this.$notify({
+                    title: '成功',
+                    message: this.subTitle + '的课程表已经已经添加了新的内容, 正在刷新预览...',
+                    type: 'success',
+                    position: 'bottom-right'
+                });
+                this.refreshTimetableHandler(payload);
+            },
+            // 条目更新的事件处理
+            itemUpdatedHandler: function(payload) {
+                this.subTitle = payload.grade.name;
+                this.$notify({
+                    title: '成功',
+                    message: this.subTitle + '的课程表已经已经修改成功, 正在刷新预览...',
+                    type: 'success',
+                    position: 'bottom-right'
+                });
+                this.refreshTimetableHandler(payload);
+            },
+            // 刷新课程表数据
+            refreshTimetableHandler: function(payload){
+                this.subTitle = payload.grade.name;
+                this.reloading = true;
+                axios.post(
+                    Constants.API.TIMETABLE.LOAD_TIMETABLE,
+                    {
+                        grade: payload.grade.id,
+                        year: payload.timetableItem.year,
+                        term: payload.timetableItem.term,
+                        school: this.schoolId
+                    }
+                ).then(res => {
+                    if(Util.isAjaxResOk(res) && res.data.data.timetable !== ''){
+                        // 表示加载到了有效的课程表
+                        this.timetable = res.data.data.timetable;
+                        this.$notify({
+                            title: '成功',
+                            message: this.subTitle + '的课程表正在被预览..',
+                            type: 'success',
+                            position: 'bottom-right'
+                        });
+                    }else{
+                        this.timetable = [];
+                    }
+                    this.reloading = false;
+                })
+            },
+            // 把时间段数据取来, 然后去生成课程表左边第一栏
+            _getAllTimeSlots: function(schoolId){
+                axios.post(
+                    Constants.API.LOAD_STUDY_TIME_SLOTS_BY_SCHOOL,{school: schoolId}
+                ).then( res => {
+                    if(Util.isAjaxResOk(res)){
+                        this.timeSlots = res.data.data.time_frame;
+                    }
+                })
+            },
+        }
     });
 }

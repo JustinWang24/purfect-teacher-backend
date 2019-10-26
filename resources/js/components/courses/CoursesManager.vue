@@ -90,6 +90,7 @@
 
 <script>
     import { Constants } from '../../common/constants';
+    import { Util } from '../../common/utils';
     import CoursesList from './CoursesList.vue';
     export default {
         name: "CoursesManager",
@@ -146,7 +147,7 @@
                         { required: true, message: '请选择学期', trigger: 'change' }
                     ]
                 },
-                terms: ['第一学期','第二学期','第三学期','第四学期'],
+                terms: Constants.TERMS,
                 majors: [], // 所有可能的专业
                 teachers:[], // 被搜索出的老师
                 loading: false,
@@ -223,7 +224,7 @@
                     axios.post(
                         Constants.API.DELETE_COURSE,{course: payload.course.uuid}
                     ).then(res=>{
-                        if(res.data.code === Constants.AJAX_SUCCESS){
+                        if(Util.isAjaxResOk(res)){
                             this.courses.splice(payload.idx, 1);
                             this.$notify({
                                 title: '成功',
@@ -252,7 +253,7 @@
                 axios.post(
                     Constants.API.SAVE_COURSE,{course: this.courseModel, school: this.schoolId}
                 ).then(res => {
-                    if(res.data.code === Constants.AJAX_SUCCESS){
+                    if(Util.isAjaxResOk(res)){
                         // 更新本地的模型对象
                         this.courseModel.id = res.data.data.id;
                         this.$notify({
@@ -283,7 +284,7 @@
                         {query: teacherName, school: this.schoolId, majors: this.majors}
                     ).then(res => {
                         this.loading = false;
-                        if(res.data.code === Constants.AJAX_SUCCESS && res.data.data.teachers.length > 0){
+                        if(Util.isAjaxResOk(res) && res.data.data.teachers.length > 0){
                             this.teachers = res.data.data.teachers;
                         }else{
                             this.teachers = [];
@@ -296,7 +297,7 @@
                 axios.post(
                     Constants.API.LOAD_MAJORS_BY_SCHOOL, {id: this.schoolId}
                 ).then(res=>{
-                    if(res.data.code === Constants.AJAX_SUCCESS && res.data.data.majors.length > 0){
+                    if(Util.isAjaxResOk(res) && res.data.data.majors.length > 0){
                         this.majors = res.data.data.majors;
                     }
                     else{
