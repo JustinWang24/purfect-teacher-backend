@@ -4,6 +4,7 @@ namespace App;
 
 use App\Models\Acl\Role;
 use App\Models\Students\StudentProfile;
+use App\Models\Teachers\TeacherProfile;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -105,11 +106,10 @@ class User extends Authenticatable
     }
 
     public function profile(){
-//        dd($this->type);
         $roleSlug = $this->getCurrentRoleSlug();
         if($roleSlug === Role::TEACHER_SLUG || $roleSlug === Role::EMPLOYEE_SLUG){
             // 教师或者职工
-
+            return $this->hasOne(TeacherProfile::class,'teacher_id');
         }
         elseif ($this->type === self::TYPE_STUDENT){
             // 已认证学生

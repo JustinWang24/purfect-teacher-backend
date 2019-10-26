@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\School;
 
+use App\Dao\Courses\CourseTeacherDao;
 use App\Dao\Teachers\TeacherProfileDao;
 use App\Utils\JsonBuilder;
 use Illuminate\Http\Request;
@@ -27,5 +28,10 @@ class TeachersController extends Controller
         // 搜索过程, 先简单处理, 在数据量比较小的情况下, 直接搜索 teacher profiles 表, 而不考虑 major 来缩小范围
         $result = $dao->searchTeacherByNameSimple($name, $schoolId);
         return JsonBuilder::Success(['teachers'=>$result]);
+    }
+
+    public function load_course_teachers(Request $request){
+        $dao = new CourseTeacherDao();
+        return JsonBuilder::Success(['teachers'=>$dao->getTeachersByCourse($request->get('course'))]);
     }
 }
