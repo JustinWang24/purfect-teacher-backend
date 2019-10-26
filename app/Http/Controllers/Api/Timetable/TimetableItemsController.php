@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Api\Timetable;
 
 use App\BusinessLogic\TimetableLogic\TimetableBuilderLogic;
 use App\BusinessLogic\TimetableLogic\TimetableItemBeforeCreate;
+use App\BusinessLogic\TimetableLogic\TimetableItemBeforeUpdate;
+use App\Dao\Timetable\TimetableItemDao;
 use App\Utils\JsonBuilder;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -20,11 +22,32 @@ class TimetableItemsController extends Controller
         $item = $logic->check()->create();
         if($item){
             return JsonBuilder::Success(['id'=>$item->id]);
-        }else{
-            return JsonBuilder::Error();
         }
+        // Todo: 创建失败需要指明原因
+        return JsonBuilder::Error();
     }
 
+    /**
+     * 更新已经存在的课程表项目
+     * @param Request $request
+     * @return string
+     */
+    public function update(Request $request){
+        $logic = new TimetableItemBeforeUpdate($request);
+        $updated = $logic->check()->update();
+
+        if($updated){
+            return JsonBuilder::Success();
+        }
+        // Todo: 更新失败需要指明原因
+        return JsonBuilder::Error();
+    }
+
+    /**
+     * 加载整个课程表
+     * @param Request $request
+     * @return string
+     */
     public function load(Request $request){
         // Todo: 查询的必要提交是班级 id, 年和学期
         $gradeId = $request->get('grade');
@@ -34,5 +57,16 @@ class TimetableItemsController extends Controller
 
         $logic = new TimetableBuilderLogic($schoolId,$gradeId, $term, $year);
         return JsonBuilder::Success(['timetable'=>$logic->build()]);
+    }
+
+    /**
+     * 加载单个课程表中的某项
+     * @param Request $request
+     * @return string
+     */
+    public function load_item(Request $request){
+        $dao = new TimetableItemDao();
+        $item = $dao->getItemById($request->get('id'));
+        return JsonBuilder::Success(['timetableItem'=>$item??'']);
     }
 }

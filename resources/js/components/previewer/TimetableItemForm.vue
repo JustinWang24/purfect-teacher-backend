@@ -177,28 +177,17 @@ RT!708!7
             initTimeSlotId: {
                 type: [Number,String],
                 required: true,
+            },
+            // 传递来的表单数据
+            timeTableItem: {
+                type: Object,
+                required: true,
             }
         },
         data() {
             return {
                 currentStep: 1,
                 selectedMajor: '',
-                timeTableItem: {
-                    id: null,
-                    year:'',
-                    term:1,
-                    repeat_unit:1,
-                    weekday_index: this.initWeekdayIndex,
-                    time_slot_id:this.initTimeSlotId,
-                    // 地点
-                    building_id:'',
-                    room_id:'',
-                    grade_id:'',
-                    course_id:'',
-                    teacher_id:'',
-                    published: false,
-                },
-                // timeSlots: [],
                 campuses: [],
                 rooms: [],
                 majors: [], // 哪些专业
@@ -321,13 +310,19 @@ RT!708!7
             // 上课内容的表述
             'courseText': function(){
                 if(this.timeTableItem.course_id !== ''){
-                    return Util.GetItemById(this.timeTableItem.course_id, this.courses).name;
+                    let course = Util.GetItemById(this.timeTableItem.course_id, this.courses);
+                    if(!Util.isEmpty(course)){
+                        return course.name;
+                    }
                 }
             },
             // 授课教师的表述
             'teacherText': function(){
                 if(this.timeTableItem.teacher_id !== ''){
-                    return Util.GetItemById(this.timeTableItem.teacher_id, this.teachers).name;
+                    let teacher = Util.GetItemById(this.timeTableItem.teacher_id, this.teachers);
+                    if(!Util.isEmpty(teacher)){
+                        return teacher.name;
+                    }
                 }
             }
         },
@@ -445,8 +440,9 @@ RT!708!7
             saveItem: function(){
                 // Todo: 课程表的 item, 保存之前应该做一些有效性检查
                 this.savingActionInProgress = true;
+                const isCreate = this.timeTableItem.id === null;
                 axios.post(
-                    Constants.API.TIMETABLE.SAVE_NEW,
+                    isCreate ? Constants.API.TIMETABLE.SAVE_NEW : Constants.API.TIMETABLE.UPDATE,
                     {timetableItem: this.timeTableItem, school: this.schoolId, user: this.userUuid}
                 ).then(res => {
                     if(Util.isAjaxResOk(res)){
@@ -458,6 +454,7 @@ RT!708!7
                         }else{
                             this.$emit('item-updated', this._getPayload());
                         }
+                        this.currentStep = 1;
                     }
                     this.savingActionInProgress = false;
                 });
@@ -469,7 +466,6 @@ RT!708!7
             },
             _getPayload: function(){
                 return {
-                    timetableItem: this.timeTableItem,
                     grade:{
                         id: this.timeTableItem.grade_id,
                         name: this.gradeInfoText

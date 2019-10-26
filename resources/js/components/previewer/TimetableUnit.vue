@@ -9,6 +9,7 @@
                 class="unit-content"
                 placement="right"
                 width="400"
+                v-model="popupVisible"
                 trigger="click">
             <p>
                 <el-button icon="el-icon-edit" size="mini" v-if="!unit.published" v-on:click="editUnit">编辑</el-button>
@@ -37,6 +38,11 @@
                 return this.unit.published;
             }
         },
+        data(){
+            return {
+                popupVisible: false
+            };
+        },
         methods: {
             isEmpty: function() {
                 return Util.isEmpty(this.unit);
@@ -58,6 +64,8 @@
             },
             editUnit: function(){
                 this.$emit('edit-for-current-unit',{unit: this.unit});
+                this.popupVisible = false;
+                Util.pageScrollTo(0); // 移动到页面顶部
             },
             cloneUnit: function () {
                 this.$emit('clone-for-current-unit',{unit: this.unit});

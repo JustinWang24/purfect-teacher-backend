@@ -21,12 +21,34 @@ class TimetableItemDao
     }
 
     /**
+     * @param $id
+     * @return TimetableItem
+     */
+    public function getItemById($id){
+        return TimetableItem::find($id);
+    }
+
+    /**
      * 添加新的 Item
      * @param $data
      * @return TimetableItem
      */
     public function createTimetableItem($data){
         return TimetableItem::create($data);
+    }
+
+    /**
+     * 更新课程表项
+     * @param $data
+     * @return bool
+     */
+    public function updateTimetableItem($data){
+        if(isset($data['id']) && $data['id']){
+            $id = $data['id'];
+            unset($data['id']);
+            return TimetableItem::where('id',$id)->update($data);
+        }
+        return false;
     }
 
     /**

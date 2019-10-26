@@ -7,6 +7,7 @@
                     :weekday="weekday"
                     :row-index="idx"
                     v-on:create-new-for-current-unit="createNewForCurrentUnitHandler"
+                    v-on:edit-for-current-unit="editForCurrentUnit"
             ></timetable-unit>
         </div>
     </div>
@@ -30,6 +31,10 @@
         methods: {
             createNewForCurrentUnitHandler: function(payload){
                 this.$emit('create-new-for-current-column',payload)
+            },
+            // 编辑课程表项目
+            editForCurrentUnit: function(payload){
+                this.$emit('edit-for-current-unit-column',payload)
             }
         }
     }

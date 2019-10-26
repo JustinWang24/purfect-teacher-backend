@@ -1,9 +1,6 @@
 <?php
 /**
- * Created by PhpStorm.
- * User: justinwang
- * Date: 25/10/19
- * Time: 8:14 PM
+ * 在这里实现前端加载课程表所需要的项目的具体方法
  */
 
 namespace App\BusinessLogic\TimetableLogic;

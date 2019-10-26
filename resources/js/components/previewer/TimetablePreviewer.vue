@@ -9,6 +9,7 @@
                         :rows="rows"
                         :weekday="idx"
                         v-on:create-new-for-current-column="createNewForCurrentColumnHandler"
+                        v-on:edit-for-current-unit-column="editForCurrentUnitColumnHandler"
                 ></timetable-column>
             </div>
         </div>
@@ -49,6 +50,9 @@
         methods: {
             createNewForCurrentColumnHandler: function(payload){
                 this.$emit('create-new-by-click',payload);
+            },
+            editForCurrentUnitColumnHandler: function (payload) {
+                this.$emit('edit-unit-by-click',payload);
             }
         }
     }

@@ -76,7 +76,15 @@ Route::prefix('timetable')->group(function () {
     Route::post('/save-timetable-time','Api\Timetable\TimetableItemsController@save')
         ->name('api.timetable.save.item');
 
+    // 保存课程表项的接口
+    Route::post('/update-timetable-time','Api\Timetable\TimetableItemsController@update')
+        ->name('api.timetable.update.item');
+
     // 尝试加载课程表: 查询条件是只要有班级, 年和学期即可
     Route::post('/load','Api\Timetable\TimetableItemsController@load')
         ->name('api.timetable.load.items');
+
+    // 尝试加载课程表项: 查询条件是id
+    Route::post('/load-item','Api\Timetable\TimetableItemsController@load_item')
+        ->name('api.timetable.load.item');
 });
