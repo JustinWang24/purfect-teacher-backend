@@ -29,6 +29,7 @@
                     :sub-title="subTitle"
                     v-on:create-new-by-click="createNewByClickHandler"
                     v-on:edit-unit-by-click="editUnitByClickHandler"
+                    v-on:clone-action-success="refreshTimetableHandler"
                 ></timetable-previewer>
             </div>
         </div>

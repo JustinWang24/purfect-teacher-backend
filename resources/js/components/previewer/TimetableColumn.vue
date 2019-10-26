@@ -9,6 +9,7 @@
                     v-on:create-new-for-current-unit="createNewForCurrentUnitHandler"
                     v-on:edit-for-current-unit="editForCurrentUnit"
                     v-on:unit-deleted="unitDeletedHandler"
+                    v-on:clone-for-current-unit="unitCloneHandler"
             ></timetable-unit>
         </div>
     </div>
@@ -31,18 +32,18 @@
         },
         methods: {
             createNewForCurrentUnitHandler: function(payload){
-                this.$emit('create-new-for-current-column',payload)
+                this.$emit('create-new-for-current-column',payload);
             },
             // 编辑课程表项目
             editForCurrentUnit: function(payload){
-                this.$emit('edit-for-current-unit-column',payload)
+                this.$emit('edit-for-current-unit-column',payload);
             },
             unitDeletedHandler: function (payload) {
                 const idx = Util.GetItemIndexById(payload.id, this.rows);
-                console.log(this.rows);
-                console.log(idx);
                 this.rows[idx] = '';
-                console.log(this.rows);
+            },
+            unitCloneHandler: function (payload) {
+                this.$emit('clone-for-current-unit-column',payload);
             }
         }
     }
