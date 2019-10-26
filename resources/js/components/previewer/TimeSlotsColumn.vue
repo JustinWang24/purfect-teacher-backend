@@ -30,8 +30,9 @@
         font-size: 14px;
         font-weight: bold;
         color: #0c83fc;
-        height: 120px;
-        padding: 10px 0 10px 0;
+        height: 140px;
+        padding: 40px 15px 10px 0;
+        box-sizing: border-box;
     }
 }
 </style>

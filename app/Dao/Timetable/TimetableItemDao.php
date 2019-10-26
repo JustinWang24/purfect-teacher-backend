@@ -94,7 +94,9 @@ class TimetableItemDao
                 'room'=>$row->room->name,
                 'room_id'=>$row->room_id,
                 'id'=>$row->id,
-                'published'=>$row->published
+                'published'=>$row->published,
+                'repeat_unit'=>$row->repeat_unit,
+                'optional'=>$row->course->optional
             ];
         }
         return $result;
