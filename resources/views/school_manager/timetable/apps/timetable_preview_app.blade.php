@@ -14,6 +14,7 @@
                     :init-weekday-index="shared.initWeekdayIndex"
                     :init-time-slot-id="shared.initTimeSlotId"
                     :shared="shared"
+                    :time-table-item="timeTableItem"
                 ></timetable-item-form>
             </div>
         </div>
@@ -27,6 +28,7 @@
                     :time-slots="timeSlots"
                     :sub-title="subTitle"
                     v-on:create-new-by-click="createNewByClickHandler"
+                    v-on:edit-unit-by-click="editUnitByClickHandler"
                 ></timetable-previewer>
             </div>
         </div>

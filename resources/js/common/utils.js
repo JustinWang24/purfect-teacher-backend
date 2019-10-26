@@ -36,25 +36,28 @@ export const Util = {
     },
     // 在本环境中是否为空
     isEmpty: function (obj) {
-        // null and undefined are "empty"
-        if (obj == null) return true;
+        // null and undefined 等同于空
+        if (obj === null) return true;
+        if (obj === '') return true;
+        if (typeof obj === 'undefined') return true;
 
-        // Assume if it has a length property with a non-zero value
-        // that that property is correct.
+        // 处理数组
         if (obj.length > 0)    return false;
         if (obj.length === 0)  return true;
 
-        // If it isn't an object at this point
-        // it is empty, but it can't be anything *but* empty
-        // Is it empty?  Depends on your application.
-        if (typeof obj !== "object") return true;
-
-        // Otherwise, does it have any properties of its own?
-        // Note that this doesn't handle
-        // toString and valueOf enumeration bugs in IE < 9
-        for (var key in obj) {
-            if (Object.prototype.hasOwnProperty.call(obj, key)) return false;
+        // 是否传入的对象自己有属性
+        if(typeof obj === 'object'){
+            let anyProperty = 0;
+            for (let key in obj) {
+                anyProperty++;
+                break;
+            }
+            return anyProperty === 0;
         }
-        return true;
+        return false;
+    },
+    pageScrollTo: function(pos){
+        // 移动到页面顶部
+        document.body.scrollTop = document.documentElement.scrollTop = pos;
     }
 };

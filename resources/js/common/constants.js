@@ -21,7 +21,9 @@ export const Constants = {
         // 课程表专有
         TIMETABLE: {
             SAVE_NEW: '/api/timetable/save-timetable-time',
+            UPDATE: '/api/timetable/update-timetable-time',
             LOAD_TIMETABLE: '/api/timetable/load', // 加载课程表
+            LOAD_TIMETABLE_ITEM: '/api/timetable/load-item', // 加载课程表项
         }
     },
     TERMS: ['第一学期','第二学期','第三学期','第四学期'],
