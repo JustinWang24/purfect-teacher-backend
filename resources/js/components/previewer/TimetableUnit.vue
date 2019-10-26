@@ -28,6 +28,7 @@
 </template>
 
 <script>
+    import { Constants } from '../../common/constants';
     import { Util } from '../../common/utils';
 
     export default {
@@ -74,7 +75,32 @@
                 this.$emit('create-special-case',{unit: this.unit});
             },
             deleteUnit: function() {
-                this.$emit('delete-unit',{unit: this.unit});
+                // 删除课程表项目
+                this.$confirm('此操作将永久删除课程表中该项, 是否继续?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    axios.post(
+                        Constants.API.TIMETABLE.DELETE_ITEM,{id: this.unit.id}
+                    ).then(res=>{
+                        if(Util.isAjaxResOk(res)){
+                            this.$notify({
+                                title: '成功',
+                                message: '删除成功',
+                                type: 'success',
+                                position: 'bottom-right'
+                            });
+                            this.$emit('unit-deleted',{id: this.unit.id});
+                        }
+                    });
+                }).catch(() => {
+                    this.$notify.info({
+                        title: '消息',
+                        message: '删除操作已取消',
+                        position: 'bottom-right'
+                    });
+                });
             }
         }
     }

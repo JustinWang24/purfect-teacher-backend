@@ -20,6 +20,22 @@ export const Util = {
         });
         return result;
     },
+    /**
+     * 根据 id 来定位数组中的 item 的索引
+     * @param id
+     * @param obj
+     * @returns {*}
+     * @constructor
+     */
+    GetItemIndexById: function (id, obj) {
+        let result = null;
+        _.each(obj, (item, idx) => {
+            if(id === item.id){
+                result = idx;
+            }
+        });
+        return result;
+    },
     // 输出学期文字的方法
     GetTermText: function (term) {
         return Constants.TERMS[term - 1];

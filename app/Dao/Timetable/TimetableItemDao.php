@@ -38,6 +38,15 @@ class TimetableItemDao
     }
 
     /**
+     * 删除
+     * @param $id
+     * @return bool|null
+     */
+    public function deleteItem($id){
+        return TimetableItem::where('id',$id)->delete();
+    }
+
+    /**
      * 更新课程表项
      * @param $data
      * @return bool
