@@ -8,6 +8,7 @@
                     :row-index="idx"
                     v-on:create-new-for-current-unit="createNewForCurrentUnitHandler"
                     v-on:edit-for-current-unit="editForCurrentUnit"
+                    v-on:unit-deleted="unitDeletedHandler"
             ></timetable-unit>
         </div>
     </div>
@@ -35,6 +36,13 @@
             // 编辑课程表项目
             editForCurrentUnit: function(payload){
                 this.$emit('edit-for-current-unit-column',payload)
+            },
+            unitDeletedHandler: function (payload) {
+                const idx = Util.GetItemIndexById(payload.id, this.rows);
+                console.log(this.rows);
+                console.log(idx);
+                this.rows[idx] = '';
+                console.log(this.rows);
             }
         }
     }

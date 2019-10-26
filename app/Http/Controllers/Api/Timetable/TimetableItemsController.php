@@ -44,6 +44,16 @@ class TimetableItemsController extends Controller
     }
 
     /**
+     * @param Request $request
+     * @return string
+     */
+    public function delete(Request $request){
+        $dao = new TimetableItemDao();
+        $result = $dao->deleteItem($request->get('id'));
+        return $result ? JsonBuilder::Success() : JsonBuilder::Error();
+    }
+
+    /**
      * 加载整个课程表
      * @param Request $request
      * @return string

@@ -20,8 +20,9 @@ export const Constants = {
         DELETE_COURSE: '/api/school/delete-course',
         // 课程表专有
         TIMETABLE: {
-            SAVE_NEW: '/api/timetable/save-timetable-time',
-            UPDATE: '/api/timetable/update-timetable-time',
+            SAVE_NEW: '/api/timetable/save-timetable-item',
+            UPDATE: '/api/timetable/update-timetable-item',
+            DELETE_ITEM: '/api/timetable/delete-timetable-item',
             LOAD_TIMETABLE: '/api/timetable/load', // 加载课程表
             LOAD_TIMETABLE_ITEM: '/api/timetable/load-item', // 加载课程表项
         }
