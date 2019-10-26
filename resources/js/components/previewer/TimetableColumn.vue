@@ -2,7 +2,12 @@
     <div class="the-column-wrap">
         <p class="header-txt">{{ weekdayText }}</p>
         <div class="the-unit-div" v-for="(unit, idx) in rows" :key="idx">
-            <timetable-unit :unit="unit"></timetable-unit>
+            <timetable-unit
+                    :unit="unit"
+                    :weekday="weekday"
+                    :row-index="idx"
+                    v-on:create-new-for-current-unit="createNewForCurrentUnitHandler"
+            ></timetable-unit>
         </div>
     </div>
 </template>
@@ -20,6 +25,11 @@
         computed: {
             'weekdayText': function(){
                 return Util.GetWeekdayText(this.weekday);
+            }
+        },
+        methods: {
+            createNewForCurrentUnitHandler: function(payload){
+                this.$emit('create-new-for-current-column',payload)
             }
         }
     }

@@ -1,12 +1,23 @@
 <template>
-    <div class="timetable-unit-wrap" :class="customCssRule()">
-        <p v-if="isEmpty()" class="text-center mt-2">未安排</p>
-        <div v-else class="unit-content">
-            <p class="text-center no-margin">{{ unit.course }}</p>
-            <p class="text-center no-margin">老师: {{ unit.teacher }}</p>
-            <p class="text-center no-margin">地点: {{ unit.building }}</p>
-            <p class="text-center no-margin">{{ unit.room }}</p>
-        </div>
+    <div v-if="isEmpty()" class="timetable-unit-wrap" :class="customCssRule()">
+        <p class="text-center mt-4">
+            <el-button round v-on:click="onEmptyUnitClicked">点击添加</el-button>
+        </p>
+    </div>
+    <div v-else class="timetable-unit-wrap" :class="customCssRule()">
+        <el-popover
+                class="unit-content"
+                placement="right"
+                width="400"
+                trigger="click">
+            <p>something</p>
+            <div class="unit-content" slot="reference">
+                <p class="text-center no-margin">{{ unit.course }}</p>
+                <p class="text-center no-margin">老师: {{ unit.teacher }}</p>
+                <p class="text-center no-margin">地点: {{ unit.building }}</p>
+                <p class="text-center no-margin">{{ unit.room }}</p>
+            </div>
+        </el-popover>
     </div>
 </template>
 
@@ -15,7 +26,7 @@
 
     export default {
         name: "TimetableUnit",
-        props: ['unit'],
+        props: ['unit','weekday','rowIndex'],
         methods: {
             isEmpty: function() {
                 return Util.isEmpty(this.unit);
@@ -30,6 +41,10 @@
                 else{
                     return 'draft';
                 }
+            },
+            // 空白时候点击, 相当于添加
+            onEmptyUnitClicked: function(){
+                this.$emit('create-new-for-current-unit',{weekday: this.weekday+1, timeSlotId: this.rowIndex});
             }
         }
     }
@@ -40,7 +55,7 @@
         display: block;
         padding: 10px 0 10px 0;
         height: 120px;
-        border: solid 1px #DCDFE6;
+        border: solid 1px #f1f3f7;
         background-color: #F5F7FA;
         color: #888888;
     }

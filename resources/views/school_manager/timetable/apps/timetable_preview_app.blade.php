@@ -11,6 +11,9 @@
                     v-on:item-updated="itemUpdatedHandler"
                     v-on:timetable-refresh="refreshTimetableHandler"
                     :reloading="reloading"
+                    :init-weekday-index="shared.initWeekdayIndex"
+                    :init-time-slot-id="shared.initTimeSlotId"
+                    :shared="shared"
                 ></timetable-item-form>
             </div>
         </div>
@@ -23,6 +26,7 @@
                     :timetable="timetable"
                     :time-slots="timeSlots"
                     :sub-title="subTitle"
+                    v-on:create-new-by-click="createNewByClickHandler"
                 ></timetable-previewer>
             </div>
         </div>
