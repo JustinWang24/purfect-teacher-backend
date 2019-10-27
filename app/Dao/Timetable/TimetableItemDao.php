@@ -141,11 +141,12 @@ class TimetableItemDao
      * 根据给定的条件加载某个班的某一天的课程表项列表
      * @param $weekDayIndex
      * @param $year
+     * @param $weekType
      * @param $term
      * @param $gradeId
      * @return array
      */
-    public function getItemsByWeekDayIndex($weekDayIndex, $year, $term, $gradeId){
+    public function getItemsByWeekDayIndex($weekDayIndex, $year, $term, $weekType, $gradeId){
         $where = [
             ['year','=',$year],
             ['term','=',$term],
@@ -153,6 +154,18 @@ class TimetableItemDao
             ['weekday_index','=',$weekDayIndex],
             ['to_replace','=',0], // 不需要调课记录
         ];
+
+        if($weekType === GradeAndYearUtil::WEEK_ODD){
+            // 单周课程表, 那么就加载 每周 + 单周
+            $where[] = [
+                'repeat_unit','<>',GradeAndYearUtil::TYPE_EVERY_EVEN_WEEK
+            ];
+        }else{
+            // 双周课程表, 那么就加载 每周 + 双周
+            $where[] = [
+                'repeat_unit','<>',GradeAndYearUtil::TYPE_EVERY_ODD_WEEK
+            ];
+        }
         /**
          * @var TimetableItem[] $rows
          */

@@ -12,14 +12,24 @@ class TimetableBuilderLogic
 {
     protected $schoolId;
     protected $gradeId;
+    protected $weekType;
     protected $term;
     protected $year;
     protected $timetableItemDao;
 
-    public function __construct($schoolId, $gradeId, $term, $year = null)
+    /**
+     * TimetableBuilderLogic constructor.
+     * @param $schoolId: 学校 ID
+     * @param $gradeId: 年级 ID
+     * @param $weekType: 单双周
+     * @param $term: 学期
+     * @param null $year: 学年
+     */
+    public function __construct($schoolId, $gradeId, $weekType, $term, $year = null)
     {
         $this->gradeId = $gradeId;
         $this->year = $year ?? Carbon::now()->year;
+        $this->weekType = $weekType;
         $this->term = $term;
         $this->schoolId = $schoolId;
     }
@@ -39,7 +49,7 @@ class TimetableBuilderLogic
 
         foreach (range(1, 7) as $weekDayIndex) {
             $timetable[] = $this->timetableItemDao->getItemsByWeekDayIndex(
-                $weekDayIndex, $this->year, $this->term, $this->gradeId
+                $weekDayIndex, $this->year, $this->term, $this->weekType, $this->gradeId
             );
         }
 

@@ -88,6 +88,7 @@ if(document.getElementById('school-timetable-previewer-app')){
                 //
                 schoolId: null,
                 reloading: false, // 只是课程表的预览数据是否整备加载中
+                weekType: Constants.WEEK_NUMBER_ODD, // 默认是单周
             }
         },
         created() {
@@ -111,6 +112,7 @@ if(document.getElementById('school-timetable-previewer-app')){
                 else{
                     this.timeTableItem.weekday_index = parseInt(payload.weekday);
                     this.timeTableItem.time_slot_id = parseInt(payload.timeSlotId);
+                    this.timeTableItem.id = null;
                 }
             },
             // 条目新增的事件处理
@@ -138,8 +140,12 @@ if(document.getElementById('school-timetable-previewer-app')){
             // 刷新课程表数据
             refreshTimetableHandler: function(payload){
                 // 把数据保存到缓存中
-                if(!Util.isEmpty(payload)){
+                if(!Util.isEmpty(payload.grade)){
                     this.subTitle = payload.grade.name;
+                }
+
+                if(!Util.isEmpty(payload.weekType)){
+                    this.weekType = payload.weekType;
                 }
 
                 this.reloading = true;
@@ -149,7 +155,8 @@ if(document.getElementById('school-timetable-previewer-app')){
                         grade: this.timeTableItem.grade_id,
                         year: this.timeTableItem.year,
                         term: this.timeTableItem.term,
-                        school: this.schoolId
+                        school: this.schoolId,
+                        weekType: this.weekType,
                     }
                 ).then(res => {
                     if(Util.isAjaxResOk(res) && res.data.data.timetable !== ''){
@@ -157,7 +164,7 @@ if(document.getElementById('school-timetable-previewer-app')){
                         this.timetable = res.data.data.timetable;
                         this.$notify({
                             title: '成功',
-                            message: this.subTitle + '的课程表正在被预览..',
+                            message: this.subTitle + '的课程表加载完毕',
                             type: 'success',
                             position: 'bottom-right'
                         });

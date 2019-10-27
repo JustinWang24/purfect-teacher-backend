@@ -260,7 +260,7 @@ RT!708!7
             },
             'timeSlotText': function () {
                 if(this.timeTableItem.time_slot_id !== ''){
-                    let txt =  Util.GetWeekdayText(this.timeTableItem.weekday_index) + ', ';
+                    let txt =  Util.GetWeekdayText(this.timeTableItem.weekday_index - 1) + ', ';
                     let slot = Util.GetItemById(this.timeTableItem.time_slot_id, this.timeSlots);
                     if(slot){
                         txt += slot.name;

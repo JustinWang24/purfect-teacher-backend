@@ -29,9 +29,12 @@ export const Constants = {
             LOAD_TIMETABLE_ITEM: '/api/timetable/load-item', // 加载课程表项
             CREATE_SPECIAL_CASE: '/api/timetable/create-special-case', // 加载课程表项
             LOAD_SPECIAL_CASES: '/api/timetable/load-special-cases', // 加载课程表项
+            SWITCH_WEEK_VIEW: '/api/timetable/switch-week-view', // 加载课程表项
         }
     },
     TERMS: ['第一学期','第二学期'],
     REPEAT_UNITS: ['每周重复','仅单周重复','仅双周重复'],
     WEEK_DAYS: ['周一','周二','周三','周四','周五','周六','周日',],
+    WEEK_NUMBER_ODD: 1, // 单周
+    WEEK_NUMBER_EVEN: 2,// 双周
 };
