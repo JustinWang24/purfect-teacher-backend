@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\School;
 use App\Dao\Courses\CourseMajorDao;
 use App\Dao\Schools\GradeDao;
 use App\Dao\Schools\MajorDao;
+use App\Dao\Timetable\TimetableItemDao;
 use App\Http\Controllers\Controller;
 use App\User;
 use App\Utils\JsonBuilder;
@@ -45,13 +46,20 @@ class MajorsController extends Controller
     }
 
     /**
-     * 获取某个专业的所有课程
+     * 获取某个专业的所有课程. 如果提交的参数中包含了 as , 则根据 as 的逻辑提取课程
      * @param Request $request
      * @return string
      */
     public function load_major_courses(Request $request){
         $dao = new CourseMajorDao();
-        $courses = $dao->getCoursesByMajorAndTerm($request->get('id'), $request->get('term'));
+        if($request->has('as') && $request->get('as') === 'timetable-item-id'){
+            $itemDao = new TimetableItemDao();
+            $item = $itemDao->getItemById($request->get('itemId'));
+            $courses = $dao->getCoursesByMajorAndTerm($item->grade->major_id, $item->term);
+        }
+        else{
+            $courses = $dao->getCoursesByMajorAndTerm($request->get('id'), $request->get('term'));
+        }
         return JsonBuilder::Success(['courses'=>$courses]);
     }
 }

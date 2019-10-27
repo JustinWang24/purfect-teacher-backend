@@ -38,7 +38,7 @@ Route::prefix('school')->group(function () {
     Route::any('/load-major-courses','Api\School\MajorsController@load_major_courses')
         ->name('api.school.load.major.courses');
 
-    // 获取某个学校所有的专业
+    // 获取某个学校所有的课程
     Route::any('/load-courses','Api\School\CoursesController@load_courses')
         ->name('api.school.load.courses');
 
