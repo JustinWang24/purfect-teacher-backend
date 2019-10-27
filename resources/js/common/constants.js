@@ -20,6 +20,7 @@ export const Constants = {
         DELETE_COURSE: '/api/school/delete-course',
         // 课程表专有
         TIMETABLE: {
+            CAN_BE_INSERTED: '/api/timetable/timetable-item-can-be-inserted',
             SAVE_NEW: '/api/timetable/save-timetable-item',
             UPDATE: '/api/timetable/update-timetable-item',
             DELETE_ITEM: '/api/timetable/delete-timetable-item',
