@@ -1,6 +1,9 @@
 <template>
     <div style="padding-bottom: 30px;">
-        <h2 class="text-center mt-4">课程表预览: {{ subTitle }}</h2>
+        <h3 class="text-center mt-4">
+            <el-button v-if=" subTitle !== '' " v-on:click="switchWeekViewHandler" type="text">{{ isWeekOdd ? '切换为双周课表' : '切换为单周课表' }}</el-button>&nbsp;
+            课程表预览: {{ subTitle }}
+        </h3>
         <el-divider></el-divider>
         <div class="timetable-wrap mb-4">
             <time-slots-column :time-slots="timeSlots" class="first-column"></time-slots-column>
@@ -108,6 +111,11 @@
         components: {
             TimetableColumn, TimeSlotsColumn, TimetableItemSpecialForm
         },
+        computed: {
+            'isWeekOdd': function(){
+                return this.weekType === Constants.WEEK_NUMBER_ODD;
+            }
+        },
         props: {
             timetable: {
                 type: Array,
@@ -124,7 +132,8 @@
             },
             subTitle: {
                 type: String,
-                required: false
+                required: false,
+                default: '',
             },
             schoolId: {
                 type: [Number, String],
@@ -133,6 +142,11 @@
             userUuid: {
                 type: [Number, String],
                 required: true
+            },
+            weekType: {    // 默认的为单周
+                type: Number,
+                required: false,
+                default: Constants.WEEK_NUMBER_ODD
             }
         },
         data(){
@@ -345,6 +359,14 @@
                     this.$emit('timetable-refresh',{})
                 }
                 this.specialsListVisible = false;
+            },
+            // 切换单双周的视图
+            switchWeekViewHandler: function(){
+                let weekType = Constants.WEEK_NUMBER_ODD;
+                if(this.weekType === Constants.WEEK_NUMBER_ODD){
+                    weekType = Constants.WEEK_NUMBER_EVEN;
+                }
+                this.$emit('timetable-refresh',{weekType: weekType});
             }
         }
     }

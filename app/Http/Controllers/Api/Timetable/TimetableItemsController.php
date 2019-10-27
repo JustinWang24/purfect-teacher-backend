@@ -95,8 +95,9 @@ class TimetableItemsController extends Controller
         $year = $request->get('year');
         $term = $request->get('term');
         $schoolId = $request->get('school');
+        $weekType = intval($request->get('weekType')); // 指示位: 是否为单双周
 
-        $logic = new TimetableBuilderLogic($schoolId,$gradeId, $term, $year);
+        $logic = new TimetableBuilderLogic($schoolId,$gradeId, $weekType, $term, $year);
         return JsonBuilder::Success(['timetable'=>$logic->build()]);
     }
 
