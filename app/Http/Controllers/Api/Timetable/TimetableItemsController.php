@@ -90,4 +90,14 @@ class TimetableItemsController extends Controller
         $item = $dao->getItemById($request->get('id'));
         return JsonBuilder::Success(['timetableItem'=>$item??'']);
     }
+
+    public function create_special_case(Request $request){
+        $specialCase = $request->get('specialCase');
+        $dao = new TimetableItemDao();
+        $item = $dao->getItemById($specialCase['to_replace']);
+
+        $result = $dao->createSpecialCase($specialCase, $item);
+
+        return $result ? JsonBuilder::Success(['grade_id'=>$result->grade_id]) : JsonBuilder::Error();
+    }
 }

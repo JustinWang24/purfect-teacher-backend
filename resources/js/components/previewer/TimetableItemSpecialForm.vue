@@ -16,6 +16,7 @@
                             <el-date-picker
                                     v-model="specialTimeTableItem.at_special_datetime"
                                     type="date"
+                                    :editable="false"
                                     placeholder="选择日期">
                             </el-date-picker>
                             <span class="help-text">说明: 表示调课安排是在哪天开始</span>
@@ -103,6 +104,10 @@
             },
             courses: {
                 type: Array,
+                required: true
+            },
+            schoolId: {
+                type: [Number, String],
                 required: true
             }
         },

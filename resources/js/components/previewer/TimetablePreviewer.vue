@@ -45,7 +45,8 @@
         </el-dialog>
         <el-dialog title="调课表单" :visible.sync="specialCaseFormVisible">
             <timetable-item-special-form
-                user-uuid="1"
+                :user-uuid="userUuid"
+                :school-id="schoolId"
                 :courses="coursesForSpecial"
                 :specialTimeTableItem="specialCase"
                 :to-be-replaced-item="toBeReplacedItem"
@@ -90,6 +91,14 @@
             subTitle: {
                 type: String,
                 required: false
+            },
+            schoolId: {
+                type: [Number, String],
+                required: true
+            },
+            userUuid: {
+                type: [Number, String],
+                required: true
             }
         },
         data(){
@@ -172,7 +181,7 @@
                     {itemId: payload.unit.id, as: 'timetable-item-id'}
                 ).then(res => {
                     if(Util.isAjaxResOk(res)){
-                        this._resetSpecialForm(); // 初始化调课表单数据
+                        this._resetSpecialForm(payload.unit.id); // 初始化调课表单数据
                         this.toBeReplacedItem = payload.unit; // 获取到被调课的项
                         this.coursesForSpecial = res.data.data.courses;
                         this.specialCaseFormVisible = true;
@@ -198,6 +207,33 @@
             },
             confirmSpecialCaseHandler: function(){
                 console.log(this.specialCase);
+                axios.post(
+                    Constants.API.TIMETABLE.CREATE_SPECIAL_CASE,
+                    {specialCase: this.specialCase}
+                ).then(res=>{
+                    if(Util.isAjaxResOk(res)){
+                        // 创建成功, 去刷新课程表的表单
+                        this.$emit('timetable-refresh',{
+                            grade:{
+                                id: res.data.data.grade_id,
+                                name: this.subTitle
+                            }
+                        });
+                        this.$notify({
+                            title: '成功',
+                            message: '调课操作成功, 正为您刷新课程表 ...',
+                            type: 'success',
+                            position: 'bottom-right'
+                        });
+                        this.specialCaseFormVisible = false;
+                    }else{
+                        this.$notify.error({
+                            title: '系统错误',
+                            message: '调课操作失败, 请稍候再试 ...',
+                            position: 'bottom-right'
+                        });
+                    }
+                })
             }
         }
     }
