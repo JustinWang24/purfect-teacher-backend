@@ -11,6 +11,9 @@ use Carbon\Carbon;
 
 class GradeAndYearUtil
 {
+    const DEFAULT_FORMAT_DATE = 'Y年m月d';
+    const DEFAULT_FORMAT_DATETIME = 'Y年m月d H时i分';
+
     /**
      * 将如果年份转成年级的数字, 根据当前的年份. 比如 2019 届在 2019 年就是 1 年级, 到 2020年就是 2 年级
      * @param $year: 入学年份

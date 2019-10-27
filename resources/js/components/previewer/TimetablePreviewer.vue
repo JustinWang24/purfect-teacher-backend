@@ -12,6 +12,7 @@
                         v-on:edit-for-current-unit-column="editForCurrentUnitColumnHandler"
                         v-on:clone-for-current-unit-column="cloneForCurrentUnitColumnHandler"
                         v-on:create-special-case-column="createSpecialCaseColumnHandler"
+                        v-on:show-special-cases-column="showSpecialCasesColumnHandler"
                 ></timetable-column>
             </div>
         </div>
@@ -59,6 +60,23 @@
                 <el-button type="primary" @click="confirmSpecialCaseHandler">确 定</el-button>
             </div>
         </el-dialog>
+        <el-dialog title="调课记录表" :visible.sync="specialsListVisible" :before-close="beforeSpecialListClose">
+            <el-table :data="specials">
+                <el-table-column property="date" label="日期" width="150"></el-table-column>
+                <el-table-column property="course" label="课程" width="200"></el-table-column>
+                <el-table-column property="location" label="上课地点"></el-table-column>
+                <el-table-column property="teacher" label="授课教师"></el-table-column>
+                <el-table-column property="updated_by" label="操作人"></el-table-column>
+                <el-table-column label="操作">
+                    <template slot-scope="scope">
+                        <el-button
+                                size="mini"
+                                type="danger"
+                                @click="handleSpecialCaseDelete(scope.$index, scope.row)">删除</el-button>
+                    </template>
+                </el-table-column>
+            </el-table>
+        </el-dialog>
     </div>
 </template>
 
@@ -105,6 +123,7 @@
             return {
                 cloneFormVisible: false,
                 specialCaseFormVisible: false,
+                specialsListVisible: false,
                 formLabelWidth: '80px',
                 // 克隆表单用
                 cloned: {
@@ -125,7 +144,10 @@
                     to_replace: 0,
                 },
                 toBeReplacedItem: {},
-                coursesForSpecial:[]
+                coursesForSpecial:[],
+                // 显示调课的列表
+                specials:[],
+                anySpecialItemRemoved: false,
             }
         },
         created() {
@@ -174,6 +196,19 @@
                     }
                 });
             },
+            showSpecialCasesColumnHandler: function(payload){
+                axios.post(
+                    Constants.API.TIMETABLE.LOAD_SPECIAL_CASES,
+                    {ids: payload}
+                ).then(res => {
+                    if (Util.isAjaxResOk(res)){
+                        this.specialsListVisible = true;
+                        this.anySpecialItemRemoved = false;
+                        this.specials = res.data.data.specials;
+                    }
+                });
+            },
+            // 创建调课记录
             createSpecialCaseColumnHandler: function (payload) {
                 // 获取调课可能涉及到的课程列表
                 axios.post(
@@ -206,19 +241,13 @@
                 this.toBeReplacedItem = {}; // 获取到被调课的项
             },
             confirmSpecialCaseHandler: function(){
-                console.log(this.specialCase);
                 axios.post(
                     Constants.API.TIMETABLE.CREATE_SPECIAL_CASE,
-                    {specialCase: this.specialCase}
+                    {specialCase: this.specialCase, user: this.userUuid}
                 ).then(res=>{
                     if(Util.isAjaxResOk(res)){
                         // 创建成功, 去刷新课程表的表单
-                        this.$emit('timetable-refresh',{
-                            grade:{
-                                id: res.data.data.grade_id,
-                                name: this.subTitle
-                            }
-                        });
+                        this.$emit('timetable-refresh',{});
                         this.$notify({
                             title: '成功',
                             message: '调课操作成功, 正为您刷新课程表 ...',
@@ -234,6 +263,43 @@
                         });
                     }
                 })
+            },
+            // 删除调课项
+            handleSpecialCaseDelete: function(idx, row){
+                this.$confirm('此操作将永久删除该调课记录, 是否继续?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    axios.post(
+                        Constants.API.TIMETABLE.DELETE_ITEM,{id: row.id, user: this.userUuid}
+                    ).then(res=>{
+                        if(Util.isAjaxResOk(res)){
+                            this.$notify({
+                                title: '成功',
+                                message: '删除成功',
+                                type: 'success',
+                                position: 'bottom-right'
+                            });
+                            this.specials.splice(idx, 1);
+                            this.anySpecialItemRemoved = true;
+                        }
+                    });
+                }).catch(() => {
+                    this.$notify.info({
+                        title: '消息',
+                        message: '删除操作已取消',
+                        position: 'bottom-right'
+                    });
+                });
+            },
+            // 当调课记录 modal 关闭时: 发布事件, 让课程表刷新
+            beforeSpecialListClose: function(){
+                if(this.anySpecialItemRemoved){
+                    // 去从新加载 preview
+                    this.$emit('timetable-refresh',{})
+                }
+                this.specialsListVisible = false;
             }
         }
     }

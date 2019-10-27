@@ -27,6 +27,8 @@ class TimetableItem extends Model
 
     public $casts = [
         'published' => 'boolean', // 是否本 item 是发布状态
+        'at_special_datetime' => 'datetime', // 是否本 item 是发布状态
+        'to_special_datetime' => 'datetime', // 是否本 item 是发布状态
     ];
 
     public function getPublishedTextAttribute(){
@@ -51,5 +53,13 @@ class TimetableItem extends Model
 
     public function grade(){
         return $this->belongsTo(Grade::class);
+    }
+
+    public function replacement(){
+        return $this->belongsTo(self::class,'to_replace');
+    }
+
+    public function updatedBy(){
+        return $this->belongsTo(User::class, 'last_updated_by');
     }
 }

@@ -68,9 +68,6 @@
             isEmpty: function() {
                 return Util.isEmpty(this.unit);
             },
-            showSpecials: function(){
-                console.log(this.unit.specials);
-            },
             customCssRule: function(){
                 if(this.isEmpty()){
                     return '';
@@ -95,6 +92,7 @@
             cloneUnit: function () {
                 this.$emit('clone-for-current-unit',{unit: this.unit});
             },
+            // 创建调课的事件
             createSpecialCase: function (){
                 this.$emit('create-special-case',{unit: this.unit});
             },
@@ -126,6 +124,10 @@
                         position: 'bottom-right'
                     });
                 });
+            },
+            // 查看调课的记录集合
+            showSpecials: function () {
+                this.$emit('show-specials',this.unit.specials);
             }
         }
     }
