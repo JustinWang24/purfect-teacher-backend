@@ -27,13 +27,24 @@ class QueryAvailableClassrooms implements IQueryAvailableRooms
 
     public function __construct(Request $request)
     {
-        $this->buildingId = $request->get('building');
-        $this->year = $request->get('year');
-        $this->term = $request->get('term');
-        $this->weekdayIndex = $request->get('weekday_index');
-        $this->timeSlotId = $request->get('timeSlot');
         $this->roomDao = new RoomDao(new User());
         $this->timetableItemDao = new TimetableItemDao();
+
+        if($request->has('as') && $request->get('as') === 'timetable-item-id'){
+            $item = $this->timetableItemDao->getItemById($request->get('itemId'));
+            $this->buildingId = $item->building_id;
+            $this->year = $item->year;
+            $this->term = $item->term;
+            $this->weekdayIndex = $item->weekday_index;
+            $this->timeSlotId = $item->time_slot_id;
+        }
+        else{
+            $this->buildingId = $request->get('building');
+            $this->year = $request->get('year');
+            $this->term = $request->get('term');
+            $this->weekdayIndex = $request->get('weekday_index');
+            $this->timeSlotId = $request->get('timeSlot');
+        }
     }
 
     /**

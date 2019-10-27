@@ -38,7 +38,7 @@ Route::prefix('school')->group(function () {
     Route::any('/load-major-courses','Api\School\MajorsController@load_major_courses')
         ->name('api.school.load.major.courses');
 
-    // 获取某个学校所有的专业
+    // 获取某个学校所有的课程
     Route::any('/load-courses','Api\School\CoursesController@load_courses')
         ->name('api.school.load.courses');
 
@@ -95,4 +95,12 @@ Route::prefix('timetable')->group(function () {
     // 尝试加载课程表项: 查询条件是id
     Route::post('/load-item','Api\Timetable\TimetableItemsController@load_item')
         ->name('api.timetable.load.item');
+
+    // 创建课程表的调课项
+    Route::post('/create-special-case','Api\Timetable\TimetableItemsController@create_special_case')
+        ->name('api.timetable.create.special.case');
+
+    // 尝试加载课程表的特定调课项: 查询条件是 ids, 即调课项的 id 集合
+    Route::post('/load-special-cases','Api\Timetable\TimetableItemsController@load_special_cases')
+        ->name('api.timetable.load.special.cases');
 });

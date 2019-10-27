@@ -10,6 +10,8 @@
                     v-on:edit-for-current-unit="editForCurrentUnit"
                     v-on:unit-deleted="unitDeletedHandler"
                     v-on:clone-for-current-unit="unitCloneHandler"
+                    v-on:create-special-case="createSpecialCaseHandler"
+                    v-on:show-specials="showSpecialCasesHandler"
             ></timetable-unit>
         </div>
     </div>
@@ -44,6 +46,12 @@
             },
             unitCloneHandler: function (payload) {
                 this.$emit('clone-for-current-unit-column',payload);
+            },
+            createSpecialCaseHandler: function (payload) {
+                this.$emit('create-special-case-column',payload);
+            },
+            showSpecialCasesHandler: function (payload) {
+                this.$emit('show-special-cases-column',payload);
             }
         }
     }

@@ -8,6 +8,9 @@
 
 namespace App\Dao\Timetable;
 use App\Models\Timetable\TimetableItem;
+use App\User;
+use App\Utils\Time\GradeAndYearUtil;
+use Illuminate\Support\Collection;
 
 class TimetableItemDao
 {
@@ -48,6 +51,34 @@ class TimetableItemDao
     }
 
     /**
+     * @param $specialCase
+     * @param TimetableItem $origin
+     * @param User $doer
+     * @return null|TimetableItem
+     */
+    public function createSpecialCase($specialCase, $origin, $doer){
+        $fillable = $origin->getFillable();
+        $data = [];
+        foreach ($fillable as $fieldName) {
+            $data[$fieldName] = $origin->$fieldName;
+        }
+        foreach ($specialCase as $name=>$fieldValue) {
+            if($name === 'at_special_datetime' || $name === 'to_special_datetime'){
+                $carbon = GradeAndYearUtil::ConvertJsTimeToCarbon($fieldValue);
+                if($carbon){
+                    $fieldValue = $carbon->format('Y-m-d');
+                    $data[$name] = $fieldValue;
+                }
+            }
+            else{
+                $data[$name] = $fieldValue;
+            }
+        }
+        $data['last_updated_by'] = $doer->id;
+        return $this->createTimetableItem($data);
+    }
+
+    /**
      * 添加新的 Item
      * @param $data
      * @return TimetableItem
@@ -59,9 +90,18 @@ class TimetableItemDao
     /**
      * 删除
      * @param $id
+     * @param User $doer
      * @return bool|null
      */
-    public function deleteItem($id){
+    public function deleteItem($id, $doer = null){
+        $item = $this->getItemById($id);
+        if($item){
+            if($doer){
+                // 记录下是谁删除的
+                $item->last_updated_by = $doer->id;
+                $item->save();
+            }
+        }
         return TimetableItem::where('id',$id)->delete();
     }
 
@@ -80,6 +120,7 @@ class TimetableItemDao
     }
 
     /**
+     * 根据给定的条件加载某个班的某一天的课程表项列表
      * @param $weekDayIndex
      * @param $year
      * @param $term
@@ -92,6 +133,7 @@ class TimetableItemDao
             ['term','=',$term],
             ['grade_id','=',$gradeId],
             ['weekday_index','=',$weekDayIndex],
+            ['to_replace','=',0], // 不需要调课记录
         ];
         /**
          * @var TimetableItem[] $rows
@@ -104,7 +146,9 @@ class TimetableItemDao
             $result[$timeSlot->id] = '';
         }
 
+//        $specialCases = [];
         foreach ($rows as $row) {
+            // 要判断一下, 是否为调课的记录
             $result[$row->time_slot_id] = [
                 'course' => $row->course->name,
                 'teacher'=> $row->teacher->profile->name,
@@ -118,9 +162,48 @@ class TimetableItemDao
                 'optional'=>$row->course->optional,
                 'weekday_index'=>$row->weekday_index,
                 'time_slot_id'=>$row->time_slot_id,
+                'specials'=>'',
             ];
         }
         return $result;
+    }
+
+    /**
+     * 获取指定条件下的调课统计数据
+     * 返回: [
+     *      '原始的固定课表项 ID' => [调课项的 id 数组]
+     * ]
+     * @param $year
+     * @param $term
+     * @param $gradeId
+     * @param $today
+     * @return array
+     */
+    public function getSpecialsAfterToday($year, $term, $gradeId, $today){
+        $where = [
+            ['year','=',$year],
+            ['term','=',$term],
+            ['grade_id','=',$gradeId],
+            ['to_replace','>',0], // 只加载调课记录
+            ['at_special_datetime','>=',$today->format('Y-m-d').' 00:00:00'], // 今天或者今天以后的
+        ];
+        /**
+         * @var TimetableItem[] $rows
+         */
+        $specialRows = TimetableItem::select(['id','to_replace'])
+            ->where($where)->orderBy('time_slot_id','asc')->get();
+
+        $specialCases = [];
+
+        foreach ($specialRows as $specialRow) {
+            if(isset($specialCases[$specialRow->to_replace])){
+                $specialCases[$specialRow->to_replace][] = $specialRow->id;
+            }
+            else{
+                $specialCases[$specialRow->to_replace] = [$specialRow->id];
+            }
+        }
+        return $specialCases;
     }
 
     /**
@@ -150,5 +233,14 @@ class TimetableItemDao
                 ->where('building_id',$buildingId)
                 ->get()->toArray();
         }
+    }
+
+    /**
+     * 根据传入的 id 的数组, 加载全部列表
+     * @param $ids
+     * @return Collection
+     */
+    public function getItemsByIdArray($ids){
+        return TimetableItem::whereIn('id',$ids)->get();
     }
 }
