@@ -1,6 +1,9 @@
 <template>
     <div style="padding-bottom: 30px;">
-        <h2 class="text-center mt-4">课程表预览: {{ subTitle }}</h2>
+        <h3 class="text-center mt-4">
+            <el-button v-if=" subTitle !== '' " v-on:click="switchWeekViewHandler" type="text">{{ isWeekOdd ? '切换为双周课表' : '切换为单周课表' }}</el-button>&nbsp;
+            课程表预览: {{ subTitle }}
+        </h3>
         <el-divider></el-divider>
         <div class="timetable-wrap mb-4">
             <time-slots-column :time-slots="timeSlots" class="first-column"></time-slots-column>
@@ -62,17 +65,33 @@
         </el-dialog>
         <el-dialog title="调课记录表" :visible.sync="specialsListVisible" :before-close="beforeSpecialListClose">
             <el-table :data="specials">
-                <el-table-column property="date" label="日期" width="150"></el-table-column>
-                <el-table-column property="course" label="课程" width="200"></el-table-column>
-                <el-table-column property="location" label="上课地点"></el-table-column>
+                <el-table-column label="日期" width="150">
+                    <template slot-scope="scope">
+                        <i v-if="scope.row.published" class="el-icon-check"></i>
+                        <i v-else class="el-icon-video-pause"></i>
+                        <i class="el-icon-time"></i>
+                        <span>{{ scope.row.date }}</span>
+                    </template>
+                </el-table-column>
+                <el-table-column property="course" label="课程" width="120"></el-table-column>
+                <el-table-column property="location" label="上课地点" width="120"></el-table-column>
                 <el-table-column property="teacher" label="授课教师"></el-table-column>
                 <el-table-column property="updated_by" label="操作人"></el-table-column>
-                <el-table-column label="操作">
+                <el-table-column label="操作" width="150">
                     <template slot-scope="scope">
                         <el-button
                                 size="mini"
                                 type="danger"
-                                @click="handleSpecialCaseDelete(scope.$index, scope.row)">删除</el-button>
+                                @click="handleSpecialCaseDelete(scope.$index, scope.row)">
+                            删除
+                        </el-button>
+                        <el-button
+                                v-if="!scope.row.published"
+                                size="mini"
+                                type="primary"
+                                @click="handleSpecialCasePublish(scope.$index, scope.row)">
+                            发布
+                        </el-button>
                     </template>
                 </el-table-column>
             </el-table>
@@ -92,6 +111,11 @@
         components: {
             TimetableColumn, TimeSlotsColumn, TimetableItemSpecialForm
         },
+        computed: {
+            'isWeekOdd': function(){
+                return this.weekType === Constants.WEEK_NUMBER_ODD;
+            }
+        },
         props: {
             timetable: {
                 type: Array,
@@ -108,7 +132,8 @@
             },
             subTitle: {
                 type: String,
-                required: false
+                required: false,
+                default: '',
             },
             schoolId: {
                 type: [Number, String],
@@ -117,6 +142,11 @@
             userUuid: {
                 type: [Number, String],
                 required: true
+            },
+            weekType: {    // 默认的为单周
+                type: Number,
+                required: false,
+                default: Constants.WEEK_NUMBER_ODD
             }
         },
         data(){
@@ -264,6 +294,35 @@
                     }
                 })
             },
+            // 发布调课信息
+            handleSpecialCasePublish: function(idx, row){
+                this.$confirm('您将发布此调课信息, 是否确认?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    axios.post(
+                        Constants.API.TIMETABLE.PUBLISH_ITEM,{id: row.id, user: this.userUuid}
+                    ).then(res=>{
+                        if(Util.isAjaxResOk(res)){
+                            this.$notify({
+                                title: '成功',
+                                message: '调课信息已经发布成功',
+                                type: 'success',
+                                position: 'bottom-right'
+                            });
+                            this.specials[idx].published = true;
+                        }
+                    });
+                }).catch((e) => {
+                    console.log(e);
+                    this.$notify.info({
+                        title: '消息',
+                        message: '发布操作已取消',
+                        position: 'bottom-right'
+                    });
+                });
+            },
             // 删除调课项
             handleSpecialCaseDelete: function(idx, row){
                 this.$confirm('此操作将永久删除该调课记录, 是否继续?', '提示', {
@@ -300,6 +359,14 @@
                     this.$emit('timetable-refresh',{})
                 }
                 this.specialsListVisible = false;
+            },
+            // 切换单双周的视图
+            switchWeekViewHandler: function(){
+                let weekType = Constants.WEEK_NUMBER_ODD;
+                if(this.weekType === Constants.WEEK_NUMBER_ODD){
+                    weekType = Constants.WEEK_NUMBER_EVEN;
+                }
+                this.$emit('timetable-refresh',{weekType: weekType});
             }
         }
     }

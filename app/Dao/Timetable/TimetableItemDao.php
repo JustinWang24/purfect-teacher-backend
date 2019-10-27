@@ -90,7 +90,7 @@ class TimetableItemDao
     /**
      * 删除
      * @param $id
-     * @param User $doer
+     * @param User|null $doer
      * @return bool|null
      */
     public function deleteItem($id, $doer = null){
@@ -103,6 +103,24 @@ class TimetableItemDao
             }
         }
         return TimetableItem::where('id',$id)->delete();
+    }
+
+    /**
+     * @param $id
+     * @param User|null $doer
+     * @return bool
+     */
+    public function publishItem($id, $doer=null){
+        $item = $this->getItemById($id);
+        if($item){
+            if($doer){
+                // 记录下是谁删除的
+                $item->last_updated_by = $doer->id;
+            }
+            $item->published = true;
+            return $item->save();
+        }
+        return false;
     }
 
     /**
@@ -123,11 +141,12 @@ class TimetableItemDao
      * 根据给定的条件加载某个班的某一天的课程表项列表
      * @param $weekDayIndex
      * @param $year
+     * @param $weekType
      * @param $term
      * @param $gradeId
      * @return array
      */
-    public function getItemsByWeekDayIndex($weekDayIndex, $year, $term, $gradeId){
+    public function getItemsByWeekDayIndex($weekDayIndex, $year, $term, $weekType, $gradeId){
         $where = [
             ['year','=',$year],
             ['term','=',$term],
@@ -135,6 +154,18 @@ class TimetableItemDao
             ['weekday_index','=',$weekDayIndex],
             ['to_replace','=',0], // 不需要调课记录
         ];
+
+        if($weekType === GradeAndYearUtil::WEEK_ODD){
+            // 单周课程表, 那么就加载 每周 + 单周
+            $where[] = [
+                'repeat_unit','<>',GradeAndYearUtil::TYPE_EVERY_EVEN_WEEK
+            ];
+        }else{
+            // 双周课程表, 那么就加载 每周 + 双周
+            $where[] = [
+                'repeat_unit','<>',GradeAndYearUtil::TYPE_EVERY_ODD_WEEK
+            ];
+        }
         /**
          * @var TimetableItem[] $rows
          */

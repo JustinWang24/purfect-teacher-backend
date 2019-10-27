@@ -84,6 +84,10 @@ Route::prefix('timetable')->group(function () {
     Route::post('/delete-timetable-item','Api\Timetable\TimetableItemsController@delete')
         ->name('api.timetable.delete.item');
 
+    // 发布课程表项的接口
+    Route::post('/publish-timetable-item','Api\Timetable\TimetableItemsController@publish')
+        ->name('api.timetable.publish.item');
+
     // 保存课程表项的接口
     Route::post('/update-timetable-item','Api\Timetable\TimetableItemsController@update')
         ->name('api.timetable.update.item');
