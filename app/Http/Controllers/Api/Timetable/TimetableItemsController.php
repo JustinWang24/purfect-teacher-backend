@@ -63,6 +63,17 @@ class TimetableItemsController extends Controller
     }
 
     /**
+     * @param Request $request
+     * @return string
+     */
+    public function publish(Request $request){
+        $dao = new TimetableItemDao();
+        $user = $this->userDao->getUserByUuid($request->get('user'));
+        $result = $dao->publishItem($request->get('id'), $user);
+        return $result ? JsonBuilder::Success() : JsonBuilder::Error();
+    }
+
+    /**
      * 克隆项目
      * @param Request $request
      * @return string
@@ -84,8 +95,9 @@ class TimetableItemsController extends Controller
         $year = $request->get('year');
         $term = $request->get('term');
         $schoolId = $request->get('school');
+        $weekType = intval($request->get('weekType')); // 指示位: 是否为单双周
 
-        $logic = new TimetableBuilderLogic($schoolId,$gradeId, $term, $year);
+        $logic = new TimetableBuilderLogic($schoolId,$gradeId, $weekType, $term, $year);
         return JsonBuilder::Success(['timetable'=>$logic->build()]);
     }
 
