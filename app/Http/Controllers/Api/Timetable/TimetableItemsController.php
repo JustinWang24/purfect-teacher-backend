@@ -2,16 +2,24 @@
 
 namespace App\Http\Controllers\Api\Timetable;
 
+use App\BusinessLogic\TimetableLogic\SpecialItemsLoadLogic;
 use App\BusinessLogic\TimetableLogic\TimetableBuilderLogic;
 use App\BusinessLogic\TimetableLogic\TimetableItemBeforeCreate;
 use App\BusinessLogic\TimetableLogic\TimetableItemBeforeUpdate;
 use App\Dao\Timetable\TimetableItemDao;
+use App\Dao\Users\UserDao;
 use App\Utils\JsonBuilder;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
 class TimetableItemsController extends Controller
 {
+    protected $userDao;
+    public function __construct()
+    {
+        $this->userDao = new UserDao();
+    }
+
     /**
      * 保存课程表项目的接口
      * @param Request $request
@@ -49,7 +57,8 @@ class TimetableItemsController extends Controller
      */
     public function delete(Request $request){
         $dao = new TimetableItemDao();
-        $result = $dao->deleteItem($request->get('id'));
+        $user = $this->userDao->getUserByUuid($request->get('user'));
+        $result = $dao->deleteItem($request->get('id'), $user);
         return $result ? JsonBuilder::Success() : JsonBuilder::Error();
     }
 
@@ -91,13 +100,32 @@ class TimetableItemsController extends Controller
         return JsonBuilder::Success(['timetableItem'=>$item??'']);
     }
 
+    /**
+     * 创建新的课程表调课项
+     * @param Request $request
+     * @return string
+     */
     public function create_special_case(Request $request){
         $specialCase = $request->get('specialCase');
         $dao = new TimetableItemDao();
         $item = $dao->getItemById($specialCase['to_replace']);
 
-        $result = $dao->createSpecialCase($specialCase, $item);
+        $user = $this->userDao->getUserByUuid($request->get('user'));
 
-        return $result ? JsonBuilder::Success(['grade_id'=>$result->grade_id]) : JsonBuilder::Error();
+        if($user && $user->isSchoolAdminOrAbove()){
+            $result = $dao->createSpecialCase($specialCase, $item, $user);
+            return $result ? JsonBuilder::Success(['grade_id'=>$result->grade_id]) : JsonBuilder::Error();
+        }
+        else{
+            return JsonBuilder::Error('没有权限进行此操作');
+        }
+    }
+
+    public function load_special_cases(Request $request){
+        $ids = $request->get('ids');
+
+        $logic = new SpecialItemsLoadLogic($ids);
+
+        return JsonBuilder::Success(['specials'=>$logic->build()]);
     }
 }

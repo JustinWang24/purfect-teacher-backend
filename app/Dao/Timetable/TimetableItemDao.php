@@ -8,7 +8,9 @@
 
 namespace App\Dao\Timetable;
 use App\Models\Timetable\TimetableItem;
+use App\User;
 use App\Utils\Time\GradeAndYearUtil;
+use Illuminate\Support\Collection;
 
 class TimetableItemDao
 {
@@ -51,9 +53,10 @@ class TimetableItemDao
     /**
      * @param $specialCase
      * @param TimetableItem $origin
+     * @param User $doer
      * @return null|TimetableItem
      */
-    public function createSpecialCase($specialCase, $origin){
+    public function createSpecialCase($specialCase, $origin, $doer){
         $fillable = $origin->getFillable();
         $data = [];
         foreach ($fillable as $fieldName) {
@@ -71,6 +74,7 @@ class TimetableItemDao
                 $data[$name] = $fieldValue;
             }
         }
+        $data['last_updated_by'] = $doer->id;
         return $this->createTimetableItem($data);
     }
 
@@ -86,9 +90,18 @@ class TimetableItemDao
     /**
      * 删除
      * @param $id
+     * @param User $doer
      * @return bool|null
      */
-    public function deleteItem($id){
+    public function deleteItem($id, $doer = null){
+        $item = $this->getItemById($id);
+        if($item){
+            if($doer){
+                // 记录下是谁删除的
+                $item->last_updated_by = $doer->id;
+                $item->save();
+            }
+        }
         return TimetableItem::where('id',$id)->delete();
     }
 
@@ -220,5 +233,14 @@ class TimetableItemDao
                 ->where('building_id',$buildingId)
                 ->get()->toArray();
         }
+    }
+
+    /**
+     * 根据传入的 id 的数组, 加载全部列表
+     * @param $ids
+     * @return Collection
+     */
+    public function getItemsByIdArray($ids){
+        return TimetableItem::whereIn('id',$ids)->get();
     }
 }

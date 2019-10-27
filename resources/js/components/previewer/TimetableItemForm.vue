@@ -467,7 +467,7 @@ RT!708!7
             _getPayload: function(){
                 return {
                     grade:{
-                        id: this.timeTableItem.grade_id,
+                        // id: this.timeTableItem.grade_id,
                         name: this.gradeInfoText
                     }
                 };

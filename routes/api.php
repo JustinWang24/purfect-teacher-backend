@@ -96,7 +96,11 @@ Route::prefix('timetable')->group(function () {
     Route::post('/load-item','Api\Timetable\TimetableItemsController@load_item')
         ->name('api.timetable.load.item');
 
-    // 尝试加载课程表项: 查询条件是id
+    // 创建课程表的调课项
     Route::post('/create-special-case','Api\Timetable\TimetableItemsController@create_special_case')
         ->name('api.timetable.create.special.case');
+
+    // 尝试加载课程表的特定调课项: 查询条件是 ids, 即调课项的 id 集合
+    Route::post('/load-special-cases','Api\Timetable\TimetableItemsController@load_special_cases')
+        ->name('api.timetable.load.special.cases');
 });
