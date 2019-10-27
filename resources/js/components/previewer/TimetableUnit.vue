@@ -21,7 +21,7 @@
             <div class="unit-content" slot="reference">
                 <p class="text-center no-margin" style="margin-top: -10px;">
 <text-badge :text="optionalText" :color="optionalColor"></text-badge>
-<text-badge v-if="this.unit.repeat_unit === 2" text="单双周" color="primary"></text-badge>
+<text-badge :text="repeatUnitText" color="primary"></text-badge>
 <text-badge v-if="specialCasesCount > 0" text="调课" color="info"></text-badge>
                 </p>
                 <p class="text-center no-margin">{{ unit.course }}</p>
@@ -57,6 +57,10 @@
             // 本项在未来有几节调课
             'specialCasesCount': function(){
                 return Util.isEmpty(this.unit.specials) ? 0 : this.unit.specials.length;
+            },
+            // 周期文字
+            'repeatUnitText': function(){
+                return Constants.REPEAT_UNITS[this.unit.repeat_unit-1];
             }
         },
         data(){

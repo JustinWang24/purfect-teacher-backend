@@ -90,7 +90,7 @@ class TimetableItemDao
     /**
      * 删除
      * @param $id
-     * @param User $doer
+     * @param User|null $doer
      * @return bool|null
      */
     public function deleteItem($id, $doer = null){
@@ -103,6 +103,24 @@ class TimetableItemDao
             }
         }
         return TimetableItem::where('id',$id)->delete();
+    }
+
+    /**
+     * @param $id
+     * @param User|null $doer
+     * @return bool
+     */
+    public function publishItem($id, $doer=null){
+        $item = $this->getItemById($id);
+        if($item){
+            if($doer){
+                // 记录下是谁删除的
+                $item->last_updated_by = $doer->id;
+            }
+            $item->published = true;
+            return $item->save();
+        }
+        return false;
     }
 
     /**

@@ -63,6 +63,17 @@ class TimetableItemsController extends Controller
     }
 
     /**
+     * @param Request $request
+     * @return string
+     */
+    public function publish(Request $request){
+        $dao = new TimetableItemDao();
+        $user = $this->userDao->getUserByUuid($request->get('user'));
+        $result = $dao->publishItem($request->get('id'), $user);
+        return $result ? JsonBuilder::Success() : JsonBuilder::Error();
+    }
+
+    /**
      * 克隆项目
      * @param Request $request
      * @return string

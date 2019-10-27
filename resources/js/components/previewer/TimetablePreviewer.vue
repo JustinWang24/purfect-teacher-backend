@@ -62,17 +62,33 @@
         </el-dialog>
         <el-dialog title="调课记录表" :visible.sync="specialsListVisible" :before-close="beforeSpecialListClose">
             <el-table :data="specials">
-                <el-table-column property="date" label="日期" width="150"></el-table-column>
-                <el-table-column property="course" label="课程" width="200"></el-table-column>
-                <el-table-column property="location" label="上课地点"></el-table-column>
+                <el-table-column label="日期" width="150">
+                    <template slot-scope="scope">
+                        <i v-if="scope.row.published" class="el-icon-check"></i>
+                        <i v-else class="el-icon-video-pause"></i>
+                        <i class="el-icon-time"></i>
+                        <span>{{ scope.row.date }}</span>
+                    </template>
+                </el-table-column>
+                <el-table-column property="course" label="课程" width="120"></el-table-column>
+                <el-table-column property="location" label="上课地点" width="120"></el-table-column>
                 <el-table-column property="teacher" label="授课教师"></el-table-column>
                 <el-table-column property="updated_by" label="操作人"></el-table-column>
-                <el-table-column label="操作">
+                <el-table-column label="操作" width="150">
                     <template slot-scope="scope">
                         <el-button
                                 size="mini"
                                 type="danger"
-                                @click="handleSpecialCaseDelete(scope.$index, scope.row)">删除</el-button>
+                                @click="handleSpecialCaseDelete(scope.$index, scope.row)">
+                            删除
+                        </el-button>
+                        <el-button
+                                v-if="!scope.row.published"
+                                size="mini"
+                                type="primary"
+                                @click="handleSpecialCasePublish(scope.$index, scope.row)">
+                            发布
+                        </el-button>
                     </template>
                 </el-table-column>
             </el-table>
@@ -263,6 +279,35 @@
                         });
                     }
                 })
+            },
+            // 发布调课信息
+            handleSpecialCasePublish: function(idx, row){
+                this.$confirm('您将发布此调课信息, 是否确认?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    axios.post(
+                        Constants.API.TIMETABLE.PUBLISH_ITEM,{id: row.id, user: this.userUuid}
+                    ).then(res=>{
+                        if(Util.isAjaxResOk(res)){
+                            this.$notify({
+                                title: '成功',
+                                message: '调课信息已经发布成功',
+                                type: 'success',
+                                position: 'bottom-right'
+                            });
+                            this.specials[idx].published = true;
+                        }
+                    });
+                }).catch((e) => {
+                    console.log(e);
+                    this.$notify.info({
+                        title: '消息',
+                        message: '发布操作已取消',
+                        position: 'bottom-right'
+                    });
+                });
             },
             // 删除调课项
             handleSpecialCaseDelete: function(idx, row){
