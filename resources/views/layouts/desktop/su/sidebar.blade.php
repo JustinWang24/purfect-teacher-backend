@@ -38,7 +38,7 @@
                 </li>
 
                 <li class="nav-item">
-                    <a href="{{ route('school_manager.timetable.manager',['uuid'=>session('school.uuid')]) }}" class="nav-link">
+                    <a href="{{ route('school_manager.timetable.manager.preview',['uuid'=>session('school.uuid')]) }}" class="nav-link">
                         <i class="material-icons">event</i>
                         <span class="title">课程表管理</span>
                     </a>

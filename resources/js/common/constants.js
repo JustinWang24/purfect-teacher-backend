@@ -26,6 +26,8 @@ export const Constants = {
             CLONE_ITEM: '/api/timetable/clone-timetable-item',
             LOAD_TIMETABLE: '/api/timetable/load', // 加载课程表
             LOAD_TIMETABLE_ITEM: '/api/timetable/load-item', // 加载课程表项
+            CREATE_SPECIAL_CASE: '/api/timetable/create-special-case', // 加载课程表项
+            LOAD_SPECIAL_CASES: '/api/timetable/load-special-cases', // 加载课程表项
         }
     },
     TERMS: ['第一学期','第二学期','第三学期','第四学期'],
