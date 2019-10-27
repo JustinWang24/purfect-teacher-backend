@@ -11,6 +11,7 @@
                         v-on:create-new-for-current-column="createNewForCurrentColumnHandler"
                         v-on:edit-for-current-unit-column="editForCurrentUnitColumnHandler"
                         v-on:clone-for-current-unit-column="cloneForCurrentUnitColumnHandler"
+                        v-on:create-special-case-column="createSpecialCaseColumnHandler"
                 ></timetable-column>
             </div>
         </div>
@@ -42,19 +43,35 @@
                 <el-button type="primary" @click="confirmCloneAction">确 定</el-button>
             </div>
         </el-dialog>
+        <el-dialog title="调课表单" :visible.sync="specialCaseFormVisible">
+            <timetable-item-special-form
+                user-uuid="1"
+                :courses="coursesForSpecial"
+                :specialTimeTableItem="specialCase"
+                :to-be-replaced-item="toBeReplacedItem"
+                :subtitle="subTitle"
+                :special-case-cancelled="cancelSpecialCaseHandler"
+                :special-case-confirmed="confirmSpecialCaseHandler"
+            ></timetable-item-special-form>
+            <div slot="footer" class="dialog-footer">
+                <el-button @click="cancelSpecialCaseHandler">取 消</el-button>
+                <el-button type="primary" @click="confirmSpecialCaseHandler">确 定</el-button>
+            </div>
+        </el-dialog>
     </div>
 </template>
 
 <script>
     import TimetableColumn from './TimetableColumn.vue';
     import TimeSlotsColumn from './TimeSlotsColumn.vue';
+    import TimetableItemSpecialForm from './TimetableItemSpecialForm.vue';
     import { Constants } from '../../common/constants';
     import { Util } from '../../common/utils';
 
     export default {
         name: "TimetablePreviewer",
         components: {
-            TimetableColumn, TimeSlotsColumn
+            TimetableColumn, TimeSlotsColumn, TimetableItemSpecialForm
         },
         props: {
             timetable: {
@@ -78,6 +95,7 @@
         data(){
             return {
                 cloneFormVisible: false,
+                specialCaseFormVisible: false,
                 formLabelWidth: '80px',
                 // 克隆表单用
                 cloned: {
@@ -86,6 +104,19 @@
                     from_unit_id: null,
                 },
                 weekdays:[],
+                // 调课用
+                specialCase: {
+                    at_special_datetime: '',
+                    to_special_datetime: '',
+                    course_id: '',
+                    teacher_id: '',
+                    building_id: '',
+                    room_id: '',
+                    published: false,
+                    to_replace: 0,
+                },
+                toBeReplacedItem: {},
+                coursesForSpecial:[]
             }
         },
         created() {
@@ -133,7 +164,40 @@
                         this.$emit('clone-action-success');
                     }
                 });
-
+            },
+            createSpecialCaseColumnHandler: function (payload) {
+                // 获取调课可能涉及到的课程列表
+                axios.post(
+                    Constants.API.LOAD_COURSES_BY_MAJOR,
+                    {itemId: payload.unit.id, as: 'timetable-item-id'}
+                ).then(res => {
+                    if(Util.isAjaxResOk(res)){
+                        this._resetSpecialForm(); // 初始化调课表单数据
+                        this.toBeReplacedItem = payload.unit; // 获取到被调课的项
+                        this.coursesForSpecial = res.data.data.courses;
+                        this.specialCaseFormVisible = true;
+                    }
+                });
+            },
+            _resetSpecialForm: function(id){
+                this.specialCase = {
+                    at_special_datetime: '',
+                    to_special_datetime: '',
+                    course_id: '',
+                    teacher_id: '',
+                    building_id: '',
+                    room_id: '',
+                    published: false,
+                    to_replace: id,
+                };
+            },
+            cancelSpecialCaseHandler: function(){
+                this.specialCaseFormVisible = false;
+                this._resetSpecialForm(null); // 重置调课表单数据
+                this.toBeReplacedItem = {}; // 获取到被调课的项
+            },
+            confirmSpecialCaseHandler: function(){
+                console.log(this.specialCase);
             }
         }
     }
