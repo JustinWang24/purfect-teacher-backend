@@ -43,7 +43,8 @@
                                            :key="repeatUnit"
                                            v-for="(repeatUnit, idx) in repeatUnits"></el-option>
                             </el-select>
-                            <span class="help-text">说明: 表示这个安排是每周都延续的</span>
+                            <span class="help-text">
+                                说明: 表示这个安排是<span :class="repeatUnitBriefClass">{{ repeatUnitBrief }}</span>都有效</span>
                         </el-form-item>
                         <el-form-item label="哪一天">
                             <el-select v-model="timeTableItem.weekday_index" style="width: 100%;">
@@ -133,7 +134,7 @@
 
             <el-form-item style="text-align: center;">
                 <el-button icon="el-icon-back" type="primary" @click="goToPrev" :disabled="currentStep===1">上一步</el-button>
-                <el-button icon="el-icon-right el-icon--right" type="primary" @click="goToNext" v-show="currentStep === 1">下一步</el-button>
+                <el-button :loading="checkingActionInProgress" icon="el-icon-right el-icon--right" type="primary" @click="goToNext" v-show="currentStep === 1">下一步</el-button>
                 <el-button :loading="savingActionInProgress" icon="el-icon-document-add" type="primary" @click="saveItem" v-show="currentStep === 2">我确认以上信息无误, 保存</el-button>
                 <el-button :loading="reloading" icon="el-icon-refresh" @click="fireUpTimetableRefresh">刷新</el-button>
             </el-form-item>
@@ -199,6 +200,7 @@ RT!708!7
                 repeatUnits:[],
                 weekdays:[],
                 savingActionInProgress: false,
+                checkingActionInProgress: false,
             }
         },
         // 监听
@@ -253,6 +255,24 @@ RT!708!7
             'termText': function(){
                 if(this.timeTableItem.term)
                     return Util.GetTermText(this.timeTableItem.term);
+            },
+            'repeatUnitBrief': function() {
+                let brief = '每周';
+                if(this.timeTableItem.repeat_unit === 2){
+                    brief = '每逢单周';
+                }else if(this.timeTableItem.repeat_unit === 3){
+                    brief = '每逢双周';
+                }
+                return brief;
+            },
+            'repeatUnitBriefClass': function() {
+                let rule = '';
+                if(this.timeTableItem.repeat_unit === 2){
+                    rule = 'text-danger';
+                }else if(this.timeTableItem.repeat_unit === 3){
+                    rule = 'text-primary';
+                }
+                return rule;
             },
             'repeatUnitText': function () {
                 if(this.timeTableItem.repeat_unit)
@@ -433,9 +453,29 @@ RT!708!7
                 }
             },
             goToNext: function () {
-                if(this.currentStep < 4){
-                    this.currentStep++;
-                }
+                // 要做数据是否可以插入的检查操作
+                this.checkingActionInProgress = true;
+                axios.post(
+                    Constants.API.TIMETABLE.CAN_BE_INSERTED,
+                    {timetableItem: this.timeTableItem, school: this.schoolId, user: this.userUuid}
+                ).then(res => {
+                    if(Util.isAjaxResOk(res)){
+                        // 表示检查通过
+                        if(this.currentStep < 2){
+                            this.currentStep++;
+                        }
+                    }
+                    else{
+                        // 无法通过检查, 则显示具体的原因
+                        this.$notify.error({
+                            title: '错误',
+                            message: res.data.message,
+                            duration: 0
+                        });
+                    }
+                }).finally(()=>{
+                    this.checkingActionInProgress = false;
+                });
             },
             saveItem: function(){
                 // Todo: 课程表的 item, 保存之前应该做一些有效性检查

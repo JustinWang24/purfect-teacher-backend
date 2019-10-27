@@ -73,6 +73,10 @@ Route::prefix('school')->group(function () {
 
 Route::prefix('timetable')->group(function () {
     // 保存课程表项的接口
+    Route::post('/timetable-item-can-be-inserted','Api\Timetable\TimetableItemsController@can_be_inserted')
+        ->name('api.timetable.item.can.be.inserted');
+
+    // 保存课程表项的接口
     Route::post('/save-timetable-item','Api\Timetable\TimetableItemsController@save')
         ->name('api.timetable.save.item');
 

@@ -13,17 +13,24 @@ class TimetableItemBeforeCreate
     /**
      * @var Request
      */
-    protected $request;
-    protected $itemData;
-    protected $schoolId;
-    protected $userUuid;
+    private $request;
+    private $itemData;
+    private $schoolId;
+    private $userUuid;
+
+    /**
+     * @var TimetableItemDao
+     */
+    private $itemDao;
+
     /**
      * @var UserDao
      */
-    protected $userDao;
-    protected $currentUser;
+    private $userDao;
+    private $currentUser;
 
-    private $checked = false;
+    public $checked = false;
+    public $errorMessage = '';
 
     public function __construct(Request $request)
     {
@@ -31,7 +38,9 @@ class TimetableItemBeforeCreate
         $this->schoolId = $request->get('school');
         $this->userUuid = $request->get('user');
         $this->itemData = $request->get('timetableItem');
+        $this->itemData['school_id'] = $this->schoolId;
         $this->userDao = new UserDao();
+        $this->itemDao = new TimetableItemDao();
     }
 
     /**
@@ -41,6 +50,25 @@ class TimetableItemBeforeCreate
     public function check(){
         $this->currentUser = $this->userDao->getUserByIdOrUuid($this->userUuid);
         $this->checked = $this->currentUser && $this->currentUser->isSchoolAdminOrAbove();
+        if(!$this->checked){
+            // 用户没有权限做插入的操作
+            $this->errorMessage = '您没有做创建课程表项的权限';
+            return $this;
+        }
+
+        if(isset($this->itemData['id'])){
+            // 这是个更新操作, 所以是可以通过的
+            $this->checked = true;
+            return $this;
+        }
+
+        $found = $this->itemDao->hasAnyOneTakenThePlace($this->itemData);
+        if($found){
+            // 表示已经被占用了
+            $this->checked = false;
+            $this->errorMessage = '您选择的时间段已经被: ' . $found->describeItself() . ' 占用了.';
+            return $this;
+        }
         return $this;
     }
 
@@ -50,10 +78,8 @@ class TimetableItemBeforeCreate
      */
     public function create(){
         if($this->checked){
-            $dao = new TimetableItemDao();
-            $this->itemData['school_id'] = $this->schoolId;
             $this->itemData['last_updated_by'] = $this->currentUser->id;
-            return $dao->createTimetableItem($this->itemData);
+            return $this->itemDao->createTimetableItem($this->itemData);
         }
         return null;
     }
