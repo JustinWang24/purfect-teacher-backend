@@ -14,13 +14,15 @@
             <p>
                 <el-button icon="el-icon-edit" size="mini" v-if="!unit.published" v-on:click="editUnit">编辑</el-button>
                 <el-button icon="el-icon-document-copy" size="mini" type="success" v-on:click="cloneUnit">克隆</el-button>
-                <el-button icon="el-icon-share" type="primary" size="mini" v-if="unit.published" v-on:click="createSpecialCase">临时调课</el-button>
-                <el-button icon="el-icon-delete" type="danger" size="mini" v-on:click="deleteUnit">删除</el-button>
+                <el-button icon="el-icon-share" type="primary" size="mini" v-if="unit.published" v-on:click="createSpecialCase">调课</el-button>
+                <el-button v-if="specialCasesCount > 0" icon="el-icon-info" type="success" size="mini" v-on:click="showSpecials">调课记录</el-button>
+                <el-button icon="el-icon-delete" type="danger" size="mini" v-on:click="deleteUnit"></el-button>
             </p>
             <div class="unit-content" slot="reference">
                 <p class="text-center no-margin" style="margin-top: -10px;">
 <text-badge :text="optionalText" :color="optionalColor"></text-badge>
 <text-badge v-if="this.unit.repeat_unit === 2" text="单双周" color="primary"></text-badge>
+<text-badge v-if="specialCasesCount > 0" text="调课" color="info"></text-badge>
                 </p>
                 <p class="text-center no-margin">{{ unit.course }}</p>
                 <p class="text-center no-margin">老师: {{ unit.teacher }}</p>
@@ -52,6 +54,10 @@
             'optionalColor': function(){
                 return this.unit.optional ? 'default' : 'danger';
             },
+            // 本项在未来有几节调课
+            'specialCasesCount': function(){
+                return Util.isEmpty(this.unit.specials) ? 0 : this.unit.specials.length;
+            }
         },
         data(){
             return {
@@ -61,6 +67,9 @@
         methods: {
             isEmpty: function() {
                 return Util.isEmpty(this.unit);
+            },
+            showSpecials: function(){
+                console.log(this.unit.specials);
             },
             customCssRule: function(){
                 if(this.isEmpty()){
@@ -89,6 +98,7 @@
             createSpecialCase: function (){
                 this.$emit('create-special-case',{unit: this.unit});
             },
+            // 删除当前项
             deleteUnit: function() {
                 // 删除课程表项目
                 this.$confirm('此操作将永久删除课程表中该项, 是否继续?', '提示', {

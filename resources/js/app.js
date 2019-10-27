@@ -165,6 +165,9 @@ if(document.getElementById('school-timetable-previewer-app')){
                         this.timetable = [];
                     }
                     this.reloading = false;
+                }).catch(e=>{
+                    console.log(e);
+                    this.reloading = false;
                 })
             },
             // 把时间段数据取来, 然后去生成课程表左边第一栏
