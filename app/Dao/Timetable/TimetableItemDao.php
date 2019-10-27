@@ -88,6 +88,56 @@ class TimetableItemDao
     }
 
     /**
+     * 检查给定的数据, 是否已经被别人项占用
+     * @param $data
+     * @return bool|TimetableItem
+     */
+    public function hasAnyOneTakenThePlace($data){
+        // 情况 1: 如果课程表项目, 它的重复周期是每周有效, 那么插入前要检查, 只要该时段有任意类型的项目, 则都不可插入
+        if(intval($data['repeat_unit']) === GradeAndYearUtil::TYPE_EVERY_WEEK){
+            $where = [
+                ['school_id','=',$data['school_id']],
+                ['weekday_index','=',$data['weekday_index']],
+                ['time_slot_id','=',$data['time_slot_id']],
+                ['year','=',$data['year']],
+                ['term','=',$data['term']],
+                ['building_id','=',$data['building_id']],
+                ['room_id','=',$data['room_id']],
+            ];
+        }
+        elseif(intval($data['repeat_unit']) === GradeAndYearUtil::TYPE_EVERY_EVEN_WEEK){
+            $where = [
+                ['school_id','=',$data['school_id']],
+                ['weekday_index','=',$data['weekday_index']],
+                ['time_slot_id','=',$data['time_slot_id']],
+                ['year','=',$data['year']],
+                ['term','=',$data['term']],
+                ['building_id','=',$data['building_id']],
+                ['room_id','=',$data['room_id']],
+                ['repeat_unit','<>',GradeAndYearUtil::TYPE_EVERY_ODD_WEEK], // 想插入双周, 那么相同时间地点, 不能有双周或者每周的
+            ];
+        }
+        elseif(intval($data['repeat_unit']) === GradeAndYearUtil::TYPE_EVERY_ODD_WEEK){
+            $where = [
+                ['school_id','=',$data['school_id']],
+                ['weekday_index','=',$data['weekday_index']],
+                ['time_slot_id','=',$data['time_slot_id']],
+                ['year','=',$data['year']],
+                ['term','=',$data['term']],
+                ['building_id','=',$data['building_id']],
+                ['room_id','=',$data['room_id']],
+                ['repeat_unit','<>',GradeAndYearUtil::TYPE_EVERY_EVEN_WEEK], // 想插入单周, 那么相同时间地点, 不能有单周或者每周的
+            ];
+        }
+        else{
+            return true; // 错误的数据, 直接 reject
+        }
+
+        $found = TimetableItem::where($where)->first();
+        return $found??false;
+    }
+
+    /**
      * 删除
      * @param $id
      * @param User|null $doer

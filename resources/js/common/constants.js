@@ -20,6 +20,7 @@ export const Constants = {
         DELETE_COURSE: '/api/school/delete-course',
         // 课程表专有
         TIMETABLE: {
+            CAN_BE_INSERTED: '/api/timetable/timetable-item-can-be-inserted',
             SAVE_NEW: '/api/timetable/save-timetable-item',
             UPDATE: '/api/timetable/update-timetable-item',
             DELETE_ITEM: '/api/timetable/delete-timetable-item',
@@ -32,7 +33,8 @@ export const Constants = {
             SWITCH_WEEK_VIEW: '/api/timetable/switch-week-view', // 加载课程表项
         }
     },
-    TERMS: ['第一学期','第二学期'],
+    YEARS: ['N.A','一年级','二年级','三年级','四年级','五年级','六年级'],
+    TERMS: ['N.A','第一学期','第二学期'],
     REPEAT_UNITS: ['每周重复','仅单周重复','仅双周重复'],
     WEEK_DAYS: ['周一','周二','周三','周四','周五','周六','周日',],
     WEEK_NUMBER_ODD: 1, // 单周

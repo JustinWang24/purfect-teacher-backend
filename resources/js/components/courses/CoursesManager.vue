@@ -3,9 +3,9 @@
         <div class="courses-list-col">
             <p class="courses-list-title">
                 课程列表 &nbsp;
-                <el-button type="primary" @click="newCourseForm">添加课程</el-button>
+                <el-button icon="el-icon-circle-plus" type="primary" @click="newCourseForm">添加课程</el-button>
             </p>
-            <courses-list :courses="courses" @course-delete="onCourseNeedDelete" @course-edit="onCourseNeedEdit" :can-delete="canDelete"></courses-list>
+            <courses-list :courses="courses" @course-view="onCourseNeedView" @course-delete="onCourseNeedDelete" @course-edit="onCourseNeedEdit" :can-delete="canDelete"></courses-list>
         </div>
 
         <el-drawer
@@ -26,20 +26,18 @@
                 </el-form-item>
                 <el-form-item label="适用年级" prop="year">
                     <el-select v-model="courseModel.year" placeholder="课程针对哪个年级">
-                        <el-option label="1年级" value="1"></el-option>
-                        <el-option label="2年级" value="2"></el-option>
-                        <el-option label="3年级" value="3"></el-option>
-                        <el-option label="4年级" value="4"></el-option>
-                        <el-option label="5年级" value="5"></el-option>
-                        <el-option label="6年级" value="6"></el-option>
+                        <el-option label="1年级" :value="1"></el-option>
+                        <el-option label="2年级" :value="2"></el-option>
+                        <el-option label="3年级" :value="3"></el-option>
+                        <el-option label="4年级" :value="4"></el-option>
+                        <el-option label="5年级" :value="5"></el-option>
+                        <el-option label="6年级" :value="6"></el-option>
                     </el-select>
                 </el-form-item>
                 <el-form-item label="适用学期" prop="term">
                     <el-select v-model="courseModel.term" placeholder="课程针对哪个学期">
-                        <el-option label="第一学期" value="1"></el-option>
-                        <el-option label="第二学期" value="2"></el-option>
-                        <el-option label="第三学期" value="3"></el-option>
-                        <el-option label="第四学期" value="4"></el-option>
+                        <el-option label="第一学期" :value="1"></el-option>
+                        <el-option label="第二学期" :value="2"></el-option>
                     </el-select>
                 </el-form-item>
                 <el-form-item label="课程类型">
@@ -85,6 +83,18 @@
                 </el-form-item>
             </el-form>
         </el-drawer>
+
+        <el-drawer
+                title="课程表"
+                :visible.sync="showCourseScheduleFlag"
+                direction="rtl"
+                size="50%">
+            <el-table :data="courseSchedule">
+                <el-table-column property="date" label="日期" width="150"></el-table-column>
+                <el-table-column property="name" label="教师" width="120"></el-table-column>
+                <el-table-column property="grade" label="班级信息"></el-table-column>
+            </el-table>
+        </el-drawer>
     </div>
 </template>
 
@@ -106,6 +116,10 @@
                 type: Boolean,
                 required: false,
                 default: false
+            },
+            userUuid: {
+                type: String,
+                required: true,
             }
         },
         data(){
@@ -134,12 +148,6 @@
                     name: [
                         { required: true, message: '请输入课程名称', trigger: 'blur' }
                     ],
-                    // teachers: [
-                    //     { type: 'array', required: true, message: '请至少选择一个任课教师', trigger: 'change' }
-                    // ],
-                    // majors: [
-                    //     { type: 'array', required: true, message: '请至少选择一个所属专业', trigger: 'change' }
-                    // ],
                     year: [
                         { required: true, message: '请选择年级', trigger: 'change' }
                     ],
@@ -152,6 +160,9 @@
                 teachers:[], // 被搜索出的老师
                 loading: false,
                 passedCourseId: null,
+                // 根据课程总结的汇总表
+                showCourseScheduleFlag: false,
+                courseSchedule:[]
             };
         },
         created(){
@@ -213,6 +224,10 @@
             },
             onDrawerClosed: function(){
                 this.showCourseFormFlag = false;
+            },
+            // 当课程名被点击, 去加载该课程的课程表
+            onCourseNeedView: function(payload){
+                this.showCourseScheduleFlag = true;
             },
             // 当需要删除的时候
             onCourseNeedDelete: function(payload){
