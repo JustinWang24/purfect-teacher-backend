@@ -3,28 +3,34 @@
         <el-table
                 :data="courses"
                 style="width: 100%">
-            <el-table-column
-                    label="课程名称"
-                    width="140">
+            <el-table-column label="课程名称">
                 <template slot-scope="scope">
-                    <i class="el-icon-book"></i>
-                    <span style="margin-left: 10px">{{ scope.row.name }}</span>
+                    <el-button type="text" v-on:click="courseNameClickedHandler">
+                        <i class="el-icon-s-order"></i>
+                        <span>{{ scope.row.name }}({{ scope.row.code }})</span>
+                    </el-button>
                 </template>
             </el-table-column>
             <el-table-column
-                    label="课程编号"
-                    prop="code"
-                    width="140">
+                    label="类型"
+                    width="80">
+                <template slot-scope="scope">
+                    <text-badge :text="scope.row.optional ? '选修' : '必修'" :color="scope.row.optional ? 'default' : 'danger'"></text-badge>
+                </template>
             </el-table-column>
             <el-table-column
                     label="适用年级"
-                    prop="year"
                     width="80">
+                <template slot-scope="scope">
+                    <el-tag size="medium" type="default">{{ yearText(scope.row.year) }}</el-tag>
+                </template>
             </el-table-column>
             <el-table-column
                     label="适用学期"
-                    prop="term"
                     width="80">
+                <template slot-scope="scope">
+                    <el-tag size="medium" type="default">{{ termText(scope.row.term) }}</el-tag>
+                </template>
             </el-table-column>
             <el-table-column
                     label="学分"
@@ -62,8 +68,13 @@
 </template>
 
 <script>
+    import { Constants } from '../../common/constants';
+    import TextBadge from '../../components/misc/TextBadge';
     export default {
         name: "CoursesList",
+        components: {
+            TextBadge
+        },
         props: {
             courses: { // 学校的 ID
                 type: Array, required: true
@@ -82,6 +93,15 @@
             },
             handleEdit: function(idx, row){
                 this.$emit('course-edit', {idx: idx, course: row});
+            },
+            yearText: function(year){
+                return Constants.YEARS[year];
+            },
+            termText: function (term) {
+                return Constants.TERMS[term];
+            },
+            courseNameClickedHandler: function(idx, row){
+                this.$emit('course-view', {idx: idx, course: row});
             }
         }
     }
