@@ -1,7 +1,7 @@
 <template>
     <div style="padding-bottom: 30px;">
         <h3 class="text-center mt-4">
-            <el-button v-if=" subTitle !== '' " v-on:click="switchWeekViewHandler" type="text">{{ isWeekOdd ? '切换为双周课表' : '切换为单周课表' }}</el-button>&nbsp;
+            <el-button v-if=" subTitle !== '' " v-on:click="switchWeekViewHandler" type="text">{{ isWeekOdd ? '目前是单周课表, 点击切换为双周课表' : '目前是双周课表, 点击切换为单周课表' }}</el-button>&nbsp;
             课程表预览: {{ subTitle }}
         </h3>
         <el-divider></el-divider>
@@ -222,7 +222,7 @@
                             type: 'success',
                             position: 'bottom-right'
                         });
-                        this.$emit('clone-action-success');
+                        this.$emit('timetable-refresh',{});
                     }
                 });
             },

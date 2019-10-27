@@ -21,6 +21,20 @@ class TimetableItemsController extends Controller
     }
 
     /**
+     * 检查提交的数据是否可以插入到数据中
+     * @param Request $request
+     * @return string
+     */
+    public function can_be_inserted(Request $request){
+        $logic = new TimetableItemBeforeCreate($request);
+        $logic->check();
+        if($logic->checked){
+            return JsonBuilder::Success();
+        }
+        return JsonBuilder::Error($logic->errorMessage);
+    }
+
+    /**
      * 保存课程表项目的接口
      * @param Request $request
      * @return string
