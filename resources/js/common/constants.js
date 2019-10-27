@@ -23,6 +23,7 @@ export const Constants = {
             SAVE_NEW: '/api/timetable/save-timetable-item',
             UPDATE: '/api/timetable/update-timetable-item',
             DELETE_ITEM: '/api/timetable/delete-timetable-item',
+            PUBLISH_ITEM: '/api/timetable/publish-timetable-item',
             CLONE_ITEM: '/api/timetable/clone-timetable-item',
             LOAD_TIMETABLE: '/api/timetable/load', // 加载课程表
             LOAD_TIMETABLE_ITEM: '/api/timetable/load-item', // 加载课程表项
@@ -30,7 +31,7 @@ export const Constants = {
             LOAD_SPECIAL_CASES: '/api/timetable/load-special-cases', // 加载课程表项
         }
     },
-    TERMS: ['第一学期','第二学期','第三学期','第四学期'],
-    REPEAT_UNITS: ['单周重复','双周重复','三周重复','四周重复'],
+    TERMS: ['第一学期','第二学期'],
+    REPEAT_UNITS: ['每周重复','仅单周重复','仅双周重复'],
     WEEK_DAYS: ['周一','周二','周三','周四','周五','周六','周日',],
 };
