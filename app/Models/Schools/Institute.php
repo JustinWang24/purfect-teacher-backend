@@ -2,6 +2,7 @@
 
 namespace App\Models\Schools;
 
+use App\Models\Acl\Role;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Users\GradeUser;
 use App\User;
@@ -27,10 +28,10 @@ class Institute extends Model
     }
 
     public function employeesCount(){
-        return GradeUser::where('institute_id', $this->id)->where('user_type',User::TYPE_EMPLOYEE)->count();
+        return GradeUser::where('institute_id', $this->id)->whereIn('user_type',Role::GetTeacherUserTypes())->count();
     }
 
     public function studentsCount(){
-        return GradeUser::where('institute_id', $this->id)->where('user_type',User::TYPE_STUDENT)->count();
+        return GradeUser::where('institute_id', $this->id)->whereIn('user_type',Role::GetStudentUserTypes())->count();
     }
 }

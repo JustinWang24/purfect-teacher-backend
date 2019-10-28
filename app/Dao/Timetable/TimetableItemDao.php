@@ -232,7 +232,7 @@ class TimetableItemDao
             // 要判断一下, 是否为调课的记录
             $result[$row->time_slot_id] = [
                 'course' => $row->course->name,
-                'teacher'=> $row->teacher->profile->name,
+                'teacher'=> $row->teacher->name,
                 'teacher_id'=> $row->teacher_id,
                 'building'=>$row->building->name,
                 'room'=>$row->room->name,
