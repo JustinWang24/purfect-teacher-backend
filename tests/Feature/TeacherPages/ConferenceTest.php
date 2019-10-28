@@ -26,7 +26,7 @@ class ConferenceTest extends BasicPageTestCase
      */
     public function testAddConferencePage()
     {
-        $user = $this->getSuperAdmin();
+        $user = $this->getTeacher();
 
         $response = $this->setSchoolAsUser($user, 50)
             ->actingAs($user)
@@ -57,7 +57,7 @@ class ConferenceTest extends BasicPageTestCase
         $to   = Carbon::tomorrow()->format('Y-m-d');
 
         $data = ['from'=>$from,'to'=>$to];
-        $user = $this->getSuperAdmin();
+        $user = $this->getTeacher();
         $response = $this->setSchoolAsUser($user, 50)
             ->actingAs($user)
             ->withSession($this->schoolSessionData)
@@ -83,7 +83,7 @@ class ConferenceTest extends BasicPageTestCase
      */
     public function testGetRoomsApi()
     {
-        $user = $this->getSuperAdmin();
+        $user = $this->getTeacher();
         $date = Carbon::now()->format('Y-m-d');
         $get = ['date'=>$date];
 
@@ -113,7 +113,8 @@ class ConferenceTest extends BasicPageTestCase
 
         $data = $this->__createConferenceData();
 
-        $user = $this->getSuperAdmin();
+        $user = $this->getTeacher();
+
         $response = $this->setSchoolAsUser($user, 50)
             ->actingAs($user)
             ->withSession($this->schoolSessionData)
@@ -130,7 +131,7 @@ class ConferenceTest extends BasicPageTestCase
      */
     public function testGetConferenceListApi()
     {
-        $user = $this->getSuperAdmin();
+        $user = $this->getTeacher();
         $response = $this->setSchoolAsUser($user, 50)
             ->actingAs($user)
             ->withSession($this->schoolSessionData)
