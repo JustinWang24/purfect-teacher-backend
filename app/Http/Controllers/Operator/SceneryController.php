@@ -9,8 +9,7 @@ use App\Http\Requests\Scenery\SceneryRequest;
 use App\Utils\Files\UploadFiles;
 use App\Utils\FlashMessageBuilder;
 use App\Models\Schools\SchoolResource;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Storage;
+use App\Dao\Categories\CategorieDao;
 
 class SceneryController extends Controller
 {
@@ -80,7 +79,16 @@ class SceneryController extends Controller
 
         $sceneryData = $request->post('scenery');
 //      $sceneryData['school_id'] = $request->getSchoolId();
+//      $uuid = $request->uuid();
+
+        $userId = $request->getUserId();
+        $categoriesDao = new CategorieDao;
+
+        $category = $categoriesDao->getMyCategoriesByUserId($userId, '2');
         $sceneryData['school_id'] = 1;
+        $uuid = '19bab179-4164-403e-9043-0e53318acd0a';
+
+        $category = 'e3a4ecd9-7203-4d2f-b97a-0091a06929f0';
 
         // TODO :: 以下 上传文件代码 需要抽离成接口类
 
@@ -94,7 +102,7 @@ class SceneryController extends Controller
                 $ext      = $value->getClientOriginalExtension();
                 $filename = md5(rand(0, 99)) . '.' . $ext;
                 $path   = $value->move('storage', $filename);
-                $uploadFile[] = $upload->uploadFile('1.0','e3a4ecd9-7203-4d2f-b97a-0091a06929f0','19bab179-4164-403e-9043-0e53318acd0a', $path);
+                $uploadFile[] = $upload->uploadFile('1.0', $category, $uuid, $path);
             }
 
             foreach ($uploadFile as $key => $val) {
@@ -105,7 +113,7 @@ class SceneryController extends Controller
                     unlink('storage/'. $val['data']['file']['name']);
                 }
             }
-
+            // 临时写下标的方式
             if ($request->post('type') == SchoolResource::TYPE_IMAGE) {
                 $sceneryData['path'] = $uploadFile[0]['data']['file']['url'];
                 $sceneryData['size'] = $uploadFile[0]['data']['file']['size'];

@@ -15,10 +15,10 @@ use App\Models\Schools\SchoolResource;
                 <div class="card-body " id="bar-parent">
                     <form action="{{ route('school_manager.scenery.save') }}" method="post" enctype="multipart/form-data">
                         @csrf
-                         <input type="hidden" id="major-id-input" name="scenery[id]" value="{{ $data->id }}">
+                         <input type="hidden" for="manager-input" name="scenery[id]" value="{{ $data->id }}">
 
                         <div class="form-group">
-                            <label for="school-name-input">资源类型</label>
+                            <label for="manager-input">资源类型</label>
                             <select class="form-control" name="scenery[type]"  required>
                                 <option value="">Select...</option>
                                 <option value="{{SchoolResource::TYPE_IMAGE}}">图片</option>
@@ -27,40 +27,40 @@ use App\Models\Schools\SchoolResource;
                         </div>
                         <div id="image" style="">
                             <div class="form-group">
-                                <lable for="">资源名称</lable>
+                                <lable for="manager-input">资源名称</lable>
                                 <input type="text"  class="form-control" name="scenery[name]"  value="{{ $data->name }}"required>
                             </div>
                             <div class="form-group">
-                                <lable for="">宽度</lable>
+                                <lable for="manager-input">宽度</lable>
                                  <div class="input-group">
                                     <input type="text"  class="form-control" name="scenery[width]"  value="{{ $data->width }}" required>
                                     <span class="input-group-addon">PX</span>
                                 </div>
                             </div>
                             <div class="form-group">
-                                <lable for="">高度</lable>
+                                <lable for="manager-input">高度</lable>
                                  <div class="input-group">
                                     <input type="text"  class="form-control" name="scenery[height]" value="{{ $data->height }}" required>
                                     <span class="input-group-addon">PX</span>
                                 </div>
                             </div>
 
-{{--                            <div class="form-group">--}}
-{{--                                <label for="school-name-input">上传图片</label>--}}
-{{--                                <input type="file" class="form-control" name="image" required>--}}
-{{--                            </div>--}}
-{{--                        </div>--}}
+                            <div class="form-group">
+                                <label for="manager-input">上传图片</label>
+                                <input type="file" class="form-control" name="image" required>
+                            </div>
+                        </div>
 
-{{--                        <div id="video" style="">--}}
-{{--                            <div class="form-group">--}}
-{{--                                <label for="school-name-input">上传视频</label>--}}
-{{--                                <input type="file" class="form-control" name="video" required>--}}
-{{--                            </div>--}}
-{{--                            <div class="form-group">--}}
-{{--                                <label for="school-name-input">上传视频封面</label>--}}
-{{--                                <input type="file" class="form-control" name="video_cover" required>--}}
-{{--                            </div>--}}
-{{--                        </div>--}}
+                        <div id="video" style="display: none">
+                            <div class="form-group">
+                                <label for="manager-input">上传视频</label>
+                                <input type="file" class="form-control" name="video" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="manager-input">上传视频封面</label>
+                                <input type="file" class="form-control" name="video_cover" required>
+                            </div>
+                        </div>
 
 
                         <?php
