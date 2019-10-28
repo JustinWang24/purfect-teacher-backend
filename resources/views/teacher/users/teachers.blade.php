@@ -45,7 +45,7 @@ use App\User;
                                     <tr>
                                         <td>{{ $index+1 }}</td>
                                         <td>
-                                            {{ $gradeUser->user->profile->name }}
+                                            {{ $gradeUser->user->name }}
                                         </td>
                                         <td>{{ $gradeUser->user->role() }}</td>
                                         <td>{{ $gradeUser->workAt() }}</td>
