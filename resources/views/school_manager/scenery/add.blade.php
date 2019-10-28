@@ -16,7 +16,7 @@ use App\Models\Schools\SchoolResource;
                     <form action="{{ route('school_manager.scenery.save') }}" method="post" enctype="multipart/form-data">
                         @csrf
                         <div class="form-group">
-                            <label for="school-name-input">资源类型</label>
+                            <label for="manager-type-input">资源类型</label>
                             <select class="form-control" name="scenery[type]"  required>
                                 <option value="">Select...</option>
                                 <option value="{{SchoolResource::TYPE_IMAGE}}">图片</option>
@@ -26,36 +26,36 @@ use App\Models\Schools\SchoolResource;
 
                         <div id="image" style="">
                             <div class="form-group">
-                                <lable for="">资源名称</lable>
+                                <lable for="manager-name-input">资源名称</lable>
                                 <input type="text"  class="form-control" name="scenery[name]" required>
                             </div>
                             <div class="form-group">
-                                <lable for="">宽度</lable>
+                                <lable for="manager-width-input">宽度</lable>
                                  <div class="input-group">
                                     <input type="text"  class="form-control" name="scenery[width]"  required >
                                     <span class="input-group-addon">PX</span>
                                 </div>
                             </div>
                             <div class="form-group">
-                                <lable for="">高度</lable>
+                                <lable for="manager-height-input">高度</lable>
                                  <div class="input-group">
                                     <input type="text"  class="form-control" name="scenery[height]"  required >
                                     <span class="input-group-addon">PX</span>
                                 </div>
                             </div>
-{{--                            <div class="form-group">--}}
-{{--                                <label for="school-name-input">上传图片</label>--}}
-{{--                                <input type="file" class="form-control" name="image" required>--}}
-{{--                            </div>--}}
+                            <div class="form-group">
+                                <label for="manager-image-input">上传图片</label>
+                                <input type="file" class="form-control" name="image" required>
+                            </div>
                         </div>
 
                         <div id="video">
                             <div class="form-group">
-                                <label for="school-name-input">上传视频封面</label>
+                                <label for="manager-video-cover-input">上传视频封面</label>
                                 <input type="file" class="form-control" name="video_cover" required>
                             </div>
                             <div class="form-group">
-                                <label for="school-name-input">上传视频</label>
+                                <label for="manager-video-input">上传视频</label>
                                 <input type="file" class="form-control" name="video" required>
                             </div>
                         </div>

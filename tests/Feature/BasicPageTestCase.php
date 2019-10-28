@@ -17,6 +17,8 @@ class BasicPageTestCase extends TestCase
     protected $userDao;
     protected $superAdmin;
     protected $operator;
+    protected $schoolManager;
+    protected $getTeacher;
     protected $school;
     protected $schoolSessionData = [];
 
@@ -24,9 +26,11 @@ class BasicPageTestCase extends TestCase
     {
         parent::setUp();
         // 初始化所需要的 dao
-        $this->userDao = new UserDao();
-        $this->superAdmin = $this->userDao->getUserByMobile('18601216091');
-        $this->operator = $this->userDao->getUserByMobile('18510209803');
+        $this->userDao       = new UserDao();
+        $this->superAdmin    = $this->userDao->getUserByMobile('18601216091');
+        $this->operator      = $this->userDao->getUserByMobile('18510209803');
+        $this->schoolManager = $this->userDao->getUserByMobile('1000006');
+        $this->getTeacher    = $this->userDao->getUserByMobile('18601216001');
     }
 
     /**
@@ -42,6 +46,24 @@ class BasicPageTestCase extends TestCase
     protected function getOperator(){
         return $this->operator;
     }
+
+    /**
+     * @return User
+     */
+    protected function getSchoolManager()
+    {
+        return $this->schoolManager;
+    }
+
+    /**
+     * @return User
+     */
+    protected function getTeacher()
+    {
+        return $this->getTeacher;
+    }
+
+
 
     /**
      * 以给定的用户来加载测试的学校
