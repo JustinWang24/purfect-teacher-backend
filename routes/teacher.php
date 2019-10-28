@@ -17,4 +17,9 @@ Route::prefix('teacher')->group(function () {
     Route::get('conference/getUsers', 'ConferenceController@getUsers')->name('teacher.conference.getUsers'); //获取参会人员接口
     Route::get('conference/getRooms', 'ConferenceController@getRooms')->name('teacher.conference.getRooms'); //获取会议室
 
+
+    //考试管理
+    Route::get('exam/index', 'ExamController@index')->name('teacher.exam.index');   //列表
+    Route::get('exam/create', 'ExamController@create')->name('teacher.exam.create');   //列表
+
 });
