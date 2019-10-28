@@ -9,6 +9,7 @@
 namespace App\Dao\Schools;
 use App\Models\Schools\Campus;
 use App\User;
+use Illuminate\Support\Collection;
 
 class CampusDao
 {
@@ -51,5 +52,14 @@ class CampusDao
             return Campus::where('id',$id)->where('school_id',$schoolId)->first();
         }
         return Campus::find($id);
+    }
+
+    /**
+     * 根据学校 ID 获取所有的校区
+     * @param $schoolId
+     * @return Collection
+     */
+    public function getCampusesBySchool($schoolId){
+        return Campus::where('school_id',$schoolId)->get();
     }
 }

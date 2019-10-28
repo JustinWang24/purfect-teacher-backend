@@ -1,7 +1,7 @@
 <div class="sidebar-container">
     <div class="sidemenu-container navbar-collapse collapse fixed-menu">
         <div id="remove-scroll" class="left-sidemenu">
-            <ul class="sidemenu  page-header-fixed sidemenu-hover-submenu" data-keep-expanded="false"
+            <ul class="sidemenu  page-header-fixed sidemenu-closed" data-keep-expanded="false"
                 data-auto-scroll="true" data-slide-speed="200" style="padding-top: 20px">
                 <li class="sidebar-toggler-wrapper hide">
                     <div class="sidebar-toggler">
@@ -38,7 +38,7 @@
                 </li>
 
                 <li class="nav-item">
-                    <a href="{{ route('school_manager.timetable.manager',['uuid'=>session('school.uuid')]) }}" class="nav-link">
+                    <a href="{{ route('school_manager.timetable.manager.preview',['uuid'=>session('school.uuid')]) }}" class="nav-link">
                         <i class="material-icons">event</i>
                         <span class="title">课程表管理</span>
                     </a>

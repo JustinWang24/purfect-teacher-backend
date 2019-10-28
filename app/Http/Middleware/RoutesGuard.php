@@ -39,6 +39,7 @@ class RoutesGuard
                 return redirect('/home');
             }
         }
+
         return $next($request);
     }
 

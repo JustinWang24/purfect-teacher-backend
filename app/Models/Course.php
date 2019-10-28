@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Models\Courses\CourseTeacher;
 use App\Models\Courses\CourseMajor;
+use Illuminate\Support\Facades\DB;
 
 class Course extends Model
 {
@@ -19,11 +20,15 @@ class Course extends Model
         'desc','school_id'
     ];
 
+    public $casts = [
+        'optional' => 'boolean', // 是否选修课
+    ];
+
     public function majors(){
-        return $this->hasMany(CourseMajor::class);
+        return $this->hasMany(CourseMajor::class)->select(DB::raw('major_id as id, major_name as name'));
     }
 
     public function teachers(){
-        return $this->hasMany(CourseTeacher::class);
+        return $this->hasMany(CourseTeacher::class)->select(DB::raw('teacher_id as id, teacher_name as name'));
     }
 }
