@@ -66,6 +66,7 @@ class ConferenceTest extends BasicPageTestCase
         $result = json_decode($response->content(),true);
         $this->assertArrayHasKey('error_no', $result);
         $this->assertArrayHasKey('data', $result);
+        $this->assertEquals(1000, $result['error_no']);
         foreach ($result['data'] as $key => $val)
         {
             $this->assertArrayHasKey('id', $val);
@@ -92,6 +93,7 @@ class ConferenceTest extends BasicPageTestCase
             ->get(route('teacher.conference.getRooms',$get));
         $result = json_decode($response->content(),true);
         $this->assertArrayHasKey('error_no', $result);
+        $this->assertEquals(1000, $result['error_no']);
         $this->assertArrayHasKey('data', $result);
         foreach ($result['data'] as $key => $val)
         {
@@ -117,7 +119,9 @@ class ConferenceTest extends BasicPageTestCase
             ->withSession($this->schoolSessionData)
             ->post(route('teacher.conference.create',$data));
         $result = json_decode($response->content(),true);
-        dd($result);
+//        dump($result);
+        $this->assertArrayHasKey('error_no', $result);
+        $this->assertEquals(1000, $result['error_no']);
     }
 
 
@@ -132,7 +136,9 @@ class ConferenceTest extends BasicPageTestCase
             ->withSession($this->schoolSessionData)
             ->get(route('teacher.conference.data'));
         $result = json_decode($response->content(),true);
-        dd($result);
+//        dd($result);
+        $this->assertArrayHasKey('error_no', $result);
+        $this->assertEquals(1000, $result['error_no']);
     }
 
 
