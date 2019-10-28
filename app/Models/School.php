@@ -13,7 +13,12 @@ class School extends Model
 {
     use SoftDeletes;
     protected $fillable = [
-        'uuid','max_students_number','max_employees_number','name'
+        'uuid','max_students_number','max_employees_number','name',
+        'state', // 哪个省
+        'level', // 学校批次名称: 高职
+        'category_code_state', // 省市科类代码:
+        'category_code', // 学校科类代码: 01
+        'category_name', // 学校科类名称: 理工
     ];
 
     /**

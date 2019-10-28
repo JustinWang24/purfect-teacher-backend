@@ -8,8 +8,8 @@
 
 namespace App\BusinessLogic\UsersListPage\Impl;
 use Illuminate\Http\Request;
-use App\User;
 use App\Dao\Users\GradeUserDao;
+use App\Models\Acl\Role;
 
 class TeachersListLogic extends AbstractDataListLogic
 {
@@ -22,12 +22,13 @@ class TeachersListLogic extends AbstractDataListLogic
     {
         $result = [];
         $dao = new GradeUserDao($this->request->user());
+        $employeeTypes = Role::GetTeacherUserTypes();
         switch ($this->request->get('by')){
             case 'campus':
-                $result = $dao->paginateUserByCampus($this->id, User::TYPE_EMPLOYEE);
+                $result = $dao->paginateUserByCampus($this->id, $employeeTypes);
                 break;
             case 'institute':
-                $result = $dao->paginateUserByInstitute($this->id, User::TYPE_EMPLOYEE);
+                $result = $dao->paginateUserByInstitute($this->id, $employeeTypes);
                 break;
             default:
                 break;

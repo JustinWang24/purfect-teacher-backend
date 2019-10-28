@@ -11,11 +11,13 @@
                 <timetable-column
                         :rows="rows"
                         :weekday="idx"
+                        :as-manager="asManager"
                         v-on:create-new-for-current-column="createNewForCurrentColumnHandler"
                         v-on:edit-for-current-unit-column="editForCurrentUnitColumnHandler"
                         v-on:clone-for-current-unit-column="cloneForCurrentUnitColumnHandler"
                         v-on:create-special-case-column="createSpecialCaseColumnHandler"
                         v-on:show-special-cases-column="showSpecialCasesColumnHandler"
+                        v-on:make-enquiry-column="makeEnquiryColumnHandler"
                 ></timetable-column>
             </div>
         </div>
@@ -80,13 +82,14 @@
                 <el-table-column label="操作" width="150">
                     <template slot-scope="scope">
                         <el-button
+                                v-if="asManager"
                                 size="mini"
                                 type="danger"
                                 @click="handleSpecialCaseDelete(scope.$index, scope.row)">
                             删除
                         </el-button>
                         <el-button
-                                v-if="!scope.row.published"
+                                v-if="!scope.row.published && asManager"
                                 size="mini"
                                 type="primary"
                                 @click="handleSpecialCasePublish(scope.$index, scope.row)">
@@ -96,6 +99,16 @@
                 </el-table-column>
             </el-table>
         </el-dialog>
+
+        <el-dialog title="请求事宜表单" :visible.sync="makeEnquiryFormVisible">
+            <general-enquiry-form
+                :enquiry-form="enquiryForm"
+            ></general-enquiry-form>
+            <div slot="footer" class="dialog-footer">
+                <el-button @click="makeEnquiryFormVisible = false">取 消</el-button>
+                <el-button type="primary" @click="makeEnquiryFromSubmitHandler">确 定</el-button>
+            </div>
+        </el-dialog>
     </div>
 </template>
 
@@ -103,13 +116,14 @@
     import TimetableColumn from './TimetableColumn.vue';
     import TimeSlotsColumn from './TimeSlotsColumn.vue';
     import TimetableItemSpecialForm from './TimetableItemSpecialForm.vue';
+    import GeneralEnquiryForm from '../misc/GeneralEnquiryForm';
     import { Constants } from '../../common/constants';
     import { Util } from '../../common/utils';
 
     export default {
         name: "TimetablePreviewer",
         components: {
-            TimetableColumn, TimeSlotsColumn, TimetableItemSpecialForm
+            TimetableColumn, TimeSlotsColumn, TimetableItemSpecialForm,GeneralEnquiryForm
         },
         computed: {
             'isWeekOdd': function(){
@@ -178,6 +192,9 @@
                 // 显示调课的列表
                 specials:[],
                 anySpecialItemRemoved: false,
+                // 请假等事宜
+                makeEnquiryFormVisible: false,
+                enquiryForm:{},
             }
         },
         created() {
@@ -367,6 +384,15 @@
                     weekType = Constants.WEEK_NUMBER_EVEN;
                 }
                 this.$emit('timetable-refresh',{weekType: weekType});
+            },
+            makeEnquiryColumnHandler: function (payload){
+                console.log(payload);
+                // payload 就是课表的 item
+                this.makeEnquiryFormVisible = true;
+                this.enquiryForm = payload;
+            },
+            makeEnquiryFromSubmitHandler: function () {
+                console.log(this.enquiryForm);
             }
         }
     }

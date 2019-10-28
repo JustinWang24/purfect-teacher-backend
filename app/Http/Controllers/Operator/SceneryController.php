@@ -5,11 +5,11 @@ namespace App\Http\Controllers\Operator;
 
 use App\Http\Controllers\Controller;
 use App\Dao\Schools\SchoolResourceDao;
-use Illuminate\Http\Request;
+use App\Http\Requests\Scenery\SceneryRequest;
 use App\Utils\Files\UploadFiles;
 use App\Utils\FlashMessageBuilder;
 use App\Models\Schools\SchoolResource;
-use Illuminate\Support\Facades\Auth;
+use App\Dao\Categories\CategorieDao;
 
 class SceneryController extends Controller
 {
@@ -20,10 +20,10 @@ class SceneryController extends Controller
 
     /**
      * 学校风采管理
-     * @param Request $request
+     * @param SceneryRequest $request
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function list(Request $request)
+    public function list(SceneryRequest $request)
     {
 
         $dao = new SchoolResourceDao;
@@ -37,10 +37,10 @@ class SceneryController extends Controller
 
     /**
      * 学校风采添加表单
-     * @param Request $request
+     * @param SceneryRequest $request
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function add(Request $request)
+    public function add(SceneryRequest $request)
     {
        return view('school_manager.scenery.add', $this->dataForView);
     }
@@ -50,7 +50,7 @@ class SceneryController extends Controller
      * 学校风采编辑表单
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function edit(Request $request)
+    public function edit(SceneryRequest $request)
     {
         $dao = new SchoolResourceDao;
 
@@ -71,23 +71,58 @@ class SceneryController extends Controller
 
     /**
      * 学校风采修改|插入
-     * @param Request $request
+     * @param SceneryRequest $request
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function save(Request $request)
+    public function save(SceneryRequest $request)
     {
-        $sceneryData = $request->post('scenery');
-        $sceneryData['school_id'] = $request->session()->get('school.id');
 
-        if($sceneryData['type'] == SchoolResource::TYPE_IMAGE) {
-            $image = $request->file();
-            //  TODO :: 图片上传到静态服务器
-            $upload = ['file' => ['url' => 'www.baid.com', 'type' => 'jpg', 'size' => '1000000']];
-            $sceneryData['path'] = $upload['file']['url'];
-            $sceneryData['format'] = $upload['file']['type'];
-            $sceneryData['size'] = $upload['file']['size'];
-        } else {
-            // 视频
+        $sceneryData = $request->post('scenery');
+//      $sceneryData['school_id'] = $request->getSchoolId();
+//      $uuid = $request->uuid();
+
+        $userId = $request->getUserId();
+        $categoriesDao = new CategorieDao;
+
+        $category = $categoriesDao->getMyCategoriesByUserId($userId, '2');
+        $sceneryData['school_id'] = 1;
+        $uuid = '19bab179-4164-403e-9043-0e53318acd0a';
+
+        $category = 'e3a4ecd9-7203-4d2f-b97a-0091a06929f0';
+
+        // TODO :: 以下 上传文件代码 需要抽离成接口类
+
+        $file = $request->file();
+
+        $upload     = new UploadFiles;
+
+        if (!empty($file)) {
+
+            foreach ($file as $value) {
+                $ext      = $value->getClientOriginalExtension();
+                $filename = md5(rand(0, 99)) . '.' . $ext;
+                $path   = $value->move('storage', $filename);
+                $uploadFile[] = $upload->uploadFile('1.0', $category, $uuid, $path);
+            }
+
+            foreach ($uploadFile as $key => $val) {
+
+                if ($val['code'] != 1000) {
+                    FlashMessageBuilder::Push($request, FlashMessageBuilder::DANGER,'上传失败, 请重新上传');
+                } else {
+                    unlink('storage/'. $val['data']['file']['name']);
+                }
+            }
+            // 临时写下标的方式
+            if ($request->post('type') == SchoolResource::TYPE_IMAGE) {
+                $sceneryData['path'] = $uploadFile[0]['data']['file']['url'];
+                $sceneryData['size'] = $uploadFile[0]['data']['file']['size'];
+            } else {
+                $sceneryData['path']       = $uploadFile[0]['data']['file']['url'];
+                $sceneryData['video_path'] = $uploadFile[1]['data']['file']['url'];
+                $sceneryData['size']       = $uploadFile[1]['data']['file']['size'];
+                $sceneryData['format']     = $ext;
+            }
         }
 
         $dao = new SchoolResourceDao();
