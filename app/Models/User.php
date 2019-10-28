@@ -120,8 +120,25 @@ class User extends Authenticatable
         }
     }
 
+    /**
+     * Todo: 需要完成获取学校管理员所关联的学校 ID 的功能
+     * @return int
+     */
     public function getSchoolId()
     {
         return 1;
+    }
+
+    /**
+     * 获取学生的状态文字
+     * @return string
+     */
+    public function getStatusText(){
+        $arr = [
+            self::STATUS_WAITING_FOR_MOBILE_TO_BE_VERIFIED=>self::STATUS_WAITING_FOR_MOBILE_TO_BE_VERIFIED_TEXT,
+            self::STATUS_WAITING_FOR_IDENTITY_TO_BE_VERIFIED=>self::STATUS_WAITING_FOR_IDENTITY_TO_BE_VERIFIED_TEXT,
+            self::STATUS_VERIFIED=>self::STATUS_VERIFIED_TEXT,
+        ];
+        return $arr[$this->status];
     }
 }
