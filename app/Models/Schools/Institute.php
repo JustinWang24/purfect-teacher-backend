@@ -10,7 +10,8 @@ use App\Models\School;
 class Institute extends Model
 {
     protected $fillable = [
-        'school_id', 'campus_id', 'name', 'description','last_updated_by'
+        'school_id', 'campus_id', 'name', 'description','last_updated_by',
+        'category_code', // 学院代码: 01
     ];
 
     public function school(){
