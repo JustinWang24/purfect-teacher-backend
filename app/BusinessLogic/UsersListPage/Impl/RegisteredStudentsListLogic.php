@@ -11,6 +11,7 @@ namespace App\BusinessLogic\UsersListPage\Impl;
 use Illuminate\Http\Request;
 use App\Dao\Users\GradeUserDao;
 use App\User;
+use App\Models\Acl\Role;
 
 class RegisteredStudentsListLogic extends AbstractDataListLogic
 {
@@ -27,21 +28,22 @@ class RegisteredStudentsListLogic extends AbstractDataListLogic
     {
         $result = [];
         $dao = new GradeUserDao($this->request->user());
+        $studentTypes = Role::GetStudentUserTypes();
         switch ($this->request->get('by')){
             case 'campus':
-                $result = $dao->paginateUserByCampus($this->id, User::TYPE_STUDENT);
+                $result = $dao->paginateUserByCampus($this->id, $studentTypes);
                 break;
             case 'institute':
-                $result = $dao->paginateUserByInstitute($this->id, User::TYPE_STUDENT);
+                $result = $dao->paginateUserByInstitute($this->id, $studentTypes);
                 break;
             case 'department':
-                $result = $dao->paginateUserByDepartment($this->id, User::TYPE_STUDENT);
+                $result = $dao->paginateUserByDepartment($this->id, $studentTypes);
                 break;
             case 'major':
-                $result = $dao->paginateUserByMajor($this->id, User::TYPE_STUDENT);
+                $result = $dao->paginateUserByMajor($this->id, $studentTypes);
                 break;
             case 'grade':
-                $result = $dao->paginateUserByGrade($this->id, User::TYPE_STUDENT);
+                $result = $dao->paginateUserByGrade($this->id, $studentTypes);
                 break;
             default:
                 break;

@@ -6,6 +6,7 @@ use App\Models\Users\GradeUser;
 use App\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Models\Acl\Role;
 
 class Campus extends Model
 {
@@ -56,10 +57,10 @@ class Campus extends Model
     }
 
     public function employeesCount(){
-        return GradeUser::where('campus_id', $this->id)->where('user_type',User::TYPE_EMPLOYEE)->count();
+        return GradeUser::where('campus_id', $this->id)->where('user_type',Role::TEACHER)->count();
     }
 
     public function studentsCount(){
-        return GradeUser::where('campus_id', $this->id)->where('user_type',User::TYPE_STUDENT)->count();
+        return GradeUser::where('campus_id', $this->id)->where('user_type',Role::VERIFIED_USER_STUDENT)->count();
     }
 }

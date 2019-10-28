@@ -135,4 +135,16 @@ class Role extends BaseRole
 
         return $roles;
     }
+
+    public static function GetStudentUserTypes(){
+        return [
+            Role::VERIFIED_USER_STUDENT, Role::VERIFIED_USER_CLASS_LEADER, Role::VERIFIED_USER_CLASS_SECRETARY
+        ];
+    }
+
+    public static function GetTeacherUserTypes(){
+        return [
+            Role::TEACHER, Role::EMPLOYEE
+        ];
+    }
 }
