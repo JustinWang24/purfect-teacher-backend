@@ -85,7 +85,8 @@ class GradeUser extends Model
      * @return string
      */
     public function workAt(){
-        return 'n.a';
+        return $this->institute->name . ' / ' . $this->department->name . ' / '
+            . $this->major->name . ' / ' . $this->grade->name;
     }
 
     /**

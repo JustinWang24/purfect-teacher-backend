@@ -41,6 +41,13 @@ class TimeSlot extends Model
         ];
     }
 
+    /**
+     * @return string
+     */
+    public function getTypeTextAttribute(){
+        return self::AllTypes()[$this->type];
+    }
+
     public function school(){
         return $this->belongsTo(School::class);
     }

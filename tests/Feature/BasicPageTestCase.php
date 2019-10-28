@@ -20,6 +20,7 @@ class BasicPageTestCase extends TestCase
     protected $schoolManager;
     protected $getTeacher;
     protected $school;
+    protected $teacher;
     protected $schoolSessionData = [];
 
     public function setUp(): void
@@ -45,6 +46,14 @@ class BasicPageTestCase extends TestCase
      */
     protected function getOperator(){
         return $this->operator;
+    }
+
+
+    /**
+     * @return User
+     */
+    protected function getTeacher(){
+        return $this->teacher;
     }
 
     /**

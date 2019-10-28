@@ -4,6 +4,7 @@ namespace App;
 
 use App\Models\Acl\Role;
 use App\Models\Students\StudentProfile;
+use App\Models\Teachers\TeacherProfile;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -105,11 +106,10 @@ class User extends Authenticatable
     }
 
     public function profile(){
-//        dd($this->type);
         $roleSlug = $this->getCurrentRoleSlug();
         if($roleSlug === Role::TEACHER_SLUG || $roleSlug === Role::EMPLOYEE_SLUG){
             // 教师或者职工
-
+            return $this->hasOne(TeacherProfile::class,'teacher_id');
         }
         elseif ($this->type === self::TYPE_STUDENT){
             // 已认证学生
@@ -120,8 +120,25 @@ class User extends Authenticatable
         }
     }
 
+    /**
+     * Todo: 需要完成获取学校管理员所关联的学校 ID 的功能
+     * @return int
+     */
     public function getSchoolId()
     {
         return 1;
+    }
+
+    /**
+     * 获取学生的状态文字
+     * @return string
+     */
+    public function getStatusText(){
+        $arr = [
+            self::STATUS_WAITING_FOR_MOBILE_TO_BE_VERIFIED=>self::STATUS_WAITING_FOR_MOBILE_TO_BE_VERIFIED_TEXT,
+            self::STATUS_WAITING_FOR_IDENTITY_TO_BE_VERIFIED=>self::STATUS_WAITING_FOR_IDENTITY_TO_BE_VERIFIED_TEXT,
+            self::STATUS_VERIFIED=>self::STATUS_VERIFIED_TEXT,
+        ];
+        return $arr[$this->status];
     }
 }

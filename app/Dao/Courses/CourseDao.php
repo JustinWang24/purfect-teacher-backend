@@ -12,8 +12,6 @@ use App\Dao\Teachers\TeacherProfileDao;
 use App\Models\Course;
 use App\Models\Courses\CourseMajor;
 use App\Models\Courses\CourseTeacher;
-use App\Utils\JsonBuilder;
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\DB;
 use Ramsey\Uuid\Uuid;
 
