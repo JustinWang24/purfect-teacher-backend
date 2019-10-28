@@ -68,6 +68,10 @@ Route::prefix('school_manager')->group(function () {
     // 添加课程表项目// 添加班级
     Route::get('timetable/manager/preview', 'TimeTables\TimetablesController@preview')->name('school_manager.timetable.manager.preview');           // 添加班级
     Route::get('timetable/manager/courses', 'TimeTables\CoursesController@manager')->name('school_manager.courses.manager');
+    Route::get(
+        'timetable/manager/view-grade-timetable',
+        'TimeTables\TimeTablesController@view_grade_timetable')
+        ->name('school_manager.grade.view.timetable');
 
 
 

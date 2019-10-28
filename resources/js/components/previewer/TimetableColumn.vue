@@ -6,12 +6,14 @@
                     :unit="unit"
                     :weekday="weekday"
                     :row-index="idx"
+                    :as-manager="asManager"
                     v-on:create-new-for-current-unit="createNewForCurrentUnitHandler"
                     v-on:edit-for-current-unit="editForCurrentUnit"
                     v-on:unit-deleted="unitDeletedHandler"
                     v-on:clone-for-current-unit="unitCloneHandler"
                     v-on:create-special-case="createSpecialCaseHandler"
                     v-on:show-specials="showSpecialCasesHandler"
+                    v-on:make-enquiry="makeEnquiryHandler"
             ></timetable-unit>
         </div>
     </div>
@@ -26,7 +28,7 @@
         components: {
             TimetableUnit
         },
-        props: ['rows','weekday'],
+        props: ['rows','weekday','asManager'],
         computed: {
             'weekdayText': function(){
                 return Util.GetWeekdayText(this.weekday);
@@ -52,6 +54,9 @@
             },
             showSpecialCasesHandler: function (payload) {
                 this.$emit('show-special-cases-column',payload);
+            },
+            makeEnquiryHandler: function(payload){
+                this.$emit('make-enquiry-column',payload);
             }
         }
     }

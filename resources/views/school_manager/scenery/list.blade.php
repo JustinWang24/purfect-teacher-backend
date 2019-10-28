@@ -43,14 +43,14 @@ use App\Utils\UI\Button;
                                           </div>
                                         <td class="text-center">{{$info['sort']}}</td>
                                         </td>
-                                        <td class="text-center">
+                                        <td class="text-center button">
                                             @php
                                                 /** @var TYPE_NAME $info */
                                                 Button::PrintGroup(
                                                 [
                                                     'text'=>'可执行操作',
                                                     'subs'=>[
-                                                        ['url'=>route('school_manager.scenery.edit', array('id'=> $info->id)),'text'=>'编辑']
+                                                        ['url'=>route('school_manager.scenery.edit', array('id'=> $info->id)), 'text'=>'编辑']
                                                     ]
                                                 ],
                                                 Button::TYPE_PRIMARY

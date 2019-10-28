@@ -34,7 +34,7 @@ class SpecialItemsLoadLogic
                 'id'        =>$item->id,
                 'date'      =>$item->at_special_datetime->format(GradeAndYearUtil::DEFAULT_FORMAT_DATE),
                 'course'    =>$item->course->name,
-                'teacher'   =>$item->teacher->profile->name,
+                'teacher'   =>$item->teacher->name,
                 'location'  =>$item->building->name . ' - ' .$item->room->name,
                 'updated_by'=>$item->updatedBy->name,
                 'published' =>$item->published,
