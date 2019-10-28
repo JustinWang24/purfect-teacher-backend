@@ -91,6 +91,11 @@ class GradeUserDao
      * @return Collection
      */
     private function _paginateUsersBy($type, $fieldName, $fieldValue, $orderBy = 'updated_at', $direction = 'desc'){
+        if(is_array($type)){
+            return GradeUser::where($fieldName,$fieldValue)
+                ->whereIn('user_type',$type)
+                ->orderBy($orderBy,$direction)->paginate();
+        }
         return GradeUser::where($fieldName,$fieldValue)
             ->where('user_type',$type)
             ->orderBy($orderBy,$direction)->paginate();
