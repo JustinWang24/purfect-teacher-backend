@@ -37,7 +37,7 @@ class TeachersListLogic extends AbstractDataListLogic
 
     public function getViewPath()
     {
-        return 'teacher.users.students';
+        return 'teacher.users.teachers';
     }
 
     public function getData()

@@ -45,9 +45,9 @@ use App\User;
                                     <tr>
                                         <td>{{ $gradeUser->user->id }}</td>
                                         <td>
-                                            {{ $gradeUser->user->profile->name ?? 'n.a' }}
+                                            {{ $gradeUser->user->name ?? 'n.a' }}
                                         </td>
-                                        <td>{{ $gradeUser->user->status }}</td>
+                                        <td>{{ $gradeUser->user->getStatusText() }}</td>
                                         <td>{{ $gradeUser->studyAt() }}</td>
                                         <td class="text-center">
                                             @php
