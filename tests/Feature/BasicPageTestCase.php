@@ -18,6 +18,7 @@ class BasicPageTestCase extends TestCase
     protected $superAdmin;
     protected $operator;
     protected $school;
+    protected $teacher;
     protected $schoolSessionData = [];
 
     public function setUp(): void
@@ -27,6 +28,8 @@ class BasicPageTestCase extends TestCase
         $this->userDao = new UserDao();
         $this->superAdmin = $this->userDao->getUserByMobile('18601216091');
         $this->operator = $this->userDao->getUserByMobile('18510209803');
+        $this->teacher = $this->userDao->getUserByMobile('18601216001');
+
     }
 
     /**
@@ -41,6 +44,14 @@ class BasicPageTestCase extends TestCase
      */
     protected function getOperator(){
         return $this->operator;
+    }
+
+
+    /**
+     * @return User
+     */
+    protected function getTeacher(){
+        return $this->teacher;
     }
 
     /**
