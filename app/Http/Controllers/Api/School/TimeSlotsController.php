@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\School;
 
 use App\Dao\Schools\SchoolDao;
+use App\Dao\Timetable\TimeSlotDao;
 use App\User;
 use App\Utils\JsonBuilder;
 use Illuminate\Http\Request;
@@ -21,7 +22,7 @@ class TimeSlotsController extends Controller
 
         $schoolDao = new SchoolDao(new User());
 
-        $school = $schoolDao->getSchoolByUuid($schoolUuid);
+        $school = $schoolDao->getSchoolByIdOrUuid($schoolUuid);
 
         if($school){
             return JsonBuilder::Success(['time_frame'=>$school->timeFrame]);
@@ -29,5 +30,28 @@ class TimeSlotsController extends Controller
         else{
             return JsonBuilder::Error();
         }
+    }
+
+    /**
+     * 加载所有的学习时间段
+     * @param Request $request
+     * @return string
+     */
+    public function load_study_time_slots(Request $request){
+        $schoolIdOrUuid = $request->get('school');
+        if(strlen($schoolIdOrUuid) > 10){
+            $schoolDao = new SchoolDao(new User());
+            $school = $schoolDao->getSchoolByIdOrUuid($schoolIdOrUuid);
+            if($school){
+                $schoolIdOrUuid = $school->id;
+            }else{
+                $schoolIdOrUuid = null;
+            }
+        }
+        if($schoolIdOrUuid){
+            $timeSlotDao = new TimeSlotDao();
+            return JsonBuilder::Success(['time_frame'=>$timeSlotDao->getAllStudyTimeSlots($schoolIdOrUuid, true)]);
+        }
+        return JsonBuilder::Error();
     }
 }

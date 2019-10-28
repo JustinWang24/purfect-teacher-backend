@@ -9,13 +9,13 @@ use App\User;
         <div class="col-sm-12 col-md-12 col-xl-12">
             <div class="card-box">
                 <div class="card-head">
-                    <header>{{ $campus->name }}</header>
+                    <header>{{ $parent->name }} 教职工列表: (总数: {{ $employees->total() }})</header>
                 </div>
 
                 <div class="card-body">
                     <div class="row">
                         <div class="row table-padding">
-                            <div class="col-md-6 col-sm-6 col-6">
+                            <div class="col-12">
                                 @if(isset($returnPath))
                                 <a href="{{ $returnPath }}" class="btn btn-default">
                                     返回 <i class="fa fa-arrow-circle-left"></i>
@@ -32,7 +32,6 @@ use App\User;
                                 <tr>
                                     <th>#</th>
                                     <th>姓名</th>
-                                    <th>角色</th>
                                     <th>所在单位</th>
                                     <th></th>
                                 </tr>
@@ -45,12 +44,11 @@ use App\User;
                                     <tr>
                                         <td>{{ $index+1 }}</td>
                                         <td>
-                                            {{ $gradeUser->user->profile->name }}
+                                            {{ $gradeUser->user->name }}
                                         </td>
-                                        <td>{{ $gradeUser->user->role() }}</td>
                                         <td>{{ $gradeUser->workAt() }}</td>
                                         <td class="text-center">
-                                            {{ Anchor::Print(['text'=>'编辑','href'=>route('school_manager.campus.edit',['uuid'=>$campus->id])], Button::TYPE_DEFAULT,'edit') }}
+                                            {{ Anchor::Print(['text'=>'编辑','href'=>route('school_manager.campus.edit',['uuid'=>$parent->id])], Button::TYPE_DEFAULT,'edit') }}
                                         </td>
                                     </tr>
                                 @endforeach
