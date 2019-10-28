@@ -2,6 +2,7 @@
 
 namespace App\Models\Schools;
 
+use App\Models\Acl\Role;
 use App\Models\School;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Users\GradeUser;
@@ -26,10 +27,10 @@ class Department extends Model
     }
 
     public function employeesCount(){
-        return GradeUser::where('department_id', $this->id)->where('user_type',User::TYPE_EMPLOYEE)->count();
+        return GradeUser::where('department_id', $this->id)->where('user_type',Role::GetTeacherUserTypes())->count();
     }
 
     public function studentsCount(){
-        return GradeUser::where('department_id', $this->id)->where('user_type',User::TYPE_STUDENT)->count();
+        return GradeUser::where('department_id', $this->id)->where('user_type',Role::GetStudentUserTypes())->count();
     }
 }

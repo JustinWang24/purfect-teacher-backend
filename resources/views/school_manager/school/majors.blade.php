@@ -16,7 +16,7 @@ use App\User;
                     <div class="row">
                         <div class="row table-padding">
                             <div class="col-12">
-                                <a href="{{ url()->previous() }}" class="btn btn-default">
+                                <a href="{{ route('school_manager.institute.departments',['uuid'=>$parent->institute->id,'by'=>'institute']) }}" class="btn btn-default">
                                     <i class="fa fa-arrow-circle-left"></i> 返回
                                 </a>&nbsp;
                                 <a href="{{ route('school_manager.major.add',['uuid'=>$parent->id]) }}" class="btn btn-primary pull-right" id="btn-create-major-from-department">

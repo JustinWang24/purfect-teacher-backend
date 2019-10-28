@@ -37,6 +37,7 @@ export const Constants = {
     TERMS: ['N.A','第一学期','第二学期'],
     REPEAT_UNITS: ['每周重复','仅单周重复','仅双周重复'],
     WEEK_DAYS: ['周一','周二','周三','周四','周五','周六','周日',],
+    ENQUIRY_TYPES: ['请病假(上课)','请事假(上课)','发通知'],
     WEEK_NUMBER_ODD: 1, // 单周
     WEEK_NUMBER_EVEN: 2,// 双周
 };
