@@ -15,12 +15,13 @@ class GiveEachUserAName extends Migration
      */
     public function up()
     {
-        $counts = DB::table('users')->count();
-
-        $faker = Factory::create();
-
-        foreach (range(1,$counts) as $userId){
-            DB::table('users')->where('id',$userId)->update(['name'=>$faker->name]);
+        // 只有在非生产环境下才可以下面的数据
+        if (env('APP_ENV') !== 'production'){
+            $counts = DB::table('users')->count();
+            $faker = Factory::create();
+            foreach (range(1,$counts) as $userId){
+                DB::table('users')->where('id',$userId)->update(['name'=>$faker->name]);
+            }
         }
     }
 

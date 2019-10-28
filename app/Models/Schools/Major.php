@@ -10,7 +10,11 @@ use App\User;
 class Major extends Model
 {
     protected $fillable = [
-        'school_id', 'department_id', 'name', 'description','last_updated_by'
+        'school_id', 'department_id', 'name', 'description','last_updated_by',
+        'category_code', // 专业代码: 01
+        'fee', // 学费
+        'period', // 学制: 3年
+        'notes', // 本专业的备注
     ];
 
     public function school(){
