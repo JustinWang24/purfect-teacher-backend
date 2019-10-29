@@ -9,6 +9,7 @@
 namespace App\Dao\Schools;
 use App\User;
 use App\Models\Schools\Room;
+use Illuminate\Support\Collection;
 
 class RoomDao
 {
@@ -19,12 +20,31 @@ class RoomDao
     }
 
     /**
+     * @param $buildingId
+     * @return Collection
+     */
+    public function getRoomsByBuilding($buildingId){
+        return Room::where('building_id',$buildingId)->get();
+    }
+
+    /**
      * @param $id
      * @return Room
      */
     public function getRoomById($id){
         return Room::find($id);
     }
+
+
+    /**
+     * @param $map
+     * @return mixed
+     */
+    public function getRooms($map)
+    {
+        return Room::where($map)->get();
+    }
+
 
     /**
      * @param $data

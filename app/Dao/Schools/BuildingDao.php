@@ -70,4 +70,28 @@ class BuildingDao
             return $campus->buildings;
         }
     }
+
+    public function getBuildingsByCampus($campus){
+        return Building::where('campus_id', is_object($campus) ? $campus->id : $campus)->orderBy('name','asc')->get();
+    }
+
+    /**
+     * @param int $schoolId
+     * @return mixed
+     */
+    public function getBuildingsBySchool($schoolId){
+        $dao = new CampusDao(new User());
+        $campuses = $dao->getCampusesBySchool($schoolId);
+        $data = [];
+        foreach ($campuses as $campus) {
+            $buildings = $this->getBuildingsByCampus($campus);
+            if(count($buildings)){
+                $data[] = [
+                    'campus'=>$campus->name,
+                    'buildings'=>$buildings
+                ];
+            }
+        }
+        return $data;
+    }
 }

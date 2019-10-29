@@ -3,6 +3,7 @@
 namespace App\Dao\Teachers;
 
 use App\Models\Teachers\TeacherProfile;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\DB;
 
 /**
@@ -47,5 +48,18 @@ class TeacherProfileDao
      */
     public function createProfile($data){
         return TeacherProfile::create($data);
+    }
+
+
+    /**
+     * 获取老师列表
+     * @param $map
+     * @param $field
+     * @return Collection
+     */
+    public function getTeachers($map,$field)
+    {
+        $list = TeacherProfile::where($map)->select($field)->get();
+        return $list;
     }
 }

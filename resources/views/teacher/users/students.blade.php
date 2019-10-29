@@ -17,7 +17,7 @@ use App\User;
                         <div class="row table-padding">
                             <div class="col-12">
                                 @if(isset($returnPath))
-                                    <a href="{{ $returnPath }}" class="btn btn-default">
+                                    <a href="{{ route('school_manager.major.grades',['uuid'=>$parent->major->id,'by'=>'major']) }}" class="btn btn-default">
                                         返回 <i class="fa fa-arrow-circle-left"></i>
                                     </a>&nbsp;
                                 @endif
@@ -45,9 +45,9 @@ use App\User;
                                     <tr>
                                         <td>{{ $gradeUser->user->id }}</td>
                                         <td>
-                                            {{ $gradeUser->user->profile->name ?? 'n.a' }}
+                                            {{ $gradeUser->user->name ?? 'n.a' }}
                                         </td>
-                                        <td>{{ $gradeUser->user->status }}</td>
+                                        <td>{{ $gradeUser->user->getStatusText() }}</td>
                                         <td>{{ $gradeUser->studyAt() }}</td>
                                         <td class="text-center">
                                             @php
