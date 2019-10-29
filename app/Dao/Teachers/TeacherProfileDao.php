@@ -31,13 +31,22 @@ class TeacherProfileDao
     /**
      * @param $name
      * @param $schoolId
+     * @param $majorsId
      * @return \Illuminate\Support\Collection
      */
-    public function searchTeacherByNameSimple($name, $schoolId){
-        return DB::table('teacher_profiles')
-            ->select(DB::raw('teacher_id as id, name, avatar'))
+    public function searchTeacherByNameSimple($name, $schoolId, $majorsId = []){
+        if(!empty($majorsId)){
+            return DB::table('grade_users')
+                ->select(DB::raw('user_id as id, name'))
+                ->where('school_id',$schoolId)
+                ->whereIn('major_id',$majorsId)
+                ->where('name','like',$name.'%')
+                ->get();
+        }
+        return DB::table('grade_users')
+            ->select(DB::raw('user_id as id, name'))
             ->where('school_id',$schoolId)
-            ->where('name','like','%'.$name.'%')
+            ->where('name','like',$name.'%')
             ->get();
     }
 

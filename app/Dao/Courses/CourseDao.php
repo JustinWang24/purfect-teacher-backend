@@ -9,6 +9,7 @@
 namespace App\Dao\Courses;
 use App\Dao\Schools\MajorDao;
 use App\Dao\Teachers\TeacherProfileDao;
+use App\Dao\Users\UserDao;
 use App\Models\Course;
 use App\Models\Courses\CourseMajor;
 use App\Models\Courses\CourseTeacher;
@@ -81,10 +82,10 @@ class CourseDao
                 CourseTeacher::where('course_id',$id)->delete();
                 // 保存授课老师
                 if(!empty($teachersId)){
-                    $teacherDao = new TeacherProfileDao();
+                    $userDao = new UserDao();
                     foreach ($teachersId as $teacherId) {
                         // 先检查当前这条
-                        $theTeacher = $teacherDao->getTeacherProfileByTeacherIdOrUuid($teacherId);
+                        $theTeacher = $userDao->getUserById($teacherId);
                         $d = [
                             'course_id'=>$id,
                             'course_code'=>$data['code'],
