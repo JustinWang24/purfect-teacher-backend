@@ -14,7 +14,7 @@
                         :time-slots="timeSlots"
                         :sub-title="subTitle"
                         :week-type="weekType"
-                        :as-manager="{{ Auth::user()->isSchoolAdminOrAbove() ? 'true' : 'false' }}"
+                        :as-manager="{{ !Auth::user()->isSchoolAdminOrAbove() ? 'true' : 'false' }}"
                         v-on:timetable-refresh="refreshTimetableHandler"
                 ></timetable-previewer>
             </div>

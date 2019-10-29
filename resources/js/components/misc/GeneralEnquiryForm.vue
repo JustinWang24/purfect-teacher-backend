@@ -7,9 +7,13 @@
                     <div class="card" style="margin-left:11px;box-shadow:none;padding-right:11px;padding-top:14px;border:none;">
                         <el-form-item label="类型">
                             <el-select v-model="enquiryForm.type" style="width: 50%;">
-                                <el-option :label="type" :value="type" :key="idx" v-for="(type, idx) in types"></el-option>
+                                <el-option :label="type" :value="idx" :key="idx" v-for="(type, idx) in types"></el-option>
                             </el-select>
                             <span class="help-text">说明: 请选择是哪一类请求</span>
+                        </el-form-item>
+
+                        <el-form-item label="标题">
+                            <el-input v-model="enquiryForm.title" style="width: 100%;"></el-input>
                         </el-form-item>
 
                         <el-form-item label="起始日期">
@@ -30,7 +34,7 @@
                         </el-form-item>
 
                         <el-form-item label="原因">
-                            <el-input type="textarea" v-model="enquiryForm.notes"></el-input>
+                            <el-input type="textarea" v-model="enquiryForm.details"></el-input>
                         </el-form-item>
                     </div>
                 </div>
