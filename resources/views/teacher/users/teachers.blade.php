@@ -16,11 +16,9 @@ use App\User;
                     <div class="row">
                         <div class="row table-padding">
                             <div class="col-12">
-                                @if(isset($returnPath))
-                                <a href="{{ $returnPath }}" class="btn btn-default">
+                                <a href="{{ url()->previous() }}" class="btn btn-default">
                                     返回 <i class="fa fa-arrow-circle-left"></i>
                                 </a>&nbsp;
-                                @endif
                                 <a href="#" class="btn btn-primary pull-right">
                                     添加新教职工 <i class="fa fa-plus"></i>
                                 </a>

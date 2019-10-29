@@ -2,6 +2,7 @@
 
 namespace App\Models\Users;
 
+use App\Models\Misc\Enquiry;
 use App\Models\School;
 use App\Models\Schools\Campus;
 use App\Models\Schools\Department;
@@ -78,6 +79,10 @@ class GradeUser extends Model
      */
     public function user(){
         return $this->belongsTo(User::class);
+    }
+
+    public function enquiries(){
+        return $this->hasMany(Enquiry::class, 'user_id','user_id');
     }
 
     /**

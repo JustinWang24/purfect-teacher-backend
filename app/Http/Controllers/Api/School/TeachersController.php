@@ -24,9 +24,8 @@ class TeachersController extends Controller
         $majorsId = $request->get('majors');
 
         $dao = new TeacherProfileDao();
-
         // 搜索过程, 先简单处理, 在数据量比较小的情况下, 直接搜索 teacher profiles 表, 而不考虑 major 来缩小范围
-        $result = $dao->searchTeacherByNameSimple($name, $schoolId);
+        $result = $dao->searchTeacherByNameSimple($name, $schoolId, $majorsId);
         return JsonBuilder::Success(['teachers'=>$result]);
     }
 

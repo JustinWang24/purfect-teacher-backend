@@ -3,6 +3,7 @@
 namespace App;
 
 use App\Models\Acl\Role;
+use App\Models\Misc\Enquiry;
 use App\Models\Students\StudentProfile;
 use App\Models\Teachers\TeacherProfile;
 use Illuminate\Notifications\Notifiable;
@@ -118,6 +119,10 @@ class User extends Authenticatable
         else{
             return null;
         }
+    }
+
+    public function enquiries(){
+        return $this->hasMany(Enquiry::class);
     }
 
     /**
