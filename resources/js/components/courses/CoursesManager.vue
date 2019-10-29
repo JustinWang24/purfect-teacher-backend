@@ -296,7 +296,7 @@
                     // 从服务器获取老师信息
                     axios.post(
                         Constants.API.SEARCH_TEACHERS_BY_NAME,
-                        {query: teacherName, school: this.schoolId, majors: this.majors}
+                        {query: teacherName, school: this.schoolId, majors: this.courseModel.majors}
                     ).then(res => {
                         this.loading = false;
                         if(Util.isAjaxResOk(res) && res.data.data.teachers.length > 0){
