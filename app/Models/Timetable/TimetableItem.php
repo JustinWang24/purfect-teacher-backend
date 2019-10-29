@@ -66,4 +66,8 @@ class TimetableItem extends Model
     public function describeItself(){
         return $txt = $this->grade->name . ' - ' . $this->course->name;
     }
+
+    public function itemEnquiries(){
+        return $this->hasMany(TimetableItemEnquiry::class);
+    }
 }

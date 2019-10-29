@@ -7,13 +7,10 @@
  */
 
 namespace App\Http\Controllers\Operator\TimeTables;
-use App\BusinessLogic\TimetableLogic\TimetableBuilderLogic;
 use App\Dao\Schools\GradeDao;
-use App\Dao\Timetable\TimeSlotDao;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\TimeTable\TimetableRequest;
 use App\Dao\Schools\SchoolDao;
-use App\Utils\Time\GradeAndYearUtil;
 
 class TimetablesController extends Controller
 {
@@ -31,6 +28,7 @@ class TimetablesController extends Controller
         $schoolDao = new SchoolDao($request->user());
         $school = $schoolDao->getSchoolByUuid($request->uuid());
         $this->dataForView['pageTitle'] = $school->name . ' 课程表管理';
+        $this->dataForView['needManagerNav'] = true;
         $this->dataForView['school'] = $school;
         $this->dataForView['app_name'] = 'time_slots_app';
         return view('school_manager.timetable.manager', $this->dataForView);
