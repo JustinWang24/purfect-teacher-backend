@@ -106,7 +106,7 @@
             ></general-enquiry-form>
             <div slot="footer" class="dialog-footer">
                 <el-button @click="makeEnquiryFormVisible = false">取 消</el-button>
-                <el-button type="primary" @click="makeEnquiryFromSubmitHandler">确 定</el-button>
+                <el-button type="primary" @click="makeEnquiryFormSubmitHandler">确 定</el-button>
             </div>
         </el-dialog>
     </div>
@@ -332,7 +332,6 @@
                         }
                     });
                 }).catch((e) => {
-                    console.log(e);
                     this.$notify.info({
                         title: '消息',
                         message: '发布操作已取消',
@@ -391,8 +390,36 @@
                 this.makeEnquiryFormVisible = true;
                 this.enquiryForm = payload;
             },
-            makeEnquiryFromSubmitHandler: function () {
+            makeEnquiryFormSubmitHandler: function () {
                 console.log(this.enquiryForm);
+                this.enquiryForm.school_id = this.schoolId;
+                axios.post(
+                    Constants.API.ENQUIRY_SUBMIT,
+                    {enquiry: this.enquiryForm, logic: Constants.LOGIC.TIMETABLE.ENQUIRY, userUuid: this.userUuid}
+                ).then(res => {
+                    if(Util.isAjaxResOk(res)){
+                        this.$notify({
+                            title: '成功',
+                            message: '您的申请已经成功提交!',
+                            type: 'success',
+                            position: 'bottom-right'
+                        });
+                        this.makeEnquiryFormVisible = false;
+                    }else{
+                        this.$notify.error({
+                            title: '系统错误',
+                            message: res.data.message,
+                            position: 'bottom-right'
+                        });
+                    }
+                }).catch( e => {
+                    console.log(e);
+                    this.$notify.error({
+                        title: '系统错误',
+                        message: '提交申请操作失败, 请稍候再试 ...',
+                        position: 'bottom-right'
+                    });
+                })
             }
         }
     }

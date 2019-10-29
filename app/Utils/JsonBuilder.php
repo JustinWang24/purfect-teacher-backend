@@ -38,17 +38,18 @@ class JsonBuilder
     /**
      * 返回错误JSON消息
      * @param  array|String $dataOrMessage
+     * @param  int $code
      * @return string
      */
-    public static function Error($dataOrMessage = 'Err'){
+    public static function Error($dataOrMessage = 'Err', $code = null){
         if(is_array($dataOrMessage)){
             return json_encode([
-                'code' => self::CODE_ERROR,
+                'code' => $code ?? self::CODE_ERROR,
                 'message' => $dataOrMessage
             ]);
         }else{
             return json_encode([
-                'code' => self::CODE_ERROR,
+                'code' => $code ?? self::CODE_ERROR,
                 'message' => $dataOrMessage
             ]);
         }
