@@ -16,11 +16,9 @@ use App\User;
                     <div class="row">
                         <div class="row table-padding">
                             <div class="col-12">
-                                @if(isset($returnPath))
-                                    <a href="{{ route('school_manager.major.grades',['uuid'=>$parent->major->id,'by'=>'major']) }}" class="btn btn-default">
-                                        返回 <i class="fa fa-arrow-circle-left"></i>
-                                    </a>&nbsp;
-                                @endif
+                                <a href="{{ url()->previous() }}" class="btn btn-default">
+                                    返回 <i class="fa fa-arrow-circle-left"></i>
+                                </a>&nbsp;
                                 <a href="{{ route('school_manager.student.add') }}" class="btn btn-primary pull-right">
                                     添加新学生 <i class="fa fa-plus"></i>
                                 </a>
@@ -34,6 +32,7 @@ use App\User;
                                     <th>姓名</th>
                                     <th>状态</th>
                                     <th>所在班级</th>
+                                    <th>待办的申请</th>
                                     <th>操作</th>
                                 </tr>
                                 </thead>
@@ -49,7 +48,11 @@ use App\User;
                                         </td>
                                         <td>{{ $gradeUser->user->getStatusText() }}</td>
                                         <td>{{ $gradeUser->studyAt() }}</td>
+                                        <td>{{ count($gradeUser->enquiries) }}</td>
                                         <td class="text-center">
+                                            <a target="_blank" href="{{ route('school_manager.grade.view.timetable',['uuid'=>$gradeUser->grade_id]) }}" class="btn btn-round btn-primary btn-view-timetable">
+                                                <i class="fa fa-calendar"></i>查看课表
+                                            </a>
                                             @php
                                             Button::PrintGroup(
                                                 [

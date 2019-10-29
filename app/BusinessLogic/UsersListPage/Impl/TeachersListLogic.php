@@ -30,6 +30,12 @@ class TeachersListLogic extends AbstractDataListLogic
             case 'institute':
                 $result = $dao->paginateUserByInstitute($this->id, $employeeTypes);
                 break;
+            case 'department':
+                $result = $dao->paginateUserByDepartment($this->id, $employeeTypes);
+                break;
+            case 'major':
+                $result = $dao->paginateUserByMajor($this->id, $employeeTypes);
+                break;
             default:
                 break;
         }
