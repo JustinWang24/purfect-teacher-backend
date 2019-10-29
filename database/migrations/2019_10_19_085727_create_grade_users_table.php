@@ -18,7 +18,7 @@ class CreateGradeUsersTable extends Migration
 
                 Schema::create('grade_users', function (Blueprint $table) {
                 $table->integerIncrements('id');
-                $table->unsignedBigInteger('user_id');
+                $table->unsignedBigInteger('user_id')->index();
                 $table->smallInteger('user_type')->default(1)->comment('1:学生 2:老师 3:管理员 4:合作伙伴 5:运营商 6运营商管理员 100超级用户');
                 // 用户关联的学校
                 $table->unsignedInteger('school_id')->comment('学校ID');
