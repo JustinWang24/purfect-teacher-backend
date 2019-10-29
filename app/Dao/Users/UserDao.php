@@ -27,12 +27,28 @@ class UserDao
      */
     public function getUserByIdOrUuid($idOrUuid){
         if(is_string($idOrUuid) && strlen($idOrUuid) > 10){
-            return User::where('uuid',$idOrUuid)->first();
+            return $this->getUserByUuid($idOrUuid);
         }
         elseif (is_int($idOrUuid)){
-            return User::find($idOrUuid);
+            return $this->getUserById($idOrUuid);
         }
         return null;
+    }
+
+    /**
+     * @param $uuid
+     * @return User|null
+     */
+    public function getUserByUuid($uuid){
+        return User::where('uuid',$uuid)->first();
+    }
+
+    /**
+     * @param $id
+     * @return User|null
+     */
+    public function getUserById($id){
+        return User::find($id);
     }
 
     /**

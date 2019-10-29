@@ -1,7 +1,7 @@
 <div class="sidebar-container">
     <div class="sidemenu-container navbar-collapse collapse fixed-menu">
         <div id="remove-scroll" class="left-sidemenu">
-            <ul class="sidemenu  page-header-fixed sidemenu-hover-submenu" data-keep-expanded="false"
+            <ul class="sidemenu  page-header-fixed sidemenu-closed" data-keep-expanded="false"
                 data-auto-scroll="true" data-slide-speed="200" style="padding-top: 20px">
                 <li class="sidebar-toggler-wrapper hide">
                     <div class="sidebar-toggler">
@@ -38,10 +38,26 @@
                 </li>
 
                 <li class="nav-item">
-                    <a href="{{ route('school_manager.timetable.manager',['uuid'=>session('school.uuid')]) }}" class="nav-link">
+                    <a href="{{ route('school_manager.timetable.manager.preview',['uuid'=>session('school.uuid')]) }}" class="nav-link">
                         <i class="material-icons">event</i>
                         <span class="title">课程表管理</span>
                     </a>
+                </li>
+                <li class="nav-item">
+                    <a href="javascript:void(0);" class="nav-link nav-toggle">
+                        <i class="material-icons">dashboard</i>
+                        <span class="title">会议管理</span>
+                        <span class="selected"></span>
+                        <span class="arrow open"></span>
+                    </a>
+                    <ul class="sub-menu">
+                        <li class="nav-item active">
+                            <a href="{{ route('teacher.conference.index') }}" class="nav-link ">
+                                <span class="title">会议列表</span>
+                                <span class="selected"></span>
+                            </a>
+                        </li>
+                    </ul>
                 </li>
                 @endif
 

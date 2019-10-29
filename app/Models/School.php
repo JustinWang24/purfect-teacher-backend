@@ -13,7 +13,12 @@ class School extends Model
 {
     use SoftDeletes;
     protected $fillable = [
-        'uuid','max_students_number','max_employees_number','name'
+        'uuid','max_students_number','max_employees_number','name',
+        'state', // 哪个省
+        'level', // 学校批次名称: 高职
+        'category_code_state', // 省市科类代码:
+        'category_code', // 学校科类代码: 01
+        'category_name', // 学校科类名称: 理工
     ];
 
     /**
@@ -23,12 +28,21 @@ class School extends Model
         return $this->belongsTo(User::class,'last_updated_by');
     }
 
+    /**
+     * 学校包含的校区
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
     public function campuses(){
         return $this->hasMany(Campus::class)->orderBy('name','asc');
     }
 
+    /**
+     * 学校预制的时间段
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
     public function timeFrame(){
-        return $this->hasMany(TimeSlot::class)->select(['id','name','type','from','to'])->orderBy('from','asc');
+        return $this->hasMany(TimeSlot::class)->select(['id','name','type','from','to'])
+            ->orderBy('from','asc');
     }
 
     /**
