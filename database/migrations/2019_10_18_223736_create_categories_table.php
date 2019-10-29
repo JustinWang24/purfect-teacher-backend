@@ -36,12 +36,14 @@ class CreateCategoriesTable extends Migration
          * 创建关联外键
          */
         if(Schema::hasTable('categories')){
-            Schema::table('medias', function (Blueprint $table){
+		/**
+		Schema::table('medias', function (Blueprint $table){
                 // 级联删除文件
                 $table->foreign('category_id')
                     ->references('id')->on('categories')
                     ->onDelete('cascade');
-            });
+		});
+		 */
         }
 
     }
