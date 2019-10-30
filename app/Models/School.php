@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Schools\SchoolConfiguration;
 use App\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -43,6 +44,14 @@ class School extends Model
     public function timeFrame(){
         return $this->hasMany(TimeSlot::class)->select(['id','name','type','from','to'])
             ->orderBy('from','asc');
+    }
+
+    /**
+     * 学校的配置
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function configuration(){
+        return $this->hasOne(SchoolConfiguration::class);
     }
 
     /**
