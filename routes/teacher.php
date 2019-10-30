@@ -18,8 +18,13 @@ Route::prefix('teacher')->group(function () {
     Route::get('conference/getRooms', 'ConferenceController@getRooms')->name('teacher.conference.getRooms'); //获取会议室
 
 
+
+
     //考试管理
-    Route::get('exam/index', 'ExamController@index')->name('teacher.exam.index');   //列表
-    Route::get('exam/create', 'ExamController@create')->name('teacher.exam.create');   //列表
+    Route::get('exam/index', 'ExamController@index')->name('teacher.exam.index');                        // 列表
+    Route::get('exam/create', 'ExamController@create')->name('teacher.exam.create');                     // 创建考试
+    Route::get('exam/data', 'ExamController@data')->name('teacher.exam.data');                           // 创建考试
+    Route::get('exam/getClassRooms', 'ExamController@getClassRooms')->name('teacher.exam.getClassRooms');// 获取教室列表
+    Route::get('exam/getCourses', 'ExamController@getCourses')->name('teacher.exam.getCourses');         // 获取课程列表
 
 });
