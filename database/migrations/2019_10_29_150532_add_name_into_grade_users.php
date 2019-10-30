@@ -15,8 +15,8 @@ class AddNameIntoGradeUsers extends Migration
     public function up()
     {
         Schema::table('grade_users', function (Blueprint $table) {
-            // $table->string('name',40)
-            //    ->comment('用户的名字: 用来根据名字搜索用')->after('user_id');
+             $table->string('name',40)
+                ->comment('用户的名字: 用来根据名字搜索用')->after('user_id');
         });
 
         $total = DB::table('users')->count();
