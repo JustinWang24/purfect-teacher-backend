@@ -14,12 +14,13 @@ import 'element-ui/lib/theme-chalk/index.css';
 Vue.use(ElementUI);
 
 /**
- * The following block of code may be used to automatically register your
- * Vue components. It will recursively scan this directory for the Vue
- * components and automatically register them with their "basename".
- *
- * Eg. ./components/ExampleComponent.vue -> <example-component></example-component>
- */
+
+* The following block of code may be used to automatically register your
+* Vue components. It will recursively scan this directory for the Vue
+* components and automatically register them with their "basename".
+*
+* Eg. ./components/ExampleComponent.vue -> <example-component></example-component>
+*/
 
 // const files = require.context('./', true, /\.vue$/i);
 // files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default));
@@ -28,7 +29,6 @@ Vue.component('time-slots-manager', require('./components/timeline/TimeSlotsMana
 Vue.component('courses-manager', require('./components/courses/CoursesManager.vue').default);
 Vue.component('timetable-previewer', require('./components/previewer/TimetablePreviewer.vue').default);
 Vue.component('timetable-item-form', require('./components/previewer/TimetableItemForm.vue').default);
-
 /**
  * Next, we will create a fresh Vue application instance and attach it to
  * the page. Then, you may begin adding components to this applications
