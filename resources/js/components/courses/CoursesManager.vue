@@ -8,46 +8,106 @@
             <courses-list :courses="courses" @course-view="onCourseNeedView" @course-delete="onCourseNeedDelete" @course-edit="onCourseNeedEdit" :can-delete="canDelete"></courses-list>
         </div>
 
-        <el-drawer
+        <el-dialog
             title="课程登记表"
             :visible.sync="showCourseFormFlag"
-            direction="rtl"
+            :fullscreen="true"
             custom-class="course-form-drawer"
         >
             <el-form :model="courseModel" :rules="rules" ref="courseModelForm" label-width="100px" class="course-form">
-                <el-form-item label="课程编号" prop="code">
-                    <el-input v-model="courseModel.code" placeholder="必填: 课程编号, 请注意保证课程编号的唯一性"></el-input>
-                </el-form-item>
-                <el-form-item label="课程名称" prop="name">
-                    <el-input v-model="courseModel.name" placeholder="必填: 课程名称"></el-input>
-                </el-form-item>
-                <el-form-item label="学分" prop="scores">
-                    <el-input v-model="courseModel.scores" placeholder="选填: 课程学分"></el-input>
-                </el-form-item>
-                <el-form-item label="适用年级" prop="year">
-                    <el-select v-model="courseModel.year" placeholder="课程针对哪个年级">
-                        <el-option label="1年级" :value="1"></el-option>
-                        <el-option label="2年级" :value="2"></el-option>
-                        <el-option label="3年级" :value="3"></el-option>
-                        <el-option label="4年级" :value="4"></el-option>
-                        <el-option label="5年级" :value="5"></el-option>
-                        <el-option label="6年级" :value="6"></el-option>
-                    </el-select>
-                </el-form-item>
-                <el-form-item label="适用学期" prop="term">
-                    <el-select v-model="courseModel.term" placeholder="课程针对哪个学期">
-                        <el-option label="第一学期" :value="1"></el-option>
-                        <el-option label="第二学期" :value="2"></el-option>
-                    </el-select>
-                </el-form-item>
-                <el-form-item label="课程类型">
-                    <el-select v-model="courseModel.optional" placeholder="课程类型">
-                        <el-option label="必修课" value="0"></el-option>
-                        <el-option label="选修课" value="1"></el-option>
-                    </el-select>
-                </el-form-item>
+                <el-row>
+                    <el-col :span="8">
+                        <el-form-item label="课程编号" prop="code">
+                            <el-input v-model="courseModel.code" placeholder="必填: 课程编号, 请注意保证课程编号的唯一性"></el-input>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="8">
+                        <el-form-item label="课程名称" prop="name">
+                            <el-input v-model="courseModel.name" placeholder="必填: 课程名称"></el-input>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="8">
+                        <el-form-item label="学分" prop="scores">
+                            <el-input v-model="courseModel.scores" placeholder="选填: 课程学分"></el-input>
+                        </el-form-item>
+                    </el-col>
+                </el-row>
+                <el-row>
+                    <el-col :span="8">
+                        <el-form-item label="适用年级" prop="year">
+                            <el-select v-model="courseModel.year" placeholder="课程针对哪个年级">
+                                <el-option label="1年级" :value="1"></el-option>
+                                <el-option label="2年级" :value="2"></el-option>
+                                <el-option label="3年级" :value="3"></el-option>
+                                <el-option label="4年级" :value="4"></el-option>
+                                <el-option label="5年级" :value="5"></el-option>
+                                <el-option label="6年级" :value="6"></el-option>
+                            </el-select>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="8">
+                        <el-form-item label="适用学期" prop="term">
+                            <el-select v-model="courseModel.term" placeholder="课程针对哪个学期">
+                                <el-option label="第一学期" :value="1"></el-option>
+                                <el-option label="第二学期" :value="2"></el-option>
+                            </el-select>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="8">
+                        <el-form-item label="课程类型">
+                            <el-select v-model="courseModel.optional" placeholder="课程类型">
+                                <el-option label="必修课" value="0"></el-option>
+                                <el-option label="选修课" value="1"></el-option>
+                            </el-select>
+                        </el-form-item>
+                    </el-col>
+                </el-row>
+
+                <!-- 如果是选修课, 则与专业无关, 需要制定上课的时间范围, 周内的第几天, 以及当天的第几节课 -->
+                <el-row v-if="courseModel.optional === '1'">
+                    <el-col :span="24">
+                        <h4 class="pl-4">只对选修课有效</h4>
+                    </el-col>
+                    <el-col :span="8">
+                        <el-form-item label="哪周上课">
+                        <el-select v-model="courseModel.weekNumbers" multiple placeholder="请选择在哪周上课, 可多选" style="width: 100%;">
+                            <el-option
+                                    v-for="weekNumber in totalWeeks"
+                                    :key="weekNumber"
+                                    :label="'第' + weekNumber + '周'"
+                                    :value="weekNumber">
+                            </el-option>
+                        </el-select>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="8">
+                        <el-form-item label="哪天上课">
+                        <el-select v-model="courseModel.dayIndexes" multiple placeholder="请选择哪天上课, 可多选" style="width: 100%;">
+                            <el-option
+                                    v-for="dayIndex in 5"
+                                    :key="dayIndex"
+                                    :label="'周' + dayIndex"
+                                    :value="dayIndex">
+                            </el-option>
+                        </el-select>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="8">
+                        <el-form-item label="上课时间">
+                        <el-select v-model="courseModel.timeSlots" multiple placeholder="请选择上课的时间段, 可多选" style="width: 100%;">
+                            <el-option
+                                    v-for="(timeSlot, idx) in timeSlots"
+                                    :key="idx"
+                                    :label="timeSlot.name"
+                                    :value="timeSlot.id">
+                            </el-option>
+                        </el-select>
+                        </el-form-item>
+                    </el-col>
+                </el-row>
+
                 <el-form-item label="所属专业" prop="majors">
-                    <el-select v-model="courseModel.majors" multiple placeholder="请选择所属专业" style="width: 100%;">
+                    <el-select v-model="courseModel.majors" multiple placeholder="请选择所属专业. 留空表示对所有的专业都有效" style="width: 100%;">
                         <el-option
                                 v-for="(major, idx) in majors"
                                 :key="idx"
@@ -74,6 +134,7 @@
                         </el-option>
                     </el-select>
                 </el-form-item>
+
                 <el-form-item label="课程概述">
                     <el-input type="textarea" v-model="courseModel.desc" placeholder="可选"></el-input>
                 </el-form-item>
@@ -82,7 +143,7 @@
                     <el-button @click="showCourseFormFlag = false">取消</el-button>
                 </el-form-item>
             </el-form>
-        </el-drawer>
+        </el-dialog>
 
         <el-drawer
                 title="课程表"
@@ -101,6 +162,8 @@
 <script>
     import { Constants } from '../../common/constants';
     import { Util } from '../../common/utils';
+    import { getTimeSlots, getCourses, getMajors } from '../../common/timetables';
+    import { searchTeachers } from '../../common/search';
     import CoursesList from './CoursesList.vue';
     export default {
         name: "CoursesManager",
@@ -139,7 +202,10 @@
                     optional: '0', // 必修还是选修
                     year: '',
                     term: '', // 学期
-                    desc: '',  // 学期
+                    desc: '',  // 课程描述
+                    timeSlots: [], // 课程上课的时间段
+                    dayIndexes: [], // 课程上课的时间段
+                    weekNumbers: [], // 课程上课的时间段
                 },
                 rules:{
                     code: [
@@ -162,18 +228,28 @@
                 passedCourseId: null,
                 // 根据课程总结的汇总表
                 showCourseScheduleFlag: false,
-                courseSchedule:[]
+                courseSchedule:[],
+                timeSlots:[],
+                totalWeeks: 20,
+                pageNumber: 0,
             };
         },
         created(){
             this._getAllCourses();
             this._getAllMajors();
+            // 获取一个学期会有多少周
+
+            // 获取学校的每天的教学时间段安排
+            getTimeSlots(this.schoolId).then(res => {
+                if(Util.isAjaxResOk(res)){
+                    this.timeSlots = res.data.data.time_frame;
+                    this.totalWeeks = res.data.data.total_weeks;
+                }
+            })
         },
         methods: {
             _getAllCourses: function(){
-                axios.post(
-                    Constants.API.LOAD_COURSES_BY_SCHOOL,{school: this.schoolId}
-                ).then(res => {
+                getCourses(this.schoolId, this.pageNumber).then(res => {
                     if(res.data.code === Constants.AJAX_SUCCESS){
                         this.courses = res.data.data.courses;
                     }
@@ -294,9 +370,10 @@
                 if (teacherName !== '') {
                     this.loading = true;
                     // 从服务器获取老师信息
-                    axios.post(
-                        Constants.API.SEARCH_TEACHERS_BY_NAME,
-                        {query: teacherName, school: this.schoolId, majors: this.courseModel.majors}
+                    searchTeachers(
+                        this.schoolId,
+                        teacherName,
+                        this.courseModel.majors
                     ).then(res => {
                         this.loading = false;
                         if(Util.isAjaxResOk(res) && res.data.data.teachers.length > 0){
@@ -309,9 +386,7 @@
             },
             // 获取所有可能的专业列表
             _getAllMajors: function () {
-                axios.post(
-                    Constants.API.LOAD_MAJORS_BY_SCHOOL, {id: this.schoolId}
-                ).then(res=>{
+                getMajors(this.schoolId, this.pageNumber).then(res=>{
                     if(Util.isAjaxResOk(res) && res.data.data.majors.length > 0){
                         this.majors = res.data.data.majors;
                     }
