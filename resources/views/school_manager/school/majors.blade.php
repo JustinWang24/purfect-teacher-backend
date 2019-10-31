@@ -30,7 +30,8 @@ use App\User;
                                 <tr>
                                     <th>#</th>
                                     <th>专业名称</th>
-                                    <th style="width: 300px;">简介</th>
+                                    <th>自主招生</th>
+                                    <th>招生人数</th>
                                     <th>班级数</th>
                                     <th>教职工数</th>
                                     <th>学生数</th>
@@ -44,7 +45,14 @@ use App\User;
                                         <td>
                                             {{ $major->name }}
                                         </td>
-                                        <td>{{ $major->description }}</td>
+                                        <td>
+                                            @if($major->open)
+                                                <span class="text-primary">已经开放</span>
+                                            @else
+                                                <span class="text-danger">已经停止</span>
+                                            @endif
+                                        </td>
+                                        <td>{{ $major->seats }}人</td>
                                         <td class="text-center">
                                             <a class="anchor-grades-counter" href="{{ route('school_manager.major.grades',['uuid'=>$major->id,'by'=>'major']) }}">{{ count($major->grades) }}</a>
                                         </td>
