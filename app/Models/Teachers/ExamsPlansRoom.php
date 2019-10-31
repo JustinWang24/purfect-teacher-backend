@@ -5,10 +5,11 @@ namespace App\Models\Teachers;
 use App\Models\Schools\Room;
 use Illuminate\Database\Eloquent\Model;
 
-class ExamsRoom extends Model
+class ExamsPlansRoom extends Model
 {
     protected  $fillable=[
-        'exam_id', 'room_id', 'exam_time', 'from', 'to'
+        'plan_id', 'room_id', 'from', 'to', 'num', 'first_teacher_id', 'first_invigilate',
+        'second_teacher_id', 'second_invigilate', 'thirdly_teacher_id', 'thirdly_invigilate'
     ];
 
 
