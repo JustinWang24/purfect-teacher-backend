@@ -48,7 +48,12 @@
                     label="关联专业"
                     width="240">
                 <template slot-scope="scope">
-                    <el-tag size="medium" type="info" effect="plain" :key="idx" v-for="(m,idx) in scope.row.majors" style="margin:2px;">{{ m.name }}</el-tag>
+                    <el-tag size="medium" type="info" effect="plain" :key="idx" v-for="(m,idx) in scope.row.majors" style="margin:2px;">
+                        {{ m.name }}
+                    </el-tag>
+                    <el-tag v-if="scope.row.majors.length === 0" size="medium" type="success" effect="plain" style="margin:2px;">
+                        对所有专业都开放
+                    </el-tag>
                 </template>
             </el-table-column>
             <el-table-column label="操作">
