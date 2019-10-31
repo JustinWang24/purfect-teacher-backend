@@ -5,7 +5,14 @@
                 课程列表 &nbsp;
                 <el-button icon="el-icon-circle-plus" type="primary" @click="newCourseForm">添加课程</el-button>
             </p>
-            <courses-list :courses="courses" @course-view="onCourseNeedView" @course-delete="onCourseNeedDelete" @course-edit="onCourseNeedEdit" :can-delete="canDelete"></courses-list>
+            <courses-list
+                    :courses="courses"
+                    :time-slots="timeSlots"
+                    @course-view="onCourseNeedView"
+                    @course-delete="onCourseNeedDelete"
+                    @course-edit="onCourseNeedEdit"
+                    :can-delete="canDelete"
+            ></courses-list>
         </div>
 
         <el-dialog

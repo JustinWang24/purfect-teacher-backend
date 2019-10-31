@@ -234,10 +234,15 @@ class CourseDao
     /**
      * 根据学校的 ID 获取课程
      * @param $schoolId
+     * @param $pageNumber
+     * @param $pageSize
      * @return array
      */
-    public function getCoursesBySchoolId($schoolId){
-        $courses = Course::where('school_id',$schoolId)->get();
+    public function getCoursesBySchoolId($schoolId, $pageNumber=0, $pageSize=20){
+        $courses = Course::where('school_id',$schoolId)
+            ->skip($pageNumber * $pageSize)
+            ->take($pageSize)
+            ->get();
         $data = [];
         foreach ($courses as $course) {
             /**
@@ -249,6 +254,12 @@ class CourseDao
             }
             $item['teachers'] = $course->teachers;
             $item['majors'] = $course->majors;
+            $item['arrangements'] = [];
+            if($course->optional){
+                // 是选修课
+                $item['arrangements'] = $course->arrangements;
+            }
+
             $data[] = $item;
         }
         return $data;
