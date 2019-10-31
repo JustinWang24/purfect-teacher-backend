@@ -29,7 +29,7 @@ class UserDao
         if(is_string($idOrUuid) && strlen($idOrUuid) > 10){
             return $this->getUserByUuid($idOrUuid);
         }
-        elseif (is_int($idOrUuid)){
+        elseif ($idOrUuid){
             return $this->getUserById($idOrUuid);
         }
         return null;
