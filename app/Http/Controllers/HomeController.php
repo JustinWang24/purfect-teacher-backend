@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\BusinessLogic\HomePage\Factory;
 use App\User;
 use Illuminate\Http\Request;
+use App\BusinessLogic\DocumentsWorkflows\Factory as DocumentFactory;
 
 class HomeController extends Controller
 {
@@ -42,4 +43,23 @@ class HomeController extends Controller
 //        dd($user->getDefaultView());
         return view($user->getDefaultView(), array_merge($this->dataForView, $data));
     }
+
+    /**
+     * 处理任意约定以步骤的方法
+     * @param Request $request
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function handle_step(Request $request)
+    {
+        $predefinedStep = DocumentFactory::GetInstance($request);
+
+        $predefinedStep->checkDocument($request->get('document'));
+
+        if($predefinedStep->isDone()){
+            $this->dataForView['next'] = $predefinedStep->passToNext();
+        }
+
+        return view('',$this->dataForView);
+    }
+
 }

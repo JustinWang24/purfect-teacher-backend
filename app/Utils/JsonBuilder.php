@@ -20,18 +20,18 @@ class JsonBuilder
      * @return string
      */
     public static function Success($dataOrMessage=[], $message = 'OK'){
-        if(is_array($dataOrMessage)){
+        if(is_array($dataOrMessage) || is_object($dataOrMessage) ){
             return json_encode([
                 'code' => self::CODE_SUCCESS,
                 'message' => $message,
                 'data' => $dataOrMessage
-            ]);
+            ], JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT);
         }else{
             return json_encode([
                 'code' => self::CODE_SUCCESS,
                 'message' => $dataOrMessage,
                 'data'=>[]
-            ]);
+            ], JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT);
         }
     }
 
@@ -46,12 +46,12 @@ class JsonBuilder
             return json_encode([
                 'code' => $code ?? self::CODE_ERROR,
                 'message' => $dataOrMessage
-            ]);
+            ], JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT);
         }else{
             return json_encode([
                 'code' => $code ?? self::CODE_ERROR,
                 'message' => $dataOrMessage
-            ]);
+            ], JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT);
         }
     }
 }

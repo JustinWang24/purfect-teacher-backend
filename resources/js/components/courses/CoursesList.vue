@@ -112,9 +112,9 @@
             handleEdit: function(idx, row){
                 this.$emit('course-edit', {idx: idx, course: row});
             },
-            handleViewClick: function(idx, row){
+            handleViewClick: function(idx, course){
                 // 查看必修课的课程安排, 根据指定的课程 ID
-
+                window.open(Constants.API.TIMETABLE.VIEW_TIMETABLE_FOR_COURSE + '?uuid=' + course.uuid, '_blank');
             },
             yearText: function(year){
                 return Constants.YEARS[year];
