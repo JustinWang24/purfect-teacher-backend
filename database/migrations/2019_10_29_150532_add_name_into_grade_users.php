@@ -5,6 +5,7 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Support\Facades\DB;
 use App\Models\Users\GradeUser;
+
 class AddNameIntoGradeUsers extends Migration
 {
     /**
