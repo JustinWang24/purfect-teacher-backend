@@ -66,8 +66,8 @@ class ExamController extends Controller
     public function getDepartmentList(ExamRequest $request) {
         $schoolId = $request->session()->get('school.id');
         $departmentDao = new DepartmentDao($request->user());
-        $field = ['id' ,'school_id', 'name', 'institute_id'];
-        $list = $departmentDao->getDepartmentBySchoolId($schoolId,$field);
+        $field = ['id' ,'school_id', 'name', 'institute_id', 'campuses_id'];
+        $list = $departmentDao->getDepartmentBySchoolId($schoolId,$field)->toArray();
         return JsonBuilder::Success($list,'请求成功');
     }
 
@@ -80,7 +80,7 @@ class ExamController extends Controller
         $departmentId = $request->get('department_id');
         $majorDao = new MajorDao();
         $field = ['id', 'name','school_id'];
-        $list = $majorDao->getByDepartment($departmentId,$field);
+        $list = $majorDao->getByDepartment($departmentId,$field)->toArray();
         return JsonBuilder::Success($list,'请求成功');
     }
 
@@ -94,7 +94,7 @@ class ExamController extends Controller
         $year = $request->get('year');
         $gradeDao = new GradeDao($request->user());
         $field = ['id', 'name', 'year'];
-        $list = $gradeDao->getGradesByMajorAndYear($majorId,$year,$field);
+        $list = $gradeDao->getGradesByMajorAndYear($majorId,$year,$field)->toArray();
         return JsonBuilder::Success($list,'请求成功');
     }
 
@@ -107,6 +107,7 @@ class ExamController extends Controller
     public function createExamPlan(ExamRequest $request) {
         $all = $request->all();
         $examDao = new ExamDao();
+
         $re = $examDao->createPlan($all);
         if($re->id) {
             return JsonBuilder::Success('创建成功');
@@ -157,8 +158,11 @@ class ExamController extends Controller
     }
 
 
-
-
+    /**
+     * 考点绑定监考老师
+     * @param ExamRequest $request
+     * @return string
+     */
     public function roomBindingTeacher(ExamRequest $request) {
         $all = $request->all();
 

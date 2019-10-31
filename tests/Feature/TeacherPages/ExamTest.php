@@ -83,8 +83,8 @@ class ExamTest extends BasicPageTestCase
             ->actingAs($user)
             ->withSession($this->schoolSessionData)
             ->get(route('teacher.exam.getDepartmentList'));
-        $result = json_decode($response->content(),true);
 
+        $result = json_decode($response->content(),true);
         $this->assertArrayHasKey('code', $result);
         $this->assertEquals(1000, $result['code']);
         foreach ($result['data'] as $key => $val)
