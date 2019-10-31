@@ -31,8 +31,33 @@ class CourseDao
 
     }
 
+    /**
+     * @param $idOrUuid
+     * @return Course
+     */
+    public function getCourseByIdOrUuid($idOrUuid){
+        if(strlen($idOrUuid) > 32){
+            return $this->getCourseByUuid($idOrUuid);
+        }
+        else{
+            return $this->getCourseById($idOrUuid);
+        }
+    }
+
+    /**
+     * @param $uuid
+     * @return Course
+     */
     public function getCourseByUuid($uuid){
         return Course::where('uuid',$uuid)->first();
+    }
+
+    /**
+     * @param $id
+     * @return Course
+     */
+    public function getCourseById($id){
+        return Course::find($id);
     }
 
     /**

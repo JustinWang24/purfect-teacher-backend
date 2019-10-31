@@ -64,7 +64,12 @@
                             <el-select v-model="timeTableItem.course_id" style="width: 100%;">
                                 <el-option :label="course.name" :value="course.id" :key="course.id" v-for="course in courses"></el-option>
                             </el-select>
-                            <span class="help-text">说明: 请选择要教授哪门课程</span>
+                            <span class="help-text">
+                                说明: 请选择要教授哪门课程
+                                <span v-if="timeTableItem.course_id !== ''">
+                                    <a target="_blank" :href="previewByCourseUrl">点击查看({{ courseText }})的已有课程安排</a>
+                                </span>
+                            </span>
                         </el-form-item>
 
                         </div>
@@ -75,7 +80,12 @@
                                 <el-select v-model="timeTableItem.teacher_id" style="width: 100%;">
                                     <el-option :label="teacher.name" :value="teacher.id" :key="teacher.id" v-for="teacher in teachers"></el-option>
                                 </el-select>
-                                <span class="help-text">说明: 请选择授课的老师</span>
+                                <span class="help-text">
+                                    说明: 请选择授课的老师
+                                    <span v-if="timeTableItem.teacher_id !== ''">
+                                        <a target="_blank" :href="previewByTeacherUrl">点击查看老师: ({{ teacherText }}) 已被安排的课程</a>
+                                    </span>
+                                </span>
                             </el-form-item>
                             <el-form-item label="教学楼">
                                 <el-select v-model="timeTableItem.building_id" placeholder="请选择" style="width: 100%;">
@@ -97,7 +107,12 @@
                                 <el-select v-model="timeTableItem.room_id" style="width: 100%;">
                                     <el-option :label="room.name" :value="room.id" :key="room.id" v-for="room in rooms"></el-option>
                                 </el-select>
-                                <span class="help-text">说明: 请选择上面选择的楼的那个房间上课</span>
+                                <span v-if="timeTableItem.room_id !== ''">
+                                    <a target="_blank" :href="previewByRoomUrl">点击查看教室: ({{ locationText }}) 的排课</a>
+                                </span>
+                                <span v-else class="help-text">
+                                    说明: 请选择上面选择的楼的那个房间上课
+                                </span>
                             </el-form-item>
                         </div>
                     </div>
@@ -251,6 +266,15 @@ RT!708!7
         },
         // 计算属性
         computed: {
+            'previewByCourseUrl': function() {
+                return Constants.API.TIMETABLE.VIEW_TIMETABLE_FOR_COURSE + '?uuid=' + this.timeTableItem.course_id;
+            },
+            'previewByTeacherUrl': function() {
+                return Constants.API.TIMETABLE.VIEW_TIMETABLE_FOR_TEACHER + '?uuid=' + this.timeTableItem.teacher_id;
+            },
+            'previewByRoomUrl': function() {
+                return Constants.API.TIMETABLE.VIEW_TIMETABLE_FOR_ROOM + '?uuid=' + this.timeTableItem.room_id;
+            },
             'termText': function(){
                 if(this.timeTableItem.term)
                     return Util.GetTermText(this.timeTableItem.term);
