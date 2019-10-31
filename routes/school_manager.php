@@ -70,7 +70,7 @@ Route::prefix('school_manager')->group(function () {
     Route::get('timetable/manager/courses', 'TimeTables\CoursesController@manager')->name('school_manager.courses.manager');
     Route::get('timetable/manager/view-grade-timetable','TimeTables\TimetablesController@view_grade_timetable')->name('school_manager.grade.view.timetable');
 
-
-
-    // 课程班级
+    // 学校的基础配置信息
+    Route::post('school/config/update','SchoolsController@config_update')
+        ->name('school_manager.school.config.update');
 });
