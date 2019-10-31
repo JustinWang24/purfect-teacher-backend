@@ -15,8 +15,9 @@ class CreateProgressStepsUsersTable extends Migration
     {
         Schema::create('progress_steps_users', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->unsignedBigInteger('preset_step_id')->nullable()->comment('预置步骤ID');
+            $table->unsignedBigInteger('progress_steps_id')->nullable()->comment('步骤ID');
             $table->unsignedBigInteger('user_id')->nullable()->comment('步骤负责人');
+            $table->unsignedSmallInteger('type')->nullable()->comment('1审核人 2抄送人');
             $table->timestamps();
         });
 

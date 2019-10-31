@@ -24,7 +24,7 @@ class ProgressDao
 
     /**
      * 添加公文流程
-     * preset_step_id key 是 第几步骤 val 是步骤id
+     * process_data key 是 第几步骤 val 是步骤id
      * @param $data
      * @return bool
      */
@@ -34,22 +34,22 @@ class ProgressDao
 
         DB::beginTransaction();
 
-        $progressResult   = Progress::create($progressData);
+        $progressResult = Progress::create($progressData);
 
         $presetStepData = [];
-        foreach ($data['preset_step_id']  as $key => $val) {
+        foreach ($data['preset_step_id'] as $key => $val) {
             $presetStepData[$key]['progress_id']    = $progressResult->id;
             $presetStepData[$key]['index']          = $key;
             $presetStepData[$key]['preset_step_id'] = $val;
-            $presetStepData[$key]['created_at'] = date('Y-m-d H:i:s');
-            $presetStepData[$key]['updated_at'] = date('Y-m-d H:i:s');
+            $presetStepData[$key]['created_at']     = date('Y-m-d H:i:s');
+            $presetStepData[$key]['updated_at']     = date('Y-m-d H:i:s');
         }
         $progressStepsResult = ProgressSteps::insert($presetStepData);
 
         if ($progressResult == false || $progressStepsResult == false) {
             DB::rollBack();
-            $result =  false;
-        } else  {
+            $result = false;
+        } else {
             DB::commit();
             $result = $progressResult->id;
         }
