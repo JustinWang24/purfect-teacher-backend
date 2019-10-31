@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 class ExamsPlan extends Model
 {
     protected  $fillable=[
-        'exam_id', 'institute_id', 'department_id', 'major_id', 'grade_id',
+        'exam_id', 'campus_id', 'institute_id', 'department_id', 'major_id', 'grade_id',
         'type', 'formalism', 'year', 'from', 'to'
     ];
 

@@ -15,6 +15,26 @@
     根据考试类型切换考试时间的选择
     随堂考根据周几的第几节课考试，其余根据时间选择
     需要接口提供
+    
+    
+ ### .创建考试接口
+
+#### 1: 请求数据
+| 参数名       | 是否必须     | 参数类型  | 说明       |
+| --------    |:----------:| -----:   | -----:    |
+| name        | Yes        | string   | 考试名称|
+| course_id   | Yes        | string   | 课程ID|
+| semester    | Yes        | string   | 学期|
+
+#### 2.响应数据: json 格式
+``` json
+{
+	"code": 1000,
+	"message": "添加成功",
+	"data": []
+}
+```
+
 
 
 
@@ -38,6 +58,92 @@
     
 
 :::
+
+
+## 获取考试群体 
+  - 获取学校下面的系
+ 
+  
+``` json
+{
+	"code": 1000,
+	"message": "请求成功",
+	"data": [{
+		"id": 1471,          // 系ID
+		"school_id": 50,     // 学校ID
+		"name": "iusto系",   // 名称
+		"institute_id": 491, // 学院ID
+        "campuses_id": 0     // 校区ID
+	}]
+}
+
+```
+
+  - 获取系下面的专业
+  #### 请求数据
+  
+| 参数名       | 是否必须     | 参数类型  | 说明       |
+| --------    |:----------:| -----:   | -----:    |
+|department_id| Yes        | int      | 系ID      |
+#### 相应数据
+``` json
+{
+	"code": 1000,
+	"message": "请求成功",
+	"data": [{
+		"id": 2943,                    // 专业id
+		"name": "Miss Cara Sauer 专业", // 名称 
+		"school_id": 50                // 学校ID
+	}]
+}
+```  
+
+ - 获取专业下的班
+ ####  请求数据
+ | 参数名       | 是否必须     | 参数类型  | 说明     |
+| --------    |:----------:| -----:   | -----:    |
+|major_id     | Yes        | int      | 专业ID     |
+|year         | Yes        | int      | 学年     |
+ 
+``` json   
+{
+	"code": 1000,
+	"message": "请求成功",
+	"data": [{
+		"id": 23541,                     // 班级ID
+		"name": "Alysha Buckridge 专业",  // 班级名称
+		"year": 2019                     // 学年
+	}]
+}
+
+```
+
+  - 创建考试计划
+  
+  ####  请求数据
+| 参数名       | 是否必须     | 参数类型  | 说明     |
+| --------    |:----------:| -----:   | -----:    |
+|exam_id     | Yes        | int      | 考试ID     |
+|campus_id    | Yes        | int      | 校区ID     |
+|institute_id  | Yes        | int      | 学院ID     |
+|department_id  | Yes        | int      | 系ID     |
+|major_id     | optional     | int      | 专业ID     |
+|year         | Yes          | int      | 学年     |
+|grade_id     | optional        | int      | 班级ID     |
+|type         | Yes         | int      | 考试类型     |
+|formalism    | Yes         | int      | 考试形式     |
+|from         | Yes        | dateTime      | 开始时间     |
+|to         | Yes        | dateTime      | 结束时间     |
+
+- 相应格式
+```json
+{
+	"code": 1000,
+	"message": "创建成功",
+	"data": []
+}
+```
+
 
 
 ### 2.获取课程接口  teacher/exam/getCourses
@@ -85,28 +191,9 @@
 }
 ````
 
-### 4.创建考试接口
 
-#### 1: 请求数据
-| 参数名       | 是否必须     | 参数类型  | 说明       |
-| --------    |:----------:| -----:   | -----:    |
-| name        | Yes        | string   | 考试名称|
-| course_id   | Yes        | string   | 课程ID|
-| semester    | Yes        | string   | 学期|
-| formalism   | Yes        | string   | 考试形式|
-| type        | Yes        | string   | 考试类型|
-| room_id     | Yes        | array    | 房间ID|
-| from        | Yes        | date     | 开始时间|
-| to          | Yes        | date     | 结束时间|
 
-#### 2.响应数据: json 格式
-``` json
-{
-	"code": 1000,
-	"message": "添加成功",
-	"data": []
-}
-```
+
 
 ### 5.考试列表
 
