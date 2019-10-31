@@ -43,6 +43,9 @@ use App\User;
                                         <td>{{ $room->getTypeText() }}</td>
                                         <td>{{ $room->description }}</td>
                                         <td class="text-center">
+                                            <a target="_blank" href="{{ route('school_manager.room.view.timetable',['uuid'=>$room->id]) }}" id="" class="btn btn-round btn-default btn-room-timetable">
+                                                <i class="fa fa-calendar"></i>排课记录
+                                            </a>
                                             {{ Anchor::Print(['text'=>'编辑','class'=>'btn-edit-room','href'=>route('school_manager.room.edit',['uuid'=>$room->id])], Button::TYPE_DEFAULT,'edit') }}
                                             {{ Anchor::Print(['text'=>'删除','class'=>'btn-delete-room btn-need-confirm','href'=>route('school_manager.room.delete',['uuid'=>$room->id])], Button::TYPE_DANGER,'trash') }}
                                         </td>

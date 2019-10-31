@@ -32,6 +32,7 @@ use App\User;
                                     <th>专业名称</th>
                                     <th>自主招生</th>
                                     <th>招生人数</th>
+                                    <th>学费</th>
                                     <th>班级数</th>
                                     <th>教职工数</th>
                                     <th>学生数</th>
@@ -53,6 +54,7 @@ use App\User;
                                             @endif
                                         </td>
                                         <td>{{ $major->seats }}人</td>
+                                        <td>{{ $major->fee }}元/人</td>
                                         <td class="text-center">
                                             <a class="anchor-grades-counter" href="{{ route('school_manager.major.grades',['uuid'=>$major->id,'by'=>'major']) }}">{{ count($major->grades) }}</a>
                                         </td>
