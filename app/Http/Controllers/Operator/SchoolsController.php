@@ -2,11 +2,17 @@
 
 namespace App\Http\Controllers\Operator;
 
+use App\Dao\Schools\DepartmentDao;
+use App\Dao\Schools\GradeDao;
+use App\Dao\Schools\MajorDao;
+use App\Dao\Users\GradeUserDao;
+use App\Dao\Users\UserDao;
 use App\Http\Requests\SchoolRequest;
 use App\Http\Controllers\Controller;
 use App\Dao\Schools\SchoolDao;
-use App\Models\School;
+use App\Models\Acl\Role;
 use App\Utils\FlashMessageBuilder;
+use App\Dao\Schools\InstituteDao;
 
 class SchoolsController extends Controller
 {
@@ -28,6 +34,11 @@ class SchoolsController extends Controller
         return redirect()->route('school_manager.school.view');
     }
 
+    /**
+     * 更新学校的配置信息
+     * @param SchoolRequest $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function config_update(SchoolRequest $request){
         $dao = new SchoolDao($request->user());
         $school = $dao->getSchoolByUuid($request->uuid());
@@ -40,5 +51,41 @@ class SchoolsController extends Controller
             FlashMessageBuilder::Push($request, 'danger','无法获取学校数据');
         }
         return redirect()->route('school_manager.school.view');
+    }
+
+    public function institutes(SchoolRequest $request){
+        $instituteDao = new InstituteDao($request->user());
+        $this->dataForView['institutes'] = $instituteDao->getBySchool(session('school.id'));
+        return view('school_manager.school.institutes', $this->dataForView);
+    }
+
+    public function departments(SchoolRequest $request){
+        $dao = new DepartmentDao($request->user());
+        $this->dataForView['departments'] = $dao->getBySchool(session('school.id'));
+        return view('school_manager.school.departments', $this->dataForView);
+    }
+
+    public function majors(SchoolRequest $request){
+        $dao = new MajorDao($request->user());
+        $this->dataForView['majors'] = $dao->getBySchool(session('school.id'));
+        return view('school_manager.school.majors', $this->dataForView);
+    }
+
+    public function grades(SchoolRequest $request){
+        $dao = new GradeDao($request->user());
+        $this->dataForView['grades'] = $dao->getBySchool(session('school.id'));
+        return view('school_manager.school.grades', $this->dataForView);
+    }
+
+    public function teachers(SchoolRequest $request){
+        $dao = new GradeUserDao($request->user());
+        $this->dataForView['employees'] = $dao->getBySchool(session('school.id'), Role::GetTeacherUserTypes());
+        return view('teacher.users.teachers', $this->dataForView);
+    }
+
+    public function students(SchoolRequest $request){
+        $dao = new GradeUserDao($request->user());
+        $this->dataForView['students'] = $dao->getBySchool(session('school.id'),Role::GetStudentUserTypes());
+        return view('teacher.users.students', $this->dataForView);
     }
 }

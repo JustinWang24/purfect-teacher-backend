@@ -15,9 +15,24 @@ use Illuminate\Support\Collection;
 class GradeDao
 {
     private $currentUser;
-    public function __construct(User $user)
+
+    /**
+     * GradeDao constructor.
+     * @param User|null $user
+     */
+    public function __construct($user = null)
     {
         $this->currentUser = $user;
+    }
+
+    /**
+     * @param $name
+     * @param $schoolId
+     * @return Collection
+     */
+    public function searchByName($name, $schoolId){
+        return Grade::select(['id','name'])
+            ->where('school_id',$schoolId)->where('name','like',$name.'%')->get();
     }
 
     /**
@@ -26,6 +41,14 @@ class GradeDao
      */
     public function getGradeById($id){
         return Grade::find($id);
+    }
+
+    /**
+     * @param $id
+     * @return Grade
+     */
+    public function getBySchool($id){
+        return Grade::where('school_id',$id)->paginate();
     }
 
     /**

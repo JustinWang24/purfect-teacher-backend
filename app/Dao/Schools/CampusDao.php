@@ -14,7 +14,7 @@ use Illuminate\Support\Collection;
 class CampusDao
 {
     private $currentUser;
-    public function __construct(User $user)
+    public function __construct($user = null)
     {
         $this->currentUser = $user;
     }
@@ -27,6 +27,16 @@ class CampusDao
     public function createCampus($data){
         $data['last_updated_by'] = $this->currentUser->id;
         return Campus::create($data);
+    }
+
+    /**
+     * @param $name
+     * @param $schoolId
+     * @return Collection
+     */
+    public function searchByName($name, $schoolId){
+        return Campus::select(['id','name'])
+            ->where('school_id',$schoolId)->where('name','like',$name.'%')->get();
     }
 
     /**

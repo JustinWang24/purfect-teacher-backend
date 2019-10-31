@@ -12,21 +12,26 @@ use App\User;
         <div class="col-sm-12 col-md-12 col-xl-12">
             <div class="card-box">
                 <div class="card-head">
-                    <header>学院名: {{ session('school.name') }} - {{ $parent->name }}</header>
+                    <header>{{ session('school.name') }} {{ $parent->name??'' }}</header>
                 </div>
 
                 <div class="card-body">
                     <div class="row">
-                        <div class="row table-padding">
-                            <div class="col-12">
+                        <div class="table-padding col-12">
+                            <a href="{{ route('school_manager.school.view') }}" class="btn btn-default">
+                                返回 <i class="fa fa-arrow-circle-left"></i>
+                            </a>&nbsp;
+                            @if(isset($parent))
                                 <a href="{{ route('school_manager.campus.institutes',['uuid'=>$parent->campus->id,'by'=>'campus']) }}" class="btn btn-default">
                                     <i class="fa fa-arrow-circle-left"></i> 返回
                                 </a>&nbsp;
                                 <a href="{{ route('school_manager.department.add',['uuid'=>$parent->id]) }}" class="btn btn-primary pull-right" id="btn-create-department-from-institute">
                                     创建新系 <i class="fa fa-plus"></i>
                                 </a>
-                            </div>
+                            @endif
+                            @include('school_manager.school.reusable.nav',['highlight'=>'department'])
                         </div>
+
                         <div class="table-responsive">
                             <table class="table table-striped table-bordered table-hover table-checkable order-column valign-middle">
                                 <thead>
@@ -68,6 +73,10 @@ use App\User;
                                 @endforeach
                                 </tbody>
                             </table>
+
+                            @if(!isset($parent))
+{{ $departments->links() }}
+                            @endif
                         </div>
                     </div>
                 </div>

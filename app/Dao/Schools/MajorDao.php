@@ -25,6 +25,16 @@ class MajorDao
     }
 
     /**
+     * @param $name
+     * @param $schoolId
+     * @return Collection
+     */
+    public function searchByName($name, $schoolId){
+        return Major::select(['id','name'])
+            ->where('school_id',$schoolId)->where('name','like',$name.'%')->get();
+    }
+
+    /**
      * 根据给定的 campus 或 id 获取包含的学院
      * @param $department
      * @param $field
@@ -35,6 +45,16 @@ class MajorDao
             $department = $department->id;
         }
         return Major::where('department_id',$department)->select($field)->get();
+    }
+
+    /**
+     * 根据给定的 campus 或 id 获取包含的学院
+     * @param $schoolId
+     * @param $field
+     * @return Collection
+     */
+    public function getBySchool($schoolId,$field='*'){
+        return Major::where('school_id',$schoolId)->select($field)->paginate();
     }
 
     /**

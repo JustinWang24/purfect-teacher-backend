@@ -9,21 +9,19 @@ use App\User;
         <div class="col-sm-12 col-md-12 col-xl-12">
             <div class="card-box">
                 <div class="card-head">
-                    <header>{{ $parent->name }} 教职工列表: (总数: {{ $employees->total() }})</header>
+                    <header>{{ $parent->name??session('school.name') }} 教职工列表: (总数: {{ $employees->total() }})</header>
                 </div>
 
                 <div class="card-body">
                     <div class="row">
-                        <div class="row table-padding">
-                            <div class="col-12">
-                                <a href="{{ url()->previous() }}" class="btn btn-default">
-                                    返回 <i class="fa fa-arrow-circle-left"></i>
-                                </a>&nbsp;
-                                <a href="#" class="btn btn-primary pull-right">
-                                    添加新教职工 <i class="fa fa-plus"></i>
-                                </a>
-                            </div>
+
+                        <div class="table-padding col-12">
+                            <a href="#" class="btn btn-primary">
+                                添加新教职工 <i class="fa fa-plus"></i>
+                            </a>
+                            @include('school_manager.school.reusable.nav',['highlight'=>'teacher'])
                         </div>
+
                         <div class="table-responsive">
                             <table class="table table-striped table-bordered table-hover table-checkable order-column valign-middle">
                                 <thead>
@@ -46,12 +44,14 @@ use App\User;
                                         </td>
                                         <td>{{ $gradeUser->workAt() }}</td>
                                         <td class="text-center">
-                                            {{ Anchor::Print(['text'=>'编辑','href'=>route('school_manager.campus.edit',['uuid'=>$parent->id])], Button::TYPE_DEFAULT,'edit') }}
+                                            {{ Anchor::Print(['text'=>'编辑','href'=>route('school_manager.campus.edit',['uuid'=>$gradeUser->user_id])], Button::TYPE_DEFAULT,'edit') }}
                                         </td>
                                     </tr>
                                 @endforeach
                                 </tbody>
                             </table>
+
+                            {{ $employees->links() }}
                         </div>
                     </div>
                 </div>
