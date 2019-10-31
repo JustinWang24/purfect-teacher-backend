@@ -41,6 +41,7 @@ Vue.component('timetable-item-form', require('./components/previewer/TimetableIt
 
 import { Constants } from './common/constants';
 import { Util } from './common/utils';
+import { getTimeSlots } from './common/timetables';
 
 // 学校时间段管理
 if(document.getElementById('school-time-slots-manager')){
@@ -81,7 +82,6 @@ if(document.getElementById('school-timetable-grade-viewer-app')){
             this.gradeName = document.getElementById('timetable-current-grade-name').dataset.name;
             this.year = document.getElementById('timetable-current-year').dataset.year;
             this.term = document.getElementById('timetable-current-term').dataset.term;
-            this._getAllTimeSlots(this.schoolId);
             for (let i = 0; i < 7; i++) {
                 let rows = [];
                 for (let j = 0; j < 8; j++) {
@@ -89,6 +89,13 @@ if(document.getElementById('school-timetable-grade-viewer-app')){
                 }
                 this.timetable.push(rows);
             }
+
+            // 把时间段数据取来, 然后去生成课程表左边第一栏
+            getTimeSlots(this.schoolId).then(res => {
+                if(Util.isAjaxResOk(res)){
+                    this.timeSlots = res.data.data.time_frame;
+                }
+            })
         },
         mounted() {
             this.refreshTimetableHandler({
@@ -98,16 +105,6 @@ if(document.getElementById('school-timetable-grade-viewer-app')){
             });
         },
         methods: {
-            // 把时间段数据取来, 然后去生成课程表左边第一栏
-            _getAllTimeSlots: function(schoolId){
-                axios.post(
-                    Constants.API.LOAD_STUDY_TIME_SLOTS_BY_SCHOOL,{school: schoolId}
-                ).then( res => {
-                    if(Util.isAjaxResOk(res)){
-                        this.timeSlots = res.data.data.time_frame;
-                    }
-                })
-            },
             // 刷新课程表数据
             refreshTimetableHandler: function(payload){
                 // 把数据保存到缓存中
@@ -190,7 +187,7 @@ if(document.getElementById('school-timetable-previewer-app')){
         },
         created() {
             this.schoolId = document.getElementById('current-school-id').dataset.school;
-            this._getAllTimeSlots(this.schoolId);
+            // this._getAllTimeSlots(this.schoolId);
             for (let i = 0; i < 7; i++) {
                 let rows = [];
                 for (let j = 0; j < 8; j++) {
@@ -198,6 +195,12 @@ if(document.getElementById('school-timetable-previewer-app')){
                 }
                 this.timetable.push(rows);
             }
+            // 把时间段数据取来, 然后去生成课程表左边第一栏
+            getTimeSlots(this.schoolId).then(res => {
+                if(Util.isAjaxResOk(res)){
+                    this.timeSlots = res.data.data.time_frame;
+                }
+            })
         },
         methods: {
             // 来自 Preview 格子元素的点击事件最终处理函数
@@ -273,16 +276,6 @@ if(document.getElementById('school-timetable-previewer-app')){
                 }).catch(e=>{
                     console.log(e);
                     this.reloading = false;
-                })
-            },
-            // 把时间段数据取来, 然后去生成课程表左边第一栏
-            _getAllTimeSlots: function(schoolId){
-                axios.post(
-                    Constants.API.LOAD_STUDY_TIME_SLOTS_BY_SCHOOL,{school: schoolId}
-                ).then( res => {
-                    if(Util.isAjaxResOk(res)){
-                        this.timeSlots = res.data.data.time_frame;
-                    }
                 })
             },
             // 编辑已经存在的课程表项

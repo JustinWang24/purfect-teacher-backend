@@ -23,7 +23,7 @@ class TeacherProfileDao
             return TeacherProfile::where('uuid', $teacherIdOrUuid)->first();
         }
         elseif (is_int($teacherIdOrUuid)){
-            return TeacherProfile::where('teacher_id', $teacherIdOrUuid)->first();
+            return TeacherProfile::where('user_id', $teacherIdOrUuid)->first();
         }
         return null;
     }

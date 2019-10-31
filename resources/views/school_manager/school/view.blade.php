@@ -1,12 +1,16 @@
-<?php
+@php
 use App\Utils\UI\Anchor;
 use App\Utils\UI\Button;
 use App\User;
-?>
+use App\Utils\Misc\ConfigurationTool;
+/**
+ * @var \App\Models\Schools\SchoolConfiguration $config
+ */
+@endphp
 @extends('layouts.app')
 @section('content')
     <div class="row">
-        <div class="col-sm-12 col-md-12 col-xl-12">
+        <div class="col-sm-12 col-md-8 col-xl-8">
             <div class="card-box">
                 <div class="card-head">
                     <header>{{ session('school.name') }}</header>
@@ -25,11 +29,10 @@ use App\User;
                                 <thead>
                                 <tr>
                                     <th>校区名称</th>
-                                    <th style="width: 300px;">简介</th>
                                     <th style="width: 400px;">校区设施</th>
-                                    <th>学院数</th>
-                                    <th>教职工总数</th>
-                                    <th>学生总数</th>
+                                    <th style="width: 100px;text-align: center;">学院数</th>
+                                    <th style="width: 100px;">教职工总数</th>
+                                    <th style="width: 100px;">学生总数</th>
                                     <th></th>
                                 </tr>
                                 </thead>
@@ -41,7 +44,6 @@ use App\User;
                                         <td>
                                             {{ $campus->name }}
                                         </td>
-                                        <td>{{ $campus->description }}</td>
                                         <td>
                                             <a class="anchor-building-counter" href="{{ route('school_manager.campus.buildings',['uuid'=>$campus->id,'by'=>'campus', 'type'=>\App\Models\Schools\Building::TYPE_CLASSROOM_BUILDING]) }}">
                                                 <span class="badge badge-light">教学楼: {{ count($campus->classroomBuildings) }}</span>
@@ -54,7 +56,9 @@ use App\User;
                                             </a>
                                         </td>
                                         <td class="text-center">
-                                            <a class="anchor-institute-counter" href="{{ route('school_manager.campus.institutes',['uuid'=>$campus->id,'by'=>'campus']) }}">{{ count($campus->institutes) }}</a>
+                                            <a class="anchor-institute-counter" href="{{ route('school_manager.campus.institutes',['uuid'=>$campus->id,'by'=>'campus']) }}">
+                                                {{ count($campus->institutes) }}
+                                            </a>
                                         </td>
                                         <td class="text-center">
                                             <a class="employees-counter" href="{{ route('school_manager.campus.users',['type'=>User::TYPE_EMPLOYEE,'uuid'=>$campus->id,'by'=>'campus']) }}">{{ $campus->employeesCount() }}</a>
@@ -70,6 +74,58 @@ use App\User;
                                 </tbody>
                             </table>
                         </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-12 col-md-4 col-xl-4">
+            <div class="card-box">
+                <div class="card-head">
+                    <header>{{ session('school.name') }} 基本配置</header>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-12">
+                            <form action="{{ route('school_manager.school.config.update') }}" method="post"  id="edit-school-config-form">
+                                @csrf
+                                <input type="hidden" id="school-config-id-input" name="uuid" value="{{ session('school.uuid') }}">
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <span class="input-group-addon custom-add-on">默认情况下, 本校学生每学期可以选择</span>
+                                        <input required type="text" class="form-control"
+                                               id="config-1" value="{{ $config ? $config->getOptionalCoursesPerYear() : 1 }}"
+                                               placeholder="学生每年可以选择的选修课数量" name="config[{{ \App\Utils\Misc\ConfigurationTool::KEY_OPTIONAL_COURSES_PER_YEAR }}]">
+                                        <span class="input-group-addon custom-add-on">门选修课</span>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label>学生每学期的教学周数</label>
+                                    <select class="form-control" id="room-type-input" name="config[{{ \App\Utils\Misc\ConfigurationTool::KEY_STUDY_WEEKS_PER_TERM }}]">
+                                        @php
+                                            $weeksPerTerm = $config ? $config->getStudyWeeksPerTerm() : \App\Utils\Misc\ConfigurationTool::DEFAULT_STUDY_WEEKS_PER_TERM;
+                                        @endphp
+                                        @foreach(range(10, \App\Utils\Misc\ConfigurationTool::DEFAULT_STUDY_WEEKS_PER_TERM + 2) as $number)
+                                            <option value="{{ $number }}" {{ $number===$weeksPerTerm ? 'selected':null }}>{{ $number }}周</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>学生上自习课, 是否需要签到</label>
+                                    @php
+                                        $needRegistration = $config ? $config->isSelfStudyNeedRegistration() : false;
+                                    @endphp
+                                    <select class="form-control" id="room-type-input" name="config[{{ \App\Utils\Misc\ConfigurationTool::KEY_SELF_STUDY_NEED_REGISTRATION }}]">
+                                        <option value="1" {{ $needRegistration ? 'selected':null }}>自习课需要签到</option>
+                                        <option value="0" {{ !$needRegistration ? 'selected':null }}>自习课不需要签到</option>
+                                    </select>
+                                </div>
+
+                                <?php
+                                Button::Print(['id'=>'btn-save-school-config','text'=>trans('general.submit')], Button::TYPE_PRIMARY);
+                                ?>&nbsp;
+                            </form>
+                        </div>
+
                     </div>
                 </div>
             </div>

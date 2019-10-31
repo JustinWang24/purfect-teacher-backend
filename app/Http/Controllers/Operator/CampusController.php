@@ -28,6 +28,11 @@ class CampusController extends Controller
         $school = $dao->getSchoolById($request->session()->get('school.id'));
         if($school){
             $this->dataForView['school'] = $school;
+            $config = $school->configuration;
+            if(is_null($config)){
+                $config = $dao->createDefaultConfig($school);
+            }
+            $this->dataForView['config'] = $config;
             return view('school_manager.school.view', $this->dataForView);
         }
         else{

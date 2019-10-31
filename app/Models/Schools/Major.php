@@ -16,6 +16,12 @@ class Major extends Model
         'fee', // 学费
         'period', // 学制: 3年
         'notes', // 本专业的备注
+        'open', // 是否开启自主招生
+        'seats', // 招生的人数
+    ];
+
+    public $casts = [
+        'open'=>'boolean'
     ];
 
     public function school(){
