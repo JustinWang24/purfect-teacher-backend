@@ -40,6 +40,7 @@ class HomeController extends Controller
         $logic = Factory::GetLogic($user);
 
         $data = $logic ? $logic->getDataForView() : [];
+//        dd($user->getDefaultView());
         return view($user->getDefaultView(), array_merge($this->dataForView, $data));
     }
 

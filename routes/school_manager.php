@@ -85,4 +85,8 @@ Route::prefix('school_manager')->group(function () {
     // 学校的基础配置信息
     Route::post('school/config/update','SchoolsController@config_update')
         ->name('school_manager.school.config.update');
+
+
+    // 招生管理
+    Route::get('planRecruit/list', 'RecruitStudent\PlanRecruit@list')->name('school_manager.planRecruit.list');
 });

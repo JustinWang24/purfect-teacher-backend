@@ -77,4 +77,14 @@ class MajorDao
         unset($majorData['id']);
         return Major::where('id',$id)->update($majorData);
     }
+    
+    /**
+     * 分页获列表
+     * @param $map
+     * @param string $field
+     * @return mixed
+     */
+    public function getMajorPage($map,$field='*') {
+        return Major::where($map)->select($field)->paginate(15);
+    }
 }
