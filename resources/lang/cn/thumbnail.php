@@ -20,6 +20,7 @@ return [
     'course'  => '课程管理',
     'users'  => '用户列表',
     'user'  => '用户管理',
+    'teacher'  => '教师',
     'preview'  => '预览工具',
     'list'   => '列表',
     'add'    => '添加数据',

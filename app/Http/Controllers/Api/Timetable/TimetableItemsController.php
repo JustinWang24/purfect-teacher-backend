@@ -6,6 +6,7 @@ use App\BusinessLogic\TimetableLogic\SpecialItemsLoadLogic;
 use App\BusinessLogic\TimetableLogic\TimetableBuilderLogic;
 use App\BusinessLogic\TimetableLogic\TimetableItemBeforeCreate;
 use App\BusinessLogic\TimetableLogic\TimetableItemBeforeUpdate;
+use App\BusinessLogic\TimetableViewLogic\Factory;
 use App\Dao\Timetable\TimetableItemDao;
 use App\Dao\Users\UserDao;
 use App\Utils\JsonBuilder;
@@ -104,14 +105,7 @@ class TimetableItemsController extends Controller
      * @return string
      */
     public function load(Request $request){
-        // Todo: 查询的必要提交是班级 id, 年和学期
-        $gradeId = $request->get('grade');
-        $year = $request->get('year');
-        $term = $request->get('term');
-        $schoolId = $request->get('school');
-        $weekType = intval($request->get('weekType')); // 指示位: 是否为单双周
-
-        $logic = new TimetableBuilderLogic($schoolId,$gradeId, $weekType, $term, $year);
+        $logic = Factory::GetInstance($request);
         return JsonBuilder::Success(['timetable'=>$logic->build()]);
     }
 
