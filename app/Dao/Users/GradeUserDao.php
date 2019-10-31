@@ -15,9 +15,23 @@ use Illuminate\Support\Facades\DB;
 class GradeUserDao
 {
     private $currentUser;
-    public function __construct(User $user)
+
+    public function __construct($user = null)
     {
         $this->currentUser = $user;
+    }
+
+    /**
+     * 模糊查找用户的信息
+     * @param $name
+     * @param $schoolId
+     * @return Collection
+     */
+    public function getUsersWithNameLike($name, $schoolId){
+        return GradeUser::select(['id','name','user_type','department_id','major_id','grade_id'])
+            ->where('school_id',$schoolId)
+            ->where('name','like',$name.'%')
+            ->take(12)->get();
     }
 
     /**
@@ -30,6 +44,16 @@ class GradeUserDao
             $userId = $this->currentUser->id;
         }
         return DB::table('grade_users')->select('school_id')->where('user_id',$userId)->get();
+    }
+
+    /**
+     * 根据学校获取 id
+     * @param $schoolId
+     * @param $types
+     * @return User
+     */
+    public function getBySchool($schoolId,$types){
+        return GradeUser::where('school_id',$schoolId)->whereIn('user_type',$types)->paginate();
     }
 
     /**

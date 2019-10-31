@@ -3,6 +3,13 @@
 Route::prefix('school_manager')->group(function () {
     // 学校管理
     Route::get('school/view', 'CampusController@school')->name('school_manager.school.view'); // 显示学校的统计信息
+    Route::get('school/institutes', 'SchoolsController@institutes')->name('school_manager.school.institutes'); // 显示学校的所有学院
+    Route::get('school/departments', 'SchoolsController@departments')->name('school_manager.school.departments'); // 显示学校的所有系
+    Route::get('school/majors', 'SchoolsController@majors')->name('school_manager.school.majors'); // 显示学校的所有专业
+    Route::get('school/grades', 'SchoolsController@grades')->name('school_manager.school.grades'); // 显示学校的所有班级
+    Route::get('school/teachers', 'SchoolsController@teachers')->name('school_manager.school.teachers'); // 显示学校的所有老师
+    Route::get('school/students', 'SchoolsController@students')->name('school_manager.school.students'); // 显示学校的所有学生
+
     // 校区的管理
     Route::get('campus/add', 'CampusController@add')->name('school_manager.campus.add');                        // 添加校区
     Route::get('campus/edit', 'CampusController@edit')->name('school_manager.campus.edit');                     // 编辑校区

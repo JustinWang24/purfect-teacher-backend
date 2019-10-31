@@ -43,11 +43,11 @@ Route::prefix('school')->group(function () {
         ->name('api.school.load.courses');
 
     // 搜索某个学校的老师
-    Route::any('/search-teachers','Api\School\TeachersController@search_by_name')
+    Route::any('/search-teachers','Api\School\UsersController@search_by_name')
         ->name('api.school.search.teachers');
 
     // 根据给定的课程, 返回所有教授该课程的老师的列表
-    Route::any('/load-course-teachers','Api\School\TeachersController@load_course_teachers')
+    Route::any('/load-course-teachers','Api\School\UsersController@load_course_teachers')
         ->name('api.school.load.course.teachers');
 
     // 保存课程的接口
@@ -69,6 +69,10 @@ Route::prefix('school')->group(function () {
     // 根据条件为课程表创建表单返回未被占用的房间
     Route::any('/load-building-available-rooms','Api\School\LocationController@load_building_available_rooms')
         ->name('api.school.load.building.available.rooms');
+
+    // 快速定位用户的搜索
+    Route::any('/quick-search-users','Api\School\UsersController@quick_search_users')
+        ->name('api.school.quick.search.users');
 });
 
 Route::prefix('enquiry')->group(function () {

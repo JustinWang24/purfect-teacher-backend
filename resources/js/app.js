@@ -29,6 +29,7 @@ Vue.component('time-slots-manager', require('./components/timeline/TimeSlotsMana
 Vue.component('courses-manager', require('./components/courses/CoursesManager.vue').default);
 Vue.component('timetable-previewer', require('./components/previewer/TimetablePreviewer.vue').default);
 Vue.component('timetable-item-form', require('./components/previewer/TimetableItemForm.vue').default);
+Vue.component('search-bar', require('./components/quickSearch/SearchBar.vue').default);
 /**
  * Next, we will create a fresh Vue application instance and attach it to
  * the page. Then, you may begin adding components to this applications
@@ -54,6 +55,13 @@ if(document.getElementById('school-courses-manager-app')){
     new Vue({
         el: '#school-courses-manager-app'
     });
+}
+
+// 快速定位用户的搜索框: 会更加当前的状况, 来搜索用户和学院 系等
+if(document.getElementById('user-quick-search-app')){
+    new Vue({
+        el:'#user-quick-search-app'
+    })
 }
 
 // 查看课程的授课 从教室角度, 产品课程表的程序

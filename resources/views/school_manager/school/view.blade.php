@@ -17,12 +17,12 @@ use App\Utils\Misc\ConfigurationTool;
                 </div>
                 <div class="card-body">
                     <div class="row">
-                        <div class="row table-padding">
-                            <div class="col-12">
-                                <a href="{{ route('school_manager.campus.add') }}" class="btn btn-primary" id="btn-create-campus-from-school">
-                                    创建新校区 <i class="fa fa-plus"></i>
-                                </a>
-                            </div>
+
+                        <div class="table-padding col-12">
+                            <a href="{{ route('school_manager.campus.add') }}" class="btn btn-primary" id="btn-create-campus-from-school">
+                                创建新校区 <i class="fa fa-plus"></i>
+                            </a>
+                            @include('school_manager.school.reusable.nav',['highlight'=>'campus'])
                         </div>
                         <div class="table-responsive">
                             <table class="table table-striped table-bordered table-hover table-checkable order-column valign-middle">

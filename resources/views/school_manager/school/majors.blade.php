@@ -9,21 +9,22 @@ use App\User;
         <div class="col-sm-12 col-md-12 col-xl-12">
             <div class="card-box">
                 <div class="card-head">
-                    <header>系名: {{ session('school.name') }} - {{ $parent->name }}</header>
+                    <header>{{ session('school.name') }} - {{ $parent->name??'' }}</header>
                 </div>
-
                 <div class="card-body">
                     <div class="row">
-                        <div class="row table-padding">
-                            <div class="col-12">
+                        <div class="table-padding col-12">
+                            @if(isset($parent) && !empty($parent))
                                 <a href="{{ route('school_manager.institute.departments',['uuid'=>$parent->institute->id,'by'=>'institute']) }}" class="btn btn-default">
                                     <i class="fa fa-arrow-circle-left"></i> 返回
                                 </a>&nbsp;
                                 <a href="{{ route('school_manager.major.add',['uuid'=>$parent->id]) }}" class="btn btn-primary pull-right" id="btn-create-major-from-department">
                                     创建新专业 <i class="fa fa-plus"></i>
                                 </a>
-                            </div>
+                            @endif
+                            @include('school_manager.school.reusable.nav',['highlight'=>'major'])
                         </div>
+
                         <div class="table-responsive">
                             <table class="table table-striped table-bordered table-hover table-checkable order-column valign-middle">
                                 <thead>
@@ -71,6 +72,10 @@ use App\User;
                                 @endforeach
                                 </tbody>
                             </table>
+
+                            @if(!isset($parent))
+                                {{ $majors->links() }}
+                            @endif
                         </div>
                     </div>
                 </div>
