@@ -10,6 +10,7 @@ use App\Utils\Files\UploadFiles;
 use App\Utils\FlashMessageBuilder;
 use App\Models\Schools\SchoolResource;
 use App\Dao\Categories\CategorieDao;
+use Illuminate\Support\Facades\Auth;
 
 class SceneryController extends Controller
 {
@@ -81,10 +82,9 @@ class SceneryController extends Controller
 //      $sceneryData['school_id'] = $request->getSchoolId();
 //      $uuid = $request->uuid();
 
-        $userId = $request->getUserId();
         $categoriesDao = new CategorieDao;
 
-        $category = $categoriesDao->getMyCategoriesByUserId($userId, '2');
+        $category = $categoriesDao->getMyCategoriesByUserId(Auth::id(), '2');
         $sceneryData['school_id'] = 1;
         $uuid = '19bab179-4164-403e-9043-0e53318acd0a';
 
