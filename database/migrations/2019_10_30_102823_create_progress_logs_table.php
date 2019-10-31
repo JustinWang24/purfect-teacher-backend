@@ -32,6 +32,6 @@ class CreateProgressLogsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('progress_log');
+        Schema::dropIfExists('progress_logs');
     }
 }
