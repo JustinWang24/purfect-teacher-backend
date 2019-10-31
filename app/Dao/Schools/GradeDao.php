@@ -32,12 +32,14 @@ class GradeDao
      * 根据给定的专业和年份获取班级
      * @param $majorId
      * @param $year
+     * @param $field
      * @return Collection
      */
-    public function getGradesByMajorAndYear($majorId, $year){
+    public function getGradesByMajorAndYear($majorId, $year,$field='*'){
         return Grade::where('major_id',$majorId)
             ->where('year',$year)
             ->orderBy('name','asc')
+            ->select($field)
             ->get();
     }
 

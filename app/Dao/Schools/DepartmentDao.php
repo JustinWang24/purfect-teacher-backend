@@ -64,4 +64,15 @@ class DepartmentDao
         }
         return Department::where('id',$id)->update($data);
     }
+
+
+    /**
+     * @param $schoolId
+     * @param $field
+     * @return mixed
+     */
+    public function getDepartmentBySchoolId($schoolId,$field='*')
+    {
+        return Department::where('school_id',$schoolId)->select($field)->get();
+    }
 }
