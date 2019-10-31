@@ -14,12 +14,13 @@ import 'element-ui/lib/theme-chalk/index.css';
 Vue.use(ElementUI);
 
 /**
- * The following block of code may be used to automatically register your
- * Vue components. It will recursively scan this directory for the Vue
- * components and automatically register them with their "basename".
- *
- * Eg. ./components/ExampleComponent.vue -> <example-component></example-component>
- */
+
+* The following block of code may be used to automatically register your
+* Vue components. It will recursively scan this directory for the Vue
+* components and automatically register them with their "basename".
+*
+* Eg. ./components/ExampleComponent.vue -> <example-component></example-component>
+*/
 
 // const files = require.context('./', true, /\.vue$/i);
 // files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default));
@@ -28,7 +29,6 @@ Vue.component('time-slots-manager', require('./components/timeline/TimeSlotsMana
 Vue.component('courses-manager', require('./components/courses/CoursesManager.vue').default);
 Vue.component('timetable-previewer', require('./components/previewer/TimetablePreviewer.vue').default);
 Vue.component('timetable-item-form', require('./components/previewer/TimetableItemForm.vue').default);
-
 /**
  * Next, we will create a fresh Vue application instance and attach it to
  * the page. Then, you may begin adding components to this applications
@@ -41,6 +41,7 @@ Vue.component('timetable-item-form', require('./components/previewer/TimetableIt
 
 import { Constants } from './common/constants';
 import { Util } from './common/utils';
+import { getTimeSlots } from './common/timetables';
 
 // 学校时间段管理
 if(document.getElementById('school-time-slots-manager')){
@@ -55,6 +56,376 @@ if(document.getElementById('school-courses-manager-app')){
     });
 }
 
+// 查看课程的授课 从教室角度, 产品课程表的程序
+if(document.getElementById('school-timetable-room-viewer-app')){
+    new Vue({
+        el: '#school-timetable-room-viewer-app',
+        data() {
+            return {
+                timetable: [],
+                timeSlots: [],
+                // 最后被选定的班级名称
+                subTitle: '',
+                reloading: false, // 只是课程表的预览数据是否整备加载中
+                weekType: Constants.WEEK_NUMBER_ODD, // 默认是单周
+                // 加载课程表所必须的项目
+                schoolId: null,
+                roomId: null,
+                roomName: null,
+                year: null,
+                term: null,
+            }
+        },
+        created() {
+            this.schoolId = document.getElementById('timetable-current-school-id').dataset.school;
+            this.roomId = document.getElementById('timetable-current-room-id').dataset.id;
+            this.roomName = document.getElementById('timetable-current-room-name').dataset.name;
+            this.year = document.getElementById('timetable-current-year').dataset.year;
+            this.term = document.getElementById('timetable-current-term').dataset.term;
+            for (let i = 0; i < 7; i++) {
+                let rows = [];
+                for (let j = 0; j < 8; j++) {
+                    rows.push({});
+                }
+                this.timetable.push(rows);
+            }
+
+            // 把时间段数据取来, 然后去生成课程表左边第一栏
+            getTimeSlots(this.schoolId).then(res => {
+                if(Util.isAjaxResOk(res)){
+                    this.timeSlots = res.data.data.time_frame;
+                }
+            })
+        },
+        mounted() {
+            this.refreshTimetableHandler({
+                room:{
+                    name: this.roomName
+                }
+            });
+        },
+        methods: {
+            // 刷新课程表数据
+            refreshTimetableHandler: function(payload){
+                // 把数据保存到缓存中
+                if(!Util.isEmpty(payload.room)){
+                    this.subTitle = payload.room.name;
+                }
+
+                if(!Util.isEmpty(payload.weekType)){
+                    this.weekType = payload.weekType;
+                }
+
+                this.reloading = true;
+                axios.post(
+                    Constants.API.TIMETABLE.LOAD_TIMETABLE,
+                    {
+                        room: this.roomId,
+                        year: this.year,
+                        term: this.term,
+                        school: this.schoolId,
+                        weekType: this.weekType,
+                    }
+                ).then(res => {
+                    if(Util.isAjaxResOk(res) && res.data.data.timetable !== ''){
+                        // 表示加载到了有效的课程表
+                        this.timetable = res.data.data.timetable;
+                        this.$notify({
+                            title: '成功',
+                            message: this.subTitle + '的课程表加载完毕',
+                            type: 'success',
+                            position: 'bottom-right'
+                        });
+                    }else{
+                        this.timetable = [];
+                    }
+                    this.reloading = false;
+                }).catch(e=>{
+                    this.reloading = false;
+                })
+            },
+        }
+    });
+}
+
+// 查看课程的授课老师角度, 产品课程表的程序
+if(document.getElementById('school-timetable-teacher-viewer-app')){
+    new Vue({
+        el: '#school-timetable-teacher-viewer-app',
+        data() {
+            return {
+                timetable: [],
+                timeSlots: [],
+                // 最后被选定的班级名称
+                subTitle: '',
+                reloading: false, // 只是课程表的预览数据是否整备加载中
+                weekType: Constants.WEEK_NUMBER_ODD, // 默认是单周
+                // 加载课程表所必须的项目
+                schoolId: null,
+                teacherId: null,
+                teacherName: null,
+                year: null,
+                term: null,
+            }
+        },
+        created() {
+            this.schoolId = document.getElementById('timetable-current-school-id').dataset.school;
+            this.teacherId = document.getElementById('timetable-current-teacher-id').dataset.id;
+            this.teacherName = document.getElementById('timetable-current-teacher-name').dataset.name;
+            this.year = document.getElementById('timetable-current-year').dataset.year;
+            this.term = document.getElementById('timetable-current-term').dataset.term;
+            for (let i = 0; i < 7; i++) {
+                let rows = [];
+                for (let j = 0; j < 8; j++) {
+                    rows.push({});
+                }
+                this.timetable.push(rows);
+            }
+
+            // 把时间段数据取来, 然后去生成课程表左边第一栏
+            getTimeSlots(this.schoolId).then(res => {
+                if(Util.isAjaxResOk(res)){
+                    this.timeSlots = res.data.data.time_frame;
+                }
+            })
+        },
+        mounted() {
+            this.refreshTimetableHandler({
+                teacher:{
+                    name: this.teacherName
+                }
+            });
+        },
+        methods: {
+            // 刷新课程表数据
+            refreshTimetableHandler: function(payload){
+                // 把数据保存到缓存中
+                if(!Util.isEmpty(payload.teacher)){
+                    this.subTitle = payload.teacher.name;
+                }
+
+                if(!Util.isEmpty(payload.weekType)){
+                    this.weekType = payload.weekType;
+                }
+
+                this.reloading = true;
+                axios.post(
+                    Constants.API.TIMETABLE.LOAD_TIMETABLE,
+                    {
+                        teacher: this.teacherId,
+                        year: this.year,
+                        term: this.term,
+                        school: this.schoolId,
+                        weekType: this.weekType,
+                    }
+                ).then(res => {
+                    if(Util.isAjaxResOk(res) && res.data.data.timetable !== ''){
+                        // 表示加载到了有效的课程表
+                        this.timetable = res.data.data.timetable;
+                        this.$notify({
+                            title: '成功',
+                            message: this.subTitle + '的课程表加载完毕',
+                            type: 'success',
+                            position: 'bottom-right'
+                        });
+                    }else{
+                        this.timetable = [];
+                    }
+                    this.reloading = false;
+                }).catch(e=>{
+                    this.reloading = false;
+                })
+            },
+        }
+    });
+}
+
+// 查看某个课程的课程表的程序
+if(document.getElementById('school-timetable-course-viewer-app')){
+    new Vue({
+        el: '#school-timetable-course-viewer-app',
+        data() {
+            return {
+                timetable: [],
+                timeSlots: [],
+                // 最后被选定的班级名称
+                subTitle: '',
+                reloading: false, // 只是课程表的预览数据是否整备加载中
+                weekType: Constants.WEEK_NUMBER_ODD, // 默认是单周
+                // 加载课程表所必须的项目
+                schoolId: null,
+                courseId: null,
+                courseName: null,
+                year: null,
+                term: null,
+            }
+        },
+        created() {
+            this.schoolId = document.getElementById('timetable-current-school-id').dataset.school;
+            this.courseId = document.getElementById('timetable-current-course-id').dataset.id;
+            this.courseName = document.getElementById('timetable-current-course-name').dataset.name;
+            this.year = document.getElementById('timetable-current-year').dataset.year;
+            this.term = document.getElementById('timetable-current-term').dataset.term;
+            for (let i = 0; i < 7; i++) {
+                let rows = [];
+                for (let j = 0; j < 8; j++) {
+                    rows.push({});
+                }
+                this.timetable.push(rows);
+            }
+
+            // 把时间段数据取来, 然后去生成课程表左边第一栏
+            getTimeSlots(this.schoolId).then(res => {
+                if(Util.isAjaxResOk(res)){
+                    this.timeSlots = res.data.data.time_frame;
+                }
+            })
+        },
+        mounted() {
+            this.refreshTimetableHandler({
+                course:{
+                    name: this.courseName
+                }
+            });
+        },
+        methods: {
+            // 刷新课程表数据
+            refreshTimetableHandler: function(payload){
+                // 把数据保存到缓存中
+                if(!Util.isEmpty(payload.teacher)){
+                    this.subTitle = payload.teacher.name;
+                }
+
+                if(!Util.isEmpty(payload.weekType)){
+                    this.weekType = payload.weekType;
+                }
+
+                this.reloading = true;
+                axios.post(
+                    Constants.API.TIMETABLE.LOAD_TIMETABLE,
+                    {
+                        course: this.courseId,
+                        year: this.year,
+                        term: this.term,
+                        school: this.schoolId,
+                        weekType: this.weekType,
+                    }
+                ).then(res => {
+                    if(Util.isAjaxResOk(res) && res.data.data.timetable !== ''){
+                        // 表示加载到了有效的课程表
+                        this.timetable = res.data.data.timetable;
+                        this.$notify({
+                            title: '成功',
+                            message: this.subTitle + '的课程表加载完毕',
+                            type: 'success',
+                            position: 'bottom-right'
+                        });
+                    }else{
+                        this.timetable = [];
+                    }
+                    this.reloading = false;
+                }).catch(e=>{
+                    this.reloading = false;
+                })
+            },
+        }
+    });
+}
+
+// 查看某个班的课程表的程序
+if(document.getElementById('school-timetable-grade-viewer-app')){
+    new Vue({
+        el: '#school-timetable-grade-viewer-app',
+        data() {
+            return {
+                timetable: [],
+                timeSlots: [],
+                // 最后被选定的班级名称
+                subTitle: '',
+                reloading: false, // 只是课程表的预览数据是否整备加载中
+                weekType: Constants.WEEK_NUMBER_ODD, // 默认是单周
+                // 加载课程表所必须的项目
+                schoolId: null,
+                gradeId: null,
+                gradeName: null,
+                year: null,
+                term: null,
+            }
+        },
+        created() {
+            this.schoolId = document.getElementById('timetable-current-school-id').dataset.school;
+            this.gradeId = document.getElementById('timetable-current-grade-id').dataset.id;
+            this.gradeName = document.getElementById('timetable-current-grade-name').dataset.name;
+            this.year = document.getElementById('timetable-current-year').dataset.year;
+            this.term = document.getElementById('timetable-current-term').dataset.term;
+            for (let i = 0; i < 7; i++) {
+                let rows = [];
+                for (let j = 0; j < 8; j++) {
+                    rows.push({});
+                }
+                this.timetable.push(rows);
+            }
+
+            // 把时间段数据取来, 然后去生成课程表左边第一栏
+            getTimeSlots(this.schoolId).then(res => {
+                if(Util.isAjaxResOk(res)){
+                    this.timeSlots = res.data.data.time_frame;
+                }
+            })
+        },
+        mounted() {
+            this.refreshTimetableHandler({
+                grade:{
+                    name: this.gradeName
+                }
+            });
+        },
+        methods: {
+            // 刷新课程表数据
+            refreshTimetableHandler: function(payload){
+                // 把数据保存到缓存中
+                if(!Util.isEmpty(payload.grade)){
+                    this.subTitle = payload.grade.name;
+                }
+
+                if(!Util.isEmpty(payload.weekType)){
+                    this.weekType = payload.weekType;
+                }
+
+                this.reloading = true;
+                axios.post(
+                    Constants.API.TIMETABLE.LOAD_TIMETABLE,
+                    {
+                        grade: this.gradeId,
+                        year: this.year,
+                        term: this.term,
+                        school: this.schoolId,
+                        weekType: this.weekType,
+                    }
+                ).then(res => {
+                    if(Util.isAjaxResOk(res) && res.data.data.timetable !== ''){
+                        // 表示加载到了有效的课程表
+                        this.timetable = res.data.data.timetable;
+                        this.$notify({
+                            title: '成功',
+                            message: this.subTitle + '的课程表加载完毕',
+                            type: 'success',
+                            position: 'bottom-right'
+                        });
+                    }else{
+                        this.timetable = [];
+                    }
+                    this.reloading = false;
+                }).catch(e=>{
+                    console.log(e);
+                    this.reloading = false;
+                })
+            },
+        }
+    });
+}
+
+// 课程表管理程序
 if(document.getElementById('school-timetable-previewer-app')){
     new Vue({
         el: '#school-timetable-previewer-app',
@@ -93,7 +464,7 @@ if(document.getElementById('school-timetable-previewer-app')){
         },
         created() {
             this.schoolId = document.getElementById('current-school-id').dataset.school;
-            this._getAllTimeSlots(this.schoolId);
+            // this._getAllTimeSlots(this.schoolId);
             for (let i = 0; i < 7; i++) {
                 let rows = [];
                 for (let j = 0; j < 8; j++) {
@@ -101,10 +472,17 @@ if(document.getElementById('school-timetable-previewer-app')){
                 }
                 this.timetable.push(rows);
             }
+            // 把时间段数据取来, 然后去生成课程表左边第一栏
+            getTimeSlots(this.schoolId).then(res => {
+                if(Util.isAjaxResOk(res)){
+                    this.timeSlots = res.data.data.time_frame;
+                }
+            })
         },
         methods: {
             // 来自 Preview 格子元素的点击事件最终处理函数
             createNewByClickHandler: function(payload){
+                Util.pageScrollTo();
                 // 检查现在是否已经选择了班级, 如果没有选择, 提示无法创建
                 if(Util.isEmpty(this.timeTableItem.grade_id)){
                     this.$message.error('请您先选择课程表所要对应的班级, 才可以进行创建或修改操作!');
@@ -175,16 +553,6 @@ if(document.getElementById('school-timetable-previewer-app')){
                 }).catch(e=>{
                     console.log(e);
                     this.reloading = false;
-                })
-            },
-            // 把时间段数据取来, 然后去生成课程表左边第一栏
-            _getAllTimeSlots: function(schoolId){
-                axios.post(
-                    Constants.API.LOAD_STUDY_TIME_SLOTS_BY_SCHOOL,{school: schoolId}
-                ).then( res => {
-                    if(Util.isAjaxResOk(res)){
-                        this.timeSlots = res.data.data.time_frame;
-                    }
                 })
             },
             // 编辑已经存在的课程表项

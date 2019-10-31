@@ -19,7 +19,7 @@ class CreateMediasTable extends Migration
             Schema::create('medias', function (Blueprint $table){
                 $table->bigIncrements('id');
                 $table->uuid('uuid')->index()->comment('文件的 uuid');
-                $table->unsignedBigInteger('user_id')->comment('文件归属的用户的 ID');
+                $table->unsignedBigInteger('user_id')->index()->comment('文件归属的用户的 ID');
                 $table->unsignedSmallInteger('type')->default(1)->comment('所保存的文件的类型, 默认为图片类型 1');
                 $table->unsignedBigInteger('category_id')->default(0)->comment('该文件所属的目录的 id');// 归类, 所属的目录
                 $table->unsignedInteger('size')->default(0)->comment('文件的大小, 可以不填写, 但建议使用');    // 文件大小

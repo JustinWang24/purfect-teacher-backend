@@ -3,8 +3,10 @@
 namespace App;
 
 use App\Models\Acl\Role;
+use App\Models\Misc\Enquiry;
 use App\Models\Students\StudentProfile;
 use App\Models\Teachers\TeacherProfile;
+use App\Models\Users\GradeUser;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -120,8 +122,48 @@ class User extends Authenticatable
         }
     }
 
+    public function enquiries(){
+        return $this->hasMany(Enquiry::class);
+    }
+
+    /**
+     * Todo: 需要完成获取学校管理员所关联的学校 ID 的功能
+     * @return int
+     */
     public function getSchoolId()
     {
+        if($this->isStudent() || $this->isTeacher()){
+            return $this->gradeUser->school_id;
+        }
         return 1;
+    }
+
+    public function isStudent(){
+        return in_array($this->getCurrentRoleSlug(), [Role::VERIFIED_USER_STUDENT_SLUG, Role::VERIFIED_USER_CLASS_LEADER_SLUG, Role::VERIFIED_USER_CLASS_SECRETARY_SLUG]);
+    }
+
+    public function isTeacher(){
+        return $this->type === Role::TEACHER;
+    }
+
+    /**
+     * 获取学生的状态文字
+     * @return string
+     */
+    public function getStatusText(){
+        $arr = [
+            self::STATUS_WAITING_FOR_MOBILE_TO_BE_VERIFIED=>self::STATUS_WAITING_FOR_MOBILE_TO_BE_VERIFIED_TEXT,
+            self::STATUS_WAITING_FOR_IDENTITY_TO_BE_VERIFIED=>self::STATUS_WAITING_FOR_IDENTITY_TO_BE_VERIFIED_TEXT,
+            self::STATUS_VERIFIED=>self::STATUS_VERIFIED_TEXT,
+        ];
+        return $arr[$this->status];
+    }
+
+    /**
+     * 获取关联的用户班级
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function gradeUser(){
+        return $this->hasOne(GradeUser::class);
     }
 }

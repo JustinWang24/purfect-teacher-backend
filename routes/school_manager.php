@@ -69,7 +69,20 @@ Route::prefix('school_manager')->group(function () {
     Route::get('timetable/manager/preview', 'TimeTables\TimetablesController@preview')->name('school_manager.timetable.manager.preview');           // 添加班级
     Route::get('timetable/manager/courses', 'TimeTables\CoursesController@manager')->name('school_manager.courses.manager');
 
+    // 从班级的, 或者是学生的角度, 查看课程表
+    Route::get('timetable/manager/view-grade-timetable','TimeTables\TimetablesController@view_grade_timetable')
+        ->name('school_manager.grade.view.timetable');
+    // 从课程的角度, 查看课程表
+    Route::get('timetable/manager/view-course-timetable','TimeTables\TimetablesController@view_course_timetable')
+        ->name('school_manager.course.view.timetable');
+    // 从授课老师的角度, 查看课程表
+    Route::get('timetable/manager/view-teacher-timetable','TimeTables\TimetablesController@view_teacher_timetable')
+        ->name('school_manager.teacher.view.timetable');
+    // 从教室的角度, 查看课程表
+    Route::get('timetable/manager/view-room-timetable','TimeTables\TimetablesController@view_room_timetable')
+        ->name('school_manager.room.view.timetable');
 
-
-    // 课程班级
+    // 学校的基础配置信息
+    Route::post('school/config/update','SchoolsController@config_update')
+        ->name('school_manager.school.config.update');
 });

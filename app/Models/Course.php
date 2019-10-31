@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Courses\CourseArrangement;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Models\Courses\CourseTeacher;
@@ -30,5 +31,19 @@ class Course extends Model
 
     public function teachers(){
         return $this->hasMany(CourseTeacher::class)->select(DB::raw('teacher_id as id, teacher_name as name'));
+    }
+
+    public function school(){
+        return $this->belongsTo(School::class);
+    }
+
+    /**
+     * 本课程的课程安排
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function arrangements(){
+        return $this->hasMany(CourseArrangement::class)
+            ->orderBy('week', 'asc')
+            ->orderBy('day_index','asc');
     }
 }

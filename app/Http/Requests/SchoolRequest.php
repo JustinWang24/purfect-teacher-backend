@@ -15,4 +15,8 @@ class SchoolRequest extends MyStandardRequest
             //
         ];
     }
+
+    public function getConfiguration(){
+        return $this->get('config');
+    }
 }
