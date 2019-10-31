@@ -1,6 +1,6 @@
 <div id="timetable-current-school-id" data-school="{{ $school->id }}"></div>
 <div id="timetable-current-room-id" data-id="{{ $room->id }}"></div>
-<div id="timetable-current-room-name" data-name="{{ $room->name }}"></div>
+<div id="timetable-current-room-name" data-name="{{$room->building->name . ' - ' . $room->name }}"></div>
 <div id="timetable-current-year" data-year="{{ date('Y') }}"></div>
 <div id="timetable-current-term" data-term="{{ $term }}"></div>
 <div class="container-fluid" id="school-timetable-room-viewer-app">
