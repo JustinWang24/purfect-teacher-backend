@@ -22,7 +22,7 @@ class CreateExamsPlansRoomsTable extends Migration
                 $table->unsignedInteger('room_id')->comment('教室ID');
                 $table->foreign('room_id')->references('id')->on('rooms');
                 $table->timestamp('from')->comment('开始时间');
-                $table->timestamp('to')->comment('结束时间');
+                $table->timestamp('to')->nullable()->comment('结束时间');
                 $table->smallInteger('num')->comment('容纳人数');
                 $table->integer('first_teacher_id')->comment('主监考id')->nullable();
                 $table->string('first_invigilate',30)->comment('主监考')->nullable();

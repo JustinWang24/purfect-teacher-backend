@@ -32,6 +32,6 @@ class CreateOfficialDocumentFilesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('official_documents_fiels');
+        Schema::dropIfExists('official_document_files');
     }
 }
