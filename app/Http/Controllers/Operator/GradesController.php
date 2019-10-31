@@ -58,7 +58,7 @@ class GradesController extends Controller
                 FlashMessageBuilder::Push($request, FlashMessageBuilder::DANGER, $majorData['name'].'班级创建失败, 请重新试一下');
             }
         }
-        return redirect()->route('school_manager.major.grades',['uuid'=>$uuid,'by'=>'major']);
+        return redirect()->route('school_manager.major.grades',['uuid'=>$uuid, 'by'=>'major']);
     }
 
     /**

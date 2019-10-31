@@ -9,6 +9,7 @@
 namespace App\Dao\Courses;
 use App\Dao\Schools\MajorDao;
 use App\Dao\Teachers\TeacherProfileDao;
+use App\Dao\Users\UserDao;
 use App\Models\Course;
 use App\Models\Courses\CourseMajor;
 use App\Models\Courses\CourseTeacher;
@@ -30,8 +31,33 @@ class CourseDao
 
     }
 
+    /**
+     * @param $idOrUuid
+     * @return Course
+     */
+    public function getCourseByIdOrUuid($idOrUuid){
+        if(strlen($idOrUuid) > 32){
+            return $this->getCourseByUuid($idOrUuid);
+        }
+        else{
+            return $this->getCourseById($idOrUuid);
+        }
+    }
+
+    /**
+     * @param $uuid
+     * @return Course
+     */
     public function getCourseByUuid($uuid){
         return Course::where('uuid',$uuid)->first();
+    }
+
+    /**
+     * @param $id
+     * @return Course
+     */
+    public function getCourseById($id){
+        return Course::find($id);
     }
 
     /**
@@ -46,9 +72,11 @@ class CourseDao
             DB::beginTransaction();
             try{
                 $id = $course->id;
-                $course->delete();
+                $dao = new CourseArrangementDao($course);
+                $dao->deleteByCourseId($id);
                 CourseTeacher::where('course_id',$id)->delete();
                 CourseMajor::where('course_id',$id)->delete();
+                $course->delete();
                 DB::commit();
             }catch (\Exception $exception){
                 DB::rollBack();
@@ -81,10 +109,10 @@ class CourseDao
                 CourseTeacher::where('course_id',$id)->delete();
                 // 保存授课老师
                 if(!empty($teachersId)){
-                    $teacherDao = new TeacherProfileDao();
+                    $userDao = new UserDao();
                     foreach ($teachersId as $teacherId) {
                         // 先检查当前这条
-                        $theTeacher = $teacherDao->getTeacherProfileByTeacherIdOrUuid($teacherId);
+                        $theTeacher = $userDao->getUserById($teacherId);
                         $d = [
                             'course_id'=>$id,
                             'course_code'=>$data['code'],
@@ -116,6 +144,12 @@ class CourseDao
                     }
                 }
 
+                // 检查是选修课还是必修课, 如果是选修课, 则需要保留选修课的上课时间信息, 并保存到单独的记录表中
+                if(intval($data['optional']) === 1){
+                    // 是选修课
+                    $this->_saveCourseArrangement($course, $data);
+                }
+
                 DB::commit();
                 $result = true;
             }
@@ -127,7 +161,6 @@ class CourseDao
         }catch (\Exception $exception){
             DB::rollBack();
             $result = false;
-            dump($exception->getMessage());
         }
 
         return $result;
@@ -156,9 +189,9 @@ class CourseDao
             if($course){
                 // 保存授课老师
                 if(!empty($teachersId)){
-                    $teacherDao = new TeacherProfileDao();
+                    $teacherDao = new UserDao();
                     foreach ($teachersId as $teacherId) {
-                        $theTeacher = $teacherDao->getTeacherProfileByTeacherIdOrUuid($teacherId);
+                        $theTeacher = $teacherDao->getUserById($teacherId);
                         $d = [
                             'course_id'=>$course->id,
                             'course_code'=>$course->code,
@@ -186,6 +219,13 @@ class CourseDao
                         CourseMajor::create($d);
                     }
                 }
+
+                // 检查是选修课还是必修课, 如果是选修课, 则需要保留选修课的上课时间信息, 并保存到单独的记录表中
+                if(intval($data['optional']) === 1){
+                    // 是选修课
+                    $this->_saveCourseArrangement($course, $data);
+                }
+
                 DB::commit();
                 $result = $course;
             }
@@ -203,12 +243,31 @@ class CourseDao
     }
 
     /**
+     * Course
+     * @param $course
+     * @param $data
+     * @return bool
+     */
+    private function _saveCourseArrangement($course, $data){
+        $days = $data['dayIndexes'];
+        $timeSlotIds = $data['timeSlots'];
+        $weeks = $data['weekNumbers'];
+        $arrangement = new CourseArrangementDao($course);
+        return $arrangement->save($weeks, $days, $timeSlotIds);
+    }
+
+    /**
      * 根据学校的 ID 获取课程
      * @param $schoolId
+     * @param $pageNumber
+     * @param $pageSize
      * @return array
      */
-    public function getCoursesBySchoolId($schoolId){
-        $courses = Course::where('school_id',$schoolId)->get();
+    public function getCoursesBySchoolId($schoolId, $pageNumber=0, $pageSize=20){
+        $courses = Course::where('school_id',$schoolId)
+            ->skip($pageNumber * $pageSize)
+            ->take($pageSize)
+            ->get();
         $data = [];
         foreach ($courses as $course) {
             /**
@@ -220,6 +279,12 @@ class CourseDao
             }
             $item['teachers'] = $course->teachers;
             $item['majors'] = $course->majors;
+            $item['arrangements'] = [];
+            if($course->optional){
+                // 是选修课
+                $item['arrangements'] = $course->arrangements;
+            }
+
             $data[] = $item;
         }
         return $data;

@@ -1,22 +1,23 @@
 <template>
-    <div v-if="isEmpty()" class="timetable-unit-wrap" :class="customCssRule()">
+    <div v-if="isEmpty(unit)" class="timetable-unit-wrap" :class="customCssRule()">
         <p class="text-center mt-4">
-            <el-button round v-on:click="onEmptyUnitClicked">点击添加</el-button>
+            <el-button v-if="asManager" round v-on:click="onEmptyUnitClicked">点击添加</el-button>
         </p>
     </div>
     <div v-else class="timetable-unit-wrap" :class="customCssRule()">
         <el-popover
                 class="unit-content"
                 placement="right"
-                width="400"
+                :width="asManager ? 400 : 150"
                 v-model="popupVisible"
                 trigger="click">
             <p>
-                <el-button icon="el-icon-edit" size="mini" v-if="!unit.published" v-on:click="editUnit">编辑</el-button>
-                <el-button icon="el-icon-document-copy" size="mini" type="success" v-on:click="cloneUnit">克隆</el-button>
-                <el-button icon="el-icon-share" type="primary" size="mini" v-if="unit.published" v-on:click="createSpecialCase">调课</el-button>
+                <el-button icon="el-icon-edit" size="mini" v-if="!unit.published && asManager" v-on:click="editUnit">编辑</el-button>
+                <el-button v-if="asManager" icon="el-icon-document-copy" size="mini" type="success" v-on:click="cloneUnit">克隆</el-button>
+                <el-button icon="el-icon-share" type="primary" size="mini" v-if="unit.published && asManager" v-on:click="createSpecialCase">调课</el-button>
                 <el-button v-if="specialCasesCount > 0" icon="el-icon-info" type="success" size="mini" v-on:click="showSpecials">调课记录</el-button>
-                <el-button icon="el-icon-delete" type="danger" size="mini" v-on:click="deleteUnit"></el-button>
+                <el-button v-if="asManager" icon="el-icon-delete" type="danger" size="mini" v-on:click="deleteUnit"></el-button>
+                <el-button v-if="!asManager" icon="el-icon-chat-dot-round" type="primary" size="mini" v-on:click="makeEnquiry">申请表提交</el-button>
             </p>
             <div class="unit-content" slot="reference">
                 <p class="text-center no-margin" style="margin-top: -10px;">
@@ -24,8 +25,9 @@
 <text-badge :text="repeatUnitText" color="primary"></text-badge>
 <text-badge v-if="specialCasesCount > 0" text="调课" color="info"></text-badge>
                 </p>
-                <p class="text-center no-margin">{{ unit.course }}</p>
-                <p class="text-center no-margin">老师: {{ unit.teacher }}</p>
+                <p v-if="!isEmpty(unit.course)" class="text-center no-margin">{{ unit.course }}</p>
+                <p v-if="!isEmpty(unit.grade_name)" class="text-center no-margin">班级: {{ unit.grade_name }}</p>
+                <p v-if="!isEmpty(unit.teacher)" class="text-center no-margin">老师: {{ unit.teacher }}</p>
                 <p class="text-center no-margin">地点: {{ unit.building }}</p>
                 <p class="text-center no-margin">{{ unit.room }}</p>
             </div>
@@ -43,7 +45,7 @@
         components:{
             TextBadge
         },
-        props: ['unit','weekday','rowIndex'],
+        props: ['unit','weekday','rowIndex','asManager'],
         computed: {
             'switchStatusButtonText': function(){
                 return this.unit.published;
@@ -69,11 +71,11 @@
             };
         },
         methods: {
-            isEmpty: function() {
-                return Util.isEmpty(this.unit);
+            isEmpty: function(some) {
+                return Util.isEmpty(some);
             },
             customCssRule: function(){
-                if(this.isEmpty()){
+                if(this.isEmpty(this.unit)){
                     return '';
                 }
                 else if(this.unit.published){
@@ -132,6 +134,18 @@
             // 查看调课的记录集合
             showSpecials: function () {
                 this.$emit('show-specials',this.unit.specials);
+            },
+            // 请假或其他事宜
+            makeEnquiry: function (){
+                this.$emit('make-enquiry',{
+                    data: this.unit,
+                    subTitle: '',
+                    type: 0,
+                    start_at_date: '',
+                    end_at_date: '',
+                    detail: '',
+                    title: '',
+                });
             }
         }
     }

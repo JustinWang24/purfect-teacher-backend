@@ -71,6 +71,12 @@ Route::prefix('school')->group(function () {
         ->name('api.school.load.building.available.rooms');
 });
 
+Route::prefix('enquiry')->group(function () {
+    // 保存课程表项的接口
+    Route::post('/save','Api\Enquiry\EnquiriesController@save')
+        ->name('api.enquiry.save');
+});
+
 Route::prefix('timetable')->group(function () {
     // 保存课程表项的接口
     Route::post('/timetable-item-can-be-inserted','Api\Timetable\TimetableItemsController@can_be_inserted')

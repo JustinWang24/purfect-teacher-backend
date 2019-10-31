@@ -31,12 +31,24 @@ export const Constants = {
             CREATE_SPECIAL_CASE: '/api/timetable/create-special-case', // 加载课程表项
             LOAD_SPECIAL_CASES: '/api/timetable/load-special-cases', // 加载课程表项
             SWITCH_WEEK_VIEW: '/api/timetable/switch-week-view', // 加载课程表项
-        }
+            // 从不同角度观察课程表的 url
+            VIEW_TIMETABLE_FOR_COURSE: '/school_manager/timetable/manager/view-course-timetable', // 从课程的角度加载课程表
+            VIEW_TIMETABLE_FOR_TEACHER: '/school_manager/timetable/manager/view-teacher-timetable', // 从课程的授课老师角度加载课程表
+            VIEW_TIMETABLE_FOR_ROOM: '/school_manager/timetable/manager/view-room-timetable', // 从课程的授课老师角度加载课程表
+        },
+        // 申请
+        ENQUIRY_SUBMIT: '/api/enquiry/save',
     },
     YEARS: ['N.A','一年级','二年级','三年级','四年级','五年级','六年级'],
     TERMS: ['N.A','第一学期','第二学期'],
     REPEAT_UNITS: ['每周重复','仅单周重复','仅双周重复'],
     WEEK_DAYS: ['周一','周二','周三','周四','周五','周六','周日',],
+    ENQUIRY_TYPES: ['请假','外出, 出差','报销','用章','用车','场地','物品领用','其他'],
     WEEK_NUMBER_ODD: 1, // 单周
     WEEK_NUMBER_EVEN: 2,// 双周
+    LOGIC: {
+        TIMETABLE: {
+            ENQUIRY: 'timetable-enquiry'
+        }
+    }
 };

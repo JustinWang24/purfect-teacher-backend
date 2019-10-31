@@ -20,37 +20,38 @@ class JsonBuilder
      * @return string
      */
     public static function Success($dataOrMessage=[], $message = 'OK'){
-        if(is_array($dataOrMessage)){
+        if(is_array($dataOrMessage) || is_object($dataOrMessage) ){
             return json_encode([
                 'code' => self::CODE_SUCCESS,
                 'message' => $message,
                 'data' => $dataOrMessage
-            ]);
+            ], JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT);
         }else{
             return json_encode([
                 'code' => self::CODE_SUCCESS,
                 'message' => $dataOrMessage,
                 'data'=>[]
-            ]);
+            ], JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT);
         }
     }
 
     /**
      * 返回错误JSON消息
      * @param  array|String $dataOrMessage
+     * @param  int $code
      * @return string
      */
-    public static function Error($dataOrMessage = 'Err'){
+    public static function Error($dataOrMessage = 'Err', $code = null){
         if(is_array($dataOrMessage)){
             return json_encode([
-                'code' => self::CODE_ERROR,
+                'code' => $code ?? self::CODE_ERROR,
                 'message' => $dataOrMessage
-            ]);
+            ], JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT);
         }else{
             return json_encode([
-                'code' => self::CODE_ERROR,
+                'code' => $code ?? self::CODE_ERROR,
                 'message' => $dataOrMessage
-            ]);
+            ], JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT);
         }
     }
 }

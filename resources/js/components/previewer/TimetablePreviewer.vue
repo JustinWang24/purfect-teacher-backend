@@ -11,11 +11,13 @@
                 <timetable-column
                         :rows="rows"
                         :weekday="idx"
+                        :as-manager="asManager"
                         v-on:create-new-for-current-column="createNewForCurrentColumnHandler"
                         v-on:edit-for-current-unit-column="editForCurrentUnitColumnHandler"
                         v-on:clone-for-current-unit-column="cloneForCurrentUnitColumnHandler"
                         v-on:create-special-case-column="createSpecialCaseColumnHandler"
                         v-on:show-special-cases-column="showSpecialCasesColumnHandler"
+                        v-on:make-enquiry-column="makeEnquiryColumnHandler"
                 ></timetable-column>
             </div>
         </div>
@@ -80,13 +82,14 @@
                 <el-table-column label="操作" width="150">
                     <template slot-scope="scope">
                         <el-button
+                                v-if="asManager"
                                 size="mini"
                                 type="danger"
                                 @click="handleSpecialCaseDelete(scope.$index, scope.row)">
                             删除
                         </el-button>
                         <el-button
-                                v-if="!scope.row.published"
+                                v-if="!scope.row.published && asManager"
                                 size="mini"
                                 type="primary"
                                 @click="handleSpecialCasePublish(scope.$index, scope.row)">
@@ -96,6 +99,16 @@
                 </el-table-column>
             </el-table>
         </el-dialog>
+
+        <el-dialog title="请求事宜表单" :visible.sync="makeEnquiryFormVisible">
+            <general-enquiry-form
+                :enquiry-form="enquiryForm"
+            ></general-enquiry-form>
+            <div slot="footer" class="dialog-footer">
+                <el-button @click="makeEnquiryFormVisible = false">取 消</el-button>
+                <el-button type="primary" @click="makeEnquiryFormSubmitHandler">确 定</el-button>
+            </div>
+        </el-dialog>
     </div>
 </template>
 
@@ -103,13 +116,14 @@
     import TimetableColumn from './TimetableColumn.vue';
     import TimeSlotsColumn from './TimeSlotsColumn.vue';
     import TimetableItemSpecialForm from './TimetableItemSpecialForm.vue';
+    import GeneralEnquiryForm from '../misc/GeneralEnquiryForm';
     import { Constants } from '../../common/constants';
     import { Util } from '../../common/utils';
 
     export default {
         name: "TimetablePreviewer",
         components: {
-            TimetableColumn, TimeSlotsColumn, TimetableItemSpecialForm
+            TimetableColumn, TimeSlotsColumn, TimetableItemSpecialForm,GeneralEnquiryForm
         },
         computed: {
             'isWeekOdd': function(){
@@ -178,6 +192,9 @@
                 // 显示调课的列表
                 specials:[],
                 anySpecialItemRemoved: false,
+                // 请假等事宜
+                makeEnquiryFormVisible: false,
+                enquiryForm:{},
             }
         },
         created() {
@@ -315,7 +332,6 @@
                         }
                     });
                 }).catch((e) => {
-                    console.log(e);
                     this.$notify.info({
                         title: '消息',
                         message: '发布操作已取消',
@@ -367,6 +383,43 @@
                     weekType = Constants.WEEK_NUMBER_EVEN;
                 }
                 this.$emit('timetable-refresh',{weekType: weekType});
+            },
+            makeEnquiryColumnHandler: function (payload){
+                console.log(payload);
+                // payload 就是课表的 item
+                this.makeEnquiryFormVisible = true;
+                this.enquiryForm = payload;
+            },
+            makeEnquiryFormSubmitHandler: function () {
+                console.log(this.enquiryForm);
+                this.enquiryForm.school_id = this.schoolId;
+                axios.post(
+                    Constants.API.ENQUIRY_SUBMIT,
+                    {enquiry: this.enquiryForm, logic: Constants.LOGIC.TIMETABLE.ENQUIRY, userUuid: this.userUuid}
+                ).then(res => {
+                    if(Util.isAjaxResOk(res)){
+                        this.$notify({
+                            title: '成功',
+                            message: '您的申请已经成功提交!',
+                            type: 'success',
+                            position: 'bottom-right'
+                        });
+                        this.makeEnquiryFormVisible = false;
+                    }else{
+                        this.$notify.error({
+                            title: '系统错误',
+                            message: res.data.message,
+                            position: 'bottom-right'
+                        });
+                    }
+                }).catch( e => {
+                    console.log(e);
+                    this.$notify.error({
+                        title: '系统错误',
+                        message: '提交申请操作失败, 请稍候再试 ...',
+                        position: 'bottom-right'
+                    });
+                })
             }
         }
     }

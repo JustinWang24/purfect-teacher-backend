@@ -28,6 +28,7 @@ class UsersController extends Controller
         $logic = Factory::GetLogic($request);
         $this->dataForView['parent'] = $logic->getParentModel();
         $this->dataForView['returnPath'] = $logic->getReturnPath();
+
         // 给 Pagination 用
         $this->dataForView['appendedParams'] = $logic->getAppendedParams();
         return view($logic->getViewPath(), array_merge($this->dataForView, $logic->getUsers()));
