@@ -27,13 +27,14 @@ class MajorDao
     /**
      * 根据给定的 campus 或 id 获取包含的学院
      * @param $department
+     * @param $field
      * @return Collection
      */
-    public function getByDepartment($department){
+    public function getByDepartment($department,$field='*'){
         if(is_object($department)){
             $department = $department->id;
         }
-        return Major::where('department_id',$department)->get();
+        return Major::where('department_id',$department)->select($field)->get();
     }
 
     /**

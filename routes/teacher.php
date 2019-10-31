@@ -21,4 +21,29 @@ Route::prefix('teacher')->group(function () {
     Route::post('add/step_user', 'OfficialDocumentController@addStepUser')->name('teacher.add.step.user');                  // 添加流程中的步骤负责人
     Route::post('update/step_user', 'OfficialDocumentController@updateStepUser')->name('teacher.update.step.user');         // 修改流程中的步骤负责人
 
+
+
+
+    //考试管理
+    Route::get('exam/index', 'ExamController@index')->name('teacher.exam.index');     // 列表
+    Route::get('exam/create', 'ExamController@create')->name('teacher.exam.create');  // 创建考试
+    // 创建考试计划
+    Route::get('exam/createExamPlan', 'ExamController@createExamPlan')->name('teacher.exam.createExamPlan');
+    // 获取学校下面的系
+    Route::get('exam/getDepartmentList', 'ExamController@getDepartmentList')->name('teacher.exam.getDepartmentList');
+    // 获取系下面的专业
+    Route::get('exam/getMajorList', 'ExamController@getMajorList')->name('teacher.exam.getMajorList');
+    // 获取空闲的教室
+    Route::get('exam/getLeisureRoom', 'ExamController@getLeisureRoom')->name('teacher.exam.getLeisureRoom');
+    // 创建考点
+    Route::get('exam/createPlanRoom', 'ExamController@createPlanRoom')->name('teacher.exam.createPlanRoom');
+    //绑定考点老师
+    Route::get('exam/roomBindingTeacher', 'ExamController@roomBindingTeacher')->name('teacher.exam.roomBindingTeacher');
+
+    // 获取专业下的班级
+    Route::get('exam/getGradeList', 'ExamController@getGradeList')->name('teacher.exam.getGradeList');
+    Route::get('exam/data', 'ExamController@data')->name('teacher.exam.data');                           // 创建考试
+    Route::get('exam/getClassRooms', 'ExamController@getClassRooms')->name('teacher.exam.getClassRooms');// 获取教室列表
+    Route::get('exam/getCourses', 'ExamController@getCourses')->name('teacher.exam.getCourses');         // 获取课程列表
+
 });

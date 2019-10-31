@@ -38,11 +38,22 @@ class RoomDao
 
     /**
      * @param $map
+     * @param $field
      * @return mixed
      */
-    public function getRooms($map)
+    public function getRooms($map,$field='*')
     {
-        return Room::where($map)->get();
+        return Room::where($map)->select($field)->get();
+    }
+
+
+    /**
+     * @param array $idArr
+     * @param string $field
+     * @return mixed
+     */
+    public function getRoomsByIdArr($idArr,$field='*') {
+         return Room::whereIn('id',$idArr)->select($field)->get();
     }
 
 
