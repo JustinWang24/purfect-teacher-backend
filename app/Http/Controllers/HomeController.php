@@ -29,7 +29,7 @@ class HomeController extends Controller
         // $this->dataForView['needChart'] = true;
 
         $this->dataForView['needChart'] = false;
-        
+
         // Todo: 用户登陆成功, 应该根据不同的用户角色, 跳转到不同的起始页
         /**
          * @var User $user
@@ -39,6 +39,7 @@ class HomeController extends Controller
         $logic = Factory::GetLogic($user);
 
         $data = $logic ? $logic->getDataForView() : [];
+//        dd($user->getDefaultView());
         return view($user->getDefaultView(), array_merge($this->dataForView, $data));
     }
 }
