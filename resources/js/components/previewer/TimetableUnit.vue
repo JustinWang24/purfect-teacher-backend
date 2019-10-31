@@ -1,5 +1,5 @@
 <template>
-    <div v-if="isEmpty()" class="timetable-unit-wrap" :class="customCssRule()">
+    <div v-if="isEmpty(unit)" class="timetable-unit-wrap" :class="customCssRule()">
         <p class="text-center mt-4">
             <el-button v-if="asManager" round v-on:click="onEmptyUnitClicked">点击添加</el-button>
         </p>
@@ -25,8 +25,9 @@
 <text-badge :text="repeatUnitText" color="primary"></text-badge>
 <text-badge v-if="specialCasesCount > 0" text="调课" color="info"></text-badge>
                 </p>
-                <p class="text-center no-margin">{{ unit.course }}</p>
-                <p class="text-center no-margin">老师: {{ unit.teacher }}</p>
+                <p v-if="!isEmpty(unit.course)" class="text-center no-margin">{{ unit.course }}</p>
+                <p v-if="!isEmpty(unit.grade_name)" class="text-center no-margin">班级: {{ unit.grade_name }}</p>
+                <p v-if="!isEmpty(unit.teacher)" class="text-center no-margin">老师: {{ unit.teacher }}</p>
                 <p class="text-center no-margin">地点: {{ unit.building }}</p>
                 <p class="text-center no-margin">{{ unit.room }}</p>
             </div>
@@ -70,11 +71,11 @@
             };
         },
         methods: {
-            isEmpty: function() {
-                return Util.isEmpty(this.unit);
+            isEmpty: function(some) {
+                return Util.isEmpty(some);
             },
             customCssRule: function(){
-                if(this.isEmpty()){
+                if(this.isEmpty(this.unit)){
                     return '';
                 }
                 else if(this.unit.published){

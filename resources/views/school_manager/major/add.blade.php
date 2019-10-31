@@ -18,13 +18,13 @@ use App\Utils\UI\Button;
                         <input type="hidden" id="school-id-input" name="major[school_id]" value="{{ session('school.id') }}">
 
                         <div class="row">
-                            <div class="col-4">
+                            <div class="col-3">
                                 <div class="form-group">
                                     <label for="major-name-input">专业名称</label>
                                     <input required type="text" class="form-control" id="major-name-input" value="{{ $major->name }}" placeholder="专业名称" name="major[name]">
                                 </div>
                             </div>
-                            <div class="col-4">
+                            <div class="col-3">
                                 <div class="form-group">
                                     <label for="major-name-input">自主招生</label>
                                     <select class="form-control" id="major-open-input" name="major[open]">
@@ -33,10 +33,16 @@ use App\Utils\UI\Button;
                                     </select>
                                 </div>
                             </div>
-                            <div class="col-4">
+                            <div class="col-3">
                                 <div class="form-group">
                                     <label for="major-name-input">招生人数</label>
                                     <input required type="text" class="form-control" id="major-seats-input" value="{{ $major->seats }}" placeholder="招生人数" name="major[seats]">
+                                </div>
+                            </div>
+                            <div class="col-3">
+                                <div class="form-group">
+                                    <label for="major-name-input">学费</label>
+                                    <input required type="text" class="form-control" id="major-fee-input" value="{{ $major->fee }}" placeholder="学费" name="major[fee]">
                                 </div>
                             </div>
                         </div>

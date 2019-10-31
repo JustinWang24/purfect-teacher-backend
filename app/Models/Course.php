@@ -33,6 +33,10 @@ class Course extends Model
         return $this->hasMany(CourseTeacher::class)->select(DB::raw('teacher_id as id, teacher_name as name'));
     }
 
+    public function school(){
+        return $this->belongsTo(School::class);
+    }
+
     /**
      * 本课程的课程安排
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
