@@ -124,7 +124,7 @@ class TimetablesController extends Controller
          */
         $room = $roomDao->getRoomById($request->uuid());
 
-        $this->dataForView['pageTitle'] = '教室: ' . $room->name . ' 的排课';
+        $this->dataForView['pageTitle'] = $room->building->name .' - 教室: ' . $room->name . ' 的排课';
         $this->dataForView['needManagerNav'] = false;
         $this->dataForView['room'] = $room;
         $this->dataForView['school'] = $room->building->school;
