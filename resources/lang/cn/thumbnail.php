@@ -33,6 +33,10 @@ return [
 
     // 课程表相关
     'timetable'=>'课程表',
-    'manager'=>'管理'
+    'manager'=>'管理',
+
+
+    // 招生管理
+    'planRecruit'  => '预招管理',
 ];
 
