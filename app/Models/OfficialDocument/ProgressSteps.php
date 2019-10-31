@@ -1,6 +1,5 @@
 <?php
 
-
 namespace App\Models\OfficialDocument;
 
 use Illuminate\Database\Eloquent\Model;
@@ -15,6 +14,14 @@ class ProgressSteps extends Model
     public function presetStep()
     {
         return $this->belongsTo(PresetStep::class);
+    }
+
+    /**
+     * 步骤负载人表
+     */
+    public function progressStepsUser()
+    {
+        return $this->hasMany(ProgressStepsUser::class);
     }
 
 }

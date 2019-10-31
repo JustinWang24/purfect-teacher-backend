@@ -8,6 +8,7 @@ use App\Http\Requests\OfficialDocument\ProcessRequest;
 use App\Dao\OfficialDocuments\PresetStepDao;
 use App\Dao\OfficialDocuments\ProgressDao;
 use App\Dao\OfficialDocuments\ProgressStepsDao;
+use App\Dao\OfficialDocuments\ProgressStepsUserDao;
 
 class OfficialDocumentController extends Controller
 {
@@ -34,7 +35,7 @@ class OfficialDocumentController extends Controller
     {
         $data['name']           = $request->get('name');
         $data['school_id']      = $request->getSchoolId();
-        $data['preset_step_id'] = $request->get('preset_step_id');
+        $data['preset_step_id'] = $request->get('process_data');
 
         $dao = new ProgressDao;
 
@@ -42,7 +43,7 @@ class OfficialDocumentController extends Controller
         if ($result) {
             return JsonBuilder::Success('流程添加成功', ['progress_id' => $result]);
         } else {
-            return JsonBuilder::Success('流程添加失败');
+            return JsonBuilder::Error('流程添加失败');
         }
     }
 
@@ -63,14 +64,51 @@ class OfficialDocumentController extends Controller
     /**
      * 查询一条公文流程的详情
      * @param ProcessRequest $request
+     * @return string
      */
     public function getProcessDetails(ProcessRequest $request)
     {
-        $progressId = $request->get('progress_id');
-
         $dao = new ProgressStepsDao;
 
-        $result = $dao->getOneProgressDetailsByProgressId(1);
+        $result = $dao->getOneProgressDetailsByProgressId($request->get('progress_id'));
+
+        return JsonBuilder::Success($result);
+    }
+
+    /**
+     * 添加步骤负责人
+     * @param ProcessRequest $request
+     * @return string
+     */
+    public function addStepUser(ProcessRequest $request)
+    {
+        $dao = new ProgressStepsUserDao;
+        $result = $dao->createStep($request->get('step_user'));
+        if ($result) {
+            return JsonBuilder::Success('添加步骤负责人成功');
+        } else {
+            return JsonBuilder::Error('添加步骤负责人失败');
+        }
+    }
+
+    /**
+     * 修改步骤负责人
+     * @param ProcessRequest $request
+     * @return string
+     */
+    public function updateStepUser(ProcessRequest $request)
+    {
+        $data = $request->get('step_user');
+        $where = $request->get('id');
+
+        $dao = new ProgressStepsUserDao;
+        $result = $dao->updateStep($data, $where);
+        if ($result) {
+            return JsonBuilder::Success('修改步骤负责人成功');
+        } else {
+            return JsonBuilder::Error('修改步骤负责人失败');
+        }
+
     }
 
 

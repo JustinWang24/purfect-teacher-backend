@@ -14,11 +14,11 @@ Route::prefix('teacher')->group(function () {
     Route::get('conference/getUsers', 'ConferenceController@getUsers')->name('teacher.conference.getUsers'); // 获取参会人员接口
     Route::get('conference/getRooms', 'ConferenceController@getRooms')->name('teacher.conference.getRooms'); // 获取会议室
 
-
-    Route::get('all/step', 'OfficialDocumentController@presetStep')->name('teacher.production.process'); // 所有系统预置步骤
-    Route::post('production/process', 'OfficialDocumentController@productionProcess')->name('teacher.production.process'); // 生成公文流程
-
-    Route::get('get/official/document', 'OfficialDocumentController@getProcess')->name('teacher.get.official.document');  // 学校公文列表
-    Route::get('get/one/process', 'OfficialDocumentController@getProcessDetails')->name('teacher.get.one.process');       // 获取公文流程详情
+    Route::get('preset/step', 'OfficialDocumentController@presetStep')->name('teacher.get.preset.step');                    // 所有系统预置步骤
+    Route::post('production/process', 'OfficialDocumentController@productionProcess')->name('teacher.production.process');  // 生成公文流程
+    Route::get('official/document', 'OfficialDocumentController@getProcess')->name('teacher.get.official.document');        // 学校公文列表
+    Route::get('one/process', 'OfficialDocumentController@getProcessDetails')->name('teacher.get.one.process');             // 获取公文流程详情
+    Route::post('add/step_user', 'OfficialDocumentController@addStepUser')->name('teacher.add.step.user');                  // 添加流程中的步骤负责人
+    Route::post('update/step_user', 'OfficialDocumentController@updateStepUser')->name('teacher.update.step.user');         // 修改流程中的步骤负责人
 
 });

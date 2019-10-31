@@ -13,14 +13,14 @@ class CreateProgressTable extends Migration
      */
     public function up()
     {
-        Schema::create('progress', function (Blueprint $table) {
+        Schema::create('progresses', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('name','100')->nullable()->comment('流程名称');
             $table->unsignedBigInteger('school_id')->nullable()->comment('学校ID');
             $table->timestamps();
         });
 
-        DB::statement(" ALTER TABLE progress comment '流程表' ");
+        DB::statement(" ALTER TABLE progresses comment '流程表' ");
     }
 
     /**
