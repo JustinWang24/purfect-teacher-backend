@@ -9,20 +9,21 @@ use App\User;
         <div class="col-sm-12 col-md-12 col-xl-12">
             <div class="card-box">
                 <div class="card-head">
-                    <header>校区名: {{ session('school.name') }} - {{ $campus->name }}</header>
+                    <header>{{ session('school.name') }} {{ $campus->name ?? '' }}</header>
                 </div>
 
                 <div class="card-body">
                     <div class="row">
-                        <div class="row table-padding">
-                            <div class="col-12">
-                                <a href="{{ route('school_manager.school.view') }}" class="btn btn-default">
-                                    返回 <i class="fa fa-arrow-circle-left"></i>
-                                </a>&nbsp;
+                        <div class="table-padding col-12">
+                            <a href="{{ route('school_manager.school.view') }}" class="btn btn-default">
+                                返回 <i class="fa fa-arrow-circle-left"></i>
+                            </a>&nbsp;
+                            @if(isset($campus))
                                 <a href="{{ route('school_manager.institute.add',['uuid'=>$campus->id]) }}" class="btn btn-primary pull-right" id="btn-create-institute-from-campus">
                                     创建新学院 <i class="fa fa-plus"></i>
                                 </a>
-                            </div>
+                            @endif
+                            @include('school_manager.school.reusable.nav',['highlight'=>'institute'])
                         </div>
                         <div class="table-responsive">
                             <table class="table table-striped table-bordered table-hover table-checkable order-column valign-middle">

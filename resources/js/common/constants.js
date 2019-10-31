@@ -16,6 +16,7 @@ export const Constants = {
         LOAD_COURSES_BY_SCHOOL: '/api/school/load-courses',
         LOAD_TEACHERS_BY_COURSE: '/api/school/load-course-teachers',
         SEARCH_TEACHERS_BY_NAME: '/api/school/search-teachers',
+        QUICK_SEARCH_USERS_BY_NAME: '/api/school/quick-search-users',
         SAVE_COURSE: '/api/school/save-course',
         DELETE_COURSE: '/api/school/delete-course',
         // 课程表专有

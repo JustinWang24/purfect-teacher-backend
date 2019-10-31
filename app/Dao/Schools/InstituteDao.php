@@ -14,9 +14,19 @@ use Illuminate\Database\Eloquent\Collection;
 class InstituteDao
 {
     private $currentUser;
-    public function __construct(User $user)
+
+    /**
+     * InstituteDao constructor.
+     * @param User/null $user
+     */
+    public function __construct($user = null)
     {
         $this->currentUser = $user;
+    }
+
+    public function searchByName($name, $schoolId){
+        return Institute::select(['id','name'])
+            ->where('school_id',$schoolId)->where('name','like',$name.'%')->get();
     }
 
     /**
@@ -29,6 +39,15 @@ class InstituteDao
             $campus = $campus->id;
         }
         return Institute::where('campus_id',$campus)->get();
+    }
+
+    /**
+     * 根据给定的 school id 获取包含的学院
+     * @param $schoolId
+     * @return mixed
+     */
+    public function getBySchool($schoolId){
+        return Institute::where('school_id',$schoolId)->paginate();
     }
 
     /**

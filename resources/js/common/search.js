@@ -6,3 +6,4 @@ export function searchTeachers(schoolId, teacherName, majors) {
         {query: teacherName, school: schoolId, majors: majors}
     );
 }
+
