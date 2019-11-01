@@ -96,4 +96,8 @@ Route::prefix('school_manager')->group(function () {
 
     // 招生管理
     Route::get('planRecruit/list', 'RecruitStudent\PlanRecruit@list')->name('school_manager.planRecruit.list');
+
+
+    Route::get('registration/list', 'RecruitStudent\RegistrationInformatics@index')->name('school_manager.registration.list');  // 报名列表
+
 });
