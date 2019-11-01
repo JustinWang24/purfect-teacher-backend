@@ -1,7 +1,7 @@
 <template>
     <div class="majors-wrap">
         <el-card shadow="always" v-for="(major, idx) in majors" :key="idx">
-            <p class="major-name">{{ major.name }}</p>
+            <p class="major-name">{{ major.name }}({{ major.period }}年制)</p>
             <p class="m-desc">
                 {{ major.description }}
             </p>
