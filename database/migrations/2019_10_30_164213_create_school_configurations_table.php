@@ -52,5 +52,11 @@ class CreateSchoolConfigurationsTable extends Migration
     public function down()
     {
         Schema::dropIfExists('school_configurations');
+
+        Schema::table('departments', function (Blueprint $table) {
+            $table->dropColumn(ConfigurationTool::KEY_OPTIONAL_COURSES_PER_YEAR);
+            $table->dropColumn(ConfigurationTool::KEY_SELF_STUDY_NEED_REGISTRATION);
+            $table->dropColumn(ConfigurationTool::KEY_STUDY_WEEKS_PER_TERM);
+        });
     }
 }
