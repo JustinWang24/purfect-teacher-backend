@@ -27,6 +27,7 @@ class User extends Authenticatable
     const TYPE_STUDENT  = 1;
     const TYPE_EMPLOYEE = 2;
 
+
     /**
      * The attributes that are mass assignable.
      *
