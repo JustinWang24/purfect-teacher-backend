@@ -28,6 +28,7 @@ class CreateRegistrationInformaticsMockDataTable extends Migration
 
             for ($i = 0; $i< 20; $i++) {
                 $data['name']           = 'jack' . rand(1, 20);
+                $data['school_id']      = 1;
                 $data['major_id']       = rand(1, 10);
                 $data['id_number']      = '0000000000000000' . rand(1, 20);
                 $data['gender']         = rand(1, 2);
