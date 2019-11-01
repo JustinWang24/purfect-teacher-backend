@@ -26,7 +26,7 @@ class MajorsController extends Controller
             $school = $schoolDao->getSchoolByIdOrUuid($request->get('id'));
             // 只加载公开报名的专业
             if($school){
-                $majors = $majorDao->getOpenedMajorsBySchool($school->id);
+                $majors = $majorDao->getOpenedMajorsBySchool($school->id, $request->has('hot'));
             }
         }
         else{
