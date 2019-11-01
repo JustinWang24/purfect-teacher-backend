@@ -47,6 +47,6 @@ class CreateRegistrationInformaticsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('registration_information');
+        Schema::dropIfExists('registration_informatics');
     }
 }
