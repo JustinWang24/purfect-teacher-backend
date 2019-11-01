@@ -10,7 +10,12 @@ use Illuminate\Http\Request;
 class SchoolDao
 {
     private $currentUser;
-    public function __construct(User $user)
+
+    /**
+     * SchoolDao constructor.
+     * @param User|null $user
+     */
+    public function __construct($user = null)
     {
         $this->currentUser = $user;
     }
