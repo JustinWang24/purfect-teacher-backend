@@ -14,8 +14,8 @@ class AlterMajorTableWithOpenAndSeats extends Migration
     public function up()
     {
         Schema::table('majors', function (Blueprint $table) {
-            $table->boolean('open')->comment('是否打开预招的功能');
-            $table->unsignedMediumInteger('seats')->comment('招生的人数');
+            $table->boolean('open')->default(false)->comment('是否打开预招的功能');
+            $table->unsignedMediumInteger('seats')->default(0)->comment('招生的人数');
         });
     }
 
