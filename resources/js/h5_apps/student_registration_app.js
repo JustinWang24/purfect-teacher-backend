@@ -9,6 +9,7 @@ import 'element-ui/lib/theme-chalk/index.css';
 Vue.use(ElementUI);
 
 Vue.component('major-cards', require('../components/statics/MajorCards.vue').default);
+Vue.component('major-registration-form', require('../components/statics/MajorRegistrationForm.vue').default);
 
 new Vue({
     el:'#student_registration_app',
