@@ -32,6 +32,14 @@ class Major extends Model
         return $this->belongsTo(Department::class);
     }
 
+    public function institute(){
+        return $this->belongsTo(Institute::class);
+    }
+
+    public function campus(){
+        return $this->belongsTo(Campus::class);
+    }
+
     public function grades(){
         return $this->hasMany(Grade::class);
     }
