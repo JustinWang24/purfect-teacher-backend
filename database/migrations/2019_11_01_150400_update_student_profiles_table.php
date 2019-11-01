@@ -34,6 +34,15 @@ class UpdateStudentProfilesTable extends Migration
      */
     public function down()
     {
-        //
+        Schema::table('student_profiles', function (Blueprint $table) {
+            $table->dropColumn('source_place');
+            $table->dropColumn('country');
+            $table->dropColumn('birthday');
+            $table->dropColumn('qq');
+            $table->dropColumn('wx');
+            $table->dropColumn('examination_score');
+            $table->dropColumn('parent_name');
+            $table->dropColumn('parent_mobile');
+        });
     }
 }
