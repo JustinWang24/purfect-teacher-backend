@@ -36,8 +36,6 @@ class UpdateStudentProfilesTable extends Migration
     {
         Schema::table('student_profiles', function (Blueprint $table) {
             $table->dropColumn('source_place');
-            $table->dropColumn('country');
-            $table->dropColumn('birthday');
             $table->dropColumn('qq');
             $table->dropColumn('wx');
             $table->dropColumn('examination_score');
