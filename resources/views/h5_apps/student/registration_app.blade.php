@@ -3,9 +3,6 @@
 <div id="current-school-id" data-id="{{ $school->uuid }}"></div>
 <div id="{{ $appName }}" class="school-intro-container">
     <div class="header">
-        <div class="close-btn">
-            <i class="el-icon-close"></i>
-        </div>
         <h2 class="title">{{ $pageTitle }}</h2>
     </div>
     <div class="main">
@@ -70,7 +67,7 @@
                 :visible.sync="showMajorDetailFlag"
                 direction="rtl">
             <div class="major-detail-wrapper" v-if="selectedMajor">
-                <p class="md-name">@{{ selectedMajor.name }}</p>
+                <p class="md-name">@{{ selectedMajor.name }}(@{{ selectedMajor.period }}年制)</p>
                 <p class="md-desc">
                     @{{ selectedMajor.description }}
                 </p>
@@ -81,7 +78,7 @@
         </el-drawer>
 
         <el-drawer
-                :title="'报名:' + (selectedMajor ? selectedMajor.name : '')"
+                :title="'报名:' + (selectedMajor ? selectedMajor.name + '(' + selectedMajor.period +'年制)' : '')"
                 size="100%"
                 :visible.sync="showRegistrationFormFlag"
                 direction="rtl">

@@ -50,7 +50,7 @@
                 <el-form-item label="微信号" prop="wx">
                     <el-input size="mini" v-model="registrationForm.wx" placeholder="选填: 微信号"></el-input>
                 </el-form-item>
-                <el-form-item label="邮箱" prop="email">
+                <el-form-item label="邮箱" prop="email" class="no-border-bottom">
                     <el-input size="mini" v-model="registrationForm.email" placeholder="必填: 邮箱"></el-input>
                 </el-form-item>
             </el-card>
@@ -60,14 +60,8 @@
                 <el-form-item label="家长姓名" prop="parent_name">
                     <el-input size="mini" v-model="registrationForm.parent_name" placeholder="必填: 家长姓名"></el-input>
                 </el-form-item>
-                <el-form-item label="家长电话" prop="parent_name">
+                <el-form-item label="家长电话" prop="parent_name" class="no-border-bottom">
                     <el-input size="mini" v-model="registrationForm.parent_name" placeholder="选填: 家长电话"></el-input>
-                </el-form-item>
-                <el-form-item label="微信号" prop="wx">
-                    <el-input size="mini" v-model="registrationForm.wx" placeholder="选填: 微信号"></el-input>
-                </el-form-item>
-                <el-form-item label="邮箱" prop="email">
-                    <el-input size="mini" v-model="registrationForm.email" placeholder="必填: 邮箱"></el-input>
                 </el-form-item>
             </el-card>
 
@@ -76,11 +70,15 @@
                 <el-form-item label="  中/高考分数">
                     <el-input size="mini" v-model="registrationForm.scores" placeholder="请输入"></el-input>
                 </el-form-item>
-                <el-form-item label="是否服从调剂" prop="relocation_allowed">
+                <el-form-item label="是否服从调剂" prop="relocation_allowed" class="no-border-bottom">
                     <el-switch
+                            size="mini"
+                            style="float:right;margin:12px;"
                             v-model="registrationForm.relocation_allowed"
-                            active-text="服从"
-                            inactive-text="不服从">
+                            active-color="#13ce66"
+                            inactive-color="#ff4949"
+                            active-text="是"
+                            inactive-text="否">
                     </el-switch>
                 </el-form-item>
             </el-card>
@@ -148,8 +146,7 @@
                     ],
                     parent_name: [
                         { required: true, message: '请输入家长的联系姓名', trigger: 'blur' }
-                    ]
-                    ,
+                    ],
                     parent_mobile: [
                         { required: true, message: '请输入家长的联系电话', trigger: 'blur' }
                     ]

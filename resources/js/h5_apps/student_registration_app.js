@@ -34,7 +34,7 @@ new Vue({
         loadHotOpenMajorsBySchool: function(){
             axios.post(
                 Constants.API.LOAD_MAJORS_BY_SCHOOL,
-                {id: this.schoolId, only: 'open'}
+                {id: this.schoolId, only: 'open', hot: 1}
             ).then(res => {
                 if(Util.isAjaxResOk(res)){
                     this.hotMajors = res.data.data.majors;
