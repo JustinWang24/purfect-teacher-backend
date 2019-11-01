@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Operator;
 use App\Dao\Schools\DepartmentDao;
 use App\Dao\Schools\GradeDao;
 use App\Dao\Schools\MajorDao;
+use App\Dao\Schools\RoomDao;
 use App\Dao\Users\GradeUserDao;
 use App\Dao\Users\UserDao;
 use App\Http\Requests\SchoolRequest;
@@ -87,5 +88,11 @@ class SchoolsController extends Controller
         $dao = new GradeUserDao($request->user());
         $this->dataForView['students'] = $dao->getBySchool(session('school.id'),Role::GetStudentUserTypes());
         return view('teacher.users.students', $this->dataForView);
+    }
+
+    public function rooms(SchoolRequest $request){
+        $dao = new RoomDao($request->user());
+        $this->dataForView['rooms'] = $dao->getRoomsPaginate([['school_id','=',session('school.id')]]);
+        return view('school_manager.school.rooms', $this->dataForView);
     }
 }
