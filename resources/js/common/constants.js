@@ -39,6 +39,7 @@ export const Constants = {
         },
         // 申请
         ENQUIRY_SUBMIT: '/api/enquiry/save',
+        // 静态页面
     },
     YEARS: ['N.A','一年级','二年级','三年级','四年级','五年级','六年级'],
     TERMS: ['N.A','第一学期','第二学期'],

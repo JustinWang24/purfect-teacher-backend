@@ -151,7 +151,8 @@ class User extends Authenticatable
     }
 
     public function isStudent(){
-        return in_array($this->getCurrentRoleSlug(), [Role::VERIFIED_USER_STUDENT_SLUG, Role::VERIFIED_USER_CLASS_LEADER_SLUG, Role::VERIFIED_USER_CLASS_SECRETARY_SLUG]);
+        return in_array($this->getCurrentRoleSlug(),
+            [Role::VERIFIED_USER_STUDENT_SLUG, Role::VERIFIED_USER_CLASS_LEADER_SLUG, Role::VERIFIED_USER_CLASS_SECRETARY_SLUG]);
     }
 
     public function isTeacher(){
