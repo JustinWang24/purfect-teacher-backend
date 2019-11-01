@@ -17,11 +17,13 @@ class Major extends Model
         'period', // 学制: 3年
         'notes', // 本专业的备注
         'open', // 是否开启自主招生
+        'hot', // 是否是热门课程
         'seats', // 招生的人数
     ];
 
     public $casts = [
-        'open'=>'boolean'
+        'open'=>'boolean',
+        'hot'=>'boolean',
     ];
 
     public function school(){
