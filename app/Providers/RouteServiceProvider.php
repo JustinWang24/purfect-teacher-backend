@@ -41,6 +41,7 @@ class RouteServiceProvider extends ServiceProvider
         $this->mapOperatorRoutes();
         $this->mapSchoolManagerRoutes();
         $this->mapTeacherRoutes();
+        $this->mapStudentRoutes();
     }
 
     /**
@@ -112,4 +113,13 @@ class RouteServiceProvider extends ServiceProvider
              ->group(base_path('routes/teacher.php'));
     }
 
+    /**
+     * Student 学生路由
+     */
+    protected function mapStudentRoutes()
+    {
+        Route::middleware('web')
+            ->namespace($this->namespace. '\Student')
+            ->group(base_path('routes/verified_student.php'));
+    }
 }

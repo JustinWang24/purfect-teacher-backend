@@ -1,7 +1,8 @@
 <template>
     <el-autocomplete
             v-model="query"
-            style="width: 500px;"
+            style="width: 400px;"
+            :clearable="true"
             :fetch-suggestions="querySearchAsync"
             prefix-icon="el-icon-search"
             :placeholder="placeholderText"
@@ -20,7 +21,7 @@
         ],
         computed: {
             'placeholderText': function(){
-                return '请输入 教职工/学生姓名'+this.tip+' 进行查找';
+                return '可输入 教职工/学生姓名'+this.tip+' 进行查找';
             }
         },
         data() {

@@ -4,6 +4,7 @@ namespace App;
 
 use App\Models\Acl\Role;
 use App\Models\Misc\Enquiry;
+use App\Models\Students\RegistrationForm;
 use App\Models\Students\StudentProfile;
 use App\Models\Teachers\TeacherProfile;
 use App\Models\Users\GradeUser;
@@ -27,6 +28,8 @@ class User extends Authenticatable
     const TYPE_STUDENT  = 1;
     const TYPE_EMPLOYEE = 2;
 
+    const GENDER_MALE = 1;
+    const GENDER_FEMALE = 2;
 
     /**
      * The attributes that are mass assignable.
@@ -114,13 +117,21 @@ class User extends Authenticatable
             // 教师或者职工
             return $this->hasOne(TeacherProfile::class,'teacher_id');
         }
-        elseif ($this->type === self::TYPE_STUDENT){
+        elseif (in_array($this->type, Role::GetStudentUserTypes())){
             // 已认证学生
             return $this->hasOne(StudentProfile::class);
         }
         else{
             return null;
         }
+    }
+
+    /**
+     * 学生的报名表中的信息
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function registrationForm(){
+        return $this->hasOne(RegistrationForm::class);
     }
 
     public function enquiries(){
