@@ -9,6 +9,7 @@ Route::prefix('school_manager')->group(function () {
     Route::get('school/grades', 'SchoolsController@grades')->name('school_manager.school.grades'); // 显示学校的所有班级
     Route::get('school/teachers', 'SchoolsController@teachers')->name('school_manager.school.teachers'); // 显示学校的所有老师
     Route::get('school/students', 'SchoolsController@students')->name('school_manager.school.students'); // 显示学校的所有学生
+    Route::get('school/rooms', 'SchoolsController@rooms')->name('school_manager.school.rooms'); // 显示学校的所有学生
 
     // 校区的管理
     Route::get('campus/add', 'CampusController@add')->name('school_manager.campus.add');                        // 添加校区
@@ -18,6 +19,7 @@ Route::prefix('school_manager')->group(function () {
 
     Route::get('campus/buildings', 'CampusController@buildings')->name('school_manager.campus.buildings');   // 显示校区的包含的建筑信息
     Route::get('campus/institutes', 'CampusController@institutes')->name('school_manager.campus.institutes');   // 显示校区的包含的学院的信息
+
     // 学院的管理
     Route::get('institute/edit', 'InstitutesController@edit')->name('school_manager.institute.edit');           // 编辑学院
     Route::get('institute/add', 'InstitutesController@add')->name('school_manager.institute.add');              // 添加学院

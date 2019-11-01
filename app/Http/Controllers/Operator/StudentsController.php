@@ -7,6 +7,7 @@
  */
 
 namespace App\Http\Controllers\Operator;
+use App\Dao\Users\UserDao;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\User\StudentRequest;
 
@@ -19,10 +20,6 @@ class StudentsController extends Controller
 
     public function add(){
         return 'student add';
-    }
-
-    public function edit(StudentRequest $request){
-        return 'student edit '. $request->uuid();
     }
 
     public function suspend(StudentRequest $request){

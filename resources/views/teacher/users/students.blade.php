@@ -55,7 +55,7 @@ use App\User;
                                                 [
                                                     'text'=>'可执行操作',
                                                     'subs'=>[
-                                                        ['url'=>route('school_manager.student.edit',['uuid'=>$gradeUser->user->uuid]),'text'=>'编辑'],
+                                                        ['url'=>route('verified_student.profile.edit',['uuid'=>$gradeUser->user->uuid]),'text'=>'编辑'],
                                                         ['url'=>route('school_manager.student.suspend',['uuid'=>$gradeUser->user->uuid]),'text'=>'休学'],
                                                         ['url'=>route('school_manager.student.stop',['uuid'=>$gradeUser->user->uuid]),'text'=>'停课'],
                                                         ['url'=>route('school_manager.student.reject',['uuid'=>$gradeUser->user->uuid]),'text'=>'退学'],
