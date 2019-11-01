@@ -15,6 +15,13 @@ Route::get('/', function () {
     return view('auth.login');
 });
 
+/**
+ * 无须登录的前端页面路由
+ */
+// 招生相关
+Route::prefix('statics')->group(function () {
+    Route::get('/school/majors/list', 'Statics\PagesController@school_majors_list')->name('static.school.majors-list');
+});
 
 Auth::routes();
 

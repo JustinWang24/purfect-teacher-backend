@@ -1,0 +1,94 @@
+@import "basic";
+
+$borderColor: #F6F6F6;
+$txtColor: #333333;
+$defaultPadding: 15px;
+
+.school-intro-container{
+  .header{
+    position: relative;
+    border-bottom: solid 1px $borderColor;
+    .close-btn{
+      position: absolute;
+      top: 7px;
+      left: 7px;
+      color: #6F7275;
+      font-size: 30px;
+    }
+    .title{
+      text-align: center;
+      margin: 0;
+      line-height: 44px;
+      color: $txtColor;
+      font-size: 18px;
+    }
+  }
+
+  .main{
+    .intro-img{
+      padding: $defaultPadding;
+    }
+    .intro-content{
+      padding: $defaultPadding;
+      border-bottom: solid 7px $borderColor;
+      p{
+        color: $txtColor;
+        font-size: 14px;
+        line-height: 20px;
+        margin: 10px 0;
+      }
+    }
+    .sub-title{
+      color: $txtColor;
+      padding-left: $defaultPadding;
+      margin-bottom: 0;
+    }
+    .majors-wrap{
+      padding: $defaultPadding;
+      .el-card{
+        border: none;
+        margin-bottom: $defaultPadding;
+        p{
+          margin:0;
+          line-height: 23px;
+          color: $txtColor;
+        }
+        .major-name{
+          font-size: 14px;
+        }
+        .stat{
+          color: #6F7275;
+          font-size: 12px;
+        }
+        .fee{
+          font-size: 12px;
+        }
+      }
+    }
+  }
+}
+
+.major-detail-wrapper{
+  margin-top: -20px;
+  padding: $defaultPadding;
+  border-top: solid 1px $borderColor;
+  p{
+    margin:0;
+    line-height: 23px;
+    color: $txtColor;
+  }
+  .md-name{
+    margin-bottom: 10px;
+  }
+  .md-desc{
+    font-size: 13px;
+    line-height: 18px;
+  }
+}
+
+.showMoreButton{
+  background:-webkit-linear-gradient(to right, #66D9FF, #4EA5FE);
+  background:linear-gradient(to right,#66D9FF,#4EA5FE);
+  border: none;
+  padding: 8px 40px !important;
+}

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\School;
 use App\Dao\Courses\CourseMajorDao;
 use App\Dao\Schools\GradeDao;
 use App\Dao\Schools\MajorDao;
+use App\Dao\Schools\SchoolDao;
 use App\Dao\Timetable\TimetableItemDao;
 use App\Http\Controllers\Controller;
 use App\User;
@@ -19,7 +20,19 @@ class MajorsController extends Controller
      */
     public function load_by_school(Request $request){
         $majorDao = new MajorDao(new User());
-        return JsonBuilder::Success(['majors'=>$majorDao->getMajorsBySchool($request->get('id'))]);
+        $majors = [];
+        if($request->has('only') && $request->get('only') === 'open'){
+            $schoolDao = new SchoolDao();
+            $school = $schoolDao->getSchoolByIdOrUuid($request->get('id'));
+            // 只加载公开报名的专业
+            if($school){
+                $majors = $majorDao->getOpenedMajorsBySchool($school->id);
+            }
+        }
+        else{
+            $majors = $majorDao->getMajorsBySchool($request->get('id'));
+        }
+        return JsonBuilder::Success(['majors'=>$majors]);
     }
 
     /**
