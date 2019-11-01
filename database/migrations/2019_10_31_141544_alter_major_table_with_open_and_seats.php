@@ -15,6 +15,7 @@ class AlterMajorTableWithOpenAndSeats extends Migration
     {
         Schema::table('majors', function (Blueprint $table) {
             $table->boolean('open')->comment('是否打开预招的功能');
+            $table->boolean('hot')->comment('是否为热门课程');
             $table->unsignedMediumInteger('seats')->comment('招生的人数');
         });
     }
@@ -26,6 +27,10 @@ class AlterMajorTableWithOpenAndSeats extends Migration
      */
     public function down()
     {
-        //
+        Schema::table('majors', function (Blueprint $table) {
+            $table->dropColumn('open');
+            $table->dropColumn('seats');
+            $table->dropColumn('hot');
+        });
     }
 }
