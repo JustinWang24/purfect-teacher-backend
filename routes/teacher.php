@@ -46,4 +46,10 @@ Route::prefix('teacher')->group(function () {
     Route::get('exam/getClassRooms', 'ExamController@getClassRooms')->name('teacher.exam.getClassRooms');// 获取教室列表
     Route::get('exam/getCourses', 'ExamController@getCourses')->name('teacher.exam.getCourses');         // 获取课程列表
 
+
+
+
+
+
+
 });
