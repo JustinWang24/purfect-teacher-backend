@@ -102,4 +102,8 @@ Route::prefix('school_manager')->group(function () {
 
     Route::get('registration/list', 'RecruitStudent\RegistrationInformatics@index')->name('school_manager.registration.list');  // 报名列表
 
+
+    //设备管理
+//    Route::get('')-name();
+
 });
