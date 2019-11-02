@@ -30,3 +30,13 @@ export function loadOpenedMajors(idNumber,mobile) {
         {id_number: idNumber, mobile: mobile,version:Constants.VERSION}
     );
 }
+
+export function loadMajorDetail(majorId) {
+    if(Util.isDevEnv()){
+        return axios.get(Util.buildUrl(Constants.API.REGISTRATION_FORM.LOAD_MAJOR_DETAIL));
+    }
+    return axios.post(
+        Util.buildUrl(Constants.API.REGISTRATION_FORM.LOAD_MAJOR_DETAIL),
+        {id: majorId, version:Constants.VERSION}
+    );
+}
