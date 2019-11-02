@@ -9,6 +9,7 @@ class TeacherProfile extends Model
     protected $fillable = [
         'uuid',
         'user_id',
+        'name',
         'school_id', // 教师任职的学校
         'serial_number', // 教师编号
         'group_name', // 所在部门: 基础教学部
