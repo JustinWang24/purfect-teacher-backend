@@ -46,6 +46,12 @@ export const Constants = {
             QUERY_STUDENT_MAJORS: '/api/student-register/load-open-majors',
             SUBMIT_FORM: '/api/student-register/submit-form',
             LOAD_MAJOR_DETAIL: '/api/student-register/load-major-detail',
+        },
+        // 获取省市列表的接口
+        LOCATION: {
+            PROVINCES: '/api/location/get-provinces',
+            CITIES: '/api/location/get-cities',
+            DISTRICTS: '/api/location/get-districts',
         }
     },
     YEARS: ['N.A','一年级','二年级','三年级','四年级','五年级','六年级'],

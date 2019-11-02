@@ -45,6 +45,11 @@ new Vue({
                 parent_mobile: '',
                 examination_score: '',
                 relocation_allowed: false,
+                province:'',
+                city:'',
+                district:'',
+                address:'',
+                postcode:'',
             }
         }
     },
