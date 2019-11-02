@@ -11,8 +11,8 @@
                 </el-form-item>
                 <el-form-item label="性别" prop="gender">
                     <el-select size="mini" v-model="registrationForm.gender" placeholder="必填: 性别" style="width: 100%;">
-                        <el-option label="男" value="1"></el-option>
-                        <el-option label="女" value="2"></el-option>
+                        <el-option label="男" :value="1"></el-option>
+                        <el-option label="女" :value="2"></el-option>
                     </el-select>
                 </el-form-item>
                 <el-form-item label="出生日期" required>
@@ -25,14 +25,18 @@
                             placeholder="选择日期">
                     </el-date-picker>
                 </el-form-item>
-                <el-form-item label="民族" prop="nationality">
-                    <el-input size="mini" v-model="registrationForm.nationality" placeholder="必填: 民族"></el-input>
+                <el-form-item label="民族" prop="nation_name">
+                    <el-input size="mini" v-model="registrationForm.nation_name" placeholder="必填: 民族"></el-input>
                 </el-form-item>
-                <el-form-item label="政治面貌" prop="political">
-                    <el-input size="mini" v-model="registrationForm.political" placeholder="必填: 政治面貌"></el-input>
+                <el-form-item label="政治面貌" prop="political_name">
+                    <el-select size="mini" v-model="registrationForm.political_name" placeholder="必填: 政治面貌" style="width: 100%;">
+                        <el-option label="团员" value="团员"></el-option>
+                        <el-option label="党员" value="党员"></el-option>
+                        <el-option label="群众" value="群众"></el-option>
+                    </el-select>
                 </el-form-item>
-                <el-form-item label="生源地" prop="source">
-                    <el-input size="mini" v-model="registrationForm.source" placeholder="必填: 生源地"></el-input>
+                <el-form-item label="生源地" prop="source_place">
+                    <el-input size="mini" v-model="registrationForm.source_place" placeholder="必填: 生源地"></el-input>
                 </el-form-item>
                 <el-form-item label="籍贯" prop="country" class="no-border-bottom">
                     <el-input size="mini" v-model="registrationForm.country" placeholder="必填: 籍贯"></el-input>
@@ -60,15 +64,15 @@
                 <el-form-item label="家长姓名" prop="parent_name">
                     <el-input size="mini" v-model="registrationForm.parent_name" placeholder="必填: 家长姓名"></el-input>
                 </el-form-item>
-                <el-form-item label="家长电话" prop="parent_name" class="no-border-bottom">
-                    <el-input size="mini" v-model="registrationForm.parent_name" placeholder="选填: 家长电话"></el-input>
+                <el-form-item label="家长电话" prop="parent_mobile" class="no-border-bottom">
+                    <el-input size="mini" v-model="registrationForm.parent_mobile" placeholder="选填: 家长电话"></el-input>
                 </el-form-item>
             </el-card>
 
             <h3>申报信息</h3>
             <el-card class="box-card" :body-style="{paddingTop:'2px',paddingBottom:'2px'}">
-                <el-form-item label="  中/高考分数">
-                    <el-input size="mini" v-model="registrationForm.scores" placeholder="请输入"></el-input>
+                <el-form-item label="中/高考分数">
+                    <el-input size="mini" v-model="registrationForm.examination_score" placeholder="请输入"></el-input>
                 </el-form-item>
                 <el-form-item label="是否服从调剂" prop="relocation_allowed" class="no-border-bottom">
                     <el-switch
@@ -92,29 +96,18 @@
 </template>
 
 <script>
-    const THE_ENV = 'dev';
+    import { saveRegistrationForm } from '../../common/registration_form';
+    import { Util } from '../../common/utils';
 
     export default {
         name: "MajorRegistrationForm",
         props:[
-            'major'
+            'major','registrationForm'
         ],
         data(){
             return {
                 resetElInput:{
                     border: 'none',textAlign:'right'
-                },
-                registrationForm: {
-                    id:'',
-                    name: '',
-                    id_number: '',
-                    gender: '',
-                    nationality: '',
-                    political: '',
-                    source: '',
-                    country: '',
-                    birthday: '',
-                    relocation_allowed: false,
                 },
                 rules:{
                     name: [
@@ -123,13 +116,13 @@
                     id_number: [
                         { required: true, message: '请输入您的身份证号', trigger: 'blur' },
                     ],
-                    source: [
+                    source_place: [
                         { required: true, message: '请输入生源地', trigger: 'blur' },
                     ],
-                    political: [
+                    political_name: [
                         { required: true, message: '请输入您的政治面貌', trigger: 'blur' },
                     ],
-                    nationality: [
+                    nation_name: [
                         { required: true, message: '请输入您的民族', trigger: 'blur' },
                     ],
                     gender: [
@@ -155,7 +148,18 @@
         },
         methods: {
             save: function(){
-
+                if(Util.isDevEnv()){
+                    console.log(this.registrationForm, this.major.id);
+                }
+                saveRegistrationForm(this.registrationForm, this.major.id, '/mock_expect_success.json')
+                    .then(res => {
+                        if(Util.isAjaxResOk(res)){
+                            // 保存成功
+                            this.$emit('form-saved-success')
+                        }else{
+                            this.$emit('form-saved-failed',res.data.message)
+                        }
+                    });
             }
         }
     }
