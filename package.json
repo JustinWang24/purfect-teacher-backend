@@ -25,6 +25,7 @@
     },
     "dependencies": {
         "element-ui": "^2.12.0",
+        "lockr": "^0.8.5",
         "moment": "^2.22.2",
         "normalize.css": "^8.0.1"
     }

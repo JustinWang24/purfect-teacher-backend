@@ -112,3 +112,6 @@ $defaultPadding: 15px;
 .el-drawer.ltr, .el-drawer.rtl, .el-drawer__container {
   overflow: scroll;
 }
+.for-mobile-alert{
+  max-width: 360px !important;
+}
