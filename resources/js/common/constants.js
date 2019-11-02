@@ -45,6 +45,7 @@ export const Constants = {
             QUERY_STUDENT_PROFILE: '/api/student-register/query-student-profile',
             QUERY_STUDENT_MAJORS: '/api/student-register/load-open-majors',
             SUBMIT_FORM: '/api/student-register/submit-form',
+            LOAD_MAJOR_DETAIL: '/api/student-register/load-major-detail',
         }
     },
     YEARS: ['N.A','一年级','二年级','三年级','四年级','五年级','六年级'],
