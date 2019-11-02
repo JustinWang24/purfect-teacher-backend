@@ -2,6 +2,7 @@
  * 一些常用的工具函数
  */
 import { Constants } from './constants';
+import Lockr from 'lockr';
 
 export const Util = {
     /**
@@ -75,5 +76,36 @@ export const Util = {
     pageScrollTo: function(pos){
         // 移动到页面顶部
         document.body.scrollTop = document.documentElement.scrollTop = pos;
+    },
+    // 利用 Local Storage 获取用户最后输入的身份证号码手机号, 或其他数据对象
+    getIdNumber: function () {
+        return Lockr.get(Constants.STUDENT_ID_NUMBER);
+    },
+    setStudentIdNumber(number){
+        Lockr.set(Constants.STUDENT_ID_NUMBER, number);
+    },
+    getLocalStudentMobile: function () {
+        return Lockr.get(Constants.STUDENT_MOBILE);
+    },
+    setStudentMobile: function(number){
+        Lockr.set(Constants.STUDENT_MOBILE, number);
+    },
+    setObjToLocalStorage: function(k,obj){
+        Lockr.set(k, obj);
+    },
+    getObjFromLocalStorage: function(k){
+        return Lockr.get(k)
+    },
+    isDevEnv: function(){
+        return document.domain.indexOf('.test')>-1 || document.domain.indexOf('.pftytx.com')>-1;
+    },
+    buildUrl: function(url, affix) {
+        // 方便的创建 url, 可以自动判定是测试环境还是生产环境
+        const isDev = this.isDevEnv();
+        const base = isDev ? 'https://mock.api.pftytx.com' : '';
+        if(isDev && this.isEmpty(affix)){
+            affix = '/mock.json';
+        }
+        return base + url + (isDev ? affix : '');
     }
 };

@@ -24,6 +24,7 @@ class UpdateStudentProfilesTable extends Migration
             // 家长信息
             $table->string('parent_name', '50')->comment('家长姓名');
             $table->string('parent_mobile', '11')->comment('家长手机号');
+            $table->boolean('relocation_allowed')->default(false)->comment('服从调剂');
         });
     }
 
@@ -41,6 +42,7 @@ class UpdateStudentProfilesTable extends Migration
             $table->dropColumn('examination_score');
             $table->dropColumn('parent_name');
             $table->dropColumn('parent_mobile');
+            $table->dropColumn('relocation_allowed');
         });
     }
 }
