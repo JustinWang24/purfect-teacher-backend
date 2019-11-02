@@ -35,5 +35,8 @@ class CreateCourseArrangementsTable extends Migration
     public function down()
     {
         Schema::dropIfExists('course_arrangements');
+        Schema::table('course_teachers', function (Blueprint $table) {
+            $table->dropColumn('teacher_notes');
+        });
     }
 }

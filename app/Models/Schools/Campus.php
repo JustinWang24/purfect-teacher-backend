@@ -56,6 +56,14 @@ class Campus extends Model
         return $this->hasMany(Building::class)->where('type',Building::TYPE_HALL);
     }
 
+    /**
+     * 校区的食堂/会堂等
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function rooms(){
+        return $this->hasMany(Room::class);
+    }
+
     public function employeesCount(){
         return GradeUser::where('campus_id', $this->id)->where('user_type',Role::TEACHER)->count();
     }

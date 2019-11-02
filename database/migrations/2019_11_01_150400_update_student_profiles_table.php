@@ -22,8 +22,9 @@ class UpdateStudentProfilesTable extends Migration
             $table->string('wx', '30')->nullable()->comment('微信号');
             $table->string('examination_score', '11')->nullable()->comment('中/高考分数');
             // 家长信息
-            $table->string('parent_name', '50')->nullable()->comment('家长姓名');
-            $table->string('parent_mobile', '11')->nullable()->comment('家长手机号');
+            $table->string('parent_name', '50')->comment('家长姓名');
+            $table->string('parent_mobile', '11')->comment('家长手机号');
+            $table->boolean('relocation_allowed')->default(false)->comment('服从调剂');
         });
     }
 
@@ -34,6 +35,14 @@ class UpdateStudentProfilesTable extends Migration
      */
     public function down()
     {
-        //
+        Schema::table('student_profiles', function (Blueprint $table) {
+            $table->dropColumn('source_place');
+            $table->dropColumn('qq');
+            $table->dropColumn('wx');
+            $table->dropColumn('examination_score');
+            $table->dropColumn('parent_name');
+            $table->dropColumn('parent_mobile');
+            $table->dropColumn('relocation_allowed');
+        });
     }
 }
