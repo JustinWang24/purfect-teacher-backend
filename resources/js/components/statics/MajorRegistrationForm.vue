@@ -69,6 +69,28 @@
                 </el-form-item>
             </el-card>
 
+            <h3>联系地址</h3>
+            <el-card class="box-card" :body-style="{paddingTop:'2px',paddingBottom:'2px'}">
+                <el-form-item label="省份">
+                    <el-select size="mini" v-model="registrationForm.province" placeholder="必填: 省份" style="width: 100%;">
+                        <el-option v-for="(p, idx) in provinces" :key="idx" :label="p.name" :value="p.name"></el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item label="城市">
+                    <el-select size="mini" v-model="registrationForm.city" placeholder="必填: 城市" style="width: 100%;">
+                        <el-option v-for="(c, idx) in cities" :key="idx" :label="c.name" :value="c.name"></el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item label="城区">
+                    <el-select size="mini" v-model="registrationForm.district" placeholder="必填: 城区" style="width: 100%;">
+                        <el-option v-for="(d, idx) in districts" :key="idx" :label="d.name" :value="d.name"></el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item label="地址">
+                    <el-input size="mini" v-model="registrationForm.address" placeholder="必填: 地址"></el-input>
+                </el-form-item>
+            </el-card>
+
             <h3>申报信息</h3>
             <el-card class="box-card" :body-style="{paddingTop:'2px',paddingBottom:'2px'}">
                 <el-form-item label="中/高考分数">
@@ -97,6 +119,7 @@
 
 <script>
     import { saveRegistrationForm } from '../../common/registration_form';
+    import { provinces, cities, districts } from '../../common/location';
     import { Util } from '../../common/utils';
 
     export default {
@@ -143,14 +166,35 @@
                     parent_mobile: [
                         { required: true, message: '请输入家长的联系电话', trigger: 'blur' }
                     ]
-                }
+                },
+                provinces:[],
+                cities:[],
+                districts:[],
             }
+        },
+        watch: {
+            'registrationForm.province': function(newVal, oldVal){
+                if(newVal !== oldVal){
+                    cities(newVal).then(res => {
+                        this.cities = res.data.data.cities;
+                    })
+                }
+            },
+            'registrationForm.city': function(newVal, oldVal){
+                if(newVal !== oldVal){
+                    districts(newVal).then(res => {
+                        this.districts = res.data.data.districts;
+                    })
+                }
+            },
+        },
+        created() {
+            provinces('/mock.json').then(res => {
+                this.provinces = res.data.data.provinces;
+            });
         },
         methods: {
             save: function(){
-                if(Util.isDevEnv()){
-                    console.log(this.registrationForm, this.major.id);
-                }
                 saveRegistrationForm(this.registrationForm, this.major.id, '/mock_expect_success.json')
                     .then(res => {
                         if(Util.isAjaxResOk(res)){
