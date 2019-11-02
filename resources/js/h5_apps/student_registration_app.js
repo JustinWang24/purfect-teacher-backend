@@ -76,6 +76,13 @@ new Vue({
             Util.setObjToLocalStorage(Constants.STUDENT_PROFILE,this.registrationForm);
             Util.setStudentIdNumber(this.registrationForm.id_number);
             Util.setStudentMobile(this.registrationForm.mobile);
+            // 当报名成功, 显示祝贺
+            const txt = '您已经成功报名专业: ' + this.selectedMajor.name + '. 我们的招生老师将审核您的报名申请, 并很快与您联系.';
+            this.$alert(txt, '谢谢!', {
+                confirmButtonText: '确定',
+                type:'success',
+                customClass: 'for-mobile-alert'
+            });
         },
         formSavedFailedHandler: function(errorMsgText){
             this.hideRegistrationForm();
@@ -88,13 +95,6 @@ new Vue({
         },
         hideRegistrationForm: function(){
             this.showRegistrationFormFlag = false;
-            // 当报名成功, 显示祝贺
-            const txt = '您已经成功报名专业: ' + this.selectedMajor.name + '. 我们的招生老师将审核您的报名申请, 并很快与您联系.';
-            this.$alert(txt, '谢谢!', {
-                confirmButtonText: '确定',
-                type:'success',
-                customClass: 'for-mobile-alert'
-            });
         },
         //
         loadHotOpenMajorsBySchool: function(){
@@ -130,6 +130,7 @@ new Vue({
             this.showAllMajorsFlag = false;
             this.selectedMajor = major;
             this.showMajorDetailFlag = true; // 显示专业详情
+            this.selectedMajor = major;
         }
     }
 });
