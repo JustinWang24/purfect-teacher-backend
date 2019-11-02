@@ -49,6 +49,7 @@ new Vue({
                 city:'',
                 district:'',
                 address:'',
+                postcode:'',
             }
         }
     },

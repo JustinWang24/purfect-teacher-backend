@@ -89,6 +89,9 @@
                 <el-form-item label="地址">
                     <el-input size="mini" v-model="registrationForm.address" placeholder="必填: 地址"></el-input>
                 </el-form-item>
+                <el-form-item label="邮政编码">
+                    <el-input size="mini" v-model="registrationForm.postcode" placeholder="必填: 邮政编码"></el-input>
+                </el-form-item>
             </el-card>
 
             <h3>申报信息</h3>
