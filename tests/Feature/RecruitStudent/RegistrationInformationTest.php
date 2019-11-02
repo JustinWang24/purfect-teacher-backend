@@ -15,12 +15,43 @@ class RegistrationInformationTest extends BasicPageTestCase
     {
         $this->withoutExceptionHandling();
         $su = $this->getSchoolManager();
+        $data = ['sort' => 'desc'];
         $response = $this->setSchoolAsUser($su, 1)
             ->actingAs($su)
             ->withSession($this->schoolSessionData)
-            ->get(route('school_manager.registration.list'));
+            ->get(route('school_manager.registration.list', $data));
+
+        dd($response->content());
+    }
+
+    /**
+     * 测试正常获取一条报名的详情
+     */
+    public function testItCanGetOneDataInfo()
+    {
+        $this->withoutExceptionHandling();
+        $su = $this->getSchoolManager();
+        $data = ['id' => '1'];
+        $response = $this->setSchoolAsUser($su, 1)
+            ->actingAs($su)
+            ->withSession($this->schoolSessionData)
+            ->get(route('school_manager.registration.details', $data));
         dd($response->content());
     }
 
 
+    /**
+     * 测试正常获取一条报名的详情
+     */
+    public function testItCanUpdateData()
+    {
+        $this->withoutExceptionHandling();
+        $su = $this->getSchoolManager();
+        $data = ['id' => '1', 'data' => ['note' => '124']];
+        $response = $this->setSchoolAsUser($su, 1)
+            ->actingAs($su)
+            ->withSession($this->schoolSessionData)
+            ->get(route('school_manager.registration.examine', $data));
+        dd($response->content());
+    }
 }

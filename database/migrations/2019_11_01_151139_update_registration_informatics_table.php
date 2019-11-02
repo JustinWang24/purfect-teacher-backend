@@ -20,8 +20,8 @@ class UpdateRegistrationInformaticsTable extends Migration
             $table->unsignedInteger('user_id')->comment('学生ID');
             $table->unsignedInteger('school_id')->comment('报名的学校ID');
             $table->unsignedInteger('major_id')->comment('报名的专业ID');
-            $table->string('name', '20')->comment('姓名');
-            $table->unsignedTinyInteger('whether_adjust')->comment('是否接受调剂 1接受 0不接受');
+            $table->string('name', '100')->comment('姓名');
+            $table->unsignedTinyInteger('relocation_allowed')->comment('是否接受调剂 1接受 0不接受');
             $table->unsignedTinyInteger('status')->comment('状态 1待审核 2已通过 3未通过');
             $table->timestamps();
         });

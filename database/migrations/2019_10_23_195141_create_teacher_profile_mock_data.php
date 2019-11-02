@@ -29,7 +29,7 @@ class CreateTeacherProfileMockData extends Migration
             $data = [
                 'uuid' => Uuid::uuid4()->toString(),
                 'teacher_id' => $gradeUser->user_id,
-                'school_id' => $gradeUser->school_id,
+                'school_id'  => $gradeUser->school_id,
                 'name'=>strlen($name) > 20 ? substr($name,0, 20) : $name,
                 'gender'=>1,
                 'country'=>'中国',
@@ -42,6 +42,7 @@ class CreateTeacherProfileMockData extends Migration
                 'birthday'=>$faker->date('Y-m-d'),
                 'avatar'=>$faker->imageUrl(),
             ];
+
             $dao->createProfile($data);
         }
     }

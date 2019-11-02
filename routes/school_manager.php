@@ -101,5 +101,7 @@ Route::prefix('school_manager')->group(function () {
 
 
     Route::get('registration/list', 'RecruitStudent\RegistrationInformatics@index')->name('school_manager.registration.list');  // 报名列表
+    Route::get('registration/details', 'RecruitStudent\RegistrationInformatics@details')->name('school_manager.registration.details');  // 报名详情
+    Route::get('registration/examine', 'RecruitStudent\RegistrationInformatics@examine')->name('school_manager.registration.examine');  // 报名审核
 
 });
