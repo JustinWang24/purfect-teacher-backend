@@ -28,6 +28,14 @@ class RoomDao
     }
 
     /**
+     * @param $campusId
+     * @return Collection
+     */
+    public function getRoomsByCampus($campusId){
+        return Room::where('campus_id',$campusId)->paginate();
+    }
+
+    /**
      * @param $id
      * @return Room
      */
@@ -46,6 +54,15 @@ class RoomDao
         return Room::where($map)->select($field)->get();
     }
 
+    /**
+     * @param $map
+     * @param $field
+     * @return mixed
+     */
+    public function getRoomsPaginate($map,$field='*')
+    {
+        return Room::where($map)->select($field)->paginate();
+    }
 
     /**
      * @param array $idArr

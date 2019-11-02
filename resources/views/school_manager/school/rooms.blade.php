@@ -9,21 +9,23 @@ use App\User;
         <div class="col-sm-12 col-md-12 col-xl-12">
             <div class="card-box">
                 <div class="card-head">
-                    <header>{{ session('school.name') }} - {{ $building->name }}</header>
+                    <header>{{ session('school.name') }} - {{ $building->name ?? null }}</header>
                 </div>
 
                 <div class="card-body">
                     <div class="row">
-                        <div class="row table-padding">
-                            <div class="col-12">
+                        <div class="table-padding col-12">
+                            @if(isset($building)))
                                 <a href="{{ url()->previous() }}" class="btn btn-default">
                                     <i class="fa fa-arrow-circle-left"></i> 返回
                                 </a>&nbsp;
                                 <a href="{{ route('school_manager.room.add',['uuid'=>$building->id]) }}" class="btn btn-primary pull-right" id="btn-create-room-from-building">
                                     添加新房间 <i class="fa fa-plus"></i>
                                 </a>
-                            </div>
+                            @endif
+                            @include('school_manager.school.reusable.nav',['highlight'=>'room'])
                         </div>
+
                         <div class="table-responsive">
                             <table class="table table-striped table-bordered table-hover table-checkable order-column valign-middle">
                                 <thead>
@@ -53,6 +55,10 @@ use App\User;
                                 @endforeach
                                 </tbody>
                             </table>
+
+                            @if(!isset($building)))
+{{ $rooms->links() }}
+                            @endif
                         </div>
                     </div>
                 </div>

@@ -22,6 +22,7 @@ return [
     'user'  => '用户管理',
     'teachers'  => '教师列表',
     'teacher'  => '教师',
+    'profile'  => '学生资料',
     'preview'  => '预览工具',
     'list'   => '列表',
     'add'    => '添加数据',

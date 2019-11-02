@@ -67,13 +67,53 @@ class MajorDao
 
     /**
      * @param $schoolId
+     * @param bool $openedOnly : 只加载公开的专业
+     * @param bool $hotOnly: 只加载热门的
      * @param bool $simple
      * @return Collection
      */
-    public function getMajorsBySchool($schoolId, $simple = true){
+    public function getMajorsBySchool($schoolId, $openedOnly = false, $hotOnly = false, $simple = true){
+        $where = [
+            ['school_id','=',$schoolId]
+        ];
+        if($openedOnly){
+            $where[] = ['open','=',1];
+        }
+        if($hotOnly){
+            $where[] = ['hot','=',1];
+        }
         if($simple)
-            return Major::select(['id','name'])->where('school_id',$schoolId)->orderBy('name','asc')->get();
-        return Major::where('school_id',$schoolId)->orderBy('name','asc')->get();
+            return Major::select(['id','name'])->where($where)->orderBy('name','asc')->get();
+        return Major::where($where)->orderBy('name','asc')->get();
+    }
+
+    /**
+     * 只加载开放报名的专业列表
+     * @param $schoolId
+     * @param $hotOnly : 是否只加载热门
+     * @return array
+     */
+    public function getOpenedMajorsBySchool($schoolId, $hotOnly = false){
+        $majors = $this->getMajorsBySchool($schoolId, true, $hotOnly, false);
+        $result = [];
+        foreach ($majors as $major) {
+            /**
+             * @var Major $major
+             */
+            $result[] = [
+                'id'=>$major->id,
+                'institute'=>$major->institute->name??'',
+                'department'=>$major->department->name,
+                'campus'=>$major->campus->name??'',
+                'name'=>$major->name,
+                'fee'=>$major->fee,
+                'seats'=>$major->seats,
+                'period'=>$major->period,
+                'description'=>$major->description,
+            ];
+        }
+
+        return $result;
     }
 
     /**

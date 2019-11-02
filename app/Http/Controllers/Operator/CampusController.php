@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Operator;
 
 use App\Dao\Schools\BuildingDao;
+use App\Dao\Schools\RoomDao;
 use App\Http\Controllers\Controller;
 use App\Dao\Schools\SchoolDao;
 use App\Http\Requests\School\CampusRequest;
@@ -10,6 +11,7 @@ use App\Dao\Schools\InstituteDao;
 use App\Dao\Schools\CampusDao;
 use App\Utils\FlashMessageBuilder;
 use App\Models\Schools\Campus;
+use Illuminate\Support\Facades\Route;
 
 class CampusController extends Controller
 {
@@ -91,7 +93,8 @@ class CampusController extends Controller
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function edit(CampusRequest $request){
-        $this->dataForView['campus'] = Campus::find($request->uuid());
+        $campusDao = new CampusDao($request->user());
+        $this->dataForView['campus'] = $campusDao->getCampusById($request->uuid());
         return view('school_manager.campus.edit', $this->dataForView);
     }
 
