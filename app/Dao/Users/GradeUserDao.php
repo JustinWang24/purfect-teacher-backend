@@ -7,6 +7,7 @@
  */
 
 namespace App\Dao\Users;
+use App\Models\Acl\Role;
 use App\Models\Users\GradeUser;
 use Illuminate\Database\Eloquent\Collection;
 use App\User;
@@ -123,5 +124,15 @@ class GradeUserDao
         return GradeUser::where($fieldName,$fieldValue)
             ->where('user_type',$type)
             ->orderBy($orderBy,$direction)->paginate();
+    }
+
+    /**
+     * 获取指定学校的第一位老师
+     *
+     * @param $schoolId
+     * @return GradeUser
+     */
+    public function getAnyTeacher($schoolId){
+        return GradeUser::where('school_id',$schoolId)->where('user_type',Role::TEACHER)->first();
     }
 }

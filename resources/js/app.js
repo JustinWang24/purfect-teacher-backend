@@ -587,7 +587,44 @@ if(document.getElementById('school-recruitment-manager-app')){
         el:'#school-recruitment-manager-app',
         data(){
             return {
-                form:{}
+                form:{},
+                year:'',
+                years:[],
+            }
+        },
+        created(){
+            this.year = (new Date()).getFullYear() + 1;
+
+            this.years.push(this.year + 1);
+            this.years.push(this.year);
+            this.years.push(this.year - 1);
+
+            this._resetFormData();
+        },
+        methods: {
+            // 创建新招生计划
+            createNewPlan: function(){
+                this._resetFormData();
+            },
+            _resetFormData: function(){
+                this.form = {
+                    id:'',
+                    major_id:'',
+                    major_name:'',
+                    type:'',
+                    title:'',
+                    start_at:'',
+                    end_at:'',
+                    expired:false,
+                    description:'',
+                    tease:'',
+                    tags:'',
+                    fee:'',
+                    hot:false,
+                    seats:'',
+                    grades_count:'',
+                    year:this.year,
+                };
             }
         }
     });

@@ -26,9 +26,10 @@ class ConferenceTest extends BasicPageTestCase
      */
     public function testAddConferencePage()
     {
+        $this->withoutExceptionHandling();
         $user = $this->getTeacher();
 
-        $response = $this->setSchoolAsUser($user, 50)
+        $response = $this->setSchoolAsUser($user, 1)
             ->actingAs($user)
             ->withSession($this->schoolSessionData)
             ->get(route('teacher.conference.add',['uuid'=>'6fec3fe9-da7a-44a2-9ce1-1a541e931bec']));
@@ -110,17 +111,17 @@ class ConferenceTest extends BasicPageTestCase
      */
     public function testAddConferenceApi()
     {
-
+        $this->withoutExceptionHandling();
         $data = $this->__createConferenceData();
 
         $user = $this->getTeacher();
 
-        $response = $this->setSchoolAsUser($user, 50)
+        $response = $this->setSchoolAsUser($user, 1)
             ->actingAs($user)
             ->withSession($this->schoolSessionData)
             ->post(route('teacher.conference.create',$data));
         $result = json_decode($response->content(),true);
-//        dump($result);
+
         $this->assertArrayHasKey('code', $result);
         $this->assertEquals(1000, $result['code']);
     }
