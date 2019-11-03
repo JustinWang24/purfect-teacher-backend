@@ -18,7 +18,7 @@ class ProductionProcessTest extends  BasicPageTestCase
             ->actingAs($su)
             ->withSession($this->schoolSessionData)
             ->get(route('teacher.get.preset.step'));
-        dd($response->content());
+        $this->assertTrue(1===2);
     }
 
     /**
@@ -34,7 +34,7 @@ class ProductionProcessTest extends  BasicPageTestCase
             ->withSession($this->schoolSessionData)
             ->post(route('teacher.production.process', $data));
 
-        dd($response->content());
+        $this->assertTrue(1===2);
     }
 
     /**
@@ -48,7 +48,7 @@ class ProductionProcessTest extends  BasicPageTestCase
             ->actingAs($su)
             ->withSession($this->schoolSessionData)
             ->get(route('teacher.get.official.document'));
-        dd($response->content());
+        $this->assertTrue(1===2);
     }
 
     /**
@@ -63,7 +63,7 @@ class ProductionProcessTest extends  BasicPageTestCase
             ->actingAs($su)
             ->withSession($this->schoolSessionData)
             ->get(route('teacher.get.one.process', $data));
-        dd($response->content());
+        $this->assertTrue(1===2);
     }
 
     /**
@@ -78,7 +78,7 @@ class ProductionProcessTest extends  BasicPageTestCase
             ->actingAs($su)
             ->withSession($this->schoolSessionData)
             ->post(route('teacher.add.step.user', $data));
-        dd($response->content());
+        $this->assertTrue(1===2);
     }
 
     /**
@@ -93,7 +93,7 @@ class ProductionProcessTest extends  BasicPageTestCase
             ->actingAs($su)
             ->withSession($this->schoolSessionData)
             ->post(route('teacher.update.step.user', $data));
-        dd($response->content());
+        $this->assertTrue(1===2);
     }
 
 

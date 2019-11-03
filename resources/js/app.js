@@ -30,15 +30,8 @@ Vue.component('courses-manager', require('./components/courses/CoursesManager.vu
 Vue.component('timetable-previewer', require('./components/previewer/TimetablePreviewer.vue').default);
 Vue.component('timetable-item-form', require('./components/previewer/TimetableItemForm.vue').default);
 Vue.component('search-bar', require('./components/quickSearch/SearchBar.vue').default);
-/**
- * Next, we will create a fresh Vue application instance and attach it to
- * the page. Then, you may begin adding components to this applications
- * or customize the JavaScript scaffolding to fit your unique needs.
- */
-
-// const app = new Vue({
-//     el: '#app',
-// });
+Vue.component('recruitment-plans-list', require('./components/recruitment/RecruitmentPlansList.vue').default);
+Vue.component('recruitment-plan-form', require('./components/recruitment/RecruitmentPlanForm.vue').default);
 
 import { Constants } from './common/constants';
 import { Util } from './common/utils';
@@ -50,7 +43,7 @@ if(document.getElementById('school-time-slots-manager')){
         el: '#school-time-slots-manager'
     });
 }
-
+// 学校的课程管理
 if(document.getElementById('school-courses-manager-app')){
     new Vue({
         el: '#school-courses-manager-app'
@@ -583,6 +576,55 @@ if(document.getElementById('school-timetable-previewer-app')){
                         this.$message.error('您尝试加载的课程表不存在');
                     }
                 })
+            }
+        }
+    });
+}
+
+// 后台的招生计划的管理程序
+if(document.getElementById('school-recruitment-manager-app')){
+    new Vue({
+        el:'#school-recruitment-manager-app',
+        data(){
+            return {
+                form:{},
+                year:'',
+                years:[],
+            }
+        },
+        created(){
+            this.year = (new Date()).getFullYear() + 1;
+
+            this.years.push(this.year + 1);
+            this.years.push(this.year);
+            this.years.push(this.year - 1);
+
+            this._resetFormData();
+        },
+        methods: {
+            // 创建新招生计划
+            createNewPlan: function(){
+                this._resetFormData();
+            },
+            _resetFormData: function(){
+                this.form = {
+                    id:'',
+                    major_id:'',
+                    major_name:'',
+                    type:'',
+                    title:'',
+                    start_at:'',
+                    end_at:'',
+                    expired:false,
+                    description:'',
+                    tease:'',
+                    tags:'',
+                    fee:'',
+                    hot:false,
+                    seats:'',
+                    grades_count:'',
+                    year:this.year,
+                };
             }
         }
     });

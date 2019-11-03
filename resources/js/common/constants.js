@@ -52,6 +52,10 @@ export const Constants = {
             PROVINCES: '/api/location/get-provinces',
             CITIES: '/api/location/get-cities',
             DISTRICTS: '/api/location/get-districts',
+        },
+        RECRUITMENT: {
+            LOAD_PLANS: '/api/recruitment/load-plans',
+            SAVE_PLAN: '/api/recruitment/save-plan',
         }
     },
     YEARS: ['N.A','一年级','二年级','三年级','四年级','五年级','六年级'],

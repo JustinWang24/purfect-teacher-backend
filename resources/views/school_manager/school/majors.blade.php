@@ -31,12 +31,13 @@ use App\User;
                                 <tr>
                                     <th>#</th>
                                     <th>专业名称</th>
+                                    <th>热门专业</th>
                                     <th>自主招生</th>
                                     <th>招生人数</th>
                                     <th>学费</th>
                                     <th>班级数</th>
                                     <th>教职工数</th>
-                                    <th>学生数</th>
+                                    <th>在校学生数</th>
                                     <th></th>
                                 </tr>
                                 </thead>
@@ -46,6 +47,9 @@ use App\User;
                                         <td>{{ $index+1 }}</td>
                                         <td>
                                             {{ $major->name }}
+                                        </td>
+                                        <td>
+                                            <span class="text-{{ $major->hot ? 'primary' : null }}">{{ $major->hot ? '是' : '否' }}</span>
                                         </td>
                                         <td>
                                             @if($major->open)
