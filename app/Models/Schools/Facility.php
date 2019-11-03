@@ -39,6 +39,22 @@ class Facility extends Model
      */
     protected $fillable = ['facility_number', 'facility_name', 'school_id', 'campus_id', 'building_id', 'room_id', 'detail_addr', 'status', 'type'];
 
+
+    const TYPE_MONITORING  = 1;
+    const TYPE_ENTRANCE_GUARD  = 2;
+    const TYPE_CLASS_SIGN  = 3;
+    const TYPE_CLASS_CLASSROOM  = 4;
+
+
+
+    const TYPE_MONITORING_TEXT  = '监控设备';
+    const TYPE_ENTRANCE_GUARD_TEXT  = '门禁设备';
+    const TYPE_CLASS_SIGN_TEXT  = '班牌设备';
+    const TYPE_CLASS_CLASSROOM_TEXT  = '教室设备';
+
+
+
+
     public function campus() {
         return $this->belongsTo(Campus::class, 'campus_id', 'id');
     }

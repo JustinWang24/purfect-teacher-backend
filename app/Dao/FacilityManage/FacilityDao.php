@@ -71,4 +71,18 @@ class FacilityDao
     public function delete($id) {
         return Facility::where('id',$id)->delete();
     }
+
+
+    /**
+     * 获取类型
+     * @return array
+     */
+    public function getType(){
+        return [
+            ['id'=> Facility::TYPE_MONITORING, 'val'=> Facility::TYPE_MONITORING_TEXT],
+            ['id'=> Facility::TYPE_ENTRANCE_GUARD, 'val'=> Facility::TYPE_ENTRANCE_GUARD_TEXT],
+            ['id'=> Facility::TYPE_CLASS_SIGN, 'val'=> Facility::TYPE_CLASS_SIGN_TEXT],
+            ['id'=> Facility::TYPE_CLASS_CLASSROOM, 'val'=> Facility::TYPE_CLASS_CLASSROOM_TEXT],
+        ];
+    }
 }

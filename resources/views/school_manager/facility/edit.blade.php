@@ -25,6 +25,19 @@ use App\Utils\UI\Button;
                             <input required type="text" class="form-control" id="facility-name-input" value="{{$facility['facility_name']}}" placeholder="设备名称" name="facility[facility_name]">
                         </div>
 
+
+                        <div class="form-group">
+                            <label for="facility-name-input">类型</label>
+
+                            <select required type="select" class="form-control" id="facility-type-select" value="" placeholder="类型" name="facility[type]">
+                                @foreach($type as $key => $val)
+                                <option value="{{$val['id']}}" @if($val['id'] == $facility['type']) selected @endif>{{$val['val']}}</option>
+                                @endforeach
+                            </select>
+
+                        </div>
+
+
                         <div class="form-group">
                             <label for="facility-campus-select">校区</label>
                             <select required type="text" class="form-control" id="facility-campus-select" value="" placeholder="校区" name="facility[campus_id]">
@@ -59,6 +72,15 @@ use App\Utils\UI\Button;
                             <input  type="text" class="form-control" id="facility-addr-select" value="{{$facility['detail_addr']}}" placeholder="详细地址" name="facility[detail_addr]">
                         </div>
 
+                        <div class="form-group">
+                            <label for="building-addr-radio">状态</label>&nbsp&nbsp&nbsp&nbsp
+                            <input type="radio" class="form-control-radio" id="facility-status-radio-close" value="0"  name="facility[status]"
+                                   @if($facility['status'] == 0) checked @endif> 关闭  &nbsp&nbsp&nbsp&nbsp
+                            <input type="radio" class="form-control-radio" id="facility-status-radio-open"  value="1"  name="facility[status]"
+                                   @if($facility['status'] == 1) checked @endif> 开启
+
+
+                        </div>
 
                         <?php
                         Button::Print(['id'=>'btn-create-building','text'=>trans('general.submit')], Button::TYPE_PRIMARY);
