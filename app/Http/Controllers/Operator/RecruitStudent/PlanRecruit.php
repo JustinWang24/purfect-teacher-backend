@@ -23,6 +23,6 @@ class PlanRecruit extends Controller
         $list = $majorDao->getMajorPage($map, $field);
         $this->dataForView['major'] = $list;
 
-        return view('school_manager.recruitStudent.planRecruit.list', $this->dataForView);
+        return view('school_manager.recruitStudent.planRecruit.management', $this->dataForView);
     }
 }
