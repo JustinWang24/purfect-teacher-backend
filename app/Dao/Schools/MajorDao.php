@@ -145,6 +145,6 @@ class MajorDao
      * @return mixed
      */
     public function getMajorPage($map,$field='*') {
-        return Major::where($map)->select($field)->paginate(15);
+        return Major::where($map)->select($field)->paginate(10);
     }
 }
