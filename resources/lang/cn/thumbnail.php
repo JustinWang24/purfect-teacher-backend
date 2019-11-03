@@ -36,6 +36,10 @@ return [
 
     // 课程表相关
     'timetable'=>'课程表',
-    'manager'=>'管理'
+    'manager'=>'管理',
+
+
+    //设备管理
+    'facility' => '设备管理',
 ];
 
