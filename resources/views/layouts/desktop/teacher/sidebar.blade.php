@@ -134,7 +134,7 @@
                         </li>
                     </ul>
                 </li>
-                
+
                 <li class="nav-item">
                     <a href="javascript:void(0);" class="nav-link nav-toggle">
                         <i class="material-icons">dashboard</i>
