@@ -10,7 +10,7 @@ use App\Utils\Misc\ConfigurationTool;
 @extends('layouts.app')
 @section('content')
     <div class="row">
-        <div class="col-sm-12 col-md-4 col-xl-4">
+        <div class="col-sm-12 col-md-3 col-lg-3 col-xl-4">
             <div class="card-box">
                 <div class="card-head">
                     <header>{{ session('school.name') }} 基本配置</header>
@@ -63,18 +63,19 @@ use App\Utils\Misc\ConfigurationTool;
             </div>
         </div>
 
-        <div class="col-sm-12 col-md-8 col-xl-8">
+        <div class="col-sm-12 col-md-9 col-lg-9 col-xl-8">
             <div class="card-box">
                 <div class="card-head">
-                    <header>{{ session('school.name') }}</header>
+                    <header>
+                        {{ session('school.name') }}
+                        <a href="{{ route('school_manager.campus.add') }}" class="btn btn-primary" id="btn-create-campus-from-school">
+                            创建新校区 <i class="fa fa-plus"></i>
+                        </a>
+                    </header>
                 </div>
                 <div class="card-body">
                     <div class="row">
-
                         <div class="table-padding col-12">
-                            <a href="{{ route('school_manager.campus.add') }}" class="btn btn-primary" id="btn-create-campus-from-school">
-                                创建新校区 <i class="fa fa-plus"></i>
-                            </a>
                             @include('school_manager.school.reusable.nav',['highlight'=>'campus'])
                         </div>
                         <div class="table-responsive">

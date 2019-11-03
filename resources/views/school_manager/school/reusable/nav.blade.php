@@ -36,9 +36,11 @@
             ></search-bar>
         </div>
         <div class="btn-group pull-right">
+            @if($highlight !== 'campus')
             <a href="{{ route('school_manager.school.view') }}" class="btn btn-{{ $highlight==='campus' ? 'primary' : 'default' }}">
                 <span class="fa {{ $highlight==='campus' ? 'fa-check-square' : null }}"></span> 校区管理
             </a>
+            @endif
             <a href="{{ route('school_manager.school.rooms') }}" class="btn btn-{{ $highlight==='room' ? 'primary' : 'default' }}">
                 <span class="fa {{ $highlight==='room' ? 'fa-check-square' : null }}"></span> 物业管理
             </a>
