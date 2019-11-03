@@ -81,6 +81,16 @@ Route::prefix('enquiry')->group(function () {
         ->name('api.enquiry.save');
 });
 
+Route::prefix('recruitment')->group(function () {
+    // 加载某个学校的招生计划
+    Route::post('/load-plans','Api\Recruitment\PlansController@load_plans')
+        ->name('api.recruitment.load.plans');
+
+    // 保存某个学校的招生计划
+    Route::post('/save-plan','Api\Recruitment\PlansController@save_plan')
+        ->name('api.recruitment.save.plan');
+});
+
 Route::prefix('timetable')->group(function () {
     // 保存课程表项的接口
     Route::post('/timetable-item-can-be-inserted','Api\Timetable\TimetableItemsController@can_be_inserted')

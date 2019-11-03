@@ -7,6 +7,7 @@
  */
 
 namespace Tests\Feature;
+use App\Dao\Users\GradeUserDao;
 use Tests\TestCase;
 use App\Dao\Users\UserDao;
 use App\Dao\Schools\SchoolDao;
@@ -15,6 +16,7 @@ use App\User;
 class BasicPageTestCase extends TestCase
 {
     protected $userDao;
+    protected $gradeUserDao;
     protected $superAdmin;
     protected $operator;
     protected $schoolManager;
@@ -28,10 +30,11 @@ class BasicPageTestCase extends TestCase
         parent::setUp();
         // 初始化所需要的 dao
         $this->userDao       = new UserDao();
+        $this->gradeUserDao       = new GradeUserDao();
         $this->superAdmin    = $this->userDao->getUserByMobile('18601216091');
         $this->operator      = $this->userDao->getUserByMobile('18510209803');
         $this->schoolManager = $this->userDao->getUserByMobile('1000006');
-        $this->teacher    = $this->userDao->getUserByMobile('18601216001');
+        $this->teacher    = $this->gradeUserDao->getAnyTeacher(1)->user;
     }
 
     /**

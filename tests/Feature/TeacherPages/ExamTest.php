@@ -14,9 +14,10 @@ class ExamTest extends BasicPageTestCase
      */
     public function testAddExamPage()
     {
+
         $user = $this->getTeacher();
 
-        $response = $this->setSchoolAsUser($user, 50)
+        $response = $this->setSchoolAsUser($user, 1)
             ->actingAs($user)
             ->withSession($this->schoolSessionData)
             ->get(route('teacher.exam.index',['uuid'=>'6fec3fe9-da7a-44a2-9ce1-1a541e931bec']));
@@ -355,7 +356,8 @@ class ExamTest extends BasicPageTestCase
             ->withSession($this->schoolSessionData)
             ->get(route('api.school.load.majors',['id'=>1]));
         $result = json_decode($response->content(),true);
-        dd($result);
+//        dd($result);
+        $this->assertTrue(1===1);
     }
 
 
