@@ -104,6 +104,9 @@ Route::prefix('school_manager')->group(function () {
 
 
     //设备管理
-//    Route::get('')-name();
+    Route::get('facility/list','FacilityController@list')->name('school_manager.facility.list');
+    Route::any('facility/add','FacilityController@add')->name('school_manager.facility.add');
+    Route::any('facility/edit','FacilityController@edit')->name('school_manager.facility.edit');
+    Route::get('facility/delete','FacilityController@delete')->name('school_manager.facility.delete');
 
 });
