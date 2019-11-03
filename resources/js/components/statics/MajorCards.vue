@@ -28,6 +28,8 @@
 </template>
 
 <script>
+    import { loadMajorDetail } from '../../common/registration_form';
+    import { Util } from '../../common/utils';
     export default {
         name: "MajorCards",
         props:[
@@ -39,7 +41,25 @@
         },
         methods:{
             loadDetail: function (major) {
-                this.$emit('show-major-detail', major);
+                loadMajorDetail(major.id).then(res => {
+                    if(Util.isAjaxResOk(res)){
+                        this.$emit('show-major-detail', res.data.data.major);
+                    }
+                    else{
+                        this.$alert('无法加载专业: ' + major.name + '的详情', '加载失败', {
+                            confirmButtonText: '确定',
+                            type:'error',
+                            customClass: 'for-mobile-alert'
+                        });
+                    }
+                }).catch(e => {
+                    console.log(e);
+                    this.$alert('服务器忙, 无法加载专业: ' + major.name + '的详情. 请稍候再试!', '加载失败', {
+                        confirmButtonText: '确定',
+                        type:'error',
+                        customClass: 'for-mobile-alert'
+                    });
+                })
             },
             apply: function (major) {
                 this.$emit('apply-major', major);
