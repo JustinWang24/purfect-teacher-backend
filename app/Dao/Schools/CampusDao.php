@@ -67,9 +67,10 @@ class CampusDao
     /**
      * 根据学校 ID 获取所有的校区
      * @param $schoolId
+     * @param $field
      * @return Collection
      */
-    public function getCampusesBySchool($schoolId){
-        return Campus::where('school_id',$schoolId)->get();
+    public function getCampusesBySchool($schoolId,$field='*'){
+        return Campus::where('school_id',$schoolId)->select($field)->get();
     }
 }
