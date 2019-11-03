@@ -109,4 +109,10 @@ Route::prefix('school_manager')->group(function () {
     Route::any('facility/edit','FacilityController@edit')->name('school_manager.facility.edit');
     Route::get('facility/delete','FacilityController@delete')->name('school_manager.facility.delete');
 
+    Route::get('planRecruit/list', 'RecruitStudent\PlanRecruitController@list')->name('school_manager.planRecruit.list');
+    Route::any('planRecruit/edit', 'RecruitStudent\PlanRecruitController@edit')->name('school_manager.planRecruit.edit');
+    Route::get('consult/list', 'RecruitStudent\ConsultController@list')->name('school_manager.consult.list');
+    Route::any('consult/add', 'RecruitStudent\ConsultController@add')->name('school_manager.consult.add');
+    Route::any('consult/edit', 'RecruitStudent\ConsultController@edit')->name('school_manager.consult.edit');
+    Route::get('consult/delete', 'RecruitStudent\ConsultController@delete')->name('school_manager.consult.delete');
 });

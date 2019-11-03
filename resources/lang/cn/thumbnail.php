@@ -39,6 +39,11 @@ return [
     'manager'=>'管理',
 
 
+    // 招生管理
+    'planRecruit'  => '预招管理',
+    'manager'=>'管理',
+
+
     //设备管理
     'facility' => '设备管理',
 ];
