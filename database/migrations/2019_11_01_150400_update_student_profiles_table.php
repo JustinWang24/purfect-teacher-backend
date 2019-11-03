@@ -16,14 +16,15 @@ class UpdateStudentProfilesTable extends Migration
         Schema::table('student_profiles', function (Blueprint $table) {
             // 报名信息
             $table->text('source_place')->nullable()->comment('生源地');
-            $table->string('country', '50')->comment('籍贯')->change();
+            $table->string('country', '50')->nullable()->comment('籍贯')->change();
             $table->date('birthday')->nullable()->comment('出生年月日')->change();
-            $table->string('qq', '20')->comment('QQ号');
-            $table->string('wx', '30')->comment('微信号');
+            $table->string('qq', '20')->nullable()->comment('QQ号');
+            $table->string('wx', '30')->nullable()->comment('微信号');
             $table->string('examination_score', '11')->nullable()->comment('中/高考分数');
             // 家长信息
             $table->string('parent_name', '50')->comment('家长姓名');
             $table->string('parent_mobile', '11')->comment('家长手机号');
+            $table->boolean('relocation_allowed')->default(false)->comment('服从调剂');
         });
     }
 
@@ -41,6 +42,7 @@ class UpdateStudentProfilesTable extends Migration
             $table->dropColumn('examination_score');
             $table->dropColumn('parent_name');
             $table->dropColumn('parent_mobile');
+            $table->dropColumn('relocation_allowed');
         });
     }
 }

@@ -7,17 +7,18 @@
     </div>
     <div class="main">
         <div class="intro-img">
-            <el-image src="https://fuss10.elemecdn.com/a/3f/3302e58f9a181d2509f3dc0fa68b0jpeg.jpeg">
+            <el-image src="https://gss3.bdstatic.com/-Po3dSag_xI4khGkpoWK1HF6hhy/baike/c0%3Dbaike80%2C5%2C5%2C80%2C26/sign=d2bb3bedb351f819e5280b18bbdd2188/caef76094b36acafc5742b3a7fd98d1000e99c64.jpg">
             </el-image>
         </div>
         <div class="intro-content">
-            <p>RealTeachers Pty Ltd位于南半球最具文化气息的城市----澳大利亚墨尔本，致力于向中国大陆、台湾、越南、韩国和日本输送高品质英文母语外教。招聘澳洲外教，并经过筛选和培训，以为学生提供优质学习体验为己任。 所输出外教涵盖小学标准英语外教、幼儿园外教、音体美外教、舞台剧专业外教、中学各学科外教、专业IB外教，以及野外求生外教和咖啡师培训外教等澳洲、英国、新西兰全科科目专业外教
+            <p>
+                礼县职业中等专业学校，原名礼县职业技术学校，是一所省级重点职业学校，创建于1987年10月，现占地面积132.6亩，建筑面积约2.6万平方米，有教职工111人，在校学生2128人，开设文秘、电工电子、现代农艺、计算机应用等8个专业，拥有图书室、阅览室、多媒体教室及汽车维修、机械加工、电工电子、服装工艺、家政服务、计算机、电焊及烹饪等专业实训室。
             </p>
             <p>
-            RealTeachers Pty Ltd与墨尔本大学、莫纳什大学、国际开放学院和众多RTO有深度合作关系，每月一次的大规模开放性现场招聘说明会，已经成功搭建起中国各城市吸纳外教的最重要专业平台。所输出的外教遍布除了黑龙江和甘肃之外的所有大陆省份。
+                自建校以来,始终以“热爱专业、学有所长、修养身心、服务社会”为校训，确立了“校际联合，校企合作，资源共享，优势互补，互惠互利，共同发展”的办学思路，广泛开展职业教育，办学规模迅速扩大，办学效益日益提高，为推动经济社会的快速发展做出了应有的贡献
             </p>
             <p>
-            另外，依托于强力的外教输出平台，RealTeachers Pty Ltd又于2017年展开了网络英文培训的业务，将优秀的外教引进到国内。目前开展的培训业务有，少儿英文网络培训一对一、一对二、一对三、一对四服务；雅思写作和口语培训；青少年游学前培训；青少年留学前培训、成人移民澳洲文化特训，外教英文一对一等。
+                2005年被甘肃省教育厅、甘肃省劳动和社会保障厅及甘肃省经贸委联合授予“全省职业教育先进单位”称号；2008年甘肃省教育厅授予“甘肃省职业教育工作先进集体”荣誉称号。2006年被甘肃省教育厅确定为市级重点职业学校，被甘肃省劳动和社会保障厅、甘肃省扶贫办确定为贫困地区农村劳动力转移培训示范基地,2009年被甘肃省教育厅确定为职业中专,并被认定为省级重点中等职业学校；2010年被省委省政府授予“甘肃省教育系统先进单位”荣誉称号，2011年被省教育厅授予“甘肃省职业教育招生先进单位”荣誉称号。
             </p>
         </div>
         <h3 class="sub-title">热门专业</h3>
@@ -67,12 +68,25 @@
                 :visible.sync="showMajorDetailFlag"
                 direction="rtl">
             <div class="major-detail-wrapper" v-if="selectedMajor">
+                <el-image style="margin-bottom: 12px;" src="https://gss0.bdstatic.com/-4o3dSag_xI4khGkpoWK1HF6hhy/baike/c0%3Dbaike150%2C5%2C5%2C150%2C50/sign=823085820233874488c8272e3066b29c/ac345982b2b7d0a278e0df4fc5ef76094b369a33.jpg"></el-image>
                 <p class="md-name">@{{ selectedMajor.name }}(@{{ selectedMajor.period }}年制)</p>
                 <p class="md-desc">
                     @{{ selectedMajor.description }}
                 </p>
                 <p style="text-align: center;margin-top:20px;">
                     <el-button class="showMoreButton" v-on:click="applyMajorHandler(selectedMajor)" type="primary" round>报名</el-button>
+                </p>
+                <div v-if="selectedMajor.courses">
+                    <el-divider></el-divider>
+                    <p class="md-name"><i class="el-icon-trophy"></i>&nbsp;学习的专业课包括:</p>
+                    <p>
+                        <el-tag effect="plain" style="margin: 5px;" v-for="(course, idx) in selectedMajor.courses" :key="idx">@{{ course.name }}</el-tag>
+                    </p>
+                </div>
+                <el-divider></el-divider>
+                <p class="md-name"><i class="el-icon-help"></i>&nbsp;毕业后的择业方向:</p>
+                <p class="md-desc">
+                    会计学专业属工商管理学科，是一个应用性较强的专业。该专业设有企业会计、国际会计、注册会计师等三个专业方向。专业以企业会计为主，兼顾计算机与财务管理。在教学方法上强调理论与实践相结合的教学模式，提倡启发式与案例教学，多方位培养学生处理会计业务与管理财务的操作能力和创新能力。
                 </p>
             </div>
         </el-drawer>
@@ -84,6 +98,9 @@
                 direction="rtl">
             <major-registration-form
                 :major="selectedMajor"
+                :registration-form="registrationForm"
+                v-on:form-saved-success="formSavedSuccessHandler"
+                v-on:form-saved-failed="formSavedFailedHandler"
             ></major-registration-form>
         </el-drawer>
     </div>

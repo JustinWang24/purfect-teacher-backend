@@ -2,6 +2,7 @@
  * 可能需要广泛使用的一些常量
  */
 export const Constants = {
+    VERSION: '3.0',
     AJAX_SUCCESS: 1000,
     AJAX_ERROR: 999,
     API: {
@@ -39,7 +40,19 @@ export const Constants = {
         },
         // 申请
         ENQUIRY_SUBMIT: '/api/enquiry/save',
-        // 静态页面
+        // 静态页面: 学生报名
+        REGISTRATION_FORM: {
+            QUERY_STUDENT_PROFILE: '/api/student-register/query-student-profile',
+            QUERY_STUDENT_MAJORS: '/api/student-register/load-open-majors',
+            SUBMIT_FORM: '/api/student-register/submit-form',
+            LOAD_MAJOR_DETAIL: '/api/student-register/load-major-detail',
+        },
+        // 获取省市列表的接口
+        LOCATION: {
+            PROVINCES: '/api/location/get-provinces',
+            CITIES: '/api/location/get-cities',
+            DISTRICTS: '/api/location/get-districts',
+        }
     },
     YEARS: ['N.A','一年级','二年级','三年级','四年级','五年级','六年级'],
     TERMS: ['N.A','第一学期','第二学期'],
@@ -52,5 +65,8 @@ export const Constants = {
         TIMETABLE: {
             ENQUIRY: 'timetable-enquiry'
         }
-    }
+    },
+    STUDENT_ID_NUMBER: 'purfect.id_number',
+    STUDENT_MOBILE: 'purfect.mobile',
+    STUDENT_PROFILE: 'purfect.profile',
 };
