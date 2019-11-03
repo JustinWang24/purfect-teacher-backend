@@ -59,7 +59,6 @@ class TeacherProfileDao
         return TeacherProfile::create($data);
     }
 
-
     /**
      * 获取老师列表
      * @param $map

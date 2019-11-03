@@ -5,12 +5,12 @@
 use App\Models\Students\StudentProfile;
 use App\User;
 use App\Models\RecruitStudent\RegistrationInformatics;
-use Illuminate\Support\Str;
 use Faker\Generator as Faker;
 use App\Models\Acl\Role;
 use Illuminate\Support\Facades\Hash;
 use Ramsey\Uuid\Uuid;
 use Carbon\Carbon;
+use App\Models\Schools\RecruitmentPlan;
 
 /*
 |--------------------------------------------------------------------------
@@ -63,5 +63,30 @@ $factory->define(RegistrationInformatics::class, function (Faker $faker) {
         'major_id' => rand(1, 3),
         'relocation_allowed' => rand(1, 2),
         'status' => rand(1, 3),
+    ];
+});
+
+// Mock 招生计划的数据
+$factory->define(RecruitmentPlan::class, function (Faker $faker) {
+    return [
+        'school_id'=>1,
+        'major_id'=>1,
+        'major_name'=>$faker->name,// 专业名
+        'type'=>RecruitmentPlan::TYPE_SELF, // 招生类型: 自主招生/统招 等
+        'title'=>$faker->title,// 本次招生计划的标题
+        'start_at'=>date('Y-m-d'),  // 开始招生日期
+        'end_at'=>date('Y-m-d'),    // 招生截止日期
+        'expired'=>$faker->boolean,  // 强制结束招生
+        'description'=>$faker->paragraph,  // 招生简章详情
+        'tease'=>$faker->paragraph,  // 简介
+        'tags'=>$faker->paragraph,  // 标签
+        'fee'=>1000,  // 专业学费
+        'hot'=>$faker->boolean,  // 热门专业
+        'seats'=>100,// 招生人数
+        'grades_count'=>3,// 招几个班级
+        'year'=>2019, // 招生年度
+        'applied_count'=>0, // 已报名人数
+        'enrolled_count'=>0, // 已招生人数
+        'manager_id'=>1, // 负责人: 本次招生的收信人
     ];
 });

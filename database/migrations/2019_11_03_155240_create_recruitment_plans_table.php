@@ -27,7 +27,7 @@ class CreateRecruitmentPlansTable extends Migration
             $table->date('start_at')->comment('开始招生日期');
             $table->date('end_at')->nullable()->comment('开始招生日期');
 
-            $table->unsignedSmallInteger('grades_count')->default(0)->comment('招生人数');
+            $table->unsignedSmallInteger('grades_count')->default(0)->comment('招几个班');
             $table->unsignedInteger('seats')->default(0)->comment('招生人数');
             $table->unsignedInteger('fee')->default(0)->comment('专业学费');
             $table->unsignedInteger('year')->comment('招生年度');

@@ -4,10 +4,15 @@ namespace App\Models\Schools;
 
 use App\Models\School;
 use App\User;
+use App\Utils\Time\GradeAndYearUtil;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class RecruitmentPlan extends Model
 {
+    use SoftDeletes;
+
     const TYPE_GENERAL = 1; // 统招
     const TYPE_SELF = 2;    // 自主招生
 
@@ -32,6 +37,33 @@ class RecruitmentPlan extends Model
         'enrolled_count', // 已招生人数
         'manager_id', // 负责人: 本次招生的收信人
     ];
+
+    public $dates = [
+        'start_at','end_at',
+    ];
+
+    protected $casts = [
+        'start_at' => 'datetime:Y年m月d日',
+        'end_at' => 'datetime:Y年m月d日',
+    ];
+
+    public function setStartAtAttribute($value)
+    {
+        $this->attributes['start_at'] = GradeAndYearUtil::ConvertJsTimeToCarbon($value);
+    }
+
+    /**
+     * @param $value
+     */
+    public function setEndAtAttribute($value)
+    {
+        if(empty($value)){
+            $this->attributes['end_at'] = null;
+        }
+        else{
+            $this->attributes['end_at'] = GradeAndYearUtil::ConvertJsTimeToCarbon($value);
+        }
+    }
 
     public function major(){
         return $this->belongsTo(Major::class);
