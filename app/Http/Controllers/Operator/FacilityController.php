@@ -75,6 +75,8 @@ class FacilityController extends Controller
         $result = $facilityDao->facilityInfoDispose($id,$user,$schoolId);
         $this->dataForView['facility'] = $result['facility'];
         $this->dataForView['campus'] = $result['campus'];
+        $this->dataForView['type'] = $facilityDao->getType();
+//        dump($this->dataForView);die;
         return view('school_manager.facility.edit', $this->dataForView);
     }
 

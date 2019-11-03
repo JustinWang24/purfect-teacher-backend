@@ -52,18 +52,12 @@
                 </li>
 
                 <li class="nav-item">
-                    <a href="{{ route('school_manager.planRecruit.list',['uuid'=>session('school.uuid')]) }}" class="nav-link">
+                    <a href="javascript:void(0);" class="nav-link nav-toggle">
                         <i class="material-icons">people</i>
                         <span class="title">招生管理</span>
+                        <span class="selected"></span>
+                        <span class="arrow open"></span>
                     </a>
-                </li>
-
-                <li class="nav-item">
-                    <a href="{{ route('school_manager.facility.list') }}" class="nav-link">
-                        <i class="material-icons">dashboard</i>
-                        <span class="title">设备管理</span>
-                    </a>
-
                     <ul class="sub-menu">
                         <li class="nav-item active">
                             <a href="{{ route('school_manager.planRecruit.list') }}" class="nav-link ">
@@ -78,6 +72,15 @@
                             </a>
                         </li>
                     </ul>
+                </li>
+
+                <li class="nav-item">
+                    <a href="{{ route('school_manager.facility.list') }}" class="nav-link">
+                        <i class="material-icons">dashboard</i>
+                        <span class="title">设备管理</span>
+                    </a>
+
+
                 </li>
                 @endif
             </ul>
