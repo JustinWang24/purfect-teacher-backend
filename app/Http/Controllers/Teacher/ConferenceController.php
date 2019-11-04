@@ -100,23 +100,21 @@ class ConferenceController extends Controller
         $from = $request->get('from');
         $to = $request->get('to');
 
-        $schoolId = 1;
+        $schoolId = $request->getSchoolId();
         $userId = Auth::id();
-        $map = [['school_id', '=', $schoolId],['teacher_id', '!=', $userId]];
+        $map = [['school_id', '=', $schoolId],['user_id', '!=', $userId]];
         $teacherDao = new TeacherProfileDao();
-        $field = ['id','teacher_id','name','school_id'];
+        $field = ['id','user_id','school_id'];
         $teacherList = $teacherDao->getTeachers($map, $field)->toArray();
-
 
         #查询老师在当前时间是否有空
         $conferenceDao = new ConferenceDao();
-
         $conferenceUsers = $conferenceDao->getConferenceUser($from, $to, $schoolId);
 
         $userIdArr = array_column($conferenceUsers,'user_id');
         foreach ($teacherList as $key => $value)
         {
-            if(in_array($value['teacher_id'],$userIdArr))
+            if(in_array($value['user_id'],$userIdArr))
             {
                 $teacherList[$key]['status'] = 1; //有会议
             }
