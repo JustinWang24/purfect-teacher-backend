@@ -71,8 +71,8 @@ class ConferenceTest extends BasicPageTestCase
         foreach ($result['data'] as $key => $val)
         {
             $this->assertArrayHasKey('id', $val);
-            $this->assertArrayHasKey('teacher_id', $val);
-            $this->assertArrayHasKey('name', $val);
+            $this->assertArrayHasKey('user_id', $val);
+            $this->assertArrayHasKey('name', $val['users']);
             $this->assertArrayHasKey('school_id', $val);
             $this->assertArrayHasKey('status', $val);
         }
