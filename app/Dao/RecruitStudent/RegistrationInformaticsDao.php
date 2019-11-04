@@ -77,4 +77,16 @@ class RegistrationInformaticsDao
         return RegistrationInformatics::where('id', $id)->update($data);
     }
 
+    /**
+     * 根据userId获取报名信息
+     * @param $userId
+     * @return mixed
+     */
+    public function getInformaticsByUserId($userId)
+    {
+        return RegistrationInformatics::where('user_id', $userId)->get();
+    }
+
+
+
 }

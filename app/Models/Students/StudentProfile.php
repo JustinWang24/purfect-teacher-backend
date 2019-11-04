@@ -2,6 +2,8 @@
 
 namespace App\Models\Students;
 
+use App\Models\RecruitStudent\RegistrationInformatics;
+use App\User;
 use Illuminate\Database\Eloquent\Model;
 
 class StudentProfile extends Model
@@ -32,4 +34,19 @@ class StudentProfile extends Model
     ];
 
     public $dates = ['birthday'];
+
+    protected $table = 'student_profiles';
+
+
+    public function user()
+    {
+        return $this->hasOne(User::class,'id', 'user_id');
+    }
+
+    public function registrationInformatics()
+    {
+        return $this->hasMany(RegistrationInformatics::class,'user_id', 'user_id');
+    }
+
+
 }
