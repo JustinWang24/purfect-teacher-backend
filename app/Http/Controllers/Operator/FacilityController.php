@@ -35,7 +35,7 @@ class FacilityController extends Controller
 
     public function add(MonitoringRequest $request) {
 
-         $facilityDao = new FacilityDao();
+        $facilityDao = new FacilityDao();
         if($request->isMethod('post')) {
             $all = $request->post('facility');
             $all['school_id'] = $request->getSchoolId();
@@ -54,7 +54,7 @@ class FacilityController extends Controller
         $schoolId = $request->getSchoolId();
         $campus = $campusDao->getCampusesBySchool($schoolId,$field);
         $this->dataForView['campus'] = $campus;
-         $this->dataForView['type'] = $facilityDao->getType();
+        $this->dataForView['type'] = $facilityDao->getType();
         return view('school_manager.facility.add', $this->dataForView);
 
     }
