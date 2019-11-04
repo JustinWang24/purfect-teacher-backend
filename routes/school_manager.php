@@ -106,11 +106,13 @@ Route::prefix('school_manager')->group(function () {
     Route::get('registration/list', 'RecruitStudent\RegistrationInformatics@index')->name('school_manager.registration.list');  // 报名列表
 
     //设备管理
-    Route::get('facility/list','FacilityController@list')->name('school_manager.facility.list');
-    Route::any('facility/add','FacilityController@add')->name('school_manager.facility.add');
-    Route::any('facility/edit','FacilityController@edit')->name('school_manager.facility.edit');
-    Route::get('facility/delete','FacilityController@delete')->name('school_manager.facility.delete');
-  
+    Route::get('facility/list','FacilityController@list')->name('school_manager.facility.list');  // 设备列表
+    Route::any('facility/add','FacilityController@add')->name('school_manager.facility.add');     // 添加设备
+    Route::any('facility/edit','FacilityController@edit')->name('school_manager.facility.edit');  // 编辑设备
+    Route::get('facility/delete','FacilityController@delete')->name('school_manager.facility.delete'); // 删除设备
+    Route::get('facility/getBuildingList','FacilityController@getBuildingList')->name('school_manager.facility.getBuildingList'); // 获取建筑列表
+    Route::get('facility/getRoomingList','FacilityController@getRoomList')->name('school_manager.facility.getRoomList');  // 获取教室列表
+
     // 招生报名管理
     Route::get('registration/list', 'RecruitStudent\RegistrationInformatics@index')->name('school_manager.registration.list');  // 报名列表
     Route::get('registration/details', 'RecruitStudent\RegistrationInformatics@details')->name('school_manager.registration.details');  // 报名详情

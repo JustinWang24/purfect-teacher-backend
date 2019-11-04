@@ -2,7 +2,9 @@
 
 namespace App\Dao\FacilityManage;
 
+use App\Dao\Schools\BuildingDao;
 use App\Dao\Schools\CampusDao;
+use App\Dao\Schools\RoomDao;
 use App\Models\Schools\Facility;
 
 class FacilityDao
@@ -56,10 +58,16 @@ class FacilityDao
      */
     public function facilityInfoDispose($id,$user,$schoolId) {
         $campusDao = new CampusDao($user);
+        $buildingDao = new BuildingDao($user);
+        $roomDao = new RoomDao($user);
         $facility = $this->getFacilityInfo(['id'=>$id]);
         $field = ['id', 'name'];
         $campus = $campusDao->getCampusesBySchool($schoolId,$field);
-        return ['facility'=>$facility,'campus'=>$campus];
+        $building = $buildingDao->getBuildingByCampusId($facility['campus_id']);
+        $room = $roomDao->getRoomByBuildingId($facility['building_id']);
+
+        return ['facility'=>$facility, 'campus'=>$campus,
+            'building'=>$building, 'room'=>$room];
     }
 
 
