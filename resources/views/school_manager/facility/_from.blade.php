@@ -45,13 +45,16 @@
     <label for="facility-building-select">建筑</label>
     <select required type="text" class="form-control" id="facility-building-select" placeholder="建筑" name="facility[building_id]">
         <option value="">请选择</option>
-        @foreach($building as $key => $val)
-            <option value="{{$val['id']}}"
-                    @if(isset($facility['building_id']))
-                    @if($val['id'] == $facility['building_id'])  selected @endif
-                    @endif>
-                {{$val['name']}}</option>
-        @endforeach
+
+        @if(!empty($building))
+            @foreach($building as $key => $val)
+                <option value="{{$val['id']}}"
+                        @if(isset($facility['building_id']))
+                        @if($val['id'] == $facility['building_id'])  selected @endif
+                        @endif>
+                    {{$val['name']}}</option>
+            @endforeach
+        @endif
     </select>
 </div>
 
@@ -59,18 +62,20 @@
     <label for="facility-room-select">教室</label>
     <select required type="text" class="form-control" id="facility-room-select" value="" placeholder="教室" name="facility[room_id]">
         <option value="">请选择</option>
-        @foreach($room as $key => $val)
-            <option value="{{$val['id']}}"
-                    @if(isset($facility['room_id']))
-                    @if($val['id'] == $facility['room_id'])  selected @endif
-                    @endif>
-                {{$val['name']}}</option>
-        @endforeach
+        @if(!empty($room))
+            @foreach($room as $key => $val)
+                <option value="{{$val['id']}}"
+                        @if(isset($facility['room_id']))
+                        @if($val['id'] == $facility['room_id'])  selected @endif
+                        @endif>
+                    {{$val['name']}}</option>
+            @endforeach
+        @endif
     </select>
 </div>
 
 
 <div class="form-group">
-    <label for="building-addr-select">详细地址</label>
+    <label for="facility-addr-select">详细地址</label>
     <input  type="text" class="form-control" id="facility-addr-input" value="{{$facility['detail_addr'] ?? old('detail_addr')}}" placeholder="详细地址" name="facility[detail_addr]">
 </div>

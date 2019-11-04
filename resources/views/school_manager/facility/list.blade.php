@@ -12,7 +12,7 @@
                         <div class="row table-padding">
                             <div class="col-md-6 col-sm-6 col-6">
                                 <a href="{{ route('school_manager.facility.add') }}" class="btn btn-primary">
-                                    创建监控 <i class="fa fa-plus"></i>
+                                    创建 <i class="fa fa-plus"></i>
                                 </a>
                             </div>
                         </div>
@@ -27,6 +27,7 @@
                                     <th>校区</th>
                                     <th>楼群</th>
                                     <th>教室</th>
+                                    <th>类型</th>
                                     <th>创建时间</th>
                                     <th>操作</th>
                                 </tr>
@@ -40,6 +41,7 @@
                                         <td>{{$val['campus']['name']}}</td>
                                         <td>{{ $val['building']['name'] }}</td>
                                         <td>{{$val['room']['name']}}</td>
+                                        <td>{{$val['TypeText']}}</td>
                                         <td>{{$val['created_at']}}</td>
                                         <td class="text-center">
                                             {{ \App\Utils\UI\Anchor::Print(['text'=>'编辑','class'=>'btn-edit-facility','href'=>route('school_manager.facility.edit',['id'=>$val['id']])], \App\Utils\UI\Button::TYPE_DEFAULT,'edit') }}

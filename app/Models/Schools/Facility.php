@@ -67,4 +67,24 @@ class Facility extends Model
     public function building() {
         return $this->belongsTo(Building::class, 'building_id', 'id');
     }
+
+
+    /**
+     * 获取type属性
+     * @return string
+     */
+    public function getTypeTextAttribute() {
+        switch ($this->type) {
+            case self::TYPE_MONITORING:
+                return self::TYPE_MONITORING_TEXT;break;
+            case self::TYPE_ENTRANCE_GUARD:
+                return self::TYPE_ENTRANCE_GUARD_TEXT;break;
+            case self::TYPE_CLASS_SIGN:
+                return self::TYPE_CLASS_SIGN_TEXT;break;
+            case self::TYPE_CLASS_CLASSROOM:
+                return self::TYPE_CLASS_CLASSROOM_TEXT;
+            default : return '';
+
+        }
+    }
 }
