@@ -94,14 +94,11 @@ class ConferenceDao
         try{
             DB::beginTransaction();
             $s1 = $this->createConference($conferenceData);
-
-            if(!$s1->id)
-            {
+            if(!$s1->id) {
                 throw new \Exception('创建会议失败');
             }
 
-            foreach ($conferenceData['participant'] as $key => $val)
-            {
+            foreach ($conferenceData['participant'] as $key => $val) {
                 $conferenceUserData = [
                     'conference_id' => $s1->id,
                     'user_id'       => $val,
