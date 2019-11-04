@@ -15,16 +15,18 @@
 ```$xslt
 {
 "code":1000,
-"data":[
-        {
-            "id":97308,  
-            "user_id":167825,              // 用户ID
-            "school_id":1,                 // 学校ID
-            "users":{
-                "name" :"Dr. Valentina Simonis"  // 用户昵称
-            },  
-            "status":0                    //状态 0:没有会议  1:有会议
-        }]
+"data": { 
+        "teacher":
+            [{
+                "id":97308,  
+                "user_id":167825,              // 用户ID
+                "school_id":1,                 // 学校ID
+                "users":{
+                    "name" :"Dr. Valentina Simonis"  // 用户昵称
+                },  
+                "status":0                    //状态 0:没有会议  1:有会议
+            }]
+        }
 }
 ```
 
@@ -35,30 +37,26 @@
 ```$xslt
 {
 	"code": 1000,
-	"data": [{
-		"id": 1,
-		"school_id": 50,
-		"campus_id": 0,
-		"building_id": 1,
-		"name": "教学楼",
-		"type": 3,
-		"seats": 1,
-		"description": null,
-		"deleted_at": null,
-		"time":[
-		    {   
-		     "from":"13:38:52",    //开始时间
-		     "to":"13:43:52",      //结束时间
-		     "room_id":1
-		    },
-		    {
-		    "from":"14:40:00",  
-             "to":"15:00:00",
-             "room_id":1
-		    }
-        ]
-      
-	}]
+	"data": {
+        "room":
+            [{
+            "id": 1,
+            "school_id": 50,
+            "campus_id": 0,
+            "building_id": 1,
+            "name": "教学楼",
+            "type": 3,
+            "seats": 1,
+            "description": null,
+            "deleted_at": null,
+            "time":[
+                {   
+                 "from":"13:38:52",    //开始时间
+                 "to":"13:43:52",      //结束时间
+                 "room_id":1
+                }]
+            }]
+        }
 }
 ```
 
@@ -88,50 +86,42 @@
 ```
 
 
-### 获取会议列表
+### 获取会议列表  /teacher/conference/data
 #### 响应数据
 ```$xslt
 {
 	"code": 1000,
-	"data": [{
-		"id": 4,
-		"title": "TO7GvEgXH7",       //会议主题       
-		"school_id": 50,             //学校ID
-		"user_id": 1,                //用户ID
-		"room_id": 1,                //会议室ID
-		"sign_out": 0,               //是否签退 0不需要 1需要
-		"date": "2019-10-25",        //当天日期
-		"from": "13:38:52",          //会议开始时间
-		"to": "13:43:52",            //会议结束时间
-		"video": 0,                  //是否视频会议 0不需要 1需要
-		"remark": null,              //特殊说明
-		"status": 0,                 //审核状态 0未审核 1已审核  2已拒绝
-		"created_at": "2019-10-25 13:38:52", 
-		"updated_at": "2019-10-25 13:38:52",
-		"users": {
-			"id": 1,
-			"uuid": "6fec3fe9-da7a-44a2-9ce1-1a541e931bec",
-			"name": "小马",
-			"mobile": "18601216091",
-			"email": null,
-			"type": 1,
-			"status": 3,
-			"mobile_verified_at": "2019-10-23 10:50:47",
-			"created_at": "2019-10-23 10:50:47",
-			"updated_at": "2019-10-23 10:50:47"
-		},
-		"rooms": {
-                "id" : 1
-                "school_id" : 50
-                "campus_id" : 0
-                "building_id" : 1
-                "name"  : "教学楼"
-                "type"  :3
-                "seats" : 1
-                "description" => null
-                "deleted_at" => null
+	"data": {
+        "comference":
+            [{
+            "id": 4,
+            "title": "TO7GvEgXH7",       //会议主题       
+            "school_id": 50,             //学校ID
+            "user_id": 1,                //用户ID
+            "room_id": 1,                //会议室ID
+            "sign_out": 0,               //是否签退 0不需要 1需要
+            "date": "2019-10-25",        //当天日期
+            "from": "13:38:52",          //会议开始时间
+            "to": "13:43:52",            //会议结束时间
+            "video": 0,                  //是否视频会议 0不需要 1需要
+            "remark": null,              //特殊说明
+            "status": 0,                 //审核状态 0未审核 1已审核  2已拒绝
+            "created_at": "2019-10-25 13:38:52", 
+            "users": {
+                "id": 1,
+                "uuid": "6fec3fe9-da7a-44a2-9ce1-1a541e931bec",
+                "name": "小马",
+                "mobile": "18601216091",
+            },
+            "rooms": {
+                    "id" : 1
+                    "school_id" : 50
+                    "campus_id" : 0
+                    "building_id" : 1
+                    "name"  : "教学楼"
+                    "type"  :3
+            }
+            }]
         }
-
-	}]
 }
 ```
