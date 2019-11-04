@@ -42,8 +42,8 @@
                                         <td>{{$val['room']['name']}}</td>
                                         <td>{{$val['created_at']}}</td>
                                         <td class="text-center">
-                                            {{ \App\Utils\UI\Anchor::Print(['text'=>'编辑','href'=>route('school_manager.facility.edit',['id'=>$val['id']])], \App\Utils\UI\Button::TYPE_DEFAULT,'edit') }}
-                                            {{ \App\Utils\UI\Anchor::Print(['text'=>'删除','class'=>'btn-delete-room btn-need-confirm','href'=>route('school_manager.facility.delete',['id'=>$val['id']])], \App\Utils\UI\Button::TYPE_DANGER,'trash') }}
+                                            {{ \App\Utils\UI\Anchor::Print(['text'=>'编辑','class'=>'btn-edit-facility btn-need-confirm','href'=>route('school_manager.facility.edit',['id'=>$val['id']])], \App\Utils\UI\Button::TYPE_DEFAULT,'edit') }}
+                                            {{ \App\Utils\UI\Anchor::Print(['text'=>'删除','class'=>'btn-delete-facility btn-need-confirm','href'=>route('school_manager.facility.delete',['id'=>$val['id']])], \App\Utils\UI\Button::TYPE_DANGER,'trash') }}
                                         </td>
                                     </tr>
                                 @endforeach
