@@ -69,7 +69,7 @@ use App\Utils\UI\Button;
 
                         <div class="form-group">
                             <label for="building-addr-select">详细地址</label>
-                            <input  type="text" class="form-control" id="facility-addr-select" value="{{$facility['detail_addr']}}" placeholder="详细地址" name="facility[detail_addr]">
+                            <input  type="text" class="form-control" id="facility-addr-input" value="{{$facility['detail_addr']}}" placeholder="详细地址" name="facility[detail_addr]">
                         </div>
 
                         <div class="form-group">
@@ -83,10 +83,10 @@ use App\Utils\UI\Button;
                         </div>
 
                         <?php
-                        Button::Print(['id'=>'btn-create-building','text'=>trans('general.submit')], Button::TYPE_PRIMARY);
+                        Button::Print(['id'=>'btn-edit-facility','text'=>trans('general.submit')], Button::TYPE_PRIMARY);
                         ?>&nbsp;
                         <?php
-                        Anchor::Print(['text'=>trans('general.return'),'href'=>url()->previous(),'class'=>'pull-right link-return'], Button::TYPE_SUCCESS,'arrow-circle-o-right')
+                        Anchor::Print([''=>'','text'=>trans('general.return'),'href'=>url()->previous(),'class'=>'pull-right link-return'], Button::TYPE_SUCCESS,'arrow-circle-o-right')
                         ?>
                     </form>
                 </div>
