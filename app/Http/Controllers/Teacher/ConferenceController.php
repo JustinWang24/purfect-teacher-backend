@@ -74,13 +74,9 @@ class ConferenceController extends Controller
 
         $conferenceDao = new ConferenceDao();
         $return = $conferenceDao -> addConferenceFlow($conferenceData);
-
-        if($return['code'] == 1)
-        {
+        if($return['code'] == 1) {
             return JsonBuilder::Success($return['msg']);
-        }
-        else
-        {
+        } else {
             return JsonBuilder::Error($return['msg']);
         }
 
