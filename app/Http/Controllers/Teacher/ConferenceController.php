@@ -14,24 +14,21 @@ use App\Http\Requests\Teacher\ConferenceRequest;
 
 class ConferenceController extends Controller
 {
-    public function index()
-    {
+    public function index() {
         return view('teacher.conference.index', $this->dataForView);
     }
 
 
-    public function data(ConferenceRequest $request)
-    {
+    public function data(ConferenceRequest $request) {
         #判断权限
-        $schoolId = $request->session()->get('school.id');
+        $schoolId = $request->getSchoolId();
 
         $userId = Auth::id();
         $dao = new ConferenceDao();
         $map = ['user_id'=>$userId];
         $list = $dao->getConferenceListByUser($map,$schoolId)->toArray();
-
-        return JsonBuilder::Success($list);
-//        echo json_encode(['code'=>0,"count" => 1, "data" => $list]);die;
+        $result = ['conference'=>$list];
+        return JsonBuilder::Success($result);
 
     }
 
@@ -41,9 +38,7 @@ class ConferenceController extends Controller
      * @param ConferenceRequest $request
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function add(ConferenceRequest $request)
-    {
-
+    public function add(ConferenceRequest $request) {
         $roomDao = new RoomDao($request->user());
         $schoolId = 1;
 
@@ -67,8 +62,7 @@ class ConferenceController extends Controller
      * @param ConferenceRequest $request
      * @return string
      */
-    public function create(ConferenceRequest $request)
-    {
+    public function create(ConferenceRequest $request) {
         $conferenceData = $request->all();
         $conferenceData['school_id'] = $request->session()->get('school.id');
 
@@ -90,8 +84,7 @@ class ConferenceController extends Controller
      * @param ConferenceRequest $request
      * @return string
      */
-    public function getUsers(ConferenceRequest $request)
-    {
+    public function getUsers(ConferenceRequest $request) {
 
         $from = $request->get('from');
         $to = $request->get('to');
@@ -108,19 +101,17 @@ class ConferenceController extends Controller
         $conferenceUsers = $conferenceDao->getConferenceUser($from, $to, $schoolId);
 
         $userIdArr = array_column($conferenceUsers,'user_id');
-        foreach ($teacherList as $key => $value)
-        {
-            if(in_array($value['user_id'],$userIdArr))
-            {
+        foreach ($teacherList as $key => $value) {
+            if(in_array($value['user_id'],$userIdArr)) {
                 $teacherList[$key]['status'] = 1; //有会议
-            }
-            else
-            {
+            } else {
                 $teacherList[$key]['status'] = 0; //没有会议
             }
         }
 
-        return JsonBuilder::Success($teacherList);
+        $result = ['teacher'=>$teacherList];
+
+        return JsonBuilder::Success($result);
 
     }
 
@@ -131,8 +122,7 @@ class ConferenceController extends Controller
      * @param ConferenceRequest $request
      * @return string
      */
-    public function getRooms(ConferenceRequest $request)
-    {
+    public function getRooms(ConferenceRequest $request) {
         $date = $request->get('date');
 
         $roomDao = new RoomDao($request->user());
@@ -146,18 +136,15 @@ class ConferenceController extends Controller
         $field = ['from','to','room_id'];
         $conferenceList = $conferenceDao->getConference($map,$field,'room_id')->toArray();
 
-        foreach ($list as $key => $val)
-        {
-            if(array_key_exists($val['id'],$conferenceList))
-            {
+        foreach ($list as $key => $val) {
+            if(array_key_exists($val['id'],$conferenceList)) {
                 $list[$key]['time'] = $conferenceList[$val['id']];
-            }
-            else
-            {
+            } else {
                 $list[$key]['time'] = [];
             }
         }
-        return JsonBuilder::Success($list);
+        $result = ['room'=>$list];
+        return JsonBuilder::Success($result);
     }
 
 }

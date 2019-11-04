@@ -68,7 +68,7 @@ class ConferenceTest extends BasicPageTestCase
         $this->assertArrayHasKey('code', $result);
         $this->assertArrayHasKey('data', $result);
         $this->assertEquals(1000, $result['code']);
-        foreach ($result['data'] as $key => $val)
+        foreach ($result['data']['teacher'] as $key => $val)
         {
             $this->assertArrayHasKey('id', $val);
             $this->assertArrayHasKey('user_id', $val);
@@ -96,7 +96,7 @@ class ConferenceTest extends BasicPageTestCase
         $this->assertArrayHasKey('code', $result);
         $this->assertEquals(1000, $result['code']);
         $this->assertArrayHasKey('data', $result);
-        foreach ($result['data'] as $key => $val)
+        foreach ($result['data']['room'] as $key => $val)
         {
             $this->assertArrayHasKey('id', $val);
             $this->assertArrayHasKey('school_id', $val);
@@ -138,9 +138,10 @@ class ConferenceTest extends BasicPageTestCase
             ->withSession($this->schoolSessionData)
             ->get(route('teacher.conference.data'));
         $result = json_decode($response->content(),true);
-//        dd($result);
+
         $this->assertArrayHasKey('code', $result);
         $this->assertEquals(1000, $result['code']);
+        $this->assertArrayHasKey('conference',$result['data']);
     }
 
 
