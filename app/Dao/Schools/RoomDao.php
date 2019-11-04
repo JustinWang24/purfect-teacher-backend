@@ -107,4 +107,27 @@ class RoomDao
         return Room::where('id', $id)->update($data);
     }
 
+
+    /**
+     * @param array $map
+     * @param array $field
+     * @return mixed
+     */
+    protected function getRoomList($map, $field) {
+        return Room::where($map)->select($field)->get();
+    }
+
+
+    /**
+     * 通过建筑ID获取教室
+     * @param $buildingId
+     * @return mixed
+     */
+    public function getRoomByBuildingId($buildingId) {
+        $field = ['id', 'building_id', 'name', 'type','exam_seats', 'seats'];
+        $map = ['building_id'=>$buildingId, 'type'=>Room::TYPE_CLASSROOM];
+        $result = $this->getRoomList($map,$field);
+        return $result;
+    }
+
 }
