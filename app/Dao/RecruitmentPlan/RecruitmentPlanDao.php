@@ -73,4 +73,54 @@ class RecruitmentPlanDao
             ->take($pageSize)
             ->get();
     }
+
+
+    /**
+     *根据ID获取专业详情包括专业下的课程
+     * @param $majorId
+     * @return mixed
+     */
+    public function getMajorDetailById($majorId)
+    {
+        $data = RecruitmentPlan::where('id', $majorId)->select('id', 'major_id', 'seats', 'enrolled_count', 'applied_count')->with([
+                    'courseMajor' => function ($query) {
+                        $query->select('major_id', 'course_name');
+                    },
+                    'major' => function ($query) {
+                        $query->select('id', 'name', 'fee', 'period', 'description');
+                    }
+                ])->first();
+
+        return $data;
+    }
+
+
+    /**
+     * 根据学校id 获取招生的专业
+     * @param $schoolId
+     * @return array
+     */
+    public function getAllMajorBySchoolId($schoolId)
+    {
+        $data = RecruitmentPlan::where('school_id', $schoolId)
+                    ->select('id', 'major_id', 'seats', 'enrolled_count', 'applied_count', 'hot')->with([
+                    'major' => function ($query) {
+                        $query->select('id', 'name', 'fee', 'period');
+                    }
+                ])->orderBy('created_at', 'desc')->get();
+
+        $result = [];
+        foreach ($data as $key => $val) {
+            $result[$key]['id']       = $val['id'];
+            $result[$key]['major_id'] = $val['major_id'];
+            $result[$key]['name']     = $val['major']['name'];
+            $result[$key]['fee']      = $val['major']['fee'];
+            $result[$key]['period']   = $val['major']['period'];
+            $result[$key]['seats']    = $val['seats'];
+            $result[$key]['enrolled'] = $val['enrolled_count'];
+            $result[$key]['applied']  = $val['applied_count'];
+        }
+
+        return  $result;
+    }
 }
