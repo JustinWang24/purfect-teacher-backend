@@ -60,6 +60,7 @@ $factory->define(StudentProfile::class, function (Faker $faker) {
 $factory->define(RegistrationInformatics::class, function (Faker $faker) {
     return [
         'school_id' => rand(1, 9),
+        'recruitment_plan_id' => 1,
         'major_id' => rand(1, 3),
         'relocation_allowed' => rand(1, 2),
         'status' => rand(1, 3),
