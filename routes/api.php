@@ -46,6 +46,9 @@ Route::prefix('school')->group(function () {
     Route::any('/search-teachers','Api\School\UsersController@search_by_name')
         ->name('api.school.search.teachers');
 
+    Route::any('/get-user-name','Api\School\UsersController@get_user_name')
+        ->name('api.school.get.user.name.by.id');
+
     // 根据给定的课程, 返回所有教授该课程的老师的列表
     Route::any('/load-course-teachers','Api\School\UsersController@load_course_teachers')
         ->name('api.school.load.course.teachers');
@@ -83,12 +86,20 @@ Route::prefix('enquiry')->group(function () {
 
 Route::prefix('recruitment')->group(function () {
     // 加载某个学校的招生计划
-    Route::post('/load-plans','Api\Recruitment\PlansController@load_plans')
+    Route::any('/load-plans','Api\Recruitment\PlansController@load_plans')
         ->name('api.recruitment.load.plans');
 
     // 保存某个学校的招生计划
     Route::post('/save-plan','Api\Recruitment\PlansController@save_plan')
         ->name('api.recruitment.save.plan');
+
+    // 加载某个招生计划
+    Route::any('/get-plan','Api\Recruitment\PlansController@get_plan')
+        ->name('api.recruitment.get.plan');
+
+    // 加载某个招生计划
+    Route::post('/delete-plan','Api\Recruitment\PlansController@delete_plan')
+        ->name('api.recruitment.delete.plan');
 });
 
 Route::prefix('timetable')->group(function () {

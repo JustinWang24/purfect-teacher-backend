@@ -8,6 +8,7 @@
 namespace App\Dao\Teachers;
 
 use App\User;
+use App\Utils\ReturnData\MessageBag;
 use Illuminate\Support\Facades\DB;
 use App\Models\Teachers\Conference;
 use App\Models\Teachers\ConferencesUser;
@@ -17,19 +18,18 @@ class ConferenceDao
 {
 
     /**
+     * @param User $user
      * @param $map
      * @param string $schoolId
      * @return mixed
      */
-    public function getConferenceListByUser($map,$schoolId='')
+    public function getConferenceListByUser($user, $map,$schoolId='')
     {
-        $userModel = new User();
-        if($userModel->isSchoolAdminOrAbove())
-        {
+        if($user->isSchoolAdminOrAbove()) {
             $map['school_id'] = $schoolId;
         }
         $model = new Conference();
-        $list = $model->where($map)->with('users')->get();
+        $list = $model->where($map)->with('user')->get();
         return $list;
     }
 
@@ -83,25 +83,21 @@ class ConferenceDao
         return ConferencesUser::where($map)->orwhere($map2)->get()->toArray();
     }
 
-
     /**
      * 添加会议流程
      * @param array $conferenceData 会议数据
-     * @return array
+     * @return MessageBag
      */
     public function addConferenceFlow($conferenceData)
     {
         try{
             DB::beginTransaction();
             $s1 = $this->createConference($conferenceData);
-
-            if(!$s1->id)
-            {
+            if(!$s1->id) {
                 throw new \Exception('创建会议失败');
             }
 
-            foreach ($conferenceData['participant'] as $key => $val)
-            {
+            foreach ($conferenceData['participant'] as $key => $val) {
                 $conferenceUserData = [
                     'conference_id' => $s1->id,
                     'user_id'       => $val,
@@ -125,13 +121,16 @@ class ConferenceDao
                 throw new \Exception('添加会议媒体关联失败');
             }
             DB::commit();
-            return ['code'=>1,'msg'=>'创建成功'];
+
+            return new MessageBag(1000,'创建成功');
+
         }
         catch (\Exception $e)
         {
             DB::rollBack();
             $msg = $e->getMessage();
-            return ['code'=>0,'msg'=>$msg];
+//            return ['code'=>0,'msg'=>$msg];
+            return new MessageBag(999,$msg);
         }
     }
 

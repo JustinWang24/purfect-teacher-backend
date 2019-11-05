@@ -2,6 +2,7 @@
 
 namespace App\Models\Teachers;
 
+use App\User;
 use Illuminate\Database\Eloquent\Model;
 
 class TeacherProfile extends Model
@@ -45,5 +46,10 @@ class TeacherProfile extends Model
         return $this->school_id;
     }
 
+
+    public function user() {
+        $field = ['id','name'];
+        return $this->belongsTo(User::class)->select($field);
+    }
 
 }
