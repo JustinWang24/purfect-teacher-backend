@@ -68,6 +68,7 @@ class OpenMajorController extends Controller
     /**
      * 专业详情
      * @param PlanRecruitRequest $request
+     * @return string
      */
     public function majorDetail(PlanRecruitRequest $request)
     {
@@ -75,12 +76,14 @@ class OpenMajorController extends Controller
         $schoolId = $request->get('school_id');
         $dao  = new RecruitmentPlanDao($schoolId);
         $data = $dao->getMajorDetailById($majorId);
-        dd($data);
+
+        return JsonBuilder::Success($data);
     }
 
     /**
      * 已报名学生, 辅助填充数据
      * @param PlanRecruitRequest $request
+     * @return string
      */
     public function studentProfile(PlanRecruitRequest $request)
     {
@@ -104,22 +107,67 @@ class OpenMajorController extends Controller
             }
         }
 
-        $field = ['id', 'user_id', 'id_number', 'gender', 'nation_name',
+        $result = [];
+
+        if (isset($userId)) {
+            $field = ['id', 'user_id', 'id_number', 'gender', 'nation_name',
                   'political_name', 'source_place', 'country', 'birthday',
                   'qq', 'wx', 'parent_name', 'parent_mobile', 'examination_score'
-        ];
+            ];
+            $result = $studentProfileDao->getStudentSignUpByUserId($userId, $field);
+        }
 
-        $result = $studentProfileDao->getStudentSignUpByUserId($userId, $field);
-
+        return JsonBuilder::Success($result);
     }
 
     /**
      * 学生报名
      * @param PlanRecruitRequest $request
+     * @return string
+     * @throws \Exception
      */
     public function signUp(PlanRecruitRequest $request)
     {
-        
+        $userId     = $request->get('id');
+        $schoolId   = $request->get('school_id');
+        $majorId    = $request->get('major_id');
+        $planId     = $request->get('recruitment_plan_id');
+        $data       = $request->get('data');
+
+        $planDao = new RecruitmentPlanDao($schoolId);
+
+        $plan = $planDao->getRecruitmentPlanById($planId);
+        if ($plan->seats >= $plan->enrolled_count) {
+            return JsonBuilder::Error('该专业已招满,请选择其他专业', '999');
+        }
+
+        $dao =  new RegistrationInformaticsDao;
+
+        if (empty($userId)) {
+            $add = $dao->addUser($data);
+            if (!$add) {
+               return JsonBuilder::Error('报名失败', '999');
+            } else {
+                 $signUpData['user_id']   = $add;
+            }
+        } else {
+            $signUpData['user_id'] = $userId;
+        }
+
+        $signUpData['school_id']           = $schoolId;
+        $signUpData['major_id']            = $majorId;
+        $signUpData['name']                = $data['name'];
+        $signUpData['relocation_allowed']  = $data['relocation_allowed'];
+        $signUpData['recruitment_plan_id'] = $planId;
+        $signUpData['status'] = 1;
+        $result = $dao->signUp($signUpData);
+
+        if ($result) {
+            return JsonBuilder::Success('报名成功');
+        } else {
+            return JsonBuilder::Error('报名失败',999);
+        }
+
     }
 
 }

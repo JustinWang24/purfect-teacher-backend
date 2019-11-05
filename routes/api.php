@@ -153,6 +153,4 @@ Route::prefix('student-register')->group(function () {
         ->name('api.major.submit.form');
 
 
-
-
 });
