@@ -94,4 +94,28 @@ class BuildingDao
         }
         return $data;
     }
+
+
+    /**
+     * 获取列表
+     * @param $map
+     * @param $field
+     * @return mixed
+     */
+    protected function getBuildingList($map,$field) {
+        return Building::where($map)->select($field)->get();
+    }
+
+
+    /**
+     * 根据校区id获取建筑
+     * @param $campusId
+     * @return mixed
+     */
+    public function getBuildingByCampusId($campusId) {
+        $field = ['id', 'campus_id', 'name', 'type', 'description'];
+        $map = ['campus_id'=>$campusId,'type'=>Building::TYPE_CLASSROOM_BUILDING];
+        $result = $this->getBuildingList($map,$field);
+        return $result;
+    }
 }
