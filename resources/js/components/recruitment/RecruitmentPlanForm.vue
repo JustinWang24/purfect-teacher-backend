@@ -5,18 +5,27 @@
                 <el-input v-model="form.title" placeholder="必填: 招生简章标题"></el-input>
             </el-form-item>
 
-            <el-form-item label="招生计划年份">
-                <el-select v-model="form.year" placeholder="请选择活动区域">
-                    <el-option :label="'招生年份: ' + y + '年'" :value="y" :key="idx" v-for="(y, idx) in years"></el-option>
-                </el-select>
-            </el-form-item>
+            <el-row>
+                <el-col :span="12">
+                    <el-form-item label="招生计划年份">
+                        <el-select v-model="form.year" placeholder="请选择活动区域">
+                            <el-option :label="'招生年份: ' + y + '年'" :value="y" :key="idx" v-for="(y, idx) in years"></el-option>
+                        </el-select>
+                    </el-form-item>
+                </el-col>
+                <el-col :span="12">
+                    <el-form-item label="招生类型">
+                        <el-select v-model="form.type" placeholder="请选择招生类型">
+                            <el-option label="自主招生" :value="2"></el-option>
+                            <el-option label="统招" :value="1"></el-option>
+                        </el-select>
+                    </el-form-item>
+                </el-col>
+            </el-row>
 
-            <el-form-item label="招生类型">
-                <el-select v-model="form.type" placeholder="请选择招生类型">
-                    <el-option label="自主招生" :value="2"></el-option>
-                    <el-option label="统招" :value="1"></el-option>
-                </el-select>
-            </el-form-item>
+
+
+
 
             <el-form-item label="专业" prop="major_id">
                 <el-select v-model="form.major_id" placeholder="请选择招生专业" style="width: 100%;">
@@ -26,11 +35,11 @@
 
             <el-form-item label="发布期限">
                 <el-col :span="11">
-                    <el-form-item prop="start_at" required>
+                    <el-form-item prop="start_at">
                         <el-date-picker type="date" placeholder="选择开始日期" v-model="form.start_at" style="width: 100%;"></el-date-picker>
                     </el-form-item>
                 </el-col>
-                <el-col class="line" :span="2">-</el-col>
+                <el-col class="line" :span="2"><p style="text-align:center;">-</p></el-col>
                 <el-col :span="11">
                     <el-form-item>
                         <el-date-picker placeholder="选择结束日期" v-model="form.end_at" style="width: 100%;"></el-date-picker>
@@ -38,25 +47,54 @@
                 </el-col>
             </el-form-item>
 
-            <el-form-item label="标记为热门">
-                <el-switch v-model="form.hot"></el-switch>
-            </el-form-item>
-            <el-form-item label="强制停止">
-                <el-switch v-model="form.expired"></el-switch>
-            </el-form-item>
+            <el-row>
+                <el-col :span="12">
+                    <el-form-item label="标记为热门">
+                        <el-switch v-model="form.hot"></el-switch>
+                    </el-form-item>
+                </el-col>
+                <el-col :span="12">
+                    <el-form-item label="强制停止">
+                        <el-switch v-model="form.expired"></el-switch>
+                    </el-form-item>
+                </el-col>
+            </el-row>
 
-            <el-form-item label="招生总数" prop="seats">
-                <el-input v-model="form.seats" placeholder="必填: 此专业计划招生的总人数"></el-input>
-            </el-form-item>
-            <el-form-item label="分几个班" prop="grades_count">
-                <el-input v-model="form.grades_count" placeholder="必填: 计划招几个班"></el-input>
-            </el-form-item>
 
-            <el-form-item label="学费/年" prop="fee">
-                <el-input v-model="form.fee" placeholder="必填: 学费/年">
-                    <template slot="append">元/年</template>
-                </el-input>
-            </el-form-item>
+            <el-row>
+                <el-col :span="12">
+                    <el-form-item label="招生总数" prop="seats">
+                        <el-input v-model="form.seats" placeholder="必填: 此专业计划招生的总人数"></el-input>
+                    </el-form-item>
+                </el-col>
+                <el-col :span="12">
+                    <el-form-item label="分几个班" prop="grades_count">
+                        <el-input v-model="form.grades_count" placeholder="必填: 计划招几个班"></el-input>
+                    </el-form-item>
+                </el-col>
+            </el-row>
+
+            <el-row>
+                <el-col :span="12">
+                    <el-form-item label="学费/年" prop="fee">
+                        <el-input v-model="form.fee" placeholder="必填: 学费/年">
+                            <template slot="append">元/年</template>
+                        </el-input>
+                    </el-form-item>
+                </el-col>
+                <el-col :span="12">
+                    <el-form-item label="招生负责人">
+                        <search-bar
+                            :school-id="schoolId"
+                            scope="employee"
+                            width="100%"
+                            v-on:result-item-selected="managerItemSelectedHandler"
+                            :init-query="currentManagerName"
+                        ></search-bar>
+                    </el-form-item>
+                </el-col>
+            </el-row>
+
 
             <el-form-item label="简介" prop="tease">
                 <el-input type="textarea" v-model="form.tease"  placeholder="必填: 招生专业简介"></el-input>
@@ -71,8 +109,9 @@
             </el-form-item>
 
             <el-form-item>
-                <el-button type="primary" @click="submitForm('ruleForm')">立即创建</el-button>
-                <el-button @click="resetForm('ruleForm')">重置</el-button>
+                <el-button type="primary" @click="submitForm('ruleForm')" icon="el-icon-upload">
+                    {{ this.form.id === ''  ? '创建' : '更新' }}
+                </el-button>
             </el-form-item>
         </el-form>
     </div>
@@ -81,10 +120,15 @@
 <script>
     import { getMajors } from '../../common/timetables';
     import { Constants } from '../../common/constants';
+    import { getUserNameById } from '../../common/search';
     import { Util } from '../../common/utils';
+    import SearchBar from '../quickSearch/SearchBar';
 
     export default {
         name: "RecruitmentPlanForm",
+        components:{
+            SearchBar
+        },
         props:{
             form: {
                 type: Object,
@@ -102,6 +146,22 @@
         watch: {
             'form.major_id': function() {
                 this.form.major_name = Util.GetItemById(this.form.major_id, this.majors).name;
+            },
+            'form.manager_id': function(newManagerId, oldManagerId){
+                if(newManagerId !== oldManagerId && newManagerId > 0){
+                    // 监控 manager_id 的变化
+                    if(newManagerId > 0){
+                        getUserNameById(this.form.school_id, newManagerId)
+                            .then(res => {
+                                if(Util.isAjaxResOk(res)){
+                                    this.currentManagerName = res.data.data.name;
+                                }
+                            });
+                    }else{
+                        // 表示是要创建新的招生计划了
+                        this.currentManagerName = '';
+                    }
+                }
             }
         },
         data(){
@@ -111,7 +171,7 @@
                         { required: true, message: '请输入标题', trigger: 'blur' },
                     ],
                     major_id: [
-                        { required: true, message: '请选择专业', trigger: 'change' }
+                        { required: true, message: '请选择专业', trigger: 'blur' }
                     ],
                     start_at: [
                         { type: 'date', required: true, message: '请选择日期', trigger: 'blur' }
@@ -133,6 +193,7 @@
                     ],
                 },
                 majors:[],
+                currentManagerName:'', // 当前选定的招生负责人的名字
             };
         },
         created(){
@@ -143,11 +204,9 @@
             });
         },
         methods: {
-            submitForm: function(formRef){
+            submitForm: function(){
                 this.form.school_id = this.schoolId;
-
                 const isCreateAction = Util.isEmpty(this.form.id);
-
                 axios.post(
                     Constants.API.RECRUITMENT.SAVE_PLAN,
                     {form: this.form}
@@ -162,7 +221,7 @@
                             });
                             this.$emit('new-plan-created'); // 发布新建计划消息
                         }else{
-                            this.$emit('new-plan-updated'); // 发布更新计划消息
+                            this.$emit('plan-updated'); // 发布更新计划消息
                             this.$message({
                                 message: '招生计划'+this.form.title+'已经成功更新',
                                 type: 'success'
@@ -176,8 +235,9 @@
                     this.$message.error('网络失去连接或服务器忙, 请稍候再试!');
                 });
             },
-            resetForm: function(formRef){
-
+            // 当老师的 item 被点击, 则 id 赋值给 manager_id
+            managerItemSelectedHandler: function(payload) {
+                this.form.manager_id = payload.item.id;
             }
         }
     }

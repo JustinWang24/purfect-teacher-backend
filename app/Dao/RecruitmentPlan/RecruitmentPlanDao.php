@@ -27,7 +27,9 @@ class RecruitmentPlanDao
      * @return RecruitmentPlan
      */
     public function createPlan($planData){
-//        $planData['start_at'] = GradeAndYearUtil::ConvertJsTimeToCarbon($planData['start_at']);
+        if(empty($planData['tags'])){
+            $planData['tags'] = $planData['major_name'];
+        }
         return RecruitmentPlan::create($planData);
     }
 
@@ -69,6 +71,7 @@ class RecruitmentPlanDao
         }
         return RecruitmentPlan::where('school_id', $schoolId)
             ->where('year',$year)
+            ->orderBy('updated_at','desc')
             ->skip($pageNumber * $pageSize)
             ->take($pageSize)
             ->get();
