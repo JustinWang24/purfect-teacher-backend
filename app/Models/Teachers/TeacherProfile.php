@@ -47,8 +47,9 @@ class TeacherProfile extends Model
     }
 
 
-    public function users() {
-        return $this->hasOne(User::class,'id','user_id');
+    public function user() {
+        $field = ['id','name'];
+        return $this->belongsTo(User::class)->select($field);
     }
 
 }

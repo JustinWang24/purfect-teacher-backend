@@ -72,7 +72,7 @@ class ConferenceTest extends BasicPageTestCase
         {
             $this->assertArrayHasKey('id', $val);
             $this->assertArrayHasKey('user_id', $val);
-            $this->assertArrayHasKey('name', $val['users']);
+            $this->assertArrayHasKey('name', $val['user']);
             $this->assertArrayHasKey('school_id', $val);
             $this->assertArrayHasKey('status', $val);
         }
@@ -84,7 +84,7 @@ class ConferenceTest extends BasicPageTestCase
      */
     public function testGetRoomsApi()
     {
-        $user = $this->getTeacher();
+        $user = $this->getSchoolManager();
         $date = Carbon::now()->format('Y-m-d');
         $get = ['date'=>$date];
 
@@ -93,6 +93,7 @@ class ConferenceTest extends BasicPageTestCase
             ->withSession($this->schoolSessionData)
             ->get(route('teacher.conference.getRooms',$get));
         $result = json_decode($response->content(),true);
+
         $this->assertArrayHasKey('code', $result);
         $this->assertEquals(1000, $result['code']);
         $this->assertArrayHasKey('data', $result);
@@ -113,13 +114,14 @@ class ConferenceTest extends BasicPageTestCase
     {
         $this->withoutExceptionHandling();
         $data = $this->__createConferenceData();
-
         $user = $this->getTeacher();
+        $data['user_id'] = $user->id;
 
         $response = $this->setSchoolAsUser($user, 1)
             ->actingAs($user)
             ->withSession($this->schoolSessionData)
             ->post(route('teacher.conference.create',$data));
+
         $result = json_decode($response->content(),true);
 
         $this->assertArrayHasKey('code', $result);
@@ -132,8 +134,8 @@ class ConferenceTest extends BasicPageTestCase
      */
     public function testGetConferenceListApi()
     {
-        $user = $this->getTeacher();
-        $response = $this->setSchoolAsUser($user, 50)
+        $user = $this->getSchoolManager();
+        $response = $this->setSchoolAsUser($user, 1)
             ->actingAs($user)
             ->withSession($this->schoolSessionData)
             ->get(route('teacher.conference.data'));
@@ -157,7 +159,6 @@ class ConferenceTest extends BasicPageTestCase
             'date'       => Carbon::now()->format('Y-m-d'),
             'from'       => Carbon::now()->format('H:i:s'),
             'to'         => Carbon::parse('+5 minutes ')->format('H:i:s'),
-            'user_id'    => 1,
             'participant'=> [11,12,13],
             'sign_out'   => 0,
             'video'      => 0,
