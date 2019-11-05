@@ -9,6 +9,7 @@
 namespace App\BusinessLogic\QuickSearch;
 use App\BusinessLogic\QuickSearch\Contracts\IQuickSearchLogic;
 use App\BusinessLogic\QuickSearch\Impl\CampusQuickSearchLogic;
+use App\BusinessLogic\QuickSearch\Impl\EmployeeQuickSearchLogic;
 use App\BusinessLogic\QuickSearch\Impl\InstituteQuickSearchLogic;
 use App\BusinessLogic\QuickSearch\Impl\MajorQuickSearchLogic;
 use Illuminate\Http\Request;
@@ -37,6 +38,9 @@ class Factory
                 break;
             case 'grade':
                 $instance = new MajorQuickSearchLogic($request);
+                break;
+            case 'employee':
+                $instance = new EmployeeQuickSearchLogic($request);
                 break;
             default:
                 break;

@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Api\School;
 use App\BusinessLogic\QuickSearch\Factory;
 use App\Dao\Courses\CourseTeacherDao;
 use App\Dao\Teachers\TeacherProfileDao;
+use App\Dao\Users\GradeUserDao;
+use App\Dao\Users\UserDao;
 use App\Models\Users\GradeUser;
 use App\User;
 use App\Utils\JsonBuilder;
@@ -73,5 +75,22 @@ class UsersController extends Controller
             }
         }
         return JsonBuilder::Success($data);
+    }
+
+    /**
+     * 获取用户名字, 根据给定的学校和用户 ID
+     * @param Request $request
+     * @return string
+     */
+    public function get_user_name(Request $request){
+        $schoolId = $request->get('school');
+        $userId = $request->get('user');
+        $dao = new GradeUserDao();
+        $exist = $dao->isUserInSchool($userId, $schoolId);
+        if($exist){
+            return JsonBuilder::Success(['name'=>$exist->name]);
+        }else{
+            return JsonBuilder::Error('查找的用户不存在');
+        }
     }
 }
