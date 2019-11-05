@@ -31,6 +31,8 @@ class StudentProfile extends Model
         'political_name', // 政治面貌名称
         'nation_code', // 民族代码
         'nation_name', // 民族名称
+        'parent_name', // 家长姓名
+        'parent_mobile' // 家长手机号
     ];
 
     public $dates = ['birthday'];

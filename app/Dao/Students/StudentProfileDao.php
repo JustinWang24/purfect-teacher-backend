@@ -45,7 +45,34 @@ class StudentProfileDao extends StudentProfile
                 }
             ])->first();
 
-        dd($data->toArray());
+        $data = $data->toArray();
+        $result = [];
+
+        if (is_array($data) && !empty($data)) {
+            $result['profile']['id']                = is_null($data['user']['id']) ? '' : $data['user']['id'];
+            $result['profile']['name']              = is_null($data['user']['name']) ? '' : $data['user']['name'];
+            $result['profile']['mobile']            = is_null($data['user']['mobile']) ? '' : $data['user']['mobile'];
+            $result['profile']['email']             = is_null($data['user']['email']) ? '' : $data['user']['email'];
+            $result['profile']['id_number']         = is_null($data['id_number']) ? '' : $data['id_number'];
+            $result['profile']['gender']            = is_null($data['gender']) ? '' : $data['gender'];
+            $result['profile']['nation_name']       = is_null($data['nation_name']) ? '' : $data['nation_name'];
+            $result['profile']['political_name']    = is_null($data['political_name']) ? '' : $data['political_name'];
+            $result['profile']['source_place']      = is_null($data['source_place']) ? '' : $data['source_place'];
+            $result['profile']['country']           = is_null($data['country']) ? '' : $data['country'];
+            $result['profile']['birthday']          = is_null($data['birthday']) ? '' : $data['birthday'];
+            $result['profile']['qq']                = is_null($data['qq']) ? '' : $data['qq'];
+            $result['profile']['wx']                = is_null($data['wx']) ? '' : $data['wx'];
+            $result['profile']['parent_name']       = is_null($data['parent_name']) ? '' : $data['parent_name'];
+            $result['profile']['parent_mobile']     = is_null($data['parent_mobile']) ? '' : $data['parent_mobile'];
+            $result['profile']['examination_score'] = is_null($data['examination_score'])? '' : $data['examination_score'];
+
+            foreach ($data['registration_informatics'] as $key => $val) {
+                $result['applied'][$key] = $val;
+                unset($result['applied'][$key]['user_id']);
+            }
+        }
+
+        return $result;
     }
 
 }

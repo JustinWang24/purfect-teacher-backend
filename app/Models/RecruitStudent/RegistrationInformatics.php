@@ -10,7 +10,7 @@ use App\User;
 
 class RegistrationInformatics extends Model
 {
-    protected $fillable = ['user_id', 'school_id', 'major_id', 'name', 'whether_adjust', 'status'];
+    protected $fillable = ['user_id', 'school_id', 'major_id', 'name', 'status', 'recruitment_plan_id', 'relocation_allowed', 'note'];
 
      const PAGE_NUMBER = 10;
 

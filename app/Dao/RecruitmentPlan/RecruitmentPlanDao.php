@@ -82,7 +82,7 @@ class RecruitmentPlanDao
      */
     public function getMajorDetailById($majorId)
     {
-        $data = RecruitmentPlan::where('id', $majorId)->select('id', 'major_id', 'seats', 'enrolled_count', 'applied_count')->with([
+        $data = RecruitmentPlan::where('major_id', $majorId)->select('id', 'major_id', 'seats', 'enrolled_count', 'applied_count')->with([
                     'courseMajor' => function ($query) {
                         $query->select('major_id', 'course_name');
                     },
@@ -91,7 +91,25 @@ class RecruitmentPlanDao
                     }
                 ])->first();
 
-        return $data;
+        $data = $data->toArray();
+        $result = [];
+        if (is_array($data) && !empty($data)) {
+            $result['major']['id']          = is_null($data['major_id']) ? '' : $data['major_id'];
+            $result['major']['seats']       = is_null($data['seats']) ? '' : $data['seats'];
+            $result['major']['enrolled']    = is_null($data['enrolled_count']) ? '' : $data['enrolled_count'];
+            $result['major']['applied']     = is_null($data['applied_count']) ? '' : $data['applied_count'];
+            $result['major']['name']        = is_null($data['major']['name']) ? '' : $data['major']['name'];
+            $result['major']['fee']         = is_null($data['major']['fee']) ? '' : $data['major']['fee'];
+            $result['major']['period']      = is_null($data['major']['period']) ? '' : $data['major']['period'];
+            $result['major']['description'] = is_null($data['major']['description']) ? '' : $data['major']['description'];
+
+            foreach ($data['course_major'] as $key => $val) {
+                $result['courses'][] = $val;
+                unset($result['courses'][$key]['major_id']);
+            }
+        }
+
+        return $result;
     }
 
 
@@ -123,4 +141,16 @@ class RecruitmentPlanDao
 
         return  $result;
     }
+
+
+    /**
+     * 根据ID 获取一条招生计划
+     * @param $id
+     * @return mixed
+     */
+    public function getRecruitmentPlanById($id)
+    {
+        return RecruitmentPlan::find($id);
+    }
+
 }
