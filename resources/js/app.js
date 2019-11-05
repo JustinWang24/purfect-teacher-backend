@@ -575,7 +575,7 @@ if(document.getElementById('school-timetable-previewer-app')){
                         // 加载失败
                         this.$message.error('您尝试加载的课程表不存在');
                     }
-                })
+                });
             }
         }
     });
@@ -590,9 +590,18 @@ if(document.getElementById('school-recruitment-manager-app')){
                 form:{},
                 year:'',
                 years:[],
+                plans:[],
+                reloading: false,
+                pageSize:20,
+                schoolId: null,
+                userUuid: null,
             }
         },
         created(){
+            const el = document.getElementById('plan-manager-school-id');
+            this.schoolId = el.dataset.id;
+            this.userUuid = el.dataset.uuid;
+
             this.year = (new Date()).getFullYear() + 1;
 
             this.years.push(this.year + 1);
@@ -600,11 +609,70 @@ if(document.getElementById('school-recruitment-manager-app')){
             this.years.push(this.year - 1);
 
             this._resetFormData();
+            this.loadPlans(0);
         },
         methods: {
             // 创建新招生计划
             createNewPlan: function(){
                 this._resetFormData();
+            },
+            onEditPlanHandler: function(payload){
+                axios.post(
+                    Constants.API.RECRUITMENT.GET_PLAN,
+                    {version: Constants.VERSION, plan: payload.plan.id }
+                ).then(res => {
+                    if(Util.isAjaxResOk(res)){
+                        this.form = res.data.data.plan;
+                        this.$message('您正在编辑招生计划: ' + this.form.title);
+                    }
+                    else{
+                        this.$message.error('加载招生计划数据失败');
+                    }
+                })
+            },
+            onDeletePlanHandler: function(payload){
+                axios.post(
+                    Constants.API.RECRUITMENT.DELETE_PLAN,
+                    {version: Constants.VERSION, plan: payload.plan.id, user: this.userUuid }
+                ).then(res => {
+                    if(Util.isAjaxResOk(res)){
+                        const idx = Util.GetItemIndexById(payload.plan.id, this.plans);
+                        if(idx > -1){
+                            this.plans.splice(idx, 1);
+                            this.$message({
+                                message: '招生计划: ' + payload.plan.title + '已被删除',
+                                type: 'success'
+                            });
+                        }
+                    }
+                    else{
+                        this.$message.error('无法删除招生计划');
+                    }
+                })
+            },
+            // 当新计划被成功创建
+            newPlanCreatedHandler: function(payload){
+                this.loadPlans(0);
+            },
+            planUpdatedHandler: function(payload){
+                this.loadPlans(0);
+            },
+            loadPlans: function(pageNumber){
+                this.plans = [];
+                axios.post(
+                    Constants.API.RECRUITMENT.LOAD_PLANS,
+                    {
+                        school: this.schoolId,
+                        pageNumber: pageNumber,
+                        pageSize: this.pageSize,
+                        year: this.year,
+                        version: Constants.VERSION
+                    }
+                ).then(res => {
+                    if(Util.isAjaxResOk(res)){
+                        this.plans = res.data.data.plans;
+                    }
+                });
             },
             _resetFormData: function(){
                 this.form = {
@@ -624,6 +692,7 @@ if(document.getElementById('school-recruitment-manager-app')){
                     seats:'',
                     grades_count:'',
                     year:this.year,
+                    manager_id: 0,
                 };
             }
         }
