@@ -14,9 +14,11 @@ class CreateUpdateRegistrationInformaticsTable extends Migration
     public function up()
     {
         Schema::table('registration_informatics', function (Blueprint $table) {
-            $table->unsignedTinyInteger('status')
+            $table->unsignedSmallInteger('status')
                 ->default(\App\Models\RecruitStudent\RegistrationInformatics::WAITING)
-                ->comment('状态 1待审核 2报名审核被拒绝 3报名审核已通过 4被拒绝录取 5被录取 6已报到');
+                ->comment('状态 1待审核 2报名审核被拒绝 3报名审核已通过 4被拒绝录取 5被录取 6已报到')
+                ->change();
+
         });
     }
 
