@@ -8,6 +8,7 @@ use App\Utils\Time\GradeAndYearUtil;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Models\Courses\CourseMajor;
 
 class RecruitmentPlan extends Model
 {
@@ -78,4 +79,11 @@ class RecruitmentPlan extends Model
     public function manager(){
         return $this->belongsTo(User::class,'manager_id');
     }
+
+
+    public function courseMajor()
+    {
+        return $this->hasMany(CourseMajor::class,'major_id', 'major_id');
+    }
+
 }
