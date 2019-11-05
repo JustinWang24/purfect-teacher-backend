@@ -12,16 +12,21 @@ class RegistrationInformatics extends Model
 {
     protected $fillable = ['user_id', 'school_id', 'major_id', 'name', 'status', 'recruitment_plan_id', 'relocation_allowed', 'note'];
 
-    const WAIT_EXAMINE = 1;
-    const ADOPT = 2;          // 报名时 已通过
-    const WAIT_ADMISSION = 2; // 录取时 待录取
-    const NOT_PASS = 3;
-    const ADMISSION = 4;
-    const WAIT_EXAMINE_TEXT = '等待审核';
-    const ADOPT_TEXT = '已通过';
-    const NOT_PASS_TEXT = '未通过';
-    const WAIT_ADMISSION_TEXT = '待录取';
-    const ADMISSION_TEXT = '已录取';
+    const WAITING           = 1;    // 等待审核
+    const REFUSED           = 2;    // 报名审核被拒绝
+    const PASSED            = 3;    // 报名审核已通过
+    const WAIT_FOR_APPROVAL = 3;    // 录取时 待录取
+    const REJECTED          = 4;    // 被拒绝录取
+    const APPROVED          = 5;    // 被录取
+    const ENROLLED          = 6;    // 已报到
+
+    const WAITING_TEXT              = '等待审核';
+    const REFUSED_TEXT              = '报名审核被拒绝';
+    const PASSED_TEXT               = '报名审核已通过';
+    const WAIT_FOR_APPROVAL_TEXT    = '审核通过待录取';
+    const REJECTED_TEXT             = '被拒绝录取';
+    const APPROVED_TEXT             = '已录取';
+    const ENROLLED_TEXT             = '已报到';
 
     /**
      * 学生详情表
