@@ -12,7 +12,7 @@ class RegistrationInformatics extends Model
 {
     protected $fillable = ['user_id', 'school_id', 'major_id', 'name', 'whether_adjust', 'status'];
 
-     const PAGE_NUMBER = 10;
+    const PAGE_NUMBER = 10;
 
     /**
      * 学生详情表
