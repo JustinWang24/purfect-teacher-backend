@@ -26,5 +26,4 @@ use App\Utils\UI\Button;
             </div>
         </div>
     </div>
-@include('school_manager.facility._js')
 @endsection

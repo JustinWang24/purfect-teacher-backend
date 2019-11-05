@@ -111,7 +111,7 @@ Route::prefix('school_manager')->group(function () {
     Route::any('facility/edit','FacilityController@edit')->name('school_manager.facility.edit');  // 编辑设备
     Route::get('facility/delete','FacilityController@delete')->name('school_manager.facility.delete'); // 删除设备
     Route::get('facility/getBuildingList','FacilityController@getBuildingList')->name('school_manager.facility.getBuildingList'); // 获取建筑列表
-    Route::get('facility/getRoomingList','FacilityController@getRoomList')->name('school_manager.facility.getRoomList');  // 获取教室列表
+    Route::get('facility/getRoomList','FacilityController@getRoomList')->name('school_manager.facility.getRoomList');  // 获取教室列表
 
     // 招生报名管理
     Route::get('registration/list', 'RecruitStudent\RegistrationInformatics@index')->name('school_manager.registration.list');  // 报名列表

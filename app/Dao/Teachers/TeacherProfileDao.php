@@ -67,7 +67,7 @@ class TeacherProfileDao
      */
     public function getTeachers($map,$field)
     {
-        $list = TeacherProfile::where($map)->select($field)->with('users')->get();
+        $list = TeacherProfile::where($map)->select($field)->with('user')->get();
         return $list;
     }
 }
