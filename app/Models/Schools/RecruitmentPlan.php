@@ -43,8 +43,10 @@ class RecruitmentPlan extends Model
     ];
 
     protected $casts = [
-        'start_at' => 'datetime:Y年m月d日',
-        'end_at' => 'datetime:Y年m月d日',
+        'start_at' => 'datetime:Y-m-d',
+        'end_at' => 'datetime:Y-m-d',
+        'hot'=>'boolean',
+        'expired'=>'boolean',
     ];
 
     public function setStartAtAttribute($value)

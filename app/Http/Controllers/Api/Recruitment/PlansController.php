@@ -54,4 +54,26 @@ class PlansController extends Controller
         }
         return JsonBuilder::Error('没有指明具体学校, 无法操作!');
     }
+
+    /**
+     * 根据 id 获取招生计划
+     * @param Request $request
+     * @return string
+     */
+    public function get_plan(Request $request){
+        $planId = $request->get('plan');
+        $dao = new RecruitmentPlanDao(0);
+        $plan = $dao->getPlan($planId);
+        return JsonBuilder::Success(['plan'=>$plan]);
+    }
+
+    /**
+     * @param Request $request
+     * @return string
+     */
+    public function delete_plan(Request $request){
+        $dao = new RecruitmentPlanDao(0);
+        $done = $dao->deletePlan($request->get('plan'));
+        return $done ? JsonBuilder::Success() : JsonBuilder::Error();
+    }
 }

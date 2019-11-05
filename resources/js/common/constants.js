@@ -17,6 +17,7 @@ export const Constants = {
         LOAD_COURSES_BY_SCHOOL: '/api/school/load-courses',
         LOAD_TEACHERS_BY_COURSE: '/api/school/load-course-teachers',
         SEARCH_TEACHERS_BY_NAME: '/api/school/search-teachers',
+        GET_USER_NAME_BY_ID: '/api/school/get-user-name',
         QUICK_SEARCH_USERS_BY_NAME: '/api/school/quick-search-users',
         SAVE_COURSE: '/api/school/save-course',
         DELETE_COURSE: '/api/school/delete-course',
@@ -56,6 +57,8 @@ export const Constants = {
         RECRUITMENT: {
             LOAD_PLANS: '/api/recruitment/load-plans',
             SAVE_PLAN: '/api/recruitment/save-plan',
+            GET_PLAN: '/api/recruitment/get-plan',
+            DELETE_PLAN: '/api/recruitment/delete-plan',
         }
     },
     YEARS: ['N.A','一年级','二年级','三年级','四年级','五年级','六年级'],

@@ -5,6 +5,7 @@ use App\User;
 ?>
 @extends('layouts.app')
 @section('content')
+    <div id="plan-manager-school-id" data-id="{{ session('school.id') }}" data-uuid="{{ Auth::user()->uuid }}"></div>
     <div class="row" id="school-recruitment-manager-app">
         <div class="col-7">
             <div class="card-box">
@@ -26,9 +27,11 @@ use App\User;
                 </div>
                 <div class="card-body">
                     <recruitment-plans-list
-                            school-id="{{ session('school.id') }}"
-                            :year="year"
-                            :can-delete="{{ Auth::user()->isSchoolAdminOrAbove() ? 'true' : 'false' }}"
+                        :school-id="schoolId"
+                        :plans="plans"
+                        :can-delete="{{ Auth::user()->isSchoolAdminOrAbove() ? 'true' : 'false' }}"
+                        v-on:delete-plan="onDeletePlanHandler"
+                        v-on:edit-plan="onEditPlanHandler"
                     ></recruitment-plans-list>
                 </div>
             </div>
@@ -40,9 +43,11 @@ use App\User;
                 </div>
                 <div class="card-body">
                     <recruitment-plan-form
-                            school-id="{{ session('school.id') }}"
-                            :years="years"
-                            :form="form"
+                        :school-id="schoolId"
+                        :years="years"
+                        :form="form"
+                        v-on:new-plan-created="newPlanCreatedHandler"
+                        v-on:plan-updated="planUpdatedHandler"
                     ></recruitment-plan-form>
                 </div>
             </div>
