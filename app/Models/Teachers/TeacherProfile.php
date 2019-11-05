@@ -2,6 +2,7 @@
 
 namespace App\Models\Teachers;
 
+use App\User;
 use Illuminate\Database\Eloquent\Model;
 
 class TeacherProfile extends Model
@@ -45,5 +46,9 @@ class TeacherProfile extends Model
         return $this->school_id;
     }
 
+
+    public function users() {
+        return $this->hasOne(User::class,'id','user_id');
+    }
 
 }
