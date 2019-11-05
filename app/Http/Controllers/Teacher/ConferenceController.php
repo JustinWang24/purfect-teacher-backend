@@ -22,11 +22,11 @@ class ConferenceController extends Controller
     public function data(ConferenceRequest $request) {
         #判断权限
         $schoolId = $request->getSchoolId();
-
+        $user = $request->user();
         $userId = Auth::id();
         $dao = new ConferenceDao();
         $map = ['user_id'=>$userId];
-        $list = $dao->getConferenceListByUser($map,$schoolId)->toArray();
+        $list = $dao->getConferenceListByUser($user, $map,$schoolId)->toArray();
         $result = ['conference'=>$list];
         return JsonBuilder::Success($result);
 
@@ -40,11 +40,12 @@ class ConferenceController extends Controller
      */
     public function add(ConferenceRequest $request) {
         $roomDao = new RoomDao($request->user());
-        $schoolId = 1;
+        $schoolId = $request->getSchoolId();
 
         #会议室
         $map = ['school_id'=>$schoolId,'type'=>Room::TYPE_MEETING_ROOM];
-        $room = $roomDao->getRooms($map);
+        $field = ['id', 'school_id', 'name'];
+        $room = $roomDao->getRooms($map,$field);
         #老师
         $map = ['school_id'=>$schoolId];
         $teacherDao = new TeacherProfileDao();
@@ -64,11 +65,12 @@ class ConferenceController extends Controller
      */
     public function create(ConferenceRequest $request) {
         $conferenceData = $request->all();
-        $conferenceData['school_id'] = $request->session()->get('school.id');
+        $conferenceData['school_id'] = $request->getSchoolId();
 
         $conferenceDao = new ConferenceDao();
-        $return = $conferenceDao -> addConferenceFlow($conferenceData);
-        if($return['code'] == 1) {
+        $return = $conferenceDao->addConferenceFlow($conferenceData);
+
+        if($return->isSuccess()) {
             return JsonBuilder::Success($return['msg']);
         } else {
             return JsonBuilder::Error($return['msg']);
@@ -126,9 +128,11 @@ class ConferenceController extends Controller
         $date = $request->get('date');
 
         $roomDao = new RoomDao($request->user());
-        $schoolId = 50;
+        $schoolId = $request->getSchoolId();
         $map = ['school_id'=>$schoolId,'type'=>Room::TYPE_MEETING_ROOM];
-        $list = $roomDao->getRooms($map)->toArray();
+        $field = ['id', 'school_id', 'name'];
+        $list = $roomDao->getRooms($map, $field)->toArray();
+
         //查询开会的房间的时间
         $conferenceDao = new ConferenceDao();
         $map = ['date'=>$date,'school_id'=>$schoolId];

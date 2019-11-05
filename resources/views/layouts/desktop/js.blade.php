@@ -12,6 +12,7 @@
 <script src="{{ asset('assets/js/app.js') }}"></script>
 <script src="{{ asset('assets/js/layout.js') }}"></script>
 <script src="{{ asset('assets/js/theme-color.js') }}"></script>
+<script src="{{ asset('assets/js/custom.js') }}"></script>
 <!-- material -->
 <!-- chart js -->
 @if($needChart??false)
