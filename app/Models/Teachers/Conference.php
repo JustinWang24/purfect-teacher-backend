@@ -21,8 +21,10 @@ class Conference extends Model
     ];
 
 
+    protected $hidden=['updated_at'];
 
-    public function schools()
+
+    public function school()
     {
         return $this->belongsTo(School::class, 'school_id','id');
     }
@@ -32,16 +34,17 @@ class Conference extends Model
      * 负责人
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function users()
+    public function user()
     {
-        return $this->belongsTo(User::class,'user_id','id');
+        $field = ['id','uuid','name','mobile'];
+        return $this->belongsTo(User::class)->select($field);
     }
 
     /**
      * 邀请人
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function participant()
+    public function participants()
     {
         return $this->hasMany(ConferencesUser::class, 'conference_id', 'id');
     }

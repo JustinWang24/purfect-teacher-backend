@@ -1,11 +1,14 @@
 <?php
 namespace App\Http\Controllers\Operator;
 
+use App\Dao\Schools\BuildingDao;
 use App\Dao\Schools\CampusDao;
+use App\Dao\Schools\RoomDao;
 use App\Utils\FlashMessageBuilder;
 use App\Http\Controllers\Controller;
 use App\Dao\FacilityManage\FacilityDao;
 use App\Http\Requests\FacilityManage\MonitoringRequest;
+use App\Utils\JsonBuilder;
 
 class FacilityController extends Controller
 {
@@ -32,10 +35,10 @@ class FacilityController extends Controller
 
     public function add(MonitoringRequest $request) {
 
+        $facilityDao = new FacilityDao();
         if($request->isMethod('post')) {
             $all = $request->post('facility');
             $all['school_id'] = $request->getSchoolId();
-            $facilityDao = new FacilityDao();
             $result = $facilityDao->save($all);
             if($result) {
                 FlashMessageBuilder::Push($request, FlashMessageBuilder::SUCCESS,'保存成功');
@@ -51,6 +54,7 @@ class FacilityController extends Controller
         $schoolId = $request->getSchoolId();
         $campus = $campusDao->getCampusesBySchool($schoolId,$field);
         $this->dataForView['campus'] = $campus;
+        $this->dataForView['type'] = $facilityDao->getType();
         return view('school_manager.facility.add', $this->dataForView);
 
     }
@@ -75,8 +79,10 @@ class FacilityController extends Controller
         $result = $facilityDao->facilityInfoDispose($id,$user,$schoolId);
         $this->dataForView['facility'] = $result['facility'];
         $this->dataForView['campus'] = $result['campus'];
+        $this->dataForView['building'] = $result['building'];
+        $this->dataForView['room'] = $result['room'];
         $this->dataForView['type'] = $facilityDao->getType();
-//        dump($this->dataForView);die;
+
         return view('school_manager.facility.edit', $this->dataForView);
     }
 
@@ -91,6 +97,44 @@ class FacilityController extends Controller
             FlashMessageBuilder::Push($request, FlashMessageBuilder::DANGER,'删除失败');
         }
         return redirect()->route('school_manager.facility.list');
+    }
+
+
+    /**
+     * 根据校区获取建筑列表
+     * @param MonitoringRequest $request
+     * @return string
+     */
+    public function getBuildingList(MonitoringRequest $request) {
+        $campusId = $request->get('campus_id');
+        $user = $request->user();
+        $buildingDao = new BuildingDao($user);
+        $list = $buildingDao->getBuildingByCampusId($campusId)->toArray();
+        if(!empty($list)) {
+            $result = ['building'=>$list];
+            return JsonBuilder::Success($result,'请求成功');
+        } else {
+            return JsonBuilder::Error('暂无数据',0);
+        }
+    }
+
+
+    /**
+     * 根据建筑获取教室列表
+     * @param MonitoringRequest $request
+     * @return string
+     */
+    public function getRoomList(MonitoringRequest $request) {
+        $roomId = $request->get('building_id');
+        $user = $request->user();
+        $roomDao = new RoomDao($user);
+        $list = $roomDao->getRoomByBuildingId($roomId)->toArray();
+        if(!empty($list)) {
+            $result = ['room'=>$list];
+            return JsonBuilder::Success($result,'请求成功');
+        } else {
+            return JsonBuilder::Error('暂无数据',0);
+        }
     }
 
 

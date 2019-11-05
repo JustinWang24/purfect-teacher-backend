@@ -26,13 +26,28 @@ class GradeUserDao
      * 模糊查找用户的信息
      * @param $name
      * @param $schoolId
+     * @param $userType : 需要限定的用户类型
      * @return Collection
      */
-    public function getUsersWithNameLike($name, $schoolId){
-        return GradeUser::select(['id','name','user_type','department_id','major_id','grade_id'])
-            ->where('school_id',$schoolId)
-            ->where('name','like',$name.'%')
-            ->take(12)->get();
+    public function getUsersWithNameLike($name, $schoolId, $userType = null){
+        $where = [
+            ['school_id','=',$schoolId],
+            ['name','like',$name.'%'],
+        ];
+        $query = GradeUser::select(['id','name','user_type','department_id','major_id','grade_id'])
+            ->where($where);
+
+        if($userType){
+            if(is_array($userType)){
+                // 如果同时定位多个角色
+                $query->whereIn('user_type',$userType);
+            }
+            else{
+                $query->where('user_type',$userType);
+            }
+        }
+
+        return $query->take(12)->get();
     }
 
     /**
@@ -51,10 +66,25 @@ class GradeUserDao
      * 根据学校获取 id
      * @param $schoolId
      * @param $types
-     * @return User
+     * @return Collection
      */
     public function getBySchool($schoolId,$types){
         return GradeUser::where('school_id',$schoolId)->whereIn('user_type',$types)->paginate();
+    }
+
+    /**
+     * 根据学校 id 和 用户 id 来检查是否存在
+     * @param $schoolId
+     * @param $userId
+     * @param $simple: 简单数据即可
+     * @return GradeUser
+     */
+    public function isUserInSchool($userId, $schoolId, $simple = true){
+        $query = GradeUser::where('school_id',$schoolId)->where('user_id',$userId);
+        if($simple){
+            $query->select('name');
+        }
+        return $query->first();
     }
 
     /**
