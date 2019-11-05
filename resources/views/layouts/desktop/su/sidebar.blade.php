@@ -66,6 +66,12 @@
                             </a>
                         </li>
                         <li class="nav-item active">
+                            <a href="{{ route('school_manager.planRecruit.list') }}" class="nav-link ">
+                                <span class="title">报名表管理</span>
+                                <span class="selected"></span>
+                            </a>
+                        </li>
+                        <li class="nav-item active">
                             <a href="{{ route('school_manager.consult.list') }}" class="nav-link ">
                                 <span class="title">咨询管理</span>
                                 <span class="selected"></span>

@@ -23,8 +23,11 @@ class CoursesController extends Controller
             $result = $dao->updateCourse($courseData);
         }
 
-        return $result ?
-            JsonBuilder::Success(['id'=>$result->id??$courseData['id']]) : JsonBuilder::Error();
+        $course = $result->getData();
+
+        return $result->isSuccess() ?
+            JsonBuilder::Success(['id'=>$course->id ?? $courseData['id']])
+            : JsonBuilder::Error($result->getMessage());
     }
 
     /**

@@ -8,16 +8,20 @@
 
 namespace App\Dao\Courses;
 use App\Dao\Schools\MajorDao;
-use App\Dao\Teachers\TeacherProfileDao;
 use App\Dao\Users\UserDao;
 use App\Models\Course;
 use App\Models\Courses\CourseMajor;
 use App\Models\Courses\CourseTeacher;
+use App\Utils\JsonBuilder;
+use App\Utils\ReturnData\IMessageBag;
+use App\Utils\ReturnData\MessageBag;
 use Illuminate\Support\Facades\DB;
 use Ramsey\Uuid\Uuid;
+use App\Dao\BuildFillableData;
 
 class CourseDao
 {
+    use BuildFillableData;
     protected $fields = [
         'code','name','uuid','id',
         'scores',
@@ -88,21 +92,22 @@ class CourseDao
 
     /**
      * @param $data
-     * @return bool
+     * @return IMessageBag
      */
     public function updateCourse($data){
         $id = $data['id'];
         unset($data['id']);
 
         $teachersId = $data['teachers'];
-        unset($data['teachers']);
         $majorsId = $data['majors'];
-        unset($data['majors']);
+
+        $messageBag = new MessageBag(JsonBuilder::CODE_ERROR);
 
         DB::beginTransaction();
         try{
             // 先更新课程数据
-            $course = Course::where('id',$id)->update($data);
+            $filledData = $this->getFillableData(new Course(), $data);
+            $course = Course::where('id',$id)->update($filledData);
 
             if($course){
                 // 删除所有的授课老师
@@ -151,40 +156,42 @@ class CourseDao
                 }
 
                 DB::commit();
-                $result = true;
+                $messageBag->setCode(JsonBuilder::CODE_SUCCESS);
             }
             else{
                 DB::rollBack();
-                $result = false;
+                $messageBag->setMessage('无法更新课程信息, 请联系管理员');
             }
 
         }catch (\Exception $exception){
             DB::rollBack();
-            $result = false;
+            $messageBag->setMessage($exception->getMessage());
         }
 
-        return $result;
+        return $messageBag;
     }
 
     /**
      * 创建课程的方法
      * @param $data
-     * @return Course|boolean
+     * @return IMessageBag
      */
     public function createCourse($data){
         if(isset($data['id']) || empty($data['id'])){
             unset($data['id']);
         }
         $teachersId = $data['teachers'];
-        unset($data['teachers']);
         $majorsId = $data['majors'];
-        unset($data['majors']);
+
+        $messageBag = new MessageBag(JsonBuilder::CODE_ERROR);
 
         DB::beginTransaction();
         try{
             $data['uuid'] = Uuid::uuid4()->toString();
+            $fillableData = $this->getFillableData(new Course(),$data);
+
             // 先保存课程数据
-            $course = Course::create($data);
+            $course = Course::create($fillableData);
 
             if($course){
                 // 保存授课老师
@@ -227,19 +234,20 @@ class CourseDao
                 }
 
                 DB::commit();
-                $result = $course;
+                $messageBag->setCode(JsonBuilder::CODE_SUCCESS);
+                $messageBag->setData($course);
             }
             else{
                 DB::rollBack();
-                $result = false;
+                $messageBag->setMessage('保存课程数据失败, 请联系管理员');
             }
 
         }catch (\Exception $exception){
             DB::rollBack();
-            $result = false;
+            $messageBag->setMessage($exception->getMessage());
         }
 
-        return $result;
+        return $messageBag;
     }
 
     /**
