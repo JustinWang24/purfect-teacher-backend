@@ -7,6 +7,7 @@ use App\Models\School;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Users\GradeUser;
 use App\User;
+use App\Models\Courses\CourseMajor;
 
 class Major extends Model
 {
