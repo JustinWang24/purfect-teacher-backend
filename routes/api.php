@@ -161,4 +161,7 @@ Route::prefix('student-register')->group(function () {
      // 报名
      Route::post('/submit-form','Api\Recruitment\OpenMajorController@signUp')
         ->name('api.major.submit.form');
+     //
+    Route::post('/submit-excel','Api\Recruitment\OpenMajorController@testExcel')
+        ->name('api.major.submit.excel');
 });

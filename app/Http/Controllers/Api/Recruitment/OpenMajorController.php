@@ -9,6 +9,8 @@ use App\Dao\Users\UserDao;
 use App\Dao\RecruitStudent\RegistrationInformaticsDao;
 use App\Dao\Students\StudentProfileDao;
 use App\Utils\JsonBuilder;
+use Illuminate\Http\Request;
+
 
 class OpenMajorController extends Controller
 {
@@ -167,6 +169,19 @@ class OpenMajorController extends Controller
         } else {
             return JsonBuilder::Error('报名失败',999);
         }
+    }
+
+
+    public function testExcel(PlanRecruitRequest $request)
+    {
+
+        $file     = $request->file('file')->store('public');
+        dd($file);
+        $path = $request->file('file')->storeAs(
+            'storage', $request->file('file')->getFilename()
+        );
+        dd($path);
+
 
     }
 
