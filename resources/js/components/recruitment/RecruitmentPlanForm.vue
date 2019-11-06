@@ -95,6 +95,15 @@
             <el-form-item label="招生简章" prop="description">
                 <el-input type="textarea" v-model="form.description" placeholder="必填: 招生简章"></el-input>
             </el-form-item>
+            <el-form-item label="招生对象">
+                <el-input type="textarea" v-model="form.target_students" placeholder="选填: 招生对象"></el-input>
+            </el-form-item>
+            <el-form-item label="报名条件">
+                <el-input type="textarea" v-model="form.student_requirements" placeholder="选填: 报名条件"></el-input>
+            </el-form-item>
+            <el-form-item label="录取方式">
+                <el-input type="textarea" v-model="form.how_to_enrol" placeholder="选填: 录取方式"></el-input>
+            </el-form-item>
             <el-form-item label="标签" prop="tags">
                 <el-input type="textarea" v-model="form.tags"  placeholder="选填: 标签, 以逗号分隔"></el-input>
             </el-form-item>

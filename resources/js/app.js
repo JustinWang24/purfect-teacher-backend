@@ -697,7 +697,6 @@ if(document.getElementById('school-recruitment-manager-app')){
                     title:'',
                     start_at:'',
                     end_at:'',
-                    expired:false,
                     description:'',
                     tease:'',
                     tags:'',
@@ -707,6 +706,9 @@ if(document.getElementById('school-recruitment-manager-app')){
                     grades_count:'',
                     year:this.year,
                     manager_id: '',
+                    target_students: '',
+                    student_requirements: '',
+                    how_to_enrol: '',
                 };
             }
         }
