@@ -24,7 +24,6 @@ class PlansController extends Controller
             $request->get('pageNumber'),
             $request->get('pageSize')
         );
-
         return JsonBuilder::Success(['plans'=>$plans??[]]);
     }
 
