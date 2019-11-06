@@ -30,7 +30,6 @@ class PlanRecruitDao
         return $result;
     }
 
-
     /**
      * 修改预招信息
      * @param $data
