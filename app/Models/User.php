@@ -31,6 +31,14 @@ class User extends Authenticatable
     const GENDER_MALE = 1;
     const GENDER_FEMALE = 2;
 
+    // 生源类型:
+    const SOURCE_GENERAL = 1;
+    const SOURCE_SELF    = 2;
+    const SOURCE_AGENT   = 3;
+    const SOURCE_GENERAL_TEXT = '统招';
+    const SOURCE_SELF_TEXT    = '自招';
+    const SOURCE_AGENT_TEXT   = '中介';
+
     /**
      * The attributes that are mass assignable.
      *

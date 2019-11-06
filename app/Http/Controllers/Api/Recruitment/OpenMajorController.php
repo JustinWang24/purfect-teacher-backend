@@ -16,7 +16,7 @@ class OpenMajorController extends Controller
     /**
      * 招生专业
      * @param PlanRecruitRequest $request
-     * @return json
+     * @return string
      */
     public function major(PlanRecruitRequest $request)
     {
