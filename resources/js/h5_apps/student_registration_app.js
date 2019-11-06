@@ -17,9 +17,11 @@ new Vue({
     data(){
         return {
             majors: [],
-            hotMajors: [],
-            appliedMajors:[], // 学生已经报名的专业
+            // hotMajors: [],
+            // appliedPlans:[], // 学生已经报名的专业
             schoolId: '',
+            studentMobile: '',
+            studentIdNumber: '',
             selectedMajor: null, // 当下被点选的专业
             // 显示所有的专业的控制
             showAllMajorsFlag: false,
@@ -55,18 +57,11 @@ new Vue({
     },
     created(){
         // 尝试从本地获取学生已经保存的手机号和身份证号码
-        const id_number = Util.getIdNumber();
-        const mobile = Util.getLocalStudentMobile();
-        const profile = Util.getObjFromLocalStorage(Constants.STUDENT_PROFILE);
+        this.studentIdNumber = Util.getIdNumber();
+        this.studentMobile = Util.getLocalStudentMobile();
         // 如果本地已经保存了电话或者身份证号, 那么向服务器申请学生的信息
-        if(!Util.isEmpty(mobile) || !Util.isEmpty(id_number)){
-            queryStudentProfile(id_number, mobile).then(res => {
-                if(Util.isAjaxResOk(res)){
-                    Util.setObjToLocalStorage(Constants.STUDENT_PROFILE, res.data.data.profile);
-                    this.appliedMajors = res.data.data.applied;
-                    this.registrationForm = res.data.data.profile;
-                }
-            });
+        if(!Util.isEmpty(this.studentMobile) || !Util.isEmpty(this.studentIdNumber)){
+            this.registrationForm = Util.getObjFromLocalStorage(Constants.STUDENT_PROFILE);
         }
     },
     mounted() {
@@ -87,6 +82,13 @@ new Vue({
                 type:'success',
                 customClass: 'for-mobile-alert'
             });
+            // 这个已经报名的, 应该被标识出来
+            for(let i=0;i<this.majors.length;i++){
+                if(payload.plan.id === this.majors[i].id){
+                    this.majors[i].applied = '等待审核'; // 标识这个招生信息已经被申请过了
+                    break;
+                }
+            }
         },
         formSavedFailedHandler: function(errorMsgText){
             this.hideRegistrationForm();
@@ -103,7 +105,7 @@ new Vue({
         loadAllPlansBySchool: function(){
             axios.post(
                 Constants.API.RECRUITMENT.LOAD_PLANS,
-                {school: this.schoolId, version: Constants.VERSION}
+                {school: this.schoolId, version: Constants.VERSION, mobile: this.studentMobile, id_number: this.studentIdNumber}
             ).then(res => {
                 if(Util.isAjaxResOk(res)){
                     this.majors = res.data.data.plans;
@@ -141,6 +143,16 @@ new Vue({
                     customClass: 'for-mobile-alert'
                 });
             })
+        },
+        isPlanHasBeenApplied: function(planId){
+            let applied = false;
+            for(let i=0;i<this.majors.length;i++){
+                if(planId === this.majors[i].id){
+                    applied = true;
+                    break;
+                }
+            }
+            return applied;
         }
     }
 });
