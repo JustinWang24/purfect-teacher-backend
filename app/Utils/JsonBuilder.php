@@ -24,13 +24,16 @@ class JsonBuilder
      */
     public static function Success($dataOrMessage=[], $message = 'OK'){
         if( is_array($dataOrMessage) ){
-            $dataOrMessage = self::TransformNullToEmptyString($dataOrMessage);
-            return json_encode([
-                'code' => self::CODE_SUCCESS,
-                'message' => $message,
-                'data' => $dataOrMessage
-            ], self::MODE_OUTPUT);
-
+            try{
+                $dataOrMessage = self::TransformNullToEmptyString($dataOrMessage);
+                return json_encode([
+                    'code' => self::CODE_SUCCESS,
+                    'message' => $message,
+                    'data' => $dataOrMessage
+                ], self::MODE_OUTPUT);
+            }catch (\Exception $exception){
+                return self::Error($exception->getMessage());
+            }
         }elseif (is_object($dataOrMessage)){
             try{
                 $dataOrMessage = self::TransformNullToEmptyStringForObject($dataOrMessage);
@@ -80,6 +83,9 @@ class JsonBuilder
         array_walk_recursive($array, function (& $val,$key ) {
             if (is_null($val)) {
                 $val = '';
+            }
+            elseif (is_object($val)){
+                $val = self::TransformNullToEmptyStringForObject($val);
             }
         });
         return $array;
