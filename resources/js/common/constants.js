@@ -47,6 +47,7 @@ export const Constants = {
             QUERY_STUDENT_MAJORS: '/api/student-register/load-open-majors',
             SUBMIT_FORM: '/api/student-register/submit-form',
             LOAD_MAJOR_DETAIL: '/api/student-register/load-major-detail',
+            // LOAD_ALL_PLANS: '/api/student-register/load-open-majors',
         },
         // 获取省市列表的接口
         LOCATION: {

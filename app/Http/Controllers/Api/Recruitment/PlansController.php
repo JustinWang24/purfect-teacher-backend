@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers\Api\Recruitment;
 
+use App\BusinessLogic\RecruitmentPlan\PlansLoader;
 use App\Dao\RecruitmentPlan\RecruitmentPlanDao;
+use App\Http\Requests\RecruitStudent\PlanRecruitRequest;
 use App\Utils\JsonBuilder;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -10,21 +12,16 @@ use App\Http\Controllers\Controller;
 class PlansController extends Controller
 {
     /**
-     * @param Request $request
+     * @param PlanRecruitRequest $request
      * @return string
      */
-    public function load_plans(Request $request){
-        $schoolId = $request->get('school');
-        $year = $request->has('year') ? $request->get('year') : date('Y');
-
-        $dao = new RecruitmentPlanDao($schoolId);
-        $plans = $dao->getPlansBySchool(
-            $schoolId,
-            $year,
-            $request->get('pageNumber'),
-            $request->get('pageSize')
-        );
-        return JsonBuilder::Success(['plans'=>$plans??[]]);
+    public function load_plans(PlanRecruitRequest $request){
+        $logic = PlansLoader::GetInstance($request);
+        $plans = [];
+        if($logic){
+            $plans = $logic->getPlans();
+        }
+        return JsonBuilder::Success(['plans'=>$plans]);
     }
 
     /**
@@ -56,14 +53,12 @@ class PlansController extends Controller
 
     /**
      * 根据 id 获取招生计划
-     * @param Request $request
+     * @param PlanRecruitRequest $request
      * @return string
      */
-    public function get_plan(Request $request){
-        $planId = $request->get('plan');
-        $dao = new RecruitmentPlanDao(0);
-        $plan = $dao->getPlan($planId);
-        return JsonBuilder::Success(['plan'=>$plan]);
+    public function get_plan(PlanRecruitRequest $request){
+        $logic = PlansLoader::GetInstance($request);
+        return JsonBuilder::Success(['plan'=>$logic->getPlanDetail()]);
     }
 
     /**

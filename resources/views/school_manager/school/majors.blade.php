@@ -31,10 +31,7 @@ use App\User;
                                 <tr>
                                     <th>#</th>
                                     <th>专业名称</th>
-                                    <th>热门专业</th>
-                                    <th>自主招生</th>
-                                    <th>招生人数</th>
-                                    <th>学费</th>
+                                    <th>招生计划</th>
                                     <th>班级数</th>
                                     <th>教职工数</th>
                                     <th>在校学生数</th>
@@ -49,17 +46,12 @@ use App\User;
                                             {{ $major->name }}
                                         </td>
                                         <td>
-                                            <span class="text-{{ $major->hot ? 'primary' : null }}">{{ $major->hot ? '是' : '否' }}</span>
-                                        </td>
-                                        <td>
-                                            @if($major->open)
-                                                <span class="text-primary">已经开放</span>
-                                            @else
-                                                <span class="text-danger">已经停止</span>
+                                            @if($major->plans)
+                                                @foreach($major->plans as $plan)
+                                                    <a target="_blank" href="{{ route('school_manager.planRecruit.list',['plan'=>$plan->id]) }}">{{ $plan->title }}: {{ _printDate($plan->start_at) }}开始招收{{ $plan->seats }}人</a>
+                                                @endforeach
                                             @endif
                                         </td>
-                                        <td>{{ $major->seats }}人</td>
-                                        <td>{{ $major->fee }}元/人</td>
                                         <td class="text-center">
                                             <a class="anchor-grades-counter" href="{{ route('school_manager.major.grades',['uuid'=>$major->id,'by'=>'major']) }}">{{ count($major->grades) }}</a>
                                         </td>

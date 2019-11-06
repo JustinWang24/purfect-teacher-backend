@@ -95,7 +95,6 @@ Route::prefix('school_manager')->group(function () {
     Route::post('school/config/update','SchoolsController@config_update')
         ->name('school_manager.school.config.update');
 
-
     // 招生管理
     Route::get('planRecruit/list', 'RecruitStudent\PlanRecruitController@list')->name('school_manager.planRecruit.list');
     Route::any('planRecruit/edit', 'RecruitStudent\PlanRecruitController@edit')->name('school_manager.planRecruit.edit');
