@@ -7,8 +7,12 @@
             <el-table-column
                     label="专业">
                 <template slot-scope="scope">
-                    <p>{{ scope.row.major_name}}</p>
-                    <p>{{ typeText(scope.row.type) }}</p>
+                    <el-badge v-if="scope.row.hot" value="热门" style="margin-top:10px;">
+                        {{ scope.row.major_name}} - {{ typeText(scope.row.type) }}
+                    </el-badge>
+                    <p v-else>
+                        {{ scope.row.major_name}} - {{ typeText(scope.row.type) }}
+                    </p>
                 </template>
             </el-table-column>
             <el-table-column
@@ -17,13 +21,13 @@
             </el-table-column>
             <el-table-column
                     prop="start_at"
-                    label="开始日期">
+                    label="招生开始日期">
             </el-table-column>
             <el-table-column
                     label="招生人数/统计">
                 <template slot-scope="scope">
-                    <p>{{ scope.row.seats }}人/{{ scope.row.grades_count }}班</p>
-                    <p>{{ scope.row.applied_count }}报名/{{ scope.row.enrolled_count }}录取</p>
+                    <p>{{ scope.row.seats }}人 / {{ scope.row.grades_count }}个班</p>
+                    <p>{{ scope.row.applied_count }}报名 / {{ scope.row.enrolled_count }}录取</p>
                 </template>
             </el-table-column>
             <el-table-column

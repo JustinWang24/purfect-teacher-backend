@@ -52,7 +52,7 @@ class UsersController extends Controller
         if($logic){
             $users = $logic->getUsers();
             $facilities = $logic->getFacilities();
-            if($facilities){
+            if(!empty($facilities)){
                 foreach ($facilities as $facility) {
                     $data[] = [
                         'id'=>$facility->id,
@@ -62,13 +62,13 @@ class UsersController extends Controller
                 }
             }
             if($users){
-                foreach ($users as $user) {
+                foreach ($users as $gradeUser) {
                     /**
                      * @var GradeUser $user
                      */
                     $data[] = [
-                        'id'=>$user->id,
-                        'value'=>$user->name . ' - ' . $user->grade->name . ' ' . $user->major->name,
+                        'id'=>$gradeUser->user_id,
+                        'value'=>$gradeUser->name . ' - ' . $gradeUser->grade->name . ' ' . $gradeUser->major->name,
                         'scope'=>'user'
                     ];
                 }

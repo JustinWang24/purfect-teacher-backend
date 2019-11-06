@@ -22,6 +22,7 @@
                             size="mini"
                             type="date"
                             prefix-icon="a"
+                            value-format="yyyy-MM-dd"
                             placeholder="选择日期">
                     </el-date-picker>
                 </el-form-item>
