@@ -24,26 +24,28 @@
         <h3 class="sub-title">热门专业</h3>
 
         <div class="majors-wrap">
-            <el-card shadow="always" v-for="(major, idx) in hotMajors" :key="idx">
-                <el-row>
-                    <el-col :span="6">
-                        <p class="major-name">@{{ major.name }}</p>
-                    </el-col>
-                    <el-col :span="6">
-                        <p class="stat">
-                            <span class="apply">@{{ major.seats }}</span>/<span class="seats">@{{ major.seats }}</span>
-                        </p>
-                    </el-col>
-                    <el-col :span="6">
-                        <p class="fee">
-                            学费: @{{ major.fee }}/年
-                        </p>
-                    </el-col>
-                    <el-col :span="6">
-                        <el-button style="float: right;font-size: 12px;padding: 4px 15px;" size="mini" type="primary" round v-on:click="applyMajorHandler(major)">报名</el-button>
-                    </el-col>
-                </el-row>
-            </el-card>
+            <div v-for="(major, idx) in majors" :key="idx">
+                <el-card shadow="always" v-if="major.hot === true">
+                    <el-row>
+                        <el-col :span="6">
+                            <p class="major-name" v-on:click="showMajorDetailHandler(major)">@{{ major.name }}</p>
+                        </el-col>
+                        <el-col :span="6">
+                            <p class="stat">
+                                <span class="enrolled">@{{ major.enrolled }}</span>/<span class="seats">@{{ major.seats }}</span>
+                            </p>
+                        </el-col>
+                        <el-col :span="6">
+                            <p class="fee">
+                                学费: @{{ major.fee }}/年
+                            </p>
+                        </el-col>
+                        <el-col :span="6">
+                            <el-button style="float: right;font-size: 12px;padding: 4px 15px;" size="mini" type="primary" round v-on:click="applyMajorHandler(major)">报名</el-button>
+                        </el-col>
+                    </el-row>
+                </el-card>
+            </div>
             <p style="text-align: center;margin-top:20px;">
                 <el-button class="showMoreButton" v-on:click="showAllMajors" type="primary" round>查看更多</el-button>
             </p>
@@ -65,10 +67,19 @@
                 title="专业详情"
                 size="100%"
                 :visible.sync="showMajorDetailFlag"
+                v-on:closed="showAllMajors"
                 direction="rtl">
             <div class="major-detail-wrapper" v-if="selectedMajor">
                 <el-image style="margin-bottom: 12px;" src="https://gss0.bdstatic.com/-4o3dSag_xI4khGkpoWK1HF6hhy/baike/c0%3Dbaike150%2C5%2C5%2C150%2C50/sign=823085820233874488c8272e3066b29c/ac345982b2b7d0a278e0df4fc5ef76094b369a33.jpg"></el-image>
-                <p class="md-name">@{{ selectedMajor.name }}(@{{ selectedMajor.period }}年制)</p>
+                <p class="md-name">
+                    <el-badge v-if="selectedMajor.hot" value="热门" class="item">
+                        @{{ selectedMajor.name }}(@{{ selectedMajor.period }}年制)
+                    </el-badge>
+                    <span v-else>
+                        @{{ selectedMajor.name }}(@{{ selectedMajor.period }}年制)
+                    </span>
+                    <span style="float: right"><i class="el-icon-map-location"></i>上课地点: @{{ selectedMajor.campus }}</span>
+                </p>
                 <p class="md-desc">
                     @{{ selectedMajor.description }}
                 </p>
@@ -83,10 +94,20 @@
                     </p>
                 </div>
                 <el-divider></el-divider>
-                <p class="md-name"><i class="el-icon-help"></i>&nbsp;毕业后的择业方向:</p>
-                <p class="md-desc">
-                    会计学专业属工商管理学科，是一个应用性较强的专业。该专业设有企业会计、国际会计、注册会计师等三个专业方向。专业以企业会计为主，兼顾计算机与财务管理。在教学方法上强调理论与实践相结合的教学模式，提倡启发式与案例教学，多方位培养学生处理会计业务与管理财务的操作能力和创新能力。
-                </p>
+                <p class="md-name"><i class="el-icon-help"></i>&nbsp;招生对象</p>
+                <p class="md-desc">@{{ selectedMajor.target_students }}</p>
+
+                <el-divider></el-divider>
+                <p class="md-name"><i class="el-icon-help"></i>&nbsp;报名条件</p>
+                <p class="md-desc">@{{ selectedMajor.student_requirements }}</p>
+
+                <el-divider></el-divider>
+                <p class="md-name"><i class="el-icon-help"></i>&nbsp;录取方式</p>
+                <p class="md-desc">@{{ selectedMajor.how_to_enrol }}</p>
+
+                <el-divider></el-divider>
+                <p class="md-name"><i class="el-icon-help"></i>&nbsp;毕业后的择业方向</p>
+                <p class="md-desc">@{{ selectedMajor.future }}</p>
             </div>
         </el-drawer>
 

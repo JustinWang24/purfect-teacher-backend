@@ -1,7 +1,7 @@
 window.axios = require('axios');
 import { Constants } from '../common/constants';
 import { Util } from '../common/utils';
-import { queryStudentProfile, loadOpenedMajors } from '../common/registration_form';
+import { queryStudentProfile, loadMajorDetail } from '../common/registration_form';
 
 window.Vue = require('vue');
 // 引入 Element UI 库
@@ -71,8 +71,7 @@ new Vue({
     },
     mounted() {
         this.schoolId = document.getElementById('current-school-id').dataset.id;
-        this.loadHotOpenMajorsBySchool();
-        this.loadAllOpenMajorsBySchool();
+        this.loadAllPlansBySchool();
     },
     methods: {
         formSavedSuccessHandler: function(payload){
@@ -101,24 +100,13 @@ new Vue({
         hideRegistrationForm: function(){
             this.showRegistrationFormFlag = false;
         },
-        //
-        loadHotOpenMajorsBySchool: function(){
+        loadAllPlansBySchool: function(){
             axios.post(
-                Constants.API.LOAD_MAJORS_BY_SCHOOL,
-                {id: this.schoolId, only: 'open', hot: 1}
+                Constants.API.RECRUITMENT.LOAD_PLANS,
+                {school: this.schoolId, version: Constants.VERSION}
             ).then(res => {
                 if(Util.isAjaxResOk(res)){
-                    this.hotMajors = res.data.data.majors;
-                }
-            });
-        },
-        loadAllOpenMajorsBySchool: function(){
-            axios.post(
-                Constants.API.LOAD_MAJORS_BY_SCHOOL,
-                {id: this.schoolId, only: 'open'}
-            ).then(res => {
-                if(Util.isAjaxResOk(res)){
-                    this.majors = res.data.data.majors;
+                    this.majors = res.data.data.plans;
                 }
             });
         },
@@ -132,10 +120,27 @@ new Vue({
             this.selectedMajor = major;
         },
         showMajorDetailHandler: function(major){
-            this.showAllMajorsFlag = false;
-            this.selectedMajor = major;
-            this.showMajorDetailFlag = true; // 显示专业详情
-            this.selectedMajor = major;
+            loadMajorDetail(major.id).then(res => {
+                if(Util.isAjaxResOk(res)){
+                    this.selectedMajor = res.data.data.plan;
+                    this.showAllMajorsFlag = false;
+                    this.showMajorDetailFlag = true; // 显示专业详情
+                }
+                else{
+                    this.$alert('无法加载专业: ' + major.name + '的详情', '加载失败', {
+                        confirmButtonText: '确定',
+                        type:'error',
+                        customClass: 'for-mobile-alert'
+                    });
+                }
+            }).catch(e => {
+                console.log(e);
+                this.$alert('服务器忙, 无法加载专业: ' + major.name + '的详情. 请稍候再试!', '加载失败', {
+                    confirmButtonText: '确定',
+                    type:'error',
+                    customClass: 'for-mobile-alert'
+                });
+            })
         }
     }
 });

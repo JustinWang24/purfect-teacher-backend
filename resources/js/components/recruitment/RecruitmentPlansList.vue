@@ -8,11 +8,12 @@
                     label="专业">
                 <template slot-scope="scope">
                     <el-badge v-if="scope.row.hot" value="热门" style="margin-top:10px;">
-                        {{ scope.row.major_name}} - {{ typeText(scope.row.type) }}
+                        {{ scope.row.major_name}}
                     </el-badge>
                     <p v-else>
-                        {{ scope.row.major_name}} - {{ typeText(scope.row.type) }}
+                        {{ scope.row.major_name}}
                     </p>
+                    <p>{{ typeText(scope.row.type) }}</p>
                 </template>
             </el-table-column>
             <el-table-column
