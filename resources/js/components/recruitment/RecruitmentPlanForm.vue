@@ -8,7 +8,7 @@
             <el-row>
                 <el-col :span="12">
                     <el-form-item label="招生计划年份">
-                        <el-select v-model="form.year" placeholder="请选择活动区域">
+                        <el-select v-model="form.year" placeholder="请选择年份">
                             <el-option :label="'招生年份: ' + y + '年'" :value="y" :key="idx" v-for="(y, idx) in years"></el-option>
                         </el-select>
                     </el-form-item>
@@ -23,10 +23,6 @@
                 </el-col>
             </el-row>
 
-
-
-
-
             <el-form-item label="专业" prop="major_id">
                 <el-select v-model="form.major_id" placeholder="请选择招生专业" style="width: 100%;">
                     <el-option :label="ma.name" :value="ma.id" :key="idx" v-for="(ma, idx) in majors"></el-option>
@@ -36,44 +32,43 @@
             <el-form-item label="发布期限">
                 <el-col :span="11">
                     <el-form-item prop="start_at">
-                        <el-date-picker type="date" placeholder="选择开始日期" v-model="form.start_at" style="width: 100%;"></el-date-picker>
+                        <el-date-picker
+                                type="date"
+                                placeholder="选择开始日期"
+                                value-format="yyyy-MM-dd"
+                                v-model="form.start_at" style="width: 100%;"></el-date-picker>
                     </el-form-item>
                 </el-col>
                 <el-col class="line" :span="2"><p style="text-align:center;">-</p></el-col>
                 <el-col :span="11">
                     <el-form-item>
-                        <el-date-picker placeholder="选择结束日期" v-model="form.end_at" style="width: 100%;"></el-date-picker>
+                        <el-date-picker type="date"
+                                        placeholder="选择结束日期"
+                                        value-format="yyyy-MM-dd"
+                                        v-model="form.end_at" style="width: 100%;"></el-date-picker>
                     </el-form-item>
                 </el-col>
             </el-form-item>
-
             <el-row>
-                <el-col :span="12">
+                <el-col :span="6">
                     <el-form-item label="标记为热门">
                         <el-switch v-model="form.hot"></el-switch>
                     </el-form-item>
                 </el-col>
-                <el-col :span="12">
-                    <el-form-item label="强制停止">
-                        <el-switch v-model="form.expired"></el-switch>
+                <el-col :span="10">
+                    <el-form-item label="计划招收" prop="seats">
+                        <el-input v-model="form.seats" placeholder="必填: 招生的总人数">
+                            <template slot="append">人</template>
+                        </el-input>
                     </el-form-item>
                 </el-col>
-            </el-row>
-
-
-            <el-row>
-                <el-col :span="12">
-                    <el-form-item label="招生总数" prop="seats">
-                        <el-input v-model="form.seats" placeholder="必填: 此专业计划招生的总人数"></el-input>
-                    </el-form-item>
-                </el-col>
-                <el-col :span="12">
+                <el-col :span="8">
                     <el-form-item label="分几个班" prop="grades_count">
-                        <el-input v-model="form.grades_count" placeholder="必填: 计划招几个班"></el-input>
+                        <el-input v-model="form.grades_count" placeholder="必填: 计划招几个班">
+                        </el-input>
                     </el-form-item>
                 </el-col>
             </el-row>
-
             <el-row>
                 <el-col :span="12">
                     <el-form-item label="学费/年" prop="fee">
@@ -85,29 +80,24 @@
                 <el-col :span="12">
                     <el-form-item label="招生负责人">
                         <search-bar
-                            :school-id="schoolId"
-                            scope="employee"
-                            width="100%"
-                            v-on:result-item-selected="managerItemSelectedHandler"
-                            :init-query="currentManagerName"
+                                :school-id="schoolId"
+                                scope="employee"
+                                width="100%"
+                                v-on:result-item-selected="managerItemSelectedHandler"
+                                :init-query="currentManagerName"
                         ></search-bar>
                     </el-form-item>
                 </el-col>
             </el-row>
-
-
             <el-form-item label="简介" prop="tease">
                 <el-input type="textarea" v-model="form.tease"  placeholder="必填: 招生专业简介"></el-input>
             </el-form-item>
-
             <el-form-item label="招生简章" prop="description">
                 <el-input type="textarea" v-model="form.description" placeholder="必填: 招生简章"></el-input>
             </el-form-item>
-
             <el-form-item label="标签" prop="tags">
                 <el-input type="textarea" v-model="form.tags"  placeholder="选填: 标签, 以逗号分隔"></el-input>
             </el-form-item>
-
             <el-form-item>
                 <el-button type="primary" @click="submitForm('ruleForm')" icon="el-icon-upload">
                     {{ this.form.id === ''  ? '创建' : '更新' }}
@@ -141,26 +131,26 @@
             schoolId: {
                 type: [Number, String],
                 required: true
+            },
+            somethingChanged: {
+                type: Boolean,
+                required: true
             }
         },
         watch: {
-            'form.major_id': function() {
-                this.form.major_name = Util.GetItemById(this.form.major_id, this.majors).name;
+            'form.major_id': function(newVal, oldVal) {
+                if(!Util.isEmpty(newVal))
+                    this.form.major_name = Util.GetItemById(this.form.major_id, this.majors).name;
             },
-            'form.manager_id': function(newManagerId, oldManagerId){
-                if(newManagerId !== oldManagerId && newManagerId > 0){
-                    // 监控 manager_id 的变化
-                    if(newManagerId > 0){
-                        getUserNameById(this.form.school_id, newManagerId)
-                            .then(res => {
-                                if(Util.isAjaxResOk(res)){
-                                    this.currentManagerName = res.data.data.name;
-                                }
-                            });
-                    }else{
-                        // 表示是要创建新的招生计划了
-                        this.currentManagerName = '';
-                    }
+            'somethingChanged': function(){
+                this.currentManagerName = '';
+                if(!Util.isEmpty(this.form.manager_id)){
+                    getUserNameById(this.schoolId, this.form.manager_id)
+                        .then(res => {
+                            if(Util.isAjaxResOk(res)){
+                                this.currentManagerName = res.data.data.name;
+                            }
+                        });
                 }
             }
         },

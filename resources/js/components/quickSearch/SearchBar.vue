@@ -53,9 +53,7 @@
         },
         watch:{
             'initQuery': function(newValue, oldValue){
-                if(newValue !== oldValue && !Util.isEmpty(newValue.trim())){
-                    this.query = newValue;
-                }
+                this.query = newValue;
             }
         },
         created() {
