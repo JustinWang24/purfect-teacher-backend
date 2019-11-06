@@ -10,22 +10,72 @@ use App\Utils\JsonBuilder;
 class TextbookController extends Controller
 {
 
+    /**
+     * 添加
+     * @param TextbookRequest $request
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View|string
+     */
     public function add(TextbookRequest $request) {
-
-        if($request->isMethod('post')) {
-//            $all = $request->post('textbook');
-            $all = $request->all();
-            $all['school_id'] = $request->getSchoolId();
-            $textbookDao = new TextbookDao();
-            $result = $textbookDao->saveTextbook($all);
-            if($result) {
-                return JsonBuilder::Success('创建成功');
-            } else {
-                return JsonBuilder::Error('创建失败');
-            }
-
-        }
-
         return view('school_manager.textbook.add', $this->dataForView);
     }
+
+
+
+    /**
+     * 编辑
+     * @param TextbookRequest $request
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function edit(TextbookRequest $request) {
+
+        $textbookDao = new TextbookDao();
+        $id = $request->get('id');
+        $info = $textbookDao->getTextbookById($id);
+        $this->dataForView['textbook'] = $info;
+        return view('school_manager.textbook.edit', $this->dataForView);
+    }
+
+
+    /**
+     * 保存
+     * @param TextbookRequest $request
+     * @return string
+     */
+    public function save(TextbookRequest $request) {
+        $textbookDao = new TextbookDao();
+        $all = $request->get('textbook');;
+        if(!empty($all['id'])) {
+            $id = $all['id'];
+            unset($all['id']);
+            $result = $textbookDao->editById($id,$all);
+            if($result) {
+                return JsonBuilder::Success('编辑成功');
+            } else {
+                return JsonBuilder::Error('编辑失败');
+            }
+        } else {
+            $all['school_id'] = $request->getSchoolId();
+            $result = $textbookDao->create($all);
+            if($result->isSuccess()) {
+                return JsonBuilder::Success('创建成功');
+            } else {
+                return JsonBuilder::Error($result->getMessage());
+            }
+        }
+
+    }
+
+
+    //查看该专业所以教材的采购情况
+    public function loadMajorTextbook() {
+
+        $textbookDao = new TextbookDao();
+        $result = $textbookDao->getTextbooksByMajor();
+
+        //通过课程
+        dd($result);
+    }
+
+
+
 }

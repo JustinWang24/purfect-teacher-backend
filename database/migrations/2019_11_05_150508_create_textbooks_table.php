@@ -24,8 +24,8 @@ class CreateTextbooksTable extends Migration
                 $table->integer('course_id')->comment('课程ID')->nullable();
                 $table->integer('school_id')->comment('学校ID');
                 $table->tinyInteger('type')->comment('教材类型 1:专业教材 2:通用教材 3:选读教材');
-                $table->float('purchase_price')->comment('采购价')->nullable();
-                $table->float('price')->comment('学生购买价')->nullable();
+                $table->float('purchase_price',8,2)->comment('采购价')->nullable();
+                $table->float('price',8,2)->comment('学生购买价')->nullable();
                 $table->text('introduce')->comment('教材介绍')->nullable();
                 $table->timestamps();
                 $table->softDeletes();

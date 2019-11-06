@@ -2,6 +2,7 @@
 
 namespace App\Models\Schools;
 
+use App\Models\Course;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -24,11 +25,38 @@ class Textbook extends Model
      */
     protected $fillable = ['name', 'press', 'author', 'edition', 'course_id', 'school_id', 'type', 'purchase_price', 'price', 'introduce'];
 
+    protected $hidden = ['updated_at', 'deleted_at'];
+
     const TYPE_MAJOR  = 1;
     const TYPE_COMMON = 2;
     const TYPE_SELECT = 3;
 
     const TYPE_MAJOR_TEXT = '专业教材';
     const TYPE_COMMON_TEXT = '普通教材';
-    const TYPE_SELECT_TEXT = '普通教材';
+    const TYPE_SELECT_TEXT = '选读教材';
+
+
+    /**
+     * 课程
+     */
+    public function course() {
+        $this->belongsTo(Course::class);
+    }
+
+
+    /**
+     * 获取type属性
+     * @return string
+     */
+    public function getTypeTextAttribute() {
+        switch ($this->type) {
+            case self::TYPE_MAJOR :
+                return self::TYPE_MAJOR_TEXT;break;
+            case self::TYPE_COMMON :
+                return self::TYPE_COMMON_TEXT;break;
+            case self::TYPE_SELECT :
+                return self::TYPE_SELECT_TEXT;break;
+            default :return '';
+        }
+    }
 }
