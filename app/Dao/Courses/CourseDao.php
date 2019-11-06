@@ -15,6 +15,7 @@ use App\Models\Courses\CourseTeacher;
 use App\Utils\JsonBuilder;
 use App\Utils\ReturnData\IMessageBag;
 use App\Utils\ReturnData\MessageBag;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\DB;
 use Ramsey\Uuid\Uuid;
 use App\Dao\BuildFillableData;
@@ -269,7 +270,7 @@ class CourseDao
      * @param $schoolId
      * @param $pageNumber
      * @param $pageSize
-     * @return array
+     * @return array|Collection
      */
     public function getCoursesBySchoolId($schoolId, $pageNumber=0, $pageSize=20){
         $courses = Course::where('school_id',$schoolId)
