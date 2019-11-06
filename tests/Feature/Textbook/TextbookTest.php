@@ -13,12 +13,13 @@ class TextbookTest extends BasicPageTestCase
         parent::setUp();
     }
 
+
     public function _createDate() {
         $data['textbook'] = [
             'name'     => Str::random(),
             'press'    => '新华出版社',
             'author'   => '三毛',
-            'edition'  => '1',      //版本
+            'edition'  => 1,      //版本
             'course_id'=> 1,
             'type'     => Textbook::TYPE_MAJOR,
             'purchase_price' => 80,
@@ -122,16 +123,45 @@ class TextbookTest extends BasicPageTestCase
     }
 
 
-    //获取专业的教材采购情况
+    /**
+     * 查看某专业教材的采购情况
+     */
     public function testLoadMajorCourses() {
+        $data = ['major_id'=>2971];
         $this->withoutExceptionHandling();
         $user = $this->getSuperAdmin();
 
         $response = $this->setSchoolAsUser($user, 50)
             ->actingAs($user)
             ->withSession($this->schoolSessionData)
-            ->get(route('school_manager.textbook.loadMajorTextbook'));
-        dd($response->content());
+            ->get(route('school_manager.textbook.loadMajorTextbook',$data));
+
+        $result = json_decode($response->content(),true);
+        $this->assertArrayHasKey('code', $result);
+        $this->assertEquals(1000, $result['code']);
+        foreach ($result['data']['major_textbook'] as $key => $val) {
+            $this->assertArrayHasKey('code', $val);
+            $this->assertArrayHasKey('name', $val);
+            $this->assertArrayHasKey('year', $val);
+            $this->assertArrayHasKey('type', $val);
+            $this->assertArrayHasKey('textbook_num', $val);
+            $this->assertArrayHasKey('textbooks', $val);
+        }
+    }
+
+
+
+    /**
+     * 教材列表
+     */
+    public function testTextbookListApi() {
+        $user = $this->getSuperAdmin();
+
+        $response = $this->setSchoolAsUser($user, 50)
+            ->actingAs($user)
+            ->withSession($this->schoolSessionData)
+            ->get(route('school_manager.textbook.list'));
+        dd($response);
     }
 
 

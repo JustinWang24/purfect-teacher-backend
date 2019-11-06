@@ -10,6 +10,21 @@ use App\Utils\JsonBuilder;
 class TextbookController extends Controller
 {
 
+
+    /**
+     * 列表
+     * @param TextbookRequest $request
+     * @return string
+     */
+    public function list(TextbookRequest $request) {
+        $schoolId = $request->getSchoolId();
+        $textbookDao = new TextbookDao();
+        $list = $textbookDao->getTextbookListBySchoolId($schoolId)->toArray();
+        return JsonBuilder::Success($list);
+    }
+
+
+
     /**
      * 添加
      * @param TextbookRequest $request
@@ -43,7 +58,8 @@ class TextbookController extends Controller
      */
     public function save(TextbookRequest $request) {
         $textbookDao = new TextbookDao();
-        $all = $request->get('textbook');;
+        $all = $request->get('textbook');
+
         if(!empty($all['id'])) {
             $id = $all['id'];
             unset($all['id']);
@@ -66,14 +82,20 @@ class TextbookController extends Controller
     }
 
 
-    //查看该专业所以教材的采购情况
+
+    /**
+     * 查看该专业所有教材的采购情况
+     * @param TextbookRequest $request
+     * @return string
+     */
     public function loadMajorTextbook(TextbookRequest $request) {
 
-        $majorId = $request->get('major_id','2971');
+        $schoolId = $request->getSchoolId();
+        $majorId = $request->get('major_id');
         $textbookDao = new TextbookDao();
-        $result = $textbookDao->getTextbooksByMajor($majorId);
-
-        return JsonBuilder::Success($result);
+        $result = $textbookDao->getTextbooksByMajor($majorId,$schoolId);
+        $data = ['major_textbook'=>$result];
+        return JsonBuilder::Success($data);
     }
 
 
