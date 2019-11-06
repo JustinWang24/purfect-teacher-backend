@@ -7,7 +7,7 @@ export function saveRegistrationForm(form, majorId, affix) {
     }
     return axios.post(
         Util.buildUrl(Constants.API.REGISTRATION_FORM.SUBMIT_FORM, affix),
-        {form: form, major_id: majorId,version:Constants.VERSION}
+        {form: form, recruitment_plan_id: majorId,version:Constants.VERSION}
     );
 }
 

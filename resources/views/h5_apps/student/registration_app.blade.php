@@ -41,7 +41,8 @@
                             </p>
                         </el-col>
                         <el-col :span="6">
-                            <el-button style="float: right;font-size: 12px;padding: 4px 15px;" size="mini" type="primary" round v-on:click="applyMajorHandler(major)">报名</el-button>
+                            <el-button v-if="!major.applied" style="float: right;font-size: 12px;padding: 4px 15px;" size="mini" type="primary" round v-on:click="applyMajorHandler(major)">报名</el-button>
+                            <p class="status-text" v-else>@{{ major.applied }}</p>
                         </el-col>
                     </el-row>
                 </el-card>
@@ -84,7 +85,7 @@
                     @{{ selectedMajor.description }}
                 </p>
                 <p style="text-align: center;margin-top:20px;">
-                    <el-button class="showMoreButton" v-on:click="applyMajorHandler(selectedMajor)" type="primary" round>报名</el-button>
+                    <el-button v-if="!isPlanHasBeenApplied(selectedMajor.id)" class="showMoreButton" v-on:click="applyMajorHandler(selectedMajor)" type="primary" round>报名</el-button>
                 </p>
                 <div v-if="selectedMajor.courses">
                     <el-divider></el-divider>

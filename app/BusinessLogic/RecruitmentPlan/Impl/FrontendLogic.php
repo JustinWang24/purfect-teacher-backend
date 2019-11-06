@@ -11,7 +11,10 @@ use App\BusinessLogic\RecruitmentPlan\Contract\IPlansLoaderLogic;
 use App\Dao\Courses\CourseDao;
 use App\Dao\Courses\CourseMajorDao;
 use App\Dao\RecruitmentPlan\RecruitmentPlanDao;
+use App\Dao\RecruitStudent\RegistrationInformaticsDao;
 use App\Dao\Schools\SchoolDao;
+use App\Dao\Students\StudentProfileDao;
+use App\Dao\Users\UserDao;
 use App\Http\Requests\RecruitStudent\PlanRecruitRequest;
 use Carbon\Carbon;
 
@@ -21,6 +24,8 @@ class FrontendLogic implements IPlansLoaderLogic
     private $schoolId;
     private $today;
     private $request;
+    private $studentMobile;
+    private $studentIdNumber;
 
     public function __construct(PlanRecruitRequest $request)
     {
@@ -28,6 +33,8 @@ class FrontendLogic implements IPlansLoaderLogic
         $this->schoolId = null;
         $this->today = Carbon::today();
         $this->request = $request;
+        $this->studentIdNumber = $request->getStudentIdNumber();
+        $this->studentMobile = $request->getMobile();
     }
 
     public function getPlans()
@@ -42,8 +49,22 @@ class FrontendLogic implements IPlansLoaderLogic
         $rows = $dao->getPlansBySchoolForToday($this->today, $school->id);
 
         $plans = [];
+
+        $profileDao = new StudentProfileDao();
+        $userId = $profileDao->getUserIdByIdNumberOrMobile($this->studentIdNumber, $this->studentMobile);
+
+        $regDao = new RegistrationInformaticsDao();
+
         if($rows){
             foreach ($rows as $row) {
+                $applied = false;
+                if($userId){
+                    $applied = $regDao->getInformaticsByUserIdAndPlanId($userId, $row->id);
+                    if($applied){
+                        $applied = $applied->getStatusText();
+                    }
+                }
+
                 $plans[] = [
                     'id'=>$row->id,
                     'name'=>$row->major->name,
@@ -51,10 +72,10 @@ class FrontendLogic implements IPlansLoaderLogic
                     'period'=>$row->major->period,
                     'seats'=>$row->seats,
                     'enrolled'=>$row->enrolled_count,
-                    'applied'=>$row->applied_count,
+                    'applied'=>$applied??false,
                     'hot'=>$row->hot,
                     'title'=>$row->title,
-                    'tease'=>$row->tease
+                    'tease'=>$row->tease,
                 ];
             }
         }

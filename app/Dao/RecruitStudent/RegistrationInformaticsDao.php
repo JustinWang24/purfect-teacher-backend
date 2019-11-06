@@ -4,6 +4,10 @@
 namespace App\Dao\RecruitStudent;
 
 use App\Models\RecruitStudent\RegistrationInformatics;
+use App\Models\Schools\RecruitmentPlan;
+use App\Utils\JsonBuilder;
+use App\Utils\ReturnData\IMessageBag;
+use App\Utils\ReturnData\MessageBag;
 use Exception;
 use Ramsey\Uuid\Uuid;
 use App\Models\Students\StudentProfile;
@@ -87,21 +91,46 @@ class RegistrationInformaticsDao
     /**
      * 根据userId获取报名信息
      * @param $userId
+     * @param $simple: 是否只获取简单数据
      * @return mixed
      */
-    public function getInformaticsByUserId($userId)
+    public function getInformaticsByUserId($userId, $simple = false)
     {
+        if($simple){
+            return RegistrationInformatics::select(['id','recruitment_plan_id','status','note'])
+                ->where('user_id', $userId)->get();
+        }
         return RegistrationInformatics::where('user_id', $userId)->get();
+    }
+
+    /**
+     * 根据userId 和 招生计划的 id 获取报名信息
+     * @param $userId
+     * @param $planId
+     * @param bool $simple
+     * @return RegistrationInformatics|null
+     */
+    public function getInformaticsByUserIdAndPlanId($userId, $planId, $simple = false){
+        if($simple){
+            return RegistrationInformatics::select(['id','recruitment_plan_id','status','note'])
+                ->where('user_id', $userId)
+                ->where('recruitment_plan_id', $planId)
+                ->first();
+        }
+        return RegistrationInformatics::where('user_id', $userId)
+            ->where('recruitment_plan_id', $planId)
+            ->first();
     }
 
 
     /**
      * 添加未认证用户并且报名
      * @param $data
+     * @param RecruitmentPlan $plan
      * @throws Exception
-     * @return void|bool
+     * @return IMessageBag
      */
-    public function addUser($data)
+    public function addUser($data, $plan)
     {
         $data['uuid'] = Uuid::uuid4()->toString();
         $data['password'] = Hash::make('000000');
@@ -110,39 +139,48 @@ class RegistrationInformaticsDao
 
         $user =  User::create($data);
 
+        $bag = new MessageBag();
+        $profile = false;
+
         if ($user) {
             $userProfile = $data;
             $userProfile['uuid'] = $data['uuid'];
             $userProfile['user_id'] = $user->id;
             $userProfile['device']  = 0;
-            $userProfile['year'] = date('Y');
-            $userProfile['serial_number'] = 0;
-            $userProfile['avatar'] = 'www.tx.test';
+            $userProfile['year'] = $plan->year; // 这个应该是从招生中的入学年级来
+            $userProfile['serial_number'] = 0;  // 学号还无法分配
+            $userProfile['avatar'] = '/assets/img/dp.jpg'; // 用户默认的图片
             $profile = StudentProfile::create($userProfile);
+            if(!$profile){
+                $bag->setMessage('学生档案创建失败');
+            }
         } else {
             $user = false;
-            $profile = false;
+            $bag->setMessage('学生用户账户创建失败');
         }
 
-        if ($user == false || $profile == false) {
-            DB::rollBack();
-            $result = false;
-        } else {
+        if ($user && $profile) {
             DB::commit();
-            $result = $user->id;
+            $bag->setData([
+                'user'=>$user,
+                'profile'=>$profile
+            ]);
+        } else {
+            DB::rollBack();
+            $bag->setCode(JsonBuilder::CODE_ERROR);
         }
-        return $result;
+        return $bag;
     }
 
     /**
      * 报名
      * @param $data
-     * @return mixed
+     * @param User $user
+     * @return RegistrationInformatics
      */
-    public function signUp($data)
+    public function signUp($data, $user)
     {
-       return RegistrationInformatics::create($data);
+        $data['user_id'] = $user->id;
+        return RegistrationInformatics::create($data);
     }
-
-
 }

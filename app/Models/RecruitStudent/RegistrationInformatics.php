@@ -28,6 +28,17 @@ class RegistrationInformatics extends Model
     const APPROVED_TEXT             = '已录取';
     const ENROLLED_TEXT             = '已报到';
 
+    public static function AllStatusStudent(){
+        return [
+            self::WAITING => self::WAITING_TEXT,
+            self::REFUSED => self::REFUSED_TEXT,
+            self::PASSED => self::PASSED_TEXT,
+            self::REJECTED => self::REJECTED_TEXT,
+            self::APPROVED => self::APPROVED_TEXT,
+            self::ENROLLED => self::ENROLLED_TEXT,
+        ];
+    }
+
     /**
      * 学生详情表
      */
@@ -59,5 +70,13 @@ class RegistrationInformatics extends Model
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    /**
+     * 获取状态文字
+     * @return string
+     */
+    public function getStatusText(){
+        return self::AllStatusStudent()[$this->status];
     }
 }

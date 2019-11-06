@@ -24,7 +24,8 @@
                     </p>
                 </el-col>
                 <el-col :span="6">
-                    <el-button style="float: right;font-size: 12px;padding: 4px 15px;" size="mini" type="primary" round v-on:click="apply(major)">报名</el-button>
+                    <el-button v-if="!major.applied" style="float: right;font-size: 12px;padding: 4px 15px;" size="mini" type="primary" round v-on:click="apply(major)">报名</el-button>
+                    <p class="status-text" v-else>{{ major.applied }}</p>
                 </el-col>
                 <el-col :span="6">
                     <el-button style="float: right;font-size: 12px;padding: 4px 15px;" size="mini" type="success" round v-on:click="loadDetail(major)">详情</el-button>
@@ -35,8 +36,6 @@
 </template>
 
 <script>
-    import { loadMajorDetail } from '../../common/registration_form';
-    import { Util } from '../../common/utils';
     export default {
         name: "MajorCards",
         props:[
@@ -49,25 +48,6 @@
         methods:{
             loadDetail: function (major) {
                 this.$emit('show-major-detail', major);
-                // loadMajorDetail(major.id).then(res => {
-                //     if(Util.isAjaxResOk(res)){
-                //         this.$emit('show-major-detail', res.data.data.plan);
-                //     }
-                //     else{
-                //         this.$alert('无法加载专业: ' + major.name + '的详情', '加载失败', {
-                //             confirmButtonText: '确定',
-                //             type:'error',
-                //             customClass: 'for-mobile-alert'
-                //         });
-                //     }
-                // }).catch(e => {
-                //     console.log(e);
-                //     this.$alert('服务器忙, 无法加载专业: ' + major.name + '的详情. 请稍候再试!', '加载失败', {
-                //         confirmButtonText: '确定',
-                //         type:'error',
-                //         customClass: 'for-mobile-alert'
-                //     });
-                // })
             },
             apply: function (major) {
                 this.$emit('apply-major', major);
@@ -109,6 +89,11 @@
             .fee{
                 font-size: 12px;
                 text-align: center;
+            }
+            .status-text{
+                color: #0c83fc;
+                font-size: 12px;
+                text-align: right;
             }
         }
     }
