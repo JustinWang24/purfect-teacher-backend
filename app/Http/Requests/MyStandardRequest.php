@@ -71,4 +71,28 @@ class MyStandardRequest extends FormRequest
     public function uuid(){
         return $this->get('uuid',null);
     }
+
+    /**
+     * 获取页码
+     * @return int
+     */
+    public function getPageNumber(){
+        return $this->has('pageNumber') ? intval($this->get('pageNumber')) : 0;
+    }
+
+    /**
+     * 获取分页大小
+     * @return int
+     */
+    public function getPageSize(){
+        return $this->has('pageSize') ? intval($this->get('pageSize')) : 20;
+    }
+
+    /**
+     * 获取提交的版本信息
+     * @return string
+     */
+    public function getVersion(){
+        return $this->has('version') ? $this->get('version') : null;
+    }
 }

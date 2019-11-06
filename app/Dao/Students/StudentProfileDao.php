@@ -2,6 +2,7 @@
 
 namespace App\Dao\Students;
 
+use App\Dao\Users\UserDao;
 use App\Models\Students\StudentProfile;
 
 class StudentProfileDao extends StudentProfile
@@ -25,6 +26,26 @@ class StudentProfileDao extends StudentProfile
     public function getStudentInfoByIdNumber($idNumber)
     {
         return StudentProfile::where('id_number', $idNumber)->first();
+    }
+
+    /**
+     * 根据身份证或者手机号, 获取用户的 ID
+     * @param $idNumber
+     * @param $mobile
+     * @return int|null
+     */
+    public function getUserIdByIdNumberOrMobile($idNumber, $mobile){
+        $userId = null;
+        if($idNumber){
+            $sp = $this->getStudentInfoByIdNumber($idNumber);
+            $userId = $sp->user_id ?? null;
+        }
+        if(!$userId && $mobile){
+            $dao = new UserDao();
+            $user = $dao->getUserByMobile($mobile);
+            $userId = $user->id ?? null;
+        }
+        return $userId;
     }
 
     /**
