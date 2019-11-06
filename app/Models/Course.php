@@ -50,7 +50,7 @@ class Course extends Model
 
 
     public function textbooks() {
-        $field = ['id', 'name', 'press', 'author', 'course_id', 'purchase_price', 'price', 'introduce'];
+        $field = ['id', 'name', 'press', 'author', 'course_id', 'purchase_price', 'price'];
         return $this->hasMany(Textbook::class)->select($field);
     }
 }

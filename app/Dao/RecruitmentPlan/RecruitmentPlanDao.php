@@ -156,4 +156,32 @@ class RecruitmentPlanDao
         return RecruitmentPlan::find($id);
     }
 
+
+    /**
+     * 获取招生计划
+     * @param $map
+     * @param $field
+     * @return mixed
+     */
+    protected function getRecruitmentPlan($map, $field) {
+        return RecruitmentPlan::where($map)->select($field)->get();
+    }
+
+
+    /**
+     * 根据专业ID和年份获取招生计划
+     * @param int $majorId 专业ID
+     * @param int $year 年
+     * @param int $type 招生类型
+     * @return mixed
+     */
+    public function getRecruitmentPlanByMajorAndYear($majorId, $year, $type) {
+        $field = ['id', 'school_id', 'major_id', 'year', 'seats','type'];
+        $map = ['major_id'=>$majorId, 'year'=>$year,'type'=>$type];
+        return $this->getRecruitmentPlan($map, $field);
+    }
+
+
+
+
 }

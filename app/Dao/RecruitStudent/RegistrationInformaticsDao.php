@@ -145,4 +145,15 @@ class RegistrationInformaticsDao
     }
 
 
+    /**
+     * 通过计划ID获取条数
+     * @param $planIdArr
+     * @return mixed
+     */
+    public function getCountByPlanIdArr($planIdArr) {
+        return RegistrationInformatics::whereIn('recruitment_plan_id',$planIdArr)->count();
+    }
+
+
+
 }

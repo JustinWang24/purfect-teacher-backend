@@ -40,7 +40,8 @@ class Textbook extends Model
      * 课程
      */
     public function course() {
-        $this->belongsTo(Course::class);
+        $field = ['id', 'code', 'name', 'scores', 'year', 'term' , 'optional'];
+        return $this->belongsTo(Course::class)->select($field);
     }
 
 
@@ -59,4 +60,7 @@ class Textbook extends Model
             default :return '';
         }
     }
+
+
+
 }
