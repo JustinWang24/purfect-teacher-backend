@@ -36,6 +36,7 @@ class RegistrationInformationTest extends BasicPageTestCase
             ->actingAs($su)
             ->withSession($this->schoolSessionData)
             ->get(route('school_manager.registration.details', $data));
+
         $this->assertTrue(1===2);
     }
 
@@ -52,6 +53,7 @@ class RegistrationInformationTest extends BasicPageTestCase
             ->actingAs($su)
             ->withSession($this->schoolSessionData)
             ->get(route('school_manager.registration.examine', $data));
+        dd($response->content());
         $this->assertTrue(1===2);
     }
 }

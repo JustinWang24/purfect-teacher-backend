@@ -15,6 +15,7 @@
                         <el-form-item label="开始日期">
                             <el-date-picker
                                     v-model="specialTimeTableItem.at_special_datetime"
+                                    value-format="yyyy-MM-dd"
                                     type="date"
                                     :editable="false"
                                     placeholder="选择日期">

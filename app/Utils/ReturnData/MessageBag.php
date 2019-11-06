@@ -53,6 +53,6 @@ class MessageBag implements IMessageBag
 
     public function isSuccess()
     {
-        return JsonBuilder::CODE_SUCCESS === $this->code;
+        return JsonBuilder::CODE_SUCCESS === $this->code || $this->code === true;
     }
 }

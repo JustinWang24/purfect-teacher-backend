@@ -137,7 +137,6 @@ class MajorDao
         unset($majorData['id']);
         return Major::where('id',$id)->update($majorData);
     }
-    
     /**
      * 分页获列表
      * @param $map
