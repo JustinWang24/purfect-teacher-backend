@@ -595,6 +595,7 @@ if(document.getElementById('school-recruitment-manager-app')){
                 pageSize:20,
                 schoolId: null,
                 userUuid: null,
+                flag: true,
             }
         },
         created(){
@@ -611,10 +612,16 @@ if(document.getElementById('school-recruitment-manager-app')){
             this._resetFormData();
             this.loadPlans(0);
         },
+        watch:{
+            'year': function(newVal) {
+                this.loadPlans(0);
+            }
+        },
         methods: {
             // 创建新招生计划
             createNewPlan: function(){
                 this._resetFormData();
+                this.flag = !this.flag;
             },
             onEditPlanHandler: function(payload){
                 axios.post(
@@ -624,12 +631,14 @@ if(document.getElementById('school-recruitment-manager-app')){
                     if(Util.isAjaxResOk(res)){
                         this.form = res.data.data.plan;
                         this.$message('您正在编辑招生计划: ' + this.form.title);
+                        this.flag = !this.flag;
                     }
                     else{
                         this.$message.error('加载招生计划数据失败');
                     }
                 })
             },
+            // 当删除按钮被点击
             onDeletePlanHandler: function(payload){
                 axios.post(
                     Constants.API.RECRUITMENT.DELETE_PLAN,
@@ -639,6 +648,11 @@ if(document.getElementById('school-recruitment-manager-app')){
                         const idx = Util.GetItemIndexById(payload.plan.id, this.plans);
                         if(idx > -1){
                             this.plans.splice(idx, 1);
+                            if(payload.plan.id === this.form.id){
+                                // 正好删除的是正在被编辑的计划, 那么重置编辑表单
+                                this._resetFormData();
+                                this.flag = !this.flag;
+                            }
                             this.$message({
                                 message: '招生计划: ' + payload.plan.title + '已被删除',
                                 type: 'success'
@@ -683,7 +697,6 @@ if(document.getElementById('school-recruitment-manager-app')){
                     title:'',
                     start_at:'',
                     end_at:'',
-                    expired:false,
                     description:'',
                     tease:'',
                     tags:'',
@@ -692,7 +705,10 @@ if(document.getElementById('school-recruitment-manager-app')){
                     seats:'',
                     grades_count:'',
                     year:this.year,
-                    manager_id: 0,
+                    manager_id: '',
+                    target_students: '',
+                    student_requirements: '',
+                    how_to_enrol: '',
                 };
             }
         }

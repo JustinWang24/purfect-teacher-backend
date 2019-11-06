@@ -146,8 +146,7 @@ Route::prefix('timetable')->group(function () {
 
 // 招生API
 Route::prefix('student-register')->group(function () {
-
-     // 招生专业
+     // 获取全部招生计划
      Route::post('/load-open-majors','Api\Recruitment\OpenMajorController@major')
         ->name('api.load.open.majors');
 
@@ -162,6 +161,4 @@ Route::prefix('student-register')->group(function () {
      // 报名
      Route::post('/submit-form','Api\Recruitment\OpenMajorController@signUp')
         ->name('api.major.submit.form');
-
-
 });
