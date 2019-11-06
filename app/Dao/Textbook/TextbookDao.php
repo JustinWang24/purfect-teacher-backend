@@ -94,7 +94,12 @@ class TextbookDao
     }
 
 
-    public function getTextbooksByMajor($majorId = '2971') {
+    /**
+     * 通过专业ID获取教材采购数
+     * @param $majorId
+     * @return array
+     */
+    public function getTextbooksByMajor($majorId) {
         $courseMajorDao = new CourseMajorDao();
         $list = $courseMajorDao->getCoursesByMajor($majorId)->toArray();
         $courseIdArr = array_column($list,'id','id');
@@ -102,23 +107,23 @@ class TextbookDao
         $courseDao = new CourseDao();
         $field = ['id', 'code', 'name', 'year', 'term'];
         $courses = $courseDao->getCoursesByIdArr($courseIdArr, $field)->toArray();
-
-        //下一年时间
-        $nextYear = Carbon::parse('+ 1year')->format('Y');
+        $thisYear = Carbon::now()->year;  // 今年
+        $nextYear = Carbon::parse('+ 1year')->year; // 明年
 
         foreach ($courses as $key => $val) {
             $year = $nextYear - $val['year'];
-            if($year == 1) {
+            if($year == $thisYear) {
                 // todo 去查招生计划和已招学生
+                $courses[$key]['textbook_num'] = 0;
             } else {
+                // 通过专业ID和课程的年级查询学生数量
                 $num = $this->getStudentNumByMajorAndYear($majorId,$year);
                 $courses[$key]['textbook_num'] = $num;
             }
 
         }
-        dd($courses);
 
-        return $list;
+        return $courses;
     }
 
 

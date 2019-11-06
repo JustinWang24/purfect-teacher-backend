@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\Courses\CourseArrangement;
+use App\Models\Schools\Textbook;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Models\Courses\CourseTeacher;
@@ -45,5 +46,11 @@ class Course extends Model
         return $this->hasMany(CourseArrangement::class)
             ->orderBy('week', 'asc')
             ->orderBy('day_index','asc');
+    }
+
+
+    public function textbooks() {
+        $field = ['id', 'name', 'press', 'author', 'course_id', 'purchase_price', 'price', 'introduce'];
+        return $this->hasMany(Textbook::class)->select($field);
     }
 }
