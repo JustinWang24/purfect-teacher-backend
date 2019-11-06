@@ -16,9 +16,10 @@ class RedirectIfNoSessionData
      */
     public function handle($request, Closure $next)
     {
+
         if(
             empty($request->session()->get('school.id'))
-            && $request->user()->isOperatorOrAbove()
+            && $request->user() && $request->user()->isOperatorOrAbove()
         ){
             if(Route::currentRouteName() !== 'home' && Route::currentRouteName() !== 'operator.schools.enter'){
                 // 如果申请的不是 home, 并且 session 中没有 school.id, 那么就要跳转到 home, 以从新选择要操作的学校.

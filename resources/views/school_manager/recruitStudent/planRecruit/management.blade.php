@@ -8,7 +8,7 @@ use App\User;
     <div id="plan-manager-school-id" data-id="{{ session('school.id') }}" data-uuid="{{ Auth::user()->uuid }}"></div>
     <div class="row" id="school-recruitment-manager-app">
         <div class="col-7">
-            <div class="card-box">
+            <div class="card">
                 <div class="card-head">
                     <header>
                         <span class="pull-left">{{ session('school.name') }}: 招生计划表</span>
@@ -37,7 +37,7 @@ use App\User;
             </div>
         </div>
         <div class="col-5">
-            <div class="card-box">
+            <div class="card">
                 <div class="card-head">
                     <header>招生计划</header>
                 </div>
@@ -46,6 +46,7 @@ use App\User;
                         :school-id="schoolId"
                         :years="years"
                         :form="form"
+                        :something-changed="flag"
                         v-on:new-plan-created="newPlanCreatedHandler"
                         v-on:plan-updated="planUpdatedHandler"
                     ></recruitment-plan-form>

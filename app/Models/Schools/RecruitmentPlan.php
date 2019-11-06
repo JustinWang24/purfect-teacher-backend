@@ -5,9 +5,9 @@ namespace App\Models\Schools;
 use App\Models\School;
 use App\User;
 use App\Utils\Time\GradeAndYearUtil;
-use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Models\Courses\CourseMajor;
 
 class RecruitmentPlan extends Model
 {
@@ -24,7 +24,6 @@ class RecruitmentPlan extends Model
         'title',// 本次招生计划的标题
         'start_at',  // 开始招生日期
         'end_at',    // 招生截止日期
-        'expired',  // 强制结束招生
         'description',  // 招生简章详情
         'tease',  // 简介
         'tags',  // 标签
@@ -36,6 +35,9 @@ class RecruitmentPlan extends Model
         'applied_count', // 已报名人数
         'enrolled_count', // 已招生人数
         'manager_id', // 负责人: 本次招生的收信人
+        'target_students', // 录取方式
+        'student_requirements', // 报名条件
+        'how_to_enrol', // 录取方式
     ];
 
     public $dates = [
@@ -46,7 +48,6 @@ class RecruitmentPlan extends Model
         'start_at' => 'datetime:Y-m-d',
         'end_at' => 'datetime:Y-m-d',
         'hot'=>'boolean',
-        'expired'=>'boolean',
     ];
 
     public function setStartAtAttribute($value)
@@ -78,4 +79,11 @@ class RecruitmentPlan extends Model
     public function manager(){
         return $this->belongsTo(User::class,'manager_id');
     }
+
+
+    public function courseMajor()
+    {
+        return $this->hasMany(CourseMajor::class,'major_id', 'major_id');
+    }
+
 }

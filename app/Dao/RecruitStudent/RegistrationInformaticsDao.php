@@ -4,6 +4,13 @@
 namespace App\Dao\RecruitStudent;
 
 use App\Models\RecruitStudent\RegistrationInformatics;
+use Exception;
+use Ramsey\Uuid\Uuid;
+use App\Models\Students\StudentProfile;
+use Illuminate\Support\Facades\DB;
+use App\Models\Acl\Role;
+use App\User;
+use Illuminate\Support\Facades\Hash;
 
 class RegistrationInformaticsDao
 {
@@ -76,5 +83,66 @@ class RegistrationInformaticsDao
     {
         return RegistrationInformatics::where('id', $id)->update($data);
     }
+
+    /**
+     * 根据userId获取报名信息
+     * @param $userId
+     * @return mixed
+     */
+    public function getInformaticsByUserId($userId)
+    {
+        return RegistrationInformatics::where('user_id', $userId)->get();
+    }
+
+
+    /**
+     * 添加未认证用户并且报名
+     * @param $data
+     * @throws Exception
+     * @return void|bool
+     */
+    public function addUser($data)
+    {
+        $data['uuid'] = Uuid::uuid4()->toString();
+        $data['password'] = Hash::make('000000');
+        $data['type'] = Role::VISITOR;
+        DB::beginTransaction();
+
+        $user =  User::create($data);
+
+        if ($user) {
+            $userProfile = $data;
+            $userProfile['uuid'] = $data['uuid'];
+            $userProfile['user_id'] = $user->id;
+            $userProfile['device']  = 0;
+            $userProfile['year'] = date('Y');
+            $userProfile['serial_number'] = 0;
+            $userProfile['avatar'] = 'www.tx.test';
+            $profile = StudentProfile::create($userProfile);
+        } else {
+            $user = false;
+            $profile = false;
+        }
+
+        if ($user == false || $profile == false) {
+            DB::rollBack();
+            $result = false;
+        } else {
+            DB::commit();
+            $result = $user->id;
+        }
+        return $result;
+    }
+
+    /**
+     * 报名
+     * @param $data
+     * @return mixed
+     */
+    public function signUp($data)
+    {
+       return RegistrationInformatics::create($data);
+    }
+
 
 }

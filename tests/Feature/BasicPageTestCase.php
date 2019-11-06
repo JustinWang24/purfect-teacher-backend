@@ -30,11 +30,11 @@ class BasicPageTestCase extends TestCase
         parent::setUp();
         // 初始化所需要的 dao
         $this->userDao       = new UserDao();
-        $this->gradeUserDao       = new GradeUserDao();
+        $this->gradeUserDao  = new GradeUserDao();
         $this->superAdmin    = $this->userDao->getUserByMobile('18601216091');
         $this->operator      = $this->userDao->getUserByMobile('18510209803');
         $this->schoolManager = $this->userDao->getUserByMobile('1000006');
-        $this->teacher    = $this->gradeUserDao->getAnyTeacher(1)->user;
+        $this->teacher       = $this->gradeUserDao->getAnyTeacher(6);
     }
 
     /**

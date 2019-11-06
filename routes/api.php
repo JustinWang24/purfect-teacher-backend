@@ -143,3 +143,22 @@ Route::prefix('timetable')->group(function () {
     Route::post('/load-special-cases','Api\Timetable\TimetableItemsController@load_special_cases')
         ->name('api.timetable.load.special.cases');
 });
+
+// 招生API
+Route::prefix('student-register')->group(function () {
+     // 获取全部招生计划
+     Route::post('/load-open-majors','Api\Recruitment\OpenMajorController@major')
+        ->name('api.load.open.majors');
+
+     // 专业详情
+     Route::post('/load-major-detail','Api\Recruitment\OpenMajorController@majorDetail')
+        ->name('api.load.major.detail');
+
+     // 报名辅助填充数据
+     Route::post('/query-student-profile','Api\Recruitment\OpenMajorController@studentProfile')
+        ->name('api.query.student.profile');
+
+     // 报名
+     Route::post('/submit-form','Api\Recruitment\OpenMajorController@signUp')
+        ->name('api.major.submit.form');
+});
