@@ -1,7 +1,14 @@
 <template>
     <div class="majors-wrap">
         <el-card shadow="always" v-for="(major, idx) in majors" :key="idx">
-            <p class="major-name">{{ major.name }}({{ major.period }}年制)</p>
+            <p class="major-name">
+                <el-badge v-if="major.hot" value="热门" class="item">
+                    {{ major.name }}({{ major.period }}年制)
+                </el-badge>
+                <span v-else>
+                    {{ major.name }}({{ major.period }}年制)
+                </span>
+            </p>
             <p class="m-desc">
                 {{ major.description }}
             </p>
@@ -41,25 +48,26 @@
         },
         methods:{
             loadDetail: function (major) {
-                loadMajorDetail(major.id).then(res => {
-                    if(Util.isAjaxResOk(res)){
-                        this.$emit('show-major-detail', res.data.data.major);
-                    }
-                    else{
-                        this.$alert('无法加载专业: ' + major.name + '的详情', '加载失败', {
-                            confirmButtonText: '确定',
-                            type:'error',
-                            customClass: 'for-mobile-alert'
-                        });
-                    }
-                }).catch(e => {
-                    console.log(e);
-                    this.$alert('服务器忙, 无法加载专业: ' + major.name + '的详情. 请稍候再试!', '加载失败', {
-                        confirmButtonText: '确定',
-                        type:'error',
-                        customClass: 'for-mobile-alert'
-                    });
-                })
+                this.$emit('show-major-detail', major);
+                // loadMajorDetail(major.id).then(res => {
+                //     if(Util.isAjaxResOk(res)){
+                //         this.$emit('show-major-detail', res.data.data.plan);
+                //     }
+                //     else{
+                //         this.$alert('无法加载专业: ' + major.name + '的详情', '加载失败', {
+                //             confirmButtonText: '确定',
+                //             type:'error',
+                //             customClass: 'for-mobile-alert'
+                //         });
+                //     }
+                // }).catch(e => {
+                //     console.log(e);
+                //     this.$alert('服务器忙, 无法加载专业: ' + major.name + '的详情. 请稍候再试!', '加载失败', {
+                //         confirmButtonText: '确定',
+                //         type:'error',
+                //         customClass: 'for-mobile-alert'
+                //     });
+                // })
             },
             apply: function (major) {
                 this.$emit('apply-major', major);

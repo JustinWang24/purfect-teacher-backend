@@ -55,10 +55,15 @@ $defaultPadding: 15px;
         }
         .major-name{
           font-size: 14px;
+          font-weight: bold;
         }
         .stat{
           color: #6F7275;
           font-size: 12px;
+          text-align: center;
+          .enrolled{
+            color: #0c83fc;
+          }
         }
         .fee{
           font-size: 12px;
