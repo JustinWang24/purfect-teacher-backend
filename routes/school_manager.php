@@ -120,6 +120,10 @@ Route::prefix('school_manager')->group(function () {
 
 
     //教材管理
-    Route::any('textbook/add', 'TextbookController@add')->name('school_manager.textbook.add');  // 添加教程
+    Route::get('textbook/add', 'TextbookController@add')->name('school_manager.textbook.add');     // 添加教程
+    Route::get('textbook/edit', 'TextbookController@edit')->name('school_manager.textbook.edit');  // 编辑教程
+    Route::post('textbook/save', 'TextbookController@save')->name('school_manager.textbook.save'); // 保存教程
+    //获取专业教材
+    Route::get('textbook/loadMajorTextbook', 'TextbookController@loadMajorTextbook')->name('school_manager.textbook.loadMajorTextbook');
 
 });
