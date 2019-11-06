@@ -14,7 +14,7 @@ class PlanRecruitDao
     public function getPlanRecruitBySchoolId($schoolId) {
         $majorDao = new MajorDao();
         $map = ['school_id'=>$schoolId];
-        $field = ['id', 'name', 'description', 'fee', 'open', 'seats'];
+        $field = ['id', 'name', 'description'];
         $list = $majorDao->getMajorPage($map, $field);
         return $list;
     }

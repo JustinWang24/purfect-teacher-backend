@@ -106,8 +106,6 @@ class MajorDao
                 'department'=>$major->department->name,
                 'campus'=>$major->campus->name??'',
                 'name'=>$major->name,
-                'fee'=>$major->fee,
-                'seats'=>$major->seats,
                 'period'=>$major->period,
                 'description'=>$major->description,
             ];
