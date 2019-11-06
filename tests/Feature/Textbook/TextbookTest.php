@@ -122,7 +122,7 @@ class TextbookTest extends BasicPageTestCase
     }
 
 
-    //获取专业的教材
+    //获取专业的教材采购情况
     public function testLoadMajorCourses() {
         $this->withoutExceptionHandling();
         $user = $this->getSuperAdmin();
@@ -131,7 +131,7 @@ class TextbookTest extends BasicPageTestCase
             ->actingAs($user)
             ->withSession($this->schoolSessionData)
             ->get(route('school_manager.textbook.loadMajorTextbook'));
-        dd($response);
+        dd($response->content());
     }
 
 

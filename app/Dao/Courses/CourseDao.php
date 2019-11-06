@@ -306,7 +306,7 @@ class CourseDao
      * @return mixed
      */
     public function getCoursesByIdArr($idArr,$field) {
-        $result = Course::whereIn('id',$idArr)->select($field)->get();
+        $result = Course::whereIn('id',$idArr)->with('textbooks')->select($field)->get();
         return $result;
     }
 }

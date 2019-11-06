@@ -67,13 +67,13 @@ class TextbookController extends Controller
 
 
     //查看该专业所以教材的采购情况
-    public function loadMajorTextbook() {
+    public function loadMajorTextbook(TextbookRequest $request) {
 
+        $majorId = $request->get('major_id','2971');
         $textbookDao = new TextbookDao();
-        $result = $textbookDao->getTextbooksByMajor();
+        $result = $textbookDao->getTextbooksByMajor($majorId);
 
-        //通过课程
-        dd($result);
+        return JsonBuilder::Success($result);
     }
 
 
