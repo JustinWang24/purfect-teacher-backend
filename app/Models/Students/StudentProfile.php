@@ -32,7 +32,8 @@ class StudentProfile extends Model
         'nation_code', // 民族代码
         'nation_name', // 民族名称
         'parent_name', // 家长姓名
-        'parent_mobile' // 家长手机号
+        'parent_mobile', // 家长手机号
+        'source' // 统招还是自招
     ];
 
     public $dates = ['birthday'];
@@ -49,6 +50,4 @@ class StudentProfile extends Model
     {
         return $this->hasMany(RegistrationInformatics::class,'user_id', 'user_id');
     }
-
-
 }

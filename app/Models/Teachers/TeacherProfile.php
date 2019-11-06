@@ -26,7 +26,12 @@ class TeacherProfile extends Model
         'birthday',
         'joined_at', // 入职日期
         'avatar',
+        'famous',
     ];
+
+    public $casts = ['famous'=>'boolean'];
+
+    public $dates = ['joined_at'];
 
     /**
      * 获取教师ID
