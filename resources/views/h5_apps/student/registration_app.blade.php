@@ -44,7 +44,6 @@
                     </el-col>
                 </el-row>
             </el-card>
-
             <p style="text-align: center;margin-top:20px;">
                 <el-button class="showMoreButton" v-on:click="showAllMajors" type="primary" round>查看更多</el-button>
             </p>

@@ -34,7 +34,7 @@ class GradeUserDao
             ['school_id','=',$schoolId],
             ['name','like',$name.'%'],
         ];
-        $query = GradeUser::select(['id','name','user_type','department_id','major_id','grade_id'])
+        $query = GradeUser::select(['id','user_id','name','user_type','department_id','major_id','grade_id'])
             ->where($where);
 
         if($userType){

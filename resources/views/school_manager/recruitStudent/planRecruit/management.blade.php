@@ -46,6 +46,7 @@ use App\User;
                         :school-id="schoolId"
                         :years="years"
                         :form="form"
+                        :something-changed="flag"
                         v-on:new-plan-created="newPlanCreatedHandler"
                         v-on:plan-updated="planUpdatedHandler"
                     ></recruitment-plan-form>
