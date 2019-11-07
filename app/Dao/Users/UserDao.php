@@ -100,4 +100,35 @@ class UserDao
             return false;
         }
     }
+
+    /**
+     * 获取用户所在班级
+     * @param $uuid
+     * @return
+     */
+    public function getUserGradeByUuid($uuid)
+    {
+        return User::where('uuid', $uuid)->with('gradeUser')->first();
+    }
+
+
+    /**
+     * 返回 APP 用户身份
+     * @param $userType
+     * @return string
+     */
+    public function  getUserRoleName($userType)
+    {
+        switch ($userType) {
+            case Role::TEACHER :
+                return trans('AppName.teacher');
+                break;
+            case Role::VERIFIED_USER_STUDENT :
+                return trans('AppName.student');
+                break;
+            // todo :: 用到了再补充
+            default: return "" ;
+                break;
+        }
+    }
 }
