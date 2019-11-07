@@ -298,4 +298,16 @@ class CourseDao
         }
         return $data;
     }
+
+
+    /**
+     * 通过idArr查询课程列表
+     * @param $idArr
+     * @param $field
+     * @return mixed
+     */
+    public function getCoursesByIdArr($idArr,$field) {
+        $result = Course::whereIn('id',$idArr)->with('textbooks')->select($field)->get();
+        return $result;
+    }
 }

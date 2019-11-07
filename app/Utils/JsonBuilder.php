@@ -13,8 +13,8 @@ class JsonBuilder
 {
     const CODE_SUCCESS = 1000;
     const CODE_ERROR = 999;
-//    const MODE_OUTPUT = JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT;
-    const MODE_OUTPUT = JSON_UNESCAPED_UNICODE;
+    const MODE_OUTPUT_DEV = JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT;
+    const MODE_OUTPUT_PROD = JSON_UNESCAPED_UNICODE;
 
     /**
      * 返回成功JSON消息
@@ -23,6 +23,7 @@ class JsonBuilder
      * @return string
      */
     public static function Success($dataOrMessage=[], $message = 'OK'){
+        $mode = env('APP_DEBUG',true) ? self::MODE_OUTPUT_DEV : self::MODE_OUTPUT_PROD;
         if( is_array($dataOrMessage) ){
             try{
                 $dataOrMessage = self::TransformNullToEmptyString($dataOrMessage);
@@ -30,7 +31,7 @@ class JsonBuilder
                     'code' => self::CODE_SUCCESS,
                     'message' => $message,
                     'data' => $dataOrMessage
-                ], self::MODE_OUTPUT);
+                ], $mode);
             }catch (\Exception $exception){
                 return self::Error($exception->getMessage());
             }
@@ -41,7 +42,7 @@ class JsonBuilder
                     'code' => self::CODE_SUCCESS,
                     'message' => $message,
                     'data' => $dataOrMessage
-                ], self::MODE_OUTPUT);
+                ], $mode);
             }catch (\Exception $exception){
                 return self::Error($exception->getMessage());
             }
@@ -51,7 +52,7 @@ class JsonBuilder
                 'code' => self::CODE_SUCCESS,
                 'message' => $dataOrMessage,
                 'data'=>[]
-            ], self::MODE_OUTPUT);
+            ], $mode);
         }
     }
 
