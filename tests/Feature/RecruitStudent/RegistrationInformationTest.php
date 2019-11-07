@@ -1,8 +1,9 @@
 <?php
 
-
 namespace Tests\Feature\RecruitStudent;
 
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Http\UploadedFile;
 use Tests\Feature\BasicPageTestCase;
 
 class RegistrationInformationTest extends BasicPageTestCase
@@ -55,5 +56,24 @@ class RegistrationInformationTest extends BasicPageTestCase
             ->get(route('school_manager.registration.examine', $data));
         dd($response->content());
         $this->assertTrue(1===2);
+    }
+
+
+    /**
+     * 测试正常上传Excel
+     */
+    public function testItCanUploadExcel()
+    {
+        $file = new UploadedFile(__DIR__.'/test.xlsx','original');
+
+        $this->withoutExceptionHandling();
+        $su = $this->getSchoolManager();
+        $data = ['file' => $file];
+        $response = $this->setSchoolAsUser($su, 1)
+                         ->actingAs($su)
+                         ->withSession($this->schoolSessionData)
+                         ->post(route('api.major.submit.excel'), $data);
+
+        dd($response->content());
     }
 }
