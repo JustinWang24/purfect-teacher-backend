@@ -19,8 +19,8 @@ class CreateMajorsTable extends Migration
                 $table->integerIncrements('id');
                 // 该专业关联的学校
                 $table->unsignedInteger('school_id')->comment('学校ID');
-                $table->unsignedInteger('campuses_id')->default(0)->comment('校区ID');
-                $table->unsignedInteger('institutes_id')->default(0)->comment('学院ID');
+                $table->unsignedInteger('campus_id')->default(0)->comment('校区ID');
+                $table->unsignedInteger('institute_id')->default(0)->comment('学院ID');
                 // 该专业关联的系, 如果为 0 表示无任何关联
                 $table->unsignedInteger('department_id')->default(0)->comment('系ID');
                 $table->string('name',100)->comment('专业名称');   // 学院(系)的名称
