@@ -34,7 +34,7 @@ class BasicPageTestCase extends TestCase
         $this->superAdmin    = $this->userDao->getUserByMobile('18601216091');
         $this->operator      = $this->userDao->getUserByMobile('18510209803');
         $this->schoolManager = $this->userDao->getUserByMobile('1000006');
-        $this->teacher       = $this->gradeUserDao->getAnyTeacher(6);
+        $this->teacher       = $this->gradeUserDao->getAnyTeacher(1);
     }
 
     /**

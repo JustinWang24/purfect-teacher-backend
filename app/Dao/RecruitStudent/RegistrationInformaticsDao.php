@@ -208,4 +208,19 @@ class RegistrationInformaticsDao
         }
         return $msgBag;
     }
+
+
+
+    /**
+     * 通过计划ID和状态获取条数 状态值判断是大于等于
+     * @param int   $status  状态
+     * @param array $planIdArr  计划ID
+     * @return mixed
+     */
+    public function getCountByStatusAndPlanIdArr($status,$planIdArr) {
+        return RegistrationInformatics::where('status','>=',$status)->
+        whereIn('recruitment_plan_id',$planIdArr)->count();
+    }
+
+
 }

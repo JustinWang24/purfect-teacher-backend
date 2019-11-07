@@ -165,4 +165,38 @@ class GradeUserDao
     public function getAnyTeacher($schoolId){
         return GradeUser::where('school_id',$schoolId)->where('user_type',Role::TEACHER)->first();
     }
+
+    /**
+     * 获取班级通讯录
+     * @param $gradeId
+     * @return array
+     */
+    public function getGradeAddressBook($gradeId)
+    {
+        $userDao = new UserDao;
+        $data = GradeUser::where('grade_id', $gradeId)->select('user_id', 'user_type')->with([
+                    'user' => function ($query) {
+                        $query->select('id', 'name', 'mobile');
+                    }
+                ])->get();
+        $teacher = [];
+        $student = [];
+
+        foreach ($data as $key => $val) {
+            if ($val['user_type'] == Role::TEACHER) {
+                $teacher[$key]['name'] = $val['user']['name'];
+                $teacher[$key]['tel']  = $val['user']['mobile'];
+                $teacher[$key]['type'] = $userDao->getUserRoleName($val['user_type']);
+            } elseif ($val['user_type'] == Role::VERIFIED_USER_STUDENT) {
+                $student[$key]['name'] = $val['user']['name'];
+                $student[$key]['tel']  = $val['user']['mobile'];
+                $student[$key]['type'] = $userDao->getUserRoleName($val['user_type']);
+            }
+        }
+
+        return ['schoolmate_list'=>array_merge($student),  'teacher_list'=>array_merge($teacher)];
+
+    }
+
+
 }

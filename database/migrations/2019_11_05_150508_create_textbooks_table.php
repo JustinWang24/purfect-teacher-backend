@@ -17,16 +17,17 @@ class CreateTextbooksTable extends Migration
         if(!Schema::hasTable('textbooks')) {
             Schema::create('textbooks', function (Blueprint $table) {
                 $table->increments('id');
-                $table->string('name')->comment('教材名称');
-                $table->string('press')->comment('出版社')->nullable();
-                $table->string('author')->comment('作者')->nullable();
-                $table->string('edition')->comment('版本')->nullable();
-                $table->integer('course_id')->comment('课程ID')->nullable();
+                $table->string('name',30)->comment('教材名称');
+                $table->string('press',30)->comment('出版社');
+                $table->string('author',20)->comment('作者');
+                $table->string('edition',20)->comment('版本');
+                $table->integer('course_id')->comment('课程ID');
                 $table->integer('school_id')->comment('学校ID');
-                $table->tinyInteger('type')->comment('教材类型 1:专业教材 2:通用教材 3:选读教材');
-                $table->float('purchase_price',8,2)->comment('采购价')->nullable();
-                $table->float('price',8,2)->comment('学生购买价')->nullable();
+                $table->unsignedTinyInteger('type')->comment('教材类型 1:专业教材 2:通用教材 3:选读教材')->default(\App\Models\Schools\Textbook::TYPE_MAJOR);
+                $table->float('purchase_price',6,2)->comment('采购价')->default(0);
+                $table->float('price',6,2)->comment('学生购买价')->default(0);
                 $table->text('introduce')->comment('教材介绍')->nullable();
+                $table->unsignedTinyInteger('status')->comment('状态 0:解除 1:正常')->default(\App\Models\Schools\Textbook::STATUS_NORMAL);
                 $table->timestamps();
                 $table->softDeletes();
             });
