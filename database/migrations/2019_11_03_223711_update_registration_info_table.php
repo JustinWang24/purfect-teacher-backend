@@ -16,7 +16,6 @@ class UpdateRegistrationInfoTable extends Migration
         // 修复报名信息表的错误
         Schema::table('registration_informatics', function (Blueprint $table) {
             // 报名信息
-            $table->renameColumn('whether_adjust','relocation_allowed');
             $table->unsignedInteger('recruitment_plan_id')->after('major_id')->comment('关联的招生计划 ID');
         });
     }
@@ -30,7 +29,6 @@ class UpdateRegistrationInfoTable extends Migration
     {
         Schema::table('registration_informatics', function (Blueprint $table) {
             // 报名信息
-            $table->renameColumn('relocation_allowed','whether_adjust');
             $table->dropColumn('recruitment_plan_id');
         });
     }
