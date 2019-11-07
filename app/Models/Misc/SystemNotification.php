@@ -15,6 +15,7 @@ class SystemNotification extends Model
     const TO_ALL            = 0;// To 所有人
     const FROM_SYSTEM       = 0;// 发自系统的广播消息
     const TYPE_NONE         = 0;// 消息类别: 无
+    const TYPE_STUDENT_REGISTRATION = 0;// 消息类别: 学生填写招生报名表
 
     protected $fillable = [
         'sender',

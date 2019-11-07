@@ -195,7 +195,7 @@ class RegistrationInformaticsDao
                 // 自增操作完成
                 DB::commit();
                 $msgBag->setCode(JsonBuilder::CODE_SUCCESS);
-                $msgBag->setData($result);
+                $msgBag->setData($reg);
             }else{
                 $msgBag->setMessage('无法增加总报名人数的记录');
             }

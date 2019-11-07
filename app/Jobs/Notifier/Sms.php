@@ -38,10 +38,10 @@ class Sms implements ShouldQueue
     public function handle()
     {
         if(count($this->receivers) === 1){
-            // 点对点的短信发送
+            // Todo 点对点的短信发送
         }
         elseif(count($this->receivers) > 1){
-            // 群发短信
+            // Todo 群发短信
         }
     }
 }
