@@ -7,6 +7,7 @@
  */
 
 namespace App\Dao\RecruitmentPlan;
+use App\Dao\Schools\SchoolDao;
 use App\Models\Schools\RecruitmentPlan;
 use App\Utils\Time\GradeAndYearUtil;
 use Illuminate\Support\Facades\DB;
@@ -66,14 +67,32 @@ class RecruitmentPlanDao
      * @return RecruitmentPlan[]
      */
     public function getPlansBySchool($schoolId, $year = null, $pageNumber = 0, $pageSize = 20){
-        if(!$year){
-            $year = date('Y');
-        }
-        return RecruitmentPlan::where('school_id', $schoolId)
+        $query =  RecruitmentPlan::where('school_id', $schoolId)
             ->where('year',$year)
             ->orderBy('updated_at','desc')
             ->skip($pageNumber * $pageSize)
-            ->take($pageSize)
+            ->take($pageSize);
+
+        if($year){
+            $query->where('year',$year);
+        }
+        return $query->get();
+    }
+
+    /**
+     * 加载对于今天依然有效的招生简章
+     *
+     * @param $today
+     * @param $schoolId
+     * @return RecruitmentPlan[]
+     */
+    public function getPlansBySchoolForToday($today, $schoolId){
+        return  RecruitmentPlan::where('school_id', $schoolId)
+            ->where('start_at','<=',$today->format('Y-m-d'))
+            ->where(function ($query) use($today){
+                $query->whereNull('end_at')->orWhere('end_at','>=',$today->format('Y-m-d'));
+            })
+            ->orderBy('id','asc')
             ->get();
     }
 

@@ -147,11 +147,11 @@ Route::prefix('timetable')->group(function () {
 // 招生API
 Route::prefix('student-register')->group(function () {
      // 获取全部招生计划
-     Route::post('/load-open-majors','Api\Recruitment\OpenMajorController@major')
+     Route::post('/load-open-majors','Api\Recruitment\PlansController@load_plans')
         ->name('api.load.open.majors');
 
      // 专业详情
-     Route::post('/load-major-detail','Api\Recruitment\OpenMajorController@majorDetail')
+     Route::post('/load-major-detail','Api\Recruitment\PlansController@get_plan')
         ->name('api.load.major.detail');
 
      // 报名辅助填充数据
