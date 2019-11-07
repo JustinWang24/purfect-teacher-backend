@@ -13,7 +13,7 @@ class Department extends Model
     use HasConfigurations;
 
     protected $fillable = [
-        'school_id', 'institute_id', 'name', 'description',
+        'school_id', 'institute_id', 'name', 'description','campus_id',
         ConfigurationTool::KEY_STUDY_WEEKS_PER_TERM,
         ConfigurationTool::KEY_SELF_STUDY_NEED_REGISTRATION,
         ConfigurationTool::KEY_OPTIONAL_COURSES_PER_YEAR,

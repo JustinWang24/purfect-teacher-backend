@@ -19,7 +19,7 @@ class Major extends Model
     const TYPE_UNION_FULL_DAY_TEXT       = '校企联合办学全日制';
 
     protected $fillable = [
-        'school_id', 'department_id', 'name', 'description','last_updated_by',
+        'school_id', 'department_id', 'name', 'description','last_updated_by','institute_id','campus_id',
         'category_code', // 专业代码: 01
         'period', // 学制: 3年
         'notes', // 本专业的备注
