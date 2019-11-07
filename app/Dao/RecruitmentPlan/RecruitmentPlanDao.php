@@ -204,11 +204,13 @@ class RecruitmentPlanDao
      */
     public function increaseAppliedCountNumber($planId){
         $plan = DB::table('recruitment_plans')
-            ->select('applied_count')
+            ->select(['id','applied_count'])
             ->where('id',$planId)
             ->first();
+
+
         if($plan){
-            $count = $plan->applied_count++;
+            $count = $plan->applied_count + 1;
             DB::table('recruitment_plans')
                 ->where('id',$planId)
                 ->update(['applied_count'=>$count]);

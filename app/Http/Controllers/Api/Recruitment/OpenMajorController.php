@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\Recruitment;
 
+use App\Events\User\Student\ApplyRecruitmentPlanEvent;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\RecruitStudent\PlanRecruitRequest;
 use App\Dao\RecruitmentPlan\RecruitmentPlanDao;
@@ -139,9 +140,9 @@ class OpenMajorController extends Controller
          */
         $result = $user ? $dao->signUp($formData, $user) : false;
 
-        // Todo: 通知老师, 有个新报名的学生
-
-        if ($result->isSuccess()) {
+        if ($result && $result->isSuccess()) {
+            // Todo: 通知老师, 有个新报名的学生
+            event(new ApplyRecruitmentPlanEvent($result->getData()));
             return JsonBuilder::Success('报名成功');
         } else {
             return JsonBuilder::Error('报名失败');

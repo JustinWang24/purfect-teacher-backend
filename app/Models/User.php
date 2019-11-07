@@ -6,14 +6,14 @@ use App\Models\Acl\Role;
 use App\Models\Contract\HasDeviceId;
 use App\Models\Contract\HasMobilePhone;
 use App\Models\Misc\Enquiry;
-use App\Models\Students\RegistrationForm;
 use App\Models\Students\StudentProfile;
 use App\Models\Teachers\TeacherProfile;
 use App\Models\Users\GradeUser;
 use Illuminate\Notifications\Notifiable;
-use Illuminate\Contracts\Auth\MustVerifyEmail;
+//use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Kodeine\Acl\Traits\HasRole;
+use App\Models\RecruitStudent\RegistrationInformatics;
 
 class User extends Authenticatable implements HasMobilePhone, HasDeviceId
 {
@@ -47,7 +47,7 @@ class User extends Authenticatable implements HasMobilePhone, HasDeviceId
      * @var array
      */
     protected $fillable = [
-        'password','mobile_verified_at','mobile','uuid','status','type'
+        'password','mobile_verified_at','mobile','uuid','status','type','name'
     ];
 
     /**
@@ -141,7 +141,7 @@ class User extends Authenticatable implements HasMobilePhone, HasDeviceId
      * @return \Illuminate\Database\Eloquent\Relations\HasOne
      */
     public function registrationForm(){
-        return $this->hasOne(RegistrationForm::class);
+        return $this->hasOne(RegistrationInformatics::class);
     }
 
     public function enquiries(){
@@ -192,12 +192,12 @@ class User extends Authenticatable implements HasMobilePhone, HasDeviceId
 
     public function getMobile()
     {
-        // TODO: Implement getMobile() method.
+        return $this->mobile;
     }
 
     public function getName()
     {
-        return ['user'=>$this->name];
+        return $this->name;
     }
 
     public function getDeviceId()
