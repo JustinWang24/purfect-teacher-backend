@@ -3,6 +3,8 @@
 namespace App;
 
 use App\Models\Acl\Role;
+use App\Models\Contract\HasDeviceId;
+use App\Models\Contract\HasMobilePhone;
 use App\Models\Misc\Enquiry;
 use App\Models\Students\RegistrationForm;
 use App\Models\Students\StudentProfile;
@@ -13,7 +15,7 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Kodeine\Acl\Traits\HasRole;
 
-class User extends Authenticatable
+class User extends Authenticatable implements HasMobilePhone, HasDeviceId
 {
     use Notifiable, HasRole;
 
@@ -186,5 +188,20 @@ class User extends Authenticatable
      */
     public function gradeUser(){
         return $this->hasOne(GradeUser::class);
+    }
+
+    public function getMobile()
+    {
+        // TODO: Implement getMobile() method.
+    }
+
+    public function getName()
+    {
+        return ['user'=>$this->name];
+    }
+
+    public function getDeviceId()
+    {
+        // TODO: Implement getDeviceId() method.
     }
 }
