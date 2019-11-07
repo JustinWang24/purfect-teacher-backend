@@ -2,6 +2,7 @@
 
 namespace App\Models\RecruitStudent;
 
+use App\Models\Schools\RecruitmentPlan;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Students\StudentProfile;
 use App\Models\School;
@@ -70,6 +71,14 @@ class RegistrationInformatics extends Model
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    /**
+     * 关联的报名计划
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function plan(){
+        return $this->belongsTo(RecruitmentPlan::class,'recruitment_plan_id');
     }
 
     /**
