@@ -63,16 +63,17 @@ class JsonBuilder
      * @return string
      */
     public static function Error($dataOrMessage = 'Err', $code = null){
+        $mode = env('APP_DEBUG',true) ? self::MODE_OUTPUT_DEV : self::MODE_OUTPUT_PROD;
         if(is_array($dataOrMessage)){
             return json_encode([
                 'code' => $code ?? self::CODE_ERROR,
                 'message' => $dataOrMessage
-            ], self::MODE_OUTPUT);
+            ], $mode);
         }else{
             return json_encode([
                 'code' => $code ?? self::CODE_ERROR,
                 'message' => $dataOrMessage
-            ], self::MODE_OUTPUT);
+            ], $mode);
         }
     }
 
