@@ -8,6 +8,7 @@ use App\Dao\RecruitStudent\RegistrationInformaticsDao;
 use App\Dao\Schools\GradeDao;
 use App\Dao\Schools\GradeUserDao;
 use App\Models\Acl\Role;
+use App\Models\RecruitStudent\RegistrationInformatics;
 use App\Models\Schools\RecruitmentPlan;
 use App\Models\Schools\Textbook;
 use App\Utils\JsonBuilder;
@@ -25,14 +26,14 @@ class TextbookDao
     public function create($data) {
 
         $info = $this->getTextbookByName($data['name']);
+
         if(!empty($info)) {
-            return new MessageBag(JsonBuilder::Error(),'该教材已添加,请勿重复添加');
+            return new MessageBag(JsonBuilder::CODE_ERROR,'该教材已添加,请勿重复添加');
         }
 
-        $re = Textbook::create($data);
-
-        if($re){
-            return new MessageBag(JsonBuilder::CODE_SUCCESS,'创建成功');
+        $result = Textbook::create($data);
+        if($result){
+            return new MessageBag(JsonBuilder::CODE_SUCCESS,'创建成功',$result);
         } else {
             return new MessageBag(JsonBuilder::CODE_ERROR,'创建失败');
         }
@@ -40,36 +41,13 @@ class TextbookDao
 
 
     /**
-     * 编辑
-     * @param $map
-     * @param $data
-     * @return mixed
-     */
-    protected function edit($map, $data) {
-        return Textbook::where($map)->update($data);
-    }
-
-
-    /**
      * 根据ID修改
-     * @param $id
      * @param $data
      * @return mixed
      */
-    public function editById($id,$data) {
-        $map = ['id'=>$id];
-        return $this->edit($map,$data);
-    }
+    public function editById($data) {
 
-
-    /**
-     * 获取教材详情
-     * @param $map
-     * @param string $field
-     * @return mixed
-     */
-    protected function getTextbookInfo($map, $field='*') {
-        return Textbook::where($map)->select($field)->first();
+        return Textbook::where('id',$data['id'])->update($data);
     }
 
 
@@ -81,8 +59,7 @@ class TextbookDao
      */
     public function getTextbookByName($name) {
         $field = ['id', 'name'];
-        $map = ['name'=>$name];
-        return $this->getTextbookInfo($map, $field);
+        return Textbook::where('name',$name)->select($field)->first();
     }
 
 
@@ -92,8 +69,7 @@ class TextbookDao
      * @return mixed
      */
     public function getTextbookById($id) {
-        $map = ['id'=>$id];
-        return $this->getTextbookInfo($map);
+        return Textbook::where('id',$id)->first();
     }
 
 
@@ -117,7 +93,7 @@ class TextbookDao
         foreach ($courses as $key => $val) {
             $year = $nextYear - $val['year'];
             if($year == $thisYear) {
-                // todo 去查招生计划和已招学生
+                // 去查招生计划和已招学生
                 $num = $this->getNewlyBornNumByMajor($majorId,$nextYear,$schoolId);
                 $courses[$key]['type'] = 1;   // 即将入学新生
                 $courses[$key]['textbook_num'] = $num;
@@ -173,15 +149,18 @@ class TextbookDao
         $selfPlanSeat = array_sum(array_column($selfPlan,'seats'));
         $totalPlanSeat = $generalPlanSeat + $selfPlanSeat;
 
+        // 大于或等于该状态 表示已被录取
+        $status = RegistrationInformatics::APPROVED;
+
         //统招报名人数
         $generalPlanIdArr = array_column($generalPlan,'id');
         $registrationInformaticsDao = new RegistrationInformaticsDao();
-        $generalInformaticsSeat = $registrationInformaticsDao->getCountByPlanIdArr($generalPlanIdArr);
+        $generalInformaticsSeat = $registrationInformaticsDao->getCountByStatusAndPlanIdArr($status, $generalPlanIdArr);
 
 
         //自招报名人数
         $selfPlanIdArr = array_column($selfPlan,'id');
-        $selfInformaticsSeat = $registrationInformaticsDao->getCountByPlanIdArr($selfPlanIdArr);
+        $selfInformaticsSeat = $registrationInformaticsDao->getCountByStatusAndPlanIdArr($status, $selfPlanIdArr);
         $totalInformaticsSeat = $generalInformaticsSeat + $selfInformaticsSeat;
 
         return [
