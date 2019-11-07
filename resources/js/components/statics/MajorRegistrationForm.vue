@@ -50,7 +50,7 @@
                     <el-input size="mini" v-model="registrationForm.mobile" placeholder="必填: 联系电话"></el-input>
                 </el-form-item>
                 <el-form-item label="QQ号" prop="qq">
-                    <el-input size="mini" v-model="registrationForm.qq" placeholder="选填: 身份证号"></el-input>
+                    <el-input size="mini" v-model="registrationForm.qq" placeholder="选填: QQ号"></el-input>
                 </el-form-item>
                 <el-form-item label="微信号" prop="wx">
                     <el-input size="mini" v-model="registrationForm.wx" placeholder="选填: 微信号"></el-input>
@@ -129,7 +129,7 @@
     export default {
         name: "MajorRegistrationForm",
         props:[
-            'major','registrationForm'
+            'major','registrationForm','schoolId'
         ],
         data(){
             return {
@@ -203,7 +203,7 @@
                     .then(res => {
                         if(Util.isAjaxResOk(res)){
                             // 保存成功
-                            this.$emit('form-saved-success')
+                            this.$emit('form-saved-success',{plan: this.major})
                         }else{
                             this.$emit('form-saved-failed',res.data.message)
                         }
