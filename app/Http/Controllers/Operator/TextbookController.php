@@ -19,8 +19,13 @@ class TextbookController extends Controller
     public function list(TextbookRequest $request) {
         $schoolId = $request->getSchoolId();
         $textbookDao = new TextbookDao();
-        $list = $textbookDao->getTextbookListBySchoolId($schoolId)->toArray();
-        return JsonBuilder::Success($list);
+        $list = $textbookDao->getTextbookListBySchoolId($schoolId);
+        foreach ($list as $key => $val) {
+            $list[$key]['type'] = $val['type_text'];
+        }
+
+        $data['textbook']=$list;
+        return JsonBuilder::Success($data);
     }
 
 

@@ -161,7 +161,27 @@ class TextbookTest extends BasicPageTestCase
             ->actingAs($user)
             ->withSession($this->schoolSessionData)
             ->get(route('school_manager.textbook.list'));
-        dd($response);
+
+        $result = json_decode($response->content(),true);
+        $this->assertArrayHasKey('code', $result);
+        $this->assertEquals(1000, $result['code']);
+        $this->assertArrayHasKey('textbook', $result['data']);
+
+        foreach ($result['data']['textbook'] as $key => $val) {
+            $this->assertArrayHasKey('name', $val);
+            $this->assertArrayHasKey('press', $val);
+            $this->assertArrayHasKey('author', $val);
+            $this->assertArrayHasKey('course_id', $val);
+            $this->assertArrayHasKey('type', $val);
+            $this->assertArrayHasKey('purchase_price', $val);
+            $this->assertArrayHasKey('price', $val);
+            $this->assertArrayHasKey('course', $val);
+            $this->assertArrayHasKey('name', $val['course']);
+            $this->assertArrayHasKey('code', $val['course']);
+            $this->assertArrayHasKey('year', $val['course']);
+
+        }
+
     }
 
 
