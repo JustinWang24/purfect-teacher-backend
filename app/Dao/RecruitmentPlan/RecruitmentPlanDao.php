@@ -7,9 +7,7 @@
  */
 
 namespace App\Dao\RecruitmentPlan;
-use App\Dao\Schools\SchoolDao;
 use App\Models\Schools\RecruitmentPlan;
-use App\Utils\Time\GradeAndYearUtil;
 use Illuminate\Support\Facades\DB;
 
 class RecruitmentPlanDao
@@ -199,7 +197,23 @@ class RecruitmentPlanDao
         return $this->getRecruitmentPlan($map, $field);
     }
 
-
-
-
+    /**
+     * 对指定的招生计划的已报名人数字段执行自增操作
+     * @param $planId
+     * @return bool|int
+     */
+    public function increaseAppliedCountNumber($planId){
+        $plan = DB::table('recruitment_plans')
+            ->select('applied_count')
+            ->where('id',$planId)
+            ->first();
+        if($plan){
+            $count = $plan->applied_count++;
+            DB::table('recruitment_plans')
+                ->where('id',$planId)
+                ->update(['applied_count'=>$count]);
+            return $count;
+        }
+        return false;
+    }
 }

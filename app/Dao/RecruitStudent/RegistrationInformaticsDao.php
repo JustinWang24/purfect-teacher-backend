@@ -3,6 +3,7 @@
 
 namespace App\Dao\RecruitStudent;
 
+use App\Dao\RecruitmentPlan\RecruitmentPlanDao;
 use App\Models\RecruitStudent\RegistrationInformatics;
 use App\Models\Schools\RecruitmentPlan;
 use App\Utils\JsonBuilder;
@@ -173,15 +174,39 @@ class RegistrationInformaticsDao
     }
 
     /**
-     * 报名
+     * 报名: 用户在报名的时候, 需要完成的操作包括
+     * 1: 添加报名表
+     * 2: 更新招生广告的 "已报名学生数" 字段
      * @param $data
      * @param User $user
-     * @return RegistrationInformatics
+     * @return IMessageBag
      */
     public function signUp($data, $user)
     {
         $data['user_id'] = $user->id;
-        return RegistrationInformatics::create($data);
+        $msgBag = new MessageBag(JsonBuilder::CODE_ERROR);
+        DB::beginTransaction();
+        $reg =  RegistrationInformatics::create($data);
+        if($reg){
+            // 报名数据添加成功
+            $planDao = new RecruitmentPlanDao($reg->school_id);
+            $result = $planDao->increaseAppliedCountNumber($reg->recruitment_plan_id);
+            if($result){
+                // 自增操作完成
+                DB::commit();
+                $msgBag->setCode(JsonBuilder::CODE_SUCCESS);
+                $msgBag->setData($result);
+            }else{
+                $msgBag->setMessage('无法增加总报名人数的记录');
+            }
+        }else{
+            $msgBag->setMessage('无法添加报名表');
+        }
+
+        if(!$msgBag->isSuccess()){
+            DB::rollBack();
+        }
+        return $msgBag;
     }
 
 
