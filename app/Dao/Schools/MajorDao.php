@@ -67,8 +67,8 @@ class MajorDao
 
     /**
      * @param $schoolId
-     * @param bool $openedOnly : 只加载公开的专业
-     * @param bool $hotOnly: 只加载热门的
+     * @param bool $openedOnly : 只加载公开的专业 - 不再使用了
+     * @param bool $hotOnly: 只加载热门的 - 不再使用了
      * @param bool $simple
      * @return Collection
      */
@@ -76,12 +76,7 @@ class MajorDao
         $where = [
             ['school_id','=',$schoolId]
         ];
-        if($openedOnly){
-            $where[] = ['open','=',1];
-        }
-        if($hotOnly){
-            $where[] = ['hot','=',1];
-        }
+
         if($simple)
             return Major::select(['id','name'])->where($where)->orderBy('name','asc')->get();
         return Major::where($where)->orderBy('name','asc')->get();
@@ -106,9 +101,7 @@ class MajorDao
                 'department'=>$major->department->name,
                 'campus'=>$major->campus->name??'',
                 'name'=>$major->name,
-                'fee'=>$major->fee,
-                'seats'=>$major->seats,
-                'period'=>$major->period,
+                'period'=>$major->period, // 几年制
                 'description'=>$major->description,
             ];
         }

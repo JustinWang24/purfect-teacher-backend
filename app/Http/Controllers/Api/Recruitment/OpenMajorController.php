@@ -14,7 +14,6 @@ use Illuminate\Http\Request;
 
 class OpenMajorController extends Controller
 {
-
     /**
      * 招生专业
      * @param PlanRecruitRequest $request
@@ -68,58 +67,40 @@ class OpenMajorController extends Controller
     }
 
     /**
-     * 专业详情
-     * @param PlanRecruitRequest $request
-     * @return string
-     */
-    public function majorDetail(PlanRecruitRequest $request)
-    {
-        $majorId = $request->get('id');
-        $schoolId = $request->get('school_id');
-        $dao  = new RecruitmentPlanDao($schoolId);
-        $data = $dao->getMajorDetailById($majorId);
-
-        return JsonBuilder::Success($data);
-    }
-
-    /**
-     * 已报名学生, 辅助填充数据
+     * 学生尝试加载自己已经报名过的招生信息
      * @param PlanRecruitRequest $request
      * @return string
      */
     public function studentProfile(PlanRecruitRequest $request)
     {
-        $mobile = $request->get('mobile');
-        $idNumber = $request->get('id_number');
+        $mobile = $request->getMobile();            // 手机号
+        $idNumber = $request->getStudentIdNumber(); // 身份证号
 
-        $userDao  = new UserDao;
-        $studentProfileDao = new StudentProfileDao;
+        $userId = null;
+        $userProfile = null;
 
-        if (isset($mobile)) {
-            $user = $userDao->getUserByMobile($mobile);
-            if (!empty($user->id)) {
-                $userId = $user->id;
-            }
+        // 优先通过提交的身份证进行查询
+        if ($idNumber) {
+            $studentProfileDao = new StudentProfileDao;
+            $userProfile = $studentProfileDao->getStudentInfoByIdNumber($idNumber);
+            $userId = $userProfile->user_id ?? null;
         }
 
-        if (isset($idNumber)) {
-            $user = $studentProfileDao->getStudentInfoByIdNumber($idNumber);
-            if (!empty($user->id)) {
-                $userId = $user->user_id;
-            }
+        // 如果这个时候没有取到用户
+        if (!$userId && $mobile) {
+            $userDao  = new UserDao;
+            $user = $userDao->getUserByMobile($mobile);
+            $userId = $user->id ?? null;
         }
 
         $result = [];
 
-        if (isset($userId)) {
-            $field = ['id', 'user_id', 'id_number', 'gender', 'nation_name',
-                  'political_name', 'source_place', 'country', 'birthday',
-                  'qq', 'wx', 'parent_name', 'parent_mobile', 'examination_score'
-            ];
-            $result = $studentProfileDao->getStudentSignUpByUserId($userId, $field);
+        if ($userId) {
+            $regDao = new RegistrationInformaticsDao();
+            $result = $regDao->getInformaticsByUserId($userId, $simple = true); // 获取简单的数据即可
         }
 
-        return JsonBuilder::Success($result);
+        return JsonBuilder::Success(['applied'=>$result]);
     }
 
     /**
@@ -129,6 +110,44 @@ class OpenMajorController extends Controller
      * @throws \Exception
      */
     public function signUp(PlanRecruitRequest $request)
+    {
+        $formData = $request->getSignUpFormData();
+        $plan = $request->getPlan();
+        if ($plan->seats <= $plan->enrolled_count) {
+            return JsonBuilder::Error('该专业已招满,请选择其他专业');
+        }
+
+        $dao =  new RegistrationInformaticsDao;
+
+        $profileDao = new StudentProfileDao();
+        $userId = $profileDao->getUserIdByIdNumberOrMobile($formData['id_number'], $formData['mobile']);
+
+        if (!$userId) {
+            $msgBag = $dao->addUser($formData, $plan);
+            if ($msgBag->isSuccess()) {
+                $user = $msgBag->getData()['user'];
+            } else {
+                return JsonBuilder::Error($msgBag->getMessage());
+            }
+        } else {
+            $userDao = new UserDao();
+            $user = $userDao->getUserByIdOrUuid($userId);
+        }
+        $result = $user ? $dao->signUp($formData, $user) : false;
+        if ($result) {
+            return JsonBuilder::Success('报名成功');
+        } else {
+            return JsonBuilder::Error('报名失败');
+        }
+    }
+
+    /**
+     * @deprecated
+     * @param PlanRecruitRequest $request
+     * @return string
+     * @throws \Exception
+     */
+    public function signUpOld(PlanRecruitRequest $request)
     {
         $userId     = $request->get('id');
         $schoolId   = $request->get('school_id');
@@ -148,9 +167,9 @@ class OpenMajorController extends Controller
         if (empty($userId)) {
             $add = $dao->addUser($data);
             if (!$add) {
-               return JsonBuilder::Error('报名失败', '999');
+                return JsonBuilder::Error('报名失败', '999');
             } else {
-                 $signUpData['user_id']   = $add;
+                $signUpData['user_id']   = $add;
             }
         } else {
             $signUpData['user_id'] = $userId;
@@ -177,7 +196,5 @@ class OpenMajorController extends Controller
         $path = $request->file('file')->storeAs(
             'storage', $request->file('file')->getFilename()
         );
-        
     }
-
 }
