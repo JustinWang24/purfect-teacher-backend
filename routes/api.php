@@ -165,3 +165,15 @@ Route::prefix('student-register')->group(function () {
     Route::post('/submit-excel','Api\Recruitment\OpenMajorController@testExcel')
         ->name('api.major.submit.excel');
 });
+
+// APP通讯录
+Route::prefix('campus')->group(function () {
+
+     // 班级通讯录
+     Route::post('/handleAffairs/getAddressBook/class','Api\Address\AddressBookController@index')
+        ->name('api.address.book.class');
+
+     // 学校部门通讯录
+     Route::post('/handleAffairs/getAddressBook/official','Api\Address\AddressBookController@official')
+        ->name('api.address.book.official');
+});

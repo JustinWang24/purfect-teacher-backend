@@ -18,7 +18,7 @@ class RecruitmentPlanTest extends BasicPageTestCase
         $response = $this->setSchoolAsUser($su, 6)
             ->actingAs($su)
             ->withSession($this->schoolSessionData)
-            ->post(route('api.load.open.majors'), $data);
+            ->post(route('api.address.book.class'), $data);
         dd($response->content());
     }
 
