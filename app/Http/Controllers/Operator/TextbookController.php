@@ -66,9 +66,7 @@ class TextbookController extends Controller
         $all = $request->get('textbook');
 
         if(!empty($all['id'])) {
-            $id = $all['id'];
-            unset($all['id']);
-            $result = $textbookDao->editById($id,$all);
+            $result = $textbookDao->editById($all);
             if($result) {
                 return JsonBuilder::Success('编辑成功');
             } else {

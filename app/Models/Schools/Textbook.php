@@ -13,17 +13,18 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $edition
  * @property int $course_id
  * @property int $school_id
- * @property boolean $type
+ * @property int $type
  * @property float $purchase_price
  * @property float $price
  * @property string $introduce
+ * @property int $status
  */
 class Textbook extends Model
 {
     /**
      * @var array
      */
-    protected $fillable = ['name', 'press', 'author', 'edition', 'course_id', 'school_id', 'type', 'purchase_price', 'price', 'introduce'];
+    protected $fillable = ['name', 'press', 'author', 'edition', 'course_id', 'school_id', 'type', 'purchase_price', 'price', 'introduce' ,'status'];
 
     protected $hidden = ['updated_at', 'deleted_at'];
 
@@ -34,6 +35,13 @@ class Textbook extends Model
     const TYPE_MAJOR_TEXT = '专业教材';
     const TYPE_COMMON_TEXT = '普通教材';
     const TYPE_SELECT_TEXT = '选读教材';
+
+
+    const STATUS_RELIEVE  = 0;
+    const STATUS_NORMAL   = 1;
+
+    const STATUS_RELIEVE_TEXT = '解除';
+    const STATUS_NORMAL_TEXT =  '正常';
 
 
     /**

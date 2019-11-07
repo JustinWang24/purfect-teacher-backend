@@ -51,6 +51,6 @@ class Course extends Model
 
     public function textbooks() {
         $field = ['id', 'name', 'press', 'author', 'course_id', 'purchase_price', 'price'];
-        return $this->hasMany(Textbook::class)->select($field);
+        return $this->hasMany(Textbook::class)->where('status',Textbook::STATUS_NORMAL)->select($field);
     }
 }
