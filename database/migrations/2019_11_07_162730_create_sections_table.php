@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateSectionTable extends Migration
+class CreateSectionsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -24,7 +24,7 @@ class CreateSectionTable extends Migration
             $table->timestamps();
         });
 
-        DB::statement(" ALTER TABLE section comment '部门表' ");
+        DB::statement(" ALTER TABLE sections comment '部门表' ");
     }
 
     /**
