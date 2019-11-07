@@ -26,12 +26,12 @@ class TextbookDao
     public function create($data) {
 
         $info = $this->getTextbookByName($data['name']);
+
         if(!empty($info)) {
             return new MessageBag(JsonBuilder::CODE_ERROR,'该教材已添加,请勿重复添加');
         }
 
         $result = Textbook::create($data);
-
         if($result){
             return new MessageBag(JsonBuilder::CODE_SUCCESS,'创建成功',$result);
         } else {

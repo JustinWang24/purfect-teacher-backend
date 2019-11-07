@@ -89,14 +89,13 @@ class TextbookTest extends BasicPageTestCase
     public function testSaveTextbookApi() {
         $data = $this->_createDate();
 //        $data['textbook']['id'] = 1;
-
         $this->withoutExceptionHandling();
         $user = $this->getSuperAdmin();
 
         $response = $this->setSchoolAsUser($user, 50)
             ->actingAs($user)
             ->withSession($this->schoolSessionData)
-            ->post(route('school_manager.textbook.save',$data));
+            ->get(route('school_manager.textbook.save',$data));
 
         $result = json_decode($response->content(),true);
 
