@@ -68,7 +68,6 @@ class RecruitmentPlanDao
      */
     public function getPlansBySchool($schoolId, $year = null, $pageNumber = 0, $pageSize = 20){
         $query =  RecruitmentPlan::where('school_id', $schoolId)
-            ->where('year',$year)
             ->orderBy('updated_at','desc')
             ->skip($pageNumber * $pageSize)
             ->take($pageSize);

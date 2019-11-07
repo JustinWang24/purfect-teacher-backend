@@ -20,7 +20,7 @@ class PlanRecruitRequest extends MyStandardRequest
      */
     public function getSchoolId()
     {
-        return $this->has('school') ? $this->get('school') : $this->get('id');
+        return $this->has('school') ? $this->get('school') : null;
     }
 
     /**
@@ -28,15 +28,15 @@ class PlanRecruitRequest extends MyStandardRequest
      * @return int|mixed
      */
     public function getYear(){
-        return $this->has('year') ? $this->get('year') : intval(date('Y'))+1;
+        return $this->has('year') ? $this->get('year') : null;
     }
 
     public function getMobile(){
-        return $this->get('mobile');
+        return $this->has('mobile') ? $this->get('mobile') : null;
     }
 
     public function getStudentIdNumber(){
-        return $this->get('id_number');
+        return  $this->has('id_number') ? $this->get('id_number') : null;
     }
 
     /**
