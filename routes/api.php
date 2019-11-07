@@ -93,7 +93,7 @@ Route::prefix('recruitment')->group(function () {
     Route::post('/save-plan','Api\Recruitment\PlansController@save_plan')
         ->name('api.recruitment.save.plan');
 
-    // 加载某个招生计划
+    // 加载某个招生计划: 后端加载是调用
     Route::any('/get-plan','Api\Recruitment\PlansController@get_plan')
         ->name('api.recruitment.get.plan');
 
@@ -150,8 +150,8 @@ Route::prefix('student-register')->group(function () {
      Route::post('/load-open-majors','Api\Recruitment\PlansController@load_plans')
         ->name('api.load.open.majors');
 
-     // 专业详情
-     Route::post('/load-major-detail','Api\Recruitment\PlansController@get_plan')
+     // 专业详情: 前端加载是调用
+     Route::post('/load-major-detail','Api\Recruitment\PlansController@get_plan_front')
         ->name('api.load.major.detail');
 
      // 报名辅助填充数据

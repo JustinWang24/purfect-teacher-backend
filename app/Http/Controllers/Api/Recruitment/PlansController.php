@@ -16,7 +16,7 @@ class PlansController extends Controller
      * @return string
      */
     public function load_plans(PlanRecruitRequest $request){
-        $logic = PlansLoader::GetInstance($request);
+        $logic = PlansLoader::GetInstance($request, $request->getYear());
         $plans = [];
         if($logic){
             $plans = $logic->getPlans();
@@ -52,14 +52,27 @@ class PlansController extends Controller
     }
 
     /**
-     * 根据 id 获取招生计划
+     * 根据 id 获取招生计划详情: 后端用
      * @param PlanRecruitRequest $request
      * @return string
      */
     public function get_plan(PlanRecruitRequest $request){
-        $logic = PlansLoader::GetInstance($request);
+        $logic = PlansLoader::GetInstance($request, true);
         return JsonBuilder::Success(['plan'=>$logic->getPlanDetail()]);
     }
+
+
+    /**
+     * 根据 id 获取招生计划: 前端页面用
+     * @param PlanRecruitRequest $request
+     * @return string
+     */
+    public function get_plan_front(PlanRecruitRequest $request){
+        $logic = PlansLoader::GetInstance($request, false);
+        return JsonBuilder::Success(['plan'=>$logic->getPlanDetail()]);
+    }
+
+
 
     /**
      * @param Request $request
