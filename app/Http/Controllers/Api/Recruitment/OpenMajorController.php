@@ -174,15 +174,10 @@ class OpenMajorController extends Controller
 
     public function testExcel(PlanRecruitRequest $request)
     {
-
-        $file     = $request->file('file')->store('public');
-        dd($file);
         $path = $request->file('file')->storeAs(
             'storage', $request->file('file')->getFilename()
         );
-        dd($path);
-
-
+        
     }
 
 }
