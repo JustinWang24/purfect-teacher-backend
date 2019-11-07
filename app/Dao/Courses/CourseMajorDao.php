@@ -61,4 +61,35 @@ class CourseMajorDao
 
         return $simple ? $data : $cms;
     }
+
+
+    /**
+     * 根据指定的专业Id和年级获取课程列表
+     * @param $majorId
+     * @param $year
+     * @param bool $simple
+     * @return Collection|array
+     */
+    public function getCoursesByMajorAndYear($majorId, $year, $simple = true){
+        $cms =  DB::table('course_majors')
+            ->join('courses', function ($join) use ($year) {
+                $join->on('courses.id', '=', 'course_majors.course_id')
+                    ->where('courses.year','=',$year);
+            })
+            ->where('major_id',$majorId)
+            ->orderBy('course_majors.course_name','asc')
+            ->get();
+
+        $data = [];
+        if($simple){
+            foreach ($cms as $cm) {
+                $data[] = [
+                    'id'=>$cm->course_id,
+                    'name'=>$cm->name
+                ];
+            }
+        }
+
+        return $simple ? $data : $cms;
+    }
 }

@@ -125,7 +125,9 @@ Route::prefix('school_manager')->group(function () {
     Route::get('textbook/list', 'TextbookController@list')->name('school_manager.textbook.list');  // 教程列表
     Route::get('textbook/add', 'TextbookController@add')->name('school_manager.textbook.add');     // 添加教程
     Route::get('textbook/edit', 'TextbookController@edit')->name('school_manager.textbook.edit');  // 编辑教程
-    Route::get('textbook/save', 'TextbookController@save')->name('school_manager.textbook.save'); // 保存教程
+    Route::post('textbook/save', 'TextbookController@save')->name('school_manager.textbook.save'); // 保存教程
     Route::get('textbook/loadMajorTextbook', 'TextbookController@loadMajorTextbook')->name('school_manager.textbook.loadMajorTextbook'); // 获取专业教材采购情况
+    Route::get('textbook/loadGradeTextbook', 'TextbookController@loadGradeTextbook')->name('school_manager.textbook.loadGradeTextbook'); // 获取班级教材采购情况
+    Route::get('textbook/loadCampusTextbook', 'TextbookController@loadCampusTextbook')->name('school_manager.textbook.loadCampusTextbook'); // 获取校区教材采购情况
 
 });

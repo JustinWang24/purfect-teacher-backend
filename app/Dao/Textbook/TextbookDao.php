@@ -7,7 +7,6 @@ use App\Dao\RecruitmentPlan\RecruitmentPlanDao;
 use App\Dao\RecruitStudent\RegistrationInformaticsDao;
 use App\Dao\Schools\GradeDao;
 use App\Dao\Schools\GradeUserDao;
-use App\Models\Acl\Role;
 use App\Models\RecruitStudent\RegistrationInformatics;
 use App\Models\Schools\RecruitmentPlan;
 use App\Models\Schools\Textbook;
@@ -124,8 +123,8 @@ class TextbookDao
         }
         $gradeIdArr = array_column($gradeList,'id');
         $gradeUserDao = new GradeUserDao();
-        $map = ['user_type'=>Role::VERIFIED_USER_STUDENT];
-        $count = $gradeUserDao->getCountByGradeIdArr($map,$gradeIdArr);
+
+        $count = $gradeUserDao->getCountByGradeId($gradeIdArr);
         return $count;
     }
 
@@ -181,6 +180,43 @@ class TextbookDao
      */
     public function getTextbookListBySchoolId($schoolId) {
         return Textbook::where('school_id',$schoolId)->with('course')->get();
+    }
+
+
+
+    /**
+     * 查询当前班级所学的教材
+     * @param $gradeId
+     * @return MessageBag
+     */
+    public function getTextbooksByGradeId($gradeId) {
+
+        $gradeUserDao = new GradeUserDao();
+        $gradeDao = new GradeDao();
+        $courseDao = new CourseDao();
+
+        // 查询当前班级学生的总数
+        $courseMajorDao = new CourseMajorDao();
+        $studentCount = $gradeUserDao->getCountByGradeId($gradeId);
+        $gradeInfo = $gradeDao->getGradeById($gradeId);   //班级详情
+
+        $nextYear = Carbon::parse('+ 1year')->year;
+        $year = $nextYear - $gradeInfo['year'] + 1 ;  // 计算班级的下一年年级
+
+        // 通过专业和年级查询该班上的课程
+        $result = $courseMajorDao->getCoursesByMajorAndYear($gradeInfo['major_id'],$year);
+        if(empty($result)) {
+            return new MessageBag(JsonBuilder::CODE_EMPTY,'当前专业所处年级没有课程');
+        }
+        $courseIdArr = array_column($result,'id');
+        $field = ['id', 'code', 'name', 'year', 'term'];
+        // 通过课程查询该班所用的教材
+        $list = $courseDao->getCoursesByIdArr($courseIdArr,$field);
+        foreach ($list as $key => $val) {
+            $list[$key]['textbook_num'] = $studentCount;
+        }
+
+        return new MessageBag(JsonBuilder::CODE_SUCCESS,'请求成功',$list);
     }
 
 

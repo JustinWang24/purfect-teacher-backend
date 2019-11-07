@@ -3,6 +3,7 @@
 namespace Tests\Feature\Textbook;
 
 use App\Models\Schools\Textbook;
+use App\Utils\JsonBuilder;
 use Illuminate\Support\Str;
 use Tests\Feature\BasicPageTestCase;
 
@@ -95,7 +96,7 @@ class TextbookTest extends BasicPageTestCase
         $response = $this->setSchoolAsUser($user, 50)
             ->actingAs($user)
             ->withSession($this->schoolSessionData)
-            ->get(route('school_manager.textbook.save',$data));
+            ->post(route('school_manager.textbook.save',$data));
 
         $result = json_decode($response->content(),true);
 
@@ -108,7 +109,7 @@ class TextbookTest extends BasicPageTestCase
     /**
      * 查看某专业教材的采购情况
      */
-    public function testLoadMajorCourses() {
+    public function testLoadMajorCoursesTextbook() {
         $data = ['major_id'=>2971];
         $this->withoutExceptionHandling();
         $user = $this->getSuperAdmin();
@@ -146,7 +147,7 @@ class TextbookTest extends BasicPageTestCase
 
         $result = json_decode($response->content(),true);
         $this->assertArrayHasKey('code', $result);
-        $this->assertEquals(1000, $result['code']);
+        $this->assertNotEquals(999, $result['code']);
         $this->assertArrayHasKey('textbook', $result['data']);
 
         foreach ($result['data']['textbook'] as $key => $val) {
@@ -167,6 +168,57 @@ class TextbookTest extends BasicPageTestCase
 
         }
 
+    }
+
+
+    /**
+     * 以班级为单位查询教材使用情况
+     */
+    public function testLoadGradeCoursesTextbook() {
+        $user = $this->getSuperAdmin();
+        $data = ['grade_id'=>23881];
+        $response = $this->setSchoolAsUser($user, 50)
+            ->actingAs($user)
+            ->withSession($this->schoolSessionData)
+            ->get(route('school_manager.textbook.loadGradeTextbook',$data));
+
+        $result = json_decode($response->content(),true);
+        $this->assertArrayHasKey('code', $result);
+        $this->assertNotEquals(999, $result['code']);
+
+        if($result['code'] == JsonBuilder::CODE_SUCCESS) {
+            foreach ($result['data'] as $key => $val) {
+                $this->assertArrayHasKey('id', $val);
+                $this->assertArrayHasKey('code', $val);
+                $this->assertArrayHasKey('name', $val);
+                $this->assertArrayHasKey('year', $val);
+                $this->assertArrayHasKey('term', $val);
+                $this->assertArrayHasKey('textbook_num', $val);
+                $this->assertArrayHasKey('textbooks', $val);
+
+                if(!empty($val['textbooks'])) {
+                    foreach ($val['textbooks'] as $k => $v)
+                    {
+                        $this->assertArrayHasKey('name', $v);
+                        $this->assertArrayHasKey('press', $v);
+                        $this->assertArrayHasKey('author', $v);
+                        $this->assertArrayHasKey('price', $v);
+                        $this->assertArrayHasKey('purchase_price', $v);
+                    }
+                }
+            }
+        }
+    }
+
+
+    public function testLoadCampusTextbook() {
+
+        $user = $this->getSuperAdmin();
+        $data = ['campus_id'=>23881];
+        $response = $this->setSchoolAsUser($user, 50)
+            ->actingAs($user)
+            ->withSession($this->schoolSessionData)
+            ->get(route('school_manager.textbook.loadCampusTextbook',$data));
     }
 
 

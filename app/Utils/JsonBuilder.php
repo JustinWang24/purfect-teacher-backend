@@ -11,6 +11,8 @@ namespace App\Utils;
 
 class JsonBuilder
 {
+
+    const CODE_EMPTY = 0;   // 数据为空
     const CODE_SUCCESS = 1000;
     const CODE_ERROR = 999;
     const MODE_OUTPUT_DEV = JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT;
@@ -63,16 +65,17 @@ class JsonBuilder
      * @return string
      */
     public static function Error($dataOrMessage = 'Err', $code = null){
+        $mode = env('APP_DEBUG',true) ? self::MODE_OUTPUT_DEV : self::MODE_OUTPUT_PROD;
         if(is_array($dataOrMessage)){
             return json_encode([
                 'code' => $code ?? self::CODE_ERROR,
                 'message' => $dataOrMessage
-            ], self::MODE_OUTPUT);
+            ], $mode);
         }else{
             return json_encode([
                 'code' => $code ?? self::CODE_ERROR,
                 'message' => $dataOrMessage
-            ], self::MODE_OUTPUT);
+            ], $mode);
         }
     }
 
