@@ -49,7 +49,7 @@ class TextbookController extends Controller
     public function edit(TextbookRequest $request) {
 
         $textbookDao = new TextbookDao();
-        $id = $request->get('id');
+        $id = $request->getTextbookId();
         $info = $textbookDao->getTextbookById($id);
         $this->dataForView['textbook'] = $info;
         return view('school_manager.textbook.edit', $this->dataForView);
@@ -63,8 +63,7 @@ class TextbookController extends Controller
      */
     public function save(TextbookRequest $request) {
         $textbookDao = new TextbookDao();
-        $all = $request->get('textbook');
-
+        $all = $request->getFormData();
         if(!empty($all['id'])) {
             $result = $textbookDao->editById($all);
             if($result) {
@@ -94,13 +93,38 @@ class TextbookController extends Controller
     public function loadMajorTextbook(TextbookRequest $request) {
 
         $schoolId = $request->getSchoolId();
-        $majorId = $request->get('major_id');
         $textbookDao = new TextbookDao();
+        $majorId = $request->getMajorId();
         $result = $textbookDao->getTextbooksByMajor($majorId,$schoolId);
         $data = ['major_textbook'=>$result];
         return JsonBuilder::Success($data);
     }
 
+
+
+    /**
+     * 查询以班级为单位的教材情况
+     * @param TextbookRequest $request
+     * @return string
+     */
+    public function loadGradeTextbook(TextbookRequest $request) {
+        $gradeId = $request->getGradeId();
+        $textbookDao = new TextbookDao();
+        $result = $textbookDao->getTextbooksByGradeId($gradeId);
+
+        if($result->isSuccess()) {
+            return JsonBuilder::Success($result->getData());
+        } else {
+            return JsonBuilder::Error($result->getMessage(),$result->getCode());
+        }
+    }
+
+
+    //通过校区查询教材的购买情况
+    public function loadCampusTextbook(TextbookRequest $request) {
+        $campusId = $request->getCampusId();
+        dd($campusId);
+    }
 
 
 }
