@@ -16,11 +16,12 @@ class PlansLoader
 {
     /**
      * @param PlanRecruitRequest $request
+     * @param $back: 前端逻辑还是后端逻辑
      * @return IPlansLoaderLogic
      */
-    public static function GetInstance(PlanRecruitRequest $request){
+    public static function GetInstance(PlanRecruitRequest $request, $back = false){
         $instance = null;
-        if($request->getYear()){
+        if($back){
             // 从管理后台传来的, 会提交 year 作为查询参数, 而前端不会
             $instance = new BackendLogic($request);
         }
