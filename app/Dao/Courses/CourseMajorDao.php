@@ -92,4 +92,14 @@ class CourseMajorDao
 
         return $simple ? $data : $cms;
     }
+
+
+    /**
+     * 通过专业id集合获取课程
+     * @param $majorIdArr
+     * @return mixed
+     */
+    public function getCourseIdByMajorIdArr($majorIdArr) {
+        return CourseMajor::whereIn('major_id',$majorIdArr)->get();
+    }
 }

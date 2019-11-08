@@ -110,7 +110,7 @@ class TextbookTest extends BasicPageTestCase
      * 查看某专业教材的采购情况
      */
     public function testLoadMajorCoursesTextbook() {
-        $data = ['major_id'=>2971];
+        $data = ['major_id'=>40];
         $this->withoutExceptionHandling();
         $user = $this->getSuperAdmin();
 
@@ -176,7 +176,7 @@ class TextbookTest extends BasicPageTestCase
      */
     public function testLoadGradeCoursesTextbook() {
         $user = $this->getSuperAdmin();
-        $data = ['grade_id'=>23881];
+        $data = ['grade_id'=>313];
         $response = $this->setSchoolAsUser($user, 50)
             ->actingAs($user)
             ->withSession($this->schoolSessionData)
@@ -211,14 +211,18 @@ class TextbookTest extends BasicPageTestCase
     }
 
 
+    /**
+     * 加载校区的教材采购情况
+     */
     public function testLoadCampusTextbook() {
 
         $user = $this->getSuperAdmin();
-        $data = ['campus_id'=>23881];
+        $data = ['campus_id'=>2];
         $response = $this->setSchoolAsUser($user, 50)
             ->actingAs($user)
             ->withSession($this->schoolSessionData)
             ->get(route('school_manager.textbook.loadCampusTextbook',$data));
+        dd($response);
     }
 
 

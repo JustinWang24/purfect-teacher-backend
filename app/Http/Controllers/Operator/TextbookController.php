@@ -123,6 +123,8 @@ class TextbookController extends Controller
     //通过校区查询教材的购买情况
     public function loadCampusTextbook(TextbookRequest $request) {
         $campusId = $request->getCampusId();
+        $textbookDao = new TextbookDao();
+        $result = $textbookDao->getCampusTextbook($campusId);
         dd($campusId);
     }
 
