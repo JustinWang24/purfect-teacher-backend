@@ -2,6 +2,7 @@
 
 namespace App\Dao\Teachers;
 
+use App\Models\Schools\GradeUser;
 use App\Models\Teachers\TeacherProfile;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\DB;
@@ -36,15 +37,13 @@ class TeacherProfileDao
      */
     public function searchTeacherByNameSimple($name, $schoolId, $majorsId = []){
         if(!empty($majorsId)){
-            return DB::table('grade_users')
-                ->select(DB::raw('user_id as id, name'))
+            return GradeUser::select(DB::raw('user_id as id, name'))
                 ->where('school_id',$schoolId)
                 ->whereIn('major_id',$majorsId)
                 ->where('name','like',$name.'%')
                 ->get();
         }
-        return DB::table('grade_users')
-            ->select(DB::raw('user_id as id, name'))
+        return GradeUser::select(DB::raw('user_id as id, name'))
             ->where('school_id',$schoolId)
             ->where('name','like',$name.'%')
             ->get();
