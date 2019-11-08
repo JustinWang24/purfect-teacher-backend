@@ -93,7 +93,6 @@ class OpenMajorController extends Controller
             $user = $userDao->getUserByMobile($mobile);
             $userId = $user->id ?? null;
         }
-
         $result = [];
 
         if ($userId) {
@@ -149,60 +148,4 @@ class OpenMajorController extends Controller
         }
     }
 
-    /**
-     * @deprecated
-     * @param PlanRecruitRequest $request
-     * @return string
-     * @throws \Exception
-     */
-    public function signUpOld(PlanRecruitRequest $request)
-    {
-        $userId     = $request->get('id');
-        $schoolId   = $request->get('school_id');
-        $majorId    = $request->get('major_id');
-        $planId     = $request->get('recruitment_plan_id');
-        $data       = $request->get('data');
-
-        $planDao = new RecruitmentPlanDao($schoolId);
-
-        $plan = $planDao->getRecruitmentPlanById($planId);
-        if ($plan->seats >= $plan->enrolled_count) {
-            return JsonBuilder::Error('该专业已招满,请选择其他专业', '999');
-        }
-
-        $dao =  new RegistrationInformaticsDao;
-
-        if (empty($userId)) {
-            $add = $dao->addUser($data);
-            if (!$add) {
-                return JsonBuilder::Error('报名失败', '999');
-            } else {
-                $signUpData['user_id']   = $add;
-            }
-        } else {
-            $signUpData['user_id'] = $userId;
-        }
-
-        $signUpData['school_id']           = $schoolId;
-        $signUpData['major_id']            = $majorId;
-        $signUpData['name']                = $data['name'];
-        $signUpData['relocation_allowed']  = $data['relocation_allowed'];
-        $signUpData['recruitment_plan_id'] = $planId;
-        $signUpData['status'] = 1;
-        $result = $dao->signUp($signUpData);
-
-        if ($result) {
-            return JsonBuilder::Success('报名成功');
-        } else {
-            return JsonBuilder::Error('报名失败',999);
-        }
-    }
-
-
-    public function testExcel(PlanRecruitRequest $request)
-    {
-        $path = $request->file('file')->storeAs(
-            'storage', $request->file('file')->getFilename()
-        );
-    }
 }
