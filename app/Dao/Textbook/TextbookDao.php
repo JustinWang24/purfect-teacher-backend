@@ -85,8 +85,8 @@ class TextbookDao
         $courseIdArr = array_column($list,'id','id');
         //查询所有课程的详情
         $courseDao = new CourseDao();
-        $field = ['id', 'code', 'name', 'year', 'term'];
-        $courses = $courseDao->getCoursesByIdArr($courseIdArr, $field)->toArray();
+
+        $courses = $courseDao->getCoursesByIdArr($courseIdArr)->toArray();
         $thisYear = Carbon::now()->year;  // 今年
         $nextYear = Carbon::parse('+ 1year')->year; // 明年
 
@@ -210,9 +210,9 @@ class TextbookDao
             return new MessageBag(JsonBuilder::CODE_EMPTY,'当前专业所处年级没有课程');
         }
         $courseIdArr = array_column($result,'id');
-        $field = ['id', 'code', 'name', 'year', 'term'];
+
         // 通过课程查询该班所用的教材
-        $list = $courseDao->getCoursesByIdArr($courseIdArr,$field);
+        $list = $courseDao->getCoursesByIdArr($courseIdArr);
         foreach ($list as $key => $val) {
             $list[$key]['textbook_num'] = $studentCount;
         }
@@ -221,20 +221,48 @@ class TextbookDao
     }
 
 
-
+    /**
+     * 获取校区下的教材
+     * @param $campusId
+     * @return MessageBag
+     */
     public function getCampusTextbook($campusId) {
+
+        // 通过校区ID获取专业
         $majorDao = new MajorDao();
         $majorList = $majorDao->getMajorsByCampusId($campusId);
         if(empty($majorList)) {
             return new MessageBag(JsonBuilder::CODE_EMPTY,'该校区下没有专业');
         }
 
-        //通过专业ID集合获取相关课程ID
+        // 通过专业ID集合获取相关课程并关联到教材
         $majorIdArr = array_column($majorList->toArray(),'id');
         $courseMajorDao = new CourseMajorDao();
-        $courseList = $courseMajorDao->getCourseIdByMajorIdArr($majorIdArr);
-//        $majorIdArr = array_column('')
-        dd($courseList->toArray());
+        $courseList = $courseMajorDao->getCourseIdByMajorIdArr($majorIdArr)->toArray();
+        if(empty($courseList)) {
+            return new MessageBag(JsonBuilder::CODE_EMPTY,'该专业下没有课程');
+        }
+
+        $thisYear = Carbon::now()->year;
+        $nextYear = Carbon::parse('+ 1year')->year; // 明年
+
+        // 查询课程关联的学生
+        foreach ($courseList as $key => $val) {
+            $year = $nextYear - $val['course']['year'];
+            if($year == $thisYear) {
+                // 去查招生计划和已招学生
+                $num = $this->getNewlyBornNumByMajor($val['major_id'], $nextYear, $val['school_id']);
+                $courseList[$key]['type'] = 1;   // 即将入学新生
+                $courseList[$key]['textbook_num'] = $num;
+            } else {
+                // 通过专业ID和课程的年级查询学生数量
+                $courseList[$key]['type'] = 0;   // 老生
+                $num = $this->getStudentNumByMajorAndYear($val['major_id'],$year);
+                $courseList[$key]['textbook_num'] = $num;
+            }
+
+        }
+        return new MessageBag(JsonBuilder::CODE_SUCCESS,'请求成功',$courseList);
     }
 
 

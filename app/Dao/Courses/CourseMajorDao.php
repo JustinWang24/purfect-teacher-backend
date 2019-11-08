@@ -95,11 +95,11 @@ class CourseMajorDao
 
 
     /**
-     * 通过专业id集合获取课程
+     * 通过专业id集合获取课程和教程
      * @param $majorIdArr
      * @return mixed
      */
     public function getCourseIdByMajorIdArr($majorIdArr) {
-        return CourseMajor::whereIn('major_id',$majorIdArr)->get();
+        return CourseMajor::whereIn('major_id',$majorIdArr)->with(['course.textbooks'])->get();
     }
 }
