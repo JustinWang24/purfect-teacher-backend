@@ -7,6 +7,7 @@ use App\Dao\RecruitmentPlan\RecruitmentPlanDao;
 use App\Dao\RecruitStudent\RegistrationInformaticsDao;
 use App\Dao\Schools\GradeDao;
 use App\Dao\Schools\GradeUserDao;
+use App\Dao\Schools\MajorDao;
 use App\Models\RecruitStudent\RegistrationInformatics;
 use App\Models\Schools\RecruitmentPlan;
 use App\Models\Schools\Textbook;
@@ -217,6 +218,23 @@ class TextbookDao
         }
 
         return new MessageBag(JsonBuilder::CODE_SUCCESS,'请求成功',$list);
+    }
+
+
+
+    public function getCampusTextbook($campusId) {
+        $majorDao = new MajorDao();
+        $majorList = $majorDao->getMajorsByCampusId($campusId);
+        if(empty($majorList)) {
+            return new MessageBag(JsonBuilder::CODE_EMPTY,'该校区下没有专业');
+        }
+
+        //通过专业ID集合获取相关课程ID
+        $majorIdArr = array_column($majorList->toArray(),'id');
+        $courseMajorDao = new CourseMajorDao();
+        $courseList = $courseMajorDao->getCourseIdByMajorIdArr($majorIdArr);
+//        $majorIdArr = array_column('')
+        dd($courseList->toArray());
     }
 
 

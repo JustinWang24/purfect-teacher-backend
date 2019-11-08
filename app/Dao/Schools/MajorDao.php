@@ -139,4 +139,20 @@ class MajorDao
     public function getMajorPage($map,$field='*') {
         return Major::where($map)->select($field)->paginate(10);
     }
+
+
+    /**
+     * 获取校区下的专业
+     * @param int $campusId 校区ID
+     * @param bool $simple
+     * @return mixed
+     */
+    public function getMajorsByCampusId($campusId,$simple = true) {
+        $field = '*';
+        if($simple) {
+            $field = ['id','name'];
+        }
+
+        return Major::where('campus_id',$campusId)->select($field)->get();
+    }
 }
