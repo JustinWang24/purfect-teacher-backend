@@ -222,7 +222,40 @@ class TextbookTest extends BasicPageTestCase
             ->actingAs($user)
             ->withSession($this->schoolSessionData)
             ->get(route('school_manager.textbook.loadCampusTextbook',$data));
-        dd($response);
+
+        $result = json_decode($response->content(),true);
+
+        $this->assertArrayHasKey('code', $result);
+        $this->assertNotEquals(999, $result['code']);
+
+        if($result['code'] == JsonBuilder::CODE_SUCCESS) {
+            foreach ($result['data'] as  $key => $val) {
+                $this->assertArrayHasKey('major_name', $val);
+                $this->assertArrayHasKey('name', $val['course']);
+                $this->assertArrayHasKey('code', $val['course']);
+                $this->assertArrayHasKey('year', $val['course']);
+                $this->assertArrayHasKey('type', $val);
+                $this->assertArrayHasKey('textbook_num', $val);
+                if($val['type'] == 1) {
+                     $this->assertArrayHasKey('general_plan_seat', $val['textbook_num']);
+                     $this->assertArrayHasKey('self_plan_seat', $val['textbook_num']);
+                     $this->assertArrayHasKey('total_plan_seat', $val['textbook_num']);
+                     $this->assertArrayHasKey('general_informatics_seat', $val['textbook_num']);
+                     $this->assertArrayHasKey('self_informatics_seat', $val['textbook_num']);
+                     $this->assertArrayHasKey('total_informatics_seat', $val['textbook_num']);
+                }
+
+                if(!empty($val['course']['textbooks'])) {
+                    foreach ($val['course']['textbooks'] as $k => $v){
+                        $this->assertArrayHasKey('name', $v);
+                        $this->assertArrayHasKey('press', $v);
+                        $this->assertArrayHasKey('author', $v);
+                        $this->assertArrayHasKey('purchase_price', $v);
+                        $this->assertArrayHasKey('price', $v);
+                    }
+                }
+            }
+        }
     }
 
 

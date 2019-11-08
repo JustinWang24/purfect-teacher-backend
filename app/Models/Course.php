@@ -22,6 +22,8 @@ class Course extends Model
         'desc','school_id'
     ];
 
+    public $hidden = ['deleted_at'];
+
     public $casts = [
         'optional' => 'boolean', // 是否选修课
     ];

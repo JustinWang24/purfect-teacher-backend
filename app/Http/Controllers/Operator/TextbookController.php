@@ -125,7 +125,12 @@ class TextbookController extends Controller
         $campusId = $request->getCampusId();
         $textbookDao = new TextbookDao();
         $result = $textbookDao->getCampusTextbook($campusId);
-        dd($campusId);
+        if($result->isSuccess()) {
+            return JsonBuilder::Success($result->getData());
+        } else {
+            return JsonBuilder::Error($result->getMessage());
+        }
+
     }
 
 
