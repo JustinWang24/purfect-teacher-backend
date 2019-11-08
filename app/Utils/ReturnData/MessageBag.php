@@ -17,6 +17,12 @@ class MessageBag implements IMessageBag
     private $code;
     private $data;
 
+    /**
+     * MessageBag constructor.
+     * @param int $code
+     * @param string $message
+     * @param null $data
+     */
     public function __construct($code = JsonBuilder::CODE_SUCCESS, $message = '', $data = null)
     {
         $this->data = $data;

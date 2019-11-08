@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\Recruitment;
 
+use App\Events\User\Student\ApplyRecruitmentPlanEvent;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\RecruitStudent\PlanRecruitRequest;
 use App\Dao\RecruitmentPlan\RecruitmentPlanDao;
@@ -9,6 +10,8 @@ use App\Dao\Users\UserDao;
 use App\Dao\RecruitStudent\RegistrationInformaticsDao;
 use App\Dao\Students\StudentProfileDao;
 use App\Utils\JsonBuilder;
+use Illuminate\Http\Request;
+
 
 class OpenMajorController extends Controller
 {
@@ -111,6 +114,7 @@ class OpenMajorController extends Controller
     {
         $formData = $request->getSignUpFormData();
         $plan = $request->getPlan();
+
         if ($plan->seats <= $plan->enrolled_count) {
             return JsonBuilder::Error('该专业已招满,请选择其他专业');
         }
@@ -131,8 +135,14 @@ class OpenMajorController extends Controller
             $userDao = new UserDao();
             $user = $userDao->getUserByIdOrUuid($userId);
         }
+        /**
+         * signUp 中会执行包括报名总人数更新, 消息通知发布的功能
+         */
         $result = $user ? $dao->signUp($formData, $user) : false;
-        if ($result) {
+
+        if ($result && $result->isSuccess()) {
+            // Todo: 通知老师, 有个新报名的学生
+            event(new ApplyRecruitmentPlanEvent($result->getData()));
             return JsonBuilder::Success('报名成功');
         } else {
             return JsonBuilder::Error('报名失败');
@@ -186,5 +196,13 @@ class OpenMajorController extends Controller
         } else {
             return JsonBuilder::Error('报名失败',999);
         }
+    }
+
+
+    public function testExcel(PlanRecruitRequest $request)
+    {
+        $path = $request->file('file')->storeAs(
+            'storage', $request->file('file')->getFilename()
+        );
     }
 }
