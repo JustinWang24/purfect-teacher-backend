@@ -18,7 +18,7 @@ class RecruitmentPlanTest extends BasicPageTestCase
         $response = $this->setSchoolAsUser($su, 6)
             ->actingAs($su)
             ->withSession($this->schoolSessionData)
-            ->post(route('api.load.open.majors', $data));
+            ->post(route('api.address.book.class'), $data);
         dd($response->content());
     }
 
@@ -33,7 +33,7 @@ class RecruitmentPlanTest extends BasicPageTestCase
         $response = $this->setSchoolAsUser($su, 1)
             ->actingAs($su)
             ->withSession($this->schoolSessionData)
-            ->post(route('api.load.major.detail', $data));
+            ->post(route('api.load.major.detail'), $data);
         dd($response->content());
     }
 
@@ -49,7 +49,7 @@ class RecruitmentPlanTest extends BasicPageTestCase
         $response = $this->setSchoolAsUser($su, 1)
             ->actingAs($su)
             ->withSession($this->schoolSessionData)
-            ->post(route('api.query.student.profile', $data));
+            ->post(route('api.query.student.profile'), $data);
         dd($response->content());
     }
 
@@ -68,7 +68,7 @@ class RecruitmentPlanTest extends BasicPageTestCase
         $response = $this->setSchoolAsUser($su, 1)
             ->actingAs($su)
             ->withSession($this->schoolSessionData)
-            ->post(route('api.major.submit.form', $data));
+            ->post(route('api.major.submit.form'), $data);
         dd($response->content());
     }
 

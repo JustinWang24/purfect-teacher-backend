@@ -28,9 +28,11 @@ class AlterMajorTableWithOpenAndSeats extends Migration
     public function down()
     {
         Schema::table('majors', function (Blueprint $table) {
-            $table->dropColumn('open');
-            $table->dropColumn('seats');
-            $table->dropColumn('hot');
+            if(Schema::hasColumn('majors','open')){
+                $table->dropColumn('open');
+                $table->dropColumn('seats');
+                $table->dropColumn('hot');
+            }
         });
     }
 }
