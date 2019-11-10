@@ -62,8 +62,11 @@ $factory->define(RegistrationInformatics::class, function (Faker $faker) {
         'school_id' => rand(1, 9),
         'recruitment_plan_id' => 1,
         'major_id' => rand(1, 3),
-        'relocation_allowed' => rand(1, 2),
-        'status' => rand(1, 3),
+        'relocation_allowed' => rand(0, 1),
+        'status' => 1,
+        'user_id' => 1,
+        'name' => $faker->name,
+        'note' => null,
     ];
 });
 
@@ -77,7 +80,6 @@ $factory->define(RecruitmentPlan::class, function (Faker $faker) {
         'title'=>$faker->title,// 本次招生计划的标题
         'start_at'=>date('Y-m-d'),  // 开始招生日期
         'end_at'=>date('Y-m-d'),    // 招生截止日期
-        'expired'=>$faker->boolean,  // 强制结束招生
         'description'=>$faker->paragraph,  // 招生简章详情
         'tease'=>$faker->paragraph,  // 简介
         'tags'=>$faker->paragraph,  // 标签
@@ -89,5 +91,8 @@ $factory->define(RecruitmentPlan::class, function (Faker $faker) {
         'applied_count'=>0, // 已报名人数
         'enrolled_count'=>0, // 已招生人数
         'manager_id'=>1, // 负责人: 本次招生的收信人
+        'target_students'=>$faker->paragraph, // 录取方式
+        'student_requirements'=>$faker->paragraph, // 报名条件
+        'how_to_enrol'=>$faker->paragraph, // 录取方式
     ];
 });

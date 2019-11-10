@@ -16,6 +16,7 @@ class RegistrationInformatics extends Model
         'recruitment_plan_id', 'relocation_allowed', 'note',
     ];
 
+    const USELESS           = 0;    // 申请作废
     const WAITING           = 1;    // 等待审核
     const REFUSED           = 2;    // 报名审核被拒绝
     const PASSED            = 3;    // 报名审核已通过
@@ -24,6 +25,7 @@ class RegistrationInformatics extends Model
     const APPROVED          = 5;    // 被录取
     const ENROLLED          = 6;    // 已报到
 
+    const USELESS_TEXT              = '申请作废';
     const WAITING_TEXT              = '等待审核';
     const REFUSED_TEXT              = '报名审核被拒绝';
     const PASSED_TEXT               = '报名审核已通过';
@@ -34,6 +36,7 @@ class RegistrationInformatics extends Model
 
     public static function AllStatusStudent(){
         return [
+            self::USELESS => self::USELESS_TEXT,
             self::WAITING => self::WAITING_TEXT,
             self::REFUSED => self::REFUSED_TEXT,
             self::PASSED => self::PASSED_TEXT,
@@ -90,6 +93,13 @@ class RegistrationInformatics extends Model
      */
     public function plan(){
         return $this->belongsTo(RecruitmentPlan::class,'recruitment_plan_id');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function lastOperator(){
+        return $this->belongsTo(User::class, 'last_updated_by');
     }
 
     /**
