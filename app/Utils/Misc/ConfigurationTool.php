@@ -15,4 +15,7 @@ class ConfigurationTool
     const KEY_SELF_STUDY_NEED_REGISTRATION = 'self_study_need_registration';    // 表示学生上自习课, 是否需要签到
     const KEY_STUDY_WEEKS_PER_TERM         = 'study_weeks_per_term';            // 表示学生每学期的教学周数
     const DEFAULT_STUDY_WEEKS_PER_TERM     = 20;                                // 缺省的每学期学习周数: 20周
+
+    const DEFAULT_PAGE_SIZE                = 20;                                // 缺省的数据库查询分页数
+    const DEFAULT_PAGE_SIZE_QUICK_SEARCH   = 12;                                // 缺省的快速查询分页数
 }

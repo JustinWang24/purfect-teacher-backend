@@ -2,6 +2,7 @@
     <div class="plan-list-wrap">
         <el-table
                 :data="plans"
+                :empty-text="emptyTableText"
                 stripe
                 style="width: 100%">
             <el-table-column
@@ -18,17 +19,28 @@
             </el-table-column>
             <el-table-column
                     prop="title"
-                    label="标题">
+                    label="招生简章标题">
             </el-table-column>
             <el-table-column
-                    prop="start_at"
-                    label="招生开始日期">
+                    label="学费">
+                <template slot-scope="scope">
+                    <p>{{ scope.row.fee }}元/年</p>
+                </template>
             </el-table-column>
+            <el-table-column
+                    label="招生期限">
+                <template slot-scope="scope">
+                    <p>从{{ scope.row.start_at }}开始</p>
+                    <p v-if="scope.row.end_at">{{ scope.row.end_at }}结束</p>
+                    <p v-else>常年有效</p>
+                </template>
+            </el-table-column>
+
             <el-table-column
                     label="招生人数/统计">
                 <template slot-scope="scope">
-                    <p>{{ scope.row.seats }}人 / {{ scope.row.grades_count }}个班</p>
-                    <p>{{ scope.row.applied_count }}报名 / {{ scope.row.enrolled_count }}录取</p>
+                    <p>计划招收{{ scope.row.seats }}人 / {{ scope.row.grades_count }}个班</p>
+                    <p>已报名: {{ scope.row.applied_count }} / 已录取: {{ scope.row.enrolled_count }}</p>
                 </template>
             </el-table-column>
             <el-table-column
@@ -36,6 +48,9 @@
                 <template slot-scope="scope">
                     <el-button-group>
                         <el-button size="mini" type="primary" icon="el-icon-edit" v-on:click="editPlan(scope.row)"></el-button>
+                        <el-button size="mini" type="primary" icon="el-icon-tools" v-on:click="registrations(scope.row)">
+                            查看报名表
+                        </el-button>
                         <el-button size="mini" type="danger" icon="el-icon-delete" v-on:click="deletePlan(scope.row)"></el-button>
                     </el-button-group>
                 </template>
@@ -48,11 +63,12 @@
     export default {
         name: "RecruitmentPlansList",
         props:[
-            'userUuid','canDelete','plans','pageSize',
+            'userUuid','canDelete','plans','pageSize','schoolId','year'
         ],
         data(){
             return {
                 pageNumber:0,
+                emptyTableText: '还没有计划'
             }
         },
         methods: {
@@ -77,6 +93,11 @@
             },
             typeText: function (type) {
                 return type === 1 ? '统招' : '自主招生';
+            },
+            // 打开报名管理界面
+            registrations: function (plan) {
+                const url = '/teacher/registration-forms/manage?plan=' + plan.id;
+                window.open(url,'_blank');
             }
         }
     }

@@ -9,8 +9,8 @@
 namespace App\Dao\Users;
 use App\Models\Acl\Role;
 use App\Models\Users\GradeUser;
+use App\Utils\Misc\ConfigurationTool;
 use Illuminate\Database\Eloquent\Collection;
-use App\User;
 use Illuminate\Support\Facades\DB;
 
 class GradeUserDao
@@ -47,7 +47,7 @@ class GradeUserDao
             }
         }
 
-        return $query->take(12)->get();
+        return $query->take(ConfigurationTool::DEFAULT_PAGE_SIZE_QUICK_SEARCH)->get();
     }
 
     /**

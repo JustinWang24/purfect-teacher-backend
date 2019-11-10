@@ -96,4 +96,12 @@ class StudentProfileDao extends StudentProfile
         return $result;
     }
 
+    /**
+     * 获取学生的资料, 根据资料表的 uuid 字段, 注意, 不是用户的 uuid
+     * @param $profileUuid
+     * @return StudentProfile
+     */
+    public function getProfileByUuid($profileUuid){
+        return StudentProfile::where('uuid',$profileUuid)->first();
+    }
 }

@@ -24,4 +24,9 @@ class DepartmentQuickSearchLogic extends AbstractQuickSearchLogic
 
         return $dao->searchByName($this->queryString, $this->schoolId);
     }
+
+    public function getNextAction($facility)
+    {
+        return route('school_manager.department.majors',['by'=>'department','uuid'=>$facility->id]);
+    }
 }
