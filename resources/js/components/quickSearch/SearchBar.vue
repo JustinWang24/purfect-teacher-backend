@@ -30,6 +30,11 @@
                 required: false,
                 default: ''
             },
+            fullTip:{ // 如果传入这个值, 那么搜索框中的说明文字就只有它
+                type:String,
+                required: false,
+                default: ''
+            },
             width:{
                 type: String,
                 required: false,
@@ -43,7 +48,7 @@
         },
         computed: {
             'placeholderText': function(){
-                return '可输入 教职工/学生姓名'+this.tip+' 进行查找';
+                return Util.isEmpty(this.fullTip) ? '可输入 教职工/学生姓名'+this.tip+' 进行查找' : this.fullTip;
             }
         },
         data() {

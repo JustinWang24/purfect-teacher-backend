@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class StudentProfile extends Model
 {
+    const DEFAULT_STUDENT_AVATAR = '/assets/img/dp.jpg';
     protected $fillable = [
         'uuid',
         'user_id',
@@ -27,6 +28,10 @@ class StudentProfile extends Model
         'id_number', // 身份证号
         'birthday',
         'avatar',
+        'qq',
+        'wx',
+        'examination_score', // 中高考分数
+        'source_place',     // 生源地
         'political_code', // 政治面貌代码
         'political_name', // 政治面貌名称
         'nation_code', // 民族代码
@@ -49,5 +54,9 @@ class StudentProfile extends Model
     public function registrationInformatics()
     {
         return $this->hasMany(RegistrationInformatics::class,'user_id', 'user_id');
+    }
+
+    public function getAvatarAttribute(){
+        return $this->avatar ?? self::DEFAULT_STUDENT_AVATAR;
     }
 }

@@ -22,4 +22,9 @@ class CampusQuickSearchLogic extends AbstractQuickSearchLogic
         $dao = new CampusDao();
         return $dao->searchByName($this->queryString, $this->schoolId);
     }
+
+    public function getNextAction($facility)
+    {
+        return route('school_manager.campus.institutes',['by'=>'campus','uuid'=>$facility->id]);
+    }
 }

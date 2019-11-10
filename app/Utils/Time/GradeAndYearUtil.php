@@ -7,6 +7,9 @@
  */
 
 namespace App\Utils\Time;
+use App\Utils\JsonBuilder;
+use App\Utils\ReturnData\IMessageBag;
+use App\Utils\ReturnData\MessageBag;
 use Carbon\Carbon;
 
 class GradeAndYearUtil
@@ -64,5 +67,41 @@ class GradeAndYearUtil
         $dayOfWeeks = $date->diffInWeeks($startFrom);
 
         return $dayOfWeeks % 2 === 0;
+    }
+
+    /**
+     * 从身份证中解析生日的方法
+     *
+     * @param $idNumber
+     * @return IMessageBag
+     */
+    public static function IdNumberToBirthday($idNumber){
+        $bag = new MessageBag(JsonBuilder::CODE_ERROR);
+        if(strlen($idNumber) === 18){
+            // 必须全数字的
+            if(preg_match("/^\d*$/",$idNumber)){
+                // 取出代表生日的部分
+                try{
+                    $birthday =  Carbon::createFromFormat('Ymd',substr($idNumber, 6,8));
+                    // 从理论上讲, 最小的入学年龄应该是 5 岁, 要检查一下
+                    $age = Carbon::now()->diffInYears($birthday);
+                    if($age > 5){
+                        $bag->setCode(JsonBuilder::CODE_SUCCESS);
+                        $bag->setData($birthday);
+                    }
+                    else{
+                        $bag->setMessage('身份证号码显示您的年龄只有'.$age.'岁, 请查证再输入');
+                    }
+                }catch (\Exception $exception){
+                    $bag->setMessage('身份证号中表示生日部分格式不对');
+                }
+            }else{
+                $bag->setMessage('身份证号必须全数字');
+            }
+        }else{
+            $bag->setMessage('身份证号的位数不对');
+        }
+
+        return $bag;
     }
 }

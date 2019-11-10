@@ -6,9 +6,8 @@ use App\BusinessLogic\QuickSearch\Factory;
 use App\Dao\Courses\CourseTeacherDao;
 use App\Dao\Teachers\TeacherProfileDao;
 use App\Dao\Users\GradeUserDao;
-use App\Dao\Users\UserDao;
+use App\Models\RecruitStudent\RegistrationInformatics;
 use App\Models\Users\GradeUser;
-use App\User;
 use App\Utils\JsonBuilder;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -54,23 +53,48 @@ class UsersController extends Controller
             $facilities = $logic->getFacilities();
             if(!empty($facilities)){
                 foreach ($facilities as $facility) {
-                    $data[] = [
+                    $item = [
                         'id'=>$facility->id,
                         'value'=>$facility->name,
-                        'scope'=>$request->get('scope')
+                        'scope'=>$request->get('scope'),
                     ];
+                    $nextAction = $logic->getNextAction($facility);
+                    if(!empty($nextAction)){
+                        $item['nextAction'] = $nextAction;
+                    }
+                    $data[] = $item;
                 }
             }
             if($users){
                 foreach ($users as $gradeUser) {
-                    /**
-                     * @var GradeUser $user
-                     */
-                    $data[] = [
-                        'id'=>$gradeUser->user_id,
-                        'value'=>$gradeUser->name . ' - ' . $gradeUser->grade->name . ' ' . $gradeUser->major->name,
-                        'scope'=>'user'
-                    ];
+                    $nextAction = $logic->getNextAction($gradeUser);
+                    $item = null;
+                    if($gradeUser instanceof GradeUser){
+                        /**
+                         * @var GradeUser $gradeUser
+                         */
+                        $item = [
+                            'id'=>$gradeUser->user_id,
+                            'value'=>$gradeUser->name . ' - ' . $gradeUser->grade->name . ' ' . $gradeUser->major->name,
+                            'scope'=>'user',
+                            'uuid'=>$gradeUser->user->uuid,
+                        ];
+                    }
+                    elseif($gradeUser instanceof RegistrationInformatics){
+                        // 这里是对报名学生的搜索结果
+                        /**
+                         * @var RegistrationInformatics $gradeUser
+                         */
+                        $item = [
+                            'id'=>$gradeUser->user_id,
+                            'value'=>$gradeUser->name. ': '.$gradeUser->getStatusText().', '.$gradeUser->plan->year.'年 '.$gradeUser->plan->title,
+                            'scope'=>'registration',
+                        ];
+                    }
+                    if(!empty($nextAction)){
+                        $item['nextAction'] = $nextAction;
+                    }
+                    $data[] = $item;
                 }
             }
         }

@@ -24,4 +24,9 @@ class InstituteQuickSearchLogic extends AbstractQuickSearchLogic
         $dao = new InstituteDao();
         return $dao->searchByName($this->queryString, $this->schoolId);
     }
+
+    public function getNextAction($facility)
+    {
+        return route('school_manager.institute.departments',['by'=>'institute','uuid'=>$facility->id]);
+    }
 }

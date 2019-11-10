@@ -10,6 +10,7 @@ use App\Dao\Users\UserDao;
 use App\Dao\RecruitStudent\RegistrationInformaticsDao;
 use App\Dao\Students\StudentProfileDao;
 use App\Utils\JsonBuilder;
+use App\Utils\Time\GradeAndYearUtil;
 use Illuminate\Http\Request;
 
 
@@ -154,5 +155,20 @@ class OpenMajorController extends Controller
         $path = $request->file('file')->storeAs(
             'storage', $request->file('file')->getFilename()
         );
+    }
+
+    /**
+     * 验证身份证号码是符合规范的
+     * @param PlanRecruitRequest $request
+     * @return string
+     */
+    public function verify_id_number(PlanRecruitRequest $request){
+        $idNumber = $request->get('id_number');
+        $bag = GradeAndYearUtil::IdNumberToBirthday($idNumber);
+        if($bag->isSuccess()){
+            return JsonBuilder::Success(_printDate($bag->getData()));
+        }else{
+            return JsonBuilder::Error($bag->getMessage());
+        }
     }
 }
