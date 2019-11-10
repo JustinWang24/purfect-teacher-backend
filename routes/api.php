@@ -13,9 +13,9 @@ use Illuminate\Http\Request;
 |
 */
 
-//Route::middleware('auth:api')->get('/user', function (Request $request) {
-//    return $request->user();
-//});
+Route::middleware('auth:api')->get('/user', function (Request $request) {
+    return $request->user();
+});
 
 Route::prefix('school')->group(function () {
     // 加载学校的作息时间表

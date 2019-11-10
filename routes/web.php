@@ -11,9 +11,9 @@
 |
 */
 
-//Route::get('/', function () {
-//    return view('auth.login');
-//});
+Route::get('/', function () {
+    return view('auth.login');
+});
 
 /**
  * 无须登录的前端页面路由
