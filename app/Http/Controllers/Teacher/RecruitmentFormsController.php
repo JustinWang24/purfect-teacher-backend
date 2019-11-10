@@ -28,7 +28,7 @@ class RecruitmentFormsController extends Controller
 
         $registrationDao = new RegistrationInformaticsDao();
         $this->dataForView['registrations'] = $registrationDao
-            ->getPaginatedRegistrationsByPlanId($request->getPlanId());
+            ->getPaginatedRegistrationsByPlanIdForApproval($request->getPlanId());
         $this->dataForView['appendedParams'] = ['plan'=>$request->getPlanId()];
 
         return view('teacher.recruitment.registration_form.list',$this->dataForView);

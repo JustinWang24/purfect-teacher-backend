@@ -63,6 +63,22 @@ class PlanRecruitRequest extends MyStandardRequest
     }
 
     /**
+     * 获取批准表格
+     * @return array
+     */
+    public function getApprovalForm(){
+        return $this->get('form');
+    }
+
+    /**
+     * 是否为批准的操作
+     * @return boolean
+     */
+    public function isApprovedAction(){
+        return $this->getApprovalForm()['approved'];
+    }
+
+    /**
      * @return mixed
      */
     public function getPlan(){
