@@ -79,6 +79,14 @@ class PlanRecruitRequest extends MyStandardRequest
     }
 
     /**
+     * 是否为录取的操作
+     * @return boolean
+     */
+    public function isEnrolAction(){
+        return $this->getApprovalForm()['enrolled'];
+    }
+
+    /**
      * @return mixed
      */
     public function getPlan(){

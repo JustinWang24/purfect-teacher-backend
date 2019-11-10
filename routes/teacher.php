@@ -56,4 +56,7 @@ Route::prefix('teacher')->group(function () {
     Route::get('registration-forms/delete', 'RecruitmentFormsController@delete')
         ->name('teacher.registration.delete');
 
+    // 查看已经批准的报名表
+    Route::get('registration-forms/enrol', 'RecruitmentFormsController@enrol')
+        ->name('teacher.registration.forms.enrol');
 });

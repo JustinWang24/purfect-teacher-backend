@@ -34,7 +34,8 @@ class RecruitmentPlan extends Model
         'year', // 招生年度
         'applied_count', // 已报名人数
         'enrolled_count', // 已招生人数
-        'manager_id', // 负责人: 本次招生的收信人
+        'manager_id', // 报名表审核负责人: 本次招生的收信人
+        'enrol_manager', // 录取负责人: 本次录取工作的收信人
         'target_students', // 录取方式
         'student_requirements', // 报名条件
         'how_to_enrol', // 录取方式
@@ -76,10 +77,21 @@ class RecruitmentPlan extends Model
         return $this->belongsTo(School::class);
     }
 
+    /**
+     * 招生工作负责人
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
     public function manager(){
         return $this->belongsTo(User::class,'manager_id');
     }
 
+    /**
+     * 录取工作负责人
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function enrolmentManager(){
+        return $this->belongsTo(User::class,'enrol_manager');
+    }
 
     public function courseMajor()
     {
