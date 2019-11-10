@@ -10,6 +10,7 @@ namespace App\BusinessLogic\QuickSearch\Impl;
 
 
 use App\Dao\Schools\GradeDao;
+use App\User;
 use Illuminate\Http\Request;
 
 class GradeQuickSearchLogic extends AbstractQuickSearchLogic
@@ -24,5 +25,10 @@ class GradeQuickSearchLogic extends AbstractQuickSearchLogic
     {
         $dao = new GradeDao();
         return $dao->searchByName($this->queryString, $this->schoolId);
+    }
+
+    public function getNextAction($facility)
+    {
+        return route('school_manager.grade.users',['by'=>'grade','uuid'=>$facility->id,'type'=>User::TYPE_STUDENT]);
     }
 }

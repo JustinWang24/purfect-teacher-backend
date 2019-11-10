@@ -11,7 +11,10 @@ use App\User;
 
 class RegistrationInformatics extends Model
 {
-    protected $fillable = ['user_id', 'school_id', 'major_id', 'name', 'status', 'recruitment_plan_id', 'relocation_allowed', 'note'];
+    protected $fillable = [
+        'user_id', 'school_id', 'major_id', 'name', 'status',
+        'recruitment_plan_id', 'relocation_allowed', 'note',
+    ];
 
     const WAITING           = 1;    // 等待审核
     const REFUSED           = 2;    // 报名审核被拒绝
@@ -74,6 +77,14 @@ class RegistrationInformatics extends Model
     }
 
     /**
+     * 报名表关联的学生资料数据
+     */
+    public function profile()
+    {
+        return $this->belongsTo(StudentProfile::class,'user_id','user_id');
+    }
+
+    /**
      * 关联的报名计划
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
@@ -87,5 +98,13 @@ class RegistrationInformatics extends Model
      */
     public function getStatusText(){
         return self::AllStatusStudent()[$this->status];
+    }
+
+    /**
+     * 学生是否服从分配
+     * @return boolean
+     */
+    public function isRelocationAllowed(){
+        return $this->relocation_allowed;
     }
 }

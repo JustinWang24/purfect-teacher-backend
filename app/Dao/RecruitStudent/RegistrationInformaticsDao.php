@@ -7,6 +7,7 @@ use App\Dao\RecruitmentPlan\RecruitmentPlanDao;
 use App\Models\RecruitStudent\RegistrationInformatics;
 use App\Models\Schools\RecruitmentPlan;
 use App\Utils\JsonBuilder;
+use App\Utils\Misc\ConfigurationTool;
 use App\Utils\ReturnData\IMessageBag;
 use App\Utils\ReturnData\MessageBag;
 use Exception;
@@ -19,6 +20,27 @@ use Illuminate\Support\Facades\Hash;
 
 class RegistrationInformaticsDao
 {
+    /**
+     * @param $planId
+     * @return mixed
+     */
+    public function getPaginatedRegistrationsByPlanId($planId){
+        return RegistrationInformatics::where('recruitment_plan_id',$planId)
+            ->orderBy('updated_at','desc')
+            ->paginate();
+    }
+
+    /**
+     * @param $name
+     * @param $schoolId
+     * @return \Illuminate\Support\Collection
+     */
+    public function searchRegistrationFormsByStudentName($name, $schoolId){
+        return RegistrationInformatics::where('school_id',$schoolId)
+            ->where('name','like','%'.$name.'%')
+            ->take(ConfigurationTool::DEFAULT_PAGE_SIZE)
+            ->get();
+    }
 
     /**
      * 报名列表
@@ -43,7 +65,7 @@ class RegistrationInformaticsDao
                 }])
                 ->orderBy('created_at', 'desc')
                 ->orderBy('relocation_allowed', $order)
-                ->paginate(RegistrationInformatics::PAGE_NUMBER);
+                ->paginate(ConfigurationTool::DEFAULT_PAGE_SIZE);
 
         return $data;
     }

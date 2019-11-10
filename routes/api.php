@@ -13,9 +13,9 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
-});
+//Route::middleware('auth:api')->get('/user', function (Request $request) {
+//    return $request->user();
+//});
 
 Route::prefix('school')->group(function () {
     // 加载学校的作息时间表
@@ -93,7 +93,7 @@ Route::prefix('recruitment')->group(function () {
     Route::post('/save-plan','Api\Recruitment\PlansController@save_plan')
         ->name('api.recruitment.save.plan');
 
-    // 加载某个招生计划: 后端加载是调用
+    // 加载某个招生计划: 后端加载时调用
     Route::any('/get-plan','Api\Recruitment\PlansController@get_plan')
         ->name('api.recruitment.get.plan');
 
@@ -164,6 +164,10 @@ Route::prefix('student-register')->group(function () {
      //
     Route::post('/submit-excel','Api\Recruitment\OpenMajorController@testExcel')
         ->name('api.major.submit.excel');
+
+    // 验证学生身份证信息的接口
+    Route::post('/verify-id-number','Api\Recruitment\OpenMajorController@verify_id_number')
+        ->name('api.major.verify.id.number');
 });
 
 // APP通讯录

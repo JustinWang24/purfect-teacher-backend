@@ -53,7 +53,19 @@ if(document.getElementById('school-courses-manager-app')){
 // 快速定位用户的搜索框: 会更加当前的状况, 来搜索用户和学院 系等
 if(document.getElementById('user-quick-search-app')){
     new Vue({
-        el:'#user-quick-search-app'
+        el:'#user-quick-search-app',
+        methods: {
+            onItemSelected: function(payload){
+                // 如果指定了 nextAction, 就跳转到其指定的页面, 否则按照 id 为用户的 id 的规则, 打开用户的 profile
+                if(Util.isEmpty(payload.item.nextAction)){
+                    // 按照 id 为用户的 id 的规则, 打开用户的 profile
+                    const nextAction = '/verified_student/profile/edit?uuid=' + payload.item.uuid;
+                    window.open(nextAction, '_blank');
+                }else {
+                    window.open(payload.item.nextAction, '_blank');
+                }
+            }
+        }
     })
 }
 
@@ -596,6 +608,8 @@ if(document.getElementById('school-recruitment-manager-app')){
                 schoolId: null,
                 userUuid: null,
                 flag: true,
+                // 控制表单是否显示
+                showRecruitmentPlanFormFlag: false,
             }
         },
         created(){
@@ -610,7 +624,6 @@ if(document.getElementById('school-recruitment-manager-app')){
             this.years.push(this.year - 1);
 
             this._resetFormData();
-            this.loadPlans(0);
         },
         watch:{
             'year': function(newVal) {
@@ -620,8 +633,10 @@ if(document.getElementById('school-recruitment-manager-app')){
         methods: {
             // 创建新招生计划
             createNewPlan: function(){
+                console.log(1111);
                 this._resetFormData();
                 this.flag = !this.flag;
+                this.showRecruitmentPlanFormFlag = true;
             },
             onEditPlanHandler: function(payload){
                 axios.post(
@@ -632,6 +647,7 @@ if(document.getElementById('school-recruitment-manager-app')){
                         this.form = res.data.data.plan;
                         this.$message('您正在编辑招生计划: ' + this.form.title);
                         this.flag = !this.flag;
+                        this.showRecruitmentPlanFormFlag = true;
                     }
                     else{
                         this.$message.error('加载招生计划数据失败');
@@ -666,9 +682,11 @@ if(document.getElementById('school-recruitment-manager-app')){
             },
             // 当新计划被成功创建
             newPlanCreatedHandler: function(payload){
+                this.showRecruitmentPlanFormFlag = false;
                 this.loadPlans(0);
             },
             planUpdatedHandler: function(payload){
+                this.showRecruitmentPlanFormFlag = false;
                 this.loadPlans(0);
             },
             loadPlans: function(pageNumber){
@@ -680,6 +698,7 @@ if(document.getElementById('school-recruitment-manager-app')){
                         pageNumber: pageNumber,
                         pageSize: this.pageSize,
                         year: this.year,
+                        uuid: this.userUuid,// 用户 uuid, 用来加载特定的招聘计划
                         version: Constants.VERSION
                     }
                 ).then(res => {
