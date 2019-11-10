@@ -7,24 +7,16 @@
                     <el-input size="mini" v-model="registrationForm.name" placeholder="必填: 姓名"></el-input>
                 </el-form-item>
                 <el-form-item label="身份证号" prop="id_number">
-                    <el-input size="mini" v-model="registrationForm.id_number" placeholder="必填: 身份证号"></el-input>
+                    <el-input required size="mini" v-model="registrationForm.id_number" placeholder="必填: 身份证号"></el-input>
+                </el-form-item>
+                <el-form-item label="生日">
+                    <el-input :disabled="true" size="mini" v-model="birthdayText" placeholder="必填: 将根据身份证号自动生成"></el-input>
                 </el-form-item>
                 <el-form-item label="性别" prop="gender">
                     <el-select size="mini" v-model="registrationForm.gender" placeholder="必填: 性别" style="width: 100%;">
                         <el-option label="男" :value="1"></el-option>
                         <el-option label="女" :value="2"></el-option>
                     </el-select>
-                </el-form-item>
-                <el-form-item label="出生日期" required>
-                    <el-date-picker
-                            v-model="registrationForm.birthday"
-                            align="right"
-                            size="mini"
-                            type="date"
-                            prefix-icon="a"
-                            value-format="yyyy-MM-dd"
-                            placeholder="选择日期">
-                    </el-date-picker>
                 </el-form-item>
                 <el-form-item label="民族" prop="nation_name">
                     <el-input size="mini" v-model="registrationForm.nation_name" placeholder="必填: 民族"></el-input>
@@ -125,6 +117,7 @@
     import { saveRegistrationForm } from '../../common/registration_form';
     import { provinces, cities, districts } from '../../common/location';
     import { Util } from '../../common/utils';
+    import { Constants } from '../../common/constants';
 
     export default {
         name: "MajorRegistrationForm",
@@ -132,6 +125,29 @@
             'major','registrationForm','schoolId'
         ],
         data(){
+            let checkId = (rule, value, callback) => {
+                if (!value) {
+                    this.birthdayText = '';
+                    return callback(new Error('请输入您的身份证号'));
+                }
+                if(value.length !== 18){
+                    this.birthdayText = '';
+                    return callback(new Error('身份证号必须为 18 为长的数字'));
+                }
+                // 去服务器验证: 1 - 身份证是否已经存在于系统中; 2 - 是否格式正确
+                axios.post(
+                    Constants.API.REGISTRATION_FORM.VERIFY_ID_NUMBER,
+                    {version: Constants.VERSION, id_number: value}
+                ).then(res => {
+                    if(!Util.isAjaxResOk(res)){
+                        this.birthdayText = '';
+                        return callback(new Error(res.data.message));
+                    }else{
+                        this.birthdayText = res.data.message;// 服务器返回的是生日的文本
+                    }
+                })
+            };
+
             return {
                 resetElInput:{
                     border: 'none',textAlign:'right'
@@ -141,7 +157,10 @@
                         { required: true, message: '请输入您的姓名', trigger: 'blur' },
                     ],
                     id_number: [
-                        { required: true, message: '请输入您的身份证号', trigger: 'blur' },
+                        {required: true, validator: checkId, trigger: 'blur' }
+                    ],
+                    birthdayText: [
+                        {required: true, message: '生日为必填项', trigger: 'blur' }
                     ],
                     source_place: [
                         { required: true, message: '请输入生源地', trigger: 'blur' },
@@ -174,6 +193,7 @@
                 provinces:[],
                 cities:[],
                 districts:[],
+                birthdayText: ''
             }
         },
         watch: {

@@ -22,8 +22,6 @@ Route::prefix('teacher')->group(function () {
     Route::post('update/step_user', 'OfficialDocumentController@updateStepUser')->name('teacher.update.step.user');         // 修改流程中的步骤负责人
 
 
-
-
     //考试管理
     Route::get('exam/index', 'ExamController@index')->name('teacher.exam.index');     // 列表
     Route::get('exam/create', 'ExamController@create')->name('teacher.exam.create');  // 创建考试
@@ -46,10 +44,16 @@ Route::prefix('teacher')->group(function () {
     Route::get('exam/getClassRooms', 'ExamController@getClassRooms')->name('teacher.exam.getClassRooms');// 获取教室列表
     Route::get('exam/getCourses', 'ExamController@getCourses')->name('teacher.exam.getCourses');         // 获取课程列表
 
+    // 报名表管理
+    Route::get('registration-forms/manage', 'RecruitmentFormsController@manage')
+        ->name('teacher.registration.forms.manage');
 
+    // 查看考生的报名表
+    Route::get('registration-forms/view-student-profile', 'RecruitmentFormsController@view_student_profile')
+        ->name('teacher.registration.view');
 
-
-
-
+    // 删除考生的报名表
+    Route::get('registration-forms/delete', 'RecruitmentFormsController@delete')
+        ->name('teacher.registration.delete');
 
 });
