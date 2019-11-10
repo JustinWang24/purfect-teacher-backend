@@ -51,6 +51,16 @@ class UserDao
         return User::find($id);
     }
 
+	/**
+     * 获取用户所在班级
+     * @param $uuid
+     * @return
+     */
+    public function getUserGradeByUuid($uuid)
+    {
+        return User::where('uuid', $uuid)->with('gradeUser')->first();
+    }
+
     /**
      * 获取用户的所有角色, 返回值为角色的 slug
      * @param User|int|string $user

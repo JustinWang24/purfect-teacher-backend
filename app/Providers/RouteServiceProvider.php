@@ -36,6 +36,7 @@ class RouteServiceProvider extends ServiceProvider
     public function map()
     {
         $this->mapApiRoutes();
+        $this->mapApiWifiRoutes();	// api wifi interface
         $this->mapWebRoutes();
         $this->mapAdminRoutes();
         $this->mapOperatorRoutes();
@@ -70,6 +71,16 @@ class RouteServiceProvider extends ServiceProvider
              ->middleware('api')
              ->namespace($this->namespace)
              ->group(base_path('routes/api.php'));
+    }
+
+    /**
+     * ApiWifi
+     */
+    protected function mapApiWifiRoutes()
+    {
+        Route::middleware('api')
+            ->namespace($this->namespace. '\Api')
+            ->group(base_path('routes/api_wifi.php'));
     }
 
     /**
@@ -111,5 +122,7 @@ class RouteServiceProvider extends ServiceProvider
              ->namespace($this->namespace. '\Teacher')
              ->group(base_path('routes/teacher.php'));
     }
+
+
 
 }

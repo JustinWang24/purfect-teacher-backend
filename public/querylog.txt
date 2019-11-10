@@ -1,0 +1,106 @@
+
+[2019-11-10 15:22:41]select `timesid`, `user_cable_etime` from `wifi_user_times` where (`user_id` = ? and `status` = ?) order by `timesid` desc limit 1
+parmars:[1,1]
+
+[2019-11-10 15:22:41]select `addressoneid`, `addresstwoid`, `addressthreeid`, `addressfourid`, `addressoneid_name`, `addresstwoid_name`, `addressthreeid_name`, `addressfourid_name` from `wifi_orders_locations` where (`user_id` = ? and `status` = ?) order by `locationid` desc limit 1
+parmars:[1,1]
+
+[2019-11-10 15:23:23]select `timesid`, `user_cable_etime` from `wifi_user_times` where (`user_id` = ? and `status` = ?) order by `timesid` desc limit 1
+parmars:[1,1]
+
+[2019-11-10 15:23:23]select `addressoneid`, `addresstwoid`, `addressthreeid`, `addressfourid`, `addressoneid_name`, `addresstwoid_name`, `addressthreeid_name`, `addressfourid_name` from `wifi_orders_locations` where (`user_id` = ? and `status` = ?) order by `locationid` desc limit 1
+parmars:[1,1]
+
+[2019-11-10 15:34:22]select `timesid`, `user_cable_etime` from `wifi_user_times` where (`user_id` = ? and `status` = ?) order by `timesid` desc limit 1
+parmars:[1,1]
+
+[2019-11-10 15:34:22]select `addressoneid`, `addresstwoid`, `addressthreeid`, `addressfourid`, `addressoneid_name`, `addresstwoid_name`, `addressthreeid_name`, `addressfourid_name` from `wifi_orders_locations` where (`user_id` = ? and `status` = ?) order by `locationid` desc limit 1
+parmars:[1,1]
+
+[2019-11-10 21:26:51]select `timesid`, `user_wifi_time` from `wifi_user_times` where (`user_id` = ? and `status` = ?) order by `timesid` desc limit 1
+parmars:[1,1]
+
+[2019-11-10 21:27:51]select `timesid`, `user_wifi_time` from `wifi_user_times` where (`user_id` = ? and `status` = ?) order by `timesid` desc limit 1
+parmars:[1,1]
+
+[2019-11-10 21:27:51]select * from `wifis` where (`wifiid` = ? and `status` = ?) order by `wifiid` desc limit 1
+parmars:["1",1]
+
+[2019-11-10 21:30:05]select `timesid`, `user_wifi_time` from `wifi_user_times` where (`user_id` = ? and `status` = ?) order by `timesid` desc limit 1
+parmars:[1,1]
+
+[2019-11-10 21:30:05]select * from `wifis` where (`wifiid` = ? and `status` = ?) order by `wifiid` desc limit 1
+parmars:["1",1]
+
+[2019-11-10 21:31:36]select `timesid`, `user_wifi_time` from `wifi_user_times` where (`user_id` = ? and `status` = ?) order by `timesid` desc limit 1
+parmars:[1,1]
+
+[2019-11-10 21:31:36]select * from `wifis` where (`wifiid` = ? and `status` = ?) order by `wifiid` desc limit 1
+parmars:["1",1]
+
+[2019-11-10 21:33:23]select `timesid`, `user_wifi_time` from `wifi_user_times` where (`user_id` = ? and `status` = ?) order by `timesid` desc limit 1
+parmars:[1,1]
+
+[2019-11-10 21:33:23]select * from `wifis` where (`wifiid` = ? and `status` = ?) order by `wifiid` desc limit 1
+parmars:["1",1]
+
+[2019-11-10 21:33:32]select `timesid`, `user_wifi_time` from `wifi_user_times` where (`user_id` = ? and `status` = ?) order by `timesid` desc limit 1
+parmars:[1,1]
+
+[2019-11-10 21:33:32]select * from `wifis` where (`wifiid` = ? and `status` = ?) order by `wifiid` desc limit 1
+parmars:["1",1]
+
+[2019-11-10 21:35:46]select `timesid`, `user_wifi_time` from `wifi_user_times` where (`user_id` = ? and `status` = ?) order by `timesid` desc limit 1
+parmars:[1,1]
+
+[2019-11-10 21:35:46]select * from `wifis` where (`wifiid` = ? and `status` = ?) order by `wifiid` desc limit 1
+parmars:["1",1]
+
+[2019-11-10 21:36:35]select `timesid`, `user_wifi_time` from `wifi_user_times` where (`user_id` = ? and `status` = ?) order by `timesid` desc limit 1
+parmars:[1,1]
+
+[2019-11-10 21:36:35]select * from `wifis` where (`wifiid` = ? and `status` = ?) order by `wifiid` desc limit 1
+parmars:["1",1]
+
+[2019-11-10 21:36:35]insert into `wifi_orders` (`pay_time`, `succeed_time`, `paymentid`, `payment_name`, `type`, `mode`, `trade_sn`, `user_id`, `school_id`, `campus_id`, `wifi_id`, `wifi_type`, `wifi_name`, `order_days`, `order_number`, `order_unitprice`, `order_totalprice`, `created_at`) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+parmars:["2019-11-10 21:36:35","2019-11-10 21:36:35",4,"免支付",1,2,"20191110213635",1,1,1,1,1,"日卡",1,1,"0.01",0.01,"2019-11-10 21:36:35"]
+
+[2019-11-10 21:36:35]insert into `wifi_orders_locations` (`orderid`, `user_id`, `school_id`, `campus_id`, `addressoneid`, `addressoneid_name`, `addresstwoid`, `addresstwoid_name`, `addressthreeid`, `addressthreeid_name`, `addressfourid`, `addressfourid_name`, `created_at`) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+parmars:[1,1,1,1,"1","aaa","1","bbb","1","ccc","1","dddd","2019-11-10 21:36:35"]
+
+[2019-11-10 21:37:27]select `timesid`, `user_wifi_time` from `wifi_user_times` where (`user_id` = ? and `status` = ?) order by `timesid` desc limit 1
+parmars:[1,1]
+
+[2019-11-10 21:37:27]select * from `wifis` where (`wifiid` = ? and `status` = ?) order by `wifiid` desc limit 1
+parmars:["1",1]
+
+[2019-11-10 21:37:27]insert into `wifi_orders` (`pay_time`, `succeed_time`, `paymentid`, `payment_name`, `type`, `mode`, `trade_sn`, `user_id`, `school_id`, `campus_id`, `wifi_id`, `wifi_type`, `wifi_name`, `order_days`, `order_number`, `order_unitprice`, `order_totalprice`, `created_at`) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+parmars:["2019-11-10 21:37:27","2019-11-10 21:37:27",4,"免支付",1,2,"20191110213727",1,1,1,1,1,"日卡",1,1,"0.01",0.01,"2019-11-10 21:37:27"]
+
+[2019-11-10 21:37:27]insert into `wifi_orders_locations` (`orderid`, `user_id`, `school_id`, `campus_id`, `addressoneid`, `addressoneid_name`, `addresstwoid`, `addresstwoid_name`, `addressthreeid`, `addressthreeid_name`, `addressfourid`, `addressfourid_name`, `created_at`) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+parmars:[2,1,1,1,"1","aaa","1","bbb","1","ccc","1","dddd","2019-11-10 21:37:27"]
+
+[2019-11-10 21:37:27]update `wifi_user_times` set `user_cable_etime` = ?, `wifi_user_times`.`updated_at` = ? where `timesid` = ?
+parmars:["2020-11-09 21:37:27","2019-11-10 21:37:27",8]
+
+[2019-11-10 21:38:43]select `timesid`, `user_wifi_time` from `wifi_user_times` where (`user_id` = ? and `status` = ?) order by `timesid` desc limit 1
+parmars:[1,1]
+
+[2019-11-10 21:40:48]select `timesid`, `user_wifi_time` from `wifi_user_times` where (`user_id` = ? and `status` = ?) order by `timesid` desc limit 1
+parmars:[1,1]
+
+[2019-11-10 21:40:57]select `timesid`, `user_wifi_time` from `wifi_user_times` where (`user_id` = ? and `status` = ?) order by `timesid` desc limit 1
+parmars:[1,1]
+
+[2019-11-10 21:40:57]select * from `wifis` where (`wifiid` = ? and `status` = ?) order by `wifiid` desc limit 1
+parmars:["1",1]
+
+[2019-11-10 21:40:57]insert into `wifi_orders` (`pay_time`, `succeed_time`, `paymentid`, `payment_name`, `type`, `mode`, `trade_sn`, `user_id`, `school_id`, `campus_id`, `wifi_id`, `wifi_type`, `wifi_name`, `order_days`, `order_number`, `order_unitprice`, `order_totalprice`, `created_at`) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+parmars:["2019-11-10 21:40:57","2019-11-10 21:40:57",4,"免支付",1,2,"20191110214057",1,1,1,1,1,"日卡",1,1,"0.01",0.01,"2019-11-10 21:40:57"]
+
+[2019-11-10 21:40:57]insert into `wifi_orders_locations` (`orderid`, `user_id`, `school_id`, `campus_id`, `addressoneid`, `addressoneid_name`, `addresstwoid`, `addresstwoid_name`, `addressthreeid`, `addressthreeid_name`, `addressfourid`, `addressfourid_name`, `created_at`) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+parmars:[1,1,1,1,"1","aaa","1","bbb","1","ccc","1","dddd","2019-11-10 21:40:57"]
+
+[2019-11-10 21:40:57]update `wifi_user_times` set `user_cable_etime` = ?, `wifi_user_times`.`updated_at` = ? where `timesid` = ?
+parmars:["2020-11-09 21:40:57","2019-11-10 21:40:57",1]
+
