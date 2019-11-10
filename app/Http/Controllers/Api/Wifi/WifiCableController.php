@@ -84,7 +84,7 @@ class WifiCableController extends Controller
       );
       $infos = $getSchoolAddressListInfo ? $getSchoolAddressListInfo->toArray ()[ 'data' ] : [];
 
-      $infos = WifiIssueTypesDao::cateTree( $infos , 'id' , 'pid' );
+      $infos = SchoolAddressDao::cateTree( $infos , 'id' , 'pid' );
 
       return JsonBuilder::Success ( $infos ,'宿舍楼地址列表');
    }

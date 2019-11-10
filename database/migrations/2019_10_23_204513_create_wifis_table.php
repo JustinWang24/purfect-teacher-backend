@@ -18,7 +18,7 @@ class CreateWifisTable extends Migration
 				$table->bigIncrements('wifiid');
 				$table->tinyInteger('mode')->default(0)->comment('类型(1:无线,2:有线)');
 				$table->unsignedMediumInteger('school_id')->index()->default(0)->comment('学校id');
-				$table->unsignedMediumInteger('campuses_id')->index()->default(0)->comment('校区id');				
+				$table->unsignedMediumInteger('campus_id')->index()->default(0)->comment('校区id');				
 				$table->tinyInteger('wifi_type')->default(0)->comment('wifi类型id');
 				$table->string('wifi_name',50)->nullable()->comment('wifi类型名称');
 				$table->unsignedMediumInteger('wifi_days')->default(0)->comment('天数');

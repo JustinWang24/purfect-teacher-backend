@@ -1,7 +1,7 @@
 <?php
 /**
  * Created by PhpStorm.
- * User: kui.zhang
+ * User: zhang.kui
  * Date: 05/11/19
  * Time: 11:49 PM
  */
@@ -71,7 +71,7 @@ class Huawei implements WifiInterface
    }
 
    /**
-    * Func 修改用户信息(这里用到只有修改wifi密码)
+    * Func 修改用户信息(这里用到只有修改wifi时长)
     */
    public function editAccount()
    {
