@@ -5,11 +5,12 @@ use App\User;
 ?>
 @extends('layouts.app')
 @section('content')
+    <span id="current-manager-uuid" data-id="{{ Auth::user()->uuid }}"></span>
     <div class="row">
         <div class="col-sm-12 col-md-12 col-xl-12">
-            <div class="card-box">
+            <div class="card">
                 <div class="card-head">
-                    <header><span class="text-primary">{{ $plan->title }}</span> - 报名表管理: (已报名人数: {{ $registrations->count() }})</header>
+                    <header><span class="text-primary">{{ $plan->title }}</span> - 报名表管理: (等待被批准的报名人数: {{ $registrations->count() }})</header>
                 </div>
 
                 <div class="card-body">
@@ -27,7 +28,7 @@ use App\User;
                                 ></search-bar>
                             </div>
                         </div>
-                        <div class="table-responsive">
+                        <div class="table-responsive" id="registration-forms-list-app">
                             <table class="table table-striped table-bordered table-hover table-checkable order-column valign-middle">
                                 <thead>
                                 <tr>
@@ -48,7 +49,7 @@ use App\User;
                                         /** @var \App\Models\RecruitStudent\RegistrationInformatics $form */
                                     @endphp
                                     <tr>
-                                        <td>{{ $form->name}}</td>
+                                        <td>{{ $form->name }}</td>
                                         <td>{{ $form->profile->id_number}}</td>
                                         <td>{{ $form->profile->source_place }}</td>
                                         <td>
@@ -72,12 +73,46 @@ use App\User;
                                             <a target="_blank" href="{{ route('teacher.registration.view',['uuid'=>$form->profile->uuid,'plan'=>$plan->id]) }}" class="btn btn-round btn-primary btn-view-timetable">
                                                 <i class="fa fa-edit"></i>查看详情
                                             </a>
+                                            @if($form->status === \App\Models\RecruitStudent\RegistrationInformatics::WAITING)
+                                                <el-button icon="el-icon-check" v-on:click="showNotesForm({{ $form->id }}, '{{ $form->name }}')">批准</el-button>
+                                                <el-button type="danger" icon="el-icon-close" v-on:click="showRejectForm({{ $form->id }}, '{{ $form->name }}')">拒绝</el-button>
+                                            @endif
                                             {{ Anchor::Print(['text'=>'删除','href'=>route('teacher.registration.delete',['uuid'=>$form->user_id])], Button::TYPE_DANGER,'trash') }}
                                         </td>
                                     </tr>
                                 @endforeach
                                 </tbody>
                             </table>
+
+                            <el-dialog title="批准报名, 进入录取程序" :visible.sync="showNoteFormFlag">
+                                <p>学生姓名: @{{ currentName }}</p>
+                                <p>报名专业: {{ $plan->title }} - {{ $plan->year }}年</p>
+                                <p class="text-info">一旦批准, 该学生在本校的所有其他报名申请将自动作废.</p>
+                                <el-form :model="form">
+                                    <el-form-item label="备注">
+                                        <el-input type="textarea" v-model="form.note"></el-input>
+                                    </el-form-item>
+                                </el-form>
+                                <div slot="footer" class="dialog-footer">
+                                    <el-button @click="showNoteFormFlag = false">取 消</el-button>
+                                    <el-button type="primary" @click="submit">确 定</el-button>
+                                </div>
+                            </el-dialog>
+
+                            <el-dialog title="拒绝此报名申请" :visible.sync="rejectNoteFormFlag">
+                                <p class="text-danger">学生姓名: @{{ currentName }}</p>
+                                <p class="text-danger">报名专业: {{ $plan->title }} - {{ $plan->year }}年</p>
+                                <el-form :model="form">
+                                    <el-form-item label="拒绝此报名申请的原因">
+                                        <el-input type="textarea" v-model="form.note"></el-input>
+                                    </el-form-item>
+                                </el-form>
+                                <div slot="footer" class="dialog-footer">
+                                    <el-button @click="rejectNoteFormFlag = false">取 消</el-button>
+                                    <el-button type="primary" @click="submit">确 定</el-button>
+                                </div>
+                            </el-dialog>
+
                         </div>
                         <div class="row">
                             <div class="col-12">

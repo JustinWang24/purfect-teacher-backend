@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\Recruitment;
 
 use App\Events\User\Student\ApplyRecruitmentPlanEvent;
+use App\Events\User\Student\ApproveRegistrationEvent;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\RecruitStudent\PlanRecruitRequest;
 use App\Dao\RecruitmentPlan\RecruitmentPlanDao;
@@ -148,6 +149,39 @@ class OpenMajorController extends Controller
         } else {
             return JsonBuilder::Error('报名失败');
         }
+    }
+
+    /**
+     * 批准或者拒绝某个报名表格
+     *
+     * @param PlanRecruitRequest $request
+     * @return string
+     */
+    public function approve_or_reject(PlanRecruitRequest $request){
+        $form = $request->getApprovalForm();
+
+        $userUuid = $request->uuid();
+        $userDao = new UserDao();
+        $manager = $userDao->getUserByUuid($userUuid);
+
+        if($manager && ($manager->isSchoolAdminOrAbove() || $manager->isTeacher())){
+            // 操作者至少应该是学校的员工
+            $dao = new RegistrationInformaticsDao();
+            if($request->isApprovedAction()){
+                $bag = $dao->approve($form['currentId'],$manager,$form['note']??null);
+                event(new ApproveRegistrationEvent($bag->getData()));
+            }else{
+                $bag = $dao->reject($form['currentId'],$manager,$form['note']??null);
+            }
+            if($bag->isSuccess()){
+                return JsonBuilder::Success($bag->getMessage());
+            }
+            else{
+                return JsonBuilder::Error($bag->getMessage());
+            }
+        }
+
+        return JsonBuilder::Error('无权执行此操作');
     }
 
     public function testExcel(PlanRecruitRequest $request)

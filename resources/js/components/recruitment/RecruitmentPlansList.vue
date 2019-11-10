@@ -40,7 +40,7 @@
                     label="招生人数/统计">
                 <template slot-scope="scope">
                     <p>计划招收{{ scope.row.seats }}人 / {{ scope.row.grades_count }}个班</p>
-                    <p>已报名: {{ scope.row.applied_count }} / 已录取: {{ scope.row.enrolled_count }}</p>
+                    <p>报名: {{ scope.row.applied_count }} / 批准: {{ scope.row.passed_count }} / 录取: {{ scope.row.enrolled_count }}</p>
                 </template>
             </el-table-column>
             <el-table-column
@@ -97,7 +97,7 @@
             // 打开报名管理界面
             registrations: function (plan) {
                 const url = '/teacher/registration-forms/manage?plan=' + plan.id;
-                window.open(url,'_blank');
+                window.open(url,'_self');
             }
         }
     }
