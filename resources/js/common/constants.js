@@ -49,6 +49,9 @@ export const Constants = {
             LOAD_MAJOR_DETAIL: '/api/student-register/load-major-detail',
             VERIFY_ID_NUMBER: '/api/student-register/verify-id-number',
             APPROVE_OR_REJECT: '/api/student-register/approve-or-reject',
+            ENROL_OR_REJECT: '/api/student-register/enrol-or-reject',
+            ENROLMENT_MANAGER: '/teacher/registration-forms/enrol',
+            REGISTRATION_MANAGER: '/teacher/registration-forms/manage',
         },
         // 获取省市列表的接口
         LOCATION: {
