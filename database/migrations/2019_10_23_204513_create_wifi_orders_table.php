@@ -18,7 +18,7 @@ class CreateWifiOrdersTable extends Migration
 				$table->bigIncrements('orderid');
 				$table->tinyInteger('type')->default(0)->comment('类型(1:充值,2:赠送)');
 				$table->unsignedMediumInteger('school_id')->index()->default(0)->comment('学校id');
-				$table->unsignedMediumInteger('campuses_id')->index()->default(0)->comment('校区id');	
+				$table->unsignedMediumInteger('campus_id')->index()->default(0)->comment('校区id');	
 				$table->unsignedMediumInteger('user_id')->index()->default(0)->comment('用户ID');
 				$table->unsignedBigInteger('wifi_id')->index()->default(0)->comment('wifi_id');
 				$table->string('trade_sn',50)->nullable()->comment('订单号');
