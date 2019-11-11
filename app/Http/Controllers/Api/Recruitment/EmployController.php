@@ -21,8 +21,7 @@ class EmployController extends Controller
      */
     public function index(EmployRequest $request)
     {
-//        $schoolId = $request->getSchoolId();
-        $schoolId       = 7;
+        $schoolId = $request->getSchoolId();
         $informaticsDao = new RegistrationInformaticsDao;
         $gradeUserDao   = new GradeUserDao;
 
