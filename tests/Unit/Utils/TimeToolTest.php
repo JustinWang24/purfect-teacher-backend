@@ -33,4 +33,28 @@ class TimeToolTest extends TestCase
         $isOdd = GradeAndYearUtil::IsOddWeek($date1, $date2);
         $this->assertTrue($isOdd);
     }
+
+    public function testItCanGetBirthdayFromIdNumber(){
+        $id = '110108197501114932';
+        $bag = GradeAndYearUtil::IdNumberToBirthday($id);
+        $birthday = $bag->getData();
+        $this->assertEquals(1975,$birthday->year);
+        $this->assertEquals(1,$birthday->month);
+        $this->assertEquals(11,$birthday->day);
+
+        // 测试位数不对的
+        $id = '11010819750111493';
+        $bag = GradeAndYearUtil::IdNumberToBirthday($id);
+        $this->assertEquals('身份证号的位数不对',$bag->getMessage());
+
+        // 测试有非数字字符的
+        $id = '11010819750111d493';
+        $bag = GradeAndYearUtil::IdNumberToBirthday($id);
+        $this->assertEquals('身份证号必须全数字',$bag->getMessage());
+
+        // 测试有年份明显不对的
+        $id = '110108201501114932';
+        $bag = GradeAndYearUtil::IdNumberToBirthday($id);
+        $this->assertEquals('身份证号码显示您的年龄只有4岁, 请查证再输入',$bag->getMessage());
+    }
 }

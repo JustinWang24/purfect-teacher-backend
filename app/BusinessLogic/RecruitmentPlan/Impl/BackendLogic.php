@@ -17,6 +17,7 @@ class BackendLogic implements IPlansLoaderLogic
     private $year;
     private $pageNumber;
     private $pageSize;
+    private $userUuid;
 
     private $request;
 
@@ -26,6 +27,7 @@ class BackendLogic implements IPlansLoaderLogic
         $this->year = $request->getYear();
         $this->pageNumber = $request->getPageNumber();
         $this->pageSize = $request->getPageSize();
+        $this->userUuid = $request->uuid();
         $this->request = $request;
     }
 
@@ -39,6 +41,7 @@ class BackendLogic implements IPlansLoaderLogic
 
         $plans = $dao->getPlansBySchool(
             $this->schoolId,
+            $this->userUuid,
             $this->year,
             $this->pageNumber,
             $this->pageSize

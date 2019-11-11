@@ -4,6 +4,7 @@ namespace App\Http\Requests\RecruitStudent;
 
 use App\Dao\RecruitmentPlan\RecruitmentPlanDao;
 use App\Http\Requests\MyStandardRequest;
+use App\Utils\Time\GradeAndYearUtil;
 
 class PlanRecruitRequest extends MyStandardRequest
 {
@@ -49,7 +50,32 @@ class PlanRecruitRequest extends MyStandardRequest
         $plan = $this->getPlan();
         $form['school_id'] = $plan->school_id;
         $form['major_id'] = $plan->major_id;
+
+        // 解析出生日的信息
+        $bag = GradeAndYearUtil::IdNumberToBirthday($form['id_number']);
+        if($bag->isSuccess()){
+            $form['birthday'] = $bag->getData()->format('Y-m-d');
+        }else{
+            $form['birthday'] = null;
+        }
+
         return $form;
+    }
+
+    /**
+     * 获取批准表格
+     * @return array
+     */
+    public function getApprovalForm(){
+        return $this->get('form');
+    }
+
+    /**
+     * 是否为批准的操作
+     * @return boolean
+     */
+    public function isApprovedAction(){
+        return $this->getApprovalForm()['approved'];
     }
 
     /**

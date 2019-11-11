@@ -25,4 +25,9 @@ class MajorQuickSearchLogic extends AbstractQuickSearchLogic
         $dao = new MajorDao();
         return $dao->searchByName($this->queryString, $this->schoolId);
     }
+
+    public function getNextAction($facility)
+    {
+        return route('school_manager.major.grades',['by'=>'major','uuid'=>$facility->id]);
+    }
 }
