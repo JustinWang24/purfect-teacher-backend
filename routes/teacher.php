@@ -52,6 +52,14 @@ Route::prefix('teacher')->group(function () {
     Route::get('registration-forms/view-student-profile', 'RecruitmentFormsController@view_student_profile')
         ->name('teacher.registration.view');
 
+    //教材管理
+    Route::get('textbook/add', 'TextbookController@add')->name('teacher.textbook.add');     // 添加教程
+    Route::get('textbook/edit', 'TextbookController@edit')->name('teacher.textbook.edit');  // 编辑教程
+    Route::post('textbook/save', 'TextbookController@save')->name('teacher.textbook.save'); // 保存教程
+    Route::get('textbook/loadMajorTextbook', 'TextbookController@loadMajorTextbook')->name('teacher.textbook.loadMajorTextbook'); // 获取专业教材采购情况
+    Route::get('textbook/loadGradeTextbook', 'TextbookController@loadGradeTextbook')->name('teacher.textbook.loadGradeTextbook'); // 获取班级教材采购情况
+    Route::get('textbook/gradeTextbookDownload', 'TextbookController@gradeTextbookDownload')->name('teacher.textbook.gradeTextbookDownload'); // 班级教材下载
+
     // 删除考生的报名表
     Route::get('registration-forms/delete', 'RecruitmentFormsController@delete')
         ->name('teacher.registration.delete');
