@@ -181,6 +181,10 @@ Route::prefix('employ')->group(function () {
      // 获取全部未分配班级的人
      Route::post('/get-unassigned-grades','Api\Recruitment\EmployController@index')
         ->name('api.get.unassigned.grades');
+
+     // 分配班级
+     Route::post('/distribution-grades','Api\Recruitment\EmployController@distribution')
+        ->name('api.distribution.grades');
 });
 
 

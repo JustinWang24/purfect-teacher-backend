@@ -198,5 +198,24 @@ class GradeUserDao
 
     }
 
+    /**
+     * 根据学校ID 获取所有学生
+     * @param $schoolId
+     * @return GradeUser
+     */
+    public function getAllStudentBySchoolId($schoolId)
+    {
+        return GradeUser::where(['school_id' =>  $schoolId], ['user_type' => Role::VERIFIED_USER_STUDENT])->get();
+    }
+
+    /**
+     * 插入多条用户班级关系
+     * @param $data
+     * @return bool
+     */
+    public function addGradUser($data)
+    {
+        return DB::table('grade_users')->insert($data);
+    }
 
 }
