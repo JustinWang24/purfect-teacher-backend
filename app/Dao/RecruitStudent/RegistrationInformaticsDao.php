@@ -507,6 +507,7 @@ class RegistrationInformaticsDao
         return RegistrationInformatics::where($where)->get();
     }
   
+     /**
      * @param $id
      * @param User $manager
      * @return MessageBag
