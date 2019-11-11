@@ -23,12 +23,48 @@ use Illuminate\Support\Facades\Hash;
 class RegistrationInformaticsDao
 {
     /**
+     * 获取待批准的报名表
      * @param $planId
      * @return mixed
      */
-    public function getPaginatedRegistrationsByPlanIdForApproval($planId){
+    public function getPaginatedRegistrationsWaitingForApprovalByPlanId($planId){
         return RegistrationInformatics::where('recruitment_plan_id',$planId)
             ->where('status','<=',RegistrationInformatics::WAITING)
+            ->orderBy('updated_at','desc')
+            ->paginate();
+    }
+
+    /**
+     * 获取待批准的报名表
+     * @param $planId
+     * @return mixed
+     */
+    public function getPaginatedRegistrationsRefusedByPlanId($planId){
+        return RegistrationInformatics::where('recruitment_plan_id',$planId)
+            ->where('status',RegistrationInformatics::REFUSED)
+            ->orderBy('updated_at','desc')
+            ->paginate();
+    }
+
+    /**
+     * 获取待录取的报名表
+     * @param $planId
+     * @return mixed
+     */
+    public function getPaginatedPassedByPlanIdForApproval($planId){
+        return RegistrationInformatics::where('recruitment_plan_id',$planId)
+            ->where('status',RegistrationInformatics::PASSED)
+            ->orderBy('updated_at','desc')
+            ->paginate();
+    }
+
+    /**
+     * 获取所有的报名表
+     * @param $planId
+     * @return mixed
+     */
+    public function getPaginatedByPlanIdForAll($planId){
+        return RegistrationInformatics::where('recruitment_plan_id',$planId)
             ->orderBy('updated_at','desc')
             ->paginate();
     }
@@ -248,6 +284,70 @@ class RegistrationInformaticsDao
     }
 
     /**
+     * 录取一个学生
+     *
+     * @param $id
+     * @param User $manager
+     * @param null $note
+     * @return MessageBag
+     */
+    public function enrol($id,User $manager, $note = null){
+        $bag = new MessageBag(JsonBuilder::CODE_ERROR,'你无权进行此操作');
+        /**
+         * @var RegistrationInformatics $form
+         */
+        $form = null;
+        if($manager->isSchoolAdminOrAbove() || $manager->isTeacher()){
+            $form = RegistrationInformatics::find($id);
+        }
+
+        if($form){
+            // 必须确保用户和招生简章, 是同一个学校的
+            if($manager->isOperatorOrAbove() || $form->plan->school_id === $manager->getSchoolId()){
+                if($form->status === RegistrationInformatics::PASSED){
+                    // 该申请是被批准
+                    $form->last_updated_by = $manager->id;
+                    $form->note .= $note.'(录取人: '.$manager->name.')';
+                    $form->status = RegistrationInformatics::APPROVED;
+                    $form->approved_at = Carbon::now()->format('Y-m-d');
+                    DB::beginTransaction();
+                    if($form->save()){
+                        // 录取完成
+                        try{
+                            RegistrationInformatics::where('user_id',$form->user_id)
+                                ->where('id','<>',$id)
+                                ->where('status',RegistrationInformatics::WAITING)
+                                ->update([
+                                        'status'=>RegistrationInformatics::USELESS,
+                                        'note'=>'已被'.$form->plan->title.'录取']
+                                );
+                            // 报名通过审核的人数加 1
+                            $enrolCount = $form->plan->enrolled_count + 1;
+                            $form->plan->enrolled_count = $enrolCount;
+                            $form->plan->save();
+
+                            DB::commit();
+                            $bag->setMessage($form->name.'已经被录取');
+                            $bag->setCode(JsonBuilder::CODE_SUCCESS);
+                            $bag->setData($form);
+                        }catch (\Exception $exception){
+                            $bag->setMessage($exception->getMessage());
+                            DB::rollBack();
+                        }
+                    }else{
+                        $bag->setMessage('数据库更新操作失败: code 1');
+                        DB::rollBack();
+                    }
+                }
+                else{
+                    $bag->setMessage($form->name.'已经被录取');
+                }
+            }
+        }
+        return $bag;
+    }
+
+    /**
      * 批准报名
      * @param $id
      * @param User $manager
@@ -311,13 +411,50 @@ class RegistrationInformaticsDao
     }
 
     /**
-     * 拒绝报名
+     * 拒绝录取
      * @param $id
      * @param User $manager
      * @param null $note
      * @return MessageBag
      */
     public function reject($id, User $manager, $note = null){
+        $bag = new MessageBag(JsonBuilder::CODE_ERROR,'你无权进行此操作');
+        /**
+         * @var RegistrationInformatics $form
+         */
+        $form = null;
+        if($manager->isSchoolAdminOrAbove() || $manager->isTeacher()){
+            $form = RegistrationInformatics::find($id);
+        }
+
+        if($form){
+            if($manager->isOperatorOrAbove() || $form->plan->school_id === $manager->getSchoolId()){
+                if($form->status === RegistrationInformatics::PASSED){
+                    // 该申请是被批准的
+                    $form->last_updated_by = $manager->id;
+                    $form->note .= $note.'(拒绝人: '.$manager->name.')';
+                    $form->status = RegistrationInformatics::REJECTED;
+                    if($form->save()){
+                        // 拒绝完成
+                        $bag->setMessage($form->name.'的报名申请已经被拒绝');
+                        $bag->setCode(JsonBuilder::CODE_SUCCESS);
+                    }else{
+                        $bag->setMessage('数据库更新操作失败: code 1');
+                    }
+                }
+            }
+        }
+        return $bag;
+    }
+
+    /**
+     * 拒绝报名
+     * @param $id
+     * @param User $manager
+     * @param null $note
+     * @return MessageBag
+     */
+    public function refuse($id, User $manager, $note = null){
         $bag = new MessageBag(JsonBuilder::CODE_ERROR,'你无权进行此操作');
         /**
          * @var RegistrationInformatics $form
@@ -339,8 +476,16 @@ class RegistrationInformaticsDao
                     $form->status = RegistrationInformatics::REFUSED;
                     if($form->save()){
                         // 拒绝完成
+                        // 报名通过审核的人数加 1
+                        $appliedCount = $form->plan->applied_count - 1;
+                        if($appliedCount >= 0){
+                            $form->plan->applied_count = $appliedCount;
+                            $form->plan->save();
+                        }
+
                         $bag->setMessage($form->name.'的报名申请已经被拒绝');
                         $bag->setCode(JsonBuilder::CODE_SUCCESS);
+                        $bag->setData($form);
                     }else{
                         $bag->setMessage('数据库更新操作失败: code 1');
                     }
@@ -351,6 +496,7 @@ class RegistrationInformaticsDao
     }
 
     /**
+
      * 获取所有 已录取 未分配班级的人
      * @param $schoolId
      * @return
@@ -359,5 +505,52 @@ class RegistrationInformaticsDao
     {
         $where = ['school_id' => $schoolId, 'status'=> RegistrationInformatics::APPROVED];
         return RegistrationInformatics::where($where)->get();
+    }
+  
+     * @param $id
+     * @param User $manager
+     * @return MessageBag
+     */
+    public function delete($id, User $manager){
+        $bag = new MessageBag(JsonBuilder::CODE_ERROR, '数据库错误');
+
+        if($manager->isTeacher() || $manager->isSchoolAdminOrAbove()){
+            $form = $this->getById($id);
+            if($form){
+                $form->last_updated_by = $manager->id;
+                DB::beginTransaction();
+                try{
+                    if($form->save()){
+                        // 检查一下, 如果这个报名表不是已经被拒绝的, 那么plan 的 applied count 人数要减一
+                        if($form->status === RegistrationInformatics::WAITING){
+                            $form->plan->appliedCountDecrease();
+                        }
+                        $form->delete();
+                        $bag->setCode(JsonBuilder::CODE_SUCCESS);
+                        $bag->setData($form);
+                        DB::commit();
+                    }else{
+                        DB::rollBack();
+                    }
+                }catch (\Exception $exception){
+                    $bag->setMessage($exception->getMessage());
+                    DB::rollBack();
+                }
+            }else{
+                $bag->setMessage('你要操作的报名表不存在');
+            }
+        }
+        else{
+            $bag->setMessage('你没有权限进行本操作');
+        }
+        return $bag;
+    }
+
+    /**
+     * @param $id
+     * @return RegistrationInformatics
+     */
+    public function getById($id){
+        return RegistrationInformatics::find($id);
     }
 }

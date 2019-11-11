@@ -41,6 +41,17 @@ class PlanRecruitRequest extends MyStandardRequest
     }
 
     /**
+     * 获取招生计划表单
+     * @return array
+     */
+    public function getNewOrUpdatedPlanForm(){
+        $formData = $this->get('form');
+        unset($formData['manager_name']);
+        unset($formData['enrol_manager_name']);
+        return $formData;
+    }
+
+    /**
      * 获取提交的表单数据
      * @return array
      */
@@ -76,6 +87,14 @@ class PlanRecruitRequest extends MyStandardRequest
      */
     public function isApprovedAction(){
         return $this->getApprovalForm()['approved'];
+    }
+
+    /**
+     * 是否为录取的操作
+     * @return boolean
+     */
+    public function isEnrolAction(){
+        return $this->getApprovalForm()['enrolled'];
     }
 
     /**

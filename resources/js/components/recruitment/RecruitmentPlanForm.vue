@@ -23,11 +23,26 @@
                 </el-col>
             </el-row>
 
-            <el-form-item label="专业" prop="major_id">
-                <el-select v-model="form.major_id" placeholder="请选择招生专业" style="width: 100%;">
-                    <el-option :label="ma.name" :value="ma.id" :key="idx" v-for="(ma, idx) in majors"></el-option>
-                </el-select>
-            </el-form-item>
+            <el-row>
+                <el-col :span="10">
+                    <el-form-item label="专业" prop="major_id">
+                        <el-select v-model="form.major_id" placeholder="请选择招生专业" style="width: 100%;">
+                            <el-option :label="ma.name" :value="ma.id" :key="idx" v-for="(ma, idx) in majors"></el-option>
+                        </el-select>
+                    </el-form-item>
+                </el-col>
+                <el-col :span="14">
+                    <el-form-item label="招生负责人">
+                        <search-bar
+                                :school-id="schoolId"
+                                scope="employee"
+                                width="100%"
+                                v-on:result-item-selected="managerItemSelectedHandler"
+                                :init-query="currentManagerName"
+                        ></search-bar>
+                    </el-form-item>
+                </el-col>
+            </el-row>
 
             <el-form-item label="发布期限">
                 <el-col :span="11">
@@ -70,21 +85,21 @@
                 </el-col>
             </el-row>
             <el-row>
-                <el-col :span="12">
+                <el-col :span="10">
                     <el-form-item label="学费/年" prop="fee">
                         <el-input v-model="form.fee" placeholder="必填: 学费/年">
                             <template slot="append">元/年</template>
                         </el-input>
                     </el-form-item>
                 </el-col>
-                <el-col :span="12">
-                    <el-form-item label="招生负责人">
+                <el-col :span="14">
+                    <el-form-item label="录取负责人">
                         <search-bar
                                 :school-id="schoolId"
                                 scope="employee"
                                 width="100%"
-                                v-on:result-item-selected="managerItemSelectedHandler"
-                                :init-query="currentManagerName"
+                                v-on:result-item-selected="enrolmentManagerItemSelectedHandler"
+                                :init-query="currentEnrolManagerName"
                         ></search-bar>
                     </el-form-item>
                 </el-col>
@@ -147,20 +162,15 @@
             }
         },
         watch: {
-            'form.major_id': function(newVal, oldVal) {
-                if(!Util.isEmpty(newVal))
+            'form.id': function(newVal, oldVal) {
+                if(!Util.isEmpty(newVal)){
                     this.form.major_name = Util.GetItemById(this.form.major_id, this.majors).name;
-            },
-            'somethingChanged': function(){
-                this.currentManagerName = '';
-                if(!Util.isEmpty(this.form.manager_id)){
-                    getUserNameById(this.schoolId, this.form.manager_id)
-                        .then(res => {
-                            if(Util.isAjaxResOk(res)){
-                                this.currentManagerName = res.data.data.name;
-                            }
-                        });
+                    this.currentManagerName = this.form.manager_name;
+                    this.currentEnrolManagerName = this.form.enrol_manager_name;
                 }
+            },
+            'somethingChanged': function(newVal, oldVal){
+                // 监听时用
             }
         },
         data(){
@@ -192,7 +202,8 @@
                     ],
                 },
                 majors:[],
-                currentManagerName:'', // 当前选定的招生负责人的名字
+                currentManagerName: '',
+                currentEnrolManagerName: '',
             };
         },
         created(){
@@ -201,6 +212,10 @@
                     this.majors = res.data.data.majors;
                 }
             });
+        },
+        mounted(){
+            this.currentManagerName = this.form.manager_name;
+            this.currentEnrolManagerName = this.form.enrol_manager_name;
         },
         methods: {
             submitForm: function(){
@@ -237,6 +252,10 @@
             // 当老师的 item 被点击, 则 id 赋值给 manager_id
             managerItemSelectedHandler: function(payload) {
                 this.form.manager_id = payload.item.id;
+            },
+            // 当录取负责人的 item 被点击, 则 id 赋值给 enrol_manager
+            enrolmentManagerItemSelectedHandler: function(payload){
+                this.form.enrol_manager = payload.item.id;
             }
         }
     }

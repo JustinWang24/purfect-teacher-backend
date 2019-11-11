@@ -2,9 +2,7 @@
 
 namespace App\Events\User\Student;
 
-use App\Events\CanReachByMobilePhone;
 use App\Models\RecruitStudent\RegistrationInformatics;
-use App\User;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Broadcasting\PrivateChannel;
@@ -13,17 +11,17 @@ use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 
-class ApproveRegistrationEvent extends AbstractRegistrationEvent
+class RejectRegistrationEvent extends AbstractRegistrationEvent
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
     /**
-     * ApproveRegistrationEvent constructor.
-     * @param RegistrationInformatics $registrationForm
+     * RejectRegistrationEvent constructor.
+     * @param RegistrationInformatics $form
      */
-    public function __construct(RegistrationInformatics $registrationForm)
+    public function __construct(RegistrationInformatics $form)
     {
-        parent::__construct($registrationForm);
+        parent::__construct($form);
     }
 
     public function getSmsTemplateId(): string

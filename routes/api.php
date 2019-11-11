@@ -170,10 +170,9 @@ Route::prefix('student-register')->group(function () {
     Route::post('/verify-id-number','Api\Recruitment\OpenMajorController@verify_id_number')
         ->name('api.major.verify.id.number');
 
-    // 验证学生身份证信息的接口
+    // 批准和拒绝学生的报名
     Route::post('/approve-or-reject','Api\Recruitment\OpenMajorController@approve_or_reject')
         ->name('api.major.approve.or.reject');
-
 });
 
 // 录取API
@@ -185,6 +184,10 @@ Route::prefix('employ')->group(function () {
      // 分配班级
      Route::post('/distribution-grades','Api\Recruitment\EmployController@distribution')
         ->name('api.distribution.grades');
+
+    // 录取和拒绝学生的报名
+    Route::post('/enrol-or-reject','Api\Recruitment\OpenMajorController@enrol_or_reject')
+        ->name('api.major.enrol.or.reject');
 });
 
 

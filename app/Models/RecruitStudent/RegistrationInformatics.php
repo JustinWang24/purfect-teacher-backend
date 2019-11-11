@@ -8,9 +8,11 @@ use App\Models\Students\StudentProfile;
 use App\Models\School;
 use App\Models\Schools\Major;
 use App\User;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class RegistrationInformatics extends Model
 {
+    use SoftDeletes;
     protected $fillable = [
         'user_id', 'school_id', 'major_id', 'name', 'status',
         'recruitment_plan_id', 'relocation_allowed', 'note',

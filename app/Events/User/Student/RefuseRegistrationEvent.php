@@ -2,9 +2,7 @@
 
 namespace App\Events\User\Student;
 
-use App\Events\CanReachByMobilePhone;
 use App\Models\RecruitStudent\RegistrationInformatics;
-use App\User;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Broadcasting\PrivateChannel;
@@ -13,28 +11,27 @@ use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 
-class ApproveRegistrationEvent extends AbstractRegistrationEvent
+class RefuseRegistrationEvent extends AbstractRegistrationEvent
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
-
     /**
-     * ApproveRegistrationEvent constructor.
-     * @param RegistrationInformatics $registrationForm
+     * RefuseRegistrationEvent constructor.
+     * @param RegistrationInformatics $form
      */
-    public function __construct(RegistrationInformatics $registrationForm)
+    public function __construct(RegistrationInformatics $form)
     {
-        parent::__construct($registrationForm);
+        parent::__construct($form);
     }
 
     public function getSmsTemplateId(): string
     {
-        // TODO: 当报名学生的报名表被 pass 后的短信模板 ID 还未知
+        // TODO: 当报名学生的报名表被 拒绝 refuse 后的短信模板 ID 还未知
         return '';
     }
 
     public function getSmsContent(): array
     {
-        // TODO: 当报名学生的报名表被 pass 后的发送的短信内容
+        // TODO: 当报名学生的报名表被 拒绝 refuse 后的发送的短信内容
         return [];
     }
 }
