@@ -46,6 +46,7 @@ return [
     'forms' => '报名表',
     'manage' => '管理',
     'student' => '学生',
+    'enrol' => '录取',
 
     //设备管理
     'facility' => '设备管理',
