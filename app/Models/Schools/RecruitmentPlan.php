@@ -98,4 +98,18 @@ class RecruitmentPlan extends Model
         return $this->hasMany(CourseMajor::class,'major_id', 'major_id');
     }
 
+    /**
+     * 计划的已申请人数自减给定数目
+     *
+     * @param int $num
+     * @return bool
+     */
+    public function appliedCountDecrease($num = 1){
+        $count = $this->applied_count - $num;
+        if($count > -1){
+            $this->applied_count = $count;
+            return $this->save();
+        }
+        return false;
+    }
 }

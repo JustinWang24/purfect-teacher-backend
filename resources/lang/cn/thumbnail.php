@@ -47,6 +47,9 @@ return [
     'manage' => '管理',
     'student' => '学生',
     'enrol' => '录取',
+    'registrations.all' => '全部',
+    'registrations.refused' => '已拒绝',
+    'registrations.waiting' => '等待被批准',
 
     //设备管理
     'facility' => '设备管理',
