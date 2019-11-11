@@ -19,10 +19,7 @@ use App\User;
                 <div class="card-body">
                     <div class="row">
                         <div class="table-padding col-12">
-                            <a href="{{ route('school_manager.student.add') }}" class="btn btn-primary">
-                                帮学生报名 <i class="fa fa-plus"></i>
-                            </a>
-                            <a href="{{ route('teacher.planRecruit.list') }}" class="btn">
+                            <a href="{{ route('teacher.planRecruit.list') }}" class="btn btn-primary">
                                 返回招生计划
                             </a>
                             {{-- 根据当前的状态, 显示必要的按钮 --}}
