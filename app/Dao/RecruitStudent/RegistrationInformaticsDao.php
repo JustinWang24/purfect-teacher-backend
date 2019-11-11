@@ -7,9 +7,12 @@ use App\Dao\RecruitmentPlan\RecruitmentPlanDao;
 use App\Models\RecruitStudent\RegistrationInformatics;
 use App\Models\Schools\RecruitmentPlan;
 use App\Utils\JsonBuilder;
+use App\Utils\Misc\ConfigurationTool;
 use App\Utils\ReturnData\IMessageBag;
 use App\Utils\ReturnData\MessageBag;
+use Carbon\Carbon;
 use Exception;
+use Illuminate\Database\Eloquent\Collection;
 use Ramsey\Uuid\Uuid;
 use App\Models\Students\StudentProfile;
 use Illuminate\Support\Facades\DB;
@@ -19,6 +22,28 @@ use Illuminate\Support\Facades\Hash;
 
 class RegistrationInformaticsDao
 {
+    /**
+     * @param $planId
+     * @return mixed
+     */
+    public function getPaginatedRegistrationsByPlanIdForApproval($planId){
+        return RegistrationInformatics::where('recruitment_plan_id',$planId)
+            ->where('status','<=',RegistrationInformatics::WAITING)
+            ->orderBy('updated_at','desc')
+            ->paginate();
+    }
+
+    /**
+     * @param $name
+     * @param $schoolId
+     * @return \Illuminate\Support\Collection
+     */
+    public function searchRegistrationFormsByStudentName($name, $schoolId){
+        return RegistrationInformatics::where('school_id',$schoolId)
+            ->where('name','like','%'.$name.'%')
+            ->take(ConfigurationTool::DEFAULT_PAGE_SIZE)
+            ->get();
+    }
 
     /**
      * 报名列表
@@ -43,7 +68,7 @@ class RegistrationInformaticsDao
                 }])
                 ->orderBy('created_at', 'desc')
                 ->orderBy('relocation_allowed', $order)
-                ->paginate(RegistrationInformatics::PAGE_NUMBER);
+                ->paginate(ConfigurationTool::DEFAULT_PAGE_SIZE);
 
         return $data;
     }
@@ -93,7 +118,7 @@ class RegistrationInformaticsDao
      * 根据userId获取报名信息
      * @param $userId
      * @param $simple: 是否只获取简单数据
-     * @return mixed
+     * @return Collection
      */
     public function getInformaticsByUserId($userId, $simple = false)
     {
@@ -222,5 +247,106 @@ class RegistrationInformaticsDao
         whereIn('recruitment_plan_id',$planIdArr)->count();
     }
 
+    /**
+     * 批准报名
+     * @param $id
+     * @param User $manager
+     * @param null $note
+     * @return MessageBag
+     */
+    public function approve($id,User $manager, $note = null){
+        $bag = new MessageBag(JsonBuilder::CODE_ERROR,'你无权进行此操作');
+        /**
+         * @var RegistrationInformatics $form
+         */
+        $form = null;
+        if($manager->isSchoolAdminOrAbove() || $manager->isTeacher()){
+            $form = RegistrationInformatics::find($id);
+        }
 
+        if($form){
+            // 必须确保用户和招生简章, 是同一个学校的
+            if($manager->isOperatorOrAbove() || $form->plan->school_id === $manager->getSchoolId()){
+                if($form->status !== RegistrationInformatics::USELESS){
+                    // 该申请没有被别人作废
+                    $form->last_updated_by = $manager->id;
+                    $form->note .= $note.'(批准人: '.$manager->name.')';
+                    $form->status = RegistrationInformatics::PASSED;
+                    $form->approved_at = Carbon::now()->format('Y-m-d');
+                    DB::beginTransaction();
+                    if($form->save()){
+                        // 批准完成, 将该学生本年度的所有等待批准申请全部作废
+                        try{
+                            RegistrationInformatics::where('user_id',$form->user_id)
+                                ->where('id','<>',$id)
+                                ->where('status',RegistrationInformatics::WAITING)
+                                ->update([
+                                    'status'=>RegistrationInformatics::USELESS,
+                                    'note'=>'已被'.$form->plan->title.'录取']
+                                );
+                            // 报名通过审核的人数加 1
+                            $passedCount = $form->plan->passed_count + 1;
+                            $form->plan->passed_count = $passedCount;
+                            $form->plan->save();
+
+                            DB::commit();
+                            $bag->setMessage($form->name.'的报名申请已经获得批准');
+                            $bag->setCode(JsonBuilder::CODE_SUCCESS);
+                            $bag->setData($form);
+                        }catch (\Exception $exception){
+                            $bag->setMessage($exception->getMessage());
+                            DB::rollBack();
+                        }
+                    }else{
+                        $bag->setMessage('数据库更新操作失败: code 1');
+                        DB::rollBack();
+                    }
+                }
+                else{
+                    $bag->setMessage($form->name.'的报名申请已经作废');
+                }
+            }
+        }
+        return $bag;
+    }
+
+    /**
+     * 拒绝报名
+     * @param $id
+     * @param User $manager
+     * @param null $note
+     * @return MessageBag
+     */
+    public function reject($id, User $manager, $note = null){
+        $bag = new MessageBag(JsonBuilder::CODE_ERROR,'你无权进行此操作');
+        /**
+         * @var RegistrationInformatics $form
+         */
+        $form = null;
+        if($manager->isSchoolAdminOrAbove() || $manager->isTeacher()){
+            $form = RegistrationInformatics::find($id);
+        }
+
+        if($form){
+            if($manager->isOperatorOrAbove() || $form->plan->school_id === $manager->getSchoolId()){
+                if($form->status === RegistrationInformatics::PASSED){
+                    $bag->setMessage($form->name.'的报名申请已经被'.($form->lastOperator->name??null).'批准');
+                }
+                else{
+                    // 该申请没有被别人作废
+                    $form->last_updated_by = $manager->id;
+                    $form->note .= $note.'(批准人: '.$manager->name.')';
+                    $form->status = RegistrationInformatics::REFUSED;
+                    if($form->save()){
+                        // 拒绝完成
+                        $bag->setMessage($form->name.'的报名申请已经被拒绝');
+                        $bag->setCode(JsonBuilder::CODE_SUCCESS);
+                    }else{
+                        $bag->setMessage('数据库更新操作失败: code 1');
+                    }
+                }
+            }
+        }
+        return $bag;
+    }
 }

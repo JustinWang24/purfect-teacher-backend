@@ -11,8 +11,12 @@ use App\User;
 
 class RegistrationInformatics extends Model
 {
-    protected $fillable = ['user_id', 'school_id', 'major_id', 'name', 'status', 'recruitment_plan_id', 'relocation_allowed', 'note'];
+    protected $fillable = [
+        'user_id', 'school_id', 'major_id', 'name', 'status',
+        'recruitment_plan_id', 'relocation_allowed', 'note',
+    ];
 
+    const USELESS           = 0;    // 申请作废
     const WAITING           = 1;    // 等待审核
     const REFUSED           = 2;    // 报名审核被拒绝
     const PASSED            = 3;    // 报名审核已通过
@@ -21,6 +25,7 @@ class RegistrationInformatics extends Model
     const APPROVED          = 5;    // 被录取
     const ENROLLED          = 6;    // 已报到
 
+    const USELESS_TEXT              = '申请作废';
     const WAITING_TEXT              = '等待审核';
     const REFUSED_TEXT              = '报名审核被拒绝';
     const PASSED_TEXT               = '报名审核已通过';
@@ -31,6 +36,7 @@ class RegistrationInformatics extends Model
 
     public static function AllStatusStudent(){
         return [
+            self::USELESS => self::USELESS_TEXT,
             self::WAITING => self::WAITING_TEXT,
             self::REFUSED => self::REFUSED_TEXT,
             self::PASSED => self::PASSED_TEXT,
@@ -74,6 +80,14 @@ class RegistrationInformatics extends Model
     }
 
     /**
+     * 报名表关联的学生资料数据
+     */
+    public function profile()
+    {
+        return $this->belongsTo(StudentProfile::class,'user_id','user_id');
+    }
+
+    /**
      * 关联的报名计划
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
@@ -82,10 +96,25 @@ class RegistrationInformatics extends Model
     }
 
     /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function lastOperator(){
+        return $this->belongsTo(User::class, 'last_updated_by');
+    }
+
+    /**
      * 获取状态文字
      * @return string
      */
     public function getStatusText(){
         return self::AllStatusStudent()[$this->status];
+    }
+
+    /**
+     * 学生是否服从分配
+     * @return boolean
+     */
+    public function isRelocationAllowed(){
+        return $this->relocation_allowed;
     }
 }

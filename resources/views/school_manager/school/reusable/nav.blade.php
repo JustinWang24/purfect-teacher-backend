@@ -23,7 +23,6 @@
             break;
     }
 @endphp
-
 <div class="pull-right">
     <div class="row">
         <div id="quick-search-current-school-id" data-school="{{ session('school.id') }}"></div>
@@ -33,6 +32,7 @@
                     school-id="{{ session('school.id') }}"
                     scope="{{ $highlight }}"
                     tip="{{ $tip }}"
+                    v-on:result-item-selected="onItemSelected"
             ></search-bar>
         </div>
         <div class="btn-group pull-right">

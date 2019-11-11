@@ -124,3 +124,7 @@ $defaultPadding: 15px;
 .for-mobile-alert{
   max-width: 360px !important;
 }
+
+.el-form-item__error{
+  z-index: 199;
+}

@@ -21,6 +21,11 @@ class EventServiceProvider extends ServiceProvider
         'App\Events\User\Student\ApplyRecruitmentPlanEvent' => [
             'App\Listeners\User\Teacher\NotifyRecruitmentManager',
         ],
+        // 当学生的报名表获得批准或者拒绝时
+        'App\Events\User\Student\ApproveRegistrationEvent' => [
+            'App\Listeners\User\Teacher\NotifyEnrolmentManager',
+            'App\Listeners\User\Student\NotifyStudent',
+        ],
     ];
 
     /**
