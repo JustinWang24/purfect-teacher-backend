@@ -10,7 +10,10 @@ use App\User;
         <div class="col-sm-12 col-md-12 col-xl-12">
             <div class="card">
                 <div class="card-head">
-                    <header><span class="text-primary">{{ $plan->title }}</span> - 报名表管理: (等待被批准的报名人数: {{ $registrations->count() }})</header>
+                    <header>
+                        <span class="text-primary">{{ $plan->title }}</span> -
+                        报名表管理: ({{ trans('thumbnail.registrations.'.$requestStatus) }}的报名人数: {{ $registrations->count() }})
+                    </header>
                 </div>
 
                 <div class="card-body">
@@ -19,6 +22,25 @@ use App\User;
                             <a href="{{ route('school_manager.student.add') }}" class="btn btn-primary">
                                 帮学生报名 <i class="fa fa-plus"></i>
                             </a>
+                            <a href="{{ route('teacher.planRecruit.list') }}" class="btn">
+                                返回招生计划
+                            </a>
+                            {{-- 根据当前的状态, 显示必要的按钮 --}}
+                            @if($requestStatus !== 'waiting')
+                                <a class="btn" href="{{ route('teacher.registration.forms.manage',['plan'=>$plan->id,'status'=>'waiting']) }}">
+                                    只看新报名记录
+                                </a>
+                            @endif
+                            @if($requestStatus !== 'all')
+                                <a class="btn" href="{{ route('teacher.registration.forms.manage',['plan'=>$plan->id,'status'=>'all']) }}">
+                                    所有报名记录
+                                </a>
+                            @endif
+                            @if($requestStatus !== 'refused')
+                                <a class="btn" href="{{ route('teacher.registration.forms.manage',['plan'=>$plan->id,'status'=>'refused']) }}">
+                                    只看已拒绝报名
+                                </a>
+                            @endif
                             <div id="user-quick-search-app" class="pull-left mr-4">
                                 <search-bar
                                         school-id="{{ session('school.id') }}"
@@ -78,7 +100,7 @@ use App\User;
                                                 <el-button icon="el-icon-check" v-on:click="showNotesForm({{ $form->id }}, '{{ $form->name }}')">批准</el-button>
                                                 <el-button type="danger" icon="el-icon-close" v-on:click="showRejectForm({{ $form->id }}, '{{ $form->name }}')">拒绝</el-button>
                                             @endif
-                                            {{ Anchor::Print(['text'=>'删除','href'=>route('teacher.registration.delete',['uuid'=>$form->user_id])], Button::TYPE_DANGER,'trash') }}
+                                            {{ Anchor::Print(['text'=>'删除','class'=>'btn-need-confirm','href'=>route('teacher.registration.delete',['uuid'=>$form->id])], Button::TYPE_DANGER,'trash') }}
                                         </td>
                                     </tr>
                                 @endforeach

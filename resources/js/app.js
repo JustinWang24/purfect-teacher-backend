@@ -633,34 +633,15 @@ if(document.getElementById('school-recruitment-manager-app')){
         methods: {
             // 创建新招生计划
             createNewPlan: function(){
-                console.log(1111);
                 this._resetFormData();
                 this.flag = !this.flag;
                 this.showRecruitmentPlanFormFlag = true;
             },
             onEditPlanHandler: function(payload){
+                this.showRecruitmentPlanFormFlag = true;
                 this.form = Util.GetItemById(payload.plan.id, this.plans);
                 this.$message('您正在编辑招生计划: ' + this.form.title);
-                // this.flag = !this.flag;
-                this.showRecruitmentPlanFormFlag = true;
-
-                // axios.post(
-                //     Constants.API.RECRUITMENT.GET_PLAN,
-                //     {version: Constants.VERSION, plan: payload.plan.id }
-                // ).then(res => {
-                //     if(Util.isAjaxResOk(res)){
-                //         this.form = res.data.data.plan;
-                //         // 把招生和录取负责人的名字传进去
-                //         this.form.manager_name = selectedPlan.manager_name;
-                //         this.form.enrol_manager_name = selectedPlan.enrol_manager;
-                //         this.$message('您正在编辑招生计划: ' + this.form.title);
-                //         this.flag = !this.flag;
-                //         this.showRecruitmentPlanFormFlag = true;
-                //     }
-                //     else{
-                //         this.$message.error('加载招生计划数据失败');
-                //     }
-                // });
+                this.flag = !this.flag;
             },
             // 当删除按钮被点击
             onDeletePlanHandler: function(payload){
@@ -712,6 +693,9 @@ if(document.getElementById('school-recruitment-manager-app')){
                 ).then(res => {
                     if(Util.isAjaxResOk(res)){
                         this.plans = res.data.data.plans;
+                        if(this.plans.length > 0){
+                            this.form = this.plans[0];
+                        }
                     }
                 });
             },
