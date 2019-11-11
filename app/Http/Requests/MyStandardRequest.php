@@ -95,4 +95,29 @@ class MyStandardRequest extends FormRequest
     public function getVersion(){
         return $this->has('version') ? $this->get('version') : null;
     }
+
+    /**
+     * 获取专业ID
+     */
+    public function getMajorId() {
+        return $this->get('major_id','');
+    }
+
+
+    /**
+     * 获取班级ID
+     * @return mixed
+     */
+    public function getGradeId() {
+        return $this->get('grade_id',null);
+    }
+
+
+    /**
+     * 获取校区ID
+     * @return mixed
+     */
+    public function getCampusId() {
+        return $this->get('campus_id',null);
+    }
 }
