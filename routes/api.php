@@ -176,6 +176,14 @@ Route::prefix('student-register')->group(function () {
 
 });
 
+// 录取API
+Route::prefix('employ')->group(function () {
+     // 获取全部未分配班级的人
+     Route::post('/get-unassigned-grades','Api\Recruitment\EmployController@index')
+        ->name('api.get.unassigned.grades');
+});
+
+
 // APP 通讯录
 Route::prefix('campus')->group(function () {
      // 班级通讯录
