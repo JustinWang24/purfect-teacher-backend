@@ -4,6 +4,9 @@ namespace App\Http\Controllers\Api\Recruitment;
 
 use App\Events\User\Student\ApplyRecruitmentPlanEvent;
 use App\Events\User\Student\ApproveRegistrationEvent;
+use App\Events\User\Student\EnrolRegistrationEvent;
+use App\Events\User\Student\RefuseRegistrationEvent;
+use App\Events\User\Student\RejectRegistrationEvent;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\RecruitStudent\PlanRecruitRequest;
 use App\Dao\RecruitmentPlan\RecruitmentPlanDao;
@@ -159,11 +162,9 @@ class OpenMajorController extends Controller
      */
     public function approve_or_reject(PlanRecruitRequest $request){
         $form = $request->getApprovalForm();
-
         $userUuid = $request->uuid();
         $userDao = new UserDao();
         $manager = $userDao->getUserByUuid($userUuid);
-
         if($manager && ($manager->isSchoolAdminOrAbove() || $manager->isTeacher())){
             // 操作者至少应该是学校的员工
             $dao = new RegistrationInformaticsDao();
@@ -171,7 +172,8 @@ class OpenMajorController extends Controller
                 $bag = $dao->approve($form['currentId'],$manager,$form['note']??null);
                 event(new ApproveRegistrationEvent($bag->getData()));
             }else{
-                $bag = $dao->reject($form['currentId'],$manager,$form['note']??null);
+                $bag = $dao->refuse($form['currentId'],$manager,$form['note']??null);
+                event(new RefuseRegistrationEvent($bag->getData()));
             }
             if($bag->isSuccess()){
                 return JsonBuilder::Success($bag->getMessage());
@@ -180,7 +182,37 @@ class OpenMajorController extends Controller
                 return JsonBuilder::Error($bag->getMessage());
             }
         }
+        return JsonBuilder::Error('无权执行此操作');
+    }
 
+    /**
+     * 录取学生
+     *
+     * @param PlanRecruitRequest $request
+     * @return string
+     */
+    public function enrol_or_reject(PlanRecruitRequest $request){
+        $form = $request->getApprovalForm();
+        $userUuid = $request->uuid();
+        $userDao = new UserDao();
+        $manager = $userDao->getUserByUuid($userUuid);
+        if($manager && ($manager->isSchoolAdminOrAbove() || $manager->isTeacher())){
+            // 操作者至少应该是学校的员工
+            $dao = new RegistrationInformaticsDao();
+            if($request->isEnrolAction()){
+                $bag = $dao->enrol($form['currentId'],$manager,$form['note']??null);
+                event(new EnrolRegistrationEvent($bag->getData()));
+            }else{
+                $bag = $dao->reject($form['currentId'],$manager,$form['note']??null);
+                event(new RejectRegistrationEvent($bag->getData()));
+            }
+            if($bag->isSuccess()){
+                return JsonBuilder::Success($bag->getMessage());
+            }
+            else{
+                return JsonBuilder::Error($bag->getMessage());
+            }
+        }
         return JsonBuilder::Error('无权执行此操作');
     }
 
