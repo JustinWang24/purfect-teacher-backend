@@ -161,6 +161,7 @@ Route::prefix('student-register')->group(function () {
      // 报名
      Route::post('/submit-form','Api\Recruitment\OpenMajorController@signUp')
         ->name('api.major.submit.form');
+
      //
     Route::post('/submit-excel','Api\Recruitment\OpenMajorController@testExcel')
         ->name('api.major.submit.excel');
@@ -172,19 +173,29 @@ Route::prefix('student-register')->group(function () {
     // 批准和拒绝学生的报名
     Route::post('/approve-or-reject','Api\Recruitment\OpenMajorController@approve_or_reject')
         ->name('api.major.approve.or.reject');
+});
+
+// 录取API
+Route::prefix('employ')->group(function () {
+     // 获取全部未分配班级的人
+     Route::post('/get-unassigned-grades','Api\Recruitment\EmployController@index')
+        ->name('api.get.unassigned.grades');
+
+     // 分配班级
+     Route::post('/distribution-grades','Api\Recruitment\EmployController@distribution')
+        ->name('api.distribution.grades');
 
     // 录取和拒绝学生的报名
     Route::post('/enrol-or-reject','Api\Recruitment\OpenMajorController@enrol_or_reject')
         ->name('api.major.enrol.or.reject');
 });
 
-// APP通讯录
-Route::prefix('campus')->group(function () {
 
+// APP 通讯录
+Route::prefix('campus')->group(function () {
      // 班级通讯录
      Route::post('/handleAffairs/getAddressBook/class','Api\Address\AddressBookController@index')
         ->name('api.address.book.class');
-
      // 学校部门通讯录
      Route::post('/handleAffairs/getAddressBook/official','Api\Address\AddressBookController@official')
         ->name('api.address.book.official');

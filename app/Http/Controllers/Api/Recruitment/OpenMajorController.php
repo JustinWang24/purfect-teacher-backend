@@ -15,7 +15,6 @@ use App\Dao\RecruitStudent\RegistrationInformaticsDao;
 use App\Dao\Students\StudentProfileDao;
 use App\Utils\JsonBuilder;
 use App\Utils\Time\GradeAndYearUtil;
-use Illuminate\Http\Request;
 
 
 class OpenMajorController extends Controller
@@ -98,7 +97,6 @@ class OpenMajorController extends Controller
             $user = $userDao->getUserByMobile($mobile);
             $userId = $user->id ?? null;
         }
-
         $result = [];
 
         if ($userId) {
@@ -216,13 +214,6 @@ class OpenMajorController extends Controller
         return JsonBuilder::Error('无权执行此操作');
     }
 
-    public function testExcel(PlanRecruitRequest $request)
-    {
-        $path = $request->file('file')->storeAs(
-            'storage', $request->file('file')->getFilename()
-        );
-    }
-
     /**
      * 验证身份证号码是符合规范的
      * @param PlanRecruitRequest $request
@@ -237,4 +228,5 @@ class OpenMajorController extends Controller
             return JsonBuilder::Error($bag->getMessage());
         }
     }
+
 }

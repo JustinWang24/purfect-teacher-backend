@@ -496,6 +496,17 @@ class RegistrationInformaticsDao
     }
 
     /**
+
+     * 获取所有 已录取 未分配班级的人
+     * @param $schoolId
+     * @return
+     */
+    public function unassigned($schoolId)
+    {
+        $where = ['school_id' => $schoolId, 'status'=> RegistrationInformatics::APPROVED];
+        return RegistrationInformatics::where($where)->get();
+    }
+  
      * @param $id
      * @param User $manager
      * @return MessageBag
