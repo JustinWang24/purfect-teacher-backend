@@ -310,7 +310,7 @@ class CourseDao
 
         $field = '*';
         if($simple) {
-            $field = ['id', 'code', 'name', 'year', 'term'];
+            $field = ['id', 'code', 'name', 'year', 'term', 'scores'];
         }
         $result = Course::whereIn('id',$idArr)->with('textbooks')->select($field)->get();
         return $result;

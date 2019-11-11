@@ -23,4 +23,13 @@ class TextbookRequest extends MyStandardRequest
     public function getFormData() {
         return $this->get('textbook');
     }
+
+
+    /**
+     * 下载类型
+     * @return mixed
+     */
+    public function getDownloadType() {
+        return $this->get('download_type','csv');
+    }
 }

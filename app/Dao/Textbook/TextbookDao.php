@@ -15,6 +15,7 @@ use App\Utils\JsonBuilder;
 use App\Utils\ReturnData\MessageBag;
 use Carbon\Carbon;
 
+
 class TextbookDao
 {
 
@@ -264,7 +265,6 @@ class TextbookDao
         }
         return new MessageBag(JsonBuilder::CODE_SUCCESS,'请求成功',$courseList);
     }
-
 
 
 }
