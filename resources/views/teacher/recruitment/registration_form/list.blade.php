@@ -19,10 +19,7 @@ use App\User;
                 <div class="card-body">
                     <div class="row">
                         <div class="table-padding col-12">
-                            <a href="{{ route('school_manager.student.add') }}" class="btn btn-primary">
-                                帮学生报名 <i class="fa fa-plus"></i>
-                            </a>
-                            <a href="{{ route('teacher.planRecruit.list') }}" class="btn">
+                            <a href="{{ route('teacher.planRecruit.list') }}" class="btn btn-primary">
                                 返回招生计划
                             </a>
                             {{-- 根据当前的状态, 显示必要的按钮 --}}
@@ -96,11 +93,13 @@ use App\User;
                                         </td>
                                         <td>{{ $form->note }}</td>
                                         <td class="text-center">
-                                            @if($form->status === \App\Models\RecruitStudent\RegistrationInformatics::WAITING)
-                                                <el-button icon="el-icon-check" v-on:click="showNotesForm({{ $form->id }}, '{{ $form->name }}')">批准</el-button>
-                                                <el-button type="danger" icon="el-icon-close" v-on:click="showRejectForm({{ $form->id }}, '{{ $form->name }}')">拒绝</el-button>
-                                            @endif
-                                            {{ Anchor::Print(['text'=>'删除','class'=>'btn-need-confirm','href'=>route('teacher.registration.delete',['uuid'=>$form->id])], Button::TYPE_DANGER,'trash') }}
+                                            <el-button-group>
+                                                @if($form->status === \App\Models\RecruitStudent\RegistrationInformatics::WAITING)
+                                                    <el-button size="mini" type="success" icon="el-icon-check" v-on:click="showNotesForm({{ $form->id }}, '{{ $form->name }}')">批准</el-button>
+                                                    <el-button size="mini" type="warning" icon="el-icon-close" v-on:click="showRejectForm({{ $form->id }}, '{{ $form->name }}')">拒绝</el-button>
+                                                @endif
+                                                <el-button size="mini" type="danger" v-on:click="deleteForm({{ $form->id }})">删除<i class="el-icon-delete el-icon--right"></i></el-button>
+                                            </el-button-group>
                                         </td>
                                     </tr>
                                 @endforeach

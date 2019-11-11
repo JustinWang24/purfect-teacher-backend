@@ -766,6 +766,20 @@ if(document.getElementById('registration-forms-list-app')){
                 this.showNoteFormFlag = false;
                 this.rejectNoteFormFlag = true;
             },
+            deleteForm: function(id){
+                this.$confirm('此操作将删除该报名表, 是否继续?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    window.location.href = '/teacher/registration-forms/delete?uuid=' + id;
+                }).catch(() => {
+                    this.$message({
+                        type: 'info',
+                        message: '已取消删除'
+                    });
+                });
+            },
             submit: function(){
                 axios.post(
                     Constants.API.REGISTRATION_FORM.APPROVE_OR_REJECT,
