@@ -81,6 +81,7 @@ class BasicPageTestCase extends TestCase
             'uuid'=>$this->school->uuid,
             'name'=>$this->school->name
         ];
+
         return $this;
     }
 
