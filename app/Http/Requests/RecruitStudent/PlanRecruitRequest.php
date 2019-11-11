@@ -41,6 +41,17 @@ class PlanRecruitRequest extends MyStandardRequest
     }
 
     /**
+     * 获取招生计划表单
+     * @return array
+     */
+    public function getNewOrUpdatedPlanForm(){
+        $formData = $this->get('form');
+        unset($formData['manager_name']);
+        unset($formData['enrol_manager_name']);
+        return $formData;
+    }
+
+    /**
      * 获取提交的表单数据
      * @return array
      */

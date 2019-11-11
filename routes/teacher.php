@@ -45,6 +45,8 @@ Route::prefix('teacher')->group(function () {
     Route::get('exam/getCourses', 'ExamController@getCourses')->name('teacher.exam.getCourses');         // 获取课程列表
 
     // 报名表管理
+    Route::get('planRecruit/list', 'RecruitmentFormsController@list')->name('teacher.planRecruit.list');
+
     Route::get('registration-forms/manage', 'RecruitmentFormsController@manage')
         ->name('teacher.registration.forms.manage');
 

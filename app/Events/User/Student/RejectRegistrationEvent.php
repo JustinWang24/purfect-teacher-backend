@@ -11,10 +11,9 @@ use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 
-class RejectRegistrationEvent
+class RejectRegistrationEvent extends AbstractRegistrationEvent
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
-    public $form;
 
     /**
      * RejectRegistrationEvent constructor.
@@ -22,6 +21,18 @@ class RejectRegistrationEvent
      */
     public function __construct(RegistrationInformatics $form)
     {
-        $this->form = $form;
+        parent::__construct($form);
+    }
+
+    public function getSmsTemplateId(): string
+    {
+        // TODO: 当报名学生的报名表被 pass 后的短信模板 ID 还未知
+        return '';
+    }
+
+    public function getSmsContent(): array
+    {
+        // TODO: 当报名学生的报名表被 pass 后的发送的短信内容
+        return [];
     }
 }

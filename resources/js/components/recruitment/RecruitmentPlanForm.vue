@@ -38,7 +38,7 @@
                                 scope="employee"
                                 width="100%"
                                 v-on:result-item-selected="managerItemSelectedHandler"
-                                :init-query="form.manager_name"
+                                :init-query="currentManagerName"
                         ></search-bar>
                     </el-form-item>
                 </el-col>
@@ -99,7 +99,7 @@
                                 scope="employee"
                                 width="100%"
                                 v-on:result-item-selected="enrolmentManagerItemSelectedHandler"
-                                :init-query="form.enrol_manager_name"
+                                :init-query="currentEnrolManagerName"
                         ></search-bar>
                     </el-form-item>
                 </el-col>
@@ -162,27 +162,15 @@
             }
         },
         watch: {
-            'form.major_id': function(newVal, oldVal) {
-                if(!Util.isEmpty(newVal))
+            'form.id': function(newVal, oldVal) {
+                if(!Util.isEmpty(newVal)){
                     this.form.major_name = Util.GetItemById(this.form.major_id, this.majors).name;
+                    this.currentManagerName = this.form.manager_name;
+                    this.currentEnrolManagerName = this.form.enrol_manager_name;
+                }
             },
-            'somethingChanged': function(){
-                // this.currentManagerName = this.form.manager_name;
-                // this.currentEnrolmentManagerName = this.form.enrol_manager_name;
-                // if(false && !Util.isEmpty(this.form.manager_id)){
-                //     getUserNameById(this.schoolId, this.form.manager_id)
-                //         .then(res => {
-                //             if(Util.isAjaxResOk(res)){
-                //                 this.currentManagerName = res.data.data.name;
-                //             }
-                //         });
-                //     getUserNameById(this.schoolId, this.form.enrol_manager)
-                //         .then(res => {
-                //             if(Util.isAjaxResOk(res)){
-                //                 this.currentEnrolmentManagerName = res.data.data.name;
-                //             }
-                //         });
-                // }
+            'somethingChanged': function(newVal, oldVal){
+                // 监听时用
             }
         },
         data(){
@@ -214,8 +202,8 @@
                     ],
                 },
                 majors:[],
-                currentManagerName:'', // 当前选定的招生负责人的名字
-                currentEnrolmentManagerName:'', // 当前选定的录取负责人的名字
+                currentManagerName: '',
+                currentEnrolManagerName: '',
             };
         },
         created(){
@@ -224,6 +212,10 @@
                     this.majors = res.data.data.majors;
                 }
             });
+        },
+        mounted(){
+            this.currentManagerName = this.form.manager_name;
+            this.currentEnrolManagerName = this.form.enrol_manager_name;
         },
         methods: {
             submitForm: function(){
