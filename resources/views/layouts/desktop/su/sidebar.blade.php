@@ -60,14 +60,8 @@
                     </a>
                     <ul class="sub-menu">
                         <li class="nav-item active">
-                            <a href="{{ route('school_manager.planRecruit.list') }}" class="nav-link ">
+                            <a href="{{ route('teacher.planRecruit.list') }}" class="nav-link ">
                                 <span class="title">预招管理</span>
-                                <span class="selected"></span>
-                            </a>
-                        </li>
-                        <li class="nav-item active">
-                            <a href="{{ route('school_manager.planRecruit.list') }}" class="nav-link ">
-                                <span class="title">报名表管理</span>
                                 <span class="selected"></span>
                             </a>
                         </li>

@@ -95,9 +95,7 @@ Route::prefix('school_manager')->group(function () {
     Route::post('school/config/update','SchoolsController@config_update')
         ->name('school_manager.school.config.update');
 
-    // 招生管理
-    Route::get('planRecruit/list', 'RecruitStudent\PlanRecruitController@list')->name('school_manager.planRecruit.list');
-    Route::any('planRecruit/edit', 'RecruitStudent\PlanRecruitController@edit')->name('school_manager.planRecruit.edit');
+    // 招生咨询管理
     Route::get('consult/list', 'RecruitStudent\ConsultController@list')->name('school_manager.consult.list');
     Route::any('consult/add', 'RecruitStudent\ConsultController@add')->name('school_manager.consult.add');
     Route::any('consult/edit', 'RecruitStudent\ConsultController@edit')->name('school_manager.consult.edit');
@@ -123,9 +121,7 @@ Route::prefix('school_manager')->group(function () {
 
     // 教材管理
     Route::get('textbook/list', 'TextbookController@list')->name('school_manager.textbook.list');  // 教程列表
-    Route::get('textbook/add', 'TextbookController@add')->name('school_manager.textbook.add');     // 添加教程
-    Route::get('textbook/edit', 'TextbookController@edit')->name('school_manager.textbook.edit');  // 编辑教程
-    Route::get('textbook/save', 'TextbookController@save')->name('school_manager.textbook.save'); // 保存教程
-    Route::get('textbook/loadMajorTextbook', 'TextbookController@loadMajorTextbook')->name('school_manager.textbook.loadMajorTextbook'); // 获取专业教材采购情况
+    Route::get('textbook/loadCampusTextbook', 'TextbookController@loadCampusTextbook')->name('school_manager.textbook.loadCampusTextbook'); // 获取校区教材采购情况
+    Route::get('textbook/campusTextbookDownload', 'TextbookController@campusTextbookDownload')->name('school_manager.textbook.campusTextbookDownload'); // 校区教材下载
 
 });

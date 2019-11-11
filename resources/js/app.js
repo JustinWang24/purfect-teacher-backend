@@ -633,26 +633,15 @@ if(document.getElementById('school-recruitment-manager-app')){
         methods: {
             // 创建新招生计划
             createNewPlan: function(){
-                console.log(1111);
                 this._resetFormData();
                 this.flag = !this.flag;
                 this.showRecruitmentPlanFormFlag = true;
             },
             onEditPlanHandler: function(payload){
-                axios.post(
-                    Constants.API.RECRUITMENT.GET_PLAN,
-                    {version: Constants.VERSION, plan: payload.plan.id }
-                ).then(res => {
-                    if(Util.isAjaxResOk(res)){
-                        this.form = res.data.data.plan;
-                        this.$message('您正在编辑招生计划: ' + this.form.title);
-                        this.flag = !this.flag;
-                        this.showRecruitmentPlanFormFlag = true;
-                    }
-                    else{
-                        this.$message.error('加载招生计划数据失败');
-                    }
-                })
+                this.showRecruitmentPlanFormFlag = true;
+                this.form = Util.GetItemById(payload.plan.id, this.plans);
+                this.$message('您正在编辑招生计划: ' + this.form.title);
+                this.flag = !this.flag;
             },
             // 当删除按钮被点击
             onDeletePlanHandler: function(payload){
@@ -704,6 +693,9 @@ if(document.getElementById('school-recruitment-manager-app')){
                 ).then(res => {
                     if(Util.isAjaxResOk(res)){
                         this.plans = res.data.data.plans;
+                        if(this.plans.length > 0){
+                            this.form = this.plans[0];
+                        }
                     }
                 });
             },
@@ -725,9 +717,12 @@ if(document.getElementById('school-recruitment-manager-app')){
                     grades_count:'',
                     year:this.year,
                     manager_id: '',
+                    enrol_manager: '',
                     target_students: '',
                     student_requirements: '',
                     how_to_enrol: '',
+                    manager_name: '',
+                    enrol_manager_name: '',
                 };
             }
         }
@@ -774,6 +769,68 @@ if(document.getElementById('registration-forms-list-app')){
             submit: function(){
                 axios.post(
                     Constants.API.REGISTRATION_FORM.APPROVE_OR_REJECT,
+                    {form: this.form, uuid: this.userUuid}
+                ).then(res => {
+                    if(Util.isAjaxResOk(res)){
+                        this.$notify({
+                            title: '成功',
+                            message: res.data.message,
+                            type: 'success'
+                        });
+                        // 从新加载页面
+                        window.location.reload();
+                    }else{
+                        this.$notify.error({
+                            title: '错误',
+                            message: res.data.message
+                        });
+                    }
+                })
+            }
+        }
+    });
+}
+
+// 后台录取学生的管理程序
+if(document.getElementById('enrol-registration-forms-app')){
+    new Vue({
+        el: '#enrol-registration-forms-app',
+        data(){
+            return {
+                form: {
+                    note: '',
+                    currentId: '',
+                    enrolled: false,
+                },
+                currentName: '',
+                showNoteFormFlag: false,
+                rejectNoteFormFlag: false,
+                userUuid: null,
+            }
+        },
+        created(){
+            this.userUuid = document.getElementById('current-manager-uuid').dataset.id;
+        },
+        methods: {
+            showNotesForm: function(id, name){
+                this.form.note = '';
+                this.form.currentId = id;
+                this.currentName = name;
+                this.form.enrolled = true;
+                this.showNoteFormFlag = true;
+                this.rejectNoteFormFlag = false;
+            },
+            showRejectForm: function(id, name){
+                this.form.note = '';
+                this.form.currentId = id;
+                this.currentName = name;
+                this.form.enrolled = false;
+                this.showNoteFormFlag = false;
+                this.rejectNoteFormFlag = true;
+            },
+            submit: function(){
+                axios.post(
+                    Constants.API.REGISTRATION_FORM.ENROL_OR_REJECT,
                     {form: this.form, uuid: this.userUuid}
                 ).then(res => {
                     if(Util.isAjaxResOk(res)){

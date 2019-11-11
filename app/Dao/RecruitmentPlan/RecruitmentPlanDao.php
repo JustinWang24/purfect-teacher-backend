@@ -67,7 +67,14 @@ class RecruitmentPlanDao
      * @return RecruitmentPlan[]
      */
     public function getPlansBySchool($schoolId, $userUuid = null, $year = null, $pageNumber = 0, $pageSize = 20){
-        $query =  RecruitmentPlan::where('school_id', $schoolId)
+        $query =  RecruitmentPlan::select(['recruitment_plans.*','u1.name as manager_name','u2.name as enrol_manager_name'])
+            ->where('school_id', $schoolId)
+            ->leftJoin('users as u1',function($join){
+                $join->on('u1.id','=','recruitment_plans.manager_id');
+            })
+            ->leftJoin('users as u2',function($join){
+                $join->on('u2.id','=','recruitment_plans.enrol_manager');
+            })
             ->orderBy('updated_at','desc')
             ->skip($pageNumber * $pageSize)
             ->take($pageSize);

@@ -25,11 +25,11 @@ class PlansController extends Controller
     }
 
     /**
-     * @param Request $request
+     * @param PlanRecruitRequest $request
      * @return string
      */
-    public function save_plan(Request $request){
-        $formData = $request->get('form');
+    public function save_plan(PlanRecruitRequest $request){
+        $formData = $request->getNewOrUpdatedPlanForm();
         if(isset($formData['school_id']) && !empty($formData['school_id'])){
             $dao = new RecruitmentPlanDao($formData['school_id']);
 
