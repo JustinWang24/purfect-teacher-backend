@@ -45,12 +45,22 @@
                 <template slot-scope="scope">
                     <p>计划招收{{ scope.row.seats }}人 / {{ scope.row.grades_count }}个班</p>
                     <p>
-                        报名: {{ scope.row.applied_count }} /
-                        <el-button type="text" v-on:click="openEnrolmentManager(scope.row)">
+
+                        <el-button v-show="waitingsCount(scope.row) > 0" type="text" v-on:click="forWaitings(scope.row)">
+                            等待: {{ waitingsCount(scope.row) }}
+                        </el-button>
+                        <span v-show="waitingsCount(scope.row)===0">等待: 0</span>
+                        /
+                        <el-button v-show="scope.row.passed_count > 0" type="text" v-on:click="openEnrolmentManager(scope.row)">
                             批准: {{ scope.row.passed_count }}
                         </el-button>
+                        <span v-show="scope.row.passed_count===0">批准: 0</span>
                         /
-                        录取: {{ scope.row.enrolled_count }}</p>
+                        <el-button v-show="scope.row.enrolled_count > 0" type="text" v-on:click="forApproved(scope.row)">
+                            录取: {{ scope.row.enrolled_count }}
+                        </el-button>
+                        <span v-show="scope.row.enrolled_count===0">录取: 0</span>
+                    </p>
                 </template>
             </el-table-column>
             <el-table-column
@@ -58,8 +68,8 @@
                 <template slot-scope="scope">
                     <el-button-group>
                         <el-button size="mini" type="primary" icon="el-icon-edit" v-on:click="editPlan(scope.row)"></el-button>
-                        <el-button size="mini" type="primary" icon="el-icon-tools" v-on:click="registrations(scope.row)">
-                            查看报名表
+                        <el-button v-show="scope.row.applied_count > 0" size="mini" type="primary" icon="el-icon-tools" v-on:click="allRegistrations(scope.row)">
+                            全部报名表
                         </el-button>
                         <el-button v-if="scope.row.applied_count === 0" size="mini" type="danger" icon="el-icon-delete" v-on:click="deletePlan(scope.row)"></el-button>
                     </el-button-group>
@@ -107,13 +117,31 @@
                 return type === 1 ? '统招' : '自主招生';
             },
             // 打开报名管理界面
-            registrations: function (plan) {
-                const url = Constants.API.REGISTRATION_FORM.REGISTRATION_MANAGER + '?plan=' + plan.id;
+            forWaitings: function (plan) {
+                if(plan.applied_count > plan.passed_count){
+                    const url = Constants.API.REGISTRATION_FORM.REGISTRATION_MANAGER + '?plan=' + plan.id + '&status=waiting';
+                    window.open(url,'_self');
+                }
+            },
+            allRegistrations: function (plan) {
+                const url = Constants.API.REGISTRATION_FORM.REGISTRATION_MANAGER + '?plan=' + plan.id + '&status=all';
                 window.open(url,'_self');
             },
             openEnrolmentManager: function (plan) {
+                // 这个是列出所有被 pass 的申请表
                 const url = Constants.API.REGISTRATION_FORM.ENROLMENT_MANAGER + '?plan=' + plan.id;
                 window.open(url,'_self');
+            },
+            forApproved: function(plan){
+                // 所有已经被录取的: 所有 approved
+                const url = Constants.API.REGISTRATION_FORM.ENROLMENT_MANAGER + '?plan=' + plan.id +  + '&status=approved';
+                window.open(url,'_self');
+            },
+            waitingsCount: function(plan){
+                return plan.applied_count - plan.passed_count;
+            },
+            passedCount: function(plan){
+                return plan.passed_count;
             }
         }
     }

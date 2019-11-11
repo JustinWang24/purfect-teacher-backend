@@ -20,4 +20,40 @@ class RecruitmentRegistrationFormRequest extends MyStandardRequest
     public function getUserUuid(){
         return $this->get('user');
     }
+
+    /**
+     * 是否有列出所有状态的报名表的标志位
+     * @return bool
+     */
+    public function needAllStatus(){
+        return $this->has('status') && $this->get('status') === 'all';
+    }
+
+    /**
+     * 是否有只列出 等待的报名表 的标志位
+     * @return bool
+     */
+    public function isInWaitingStatus(){
+        return $this->has('status') && $this->get('status') === 'waiting';
+    }
+
+    /**
+     * 是否有只列出 等待的报名表 的标志位
+     * @return bool
+     */
+    public function isInRefusedStatus(){
+        return $this->has('status') && $this->get('status') === 'refused';
+    }
+
+    /**
+     * 是否有只列出批准的报名表的标志位
+     * @return bool
+     */
+    public function isInPassedStatus(){
+        return $this->has('status') && $this->get('status') === 'pass';
+    }
+
+    public function getStatus(){
+        return $this->get('status');
+    }
 }
