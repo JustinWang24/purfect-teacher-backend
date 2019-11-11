@@ -7,6 +7,7 @@
  */
 
 namespace App\Dao\RecruitmentPlan;
+use App\Dao\Users\UserDao;
 use App\Models\Schools\RecruitmentPlan;
 use Illuminate\Support\Facades\DB;
 
@@ -59,16 +60,35 @@ class RecruitmentPlanDao
      * 获取某个学校的招生简章
      *
      * @param $schoolId
+     * @param string $userUuid
      * @param null $year
      * @param int $pageNumber
      * @param int $pageSize
      * @return RecruitmentPlan[]
      */
-    public function getPlansBySchool($schoolId, $year = null, $pageNumber = 0, $pageSize = 20){
-        $query =  RecruitmentPlan::where('school_id', $schoolId)
+    public function getPlansBySchool($schoolId, $userUuid = null, $year = null, $pageNumber = 0, $pageSize = 20){
+        $query =  RecruitmentPlan::select(['recruitment_plans.*','u1.name as manager_name','u2.name as enrol_manager_name'])
+            ->where('school_id', $schoolId)
+            ->leftJoin('users as u1',function($join){
+                $join->on('u1.id','=','recruitment_plans.manager_id');
+            })
+            ->leftJoin('users as u2',function($join){
+                $join->on('u2.id','=','recruitment_plans.enrol_manager');
+            })
             ->orderBy('updated_at','desc')
             ->skip($pageNumber * $pageSize)
             ->take($pageSize);
+
+        if($userUuid){
+            $userDao = new UserDao();
+            $u = $userDao->getUserByUuid($userUuid);
+            if($u){
+                if($u->isTeacher()){
+                    // 如果不是超级管理员或者学校的管理员, 那么只加载该老师负责的
+                    $query->where('manager_id',$u->id);
+                }
+            }
+        }
 
         if($year){
             $query->where('year',$year);

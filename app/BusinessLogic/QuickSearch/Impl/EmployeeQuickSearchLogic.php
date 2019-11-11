@@ -26,4 +26,9 @@ class EmployeeQuickSearchLogic extends AbstractQuickSearchLogic
     {
         return [];
     }
+
+    public function getNextAction($facility)
+    {
+        return '';
+    }
 }

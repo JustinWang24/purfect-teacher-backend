@@ -9,6 +9,7 @@
 namespace App\Dao\Schools;
 use App\User;
 use App\Models\Schools\Major;
+use App\Utils\Misc\ConfigurationTool;
 use Illuminate\Database\Eloquent\Collection;
 
 class MajorDao
@@ -54,7 +55,7 @@ class MajorDao
      * @return Collection
      */
     public function getBySchool($schoolId,$field='*'){
-        return Major::where('school_id',$schoolId)->select($field)->paginate();
+        return Major::where('school_id',$schoolId)->select($field)->paginate(ConfigurationTool::DEFAULT_PAGE_SIZE);
     }
 
     /**
@@ -137,7 +138,7 @@ class MajorDao
      * @return mixed
      */
     public function getMajorPage($map,$field='*') {
-        return Major::where($map)->select($field)->paginate(10);
+        return Major::where($map)->select($field)->paginate(ConfigurationTool::DEFAULT_PAGE_SIZE_QUICK_SEARCH);
     }
 
 

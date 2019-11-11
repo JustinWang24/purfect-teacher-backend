@@ -3,6 +3,10 @@
 namespace App\Http\Controllers\Api\Recruitment;
 
 use App\Events\User\Student\ApplyRecruitmentPlanEvent;
+use App\Events\User\Student\ApproveRegistrationEvent;
+use App\Events\User\Student\EnrolRegistrationEvent;
+use App\Events\User\Student\RefuseRegistrationEvent;
+use App\Events\User\Student\RejectRegistrationEvent;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\RecruitStudent\PlanRecruitRequest;
 use App\Dao\RecruitmentPlan\RecruitmentPlanDao;
@@ -10,6 +14,7 @@ use App\Dao\Users\UserDao;
 use App\Dao\RecruitStudent\RegistrationInformaticsDao;
 use App\Dao\Students\StudentProfileDao;
 use App\Utils\JsonBuilder;
+use App\Utils\Time\GradeAndYearUtil;
 use Illuminate\Http\Request;
 
 
@@ -141,7 +146,7 @@ class OpenMajorController extends Controller
         $result = $user ? $dao->signUp($formData, $user) : false;
 
         if ($result && $result->isSuccess()) {
-            // Todo: 通知老师, 有个新报名的学生
+            // 通知老师, 有个新报名的学生
             event(new ApplyRecruitmentPlanEvent($result->getData()));
             return JsonBuilder::Success('报名成功');
         } else {
@@ -150,59 +155,86 @@ class OpenMajorController extends Controller
     }
 
     /**
-     * @deprecated
+     * 批准或者拒绝某个报名表格
+     *
      * @param PlanRecruitRequest $request
      * @return string
-     * @throws \Exception
      */
-    public function signUpOld(PlanRecruitRequest $request)
-    {
-        $userId     = $request->get('id');
-        $schoolId   = $request->get('school_id');
-        $majorId    = $request->get('major_id');
-        $planId     = $request->get('recruitment_plan_id');
-        $data       = $request->get('data');
-
-        $planDao = new RecruitmentPlanDao($schoolId);
-
-        $plan = $planDao->getRecruitmentPlanById($planId);
-        if ($plan->seats >= $plan->enrolled_count) {
-            return JsonBuilder::Error('该专业已招满,请选择其他专业', '999');
-        }
-
-        $dao =  new RegistrationInformaticsDao;
-
-        if (empty($userId)) {
-            $add = $dao->addUser($data);
-            if (!$add) {
-                return JsonBuilder::Error('报名失败', '999');
-            } else {
-                $signUpData['user_id']   = $add;
+    public function approve_or_reject(PlanRecruitRequest $request){
+        $form = $request->getApprovalForm();
+        $userUuid = $request->uuid();
+        $userDao = new UserDao();
+        $manager = $userDao->getUserByUuid($userUuid);
+        if($manager && ($manager->isSchoolAdminOrAbove() || $manager->isTeacher())){
+            // 操作者至少应该是学校的员工
+            $dao = new RegistrationInformaticsDao();
+            if($request->isApprovedAction()){
+                $bag = $dao->approve($form['currentId'],$manager,$form['note']??null);
+                event(new ApproveRegistrationEvent($bag->getData()));
+            }else{
+                $bag = $dao->refuse($form['currentId'],$manager,$form['note']??null);
+                event(new RefuseRegistrationEvent($bag->getData()));
             }
-        } else {
-            $signUpData['user_id'] = $userId;
+            if($bag->isSuccess()){
+                return JsonBuilder::Success($bag->getMessage());
+            }
+            else{
+                return JsonBuilder::Error($bag->getMessage());
+            }
         }
-
-        $signUpData['school_id']           = $schoolId;
-        $signUpData['major_id']            = $majorId;
-        $signUpData['name']                = $data['name'];
-        $signUpData['relocation_allowed']  = $data['relocation_allowed'];
-        $signUpData['recruitment_plan_id'] = $planId;
-        $signUpData['status'] = 1;
-        $result = $dao->signUp($signUpData);
-
-        if ($result) {
-            return JsonBuilder::Success('报名成功');
-        } else {
-            return JsonBuilder::Error('报名失败',999);
-        }
+        return JsonBuilder::Error('无权执行此操作');
     }
 
+    /**
+     * 录取学生
+     *
+     * @param PlanRecruitRequest $request
+     * @return string
+     */
+    public function enrol_or_reject(PlanRecruitRequest $request){
+        $form = $request->getApprovalForm();
+        $userUuid = $request->uuid();
+        $userDao = new UserDao();
+        $manager = $userDao->getUserByUuid($userUuid);
+        if($manager && ($manager->isSchoolAdminOrAbove() || $manager->isTeacher())){
+            // 操作者至少应该是学校的员工
+            $dao = new RegistrationInformaticsDao();
+            if($request->isEnrolAction()){
+                $bag = $dao->enrol($form['currentId'],$manager,$form['note']??null);
+                event(new EnrolRegistrationEvent($bag->getData()));
+            }else{
+                $bag = $dao->reject($form['currentId'],$manager,$form['note']??null);
+                event(new RejectRegistrationEvent($bag->getData()));
+            }
+            if($bag->isSuccess()){
+                return JsonBuilder::Success($bag->getMessage());
+            }
+            else{
+                return JsonBuilder::Error($bag->getMessage());
+            }
+        }
+        return JsonBuilder::Error('无权执行此操作');
+    }
 
     public function testExcel(PlanRecruitRequest $request)
     {
         $path = $request->file('file')->storeAs(
             'storage', $request->file('file')->getFilename()
         );
+    }
+
+    /**
+     * 验证身份证号码是符合规范的
+     * @param PlanRecruitRequest $request
+     * @return string
+     */
+    public function verify_id_number(PlanRecruitRequest $request){
+        $idNumber = $request->get('id_number');
+        $bag = GradeAndYearUtil::IdNumberToBirthday($idNumber);
+        if($bag->isSuccess()){
+            return JsonBuilder::Success(_printDate($bag->getData()));
+        }else{
+            return JsonBuilder::Error($bag->getMessage());
+        }
     }
 }

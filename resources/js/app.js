@@ -53,7 +53,19 @@ if(document.getElementById('school-courses-manager-app')){
 // 快速定位用户的搜索框: 会更加当前的状况, 来搜索用户和学院 系等
 if(document.getElementById('user-quick-search-app')){
     new Vue({
-        el:'#user-quick-search-app'
+        el:'#user-quick-search-app',
+        methods: {
+            onItemSelected: function(payload){
+                // 如果指定了 nextAction, 就跳转到其指定的页面, 否则按照 id 为用户的 id 的规则, 打开用户的 profile
+                if(Util.isEmpty(payload.item.nextAction)){
+                    // 按照 id 为用户的 id 的规则, 打开用户的 profile
+                    const nextAction = '/verified_student/profile/edit?uuid=' + payload.item.uuid;
+                    window.open(nextAction, '_blank');
+                }else {
+                    window.open(payload.item.nextAction, '_blank');
+                }
+            }
+        }
     })
 }
 
@@ -596,6 +608,8 @@ if(document.getElementById('school-recruitment-manager-app')){
                 schoolId: null,
                 userUuid: null,
                 flag: true,
+                // 控制表单是否显示
+                showRecruitmentPlanFormFlag: false,
             }
         },
         created(){
@@ -610,7 +624,6 @@ if(document.getElementById('school-recruitment-manager-app')){
             this.years.push(this.year - 1);
 
             this._resetFormData();
-            this.loadPlans(0);
         },
         watch:{
             'year': function(newVal) {
@@ -620,23 +633,34 @@ if(document.getElementById('school-recruitment-manager-app')){
         methods: {
             // 创建新招生计划
             createNewPlan: function(){
+                console.log(1111);
                 this._resetFormData();
                 this.flag = !this.flag;
+                this.showRecruitmentPlanFormFlag = true;
             },
             onEditPlanHandler: function(payload){
-                axios.post(
-                    Constants.API.RECRUITMENT.GET_PLAN,
-                    {version: Constants.VERSION, plan: payload.plan.id }
-                ).then(res => {
-                    if(Util.isAjaxResOk(res)){
-                        this.form = res.data.data.plan;
-                        this.$message('您正在编辑招生计划: ' + this.form.title);
-                        this.flag = !this.flag;
-                    }
-                    else{
-                        this.$message.error('加载招生计划数据失败');
-                    }
-                })
+                this.form = Util.GetItemById(payload.plan.id, this.plans);
+                this.$message('您正在编辑招生计划: ' + this.form.title);
+                // this.flag = !this.flag;
+                this.showRecruitmentPlanFormFlag = true;
+
+                // axios.post(
+                //     Constants.API.RECRUITMENT.GET_PLAN,
+                //     {version: Constants.VERSION, plan: payload.plan.id }
+                // ).then(res => {
+                //     if(Util.isAjaxResOk(res)){
+                //         this.form = res.data.data.plan;
+                //         // 把招生和录取负责人的名字传进去
+                //         this.form.manager_name = selectedPlan.manager_name;
+                //         this.form.enrol_manager_name = selectedPlan.enrol_manager;
+                //         this.$message('您正在编辑招生计划: ' + this.form.title);
+                //         this.flag = !this.flag;
+                //         this.showRecruitmentPlanFormFlag = true;
+                //     }
+                //     else{
+                //         this.$message.error('加载招生计划数据失败');
+                //     }
+                // });
             },
             // 当删除按钮被点击
             onDeletePlanHandler: function(payload){
@@ -666,9 +690,11 @@ if(document.getElementById('school-recruitment-manager-app')){
             },
             // 当新计划被成功创建
             newPlanCreatedHandler: function(payload){
+                this.showRecruitmentPlanFormFlag = false;
                 this.loadPlans(0);
             },
             planUpdatedHandler: function(payload){
+                this.showRecruitmentPlanFormFlag = false;
                 this.loadPlans(0);
             },
             loadPlans: function(pageNumber){
@@ -680,6 +706,7 @@ if(document.getElementById('school-recruitment-manager-app')){
                         pageNumber: pageNumber,
                         pageSize: this.pageSize,
                         year: this.year,
+                        uuid: this.userUuid,// 用户 uuid, 用来加载特定的招聘计划
                         version: Constants.VERSION
                     }
                 ).then(res => {
@@ -706,10 +733,137 @@ if(document.getElementById('school-recruitment-manager-app')){
                     grades_count:'',
                     year:this.year,
                     manager_id: '',
+                    enrol_manager: '',
                     target_students: '',
                     student_requirements: '',
                     how_to_enrol: '',
+                    manager_name: '',
+                    enrol_manager_name: '',
                 };
+            }
+        }
+    });
+}
+
+// 后台的管理招生计划的报名表的管理程序
+if(document.getElementById('registration-forms-list-app')){
+    new Vue({
+        el: '#registration-forms-list-app',
+        data(){
+            return {
+                form: {
+                    note: '',
+                    currentId: '',
+                    approved: false,
+                },
+                currentName: '',
+                showNoteFormFlag: false,
+                rejectNoteFormFlag: false,
+                userUuid: null,
+            }
+        },
+        created(){
+            this.userUuid = document.getElementById('current-manager-uuid').dataset.id;
+        },
+        methods: {
+            showNotesForm: function(id, name){
+                this.form.note = '';
+                this.form.currentId = id;
+                this.currentName = name;
+                this.form.approved = true;
+                this.showNoteFormFlag = true;
+                this.rejectNoteFormFlag = false;
+            },
+            showRejectForm: function(id, name){
+                this.form.note = '';
+                this.form.currentId = id;
+                this.currentName = name;
+                this.form.approved = false;
+                this.showNoteFormFlag = false;
+                this.rejectNoteFormFlag = true;
+            },
+            submit: function(){
+                axios.post(
+                    Constants.API.REGISTRATION_FORM.APPROVE_OR_REJECT,
+                    {form: this.form, uuid: this.userUuid}
+                ).then(res => {
+                    if(Util.isAjaxResOk(res)){
+                        this.$notify({
+                            title: '成功',
+                            message: res.data.message,
+                            type: 'success'
+                        });
+                        // 从新加载页面
+                        window.location.reload();
+                    }else{
+                        this.$notify.error({
+                            title: '错误',
+                            message: res.data.message
+                        });
+                    }
+                })
+            }
+        }
+    });
+}
+
+// 后台录取学生的管理程序
+if(document.getElementById('enrol-registration-forms-app')){
+    new Vue({
+        el: '#enrol-registration-forms-app',
+        data(){
+            return {
+                form: {
+                    note: '',
+                    currentId: '',
+                    enrolled: false,
+                },
+                currentName: '',
+                showNoteFormFlag: false,
+                rejectNoteFormFlag: false,
+                userUuid: null,
+            }
+        },
+        created(){
+            this.userUuid = document.getElementById('current-manager-uuid').dataset.id;
+        },
+        methods: {
+            showNotesForm: function(id, name){
+                this.form.note = '';
+                this.form.currentId = id;
+                this.currentName = name;
+                this.form.enrolled = true;
+                this.showNoteFormFlag = true;
+                this.rejectNoteFormFlag = false;
+            },
+            showRejectForm: function(id, name){
+                this.form.note = '';
+                this.form.currentId = id;
+                this.currentName = name;
+                this.form.enrolled = false;
+                this.showNoteFormFlag = false;
+                this.rejectNoteFormFlag = true;
+            },
+            submit: function(){
+                axios.post(
+                    Constants.API.REGISTRATION_FORM.ENROL_OR_REJECT,
+                    {form: this.form, uuid: this.userUuid}
+                ).then(res => {
+                    if(Util.isAjaxResOk(res)){
+                        this.$notify({
+                            title: '成功',
+                            message: res.data.message,
+                            type: 'success'
+                        });
+                        // 从新加载页面
+                        window.location.reload();
+                    }else{
+                        this.$notify.error({
+                            title: '错误',
+                            message: res.data.message
+                        });
+                    }
+                })
             }
         }
     });
