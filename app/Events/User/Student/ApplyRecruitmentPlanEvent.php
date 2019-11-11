@@ -31,4 +31,22 @@ class ApplyRecruitmentPlanEvent extends AbstractRegistrationEvent
         // TODO: 当报名学生的报名表被 pass 后的发送的短信内容
         return [];
     }
+
+    public function getForm(): RegistrationInformatics
+    {
+        // TODO: Implement getForm() method.
+        return $this->form;
+    }
+
+    public function getMessageType()
+    {
+        // TODO: Implement getMessageType() method.
+    }
+
+    public function getPriority()
+    {
+        // TODO: Implement getPriority() method.
+    }
+
+
 }

@@ -4,6 +4,7 @@
  */
 namespace App\Listeners\User\Teacher;
 
+use App\Events\HasRegistrationForm;
 use App\Events\User\Student\ApplyRecruitmentPlanEvent;
 use App\Jobs\Notifier\InternalMessage;
 use App\Models\Misc\SystemNotification;
@@ -25,18 +26,18 @@ class NotifyRecruitmentManager
     /**
      * Handle the event.
      *
-     * @param  ApplyRecruitmentPlanEvent  $event
+     * @param  HasRegistrationForm  $event
      * @return void
      */
-    public function handle(ApplyRecruitmentPlanEvent $event)
+    public function handle(HasRegistrationForm $event)
     {
         // 事件发生后, 现在采用系统内部消息通知的方式通知老师. 要不几千张报名表, 累死了
         InternalMessage::dispatchNow(
-            $event->form->school_id,
-            SystemNotification::FROM_SYSTEM,
+            $event->form->school_id, $event->getForm()->school_id,
+            SystemNotification::FROM_SYSTEM, $event->getForm()->lastOperator->id,
             $event->form->plan->manager_id,
-            SystemNotification::TYPE_STUDENT_REGISTRATION,
-            SystemNotification::PRIORITY_HIGH,
+            SystemNotification::TYPE_STUDENT_REGISTRATION,$event->getMessageType(),
+            SystemNotification::PRIORITY_HIGH,$event->getPriority(),
             $event->form->user->name.'刚刚报名: '.$event->form->plan->title
         );
     }
