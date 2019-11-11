@@ -19,9 +19,9 @@ class TextbookTest extends BasicPageTestCase
         $data['textbook'] = [
             'name'     => Str::random(),
             'press'    => '新华出版社',
-            'author'   => '三毛',
+            'author'   => '鲁迅',
             'edition'  => 1,      //版本
-            'course_id'=> 1,
+            'course_id'=> 6,
             'type'     => Textbook::TYPE_MAJOR,
             'purchase_price' => 80,
             'price'    => 100,
@@ -40,7 +40,7 @@ class TextbookTest extends BasicPageTestCase
 //        $response = $this->setSchoolAsUser($user, 50)
 //            ->actingAs($user)
 //            ->withSession($this->schoolSessionData)
-//            ->get(route('school_manager.textbook.add'));
+//            ->get(route('teacher.textbook.add'));
 //
 //        $response->assertSee('input type="hidden" name="_token"');
 //        $response->assertSee('id="textbook-name-input"');
@@ -67,7 +67,7 @@ class TextbookTest extends BasicPageTestCase
 //        $response = $this->setSchoolAsUser($user, 50)
 //            ->actingAs($user)
 //            ->withSession($this->schoolSessionData)
-//            ->get(route('school_manager.textbook.edit'));
+//            ->get(route('teacher.textbook.edit'));
 //
 //        $response->assertSee('input type="hidden" name="_token"');
 //        $response->assertSee('id="textbook-id-input"');
@@ -96,7 +96,7 @@ class TextbookTest extends BasicPageTestCase
         $response = $this->setSchoolAsUser($user, 50)
             ->actingAs($user)
             ->withSession($this->schoolSessionData)
-            ->post(route('school_manager.textbook.save',$data));
+            ->post(route('teacher.textbook.save',$data));
 
         $result = json_decode($response->content(),true);
 
@@ -117,7 +117,7 @@ class TextbookTest extends BasicPageTestCase
         $response = $this->setSchoolAsUser($user, 50)
             ->actingAs($user)
             ->withSession($this->schoolSessionData)
-            ->get(route('school_manager.textbook.loadMajorTextbook',$data));
+            ->get(route('teacher.textbook.loadMajorTextbook',$data));
 
         $result = json_decode($response->content(),true);
         $this->assertArrayHasKey('code', $result);
@@ -180,7 +180,7 @@ class TextbookTest extends BasicPageTestCase
         $response = $this->setSchoolAsUser($user, 50)
             ->actingAs($user)
             ->withSession($this->schoolSessionData)
-            ->get(route('school_manager.textbook.loadGradeTextbook',$data));
+            ->get(route('teacher.textbook.loadGradeTextbook',$data));
 
         $result = json_decode($response->content(),true);
         $this->assertArrayHasKey('code', $result);
@@ -257,6 +257,7 @@ class TextbookTest extends BasicPageTestCase
             }
         }
     }
+
 
 
 
