@@ -1,13 +1,8 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: justinwang
- * Date: 11/11/19
- * Time: 7:38 PM
- */
 
 namespace App\Utils\Misc\Contracts;
 
+use App\Utils\ReturnData\IMessageBag;
 
 interface ISmsSender
 {
@@ -15,7 +10,7 @@ interface ISmsSender
      * @param string $mobile
      * @param string $templateId
      * @param array $data
-     * @return bool
+     * @return IMessageBag
      */
-    public function send($mobile,$templateId,$data): bool;
+    public function send($mobile,$templateId,$data): IMessageBag;
 }
