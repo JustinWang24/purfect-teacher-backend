@@ -47,7 +47,7 @@ class User extends Authenticatable implements HasMobilePhone, HasDeviceId
      * @var array
      */
     protected $fillable = [
-        'password','mobile_verified_at','mobile','uuid','status','type','name'
+        'password','mobile_verified_at','mobile','uuid','status','type','name','email'
     ];
 
     /**
@@ -137,13 +137,17 @@ class User extends Authenticatable implements HasMobilePhone, HasDeviceId
     }
 
     /**
-     * 学生的报名表中的信息
-     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     * 学生提交的所有的报名表
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
     public function registrationForm(){
-        return $this->hasOne(RegistrationInformatics::class);
+        return $this->hasMany(RegistrationInformatics::class);
     }
 
+    /**
+     * 学生提交的所有请求
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
     public function enquiries(){
         return $this->hasMany(Enquiry::class);
     }
@@ -154,19 +158,35 @@ class User extends Authenticatable implements HasMobilePhone, HasDeviceId
      */
     public function getSchoolId()
     {
-        if($this->isStudent() || $this->isTeacher()){
+        if($this->isStudent() || $this->isTeacher() || $this->isEmployee()){
             return $this->gradeUser->school_id;
         }
-        return 1;
+        return 0;
     }
 
+    /**
+     * 是否用户为学生
+     * @return bool
+     */
     public function isStudent(){
         return in_array($this->getCurrentRoleSlug(),
             [Role::VERIFIED_USER_STUDENT_SLUG, Role::VERIFIED_USER_CLASS_LEADER_SLUG, Role::VERIFIED_USER_CLASS_SECRETARY_SLUG]);
     }
 
+    /**
+     * 是否用户为老师
+     * @return bool
+     */
     public function isTeacher(){
         return $this->type === Role::TEACHER;
+    }
+
+    /**
+     * 是否用户为教职工
+     * @return bool
+     */
+    public function isEmployee(){
+        return $this->type === Role::EMPLOYEE;
     }
 
     /**

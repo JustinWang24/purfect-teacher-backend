@@ -23,4 +23,12 @@ interface IQuickSearchLogic
      * @return Collection
      */
     public function getFacilities();
+
+    /**
+     * 下一步操作的路由
+     *
+     * @param $facility
+     * @return string
+     */
+    public function getNextAction($facility);
 }

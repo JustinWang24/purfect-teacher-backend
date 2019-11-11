@@ -93,7 +93,7 @@ Route::prefix('recruitment')->group(function () {
     Route::post('/save-plan','Api\Recruitment\PlansController@save_plan')
         ->name('api.recruitment.save.plan');
 
-    // 加载某个招生计划: 后端加载是调用
+    // 加载某个招生计划: 后端加载时调用
     Route::any('/get-plan','Api\Recruitment\PlansController@get_plan')
         ->name('api.recruitment.get.plan');
 
@@ -164,6 +164,18 @@ Route::prefix('student-register')->group(function () {
      //
     Route::post('/submit-excel','Api\Recruitment\OpenMajorController@testExcel')
         ->name('api.major.submit.excel');
+
+    // 验证学生身份证信息的接口
+    Route::post('/verify-id-number','Api\Recruitment\OpenMajorController@verify_id_number')
+        ->name('api.major.verify.id.number');
+
+    // 批准和拒绝学生的报名
+    Route::post('/approve-or-reject','Api\Recruitment\OpenMajorController@approve_or_reject')
+        ->name('api.major.approve.or.reject');
+
+    // 录取和拒绝学生的报名
+    Route::post('/enrol-or-reject','Api\Recruitment\OpenMajorController@enrol_or_reject')
+        ->name('api.major.enrol.or.reject');
 });
 
 // APP通讯录

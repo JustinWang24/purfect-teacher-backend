@@ -42,7 +42,11 @@ return [
 
     // 招生管理
     'planRecruit'  => '预招管理',
-
+    'registration' => '报名招生',
+    'forms' => '报名表',
+    'manage' => '管理',
+    'student' => '学生',
+    'enrol' => '录取',
 
     //设备管理
     'facility' => '设备管理',
