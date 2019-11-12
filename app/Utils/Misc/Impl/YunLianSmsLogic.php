@@ -31,10 +31,10 @@ class YunLianSmsLogic implements ISmsSender
 
     public function __construct()
     {
-        $this->accountSid   = env('YUN_LIAN_ACCOUNTS_ID');
-        $this->accountToken = env('YUN_LIAN_ACCOUNTS_TOKEN');;
+        $this->accountSid   = env('YUN_LIAN_ACCOUNTS_SID');
+        $this->accountToken = env('YUN_LIAN_ACCOUNTS_TOKEN');
         $this->appId        = env('YUN_LIAN_APP_ID');
-        $this->serverIP     = 'sandboxapp.cloopen.com';
+        $this->serverIP     = 'app.cloopen.com';
         $this->serverPort   = '8883';
         $this->softVersion  = '2013-12-26';
     }
@@ -47,6 +47,7 @@ class YunLianSmsLogic implements ISmsSender
      */
     public function send($mobile, $templateId, $data): IMessageBag
     {
+
          $rest = new Rest($this->serverIP, $this->serverPort, $this->softVersion);
 
          $rest->setAccount($this->accountSid, $this->accountToken);
