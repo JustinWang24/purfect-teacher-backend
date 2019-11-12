@@ -173,6 +173,10 @@ Route::prefix('student-register')->group(function () {
     // 批准和拒绝学生的报名
     Route::post('/approve-or-reject','Api\Recruitment\OpenMajorController@approve_or_reject')
         ->name('api.major.approve.or.reject');
+
+    // 录取学生 或 拒绝录取学生
+    Route::post('/enrol-or-reject','Api\Recruitment\OpenMajorController@enrol_or_reject')
+        ->name('api.major.enrol.or.reject');
 });
 
 // 录取API
