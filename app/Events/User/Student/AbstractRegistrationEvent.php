@@ -41,4 +41,9 @@ abstract class AbstractRegistrationEvent implements CanReachByMobilePhone
     {
         return $this->getUser()->mobile;
     }
+
+    public function getUserName(): string
+    {
+        return $this->getUser()->name;
+    }
 }
