@@ -33,12 +33,13 @@ class NotifyRecruitmentManager
     {
         // 事件发生后, 现在采用系统内部消息通知的方式通知老师. 要不几千张报名表, 累死了
         InternalMessage::dispatchNow(
-            $event->form->school_id, $event->getForm()->school_id,
-            SystemNotification::FROM_SYSTEM, $event->getForm()->lastOperator->id,
-            $event->form->plan->manager_id,
-            SystemNotification::TYPE_STUDENT_REGISTRATION,$event->getMessageType(),
-            SystemNotification::PRIORITY_HIGH,$event->getPriority(),
-            $event->form->user->name.'刚刚报名: '.$event->form->plan->title
+            $event->getForm()->school_id,
+            $event->getForm()->lastOperator->id,
+            $event->getForm()->plan->manager_id,
+            $event->getMessageType(),
+            $event->getPriority(),
+            $event->getContent(),
+            $event->getNextMove()
         );
     }
 }

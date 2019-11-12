@@ -35,4 +35,30 @@ class RejectRegistrationEvent extends AbstractRegistrationEvent
         // TODO: 当报名学生的报名表被 pass 后的发送的短信内容
         return [];
     }
+
+    public function getForm(): RegistrationInformatics
+    {
+        // TODO: Implement getForm() method.
+        return $this->from;
+    }
+
+    public function getMessageType(): int
+    {
+        // TODO: Implement getMessageType() method.
+    }
+
+    public function getPriority(): int
+    {
+        // TODO: Implement getPriority() method.
+    }
+
+    public function getContent(): string
+    {
+        // TODO: Implement getContent() method.
+    }
+
+    public function getNextMove(): string
+    {
+        // TODO: Implement getNextMove() method.
+    }
 }

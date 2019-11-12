@@ -3,6 +3,7 @@
 namespace App\Events\User\Student;
 
 use App\Events\CanReachByMobilePhone;
+use App\Models\Misc\SystemNotification;
 use App\Models\RecruitStudent\RegistrationInformatics;
 use App\User;
 use Illuminate\Broadcasting\Channel;
@@ -19,11 +20,11 @@ class ApproveRegistrationEvent extends AbstractRegistrationEvent
 
     /**
      * ApproveRegistrationEvent constructor.
-     * @param RegistrationInformatics $registrationForm
+     * @param RegistrationInformatics $form
      */
-    public function __construct(RegistrationInformatics $registrationForm)
+    public function __construct(RegistrationInformatics $form)
     {
-        parent::__construct($registrationForm);
+        parent::__construct($form);
     }
 
     public function getSmsTemplateId(): string
@@ -37,4 +38,37 @@ class ApproveRegistrationEvent extends AbstractRegistrationEvent
         // TODO: 当报名学生的报名表被 pass 后的发送的短信内容
         return [];
     }
+
+    public function getForm(): RegistrationInformatics
+    {
+        // TODO: Implement getForm() method.
+        return $this->form;
+    }
+
+    public function getMessageType(): int
+    {
+        // TODO: Implement getMessageType() method.
+        return SystemNotification::PRIORITY_MEDIUM;
+    }
+
+    public function getPriority(): int
+    {
+        // TODO: 获取消息级别
+        return SystemNotification::TYPE_STUDENT_REGISTRATION;
+    }
+
+    public function getContent(): string
+    {
+        // TODO: 获取推送的内容
+        return '学生'.$this->getUser()['name'].'报名信息已通过,请及时查看';
+
+    }
+
+    public function getNextMove(): string
+    {
+        // TODO: Implement getNextMove() method.
+        return '';
+    }
+
+
 }

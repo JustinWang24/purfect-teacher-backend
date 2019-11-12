@@ -2,6 +2,8 @@
 
 namespace App\Events\User\Student;
 
+use App\Dao\Users\UserDao;
+use App\Models\Misc\SystemNotification;
 use App\Models\RecruitStudent\RegistrationInformatics;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Foundation\Events\Dispatchable;
@@ -34,19 +36,33 @@ class ApplyRecruitmentPlanEvent extends AbstractRegistrationEvent
 
     public function getForm(): RegistrationInformatics
     {
-        // TODO: Implement getForm() method.
+        // TODO: 当报名学生的报名表被 pass 后 获取提交的信息
         return $this->form;
     }
 
-    public function getMessageType()
+    public function getMessageType(): int
     {
-        // TODO: Implement getMessageType() method.
+        // TODO: 获取信息类型
+        return SystemNotification::PRIORITY_MEDIUM;
     }
 
-    public function getPriority()
+    public function getPriority(): int
     {
-        // TODO: Implement getPriority() method.
+        // TODO: 获取消息级别
+        return SystemNotification::TYPE_STUDENT_REGISTRATION;
     }
 
+    public function getContent(): string
+    {
+        // TODO: 获取推送的内容
+
+        return '学生'.$this->getUser()['name'].'已提交报名信息,请及时查看';
+    }
+
+    public function getNextMove(): string
+    {
+        // TODO: 获取下一步操作
+        return '';
+    }
 
 }
