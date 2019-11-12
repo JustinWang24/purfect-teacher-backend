@@ -49,17 +49,17 @@
                         <el-button v-show="waitingsCount(scope.row) > 0" type="text" v-on:click="forWaitings(scope.row)">
                             等待: {{ waitingsCount(scope.row) }}
                         </el-button>
-                        <span v-show="waitingsCount(scope.row)===0">等待: 0</span>
+                        <span v-show="waitingsCount(scope.row) <= 0">等待: 0</span>
                         /
-                        <el-button v-show="scope.row.passed_count > 0" type="text" v-on:click="openEnrolmentManager(scope.row)">
-                            批准: {{ scope.row.passed_count }}
+                        <el-button v-show="passedCount(scope.row) > 0" type="text" v-on:click="openEnrolmentManager(scope.row)">
+                            批准: {{ passedCount(scope.row) }}
                         </el-button>
-                        <span v-show="scope.row.passed_count===0">批准: 0</span>
+                        <span v-show="passedCount(scope.row) <= 0">批准: 0</span>
                         /
                         <el-button v-show="scope.row.enrolled_count > 0" type="text" v-on:click="forApproved(scope.row)">
                             录取: {{ scope.row.enrolled_count }}
                         </el-button>
-                        <span v-show="scope.row.enrolled_count===0">录取: 0</span>
+                        <span v-show="scope.row.enrolled_count <= 0">录取: 0</span>
                     </p>
                 </template>
             </el-table-column>
@@ -134,14 +134,14 @@
             },
             forApproved: function(plan){
                 // 所有已经被录取的: 所有 approved
-                const url = Constants.API.REGISTRATION_FORM.ENROLMENT_MANAGER + '?plan=' + plan.id +  + '&status=approved';
+                const url = Constants.API.REGISTRATION_FORM.ENROLMENT_MANAGER + '?plan=' + plan.id + '&status=approved';
                 window.open(url,'_self');
             },
             waitingsCount: function(plan){
                 return plan.applied_count - plan.passed_count;
             },
             passedCount: function(plan){
-                return plan.passed_count;
+                return plan.passed_count - plan.enrolled_count;
             }
         }
     }
