@@ -5,12 +5,13 @@ namespace App\Events;
 
 
 use App\Models\RecruitStudent\RegistrationInformatics;
+use PhpParser\Node\Scalar\String_;
 
 interface HasRegistrationForm
 {
 
     /**
-     * 获取from
+     * 获取form
      * @return RegistrationInformatics
      */
     public function getForm(): RegistrationInformatics;
@@ -22,5 +23,24 @@ interface HasRegistrationForm
      */
     public function getMessageType() : int ;
 
-    public function getPriority();
+
+    /**
+     * 获取消息级别
+     * @return int
+     */
+    public function getPriority() : int ;
+
+
+    /**
+     * 获取内容
+     * @return string
+     */
+    public function getContent() : string ;
+
+
+    /**
+     * 获取下一步
+     * @return string
+     */
+    public function getNextMove() : string ;
 }

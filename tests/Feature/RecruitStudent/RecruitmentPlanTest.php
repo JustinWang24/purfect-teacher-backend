@@ -2,6 +2,9 @@
 
 namespace Tests\Feature\RecruitStudent;
 
+use App\Dao\RecruitStudent\RegistrationInformaticsDao;
+use App\Events\User\Student\ApplyRecruitmentPlanEvent;
+use App\Events\User\Student\ApproveRegistrationEvent;
 use Tests\Feature\BasicPageTestCase;
 
 class RecruitmentPlanTest extends BasicPageTestCase
@@ -70,6 +73,21 @@ class RecruitmentPlanTest extends BasicPageTestCase
             ->withSession($this->schoolSessionData)
             ->post(route('api.major.submit.form'), $data);
         dd($response->content());
+    }
+
+
+    public function testApplyRecruitmentPlanEvent() {
+
+        $dao = new RegistrationInformaticsDao();
+        $info = $dao->getInformaticsByUserIdAndPlanId(1,1);
+        event(new ApplyRecruitmentPlanEvent($info));
+    }
+
+
+    public function testApproveRegistrationEvent() {
+        $dao = new RegistrationInformaticsDao();
+        $info = $dao->getInformaticsByUserIdAndPlanId(1,1);
+        event(new ApproveRegistrationEvent($info));
     }
 
 }
