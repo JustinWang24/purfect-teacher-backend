@@ -28,13 +28,30 @@ class EnrolRegistrationEvent extends AbstractRegistrationEvent
 
     public function getSmsTemplateId(): string
     {
-        // TODO: 当报名学生的报名表被 pass 后的短信模板 ID 还未知
-        return '';
+        return '483489';
     }
 
     public function getSmsContent(): array
     {
-        // TODO: 当报名学生的报名表被 pass 后的发送的短信内容
-        return [];
+        return [$this->getUserName(), $this->getSchoolName(), $this->getMajorName()];
     }
+
+    public function getSchoolName()
+    {
+        $dao = new SchoolDao;
+        $result = $dao->getSchoolById($this->form->school_id);
+        if ($result) {
+            return $result->name;
+        }
+    }
+
+    public function getMajorName()
+    {
+        $dao = new MajorDao;
+        $result = $dao->getMajorById($this->form->major_id);
+        if ($result) {
+            return $result->name;
+        }
+    }
+    
 }

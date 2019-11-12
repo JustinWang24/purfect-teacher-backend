@@ -10,6 +10,8 @@ use Illuminate\Broadcasting\PresenceChannel;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
+use App\Dao\Schools\SchoolDao;
+use App\Dao\Schools\MajorDao;
 
 class RefuseRegistrationEvent extends AbstractRegistrationEvent
 {
