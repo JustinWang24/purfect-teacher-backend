@@ -53,6 +53,14 @@ class RecruitmentRegistrationFormRequest extends MyStandardRequest
         return $this->has('status') && $this->get('status') === 'pass';
     }
 
+    /**
+     * 是否有只列出已录取的新生的标志位
+     * @return bool
+     */
+    public function isInApprovedStatus(){
+        return $this->has('status') && $this->get('status') === 'approved';
+    }
+
     public function getStatus(){
         return $this->get('status');
     }

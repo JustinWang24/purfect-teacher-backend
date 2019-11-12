@@ -12,7 +12,6 @@ use App\User;
                 <div class="card-head">
                     <header><span class="text-primary">{{ $plan->title }}</span> - 新生管理: (已录取的新生: {{ $registrations->count() }})</header>
                 </div>
-
                 <div class="card-body">
                     <div class="row">
                         <div class="table-padding col-12">
@@ -66,19 +65,15 @@ use App\User;
                                             {{ $form->getStatusText() }}
                                         </td>
                                         <td>
-                                            <p>{{ $form->major->name }}</p>
-                                            <p>
-                                                @if($form->isRelocationAllowed())
-                                                    <span class="text-success">服从调剂</span>
-                                                @else
-                                                    <span class="text-danger">不服从调剂</span>
-                                                @endif
-                                            </p>
+                                            {{ $form->major->name }}
                                         </td>
                                         <td>{{ $form->note }}</td>
                                         <td class="text-center">
-                                            <el-button size="mini" icon="el-icon-check" v-on:click="showNotesForm({{ $form->id }}, '{{ $form->name }}')">录取</el-button>
-                                            <el-button size="mini" type="danger" icon="el-icon-close" v-on:click="showRejectForm({{ $form->id }}, '{{ $form->name }}')">拒绝</el-button>
+                                            <div class="btn-group btn-group-solid">
+                                                <a href="{{ route('teacher.print.invitation',['uuid'=>$form->id]) }}" target="_blank" class="btn btn-default btn-xs">录取通知单</a>
+                                                <button type="button" class="btn btn-default btn-xs">分班</button>
+                                                <a href="{{ route('teacher.cancel.enrolment',['uuid'=>$form->id]) }}" class="btn deepPink-bgcolor btn-xs btn-need-confirm">取消资格</a>
+                                            </div>
                                         </td>
                                     </tr>
                                 @endforeach
@@ -95,19 +90,6 @@ use App\User;
                                 </el-form>
                                 <div slot="footer" class="dialog-footer">
                                     <el-button @click="showNoteFormFlag = false">取 消</el-button>
-                                    <el-button type="primary" @click="submit">确 定</el-button>
-                                </div>
-                            </el-dialog>
-                            <el-dialog title="拒绝" :visible.sync="rejectNoteFormFlag">
-                                <p class="text-danger">学生姓名: @{{ currentName }}</p>
-                                <p class="text-danger">报名专业: {{ $plan->title }} - {{ $plan->year }}年</p>
-                                <el-form :model="form">
-                                    <el-form-item label="拒绝此录取的原因">
-                                        <el-input type="textarea" v-model="form.note"></el-input>
-                                    </el-form-item>
-                                </el-form>
-                                <div slot="footer" class="dialog-footer">
-                                    <el-button @click="rejectNoteFormFlag = false">取 消</el-button>
                                     <el-button type="primary" @click="submit">确 定</el-button>
                                 </div>
                             </el-dialog>
