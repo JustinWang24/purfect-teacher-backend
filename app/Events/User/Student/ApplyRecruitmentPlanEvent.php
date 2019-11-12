@@ -68,7 +68,7 @@ class ApplyRecruitmentPlanEvent extends AbstractRegistrationEvent
      * 获取推送的内容
      * @return string
      */
-    public function getContent(): string
+    public function getSystemContent(): string
     {
         return '学生'.$this->getUser()['name'].'已提交报名信息,请及时查看';
     }

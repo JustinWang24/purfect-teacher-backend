@@ -34,7 +34,7 @@ class NotifyEnrolmentManager
             $event->getForm()->plan->enrol_manager,
             $event->getMessageType(),
             $event->getPriority(),
-            $event->getContent(),
+            $event->getSystemContent(),
             $event->getNextMove()
         );
     }

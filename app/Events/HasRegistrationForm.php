@@ -35,7 +35,7 @@ interface HasRegistrationForm
      * 获取内容
      * @return string
      */
-    public function getContent() : string ;
+    public function getSystemContent() : string ;
 
 
     /**

@@ -70,7 +70,7 @@ class ApproveRegistrationEvent extends AbstractRegistrationEvent
      * 获取推送的内容
      * @return string
      */
-    public function getContent(): string
+    public function getSystemContent(): string
     {
         return '学生'.$this->getUser()['name'].'报名信息已通过,请及时查看';
     }
