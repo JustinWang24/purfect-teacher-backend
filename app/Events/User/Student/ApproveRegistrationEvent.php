@@ -39,29 +39,40 @@ class ApproveRegistrationEvent extends AbstractRegistrationEvent
         return [];
     }
 
+    /**
+     * 当报名学生的报名表被 pass 后 获取提交的信息
+     * @return RegistrationInformatics
+     */
     public function getForm(): RegistrationInformatics
     {
-        // TODO: Implement getForm() method.
         return $this->form;
     }
 
+    /**
+     * 获取信息类型
+     * @return int
+     */
     public function getMessageType(): int
     {
-        // TODO: Implement getMessageType() method.
         return SystemNotification::PRIORITY_MEDIUM;
     }
 
+    /**
+     * 获取消息级别
+     * @return int
+     */
     public function getPriority(): int
     {
-        // TODO: 获取消息级别
         return SystemNotification::TYPE_STUDENT_REGISTRATION;
     }
 
+    /**
+     * 获取推送的内容
+     * @return string
+     */
     public function getContent(): string
     {
-        // TODO: 获取推送的内容
         return '学生'.$this->getUser()['name'].'报名信息已通过,请及时查看';
-
     }
 
     public function getNextMove(): string
