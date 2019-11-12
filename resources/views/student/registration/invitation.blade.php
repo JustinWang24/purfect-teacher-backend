@@ -15,7 +15,7 @@
         <h2 style="text-align: center;">{{ $form->plan->school->name }}</h2>
         <p style="line-height: 40px;font-size: 24px;">
             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="text-decoration: underline">{{ $form->name }}</span> 同学, 你被录取到我校 <span style="text-decoration: underline">{{ $form->major->name }}</span> 专业学习.
-            请于 <span style="text-decoration: underline">{{ Carbon\Carbon::today()->format('Y 年 m 月 d 日') }}</span> 持本通知书来我校报到.
+            请于 <span style="text-decoration: underline">{{ $form->plan->opening_date->format('Y 年 m 月 d 日') }}</span> 持本通知书来我校报到.
         </p>
         <p style="line-height: 40px;font-size: 24px;">
             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;请妥善保存本通知书, 并在报到时向负责迎新的老师出示下方二维码, 办理入学手续.

@@ -1,9 +1,25 @@
 <template>
     <div class="plan-create-form">
         <el-form :model="form" :rules="rules" ref="planForm" label-width="100px" class="plan-form">
-            <el-form-item label="招生标题" prop="title">
-                <el-input v-model="form.title" placeholder="必填: 招生简章标题"></el-input>
-            </el-form-item>
+
+
+            <el-row>
+                <el-col :span="14">
+                    <el-form-item label="招生标题" prop="title">
+                        <el-input v-model="form.title" placeholder="必填: 招生简章标题"></el-input>
+                    </el-form-item>
+                </el-col>
+                <el-col :span="10">
+                    <el-form-item label="开学日期" prop="opening_date">
+                    <el-date-picker
+                            type="date"
+                            placeholder="选择开学日期"
+                            value-format="yyyy-MM-dd"
+                            v-model="form.opening_date" style="width: 100%;">
+                    </el-date-picker>
+                    </el-form-item>
+                </el-col>
+            </el-row>
 
             <el-row>
                 <el-col :span="12">
@@ -51,7 +67,8 @@
                                 type="date"
                                 placeholder="选择开始日期"
                                 value-format="yyyy-MM-dd"
-                                v-model="form.start_at" style="width: 100%;"></el-date-picker>
+                                v-model="form.start_at" style="width: 100%;">
+                        </el-date-picker>
                     </el-form-item>
                 </el-col>
                 <el-col class="line" :span="2"><p style="text-align:center;">-</p></el-col>
@@ -169,6 +186,9 @@
                     this.currentEnrolManagerName = this.form.enrol_manager_name;
                 }
             },
+            'form.major_id': function(newVal, oldVal){
+                this.form.major_name = Util.GetItemById(newVal, this.majors).name;
+            },
             'somethingChanged': function(newVal, oldVal){
                 // 监听时用
             }
@@ -183,7 +203,10 @@
                         { required: true, message: '请选择专业', trigger: 'blur' }
                     ],
                     start_at: [
-                        { type: 'date', required: true, message: '请选择日期', trigger: 'blur' }
+                        { type: 'date', required: true, message: '请选择招生开始日期', trigger: 'blur' }
+                    ],
+                    opening_date: [
+                        { type: 'date', required: true, message: '请选择开学日期', trigger: 'blur' }
                     ],
                     seats: [
                         { required: true, message: '招生总人数不可以为空', trigger: 'blur' },
