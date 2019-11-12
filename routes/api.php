@@ -17,7 +17,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::prefix('school')->group(function () {
+Route::prefix('school')->middleware('auth:api')->group(function () {
     // 加载学校的作息时间表
     Route::any('/load-time-slots','Api\School\TimeSlotsController@load_by_school')
         ->name('api.school.load.time.slots');
@@ -78,13 +78,13 @@ Route::prefix('school')->group(function () {
         ->name('api.school.quick.search.users');
 });
 
-Route::prefix('enquiry')->group(function () {
+Route::prefix('enquiry')->middleware('auth:api')->group(function () {
     // 保存课程表项的接口
     Route::post('/save','Api\Enquiry\EnquiriesController@save')
         ->name('api.enquiry.save');
 });
 
-Route::prefix('recruitment')->group(function () {
+Route::prefix('recruitment')->middleware('auth:api')->group(function () {
     // 加载某个学校的招生计划
     Route::any('/load-plans','Api\Recruitment\PlansController@load_plans')
         ->name('api.recruitment.load.plans');
@@ -102,7 +102,7 @@ Route::prefix('recruitment')->group(function () {
         ->name('api.recruitment.delete.plan');
 });
 
-Route::prefix('timetable')->group(function () {
+Route::prefix('timetable')->middleware('auth:api')->group(function () {
     // 保存课程表项的接口
     Route::post('/timetable-item-can-be-inserted','Api\Timetable\TimetableItemsController@can_be_inserted')
         ->name('api.timetable.item.can.be.inserted');
@@ -145,7 +145,7 @@ Route::prefix('timetable')->group(function () {
 });
 
 // 招生API
-Route::prefix('student-register')->group(function () {
+Route::prefix('student-register')->middleware('auth:api')->group(function () {
      // 获取全部招生计划
      Route::post('/load-open-majors','Api\Recruitment\PlansController@load_plans')
         ->name('api.load.open.majors');
@@ -180,7 +180,7 @@ Route::prefix('student-register')->group(function () {
 });
 
 // 录取API
-Route::prefix('employ')->group(function () {
+Route::prefix('employ')->middleware('auth:api')->group(function () {
      // 获取全部未分配班级的人
      Route::post('/get-unassigned-grades','Api\Recruitment\EmployController@index')
         ->name('api.get.unassigned.grades');
@@ -200,7 +200,7 @@ Route::prefix('employ')->group(function () {
 
 
 // APP 通讯录
-Route::prefix('campus')->group(function () {
+Route::prefix('campus')->middleware('auth:api')->group(function () {
      // 班级通讯录
      Route::post('/handleAffairs/getAddressBook/class','Api\Address\AddressBookController@index')
         ->name('api.address.book.class');

@@ -9,7 +9,7 @@ mix.js('resources/js/smart/smart_basic.js', 'public/js')
     .sass('resources/sass/smart/smart_basic.scss', 'public/css');
 
 /*
-*   拷贝图片目录, js css 文件等
+ *   拷贝图片目录, js css 文件等
 */
 mix.copyDirectory(
     'resources/sass/smart/fonts',
