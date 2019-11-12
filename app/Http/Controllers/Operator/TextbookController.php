@@ -11,26 +11,6 @@ use App\Utils\JsonBuilder;
 class TextbookController extends Controller
 {
 
-
-    /**
-     * 列表
-     * @param TextbookRequest $request
-     * @return string
-     */
-    public function list(TextbookRequest $request) {
-        $schoolId = $request->getSchoolId();
-        $textbookDao = new TextbookDao();
-        $list = $textbookDao->getTextbookListBySchoolId($schoolId);
-        foreach ($list as $key => $val) {
-            $list[$key]['type'] = $val['type_text'];
-        }
-
-        $data['textbook']=$list;
-        return JsonBuilder::Success($data);
-    }
-
-
-
     /**
      * 通过校区查询教材的购买情况
      * @param TextbookRequest $request
@@ -41,7 +21,8 @@ class TextbookController extends Controller
         $textbookDao = new TextbookDao();
         $result = $textbookDao->getCampusTextbook($campusId);
         if($result->isSuccess()) {
-            return JsonBuilder::Success($result->getData());
+            $data = ['campus_textbook'=>$result->getData()];
+            return JsonBuilder::Success($data);
         } else {
             return JsonBuilder::Error($result->getMessage());
         }

@@ -8,15 +8,6 @@ class TextbookRequest extends MyStandardRequest
 {
 
     /**
-     * 获取教材ID
-     * @return mixed
-     */
-    public function getTextbookId() {
-        return $this->get('id');
-    }
-
-
-    /**
      * 获取表单提交
      * @return mixed
      */
@@ -32,4 +23,17 @@ class TextbookRequest extends MyStandardRequest
     public function getDownloadType() {
         return $this->get('download_type','csv');
     }
+
+
+    /**
+     * 获取教材ID，以逗号分割
+     * @return array
+     */
+    public function getTextbookIdArr() {
+        $textbookIds = $this->get('textbook_ids',null);
+        return explode(',', $textbookIds);
+    }
+
+
+
 }

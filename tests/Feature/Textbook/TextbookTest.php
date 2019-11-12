@@ -21,7 +21,6 @@ class TextbookTest extends BasicPageTestCase
             'press'    => '新华出版社',
             'author'   => '鲁迅',
             'edition'  => 1,      //版本
-            'course_id'=> 6,
             'type'     => Textbook::TYPE_MAJOR,
             'purchase_price' => 80,
             'price'    => 100,
@@ -47,7 +46,6 @@ class TextbookTest extends BasicPageTestCase
 //        $response->assertSee('id="textbook-press-input"');
 //        $response->assertSee('id="textbook-author-input"');
 //        $response->assertSee('id="textbook-edition-input"');
-//        $response->assertSee('id="textbook-course_id-select"');
 //        $response->assertSee('id="textbook-type-input"');
 //        $response->assertSee('id="textbook-purchase_price"');
 //        $response->assertSee('id="textbook-price"');
@@ -75,7 +73,6 @@ class TextbookTest extends BasicPageTestCase
 //        $response->assertSee('id="textbook-press-input"');
 //        $response->assertSee('id="textbook-author-input"');
 //        $response->assertSee('id="textbook-edition-input"');
-//        $response->assertSee('id="textbook-course_id-select"');
 //        $response->assertSee('id="textbook-type-input"');
 //        $response->assertSee('id="textbook-purchase_price"');
 //        $response->assertSee('id="textbook-price"');
@@ -89,7 +86,7 @@ class TextbookTest extends BasicPageTestCase
      */
     public function testSaveTextbookApi() {
         $data = $this->_createDate();
-//        $data['textbook']['id'] = 1;
+        $data['textbook']['textbook_id'] = 2;
         $this->withoutExceptionHandling();
         $user = $this->getSuperAdmin();
 
@@ -104,6 +101,28 @@ class TextbookTest extends BasicPageTestCase
         $this->assertEquals(1000, $result['code']);
 
     }
+
+
+    /**
+     * 课程绑定教材
+     */
+    public function testCourseBindingTextbook() {
+
+        $data = ['textbook_ids'=>'1,2','course_id'=>1];
+        $user = $this->getSuperAdmin();
+
+        $response = $this->setSchoolAsUser($user, 50)
+            ->actingAs($user)
+            ->withSession($this->schoolSessionData)
+            ->post(route('teacher.textbook.courseBindingTextbook',$data));
+
+        $result = json_decode($response->content(),true);
+        $this->assertArrayHasKey('code', $result);
+        $this->assertEquals(1000, $result['code']);
+    }
+
+
+
 
 
     /**
@@ -128,7 +147,19 @@ class TextbookTest extends BasicPageTestCase
             $this->assertArrayHasKey('year', $val);
             $this->assertArrayHasKey('type', $val);
             $this->assertArrayHasKey('textbook_num', $val);
-            $this->assertArrayHasKey('textbooks', $val);
+            $this->assertArrayHasKey('course_textbooks', $val);
+            if(!empty($val['course_textbooks'])) {
+                foreach ($val['course_textbooks'] as $k => $v) {
+                    $this->assertArrayHasKey('textbook', $v);
+                    $this->assertArrayHasKey('name', $v['textbook']);
+                    $this->assertArrayHasKey('press', $v['textbook']);
+                    $this->assertArrayHasKey('author', $v['textbook']);
+                    $this->assertArrayHasKey('edition', $v['textbook']);
+                    $this->assertArrayHasKey('purchase_price', $v['textbook']);
+                    $this->assertArrayHasKey('price', $v['textbook']);
+                }
+            }
+
         }
     }
 
@@ -143,7 +174,7 @@ class TextbookTest extends BasicPageTestCase
         $response = $this->setSchoolAsUser($user, 50)
             ->actingAs($user)
             ->withSession($this->schoolSessionData)
-            ->get(route('school_manager.textbook.list'));
+            ->get(route('teacher.textbook.list'));
 
         $result = json_decode($response->content(),true);
         $this->assertArrayHasKey('code', $result);
@@ -154,18 +185,9 @@ class TextbookTest extends BasicPageTestCase
             $this->assertArrayHasKey('name', $val);
             $this->assertArrayHasKey('press', $val);
             $this->assertArrayHasKey('author', $val);
-            $this->assertArrayHasKey('course_id', $val);
             $this->assertArrayHasKey('type', $val);
             $this->assertArrayHasKey('purchase_price', $val);
             $this->assertArrayHasKey('price', $val);
-            $this->assertArrayHasKey('course', $val);
-            if(!empty($val['course'])) {
-                $this->assertArrayHasKey('name', $val['course']);
-                $this->assertArrayHasKey('code', $val['course']);
-                $this->assertArrayHasKey('year', $val['course']);
-            }
-
-
         }
 
     }
@@ -185,25 +207,25 @@ class TextbookTest extends BasicPageTestCase
         $result = json_decode($response->content(),true);
         $this->assertArrayHasKey('code', $result);
         $this->assertNotEquals(999, $result['code']);
+        $this->assertArrayHasKey('textbook', $result['data']);
 
         if($result['code'] == JsonBuilder::CODE_SUCCESS) {
-            foreach ($result['data'] as $key => $val) {
+            foreach ($result['data']['textbook'] as $key => $val) {
                 $this->assertArrayHasKey('id', $val);
                 $this->assertArrayHasKey('code', $val);
                 $this->assertArrayHasKey('name', $val);
                 $this->assertArrayHasKey('year', $val);
                 $this->assertArrayHasKey('term', $val);
                 $this->assertArrayHasKey('textbook_num', $val);
-                $this->assertArrayHasKey('textbooks', $val);
+                $this->assertArrayHasKey('course_textbooks', $val);
 
-                if(!empty($val['textbooks'])) {
-                    foreach ($val['textbooks'] as $k => $v)
-                    {
-                        $this->assertArrayHasKey('name', $v);
-                        $this->assertArrayHasKey('press', $v);
-                        $this->assertArrayHasKey('author', $v);
-                        $this->assertArrayHasKey('price', $v);
-                        $this->assertArrayHasKey('purchase_price', $v);
+                if(!empty($val['course_textbooks'])) {
+                    foreach ($val['course_textbooks'] as $k => $v) {
+                        $this->assertArrayHasKey('name', $v['textbook']);
+                        $this->assertArrayHasKey('press', $v['textbook']);
+                        $this->assertArrayHasKey('author', $v['textbook']);
+                        $this->assertArrayHasKey('price', $v['textbook']);
+                        $this->assertArrayHasKey('purchase_price', $v['textbook']);
                     }
                 }
             }
@@ -224,12 +246,12 @@ class TextbookTest extends BasicPageTestCase
             ->get(route('school_manager.textbook.loadCampusTextbook',$data));
 
         $result = json_decode($response->content(),true);
-
         $this->assertArrayHasKey('code', $result);
         $this->assertNotEquals(999, $result['code']);
+        $this->assertArrayHasKey('campus_textbook', $result['data']);
 
         if($result['code'] == JsonBuilder::CODE_SUCCESS) {
-            foreach ($result['data'] as  $key => $val) {
+            foreach ($result['data']['campus_textbook'] as  $key => $val) {
                 $this->assertArrayHasKey('major_name', $val);
                 $this->assertArrayHasKey('name', $val['course']);
                 $this->assertArrayHasKey('code', $val['course']);
@@ -245,13 +267,13 @@ class TextbookTest extends BasicPageTestCase
                      $this->assertArrayHasKey('total_informatics_seat', $val['textbook_num']);
                 }
 
-                if(!empty($val['course']['textbooks'])) {
-                    foreach ($val['course']['textbooks'] as $k => $v){
-                        $this->assertArrayHasKey('name', $v);
-                        $this->assertArrayHasKey('press', $v);
-                        $this->assertArrayHasKey('author', $v);
-                        $this->assertArrayHasKey('purchase_price', $v);
-                        $this->assertArrayHasKey('price', $v);
+                if(!empty($val['course']['course_textbooks'])) {
+                    foreach ($val['course']['course_textbooks'] as $k => $v){
+                        $this->assertArrayHasKey('name', $v['textbook']);
+                        $this->assertArrayHasKey('press', $v['textbook']);
+                        $this->assertArrayHasKey('author', $v['textbook']);
+                        $this->assertArrayHasKey('purchase_price', $v['textbook']);
+                        $this->assertArrayHasKey('price', $v['textbook']);
                     }
                 }
             }

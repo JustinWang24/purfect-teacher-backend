@@ -43,13 +43,13 @@ class DownloadOfficeDao
             $sheet->setCellValue('B'.$num, $val['course']['code']);
             $sheet->setCellValue('C'.$num, $val['course']['scores']);
             $sheet->setCellValue('D'.$num, $val['course']['year']);
-            if(!empty($val['course']['textbooks'])){
+            if(!empty($val['course']['course_textbooks'])){
 
-                foreach ($val['course']['textbooks'] as $k => $v) {
+                foreach ($val['course']['course_textbooks'] as $k => $v) {
                     $num = $num + $k;
-                    $sheet->setCellValue('E'.$num, $v['name']);
-                    $sheet->setCellValue('F'.$num, $v['press']);
-                    $sheet->setCellValue('G'.$num, $v['author']);
+                    $sheet->setCellValue('E'.$num, $v['textbook']['name']);
+                    $sheet->setCellValue('F'.$num, $v['textbook']['press']);
+                    $sheet->setCellValue('G'.$num, $v['textbook']['author']);
 
                     if($val['type'] == 0) {
                         $sheet->setCellValue('H'.$num, $val['textbook_num']);
@@ -135,11 +135,11 @@ class DownloadOfficeDao
             $sheet->setCellValue('D'.$num, $val['year']);
             if(!empty($val['textbooks'])){
 
-                foreach ($val['textbooks'] as $k => $v) {
+                foreach ($val['course_textbooks'] as $k => $v) {
                     $num = $num + $k;
-                    $sheet->setCellValue('E'.$num, $v['name']);
-                    $sheet->setCellValue('F'.$num, $v['press']);
-                    $sheet->setCellValue('G'.$num, $v['author']);
+                    $sheet->setCellValue('E'.$num, $v['textbook']['name']);
+                    $sheet->setCellValue('F'.$num, $v['textbook']['press']);
+                    $sheet->setCellValue('G'.$num, $v['textbook']['author']);
                     $sheet->setCellValue('H'.$num, $val['textbook_num']);
 
                 }
