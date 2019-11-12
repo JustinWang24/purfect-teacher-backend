@@ -164,9 +164,10 @@ class wifiIssueController extends Controller
       $condition[] = [ 'user_id' , '=' , $authUserInfo[ 'user_id' ] ];
 
       // 获取数据
-      $infos = WifiIssuesDao::getWifiIssuesOneInfo ( $condition,[['issueid','desc']],['*'])->toArray();
+      $infos = WifiIssuesDao::getWifiIssuesOneInfo ( $condition,[['issueid','desc']],['*']);
+      $infos = $infos != null ? $infos->toArray() : null;
 
-      if ( !empty($infos) )
+      if ( $infos )
       {
          if ( $infos[ 'status' ] == 3 )
          {
@@ -183,7 +184,7 @@ class wifiIssueController extends Controller
          ];
          $infos[ 'timeArr' ] = (array)array_values( $data );
       }
-      return JsonBuilder::Success ( $infos ,'单个报修详情');
+      return JsonBuilder::Success ( '单个报修详情' , $infos );
    }
 
    /**

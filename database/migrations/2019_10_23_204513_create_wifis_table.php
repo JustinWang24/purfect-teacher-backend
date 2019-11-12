@@ -1,4 +1,5 @@
 <?php
+
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
@@ -26,13 +27,13 @@ class CreateWifisTable extends Migration
 				$table->decimal('wifi_oprice', 8, 2)->default(0.00)->comment('原始价格');
 				$table->decimal('wifi_price', 8, 2)->default(0.00)->comment('支付价格');			
 				$table->tinyInteger('status')->default(1)->comment('状态(1:显示,0:不显示)');
-				$table->timestamps();
-				$table->softDeletes();
+				//$table->timestamps();
+				//$table->softDeletes();
 			});
 		}
-        DB::statement(" ALTER TABLE wifis comment 'wifi产品表' ")
+        DB::statement(" ALTER TABLE wifis comment 'wifi产品表' ");
     }
-
+	
     /**
      * Reverse the migrations.
      *
@@ -40,6 +41,6 @@ class CreateWifisTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('wifis');
+        Schema::dropIfExists('timetable_items');
     }
 }
