@@ -5,7 +5,7 @@ namespace App\Dao\Students;
 use App\Dao\Users\UserDao;
 use App\Models\Students\StudentProfile;
 
-class StudentProfileDao extends StudentProfile
+class StudentProfileDao
 {
 
     /**
