@@ -24,7 +24,7 @@ class Textbook extends Model
     /**
      * @var array
      */
-    protected $fillable = ['name', 'press', 'author', 'edition', 'course_id', 'school_id', 'type', 'purchase_price', 'price', 'introduce' ,'status'];
+    protected $fillable = ['name', 'press', 'author', 'edition', 'school_id', 'type', 'purchase_price', 'price', 'introduce'];
 
     protected $hidden = ['updated_at', 'deleted_at'];
 
@@ -37,20 +37,13 @@ class Textbook extends Model
     const TYPE_SELECT_TEXT = '选读教材';
 
 
-    const STATUS_RELIEVE  = 0;
-    const STATUS_NORMAL   = 1;
+//    const STATUS_RELIEVE  = 0;
+//    const STATUS_NORMAL   = 1;
+//
+//    const STATUS_RELIEVE_TEXT = '解除';
+//    const STATUS_NORMAL_TEXT =  '正常';
 
-    const STATUS_RELIEVE_TEXT = '解除';
-    const STATUS_NORMAL_TEXT =  '正常';
 
-
-    /**
-     * 课程
-     */
-    public function course() {
-        $field = ['id', 'code', 'name', 'scores', 'year', 'term' , 'optional'];
-        return $this->belongsTo(Course::class)->select($field);
-    }
 
 
     /**

@@ -120,4 +120,22 @@ class MyStandardRequest extends FormRequest
     public function getCampusId() {
         return $this->get('campus_id',null);
     }
+
+
+    /**
+     * 获取课程ID
+     * @return mixed
+     */
+    public function getCourseId() {
+        return $this->get('course_id',null);
+    }
+
+
+    /**
+     * 获取教材ID
+     * @return mixed
+     */
+    public function getTextbookId() {
+        return $this->get('textbook_id', null);
+    }
 }
