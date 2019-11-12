@@ -100,6 +100,6 @@ class CourseMajorDao
      * @return mixed
      */
     public function getCourseIdByMajorIdArr($majorIdArr) {
-        return CourseMajor::whereIn('major_id',$majorIdArr)->with(['course.textbooks'])->get();
+        return CourseMajor::whereIn('major_id',$majorIdArr)->with(['course.courseTextbooks.textbook'])->get();
     }
 }

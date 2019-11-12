@@ -120,7 +120,6 @@ Route::prefix('school_manager')->group(function () {
 
 
     // 教材管理
-    Route::get('textbook/list', 'TextbookController@list')->name('school_manager.textbook.list');  // 教程列表
     Route::get('textbook/loadCampusTextbook', 'TextbookController@loadCampusTextbook')->name('school_manager.textbook.loadCampusTextbook'); // 获取校区教材采购情况
     Route::get('textbook/campusTextbookDownload', 'TextbookController@campusTextbookDownload')->name('school_manager.textbook.campusTextbookDownload'); // 校区教材下载
 
