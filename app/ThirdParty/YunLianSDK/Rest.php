@@ -4,7 +4,7 @@
 namespace App\ThirdParty\YunLianSDK;
 
 
-class REST
+class Rest
 {
     private $AccountSid;
     private $AccountToken;
@@ -257,9 +257,10 @@ class REST
 
     /**
      * 发送模板短信
-     * @param to 短信接收彿手机号码集合,用英文逗号分开
-     * @param datas 内容数据
-     * @param $tempId 模板Id
+     * @param $to
+     * @param $datas
+     * @param $tempId
+     * @return stdClass|mixed|\SimpleXMLElement
      */
     function sendTemplateSMS($to, $datas, $tempId)
     {

@@ -12,5 +12,5 @@ interface ISmsSender
      * @param array $data
      * @return IMessageBag
      */
-    public function send($mobile,$templateId,$data): IMessageBag;
+    public function send($mobile, $templateId, $data): IMessageBag;
 }
