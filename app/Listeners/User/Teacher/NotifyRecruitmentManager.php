@@ -38,7 +38,7 @@ class NotifyRecruitmentManager
             $event->getForm()->plan->manager_id,
             $event->getMessageType(),
             $event->getPriority(),
-            $event->getContent(),
+            $event->getSystemContent(),
             $event->getNextMove()
         );
     }

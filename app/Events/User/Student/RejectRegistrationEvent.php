@@ -52,7 +52,7 @@ class RejectRegistrationEvent extends AbstractRegistrationEvent
         // TODO: Implement getPriority() method.
     }
 
-    public function getContent(): string
+    public function getSystemContent(): string
     {
         // TODO: Implement getContent() method.
     }
