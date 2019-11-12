@@ -39,10 +39,11 @@ class RecruitmentPlan extends Model
         'target_students', // 录取方式
         'student_requirements', // 报名条件
         'how_to_enrol', // 录取方式
+        'opening_date', // 开学日期
     ];
 
     public $dates = [
-        'start_at','end_at',
+        'start_at','end_at','opening_date'
     ];
 
     protected $casts = [
