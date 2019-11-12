@@ -49,6 +49,7 @@ class RecruitmentPlan extends Model
     protected $casts = [
         'start_at' => 'datetime:Y-m-d',
         'end_at' => 'datetime:Y-m-d',
+        'opening_date' => 'datetime:Y-m-d',
         'hot'=>'boolean',
     ];
 

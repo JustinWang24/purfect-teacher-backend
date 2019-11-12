@@ -723,6 +723,7 @@ if(document.getElementById('school-recruitment-manager-app')){
                     how_to_enrol: '',
                     manager_name: '',
                     enrol_manager_name: '',
+                    opening_date: '',
                 };
             }
         }
