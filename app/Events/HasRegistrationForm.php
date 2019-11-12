@@ -1,11 +1,8 @@
 <?php
 
-
 namespace App\Events;
 
-
 use App\Models\RecruitStudent\RegistrationInformatics;
-use PhpParser\Node\Scalar\String_;
 
 interface HasRegistrationForm
 {
