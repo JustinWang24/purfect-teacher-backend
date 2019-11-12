@@ -110,13 +110,19 @@ class WifiCableController extends Controller
       $condition[] = [ 'status' , '=' , 1 ];
 
       $getWifiUserTimesOneInfo = WifiUserTimesDao::getWifiUserTimesOneInfo (
-         $condition , [ [ 'timesid' , 'desc' ] ] , [ 'timesid' , 'user_wifi_time' ]
+         $condition , [ [ 'timesid' , 'desc' ] ] , [ 'timesid' , 'user_wifi_time','user_cable_etime' ]
       );
 
       // 未开通wifi无线不能申请有线
       if ( empty( $getWifiUserTimesOneInfo ) || (strtotime ( $getWifiUserTimesOneInfo->user_wifi_time ) < time ()))
       {
          return JsonBuilder::Error ( '请先充值后再申请开通有线' );
+      }
+
+      // 如果已经开通过不需要在开通
+      if ( (strtotime ( $getWifiUserTimesOneInfo->user_cable_etime ) > time ()))
+      {
+         return JsonBuilder::Error ( '您已经开通过，不需要再次开通' );
       }
 
       // 验证wifi有线是否存在
