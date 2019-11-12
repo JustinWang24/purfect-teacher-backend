@@ -34,28 +34,42 @@ class ApplyRecruitmentPlanEvent extends AbstractRegistrationEvent
         return [];
     }
 
+    /**
+     * 当报名学生的报名表被 pass 后 获取提交的信息
+     * @return RegistrationInformatics
+     */
     public function getForm(): RegistrationInformatics
     {
-        // TODO: 当报名学生的报名表被 pass 后 获取提交的信息
         return $this->form;
     }
 
+
+    /**
+     * 获取信息类型
+     * @return int
+     */
     public function getMessageType(): int
     {
-        // TODO: 获取信息类型
         return SystemNotification::PRIORITY_MEDIUM;
     }
 
+
+    /**
+     * 获取消息级别
+     * @return int
+     */
     public function getPriority(): int
     {
-        // TODO: 获取消息级别
         return SystemNotification::TYPE_STUDENT_REGISTRATION;
     }
 
+
+    /**
+     * 获取推送的内容
+     * @return string
+     */
     public function getContent(): string
     {
-        // TODO: 获取推送的内容
-
         return '学生'.$this->getUser()['name'].'已提交报名信息,请及时查看';
     }
 
