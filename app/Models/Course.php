@@ -3,7 +3,7 @@
 namespace App\Models;
 
 use App\Models\Courses\CourseArrangement;
-use App\Models\Schools\Textbook;
+use App\Models\Courses\CourseTextbook;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Models\Courses\CourseTeacher;
@@ -51,8 +51,12 @@ class Course extends Model
     }
 
 
-    public function textbooks() {
-        $field = ['id', 'name', 'press', 'author', 'course_id', 'purchase_price', 'price'];
-        return $this->hasMany(Textbook::class)->where('status',Textbook::STATUS_NORMAL)->select($field);
+
+    /**
+     * 课程和教材关联
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function courseTextbooks() {
+        return $this->hasMany(CourseTextbook::class);
     }
 }

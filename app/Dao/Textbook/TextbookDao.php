@@ -47,8 +47,9 @@ class TextbookDao
      * @return mixed
      */
     public function editById($data) {
-
-        return Textbook::where('id',$data['id'])->update($data);
+        $id = $data['textbook_id'];
+        unset($data['textbook_id']);
+        return Textbook::where('id',$id)->update($data);
     }
 
 
@@ -84,10 +85,11 @@ class TextbookDao
         $courseMajorDao = new CourseMajorDao();
         $list = $courseMajorDao->getCoursesByMajor($majorId)->toArray();
         $courseIdArr = array_column($list,'id','id');
+
         //查询所有课程的详情
         $courseDao = new CourseDao();
-
         $courses = $courseDao->getCoursesByIdArr($courseIdArr)->toArray();
+
         $thisYear = Carbon::now()->year;  // 今年
         $nextYear = Carbon::parse('+ 1year')->year; // 明年
 
@@ -181,7 +183,7 @@ class TextbookDao
      * @return mixed
      */
     public function getTextbookListBySchoolId($schoolId) {
-        return Textbook::where('school_id',$schoolId)->with('course')->get();
+        return Textbook::where('school_id',$schoolId)->get();
     }
 
 
