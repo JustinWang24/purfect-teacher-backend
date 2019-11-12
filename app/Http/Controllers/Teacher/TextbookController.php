@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Teacher;
 
+use App\Dao\Courses\CourseTextbookDao;
 use App\Utils\JsonBuilder;
 use App\Dao\Textbook\TextbookDao;
 use App\Http\Controllers\Controller;
@@ -45,7 +46,7 @@ class TextbookController extends Controller
     public function save(TextbookRequest $request) {
         $textbookDao = new TextbookDao();
         $all = $request->getFormData();
-        if(!empty($all['id'])) {
+        if(!empty($all['textbook_id'])) {
             $result = $textbookDao->editById($all);
             if($result) {
                 return JsonBuilder::Success('编辑成功');
@@ -64,6 +65,44 @@ class TextbookController extends Controller
 
     }
 
+
+
+     /**
+     * 列表
+     * @param TextbookRequest $request
+     * @return string
+     */
+    public function list(TextbookRequest $request) {
+        $schoolId = $request->getSchoolId();
+        $textbookDao = new TextbookDao();
+        $list = $textbookDao->getTextbookListBySchoolId($schoolId);
+        foreach ($list as $key => $val) {
+            $list[$key]['type'] = $val['type_text'];
+        }
+
+        $data['textbook']=$list;
+        return JsonBuilder::Success($data);
+    }
+
+
+    /**
+     * 课程绑定教材
+     * @param TextbookRequest $request
+     * @return string
+     */
+    public function courseBindingTextbook(TextbookRequest $request) {
+        $courseId = $request->getCourseId();
+        $schoolId = $request->getSchoolId();
+        $textbookIdArr = $request->getTextbookIdArr();
+        $courseTextbookDao = new CourseTextbookDao();
+        $result = $courseTextbookDao->createCourseTextbook($courseId, $schoolId, $textbookIdArr);
+        if($result->isSuccess()) {
+            return JsonBuilder::Success($result->getMessage());
+        } else {
+            return JsonBuilder::Error($result->getMessage());
+        }
+     }
+
     /**
      * 查看该专业所有教材的采购情况
      * @param TextbookRequest $request
@@ -74,6 +113,7 @@ class TextbookController extends Controller
         $schoolId = $request->getSchoolId();
         $textbookDao = new TextbookDao();
         $majorId = $request->getMajorId();
+
         $result = $textbookDao->getTextbooksByMajor($majorId,$schoolId);
         $data = ['major_textbook'=>$result];
         return JsonBuilder::Success($data);
@@ -91,8 +131,11 @@ class TextbookController extends Controller
         $textbookDao = new TextbookDao();
         $result = $textbookDao->getTextbooksByGradeId($gradeId);
 
+
+
         if($result->isSuccess()) {
-            return JsonBuilder::Success($result->getData());
+            $data = ['textbook'=>$result->getData()];
+            return JsonBuilder::Success($data);
         } else {
             return JsonBuilder::Error($result->getMessage(),$result->getCode());
         }
