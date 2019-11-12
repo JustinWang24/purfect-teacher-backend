@@ -27,8 +27,8 @@
             <el-table-column
                     label="负责人">
                 <template slot-scope="scope">
-                    <p>招生负责人: {{ scope.row.manager_name }}</p>
-                    <p>录取负责人: {{ scope.row.enrol_manager_name }}</p>
+                    <p>招生: {{ scope.row.manager_name }}</p>
+                    <p>录取: {{ scope.row.enrol_manager_name }}</p>
                 </template>
             </el-table-column>
             <el-table-column
@@ -37,6 +37,14 @@
                     <p>从{{ scope.row.start_at }}开始</p>
                     <p v-if="scope.row.end_at">{{ scope.row.end_at }}结束</p>
                     <p v-else>常年有效</p>
+                </template>
+            </el-table-column>
+
+            <el-table-column
+                    label="开学日期">
+                <template slot-scope="scope">
+                    <p v-if="scope.row.opening_date">{{ scope.row.opening_date }}</p>
+                    <p v-else>未定</p>
                 </template>
             </el-table-column>
 

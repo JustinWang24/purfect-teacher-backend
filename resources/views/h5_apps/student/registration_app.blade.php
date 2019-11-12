@@ -74,13 +74,15 @@
                 <el-image style="margin-bottom: 12px;" src="https://gss0.bdstatic.com/-4o3dSag_xI4khGkpoWK1HF6hhy/baike/c0%3Dbaike150%2C5%2C5%2C150%2C50/sign=823085820233874488c8272e3066b29c/ac345982b2b7d0a278e0df4fc5ef76094b369a33.jpg"></el-image>
                 <p class="md-name">
                     <el-badge v-if="selectedMajor.hot" value="热门" class="item">
-                        @{{ selectedMajor.name }}(@{{ selectedMajor.period }}年制)
+                        <span style="font-size: 18px;">@{{ selectedMajor.name }}(@{{ selectedMajor.period }}年制)</span>
                     </el-badge>
                     <span v-else>
                         @{{ selectedMajor.name }}(@{{ selectedMajor.period }}年制)
                     </span>
-                    <span style="float: right"><i class="el-icon-map-location"></i>上课地点: @{{ selectedMajor.campus }}</span>
+                    <p><i class="el-icon-map-location"></i>上课地点: @{{ selectedMajor.campus }}</p>
                 </p>
+                <el-divider></el-divider>
+                <p class="md-name"><i class="el-icon-reading"></i>&nbsp;详情介绍</p>
                 <p class="md-desc">
                     @{{ selectedMajor.description }}
                 </p>
