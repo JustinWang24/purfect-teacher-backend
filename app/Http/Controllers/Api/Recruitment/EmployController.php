@@ -10,7 +10,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\RecruitStudent\EmployRequest;
 use App\Utils\JsonBuilder;
 use App\Models\Acl\Role;
-use App\Utils\Misc\Impl\YunLianSmsLogic;
+use App\Utils\Misc\SmsFactory;
 
 class EmployController extends Controller
 {
@@ -77,8 +77,9 @@ class EmployController extends Controller
 
     public function testSms()
     {
-        $sms = new YunLianSmsLogic;
-
+        $aa =  SmsFactory::GetInstance();
+        $res = $aa->send('15235665252', '483489', ['马文豪', '北京大学', '计算机']);
+        dd($res);
     }
 
 

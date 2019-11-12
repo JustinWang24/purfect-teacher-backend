@@ -1,15 +1,9 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: justinwang
- * Date: 11/11/19
- * Time: 7:41 PM
- */
 
 namespace App\Utils\Misc;
 
-
 use App\Utils\Misc\Contracts\ISmsSender;
+use App\Utils\Misc\Impl\YunLianSmsLogic;
 
 class SmsFactory
 {
@@ -19,7 +13,11 @@ class SmsFactory
     public static function GetInstance(){
         $instance = null;
 
-        $provider = config('SMS_PROVIDER','YUN_LIAN');
+        $provider = env('SMS_PROVIDER','YUN_LIAN');
+
+        if ($provider == 'YUN_LIAN') {
+            $instance =  new YunLianSmsLogic;
+        }
 
         return $instance;
     }
