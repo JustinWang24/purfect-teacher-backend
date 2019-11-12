@@ -9,6 +9,7 @@ use App\Http\Requests\Teacher\RecruitmentRegistrationFormRequest;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\RecruitStudent\PlanRecruitRequest;
 use App\Dao\RecruitStudent\PlanRecruitDao;
+use App\User;
 use App\Utils\FlashMessageBuilder;
 
 class RecruitmentFormsController extends Controller
@@ -73,11 +74,17 @@ class RecruitmentFormsController extends Controller
         $this->dataForView['pageTitle'] = $this->dataForView['plan']->title . '录取';
 
         $registrationDao = new RegistrationInformaticsDao();
-        $this->dataForView['registrations'] = $registrationDao
-            ->getPaginatedPassedByPlanIdForApproval($request->getPlanId());
-        $this->dataForView['appendedParams'] = ['plan'=>$request->getPlanId()];
-
-        return view('teacher.recruitment.registration_form.enrol',$this->dataForView);
+        if($request->isInApprovedStatus()){
+            $this->dataForView['registrations'] = $registrationDao
+                ->getPaginatedApprovedByPlanId($request->getPlanId());
+            $this->dataForView['appendedParams'] = ['plan'=>$request->getPlanId(),'status'=>'approved'];
+            return view('teacher.recruitment.registration_form.new_students',$this->dataForView);
+        }else{
+            $this->dataForView['registrations'] = $registrationDao
+                ->getPaginatedPassedByPlanIdForApproval($request->getPlanId());
+            $this->dataForView['appendedParams'] = ['plan'=>$request->getPlanId()];
+            return view('teacher.recruitment.registration_form.enrol',$this->dataForView);
+        }
     }
 
     /**
@@ -119,6 +126,36 @@ class RecruitmentFormsController extends Controller
         $result = $registrationDao->delete($formId, $request->user());
         if($result->isSuccess()){
             FlashMessageBuilder::Push($request,FlashMessageBuilder::SUCCESS,$result->getData()->name.'的申请已经被删除');
+        }
+        else{
+            FlashMessageBuilder::Push($request,FlashMessageBuilder::DANGER,$result->getMessage());
+        }
+        return redirect(url()->previous());
+    }
+
+    /**
+     * 打印学生的录取通知书
+     *
+     * @param RecruitmentRegistrationFormRequest $request
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function print_invitation(RecruitmentRegistrationFormRequest $request){
+        $formId = $request->uuid();
+        $registrationDao = new RegistrationInformaticsDao();
+        $this->dataForView['form'] = $registrationDao->getById($formId);
+        return view('student.registration.invitation',$this->dataForView);
+    }
+
+    /**
+     * @param RecruitmentRegistrationFormRequest $request
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     */
+    public function cancel_enrolment(RecruitmentRegistrationFormRequest $request){
+        $formId = $request->uuid();
+        $registrationDao = new RegistrationInformaticsDao();
+        $result = $registrationDao->cancelEnrolment($formId, $request->user());
+        if($result->isSuccess()){
+            FlashMessageBuilder::Push($request,FlashMessageBuilder::SUCCESS,$result->getData()->name.'的入学资格已经被取消');
         }
         else{
             FlashMessageBuilder::Push($request,FlashMessageBuilder::DANGER,$result->getMessage());

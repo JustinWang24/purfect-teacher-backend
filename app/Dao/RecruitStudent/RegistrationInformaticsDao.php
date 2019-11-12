@@ -35,6 +35,18 @@ class RegistrationInformaticsDao
     }
 
     /**
+     * 获取被录取的新生的列表
+     * @param $planId
+     * @return mixed
+     */
+    public function getPaginatedApprovedByPlanId($planId){
+        return RegistrationInformatics::where('recruitment_plan_id',$planId)
+            ->where('status',RegistrationInformatics::APPROVED)
+            ->orderBy('updated_at','desc')
+            ->paginate();
+    }
+
+    /**
      * 获取待批准的报名表
      * @param $planId
      * @return mixed
@@ -314,13 +326,34 @@ class RegistrationInformaticsDao
                     if($form->save()){
                         // 录取完成
                         try{
-                            RegistrationInformatics::where('user_id',$form->user_id)
+                            // 如果同一个学生还有其他的报名表或者批准的报名表, 则统一置为失效的状态
+                            $others = RegistrationInformatics::where('user_id',$form->user_id)
                                 ->where('id','<>',$id)
-                                ->where('status',RegistrationInformatics::WAITING)
-                                ->update([
-                                        'status'=>RegistrationInformatics::USELESS,
-                                        'note'=>'已被'.$form->plan->title.'录取']
-                                );
+                                ->whereIn('status',[RegistrationInformatics::WAITING,RegistrationInformatics::PASSED])
+                                ->get();
+                            if($others){
+                                foreach ($others as $other) {
+                                    if($other->status === RegistrationInformatics::WAITING){
+                                        $otherPlanTotalCount = $other->plan->applied_count - 1;
+                                        if($otherPlanTotalCount > -1){
+                                            $other->plan->applied_count = $otherPlanTotalCount;
+                                            $other->plan->save();
+                                        }
+                                    }
+                                    elseif ($other->status === RegistrationInformatics::PASSED){
+                                        $otherPlanTotalCount = $other->plan->passed_count - 1;
+                                        if($otherPlanTotalCount > -1){
+                                            $other->plan->passed_count = $otherPlanTotalCount;
+                                            $other->plan->save();
+                                        }
+                                    }
+
+                                    $other->status = RegistrationInformatics::USELESS;
+                                    $other->note = '已被'.$form->plan->title.'录取';
+                                    $other->save();
+                                }
+                            }
+
                             // 报名通过审核的人数加 1
                             $enrolCount = $form->plan->enrolled_count + 1;
                             $form->plan->enrolled_count = $enrolCount;
@@ -377,13 +410,23 @@ class RegistrationInformaticsDao
                     if($form->save()){
                         // 批准完成, 将该学生本年度的所有等待批准申请全部作废
                         try{
-                            RegistrationInformatics::where('user_id',$form->user_id)
-                                ->where('id','<>',$id)
-                                ->where('status',RegistrationInformatics::WAITING)
-                                ->update([
-                                    'status'=>RegistrationInformatics::USELESS,
-                                    'note'=>'已被'.$form->plan->title.'录取']
-                                );
+//                            $others = RegistrationInformatics::where('user_id',$form->user_id)
+//                                ->where('id','<>',$id)
+//                                ->where('status',RegistrationInformatics::WAITING)
+//                                ->get();
+//                            if($others){
+//                                foreach ($others as $other) {
+//                                    $other->status = RegistrationInformatics::USELESS;
+//                                    $other->note = '已被'.$form->plan->title.'录取';
+//                                    $other->save();
+//                                    $otherPlanTotalCount = $other->plan->applied_count - 1;
+//                                    if($otherPlanTotalCount > -1){
+//                                        $other->plan->applied_count = $otherPlanTotalCount;
+//                                        $other->plan->save();
+//                                    }
+//                                }
+//                            }
+
                             // 报名通过审核的人数加 1
                             $passedCount = $form->plan->passed_count + 1;
                             $form->plan->passed_count = $passedCount;
@@ -553,5 +596,38 @@ class RegistrationInformaticsDao
      */
     public function getById($id){
         return RegistrationInformatics::find($id);
+    }
+
+    /**
+     * 取消入学资格
+     * @param $id
+     * @param $manager
+     * @return MessageBag
+     */
+    public function cancelEnrolment($id, $manager){
+        $bag = new MessageBag(JsonBuilder::CODE_ERROR);
+        $updated = RegistrationInformatics::where('id',$id)
+            ->update(
+                [
+                    'status'=>RegistrationInformatics::REJECTED,
+                    'last_updated_by'=>$manager->id,
+                    'note'=>'已录取后, 被'.$manager->name.'取消了入学资格'
+                ]
+            );
+        if($updated){
+            $bag->setCode(JsonBuilder::CODE_SUCCESS);
+            $form = RegistrationInformatics::find($id);
+            $total = $form->plan->enrolled_count - 1 ;
+            if($total > -1){
+                $form->plan->enrolled_count = $total;
+                $form->plan->passed_count = $form->plan->passed_count - 1;
+                $form->plan->applied_count = $form->plan->applied_count - 1;
+                $form->plan->save();
+            }
+            $bag->setData($form);
+        }else{
+            $bag->setMessage('数据库错误');
+        }
+        return $bag;
     }
 }
