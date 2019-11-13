@@ -2,9 +2,10 @@
 
 namespace App\Listeners\User\Teacher;
 
-use App\Events\User\Student\ApproveRegistrationEvent;
-use Illuminate\Queue\InteractsWithQueue;
-use Illuminate\Contracts\Queue\ShouldQueue;
+
+use App\Events\HasRegistrationForm;
+use App\Jobs\Notifier\InternalMessage;
+
 
 class NotifyEnrolmentManager
 {
@@ -21,11 +22,20 @@ class NotifyEnrolmentManager
     /**
      * Handle the event.
      *
-     * @param  ApproveRegistrationEvent  $event
+     * @param  HasRegistrationForm  $event
      * @return void
      */
-    public function handle(ApproveRegistrationEvent $event)
+    public function handle(HasRegistrationForm $event)
     {
         //
+        InternalMessage::dispatchNow(
+            $event->getForm()->school_id,
+            $event->getForm()->lastOperator->id,
+            $event->getForm()->plan->enrol_manager,
+            $event->getMessageType(),
+            $event->getPriority(),
+            $event->getSystemContent(),
+            $event->getNextMove()
+        );
     }
 }

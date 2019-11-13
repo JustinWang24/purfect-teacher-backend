@@ -8,10 +8,12 @@
 
 namespace App\Events\User\Student;
 use App\Events\CanReachByMobilePhone;
+use App\Events\HasRegistrationForm;
 use App\Models\RecruitStudent\RegistrationInformatics;
 use App\User;
 
-abstract class AbstractRegistrationEvent implements CanReachByMobilePhone
+abstract class AbstractRegistrationEvent implements CanReachByMobilePhone,
+    HasRegistrationForm
 {
     /**
      * @var RegistrationInformatics
