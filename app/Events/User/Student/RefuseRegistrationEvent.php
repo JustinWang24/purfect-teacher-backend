@@ -34,4 +34,31 @@ class RefuseRegistrationEvent extends AbstractRegistrationEvent
         // TODO: 当报名学生的报名表被 拒绝 refuse 后的发送的短信内容
         return [];
     }
+
+    public function getForm(): RegistrationInformatics
+    {
+        // TODO: Implement getForm() method.
+    }
+
+    public function getMessageType(): int
+    {
+        // TODO: Implement getMessageType() method.
+    }
+
+    public function getPriority(): int
+    {
+        // TODO: Implement getPriority() method.
+    }
+
+    public function getSystemContent(): string
+    {
+        // TODO: Implement getContent() method.
+    }
+
+    public function getNextMove(): string
+    {
+        // TODO: Implement getNextMove() method.
+    }
+
+
 }
