@@ -21,7 +21,6 @@ class SuHomePageLogic implements IHomePageLogic
     public function __construct(Request $request)
     {
         $this->user = $request->user();
-
     }
 
     public function getDataForView()
