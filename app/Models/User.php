@@ -160,7 +160,7 @@ class User extends Authenticatable implements HasMobilePhone, HasDeviceId
      */
     public function getSchoolId()
     {
-        if($this->isStudent() || $this->isTeacher() || $this->isEmployee()){
+        if($this->isStudent() || $this->isTeacher() || $this->isEmployee() || $this->isSchoolAdminOrAbove()){
             return $this->gradeUser->school_id;
         }
         return 0;
