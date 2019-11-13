@@ -12,22 +12,24 @@ use App\BusinessLogic\HomePage\Impl\OperatorHomePageLogic;
 use App\BusinessLogic\HomePage\Impl\SchoolManagerHomePageLogic;
 use App\BusinessLogic\HomePage\Impl\SuHomePageLogic;
 use App\User;
+use Illuminate\Http\Request;
 
 class Factory
 {
-    public static function GetLogic(User $user){
+    public static function GetLogic(Request $request){
         /**
          * @var IHomePageLogic $instance
          */
         $instance = null;
+        $user = $request->user();
 
         if($user->isSuperAdmin()){
-            $instance = new SuHomePageLogic($user);
+            $instance = new SuHomePageLogic($request);
         }elseif($user->isOperatorOrAbove()){
-            $instance = new OperatorHomePageLogic($user);
+            $instance = new OperatorHomePageLogic($request);
         }
         elseif ($user->isSchoolAdminOrAbove()){
-            $instance = new SchoolManagerHomePageLogic($user);
+            $instance = new SchoolManagerHomePageLogic($request);
         }
 
         return $instance;
