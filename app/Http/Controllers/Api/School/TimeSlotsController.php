@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\School;
 
 use App\Dao\Schools\SchoolDao;
 use App\Dao\Timetable\TimeSlotDao;
+use App\Http\Requests\MyStandardRequest;
 use App\User;
 use App\Utils\JsonBuilder;
 use App\Utils\Misc\ConfigurationTool;

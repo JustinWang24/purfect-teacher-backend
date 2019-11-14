@@ -3,11 +3,11 @@
         <el-table
                 :data="courses"
                 style="width: 100%">
-            <el-table-column label="课程名称" width="150">
+            <el-table-column label="课程名称/编号" width="250">
                 <template slot-scope="scope">
                     <el-button type="text" v-on:click="courseNameClickedHandler">
                         <i class="el-icon-s-order"></i>
-                        <span>{{ scope.row.name }}({{ scope.row.code }})</span>
+                        <span>{{ scope.row.name }} (编号: {{ scope.row.code }})</span>
                     </el-button>
                 </template>
             </el-table-column>
@@ -39,14 +39,18 @@
             </el-table-column>
             <el-table-column
                     label="授课教师"
-                    width="240">
+                    width="200">
                 <template slot-scope="scope">
-                    <el-tag size="medium" :key="idx" effect="plain" v-for="(t, idx) in scope.row.teachers" style="margin:2px;">{{ t.name }}</el-tag>
+                    <p v-for="(t, idx) in scope.row.teachers" :key="idx" style="margin-bottom:3px;">
+                    <el-tag size="medium" effect="plain" style="margin:2px;">
+                        {{ t.name }}
+                    </el-tag>
+                    </p>
                 </template>
             </el-table-column>
             <el-table-column
                     label="关联专业"
-                    width="240">
+                    width="200">
                 <template slot-scope="scope">
                     <el-tag size="medium" type="info" effect="plain" :key="idx" v-for="(m,idx) in scope.row.majors" style="margin:2px;">
                         {{ m.name }}
@@ -58,7 +62,7 @@
             </el-table-column>
             <el-table-column
                     label="时间安排"
-                    width="280">
+                    width="200">
                 <template slot-scope="scope">
                     <el-tag size="medium" type="info" effect="plain" :key="idx" v-for="(m,idx) in scope.row.arrangements" style="margin:2px;">
                         第{{ m.week }}周的星期{{ m.day_index }}的{{ describeTimeSlot(m.time_slot_id) }}
@@ -72,7 +76,7 @@
                 <template slot-scope="scope">
                     <el-button-group>
                         <el-button size="mini" icon="el-icon-edit" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
-                        <el-button size="mini" icon="el-icon-timer" @click="handleViewClick(scope.$index, scope.row)">课程安排</el-button>
+                        <el-button size="mini" icon="el-icon-timer" @click="handleViewClick(scope.$index, scope.row)">课程表</el-button>
                         <el-button v-if="canDelete" size="mini" type="danger" icon="el-icon-delete" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
                     </el-button-group>
                 </template>

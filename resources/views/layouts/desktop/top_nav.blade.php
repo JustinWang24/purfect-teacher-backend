@@ -2,7 +2,7 @@
     <div class="page-header-inner ">
         <!-- logo start -->
         <div class="page-logo">
-            <a href="index.html">
+            <a href="{{ route('home') }}">
                 <span class="logo-icon material-icons fa-rotate-45">school</span>
                 <span class="logo-default">{{ env('APP_NAME') }}</span> </a>
         </div>
@@ -31,6 +31,21 @@
             <ul class="nav navbar-nav pull-right">
                 <!-- start language menu -->
                 <li><a href="javascript:;" class="fullscreen-btn"><i class="fa fa-arrows-alt"></i></a></li>
+
+                <li id="file-manager-app">
+                    <a class="dropdown-toggle" v-on:click="showFileManager">
+                        <i class="fa fa-file-o"></i>&nbsp;文件管理器
+                    </a>
+                    <el-drawer
+                            title="我的易云盘"
+                            :visible.sync="showFileManagerFlag"
+                            direction="rtl"
+                            size="100%"
+                            custom-class="e-yun-pan">
+                        <file-manager user-uuid="{{ \Illuminate\Support\Facades\Auth::user()->uuid }}"></file-manager>
+                    </el-drawer>
+                </li>
+
                 <li class="dropdown language-switch">
                     <a class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false"> <img
                                 src="{{ asset('assets/img/flags/gb.png') }}" class="position-left" alt=""> English <span

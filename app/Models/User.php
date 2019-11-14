@@ -2,10 +2,12 @@
 
 namespace App;
 
+use App\Dao\RecruitmentPlan\RecruitmentPlanDao;
 use App\Models\Acl\Role;
 use App\Models\Contract\HasDeviceId;
 use App\Models\Contract\HasMobilePhone;
 use App\Models\Misc\Enquiry;
+use App\Models\Schools\RecruitmentPlan;
 use App\Models\Students\StudentProfile;
 use App\Models\Teachers\TeacherProfile;
 use App\Models\Users\GradeUser;
@@ -158,7 +160,7 @@ class User extends Authenticatable implements HasMobilePhone, HasDeviceId
      */
     public function getSchoolId()
     {
-        if($this->isStudent() || $this->isTeacher() || $this->isEmployee()){
+        if($this->isStudent() || $this->isTeacher() || $this->isEmployee() || $this->isSchoolManager()){
             return $this->gradeUser->school_id;
         }
         return 0;
@@ -171,6 +173,14 @@ class User extends Authenticatable implements HasMobilePhone, HasDeviceId
     public function isStudent(){
         return in_array($this->getCurrentRoleSlug(),
             [Role::VERIFIED_USER_STUDENT_SLUG, Role::VERIFIED_USER_CLASS_LEADER_SLUG, Role::VERIFIED_USER_CLASS_SECRETARY_SLUG]);
+    }
+
+    /**
+     * 是否用户为学校管理员
+     * @return bool
+     */
+    public function isSchoolManager(){
+        return $this->type === Role::SCHOOL_MANAGER;
     }
 
     /**
@@ -223,5 +233,33 @@ class User extends Authenticatable implements HasMobilePhone, HasDeviceId
     public function getDeviceId()
     {
         // TODO: Implement getDeviceId() method.
+    }
+
+    /**
+     * 当前用户的指定年的其他报名表
+     * @param $plan
+     * @param null $exceptFrom
+     * @return mixed
+     */
+    public function otherRegistrationForms($plan, $exceptFrom = null){
+        $plans = [];
+        $year = $plan->year;
+        $schoolId = $plan->school_id;
+
+        $query = RecruitmentPlan::where('year',$year)->where('school_id',$schoolId);
+
+        if($exceptFrom){
+            $query->where('id','<>',$plan->id);
+        }
+
+        $ps = $query->get();
+        foreach ($ps as $p) {
+            $plans[] = $p->id;
+        }
+
+        return RegistrationInformatics::where('user_id',$exceptFrom->user_id)
+            ->where('id','<>',$this->id)
+            ->whereIn('recruitment_plan_id',$plans)
+            ->get();
     }
 }

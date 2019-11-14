@@ -1,0 +1,14 @@
+$colorWhite: #ffffff;
+$themeColor: rgb(98, 109,183);
+.e-yun-pan{
+  .el-drawer__header{
+    border-bottom: solid 1px #e8e8e8;
+    padding-bottom: 14px;
+    background-color: $colorWhite;
+    span{
+      font-size: 18px;
+      font-weight: bold;
+      color: $themeColor;
+    }
+  }
+}

@@ -46,7 +46,6 @@ class DownloadOfficeDao
             if(!empty($val['course']['course_textbooks'])){
 
                 foreach ($val['course']['course_textbooks'] as $k => $v) {
-                    $num = $num + $k;
                     $sheet->setCellValue('E'.$num, $v['textbook']['name']);
                     $sheet->setCellValue('F'.$num, $v['textbook']['press']);
                     $sheet->setCellValue('G'.$num, $v['textbook']['author']);
@@ -61,9 +60,11 @@ class DownloadOfficeDao
                         $sheet->setCellValue('M'.$num, $val['textbook_num']['self_informatics_seat']);
                         $sheet->setCellValue('N'.$num, $val['textbook_num']['total_informatics_seat']);
                     }
+                    $num = $num +1;
                 }
-                $num = $num +1;
+
             }
+            $num = $num +1;
         }
         return $spreadsheet;
     }
@@ -85,7 +86,6 @@ class DownloadOfficeDao
         }
         $data = $result->getData();
 
-
         $spreadsheet = $this->campusDataDispose($data);
         $campusDao = new CampusDao();
         $info = $campusDao->getCampusById($campusId);
@@ -102,7 +102,7 @@ class DownloadOfficeDao
         header("Content-Type:application/application/vnd.ms-excel");
         header("Content-Type:application/download");
         header('Content-Disposition:attachment;filename='.$filename);
-        $writer->save('php://output');
+        $writer->save('php://output'); die;
     }
 
 
@@ -133,18 +133,17 @@ class DownloadOfficeDao
             $sheet->setCellValue('B'.$num, $val['code']);
             $sheet->setCellValue('C'.$num, $val['scores']);
             $sheet->setCellValue('D'.$num, $val['year']);
-            if(!empty($val['textbooks'])){
+            if(!empty($val['course_textbooks'])){
 
                 foreach ($val['course_textbooks'] as $k => $v) {
-                    $num = $num + $k;
                     $sheet->setCellValue('E'.$num, $v['textbook']['name']);
                     $sheet->setCellValue('F'.$num, $v['textbook']['press']);
                     $sheet->setCellValue('G'.$num, $v['textbook']['author']);
                     $sheet->setCellValue('H'.$num, $val['textbook_num']);
-
+                    $num = $num +1;
                 }
-                $num = $num +1;
             }
+            $num = $num +1;
         }
 
         return $spreadsheet;
@@ -169,6 +168,7 @@ class DownloadOfficeDao
         }
         $data = $result->getData();
         $spreadsheet = $this->gradeDataDispose($data);
+
         $gradeDao = new GradeDao();
         $info = $gradeDao->getGradeById($gradeId);
 
@@ -185,7 +185,7 @@ class DownloadOfficeDao
         header("Content-Type:application/application/vnd.ms-excel");
         header("Content-Type:application/download");
         header('Content-Disposition:attachment;filename='.$filename);
-        $writer->save('php://output');
+        $writer->save('php://output'); die;
     }
 
 
