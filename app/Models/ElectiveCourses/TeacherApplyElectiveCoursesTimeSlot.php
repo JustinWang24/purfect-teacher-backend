@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Model;
  */
 class TeacherApplyElectiveCoursesTimeSlot extends Model
 {
-    protected $fields = [
+    protected $fillable = [
         'teacher_apply_elective_courses_id', 'week', 'day_index', 'time_slot_id'
     ];
     public function apply(){
