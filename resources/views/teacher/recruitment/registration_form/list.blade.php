@@ -91,7 +91,24 @@ use App\User;
                                             <span class="text-danger">不服从调剂</span>
                                         @endif
                                         </td>
-                                        <td>{{ $form->note }}</td>
+                                        <td>
+                                            @if($form->note)
+                                                <p>{{ $form->note }}</p>
+                                            @endif
+                                            @php
+                                            $otherForms = $form->user->otherRegistrationForms($plan, $form);
+                                            @endphp
+                                            @if($otherForms)
+                                                <p>该学生的其他报名表</p>
+                                                @foreach($otherForms as $key=>$otherForm)
+                                                    <p>
+                                                        <a target="_blank" href="{{ route('teacher.registration.view',['uuid'=>$otherForm->profile->uuid,'plan'=>$otherForm->plan->id]) }}">
+                                                        {{ $key+1 }}: {{ $otherForm->plan->title }}, {{ $otherForm->getStatusText() }}({{ $otherForm->isRelocationAllowed()?'服从调剂':'不服从调剂' }})
+                                                        </a>
+                                                    </p>
+                                                @endforeach
+                                            @endif
+                                        </td>
                                         <td class="text-center">
                                             <el-button-group>
                                                 @if($form->status === \App\Models\RecruitStudent\RegistrationInformatics::WAITING)
@@ -134,7 +151,6 @@ use App\User;
                                     <el-button type="primary" @click="submit">确 定</el-button>
                                 </div>
                             </el-dialog>
-
                         </div>
                         <div class="row">
                             <div class="col-12">

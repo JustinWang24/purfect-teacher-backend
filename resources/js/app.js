@@ -32,10 +32,33 @@ Vue.component('timetable-item-form', require('./components/previewer/TimetableIt
 Vue.component('search-bar', require('./components/quickSearch/SearchBar.vue').default);
 Vue.component('recruitment-plans-list', require('./components/recruitment/RecruitmentPlansList.vue').default);
 Vue.component('recruitment-plan-form', require('./components/recruitment/RecruitmentPlanForm.vue').default);
+Vue.component('file-manager', require('./components/fileManager/FileManager.vue').default);
 
 import { Constants } from './common/constants';
 import { Util } from './common/utils';
 import { getTimeSlots } from './common/timetables';
+
+if (document.getElementById('file-manager-app')){
+    new Vue({
+        el: '#file-manager-app',
+        data(){
+            return {
+                showFileManagerFlag: false,
+            }
+        },
+        created() {
+
+        },
+        methods: {
+            showFileManager: function(){
+                this.showFileManagerFlag = true;
+            },
+            handleClose: function(){
+                this.showFileManagerFlag = false;
+            }
+        }
+    });
+}
 
 // 学校时间段管理
 if(document.getElementById('school-time-slots-manager')){
@@ -723,6 +746,7 @@ if(document.getElementById('school-recruitment-manager-app')){
                     how_to_enrol: '',
                     manager_name: '',
                     enrol_manager_name: '',
+                    opening_date: '',
                 };
             }
         }

@@ -10,7 +10,7 @@ use App\User;
         <div class="col-sm-12 col-md-12 col-xl-12">
             <div class="card">
                 <div class="card-head">
-                    <header><span class="text-primary">{{ $plan->title }}</span> - 新生管理: (已录取的新生: {{ $registrations->count() }})</header>
+                    <header><span class="text-primary">{{ $plan->title }}</span> - 新生管理: (待录取的新生: {{ $registrations->count() }})</header>
                 </div>
 
                 <div class="card-body">
@@ -75,7 +75,24 @@ use App\User;
                                                 @endif
                                             </p>
                                         </td>
-                                        <td>{{ $form->note }}</td>
+                                        <td>
+                                            @if($form->note)
+                                                <p>{{ $form->note }}</p>
+                                            @endif
+                                            @php
+                                                $otherForms = $form->user->otherRegistrationForms($plan, $form);
+                                            @endphp
+                                            @if($otherForms)
+                                                <p>该学生的其他报名表</p>
+                                                @foreach($otherForms as $key=>$otherForm)
+                                                    <p>
+                                                        <a target="_blank" href="{{ route('teacher.registration.view',['uuid'=>$otherForm->profile->uuid,'plan'=>$otherForm->plan->id]) }}">
+                                                            {{ $key+1 }}: {{ $otherForm->plan->title }}, {{ $otherForm->getStatusText() }}({{ $otherForm->isRelocationAllowed()?'服从调剂':'不服从调剂' }})
+                                                        </a>
+                                                    </p>
+                                                @endforeach
+                                            @endif
+                                        </td>
                                         <td class="text-center">
                                             <el-button size="mini" icon="el-icon-check" v-on:click="showNotesForm({{ $form->id }}, '{{ $form->name }}')">录取</el-button>
                                             <el-button size="mini" type="danger" icon="el-icon-close" v-on:click="showRejectForm({{ $form->id }}, '{{ $form->name }}')">拒绝</el-button>

@@ -1,4 +1,19 @@
 window.axios = require('axios');
+
+const token = document.head.querySelector('meta[name="csrf-token"]');
+const API_TOKEN = document.head.querySelector('meta[name="api-token"]');
+
+if (token) {
+    window.axios.defaults.headers.common = {
+        'X-Requested-With': 'XMLHttpRequest',
+        'X-CSRF-TOKEN': token.content,
+        'Authorization': 'Bearer ' + API_TOKEN.content,
+        'Accept': 'application/json',
+    };
+} else {
+    console.error('CSRF token not found: https://laravel.com/docs/csrf#csrf-x-csrf-token');
+}
+
 import { Constants } from '../common/constants';
 import { Util } from '../common/utils';
 import { queryStudentProfile, loadMajorDetail } from '../common/registration_form';
@@ -147,7 +162,7 @@ new Vue({
         isPlanHasBeenApplied: function(planId){
             let applied = false;
             for(let i=0;i<this.majors.length;i++){
-                if(planId === this.majors[i].id){
+                if(planId === this.majors[i].id && this.majors[i].applied){
                     applied = true;
                     break;
                 }
