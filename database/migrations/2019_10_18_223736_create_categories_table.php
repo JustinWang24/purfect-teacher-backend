@@ -22,7 +22,9 @@ class CreateCategoriesTable extends Migration
                 $table->uuid('uuid')->index()->comment('目录的 uuid');
                 $table->unsignedBigInteger('owner_id')->comment('目录所归属的的所有者的 user ID');
                 $table->unsignedBigInteger('school_id')->comment('目录所归属的学校 ID');
-                $table->unsignedSmallInteger('type')->default(2)->comment('目录的类别, 默认为用户的根目录');   // 根目录, 年级, 科目, 课堂
+                $table->unsignedSmallInteger('type')->default(0)->comment('目录的类别 目录的类别 0:整个系统的根目录 1.学校的根目录 2.用户的根目录 3.学校子目录 4.用户子目录');
+                $table->unsignedSmallInteger('asterisk')->default(0)->comment('是否有星标 0:无 1:是');
+                $table->unsignedSmallInteger('public')->default(0)->comment('公开 0:不公开 1:公开');
                 $table->unsignedBigInteger('parent_id')->default(0)->comment('目录的父级目录 id'); // 该目录的父级目录
                 $table->timestamps();
                 $table->string('name', 255)->comment('目录的名字');

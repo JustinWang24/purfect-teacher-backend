@@ -11,7 +11,8 @@ use App\User;
 
 interface CanReachByMobilePhone
 {
-    /**必须可以拿到电话号码
+    /**
+     * 必须可以拿到电话号码
      * @return string
      */
     public function getMobileNumber(): string ;
