@@ -24,9 +24,14 @@ class Media extends Model
 {
     use CanGetByUuid;
 
-    const UPDATED_AT = null;
 
-    const DEFAULT_USER_AVATAR = '/user/';   // 存放用户文件路径
+    const DEFAULT_USER_AVATAR = 'public/user/';   // 存放用户文件路径
+
+    const USER_SIZE = 1024 * 1024 ;  // 用户网盘空间大小 KB
+
+    const MAY_NOT_UPLOAD = 0 ; // 不可以上传呢
+
+    const MAY_UPLOAD = 1;  // 可以上传
 
 
     /**
@@ -49,6 +54,16 @@ class Media extends Model
     public function conferencesMedias()
     {
         return $this->hasMany('App\Models\NetworkDisk\ConferencesMedia');
+    }
+
+
+    public function getUrlPathAttribute()
+    {
+        // 本地图片服务
+        if($this->driver == 1) {
+            return substr_replace($this->url,'/storage','0','6');
+        }
+
     }
 
 

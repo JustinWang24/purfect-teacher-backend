@@ -4,6 +4,7 @@ namespace App\Dao\NetworkDisk;
 
 use App\Models\NetworkDisk\Media;
 use App\Models\NetworkDisk\Category;
+use App\User;
 use Illuminate\Support\Facades\Storage;
 class MediaDao {
 
@@ -28,6 +29,7 @@ class MediaDao {
                 'description',  // 文件内容介绍
                 'file_name',    // 原始的文件名
                 'driver',       // 文件保存在哪里
+                'asterisk',     // 是否是星标
             ];
         }
     }
@@ -58,8 +60,7 @@ class MediaDao {
      * @param int $id
      * @return Media
      */
-    public function getMediaById($id)
-    {
+    public function getMediaById($id){
         return Media::GetById($id, $this->fieldsToLoad);
     }
 
@@ -70,7 +71,7 @@ class MediaDao {
      * @return mixed
      */
     public function getMediaByUuid($uuid) {
-        return Media::GetByUuid($uuid);
+        return Media::GetByUuid($uuid, $this->fieldsToLoad);
     }
 
     /**
@@ -80,7 +81,6 @@ class MediaDao {
      * @throws \Exception
      */
     public function delete(Media $media) {
-
         $media->delete();
         return $this->deleteFile($media->url);
     }
@@ -136,8 +136,13 @@ class MediaDao {
         }
         $where[] = ['keywords','like',$keywords.'%'];
 
-        $files = Media::select('file_name', 'uuid', 'url', 'type', 'size', 'period')
+        $files = Media::select('file_name', 'driver', 'uuid', 'url', 'type', 'size', 'period')
             ->where($where)->get();
+
+
+        foreach ($files as $key => $val){
+            $files[$key]['url_path'] = $val['url_path'];
+        }
 
         if(count($files)){
             $result['files'] = $files->toArray();
@@ -145,4 +150,49 @@ class MediaDao {
 
         return $result;
     }
+
+
+    /**
+     * 通过uuid和user更新点击次数
+     * @param $uuid
+     * @param User $user
+     * @return int
+     */
+    public function updClickByUuidAndUser($uuid, $user) {
+        $map = ['uuid'=>$uuid,'user_id'=>$user->id];
+        return Media::where($map)->increment('click');
+    }
+
+
+    /**
+     * 获取列表
+     * @param User $user
+     * @param int $from
+     * @param int $pageSize
+     * @param string $orderBy
+     * @param string $sort
+     * @param int $take
+     * @return mixed
+     */
+    public function getMediaList(User $user,$from = 0, $pageSize = 20,$orderBy='create_at',$sort='desc',$take=10) {
+        $map = ['user_id'=>$user->id];
+        return Media::select($this->fieldsToLoad)
+            ->where($map)
+            ->limit($pageSize)
+            ->offset($from * $pageSize)
+            ->orderBy($orderBy,$sort)
+            ->get();
+    }
+
+
+    /**
+     * 获取用户使用空间大小
+     * @param User $user
+     * @return mixed
+     */
+    public function getUseSize(User $user) {
+        $map = ['user_id'=>$user->id];
+        return Media::where($map)->sum('size');
+    }
+
 }

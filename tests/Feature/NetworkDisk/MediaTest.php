@@ -49,18 +49,26 @@ class MediaTest extends BasicPageTestCase
 
 
     /**
-     * 测试删除
+     * 测试文件详情
      * @depends testUploadMedia
      */
-    public function testDeleteMedia($testUploadresult) {
-
-        $data = ['uuid'=>$testUploadresult['data']['file']['uuid']];
+    public function testGetMediaInfo($return) {
+        $data = ['uuid'=>$return['data']['file']['uuid']];
         $header = ['Authorization'=>"Bearer ".$this->token];
-        $response = $this->get(route('api.media.delete',$data),$header);
+        $response = $this->get(route('api.media.getMediaInfo',$data),$header);
+
         $result = json_decode($response->content(),true);
         $this->assertArrayHasKey('code', $result);
         $this->assertEquals(1000, $result['code']);
+        $this->assertArrayHasKey('media', $result['data']);
+        $this->assertArrayHasKey('file_name', $result['data']['media']);
+        $this->assertArrayHasKey('description', $result['data']['media']);
+        $this->assertArrayHasKey('size', $result['data']['media']);
+        $this->assertArrayHasKey('created_at', $result['data']['media']);
     }
+
+
+
 
 
     /**
@@ -85,6 +93,101 @@ class MediaTest extends BasicPageTestCase
         }
 
     }
+
+
+    /**
+     * 测试点击次数
+     */
+    public function testMediaClick() {
+//        $data = ['uuid'=>$testUploadresult['data']['file']['uuid']];
+        $data = ['uuid'=>'11e68162-0857-479d-b41f-82150d6532eb'];
+        $header = ['Authorization'=>"Bearer ".$this->token];
+        $response = $this->get(route('api.media.click',$data),$header);
+        $result = json_decode($response->content(),true);
+        $this->assertArrayHasKey('code', $result);
+        $this->assertEquals(1000, $result['code']);
+
+    }
+
+
+
+    /**
+     * 测试删除
+     * @depends testUploadMedia
+     */
+    public function testDeleteMedia($testUploadresult) {
+
+        $data = ['uuid'=>$testUploadresult['data']['file']['uuid']];
+        $header = ['Authorization'=>"Bearer ".$this->token];
+        $response = $this->get(route('api.media.delete',$data),$header);
+        $result = json_decode($response->content(),true);
+        $this->assertArrayHasKey('code', $result);
+        $this->assertEquals(1000, $result['code']);
+    }
+
+
+    /**
+     * 最近浏览和上传
+     */
+    public function testLatelyCreateAndBrowse() {
+        $header = ['Authorization'=>"Bearer ".$this->token];
+        $response = $this->get(route('api.media.latelyUploadingAndBrowse'),$header);
+        $result = json_decode($response->content(),true);
+        $this->assertArrayHasKey('code', $result);
+        $this->assertEquals(1000, $result['code']);
+        $this->assertArrayHasKey('uploading', $result['data']);
+        $this->assertArrayHasKey('browse', $result['data']);
+        if(!empty($result['data']['browse'])) {
+            foreach ($result['data']['browse'] as $key => $val) {
+                $this->assertArrayHasKey('url', $val);
+                $this->assertArrayHasKey('created_at', $val);
+                $this->assertArrayHasKey('keywords', $val);
+                $this->assertArrayHasKey('file_name', $val);
+                $this->assertArrayHasKey('asterisk', $val);
+            }
+
+
+        }
+        if(!empty($result['data']['uploading'])) {
+            foreach ($result['data']['uploading'] as $key => $val){
+                $this->assertArrayHasKey('url', $val);
+                $this->assertArrayHasKey('created_at', $val);
+                $this->assertArrayHasKey('keywords', $val);
+                $this->assertArrayHasKey('file_name', $val);
+                $this->assertArrayHasKey('asterisk', $val);
+            }
+        }
+
+    }
+
+
+    /**
+     * 判断是否可以上传
+     */
+    public function testJudgeIsUpload() {
+        $data = ['size'=>1000];
+        $header = ['Authorization'=>"Bearer ".$this->token];
+        $response = $this->get(route('api.media.judgeIsUpload',$data),$header);
+        $result = json_decode($response->content(), true);
+        $this->assertArrayHasKey('code', $result);
+        $this->assertEquals(1000, $result['code']);
+        $this->assertArrayHasKey(  'total_size', $result['data']['size']);
+        $this->assertArrayHasKey(  'use_size', $result['data']['size']);
+        $this->assertArrayHasKey('is_upload', $result['data']['size']);
+    }
+
+
+    public function testGetNetWorkDiskSize() {
+        $header = ['Authorization'=>"Bearer ".$this->token];
+        $response = $this->get(route('api.media.getNetWorkDiskSize'),$header);
+
+        $result = json_decode($response->content(), true);
+        $this->assertArrayHasKey('code', $result);
+        $this->assertEquals(1000, $result['code']);
+        $this->assertArrayHasKey(  'total_size', $result['data']['size']);
+        $this->assertArrayHasKey(  'use_size', $result['data']['size']);
+    }
+
 
 
 }

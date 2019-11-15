@@ -224,6 +224,10 @@ Route::prefix('network-disk')->middleware('auth:api')->group(function () {
     // 删除目录
     Route::get('/categories/delete','Api\NetworkDisk\CategoriesController@delete')
         ->name('api.categories.delete');
+
+    // 文件详情
+    Route::get('/media/getMediaInfo','Api\NetworkDisk\MediaController@getMediaInfo')
+        ->name('api.media.getMediaInfo');
     // 上传文件
     Route::post('/media/upload','Api\NetworkDisk\MediaController@upload')
         ->name('api.media.upload');
@@ -233,6 +237,19 @@ Route::prefix('network-disk')->middleware('auth:api')->group(function () {
     // 搜索文件
     Route::post('/media/search','Api\NetworkDisk\MediaController@search')
         ->name('api.media.search');
+    // 更新点击次数
+    Route::get('/media/click','Api\NetworkDisk\MediaController@click')
+        ->name('api.media.click');
+    // 最近浏览和创建
+    Route::get('/media/latelyUploadingAndBrowse','Api\NetworkDisk\MediaController@latelyUploadingAndBrowse')
+        ->name('api.media.latelyUploadingAndBrowse');
+    // 判断是否可以上传
+    Route::get('/media/judgeIsUpload','Api\NetworkDisk\MediaController@judgeIsUpload')
+        ->name('api.media.judgeIsUpload');
+
+    // 查看用户的云盘空间
+    Route::get('/media/getNetWorkDiskSize','Api\NetworkDisk\MediaController@getNetWorkDiskSize')
+        ->name('api.media.getNetWorkDiskSize');
 
 });
 
