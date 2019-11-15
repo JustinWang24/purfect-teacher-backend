@@ -64,6 +64,16 @@ export const Constants = {
             SAVE_PLAN: '/api/recruitment/save-plan',
             GET_PLAN: '/api/recruitment/get-plan',
             DELETE_PLAN: '/api/recruitment/delete-plan',
+        },
+        FILE_MANAGER: {
+            LOAD_CATEGORY: '/api/category/view',
+            CREATE_CATEGORY: '/api/category/create',
+            EDIT_CATEGORY: '/api/category/edit',
+            DELETE_CATEGORY: '/api/category/delete',
+            FILE_UPLOAD: '/api/file/upload',
+            FILE_EDIT: '/api/file/edit',
+            FILE_DELETE: '/api/file/delete',
+            FILE_SEARCH: '/api/file/search',
         }
     },
     YEARS: ['N.A','一年级','二年级','三年级','四年级','五年级','六年级'],
@@ -81,4 +91,6 @@ export const Constants = {
     STUDENT_ID_NUMBER: 'purfect.id_number',
     STUDENT_MOBILE: 'purfect.mobile',
     STUDENT_PROFILE: 'purfect.profile',
+    TYPE_FILE: 'file',  // 文件类型
+    TYPE_CATEGORY: 'category', // 目录类型
 };

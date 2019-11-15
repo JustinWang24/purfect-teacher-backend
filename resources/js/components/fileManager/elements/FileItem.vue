@@ -1,6 +1,7 @@
 <template>
-    <div class="file-item-row">
+    <div class="file-item-row" v-on:click="itemClicked" :class="highlight?'highlight':''">
         <div class="icon-box">
+            <i class="el-icon-check" v-show="highlight"></i>
             <i class="el-icon-document"></i>&nbsp;
             <span class="file-name-box">
                 {{ file.name }}
@@ -14,11 +15,17 @@
             {{ file.size }}
         </div>
         <div class="star-box">
-            <i class="el-icon-star-on" v-show="file.star" v-on:click="starClicked"></i>
-            <i class="el-icon-star-off" v-show="!file.star"></i>
+            <i class="el-icon-star-on" v-show="file.star" v-on:click.stop="starClicked"></i>
+            <i class="el-icon-star-off" v-show="!file.star" v-on:click.stop="starClicked"></i>
         </div>
         <div class="actions-box">
-            <more-actions :file="file" color="rgb(98, 109,183)"></more-actions>
+            <more-actions
+                    :file="file"
+                    color="rgb(98, 109,183)"
+                    :download="true"
+                    :share="true"
+                    v-on:item-removed="itemRemoved"
+            ></more-actions>
         </div>
     </div>
 </template>
@@ -29,13 +36,16 @@
     export default {
         name: "FileItem",
         components:{MoreActions},
-        props:['file'],
+        props:['file','highlight'],
         methods: {
             itemClicked: function(){
-                this.$emit('item-clicked',{file: this.file})
+                this.$emit('item-clicked',{file: this.file, clicked: 'file'})
             },
             starClicked: function () {
-                this.$emit('star-clicked',{file: this.file})
+                this.$emit('star-clicked',{file: this.file, clicked: 'file'})
+            },
+            itemRemoved: function(){
+                this.$emit('file-removed',{file: this.file, type: 'file'})
             }
         }
     }
@@ -48,7 +58,7 @@
         display: flex;
         flex: 1;
         padding: 12px 12px 7px 12px;
-        margin: 0;
+        margin: 0 0 2px 0;
         border-radius: 6px;
         justify-content: space-between;
         &:hover{
@@ -56,11 +66,10 @@
         }
         .icon-box{
             color: $themeColor;
-            font-size: 17px;
+            font-size: 15px;
             .file-name-box{
-                font-size: 18px;
                 font-weight: bold;
-                line-height:23px;
+                line-height:17px;
                 color: black;
             }
         }
@@ -81,5 +90,8 @@
             font-size: 20px;
             margin-top: -8px;
         }
+    }
+    .highlight{
+        background-color: white;
     }
 </style>

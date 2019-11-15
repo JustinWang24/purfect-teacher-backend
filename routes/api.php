@@ -84,7 +84,7 @@ Route::prefix('enquiry')->middleware('auth:api')->group(function () {
         ->name('api.enquiry.save');
 });
 
-Route::prefix('recruitment')->middleware('auth:api')->group(function () {
+Route::prefix('recruitment')->group(function () {
     // 加载某个学校的招生计划
     Route::any('/load-plans','Api\Recruitment\PlansController@load_plans')
         ->name('api.recruitment.load.plans');
