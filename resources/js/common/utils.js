@@ -37,6 +37,15 @@ export const Util = {
         });
         return result;
     },
+    GetItemIndexByUuid: function (uuid, obj) {
+        let result = null;
+        _.each(obj, (item, idx) => {
+            if(uuid === item.uuid){
+                result = idx;
+            }
+        });
+        return result;
+    },
     // 输出学期文字的方法
     GetTermText: function (term) {
         return Constants.TERMS[term - 1];
@@ -97,8 +106,8 @@ export const Util = {
         return Lockr.get(k)
     },
     isDevEnv: function(){
-        return false;
-        // return document.domain.indexOf('.test')>-1 || document.domain.indexOf('.pftytx.com')>-1;
+        // return false;
+        return document.domain.indexOf('.test')>-1 || document.domain.indexOf('.pftytx.com')>-1;
     },
     buildUrl: function(url, affix) {
         // 方便的创建 url, 可以自动判定是测试环境还是生产环境
