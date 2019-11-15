@@ -106,8 +106,8 @@ export const Util = {
         return Lockr.get(k)
     },
     isDevEnv: function(){
-        // return false;
-        return document.domain.indexOf('.test')>-1 || document.domain.indexOf('.pftytx.com')>-1;
+        return false;
+        // return document.domain.indexOf('.test')>-1 || document.domain.indexOf('.pftytx.com')>-1;
     },
     buildUrl: function(url, affix) {
         // 方便的创建 url, 可以自动判定是测试环境还是生产环境

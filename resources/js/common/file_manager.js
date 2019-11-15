@@ -46,3 +46,16 @@ export function deleteAction(userUuid, file, type, affix) {
         {user: userUuid, uuid: file.uuid, version:Constants.VERSION}
     );
 }
+
+// 创建目录的方法
+export function createNewCategoryAction(userUuid, parent, name, affix) {
+    const url = Util.buildUrl(Constants.API.FILE_MANAGER.CREATE_CATEGORY);
+
+    if(Util.isDevEnv()){
+        return axios.get(url, affix);
+    }
+    return axios.post(
+        url,
+        {user: userUuid, parent: parent, name: name, version:Constants.VERSION}
+    );
+}
