@@ -12,6 +12,17 @@ class ApplyGroup extends Model
 
 
     public function week(){
-        return $this->hasMany(ApplyWeek::class);
+        return $this->hasMany(ApplyWeek::class,'group_id', 'id');
     }
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::deleting(function($applyGroup) {
+            $applyGroup->week()->delete();
+        });
+    }
+
+
 }

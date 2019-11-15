@@ -21,7 +21,7 @@ Route::prefix('school_manager')->group(function () {
     Route::get('campus/institutes', 'CampusController@institutes')->name('school_manager.campus.institutes');   // 显示校区的包含的学院的信息
 
     // 学院的管理
-    Route::get('institute/edit', 'InstitutesController@edit')->name('school_manager.institute.edit');           // 编辑学院
+    Route::get('institute/edit/id/id', 'InstitutesController@edit')->name('school_manager.institute.edit');           // 编辑学院
     Route::get('institute/add', 'InstitutesController@add')->name('school_manager.institute.add');              // 添加学院
     Route::post('institute/update', 'InstitutesController@update')->name('school_manager.institute.update');    // 保存学院
     Route::get('institute/users', 'UsersController@users')->name('school_manager.institute.users');        // 显示学院的学生/教师列表
@@ -123,5 +123,13 @@ Route::prefix('school_manager')->group(function () {
     Route::get('textbook/list', 'TextbookController@list')->name('school_manager.textbook.list');  // 教程列表
     Route::get('textbook/loadCampusTextbook', 'TextbookController@loadCampusTextbook')->name('school_manager.textbook.loadCampusTextbook'); // 获取校区教材采购情况
     Route::get('textbook/campusTextbookDownload', 'TextbookController@campusTextbookDownload')->name('school_manager.textbook.campusTextbookDownload'); // 校区教材下载
+
+    //教师申请选修课管理
+    Route::get('apply/manager/preview', 'TeacherApplyElectiveCoursesController@apply_list')->name('school_manager.apply.manager.preview');
+    Route::get('apply/manager/add', 'TeacherApplyElectiveCoursesController@manager_create')->name('school_manager.apply.add');
+    Route::get('apply/manager/edit/{id}', 'TeacherApplyElectiveCoursesController@manager_edit')->name('school_manager.apply.edit');
+    Route::get('apply/manager/publish/{id}', 'TeacherApplyElectiveCoursesController@publish_apply')->name('school_manager.apply.publish');
+    Route::get('apply/manager/save', 'TeacherApplyElectiveCoursesController@apply_save')->name('school_manager.apply.save');
+
 
 });
