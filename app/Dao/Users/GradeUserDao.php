@@ -218,4 +218,14 @@ class GradeUserDao
         return DB::table('grade_users')->insert($data);
     }
 
+    /**
+     * 根据用户ID获取用户信息
+     * @param $userId
+     * @return GradeUser
+     */
+    public function getUserInfoByUserId($userId)
+    {
+        return GradeUser::where('user_id', $userId)->first();
+    }
+
 }

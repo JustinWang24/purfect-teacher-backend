@@ -13,11 +13,12 @@ class ProductionProcessTest extends  BasicPageTestCase
     public function testItCanGetPresetStep()
     {
         $this->withoutExceptionHandling();
-        $su = $this->getTeacher();
+        $su = $this->getSuperAdmin();
         $response = $this->setSchoolAsUser($su, 1)
             ->actingAs($su)
             ->withSession($this->schoolSessionData)
             ->get(route('teacher.get.preset.step'));
+
         $this->assertTrue(1===2);
     }
 
