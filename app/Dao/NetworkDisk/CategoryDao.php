@@ -97,6 +97,8 @@ class CategoryDao
     /**
      * 删除当前目录下所有的子目录和文件
      * @param Category $category
+     * @return bool
+     * @throws \Exception'
      */
     public function deleteCategory(Category $category){
 
@@ -107,18 +109,15 @@ class CategoryDao
             $this->deleteCategory($child);
         }
 
-        DB::beginTransaction();
         try{
             $dao = new MediaDao();
             $dao->deleteMediasByCategory($category);
             $category->delete();
-            DB::commit();
-
-        }catch (\Exception $e){
-            DB::rollBack();
+        }catch (\Exception $exception){
+            throw new \Exception($exception->getMessage() . ' Category:'. $category->id);
         }
 
-        return ;
+        return true;
     }
 
 
