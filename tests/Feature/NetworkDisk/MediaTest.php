@@ -21,8 +21,8 @@ class MediaTest extends BasicPageTestCase
      */
     public function testUploadMedia() {
 
-        $file = new UploadedFile(public_path().'/1.png','a.png');
-//        $file = UploadedFile::fake()->image('random.jpg');
+//        $file = new UploadedFile(public_path().'/1.png','a.png');
+        $file = UploadedFile::fake()->image('random.jpg');
         $data = [
             'file' => $file,
             'category'=>'623e728f-3701-4154-91a1-ddad1991d726',
@@ -97,10 +97,10 @@ class MediaTest extends BasicPageTestCase
 
     /**
      * 测试点击次数
+     * @depends testUploadMedia
      */
-    public function testMediaClick() {
-//        $data = ['uuid'=>$testUploadresult['data']['file']['uuid']];
-        $data = ['uuid'=>'11e68162-0857-479d-b41f-82150d6532eb'];
+    public function testMediaClick($return) {
+        $data = ['uuid'=>$return['data']['file']['uuid']];
         $header = ['Authorization'=>"Bearer ".$this->token];
         $response = $this->get(route('api.media.click',$data),$header);
         $result = json_decode($response->content(),true);
