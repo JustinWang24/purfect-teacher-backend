@@ -4,6 +4,7 @@
 namespace App\Http\Requests\NetworkDisk;
 
 
+use App\Models\NetworkDisk\Media;
 use Ramsey\Uuid\Uuid;
 use App\Dao\NetworkDisk\CategoryDao;
 use App\Http\Requests\MyStandardRequest;
@@ -67,9 +68,15 @@ class MediaRequest extends MyStandardRequest
      */
     public function getUpload() {
         $file = $this->getFile();
+        $path = Media::DEFAULT_USER_AVATAR.$this->user()->id; // 上传路径
+
         $type = $file->extension();  //文件后缀
         $categoryDao = new CategoryDao();
         $category = $categoryDao->getCateInfoByUuId($this->getCategory());
+
+        $path = $file->store('public'.$path); // 上传并返回路径
+        $url = substr_replace($path,'/storage','0','6'); // 路径替换
+
         $data = [
             'category_id' => $category->id,
             'user_id'     => $this->user()->id,
@@ -78,7 +85,7 @@ class MediaRequest extends MyStandardRequest
             'description' => $this->getDescription(),
             'file_name'   => $file->getClientOriginalName(),
             'size'        => $file->getSize(),
-            'url'         => $file->store('public'),
+            'url'         => $url,
             'driver'      => 1,
         ];
         return $data;

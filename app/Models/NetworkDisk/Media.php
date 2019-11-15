@@ -26,6 +26,8 @@ class Media extends Model
 
     const UPDATED_AT = null;
 
+    const DEFAULT_USER_AVATAR = '/user/';   // 存放用户文件路径
+
 
     /**
      * The table associated with the model.

@@ -17,7 +17,7 @@ class MediaTest extends BasicPageTestCase
 
 
     /**
-     * 测试文件上传和删除
+     * 测试文件上传
      */
     public function testUploadMedia() {
 
