@@ -228,4 +228,14 @@ class GradeUserDao
         return GradeUser::where('user_id',$userId)->select('school_id')->first();
     }
 
+
+    /**
+     * 获取指定学校的第一个学生
+     * @param $schoolId
+     * @return mixed
+     */
+    public function getStudentBySchoolId($schoolId) {
+        $map = ['school_id'=>$schoolId,'user_type'=>Role::VERIFIED_USER_STUDENT];
+        return GradeUser::where($map)->with('user')->first();
+    }
 }

@@ -7,6 +7,7 @@ use App\Dao\NetworkDisk\MediaDao;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\NetworkDisk\CategoryRequest;
 use App\Utils\JsonBuilder;
+use Illuminate\Support\Facades\DB;
 
 class CategoriesController extends Controller
 {
@@ -25,6 +26,7 @@ class CategoriesController extends Controller
         $data = $return->getData();
         $categoriesDao = new CategoryDao();
         $re = $categoriesDao->create($data);
+
         if($re) {
             return JsonBuilder::Success($re);
         } else {
@@ -83,7 +85,22 @@ class CategoriesController extends Controller
         $uuid = $request->getCateUuId();
         $categoriesDao = new CategoryDao();
         $cateInfo = $categoriesDao->getCateInfoByUuId($uuid);
-        $re = $categoriesDao->deleteCategory($cateInfo);
+
+        try{
+            DB::beginTransaction();
+            $re = $categoriesDao->deleteCategory($cateInfo);
+
+            DB::commit();
+        }catch (\Exception $e) {
+            $msg = $e->getMessage();
+            DB::rollBack();
+        }
+
+        if($re) {
+            return JsonBuilder::Success('删除成功');
+        } else {
+            return JsonBuilder::Error('删除失败'.$msg);
+        }
 
     }
 }
