@@ -208,3 +208,28 @@ Route::prefix('campus')->middleware('auth:api')->group(function () {
      Route::post('/handleAffairs/getAddressBook/official','Api\Address\AddressBookController@official')
         ->name('api.address.book.official');
 });
+
+
+// 网盘
+Route::prefix('network-disk')->middleware('auth:api')->group(function () {
+    // 创建目录
+    Route::post('/categories/create','Api\NetworkDisk\CategoriesController@create')
+        ->name('api.categories.create');
+    // 编辑目录
+    Route::post('/categories/edit','Api\NetworkDisk\CategoriesController@edit')
+        ->name('api.categories.edit');
+    // 目录下列表
+    Route::get('/categories/view','Api\NetworkDisk\CategoriesController@view')
+        ->name('api.categories.view');
+    // 删除目录
+    Route::get('/categories/delete','Api\NetworkDisk\CategoriesController@delete')
+        ->name('api.categories.delete');
+    // 上传文件
+    Route::post('/media/upload','Api\NetworkDisk\MediaController@upload')
+        ->name('api.media.upload');
+    // 删除文件
+    Route::get('/media/delete','Api\NetworkDisk\MediaController@delete')
+        ->name('api.media.delete');
+
+});
+

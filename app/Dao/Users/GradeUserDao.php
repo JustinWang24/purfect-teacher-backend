@@ -218,4 +218,14 @@ class GradeUserDao
         return DB::table('grade_users')->insert($data);
     }
 
+
+    /**
+     * 根据用户ID获取学校ID
+     * @param $userId
+     * @return mixed
+     */
+    public function getSchoolIdByUserId($userId) {
+        return GradeUser::where('user_id',$userId)->select('school_id')->first();
+    }
+
 }
