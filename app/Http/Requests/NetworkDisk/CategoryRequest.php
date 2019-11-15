@@ -87,8 +87,9 @@ class CategoryRequest extends MyStandardRequest
         $userId = $this->user()['id'];
         $parentId = $this->getParentId();
         $categoriesDao = new CategoryDao();
-        $re = $categoriesDao->isExist($name, $userId, $parentId);
-        if(!$re) {
+        $exist = $categoriesDao->isExist($name, $userId, $parentId);
+
+        if(!$exist) {
             return new MessageBag(JsonBuilder::CODE_ERROR,'该目录已存在');
         }
         $data = [
@@ -104,7 +105,7 @@ class CategoryRequest extends MyStandardRequest
 
 
     /**
-     * 获取目录类型 0:根目录 1:子目录
+     * 获取目录类型 2:根目录 4:子目录
      * @return int
      */
     public function getType() {
@@ -112,9 +113,9 @@ class CategoryRequest extends MyStandardRequest
         $categoriesDao = new CategoryDao();
         $re = $categoriesDao->getMyCategoryByUserId($userId,Category::TYPE_USER_ROOT);
         if(is_null($re)) {
-            return 0;
+            return Category::TYPE_USER_ROOT;
         } else {
-            return 1;
+            return Category::TYPE_USER_SUBORDINATE;
         }
     }
 
