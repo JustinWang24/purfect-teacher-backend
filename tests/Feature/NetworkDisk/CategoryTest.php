@@ -6,22 +6,19 @@ use Tests\Feature\BasicPageTestCase;
 
 class CategoryTest extends BasicPageTestCase
 {
-    public $token;
-    public function __construct()
-    {
-        parent::__construct();
-        $this->token = '307e9df2-7434-4c45-bc1b-7241388e65e3';
-    }
 
     /**
      * 创建目录
      */
     public function testCreateCategories() {
 
+        $token = $this->getStudent()['user']['api_token'];
+
         $data = ['parent_id'=>2, 'name'=>Carbon::now()->year.rand(1,99)];
-        $header = ['Authorization'=>"Bearer ".$this->token];
+        $header = ['Authorization'=>"Bearer ".$token];
         $response = $this->post(route('api.categories.create'),$data,$header);
         $result = json_decode($response->content(),true);
+
         $this->assertArrayHasKey('code', $result);
         return $result;
     }
@@ -32,6 +29,8 @@ class CategoryTest extends BasicPageTestCase
      * @depends testCreateCategories
      */
     public function testEditCategories($return) {
+
+        $token = $this->getStudent()['user']['api_token'];
         $data = [
             'parent_id'=>3,
             'name'=>Carbon::now()->year,
@@ -39,7 +38,7 @@ class CategoryTest extends BasicPageTestCase
             'public'=>0,
             'asterisk'=>1,
         ];
-        $header = ['Authorization'=>"Bearer ".$this->token];
+        $header = ['Authorization'=>"Bearer ".$token];
         $response = $this->post(route('api.categories.edit'),$data,$header);
         $result = json_decode($response->content(),true);
         $this->assertArrayHasKey('code', $result);
@@ -53,11 +52,13 @@ class CategoryTest extends BasicPageTestCase
      */
     public function testCateView($return) {
 
+        $token = $this->getStudent()['user']['api_token'];
         $data = ['uuid'=>$return['data']['uuid']];
-        $header = ['Authorization'=>"Bearer ".$this->token];
+        $header = ['Authorization'=>"Bearer ".$token];
         $response = $this->get(route('api.categories.view',$data),$header);
 
         $result = json_decode($response->content(),true);
+
         $this->assertArrayHasKey('code', $result);
         $this->assertEquals(1000, $result['code']);
 
@@ -98,11 +99,13 @@ class CategoryTest extends BasicPageTestCase
      */
     public function testCateDelete($return) {
 
+        $token = $this->getStudent()['user']['api_token'];
         $data = ['uuid'=>$return['data']['uuid']];
 
-        $header = ['Authorization'=>"Bearer ".$this->token];
+        $header = ['Authorization'=>"Bearer ".$token];
         $response = $this->get(route('api.categories.delete',$data),$header);
         $result = json_decode($response->content(),true);
+
         $this->assertArrayHasKey('code', $result);
         $this->assertEquals(1000, $result['code']);
     }
