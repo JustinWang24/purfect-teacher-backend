@@ -11,6 +11,7 @@ class MediaController extends Controller
 {
 
     /**
+     * 上传文件
      * @param MediaRequest $request
      * @return string
      * @throws \Exception
@@ -48,7 +49,11 @@ class MediaController extends Controller
     }
 
 
-    // 搜索文件
+    /**
+     * 搜索文件
+     * @param MediaRequest $request
+     * @return string
+     */
     public function search(MediaRequest $request) {
         $keywords = $request->getKeywords();
         $user = $request->user();
