@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers\Api\NetworkDisk;
 
+use App\BusinessLogic\NetworkDriveLogics\Factory;
 use App\Dao\NetworkDisk\CategoryDao;
 use App\Dao\NetworkDisk\MediaDao;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\NetworkDisk\CategoryRequest;
+use App\User;
 use App\Utils\JsonBuilder;
 use Illuminate\Support\Facades\DB;
 
@@ -58,11 +60,24 @@ class CategoriesController extends Controller
      * @return string
      */
     public function view(CategoryRequest $request) {
-        $uuid = $request->getCateUuId();
-
-        $userId = $request->user()['id'];
         $categoriesDao = new CategoryDao();
         $mediaDao = new MediaDao();
+
+        /**
+         * @var User $user
+         */
+//        $user = $request->user();
+        
+        $uuid = $request->getCateUuId();
+
+//        $logic = Factory::GetCategoryLogic($user, $uuid);
+
+//        $category = $logic->getCategoryByUuid($uuid);
+
+//        $category = $uuid ? $categoriesDao->getCateInfoByUuId($uuid) : $user->networkDiskRoot;
+
+        $userId = $request->user()['id'];
+
         $cateInfo = $categoriesDao->getCateInfoByUuId($uuid);
 
         $categoryList = $categoriesDao->getCateByOwnerIdAndParentId($userId, $cateInfo['id']);
@@ -75,6 +90,26 @@ class CategoriesController extends Controller
         $cateInfo['parent'] = $parent;
         $cateInfo['files'] = $files;
         $data = ['category'=>$cateInfo];
+
+//        $data = [
+//            'code'=>1000,
+//            'message'=>'',
+//            'data'=>[
+//                'category'=>[
+//                    'uuid'=>$category->uuid,
+//                    'name'=>$category->name,
+//                    'type'=>$category->type,
+//                    'children'=>$category->children,
+//                    'parent'=>$category->parent,
+//                    'files'=>$category->files,
+//                ]
+//            ]
+//        ];
+//        $data = [
+//            'code'=>1000,
+//            'message'=>'',
+//            'data'=>$logic->getData()
+//        ];
 
         return JsonBuilder::Success($data,'请求成功');
     }
