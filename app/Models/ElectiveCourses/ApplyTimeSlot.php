@@ -4,9 +4,9 @@ namespace App\Models\ElectiveCourses;
 
 use Illuminate\Database\Eloquent\Model;
 
-class StudentEnrolledOptionalCourse extends Model
+class ApplyTimeSlot extends Model
 {
     protected $fillable = [
-        'course_id', 'teacher_id', 'user_id', 'status'
+        'day_id', 'time_slot_id'
     ];
 }

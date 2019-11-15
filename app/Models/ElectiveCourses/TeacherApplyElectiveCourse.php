@@ -9,7 +9,7 @@ use App\Models\ElectiveCourses\TeacherApplyElectiveCoursesTimeSlot;
 
 class TeacherApplyElectiveCourse extends Model
 {
-    protected $fields = [
+    protected $fillable = [
         'school_id', 'teacher_id', 'teacher_name', 'major_id',
         'code', 'name', 'scores', 'year', 'term', 'desc', 'open_num',
         'status', 'reply_content'
