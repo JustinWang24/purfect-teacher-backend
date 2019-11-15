@@ -26,7 +26,7 @@ class CreateTeacherApplyElectiveCourses extends Migration
             $table->unsignedSmallInteger('term')->default(1)->nullable()->comment('学期');
             $table->text('desc')->comment('课程的描述');
             $table->unsignedSmallInteger('open_num')->default(1)->nullable()->comment('开班人数设置');
-            $table->unsignedSmallInteger('status')->default(0)->nullable()->comment('0 申请中、1 审核通过、 2 审核失败、 3 开班成功');
+            $table->unsignedSmallInteger('status')->default(0)->nullable()->comment('1 申请中、2 审核通过、 3 审核失败、 4 发布到课程表成功');
             $table->text('reply_content')->comment('批复的内容');
             $table->timestamps();
         });

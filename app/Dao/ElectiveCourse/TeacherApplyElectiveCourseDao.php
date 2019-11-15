@@ -8,24 +8,21 @@
 
 namespace App\Dao\ElectiveCourses;
 use App\Dao\BuildFillableData;
-use App\Models\ElectiveCourses\ApplyDayIndex;
+use App\Dao\Courses\CourseDao;
+use App\Models\ElectiveCourses\ApplyDay;
 use App\Models\ElectiveCourses\ApplyGroup;
 use App\Models\ElectiveCourses\ApplyTimeSlot;
 use App\Models\ElectiveCourses\ApplyWeek;
 use App\Models\ElectiveCourses\TeacherApplyElectiveCourse;
-use App\Models\ElectiveCourses\TeacherApplyElectiveCoursesTimeSlot;
 use App\Dao\Schools\MajorDao;
 use App\Dao\Users\UserDao;
-//use App\Models\Course;
-//use App\Models\Courses\CourseMajor;
-//use App\Models\Courses\CourseTeacher;
 use App\Utils\JsonBuilder;
 use App\Utils\ReturnData\IMessageBag;
 use App\Utils\ReturnData\MessageBag;
-//use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Collection;
+use Exception;
 use Illuminate\Support\Facades\DB;
-//use Ramsey\Uuid\Uuid;
-//use App\Dao\BuildFillableData;
+
 
 class TeacherApplyElectiveCourseDao
 {
@@ -49,6 +46,12 @@ class TeacherApplyElectiveCourseDao
     public function getApplyById($id)
     {
         return TeacherApplyElectiveCourse::find($id);
+    }
+    //获取已经审批过的申请
+    public function getVerifiedApplyById($id)
+    {
+        return TeacherApplyElectiveCourse::find($id)->where;
+        return DB::table('users')->where('name', 'John')->first();;
     }
 
     /**
@@ -113,7 +116,7 @@ class TeacherApplyElectiveCourseDao
         //周，星期，时间槽数据以数组方式传入
         $applyGroups = $data['groups'];
         $messageBag = new MessageBag(JsonBuilder::CODE_ERROR);
-
+        $data['teacher_name'] = self::getTeacherName($data['teacher_id']);
         DB::beginTransaction();
         try {
             $fillableData = $this->getFillableData(new TeacherApplyElectiveCourse(), $data);
@@ -149,7 +152,9 @@ class TeacherApplyElectiveCourseDao
     {
         $id = $data['id'];
         unset($data['id']);
+        $data['teacher_name'] = self::getTeacherName($data['teacher_id']);
         $applyGroups = $data['groups'];
+        $data['status'] = $data['status']??self::STATUS_WAITING_FOR_VERIFIED;
         $messageBag = new MessageBag(JsonBuilder::CODE_ERROR);
 
         DB::beginTransaction();
@@ -206,12 +211,12 @@ class TeacherApplyElectiveCourseDao
                         foreach ($days as $day => $slots) {
                             $g = [
                                 'week_id' => $weekObj->id,
-                                'day_index' => $day,
+                                'day' => $day,
                             ];
-                            $dayObj = ApplyDayIndex::create($g);
+                            $dayObj = ApplyDay::create($g);
                             foreach ($slots as $slot) {
                                 $s = [
-                                    'day_index_id' => $dayObj->id,
+                                    'day_id' => $dayObj->id,
                                     'time_slot_id' => $slot,
                                 ];
                                 $slotObj = ApplyTimeSlot::create($s);
@@ -219,7 +224,9 @@ class TeacherApplyElectiveCourseDao
                         }
                     }
                 }
+                DB::commit();
             } catch (\Exception $exception) {
+                dd($exception);
                 DB::rollBack();
             }
         }
@@ -233,8 +240,7 @@ class TeacherApplyElectiveCourseDao
      */
     public function rejectedApply($id, $content)
     {
-        $status = self::STATUS_WAITING_FOR_REJUCTED;
-        return self::operateApply($id, $status);
+        return self::operateApply($id, self::STATUS_WAITING_FOR_REJUCTED);
 
     }
 
@@ -246,9 +252,18 @@ class TeacherApplyElectiveCourseDao
      */
     public function approvedApply($id, $content)
     {
-        $status = self::STATUS_VERIFIED;
-        return self::operateApply($id, $status, $content);
+        return self::operateApply($id, self::STATUS_VERIFIED, $content);
 
+    }
+
+    /**
+     * 修改为发布状态
+     * @param $id
+     * @return IMessageBag
+     */
+    public function publishedApply($id)
+    {
+        return self::operateApply($id, self::STATUS_PUBLISHED);
     }
 
     /**
@@ -286,4 +301,74 @@ class TeacherApplyElectiveCourseDao
         }
         return $messageBag;
     }
+    //根据教师id获取教师姓名
+    public function getTeacherName($teacherId)
+    {
+        $teacherDao = new UserDao();
+        $theTeacher = $teacherDao->getUserById($teacherId);
+        return $theTeacher->name;
+    }
+    //根据身份获取申请的状态值
+    public function getDefaultStatusByRole($user)
+    {
+        if($user->isSchoolAdminOrAbove()) {
+            return self::STATUS_VERIFIED;
+        }else {
+            return self::STATUS_WAITING_FOR_VERIFIED;
+        }
+    }
+
+    //发布选修课到课程表中
+
+    public function publishToCourse($applyId)
+    {
+        $apply = self::getApplyById($applyId);
+        $data['school_id'] = $apply->school_id;
+        $data['teachers'][0] = $apply->teacher_id;
+        $data['majors'][0] = $apply->major_id;
+        $data['code'] = $apply->code;
+        $data['name'] = $apply->name;
+        $data['scores'] = $apply->scores;
+        $data['optional'] = 1;
+        $data['year'] = $apply->year;
+        $data['term'] = $apply->term;
+        $data['desc'] = $apply->desc;
+        $group = $apply->TimeSlot()->first();
+        $weeksCollection = $group->week()->get();
+        foreach ($weeksCollection as $weekCollection)
+        {
+            $week = $weekCollection->week;
+            $daysCollection = $weekCollection->day()->get();
+            foreach ($daysCollection as $dayCollection)
+            {
+                $day = $dayCollection->day;
+                $timeSlotsCollection = $dayCollection->slot()->get();
+                foreach($timeSlotsCollection as $i=>$timeSlotCollection)
+                {
+                    $time_slot = $timeSlotCollection->time_slot_id;
+                    $arr[$week][$day][] = $time_slot;
+                }
+            }
+        }
+
+        $data['group'] = $arr;
+        $messageBag = new MessageBag(JsonBuilder::CODE_ERROR);
+        DB::beginTransaction();
+        try {
+            //创建课程
+            $courseDao = new CourseDao();
+            $courseDao->createCourse($data);
+            //标记申请表为发布状态
+            self::publishedApply($applyId);
+            DB::commit();
+            $messageBag->setCode(JsonBuilder::CODE_SUCCESS);
+        } catch (\Exception $exception) {
+            DB::rollBack();
+            $messageBag->setMessage($exception->getMessage());
+        }
+        return $messageBag;
+    }
+
+
 }
+
