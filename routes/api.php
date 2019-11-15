@@ -219,36 +219,36 @@ Route::prefix('network-disk')->middleware('auth:api')->group(function () {
     Route::post('/categories/edit','Api\NetworkDisk\CategoriesController@edit')
         ->name('api.categories.edit');
     // 目录下列表
-    Route::get('/categories/view','Api\NetworkDisk\CategoriesController@view')
+    Route::post('/categories/view','Api\NetworkDisk\CategoriesController@view')
         ->name('api.categories.view');
     // 删除目录
-    Route::get('/categories/delete','Api\NetworkDisk\CategoriesController@delete')
+    Route::post('/categories/delete','Api\NetworkDisk\CategoriesController@delete')
         ->name('api.categories.delete');
 
     // 文件详情
-    Route::get('/media/getMediaInfo','Api\NetworkDisk\MediaController@getMediaInfo')
+    Route::post('/media/getMediaInfo','Api\NetworkDisk\MediaController@getMediaInfo')
         ->name('api.media.getMediaInfo');
     // 上传文件
     Route::post('/media/upload','Api\NetworkDisk\MediaController@upload')
         ->name('api.media.upload');
     // 删除文件
-    Route::get('/media/delete','Api\NetworkDisk\MediaController@delete')
+    Route::post('/media/delete','Api\NetworkDisk\MediaController@delete')
         ->name('api.media.delete');
     // 搜索文件
     Route::post('/media/search','Api\NetworkDisk\MediaController@search')
         ->name('api.media.search');
     // 更新点击次数
-    Route::get('/media/click','Api\NetworkDisk\MediaController@click')
+    Route::post('/media/click','Api\NetworkDisk\MediaController@click')
         ->name('api.media.click');
     // 最近浏览和创建
-    Route::get('/media/latelyUploadingAndBrowse','Api\NetworkDisk\MediaController@latelyUploadingAndBrowse')
+    Route::post('/media/latelyUploadingAndBrowse','Api\NetworkDisk\MediaController@latelyUploadingAndBrowse')
         ->name('api.media.latelyUploadingAndBrowse');
     // 判断是否可以上传
-    Route::get('/media/judgeIsUpload','Api\NetworkDisk\MediaController@judgeIsUpload')
+    Route::post('/media/judgeIsUpload','Api\NetworkDisk\MediaController@judgeIsUpload')
         ->name('api.media.judgeIsUpload');
 
     // 查看用户的云盘空间
-    Route::get('/media/getNetWorkDiskSize','Api\NetworkDisk\MediaController@getNetWorkDiskSize')
+    Route::post('/media/getNetWorkDiskSize','Api\NetworkDisk\MediaController@getNetWorkDiskSize')
         ->name('api.media.getNetWorkDiskSize');
 
 });

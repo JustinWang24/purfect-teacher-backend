@@ -66,13 +66,13 @@ export const Constants = {
             DELETE_PLAN: '/api/recruitment/delete-plan',
         },
         FILE_MANAGER: {
-            LOAD_CATEGORY: '/api/category/view',
-            CREATE_CATEGORY: '/api/category/create',
-            EDIT_CATEGORY: '/api/category/edit',
-            DELETE_CATEGORY: '/api/category/delete',
+            LOAD_CATEGORY: '/api/network-disk/categories/view',
+            CREATE_CATEGORY: '/api/network-disk/categories/create',
+            EDIT_CATEGORY: '/api/network-disk/categories/edit',
+            DELETE_CATEGORY: '/api/network-disk/categories/delete',
             FILE_UPLOAD: '/api/file/upload',
             FILE_EDIT: '/api/file/edit',
-            FILE_DELETE: '/api/file/delete',
+            FILE_DELETE: '/api/network-disk/media/delete',
             FILE_SEARCH: '/api/file/search',
         }
     },

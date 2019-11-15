@@ -40,15 +40,25 @@
             </div>
             <div class="files-list-wrapper">
                 <div class="the-wrapper main-title">
-                    <p class="section-title">文件列表&nbsp;<i class="el-icon-loading" v-show="isLoading"></i></p>
+                    <p class="section-title">
+                        文件列表&nbsp;<i class="el-icon-loading" v-show="isLoading"></i>
+                    </p>
                     <ul class="path">
-
+                        <li class="path-item" >
+                            <el-button style="margin-top: 5px;margin-left: 8px;" v-on:click="createNewFolder" size="mini" class="btn-theme" icon="el-icon-plus">创建文件夹</el-button>
+                        </li>
                         <li class="path-item" v-for="(item, idx) in path" :key="idx">
                             &nbsp;<el-button :class="idx>0?'btn-purple':''" type="text" :disabled="idx===0">{{ item.name }} / </el-button>
                         </li>
                     </ul>
                 </div>
                 <div class="files-wrap">
+                    <div v-show="showNewCategoryFormFlag">
+                        <new-category-form
+                                v-on:category-name-confirmed="newCategoryNameConfirmed"
+                                v-on:category-cancelled="newCategoryCancelled"
+                        ></new-category-form>
+                    </div>
                     <div  v-for="(cat, idx) in categories" :key="cat.uuid">
                         <category-item
                                 v-on:item-clicked="handleCategoryItemClicked"
@@ -124,8 +134,9 @@
     import RecentFile from './elements/RecentFile';
     import FileItem from './elements/FileItem';
     import CategoryItem from './elements/CategoryItem';
+    import NewCategoryForm from './elements/NewCategoryForm';
     import {Util} from '../../common/utils';
-    import {Constants} from '../../common/constants';
+    import { createNewCategoryAction } from '../../common/file_manager';
     import {
         loadCategory
     } from '../../common/file_manager';
@@ -134,7 +145,7 @@
         name: "FileManager",
         props:['userUuid'],
         components:{
-            RecentFile,FileItem,CategoryItem
+            RecentFile,FileItem,CategoryItem,NewCategoryForm
         },
         data() {
             return {
@@ -186,6 +197,8 @@
                 idxRecentFile: -1,
                 // 是否当前正在从服务器加载数据
                 isLoading: false,
+                showNewCategoryFormFlag: false,
+                newCategoryNameIdx: 0,
                 uploadFormData: {
                     category: null,
                     user: this.userUuid,
@@ -218,6 +231,32 @@
                 this.$refs.uploadForm.submit();
             },
             // 文件上传相关结束
+            // 创建新的文件夹
+            createNewFolder: function(){
+                this.showNewCategoryFormFlag = true;
+            },
+            newCategoryNameConfirmed: function(payload){
+                // 确认创建新的文件夹
+                createNewCategoryAction(
+                    this.userUuid, this.selectedCategory.uuid, payload.name
+                ).then(res => {
+                    if(Util.isAjaxResOk(res)){
+                        this.showNewCategoryFormFlag = false;
+                        this.loadCategory(this.selectedCategory.uuid);
+                        this.$message({
+                            type: 'success',
+                            message: '文件夹: "' + payload.name + '"创建成功!'
+                        });
+                    }else{
+                        this.$message.error('操作失败: ' + res.data.message);
+                    }
+                }).catch(e => {
+                    this.$message.error('系统繁忙, 请稍候再试!');
+                })
+            },
+            newCategoryCancelled: function(){
+                this.showNewCategoryFormFlag = false;
+            },
             // 获取目录详情的方法
             loadCategory: function(categoryId){
                 this.isLoading = true;
