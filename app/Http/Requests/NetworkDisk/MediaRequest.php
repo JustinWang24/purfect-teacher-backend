@@ -59,6 +59,15 @@ class MediaRequest extends MyStandardRequest
     }
 
 
+    /**
+     * 获取代上传文件大小
+     * @return mixed
+     */
+    public function getSize() {
+        return $this->get('size',null);
+    }
+
+
 
 
     /**
@@ -69,13 +78,11 @@ class MediaRequest extends MyStandardRequest
     public function getUpload() {
         $file = $this->getFile();
         $path = Media::DEFAULT_USER_AVATAR.$this->user()->id; // 上传路径
-
         $type = $file->extension();  //文件后缀
         $categoryDao = new CategoryDao();
         $category = $categoryDao->getCateInfoByUuId($this->getCategory());
 
-        $path = $file->store('public'.$path); // 上传并返回路径
-        $url = substr_replace($path,'/storage','0','6'); // 路径替换
+        $url = $file->store($path); // 上传并返回路径
 
         $data = [
             'category_id' => $category->id,
