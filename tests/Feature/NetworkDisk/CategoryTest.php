@@ -4,43 +4,42 @@ namespace Tests\Feature\NetworkDisk;
 use Carbon\Carbon;
 use Tests\Feature\BasicPageTestCase;
 
-class Category extends BasicPageTestCase
+class CategoryTest extends BasicPageTestCase
 {
-    public $token;
-    public function __construct()
-    {
-        parent::__construct();
-        $this->token = '307e9df2-7434-4c45-bc1b-7241388e65e3';
-    }
 
     /**
      * 创建目录
      */
     public function testCreateCategories() {
 
-        $data = ['parent_id'=>2, 'name'=>Carbon::now()->year];
-        $header = ['Authorization'=>"Bearer ".$this->token];
-        $response = $this->post(route('api.categories.create'),$data,$header);
+        $token = $this->getStudent()['user']['api_token'];
 
+        $data = ['parent_id'=>2, 'name'=>Carbon::now()->year.rand(1,99)];
+        $header = ['Authorization'=>"Bearer ".$token];
+        $response = $this->post(route('api.categories.create'),$data,$header);
         $result = json_decode($response->content(),true);
+
         $this->assertArrayHasKey('code', $result);
+        return $result;
     }
 
 
     /**
      * 编辑目录
+     * @depends testCreateCategories
      */
-    public function testEditCategories() {
+    public function testEditCategories($return) {
+
+        $token = $this->getStudent()['user']['api_token'];
         $data = [
             'parent_id'=>3,
             'name'=>Carbon::now()->year,
-            'uuid'=>'caca77ce-7de7-44fd-a0c8-0e9479b60560',
+            'uuid'=>$return['data']['uuid'],
             'public'=>0,
             'asterisk'=>1,
         ];
-        $header = ['Authorization'=>"Bearer ".$this->token];
+        $header = ['Authorization'=>"Bearer ".$token];
         $response = $this->post(route('api.categories.edit'),$data,$header);
-
         $result = json_decode($response->content(),true);
         $this->assertArrayHasKey('code', $result);
         $this->assertEquals(1000, $result['code']);
@@ -49,14 +48,17 @@ class Category extends BasicPageTestCase
 
     /**
      * 获取当前目录下的内容
+     * @depends testCreateCategories
      */
-    public function testCateView() {
+    public function testCateView($return) {
 
-        $data = ['uuid'=>'623e728f-3701-4154-91a1-ddad1991d726'];
-        $header = ['Authorization'=>"Bearer ".$this->token];
+        $token = $this->getStudent()['user']['api_token'];
+        $data = ['uuid'=>$return['data']['uuid']];
+        $header = ['Authorization'=>"Bearer ".$token];
         $response = $this->get(route('api.categories.view',$data),$header);
 
         $result = json_decode($response->content(),true);
+
         $this->assertArrayHasKey('code', $result);
         $this->assertEquals(1000, $result['code']);
 
@@ -91,12 +93,21 @@ class Category extends BasicPageTestCase
     }
 
 
-    public function testCateDelete() {
+    /**
+     * 测试删除
+     * @depends testCreateCategories
+     */
+    public function testCateDelete($return) {
 
-        $data = ['uuid'=>'caca77ce-7de7-44fd-a0c8-0e9479b60560'];
-        $header = ['Authorization'=>"Bearer ".$this->token];
+        $token = $this->getStudent()['user']['api_token'];
+        $data = ['uuid'=>$return['data']['uuid']];
+
+        $header = ['Authorization'=>"Bearer ".$token];
         $response = $this->get(route('api.categories.delete',$data),$header);
-        dd($response);
+        $result = json_decode($response->content(),true);
+
+        $this->assertArrayHasKey('code', $result);
+        $this->assertEquals(1000, $result['code']);
     }
 
 
