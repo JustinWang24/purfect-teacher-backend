@@ -20,6 +20,15 @@ class MediaRequest extends MyStandardRequest
     }
 
 
+    /**
+     * 获取Category的uuid
+     * @return mixed
+     */
+    public function getCategory() {
+        return $this->get('category',null);
+    }
+
+
 
     /**
      * 获取上传文件
@@ -60,7 +69,7 @@ class MediaRequest extends MyStandardRequest
         $file = $this->getFile();
         $type = $file->extension();  //文件后缀
         $categoryDao = new CategoryDao();
-        $category = $categoryDao->getCateInfoByUuId($this->getUuId());
+        $category = $categoryDao->getCateInfoByUuId($this->getCategory());
         $data = [
             'category_id' => $category->id,
             'user_id'     => $this->user()->id,
@@ -72,7 +81,6 @@ class MediaRequest extends MyStandardRequest
             'url'         => $file->store('public'),
             'driver'      => 1,
         ];
-
         return $data;
     }
 }

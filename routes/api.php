@@ -230,6 +230,9 @@ Route::prefix('network-disk')->middleware('auth:api')->group(function () {
     // 删除文件
     Route::get('/media/delete','Api\NetworkDisk\MediaController@delete')
         ->name('api.media.delete');
+    // 搜索文件
+    Route::post('/media/search','Api\NetworkDisk\MediaController@search')
+        ->name('api.media.search');
 
 });
 

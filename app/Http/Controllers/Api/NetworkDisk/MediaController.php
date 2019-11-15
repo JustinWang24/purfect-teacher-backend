@@ -49,5 +49,12 @@ class MediaController extends Controller
 
 
     // 搜索文件
+    public function search(MediaRequest $request) {
+        $keywords = $request->getKeywords();
+        $user = $request->user();
+        $mediaDao = new MediaDao();
+        $result = $mediaDao->search($keywords,'',$user);
+        return JsonBuilder::Success($result);
+    }
 
 }
