@@ -19,8 +19,7 @@ class SmsTest extends BasicPageTestCase
                         ->actingAs($su)
                         ->withSession($this->schoolSessionData)
                         ->get(route('api.test-sms'));
-        dd($response->content());
-
+        $this->assertTrue(1===2);
     }
 
 

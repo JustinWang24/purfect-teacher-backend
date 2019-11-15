@@ -160,7 +160,7 @@ class User extends Authenticatable implements HasMobilePhone, HasDeviceId
      */
     public function getSchoolId()
     {
-        if($this->isStudent() || $this->isTeacher() || $this->isEmployee()){
+        if($this->isStudent() || $this->isTeacher() || $this->isEmployee() || $this->isSchoolManager()){
             return $this->gradeUser->school_id;
         }
         return 0;
@@ -173,6 +173,14 @@ class User extends Authenticatable implements HasMobilePhone, HasDeviceId
     public function isStudent(){
         return in_array($this->getCurrentRoleSlug(),
             [Role::VERIFIED_USER_STUDENT_SLUG, Role::VERIFIED_USER_CLASS_LEADER_SLUG, Role::VERIFIED_USER_CLASS_SECRETARY_SLUG]);
+    }
+
+    /**
+     * 是否用户为学校管理员
+     * @return bool
+     */
+    public function isSchoolManager(){
+        return $this->type === Role::SCHOOL_MANAGER;
     }
 
     /**

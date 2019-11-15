@@ -8,17 +8,21 @@
 
 namespace App\BusinessLogic\HomePage\Impl;
 use App\BusinessLogic\HomePage\Contracts\IHomePageLogic;
+use App\Models\School;
 use App\User;
 use App\Dao\Schools\SchoolDao;
+use Illuminate\Http\Request;
 
 class SchoolManagerHomePageLogic implements IHomePageLogic
 {
     private $user = null;
     private $data = [];
+    public $request;
 
-    public function __construct(User $user)
+    public function __construct(Request $request)
     {
-        $this->user = $user;
+        $this->user = $request->user();
+        $this->request = $request;
     }
 
     public function getDataForView()
@@ -27,7 +31,13 @@ class SchoolManagerHomePageLogic implements IHomePageLogic
         /**
          * 运营人员, 那么应该显示学校的列表, 引导管理员进入某所学校
          */
-        $this->data['school'] = $dao->getMySchools();
+        /**
+         * @var School $school
+         */
+        $school = $dao->getMySchools();
+        $this->data['school'] = $school;
+        $this->data['config'] = $school->configuration;
+        $school->savedInSession($this->request);
         return $this->data;
     }
 

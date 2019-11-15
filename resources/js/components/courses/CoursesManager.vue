@@ -129,15 +129,17 @@
                                multiple
                                filterable
                                remote
-                               reserve-keyword
+                               :reserve-keyword="false"
                                placeholder="请输入老师姓名"
+                               :default-first-option="false"
                                :remote-method="searchTeachers"
-                               :loading="loading">
+                               :loading="loading"
+                               loading-text="正在查找 ...">
                         <el-option
                                 v-for="(teacher, idx) in teachers"
                                 :key="idx"
                                 :label="teacher.name"
-                                :value="teacher.id">
+                                :value="teacher.name + ' - ID:'+ teacher.id">
                         </el-option>
                     </el-select>
                 </el-form-item>
@@ -347,7 +349,6 @@
             },
             // Form
             saveCourse: function(){
-                const isUpdate = this.courseModel.id;
                 axios.post(
                     Constants.API.SAVE_COURSE,{course: this.courseModel, school: this.schoolId}
                 ).then(res => {
