@@ -7,20 +7,13 @@ use Tests\Feature\BasicPageTestCase;
 
 class MediaTest extends BasicPageTestCase
 {
-    public $token;
-    public $uuid;
-    public function __construct()
-    {
-        parent::__construct();
-        $this->token = '307e9df2-7434-4c45-bc1b-7241388e65e3';
-    }
-
 
     /**
      * 测试文件上传
      */
     public function testUploadMedia() {
 
+        $token = $this->getStudent()['user']['api_token'];
 //        $file = new UploadedFile(public_path().'/1.png','a.png');
         $file = UploadedFile::fake()->image('random.jpg');
         $data = [
@@ -29,7 +22,7 @@ class MediaTest extends BasicPageTestCase
             'description'=>'测试文件上传',
             ];
 
-        $header = ['Authorization'=>"Bearer ".$this->token];
+        $header = ['Authorization'=>"Bearer ".$token];
         $response = $this->json('post',route('api.media.upload'),$data,$header);
         $result = json_decode($response->content(),true);
 
@@ -53,8 +46,9 @@ class MediaTest extends BasicPageTestCase
      * @depends testUploadMedia
      */
     public function testGetMediaInfo($return) {
+        $token = $this->getStudent()['user']['api_token'];
         $data = ['uuid'=>$return['data']['file']['uuid']];
-        $header = ['Authorization'=>"Bearer ".$this->token];
+        $header = ['Authorization'=>"Bearer ".$token];
         $response = $this->get(route('api.media.getMediaInfo',$data),$header);
 
         $result = json_decode($response->content(),true);
@@ -75,8 +69,9 @@ class MediaTest extends BasicPageTestCase
      * 测试搜索
      */
     public function testSearchMedia() {
+        $token = $this->getStudent()['user']['api_token'];
         $data = ['keywords'=>'a'];
-        $header = ['Authorization'=>"Bearer ".$this->token];
+        $header = ['Authorization'=>"Bearer ".$token];
         $response = $this->post(route('api.media.search'),$data,$header);
         $result = json_decode($response->content(),true);
         $this->assertArrayHasKey('code', $result);
@@ -100,8 +95,9 @@ class MediaTest extends BasicPageTestCase
      * @depends testUploadMedia
      */
     public function testMediaClick($return) {
+        $token = $this->getStudent()['user']['api_token'];
         $data = ['uuid'=>$return['data']['file']['uuid']];
-        $header = ['Authorization'=>"Bearer ".$this->token];
+        $header = ['Authorization'=>"Bearer ".$token];
         $response = $this->get(route('api.media.click',$data),$header);
         $result = json_decode($response->content(),true);
         $this->assertArrayHasKey('code', $result);
@@ -117,8 +113,9 @@ class MediaTest extends BasicPageTestCase
      */
     public function testDeleteMedia($testUploadresult) {
 
+        $token = $this->getStudent()['user']['api_token'];
         $data = ['uuid'=>$testUploadresult['data']['file']['uuid']];
-        $header = ['Authorization'=>"Bearer ".$this->token];
+        $header = ['Authorization'=>"Bearer ".$token];
         $response = $this->get(route('api.media.delete',$data),$header);
         $result = json_decode($response->content(),true);
         $this->assertArrayHasKey('code', $result);
@@ -130,7 +127,8 @@ class MediaTest extends BasicPageTestCase
      * 最近浏览和上传
      */
     public function testLatelyCreateAndBrowse() {
-        $header = ['Authorization'=>"Bearer ".$this->token];
+        $token = $this->getStudent()['user']['api_token'];
+        $header = ['Authorization'=>"Bearer ".$token];
         $response = $this->get(route('api.media.latelyUploadingAndBrowse'),$header);
         $result = json_decode($response->content(),true);
         $this->assertArrayHasKey('code', $result);
@@ -165,8 +163,9 @@ class MediaTest extends BasicPageTestCase
      * 判断是否可以上传
      */
     public function testJudgeIsUpload() {
+        $token = $this->getStudent()['user']['api_token'];
         $data = ['size'=>1000];
-        $header = ['Authorization'=>"Bearer ".$this->token];
+        $header = ['Authorization'=>"Bearer ".$token];
         $response = $this->get(route('api.media.judgeIsUpload',$data),$header);
         $result = json_decode($response->content(), true);
         $this->assertArrayHasKey('code', $result);
@@ -177,8 +176,12 @@ class MediaTest extends BasicPageTestCase
     }
 
 
+    /**
+     * 获取磁盘的大小
+     */
     public function testGetNetWorkDiskSize() {
-        $header = ['Authorization'=>"Bearer ".$this->token];
+        $token = $this->getStudent()['user']['api_token'];
+        $header = ['Authorization'=>"Bearer ".$token];
         $response = $this->get(route('api.media.getNetWorkDiskSize'),$header);
 
         $result = json_decode($response->content(), true);
