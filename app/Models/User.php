@@ -7,6 +7,7 @@ use App\Models\Acl\Role;
 use App\Models\Contract\HasDeviceId;
 use App\Models\Contract\HasMobilePhone;
 use App\Models\Misc\Enquiry;
+use App\Models\NetworkDisk\Category;
 use App\Models\Schools\RecruitmentPlan;
 use App\Models\Students\StudentProfile;
 use App\Models\Teachers\TeacherProfile;
@@ -261,5 +262,12 @@ class User extends Authenticatable implements HasMobilePhone, HasDeviceId
             ->where('id','<>',$this->id)
             ->whereIn('recruitment_plan_id',$plans)
             ->get();
+    }
+
+    /**
+     * 获取用户的网盘主目录
+     */
+    public function networkDiskRoot(){
+        return $this->hasOne(Category::class, 'owner_id')->where('type',Category::TYPE_USER_ROOT);
     }
 }
