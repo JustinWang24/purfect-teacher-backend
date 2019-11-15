@@ -42,6 +42,7 @@ class Kernel extends HttpKernel
         'api' => [
             'throttle:60,1',
             'bindings',
+//            \App\Http\Middleware\GetUserInfoByToken::class, // 处理移动端传过来的token转换成user
         ],
     ];
 

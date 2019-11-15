@@ -4,6 +4,8 @@ namespace App\Models;
 
 use App\Models\Courses\CourseArrangement;
 use App\Models\Courses\CourseTextbook;
+use App\Models\ElectiveCourses\CourseElective;
+use App\Models\ElectiveCourses\StudentEnrolledOptionalCourse;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Models\Courses\CourseTeacher;
@@ -39,6 +41,22 @@ class Course extends Model
     public function school(){
         return $this->belongsTo(School::class);
     }
+
+    public function courseArrangements()
+    {
+        return $this->hasMany(CourseArrangement::class);
+    }
+
+    public function courseElective()
+    {
+        return $this->hasOne(CourseElective::class);
+    }
+
+    public function studentEnrolledOptionalCourse()
+    {
+        return $this->hasMany(StudentEnrolledOptionalCourse::class);
+    }
+
 
     /**
      * 本课程的课程安排
