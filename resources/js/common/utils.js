@@ -37,6 +37,15 @@ export const Util = {
         });
         return result;
     },
+    GetItemIndexByUuid: function (uuid, obj) {
+        let result = null;
+        _.each(obj, (item, idx) => {
+            if(uuid === item.uuid){
+                result = idx;
+            }
+        });
+        return result;
+    },
     // 输出学期文字的方法
     GetTermText: function (term) {
         return Constants.TERMS[term - 1];

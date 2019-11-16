@@ -15,11 +15,11 @@ use App\User;
                 <div class="card-body">
                     <div class="row">
                         <div class="table-padding col-12">
-                            @if(isset($building)))
+                            @if(isset($building))
                                 <a href="{{ url()->previous() }}" class="btn btn-default">
                                     <i class="fa fa-arrow-circle-left"></i> 返回
                                 </a>&nbsp;
-                                <a href="{{ route('school_manager.room.add',['uuid'=>$building->id]) }}" class="btn btn-primary pull-right" id="btn-create-room-from-building">
+                                <a href="{{ route('school_manager.room.add',['uuid'=>$building->id]) }}" class="btn btn-primary" id="btn-create-room-from-building">
                                     添加新房间 <i class="fa fa-plus"></i>
                                 </a>
                             @endif
@@ -56,7 +56,7 @@ use App\User;
                                 </tbody>
                             </table>
 
-                            @if(!isset($building)))
+                            @if(!isset($building))
 {{ $rooms->links() }}
                             @endif
                         </div>

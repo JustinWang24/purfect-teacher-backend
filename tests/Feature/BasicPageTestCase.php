@@ -102,4 +102,9 @@ class BasicPageTestCase extends TestCase
     protected function getStudent() {
         return $this->student;
     }
+
+    public function getHeaderWithApiToken(){
+        $token = $this->getStudent()['user']['api_token'];
+        return  ['Authorization'=>"Bearer ".$token];
+    }
 }
