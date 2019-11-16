@@ -60,57 +60,14 @@ class CategoriesController extends Controller
      * @return string
      */
     public function view(CategoryRequest $request) {
-        $categoriesDao = new CategoryDao();
-        $mediaDao = new MediaDao();
         /**
          * @var User $user
          */
-//        $user = $request->user();
-
+        $user = $request->user();
         $uuid = $request->getCateUuId();
-
-//        $logic = Factory::GetCategoryLogic($user, $uuid);
-
-//        $category = $logic->getCategoryByUuid($uuid);
-
-//        $category = $uuid ? $categoriesDao->getCateInfoByUuId($uuid) : $user->networkDiskRoot;
-
-        $userId = $request->user()->id;
-
-        $cateInfo = $categoriesDao->getCateInfoByUuId($uuid);
-
-        $categoryList = $categoriesDao->getCateByOwnerIdAndParentId($userId, $cateInfo['id']);
-        $cateInfo['children'] = $categoryList;
-        $files = $mediaDao->getMediaByCategoryId($cateInfo['id']);
-        $parent = [];
-        if($cateInfo['type'] == 1) {
-            $parent = $categoriesDao->getCateInfoById($cateInfo['parent_id']);
-        }
-        $cateInfo['parent'] = $parent;
-        $cateInfo['files'] = $files;
-        $data = ['category'=>$cateInfo];
-
-//        $data = [
-//            'code'=>1000,
-//            'message'=>'',
-//            'data'=>[
-//                'category'=>[
-//                    'uuid'=>$category->uuid,
-//                    'name'=>$category->name,
-//                    'type'=>$category->type,
-//                    'children'=>$category->children,
-//                    'parent'=>$category->parent,
-//                    'files'=>$category->files,
-//                ]
-//            ]
-//        ];
-//        $data = [
-//            'code'=>1000,
-//            'message'=>'',
-//            'data'=>$logic->getData()
-//        ];
-
-        return JsonBuilder::Success($data,'请求成功');
+        $logic = Factory::GetCategoryLogic($user, $uuid);
+        $data = $logic->getData();
+        return $data ? JsonBuilder::Success($data) : JsonBuilder::Error('目录不存在');
     }
 
 
