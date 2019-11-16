@@ -155,10 +155,11 @@
         </el-form>
     </div>
 </template>
-RT!708!7
+
 <script>
     import { Constants } from '../../common/constants';
     import { Util } from '../../common/utils';
+    import { loadBuildings, loadAvailableRoomsByBuilding } from '../../common/facility';
 
     export default {
         name: "TimetableItemForm",
@@ -380,36 +381,31 @@ RT!708!7
         methods: {
             // 获取学校的所有建筑, 按校区分组
             _getAllBuildings: function(){
-                axios.post(
-                    Constants.API.LOAD_BUILDINGS_BY_SCHOOL,{school: this.schoolId}
-                ).then( res => {
+                loadBuildings(this.schoolId).then( res => {
                     if(Util.isAjaxResOk(res)){
                         this.campuses = res.data.data.campuses;
                     }
-                })
+                });
             },
             // 获取某个建筑的所有房间
             _getRoomsByBuilding: function(buildingId){
                 // 获取房间时, 要根据前面一个步骤选择的时间段来进行判断.
                 // 如果给定年度的, 给定学期的, 给定时间段, 给定的建筑物内,
                 // 某个教室是可能被占用的, 因此被占用的不可以被返回
-                axios.post(
-                    Constants.API.LOAD_AVAILABLE_ROOMS_BY_BUILDING,
-                    {
-                        school: this.schoolId,
-                        building: buildingId,
-                        year: this.timeTableItem.year,
-                        term: this.timeTableItem.term,
-                        weekday_index: this.timeTableItem.weekday_index,
-                        timeSlot: this.timeTableItem.time_slot_id
-                    }
+                loadAvailableRoomsByBuilding(
+                    this.schoolId,
+                    buildingId,
+                    this.timeTableItem.year,
+                    this.timeTableItem.term,
+                    this.timeTableItem.weekday_index,
+                    this.timeTableItem.time_slot_id
                 ).then( res => {
                     if(Util.isAjaxResOk(res)){
                         this.rooms = res.data.data.rooms;
                     }else{
                         this.rooms = [];
                     }
-                })
+                });
             },
             // 获取专业
             _getAllMajors: function(){

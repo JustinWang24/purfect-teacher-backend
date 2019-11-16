@@ -1,9 +1,17 @@
 <template>
-    <div class="recent-file-wrapper" v-on:click="itemClicked">
+    <div class="recent-file-wrapper" v-on:click="itemClicked" :class="highlight?'highlight':''">
         <div class="star-wrap">
-            <i class="el-icon-star-on" v-if="file.star" v-on:click="starClicked"></i>
-            <i class="el-icon-star-off" v-if="!file.star"></i>
-            <more-actions class="txt-white m--10" :file="file" color="rgb(98, 109,183)"></more-actions>
+            <i class="el-icon-star-on" v-if="file.star" v-on:click.stop="starClicked"></i>
+            <i class="el-icon-star-off" v-if="!file.star" v-on:click.stop="starClicked"></i>
+            <i class="el-icon-check" v-show="highlight"></i>
+            <more-actions
+                    :download="true"
+                    :share="true"
+                    class="txt-white m--10"
+                    :file="file"
+                    color="rgb(98, 109,183)"
+                    v-on:item-removed="itemRemoved"
+            ></more-actions>
         </div>
         <p class="updated-at">{{ file.updated_at }}</p>
         <p class="file-name">{{ file.name }}</p>
@@ -16,13 +24,16 @@
     export default {
         name: "RecentFile",
         components:{MoreActions},
-        props:['file'],
+        props:['file','highlight'],
         methods: {
             itemClicked: function(){
-                this.$emit('item-clicked',{file: this.file})
+                this.$emit('item-clicked',{file: this.file,clicked:'recent'})
             },
             starClicked: function () {
-                this.$emit('star-clicked',{file: this.file})
+                this.$emit('star-clicked',{file: this.file,clicked:'recent'})
+            },
+            itemRemoved: function(){
+                this.$emit('file-removed',{file: this.file,type:'recent'})
             }
         }
     }
@@ -72,5 +83,8 @@
             font-size: 15px;
             line-height: 24px;
         }
+    }
+    .highlight{
+        width: 138px;
     }
 </style>
