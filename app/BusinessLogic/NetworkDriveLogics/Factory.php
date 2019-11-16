@@ -12,6 +12,7 @@ namespace App\BusinessLogic\NetworkDriveLogics;
 use App\BusinessLogic\NetworkDriveLogics\Contracts\ICategoryLogic;
 use App\BusinessLogic\NetworkDriveLogics\Impl\ForSchoolManager;
 use App\BusinessLogic\NetworkDriveLogics\Impl\ForStudent;
+use App\BusinessLogic\NetworkDriveLogics\Impl\ForTeacher;
 use App\User;
 
 class Factory
@@ -26,7 +27,11 @@ class Factory
 
         if($user->isStudent()){
             $logic = new ForStudent($categoryUuid, $user);
-        }elseif ($user->isSchoolManager()){
+        }
+        elseif ($user->isTeacher()){
+            $logic = new ForTeacher($categoryUuid, $user);
+        }
+        elseif ($user->isSchoolManager()){
             $logic = new ForSchoolManager($categoryUuid, $user);
         }
 
