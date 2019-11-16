@@ -74,6 +74,10 @@ export const Constants = {
             FILE_EDIT: '/api/file/edit',
             FILE_DELETE: '/api/network-disk/media/delete',
             FILE_SEARCH: '/api/file/search',
+        },
+        ELECTIVE_COURSE: {
+            SAVE: '/api/elective-course/save', // 管理员直接添加
+            APPLY: '/api/elective-course/apply', // 教师申请开选修课
         }
     },
     YEARS: ['N.A','一年级','二年级','三年级','四年级','五年级','六年级'],
