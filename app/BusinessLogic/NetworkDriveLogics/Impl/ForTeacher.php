@@ -2,18 +2,17 @@
 /**
  * Created by PhpStorm.
  * User: justinwang
- * Date: 15/11/19
- * Time: 9:03 PM
+ * Date: 16/11/19
+ * Time: 11:04 PM
  */
 
 namespace App\BusinessLogic\NetworkDriveLogics\Impl;
-
 use App\BusinessLogic\NetworkDriveLogics\Contracts\ICategoryLogic;
+use App\User;
 use App\Dao\NetworkDisk\CategoryDao;
 use App\Models\NetworkDisk\Category;
-use App\User;
 
-class ForStudent implements ICategoryLogic
+class ForTeacher implements ICategoryLogic
 {
     private $uuid;
     private $user;
@@ -45,7 +44,6 @@ class ForStudent implements ICategoryLogic
         }else{
             $category = $categoriesDao->getCateInfoByUuId($this->uuid);
         }
-
         return $category ? [
             'category'=>[
                 'uuid'=>$category->uuid,
@@ -60,7 +58,7 @@ class ForStudent implements ICategoryLogic
 
     public function getAllSchoolRootCategory()
     {
-        return null;
+        return 0;
     }
 
     public function getData()
