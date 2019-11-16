@@ -62,12 +62,11 @@ class CategoriesController extends Controller
     public function view(CategoryRequest $request) {
         $categoriesDao = new CategoryDao();
         $mediaDao = new MediaDao();
-
         /**
          * @var User $user
          */
 //        $user = $request->user();
-        
+
         $uuid = $request->getCateUuId();
 
 //        $logic = Factory::GetCategoryLogic($user, $uuid);
@@ -76,7 +75,7 @@ class CategoriesController extends Controller
 
 //        $category = $uuid ? $categoriesDao->getCateInfoByUuId($uuid) : $user->networkDiskRoot;
 
-        $userId = $request->user()['id'];
+        $userId = $request->user()->id;
 
         $cateInfo = $categoriesDao->getCateInfoByUuId($uuid);
 
