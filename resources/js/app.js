@@ -33,11 +33,63 @@ Vue.component('search-bar', require('./components/quickSearch/SearchBar.vue').de
 Vue.component('recruitment-plans-list', require('./components/recruitment/RecruitmentPlansList.vue').default);
 Vue.component('recruitment-plan-form', require('./components/recruitment/RecruitmentPlanForm.vue').default);
 Vue.component('file-manager', require('./components/fileManager/FileManager.vue').default);
+Vue.component('elective-course-form', require('./components/courses/ElectiveCourseForm.vue').default);
 
 import { Constants } from './common/constants';
 import { Util } from './common/utils';
-import { getTimeSlots } from './common/timetables';
+import { getTimeSlots, getMajors } from './common/timetables';
+import { getEmptyElectiveCourseApplication } from './common/elective_course';
 
+/**
+ * 老师申请开设一门新的选修课
+ */
+if(document.getElementById('teacher-apply-a-new-elective-course-app')){
+    new Vue({
+        el:'#teacher-apply-a-new-elective-course-app',
+        data(){
+            return {
+                majors:[],
+                timeSlots:[],
+                schoolId:'',
+                course:{},
+            };
+        },
+        created(){
+            this.course = getEmptyElectiveCourseApplication(true);
+            this.schoolId = document.getElementById('app-init-data-holder').dataset.school;
+            this._getAllMajors();
+            this._getAllTimeSlots();
+        },
+        methods: {
+            _getAllTimeSlots: function(){
+                getTimeSlots(this.schoolId).then(res => {
+                    if(Util.isAjaxResOk(res)){
+                        this.timeSlots = res.data.data.time_frame;
+                    }
+                })
+            },
+            // 获取所有可能的专业列表
+            _getAllMajors: function () {
+                getMajors(this.schoolId, 0).then(res=>{
+                    if(Util.isAjaxResOk(res) && res.data.data.majors.length > 0){
+                        this.majors = res.data.data.majors;
+                    }
+                    else{
+                        this.$notify.error({
+                            title: '错误',
+                            message: '无法加载专业信息列表',
+                            position: 'bottom-right'
+                        });
+                    }
+                })
+            },
+        }
+    });
+}
+
+/**
+ * 文件管理器
+ */
 if (document.getElementById('file-manager-app')){
     new Vue({
         el: '#file-manager-app',
