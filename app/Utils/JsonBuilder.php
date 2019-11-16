@@ -9,6 +9,8 @@
 namespace App\Utils;
 
 
+use Carbon\Carbon;
+
 class JsonBuilder
 {
 
@@ -105,7 +107,11 @@ class JsonBuilder
             // 具备转换成数组的条件
             $arr = $obj->toArray();
             return self::TransformNullToEmptyString($arr);
-        }else{
+        }
+        elseif ($obj instanceof Carbon){
+            return $obj->format('Y-m-d');
+        }
+        else{
             // 表明传入的对象, 既没有实现 ArrayAccess, 也没提供 toArray 方法
             throw new \Exception('数据无法正确转换成 json');
         }

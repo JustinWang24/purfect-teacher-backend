@@ -7,7 +7,6 @@ use App\Dao\Schools\SchoolDao;
 use App\Models\NetworkDisk\Category;
 use Illuminate\Support\Facades\Log;
 use Ramsey\Uuid\Uuid;
-use App\Models\NetworkDisk\Media;
 
 class CategoryDao
 {
@@ -73,12 +72,7 @@ class CategoryDao
      */
     public function isExist($name,$ownerId,$parentId) {
         $map = ['name'=>$name,'owner_id'=>$ownerId,'parent_id'=>$parentId];
-        $result = Category::where($map)->first();
-        if(is_null($result)) {
-            return true;
-        } else {
-            return false;
-        }
+        return Category::where($map)->first();
     }
 
     /**
@@ -94,7 +88,7 @@ class CategoryDao
     /**
      * 根据uuid获取目录详情
      * @param $uuid
-     * @return mixed
+     * @return Category
      */
     public function getCateInfoByUuId($uuid) {
         return Category::GetByUuid($uuid);
@@ -103,12 +97,24 @@ class CategoryDao
     /**
      * 根据ID获取目录详情
      * @param $id
-     * @return mixed
+     * @return Category
      */
     public function getCateInfoById($id) {
         return Category::where('id',$id)->first();
     }
 
+    /**
+     * @param $id
+     * @return Category
+     */
+    public function getCategoryByIdOrUuid($id){
+        if(is_string($id) && strlen($id) > 20){
+            return $this->getCateInfoByUuId($id);
+        }
+        else{
+            return $this->getCateInfoById($id);
+        }
+    }
 
     /**
      * 根据用户ID和文件的父级ID获取列表
@@ -150,7 +156,7 @@ class CategoryDao
     }
 
     /**
-     * 获取学校的文件根目录
+     * 获取学校的文件根目录. 如果学校的根目录不存在, 就创建一个
      *
      * @param $schoolId
      * @return mixed
