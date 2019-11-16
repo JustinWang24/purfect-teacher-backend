@@ -6,6 +6,7 @@ use App\Dao\RecruitmentPlan\RecruitmentPlanDao;
 use App\Models\Acl\Role;
 use App\Models\Contract\HasDeviceId;
 use App\Models\Contract\HasMobilePhone;
+use App\Models\Courses\CourseTeacher;
 use App\Models\Misc\Enquiry;
 use App\Models\NetworkDisk\Category;
 use App\Models\Schools\RecruitmentPlan;
@@ -43,6 +44,8 @@ class User extends Authenticatable implements HasMobilePhone, HasDeviceId
     const SOURCE_GENERAL_TEXT = '统招';
     const SOURCE_SELF_TEXT    = '自招';
     const SOURCE_AGENT_TEXT   = '中介';
+
+    const DEFAULT_USER_AVATAR = '/assets/img/dp.jpg';
 
     /**
      * The attributes that are mass assignable.
@@ -121,6 +124,10 @@ class User extends Authenticatable implements HasMobilePhone, HasDeviceId
             // 学校管理员的默认首页
             $viewPath = 'school_manager.school.view';
         }
+        elseif ($this->isTeacher()){
+            // 学校管理员的默认首页
+            $viewPath = 'teacher.school.view';
+        }
         return $viewPath;
     }
 
@@ -128,7 +135,7 @@ class User extends Authenticatable implements HasMobilePhone, HasDeviceId
         $roleSlug = $this->getCurrentRoleSlug();
         if($roleSlug === Role::TEACHER_SLUG || $roleSlug === Role::EMPLOYEE_SLUG){
             // 教师或者职工
-            return $this->hasOne(TeacherProfile::class,'teacher_id');
+            return $this->hasOne(TeacherProfile::class,'user_id');
         }
         elseif (in_array($this->type, Role::GetStudentUserTypes())){
             // 已认证学生
@@ -215,10 +222,24 @@ class User extends Authenticatable implements HasMobilePhone, HasDeviceId
 
     /**
      * 获取关联的用户班级
-     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     * @return mixed
      */
     public function gradeUser(){
-        return $this->hasOne(GradeUser::class);
+        if($this->isStudent()){
+            return $this->hasOne(GradeUser::class);
+        }
+        elseif($this->isTeacher()){
+            return $this->hasMany(GradeUser::class);
+        }
+    }
+
+    public function myCourses(){
+        if($this->isStudent()){
+            return [];
+        }
+        elseif($this->isTeacher()){
+            return $this->hasMany(CourseTeacher::class, 'teacher_id');
+        }
     }
 
     public function getMobile()

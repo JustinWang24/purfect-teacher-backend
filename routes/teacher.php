@@ -77,4 +77,8 @@ Route::prefix('teacher')->group(function () {
     // 查看已经批准的报名表
     Route::get('registration-forms/enrol', 'RecruitmentFormsController@enrol')
         ->name('teacher.registration.forms.enrol');
+
+    // 教师申请开设一门选修课
+    Route::get('elective-course/create', 'ElectiveCoursesController@create')
+        ->name('teacher.elective-course.create');
 });

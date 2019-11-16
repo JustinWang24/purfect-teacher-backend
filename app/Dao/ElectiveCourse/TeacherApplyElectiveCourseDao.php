@@ -16,9 +16,11 @@ use App\Models\ElectiveCourses\ApplyWeek;
 use App\Models\ElectiveCourses\TeacherApplyElectiveCourse;
 use App\Dao\Schools\MajorDao;
 use App\Dao\Users\UserDao;
+use App\User;
 use App\Utils\JsonBuilder;
 use App\Utils\ReturnData\IMessageBag;
 use App\Utils\ReturnData\MessageBag;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
 use Exception;
 use Illuminate\Support\Facades\DB;
@@ -27,19 +29,8 @@ use Illuminate\Support\Facades\DB;
 class TeacherApplyElectiveCourseDao
 {
     use BuildFillableData;
-
-    const STATUS_WAITING_FOR_VERIFIED = 1;
-    const STATUS_WAITING_FOR_VERIFIED_TEXT = '教师申请中';
-    const STATUS_WAITING_FOR_REJUCTED = 3;
-    const STATUS_WAITING_FOR_REJUCTED_TEXT = '申请退回';
-    const STATUS_VERIFIED = 2;
-    const STATUS_VERIFIED_TEXT = '审批通过';
-    const STATUS_PUBLISHED = 4;
-    const STATUS_PUBLISHED_TEXT = '已经发布到课程表';
-
     public function __construct()
     {
-
     }
 
 
@@ -154,7 +145,7 @@ class TeacherApplyElectiveCourseDao
         unset($data['id']);
         $data['teacher_name'] = self::getTeacherName($data['teacher_id']);
         $applyGroups = $data['groups'];
-        $data['status'] = $data['status']??self::STATUS_WAITING_FOR_VERIFIED;
+        $data['status'] = $data['status']??TeacherApplyElectiveCourse::STATUS_WAITING_FOR_VERIFIED;
         $messageBag = new MessageBag(JsonBuilder::CODE_ERROR);
 
         DB::beginTransaction();
@@ -240,7 +231,7 @@ class TeacherApplyElectiveCourseDao
      */
     public function rejectedApply($id, $content)
     {
-        return self::operateApply($id, self::STATUS_WAITING_FOR_REJUCTED);
+        return self::operateApply($id, TeacherApplyElectiveCourse::STATUS_WAITING_FOR_REJECTED);
 
     }
 
@@ -252,7 +243,7 @@ class TeacherApplyElectiveCourseDao
      */
     public function approvedApply($id, $content)
     {
-        return self::operateApply($id, self::STATUS_VERIFIED, $content);
+        return self::operateApply($id, TeacherApplyElectiveCourse::STATUS_VERIFIED, $content);
 
     }
 
@@ -263,7 +254,7 @@ class TeacherApplyElectiveCourseDao
      */
     public function publishedApply($id)
     {
-        return self::operateApply($id, self::STATUS_PUBLISHED);
+        return self::operateApply($id, TeacherApplyElectiveCourse::STATUS_PUBLISHED);
     }
 
     /**
@@ -280,12 +271,11 @@ class TeacherApplyElectiveCourseDao
         try {
             $apply = TeacherApplyElectiveCourse::where('id', $id);
 
-            if (self::STATUS_VERIFIED == $status) {
-                $apply->status = self::STATUS_VERIFIED;
+            if (TeacherApplyElectiveCourse::STATUS_VERIFIED == $status) {
+                $apply->status = TeacherApplyElectiveCourse::STATUS_VERIFIED;
                 $apply->reply_content .= $content;
 
-            } elseif (in_array([self::STATUS_WAITING_FOR_REJUCTED,
-                                self::STATUS_PUBLISHED], $status)) {
+            } elseif (in_array([TeacherApplyElectiveCourse::STATUS_WAITING_FOR_REJECTED,TeacherApplyElectiveCourse::STATUS_PUBLISHED], $status)) {
 
                 $apply->status = $status;
             } else {
@@ -309,12 +299,17 @@ class TeacherApplyElectiveCourseDao
         return $theTeacher->name;
     }
     //根据身份获取申请的状态值
+
+    /**
+     * @param User $user
+     * @return int
+     */
     public function getDefaultStatusByRole($user)
     {
         if($user->isSchoolAdminOrAbove()) {
-            return self::STATUS_VERIFIED;
+            return TeacherApplyElectiveCourse::STATUS_VERIFIED;
         }else {
-            return self::STATUS_WAITING_FOR_VERIFIED;
+            return TeacherApplyElectiveCourse::STATUS_WAITING_FOR_VERIFIED;
         }
     }
 
@@ -369,6 +364,17 @@ class TeacherApplyElectiveCourseDao
         return $messageBag;
     }
 
-
+    /**
+     * 获取某个学校最近 3 个月的申请
+     *
+     * @param $schoolId
+     * @param int $monthsAgo
+     * @return Collection
+     */
+    public function getAllBySchool($schoolId, $monthsAgo = 3){
+        return TeacherApplyElectiveCourse::where('school_id',$schoolId)
+            ->where('created_at','>',Carbon::now()->subMonths(3))
+            ->get();
+    }
 }
 

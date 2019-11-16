@@ -43,6 +43,7 @@ trait CustomizedAuthenticatesUsers
              * @var User $user
              */
             $user = Auth::user();
+
             if(!$user->isSchoolAdminOrAbove()){
                 // 该用户最多是个教师或者学生
                 $gradeUserDao = new GradeUserDao($user);
