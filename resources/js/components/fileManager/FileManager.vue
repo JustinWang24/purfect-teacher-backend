@@ -48,7 +48,7 @@
                             <el-button style="margin-top: 5px;margin-left: 8px;" v-on:click="createNewFolder" size="mini" class="btn-theme" icon="el-icon-plus">创建文件夹</el-button>
                         </li>
                         <li class="path-item" v-for="(item, idx) in path" :key="idx">
-                            &nbsp;<el-button :class="idx>0?'btn-purple':''" type="text" :disabled="idx===0">{{ item.name }} / </el-button>
+                            &nbsp;<el-button v-on:click="loadCategory(item.uuid)" :class="idx>0?'btn-purple':''" type="text" :disabled="idx===0">{{ item.name }} / </el-button>
                         </li>
                     </ul>
                 </div>
@@ -271,7 +271,7 @@
                             this.path = [];
                             this.path.push(this.selectedCategory);
                             this.path.push(res.data.data.category.parent);
-
+                            this.resetAllHighlightIndex();
                         }else{
                             this.$message.error('访问的云盘目录不存在');
                         }

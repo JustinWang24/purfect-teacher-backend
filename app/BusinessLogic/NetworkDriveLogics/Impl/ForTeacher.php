@@ -51,7 +51,7 @@ class ForTeacher implements ICategoryLogic
                 'type'=>$category->type,
                 'created_at'=>$category->created_at,
                 'children'=>$category->children,
-                'parent'=>$category->parent,
+                'parent'=>$category->isRootOf($this->user) ? null : $category->parentCategory,
                 'files'=>$category->files,
             ]
         ] : null;

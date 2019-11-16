@@ -94,4 +94,21 @@ class Category extends Model
     public function isOwnedByUser(User $user){
         return $user->id === $this->owner_id;
     }
+
+    /**
+     * 目录是否为给定用户的根目录
+     * @param User $user
+     * @return bool
+     */
+    public function isRootOf(User $user){
+        if($user->isSuperAdmin() || $user->isOperatorOrAbove()){
+            return false;
+        }
+        elseif ($user->isSchoolManager()){
+            return $this->type === self::TYPE_SCHOOL_ROOT;
+        }
+        elseif($user->isStudent() || $user->isTeacher() || $user->isEmployee()){
+            return $this->type === self::TYPE_USER_ROOT;
+        }
+    }
 }
