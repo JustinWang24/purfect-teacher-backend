@@ -3,6 +3,7 @@
 namespace App\Models\NetworkDisk;
 
 use Illuminate\Database\Eloquent\Model;
+use App\User;
 
 /**
  * @property integer $id
@@ -34,7 +35,6 @@ class Category extends Model
     const TYPE_SCHOOL_SUBORDINATE   = 3;    // 学校子目录
     const TYPE_USER_SUBORDINATE     = 4;    // 用户子目录
 
-
     /**
      * 当前目录的所有子目录
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
@@ -62,4 +62,36 @@ class Category extends Model
         return $this->belongsTo(Category::class, 'parent_id')->select(['uuid','name']);
     }
 
+    /**
+     * 是否目录对指定用户可写入
+     * @param User $user
+     * @return bool
+     */
+    public function isWritableByUser(User $user){
+        if($user->isOperatorOrAbove()){
+            return true;
+        }
+        return $this->isOwnedByUser($user);
+    }
+
+    /**
+     * 是否目录对指定用户读取
+     * @param User $user
+     * @return bool
+     */
+    public function isReadableByUser(User $user){
+        if($user->isOperatorOrAbove()){
+            return true;
+        }
+        return $this->isOwnedByUser($user);
+    }
+
+    /**
+     * 是否目录是给定用户的拥有者
+     * @param User $user
+     * @return bool
+     */
+    public function isOwnedByUser(User $user){
+        return $user->id === $this->owner_id;
+    }
 }

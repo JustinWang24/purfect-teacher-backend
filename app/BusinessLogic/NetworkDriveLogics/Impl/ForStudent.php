@@ -51,6 +51,7 @@ class ForStudent implements ICategoryLogic
                 'uuid'=>$category->uuid,
                 'name'=>$category->name,
                 'type'=>$category->type,
+                'created_at'=>$category->created_at,
                 'children'=>$category->children,
                 'parent'=>$category->parent,
                 'files'=>$category->files,

@@ -18,8 +18,9 @@ class CategoryTest extends BasicPageTestCase
 
         $token = $this->getStudent()['user']['api_token'];
 
-        $data = ['parent_id'=>2, 'name'=>Carbon::now()->year.rand(1,99)];
+        $data = ['parent'=>2, 'name'=>Carbon::now()->year.rand(1,99)];
         $header = ['Authorization'=>"Bearer ".$token];
+
         $response = $this->post(route('api.categories.create'),$data,$header);
         $result = json_decode($response->content(),true);
 
@@ -62,6 +63,7 @@ class CategoryTest extends BasicPageTestCase
             route('api.categories.view'),$data,$header);
 
         $result = json_decode($response->content(),true);
+
 
         $this->assertArrayHasKey('code', $result);
         $this->assertEquals(1000, $result['code']);
