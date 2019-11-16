@@ -17,7 +17,7 @@ class TeacherApplyElectiveCourse extends Model
 
 
     public function TimeSlot(){
-        return $this->hasMany(TeacherApplyElectiveCoursesTimeSlot::class);
+        return $this->hasMany(ApplyGroup::class, 'apply_id', 'id');
     }
 
 

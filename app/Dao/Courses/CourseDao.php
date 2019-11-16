@@ -10,6 +10,7 @@ namespace App\Dao\Courses;
 use App\Dao\Schools\MajorDao;
 use App\Dao\Users\UserDao;
 use App\Models\Course;
+use App\Models\Courses\CourseArrangement;
 use App\Models\Courses\CourseMajor;
 use App\Models\Courses\CourseTeacher;
 use App\Utils\JsonBuilder;
@@ -257,13 +258,13 @@ class CourseDao
      * @param $data
      * @return bool
      */
-    private function _saveCourseArrangement($course, $data){
+/*    private function _saveCourseArrangement($course, $data){
         $days = $data['dayIndexes'];
         $timeSlotIds = $data['timeSlots'];
         $weeks = $data['weekNumbers'];
         $arrangement = new CourseArrangementDao($course);
         return $arrangement->save($weeks, $days, $timeSlotIds);
-    }
+    }*/
 
     /**
      * 根据学校的 ID 获取课程
@@ -314,4 +315,45 @@ class CourseDao
         $result = Course::whereIn('id',$idArr)->with('courseTextbooks.textbook')->select($field)->get();
         return $result;
     }
+
+    /*
+     *
+            [
+                1=>[1=>[7,8],3=>[7]],
+                2=>[1=>[7,8],3=>[7]],
+                3=>[1=>[7,8],3=>[7]],
+            ],
+     *
+     */
+    private function _saveCourseArrangement($course, $data){
+
+        // 保存课时安排
+        if (!empty($data['group'])) {
+            $times = $data['group'];
+            DB::beginTransaction();
+            try {
+                foreach ($times as $week=>$days) {
+                    foreach ($days as $day=>$slots) {
+                        foreach($slots as $slot)
+                        {
+                            $d = [
+                                'course_id' => $course->id,
+                                'week'      => $week,
+                                'day_index' => $day,
+                                'time_slot_id'=>$slot,
+
+                            ];
+                            $courseArrangement = CourseArrangement::create($d);
+                        }
+                    }
+                }
+                DB::commit();
+            } catch (\Exception $exception) {
+                dd($exception);
+                DB::rollBack();
+            }
+        }
+    }
+
+
 }

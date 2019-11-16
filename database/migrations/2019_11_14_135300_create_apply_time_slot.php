@@ -15,7 +15,7 @@ class CreateApplyTimeSlot extends Migration
     {
         Schema::create('apply_time_slot', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->bigInteger('day_id')->nullable()->comment('apply_day_index主键id');
+            $table->bigInteger('day_index_id')->nullable()->comment('apply_day_index主键id');
             $table->unsignedSmallInteger('time_slot_id')->nullable()->comment('需要上课的时间槽的序号');
             $table->timestamps();
         });
