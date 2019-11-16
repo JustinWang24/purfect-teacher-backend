@@ -53,5 +53,9 @@ return [
 
     //设备管理
     'facility' => '设备管理',
+
+    // 选修课
+    'elective-course'=>'选修课',
+    'create'=>'创建',
 ];
 
