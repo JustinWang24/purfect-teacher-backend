@@ -146,6 +146,7 @@
     import { Util } from '../../common/utils';
     import { getTimeSlots, getCourses, getMajors } from '../../common/timetables';
     import { searchTeachers } from '../../common/search';
+    import { getEmptyElectiveCourseApplication } from '../../common/elective_course';
     import CoursesList from './CoursesList.vue';
     import ElectiveCourseForm from './ElectiveCourseForm.vue';
     export default {
@@ -221,6 +222,7 @@
             };
         },
         created(){
+            this.courseModel = getEmptyElectiveCourseApplication();
             this._getAllCourses();
             this._getAllMajors();
             // 获取一个学期会有多少周

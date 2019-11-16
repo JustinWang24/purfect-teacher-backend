@@ -129,6 +129,4 @@ Route::prefix('school_manager')->group(function () {
     Route::get('apply/manager/edit/{id}', 'TeacherApplyElectiveCoursesController@manager_edit')->name('school_manager.apply.edit');
     Route::get('apply/manager/publish/{id}', 'TeacherApplyElectiveCoursesController@publish_apply')->name('school_manager.apply.publish');
     Route::get('apply/manager/save', 'TeacherApplyElectiveCoursesController@apply_save')->name('school_manager.apply.save');
-
-
 });
