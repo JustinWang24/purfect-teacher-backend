@@ -27,7 +27,7 @@ class CategoryRequest extends MyStandardRequest
      * @return mixed
      */
     public function getParentId() {
-        return $this->get('parent_id',null);
+        return $this->get('parent',null);
     }
 
 
@@ -57,20 +57,13 @@ class CategoryRequest extends MyStandardRequest
         return $this->get('asterisk',null);
     }
 
-
-
-
-
     /**
      * 获取学校ID
      * @return mixed
      */
     public function getSchoolId() {
-        $userId = $this->user()['id'];
-        $gradeUserDao = new GradeUserDao();
-        return $gradeUserDao->getSchoolIdByUserId($userId);
+        return $this->user()->getSchoolId();
     }
-
 
     /**
      * 获取创建目录数据
@@ -79,24 +72,34 @@ class CategoryRequest extends MyStandardRequest
      */
     public function getCreate() {
 
-        $re = $this->getSchoolId();
-        if(is_null($re)) {
+        $schoolId = $this->getSchoolId();
+        if(is_null($schoolId)) {
             return new MessageBag(JsonBuilder::CODE_ERROR,'查询不到该用户的学校信息');
         }
         $name = $this->getName();
-        $userId = $this->user()['id'];
         $parentId = $this->getParentId();
         $categoriesDao = new CategoryDao();
-        $exist = $categoriesDao->isExist($name, $userId, $parentId);
+        $parentCategory = $categoriesDao->getCategoryByIdOrUuid($parentId);
 
-        if(!$exist) {
+        if(!$parentCategory){
+            return new MessageBag(JsonBuilder::CODE_ERROR,'指定的上级目录不存在');
+        }
+
+        if(!$parentCategory->isWritableByUser($this->user())){
+            return new MessageBag(JsonBuilder::CODE_ERROR,'你没有创建该目录的权限');
+        }
+
+        $exist = $categoriesDao->isExist($name, $this->user()->id, $parentCategory->id);
+
+        if($exist) {
             return new MessageBag(JsonBuilder::CODE_ERROR,'该目录已存在');
         }
+
         $data = [
-            'parent_id' => $parentId,
+            'parent_id' => $parentCategory->id,
             'name'      => $name,
-            'school_id' => $re['school_id'],
-            'owner_id'  => $userId,
+            'school_id' => $schoolId,
+            'owner_id'  => $this->user()->id,
             'uuid'      => Uuid::uuid4()->toString(),
             'type'      => $this->getType(),
         ];
@@ -109,14 +112,7 @@ class CategoryRequest extends MyStandardRequest
      * @return int
      */
     public function getType() {
-        $userId = $this->user()['id'];
-        $categoriesDao = new CategoryDao();
-        $re = $categoriesDao->getMyCategoryByUserId($userId,Category::TYPE_USER_ROOT);
-        if(is_null($re)) {
-            return Category::TYPE_USER_ROOT;
-        } else {
-            return Category::TYPE_USER_SUBORDINATE;
-        }
+        return Category::TYPE_USER_SUBORDINATE;
     }
 
 

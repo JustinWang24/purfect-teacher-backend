@@ -27,10 +27,10 @@ class CategoriesController extends Controller
         }
         $data = $return->getData();
         $categoriesDao = new CategoryDao();
-        $re = $categoriesDao->create($data);
+        $category = $categoriesDao->create($data);
 
-        if($re) {
-            return JsonBuilder::Success($re);
+        if($category) {
+            return JsonBuilder::Success(['uuid'=>$category->uuid]);
         } else {
             return JsonBuilder::Error('创建失败');
         }
@@ -69,7 +69,6 @@ class CategoriesController extends Controller
         $data = $logic->getData();
         return $data ? JsonBuilder::Success($data) : JsonBuilder::Error('目录不存在');
     }
-
 
     //删除
     public function delete(CategoryRequest $request) {
