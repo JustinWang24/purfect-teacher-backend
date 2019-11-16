@@ -168,8 +168,14 @@ class User extends Authenticatable implements HasMobilePhone, HasDeviceId
      */
     public function getSchoolId()
     {
-        if($this->isStudent() || $this->isTeacher() || $this->isEmployee() || $this->isSchoolManager()){
+        if($this->isStudent() || $this->isSchoolManager()){
             return $this->gradeUser->school_id;
+        }
+        elseif($this->isTeacher() || $this->isEmployee()){
+            $gus = $this->gradeUser;
+            if(count($gus) > 0){
+                return $gus[0]->school_id;
+            }
         }
         return 0;
     }
@@ -228,7 +234,7 @@ class User extends Authenticatable implements HasMobilePhone, HasDeviceId
         if($this->isStudent()){
             return $this->hasOne(GradeUser::class);
         }
-        elseif($this->isTeacher()){
+        elseif($this->isTeacher() || $this->isEmployee()){
             return $this->hasMany(GradeUser::class);
         }
     }
