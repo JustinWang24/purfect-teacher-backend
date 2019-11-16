@@ -11,6 +11,15 @@ class ApplyWeek extends Model
     ];
 
     public function day() {
-        return $this->hasMany(ApplyDayIndex::class);
+        return $this->hasMany(ApplyDay::class,'week_id', 'id');
+    }
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::deleting(function($applyWeek) {
+            $applyWeek->day()->delete();
+        });
     }
 }
