@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers\Api\NetworkDisk;
 
+use App\Dao\NetworkDisk\CategoryDao;
 use App\Models\NetworkDisk\Media;
 use App\Utils\JsonBuilder;
 use App\Dao\NetworkDisk\MediaDao;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\NetworkDisk\MediaRequest;
+use Psy\Util\Json;
 
 class MediaController extends Controller
 {
@@ -70,6 +72,33 @@ class MediaController extends Controller
         }
 
         return JsonBuilder::Success(['files'=>$result]);
+    }
+
+    /**
+     * 移动文件到新的目录
+     * @param MediaRequest $request
+     * @return string
+     */
+    public function move(MediaRequest $request){
+        $dao = new CategoryDao();
+        $toCategoryUuid = $request->getCategory();
+        $category = $dao->getCateInfoByUuId($toCategoryUuid);
+
+        $mediaDao = new MediaDao();
+        $file = $mediaDao->getMediaByUuid($request->getFileUuid());
+
+        if($file && $category){
+            $file->category_id = $category->id;
+            if($file->save()){
+                return JsonBuilder::Success();
+            }
+            else{
+                return JsonBuilder::Error('数据库操作失败, 请稍后再试!');
+            }
+        }
+        else{
+            return JsonBuilder::Error('找不到指定的文件或文件夹!');
+        }
     }
 
 

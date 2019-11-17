@@ -13,6 +13,18 @@ export function loadCategory(userUuid, categoryId, affix) {
     );
 }
 
+// 加载父级目录, 根据给定的当前目录的 uuid 或者 id
+export function loadParentCategory(userUuid, uuid, affix) {
+    const url = Util.buildUrl(Constants.API.FILE_MANAGER.LOAD_PARENT_CATEGORY);
+    if(Util.isDevEnv()){
+        return axios.get(url, affix);
+    }
+    return axios.post(
+        url,
+        {user: userUuid, uuid: uuid, version:Constants.VERSION}
+    );
+}
+
 // 编辑目录/文件的方法
 export function renameAction(userUuid, file, type, affix) {
     let url = null;
@@ -99,7 +111,7 @@ export function updateAsteriskAction(userUuid, fileUuid, affix) {
     );
 }
 
-// 更新星标
+// 搜索文件
 export function searchFileAction(userUuid, query, affix) {
     const url = Util.buildUrl(Constants.API.FILE_MANAGER.FILE_SEARCH);
 
@@ -109,5 +121,25 @@ export function searchFileAction(userUuid, query, affix) {
     return axios.post(
         url,
         {user: userUuid, keywords: query, version:Constants.VERSION}
+    );
+}
+
+/**
+ * 移动文件
+ * @param userUuid 操作的用户
+ * @param categoryUuid 移动到的文件夹
+ * @param fileUuid 被移动的文件
+ * @param affix
+ * @returns Promise
+ */
+export function moveFileAction(userUuid, categoryUuid, fileUuid, affix) {
+    const url = Util.buildUrl(Constants.API.FILE_MANAGER.FILE_MOVE);
+
+    if(Util.isDevEnv()){
+        return axios.get(url, affix);
+    }
+    return axios.post(
+        url,
+        {user: userUuid, category: categoryUuid, file_uuid: fileUuid, version:Constants.VERSION}
     );
 }

@@ -21,14 +21,19 @@ trait CategoryByUuid
             if(!$category){
                 // 说明学生还没有根目录, 那么就创建一个新的根目录给他
                 // 先找到学校的根目录
-                $schoolRoot = $categoriesDao->getSchoolRootCategory($this->user->getSchoolId());
-                $category = $categoriesDao->createCategory(
-                    '我的文档',
-                    Category::TYPE_USER_ROOT,
-                    $this->user->id,
-                    $this->user->getSchoolId(),
-                    $schoolRoot
-                );
+                try{
+                    $schoolRoot = $categoriesDao->getSchoolRootCategory($this->user->getSchoolId());
+                    $category = $categoriesDao->createCategory(
+                        '我的文档',
+                        Category::TYPE_USER_ROOT,
+                        $this->user->id,
+                        $this->user->getSchoolId(),
+                        $schoolRoot
+                    );
+                }
+                catch (\Exception $exception){
+                    $category = null;
+                }
             }
         }else{
             $category = $categoriesDao->getCateInfoByUuId($this->uuid);
@@ -43,7 +48,8 @@ trait CategoryByUuid
                 'children'=>$category->children,
                 'parent'=>$category->isRootOf($this->user) ? null : $category->parentCategory,
                 'files'=>$category->medias,
-            ]
+            ],
+            'current'=>$category
         ] : null;
     }
 }

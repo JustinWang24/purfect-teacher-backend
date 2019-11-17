@@ -35,8 +35,12 @@
                         <recent-file
                                 v-on:item-clicked="handleFileItemClicked"
                                 v-on:file-removed="handleFileItemRemoved"
+                                v-on:star-clicked="handleFileStarClicked"
+                                v-on:file-moved="handleFileMoved"
                                 :file="recentFile"
                                 :highlight="idx === idxRecentFile"
+                                :init-categories="initCategories"
+                                :user-uuid="userUuid"
                         ></recent-file>
                     </li>
                 </ul>
@@ -78,8 +82,11 @@
                                 v-on:item-clicked="handleFileItemClicked"
                                 v-on:file-removed="handleFileItemRemoved"
                                 v-on:star-clicked="handleFileStarClicked"
+                                v-on:file-moved="handleFileMoved"
                                 :file="file"
                                 :highlight="idx === idxReturnedFile"
+                                :init-categories="initCategories"
+                                :user-uuid="userUuid"
                         ></file-item>
                     </div>
                 </div>
@@ -195,6 +202,8 @@
                 },
                 headers:{},
                 currentUploadFileSize: '',
+                // 初始化的目录
+                initCategories: [],
             }
         },
         computed: {
@@ -321,6 +330,10 @@
                     .then(res => {
                         if(Util.isAjaxResOk(res)){
                             this.categories = res.data.data.category.children;
+                            if(Util.isEmpty(categoryId)){
+                                this.initCategories = this.categories;
+                            }
+
                             this.returnedFiles = res.data.data.category.files;
                             this.selectedCategory.uuid = res.data.data.category.uuid;
                             this.selectedCategory.name = res.data.data.category.name;
@@ -333,7 +346,7 @@
                             this.$message.error('访问的云盘目录不存在');
                         }
                         this.isLoading = false;
-                    })
+                    });
             },
             changeCategoryHandler: function(payload){
                 this.loadCategory(payload.file.uuid);
@@ -363,8 +376,13 @@
                 updateAsteriskAction(this.userUuid, payload.file.uuid)
                     .then(res => {
                         if(Util.isAjaxResOk(res)){
-                            const idx = Util.GetItemIndexById(payload.file.id, this.returnedFiles);
-                            this.returnedFiles[idx].asterisk = !this.returnedFiles[idx].asterisk;
+                            if(payload.clicked === 'recent'){
+                                const idx = Util.GetItemIndexById(payload.file.id, this.recentFiles);
+                                this.recentFiles[idx].asterisk = !this.recentFiles[idx].asterisk;
+                            }else{
+                                const idx = Util.GetItemIndexById(payload.file.id, this.returnedFiles);
+                                this.returnedFiles[idx].asterisk = !this.returnedFiles[idx].asterisk;
+                            }
                         }
                     })
             },
@@ -379,6 +397,13 @@
                 else if(payload.clicked === 'recent'){
                     this.idxRecentFile = Util.GetItemIndexByUuid(payload.file.uuid, this.recentFiles);
                     this.selectedFile = this.recentFiles[this.idxRecentFile];
+                }
+            },
+            // 当文件被移动, 如果成功, 则从当前的文件列表中抹去
+            handleFileMoved: function(payload){
+                if(payload.to.uuid !== this.selectedCategory.uuid){
+                    const idx = Util.GetItemIndexByUuid(payload.file.uuid, this.returnedFiles);
+                    this.returnedFiles.splice(idx, 1);
                 }
             },
             handleCategoryItemClicked: function(payload){
