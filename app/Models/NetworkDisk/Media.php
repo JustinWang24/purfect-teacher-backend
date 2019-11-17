@@ -36,6 +36,7 @@ class Media extends Model
     const TYPE_EXCEL    = 4;   // Excel 文件类型
     const TYPE_PPT      = 5;   // PPT 文件类型
     const TYPE_PDF      = 6;   // PDF 文件类型
+    const TYPE_REFERENCE= 7;   // 引用, 一般为某个文件的链接地址
     const TYPE_VIDEO    = 10;  // 视频文件类型
     const TYPE_AUDIO    = 11;  // 音频文件类型
 
@@ -69,6 +70,44 @@ class Media extends Model
     public function conferencesMedias()
     {
         return $this->hasMany('App\Models\NetworkDisk\ConferencesMedia');
+    }
+
+    /**
+     * 获取文件类型的字符串
+     * @return string
+     */
+    public function getTypeText()
+    {
+        $text = '一般文件';
+        switch ($this->type){
+            case self::TYPE_IMAGE:
+                $text = '图片';
+                break;
+            case self::TYPE_WORD:
+                $text = '微软 OFFICE WORD 文件';
+                break;
+            case self::TYPE_EXCEL:
+                $text = '微软 OFFICE EXCEL 文件';
+                break;
+            case self::TYPE_PPT:
+                $text = '微软 OFFICE 幻灯片文件';
+                break;
+            case self::TYPE_PDF:
+                $text = 'PDF文件';
+                break;
+            case self::TYPE_VIDEO:
+                $text = '视频';
+                break;
+            case self::TYPE_AUDIO:
+                $text = '音频';
+                break;
+            case self::TYPE_REFERENCE:
+                $text = '链接';
+                break;
+            default:
+                break;
+        }
+        return $text;
     }
 
     /**
