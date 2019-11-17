@@ -221,6 +221,9 @@ Route::prefix('network-disk')->middleware('auth:api')->group(function () {
     // 目录下列表
     Route::post('/categories/view','Api\NetworkDisk\CategoriesController@view')
         ->name('api.categories.view');
+    // 父级目录下列表
+    Route::post('/categories/view-parent','Api\NetworkDisk\CategoriesController@view_parent')
+        ->name('api.categories.view.parent');
     // 删除目录
     Route::post('/categories/delete','Api\NetworkDisk\CategoriesController@delete')
         ->name('api.categories.delete');
@@ -232,6 +235,9 @@ Route::prefix('network-disk')->middleware('auth:api')->group(function () {
     // 删除文件
     Route::post('/media/delete','Api\NetworkDisk\MediaController@delete')
         ->name('api.media.delete');
+    // 移动文件
+    Route::post('/media/move','Api\NetworkDisk\MediaController@move')
+        ->name('api.media.move');
     // 搜索文件
     Route::post('/media/search','Api\NetworkDisk\MediaController@search')
         ->name('api.media.search');

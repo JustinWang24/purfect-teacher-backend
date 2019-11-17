@@ -33,7 +33,6 @@ class TeacherHomepageLogic implements IHomePageLogic
      */
     public function getDataForView()
     {
-        $this->data['needChart'] = true;
         $this->data['pageTitle'] = '我的首页';
         $this->data['teacher'] = $this->teacher;
         // Todo: 加载老师profile

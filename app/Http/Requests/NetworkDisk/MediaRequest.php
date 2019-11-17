@@ -32,7 +32,12 @@ class MediaRequest extends MyStandardRequest
         return $this->get('category',null);
     }
 
-
+    /**
+     * @return string
+     */
+    public function getFileUuid(){
+        return $this->get('file_uuid', null);
+    }
 
     /**
      * 获取上传文件

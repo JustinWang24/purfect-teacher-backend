@@ -33,6 +33,15 @@ class ForStudent implements ICategoryLogic
 
     public function getData()
     {
-        return $this->getCategoryByUuid();
+        $data= $this->getCategoryByUuid();
+        /**
+         * @var Category $category
+         */
+        $category = $data['current'] ?? null;
+        if($category->isOwnedByUser($this->user)){
+            unset($data['current']);
+            return $data;
+        }
+        return null;
     }
 }

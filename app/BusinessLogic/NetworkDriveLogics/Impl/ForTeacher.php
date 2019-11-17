@@ -9,7 +9,6 @@
 namespace App\BusinessLogic\NetworkDriveLogics\Impl;
 use App\BusinessLogic\NetworkDriveLogics\Contracts\ICategoryLogic;
 use App\User;
-use App\Dao\NetworkDisk\CategoryDao;
 use App\Models\NetworkDisk\Category;
 
 class ForTeacher implements ICategoryLogic
@@ -31,6 +30,15 @@ class ForTeacher implements ICategoryLogic
 
     public function getData()
     {
-        return $this->getCategoryByUuid();
+        $data= $this->getCategoryByUuid();
+        /**
+         * @var Category $category
+         */
+        $category = $data['current'] ?? null;
+        if($category->isOwnedByUser($this->user)){
+            unset($data['current']);
+            return $data;
+        }
+        return null;
     }
 }

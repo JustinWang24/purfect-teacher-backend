@@ -67,11 +67,12 @@ export const Constants = {
         },
         FILE_MANAGER: {
             LOAD_CATEGORY: '/api/network-disk/categories/view',
+            LOAD_PARENT_CATEGORY: '/api/network-disk/categories/view-parent',
             CREATE_CATEGORY: '/api/network-disk/categories/create',
             EDIT_CATEGORY: '/api/network-disk/categories/edit',
             DELETE_CATEGORY: '/api/network-disk/categories/delete',
             FILE_UPLOAD: '/network-disk/media/upload',
-            FILE_EDIT: '/api/file/edit',
+            FILE_MOVE: '/api/network-disk/media/move',
             FILE_DELETE: '/api/network-disk/media/delete',
             FILE_SEARCH: '/api/network-disk/media/search',
             RECENT_FILES: '/api/network-disk/media/latelyUploadingAndBrowse',

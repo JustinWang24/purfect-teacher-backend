@@ -2,6 +2,7 @@
 
 namespace App\Models\NetworkDisk;
 
+use App\Dao\NetworkDisk\CategoryDao;
 use App\User;
 use App\Utils\Time\GradeAndYearUtil;
 use Illuminate\Database\Eloquent\Model;
@@ -43,7 +44,7 @@ class Media extends Model
     const DEFAULT_UPLOAD_PATH_PREFIX = 'public/users/';   // 存放用户文件路径
     const DEFAULT_URL_PATH_PREFIX = '/storage/users/';     // 对外的
 
-    const USER_SIZE = 500000000 ;  // 用户网盘空间大小 500M
+    const USER_SIZE = 500 * 1024 * 1024 ;  // 用户网盘空间大小 500M
 
     const MAY_NOT_UPLOAD = 0 ; // 不可以上传呢
 
@@ -70,6 +71,13 @@ class Media extends Model
     public function conferencesMedias()
     {
         return $this->hasMany('App\Models\NetworkDisk\ConferencesMedia');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function category(){
+        return $this->belongsTo(CategoryDao::class);
     }
 
     /**
