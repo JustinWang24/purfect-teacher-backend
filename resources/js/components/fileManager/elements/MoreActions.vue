@@ -5,10 +5,14 @@
                 <i class="el-icon-more" :style="{color: color}"></i>
               </span>
             <el-dropdown-menu slot="dropdown">
-                <el-dropdown-item>
+                <el-dropdown-item v-if="rename">
                     <el-button  v-on:click="showRenameForm" type="text"><i class="el-icon-edit"></i>重命名</el-button>
                 </el-dropdown-item>
-                <el-dropdown-item v-if="download"><i class="el-icon-download"></i>下载</el-dropdown-item>
+                <el-dropdown-item v-if="download">
+                    <el-button  v-on:click="downloadFile" type="text">
+                        <i class="el-icon-download"></i>下载
+                    </el-button>
+                </el-dropdown-item>
                 <el-dropdown-item v-if="share"><i class="el-icon-share"></i>分享</el-dropdown-item>
                 <el-dropdown-item><i class="el-icon-guide"></i>移动到 ...</el-dropdown-item>
                 <el-dropdown-item divided>
@@ -27,7 +31,7 @@
             </el-form>
             <div slot="footer" class="dialog-footer">
                 <el-button @click="renameFormVisible = false">取 消</el-button>
-                <el-button type="primary" @click="rename">确 定</el-button>
+                <el-button type="primary" @click="renameAction">确 定</el-button>
             </div>
         </el-dialog>
     </div>
@@ -40,7 +44,7 @@
 
     export default {
         name: "MoreActions",
-        props:['file','color','download','share','type'],
+        props:['file','color','download','share','type','rename'],
         computed: {
             'title': function(){
                 return '修改' + this.typeText + '名称';
@@ -56,7 +60,7 @@
         },
         methods:{
             // 重命名操作
-            rename: function(){
+            renameAction: function(){
                 this.renameFormVisible = false;
                 const type = Util.isEmpty(this.type) ? Constants.TYPE_FILE : this.type;
                 renameAction(this.user, this.file, type)
@@ -108,6 +112,12 @@
                         message: '已取消删除'
                     });
                 });
+            },
+            downloadFile: function(){
+                const type = Util.isEmpty(this.type) ? Constants.TYPE_FILE : this.type;
+                if(type === Constants.TYPE_FILE){
+                    window.open(this.file.url, '_blank');
+                }
             }
         }
     }

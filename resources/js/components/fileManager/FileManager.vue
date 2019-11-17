@@ -75,15 +75,15 @@
                         <file-item
                                 v-on:item-clicked="handleFileItemClicked"
                                 v-on:file-removed="handleFileItemRemoved"
+                                v-on:star-clicked="handleFileStarClicked"
                                 :file="file"
                                 :highlight="idx === idxReturnedFile"
                         ></file-item>
                     </div>
                 </div>
-
                 <div class="space-summary">
                     <p>
-                        总文件数: <span>0</span> 占用空间: <span>{{(disk.use_size/1000000).toFixed(1) }}M</span>, 全部空间: <span>{{ disk.total_size/1000000 }}M</span>
+                        总文件数: <span>{{ disk.total }}</span>&nbsp;占用空间: <span>{{ fileSize(disk.use_size) }}</span>&nbsp;全部空间: <span>{{ fileSize(disk.total_size) }}</span>
                     </p>
                 </div>
             </div>
@@ -122,10 +122,10 @@
                     </div>
                     <p class="section-title" style="margin-top: 30px;">文件预览/详情</p>
                     <el-card shadow="always" v-if="selectedFile">
-                        <p>文件名: {{ selectedFile.name }}</p>
-                        <p>创建时间: {{ selectedFile.updated_at }}</p>
-                        <p>大小: {{ selectedFile.size }}</p>
-                        <p>简介: 发来的卡就是附件 ad是否连接拉第三方, 发肯定是冷风机</p>
+                        <p>文件名: {{ selectedFile.file_name }}</p>
+                        <p>创建时间: {{ selectedFile.created_at }}</p>
+                        <p>大小: {{ fileSize(selectedFile.size) }}</p>
+                        <p>简介: {{ selectedFile.description }}</p>
                     </el-card>
                 </div>
             </div>
@@ -144,7 +144,7 @@
     import NewCategoryForm from './elements/NewCategoryForm';
     import {Util} from '../../common/utils';
     import {Constants} from '../../common/constants';
-    import { createNewCategoryAction, recentFilesAction, networkDiskSizeAction, loadCategory } from '../../common/file_manager';
+    import { createNewCategoryAction, recentFilesAction, networkDiskSizeAction, loadCategory, updateAsteriskAction } from '../../common/file_manager';
 
     export default {
         name: "FileManager",
@@ -220,6 +220,9 @@
             };
         },
         methods: {
+            fileSize: function(size){
+                return Util.fileSize(size);
+            },
             handleReturnedFileSelect: function(item) {
 
             },
@@ -246,6 +249,7 @@
                 this.uploadFormData.keywords = '';
                 this.uploadFormData.description = '';
                 this.currentUploadFileSize = 0;
+                this.disk.total++;
 
                 if(response.code === Constants.AJAX_SUCCESS){
                     if(this.idxSelectedCategory === -1){
@@ -340,6 +344,17 @@
                     }
                 }
             },
+            // 当文件的星标被点击后的处理函数
+            handleFileStarClicked: function(payload){
+                updateAsteriskAction(this.userUuid, payload.file.uuid)
+                    .then(res => {
+                        if(Util.isAjaxResOk(res)){
+                            const idx = Util.GetItemIndexById(payload.file.id, this.returnedFiles);
+                            this.returnedFiles[idx].asterisk = !this.returnedFiles[idx].asterisk;
+                        }
+                    })
+            },
+            // 当文件被点击后的处理函数
             handleFileItemClicked: function(payload){
                 // 文件条目被点击, 是要进行 高亮/预览 的操作
                 this.resetAllHighlightIndex();

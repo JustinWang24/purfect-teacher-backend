@@ -26,6 +26,7 @@
                     color="rgb(98, 109,183)"
                     :download="false"
                     :share="false"
+                    :rename="true"
                     v-on:file-updated-success="onCategoryUpdated"
                     v-on:item-removed="removedCategoryHandler"
             ></more-actions>

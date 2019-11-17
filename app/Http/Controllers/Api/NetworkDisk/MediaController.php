@@ -68,7 +68,7 @@ class MediaController extends Controller
      * @return string
      */
     public function click(MediaRequest $request) {
-        $uuid = $request->getUuId();
+        $uuid = $request->uuid();
         $mediaDao = new MediaDao();
         $user = $request->user();
         $result = $mediaDao->updClickByUuidAndUser($uuid, $user);
@@ -79,7 +79,22 @@ class MediaController extends Controller
         }
     }
 
-
+    /**
+     * 更新星标
+     * @param MediaRequest $request
+     * @return string
+     */
+    public function update_asterisk(MediaRequest $request){
+        $uuid = $request->uuid();
+        $mediaDao = new MediaDao();
+        $user = $request->user();
+        $result = $mediaDao->updAsteriskByUuidAndUser($uuid, $user);
+        if($result) {
+            return JsonBuilder::Success('更新成功');
+        } else {
+            return JsonBuilder::Error('更新失败');
+        }
+    }
 
     /**
      * 最近上传和浏览
@@ -152,7 +167,8 @@ class MediaController extends Controller
         $result = [
             'size'=>[
                 'use_size'=>$useSize,
-                'total_size'=>Media::USER_SIZE
+                'total_size'=>Media::USER_SIZE,
+                'total'=>count($request->user()->medias)
             ]
         ];
         return JsonBuilder::Success($result);
