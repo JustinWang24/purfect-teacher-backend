@@ -23,6 +23,12 @@ Route::prefix('statics')->group(function () {
     Route::get('/school/majors/list', 'Statics\PagesController@school_majors_list')->name('static.school.majors-list');
 });
 
+Route::prefix('network-disk')->group(function () {
+    // 上传文件
+    Route::post('/media/upload','Api\NetworkDisk\MediaController@upload')
+        ->name('file.manager.media.upload');
+});
+
 Auth::routes();
 
 // 主页

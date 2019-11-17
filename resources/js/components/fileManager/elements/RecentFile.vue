@@ -13,8 +13,8 @@
                     v-on:item-removed="itemRemoved"
             ></more-actions>
         </div>
-        <p class="updated-at">{{ file.updated_at }}</p>
-        <p class="file-name">{{ file.name }}</p>
+        <p class="updated-at">{{ file.created_at }}</p>
+        <p class="file-name">{{ file.file_name }}</p>
     </div>
 </template>
 
@@ -80,8 +80,8 @@
             margin-top: 30px;
         }
         .file-name{
-            font-size: 15px;
-            line-height: 24px;
+            font-size: 12px;
+            line-height: 20px;
         }
     }
     .highlight{

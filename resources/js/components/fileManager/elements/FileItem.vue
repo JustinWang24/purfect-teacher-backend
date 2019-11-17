@@ -4,15 +4,15 @@
             <i class="el-icon-check" v-show="highlight"></i>
             <i class="el-icon-document"></i>&nbsp;
             <span class="file-name-box">
-                {{ file.name }}
+                {{ file.file_name }}
             </span>
         </div>
 
         <div class="updated-at-box">
-            {{ file.updated_at }}
+            {{ file.created_at }}
         </div>
         <div class="size-box">
-            {{ file.size }}
+            {{ fileSize(file.size) }}
         </div>
         <div class="star-box">
             <i class="el-icon-star-on" v-show="file.star" v-on:click.stop="starClicked"></i>
@@ -32,6 +32,7 @@
 
 <script>
     import MoreActions from './MoreActions';
+    import { Util } from '../../../common/utils';
 
     export default {
         name: "FileItem",
@@ -46,6 +47,9 @@
             },
             itemRemoved: function(){
                 this.$emit('file-removed',{file: this.file, type: 'file'})
+            },
+            fileSize: function(size){
+                return Util.fileSize(size);
             }
         }
     }
@@ -67,6 +71,7 @@
         .icon-box{
             color: $themeColor;
             font-size: 15px;
+            width: 300px;
             .file-name-box{
                 font-weight: bold;
                 line-height:17px;

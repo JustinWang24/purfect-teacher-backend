@@ -59,3 +59,29 @@ export function createNewCategoryAction(userUuid, parent, name, affix) {
         {user: userUuid, parent: parent, name: name, version:Constants.VERSION}
     );
 }
+
+// 获取最新的文件列表
+export function recentFilesAction(userUuid, affix) {
+    const url = Util.buildUrl(Constants.API.FILE_MANAGER.RECENT_FILES);
+
+    if(Util.isDevEnv()){
+        return axios.get(url, affix);
+    }
+    return axios.post(
+        url,
+        {user: userUuid, version:Constants.VERSION}
+    );
+}
+
+// 获取我的网盘大小
+export function networkDiskSizeAction(userUuid, affix) {
+    const url = Util.buildUrl(Constants.API.FILE_MANAGER.GET_NETWORK_DISK_SIZE);
+
+    if(Util.isDevEnv()){
+        return axios.get(url, affix);
+    }
+    return axios.post(
+        url,
+        {user: userUuid, version:Constants.VERSION}
+    );
+}

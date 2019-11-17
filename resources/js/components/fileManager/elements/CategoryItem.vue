@@ -4,7 +4,10 @@
             <i class="el-icon-check" v-show="highlight"></i>
             <i class="el-icon-folder"></i>&nbsp;
             <span class="file-name-box">
-                <el-button type="text" v-on:click.stop="changeCategory">{{ file.name }}</el-button>
+                <el-button type="text" v-on:click.stop="changeCategory">
+                    {{ file.name }}
+                </el-button>
+                <el-tag v-if="hasNew" size="mini" type="danger">有新文件</el-tag>
             </span>
         </div>
         <div class="updated-at-box">
@@ -42,6 +45,10 @@
             },
             highlight: {
                 type: Boolean,
+                required: false
+            },
+            hasNew: {
+                type: [Boolean, undefined],
                 required: false
             }
         },

@@ -10,7 +10,6 @@ use App\Http\Requests\NetworkDisk\MediaRequest;
 
 class MediaController extends Controller
 {
-
     /**
      * 上传文件
      * @param MediaRequest $request
@@ -18,18 +17,17 @@ class MediaController extends Controller
      * @throws \Exception
      */
     public function upload(MediaRequest $request) {
-
-        $data = $request->getUpload();
-        $mediaDao = new MediaDao();
-        $re = $mediaDao->create($data);
-        if($re) {
-            $result = ['file'=>$re];
+        $msgBag = $request->getUpload();
+        if($msgBag->isSuccess()) {
+            $mediaDao = new MediaDao();
+            $result = [
+                'file'=>$mediaDao->create($msgBag->getData())
+            ];
             return JsonBuilder::Success($result,'上传成功');
         } else {
-            return JsonBuilder::Error('上传失败');
+            return JsonBuilder::Error('上传失败: '.$msgBag->getMessage());
         }
     }
-
 
     /**
      * 删除
@@ -151,9 +149,12 @@ class MediaController extends Controller
     public function getNetWorkDiskSize(MediaRequest $request) {
         $mediaDao = new MediaDao();
         $useSize = $mediaDao->getUseSize($request->user());
-        $useSize = ceil($useSize/1024);
-        $total = ceil(Media::USER_SIZE/1024/1024);
-        $result = ['size'=>['use_size'=>$useSize.'M','total_size'=>$total.'G']];
+        $result = [
+            'size'=>[
+                'use_size'=>$useSize,
+                'total_size'=>Media::USER_SIZE
+            ]
+        ];
         return JsonBuilder::Success($result);
     }
 

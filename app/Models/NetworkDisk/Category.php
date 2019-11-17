@@ -49,9 +49,8 @@ class Category extends Model
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
     public function medias(){
-        return $this->hasMany(Media::class);
+        return $this->hasMany(Media::class)->orderBy('updated_at','desc');
     }
-
 
     /**
      * 当前目录的上级目录
