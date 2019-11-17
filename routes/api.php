@@ -228,9 +228,6 @@ Route::prefix('network-disk')->middleware('auth:api')->group(function () {
     // 文件详情
     Route::post('/media/getMediaInfo','Api\NetworkDisk\MediaController@getMediaInfo')
         ->name('api.media.getMediaInfo');
-    // 上传文件
-//    Route::post('/media/upload','Api\NetworkDisk\MediaController@upload')
-//        ->name('api.media.upload');
 
     // 删除文件
     Route::post('/media/delete','Api\NetworkDisk\MediaController@delete')
@@ -241,6 +238,9 @@ Route::prefix('network-disk')->middleware('auth:api')->group(function () {
     // 更新点击次数
     Route::post('/media/click','Api\NetworkDisk\MediaController@click')
         ->name('api.media.click');
+    // 更新文件的星标
+    Route::post('/media/update-asterisk','Api\NetworkDisk\MediaController@update_asterisk')
+        ->name('api.media.update.asterisk');
     // 最近浏览和创建
     Route::post('/media/latelyUploadingAndBrowse','Api\NetworkDisk\MediaController@latelyUploadingAndBrowse')
         ->name('api.media.latelyUploadingAndBrowse');

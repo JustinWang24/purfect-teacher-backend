@@ -2,6 +2,7 @@
 
 namespace App\Models\NetworkDisk;
 
+use App\User;
 use App\Utils\Time\GradeAndYearUtil;
 use Illuminate\Database\Eloquent\Model;
 
@@ -59,6 +60,7 @@ class Media extends Model
     public $casts = [
         'created_at'=>'datetime:'.GradeAndYearUtil::DEFAULT_FORMAT_DATE,
         'updated_at'=>'datetime:'.GradeAndYearUtil::DEFAULT_FORMAT_DATE,
+        'asterisk'=>'boolean'
     ];
 
     /**
@@ -67,6 +69,15 @@ class Media extends Model
     public function conferencesMedias()
     {
         return $this->hasMany('App\Models\NetworkDisk\ConferencesMedia');
+    }
+
+    /**
+     * 是否文件是给定用户所有
+     * @param User $user
+     * @return bool
+     */
+    public function isOwnedByUser(User $user){
+        return $this->user_id === $user->id;
     }
 
     /**
@@ -79,6 +90,19 @@ class Media extends Model
         // 本地图片服务
         if(env('NETWORK_DISK_DRIVER', self::DRIVER_LOCAL) === self::DRIVER_LOCAL) {
             return str_replace(self::DEFAULT_UPLOAD_PATH_PREFIX, self::DEFAULT_URL_PATH_PREFIX, $uploadPath);
+        }
+    }
+
+    /**
+     * 转换 url 路径 为上传路径
+     * @param $url
+     * @return string
+     */
+    public static function ConvertUrlToUploadPath($url)
+    {
+        // 本地图片服务
+        if(env('NETWORK_DISK_DRIVER', self::DRIVER_LOCAL) === self::DRIVER_LOCAL) {
+            return str_replace(self::DEFAULT_URL_PATH_PREFIX,self::DEFAULT_UPLOAD_PATH_PREFIX, $url);
         }
     }
 

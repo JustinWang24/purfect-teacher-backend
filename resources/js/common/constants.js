@@ -76,6 +76,7 @@ export const Constants = {
             FILE_SEARCH: '/api/file/search',
             RECENT_FILES: '/api/network-disk/media/latelyUploadingAndBrowse',
             GET_NETWORK_DISK_SIZE: '/api/network-disk/media/getNetWorkDiskSize',
+            UPDATE_ASTERISK: '/api/network-disk/media/update-asterisk',
         },
         ELECTIVE_COURSE: {
             SAVE: '/api/elective-course/save', // 管理员直接添加

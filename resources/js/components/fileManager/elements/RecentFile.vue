@@ -9,6 +9,7 @@
                     :share="true"
                     class="txt-white m--10"
                     :file="file"
+                    :rename="false"
                     color="rgb(98, 109,183)"
                     v-on:item-removed="itemRemoved"
             ></more-actions>

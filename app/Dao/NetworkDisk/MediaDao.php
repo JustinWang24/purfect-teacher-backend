@@ -68,7 +68,7 @@ class MediaDao {
     /**
      * 根据uuid获取
      * @param $uuid
-     * @return mixed
+     * @return Media
      */
     public function getMediaByUuid($uuid) {
         return Media::GetByUuid($uuid, $this->fieldsToLoad);
@@ -82,7 +82,7 @@ class MediaDao {
      */
     public function delete(Media $media) {
         $media->delete();
-        return $this->deleteFile($media->url);
+        return $this->deleteFile(Media::ConvertUrlToUploadPath($media->url));
     }
 
 
@@ -163,6 +163,17 @@ class MediaDao {
         return Media::where($map)->increment('click');
     }
 
+    /**
+     * 通过uuid和user更新点击次数
+     * @param $uuid
+     * @param User $user
+     * @return int
+     */
+    public function updAsteriskByUuidAndUser($uuid, $user) {
+        $media = $this->getMediaByUuid($uuid);
+        $media->asterisk = !$media->asterisk;
+        return $media->isOwnedByUser($user) ? $media->save() : -1;
+    }
 
     /**
      * 获取列表

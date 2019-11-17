@@ -15,8 +15,8 @@
             {{ fileSize(file.size) }}
         </div>
         <div class="star-box">
-            <i class="el-icon-star-on" v-show="file.star" v-on:click.stop="starClicked"></i>
-            <i class="el-icon-star-off" v-show="!file.star" v-on:click.stop="starClicked"></i>
+            <i class="el-icon-star-on" v-show="file.asterisk" v-on:click.stop="starClicked"></i>
+            <i class="el-icon-star-off" v-show="!file.asterisk" v-on:click.stop="starClicked"></i>
         </div>
         <div class="actions-box">
             <more-actions
@@ -24,6 +24,7 @@
                     color="rgb(98, 109,183)"
                     :download="true"
                     :share="true"
+                    :rename="false"
                     v-on:item-removed="itemRemoved"
             ></more-actions>
         </div>
