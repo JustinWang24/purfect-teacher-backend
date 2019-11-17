@@ -49,9 +49,8 @@ class Category extends Model
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
     public function medias(){
-        return $this->hasMany(Media::class);
+        return $this->hasMany(Media::class)->orderBy('updated_at','desc');
     }
-
 
     /**
      * 当前目录的上级目录
@@ -93,5 +92,22 @@ class Category extends Model
      */
     public function isOwnedByUser(User $user){
         return $user->id === $this->owner_id;
+    }
+
+    /**
+     * 目录是否为给定用户的根目录
+     * @param User $user
+     * @return bool
+     */
+    public function isRootOf(User $user){
+        if($user->isSuperAdmin() || $user->isOperatorOrAbove()){
+            return false;
+        }
+        elseif ($user->isSchoolManager()){
+            return $this->type === self::TYPE_SCHOOL_ROOT;
+        }
+        elseif($user->isStudent() || $user->isTeacher() || $user->isEmployee()){
+            return $this->type === self::TYPE_USER_ROOT;
+        }
     }
 }

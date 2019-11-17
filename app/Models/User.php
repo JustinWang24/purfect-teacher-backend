@@ -2,7 +2,6 @@
 
 namespace App;
 
-use App\Dao\RecruitmentPlan\RecruitmentPlanDao;
 use App\Models\Acl\Role;
 use App\Models\Contract\HasDeviceId;
 use App\Models\Contract\HasMobilePhone;
@@ -18,6 +17,7 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Kodeine\Acl\Traits\HasRole;
 use App\Models\RecruitStudent\RegistrationInformatics;
+use App\Models\NetworkDisk\Media;
 
 class User extends Authenticatable implements HasMobilePhone, HasDeviceId
 {
@@ -296,5 +296,9 @@ class User extends Authenticatable implements HasMobilePhone, HasDeviceId
      */
     public function networkDiskRoot(){
         return $this->hasOne(Category::class, 'owner_id')->where('type',Category::TYPE_USER_ROOT);
+    }
+
+    public function medias(){
+        return $this->hasMany(Media::class);
     }
 }

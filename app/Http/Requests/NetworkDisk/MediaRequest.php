@@ -5,6 +5,9 @@ namespace App\Http\Requests\NetworkDisk;
 
 
 use App\Models\NetworkDisk\Media;
+use App\Utils\JsonBuilder;
+use App\Utils\ReturnData\IMessageBag;
+use App\Utils\ReturnData\MessageBag;
 use Ramsey\Uuid\Uuid;
 use App\Dao\NetworkDisk\CategoryDao;
 use App\Http\Requests\MyStandardRequest;
@@ -29,7 +32,12 @@ class MediaRequest extends MyStandardRequest
         return $this->get('category',null);
     }
 
-
+    /**
+     * @return string
+     */
+    public function getFileUuid(){
+        return $this->get('file_uuid', null);
+    }
 
     /**
      * 获取上传文件
@@ -67,34 +75,36 @@ class MediaRequest extends MyStandardRequest
         return $this->get('size',null);
     }
 
-
-
-
     /**
      * 获取上传数据
-     * @return array
+     * @return array|IMessageBag
      * @throws \Exception
      */
     public function getUpload() {
         $file = $this->getFile();
-        $path = Media::DEFAULT_USER_AVATAR.$this->user()->id; // 上传路径
-        $type = $file->extension();  //文件后缀
+        $path = Media::DEFAULT_UPLOAD_PATH_PREFIX.$this->user()->id; // 上传路径
         $categoryDao = new CategoryDao();
         $category = $categoryDao->getCateInfoByUuId($this->getCategory());
 
-        $url = $file->store($path); // 上传并返回路径
-
-        $data = [
-            'category_id' => $category->id,
-            'user_id'     => $this->user()->id,
-            'uuid'        => Uuid::uuid4()->toString(),
-            'keywords'    => $this->getKeywords(),
-            'description' => $this->getDescription(),
-            'file_name'   => $file->getClientOriginalName(),
-            'size'        => $file->getSize(),
-            'url'         => $url,
-            'driver'      => 1,
-        ];
-        return $data;
+        try{
+            $url = $file->store($path); // 上传并返回路径
+            $data = [
+                'category_id' => $category->id,
+                'uuid'        => Uuid::uuid4()->toString(),
+                'user_id'     => $this->user()->id,
+                'keywords'    => $this->getKeywords(),
+                'description' => $this->getDescription(),
+                'file_name'   => $file->getClientOriginalName(),
+                'size'        => $file->getSize(),
+                'url'         => Media::ConvertUploadPathToUrl($url),
+                'type'        => Media::ParseFileType($url),
+                'driver'      => Media::DRIVER_LOCAL,
+            ];
+            $msgBag = new MessageBag(JsonBuilder::CODE_SUCCESS);
+            $msgBag->setData($data);
+            return $msgBag;
+        }catch (\Exception $exception){
+            return new MessageBag(JsonBuilder::CODE_ERROR, $exception->getMessage());
+        }
     }
 }

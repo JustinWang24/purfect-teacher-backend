@@ -5,13 +5,15 @@
             <i class="el-icon-check" v-show="highlight"></i>
         </div>
         <div class="file-detail">
-            <p class="file-name">{{ file.name }}</p>
-            <p class="updated-at">{{ file.size }} {{ file.updated_at }}</p>
+            <p class="file-name">{{ file.file_name }}</p>
+            <p class="updated-at">{{ fileSize(file.size) }} {{ file.created_at }}</p>
         </div>
     </div>
 </template>
 
 <script>
+    import { Util } from '../../../common/utils';
+
     export default {
         name: "NewFile",
         props:['file','highlight'],
@@ -21,6 +23,9 @@
             },
             starClicked: function () {
                 this.$emit('star-clicked',{file: this.file, clicked: 'new'})
+            },
+            fileSize: function(size){
+                return Util.fileSize(size);
             }
         }
     }
