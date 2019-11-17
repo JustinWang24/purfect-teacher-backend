@@ -29,7 +29,7 @@
                 <div class="card">
                     <div class="card-body">
                         <div class="row">
-                            <p>最近 3 个月都没申请了</p>
+                            <p>最近 3 个月没有新申请</p>
                         </div>
                     </div>
                 </div>

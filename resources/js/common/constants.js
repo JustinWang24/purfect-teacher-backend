@@ -70,10 +70,12 @@ export const Constants = {
             CREATE_CATEGORY: '/api/network-disk/categories/create',
             EDIT_CATEGORY: '/api/network-disk/categories/edit',
             DELETE_CATEGORY: '/api/network-disk/categories/delete',
-            FILE_UPLOAD: '/api/file/upload',
+            FILE_UPLOAD: '/network-disk/media/upload',
             FILE_EDIT: '/api/file/edit',
             FILE_DELETE: '/api/network-disk/media/delete',
             FILE_SEARCH: '/api/file/search',
+            RECENT_FILES: '/api/network-disk/media/latelyUploadingAndBrowse',
+            GET_NETWORK_DISK_SIZE: '/api/network-disk/media/getNetWorkDiskSize',
         },
         ELECTIVE_COURSE: {
             SAVE: '/api/elective-course/save', // 管理员直接添加
@@ -97,4 +99,5 @@ export const Constants = {
     STUDENT_PROFILE: 'purfect.profile',
     TYPE_FILE: 'file',  // 文件类型
     TYPE_CATEGORY: 'category', // 目录类型
+    MAX_UPLOAD_FILE_SIZE: 10 * 1024 * 1024, // 最大 10 兆文件上传
 };

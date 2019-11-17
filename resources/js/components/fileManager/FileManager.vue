@@ -27,6 +27,7 @@
                 <ul class="cats-group">
                     <li class="cat-item">
                         <p class="cat-name">最近浏览</p>
+                        <p class="empty-tip-txt" v-if="recentFiles.length === 0">没有文件</p>
                     </li>
                     <li class="cat-item" v-for="(recentFile, idx) in recentFiles" :key="idx">
                         <recent-file
@@ -41,11 +42,12 @@
             <div class="files-list-wrapper">
                 <div class="the-wrapper main-title">
                     <p class="section-title">
-                        文件列表&nbsp;<i class="el-icon-loading" v-show="isLoading"></i>
+                        <i class="el-icon-folder-opened"></i>
+                        文件列表&nbsp;<i class="el-icon-loading" v-show="isLoading"></i>&nbsp;<span v-show="isLoading" class="empty-tip-txt">正在加载文件夹的内容 ...</span>
                     </p>
                     <ul class="path">
                         <li class="path-item" >
-                            <el-button style="margin-top: 5px;margin-left: 8px;" v-on:click="createNewFolder" size="mini" class="btn-theme" icon="el-icon-plus">创建文件夹</el-button>
+                            <el-button style="margin-top: 5px;margin-left: 8px;" v-on:click="createNewFolder" size="mini" class="btn-theme" icon="el-icon-folder-add">创建文件夹</el-button>
                         </li>
                         <li class="path-item" v-for="(item, idx) in path" :key="idx">
                             &nbsp;<el-button v-on:click="loadCategory(item.uuid)" :class="idx>0?'btn-purple':''" type="text" :disabled="idx===0">{{ item.name }} / </el-button>
@@ -64,7 +66,9 @@
                                 v-on:item-clicked="handleCategoryItemClicked"
                                 v-on:change-category="changeCategoryHandler"
                                 v-on:category-removed="removedCategoryHandler"
-                                :file="cat" :highlight="idx === idxSelectedCategory"
+                                :file="cat"
+                                :has-new="cat.hasNew"
+                                :highlight="idx === idxSelectedCategory"
                         ></category-item>
                     </div>
                     <div v-for="(file, idx) in returnedFiles" :key="idx">
@@ -79,40 +83,43 @@
 
                 <div class="space-summary">
                     <p>
-                        总文件数: <span>128</span> 占用空间: <span>57M</span>, 剩余空间: <span>443M</span>
+                        总文件数: <span>0</span> 占用空间: <span>{{(disk.use_size/1000000).toFixed(1) }}M</span>, 全部空间: <span>{{ disk.total_size/1000000 }}M</span>
                     </p>
                 </div>
             </div>
             <div class="file-preview-wrapper">
                 <div class="the-wrapper">
-                    <p class="section-title">文件上传</p>
-                    <p>上传到目录: {{ selectedCategory.name }}</p>
+                    <p class="section-title">文件上传&nbsp;<i class="el-icon-upload"></i></p>
+                    <p>上传到目录: <span class="btn-purple" v-on:click="loadCategory(selectedCategory.uuid)">{{ selectedCategory.name }}</span></p>
                     <div class="upload-box">
                         <el-upload
                                 class="upload-demo"
                                 ref="uploadForm"
                                 :data="uploadFormData"
                                 :multiple="false"
+                                :headers="headers"
                                 :limit="1"
-                                action="/api/file/upload"
+                                :action="fileUploadActionUrl"
+                                :before-upload="onBeforeUpload"
+                                :on-success="onFileUploaded"
+                                :on-error="onFileUploadFailed"
                                 :on-change="onSelectFileChange"
                                 :on-remove="handleRemove"
                                 :file-list="newFiles"
                                 :auto-upload="false">
-                            <el-button slot="trigger" size="small" class="btn-theme">
+                            <el-button slot="trigger" size="small" class="btn-theme" icon="el-icon-plus">
                                 选取文件
                             </el-button>
-                            <el-button style="margin-left: 10px;" size="small" type="success" @click="submitUpload">
+                            <el-button style="margin-left: 10px;" size="small" type="success" @click="submitUpload" icon="el-icon-upload2">
                                 上传到服务器
                             </el-button>
-                            <div slot="tip" class="el-upload__tip">云盘剩余空间: 477M</div>
+                            <div slot="tip" class="el-upload__tip">云盘剩余空间: {{ spaceLeft }}M {{ currentUploadFileSizeText }}</div>
                         </el-upload>
                         <el-form ref="form" :model="uploadFormData" label-width="80px">
                             <el-input style="margin-top: 10px;"  placeholder="选填: 文件描述关键字" v-model="uploadFormData.keywords"></el-input>
                             <el-input style="margin-top: 10px;" type="textarea" autosize v-model="uploadFormData.description" placeholder="选填: 文件说明"></el-input>
                         </el-form>
                     </div>
-
                     <p class="section-title" style="margin-top: 30px;">文件预览/详情</p>
                     <el-card shadow="always" v-if="selectedFile">
                         <p>文件名: {{ selectedFile.name }}</p>
@@ -136,10 +143,8 @@
     import CategoryItem from './elements/CategoryItem';
     import NewCategoryForm from './elements/NewCategoryForm';
     import {Util} from '../../common/utils';
-    import { createNewCategoryAction } from '../../common/file_manager';
-    import {
-        loadCategory
-    } from '../../common/file_manager';
+    import {Constants} from '../../common/constants';
+    import { createNewCategoryAction, recentFilesAction, networkDiskSizeAction, loadCategory } from '../../common/file_manager';
 
     export default {
         name: "FileManager",
@@ -164,32 +169,12 @@
                 query: '',
                 // 被搜到的文件的列表
                 returnedFiles: [],
-                recentFiles:[
-                    {
-                        uuid: '123456',
-                        star: true,
-                        updated_at: '2019-11-15 14:24',
-                        name:'打法卡萨大立科技付款但是.doc',
-                        type:'doc',
-                        size: '150k'
-                    },
-                    {
-                        uuid: '1234567',
-                        star: false,
-                        updated_at: '2019-11-15 14:24',
-                        name:'打法卡萨大立科技付款但是.pdf',
-                        type:'pdf',
-                        size: '150k'
-                    },
-                    {
-                        uuid: '1234568',
-                        star: false,
-                        updated_at: '2019-11-15 14:24',
-                        name:'打法卡萨大立科技付款但是.png',
-                        type:'png',
-                        size: '150k'
-                    }
-                ],
+                recentFiles:[],
+                disk:{
+                    use_size: 0,
+                    total_size: 0
+                },
+                fileUploadActionUrl: '',
                 newFiles:[], // 文件上传
                 // 当前高亮的几种类型值
                 idxSelectedCategory: -1,
@@ -204,11 +189,35 @@
                     user: this.userUuid,
                     keywords: '',
                     description: '',
+                },
+                headers:{},
+                currentUploadFileSize: '',
+            }
+        },
+        computed: {
+            'currentUploadFileSizeText': function(){
+                if(this.currentUploadFileSize === 0){
+                    return '';
                 }
+                else{
+                    return ',本次上传文件大小: ' + Util.fileSize(this.currentUploadFileSize);
+                }
+            },
+            'spaceLeft': function(){
+                return Util.fileSize(this.disk.total_size - this.disk.use_size);
             }
         },
         created() {
             this.loadCategory();
+            this._loadRecentFiles();
+            this._getMyDisk();
+            this.fileUploadActionUrl = Constants.API.FILE_MANAGER.FILE_UPLOAD;
+            this.headers = {
+                'X-Requested-With': 'XMLHttpRequest',
+                'X-CSRF-TOKEN': document.head.querySelector('meta[name="csrf-token"]').content,
+                'Authorization': 'Bearer ' + document.head.querySelector('meta[name="api-token"]').content,
+                'Accept': 'application/json',
+            };
         },
         methods: {
             handleReturnedFileSelect: function(item) {
@@ -219,16 +228,46 @@
             },
             // 文件上传相关
             onSelectFileChange: function(file, fileList){
-                console.log(file);
-                console.log(fileList);
-
+                // this.currentUploadFileSize = file.size;
+                // this.uploadFormData.keywords = file.name;
+                // this.uploadFormData.description = file.name;
             },
             handleRemove: function(file, fileList){
 
             },
+            onFileUploadFailed: function(err, file, fileList){
+                this.$message.error('不支持此种格式的文件上传到云盘或者文件尺寸太大');
+                this.uploadFormData.keywords = '';
+                this.uploadFormData.description = '';
+                this.currentUploadFileSize = 0;
+                fileList.pop();
+            },
+            onFileUploaded: function(response, file, fileList){
+                this.uploadFormData.keywords = '';
+                this.uploadFormData.description = '';
+                this.currentUploadFileSize = 0;
+
+                if(response.code === Constants.AJAX_SUCCESS){
+                    if(this.idxSelectedCategory === -1){
+                        this.returnedFiles.unshift(response.data.file);
+                    }else{
+                        this.categories[this.idxSelectedCategory].hasNew = true;
+                    }
+                    fileList.pop();
+                    this.$message({
+                        message: '文件上传成功!',
+                        type: 'success'
+                    });
+                }else{
+                    this.$message.error('错了哦: ' + response.message);
+                }
+            },
             submitUpload: function(){
                 this.uploadFormData.category = this.selectedCategory.uuid;
                 this.$refs.uploadForm.submit();
+            },
+            onBeforeUpload: function(file){
+                return file.size < Constants.MAX_UPLOAD_FILE_SIZE;
             },
             // 文件上传相关结束
             // 创建新的文件夹
@@ -325,6 +364,24 @@
                 this.idxReturnedFile = -1;
                 this.idxNewFile = -1;
                 this.idxRecentFile = -1;
+            },
+            // 获取用户最近浏览的文件
+            _loadRecentFiles: function(){
+                recentFilesAction(this.userUuid)
+                    .then(res => {
+                        if(Util.isAjaxResOk(res)){
+                            this.recentFiles = res.data.data.browse;
+                        }
+                    })
+            },
+            // 获取用户的网盘容量
+            _getMyDisk: function(){
+                networkDiskSizeAction(this.userUuid)
+                    .then(res => {
+                        if(Util.isAjaxResOk(res)){
+                            this.disk = res.data.data.size;
+                        }
+                    })
             }
         }
     }
@@ -333,6 +390,12 @@
 <style scoped lang="scss">
     $themeColor: rgb(98, 109,183);
     $themeGreyColor: rgb(239, 243,248);
+    $colorGrey: #c9cacc;
+    .empty-tip-txt{
+        color: $colorGrey;
+        font-size: 11px;
+        padding-left: 10px;
+    }
     .file-manager-wrapper{
         display: flex;
         flex-direction: column;
