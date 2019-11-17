@@ -13,7 +13,12 @@
                         <i class="el-icon-download"></i>下载
                     </el-button>
                 </el-dropdown-item>
-                <el-dropdown-item v-if="share"><i class="el-icon-share"></i>分享</el-dropdown-item>
+                <el-dropdown-item v-if="share">
+
+                    <el-button  v-on:click="shareFile" type="text">
+                        <i class="el-icon-share"></i>分享
+                    </el-button>
+                </el-dropdown-item>
                 <el-dropdown-item><i class="el-icon-guide"></i>移动到 ...</el-dropdown-item>
                 <el-dropdown-item divided>
                     <el-button v-on:click="deleteActionHandler" type="text" class="txt-danger">
@@ -32,6 +37,18 @@
             <div slot="footer" class="dialog-footer">
                 <el-button @click="renameFormVisible = false">取 消</el-button>
                 <el-button type="primary" @click="renameAction">确 定</el-button>
+            </div>
+        </el-dialog>
+
+        <el-dialog title="分享" :visible.sync="shareFormVisible">
+            <el-form :model="form">
+                <el-form-item label="分享地址">
+                    <el-input :id="randomId" type="textarea" v-model="form.shareAddress"></el-input>
+                </el-form-item>
+            </el-form>
+            <div slot="footer" class="dialog-footer">
+                <el-button type="primary" @click="doCopy">拷 贝</el-button>
+                <el-button @click="shareFormVisible = false">关 闭</el-button>
             </div>
         </el-dialog>
     </div>
@@ -56,7 +73,16 @@
         data() {
             return {
                 renameFormVisible: false,
+                shareFormVisible: false,
+                form:{
+                    shareAddress: ''
+                },
+                randomId: ''
             }
+        },
+        created: function(){
+            this.randomId = 'abc' + Math.random() * 1000000;
+            this.form.shareAddress = 'https://' + document.domain + '/share-file?f=' + this.file.uuid;
         },
         methods:{
             // 重命名操作
@@ -118,6 +144,14 @@
                 if(type === Constants.TYPE_FILE){
                     window.open(this.file.url, '_blank');
                 }
+            },
+            shareFile: function(){
+                this.shareFormVisible = true;
+            },
+            doCopy: function () {
+                const text = document.getElementById(this.randomId);
+                text.select();
+                document.execCommand('Copy');
             }
         }
     }

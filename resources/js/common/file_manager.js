@@ -98,3 +98,16 @@ export function updateAsteriskAction(userUuid, fileUuid, affix) {
         {user: userUuid, uuid: fileUuid, version:Constants.VERSION}
     );
 }
+
+// 更新星标
+export function searchFileAction(userUuid, query, affix) {
+    const url = Util.buildUrl(Constants.API.FILE_MANAGER.FILE_SEARCH);
+
+    if(Util.isDevEnv()){
+        return axios.get(url, affix);
+    }
+    return axios.post(
+        url,
+        {user: userUuid, keywords: query, version:Constants.VERSION}
+    );
+}

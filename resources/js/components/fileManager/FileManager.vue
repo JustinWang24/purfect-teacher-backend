@@ -8,6 +8,8 @@
                         :fetch-suggestions="querySearchFilesAsync"
                         placeholder="搜索我的文件/目录 ..."
                         @select="handleReturnedFileSelect"
+                        value-key="name"
+                        :clearable="true"
                         style="width: 58%;margin-left: 19%;"
                 ></el-autocomplete>
                 <el-button class="btn-purple" icon="el-icon-help" type="text" style="margin-left: 30px;">使用帮助</el-button>
@@ -144,7 +146,7 @@
     import NewCategoryForm from './elements/NewCategoryForm';
     import {Util} from '../../common/utils';
     import {Constants} from '../../common/constants';
-    import { createNewCategoryAction, recentFilesAction, networkDiskSizeAction, loadCategory, updateAsteriskAction } from '../../common/file_manager';
+    import { createNewCategoryAction, recentFilesAction, networkDiskSizeAction, loadCategory, updateAsteriskAction, searchFileAction } from '../../common/file_manager';
 
     export default {
         name: "FileManager",
@@ -167,6 +169,7 @@
                 path:[],
                 // 搜索文件框的关键字
                 query: '',
+                searchedFiles:[],
                 // 被搜到的文件的列表
                 returnedFiles: [],
                 recentFiles:[],
@@ -224,19 +227,30 @@
                 return Util.fileSize(size);
             },
             handleReturnedFileSelect: function(item) {
-
+                // todo 以后对不同文件的类型, 点击搜索结果后做最佳的处理.
+                window.open(item.url, '_blank');
             },
             querySearchFilesAsync: function(queryString, cb){
-
+                const _queryString = queryString.trim();
+                if(Util.isEmpty(_queryString)){
+                    // 如果视图搜索空字符串, 那么不执行远程调用, 而是直接回调一个空数组
+                    cb([]);
+                }
+                else{
+                    searchFileAction(this.userUuid, queryString)
+                        .then(res => {
+                            if(Util.isAjaxResOk(res)){
+                                cb(res.data.data.files)
+                            }
+                        })
+                }
             },
             // 文件上传相关
             onSelectFileChange: function(file, fileList){
-                // this.currentUploadFileSize = file.size;
-                // this.uploadFormData.keywords = file.name;
-                // this.uploadFormData.description = file.name;
+                return true;
             },
             handleRemove: function(file, fileList){
-
+                return true;
             },
             onFileUploadFailed: function(err, file, fileList){
                 this.$message.error('不支持此种格式的文件上传到云盘或者文件尺寸太大');

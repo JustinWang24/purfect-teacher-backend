@@ -57,8 +57,19 @@ class MediaController extends Controller
         $keywords = $request->getKeywords();
         $user = $request->user();
         $mediaDao = new MediaDao();
-        $result = $mediaDao->search($keywords,'',$user);
-        return JsonBuilder::Success($result);
+        $files = $mediaDao->search($keywords,null,$user);
+        $result = [];
+
+        foreach ($files as $file) {
+            $result[] = [
+                'name'=>$file->file_name.' ('.$file->getTypeText().')',
+                'uuid'=>$file->uuid,
+                'url'=>$file->url,
+                'type'=>$file->type,
+            ];
+        }
+
+        return JsonBuilder::Success(['files'=>$result]);
     }
 
 
