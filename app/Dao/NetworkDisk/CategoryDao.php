@@ -183,4 +183,8 @@ class CategoryDao
         }
         return $category;
     }
+
+    public function getAllSchoolRootCategory(){
+        return Category::where('parent_id',0)->get();
+    }
 }

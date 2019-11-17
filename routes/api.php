@@ -221,6 +221,9 @@ Route::prefix('network-disk')->middleware('auth:api')->group(function () {
     // 目录下列表
     Route::post('/categories/view','Api\NetworkDisk\CategoriesController@view')
         ->name('api.categories.view');
+    // 父级目录下列表
+    Route::post('/categories/view-parent','Api\NetworkDisk\CategoriesController@view_parent')
+        ->name('api.categories.view.parent');
     // 删除目录
     Route::post('/categories/delete','Api\NetworkDisk\CategoriesController@delete')
         ->name('api.categories.delete');
@@ -228,18 +231,22 @@ Route::prefix('network-disk')->middleware('auth:api')->group(function () {
     // 文件详情
     Route::post('/media/getMediaInfo','Api\NetworkDisk\MediaController@getMediaInfo')
         ->name('api.media.getMediaInfo');
-    // 上传文件
-    Route::post('/media/upload','Api\NetworkDisk\MediaController@upload')
-        ->name('api.media.upload');
+
     // 删除文件
     Route::post('/media/delete','Api\NetworkDisk\MediaController@delete')
         ->name('api.media.delete');
+    // 移动文件
+    Route::post('/media/move','Api\NetworkDisk\MediaController@move')
+        ->name('api.media.move');
     // 搜索文件
     Route::post('/media/search','Api\NetworkDisk\MediaController@search')
         ->name('api.media.search');
     // 更新点击次数
     Route::post('/media/click','Api\NetworkDisk\MediaController@click')
         ->name('api.media.click');
+    // 更新文件的星标
+    Route::post('/media/update-asterisk','Api\NetworkDisk\MediaController@update_asterisk')
+        ->name('api.media.update.asterisk');
     // 最近浏览和创建
     Route::post('/media/latelyUploadingAndBrowse','Api\NetworkDisk\MediaController@latelyUploadingAndBrowse')
         ->name('api.media.latelyUploadingAndBrowse');

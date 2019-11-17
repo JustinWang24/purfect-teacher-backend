@@ -30,7 +30,6 @@ class CategoryRequest extends MyStandardRequest
         return $this->get('parent',null);
     }
 
-
     /**
      * 被创建目录的名称
      * @return mixed

@@ -70,6 +70,26 @@ class CategoriesController extends Controller
         return $data ? JsonBuilder::Success($data) : JsonBuilder::Error('目录不存在');
     }
 
+    /**
+     * 查询目录下的列表
+     * @param CategoryRequest $request
+     * @return string
+     */
+    public function view_parent(CategoryRequest $request) {
+        /**
+         * @var User $user
+         */
+        $user = $request->user();
+        $uuid = $request->getCateUuId();
+
+        $dao = new CategoryDao();
+        $parentCategory = $dao->getCategoryByIdOrUuid($uuid)->parentCategory;
+
+        $logic = Factory::GetCategoryLogic($user, $parentCategory->uuid);
+        $data = $logic->getData();
+        return $data ? JsonBuilder::Success($data) : JsonBuilder::Error('目录不存在');
+    }
+
     //删除
     public function delete(CategoryRequest $request) {
         $uuid = $request->getCateUuId();

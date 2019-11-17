@@ -5,6 +5,7 @@ namespace App\Dao\NetworkDisk;
 use App\Models\NetworkDisk\Media;
 use App\Models\NetworkDisk\Category;
 use App\User;
+use App\Utils\Misc\ConfigurationTool;
 use Illuminate\Support\Facades\Storage;
 class MediaDao {
 
@@ -68,7 +69,7 @@ class MediaDao {
     /**
      * 根据uuid获取
      * @param $uuid
-     * @return mixed
+     * @return Media
      */
     public function getMediaByUuid($uuid) {
         return Media::GetByUuid($uuid, $this->fieldsToLoad);
@@ -82,7 +83,7 @@ class MediaDao {
      */
     public function delete(Media $media) {
         $media->delete();
-        return $this->deleteFile($media->url);
+        return $this->deleteFile(Media::ConvertUrlToUploadPath($media->url));
     }
 
 
@@ -119,8 +120,6 @@ class MediaDao {
      * @return array
      */
     public function search($keywords, $category = null, $user = null){
-        $result = ['files'=>[]];
-
         $where = [];
         if($category){
             if(is_object($category)){
@@ -134,21 +133,14 @@ class MediaDao {
             }
             $where[] = ['user_id','=',$user];
         }
-        $where[] = ['keywords','like',$keywords.'%'];
+        $where[] = ['file_name','like',$keywords.'%'];
 
-        $files = Media::select('file_name', 'driver', 'uuid', 'url', 'type', 'size', 'period')
-            ->where($where)->get();
+        $files = Media::select('file_name', 'uuid', 'url','type')
+            ->where($where)
+            ->take(ConfigurationTool::DEFAULT_PAGE_SIZE_QUICK_SEARCH)
+            ->get();
 
-
-        foreach ($files as $key => $val){
-            $files[$key]['url_path'] = $val['url_path'];
-        }
-
-        if(count($files)){
-            $result['files'] = $files->toArray();
-        }
-
-        return $result;
+        return $files;
     }
 
 
@@ -163,6 +155,17 @@ class MediaDao {
         return Media::where($map)->increment('click');
     }
 
+    /**
+     * 通过uuid和user更新点击次数
+     * @param $uuid
+     * @param User $user
+     * @return int
+     */
+    public function updAsteriskByUuidAndUser($uuid, $user) {
+        $media = $this->getMediaByUuid($uuid);
+        $media->asterisk = !$media->asterisk;
+        return $media->isOwnedByUser($user) ? $media->save() : -1;
+    }
 
     /**
      * 获取列表

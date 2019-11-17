@@ -10,6 +10,7 @@ namespace App\BusinessLogic\NetworkDriveLogics;
 
 
 use App\BusinessLogic\NetworkDriveLogics\Contracts\ICategoryLogic;
+use App\BusinessLogic\NetworkDriveLogics\Impl\ForOperator;
 use App\BusinessLogic\NetworkDriveLogics\Impl\ForSchoolManager;
 use App\BusinessLogic\NetworkDriveLogics\Impl\ForStudent;
 use App\BusinessLogic\NetworkDriveLogics\Impl\ForTeacher;
@@ -33,6 +34,9 @@ class Factory
         }
         elseif ($user->isSchoolManager()){
             $logic = new ForSchoolManager($categoryUuid, $user);
+        }
+        elseif ($user->isOperatorOrAbove()){
+            $logic = new ForOperator($categoryUuid, $user);
         }
 
         return $logic;

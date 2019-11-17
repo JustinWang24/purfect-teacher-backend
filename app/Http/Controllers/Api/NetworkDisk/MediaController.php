@@ -2,15 +2,16 @@
 
 namespace App\Http\Controllers\Api\NetworkDisk;
 
+use App\Dao\NetworkDisk\CategoryDao;
 use App\Models\NetworkDisk\Media;
 use App\Utils\JsonBuilder;
 use App\Dao\NetworkDisk\MediaDao;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\NetworkDisk\MediaRequest;
+use Psy\Util\Json;
 
 class MediaController extends Controller
 {
-
     /**
      * 上传文件
      * @param MediaRequest $request
@@ -18,18 +19,17 @@ class MediaController extends Controller
      * @throws \Exception
      */
     public function upload(MediaRequest $request) {
-
-        $data = $request->getUpload();
-        $mediaDao = new MediaDao();
-        $re = $mediaDao->create($data);
-        if($re) {
-            $result = ['file'=>$re];
+        $msgBag = $request->getUpload();
+        if($msgBag->isSuccess()) {
+            $mediaDao = new MediaDao();
+            $result = [
+                'file'=>$mediaDao->create($msgBag->getData())
+            ];
             return JsonBuilder::Success($result,'上传成功');
         } else {
-            return JsonBuilder::Error('上传失败');
+            return JsonBuilder::Error('上传失败: '.$msgBag->getMessage());
         }
     }
-
 
     /**
      * 删除
@@ -59,8 +59,46 @@ class MediaController extends Controller
         $keywords = $request->getKeywords();
         $user = $request->user();
         $mediaDao = new MediaDao();
-        $result = $mediaDao->search($keywords,'',$user);
-        return JsonBuilder::Success($result);
+        $files = $mediaDao->search($keywords,null,$user);
+        $result = [];
+
+        foreach ($files as $file) {
+            $result[] = [
+                'name'=>$file->file_name.' ('.$file->getTypeText().')',
+                'uuid'=>$file->uuid,
+                'url'=>$file->url,
+                'type'=>$file->type,
+            ];
+        }
+
+        return JsonBuilder::Success(['files'=>$result]);
+    }
+
+    /**
+     * 移动文件到新的目录
+     * @param MediaRequest $request
+     * @return string
+     */
+    public function move(MediaRequest $request){
+        $dao = new CategoryDao();
+        $toCategoryUuid = $request->getCategory();
+        $category = $dao->getCateInfoByUuId($toCategoryUuid);
+
+        $mediaDao = new MediaDao();
+        $file = $mediaDao->getMediaByUuid($request->getFileUuid());
+
+        if($file && $category){
+            $file->category_id = $category->id;
+            if($file->save()){
+                return JsonBuilder::Success();
+            }
+            else{
+                return JsonBuilder::Error('数据库操作失败, 请稍后再试!');
+            }
+        }
+        else{
+            return JsonBuilder::Error('找不到指定的文件或文件夹!');
+        }
     }
 
 
@@ -70,7 +108,7 @@ class MediaController extends Controller
      * @return string
      */
     public function click(MediaRequest $request) {
-        $uuid = $request->getUuId();
+        $uuid = $request->uuid();
         $mediaDao = new MediaDao();
         $user = $request->user();
         $result = $mediaDao->updClickByUuidAndUser($uuid, $user);
@@ -81,7 +119,22 @@ class MediaController extends Controller
         }
     }
 
-
+    /**
+     * 更新星标
+     * @param MediaRequest $request
+     * @return string
+     */
+    public function update_asterisk(MediaRequest $request){
+        $uuid = $request->uuid();
+        $mediaDao = new MediaDao();
+        $user = $request->user();
+        $result = $mediaDao->updAsteriskByUuidAndUser($uuid, $user);
+        if($result) {
+            return JsonBuilder::Success('更新成功');
+        } else {
+            return JsonBuilder::Error('更新失败');
+        }
+    }
 
     /**
      * 最近上传和浏览
@@ -151,9 +204,13 @@ class MediaController extends Controller
     public function getNetWorkDiskSize(MediaRequest $request) {
         $mediaDao = new MediaDao();
         $useSize = $mediaDao->getUseSize($request->user());
-        $useSize = ceil($useSize/1024);
-        $total = ceil(Media::USER_SIZE/1024/1024);
-        $result = ['size'=>['use_size'=>$useSize.'M','total_size'=>$total.'G']];
+        $result = [
+            'size'=>[
+                'use_size'=>$useSize,
+                'total_size'=>Media::USER_SIZE,
+                'total'=>count($request->user()->medias)
+            ]
+        ];
         return JsonBuilder::Success($result);
     }
 
