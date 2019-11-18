@@ -30,6 +30,7 @@ class ApplyElectiveCourseController extends Controller
         $applyData = $validated;
         $dao = new TeacherApplyElectiveCourseDao();
         $applyData['course']['school_id'] = $schoolId;
+        $applyData['course']['max_num'] = $applyData['course']['max_number'];
 
         if(empty($applyData['course']['id'])){
             // 创建新选修课程申请

@@ -9,6 +9,8 @@
 namespace App\Dao\ElectiveCourses;
 use App\Dao\BuildFillableData;
 use App\Dao\Courses\CourseDao;
+use App\Models\ElectiveCourses\ApplyCourseArrangement;
+use App\Models\ElectiveCourses\ApplyCourseMajor;
 use App\Models\ElectiveCourses\ApplyDay;
 use App\Models\ElectiveCourses\ApplyGroup;
 use App\Models\ElectiveCourses\ApplyTimeSlot;
@@ -52,8 +54,8 @@ class TeacherApplyElectiveCourseDao
      */
     public function createTeacherApplyElectiveCourse($data)
     {
-        if (isset($data['id']) || empty($data['id'])) {
-            unset($data['id']);
+        if (!isset($data['course']['id']) || empty($data['course']['id'])) {
+            unset($data['course']['id']);
         }
         /**
          * 第1组
@@ -105,18 +107,20 @@ class TeacherApplyElectiveCourseDao
          *
          */
         //周，星期，时间槽数据以数组方式传入
-        $applyGroups = $data['groups'];
+        $applyGroups = $data['schedule'];
         $messageBag = new MessageBag(JsonBuilder::CODE_ERROR);
-        $data['teacher_name'] = self::getTeacherName($data['teacher_id']);
         DB::beginTransaction();
         try {
-            $fillableData = $this->getFillableData(new TeacherApplyElectiveCourse(), $data);
+            $fillableData = $this->getFillableData(new TeacherApplyElectiveCourse(), $data['course']);
 
             // 先保存申请选修课程数据
             $apply = TeacherApplyElectiveCourse::create($fillableData);
 
             if ($apply) {
-                self::saveTimeSlot($applyGroups, $apply->id);
+                //保存课时安排
+                self::saveApplyCourseArrangements($applyGroups, $apply->id);
+                //保存关联专业
+                self::saveApplyMajor($data['course']['majors'], $apply->id, $data['course']['school_id']);
 
                 DB::commit();
                 $messageBag->setCode(JsonBuilder::CODE_SUCCESS);
@@ -141,26 +145,30 @@ class TeacherApplyElectiveCourseDao
      */
     public function updateTeacherApplyElectiveCourse($data)
     {
-        $id = $data['id'];
-        unset($data['id']);
-        $data['teacher_name'] = self::getTeacherName($data['teacher_id']);
-        $applyGroups = $data['groups'];
-        $data['status'] = $data['status']??TeacherApplyElectiveCourse::STATUS_WAITING_FOR_VERIFIED;
+        $id = $data['course']['id'];
+        unset($data['course']['id']);
+        $data['course']['teacher_name'] = self::getTeacherName($data['course']['teacher_id']);
+        $applyGroups = $data['schedule'];
+        $data['course']['status'] = $data['course']['status']??TeacherApplyElectiveCourse::STATUS_WAITING_FOR_VERIFIED;
         $messageBag = new MessageBag(JsonBuilder::CODE_ERROR);
 
         DB::beginTransaction();
         try {
-            $fillableData = $this->getFillableData(new TeacherApplyElectiveCourse(), $data);
+            $fillableData = $this->getFillableData(new TeacherApplyElectiveCourse(), $data['course']);
 
             // 先保存申请选修课程数据
             $apply = TeacherApplyElectiveCourse::where('id', $id)->update($fillableData);
 
             if ($apply) {
                 //先删除旧的课时安排
-                ApplyGroup::where('apply_id', $id)->delete();
+                ApplyCourseArrangement::where('apply_id', $id)->delete();
                 // 保存课时安排
-                self::saveTimeSlot($applyGroups, $id);
+                self::saveApplyCourseArrangements($applyGroups, $id);
 
+                //先删除旧的关联专业
+                ApplyCourseMajor::where('apply_id', $id)->delete();
+                //保存新的关联专业
+                self::saveApplyMajor($data['course']['majors'], $id, $data['course']['school_id']);
                 DB::commit();
                 $messageBag->setCode(JsonBuilder::CODE_SUCCESS);
                 $messageBag->setData($apply);
@@ -175,52 +183,6 @@ class TeacherApplyElectiveCourseDao
         }
 
         return $messageBag;
-    }
-
-    /**
-     * 课时保存方法
-     * @param $applyGroups
-     * @param $applyId
-     */
-    private function saveTimeSlot($applyGroups, $applyId)
-    {
-        // 保存课时安排
-        if (!empty($applyGroups)) {
-            DB::beginTransaction();
-            try {
-                foreach ($applyGroups as $applyGroup) {
-                    $d = [
-                        'apply_id' => $applyId,
-                    ];
-                    $groupObj = ApplyGroup::create($d);
-                    foreach ($applyGroup as $week => $days) {
-                        $f = [
-                            'group_id' => $groupObj->id,
-                            'week' => $week,
-                        ];
-                        $weekObj = ApplyWeek::create($f);
-                        foreach ($days as $day => $slots) {
-                            $g = [
-                                'week_id' => $weekObj->id,
-                                'day' => $day,
-                            ];
-                            $dayObj = ApplyDay::create($g);
-                            foreach ($slots as $slot) {
-                                $s = [
-                                    'day_id' => $dayObj->id,
-                                    'time_slot_id' => $slot,
-                                ];
-                                $slotObj = ApplyTimeSlot::create($s);
-                            }
-                        }
-                    }
-                }
-                DB::commit();
-            } catch (\Exception $exception) {
-                dd($exception);
-                DB::rollBack();
-            }
-        }
     }
 
     /**
@@ -297,6 +259,13 @@ class TeacherApplyElectiveCourseDao
         $teacherDao = new UserDao();
         $theTeacher = $teacherDao->getUserById($teacherId);
         return $theTeacher->name;
+    }
+    //根据专业id获得专业名称
+    public function getMajor($majorId)
+    {
+        $majorDao = new MajorDao();
+        $major = $majorDao->getMajorById($majorId);
+        return $major;
     }
     //根据身份获取申请的状态值
 
@@ -375,6 +344,69 @@ class TeacherApplyElectiveCourseDao
         return TeacherApplyElectiveCourse::where('school_id',$schoolId)
             ->where('created_at','>',Carbon::now()->subMonths(3))
             ->get();
+    }
+
+
+    public function saveApplyCourseArrangements($schedule, $applyId)
+    {
+        if (!empty($schedule)) {
+            $messageBag = new MessageBag(JsonBuilder::CODE_ERROR);
+            DB::beginTransaction();
+            try {
+                $arr = [];
+                foreach ($schedule as $key => $group) {
+                    foreach ($group['weeks'] as $week) {
+                        foreach ($group['days'] as $day) {
+                            foreach ($group['timeSlots'] as $timeSlot) {
+                                $arr[$week][$day][] = $timeSlot;
+                                $d = [
+                                    'apply_id' => $applyId,
+                                    'week' => $week,
+                                    'day_index' => $day,
+                                    'time_slot_id' => $timeSlot,
+                                    'building_id' => $group['building_id'],
+                                    'building_name' => $group['building_name'],
+                                    'classroom_id' => $group['classroom_id'],
+                                    'classroom_name' => $group['classroom_name'],
+
+                                ];
+                                ApplyCourseArrangement::create($d);
+                            }
+                        }
+                    }
+                }
+                DB::commit();
+                $messageBag->setCode(JsonBuilder::CODE_SUCCESS);
+            } catch (\Exception $exception) {
+                dd($exception);
+                DB::rollBack();
+                $messageBag->setMessage($exception->getMessage());
+            }
+        }
+        return $messageBag;
+    }
+
+    /**
+     * 保存申请课程的关联专业
+     * @param $data
+     * @param $applyId
+     */
+    public function saveApplyMajor($data, $applyId, $schoolId)
+    {
+        if (!empty($data))
+        {
+            foreach ($data as $major)
+            {
+                $majorObj = self::getMajor($major);
+                $f = [
+                    'apply_id'    => $applyId,
+                    'school_id'   => $schoolId,
+                    'major_id'    => $major,
+                    'major_name'  => $majorObj->name,
+                ];
+                ApplyCourseMajor::create($f);
+            }
+        }
     }
 }
 
