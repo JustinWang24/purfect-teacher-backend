@@ -269,3 +269,9 @@ Route::prefix('network-disk')->middleware('auth:api')->group(function () {
 
 });
 
+// 选修课申请
+Route::prefix('elective-course')->middleware('auth:api')->group(function () {
+    Route::post('/save','Api\ElectiveCourse\ApplyElectiveCourseController@create')
+        ->name('api.elective-course.save');
+
+});
