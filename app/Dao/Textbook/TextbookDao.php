@@ -211,7 +211,7 @@ class TextbookDao
         // 通过专业和年级查询该班上的课程
         $result = $courseMajorDao->getCoursesByMajorAndYear($gradeInfo['major_id'],$year);
         if(empty($result)) {
-            return new MessageBag(JsonBuilder::CODE_EMPTY,'当前专业所处年级没有课程');
+            return new MessageBag(JsonBuilder::CODE_SUCCESS,'当前专业所处年级没有课程',[]);
         }
         $courseIdArr = array_column($result,'id');
 
@@ -236,7 +236,7 @@ class TextbookDao
         $majorDao = new MajorDao();
         $majorList = $majorDao->getMajorsByCampusId($campusId);
         if(empty($majorList)) {
-            return new MessageBag(JsonBuilder::CODE_EMPTY,'该校区下没有专业');
+            return new MessageBag(JsonBuilder::CODE_SUCCESS,'该校区下没有专业',[]);
         }
 
         // 通过专业ID集合获取相关课程并关联到教材
@@ -244,7 +244,7 @@ class TextbookDao
         $courseMajorDao = new CourseMajorDao();
         $courseList = $courseMajorDao->getCourseIdByMajorIdArr($majorIdArr)->toArray();
         if(empty($courseList)) {
-            return new MessageBag(JsonBuilder::CODE_EMPTY,'该专业下没有课程');
+            return new MessageBag(JsonBuilder::CODE_SUCCESS,'该专业下没有课程',[]);
         }
 
         $thisYear = Carbon::now()->year;
