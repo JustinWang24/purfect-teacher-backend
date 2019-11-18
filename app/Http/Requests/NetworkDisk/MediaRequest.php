@@ -63,7 +63,8 @@ class MediaRequest extends MyStandardRequest
      * @return mixed
      */
     public function getDescription() {
-        return $this->get('description',null);
+        $description = $this->get('description',null);
+        return !is_null($description)?$description:$this->getFile()->getClientOriginalName();
     }
 
 
