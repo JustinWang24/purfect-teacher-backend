@@ -43,8 +43,14 @@ class TeacherApplyElectiveCourseDao
     //获取已经审批过的申请
     public function getVerifiedApplyById($id)
     {
-        return TeacherApplyElectiveCourse::find($id)->where;
-        return DB::table('users')->where('name', 'John')->first();;
+        $obj =  TeacherApplyElectiveCourse::find($id);
+        if(TeacherApplyElectiveCourse::STATUS_VERIFIED == $obj->status)
+        {
+            return $obj;
+        } else {
+            return false;
+        }
+
     }
 
     /**
@@ -231,13 +237,13 @@ class TeacherApplyElectiveCourseDao
         $messageBag = new MessageBag(JsonBuilder::CODE_ERROR);
         DB::beginTransaction();
         try {
-            $apply = TeacherApplyElectiveCourse::where('id', $id);
+            $apply = TeacherApplyElectiveCourse::where('id', $id)->first();
 
             if (TeacherApplyElectiveCourse::STATUS_VERIFIED == $status) {
                 $apply->status = TeacherApplyElectiveCourse::STATUS_VERIFIED;
                 $apply->reply_content .= $content;
 
-            } elseif (in_array([TeacherApplyElectiveCourse::STATUS_WAITING_FOR_REJECTED,TeacherApplyElectiveCourse::STATUS_PUBLISHED], $status)) {
+            } elseif (in_array($status, [TeacherApplyElectiveCourse::STATUS_WAITING_FOR_REJECTED,TeacherApplyElectiveCourse::STATUS_PUBLISHED])) {
 
                 $apply->status = $status;
             } else {
@@ -286,10 +292,26 @@ class TeacherApplyElectiveCourseDao
 
     public function publishToCourse($applyId)
     {
-        $apply = self::getApplyById($applyId);
+        $messageBag = new MessageBag(JsonBuilder::CODE_ERROR);
+        //全部专业
+        $applyMajors = self::getApplyMjor($applyId);
+        $majorArrs = [];
+        foreach ($applyMajors->toArray() as $majorArr)
+        {
+            $majorArrs[] = $majorArr['major_id'];
+        }
+        //全部课时
+        $groups = self::getApplyCourseArrangements($applyId);
+        $data['group'] = $groups->toArray();
+        $apply = self::getVerifiedApplyById($applyId);
+        if (!$apply)
+        {
+            $messageBag->setMessage('没有审批过的申请不能发布！');
+            return $messageBag;
+        }
         $data['school_id'] = $apply->school_id;
         $data['teachers'][0] = $apply->teacher_id;
-        $data['majors'][0] = $apply->major_id;
+        $data['majors'] = $majorArrs;
         $data['code'] = $apply->code;
         $data['name'] = $apply->name;
         $data['scores'] = $apply->scores;
@@ -297,26 +319,8 @@ class TeacherApplyElectiveCourseDao
         $data['year'] = $apply->year;
         $data['term'] = $apply->term;
         $data['desc'] = $apply->desc;
-        $group = $apply->TimeSlot()->first();
-        $weeksCollection = $group->week()->get();
-        foreach ($weeksCollection as $weekCollection)
-        {
-            $week = $weekCollection->week;
-            $daysCollection = $weekCollection->day()->get();
-            foreach ($daysCollection as $dayCollection)
-            {
-                $day = $dayCollection->day;
-                $timeSlotsCollection = $dayCollection->slot()->get();
-                foreach($timeSlotsCollection as $i=>$timeSlotCollection)
-                {
-                    $time_slot = $timeSlotCollection->time_slot_id;
-                    $arr[$week][$day][] = $time_slot;
-                }
-            }
-        }
 
-        $data['group'] = $arr;
-        $messageBag = new MessageBag(JsonBuilder::CODE_ERROR);
+
         DB::beginTransaction();
         try {
             //创建课程
@@ -407,6 +411,26 @@ class TeacherApplyElectiveCourseDao
                 ApplyCourseMajor::create($f);
             }
         }
+    }
+
+    /**
+     * 根据申请id获取相关选修课对应的专业
+     * @param $applyId
+     * @return mixed
+     */
+    public function getApplyMjor($applyId)
+    {
+        return ApplyCourseMajor::where('apply_id', $applyId)->get();
+    }
+
+    /**
+     * 根据申请id获取全部课时安排数据
+     * @param $applyId
+     * @return mixed
+     */
+    public function  getApplyCourseArrangements($applyId)
+    {
+        return ApplyCourseArrangement::where('apply_id',$applyId)->get();
     }
 }
 

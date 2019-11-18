@@ -332,20 +332,14 @@ class CourseDao
             $times = $data['group'];
             DB::beginTransaction();
             try {
-                foreach ($times as $week=>$days) {
-                    foreach ($days as $day=>$slots) {
-                        foreach($slots as $slot)
-                        {
-                            $d = [
-                                'course_id' => $course->id,
-                                'week'      => $week,
-                                'day_index' => $day,
-                                'time_slot_id'=>$slot,
-
-                            ];
-                            $courseArrangement = CourseArrangement::create($d);
-                        }
-                    }
+                foreach ($times as $time) {
+                    $d = [
+                        'course_id' => $course->id,
+                        'week'      => $time['week'],
+                        'day_index' => $time['day_index'],
+                        'time_slot_id'=>$time['time_slot_id'],
+                    ];
+                    $courseArrangement = CourseArrangement::create($d);
                 }
                 DB::commit();
             } catch (\Exception $exception) {
