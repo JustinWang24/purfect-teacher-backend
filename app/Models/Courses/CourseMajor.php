@@ -2,6 +2,7 @@
 
 namespace App\Models\Courses;
 
+use App\Models\ElectiveCourses\CourseElective;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Course;
 use App\Models\Schools\Major;
@@ -26,4 +27,5 @@ class CourseMajor extends Model
     public function school(){
         return $this->belongsTo(School::class);
     }
+
 }
