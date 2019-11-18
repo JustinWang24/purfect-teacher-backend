@@ -27,6 +27,7 @@
         "element-ui": "^2.12.0",
         "lockr": "^0.8.5",
         "moment": "^2.22.2",
-        "normalize.css": "^8.0.1"
+        "normalize.css": "^8.0.1",
+        "signature_pad": "^3.0.0-beta.3"
     }
 }

@@ -3,7 +3,8 @@
         <div class="courses-list-col">
             <p class="courses-list-title">
                 课程列表 &nbsp;
-                <el-button icon="el-icon-circle-plus" type="primary" @click="newCourseForm">添加课程</el-button>
+                <el-button icon="el-icon-circle-plus" type="primary" @click="newCourseForm">添加必修课</el-button>
+                <el-button icon="el-icon-circle-plus" type="success" @click="newElectiveCourseForm">添加选修课</el-button>
             </p>
             <courses-list
                     :courses="courses"
@@ -16,7 +17,7 @@
         </div>
 
         <el-dialog
-            title="课程登记表"
+            title="必修课程登记表"
             :visible.sync="showCourseFormFlag"
             :fullscreen="true"
             custom-class="course-form-drawer"
@@ -64,51 +65,7 @@
                         <el-form-item label="课程类型">
                             <el-select v-model="courseModel.optional" placeholder="课程类型">
                                 <el-option label="必修课" value="0"></el-option>
-                                <el-option label="选修课" value="1"></el-option>
                             </el-select>
-                        </el-form-item>
-                    </el-col>
-                </el-row>
-
-                <!-- 如果是选修课, 则与专业无关, 需要制定上课的时间范围, 周内的第几天, 以及当天的第几节课 -->
-                <el-row v-if="courseModel.optional === '1'">
-                    <el-col :span="24">
-                        <h4 class="pl-4">只对选修课有效</h4>
-                    </el-col>
-                    <el-col :span="8">
-                        <el-form-item label="哪周上课">
-                        <el-select v-model="courseModel.weekNumbers" multiple placeholder="请选择在哪周上课, 可多选" style="width: 100%;">
-                            <el-option
-                                    v-for="weekNumber in totalWeeks"
-                                    :key="weekNumber"
-                                    :label="'第' + weekNumber + '周'"
-                                    :value="weekNumber">
-                            </el-option>
-                        </el-select>
-                        </el-form-item>
-                    </el-col>
-                    <el-col :span="8">
-                        <el-form-item label="哪天上课">
-                        <el-select v-model="courseModel.dayIndexes" multiple placeholder="请选择哪天上课, 可多选" style="width: 100%;">
-                            <el-option
-                                    v-for="dayIndex in 5"
-                                    :key="dayIndex"
-                                    :label="'周' + dayIndex"
-                                    :value="dayIndex">
-                            </el-option>
-                        </el-select>
-                        </el-form-item>
-                    </el-col>
-                    <el-col :span="8">
-                        <el-form-item label="上课时间">
-                        <el-select v-model="courseModel.timeSlots" multiple placeholder="请选择上课的时间段, 可多选" style="width: 100%;">
-                            <el-option
-                                    v-for="(timeSlot, idx) in timeSlots"
-                                    :key="idx"
-                                    :label="timeSlot.name"
-                                    :value="timeSlot.id">
-                            </el-option>
-                        </el-select>
                         </el-form-item>
                     </el-col>
                 </el-row>
@@ -154,6 +111,22 @@
             </el-form>
         </el-dialog>
 
+        <el-dialog
+                title="选修课程登记表"
+                :visible.sync="showElectiveCourseFormFlag"
+                :fullscreen="true"
+                custom-class="course-form-drawer"
+        >
+            <elective-course-form
+                    :course-model="currentElectiveCourse"
+                    :total-weeks="totalWeeks"
+                    :time-slots="timeSlots"
+                    :majors="majors"
+                    :school-id="schoolId"
+                    v-on:cancelled="currentElectiveCourseCancelled"
+            ></elective-course-form>
+        </el-dialog>
+
         <el-drawer
                 title="课程表"
                 :visible.sync="showCourseScheduleFlag"
@@ -173,11 +146,13 @@
     import { Util } from '../../common/utils';
     import { getTimeSlots, getCourses, getMajors } from '../../common/timetables';
     import { searchTeachers } from '../../common/search';
+    import { getEmptyElectiveCourseApplication } from '../../common/elective_course';
     import CoursesList from './CoursesList.vue';
+    import ElectiveCourseForm from './ElectiveCourseForm.vue';
     export default {
         name: "CoursesManager",
         components:{
-            CoursesList
+            CoursesList,ElectiveCourseForm
         },
         props: {
             schoolId: {
@@ -241,9 +216,13 @@
                 timeSlots:[],
                 totalWeeks: 20,
                 pageNumber: 0,
+                // 选修课程相关
+                showElectiveCourseFormFlag: false,
+                currentElectiveCourse:{}
             };
         },
         created(){
+            this.courseModel = getEmptyElectiveCourseApplication();
             this._getAllCourses();
             this._getAllMajors();
             // 获取一个学期会有多少周
@@ -407,6 +386,14 @@
                     }
                 })
             },
+
+            // 选修课相关操作
+            newElectiveCourseForm: function(){
+                this.showElectiveCourseFormFlag = true;
+            },
+            currentElectiveCourseCancelled: function(payload){
+                this.showElectiveCourseFormFlag = false;
+            }
         }
     }
 </script>

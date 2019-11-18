@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class StudentEnrolledOptionalCourse extends Model
 {
-    protected $fields = [
+    protected $fillable = [
         'course_id', 'teacher_id', 'user_id', 'status'
     ];
 }

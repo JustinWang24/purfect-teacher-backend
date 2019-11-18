@@ -36,7 +36,8 @@ class BasicPageTestCase extends TestCase
         $this->operator      = $this->userDao->getUserByMobile('18510209803');
         $this->schoolManager = $this->userDao->getUserByMobile('1000006');
         $this->teacher       = $this->gradeUserDao->getAnyTeacher(3);
-        $this->student       = $this->userDao->getUserById(5);
+        $this->teacher       = $this->gradeUserDao->getAnyTeacher(1);
+        $this->student       = $this->gradeUserDao->getStudentBySchoolId(1);
     }
 
     /**
@@ -97,5 +98,11 @@ class BasicPageTestCase extends TestCase
      */
     protected function getUserDao(){
         return $this->userDao;
+    }
+
+
+    public function getHeaderWithApiToken(){
+        $token = $this->getStudent()['user']['api_token'];
+        return  ['Authorization'=>"Bearer ".$token];
     }
 }

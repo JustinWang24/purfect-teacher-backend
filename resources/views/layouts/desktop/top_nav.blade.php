@@ -34,7 +34,7 @@
 
                 <li id="file-manager-app">
                     <a class="dropdown-toggle" v-on:click="showFileManager">
-                        <i class="fa fa-file-o"></i>&nbsp;文件管理器
+                        <i class="fa fa-database"></i>&nbsp;我的云盘
                     </a>
                     <el-drawer
                             title="我的易云盘"

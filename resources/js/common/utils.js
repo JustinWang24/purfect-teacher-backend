@@ -37,6 +37,15 @@ export const Util = {
         });
         return result;
     },
+    GetItemIndexByUuid: function (uuid, obj) {
+        let result = null;
+        _.each(obj, (item, idx) => {
+            if(uuid === item.uuid){
+                result = idx;
+            }
+        });
+        return result;
+    },
     // 输出学期文字的方法
     GetTermText: function (term) {
         return Constants.TERMS[term - 1];
@@ -108,5 +117,16 @@ export const Util = {
             affix = '/mock.json';
         }
         return base + url + (isDev ? affix : '');
+    },
+    // 转换文件大小, 从整数到 text
+    fileSize: function(sizeInt){
+        let size = '';
+        if(sizeInt < 1048576){
+            size = (sizeInt/1024).toFixed(1) + 'K';
+        }
+        else{
+            size = (sizeInt/1048576).toFixed(1) + 'M';
+        }
+        return size;
     }
 };

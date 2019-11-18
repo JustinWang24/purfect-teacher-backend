@@ -11,7 +11,7 @@
                 <li class="sidebar-user-panel">
                     <div class="user-panel">
                         <div class="pull-left image">
-                            <img src="../assets/img/dp.jpg" class="img-circle user-img-circle"
+                            <img src="{{ \Illuminate\Support\Facades\Auth::user()->profile->avatar }}" class="img-circle user-img-circle"
                                  alt="User Image" />
                         </div>
                         <div class="pull-left info">

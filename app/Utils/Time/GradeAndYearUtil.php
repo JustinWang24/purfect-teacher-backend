@@ -7,10 +7,12 @@
  */
 
 namespace App\Utils\Time;
+use App\Models\Timetable\TimeSlot;
 use App\Utils\JsonBuilder;
 use App\Utils\ReturnData\IMessageBag;
 use App\Utils\ReturnData\MessageBag;
 use Carbon\Carbon;
+use App\Dao\Timetable\TimeSlotDao;
 
 class GradeAndYearUtil
 {
@@ -31,6 +33,29 @@ class GradeAndYearUtil
      */
     public static function GetGradeIndexByYear($year){
         return Carbon::now()->year - intval($year) + 1;
+    }
+
+    /**
+     * 获取当前的额 timesole 对象
+     *
+     * @param null $time
+     * @return TimeSlot|null
+     */
+    public static function GetTimeSlot($time = null){
+        $dao = new TimeSlotDao();
+        $timeSlots = $dao->getAllStudyTimeSlots(session('school.id'));
+        if(is_null($time)){
+            $time = Carbon::now();
+        }
+
+        $slot = null;
+
+        foreach ($timeSlots as $timeSlot) {
+            if($timeSlot->from <= $time->format('H:i:s') && $timeSlot->to > $time->format('H:i:s')){
+                $slot = $timeSlot;
+            }
+        }
+        return $slot;
     }
 
     /**

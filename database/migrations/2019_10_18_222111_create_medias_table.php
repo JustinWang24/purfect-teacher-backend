@@ -25,8 +25,8 @@ class CreateMediasTable extends Migration
                 $table->unsignedInteger('size')->default(0)->comment('文件的大小, 可以不填写, 但建议使用');    // 文件大小
                 $table->unsignedInteger('period')->default(0)->comment('文件播放的时长, 仅对多媒体文件有效');  // 视频文件的的时长
                 $table->unsignedTinyInteger('driver')->default(1)->comment('文件存放的服务器位置, 默认 1, 表示保存在本地');
+                $table->unsignedSmallInteger('asterisk')->default(0)->comment('是否有星标 0:无 1:是');
                 $table->dateTime('created_at');
-
                 $table->string('file_name',255)->comment('文件原名');
                 $table->string('keywords',100)->default('')->comment('描述该文件的关键字, 用于查找');
                 $table->text('url')->comment('文件的真实 URI ');
