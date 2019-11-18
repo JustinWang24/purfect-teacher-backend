@@ -86,7 +86,7 @@ class TextbookTest extends BasicPageTestCase
      */
     public function testSaveTextbookApi() {
         $data = $this->_createDate();
-        $data['textbook']['textbook_id'] = 2;
+//        $data['textbook']['textbook_id'] = 2;
         $this->withoutExceptionHandling();
         $user = $this->getSuperAdmin();
 
@@ -96,19 +96,20 @@ class TextbookTest extends BasicPageTestCase
             ->post(route('teacher.textbook.save',$data));
 
         $result = json_decode($response->content(),true);
-
         $this->assertArrayHasKey('code', $result);
         $this->assertEquals(1000, $result['code']);
-
+        return $result['data'];
     }
+
 
 
     /**
      * 课程绑定教材
+     * @depends testSaveTextbookApi
+     * @param  Textbook $textbook
      */
-    public function testCourseBindingTextbook() {
-
-        $data = ['textbook_ids'=>'1,2','course_id'=>1];
+    public function testCourseBindingTextbook($textbook) {
+        $data = ['textbook_ids'=>$textbook['textbook']['id'],'course_id'=>1];
         $user = $this->getSuperAdmin();
 
         $response = $this->setSchoolAsUser($user, 50)
@@ -237,6 +238,8 @@ class TextbookTest extends BasicPageTestCase
      * 加载校区的教材采购情况
      */
     public function testLoadCampusTextbook() {
+
+        $this->withoutExceptionHandling();
 
         $user = $this->getSuperAdmin();
         $data = ['campus_id'=>2];
