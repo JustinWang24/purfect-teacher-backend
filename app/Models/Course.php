@@ -57,7 +57,6 @@ class Course extends Model
         return $this->hasMany(StudentEnrolledOptionalCourse::class);
     }
 
-
     /**
      * 本课程的课程安排
      * @return \Illuminate\Database\Eloquent\Relations\HasMany

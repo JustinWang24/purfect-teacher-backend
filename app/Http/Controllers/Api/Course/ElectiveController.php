@@ -2,73 +2,109 @@
 
 namespace App\Http\Controllers\Api\Course;
 
+use App\Dao\Courses\CourseDao;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Course\ElectiveRequest;
 use App\Dao\Users\GradeUserDao;
-use App\Dao\Courses\CourseMajorDao;
-use App\Models\Course;
-use App\Models\Courses\CourseMajor;
-use App\Models\Schools\Major;
-use App\Models\Users\GradeUser;
+use App\Utils\JsonBuilder;
+use PHPUnit\Util\Json;
 
 class ElectiveController extends Controller
 {
 
+    /**
+     * 学生选课列表
+     * @param ElectiveRequest $request
+     * @return string
+     */
     public function index(ElectiveRequest $request)
     {
         $userId = $request->user()->id;
 
-        $dao            = new GradeUserDao;
-        $courseMajorDao = new CourseMajorDao;
+        $dao = new GradeUserDao;
 
-        /**
-         * @var GradeUser $userInfo
-         */
         $userInfo = $dao->getUserInfoByUserId($userId);
-//        $userInfo->major_id = 11;
-//        $course = $courseMajorDao->getElectiveCourseByMajorId($userInfo->major_id);
-//        dd($course->toArray());
-        // 用户->专业->专业课程关联->课程->课程的设置
-        /**
-         * @var Major $major
-         */
+
         $major = $userInfo->major;
 
-        foreach ($major->courseMajors as $key => $courseMajor) {
-            /**
-             * @var CourseMajor $courseMajor
-             */
-            $teachers = $courseMajor->course->teachers;
+        $item = [];
 
+        foreach ($major->courseMajors as $key => $courseMajor) {
             $course       = $courseMajor->course;
             $elective     = $course->courseElective;
-            $studentCount = $course->studentEnrolledOptionalCourse->count();
+            $studentCount = $course->studentEnrolledOptionalCourse->count(); // 学生报名数量
 
-            foreach ($teachers as $teacher) {
-                $arrangements = $course->courseArrangements;
-                $schedules = [];
-                foreach ($arrangements as $arrangement) {
+            $arrangements = $course->courseArrangements;
+
+            $schedules = [];
+            foreach ($arrangements as $arrangement) {
                     $s = ['weeks' => $arrangement->week, 'time' => $arrangement->day_index, 'location' => ''];
                     $schedules[] = $s;
-                }
-                $item = [
-                    'course_name'  => $courseMajor->course,
-                    'teacher_name' => $teacher->name,
-                    'value'        => $course->scores,
-                    'seats'        => $elective->open_num,
-                    'applied'      => $studentCount,
-                    'schedules'    => $schedules,
-                    'expired_at'   => '', // Todo:
-                    'threshold'    => 60, // Todo:
-                    'introduction' => $course->desc
-                ];
-
-                dd(json_encode($item));
             }
 
+            $item[]= [
+                    'course_id'    => $course->id,
+                    'course_name'  => $courseMajor->course_name,
+                    'course_time'  => $schedules,
+                    'value'        => $course->scores,
+                    'seats'        => $elective->max_num,
+                    'applied'      => $studentCount,
+                    'expired_at'   => $elective->expired_at,
+            ];
         }
 
+        return JsonBuilder::Success($item);
     }
+
+    /**
+     * 选修课详情
+     * @param ElectiveRequest $request
+     * @return string
+     */
+    public function details(ElectiveRequest $request)
+    {
+        $courseId = $request->get('course_id');
+
+        $courseDao =  new CourseDao;
+
+        $course = $courseDao->getCourseById($courseId);
+
+        if (!$course) {
+            return  JsonBuilder::Error('课程不存在');
+        }
+
+        $teacher = $course->teachers;
+
+        $elective = $course->courseElective;
+
+        $studentCount = $course->studentEnrolledOptionalCourse()->count();
+
+        $arrangements = $course->courseArrangements;
+
+        $schedules = [];
+        foreach ($arrangements as $arrangement) {
+                $s = ['weeks' => $arrangement->week, 'time' => $arrangement->day_index, 'location' => ''];
+                $schedules[] = $s;
+        }
+
+        $result  = [
+            'course_name'  => $course->name,
+            'teacher_name' => $teacher->tercher_name,
+            'value'        => $course->scores,
+            'seats'        => $elective->open_num,
+            'applied'      => $studentCount,
+            'schedules'    => $schedules,
+            'expired_at'   => $elective->expired_at,
+            'threshold'    => $elective->max_num,
+            'introduction' => $course->desc
+        ];
+
+        return JsonBuilder::Success($result);
+    }
+
+    
+
+
 
 
 }
