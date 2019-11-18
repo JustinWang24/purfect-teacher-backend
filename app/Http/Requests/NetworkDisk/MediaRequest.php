@@ -82,11 +82,16 @@ class MediaRequest extends MyStandardRequest
      * @throws \Exception
      */
     public function getUpload() {
+
+
         $file = $this->getFile();
         $path = Media::DEFAULT_UPLOAD_PATH_PREFIX.$this->user()->id; // 上传路径
         $categoryDao = new CategoryDao();
         $category = $categoryDao->getCateInfoByUuId($this->getCategory());
-
+        $auth = $category->isOwnedByUser($this->user());
+        if(!$auth) {
+            return new MessageBag(JsonBuilder::CODE_ERROR,'非用户本人,不能上传');
+        }
         try{
             $url = $file->store($path); // 上传并返回路径
             $data = [
@@ -98,7 +103,7 @@ class MediaRequest extends MyStandardRequest
                 'file_name'   => $file->getClientOriginalName(),
                 'size'        => $file->getSize(),
                 'url'         => Media::ConvertUploadPathToUrl($url),
-                'type'        => Media::ParseFileType($url),
+                'type'        => Media::ParseFileType($file->getClientOriginalExtension()),
                 'driver'      => Media::DRIVER_LOCAL,
             ];
             $msgBag = new MessageBag(JsonBuilder::CODE_SUCCESS);
