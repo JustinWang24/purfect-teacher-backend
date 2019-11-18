@@ -82,15 +82,15 @@
                     </el-form-item>
                 </el-col>
                 <el-col :span="4">
-                    <el-form-item label="最多报名" prop="open_num">
-                        <el-input v-model="courseModel.open_num" placeholder="最多可容纳的学生数">
+                    <el-form-item label="最多报名" prop="max_number">
+                        <el-input v-model="courseModel.max_number" placeholder="最多可容纳的学生数">
                             <template slot="append">人</template>
                         </el-input>
                     </el-form-item>
                 </el-col>
                 <el-col :span="4">
-                    <el-form-item label="开班人数">
-                        <el-input v-model="courseModel.min_applied" placeholder="最少可以开课的学生数">
+                    <el-form-item label="开班人数" prop="open_num">
+                        <el-input v-model="courseModel.open_num" placeholder="最少可以开课的学生数">
                             <template slot="append">人</template>
                         </el-input>
                     </el-form-item>
@@ -281,6 +281,9 @@
                         { required: true, message: '请选择学期', trigger: 'change' }
                     ],
                     open_num: [
+                        { required: true, message: '请输入课程最少开班人数', trigger: 'blur' }
+                    ],
+                    max_number: [
                         { required: true, message: '请输入课程最多可容纳的学生数', trigger: 'blur' }
                     ]
                 },
