@@ -14,8 +14,9 @@ class AddressBookTest extends BasicPageTestCase
     public function testItCanGetAddressBookApi()
     {
         $this->withoutExceptionHandling();
-        $su = $this->getSchoolManager();
-        $data = ['uuid' => '2ecbd004-dd1e-4a93-bb6c-938b393c251c'];
+        $su = $this->getStudent();
+        $data = ['uuid' => 'a2ec3321-e38b-4328-8fc9-08ceab3d849b'];
+
         $response = $this->setSchoolAsUser($su, 1)
             ->actingAs($su)
             ->withSession($this->schoolSessionData)

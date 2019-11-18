@@ -100,6 +100,32 @@ class CourseMajorDao
      * @return mixed
      */
     public function getCourseIdByMajorIdArr($majorIdArr) {
-        return CourseMajor::whereIn('major_id',$majorIdArr)->with(['course.courseTextbooks.textbook'])->get();
+        return CourseMajor::whereIn('major_id', $majorIdArr)->with(['course.courseTextbooks.textbook'])->get();
+    }
+
+    /**
+     * 根据专业ID获取选修课
+     * @param $majorId
+     * @return CourseMajor
+     */
+    public function getElectiveCourseByMajorId($majorId)
+    {
+        return CourseMajor::where('major_id', $majorId)
+               ->select('course_id', 'course_name')
+               ->join('majors', 'majors.id', '=', 'course_majors.major_id')
+               ->with([
+                   'courseArrangement' => function($query) {
+                        $query->select('course_id', 'week', 'day_index');
+                   },
+                   'courseElective' => function($query) {
+                        $query->select('course_id', 'open_num');
+                   },
+                   'courseTeacher' => function($query) {
+                        $query->select('course_id', 'teacher_name');
+                   },
+                   '' => function($query) {
+                        $query->count();
+                   }
+               ])->get();
     }
 }

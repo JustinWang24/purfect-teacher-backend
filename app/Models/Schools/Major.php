@@ -71,6 +71,10 @@ class Major extends Model
         return $this->hasMany(RecruitmentPlan::class);
     }
 
+    public function courseMajors(){
+        return $this->hasMany(CourseMajor::class);
+    }
+
     public function employeesCount(){
         return GradeUser::where('major_id', $this->id)->where('user_type',Role::GetTeacherUserTypes())->count();
     }

@@ -23,8 +23,8 @@ class BasicPageTestCase extends TestCase
     protected $getTeacher;
     protected $school;
     protected $teacher;
-    protected $schoolSessionData = [];
     protected $student;
+    protected $schoolSessionData = [];
 
     public function setUp(): void
     {
@@ -35,9 +35,9 @@ class BasicPageTestCase extends TestCase
         $this->superAdmin    = $this->userDao->getUserByMobile('18601216091');
         $this->operator      = $this->userDao->getUserByMobile('18510209803');
         $this->schoolManager = $this->userDao->getUserByMobile('1000006');
+        $this->teacher       = $this->gradeUserDao->getAnyTeacher(3);
         $this->teacher       = $this->gradeUserDao->getAnyTeacher(1);
         $this->student       = $this->gradeUserDao->getStudentBySchoolId(1);
-
     }
 
     /**
@@ -70,6 +70,11 @@ class BasicPageTestCase extends TestCase
         return $this->schoolManager;
     }
 
+    protected function getStudent()
+    {
+        return $this->student;
+    }
+
     /**
      * 以给定的用户来加载测试的学校
      * @param User $user
@@ -95,13 +100,6 @@ class BasicPageTestCase extends TestCase
         return $this->userDao;
     }
 
-
-    /**
-     * @return User
-     */
-    protected function getStudent() {
-        return $this->student;
-    }
 
     public function getHeaderWithApiToken(){
         $token = $this->getStudent()['user']['api_token'];
