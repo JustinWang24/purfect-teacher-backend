@@ -192,7 +192,6 @@ Route::prefix('employ')->middleware('auth:api')->group(function () {
      Route::get('/test-sms','Api\Recruitment\EmployController@testSms')
         ->name('api.test-sms');
 
-
     // 录取和拒绝学生的报名
     Route::post('/enrol-or-reject','Api\Recruitment\OpenMajorController@enrol_or_reject')
         ->name('api.major.enrol.or.reject');
@@ -209,6 +208,16 @@ Route::prefix('campus')->middleware('auth:api')->group(function () {
         ->name('api.address.book.official');
 });
 
+
+Route::prefix('course')->middleware('auth:api')->group(function () {
+     // 选修课列表
+     Route::post('/elective/list','Api\Course\ElectiveController@index')
+        ->name('api.course.elective.list');
+     // 选课详情
+     Route::post('/elective/details','Api\Course\ElectiveController@details')
+        ->name('api.course.elective.details');
+
+});
 
 // 网盘
 Route::prefix('network-disk')->middleware('auth:api')->group(function () {

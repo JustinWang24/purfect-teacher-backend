@@ -112,6 +112,7 @@ class UserDao
     }
 
 
+
     /**
      * 返回 APP 用户身份
      * @param $userType
