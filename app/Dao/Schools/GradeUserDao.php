@@ -3,7 +3,7 @@
 namespace App\Dao\Schools;
 
 use App\Models\Acl\Role;
-use App\Models\Schools\GradeUser;
+use App\Models\Users\GradeUser;
 
 class GradeUserDao
 {

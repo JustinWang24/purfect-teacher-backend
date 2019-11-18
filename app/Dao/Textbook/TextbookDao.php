@@ -121,11 +121,12 @@ class TextbookDao
      */
     public function getStudentNumByMajorAndYear($majorId, $year) {
         $gradeDao = new GradeDao();
-        $gradeList = $gradeDao->getGradesByMajorAndYear($majorId, $year)->toArray();
+
+        $gradeList = $gradeDao->getGradesByMajorAndYear($majorId, $year);
         if(empty($gradeList)) {
             return 0;
         }
-        $gradeIdArr = array_column($gradeList,'id');
+        $gradeIdArr = array_column($gradeList->toArray(),'id');
         $gradeUserDao = new GradeUserDao();
 
         $count = $gradeUserDao->getCountByGradeId($gradeIdArr);
@@ -248,15 +249,16 @@ class TextbookDao
 
         $thisYear = Carbon::now()->year;
         $nextYear = Carbon::parse('+ 1year')->year; // 明年
-
         // 查询课程关联的学生
         foreach ($courseList as $key => $val) {
             $year = $nextYear - $val['course']['year'];
             if($year == $thisYear) {
+
                 // 去查招生计划和已招学生
                 $num = $this->getNewlyBornNumByMajor($val['major_id'], $nextYear, $val['school_id']);
                 $courseList[$key]['type'] = 1;   // 即将入学新生
                 $courseList[$key]['textbook_num'] = $num;
+
             } else {
                 // 通过专业ID和课程的年级查询学生数量
                 $courseList[$key]['type'] = 0;   // 老生
