@@ -84,7 +84,7 @@ Route::prefix('enquiry')->middleware('auth:api')->group(function () {
         ->name('api.enquiry.save');
 });
 
-Route::prefix('recruitment')->middleware('auth:api')->group(function () {
+Route::prefix('recruitment')->group(function () {
     // 加载某个学校的招生计划
     Route::any('/load-plans','Api\Recruitment\PlansController@load_plans')
         ->name('api.recruitment.load.plans');
@@ -214,3 +214,54 @@ Route::prefix('course')->middleware('auth:api')->group(function () {
      Route::post('/elective/list','Api\Course\ElectiveController@index')
         ->name('api.course.elective.list');
 });
+
+// 网盘
+Route::prefix('network-disk')->middleware('auth:api')->group(function () {
+    // 创建目录
+    Route::post('/categories/create','Api\NetworkDisk\CategoriesController@create')
+        ->name('api.categories.create');
+    // 编辑目录
+    Route::post('/categories/edit','Api\NetworkDisk\CategoriesController@edit')
+        ->name('api.categories.edit');
+    // 目录下列表
+    Route::post('/categories/view','Api\NetworkDisk\CategoriesController@view')
+        ->name('api.categories.view');
+    // 父级目录下列表
+    Route::post('/categories/view-parent','Api\NetworkDisk\CategoriesController@view_parent')
+        ->name('api.categories.view.parent');
+    // 删除目录
+    Route::post('/categories/delete','Api\NetworkDisk\CategoriesController@delete')
+        ->name('api.categories.delete');
+
+    // 文件详情
+    Route::post('/media/getMediaInfo','Api\NetworkDisk\MediaController@getMediaInfo')
+        ->name('api.media.getMediaInfo');
+
+    // 删除文件
+    Route::post('/media/delete','Api\NetworkDisk\MediaController@delete')
+        ->name('api.media.delete');
+    // 移动文件
+    Route::post('/media/move','Api\NetworkDisk\MediaController@move')
+        ->name('api.media.move');
+    // 搜索文件
+    Route::post('/media/search','Api\NetworkDisk\MediaController@search')
+        ->name('api.media.search');
+    // 更新点击次数
+    Route::post('/media/click','Api\NetworkDisk\MediaController@click')
+        ->name('api.media.click');
+    // 更新文件的星标
+    Route::post('/media/update-asterisk','Api\NetworkDisk\MediaController@update_asterisk')
+        ->name('api.media.update.asterisk');
+    // 最近浏览和创建
+    Route::post('/media/latelyUploadingAndBrowse','Api\NetworkDisk\MediaController@latelyUploadingAndBrowse')
+        ->name('api.media.latelyUploadingAndBrowse');
+    // 判断是否可以上传
+    Route::post('/media/judgeIsUpload','Api\NetworkDisk\MediaController@judgeIsUpload')
+        ->name('api.media.judgeIsUpload');
+
+    // 查看用户的云盘空间
+    Route::post('/media/getNetWorkDiskSize','Api\NetworkDisk\MediaController@getNetWorkDiskSize')
+        ->name('api.media.getNetWorkDiskSize');
+
+});
+

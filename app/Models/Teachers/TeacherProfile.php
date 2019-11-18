@@ -57,4 +57,7 @@ class TeacherProfile extends Model
         return $this->belongsTo(User::class)->select($field);
     }
 
+    public function getAvatarAttribute(){
+        return $this->avatar ?? User::DEFAULT_USER_AVATAR;
+    }
 }

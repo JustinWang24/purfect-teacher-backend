@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class CourseElective extends Model
 {
-    protected $fields = [
+    protected $fillable = [
         'course_id', 'open_num', 'room_id'
     ];
 

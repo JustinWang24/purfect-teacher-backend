@@ -1,19 +1,33 @@
 <template>
-    <div class="new-file-wrapper">
+    <div class="new-file-wrapper" v-on:click="itemClicked" :class="highlight?'highlight':''">
         <div class="file-icon">
             <i class="el-icon-document"></i>
+            <i class="el-icon-check" v-show="highlight"></i>
         </div>
         <div class="file-detail">
-            <p class="file-name">{{ file.name }}</p>
-            <p class="updated-at">{{ file.size }} {{ file.updated_at }}</p>
+            <p class="file-name">{{ file.file_name }}</p>
+            <p class="updated-at">{{ fileSize(file.size) }} {{ file.created_at }}</p>
         </div>
     </div>
 </template>
 
 <script>
+    import { Util } from '../../../common/utils';
+
     export default {
         name: "NewFile",
-        props:['file'],
+        props:['file','highlight'],
+        methods: {
+            itemClicked: function(){
+                this.$emit('item-clicked',{file: this.file, clicked: 'new'})
+            },
+            starClicked: function () {
+                this.$emit('star-clicked',{file: this.file, clicked: 'new'})
+            },
+            fileSize: function(size){
+                return Util.fileSize(size);
+            }
+        }
     }
 </script>
 
@@ -24,7 +38,7 @@
         padding: 12px;
         border-radius: 8px;
         background-color: white;
-        margin-bottom: 10px;
+        margin-bottom: 16px;
         display: flex;
         justify-content: space-between;
         .file-icon{
@@ -45,5 +59,11 @@
                 text-align: right;
             }
         }
+    }
+    .highlight{
+        -webkit-box-shadow: 10px 10px 24px -16px #171517;
+        -moz-box-shadow: 10px 10px 24px -16px #171517;
+        box-shadow: 10px 10px 24px -16px #171517;
+        margin-left: -5px;
     }
 </style>

@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Log;
 
 class StudentProfile extends Model
 {
-    const DEFAULT_STUDENT_AVATAR = '/assets/img/dp.jpg';
+
     protected $fillable = [
         'uuid',
         'user_id',
@@ -101,6 +101,6 @@ class StudentProfile extends Model
     }
 
     public function getAvatarAttribute(){
-        return $this->avatar ?? self::DEFAULT_STUDENT_AVATAR;
+        return $this->avatar ?? User::DEFAULT_USER_AVATAR;
     }
 }
