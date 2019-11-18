@@ -49,4 +49,23 @@ class ApplyElectiveCourseController extends Controller
             JsonBuilder::Success(['id'=>$apply->id ?? $applyData['id']])
             : JsonBuilder::Error($result->getMessage());
     }
+
+    /**
+     * 将通过申请的选修课发布到课程course中
+     * http://teacher.backend.com/api/elective-course/publish/22
+     * @param Request $request
+     * @param $id
+     * @return string
+     */
+    public function publish(Request $request, $id)
+    {
+
+        $applyDao = new TeacherApplyElectiveCourseDao();
+        $result  = $applyDao->publishToCourse($id);
+        return $result->isSuccess() ?
+            JsonBuilder::Success(['id'=>$id])
+            : JsonBuilder::Error($result->getMessage());
+
+
+    }
 }
