@@ -3,15 +3,22 @@
 namespace App\Http\Controllers\Api\Course;
 
 use App\Dao\Courses\CourseDao;
+use App\Dao\ElectiveCourses\TeacherApplyElectiveCourseDao;
+use App\Dao\Schools\SchoolDao;
+use App\Dao\Schools\DepartmentDao;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Course\ElectiveRequest;
 use App\Dao\Users\GradeUserDao;
 use App\Utils\JsonBuilder;
+use App\Utils\ReturnData\MessageBag;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use PHPUnit\Util\Json;
 
 class ElectiveController extends Controller
 {
-
+    //选修课报名结果表前缀
+    const STUDENT_ENROLLED_OPTIONAL_COURSES_PREFIX = 'student_enrolled_optional_courses';
     /**
      * 学生选课列表
      * @param ElectiveRequest $request
@@ -26,12 +33,14 @@ class ElectiveController extends Controller
         $userInfo = $dao->getUserInfoByUserId($userId);
 
         $major = $userInfo->major;
-
         $item = [];
 
         foreach ($major->courseMajors as $key => $courseMajor) {
             $course       = $courseMajor->course;
-            $elective     = $course->courseElective;
+
+            $elective     = $course->courseElective()->get();
+            $elective     = $elective[0];
+
             $studentCount = $course->studentEnrolledOptionalCourse->count(); // 学生报名数量
 
             $arrangements = $course->courseArrangements;
@@ -73,7 +82,7 @@ class ElectiveController extends Controller
             return  JsonBuilder::Error('课程不存在');
         }
 
-        $teacher = $course->teachers;
+        $teacher = $course->teachers[0];
 
         $elective = $course->courseElective;
 
@@ -102,7 +111,44 @@ class ElectiveController extends Controller
         return JsonBuilder::Success($result);
     }
 
-    
+
+    public function enroll(Request $request, $courseId)
+    {
+        $user = $request->user();
+        $dao = new TeacherApplyElectiveCourseDao();
+        //查自己在报名结果表中的记录
+        $courseDao =  new CourseDao;
+        $course = $courseDao->getCourseById($courseId);
+        if (!$course) {
+            return  JsonBuilder::Error('课程不存在');
+        }
+        $teacherId = $course->teachers[0]->id;
+
+        $elective = $course->courseElective;
+        $start_year = $elective->start_year;
+        $term = $course->term;
+        $tableName = self::STUDENT_ENROLLED_OPTIONAL_COURSES_PREFIX.'_'.$start_year.'_'.$term;
+        $result = $dao->createEnrollTable($tableName);
+        if (!$result)
+        {
+            return  JsonBuilder::Error('系统错误请联系系统管理员');
+        }
+        //得到用户的已报名数量
+        $enrollNum = $dao->getTotalOfEnroll($user, $tableName);
+        //得到用户可以报名的数量
+        $numOfCanBeEnroll = $dao->getNumOfCanBeEnroll($user);
+        if ($enrollNum>=$numOfCanBeEnroll) {
+            return  JsonBuilder::Error('您的报名数量已满，不能再报其它课程');
+        }
+        //报名
+        if ($dao->quotaIsFull($courseId)){
+            JsonBuilder::Error('此选修课报名数量已满');
+        }
+        $result = $dao->enroll($courseId, $user->id, $teacherId);
+        return JsonBuilder::Success($result);
+
+    }
+
 
 
 

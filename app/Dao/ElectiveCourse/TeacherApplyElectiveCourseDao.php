@@ -9,12 +9,17 @@
 namespace App\Dao\ElectiveCourses;
 use App\Dao\BuildFillableData;
 use App\Dao\Courses\CourseDao;
+use App\Dao\Schools\DepartmentDao;
+use App\Dao\Schools\SchoolDao;
+use App\Dao\Users\GradeUserDao;
 use App\Models\ElectiveCourses\ApplyCourseArrangement;
 use App\Models\ElectiveCourses\ApplyCourseMajor;
 use App\Models\ElectiveCourses\ApplyDay;
 use App\Models\ElectiveCourses\ApplyGroup;
 use App\Models\ElectiveCourses\ApplyTimeSlot;
 use App\Models\ElectiveCourses\ApplyWeek;
+use App\Models\ElectiveCourses\CourseElective;
+use App\Models\ElectiveCourses\StudentEnrolledOptionalCourse;
 use App\Models\ElectiveCourses\TeacherApplyElectiveCourse;
 use App\Dao\Schools\MajorDao;
 use App\Dao\Users\UserDao;
@@ -26,6 +31,7 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
 use Exception;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 
 
 class TeacherApplyElectiveCourseDao
@@ -433,6 +439,80 @@ class TeacherApplyElectiveCourseDao
     public function  getApplyCourseArrangements($applyId)
     {
         return ApplyCourseArrangement::where('apply_id',$applyId)->get();
+    }
+
+    //查系或学校的相关配置获取最多能报几个选修课
+    public function getNumOfCanBeEnroll($user)
+    {
+        $schoolId = $user->getSchoolId();
+        $dao = new GradeUserDao;
+        $userInfo = $dao->getUserInfoByUserId($user->id);
+        $major = $userInfo->major;
+        $DepartmentDao = new DepartmentDao($user);
+        $department = $DepartmentDao->getDepartmentById($major->department_id);
+        $NumOfCanBeEnroll = $department->optional_courses_per_year;
+        if (empty($NumOfCanBeEnroll)) {
+            $schoolDao = new SchoolDao($user);
+            $school = $schoolDao->getSchoolById($schoolId);
+            $NumOfCanBeEnroll = $school->configuration->optional_courses_per_year;
+        }
+        return $NumOfCanBeEnroll;
+    }
+
+    //一年之内
+    public function getTotalOfEnroll($user, $tableName)
+    {
+        //报名结果表中的数量
+        $num1 = self::getNumHasEnroll($user, $tableName);
+        //报名中的数量
+        $num2 = self::getNumEnroll($user);
+        return $num1+$num2;
+    }
+
+    public function getNumHasEnroll($user, $tableName)
+    {
+        return DB::table($tableName)->where('user_id', $user->id)->count();
+    }
+
+    public function getNumEnroll($user)
+    {
+        return StudentEnrolledOptionalCourse::where('user_id', $user->id)->count();
+    }
+    //判断报名报是否存在，不存在则创建
+    public function createEnrollTable($tableName)
+    {
+        $sql = '
+        CREATE TABLE IF NOT EXISTS '.$tableName.' (
+          `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+          `course_id` int(10) unsigned DEFAULT NULL COMMENT \'课程的 ID\',
+          `teacher_id` int(10) unsigned DEFAULT NULL COMMENT \'老师ID\',
+          `user_id` int(10) unsigned DEFAULT NULL COMMENT \'学生的 ID\',
+          `status` smallint(5) unsigned DEFAULT \'0\' COMMENT \'0 申请中、1 开班成功申请成功、 2 开班成功申请失败\',
+          `created_at` timestamp NULL DEFAULT NULL,
+          `updated_at` timestamp NULL DEFAULT NULL,
+          PRIMARY KEY (`id`)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+        ';
+        if ( ! Schema::hasTable($tableName)) {
+            return DB::statement($sql);
+        } else {
+            return true;
+        }
+    }
+    //查询课程是否名额已满
+    public function quotaIsFull($courseId)
+    {
+        return CourseElective::where('course_id',$courseId)->first()->status == CourseElective::STATUS_ISFULL;
+    }
+    //报名
+    public function enroll($courseId, $userId, $teacherId)
+    {
+        $d = [
+            'course_id' => $courseId,
+            'teacher_id'=> $teacherId,
+            'user_id'   => $userId
+        ];
+        return StudentEnrolledOptionalCourse::create($d);
     }
 }
 
