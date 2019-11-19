@@ -4,7 +4,7 @@ namespace App\Dao\Courses;
 
 use App\Utils\JsonBuilder;
 use App\Utils\ReturnData\MessageBag;
-use AppModelCourses\CourseTextbook;
+use App\Models\Courses\CourseTextbook;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 
