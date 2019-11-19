@@ -34,11 +34,75 @@ Vue.component('recruitment-plans-list', require('./components/recruitment/Recrui
 Vue.component('recruitment-plan-form', require('./components/recruitment/RecruitmentPlanForm.vue').default);
 Vue.component('file-manager', require('./components/fileManager/FileManager.vue').default);
 Vue.component('elective-course-form', require('./components/courses/ElectiveCourseForm.vue').default);
+Vue.component('textbooks-table', require('./components/textbook/TextbooksTable.vue').default); // 教材列表
+Vue.component('textbook-form', require('./components/textbook/TextbookForm.vue').default);      // 教材表单
 
 import { Constants } from './common/constants';
 import { Util } from './common/utils';
 import { getTimeSlots, getMajors } from './common/timetables';
 import { getEmptyElectiveCourseApplication } from './common/elective_course';
+
+/**
+ * 教材管理
+ */
+if(document.getElementById('textbook-manager-app')){
+    new Vue({
+        el:'#textbook-manager-app',
+        data(){
+            return {
+                userUuid: null,
+                schoolId: null,
+                books:[],
+                total:0,
+                pageNumber:0,
+                pageSize:24,
+                showTextbookFormFlag: false,
+                textbookModel:{
+                    type: 1,
+                    status: 1,
+                },
+                queryTextbook: '',
+                showFileManagerFlag: false,
+            };
+        },
+        created(){
+            const dom = document.getElementById('app-init-data-holder');
+            this.userUuid = dom.dataset.user;
+            this.schoolId = dom.dataset.school;
+            this.loadTextbooks();
+        },
+        methods: {
+            pickFileHandler: function(payload){
+                console.log(payload.file);
+            },
+            queryTextbooksAsync: function(queryString, cb){
+
+            },
+            handleReturnedTextbookSelect: function(item){
+
+            },
+            saveTextbook: function(){
+
+            },
+            cancel: function(){
+                this.showTextbookFormFlag = false;
+            },
+            loadTextbooks: function(){
+                axios.post(
+                    Constants.API.TEXTBOOK.LOAD_TEXTBOOKS_PAGINATE,
+                    {school: this.schoolId, user_uuid: this.userUuid}
+                ).then(res => {
+                    if(Util.isAjaxResOk(res)){
+                        this.books = res.data.data.books;
+                        this.total = res.data.data.total;
+                        this.pageNumber = res.data.data.pageNumber;
+                        this.pageSize = res.data.data.pageSize;
+                    }
+                })
+            },
+        }
+    });
+}
 
 /**
  * 老师申请开设一门新的选修课
