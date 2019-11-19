@@ -133,7 +133,7 @@ class User extends Authenticatable implements HasMobilePhone, HasDeviceId
 
     public function profile(){
         $roleSlug = $this->getCurrentRoleSlug();
-        if($roleSlug === Role::TEACHER_SLUG || $roleSlug === Role::EMPLOYEE_SLUG){
+        if($roleSlug === Role::TEACHER_SLUG || $roleSlug === Role::EMPLOYEE_SLUG || $roleSlug === Role::ADMINISTRATOR_SLUG){
             // 教师或者职工
             return $this->hasOne(TeacherProfile::class,'user_id');
         }
@@ -231,7 +231,7 @@ class User extends Authenticatable implements HasMobilePhone, HasDeviceId
      * @return mixed
      */
     public function gradeUser(){
-        if($this->isStudent()){
+        if($this->isStudent() || $this->isSchoolManager()){
             return $this->hasOne(GradeUser::class);
         }
         elseif($this->isTeacher() || $this->isEmployee()){

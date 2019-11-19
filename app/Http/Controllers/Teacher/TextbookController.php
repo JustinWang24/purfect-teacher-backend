@@ -131,7 +131,6 @@ class TextbookController extends Controller
         $gradeId = $request->getGradeId();
         $textbookDao = new TextbookDao();
         $result = $textbookDao->getTextbooksByGradeId($gradeId);
-
         if($result->isSuccess()) {
             $data = ['textbook'=>$result->getData()];
             return JsonBuilder::Success($data);

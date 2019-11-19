@@ -29,6 +29,9 @@ Route::prefix('network-disk')->group(function () {
         ->name('file.manager.media.upload');
 });
 
+// 分享
+Route::get('/share-file','Api\NetworkDisk\MediaController@shareFile')->name('shareFile');
+
 Auth::routes();
 
 // 主页
