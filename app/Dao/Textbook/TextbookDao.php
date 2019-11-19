@@ -12,6 +12,7 @@ use App\Models\RecruitStudent\RegistrationInformatics;
 use App\Models\Schools\RecruitmentPlan;
 use App\Models\Schools\Textbook;
 use App\Utils\JsonBuilder;
+use App\Utils\Misc\ConfigurationTool;
 use App\Utils\ReturnData\MessageBag;
 use Carbon\Carbon;
 
@@ -186,7 +187,32 @@ class TextbookDao
         return Textbook::where('school_id',$schoolId)->get();
     }
 
+    /**
+     * 以分页的方式获取课程列表
+     * @param $schoolId
+     * @param $pageNumber
+     * @param $pageSize
+     * @return array
+     */
+    public function getTextbookListPaginateBySchoolId(
+        $schoolId,
+        $pageNumber = 0,
+        $pageSize = ConfigurationTool::DEFAULT_PAGE_SIZE
+    ) {
+        $books =  Textbook::where('school_id',$schoolId)
+            ->with('medias')
+            ->skip($pageSize * $pageNumber)
+            ->take($pageSize)
+            ->get();
 
+        $total = Textbook::count();
+        return [
+            'books'=>$books,
+            'total'=>$total,
+            'p'=>$pageNumber,
+            's'=>$pageSize
+        ];
+    }
 
     /**
      * 查询当前班级所学的教材

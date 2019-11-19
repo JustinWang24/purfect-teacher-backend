@@ -129,12 +129,15 @@
                             <el-input style="margin-top: 10px;" type="textarea" autosize v-model="uploadFormData.description" placeholder="选填: 文件说明"></el-input>
                         </el-form>
                     </div>
-                    <p class="section-title" style="margin-top: 30px;">文件预览/详情</p>
-                    <el-card shadow="always" v-if="selectedFile">
-                        <p>文件名: {{ selectedFile.file_name }}</p>
-                        <p>创建时间: {{ selectedFile.created_at }}</p>
-                        <p>大小: {{ fileSize(selectedFile.size) }}</p>
-                        <p>简介: {{ selectedFile.description }}</p>
+                    <p class="section-title" style="margin-top: 30px;">
+                        文件预览/详情
+                        <el-button v-if="pickFile" v-on:click="pickThisFile">使用此文件</el-button>
+                    </p>
+                    <el-card shadow="always" v-if="selectedFile" class="current-file-box">
+                        <p><span class="txt-purple">文件名</span>: {{ selectedFile.file_name }}</p>
+                        <p><span class="txt-purple">创建时间</span>: {{ selectedFile.created_at }}</p>
+                        <p><span class="txt-purple">大小</span>: {{ fileSize(selectedFile.size) }}</p>
+                        <p><span class="txt-purple">简介</span>: {{ selectedFile.description }}</p>
                     </el-card>
                 </div>
             </div>
@@ -157,7 +160,7 @@
 
     export default {
         name: "FileManager",
-        props:['userUuid'],
+        props:['userUuid','pickFile'],
         components:{
             RecentFile,FileItem,CategoryItem,NewCategoryForm
         },
@@ -232,6 +235,9 @@
             };
         },
         methods: {
+            pickThisFile: function(){
+                this.$emit('pick-this-file',{file: this.selectedFile})
+            },
             fileSize: function(size){
                 return Util.fileSize(size);
             },
@@ -561,7 +567,13 @@
         border-color: $themeColor;
         color: white;
     }
-    .btn-purple{
+    .btn-purple, .txt-purple{
         color: $themeColor;
+    }
+    .current-file-box{
+        p{
+            margin-bottom: 5px;
+            font-size: 13px;
+        }
     }
 </style>

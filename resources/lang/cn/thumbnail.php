@@ -57,5 +57,8 @@ return [
     // 选修课
     'elective-course'=>'选修课',
     'create'=>'创建',
+
+    // 教材管理
+    'textbook'=>'教材'
 ];
 
