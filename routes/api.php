@@ -211,11 +211,14 @@ Route::prefix('campus')->middleware('auth:api')->group(function () {
 
 Route::prefix('course')->middleware('auth:api')->group(function () {
      // 选修课列表
-     Route::post('/elective/list','Api\Course\ElectiveController@index')
+     Route::get('/elective/list','Api\Course\ElectiveController@index')
         ->name('api.course.elective.list');
      // 选课详情
-     Route::post('/elective/details','Api\Course\ElectiveController@details')
+     Route::get('/elective/details','Api\Course\ElectiveController@details')
         ->name('api.course.elective.details');
+     // 选课报名操作
+     Route::get('/elective/enroll/{id}','Api\Course\ElectiveController@enroll')
+        ->name('api.course.elective.enroll');
 
 });
 
