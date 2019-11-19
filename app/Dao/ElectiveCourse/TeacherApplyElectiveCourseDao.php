@@ -319,6 +319,8 @@ class TeacherApplyElectiveCourseDao
         $data['year'] = $apply->year;
         $data['term'] = $apply->term;
         $data['desc'] = $apply->desc;
+        $data['open_num'] = $apply->open_num;
+        $data['max_num'] = $apply->max_num;
 
 
         DB::beginTransaction();
