@@ -2,7 +2,7 @@
 
 namespace App\Dao\Teachers;
 
-use App\Models\Schools\GradeUser;
+use App\Models\Users\GradeUser;
 use App\Models\Teachers\TeacherProfile;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\DB;

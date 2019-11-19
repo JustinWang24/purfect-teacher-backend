@@ -3,6 +3,7 @@
 namespace Tests\Feature\NetworkDisk;
 
 use App\User;
+use App\Utils\JsonBuilder;
 use Illuminate\Http\UploadedFile;
 use Tests\Feature\BasicPageTestCase;
 
@@ -34,7 +35,7 @@ class MediaTest extends BasicPageTestCase
         $result = json_decode($response->content(),true);
 
         $this->assertArrayHasKey('code', $result);
-        $this->assertEquals(1000, $result['code']);
+        $this->assertEquals(JsonBuilder::CODE_SUCCESS, $result['code']);
 
         $this->assertArrayHasKey('file', $result['data']);
         $this->assertArrayHasKey('file_name', $result['data']['file']);
@@ -60,7 +61,7 @@ class MediaTest extends BasicPageTestCase
 
         $result = json_decode($response->content(),true);
         $this->assertArrayHasKey('code', $result);
-        $this->assertEquals(1000, $result['code']);
+        $this->assertEquals(JsonBuilder::CODE_SUCCESS, $result['code']);
         $this->assertArrayHasKey('media', $result['data']);
         $this->assertArrayHasKey('file_name', $result['data']['media']);
         $this->assertArrayHasKey('description', $result['data']['media']);
@@ -78,7 +79,7 @@ class MediaTest extends BasicPageTestCase
         $response = $this->post(route('api.media.search'),$data,$header);
         $result = json_decode($response->content(),true);
         $this->assertArrayHasKey('code', $result);
-        $this->assertEquals(1000, $result['code']);
+        $this->assertEquals(JsonBuilder::CODE_SUCCESS, $result['code']);
         $this->assertArrayHasKey('files', $result['data']);
         if(!empty($result['data']['files'])) {
             foreach ($result['data']['files'] as $key => $val) {
@@ -104,7 +105,7 @@ class MediaTest extends BasicPageTestCase
         $response = $this->post(route('api.media.click'),$data,$header);
         $result = json_decode($response->content(),true);
         $this->assertArrayHasKey('code', $result);
-        $this->assertEquals(1000, $result['code']);
+        $this->assertEquals(JsonBuilder::CODE_SUCCESS, $result['code']);
 
     }
 
@@ -122,7 +123,7 @@ class MediaTest extends BasicPageTestCase
         $response = $this->post(route('api.media.delete'),$data,$header);
         $result = json_decode($response->content(),true);
         $this->assertArrayHasKey('code', $result);
-        $this->assertEquals(1000, $result['code']);
+        $this->assertEquals(JsonBuilder::CODE_SUCCESS, $result['code']);
     }
 
 
@@ -137,7 +138,7 @@ class MediaTest extends BasicPageTestCase
         $response = $this->post(route('api.media.latelyUploadingAndBrowse'),[],$header);
         $result = json_decode($response->content(),true);
         $this->assertArrayHasKey('code', $result);
-        $this->assertEquals(1000, $result['code']);
+        $this->assertEquals(JsonBuilder::CODE_SUCCESS, $result['code']);
         $this->assertArrayHasKey('uploading', $result['data']);
         $this->assertArrayHasKey('browse', $result['data']);
         if(!empty($result['data']['browse'])) {
@@ -174,7 +175,7 @@ class MediaTest extends BasicPageTestCase
         $response = $this->post(route('api.media.judgeIsUpload'),$data,$header);
         $result = json_decode($response->content(), true);
         $this->assertArrayHasKey('code', $result);
-        $this->assertEquals(1000, $result['code']);
+        $this->assertEquals(JsonBuilder::CODE_SUCCESS, $result['code']);
         $this->assertArrayHasKey(  'total_size', $result['data']['size']);
         $this->assertArrayHasKey(  'use_size', $result['data']['size']);
         $this->assertArrayHasKey('is_upload', $result['data']['size']);
@@ -191,7 +192,7 @@ class MediaTest extends BasicPageTestCase
 
         $result = json_decode($response->content(), true);
         $this->assertArrayHasKey('code', $result);
-        $this->assertEquals(1000, $result['code']);
+        $this->assertEquals(JsonBuilder::CODE_SUCCESS, $result['code']);
         $this->assertArrayHasKey(  'total_size', $result['data']['size']);
         $this->assertArrayHasKey(  'use_size', $result['data']['size']);
     }

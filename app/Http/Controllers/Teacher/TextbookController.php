@@ -65,7 +65,8 @@ class TextbookController extends Controller
             $all['school_id'] = $request->getSchoolId();
             $result = $textbookDao->create($all);
             if($result->isSuccess()) {
-                return JsonBuilder::Success('创建成功');
+                $data = ['textbook'=>$result->getData()];
+                return JsonBuilder::Success($data,'创建成功');
             } else {
                 return JsonBuilder::Error($result->getMessage());
             }
@@ -150,9 +151,6 @@ class TextbookController extends Controller
         $gradeId = $request->getGradeId();
         $textbookDao = new TextbookDao();
         $result = $textbookDao->getTextbooksByGradeId($gradeId);
-
-
-
         if($result->isSuccess()) {
             $data = ['textbook'=>$result->getData()];
             return JsonBuilder::Success($data);

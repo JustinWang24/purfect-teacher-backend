@@ -13,6 +13,7 @@ use App\Models\Course;
 use App\Models\Courses\CourseArrangement;
 use App\Models\Courses\CourseMajor;
 use App\Models\Courses\CourseTeacher;
+use App\Models\ElectiveCourses\CourseElective;
 use App\Utils\JsonBuilder;
 use App\Utils\ReturnData\IMessageBag;
 use App\Utils\ReturnData\MessageBag;
@@ -233,6 +234,9 @@ class CourseDao
                 if(intval($data['optional']) === 1){
                     // 是选修课
                     $this->_saveCourseArrangement($course, $data);
+                    //添加course_electives表的关联数据
+                    $this->_saveCourseElective($course, $data);
+
                 }
 
                 DB::commit();
@@ -332,28 +336,47 @@ class CourseDao
             $times = $data['group'];
             DB::beginTransaction();
             try {
-                foreach ($times as $week=>$days) {
-                    foreach ($days as $day=>$slots) {
-                        foreach($slots as $slot)
-                        {
-                            $d = [
-                                'course_id' => $course->id,
-                                'week'      => $week,
-                                'day_index' => $day,
-                                'time_slot_id'=>$slot,
-
-                            ];
-                            $courseArrangement = CourseArrangement::create($d);
-                        }
-                    }
+                foreach ($times as $time) {
+                    $d = [
+                        'course_id'     => $course->id,
+                        'week'          => $time['week'],
+                        'day_index'     => $time['day_index'],
+                        'time_slot_id'  => $time['time_slot_id'],
+                        'building_id'   => $time['building_id'],
+                        'building_name' => $time['building_name'],
+                        'classroom_id'  => $time['classroom_id'],
+                        'classroom_name'=> $time['classroom_name'],
+                    ];
+                    $courseArrangement = CourseArrangement::create($d);
                 }
                 DB::commit();
             } catch (\Exception $exception) {
-                dd($exception);
                 DB::rollBack();
             }
         }
     }
 
+    /**
+     * 保存course_electives表数据
+     * @param $course
+     * @param $data
+     */
+    private function _saveCourseElective($course, $data)
+    {
+        DB::beginTransaction();
+        try {
+            $d = [
+                'course_id' => $course->id,
+                'open_num'  => $data['open_num'],
+                'max_num'   => $data['max_num'],
+            ];
+            CourseElective::create($d);
+            DB::commit();
+        } catch (\Exception $exception) {
+            dd($exception);
+            DB::rollBack();
+        }
+
+    }
 
 }
