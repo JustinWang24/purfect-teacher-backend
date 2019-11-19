@@ -8,6 +8,7 @@ use App\Utils\JsonBuilder;
 use App\Dao\NetworkDisk\MediaDao;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\NetworkDisk\MediaRequest;
+use Illuminate\Support\Facades\Storage;
 use Psy\Util\Json;
 
 class MediaController extends Controller
@@ -212,6 +213,37 @@ class MediaController extends Controller
             ]
         ];
         return JsonBuilder::Success($result);
+    }
+
+
+    /**
+     * 获取分享内容
+     * @param MediaRequest $request
+     * @return \Symfony\Component\HttpFoundation\BinaryFileResponse
+     */
+    public function shareFile(MediaRequest $request) {
+        $f = $request->get('f');
+        $mediaDao = new MediaDao();
+        $media = $mediaDao->getMediaByUuid($f);
+
+        $file = storage_path('app/'.Media::ConvertUrlToUploadPath($media->url));
+        switch ($media->type) {
+            case Media::TYPE_IMAGE :
+                header('Location:'.env('APP_URL').$media->url);
+                break;
+            case Media::TYPE_WORD:
+            case Media::TYPE_EXCEL:
+            case Media::TYPE_PPT:
+            case Media::TYPE_PDF:
+            case Media::TYPE_VIDEO:
+            case Media::TYPE_AUDIO:
+            case Media::TYPE_TXT:
+                return response()->download($file, $media->file_name);
+                break;
+            case Media::TYPE_REFERENCE :
+                header('Location:http://'.$media->url);
+                break;
+        }
     }
 
 
