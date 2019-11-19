@@ -97,7 +97,7 @@ class TextbookTest extends BasicPageTestCase
 
         $result = json_decode($response->content(),true);
         $this->assertArrayHasKey('code', $result);
-        $this->assertEquals(1000, $result['code']);
+        $this->assertEquals(JsonBuilder::CODE_SUCCESS, $result['code']);
         return $result['data'];
     }
 
@@ -119,7 +119,7 @@ class TextbookTest extends BasicPageTestCase
 
         $result = json_decode($response->content(),true);
         $this->assertArrayHasKey('code', $result);
-        $this->assertEquals(1000, $result['code']);
+        $this->assertEquals(JsonBuilder::CODE_SUCCESS, $result['code']);
     }
 
 
@@ -141,7 +141,7 @@ class TextbookTest extends BasicPageTestCase
 
         $result = json_decode($response->content(),true);
         $this->assertArrayHasKey('code', $result);
-        $this->assertEquals(1000, $result['code']);
+        $this->assertEquals(JsonBuilder::CODE_SUCCESS, $result['code']);
         foreach ($result['data']['major_textbook'] as $key => $val) {
             $this->assertArrayHasKey('code', $val);
             $this->assertArrayHasKey('name', $val);
@@ -176,10 +176,9 @@ class TextbookTest extends BasicPageTestCase
             ->actingAs($user)
             ->withSession($this->schoolSessionData)
             ->get(route('teacher.textbook.list'));
-
         $result = json_decode($response->content(),true);
         $this->assertArrayHasKey('code', $result);
-        $this->assertNotEquals(999, $result['code']);
+        $this->assertEquals(JsonBuilder::CODE_SUCCESS,$result['code']);
         $this->assertArrayHasKey('textbook', $result['data']);
 
         foreach ($result['data']['textbook'] as $key => $val) {
@@ -204,14 +203,13 @@ class TextbookTest extends BasicPageTestCase
             ->actingAs($user)
             ->withSession($this->schoolSessionData)
             ->get(route('teacher.textbook.loadGradeTextbook',$data));
-
         $result = json_decode($response->content(),true);
         $this->assertArrayHasKey('code', $result);
+        $this->assertEquals(JsonBuilder::CODE_SUCCESS,$result['code']);
 
-        $this->assertNotEquals(JsonBuilder::CODE_ERROR, $result['code']);
         $this->assertArrayHasKey('textbook', $result['data']);
 
-        if($result['code'] == JsonBuilder::CODE_SUCCESS) {
+        if(!empty($result['data']['textbook'])) {
             foreach ($result['data']['textbook'] as $key => $val) {
                 $this->assertArrayHasKey('id', $val);
                 $this->assertArrayHasKey('code', $val);
@@ -243,7 +241,7 @@ class TextbookTest extends BasicPageTestCase
         $this->withoutExceptionHandling();
 
         $user = $this->getSuperAdmin();
-        $data = ['campus_id'=>2];
+        $data = ['campus_id'=>1];
         $response = $this->setSchoolAsUser($user, 50)
             ->actingAs($user)
             ->withSession($this->schoolSessionData)
@@ -251,10 +249,10 @@ class TextbookTest extends BasicPageTestCase
 
         $result = json_decode($response->content(),true);
         $this->assertArrayHasKey('code', $result);
-        $this->assertNotEquals(999, $result['code']);
+        $this->assertEquals(JsonBuilder::CODE_SUCCESS,$result['code']);
         $this->assertArrayHasKey('campus_textbook', $result['data']);
 
-        if($result['code'] == JsonBuilder::CODE_SUCCESS) {
+        if(!empty($result['data']['campus_textbook'])) {
             foreach ($result['data']['campus_textbook'] as  $key => $val) {
                 $this->assertArrayHasKey('major_name', $val);
                 $this->assertArrayHasKey('name', $val['course']);
