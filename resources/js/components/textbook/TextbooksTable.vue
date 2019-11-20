@@ -5,11 +5,11 @@
                 <el-card shadow="hover" class="book-card">
                     <div class="card-image">
                         <figure class="image">
-                            <img src="/assets/img/mega-img1.jpg" class="book-image">
+                            <img :src="avatarUrl(book)" class="book-image">
                         </figure>
                     </div>
                     <p class="title">
-                        <el-button type="text">教材名: {{ book.name }}(第{{ book.edition }}版)</el-button>
+                        <el-button type="text">教材名: {{ book.name }}({{ book.edition }})</el-button>
                     </p>
                     <p class="author">作者: {{ book.author }}</p>
                     <p class="press">{{ book.press }}</p>
@@ -17,6 +17,11 @@
                         价格: ¥{{ book.price }}元
                         <span class="internal" v-if="asAdmin">{{ book.purchase_price }}</span>
                     </p>
+                    <el-divider style="margin: 10px 0;"></el-divider>
+                    <div>
+                        <el-button type="text" class="button" v-on:click="connectCoursesHandler(book)">关联/管理课程</el-button>
+                        <el-button type="text" class="button" v-on:click="editBookHandler(book)">编辑教材</el-button>
+                    </div>
                 </el-card>
             </el-col>
         </el-row>
@@ -51,19 +56,21 @@
                 this.highlightIdx = idx;
                 this.$emit('book-item-clicked', {idx: idx, course: row});
             },
-            handleViewClick: function(idx, course){
-                // 查看必修课的课程安排, 根据指定的课程 ID
-                window.open(Constants.API.TIMETABLE.VIEW_TIMETABLE_FOR_COURSE + '?uuid=' + course.uuid, '_blank');
+            editBookHandler: function(book){
+                this.$emit('book-edit', {book: book});
             },
-            yearText: function(year){
-                return Constants.YEARS[year];
+            // 去关联课程
+            connectCoursesHandler: function(book){
+                this.$emit('connect-courses', {book: book});
             },
-            termText: function (term) {
-                return Constants.TERMS[term];
+            avatarUrl: function(book){
+                if(book.medias.length === 0){
+                    return '/assets/img/mega-img1.jpg';
+                }else{
+                    return book.medias[0].url;
+                }
             },
-            courseNameClickedHandler: function(idx, row){
-                this.$emit('course-view', {idx: idx, course: row});
-            }
+
         }
     }
 </script>
@@ -78,6 +85,7 @@
                 .image{
                     .book-image{
                         width: 100%;
+                        height: 120px;
                         border-radius: 10px;
                     }
                 }

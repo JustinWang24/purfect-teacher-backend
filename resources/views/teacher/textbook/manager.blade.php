@@ -34,10 +34,13 @@
                     <el-button type="primary" icon="el-icon-plus" v-on:click="showTextbookFormFlag = true">添加新教材</el-button>
                 </div>
             </div>
+
             <textbooks-table
                 :books="books"
                 :as-admin="{{ $user->isTeacher() || $user->isEmployee() ? 'false' : 'true' }}"
                 v-on:load-textbooks="loadTextbooks"
+                v-on:book-edit="editBookAction"
+                v-on:connect-courses="connectCoursesAction"
             ></textbooks-table>
         </div>
         <div>
@@ -47,9 +50,20 @@
                     direction="rtl"
                     size="50%">
                 <el-form :model="textbookModel" ref="textbookForm" label-width="100px" class="textbook-form" style="margin-right: 10px;">
-                    <el-form-item label="教材名称" prop="name">
-                        <el-input v-model="textbookModel.name" placeholder="必填: 教材名称"></el-input>
-                    </el-form-item>
+
+                    <el-row>
+                        <el-col :span="16">
+                            <el-form-item label="教材名称" prop="name">
+                                <el-input v-model="textbookModel.name" placeholder="必填: 教材名称"></el-input>
+                            </el-form-item>
+                        </el-col>
+                        <el-col :span="8">
+                            <el-form-item label="版本" prop="edition">
+                                <el-input v-model="textbookModel.edition" placeholder="必填: 是第几个版本"></el-input>
+                            </el-form-item>
+                        </el-col>
+                    </el-row>
+
                     <el-row>
                         <el-col :span="8">
                             <el-form-item label="教材作者" prop="author">
@@ -87,6 +101,20 @@
                     <el-form-item>
                         <el-button type="primary" icon="el-icon-picture" v-on:click="showFileManagerFlag=true">选择图书封面图片</el-button>
                     </el-form-item>
+                    <el-form-item>
+                        <div class="row">
+                            <div class="col-4" v-for="(media, idx) in textbookModel.medias" :key="idx">
+                                <file-preview
+                                        :file-dic="media"
+                                        v-on:preview-delete="selectedFileDeleted"
+                                        :has-delete-button="true"
+                                ></file-preview>
+                            </div>
+                            <div class="col-12" v-if="textbookModel.medias.length === 0">
+                                <p class="text-info">还没选择图片</p>
+                            </div>
+                        </div>
+                    </el-form-item>
                     <el-form-item label="课材简介">
                         <el-input type="textarea" v-model="textbookModel.introduce" placeholder="可选"></el-input>
                     </el-form-item>
@@ -99,7 +127,7 @@
 
             @include(
                 'reusable_elements.section.file_manager_component',
-                [ 'syncFlag'=>'showFileManagerFlag','pickFileHandler'=>'pickFileHandler']
+                ['pickFileHandler'=>'pickFileHandler']
             )
         </div>
     </div>

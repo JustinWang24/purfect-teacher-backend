@@ -36,6 +36,7 @@ Vue.component('file-manager', require('./components/fileManager/FileManager.vue'
 Vue.component('elective-course-form', require('./components/courses/ElectiveCourseForm.vue').default);
 Vue.component('textbooks-table', require('./components/textbook/TextbooksTable.vue').default); // 教材列表
 Vue.component('textbook-form', require('./components/textbook/TextbookForm.vue').default);      // 教材表单
+Vue.component('file-preview', require('./components/fileManager/elements/FilePreview.vue').default);      // 教材表单
 
 import { Constants } from './common/constants';
 import { Util } from './common/utils';
@@ -57,12 +58,10 @@ if(document.getElementById('textbook-manager-app')){
                 pageNumber:0,
                 pageSize:24,
                 showTextbookFormFlag: false,
-                textbookModel:{
-                    type: 1,
-                    status: 1,
-                },
+                textbookModel:{},
                 queryTextbook: '',
                 showFileManagerFlag: false,
+                bookName: '',
             };
         },
         created(){
@@ -70,10 +69,18 @@ if(document.getElementById('textbook-manager-app')){
             this.userUuid = dom.dataset.user;
             this.schoolId = dom.dataset.school;
             this.loadTextbooks();
+            this.resetForm();
         },
         methods: {
+            resetForm: function(){
+                this.textbookModel.type = 1;
+                this.textbookModel.status = 1;
+                this.textbookModel.medias = [];// 教材关联的图片
+            },
+            // 当文件从云盘管理器被选择会后的处理
             pickFileHandler: function(payload){
-                console.log(payload.file);
+                this.textbookModel.medias.push(payload.file);
+                this.showFileManagerFlag = false;
             },
             queryTextbooksAsync: function(queryString, cb){
 
@@ -81,11 +88,57 @@ if(document.getElementById('textbook-manager-app')){
             handleReturnedTextbookSelect: function(item){
 
             },
-            saveTextbook: function(){
+            // 关联课程
+            connectCoursesAction: function(payload){
 
+            },
+            // 编辑课本
+            editBookAction: function(payload){
+                this.textbookModel = payload.book;
+                this.showTextbookFormFlag = true;
+            },
+            saveTextbook: function(){
+                axios.post(
+                    '/teacher/textbook/save',
+                    {textbook: this.textbookModel}
+                ).then(res => {
+                    if(Util.isAjaxResOk(res)){
+                        this.showTextbookFormFlag = false;
+                        if(Util.isEmpty(this.textbookModel.id)){
+                            // 新增教材的操作
+                            this.books.unshift(res.data.data.textbook);
+                        }
+                        else{
+                            // 更新操作
+                            const idx = Util.GetItemIndexById(res.data.data.textbook.id, this.books);
+                            if(idx > -1){
+                                this.books[idx] = res.data.data.textbook;
+                            }
+                        }
+                        this.resetForm();
+                        this.$message({
+                            message: '教材数据保存成功: ' + res.data.data.textbook.name,
+                            type: 'success'
+                        });
+                    }else{
+                        this.$notify.error({
+                            title: '错误',
+                            message: res.data.message,
+                            position: 'bottom-right'
+                        });
+                    }
+                })
             },
             cancel: function(){
                 this.showTextbookFormFlag = false;
+            },
+            selectedFileDeleted: function(payload){
+                const idx = Util.GetItemIndexByUuid(payload.file.uuid, this.textbookModel.medias);
+                this.textbookModel.medias.splice(idx, 1);
+                this.$message({
+                    message: '取消了文件: ' + payload.file.file_name,
+                    type: 'success'
+                });
             },
             loadTextbooks: function(){
                 axios.post(
