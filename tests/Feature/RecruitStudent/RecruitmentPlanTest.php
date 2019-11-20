@@ -16,13 +16,10 @@ class RecruitmentPlanTest extends BasicPageTestCase
     public function testItCanGetOpenMajorApi()
     {
         $this->withoutExceptionHandling();
-        $su = $this->getSchoolManager();
         $data = ['school_id' => '1', 'id_number' => '201928128038509'];
-        $response = $this->setSchoolAsUser($su, 6)
-            ->actingAs($su)
-            ->withSession($this->schoolSessionData)
-            ->post(route('api.address.book.class'), $data);
-        dd($response->content());
+        $response = $this->post(route('api.load.open.majors'), $data, $this->getHeaderWithApiToken());
+        $result = json_decode($response->content(),true);
+        $this->assertTrue(1===2);
     }
 
     /**
@@ -37,7 +34,7 @@ class RecruitmentPlanTest extends BasicPageTestCase
             ->actingAs($su)
             ->withSession($this->schoolSessionData)
             ->post(route('api.load.major.detail'), $data);
-        dd($response->content());
+         $this->assertTrue(1===2);
     }
 
 
@@ -47,13 +44,9 @@ class RecruitmentPlanTest extends BasicPageTestCase
     public function testItCanGetQueryStudentProfileApi()
     {
         $this->withoutExceptionHandling();
-        $su = $this->getSchoolManager();
         $data = ['id_number' => '201928128038509'];
-        $response = $this->setSchoolAsUser($su, 1)
-            ->actingAs($su)
-            ->withSession($this->schoolSessionData)
-            ->post(route('api.query.student.profile'), $data);
-        dd($response->content());
+        $response = $this->post(route('api.query.student.profile'), $data, $this->getHeaderWithApiToken());
+        $this->assertTrue(1===2);
     }
 
     /**
@@ -72,7 +65,7 @@ class RecruitmentPlanTest extends BasicPageTestCase
             ->actingAs($su)
             ->withSession($this->schoolSessionData)
             ->post(route('api.major.submit.form'), $data);
-        dd($response->content());
+         $this->assertTrue(1===2);
     }
 
 

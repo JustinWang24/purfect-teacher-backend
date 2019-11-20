@@ -19,7 +19,17 @@ class ProductionProcessTest extends  BasicPageTestCase
             ->withSession($this->schoolSessionData)
             ->get(route('teacher.get.preset.step'));
 
-        $this->assertTrue(1===2);
+        $data = json_decode($response->content(), true);
+        $this->assertArrayHasKey('code', $data);
+        $this->assertArrayHasKey('message', $data);
+        $this->assertArrayHasKey('data', $data,'返回数据中必须有 data 字段');
+        $this->assertIsArray($data['data'], 'data 必须是个数组');
+        foreach ($data['data'] as $val) {
+            $this->assertArrayHasKey('id', $val, '返回的数据中必须有 id 字段');
+            $this->assertArrayHasKey('name', $val, '返回的数据中必须有 name 字段');
+            $this->assertArrayHasKey('describe', $val, '返回的数据中必须有 describe 字段');
+            $this->assertArrayHasKey('level', $val, '返回的数据中必须有 level 字段');
+        }
     }
 
     /**
@@ -29,13 +39,17 @@ class ProductionProcessTest extends  BasicPageTestCase
     {
         $this->withoutExceptionHandling();
         $data = ['name' => '流程名称', 'process_data' => ['1' => '1', '3' => '2', '6' => '3', '9' => '4', '10' => '5'] ];
-        $su = $this->getTeacher();
+        $su = $this->getSuperAdmin();
         $response = $this->setSchoolAsUser($su, 1)
             ->actingAs($su)
             ->withSession($this->schoolSessionData)
             ->post(route('teacher.production.process', $data));
 
-        $this->assertTrue(1===2);
+        $data = json_decode($response->content(), true);
+        $this->assertArrayHasKey('code', $data);
+        $this->assertArrayHasKey('message', $data);
+        $this->assertArrayHasKey('data', $data,'返回数据中必须有 data 字段');
+        $this->assertStringContainsString($data['code'], 1000);
     }
 
     /**
@@ -44,12 +58,21 @@ class ProductionProcessTest extends  BasicPageTestCase
     public function testItCanGetOfficialDocument()
     {
         $this->withoutExceptionHandling();
-        $su = $this->getTeacher();
+        $su = $this->getSuperAdmin();
         $response = $this->setSchoolAsUser($su, 1)
             ->actingAs($su)
             ->withSession($this->schoolSessionData)
             ->get(route('teacher.get.official.document'));
-        $this->assertTrue(1===2);
+
+        $data = json_decode($response->content(), true);
+        $this->assertArrayHasKey('code', $data);
+        $this->assertArrayHasKey('message', $data);
+        $this->assertArrayHasKey('data', $data,'返回数据中必须有 data 字段');
+        $this->assertIsArray($data['data'], 'data 必须是个数组');
+        foreach ($data['data'] as $val) {
+            $this->assertArrayHasKey('id', $val, '返回的数据中必须有 id 字段');
+            $this->assertArrayHasKey('name', $val, '返回的数据中必须有 name 字段');
+        }
     }
 
     /**
@@ -59,12 +82,25 @@ class ProductionProcessTest extends  BasicPageTestCase
     {
         $this->withoutExceptionHandling();
         $data = ['progress_id' => '1'];
-        $su = $this->getTeacher();
+        $su = $this->getSuperAdmin();
         $response = $this->setSchoolAsUser($su, 1)
             ->actingAs($su)
             ->withSession($this->schoolSessionData)
             ->get(route('teacher.get.one.process', $data));
-        $this->assertTrue(1===2);
+        $data = json_decode($response->content(), true);
+
+        $this->assertArrayHasKey('code', $data);
+        $this->assertArrayHasKey('message', $data);
+        $this->assertArrayHasKey('data', $data,'返回数据中必须有 data 字段');
+        $this->assertIsArray($data['data'], 'data 必须是个数组');
+        foreach ($data['data'] as $val) {
+           $this->assertArrayHasKey('id', $val, '返回数据中必须有 id 字段');
+           $this->assertArrayHasKey('preset_step_id', $val, '返回数据中必须有 preset_step_id 字段 ');
+           $this->assertArrayHasKey('index', $val, '数据中必须有 index 字段');
+           $this->assertArrayHasKey('preset_step', $val, '返回数据中必须有 preset_step 字段');
+           $this->assertIsArray($val['progress_steps_user'], 'progress_steps_user 必须是个数组');
+        }
+
     }
 
     /**
@@ -74,12 +110,17 @@ class ProductionProcessTest extends  BasicPageTestCase
     {
         $this->withoutExceptionHandling();
         $data = ['step_user' => ['progress_steps_id' => '1', 'user_id' => '30', 'type' => '1']];
-        $su = $this->getTeacher();
+        $su = $this->getSuperAdmin();
         $response = $this->setSchoolAsUser($su, 1)
             ->actingAs($su)
             ->withSession($this->schoolSessionData)
             ->post(route('teacher.add.step.user', $data));
-        $this->assertTrue(1===2);
+
+        $data = json_decode($response->content(), true);
+        $this->assertArrayHasKey('code', $data);
+        $this->assertArrayHasKey('message', $data);
+        $this->assertArrayHasKey('data', $data,'返回数据中必须有 data 字段');
+        $this->assertStringContainsString($data['code'], 1000);
     }
 
     /**
@@ -89,12 +130,17 @@ class ProductionProcessTest extends  BasicPageTestCase
     {
         $this->withoutExceptionHandling();
         $data = ['step_user' => ['user_id' => '31', 'type' => '2'], 'id' => '2'];
-        $su = $this->getTeacher();
+        $su = $this->getSuperAdmin();
         $response = $this->setSchoolAsUser($su, 1)
             ->actingAs($su)
             ->withSession($this->schoolSessionData)
             ->post(route('teacher.update.step.user', $data));
-        $this->assertTrue(1===2);
+
+        $data = json_decode($response->content(), true);
+        $this->assertArrayHasKey('code', $data);
+        $this->assertArrayHasKey('message', $data);
+        $this->assertArrayHasKey('data', $data,'返回数据中必须有 data 字段');
+        $this->assertStringContainsString($data['code'], 1000);
     }
 
 
