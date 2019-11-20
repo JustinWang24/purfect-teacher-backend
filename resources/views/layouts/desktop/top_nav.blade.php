@@ -36,14 +36,7 @@
                     <a class="dropdown-toggle" v-on:click="showFileManager">
                         <i class="fa fa-database"></i>&nbsp;我的云盘
                     </a>
-                    <el-drawer
-                            title="我的易云盘"
-                            :visible.sync="showFileManagerFlag"
-                            direction="rtl"
-                            size="100%"
-                            custom-class="e-yun-pan">
-                        <file-manager user-uuid="{{ \Illuminate\Support\Facades\Auth::user()->uuid }}"></file-manager>
-                    </el-drawer>
+                    @include('reusable_elements.section.file_manager_component')
                 </li>
 
                 <li class="dropdown language-switch">

@@ -12,6 +12,16 @@ use App\Http\Requests\Textbook\TextbookRequest;
 
 class TextbookController extends Controller
 {
+    public function manager(TextbookRequest $request){
+        $this->dataForView['pageTitle'] = '教材管理';
+        $this->dataForView['user'] = $request->user();
+        // 如果是学校级别的, 则加载所有院系的
+
+        // 如果是普通教师角色, 则加载自己所教授的课程的
+
+        return view('teacher.textbook.manager', $this->dataForView);
+    }
+
      /**
      * 添加
      * @param TextbookRequest $request
@@ -20,8 +30,6 @@ class TextbookController extends Controller
     public function add(TextbookRequest $request) {
         return view('teacher.textbook.add', $this->dataForView);
     }
-
-
 
     /**
      * 编辑
@@ -46,10 +54,10 @@ class TextbookController extends Controller
     public function save(TextbookRequest $request) {
         $textbookDao = new TextbookDao();
         $all = $request->getFormData();
-        if(!empty($all['textbook_id'])) {
+        if(!empty($all['id'])) {
             $result = $textbookDao->editById($all);
             if($result) {
-                return JsonBuilder::Success('编辑成功');
+                return JsonBuilder::Success(['textbook'=>$result->getData()]);
             } else {
                 return JsonBuilder::Error('编辑失败');
             }
@@ -63,10 +71,7 @@ class TextbookController extends Controller
                 return JsonBuilder::Error($result->getMessage());
             }
         }
-
     }
-
-
 
      /**
      * 列表
@@ -85,6 +90,20 @@ class TextbookController extends Controller
         return JsonBuilder::Success($data);
     }
 
+    /**
+     * 列表
+     * @param TextbookRequest $request
+     * @return string
+     */
+    public function list_paginate(TextbookRequest $request) {
+        $schoolId = $request->getSchoolId();
+        $pageNumber = $request->getPageNumber();
+        $pageSize = $request->getPageSize();
+
+        $textbookDao = new TextbookDao();
+        $list = $textbookDao->getTextbookListPaginateBySchoolId($schoolId, $pageNumber, $pageSize);
+        return JsonBuilder::Success($list);
+    }
 
     /**
      * 课程绑定教材
@@ -97,6 +116,7 @@ class TextbookController extends Controller
         $textbookIdArr = $request->getTextbookIdArr();
         $courseTextbookDao = new CourseTextbookDao();
         $result = $courseTextbookDao->createCourseTextbook($courseId, $schoolId, $textbookIdArr);
+
         if($result->isSuccess()) {
             return JsonBuilder::Success($result->getMessage());
         } else {

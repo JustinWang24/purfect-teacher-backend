@@ -84,7 +84,7 @@ class CategoryRequest extends MyStandardRequest
             return new MessageBag(JsonBuilder::CODE_ERROR,'指定的上级目录不存在');
         }
 
-        if(!$parentCategory->isWritableByUser($this->user())){
+        if(!$parentCategory->isOwnedByUser($this->user())){
             return new MessageBag(JsonBuilder::CODE_ERROR,'你没有创建该目录的权限');
         }
 

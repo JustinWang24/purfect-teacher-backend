@@ -12,9 +12,11 @@ use App\Models\RecruitStudent\RegistrationInformatics;
 use App\Models\Schools\RecruitmentPlan;
 use App\Models\Schools\Textbook;
 use App\Utils\JsonBuilder;
+use App\Utils\Misc\ConfigurationTool;
 use App\Utils\ReturnData\MessageBag;
 use Carbon\Carbon;
-
+use Illuminate\Support\Facades\DB;
+use App\Models\Schools\TextbookImage;
 
 class TextbookDao
 {
@@ -25,21 +27,41 @@ class TextbookDao
      * @return MessageBag
      */
     public function create($data) {
-
         $info = $this->getTextbookByName($data['name']);
-
         if(!empty($info)) {
             return new MessageBag(JsonBuilder::CODE_ERROR,'该教材已添加,请勿重复添加');
         }
-
-        $result = Textbook::create($data);
-        if($result){
-            return new MessageBag(JsonBuilder::CODE_SUCCESS,'创建成功',$result);
-        } else {
-            return new MessageBag(JsonBuilder::CODE_ERROR,'创建失败');
+        DB::beginTransaction();
+        $book = Textbook::create($data);
+        if($book){
+            try{
+                $medias = $data['medias'];
+                $imgs = [];
+                foreach ($medias as $key => $media) {
+                    $imgs[] = TextbookImage::create(
+                        [
+                            'textbook_id'=>$book->id,
+                            'media_id'=>$media['id'],
+                            'url'=>$media['url'],
+                            'position'=>$key+1
+                        ]
+                    );
+                }
+                $book->medias = $imgs;
+                DB::commit();
+                return new MessageBag(
+                    JsonBuilder::CODE_SUCCESS,
+                    '创建成功',
+                    $book
+                );
+            }catch (\Exception $exception){
+                DB::rollBack();
+                return new MessageBag(JsonBuilder::CODE_ERROR,'创建失败: 无法关联图片');
+            }
+        }else{
+            return new MessageBag(JsonBuilder::CODE_ERROR,'创建失败: 数据库错误');
         }
     }
-
 
     /**
      * 根据ID修改
@@ -47,12 +69,44 @@ class TextbookDao
      * @return mixed
      */
     public function editById($data) {
-        $id = $data['textbook_id'];
-        unset($data['textbook_id']);
-        return Textbook::where('id',$id)->update($data);
+        $id = $data['id'];
+        unset($data['id']);
+
+        $medias = $data['medias'];
+        unset($data['medias']);
+
+        DB::beginTransaction();
+        $updated = Textbook::where('id',$id)->update($data);
+        if($updated){
+            try{
+                TextbookImage::where('textbook_id',$id)->delete();
+
+                $imgs = [];
+                foreach ($medias as $key => $media) {
+                    $imgs[] = TextbookImage::create(
+                        [
+                            'textbook_id'=>$id,
+                            'media_id'=>$media['id'],
+                            'url'=>$media['url'],
+                            'position'=>$key+1
+                        ]
+                    );
+                }
+                DB::commit();
+                return new MessageBag(
+                    JsonBuilder::CODE_SUCCESS,
+                    '更新成功',
+                    $this->getTextbookById($id)
+                );
+            }catch (\Exception $exception){
+                DB::rollBack();
+                return new MessageBag(JsonBuilder::CODE_ERROR,'更新失败: 无法关联图片');
+            }
+        }else{
+            DB::rollBack();
+            return new MessageBag(JsonBuilder::CODE_ERROR,'更新失败: 无法关联图片');
+        }
     }
-
-
 
     /**
      * 根据名称获取教材
@@ -64,16 +118,14 @@ class TextbookDao
         return Textbook::where('name',$name)->select($field)->first();
     }
 
-
     /**
      * 根据ID获取详情
      * @param $id
      * @return mixed
      */
     public function getTextbookById($id) {
-        return Textbook::where('id',$id)->first();
+        return Textbook::where('id',$id)->with('medias')->first();
     }
-
 
     /**
      * 通过专业ID获取教材采购数
@@ -187,7 +239,33 @@ class TextbookDao
         return Textbook::where('school_id',$schoolId)->get();
     }
 
+    /**
+     * 以分页的方式获取课程列表
+     * @param $schoolId
+     * @param $pageNumber
+     * @param $pageSize
+     * @return array
+     */
+    public function getTextbookListPaginateBySchoolId(
+        $schoolId,
+        $pageNumber = 0,
+        $pageSize = ConfigurationTool::DEFAULT_PAGE_SIZE
+    ) {
+        $books =  Textbook::where('school_id',$schoolId)
+            ->with('medias')
+            ->orderBy('updated_at','desc')
+            ->skip($pageSize * $pageNumber)
+            ->take($pageSize)
+            ->get();
 
+        $total = Textbook::count();
+        return [
+            'books'=>$books,
+            'total'=>$total,
+            'p'=>$pageNumber,
+            's'=>$pageSize
+        ];
+    }
 
     /**
      * 查询当前班级所学的教材
