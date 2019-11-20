@@ -13,7 +13,6 @@ class ElectiveTest extends BasicPageTestCase
     public function testItCanGetCourseElective()
     {
         $this->withoutExceptionHandling();
-        $su = $this->getStudent();
         $data =  ['api_token' => '814ec70b-1d11-4265-9c73-c91d46df6278'];
 
         $response = $this->post(
@@ -51,7 +50,6 @@ class ElectiveTest extends BasicPageTestCase
     public function testItCanGetCourseElectiveDetails()
     {
         $this->withoutExceptionHandling();
-        $su = $this->getStudent();
         $data =  ['api_token' => '814ec70b-1d11-4265-9c73-c91d46df6278', 'course_id' => 9];
 
         $response = $this->post(

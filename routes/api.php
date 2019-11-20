@@ -188,10 +188,6 @@ Route::prefix('employ')->middleware('auth:api')->group(function () {
      // 分配班级
      Route::post('/distribution-grades','Api\Recruitment\EmployController@distribution')
         ->name('api.distribution.grades');
-
-     Route::get('/test-sms','Api\Recruitment\EmployController@testSms')
-        ->name('api.test-sms');
-
     // 录取和拒绝学生的报名
     Route::post('/enrol-or-reject','Api\Recruitment\OpenMajorController@enrol_or_reject')
         ->name('api.major.enrol.or.reject');
