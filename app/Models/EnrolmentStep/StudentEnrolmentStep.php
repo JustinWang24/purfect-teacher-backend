@@ -12,6 +12,8 @@ use Illuminate\Database\Eloquent\Model;
  */
 class StudentEnrolmentStep extends Model
 {
+
+    public $timestamps = false;
     /**
      * @var array
      */

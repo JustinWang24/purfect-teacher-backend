@@ -41,4 +41,13 @@ class EnrolmentStepDao
     public function getByName($name) {
         return EnrolmentStep::where('name',$name)->first();
     }
+
+
+    /**
+     * 获取列表
+     * @return EnrolmentStep
+     */
+    public function getEnrolmentStepAll() {
+        return EnrolmentStep::get();
+    }
 }

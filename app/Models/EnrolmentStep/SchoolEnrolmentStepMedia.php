@@ -2,6 +2,7 @@
 
 namespace App\Models\EnrolmentStep;
 
+use App\Models\NetworkDisk\Media;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -11,9 +12,12 @@ use Illuminate\Database\Eloquent\Model;
  */
 class SchoolEnrolmentStepMedia extends Model
 {
+
+    public $timestamps = false;
+
     /**
      * The table associated with the model.
-     * 
+     *
      * @var string
      */
     protected $table = 'school_enrolment_step_medias';
@@ -22,5 +26,12 @@ class SchoolEnrolmentStepMedia extends Model
      * @var array
      */
     protected $fillable = ['school_enrolment_step_id', 'media_id'];
+
+    public $media_field = ['id', 'file_name', 'keywords', 'url'];
+
+
+    public function media() {
+        return $this->belongsTo(Media::class)->select($this->media_field);
+    }
 
 }
