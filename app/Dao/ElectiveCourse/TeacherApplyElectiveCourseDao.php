@@ -9,12 +9,17 @@
 namespace App\Dao\ElectiveCourses;
 use App\Dao\BuildFillableData;
 use App\Dao\Courses\CourseDao;
+use App\Dao\Schools\DepartmentDao;
+use App\Dao\Schools\SchoolDao;
+use App\Dao\Users\GradeUserDao;
 use App\Models\ElectiveCourses\ApplyCourseArrangement;
 use App\Models\ElectiveCourses\ApplyCourseMajor;
 use App\Models\ElectiveCourses\ApplyDay;
 use App\Models\ElectiveCourses\ApplyGroup;
 use App\Models\ElectiveCourses\ApplyTimeSlot;
 use App\Models\ElectiveCourses\ApplyWeek;
+use App\Models\ElectiveCourses\CourseElective;
+use App\Models\ElectiveCourses\StudentEnrolledOptionalCourse;
 use App\Models\ElectiveCourses\TeacherApplyElectiveCourse;
 use App\Dao\Schools\MajorDao;
 use App\Dao\Users\UserDao;
@@ -26,6 +31,7 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
 use Exception;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 
 
 class TeacherApplyElectiveCourseDao
@@ -434,5 +440,192 @@ class TeacherApplyElectiveCourseDao
     {
         return ApplyCourseArrangement::where('apply_id',$applyId)->get();
     }
+
+    //查系或学校的相关配置获取最多能报几个选修课
+    public function getNumOfCanBeEnroll($user)
+    {
+        $schoolId = $user->getSchoolId();
+        $dao = new GradeUserDao;
+        $userInfo = $dao->getUserInfoByUserId($user->id);
+        $major = $userInfo->major;
+        $DepartmentDao = new DepartmentDao($user);
+        $department = $DepartmentDao->getDepartmentById($major->department_id);
+        $NumOfCanBeEnroll = $department->optional_courses_per_year;
+        if (empty($NumOfCanBeEnroll)) {
+            $schoolDao = new SchoolDao($user);
+            $school = $schoolDao->getSchoolById($schoolId);
+            $NumOfCanBeEnroll = $school->configuration->optional_courses_per_year;
+        }
+        return $NumOfCanBeEnroll;
+    }
+
+    //一年之内
+    public function getTotalOfEnroll($user, $tableName)
+    {
+        //报名结果表中的数量
+        $num1 = self::getNumHasEnroll($user, $tableName);
+        //报名中的数量
+        $num2 = self::getNumEnroll($user);
+        return $num1+$num2;
+    }
+
+    public function getNumHasEnroll($user, $tableName)
+    {
+        return DB::table($tableName)->where('user_id', $user->id)->count();
+    }
+
+    public function getNumEnroll($user)
+    {
+        return StudentEnrolledOptionalCourse::where('user_id', $user->id)->count();
+    }
+    //判断报名报是否存在，不存在则创建
+    public function createEnrollTable($tableName)
+    {
+        $sql = '
+        CREATE TABLE IF NOT EXISTS '.$tableName.' (
+          `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+          `course_id` int(10) unsigned DEFAULT NULL COMMENT \'课程的 ID\',
+          `teacher_id` int(10) unsigned DEFAULT NULL COMMENT \'老师ID\',
+          `user_id` int(10) unsigned DEFAULT NULL COMMENT \'学生的 ID\',
+          `status` smallint(5) unsigned DEFAULT \'0\' COMMENT \'0 申请中、1 开班成功申请成功、 2 开班成功申请失败\',
+          `created_at` timestamp NULL DEFAULT NULL,
+          `updated_at` timestamp NULL DEFAULT NULL,
+          PRIMARY KEY (`id`)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+        ';
+        if ( ! Schema::hasTable($tableName)) {
+            return DB::statement($sql);
+        } else {
+            return true;
+        }
+    }
+    //查询课程是否名额已满
+    public function quotaIsFull($courseId)
+    {
+        return CourseElective::where('course_id',$courseId)->first()->status == CourseElective::STATUS_ISFULL;
+    }
+    //报名
+    public function enroll($courseId, $userId, $teacherId)
+    {
+        $d = [
+            'course_id' => $courseId,
+            'teacher_id'=> $teacherId,
+            'user_id'   => $userId
+        ];
+        return StudentEnrolledOptionalCourse::create($d);
+    }
+
+
+
+    /**
+     * 处理报名结果表，查询报名总数与max_num比较，
+     * 修改course_elective表的状态，删除报名表中的数据,
+     * select其中前max_num条数据，写入报名结果表，
+     *
+     * @param $maxNum
+     * @param $courseId
+     * @param $tableName
+     * @return bool
+     */
+    public function operateEnrollResult($maxNum, $courseId, $tableName)
+    {
+        //创建报名结果表
+        self::createEnrollTable($tableName);
+        if (self::quotaIsFull($courseId)) return true;
+        if (self::getEnrolleTotalForCourses($courseId) >= $maxNum)
+        {
+            DB::beginTransaction();
+            try {
+                //先修改course_elective表的状态，让其他用户不能报名
+                $updateNum = CourseElective::where('course_id', $courseId)
+                                ->update(['status' => CourseElective::STATUS_ISFULL]);
+                if ($updateNum==1)
+                {
+                    $result = StudentEnrolledOptionalCourse::where('course_id', $courseId)
+                        ->orderBy('id', 'ASC')->limit($maxNum)->get();
+                    $i = 0;
+                    foreach($result as $rowObj)
+                    {
+
+                        $d = [
+                            'course_id'     => $rowObj->course_id,
+                            'teacher_id'    => $rowObj->teacher_id,
+                            'user_id'       => $rowObj->user_id,
+                            'created_at'    => Carbon::now(),
+                            'updated_at'    => Carbon::now(),
+                        ];
+                        DB::table($tableName)->insert($d) && $i++;
+                    }
+                    if ($i !== $maxNum) {
+                        throw new Exception('报名表与结果表不一致');
+                    }
+                    //删除报名表记录
+                    StudentEnrolledOptionalCourse::where('course_id', $courseId)->delete();
+                }
+                DB::commit();
+                return true;
+            } catch (\Exception $exception) {
+                dd($exception);
+                DB::rollBack();
+                return false;
+            }
+        } else {
+            return false;
+        }
+    }
+
+    //取消报名，加共享锁，当提交或回滚后解除锁定
+    public function cancleEnroll($userId, $courseId)
+    {
+        DB::beginTransaction();
+        try {
+            $result = StudentEnrolledOptionalCourse::where('user_id', $userId)
+                ->where('course_id', $courseId)->sharedLock()->delete();
+            DB::commit();
+        } catch (\Exception $exception) {
+            DB::rollBack();
+        }
+    }
+
+    //获取某课程的报名总人数
+    public function getEnrolleTotalForCourses($courseId)
+    {
+        return StudentEnrolledOptionalCourse::where('course_id', $courseId)->count();
+    }
+
+    /**
+     * 获得用户在报名结果表或报名表中某课程的排名
+     * @param $user
+     * @param $courseId
+     * @param $tableName
+     * @return bool|int
+     */
+    public function getRanking($user, $courseId, $tableName)
+    {
+        $result = DB::table($tableName)->where('course_id', $courseId)->get();
+        foreach ($result as $key => $item) {
+            if ($item->user_id == $user->id)
+            {
+                return ++$key;
+            }
+
+        }
+        return false;
+    }
+
+    /**
+     * 获得用户在报名结果表或报名表中某课程的记录
+     * @param $user
+     * @param $courseId
+     * @param $tableName
+     * @return \Illuminate\Support\Collection
+     */
+    public function getResultEnrollRow($user, $courseId, $tableName)
+    {
+        return DB::table($tableName)->where('course_id', $courseId)
+            ->where('user_id', $user->id)->get()->first();
+    }
+
+
 }
 
