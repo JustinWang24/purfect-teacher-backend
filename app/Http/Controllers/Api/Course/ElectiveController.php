@@ -18,7 +18,7 @@ use PHPUnit\Util\Json;
 class ElectiveController extends Controller
 {
     //选修课报名结果表前缀
-    const STUDENT_ENROLLED_OPTIONAL_COURSES_PREFIX = 'student_enrolled_optional_courses';
+    const STUDENT_ENROLLED_OPTIONAL_COURSES_TABLE_NAME = 'student_enrolled_optional_courses';
     /**
      * 学生选课列表
      * @param ElectiveRequest $request
@@ -111,6 +111,14 @@ class ElectiveController extends Controller
         return JsonBuilder::Success($result);
     }
 
+    /**
+     * 先写报名表student_enrolled_optional_courses
+     * 如果此课程报名数量已满，将从student_enrolled_optional_courses中导出此课程报名数据
+     * 导入报名结果表，报名结果表是报名表+后缀的命名方式，后缀为开课年度_学期
+     * @param Request $request
+     * @param $courseId
+     * @return string
+     */
 
     public function enroll(Request $request, $courseId)
     {
@@ -127,12 +135,11 @@ class ElectiveController extends Controller
         $elective = $course->courseElective;
         $start_year = $elective->start_year;
         $term = $course->term;
-        $tableName = self::STUDENT_ENROLLED_OPTIONAL_COURSES_PREFIX.'_'.$start_year.'_'.$term;
-        $result = $dao->createEnrollTable($tableName);
-        if (!$result)
-        {
-            return  JsonBuilder::Error('系统错误请联系系统管理员');
-        }
+        $tableName = self::STUDENT_ENROLLED_OPTIONAL_COURSES_TABLE_NAME.'_'.$start_year.'_'.$term;
+        $maxNum = $elective->max_num;
+        //先处理名额报满的情况
+        $dao->operateEnrollResult($maxNum, $courseId, $tableName);
+
         //得到用户的已报名数量
         $enrollNum = $dao->getTotalOfEnroll($user, $tableName);
         //得到用户可以报名的数量
@@ -142,10 +149,64 @@ class ElectiveController extends Controller
         }
         //报名
         if ($dao->quotaIsFull($courseId)){
-            JsonBuilder::Error('此选修课报名数量已满');
+            return JsonBuilder::Error('此选修课报名数量已满');
         }
         $result = $dao->enroll($courseId, $user->id, $teacherId);
         return JsonBuilder::Success($result);
+
+    }
+
+    /**
+     * 查询具体的报名结果
+     * $result为空说明报名已满，当前用户报名失败
+     * 否则返回排名具体情况
+     * @param Request $request
+     * @param $courseId
+     * @return string
+     */
+    public function getEnrollResult(Request $request, $courseId)
+    {
+        $user = $request->user();
+        $dao  = new TeacherApplyElectiveCourseDao();
+        //查自己在报名结果表中的记录
+        $courseDao =  new CourseDao;
+        $course = $courseDao->getCourseById($courseId);
+        if (!$course) {
+            return  JsonBuilder::Error('课程不存在');
+        }
+
+        $elective = $course->courseElective;
+        $start_year = $elective->start_year;
+        $term = $course->term;
+        $tableName = self::STUDENT_ENROLLED_OPTIONAL_COURSES_TABLE_NAME.'_'.$start_year.'_'.$term;
+        $maxNum = $elective->max_num;
+
+        //先处理名额报满的情况
+        $isFull = $dao->operateEnrollResult($maxNum, $courseId, $tableName);
+        if ($isFull)
+        {
+            $ranking = $dao->getRanking($user, $courseId, $tableName);
+            if ($ranking) {
+                //获取报名的具体记录
+                $result = $dao->getResultEnrollRow($user, $courseId, $tableName);
+            }
+        } else {
+            $tableName = self::STUDENT_ENROLLED_OPTIONAL_COURSES_TABLE_NAME;
+            $ranking = $dao->getRanking($user, $courseId, $tableName);
+            if ($ranking) {
+                //获取报名的具体记录
+                $result = $dao->getResultEnrollRow($user, $courseId, $tableName);
+            }
+        }
+        //$result为空说明报名已满，当前用户报名失败
+        //否则返回排名具体情况
+        if(!empty($result))
+        {
+            $result = json_decode(json_encode($result), true);
+            return JsonBuilder::Success($result);
+        } else {
+            return JsonBuilder::Error('课程报名人数已满，您没有报名成功，请选择其它课程报名');
+        }
 
     }
 

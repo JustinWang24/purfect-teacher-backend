@@ -514,5 +514,118 @@ class TeacherApplyElectiveCourseDao
         ];
         return StudentEnrolledOptionalCourse::create($d);
     }
+
+
+
+    /**
+     * 处理报名结果表，查询报名总数与max_num比较，
+     * 修改course_elective表的状态，删除报名表中的数据,
+     * select其中前max_num条数据，写入报名结果表，
+     *
+     * @param $maxNum
+     * @param $courseId
+     * @param $tableName
+     * @return bool
+     */
+    public function operateEnrollResult($maxNum, $courseId, $tableName)
+    {
+        //创建报名结果表
+        self::createEnrollTable($tableName);
+        if (self::quotaIsFull($courseId)) return true;
+        if (self::getEnrolleTotalForCourses($courseId) >= $maxNum)
+        {
+            DB::beginTransaction();
+            try {
+                //先修改course_elective表的状态，让其他用户不能报名
+                $updateNum = CourseElective::where('course_id', $courseId)
+                                ->update(['status' => CourseElective::STATUS_ISFULL]);
+                if ($updateNum==1)
+                {
+                    $result = StudentEnrolledOptionalCourse::where('course_id', $courseId)
+                        ->orderBy('id', 'ASC')->limit($maxNum)->get();
+                    $i = 0;
+                    foreach($result as $rowObj)
+                    {
+
+                        $d = [
+                            'course_id'     => $rowObj->course_id,
+                            'teacher_id'    => $rowObj->teacher_id,
+                            'user_id'       => $rowObj->user_id,
+                            'created_at'    => Carbon::now(),
+                            'updated_at'    => Carbon::now(),
+                        ];
+                        DB::table($tableName)->insert($d) && $i++;
+                    }
+                    if ($i !== $maxNum) {
+                        throw new Exception('报名表与结果表不一致');
+                    }
+                    //删除报名表记录
+                    StudentEnrolledOptionalCourse::where('course_id', $courseId)->delete();
+                }
+                DB::commit();
+                return true;
+            } catch (\Exception $exception) {
+                dd($exception);
+                DB::rollBack();
+                return false;
+            }
+        } else {
+            return false;
+        }
+    }
+
+    //取消报名，加共享锁，当提交或回滚后解除锁定
+    public function cancleEnroll($userId, $courseId)
+    {
+        DB::beginTransaction();
+        try {
+            $result = StudentEnrolledOptionalCourse::where('user_id', $userId)
+                ->where('course_id', $courseId)->sharedLock()->delete();
+            DB::commit();
+        } catch (\Exception $exception) {
+            DB::rollBack();
+        }
+    }
+
+    //获取某课程的报名总人数
+    public function getEnrolleTotalForCourses($courseId)
+    {
+        return StudentEnrolledOptionalCourse::where('course_id', $courseId)->count();
+    }
+
+    /**
+     * 获得用户在报名结果表或报名表中某课程的排名
+     * @param $user
+     * @param $courseId
+     * @param $tableName
+     * @return bool|int
+     */
+    public function getRanking($user, $courseId, $tableName)
+    {
+        $result = DB::table($tableName)->where('course_id', $courseId)->get();
+        foreach ($result as $key => $item) {
+            if ($item->user_id == $user->id)
+            {
+                return ++$key;
+            }
+
+        }
+        return false;
+    }
+
+    /**
+     * 获得用户在报名结果表或报名表中某课程的记录
+     * @param $user
+     * @param $courseId
+     * @param $tableName
+     * @return \Illuminate\Support\Collection
+     */
+    public function getResultEnrollRow($user, $courseId, $tableName)
+    {
+        return DB::table($tableName)->where('course_id', $courseId)
+            ->where('user_id', $user->id)->get()->first();
+    }
+
+
 }
 

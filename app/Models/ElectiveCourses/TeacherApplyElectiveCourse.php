@@ -22,7 +22,7 @@ class TeacherApplyElectiveCourse extends Model
     protected $fillable = [
         'school_id', 'teacher_id', 'teacher_name', 'major_id',
         'code', 'name', 'scores', 'year', 'term', 'desc', 'open_num','max_num',
-        'status', 'reply_content'
+        'status', 'reply_content', 'start_year'
     ];
 
 
