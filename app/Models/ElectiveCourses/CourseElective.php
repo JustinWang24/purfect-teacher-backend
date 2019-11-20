@@ -12,7 +12,7 @@ class CourseElective extends Model
     const STATUS_ISFULL  = 3;
     const STATUS_CANCEL  = 4;
     protected $fillable = [
-        'course_id', 'open_num', 'room_id', 'max_num', 'enrol_start_at', 'expired_at'
+        'course_id', 'open_num', 'room_id', 'max_num', 'enrol_start_at', 'expired_at', 'start_year'
     ];
 
     public function course(){

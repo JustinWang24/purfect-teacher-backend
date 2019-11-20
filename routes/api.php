@@ -219,6 +219,9 @@ Route::prefix('course')->middleware('auth:api')->group(function () {
      // 选课报名操作
      Route::get('/elective/enroll/{id}','Api\Course\ElectiveController@enroll')
         ->name('api.course.elective.enroll');
+     // 选课查询报名结果操作
+     Route::get('/elective/getresult/{id}','Api\Course\ElectiveController@getEnrollResult')
+        ->name('api.course.elective.getresult');
 
 });
 
