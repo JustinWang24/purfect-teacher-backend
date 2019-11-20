@@ -35,7 +35,6 @@ class BasicPageTestCase extends TestCase
         $this->superAdmin    = $this->userDao->getUserByMobile('18601216091');
         $this->operator      = $this->userDao->getUserByMobile('18510209803');
         $this->schoolManager = $this->userDao->getUserByMobile('1000006');
-        $this->teacher       = $this->gradeUserDao->getAnyTeacher(3);
         $this->teacher       = $this->gradeUserDao->getAnyTeacher(1);
         $this->student       = $this->gradeUserDao->getStudentBySchoolId(1);
     }
@@ -104,5 +103,32 @@ class BasicPageTestCase extends TestCase
     public function getHeaderWithApiToken(){
         $token = $this->getStudent()['user']['api_token'];
         return  ['Authorization'=>"Bearer ".$token];
+    }
+
+
+    /**
+     * 获取教师的header信息
+     */
+    public function getHeaderWithApiTokenForTeacher() {
+        $token = $this->getTeacher()->user->api_token;
+        return  ['Authorization'=>"Bearer ".$token];
+    }
+
+
+    /**
+     * 随机生成汉字
+     * @param $num
+     * @return string
+     */
+    public function randomCreateChinese($num)  // $num为生成汉字的数量
+    {
+        $b = '';
+        for ($i=0; $i<$num; $i++) {
+            // 使用chr()函数拼接双字节汉字，前一个chr()为高位字节，后一个为低位字节
+            $a = chr(mt_rand(0xB0,0xD0)).chr(mt_rand(0xA1, 0xF0));
+            // 转码
+            $b .= iconv('GB2312', 'UTF-8', $a);
+        }
+        return $b;
     }
 }

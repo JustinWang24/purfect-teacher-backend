@@ -2,6 +2,7 @@
 
 namespace App\Models\EnrolmentStep;
 
+use App\User;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -11,9 +12,18 @@ use Illuminate\Database\Eloquent\Model;
  */
 class SchoolEnrolmentStepAssist extends Model
 {
+
+    public $timestamps = false;
+
+    public $field = ['id','uuid','name','mobile'];
     /**
      * @var array
      */
     protected $fillable = ['school_enrolment_step_id', 'user_id'];
+
+
+    public function user() {
+        return $this->belongsTo(User::class,'user_id')->select($this->field);
+    }
 
 }
