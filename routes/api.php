@@ -207,12 +207,24 @@ Route::prefix('campus')->middleware('auth:api')->group(function () {
 
 Route::prefix('course')->middleware('auth:api')->group(function () {
      // 选修课列表
-     Route::post('/elective/list','Api\Course\ElectiveController@index')
+     Route::get('/elective/list','Api\Course\ElectiveController@index')
         ->name('api.course.elective.list');
      // 选课详情
-     Route::post('/elective/details','Api\Course\ElectiveController@details')
+     Route::get('/elective/details','Api\Course\ElectiveController@details')
         ->name('api.course.elective.details');
+     // 选课报名操作
+     Route::get('/elective/enroll/{id}','Api\Course\ElectiveController@enroll')
+        ->name('api.course.elective.enroll');
+     // 选课查询报名结果操作
+     Route::get('/elective/getresult/{id}','Api\Course\ElectiveController@getEnrollResult')
+        ->name('api.course.elective.getresult');
 });
+
+// 选修课申请
+Route::prefix('elective-course')->middleware('auth:api')->group(function () {
+    Route::post('/save','Api\ElectiveCourse\ApplyElectiveCourseController@create')
+        ->name('api.elective-course.save');
+  });
 
 // 网盘
 Route::prefix('network-disk')->middleware('auth:api')->group(function () {
@@ -264,9 +276,3 @@ Route::prefix('network-disk')->middleware('auth:api')->group(function () {
 
 });
 
-// 选修课申请
-Route::prefix('elective-course')->middleware('auth:api')->group(function () {
-    Route::post('/save','Api\ElectiveCourse\ApplyElectiveCourseController@create')
-        ->name('api.elective-course.save');
-
-});

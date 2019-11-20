@@ -122,10 +122,4 @@ Route::prefix('school_manager')->group(function () {
     Route::get('textbook/loadCampusTextbook', 'TextbookController@loadCampusTextbook')->name('school_manager.textbook.loadCampusTextbook'); // 获取校区教材采购情况
     Route::get('textbook/campusTextbookDownload', 'TextbookController@campusTextbookDownload')->name('school_manager.textbook.campusTextbookDownload'); // 校区教材下载
 
-    //教师申请选修课管理
-    Route::get('apply/manager/preview', 'TeacherApplyElectiveCoursesController@apply_list')->name('school_manager.apply.manager.preview');
-    Route::get('apply/manager/add', 'TeacherApplyElectiveCoursesController@manager_create')->name('school_manager.apply.add');
-    Route::get('apply/manager/edit/{id}', 'TeacherApplyElectiveCoursesController@manager_edit')->name('school_manager.apply.edit');
-    Route::get('apply/manager/publish/{id}', 'TeacherApplyElectiveCoursesController@publish_apply')->name('school_manager.apply.publish');
-    Route::get('apply/manager/save', 'TeacherApplyElectiveCoursesController@apply_save')->name('school_manager.apply.save');
 });
