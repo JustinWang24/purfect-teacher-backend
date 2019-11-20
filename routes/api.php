@@ -216,7 +216,6 @@ Route::prefix('course')->middleware('auth:api')->group(function () {
      // 选课详情
      Route::post('/elective/details','Api\Course\ElectiveController@details')
         ->name('api.course.elective.details');
-
 });
 
 // 网盘
