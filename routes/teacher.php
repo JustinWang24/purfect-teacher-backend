@@ -64,6 +64,9 @@ Route::prefix('teacher')->group(function () {
     Route::any('textbook/list-paginate', 'TextbookController@list_paginate')
         ->name('teacher.textbook.list_paginate');  // 以分页的方式, 教程列表
 
+    Route::any('textbook/update-related-courses', 'TextbookController@update_related_courses')
+        ->name('teacher.textbook.update_related_courses');  // 保存教材关联的课程
+
     Route::get('textbook/loadMajorTextbook', 'TextbookController@loadMajorTextbook')
         ->name('teacher.textbook.loadMajorTextbook'); // 获取专业教材采购情况
     Route::get('textbook/loadGradeTextbook', 'TextbookController@loadGradeTextbook')

@@ -8,6 +8,7 @@ use App\Dao\RecruitStudent\RegistrationInformaticsDao;
 use App\Dao\Schools\GradeDao;
 use App\Dao\Schools\GradeUserDao;
 use App\Dao\Schools\MajorDao;
+use App\Models\Courses\CourseTextbook;
 use App\Models\RecruitStudent\RegistrationInformatics;
 use App\Models\Schools\RecruitmentPlan;
 use App\Models\Schools\Textbook;
@@ -20,6 +21,33 @@ use App\Models\Schools\TextbookImage;
 
 class TextbookDao
 {
+    /**
+     * 更新某教材所关联的所有课程
+     * @param $bookId
+     * @param $courses
+     * @param $schoolId
+     * @return bool
+     */
+    public function updateRelatedCourses($bookId, $courses, $schoolId){
+        DB::beginTransaction();
+        try{
+            CourseTextbook::where('textbook_id',$bookId)->delete();
+            $data = [
+                'textbook_id'=>$bookId,
+                'course_id'=>null,
+                'school_id'=>$schoolId,
+            ];
+            foreach ($courses as $course) {
+                $data['course_id'] = $course;
+                CourseTextbook::create($data);
+            }
+            DB::commit();
+            return true;
+        }catch (\Exception $exception){
+            return false;
+        }
+
+    }
 
     /**
      * 创建
@@ -253,12 +281,13 @@ class TextbookDao
     ) {
         $books =  Textbook::where('school_id',$schoolId)
             ->with('medias')
+            ->with('courses')
             ->orderBy('updated_at','desc')
             ->skip($pageSize * $pageNumber)
             ->take($pageSize)
             ->get();
 
-        $total = Textbook::count();
+        $total = Textbook::where('school_id',$schoolId)->count();
         return [
             'books'=>$books,
             'total'=>$total,

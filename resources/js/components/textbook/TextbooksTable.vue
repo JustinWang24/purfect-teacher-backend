@@ -1,23 +1,33 @@
 <template>
     <div class="books-list-wrap">
         <el-row>
-            <el-col :span="5" v-for="(book, idx) in books" :key="idx">
+            <el-col :span="8" v-for="(book, idx) in books" :key="idx">
                 <el-card shadow="hover" class="book-card">
-                    <div class="card-image">
-                        <figure class="image">
-                            <img :src="avatarUrl(book)" class="book-image">
-                        </figure>
+                    <div class="the-book-wrap">
+                        <div class="book-image">
+                            <figure class="image">
+                                <img :src="avatarUrl(book)" class="book-image">
+                            </figure>
+                        </div>
+                        <div class="book-desc">
+                            <p class="title">
+                                <el-button type="text">教材名: {{ book.name }}({{ book.edition }})</el-button>
+                            </p>
+                            <p class="author">作者: {{ book.author }}</p>
+                            <p class="press">出版: {{ book.press }}</p>
+                            <p class="price">
+                                价格: ¥{{ book.price }}元
+                                <span class="internal" v-if="asAdmin">{{ book.purchase_price }}</span>
+                            </p>
+                            <p class="press">
+                                课程: &nbsp;
+                                <el-tag size="mini" v-for="(c, idx) in book.courses" :key="idx">
+                                    {{ getCourseNameText(c.course_id) }}
+                                </el-tag>
+                            </p>
+                        </div>
                     </div>
-                    <p class="title">
-                        <el-button type="text">教材名: {{ book.name }}({{ book.edition }})</el-button>
-                    </p>
-                    <p class="author">作者: {{ book.author }}</p>
-                    <p class="press">{{ book.press }}</p>
-                    <p class="price">
-                        价格: ¥{{ book.price }}元
-                        <span class="internal" v-if="asAdmin">{{ book.purchase_price }}</span>
-                    </p>
-                    <el-divider style="margin: 10px 0;"></el-divider>
+                    <el-divider style="margin: 0;"></el-divider>
                     <div>
                         <el-button type="text" class="button" v-on:click="connectCoursesHandler(book)">关联/管理课程</el-button>
                         <el-button type="text" class="button" v-on:click="editBookHandler(book)">编辑教材</el-button>
@@ -29,21 +39,19 @@
 </template>
 
 <script>
-    import { Constants } from '../../common/constants';
-    import { Util } from '../../common/utils';
-    import TextBadge from '../../components/misc/TextBadge';
+    import { Util } from "../../common/utils";
 
     export default {
         name: "TextbooksTable",
-        components: {
-            TextBadge
-        },
         props: {
             books: { // 书
                 type: Array, required: true
             },
             asAdmin: {
                 type: Boolean, required: true
+            },
+            courses: {
+                type: Array, required: true
             }
         },
         data(){
@@ -70,7 +78,10 @@
                     return book.medias[0].url;
                 }
             },
-
+            getCourseNameText: function(courseId){
+                const c = Util.GetItemById(courseId, this.courses);
+                return c.name;
+            },
         }
     }
 </script>
@@ -80,32 +91,39 @@
     .books-list-wrap{
         padding: 0;
         .book-card{
-            margin: 4px;
-            .card-image{
-                .image{
-                    .book-image{
-                        width: 100%;
-                        height: 120px;
-                        border-radius: 10px;
+            margin: 10px;
+            .the-book-wrap{
+                display: flex;
+                .book-image{
+                    .image{
+                        .book-image{
+                            margin: 0 auto;
+                            max-width: 190px;
+                            padding-right: 10px;
+                            height: 120px;
+                            border-radius: 10px;
+                        }
                     }
                 }
-            }
-            p{
-                margin-bottom: 4px;
-            }
-            .title{
-                font-size: 14px;
-                line-height: 20px;
-                font-weight: bold;
-            }
-            .author, .press{
-                font-size: 12px;
-                color: $colorGrey;
-            }
-            .price{
-                font-size: 13px;
-                font-weight: bold;
-                color: #f56c6c;
+                .book-desc{
+                    p{
+                        margin-bottom: 4px;
+                    }
+                    .title{
+                        font-size: 14px;
+                        line-height: 20px;
+                        font-weight: bold;
+                    }
+                    .author, .press{
+                        font-size: 12px;
+                        color: $colorGrey;
+                    }
+                    .price{
+                        font-size: 13px;
+                        font-weight: bold;
+                        color: #f56c6c;
+                    }
+                }
             }
         }
     }

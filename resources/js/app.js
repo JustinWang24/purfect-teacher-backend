@@ -35,7 +35,6 @@ Vue.component('recruitment-plan-form', require('./components/recruitment/Recruit
 Vue.component('file-manager', require('./components/fileManager/FileManager.vue').default);
 Vue.component('elective-course-form', require('./components/courses/ElectiveCourseForm.vue').default);
 Vue.component('textbooks-table', require('./components/textbook/TextbooksTable.vue').default); // 教材列表
-Vue.component('textbook-form', require('./components/textbook/TextbookForm.vue').default);      // 教材表单
 Vue.component('file-preview', require('./components/fileManager/elements/FilePreview.vue').default);      // 教材表单
 
 import { Constants } from './common/constants';
@@ -56,18 +55,35 @@ if(document.getElementById('textbook-manager-app')){
                 books:[],
                 total:0,
                 pageNumber:0,
-                pageSize:24,
+                pageSize:10,
                 showTextbookFormFlag: false,
-                textbookModel:{},
+                textbookModel:{
+                    type:1,
+                    status:1,
+                    medias:[],
+                    courses:[],
+                },
                 queryTextbook: '',
                 showFileManagerFlag: false,
+                showConnectedCoursesFlag: false,
                 bookName: '',
+                courses:[],
+                isLoading: false,
             };
         },
         created(){
             const dom = document.getElementById('app-init-data-holder');
             this.userUuid = dom.dataset.user;
             this.schoolId = dom.dataset.school;
+            axios.post(
+                '/api/school/load-courses',
+                {school: this.schoolId}
+            ).then(res=>{
+                if(Util.isAjaxResOk(res)){
+                    this.courses = res.data.data.courses;
+                }
+            });
+
             this.loadTextbooks();
             this.resetForm();
         },
@@ -76,6 +92,7 @@ if(document.getElementById('textbook-manager-app')){
                 this.textbookModel.type = 1;
                 this.textbookModel.status = 1;
                 this.textbookModel.medias = [];// 教材关联的图片
+                this.textbookModel.courses = [];// 教材关联的课程
             },
             // 当文件从云盘管理器被选择会后的处理
             pickFileHandler: function(payload){
@@ -88,9 +105,32 @@ if(document.getElementById('textbook-manager-app')){
             handleReturnedTextbookSelect: function(item){
 
             },
+            getCourseNameText: function(courseId){
+                const c = Util.GetItemById(courseId, this.courses);
+                return c.name;
+            },
+            updateTextbookRelatedCourses: function(){
+                axios.post(
+                    '/teacher/textbook/update-related-courses',
+                    {textbook: this.textbookModel.id, courses: this.textbookModel.courses}
+                ).then(res => {
+                    if(Util.isAjaxResOk(res)){
+                        this.showConnectedCoursesFlag = false;
+                        this.$message({
+                            message: '保存成功: ' + this.textbookModel.name + '的关联课程已经更新了',
+                            type: 'success'
+                        });
+                        // 一旦更新成功, 则刷新当前的列表
+                        this.isLoading = true;
+                    }
+                })
+            },
             // 关联课程
             connectCoursesAction: function(payload){
-
+                // 加载该教材关联的课程
+                this.textbookModel = payload.book;
+                // 显示对话框
+                this.showConnectedCoursesFlag = true;
             },
             // 编辑课本
             editBookAction: function(payload){
@@ -143,7 +183,7 @@ if(document.getElementById('textbook-manager-app')){
             loadTextbooks: function(){
                 axios.post(
                     Constants.API.TEXTBOOK.LOAD_TEXTBOOKS_PAGINATE,
-                    {school: this.schoolId, user_uuid: this.userUuid}
+                    {school: this.schoolId, user_uuid: this.userUuid, pageNumber: this.pageNumber, pageSize: this.pageSize}
                 ).then(res => {
                     if(Util.isAjaxResOk(res)){
                         this.books = res.data.data.books;
