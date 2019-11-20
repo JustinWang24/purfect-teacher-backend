@@ -485,6 +485,7 @@ class TeacherApplyElectiveCourseDao
         CREATE TABLE IF NOT EXISTS '.$tableName.' (
           `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
           `course_id` int(10) unsigned DEFAULT NULL COMMENT \'课程的 ID\',
+          `school_id` int(10) unsigned DEFAULT NULL COMMENT \'学校的 ID\',
           `teacher_id` int(10) unsigned DEFAULT NULL COMMENT \'老师ID\',
           `user_id` int(10) unsigned DEFAULT NULL COMMENT \'学生的 ID\',
           `status` smallint(5) unsigned DEFAULT \'0\' COMMENT \'0 申请中、1 开班成功申请成功、 2 开班成功申请失败\',
@@ -505,12 +506,13 @@ class TeacherApplyElectiveCourseDao
         return CourseElective::where('course_id',$courseId)->first()->status == CourseElective::STATUS_ISFULL;
     }
     //报名
-    public function enroll($courseId, $userId, $teacherId)
+    public function enroll($courseId, $userId, $teacherId, $schoolId)
     {
         $d = [
             'course_id' => $courseId,
             'teacher_id'=> $teacherId,
-            'user_id'   => $userId
+            'user_id'   => $userId,
+            'school_id' => $schoolId,
         ];
         return StudentEnrolledOptionalCourse::create($d);
     }
@@ -551,6 +553,7 @@ class TeacherApplyElectiveCourseDao
                             'course_id'     => $rowObj->course_id,
                             'teacher_id'    => $rowObj->teacher_id,
                             'user_id'       => $rowObj->user_id,
+                            'school_id'     => $rowObj->school_id,
                             'created_at'    => Carbon::now(),
                             'updated_at'    => Carbon::now(),
                         ];
