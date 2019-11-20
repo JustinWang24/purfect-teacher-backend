@@ -7,7 +7,6 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Course\ElectiveRequest;
 use App\Dao\Users\GradeUserDao;
 use App\Utils\JsonBuilder;
-use PHPUnit\Util\Json;
 
 class ElectiveController extends Controller
 {
@@ -73,7 +72,14 @@ class ElectiveController extends Controller
             return  JsonBuilder::Error('课程不存在');
         }
 
-        $teacher = $course->teachers;
+        $teachers = $course->teachers;
+
+        $teacherArr = [];
+
+        foreach ($teachers as $teacher) {
+            $val = ['name' => $teacher->name];
+            $teacherArr[] = $val;
+        }
 
         $elective = $course->courseElective;
 
@@ -89,7 +95,7 @@ class ElectiveController extends Controller
 
         $result  = [
             'course_name'  => $course->name,
-            'teacher_name' => $teacher->tercher_name,
+            'teacher_name' => $teacherArr,
             'value'        => $course->scores,
             'seats'        => $elective->open_num,
             'applied'      => $studentCount,
@@ -101,10 +107,6 @@ class ElectiveController extends Controller
 
         return JsonBuilder::Success($result);
     }
-
-    
-
-
 
 
 }

@@ -35,7 +35,6 @@ class BasicPageTestCase extends TestCase
         $this->superAdmin    = $this->userDao->getUserByMobile('18601216091');
         $this->operator      = $this->userDao->getUserByMobile('18510209803');
         $this->schoolManager = $this->userDao->getUserByMobile('1000006');
-        $this->teacher       = $this->gradeUserDao->getAnyTeacher(3);
         $this->teacher       = $this->gradeUserDao->getAnyTeacher(1);
         $this->student       = $this->gradeUserDao->getStudentBySchoolId(1);
     }
@@ -89,7 +88,6 @@ class BasicPageTestCase extends TestCase
             'uuid'=>$this->school->uuid,
             'name'=>$this->school->name
         ];
-
         return $this;
     }
 
@@ -100,7 +98,10 @@ class BasicPageTestCase extends TestCase
         return $this->userDao;
     }
 
-
+    /**
+     * 获取学生header
+     * @return array
+     */
     public function getHeaderWithApiToken(){
         $token = $this->getStudent()['user']['api_token'];
         return  ['Authorization'=>"Bearer ".$token];
