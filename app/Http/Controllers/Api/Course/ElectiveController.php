@@ -82,7 +82,7 @@ class ElectiveController extends Controller
             return  JsonBuilder::Error('课程不存在');
         }
 
-        $teacher = $course->teachers[0];
+        $teacher = $course->teachers[0]->teacher->name ?? null;
 
         $elective = $course->courseElective;
 
@@ -98,7 +98,7 @@ class ElectiveController extends Controller
 
         $result  = [
             'course_name'  => $course->name,
-            'teacher_name' => $teacher->tercher_name,
+            'teacher_name' => $teacher,
             'value'        => $course->scores,
             'seats'        => $elective->open_num,
             'applied'      => $studentCount,
@@ -209,9 +209,4 @@ class ElectiveController extends Controller
         }
 
     }
-
-
-
-
-
 }

@@ -8,6 +8,7 @@
 
 namespace App\Http\Requests;
 
+use App\Utils\Misc\ConfigurationTool;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
 
@@ -85,7 +86,7 @@ class MyStandardRequest extends FormRequest
      * @return int
      */
     public function getPageSize(){
-        return $this->has('pageSize') ? intval($this->get('pageSize')) : 20;
+        return $this->has('pageSize') ? intval($this->get('pageSize')) : ConfigurationTool::DEFAULT_PAGE_SIZE;
     }
 
     /**

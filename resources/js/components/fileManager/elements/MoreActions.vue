@@ -113,9 +113,11 @@
             }
         },
         created: function(){
-            this.randomId = 'abc' + Math.random() * 1000000;
-            this.form.shareAddress = 'https://' + document.domain + '/share-file?f=' + this.file.uuid;
+
             this.categories = this.initCategories;
+        },
+        mounted: function(){
+            this.randomId = 'abc' + Math.random() * 1000000;
         },
         methods:{
             // 重命名操作
@@ -180,6 +182,7 @@
             },
             shareFile: function(){
                 this.shareFormVisible = true;
+                this.form.shareAddress = document.domain + '/share-file?f=' + this.file.uuid;
             },
             doCopy: function () {
                 const text = document.getElementById(this.randomId);
