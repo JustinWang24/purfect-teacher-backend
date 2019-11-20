@@ -44,6 +44,13 @@
                     </a>
                 </li>
 
+                    <li class="nav-item">
+                        <a href="{{ route('teacher.textbook.manager') }}" class="nav-link">
+                            <i class="material-icons">map</i>
+                            <span class="title">教材管理</span>
+                        </a>
+                    </li>
+
                 <li class="nav-item">
                     <a href="{{ route('teacher.conference.index',['uuid'=>session('school.uuid')])  }}" class="nav-link">
                         <i class="material-icons">event_seat</i>

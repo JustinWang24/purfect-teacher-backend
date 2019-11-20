@@ -10,7 +10,6 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\RecruitStudent\EmployRequest;
 use App\Utils\JsonBuilder;
 use App\Models\Acl\Role;
-use App\Utils\Misc\SmsFactory;
 
 class EmployController extends Controller
 {
@@ -73,14 +72,5 @@ class EmployController extends Controller
            return JsonBuilder::Error('分配班级失败');
         }
     }
-
-
-    public function testSms()
-    {
-        $aa =  SmsFactory::GetInstance();
-        $res = $aa->send('15235665252', '483489', ['马文豪', '北京大学', '计算机']);
-        dd($res);
-    }
-
 
 }

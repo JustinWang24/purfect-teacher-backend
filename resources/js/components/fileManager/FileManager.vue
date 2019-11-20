@@ -129,19 +129,19 @@
                             <el-input style="margin-top: 10px;" type="textarea" autosize v-model="uploadFormData.description" placeholder="选填: 文件说明"></el-input>
                         </el-form>
                     </div>
-                    <p class="section-title" style="margin-top: 30px;">文件预览/详情</p>
-                    <el-card shadow="always" v-if="selectedFile">
-                        <p>文件名: {{ selectedFile.file_name }}</p>
-                        <p>创建时间: {{ selectedFile.created_at }}</p>
-                        <p>大小: {{ fileSize(selectedFile.size) }}</p>
-                        <p>简介: {{ selectedFile.description }}</p>
-                    </el-card>
+
+                    <div class="preview-box-title">
+                        <p class="section-title">文件预览/详情</p>
+                        <el-button
+                                class="thebtn"
+                                size="mini"
+                                type="success"
+                                v-if="pickFile" v-on:click="pickThisFile"
+                        >使用文件</el-button>
+                    </div>
+                    <file-preview :file-dic="selectedFile"></file-preview>
                 </div>
             </div>
-        </div>
-
-        <div class="footer-bar">
-
         </div>
     </div>
 </template>
@@ -151,15 +151,16 @@
     import FileItem from './elements/FileItem';
     import CategoryItem from './elements/CategoryItem';
     import NewCategoryForm from './elements/NewCategoryForm';
+    import FilePreview from './elements/FilePreview';
     import {Util} from '../../common/utils';
     import {Constants} from '../../common/constants';
     import { createNewCategoryAction, recentFilesAction, networkDiskSizeAction, loadCategory, updateAsteriskAction, searchFileAction } from '../../common/file_manager';
 
     export default {
         name: "FileManager",
-        props:['userUuid'],
+        props:['userUuid','pickFile','allowedFileTypes'],
         components:{
-            RecentFile,FileItem,CategoryItem,NewCategoryForm
+            RecentFile,FileItem,CategoryItem,NewCategoryForm,FilePreview
         },
         data() {
             return {
@@ -232,6 +233,13 @@
             };
         },
         methods: {
+            pickThisFile: function(){
+                this.$emit('pick-this-file',{file: this.selectedFile});
+                this.$message({
+                    message: '选择了文件: ' + this.selectedFile.file_name,
+                    type: 'success'
+                });
+            },
             fileSize: function(size){
                 return Util.fileSize(size);
             },
@@ -552,6 +560,17 @@
                         line-height: 40px;
                         font-weight: bold;
                     }
+                    .preview-box-title{
+                        margin-top: 30px;
+                        display: inline-block;
+                        .section-title{
+                            float: left;
+                        }
+                        .thebtn{
+                            float: left;
+                            margin: 5px;
+                        }
+                    }
                 }
             }
         }
@@ -561,7 +580,7 @@
         border-color: $themeColor;
         color: white;
     }
-    .btn-purple{
+    .btn-purple, .txt-purple{
         color: $themeColor;
     }
 </style>

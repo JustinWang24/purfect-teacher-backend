@@ -1,6 +1,7 @@
 <?php
 namespace Tests\Feature\NetworkDisk;
 
+use App\Utils\JsonBuilder;
 use Carbon\Carbon;
 use Tests\Feature\BasicPageTestCase;
 
@@ -23,8 +24,8 @@ class CategoryTest extends BasicPageTestCase
 
         $response = $this->post(route('api.categories.create'),$data,$header);
         $result = json_decode($response->content(),true);
-
         $this->assertArrayHasKey('code', $result);
+        $this->assertEquals(JsonBuilder::CODE_SUCCESS,$result['code']);
         return $result;
     }
 
@@ -47,7 +48,7 @@ class CategoryTest extends BasicPageTestCase
         $response = $this->post(route('api.categories.edit'),$data,$header);
         $result = json_decode($response->content(),true);
         $this->assertArrayHasKey('code', $result);
-        $this->assertEquals(1000, $result['code']);
+        $this->assertEquals(JsonBuilder::CODE_SUCCESS, $result['code']);
     }
 
 
@@ -58,7 +59,7 @@ class CategoryTest extends BasicPageTestCase
     public function testCateView($return) {
         $data = ['uuid'=>$return['data']['uuid']];
         $header = $this->getHeaderWithApiToken();
-        
+
         $response = $this->post(
             route('api.categories.view'),$data,$header);
 
@@ -66,7 +67,7 @@ class CategoryTest extends BasicPageTestCase
 
 
         $this->assertArrayHasKey('code', $result);
-        $this->assertEquals(1000, $result['code']);
+        $this->assertEquals(JsonBuilder::CODE_SUCCESS, $result['code']);
 
         $this->assertArrayHasKey('category', $result['data']);
         $this->assertArrayHasKey('name', $result['data']['category']);
@@ -112,7 +113,7 @@ class CategoryTest extends BasicPageTestCase
         $result = json_decode($response->content(),true);
 
         $this->assertArrayHasKey('code', $result);
-        $this->assertEquals(1000, $result['code']);
+        $this->assertEquals(JsonBuilder::CODE_SUCCESS, $result['code']);
     }
 
 

@@ -40,13 +40,14 @@ class Media extends Model
     const TYPE_REFERENCE= 7;   // 引用, 一般为某个文件的链接地址
     const TYPE_VIDEO    = 10;  // 视频文件类型
     const TYPE_AUDIO    = 11;  // 音频文件类型
+    const TYPE_TXT      = 12;  // txt文档
 
     const DEFAULT_UPLOAD_PATH_PREFIX = 'public/users/';   // 存放用户文件路径
     const DEFAULT_URL_PATH_PREFIX = '/storage/users/';     // 对外的
 
     const USER_SIZE = 500 * 1024 * 1024 ;  // 用户网盘空间大小 500M
 
-    const MAY_NOT_UPLOAD = 0 ; // 不可以上传呢
+    const MAY_NOT_UPLOAD = 0 ; // 不可以上传呢 abc208329.9687623994
 
     const MAY_UPLOAD = 1;  // 可以上传
 
@@ -112,6 +113,8 @@ class Media extends Model
             case self::TYPE_REFERENCE:
                 $text = '链接';
                 break;
+            case self::TYPE_TXT:
+                $text = 'txt文档';
             default:
                 break;
         }
@@ -155,18 +158,14 @@ class Media extends Model
 
     /**
      * 获取文件的类型
-     * @param $fileName
+     * @param $ext
      * @return int
      */
-    public static function ParseFileType($fileName){
-        $arr = explode('.',$fileName);
-        $count = count($arr);
-        if($count > 1){
-            $ext = strtolower($arr[$count-1]);
+    public static function ParseFileType($ext){
             if(in_array($ext, ['mp4','avi'])){
                 return self::TYPE_VIDEO;
             }
-            elseif (in_array($ext, ['mp3'])){
+            elseif (in_array($ext, ['mp3','mpga'])){
                 return self::TYPE_AUDIO;
             }
             elseif (in_array($ext, ['jpg','jpeg','png','gif'])){
@@ -184,8 +183,10 @@ class Media extends Model
             elseif (in_array($ext, ['pdf'])){
                 return self::TYPE_PDF;
             }
+            elseif (in_array($ext, ['txt'])){
+                return self::TYPE_TXT;
+            }
             // Todo 处理视频和音频文件以外的文件类型
-        }
         return self::TYPE_GENERAL;
     }
 }

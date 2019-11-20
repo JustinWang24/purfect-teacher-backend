@@ -100,7 +100,6 @@ Route::prefix('school_manager')->group(function () {
     Route::any('consult/add', 'RecruitStudent\ConsultController@add')->name('school_manager.consult.add');
     Route::any('consult/edit', 'RecruitStudent\ConsultController@edit')->name('school_manager.consult.edit');
     Route::get('consult/delete', 'RecruitStudent\ConsultController@delete')->name('school_manager.consult.delete');
-    Route::get('registration/list', 'RecruitStudent\RegistrationInformatics@index')->name('school_manager.registration.list');  // 报名列表
 
     //设备管理
     Route::get('facility/list','FacilityController@list')->name('school_manager.facility.list');  // 设备列表
