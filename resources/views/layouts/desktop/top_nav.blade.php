@@ -36,7 +36,7 @@
                     <a class="dropdown-toggle" v-on:click="showFileManager">
                         <i class="fa fa-database"></i>&nbsp;我的云盘
                     </a>
-                    @include('reusable_elements.section.file_manager_component',[ 'syncFlag'=>'showFileManagerFlag'])
+                    @include('reusable_elements.section.file_manager_component')
                 </li>
 
                 <li class="dropdown language-switch">

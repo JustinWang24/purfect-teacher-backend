@@ -8,8 +8,10 @@ use Illuminate\Database\Eloquent\Model;
 class TextbookImage extends Model
 {
     protected $fillable = [
-        'textbook_id','media_id','position'
+        'textbook_id','media_id','position','url'
     ];
+
+    public $timestamps = false;
 
     public function media(){
         return $this->belongsTo(Media::class);

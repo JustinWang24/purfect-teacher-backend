@@ -54,10 +54,10 @@ class TextbookController extends Controller
     public function save(TextbookRequest $request) {
         $textbookDao = new TextbookDao();
         $all = $request->getFormData();
-        if(!empty($all['textbook_id'])) {
+        if(!empty($all['id'])) {
             $result = $textbookDao->editById($all);
             if($result) {
-                return JsonBuilder::Success('编辑成功');
+                return JsonBuilder::Success(['textbook'=>$result->getData()]);
             } else {
                 return JsonBuilder::Error('编辑失败');
             }
