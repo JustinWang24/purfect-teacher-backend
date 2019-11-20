@@ -43,5 +43,4 @@ class CourseTextbook extends Model
     {
         return $this->hasOne(Textbook::class,'id','textbook_id');
     }
-
 }

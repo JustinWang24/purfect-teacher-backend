@@ -4,6 +4,7 @@
 namespace Tests\Feature\YunLianSms;
 
 use Tests\Feature\BasicPageTestCase;
+use App\Utils\Misc\SmsFactory;
 
 class SmsTest extends BasicPageTestCase
 {
@@ -13,13 +14,9 @@ class SmsTest extends BasicPageTestCase
      */
     public function testYunLianSms()
     {
-        $this->withoutExceptionHandling();
-        $su = $this->getSchoolManager();
-        $response = $this->setSchoolAsUser($su, 50)
-                        ->actingAs($su)
-                        ->withSession($this->schoolSessionData)
-                        ->get(route('api.test-sms'));
-        $this->assertTrue(1===2);
+        $sms =  SmsFactory::GetInstance();
+        $res = $sms->send('15235665252', '483489', ['小明', '北京大学', '计算机']);
+        $this->assertTrue($res->getCode() == 1000);
     }
 
 
