@@ -36,6 +36,7 @@
             </div>
 
             <textbooks-table
+                :courses="courses"
                 :books="books"
                 :as-admin="{{ $user->isTeacher() || $user->isEmployee() ? 'false' : 'true' }}"
                 v-on:load-textbooks="loadTextbooks"
@@ -124,6 +125,26 @@
                     </el-form-item>
                 </el-form>
             </el-drawer>
+
+            <el-dialog :title="textbookModel.name" :visible.sync="showConnectedCoursesFlag">
+                <p>采用该教材的所有课程: </p>
+                <el-form :model="textbookModel">
+                    <el-form-item>
+                        <el-select v-model="textbookModel.courses" multiple placeholder="请选择" style="width: 100%;">
+                            <el-option
+                                    v-for="(course, idx) in courses"
+                                    :key="idx"
+                                    :label="course.name"
+                                    :value="course.id">
+                            </el-option>
+                        </el-select>
+                    </el-form-item>
+                </el-form>
+                <div slot="footer" class="dialog-footer">
+                    <el-button @click="showConnectedCoursesFlag = false">取 消</el-button>
+                    <el-button type="primary" @click="updateTextbookRelatedCourses">确 定</el-button>
+                </div>
+            </el-dialog>
 
             @include(
                 'reusable_elements.section.file_manager_component',
