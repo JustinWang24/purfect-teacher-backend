@@ -59,6 +59,7 @@ return [
     'create'=>'创建',
 
     // 教材管理
-    'textbook'=>'教材'
+    'textbook'=>'教材',
+    'loadMajorTextbook'=>'根据专业进行汇总'
 ];
 

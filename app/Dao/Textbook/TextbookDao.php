@@ -205,9 +205,7 @@ class TextbookDao
                 $num = $this->getStudentNumByMajorAndYear($majorId,$year);
                 $courses[$key]['textbook_num'] = $num;
             }
-
         }
-
         return $courses;
     }
 
