@@ -21,9 +21,10 @@
                             </p>
                             <p class="press">
                                 课程: &nbsp;
-                                <el-tag size="mini" v-for="(c, idx) in book.courses" :key="idx">
+                                <el-tag size="mini" v-for="(c, idx) in book.courses" :key="idx" style="margin-right: 3px;">
                                     {{ getCourseNameText(c.course_id) }}
                                 </el-tag>
+                                <el-tag size="mini" v-if="book.courses.length === 0" type="info">未关联任何课程</el-tag>
                             </p>
                         </div>
                     </div>
@@ -31,6 +32,7 @@
                     <div>
                         <el-button type="text" class="button" v-on:click="connectCoursesHandler(book)">关联/管理课程</el-button>
                         <el-button type="text" class="button" v-on:click="editBookHandler(book)">编辑教材</el-button>
+                        <el-button style="float: right;color: red;" icon="el-icon-delete" type="text" class="button" v-on:click="deleteHandler(book)">删除</el-button>
                     </div>
                 </el-card>
             </el-col>
@@ -66,6 +68,21 @@
             },
             editBookHandler: function(book){
                 this.$emit('book-edit', {book: book});
+            },
+            deleteHandler: function(book){
+
+                this.$confirm('此操作将永久删除该教材, 是否继续?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    this.$emit('book-delete', {book: book});
+                }).catch(() => {
+                    this.$message({
+                        type: 'info',
+                        message: '已取消删除'
+                    });
+                });
             },
             // 去关联课程
             connectCoursesHandler: function(book){

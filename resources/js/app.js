@@ -42,7 +42,7 @@ import { Util } from './common/utils';
 import { getTimeSlots, getMajors } from './common/timetables';
 import { loadBuildings } from './common/facility';
 import { getEmptyElectiveCourseApplication } from './common/elective_course';
-import { loadTextbooksPaginate } from './common/textbook';
+import { loadTextbooksPaginate, deleteTextbook } from './common/textbook';
 
 /**
  * 教材管理
@@ -230,6 +230,7 @@ if(document.getElementById('textbook-manager-app')){
                 this.textbookModel = payload.book;
                 this.showTextbookFormFlag = true;
             },
+            // 保存教材数据
             saveTextbook: function(){
                 axios.post(
                     '/teacher/textbook/save',
@@ -261,6 +262,29 @@ if(document.getElementById('textbook-manager-app')){
                         });
                     }
                 })
+            },
+            // 删除教材数据
+            deleteBookAction: function(payload){
+                deleteTextbook(payload.book.id)
+                    .then(res => {
+                        if(Util.isAjaxResOk(res)){
+                            const idx = Util.GetItemIndexById(payload.book.id, this.books);
+                            if(idx > -1){
+                                this.books.splice(idx, 1);
+                                this.$message({
+                                    message: '成功的删除了教材: ' + payload.book.name,
+                                    type: 'success'
+                                });
+                            }
+                        }
+                        else{
+                            this.$notify.error({
+                                title: '系统错误',
+                                message: '删除操作失败, 请稍候再试 ...',
+                                position: 'bottom-right'
+                            });
+                        }
+                    });
             },
             cancel: function(){
                 this.showTextbookFormFlag = false;

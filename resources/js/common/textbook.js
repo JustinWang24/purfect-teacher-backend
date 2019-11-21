@@ -55,3 +55,20 @@ export function attachTextbooksToCourse(schoolId, courseId, booksId, affix) {
         {school: schoolId, course_id: courseId, textbook_ids: booksId, version:Constants.VERSION}
     );
 }
+
+/**
+ *
+ * @param bookId
+ * @param affix
+ * @returns Promise
+ */
+export function deleteTextbook(bookId, affix) {
+    const url = Util.buildUrl(Constants.API.TEXTBOOK.DELETE_TEXTBOOK);
+    if(Util.isDevEnv()){
+        return axios.get(url, affix);
+    }
+    return axios.post(
+        url,
+        {textbook_id: bookId, version:Constants.VERSION}
+    );
+}

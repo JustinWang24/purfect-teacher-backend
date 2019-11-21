@@ -23,6 +23,36 @@ use App\Models\Schools\TextbookImage;
 class TextbookDao
 {
     /**
+     * 删除教材接口
+     * @param $id
+     * @param $schoolId
+     * @return bool
+     */
+    public function delete($id, $schoolId){
+        DB::beginTransaction();
+        try{
+            // 删除自己
+            $deleted = Textbook::where('id',$id)->where('school_id',$schoolId)->delete();
+            if($deleted){
+                // 删除关联的课程
+                $dao = new CourseTextbookDao();
+                $dao->deleteByTextbook($id);
+                // 删除关联的图片
+                TextbookImage::where('textbook_id',$id)->delete();
+                DB::commit();
+                return true;
+            }
+            else{
+                DB::rollBack();
+                return false;
+            }
+        }catch (\Exception $exception){
+            DB::rollBack();
+            return false;
+        }
+    }
+
+    /**
      * @param $query
      * @param $schoolId
      * @param $scope
@@ -171,7 +201,7 @@ class TextbookDao
      * @return mixed
      */
     public function getTextbookById($id) {
-        return Textbook::where('id',$id)->with('medias')->first();
+        return Textbook::where('id',$id)->with('medias')->with('courses')->first();
     }
 
     /**
