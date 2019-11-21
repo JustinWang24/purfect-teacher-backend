@@ -293,6 +293,14 @@ class CourseDao
             }
             $item['teachers'] = $course->teachers;
             $item['majors'] = $course->majors;
+            // 课程的教材
+            $item['books'] = [];
+            foreach ($course->courseTextbooks as $ct){
+                $i['id'] = $ct->textbook->id;
+                $i['name'] = $ct->textbook->name . '('.$ct->textbook->edition.')';
+                $item['books'][] = $i;
+            }
+
             $item['arrangements'] = [];
             if($course->optional){
                 // 是选修课

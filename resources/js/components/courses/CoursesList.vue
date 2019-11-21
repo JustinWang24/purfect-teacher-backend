@@ -6,16 +6,9 @@
             <el-table-column label="课程名称/编号" width="250">
                 <template slot-scope="scope">
                     <el-button type="text" v-on:click="courseNameClickedHandler">
-                        <i class="el-icon-s-order"></i>
+                        <text-badge :text="scope.row.optional ? '选修' : '必修'" :color="scope.row.optional ? 'default' : 'danger'"></text-badge>
                         <span>{{ scope.row.name }} (编号: {{ scope.row.code }})</span>
                     </el-button>
-                </template>
-            </el-table-column>
-            <el-table-column
-                    label="类型"
-                    width="80">
-                <template slot-scope="scope">
-                    <text-badge :text="scope.row.optional ? '选修' : '必修'" :color="scope.row.optional ? 'default' : 'danger'"></text-badge>
                 </template>
             </el-table-column>
             <el-table-column
@@ -72,12 +65,23 @@
                     </el-tag>
                 </template>
             </el-table-column>
+            <el-table-column
+                    label="教材">
+                <template slot-scope="scope">
+                    <p v-if="scope.row.books.length === 0">
+                        <el-button type="text" v-on:click="attachTextbook(scope.row)">添加教材</el-button>
+                    </p>
+                    <el-tag size="medium" type="info" effect="plain" :key="idx" v-for="(book,idx) in scope.row.books" style="margin:2px;">
+                        {{ book.name }}
+                    </el-tag>
+                </template>
+            </el-table-column>
             <el-table-column label="操作">
                 <template slot-scope="scope">
                     <el-button-group>
-                        <el-button size="mini" icon="el-icon-edit" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
-                        <el-button size="mini" icon="el-icon-timer" @click="handleViewClick(scope.$index, scope.row)">课程表</el-button>
-                        <el-button v-if="canDelete" size="mini" type="danger" icon="el-icon-delete" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
+                        <el-button size="mini" icon="el-icon-edit" @click="handleEdit(scope.$index, scope.row)"></el-button>
+                        <el-button size="mini" icon="el-icon-timer" @click="handleViewClick(scope.$index, scope.row)"></el-button>
+                        <el-button v-if="canDelete" size="mini" type="danger" icon="el-icon-delete" @click="handleDelete(scope.$index, scope.row)"></el-button>
                     </el-button-group>
                 </template>
             </el-table-column>
@@ -107,6 +111,7 @@
         },
         data(){
             return {
+                textbooks:[],
             };
         },
         methods: {
@@ -137,6 +142,9 @@
                 else{
                     return slot.name;
                 }
+            },
+            attachTextbook: function(course){
+                this.$emit('attach-textbook',{course: course});
             }
         }
     }

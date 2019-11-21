@@ -12,7 +12,9 @@ use App\User;
                 <div class="card">
                     <div class="card-head">
                         <header>
-                            <span class="pull-left">{{ session('school.name') }}: 招生计划表</span>
+                            <span class="pull-left">
+                                {{ session('school.name') }}: 招生计划表
+                            </span>
                         </header>
                         <div class="pull-right m-2">
                         <el-select v-model="year" placeholder="请选择招生年份">
@@ -23,7 +25,9 @@ use App\User;
                                     :value="y">
                             </el-option>
                         </el-select>
-                        <el-button v-on:click="createNewPlan" type="primary" icon="el-icon-plus">添加新计划</el-button>
+                            @if(\Illuminate\Support\Facades\Auth::user()->isSchoolAdminOrAbove())
+                                <el-button v-on:click="createNewPlan" type="primary" icon="el-icon-plus">添加新计划</el-button>
+                            @endif
                         </div>
                     </div>
                     <div class="card-body">
