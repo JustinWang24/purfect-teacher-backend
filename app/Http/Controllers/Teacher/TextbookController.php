@@ -87,7 +87,7 @@ class TextbookController extends Controller
             $list[$key]['type'] = $val['type_text'];
         }
 
-        $data['textbook']=$list;
+        $data['textbooks']=$list;
         return JsonBuilder::Success($data);
     }
 
