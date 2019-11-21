@@ -43,4 +43,12 @@ class TextbookRequest extends MyStandardRequest
     public function getCourses(){
         return $this->get('courses', []);
     }
+
+    public function getQuery(){
+        return $this->get('query', null);
+    }
+
+    public function getQueryScope(){
+        return $this->get('scope', null);
+    }
 }

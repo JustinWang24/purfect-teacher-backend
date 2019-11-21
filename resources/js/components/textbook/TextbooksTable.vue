@@ -80,7 +80,7 @@
             },
             getCourseNameText: function(courseId){
                 const c = Util.GetItemById(courseId, this.courses);
-                return c.name;
+                return Util.isEmpty(c) ? '' : c.name;
             },
         }
     }

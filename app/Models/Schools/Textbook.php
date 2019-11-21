@@ -42,10 +42,12 @@ class Textbook extends Model
     const TYPE_MAJOR  = 1;
     const TYPE_COMMON = 2;
     const TYPE_SELECT = 3;
+    const TYPE_MISC   = 4;
 
     const TYPE_MAJOR_TEXT  = '专业教材';
     const TYPE_COMMON_TEXT = '普通教材';
     const TYPE_SELECT_TEXT = '选读教材';
+    const TYPE_MISC_TEXT   = '辅助材料';
 
     /**
      * 获取type属性
@@ -59,6 +61,8 @@ class Textbook extends Model
                 return self::TYPE_COMMON_TEXT;break;
             case self::TYPE_SELECT :
                 return self::TYPE_SELECT_TEXT;break;
+            case self::TYPE_MISC :
+                return self::TYPE_MISC_TEXT;break;
             default :return '';
         }
     }
