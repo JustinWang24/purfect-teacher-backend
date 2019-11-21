@@ -4,8 +4,10 @@ namespace App\Utils\Misc\Impl;
 
 use App\Utils\Misc\Contracts\JPushSender;
 use App\Utils\ReturnData\IMessageBag;
-use App\Models\Users\Role;
+use App\Utils\ReturnData\MessageBag;
+use App\Utils\JsonBuilder;
 use JPush\Client as JPush;
+use Illuminate\Support\Facades\Log;
 
 class JPushLogic implements JPushSender
 {
@@ -13,46 +15,45 @@ class JPushLogic implements JPushSender
 
     private $masterSecret;
 
+    use PushUserRole;
 
-    public function setKey($type)
+
+    public function send($users, $title, $content, $extras): IMessageBag
     {
-        if ($type == Role::VERIFIED_USER_STUDENT || $type == Role::VERIFIED_USER_CLASS_LEADER || $type == Role::VERIFIED_USER_CLASS_SECRETARY) {
-            // 学生端
-            $this->appKey       = env('PUSH_STUDENT_KEY');
-            $this->masterSecret = env('PUSH_STUDENT_SECRET');
-
-        } elseif ($type == Role::TEACHER || Role::EMPLOYEE) {
-
-            // 教师端
-            $this->appKey       = env('PUSH_TEACHER_KEY');
-            $this->masterSecret = env('PUSH_TEACHER_SECRET');
-
-        } elseif ($type == Role::COMPANY || $type == Role::DELIVERY || $type == Role::BUSINESS_INNER || $type == BUSINESS_OUTER) {
-
-            // 商企端
-            $this->appKey       = env('15a8a325231ac1c39005a1ba');
-            $this->masterSecret = env('ffe404a15740e7a63a9f49c7');
+        if (is_array($users)) {
+            $result = $this->setKeyAndRegId($users);
         } else {
-            $this->appKey       = null;
-            $this->masterSecret = null;
+            return false;
         }
 
-    }
-
-
-    public function user($user)
-    {
-        $this->setKey($user->type);
-    }
-
-    public function send($user, $title, $content, $extras): IMessageBag
-    {
-        $client  = new JPush($this->appKey, $this->masterSecret, null, null, 'BJ');
-        $payload = $client->push()
-                    ->setPlatform('all')
-                    ->addAllAudience()
-                    ->setNotificationAlert('Hi, JPush');
-
+        foreach ($result as $key => $val) {
+            if (!empty($val)) {
+                $val['key']['appKey'] = '253cee371b0e12791f9a2d0e';
+                $val['key']['masterSecret'] = '3716beb858765a4372206b67';
+                $iosNotification     = ['sound' => '', 'extras' => $extras];
+                $androidNotification = ['title' => $title, 'extras' => $extras];
+                $options             = ['apns_production' => 'False'];
+                $client              = new JPush($val['key']['appKey'], $val['key']['masterSecret'], null, null, 'BJ');
+                try {
+                    $push     = $client->push();
+                    $response = $push
+                        ->setPlatform('all') // 推送平台
+                        ->addRegistrationId($val['regId']) // 极光ID
+                        ->setNotificationAlert($title) // 消息标题
+                        ->iosNotification($content, $iosNotification)
+                        ->androidNotification($content, $androidNotification)
+                        ->options($options)
+                        ->send();
+                } catch (\JPush\Exceptions\APIRequestException $e) {
+                    $error[] = ['message' => $e->getMessage(), 'code' => $e->getCode()];
+                    Log::alert('push推送失败:  ' . 'message:' . $e->getMessage() . '   ,code:' . $e->getCode());
+                }
+            }
+        }
+        if (!empty($error)) {
+            return new MessageBag(JsonBuilder::CODE_ERROR,'推送失败', $error);
+        }
+        return new MessageBag(JsonBuilder::CODE_SUCCESS, '推送成功');
     }
 
 
