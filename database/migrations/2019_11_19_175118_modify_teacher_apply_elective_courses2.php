@@ -26,6 +26,8 @@ class ModifyTeacherApplyElectiveCourses2 extends Migration
      */
     public function down()
     {
-        //
+        Schema::table('teacher_apply_elective_courses', function (Blueprint $table) {
+            $table->dropColumn('start_year');
+        });
     }
 }
