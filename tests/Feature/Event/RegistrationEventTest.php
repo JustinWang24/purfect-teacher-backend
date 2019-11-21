@@ -20,7 +20,6 @@ class RegistrationEventTest extends BasicPageTestCase
 
         $form = RegistrationInformatics::find($this->testFormId);
         event(new ApproveRegistrationEvent($form));
-
     }
 
 

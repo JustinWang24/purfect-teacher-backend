@@ -7,16 +7,8 @@ use App\Utils\ReturnData\IMessageBag;
 
 interface JPushSender
 {
-
-
     /**
-     * @param  object $user
-     * @return mixed
-     */
-    public function user($user);
-
-    /**
-     * @param $user
+     * @param array $user
      * @param string $title
      * @param string $content
      * @param array $extras
