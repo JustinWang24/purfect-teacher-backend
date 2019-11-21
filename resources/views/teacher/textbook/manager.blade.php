@@ -38,7 +38,7 @@
                 </div>
                 <div class="col-6">
                     <el-button-group class="pull-right">
-                        <el-button type="primary" icon="el-icon-plus" v-on:click="showTextbookFormFlag = true">添加新教材</el-button>
+                        <el-button type="primary" icon="el-icon-plus" v-on:click="addNewTextbook">添加新教材</el-button>
                         <el-button icon="el-icon-files" v-on:click="exportByGrade" disabled>按班级导出</el-button>
                         <el-button icon="el-icon-notebook-1" v-on:click="exportByMajor">按专业导出</el-button>
                         <el-button icon="el-icon-notebook-2" v-on:click="exportByCampus">按校区导出</el-button>

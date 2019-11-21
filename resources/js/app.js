@@ -42,6 +42,7 @@ import { Util } from './common/utils';
 import { getTimeSlots, getMajors } from './common/timetables';
 import { loadBuildings } from './common/facility';
 import { getEmptyElectiveCourseApplication } from './common/elective_course';
+import { loadTextbooksPaginate } from './common/textbook';
 
 /**
  * 教材管理
@@ -106,6 +107,14 @@ if(document.getElementById('textbook-manager-app')){
         },
         methods: {
             resetForm: function(){
+                this.textbookModel.id = null;
+                this.textbookModel.name = '';
+                this.textbookModel.edition = '';
+                this.textbookModel.author = '';
+                this.textbookModel.press = '';
+                this.textbookModel.purchase_price = '';
+                this.textbookModel.price = '';
+                this.textbookModel.introduce = '';
                 this.textbookModel.type = 1;
                 this.textbookModel.status = 1;
                 this.textbookModel.medias = [];// 教材关联的图片
@@ -212,6 +221,10 @@ if(document.getElementById('textbook-manager-app')){
                 // 显示对话框
                 this.showConnectedCoursesFlag = true;
             },
+            addNewTextbook: function(){
+                this.showTextbookFormFlag = true;
+                this.resetForm();
+            },
             // 编辑课本
             editBookAction: function(payload){
                 this.textbookModel = payload.book;
@@ -262,9 +275,8 @@ if(document.getElementById('textbook-manager-app')){
             },
             loadTextbooks: function(){
                 this.isLoading = true;
-                axios.post(
-                    Constants.API.TEXTBOOK.LOAD_TEXTBOOKS_PAGINATE,
-                    {school: this.schoolId, user_uuid: this.userUuid, pageNumber: this.pageNumber, pageSize: this.pageSize}
+                loadTextbooksPaginate(
+                    this.schoolId, this.userUuid, this.pageNumber, this.pageSize
                 ).then(res => {
                     if(Util.isAjaxResOk(res)){
                         this.books = res.data.data.books;
