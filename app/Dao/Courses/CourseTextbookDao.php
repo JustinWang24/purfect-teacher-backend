@@ -20,7 +20,6 @@ class CourseTextbookDao
         return CourseTextbook::create($data);
     }
 
-
     /**
      * 添加课程教材关联
      * @param $courseId

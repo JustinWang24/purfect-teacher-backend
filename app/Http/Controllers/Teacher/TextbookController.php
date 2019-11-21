@@ -106,6 +106,20 @@ class TextbookController extends Controller
     }
 
     /**
+     * 教材更新课程的接口
+     * @param TextbookRequest $request
+     * @return string
+     */
+    public function update_related_courses(TextbookRequest $request){
+        $book = $request->getTextbook();
+        $courses = $request->getCourses();
+
+        $textbookDao = new TextbookDao();
+        $updated = $textbookDao->updateRelatedCourses($book, $courses, $request->getSchoolId());
+        return $updated ? JsonBuilder::Success() : JsonBuilder::Error();
+    }
+
+    /**
      * 课程绑定教材
      * @param TextbookRequest $request
      * @return string
@@ -140,7 +154,22 @@ class TextbookController extends Controller
         return JsonBuilder::Success($data);
     }
 
+    /**
+     * @param TextbookRequest $request
+     * @return string
+     */
+    public function search(TextbookRequest $request){
+        $schoolId = $request->getSchoolId();
+        $scope = $request->getQueryScope();
+        $query = $request->getQuery();
+        if(empty(trim($query))){
+            return JsonBuilder::Success(['books'=>[]]);
+        }
 
+        $textbookDao = new TextbookDao();
+        $result = $textbookDao->searchByName($query, $schoolId, $scope);
+        return JsonBuilder::Success(['books'=>$result]);
+    }
 
     /**
      * 查询以班级为单位的教材情况
