@@ -14,7 +14,7 @@ class EnrollCourseEvent extends AbstractEnrollCourseEvent
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    public function __construct(StudentEnrolledOptionalCourse $form)
+    public function __construct(array $form)
     {
         parent::__construct($form);
     }
@@ -23,7 +23,7 @@ class EnrollCourseEvent extends AbstractEnrollCourseEvent
      * 获取form
      * @return StudentEnrolledOptionalCourse
      */
-    public function getForm(): StudentEnrolledOptionalCourse
+    public function getForm(): array
     {
         return $this->form;
     }
@@ -52,7 +52,7 @@ class EnrollCourseEvent extends AbstractEnrollCourseEvent
      */
     public function getSystemContent(): string
     {
-        $course = $this->form->course()->first();
+        $course = $this->form['course'];
         return 'Hi '.$this->getUser()['name'].'您的选修课《'.$course->name.'》已经报名成功';
     }
 
