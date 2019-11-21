@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class ModifyTeacherApplyElectiveCourses extends Migration
+class ModifyTeacherApplyElectiveCourses2 extends Migration
 {
     /**
      * Run the migrations.
@@ -26,6 +26,8 @@ class ModifyTeacherApplyElectiveCourses extends Migration
      */
     public function down()
     {
-        //
+        Schema::table('teacher_apply_elective_courses', function (Blueprint $table) {
+            $table->dropColumn('start_year');
+        });
     }
 }
