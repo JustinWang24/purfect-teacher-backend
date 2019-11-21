@@ -9,9 +9,10 @@
             <courses-list
                     :courses="courses"
                     :time-slots="timeSlots"
-                    @course-view="onCourseNeedView"
-                    @course-delete="onCourseNeedDelete"
-                    @course-edit="onCourseNeedEdit"
+                    v-on:course-view="onCourseNeedView"
+                    v-on:course-delete="onCourseNeedDelete"
+                    v-on:course-edit="onCourseNeedEdit"
+                    v-on:attach-textbook="onCourseAttacheTextbook"
                     :can-delete="canDelete"
             ></courses-list>
         </div>
@@ -112,6 +113,29 @@
         </el-dialog>
 
         <el-dialog
+                title="为课程选择教材"
+                :visible.sync="showChooseTextbookFormFlag"
+                custom-class="course-form-drawer"
+        >
+            <el-form :model="attachForm" ref="attachTextbooksForm">
+                <el-form-item label="所属专业" prop="majors">
+                    <el-select v-model="attachForm.attachedTextbooks" multiple placeholder="请选择教材" style="width: 90%;">
+                        <el-option
+                                v-for="(tb, idx) in textbooks"
+                                :key="idx"
+                                :label="tb.name"
+                                :value="tb.id">
+                        </el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item>
+                    <el-button type="primary" @click="attachTextbookConfirmed">保存</el-button>
+                    <el-button @click="showChooseTextbookFormFlag = false">取消</el-button>
+                </el-form-item>
+            </el-form>
+        </el-dialog>
+
+        <el-dialog
                 title="选修课程登记表"
                 :visible.sync="showElectiveCourseFormFlag"
                 :fullscreen="true"
@@ -147,6 +171,7 @@
     import { getTimeSlots, getCourses, getMajors } from '../../common/timetables';
     import { searchTeachers } from '../../common/search';
     import { getEmptyElectiveCourseApplication } from '../../common/elective_course';
+    import { loadTextbooks, attachTextbooksToCourse } from '../../common/textbook';
     import CoursesList from './CoursesList.vue';
     import ElectiveCourseForm from './ElectiveCourseForm.vue';
     export default {
@@ -210,6 +235,13 @@
                 teachers:[], // 被搜索出的老师
                 loading: false,
                 passedCourseId: null,
+                // 关联教科书
+                textbooks:[], // 教科书
+                showChooseTextbookFormFlag: false,
+                attachForm:{
+                    attachedTextbooks:[],
+                    courseId: null
+                },
                 // 根据课程总结的汇总表
                 showCourseScheduleFlag: false,
                 courseSchedule:[],
@@ -242,6 +274,28 @@
                         this.courses = res.data.data.courses;
                     }
                 })
+            },
+            // 课程要关联教科书
+            onCourseAttacheTextbook: function(payload){
+                if(this.textbooks.length === 0){
+                    loadTextbooks(this.schoolId).then(res => {
+                        this.textbooks = res.data.data.textbooks;
+                    })
+                }
+                this.attachForm.attachedTextbooks = [];
+                this.attachForm.courseId = payload.course.id;
+                this.showChooseTextbookFormFlag = true;
+            },
+            attachTextbookConfirmed: function(){
+                attachTextbooksToCourse(this.schoolId, this.attachForm.courseId, this.attachForm.attachedTextbooks)
+                    .then(res => {
+                        if(Util.isAjaxResOk(res)){
+                            // 关联成功
+                            this.showChooseTextbookFormFlag = false;
+                            // 刷新
+                            window.location.reload();
+                        }
+                    })
             },
             onNewCourseCreated: function(payload){
                 this.courses.unshift(payload);
