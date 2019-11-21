@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class ModifyCourseElective extends Migration
+class AddNewFieldInTextImages extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +13,10 @@ class ModifyCourseElective extends Migration
      */
     public function up()
     {
-        Schema::table('course_electives', function (Blueprint $table) {
-            $table->dropColumn('room_id');
+        Schema::table('textbook_images', function (Blueprint $table) {
+            $table->string('url')->comment(
+                '图片 URL'
+            );
         });
     }
 
@@ -25,8 +27,8 @@ class ModifyCourseElective extends Migration
      */
     public function down()
     {
-        Schema::table('course_electives', function (Blueprint $table) {
-            $table->unsignedInteger('room_id')->default(0);
+        Schema::table('textbook_images', function (Blueprint $table) {
+            $table->dropColumn('url');
         });
     }
 }

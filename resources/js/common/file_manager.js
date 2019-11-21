@@ -15,10 +15,10 @@ export function loadCategory(userUuid, categoryId, affix) {
 
 // 加载父级目录, 根据给定的当前目录的 uuid 或者 id
 export function loadParentCategory(userUuid, uuid, affix) {
-    const url = Util.buildUrl(Constants.API.FILE_MANAGER.LOAD_PARENT_CATEGORY);
-    if(Util.isDevEnv()){
-        return axios.get(url, affix);
-    }
+    // const url = Util.buildUrl(Constants.API.FILE_MANAGER.LOAD_PARENT_CATEGORY);
+    // if(Util.isDevEnv()){
+    //     return axios.get(url, affix);
+    // }
     return axios.post(
         url,
         {user: userUuid, uuid: uuid, version:Constants.VERSION}

@@ -15,7 +15,6 @@ class TextbookRequest extends MyStandardRequest
         return $this->get('textbook');
     }
 
-
     /**
      * 下载类型
      * @return mixed
@@ -23,7 +22,6 @@ class TextbookRequest extends MyStandardRequest
     public function getDownloadType() {
         return $this->get('download_type','csv');
     }
-
 
     /**
      * 获取教材ID，以逗号分割
@@ -34,6 +32,27 @@ class TextbookRequest extends MyStandardRequest
         return explode(',', $textbookIds);
     }
 
+    public function getCourse(){
+        return $this->get('course', null);
+    }
 
+    public function getTextbook(){
+        return $this->get('textbook', null);
+    }
 
+    public function getCourses(){
+        return $this->get('courses', []);
+    }
+
+    public function getQuery(){
+        return $this->get('query', null);
+    }
+
+    public function getQueryScope(){
+        return $this->get('scope', null);
+    }
+
+    public function isDownloadRequest(){
+        return $this->get('download',false);
+    }
 }

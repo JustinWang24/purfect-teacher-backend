@@ -82,6 +82,12 @@ export const Constants = {
         ELECTIVE_COURSE: {
             SAVE: '/api/elective-course/save', // 管理员直接添加
             APPLY: '/api/elective-course/apply', // 教师申请开选修课
+        },
+        TEXTBOOK: {
+            EXPORT_TEXTBOOKS_BY_MAJOR: '/teacher/textbook/loadMajorTextbook',
+            EXPORT_TEXTBOOKS_BY_CAMPUS: '/school_manager/textbook/loadCampusTextbook',
+            LOAD_TEXTBOOKS_PAGINATE: '/teacher/textbook/list-paginate',
+            SEARCH_TEXTBOOKS: '/teacher/textbook/search',
         }
     },
     YEARS: ['N.A','一年级','二年级','三年级','四年级','五年级','六年级'],
@@ -103,12 +109,15 @@ export const Constants = {
     TYPE_CATEGORY: 'category', // 目录类型
     MAX_UPLOAD_FILE_SIZE: 10 * 1024 * 1024, // 最大 10 兆文件上传
     FILE_TYPE:{
+        GENERAL: 1,
         IMAGE: 2,
         WORD: 3,
         EXCEL: 4,
         PPT: 5,
         PDF: 6,
+        REFERENCE: 7,
         VIDEO: 10,
         AUDIO: 11,
+        TXT: 12
     }
 };

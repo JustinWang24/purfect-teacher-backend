@@ -128,5 +128,32 @@ export const Util = {
             size = (sizeInt/1048576).toFixed(1) + 'M';
         }
         return size;
-    }
+    },
+    isImage: function (type) {
+        return type === Constants.FILE_TYPE.IMAGE;
+    },
+    isWordDoc: function (type) {
+        return type === Constants.FILE_TYPE.WORD;
+    },
+    isExcelDoc: function (type) {
+        return type === Constants.FILE_TYPE.EXCEL;
+    },
+    isPowerPointDoc: function (type) {
+        return type === Constants.FILE_TYPE.PPT;
+    },
+    isPdfDoc: function (type) {
+        return type === Constants.FILE_TYPE.PDF;
+    },
+    isVideoDoc: function (type) {
+        return type === Constants.FILE_TYPE.VIDEO;
+    },
+    isAudioDoc: function (type) {
+        return type === Constants.FILE_TYPE.AUDIO;
+    },
+    isTxtDoc: function (type) {
+        return type === Constants.FILE_TYPE.TXT;
+    },
+    isGeneralDoc: function (type) {
+        return type === Constants.FILE_TYPE.GENERAL;
+    },
 };

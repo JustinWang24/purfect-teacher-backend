@@ -3,15 +3,26 @@
 namespace App\Http\Controllers\Teacher;
 
 use App\Dao\Courses\CourseTextbookDao;
+use App\Dao\Schools\MajorDao;
+use App\Utils\Files\HtmlToCsv;
 use App\Utils\JsonBuilder;
 use App\Dao\Textbook\TextbookDao;
 use App\Http\Controllers\Controller;
 use App\Dao\Textbook\DownloadOfficeDao;
 use App\Http\Requests\Textbook\TextbookRequest;
 
-
 class TextbookController extends Controller
 {
+    public function manager(TextbookRequest $request){
+        $this->dataForView['pageTitle'] = '教材管理';
+        $this->dataForView['user'] = $request->user();
+        // 如果是学校级别的, 则加载所有院系的
+
+        // 如果是普通教师角色, 则加载自己所教授的课程的
+
+        return view('teacher.textbook.manager', $this->dataForView);
+    }
+
      /**
      * 添加
      * @param TextbookRequest $request
@@ -20,8 +31,6 @@ class TextbookController extends Controller
     public function add(TextbookRequest $request) {
         return view('teacher.textbook.add', $this->dataForView);
     }
-
-
 
     /**
      * 编辑
@@ -46,10 +55,10 @@ class TextbookController extends Controller
     public function save(TextbookRequest $request) {
         $textbookDao = new TextbookDao();
         $all = $request->getFormData();
-        if(!empty($all['textbook_id'])) {
+        if(!empty($all['id'])) {
             $result = $textbookDao->editById($all);
             if($result) {
-                return JsonBuilder::Success('编辑成功');
+                return JsonBuilder::Success(['textbook'=>$result->getData()]);
             } else {
                 return JsonBuilder::Error('编辑失败');
             }
@@ -63,10 +72,7 @@ class TextbookController extends Controller
                 return JsonBuilder::Error($result->getMessage());
             }
         }
-
     }
-
-
 
      /**
      * 列表
@@ -85,6 +91,34 @@ class TextbookController extends Controller
         return JsonBuilder::Success($data);
     }
 
+    /**
+     * 列表
+     * @param TextbookRequest $request
+     * @return string
+     */
+    public function list_paginate(TextbookRequest $request) {
+        $schoolId = $request->getSchoolId();
+        $pageNumber = $request->getPageNumber();
+        $pageSize = $request->getPageSize();
+
+        $textbookDao = new TextbookDao();
+        $list = $textbookDao->getTextbookListPaginateBySchoolId($schoolId, $pageNumber, $pageSize);
+        return JsonBuilder::Success($list);
+    }
+
+    /**
+     * 教材更新课程的接口
+     * @param TextbookRequest $request
+     * @return string
+     */
+    public function update_related_courses(TextbookRequest $request){
+        $book = $request->getTextbook();
+        $courses = $request->getCourses();
+
+        $textbookDao = new TextbookDao();
+        $updated = $textbookDao->updateRelatedCourses($book, $courses, $request->getSchoolId());
+        return $updated ? JsonBuilder::Success() : JsonBuilder::Error();
+    }
 
     /**
      * 课程绑定教材
@@ -97,6 +131,7 @@ class TextbookController extends Controller
         $textbookIdArr = $request->getTextbookIdArr();
         $courseTextbookDao = new CourseTextbookDao();
         $result = $courseTextbookDao->createCourseTextbook($courseId, $schoolId, $textbookIdArr);
+
         if($result->isSuccess()) {
             return JsonBuilder::Success($result->getMessage());
         } else {
@@ -110,17 +145,47 @@ class TextbookController extends Controller
      * @return string
      */
     public function loadMajorTextbook(TextbookRequest $request) {
-
         $schoolId = $request->getSchoolId();
         $textbookDao = new TextbookDao();
         $majorId = $request->getMajorId();
 
         $result = $textbookDao->getTextbooksByMajor($majorId,$schoolId);
-        $data = ['major_textbook'=>$result];
-        return JsonBuilder::Success($data);
+
+        $majorDao = new MajorDao();
+        $major = $majorDao->getMajorById($majorId);
+
+        $this->dataForView['major'] = $major;
+        $this->dataForView['major_textbook'] = $result;
+
+        if($request->isDownloadRequest()){
+            $path = HtmlToCsv::Convert(
+                'teacher.textbook.elements.table_by_major',
+                $this->dataForView
+            );
+            if($path){
+                return response()->download($path,$major->name.'教材汇总表.xls');
+            }
+        }
+
+        return view('teacher.textbook.to_csv_by_major',$this->dataForView);
     }
 
+    /**
+     * @param TextbookRequest $request
+     * @return string
+     */
+    public function search(TextbookRequest $request){
+        $schoolId = $request->getSchoolId();
+        $scope = $request->getQueryScope();
+        $query = $request->getQuery();
+        if(empty(trim($query))){
+            return JsonBuilder::Success(['books'=>[]]);
+        }
 
+        $textbookDao = new TextbookDao();
+        $result = $textbookDao->searchByName($query, $schoolId, $scope);
+        return JsonBuilder::Success(['books'=>$result]);
+    }
 
     /**
      * 查询以班级为单位的教材情况

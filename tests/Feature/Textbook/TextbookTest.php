@@ -206,6 +206,7 @@ class TextbookTest extends BasicPageTestCase
         $result = json_decode($response->content(),true);
         $this->assertArrayHasKey('code', $result);
         $this->assertEquals(JsonBuilder::CODE_SUCCESS,$result['code']);
+
         $this->assertArrayHasKey('textbook', $result['data']);
 
         if(!empty($result['data']['textbook'])) {

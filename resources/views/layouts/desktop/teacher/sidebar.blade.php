@@ -46,6 +46,13 @@
                 </li>
 
                 <li class="nav-item">
+                    <a href="{{ route('teacher.textbook.manager') }}" class="nav-link">
+                        <i class="material-icons">map</i>
+                        <span class="title">教材管理</span>
+                    </a>
+                </li>
+
+                <li class="nav-item">
                     <a href="javascript:void(0);" class="nav-link nav-toggle">
                         <i class="material-icons">store</i>
                         <span class="title">考试管理</span>
@@ -98,8 +105,6 @@
                             <i class="material-icons">dashboard</i>
                             <span class="title">设备管理</span>
                         </a>
-
-
                     </li>
                 @endif
             </ul>

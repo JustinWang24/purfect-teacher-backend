@@ -88,7 +88,6 @@ class BasicPageTestCase extends TestCase
             'uuid'=>$this->school->uuid,
             'name'=>$this->school->name
         ];
-
         return $this;
     }
 
@@ -99,7 +98,10 @@ class BasicPageTestCase extends TestCase
         return $this->userDao;
     }
 
-
+    /**
+     * 获取学生header
+     * @return array
+     */
     public function getHeaderWithApiToken(){
         $token = $this->getStudent()['user']['api_token'];
         return  ['Authorization'=>"Bearer ".$token];
