@@ -25,6 +25,8 @@ class ModifyCourseElective extends Migration
      */
     public function down()
     {
-        //
+        Schema::table('course_electives', function (Blueprint $table) {
+            $table->unsignedInteger('room_id')->default(0);
+        });
     }
 }
