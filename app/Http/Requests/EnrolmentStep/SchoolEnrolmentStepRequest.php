@@ -6,6 +6,11 @@ use App\Http\Requests\MyStandardRequest;
 
 class SchoolEnrolmentStepRequest extends MyStandardRequest
 {
+    public function authorize()
+    {
+        return true;
+    }
+
     /**
      * 获取表单提交
      * @return mixed
@@ -23,8 +28,4 @@ class SchoolEnrolmentStepRequest extends MyStandardRequest
         return $this->get('id',null);
     }
 
-
-    public function getStepType() {
-
-    }
 }
