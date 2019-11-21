@@ -59,10 +59,14 @@ Route::prefix('teacher')->group(function () {
     Route::get('textbook/add', 'TextbookController@add')->name('teacher.textbook.add');     // 添加教程
     Route::get('textbook/edit', 'TextbookController@edit')->name('teacher.textbook.edit');  // 编辑教程
     Route::post('textbook/save', 'TextbookController@save')->name('teacher.textbook.save'); // 保存教程
+    Route::post('textbook/search', 'TextbookController@search')->name('teacher.textbook.search'); // 保存教程
     Route::get('textbook/list', 'TextbookController@list')->name('teacher.textbook.list');  // 教程列表
 
     Route::any('textbook/list-paginate', 'TextbookController@list_paginate')
         ->name('teacher.textbook.list_paginate');  // 以分页的方式, 教程列表
+
+    Route::any('textbook/update-related-courses', 'TextbookController@update_related_courses')
+        ->name('teacher.textbook.update_related_courses');  // 保存教材关联的课程
 
     Route::get('textbook/loadMajorTextbook', 'TextbookController@loadMajorTextbook')
         ->name('teacher.textbook.loadMajorTextbook'); // 获取专业教材采购情况

@@ -84,8 +84,9 @@ export const Constants = {
             APPLY: '/api/elective-course/apply', // 教师申请开选修课
         },
         TEXTBOOK: {
-            LOAD_TEXTBOOKS_BY_COURSE: '',
+            EXPORT_TEXTBOOKS_BY_MAJOR: '/teacher/textbook/loadMajorTextbook',
             LOAD_TEXTBOOKS_PAGINATE: '/teacher/textbook/list-paginate',
+            SEARCH_TEXTBOOKS: '/teacher/textbook/search',
         }
     },
     YEARS: ['N.A','一年级','二年级','三年级','四年级','五年级','六年级'],
