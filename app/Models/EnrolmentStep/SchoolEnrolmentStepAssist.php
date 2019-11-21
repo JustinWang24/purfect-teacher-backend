@@ -15,7 +15,7 @@ class SchoolEnrolmentStepAssist extends Model
 
     public $timestamps = false;
 
-    public $field = ['id','uuid','name','mobile'];
+    public $user_field = ['name','mobile'];
     /**
      * @var array
      */
@@ -23,7 +23,7 @@ class SchoolEnrolmentStepAssist extends Model
 
 
     public function user() {
-        return $this->belongsTo(User::class,'user_id')->select($this->field);
+        return $this->belongsTo(User::class,'user_id')->select($this->user_field);
     }
 
 }

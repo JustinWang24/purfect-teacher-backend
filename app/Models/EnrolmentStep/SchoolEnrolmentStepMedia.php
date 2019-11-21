@@ -27,7 +27,7 @@ class SchoolEnrolmentStepMedia extends Model
      */
     protected $fillable = ['school_enrolment_step_id', 'media_id'];
 
-    public $media_field = ['id', 'file_name', 'keywords', 'url'];
+    public $media_field = ['url'];
 
 
     public function media() {

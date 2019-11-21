@@ -18,12 +18,11 @@ class EnrolmentStepTest extends BasicPageTestCase
         $this->withoutExceptionHandling();
         $user = $this->getSuperAdmin();
 
-        $data = ['name'=>'验证信息'.rand(1,99)];
+        $data = ['name'=>'验证信息'.rand(100,999)];
         $response = $this->setSchoolAsUser($user, 1)
             ->actingAs($user)
             ->withSession($this->schoolSessionData)
             ->post(route('operator.enrolmentStep.create'),$data);
-
         $result = json_decode($response->content(),true);
         $this->assertArrayHasKey('code', $result);
         $this->assertEquals(JsonBuilder::CODE_SUCCESS,
@@ -58,7 +57,7 @@ class EnrolmentStepTest extends BasicPageTestCase
 
     public function _createData() {
         $data = [
-             'id' => 1,
+//             'id' => 1,
 //                'name' => $return[0]['name'],
             'name' => $this->randomCreateChinese(5),
 //                'enrolment_step_id'=> $return[0]['id'],
@@ -66,7 +65,7 @@ class EnrolmentStepTest extends BasicPageTestCase
             'school_id' => 1,
             'campus_id' => 1 ,// 当前老师所在的校区
             'describe'  => $this->randomCreateChinese(100),
-            'sort'      => rand(1,9),
+//            'sort'      => rand(1,9),
             'user_id' => 10, // 获取老师接口
             'assists' => [11,17,18], // 协助人ID集合
             'medias'  => [1], // 媒体ID
@@ -109,50 +108,48 @@ class EnrolmentStepTest extends BasicPageTestCase
      * 测试获取学校迎新步骤详情
      */
     public function testGetSchoolEnrolmentStepInfo() {
-
         $this->withoutExceptionHandling();
-
-        $data = ['id'=>1];
+        $data = ['id'=>1,'step_type'=>1,'school_id'=>1,'campus_id'=>1];
         $header = $this->getHeaderWithApiTokenForTeacher();
 
         $response = $this->post(
             route('api.schoolEnrolmentStep.getEnrolmentInfo'),
             $data,$header);
-        dd($response->content());
         $result = json_decode($response->content(),true);
         $this->assertArrayHasKey('code', $result);
-        $this->assertEquals(JsonBuilder::CODE_SUCCESS,
-            $result['code']);
-        $this->assertArrayHasKey('id', $result['data']);
-        $this->assertArrayHasKey('name', $result['data']);
-        $this->assertArrayHasKey('enrolment_step_id', $result['data']);
-        $this->assertArrayHasKey('user', $result['data']);
-        $this->assertArrayHasKey('name', $result['data']['user']);
-        $this->assertArrayHasKey('mobile', $result['data']['user']);
+        $this->assertEquals(JsonBuilder::CODE_SUCCESS, $result['code']);
 
-        if(!empty($result['data']['assists'])) {
-            foreach ($result['data']['assists'] as $key => $val) {
-                $this->assertArrayHasKey('id', $val);
-                $this->assertArrayHasKey('user', $val);
-                $this->assertArrayHasKey('name', $val['user']);
-                $this->assertArrayHasKey('mobile', $val['user']);
+        if(!empty($result['data'])) {
+            $this->assertArrayHasKey('id', $result['data']);
+            $this->assertArrayHasKey('name', $result['data']);
+            $this->assertArrayHasKey('enrolment_step_id', $result['data']);
+            $this->assertArrayHasKey('describe', $result['data']);
+            $this->assertArrayHasKey('sort', $result['data']);
+            $this->assertArrayHasKey('campus', $result['data']);
+            $this->assertArrayHasKey('name', $result['data']['campus']);
+            $this->assertArrayHasKey('user', $result['data']);
+            $this->assertArrayHasKey('name', $result['data']['user']);
+            $this->assertArrayHasKey('mobile', $result['data']['user']);
+
+            if (!empty($result['data']['assists'])) {
+                foreach ($result['data']['assists'] as $key => $val) {
+                    $this->assertArrayHasKey('name', $val);
+                    $this->assertArrayHasKey('mobile', $val);
+                }
             }
-        }
 
-        if(!empty($result['data']['medias'])) {
-            foreach ($result['data']['medias'] as $key => $val) {
-                $this->assertArrayHasKey('id', $val);
-                $this->assertArrayHasKey('media', $val);
-                $this->assertArrayHasKey('file_name', $val['media']);
-                $this->assertArrayHasKey('url', $val['media']);
+            if (!empty($result['data']['medias'])) {
+                foreach ($result['data']['medias'] as $key => $val) {
+                    $this->assertArrayHasKey('url', $val);
+                }
             }
-        }
 
-        if(!empty($result['data']['tasks'])) {
-            foreach ($result['data']['tasks'] as $key => $val) {
-                 $this->assertArrayHasKey('id', $val);
-                 $this->assertArrayHasKey('name', $val);
-                 $this->assertArrayHasKey('type', $val);
+            if (!empty($result['data']['tasks'])) {
+                foreach ($result['data']['tasks'] as $key => $val) {
+                    $this->assertArrayHasKey('name', $val);
+                    $this->assertArrayHasKey('describe', $val);
+                    $this->assertArrayHasKey('type', $val);
+                }
             }
         }
 
@@ -168,7 +165,6 @@ class EnrolmentStepTest extends BasicPageTestCase
      */
     public function testDeleteSchoolEnrolmentStep($return) {
         $header = $this->getHeaderWithApiTokenForTeacher();
-
         $data = ['id'=>$return['id']];
         $response = $this->post(
             route('api.schoolEnrolmentStep.deleteEnrolment'),
