@@ -5,6 +5,7 @@ namespace App\Http\Requests\NetworkDisk;
 
 
 use App\Models\NetworkDisk\Media;
+use App\User;
 use App\Utils\JsonBuilder;
 use App\Utils\ReturnData\IMessageBag;
 use App\Utils\ReturnData\MessageBag;
@@ -82,14 +83,18 @@ class MediaRequest extends MyStandardRequest
      * @throws \Exception
      */
     public function getUpload() {
-
-
         $file = $this->getFile();
-        $path = Media::DEFAULT_UPLOAD_PATH_PREFIX.$this->user()->id; // 上传路径
+        /**
+         * @var User $user
+         */
+        $user = $this->user();
+
+        $path = Media::DEFAULT_UPLOAD_PATH_PREFIX.$user->id; // 上传路径
         $categoryDao = new CategoryDao();
         $category = $categoryDao->getCateInfoByUuId($this->getCategory());
-        $auth = $category->isOwnedByUser($this->user());
-        if(!$auth) {
+
+        $auth = $category->isOwnedByUser($user);
+        if(!$auth && !$user->isSchoolAdminOrAbove()) {
             return new MessageBag(JsonBuilder::CODE_ERROR,'非用户本人,不能上传');
         }
         try{
@@ -97,7 +102,7 @@ class MediaRequest extends MyStandardRequest
             $data = [
                 'category_id' => $category->id,
                 'uuid'        => Uuid::uuid4()->toString(),
-                'user_id'     => $this->user()->id,
+                'user_id'     => $category->owner_id, // 文件和目录的所有着, 应该一直保持一致
                 'keywords'    => $this->getKeywords(),
                 'description' => $this->getDescription(),
                 'file_name'   => $file->getClientOriginalName(),
