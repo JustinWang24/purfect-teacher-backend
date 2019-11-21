@@ -492,7 +492,10 @@ class TeacherApplyElectiveCourseDao
           `status` smallint(5) unsigned DEFAULT \'0\' COMMENT \'0 申请中、1 开班成功申请成功、 2 开班成功申请失败\',
           `created_at` timestamp NULL DEFAULT NULL,
           `updated_at` timestamp NULL DEFAULT NULL,
-          PRIMARY KEY (`id`)
+          PRIMARY KEY (`id`),
+          KEY `idx_course_id` (`course_id`),
+          KEY `idx_school_id` (`school_id`),
+          KEY `idx_user_id` (`user_id`),
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
         ';
         if ( ! Schema::hasTable($tableName)) {
