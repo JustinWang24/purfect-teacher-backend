@@ -4,8 +4,8 @@
 namespace App\Events\User\Student;
 
 
+use App\Dao\Users\UserDao;
 use App\Events\HasEnrollCourseForm;
-use App\Models\ElectiveCourses\StudentEnrolledOptionalCourse;
 use App\User;
 
 abstract class AbstractEnrollCourseEvent implements HasEnrollCourseForm
@@ -15,10 +15,10 @@ abstract class AbstractEnrollCourseEvent implements HasEnrollCourseForm
     protected $user;
 
     /**
-     * ApproveRegistrationEvent constructor.
-     * @param StudentEnrolledOptionalCourse $enrollCourseForm
+     *
+     * @param array $enrollCourseForm
      */
-    public function __construct(StudentEnrolledOptionalCourse $enrollCourseForm)
+    public function __construct(array $enrollCourseForm)
     {
         $this->form = $enrollCourseForm;
     }
@@ -26,7 +26,8 @@ abstract class AbstractEnrollCourseEvent implements HasEnrollCourseForm
     public function getUser(): User
     {
         if(!$this->user){
-            $this->user = $this->form->user;
+            $userDao = new UserDao();
+            $this->user = $userDao->getUserById($this->form['user_id']);
         }
         return $this->user;
     }

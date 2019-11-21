@@ -2,18 +2,14 @@
 
 
 namespace App\Events;
-
-
-use App\Models\ElectiveCourses\StudentEnrolledOptionalCourse;
-
 interface HasEnrollCourseForm
 {
 
     /**
      * 获取form
-     * @return StudentEnrolledOptionalCourse
+     * @return array
      */
-    public function getForm(): StudentEnrolledOptionalCourse;
+    public function getForm(): array;
 
 
     /**

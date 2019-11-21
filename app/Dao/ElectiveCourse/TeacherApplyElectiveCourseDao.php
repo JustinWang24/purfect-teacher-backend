@@ -12,6 +12,7 @@ use App\Dao\Courses\CourseDao;
 use App\Dao\Schools\DepartmentDao;
 use App\Dao\Schools\SchoolDao;
 use App\Dao\Users\GradeUserDao;
+use App\Events\User\Student\EnrollCourseEvent;
 use App\Models\ElectiveCourses\ApplyCourseArrangement;
 use App\Models\ElectiveCourses\ApplyCourseMajor;
 use App\Models\ElectiveCourses\ApplyDay;
@@ -240,7 +241,6 @@ class TeacherApplyElectiveCourseDao
      */
     public function operateApply($id, $status, $content=null)
     {
-        $messageBag = new MessageBag(JsonBuilder::CODE_ERROR);
         DB::beginTransaction();
         try {
             $apply = TeacherApplyElectiveCourse::where('id', $id)->first();
@@ -255,15 +255,13 @@ class TeacherApplyElectiveCourseDao
             } else {
                 throw new Exception('参数错误');
             }
-            $apply->save();
+            $result = $apply->save();
             DB::commit();
-            $messageBag->setCode(JsonBuilder::CODE_SUCCESS);
-            $messageBag->setData($apply);
+            return true;
         } catch (\Exception $exception) {
             DB::rollBack();
-            $messageBag->setMessage($exception->getMessage());
+            return false;
         }
-        return $messageBag;
     }
     //根据教师id获取教师姓名
     public function getTeacherName($teacherId)
@@ -315,29 +313,32 @@ class TeacherApplyElectiveCourseDao
             $messageBag->setMessage('没有审批过的申请不能发布！');
             return $messageBag;
         }
-        $data['school_id'] = $apply->school_id;
-        $data['teachers'][0] = $apply->teacher_id;
-        $data['majors'] = $majorArrs;
-        $data['code'] = $apply->code;
-        $data['name'] = $apply->name;
-        $data['scores'] = $apply->scores;
-        $data['optional'] = 1;
-        $data['year'] = $apply->year;
-        $data['term'] = $apply->term;
-        $data['desc'] = $apply->desc;
-        $data['open_num'] = $apply->open_num;
-        $data['max_num'] = $apply->max_num;
+        $data['school_id']      = $apply->school_id;
+        $data['teachers'][0]    = $apply->teacher_id;
+        $data['majors']         = $majorArrs;
+        $data['code']           = $apply->code;
+        $data['name']           = $apply->name;
+        $data['scores']         = $apply->scores;
+        $data['optional']       = 1;
+        $data['year']           = $apply->year;
+        $data['term']           = $apply->term;
+        $data['desc']           = $apply->desc;
+        $data['open_num']       = $apply->open_num;
+        $data['max_num']        = $apply->max_num;
+        $data['start_year']     = $apply->start_year;
 
 
         DB::beginTransaction();
         try {
             //创建课程
             $courseDao = new CourseDao();
-            $courseDao->createCourse($data);
+            $course = $courseDao->createCourse($data);
+
             //标记申请表为发布状态
-            self::publishedApply($applyId);
+            $result = self::publishedApply($applyId);
             DB::commit();
             $messageBag->setCode(JsonBuilder::CODE_SUCCESS);
+            $messageBag->setData($course->getData()->id);
         } catch (\Exception $exception) {
             DB::rollBack();
             $messageBag->setMessage($exception->getMessage());
@@ -568,7 +569,6 @@ class TeacherApplyElectiveCourseDao
                 DB::commit();
                 return true;
             } catch (\Exception $exception) {
-                dd($exception);
                 DB::rollBack();
                 return false;
             }
@@ -629,6 +629,15 @@ class TeacherApplyElectiveCourseDao
             ->where('user_id', $user->id)->get()->first();
     }
 
+    public function notifyStudent($courseId, $tableName)
+    {
+        $rows = DB::table($tableName)->where('course_id', $courseId)->get();
+        foreach ($rows as $row)
+        {
+            $row = json_decode(json_encode($row), true);
+            event(new EnrollCourseEvent($row));
+        }
+    }
 
 }
 
