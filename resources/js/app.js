@@ -55,7 +55,7 @@ if(document.getElementById('textbook-manager-app')){
                 books:[],
                 total:0,
                 pageNumber:0,
-                pageSize:10,
+                pageSize:2,
                 showTextbookFormFlag: false,
                 textbookModel:{
                     type:1,
@@ -63,18 +63,34 @@ if(document.getElementById('textbook-manager-app')){
                     medias:[],
                     courses:[],
                 },
+                // 自动补全搜索
                 queryTextbook: '',
+                queryType:'0',
+                // 自动补全搜索完成
                 showFileManagerFlag: false,
                 showConnectedCoursesFlag: false,
                 bookName: '',
                 courses:[],
                 isLoading: false,
+                // 导出
+                exportModel: {
+                    type: '',
+                    value: ''
+                },
+                majors:[],
+                grades:[],
+                campuses:[],
+                showExportGradeFlag: false,
+                showExportMajorFlag: false,
+                showExportCampusFlag: false,
+                // 导出功能完毕
             };
         },
         created(){
             const dom = document.getElementById('app-init-data-holder');
             this.userUuid = dom.dataset.user;
             this.schoolId = dom.dataset.school;
+            this.pageSize = parseInt(dom.dataset.size);
             axios.post(
                 '/api/school/load-courses',
                 {school: this.schoolId}
@@ -100,11 +116,62 @@ if(document.getElementById('textbook-manager-app')){
                 this.showFileManagerFlag = false;
             },
             queryTextbooksAsync: function(queryString, cb){
-
+                const _queryString = queryString.trim();
+                if(Util.isEmpty(_queryString)){
+                    // 如果视图搜索空字符串, 那么不执行远程调用, 而是直接回调一个空数组
+                    cb([]);
+                }
+                else{
+                    axios.post(
+                        Constants.API.TEXTBOOK.SEARCH_TEXTBOOKS,
+                        {query: _queryString, school: this.schoolId, scope: this.queryType}
+                    ).then(res => {
+                        if(Util.isAjaxResOk(res)){
+                            cb(res.data.data.books);
+                        }
+                    })
+                }
             },
             handleReturnedTextbookSelect: function(item){
+                this.textbookModel = item;
+                this.showTextbookFormFlag = true;
+            },
+            // 导出功能
+            exportBooksSheet: function(){
+                this.showExportMajorFlag = false;
+                if(this.exportModel.type === 'major'){
+                    const u1 = Constants.API.TEXTBOOK.EXPORT_TEXTBOOKS_BY_MAJOR + '?major=' + this.exportModel.value;
+                    axios.get(u1).then(res => {
+                        console.log(res.data.data);
+                    })
+                }
+            },
+            exportByGrade: function(){
+                if(this.grades.length === 0){
+                    // 加载班级
+                    this.isLoading = true;
+
+                }
+                this.showExportGradeFlag = true;
+            },
+            exportByMajor: function(){
+                if(this.majors.length === 0){
+                    // 加载班级
+                    this.isLoading = true;
+                    getMajors(this.schoolId, 0).then(res => {
+                        if(Util.isAjaxResOk(res)){
+                            this.majors = res.data.data.majors;
+                        }
+                        this.isLoading = false;
+                    })
+                }
+                this.exportModel.type = 'major';
+                this.showExportMajorFlag = true;
+            },
+            exportByCampus: function(){
 
             },
+            // 导出功能结束
             getCourseNameText: function(courseId){
                 const c = Util.GetItemById(courseId, this.courses);
                 return c.name;
@@ -181,6 +248,7 @@ if(document.getElementById('textbook-manager-app')){
                 });
             },
             loadTextbooks: function(){
+                this.isLoading = true;
                 axios.post(
                     Constants.API.TEXTBOOK.LOAD_TEXTBOOKS_PAGINATE,
                     {school: this.schoolId, user_uuid: this.userUuid, pageNumber: this.pageNumber, pageSize: this.pageSize}
@@ -188,11 +256,17 @@ if(document.getElementById('textbook-manager-app')){
                     if(Util.isAjaxResOk(res)){
                         this.books = res.data.data.books;
                         this.total = res.data.data.total;
-                        this.pageNumber = res.data.data.pageNumber;
-                        this.pageSize = res.data.data.pageSize;
+                        this.pageNumber = res.data.data.p;
+                        this.pageSize = res.data.data.s;
                     }
+                    this.isLoading = false;
                 })
             },
+            // Pagination 的页码点击响应事件
+            goToPage: function(val){
+                this.pageNumber = val -1;
+                this.loadTextbooks();
+            }
         }
     });
 }

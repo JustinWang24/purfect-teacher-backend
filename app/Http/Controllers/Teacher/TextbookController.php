@@ -154,7 +154,22 @@ class TextbookController extends Controller
         return JsonBuilder::Success($data);
     }
 
+    /**
+     * @param TextbookRequest $request
+     * @return string
+     */
+    public function search(TextbookRequest $request){
+        $schoolId = $request->getSchoolId();
+        $scope = $request->getQueryScope();
+        $query = $request->getQuery();
+        if(empty(trim($query))){
+            return JsonBuilder::Success(['books'=>[]]);
+        }
 
+        $textbookDao = new TextbookDao();
+        $result = $textbookDao->searchByName($query, $schoolId, $scope);
+        return JsonBuilder::Success(['books'=>$result]);
+    }
 
     /**
      * 查询以班级为单位的教材情况
