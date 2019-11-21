@@ -107,6 +107,19 @@ class TextbookController extends Controller
     }
 
     /**
+     * 删除教材
+     * @param TextbookRequest $request
+     * @return string
+     */
+    public function delete(TextbookRequest $request){
+        $schoolId = $request->getSchoolId();
+        $textbookId = $request->getTextbookId();
+        $textbookDao = new TextbookDao();
+        $done = $textbookDao->delete($textbookId, $schoolId);
+        return $done ? JsonBuilder::Success(): JsonBuilder::Error();
+    }
+
+    /**
      * 教材更新课程的接口
      * @param TextbookRequest $request
      * @return string

@@ -90,6 +90,7 @@ export const Constants = {
             LOAD_TEXTBOOKS: '/teacher/textbook/list',
             SEARCH_TEXTBOOKS: '/teacher/textbook/search',
             ATTACH_TEXTBOOKS: '/teacher/textbook/courseBindingTextbook',
+            DELETE_TEXTBOOK: '/teacher/textbook/delete',
         }
     },
     YEARS: ['N.A','一年级','二年级','三年级','四年级','五年级','六年级'],
