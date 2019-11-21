@@ -285,10 +285,18 @@ Route::prefix('enrolment-step')->middleware('auth:api')->group(function () {
     // 创建/修改 学校迎新步骤
     Route::any('/schoolEnrolmentStep/saveEnrolment','Api\EnrolmentStep\SchoolEnrolmentStepController@saveEnrolment')
         ->name('api.schoolEnrolmentStep.saveEnrolment');
-    // 获取学校迎新步骤详情
-    Route::any('/schoolEnrolmentStep/getEnrolmentInfo','Api\EnrolmentStep\SchoolEnrolmentStepController@getEnrolmentInfo')
-        ->name('api.schoolEnrolmentStep.getEnrolmentInfo');
+    // 更新排序
+    Route::any('/schoolEnrolmentStep/updateSort','Api\EnrolmentStep\SchoolEnrolmentStepController@updateSort')
+        ->name('api.school-enrolment-step.update-sort');
+
     // 删除学校迎新步骤
     Route::any('/schoolEnrolmentStep/deleteEnrolment','Api\EnrolmentStep\SchoolEnrolmentStepController@deleteEnrolment')
         ->name('api.schoolEnrolmentStep.deleteEnrolment');
+});
+
+Route::prefix('enrolment-step')->group(function () {
+
+    // 获取学校迎新步骤详情
+    Route::any('/schoolEnrolmentStep/getEnrolmentInfo', 'Api\EnrolmentStep\SchoolEnrolmentStepController@getEnrolmentInfo')
+        ->name('api.schoolEnrolmentStep.getEnrolmentInfo');
 });

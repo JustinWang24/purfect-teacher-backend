@@ -110,11 +110,11 @@ class EnrolmentStepTest extends BasicPageTestCase
     public function testGetSchoolEnrolmentStepInfo() {
         $this->withoutExceptionHandling();
         $data = ['id'=>1,'step_type'=>1,'school_id'=>1,'campus_id'=>1];
-        $header = $this->getHeaderWithApiTokenForTeacher();
+//        $header = $this->getHeaderWithApiTokenForTeacher();
 
         $response = $this->post(
             route('api.schoolEnrolmentStep.getEnrolmentInfo'),
-            $data,$header);
+            $data);
         $result = json_decode($response->content(),true);
         $this->assertArrayHasKey('code', $result);
         $this->assertEquals(JsonBuilder::CODE_SUCCESS, $result['code']);
@@ -156,6 +156,29 @@ class EnrolmentStepTest extends BasicPageTestCase
     }
 
 
+    /**
+     * 测试更新排序
+     * @depends testSaveSchoolEnrolmentStep
+     */
+    public function testUpdateSort($return) {
+
+        $this->withoutExceptionHandling();
+        $header = $this->getHeaderWithApiTokenForTeacher();
+        $data = ['enrolment'=>
+            [
+                ['id'=>$return['id'],'sort'=>1],
+            ]
+        ];
+        $response = $this->post(
+            route('api.school-enrolment-step.update-sort'),
+            $data,$header);
+        $result = json_decode($response->content(),true);
+        $this->assertArrayHasKey('code', $result);
+        $this->assertEquals(JsonBuilder::CODE_SUCCESS,
+            $result['code']);
+    }
+
+
 
 
 
@@ -174,9 +197,5 @@ class EnrolmentStepTest extends BasicPageTestCase
         $this->assertEquals(JsonBuilder::CODE_SUCCESS,
             $result['code']);
     }
-
-
-
-
 
 }

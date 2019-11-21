@@ -83,4 +83,21 @@ class SchoolEnrolmentStepController extends Controller
     }
 
 
+    /**
+     * 更新迎新步骤排序
+     * @param SchoolEnrolmentStepRequest $request
+     * @return string
+     */
+    public function updateSort(SchoolEnrolmentStepRequest $request) {
+        $sort = $request->getFormData();
+        $dao = new SchoolEnrolmentStepDao();
+        $result = $dao->updateStepSort($sort);
+        if($result->isSuccess()) {
+            return JsonBuilder::Success($result->getMessage());
+        } else {
+            return JsonBuilder::Error($result->getMessage());
+        }
+    }
+
+
 }

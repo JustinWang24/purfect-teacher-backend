@@ -23,6 +23,7 @@ trait TEnrolmentStepInfo
 
         $step->campus->name;
 
+
         $step->user;   // 负责人
         $step->tasks;  // 步骤子类
         // 协助人

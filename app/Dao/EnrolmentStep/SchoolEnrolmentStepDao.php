@@ -76,7 +76,6 @@ class SchoolEnrolmentStepDao{
             $medias = $data['medias'];
             unset($data['medias']);
         }
-
         $tasks = null;
         if(!empty($data['tasks'])) {
             $tasks = $data['tasks'];
@@ -230,19 +229,20 @@ class SchoolEnrolmentStepDao{
      */
     public function deleteSchoolEnrolmentStep($id) {
 
+        $ids = explode(',', $id);
         $messageBag = new MessageBag(JsonBuilder::CODE_ERROR);
         DB::beginTransaction();
         try{
             // 删除学校迎新步骤
-            SchoolEnrolmentStep::where('id',$id)->delete();
+            SchoolEnrolmentStep::whereIn('id',$ids)->delete();
             // 删除迎新协助人
-            SchoolEnrolmentStepAssist::where('school_enrolment_step_id',$id)->delete();
+            SchoolEnrolmentStepAssist::whereIn('school_enrolment_step_id',$ids)->delete();
 
             // 删除迎新文件
-            SchoolEnrolmentStepMedia::where('school_enrolment_step_id',$id)->delete();
+            SchoolEnrolmentStepMedia::whereIn('school_enrolment_step_id',$ids)->delete();
 
             // 删除迎新子类
-            SchoolEnrolmentStepTask::where('school_enrolment_step_id',$id)->delete();
+            SchoolEnrolmentStepTask::whereIn('school_enrolment_step_id',$ids)->delete();
 
             DB::commit();
             $messageBag->setCode(JsonBuilder::CODE_SUCCESS);
@@ -256,5 +256,29 @@ class SchoolEnrolmentStepDao{
         }
 
         return $messageBag;
+    }
+
+
+    /**
+     * 更新流程排序
+     * @param $data
+     * @return MessageBag
+     */
+    public function updateStepSort($data) {
+
+        DB::beginTransaction();
+        try{
+            foreach ($data as $key => $val) {
+                SchoolEnrolmentStep::where('id', $val['id'])->update(['sort'=>$val['sort']]);
+            }
+            DB::commit();
+            return new MessageBag(JsonBuilder::CODE_SUCCESS,'更新成功');
+        }
+        catch (\Exception $e) {
+
+            DB::rollBack();
+            return new MessageBag(JsonBuilder::CODE_ERROR,'更新失败');
+        }
+
     }
 }

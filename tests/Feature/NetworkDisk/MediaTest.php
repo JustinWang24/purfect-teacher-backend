@@ -15,7 +15,6 @@ class MediaTest extends BasicPageTestCase
      */
     public function testUploadMedia() {
 
-        $token = $this->getStudent()->user->api_token;
         $file = UploadedFile::fake()->image('random.jpg');
 
         /**
@@ -29,7 +28,7 @@ class MediaTest extends BasicPageTestCase
             'description'=>'测试文件上传',
             ];
 
-        $header = ['Authorization'=>"Bearer ".$token];
+        $header = $this->getHeaderWithApiToken();
         $response = $this->json('post',route('api.media.upload'),$data,$header);
 
         $result = json_decode($response->content(),true);
@@ -54,9 +53,9 @@ class MediaTest extends BasicPageTestCase
      * @depends testUploadMedia
      */
     public function testGetMediaInfo($return) {
-        $token = $this->getStudent()['user']['api_token'];
+
+        $header = $this->getHeaderWithApiToken();
         $data = ['uuid'=>$return['data']['file']['uuid']];
-        $header = ['Authorization'=>"Bearer ".$token];
         $response = $this->post(route('api.media.getMediaInfo'),$data,$header);
 
         $result = json_decode($response->content(),true);
@@ -73,9 +72,8 @@ class MediaTest extends BasicPageTestCase
      * 测试搜索
      */
     public function testSearchMedia() {
-        $token = $this->getStudent()['user']['api_token'];
+        $header = $this->getHeaderWithApiToken();
         $data = ['keywords'=>'a'];
-        $header = ['Authorization'=>"Bearer ".$token];
         $response = $this->post(route('api.media.search'),$data,$header);
         $result = json_decode($response->content(),true);
         $this->assertArrayHasKey('code', $result);
@@ -99,9 +97,8 @@ class MediaTest extends BasicPageTestCase
      * @depends testUploadMedia
      */
     public function testMediaClick($return) {
-        $token = $this->getStudent()['user']['api_token'];
+        $header = $this->getHeaderWithApiToken();
         $data = ['uuid'=>$return['data']['file']['uuid']];
-        $header = ['Authorization'=>"Bearer ".$token];
         $response = $this->post(route('api.media.click'),$data,$header);
         $result = json_decode($response->content(),true);
         $this->assertArrayHasKey('code', $result);
@@ -117,9 +114,8 @@ class MediaTest extends BasicPageTestCase
      */
     public function testDeleteMedia($testUploadresult) {
 
-        $token = $this->getStudent()['user']['api_token'];
+        $header = $this->getHeaderWithApiToken();
         $data = ['uuid'=>$testUploadresult['data']['file']['uuid']];
-        $header = ['Authorization'=>"Bearer ".$token];
         $response = $this->post(route('api.media.delete'),$data,$header);
         $result = json_decode($response->content(),true);
         $this->assertArrayHasKey('code', $result);
@@ -133,8 +129,7 @@ class MediaTest extends BasicPageTestCase
     public function testLatelyCreateAndBrowse() {
         $this->withoutExceptionHandling();
 
-        $token = $this->getStudent()['user']['api_token'];
-        $header = ['Authorization'=>"Bearer ".$token];
+        $header = $this->getHeaderWithApiToken();
         $response = $this->post(route('api.media.latelyUploadingAndBrowse'),[],$header);
         $result = json_decode($response->content(),true);
         $this->assertArrayHasKey('code', $result);
@@ -169,9 +164,8 @@ class MediaTest extends BasicPageTestCase
      * 判断是否可以上传
      */
     public function testJudgeIsUpload() {
-        $token = $this->getStudent()['user']['api_token'];
+        $header = $this->getHeaderWithApiToken();
         $data = ['size'=>1000];
-        $header = ['Authorization'=>"Bearer ".$token];
         $response = $this->post(route('api.media.judgeIsUpload'),$data,$header);
         $result = json_decode($response->content(), true);
         $this->assertArrayHasKey('code', $result);
@@ -186,8 +180,7 @@ class MediaTest extends BasicPageTestCase
      * 获取磁盘的大小
      */
     public function testGetNetWorkDiskSize() {
-        $token = $this->getStudent()['user']['api_token'];
-        $header = ['Authorization'=>"Bearer ".$token];
+        $header = $this->getHeaderWithApiToken();
         $response = $this->post(route('api.media.getNetWorkDiskSize'),[],$header);
 
         $result = json_decode($response->content(), true);
