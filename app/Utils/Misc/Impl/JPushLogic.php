@@ -28,8 +28,7 @@ class JPushLogic implements JPushSender
 
         foreach ($result as $key => $val) {
             if (!empty($val)) {
-                $val['key']['appKey'] = '253cee371b0e12791f9a2d0e';
-                $val['key']['masterSecret'] = '3716beb858765a4372206b67';
+
                 $iosNotification     = ['sound' => '', 'extras' => $extras];
                 $androidNotification = ['title' => $title, 'extras' => $extras];
                 $options             = ['apns_production' => 'False'];
