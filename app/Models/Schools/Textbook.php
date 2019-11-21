@@ -3,6 +3,7 @@
 namespace App\Models\Schools;
 
 use App\Models\Course;
+use App\Models\Courses\CourseTextbook;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -24,27 +25,29 @@ class Textbook extends Model
     /**
      * @var array
      */
-    protected $fillable = ['name', 'press', 'author', 'edition', 'school_id', 'type', 'purchase_price', 'price', 'introduce'];
+    protected $fillable = [
+        'name',
+        'press',
+        'author',
+        'edition',
+        'school_id',
+        'type',
+        'purchase_price',
+        'price',
+        'introduce'
+    ];
 
     protected $hidden = ['updated_at', 'deleted_at'];
 
     const TYPE_MAJOR  = 1;
     const TYPE_COMMON = 2;
     const TYPE_SELECT = 3;
+    const TYPE_MISC   = 4;
 
-    const TYPE_MAJOR_TEXT = '专业教材';
+    const TYPE_MAJOR_TEXT  = '专业教材';
     const TYPE_COMMON_TEXT = '普通教材';
     const TYPE_SELECT_TEXT = '选读教材';
-
-
-//    const STATUS_RELIEVE  = 0;
-//    const STATUS_NORMAL   = 1;
-//
-//    const STATUS_RELIEVE_TEXT = '解除';
-//    const STATUS_NORMAL_TEXT =  '正常';
-
-
-
+    const TYPE_MISC_TEXT   = '辅助材料';
 
     /**
      * 获取type属性
@@ -58,10 +61,25 @@ class Textbook extends Model
                 return self::TYPE_COMMON_TEXT;break;
             case self::TYPE_SELECT :
                 return self::TYPE_SELECT_TEXT;break;
+            case self::TYPE_MISC :
+                return self::TYPE_MISC_TEXT;break;
             default :return '';
         }
     }
 
+    /**
+     * 图书关联的图片
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function medias(){
+        return $this->hasMany(TextbookImage::class)->orderBy('position','asc');
+    }
 
-
+    /**
+     * 使用此教材的课程
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function courses(){
+        return $this->hasMany(CourseTextbook::class);
+    }
 }

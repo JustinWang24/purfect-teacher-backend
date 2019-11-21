@@ -2,6 +2,7 @@
 
 namespace App\Models\Courses;
 
+use App\Models\Course;
 use App\Models\Schools\Textbook;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -17,14 +18,6 @@ class CourseTextbook extends Model
     use SoftDeletes;
 
     /**
-     * The "type" of the auto-incrementing ID.
-     *
-     * @var string
-     */
-    protected $keyType = 'integer';
-
-
-    /**
      * @var array
      */
     protected $fillable = ['course_id', 'school_id', 'textbook_id'];
@@ -37,11 +30,18 @@ class CourseTextbook extends Model
 
     /**
      * 关联教材
-     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function textbook()
     {
-        return $this->hasOne(Textbook::class,'id','textbook_id');
+        return $this->belongsTo(Textbook::class);
     }
 
+    /**
+     * 关联的课程
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function course(){
+        return $this->belongsTo(Course::class);
+    }
 }

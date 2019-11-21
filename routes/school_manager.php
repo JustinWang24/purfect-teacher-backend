@@ -100,7 +100,6 @@ Route::prefix('school_manager')->group(function () {
     Route::any('consult/add', 'RecruitStudent\ConsultController@add')->name('school_manager.consult.add');
     Route::any('consult/edit', 'RecruitStudent\ConsultController@edit')->name('school_manager.consult.edit');
     Route::get('consult/delete', 'RecruitStudent\ConsultController@delete')->name('school_manager.consult.delete');
-    Route::get('registration/list', 'RecruitStudent\RegistrationInformatics@index')->name('school_manager.registration.list');  // 报名列表
 
     //设备管理
     Route::get('facility/list','FacilityController@list')->name('school_manager.facility.list');  // 设备列表
@@ -118,15 +117,8 @@ Route::prefix('school_manager')->group(function () {
     // 报名表管理
 //    Route::get('registration/examine', 'RecruitStudent\RegistrationInformatics@examine')->name('school_manager.registration.examine');  // 报名审核
 
-
     // 教材管理
-    Route::get('textbook/loadCampusTextbook', 'TextbookController@loadCampusTextbook')->name('school_manager.textbook.loadCampusTextbook'); // 获取校区教材采购情况
+    Route::get('textbook/loadCampusTextbook', 'TextbookController@loadCampusTextbook')
+        ->name('school_manager.textbook.loadCampusTextbook'); // 获取校区教材采购情况
     Route::get('textbook/campusTextbookDownload', 'TextbookController@campusTextbookDownload')->name('school_manager.textbook.campusTextbookDownload'); // 校区教材下载
-
-    //教师申请选修课管理
-    Route::get('apply/manager/preview', 'TeacherApplyElectiveCoursesController@apply_list')->name('school_manager.apply.manager.preview');
-    Route::get('apply/manager/add', 'TeacherApplyElectiveCoursesController@manager_create')->name('school_manager.apply.add');
-    Route::get('apply/manager/edit/{id}', 'TeacherApplyElectiveCoursesController@manager_edit')->name('school_manager.apply.edit');
-    Route::get('apply/manager/publish/{id}', 'TeacherApplyElectiveCoursesController@publish_apply')->name('school_manager.apply.publish');
-    Route::get('apply/manager/save', 'TeacherApplyElectiveCoursesController@apply_save')->name('school_manager.apply.save');
 });

@@ -20,7 +20,6 @@ class CourseTextbookDao
         return CourseTextbook::create($data);
     }
 
-
     /**
      * 添加课程教材关联
      * @param $courseId
@@ -31,6 +30,7 @@ class CourseTextbookDao
     public function createCourseTextbook($courseId, $schoolId, $textbookIdArr) {
         $data = [];
         $dateTime = Carbon::now()->toDateTimeString();
+
         foreach ($textbookIdArr as $key => $value) {
             $data[] = [
                 'course_id' => $courseId,
@@ -42,6 +42,7 @@ class CourseTextbookDao
         }
 
         $re = DB::table('course_textbooks')->insert($data);
+
         if($re){
             return new MessageBag(JsonBuilder::CODE_SUCCESS,'添加成功');
         } else {
