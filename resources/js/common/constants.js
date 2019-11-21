@@ -85,6 +85,7 @@ export const Constants = {
         },
         TEXTBOOK: {
             EXPORT_TEXTBOOKS_BY_MAJOR: '/teacher/textbook/loadMajorTextbook',
+            EXPORT_TEXTBOOKS_BY_CAMPUS: '/school_manager/textbook/loadCampusTextbook',
             LOAD_TEXTBOOKS_PAGINATE: '/teacher/textbook/list-paginate',
             SEARCH_TEXTBOOKS: '/teacher/textbook/search',
         }

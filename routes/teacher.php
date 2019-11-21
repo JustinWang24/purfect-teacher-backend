@@ -70,10 +70,13 @@ Route::prefix('teacher')->group(function () {
 
     Route::get('textbook/loadMajorTextbook', 'TextbookController@loadMajorTextbook')
         ->name('teacher.textbook.loadMajorTextbook'); // 获取专业教材采购情况
+
     Route::get('textbook/loadGradeTextbook', 'TextbookController@loadGradeTextbook')
         ->name('teacher.textbook.loadGradeTextbook'); // 获取班级教材采购情况
+
     Route::get('textbook/gradeTextbookDownload', 'TextbookController@gradeTextbookDownload')
         ->name('teacher.textbook.gradeTextbookDownload'); // 班级教材下载
+
     Route::post('textbook/courseBindingTextbook', 'TextbookController@courseBindingTextbook')
         ->name('teacher.textbook.courseBindingTextbook'); // 课程绑定教材
 

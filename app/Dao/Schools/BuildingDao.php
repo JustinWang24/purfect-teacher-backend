@@ -87,6 +87,7 @@ class BuildingDao
             $buildings = $this->getBuildingsByCampus($campus);
             if(count($buildings)){
                 $data[] = [
+                    'id'=>$campus->id,
                     'campus'=>$campus->name,
                     'buildings'=>$buildings
                 ];
