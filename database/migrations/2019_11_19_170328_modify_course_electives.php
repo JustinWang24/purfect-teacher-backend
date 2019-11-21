@@ -26,6 +26,9 @@ class ModifyCourseElectives extends Migration
      */
     public function down()
     {
-        //
+        Schema::table('course_electives', function (Blueprint $table) {
+            $table->dropColumn('status');
+            $table->dropColumn('start_year');
+        });
     }
 }

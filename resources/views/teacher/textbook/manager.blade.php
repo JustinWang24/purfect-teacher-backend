@@ -53,6 +53,7 @@
                 v-on:load-textbooks="loadTextbooks"
                 v-on:book-edit="editBookAction"
                 v-on:connect-courses="connectCoursesAction"
+                v-on:book-delete="deleteBookAction"
             ></textbooks-table>
             <div class="row">
                 <div class="col-12">

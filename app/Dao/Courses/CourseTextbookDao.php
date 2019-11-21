@@ -10,6 +10,13 @@ use Illuminate\Support\Facades\DB;
 
 class CourseTextbookDao
 {
+    /**
+     * @param $textbookId
+     * @return mixed
+     */
+    public function deleteByTextbook($textbookId){
+        return CourseTextbook::where('textbook_id',$textbookId)->delete();
+    }
 
     /**
      * 创建
