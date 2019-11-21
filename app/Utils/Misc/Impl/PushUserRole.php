@@ -18,7 +18,7 @@ trait PushUserRole
          */
         foreach ($users as $user) {
 
-            if ($user->type == Role::VERIFIED_USER_STUDENT || $user->type == Role::VERIFIED_USER_CLASS_LEADER || $user->type == Role::VERIFIED_USER_CLASS_SECRETARY) {
+            if ($user->isStudent()) {
                 // 学生端
                 $this->appKey       = env('PUSH_STUDENT_KEY');
                 $this->masterSecret = env('PUSH_STUDENT_SECRET');
@@ -28,7 +28,7 @@ trait PushUserRole
                     $student['regId'][] = $device->push_id;
                 }
 
-            } elseif ($user->type == Role::TEACHER || Role::EMPLOYEE) {
+            } elseif ($user->isTeacher() || $user->isEmployee()) {
                 // 教师端
                 $this->appKey       = env('PUSH_TEACHER_KEY');
                 $this->masterSecret = env('PUSH_TEACHER_SECRET');
@@ -40,6 +40,8 @@ trait PushUserRole
                 }
 
             } elseif ($user->type == Role::COMPANY || $user->type == Role::DELIVERY || $user->type == Role::BUSINESS_INNER || $users == BUSINESS_OUTER) {
+                // TODO :: 以后实现
+
                 // 商企端
                 $this->appKey       = env('PUSH_ENTERPRISE_KEY');
                 $this->masterSecret = env('PUSH_ENTERPRISE_SECRET');
@@ -53,7 +55,7 @@ trait PushUserRole
                 $this->masterSecret = null;
             }
         }
-         return [$student,  $teacher, $shop];
+        return [$student,  $teacher, $shop];
     }
 
 }
