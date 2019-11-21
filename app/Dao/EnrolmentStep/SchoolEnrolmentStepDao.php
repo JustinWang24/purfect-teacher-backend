@@ -24,26 +24,36 @@ class SchoolEnrolmentStepDao{
 
 
     /**
-     * 通过ID获取迎新详情
-     * @param $id
-     * @return SchoolEnrolmentStep
+     * 获取当前步的下一步
+     * @param int $schoolId  学校ID
+     * @param int $campusId  校区ID
+     * @param null $sort 当前第几步
+     * @return mixed
      */
-    public function getEnrolmentStepInfoById($id) {
-        $step = $this->getEnrolmentStepById($id);
-        $step->user;
-        $step->tasks;
-        $assists = $step->assists;
-
-        foreach ($assists as $k=>$v) {
-            $assists[$k]['user'] = $v->user;
+    public function getEnrolmentStepAfterFirst($schoolId, $campusId, $sort=null) {
+        $map = ['school_id'=>$schoolId, 'campus_id'=>$campusId];
+        $where = [];
+        if(!is_null($sort)) {
+            $where = [['sort','>',$sort]];
         }
+        return SchoolEnrolmentStep::where($map)->where($where)->orderBy('sort')->first();
+    }
 
-        $medias = $step->medias;
-        foreach ($medias as $k => $v) {
-            $medias[$k]['media'] = $v->media;
+
+    /**
+     * 获取当前步的上一步
+     * @param int $schoolId  学校ID
+     * @param int $campusId  校区ID
+     * @param null $sort 当前第几步
+     * @return mixed
+     */
+    public function getEnrolmentStepBeforeFirst($schoolId, $campusId, $sort=null) {
+        $map = ['school_id'=>$schoolId, 'campus_id'=>$campusId];
+        $where = [];
+        if(!is_null($sort)) {
+            $where = [['sort','<',$sort]];
         }
-
-        return $step;
+        return SchoolEnrolmentStep::where($map)->where($where)->orderBy('sort', 'desc')->first();
     }
 
 
@@ -72,6 +82,9 @@ class SchoolEnrolmentStepDao{
             $tasks = $data['tasks'];
             unset($data['tasks']);
         }
+        $map = ['school_id'=>$data['school_id'], 'campus_id'=>$data['campus_id']];
+        $sort = SchoolEnrolmentStep::where($map)->count();
+        $data['sort'] = $sort + 1;
 
         DB::beginTransaction();
         try {

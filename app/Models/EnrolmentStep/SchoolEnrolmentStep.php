@@ -2,6 +2,7 @@
 
 namespace App\Models\EnrolmentStep;
 
+use App\Models\Schools\Campus;
 use App\User;
 use Illuminate\Database\Eloquent\Model;
 
@@ -19,6 +20,9 @@ use Illuminate\Database\Eloquent\Model;
  */
 class SchoolEnrolmentStep extends Model
 {
+    const STEP_INFO = 0;   // 查看步骤详情
+    const STEP_BEFORE = 1; // 查看步骤上一步
+    const STEP_AFTER = 2;  // 查看步骤下一步
     /**
      * @var array
      */
@@ -26,14 +30,29 @@ class SchoolEnrolmentStep extends Model
 
     protected $hidden = ['updated_at'];
 
-    public $user_field = ['id', 'uuid', 'name', 'mobile'];
+    public $user_field = ['name', 'mobile'];
+
+    public $campus_field = ['name'];
+
+    public $tasks_field = ['name', 'describe', 'type'];
+
+
+    /**
+     * 获取步骤类型
+     * @return array
+     */
+    public static function getStepType(){
+        return [self::STEP_INFO, self::STEP_AFTER, self::STEP_BEFORE];
+    }
+
+
 
     /**
      * 协助人
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
     public function assists() {
-         return $this->hasMany(SchoolEnrolmentStepAssist::class);
+         return $this->hasMany(SchoolEnrolmentStepAssist::class)->select('user_id');
     }
 
 
@@ -51,7 +70,7 @@ class SchoolEnrolmentStep extends Model
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
     public function tasks() {
-        return $this->hasMany(SchoolEnrolmentStepTask::class);
+        return $this->hasMany(SchoolEnrolmentStepTask::class)->select($this->tasks_field);
     }
 
 
@@ -61,6 +80,11 @@ class SchoolEnrolmentStep extends Model
      */
     public function user() {
         return $this->belongsTo(User::class)->select($this->user_field);
+    }
+
+
+    public function campus() {
+        return $this->belongsTo(Campus::class)->select($this->campus_field);
     }
 
 }

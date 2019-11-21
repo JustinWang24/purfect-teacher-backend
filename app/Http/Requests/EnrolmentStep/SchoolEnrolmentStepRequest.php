@@ -20,6 +20,11 @@ class SchoolEnrolmentStepRequest extends MyStandardRequest
      * @return mixed
      */
     public function getEnrolmentId() {
-        return $this->get('id');
+        return $this->get('id',null);
+    }
+
+
+    public function getStepType() {
+
     }
 }
