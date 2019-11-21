@@ -385,13 +385,11 @@
                 this.$emit('timetable-refresh',{weekType: weekType});
             },
             makeEnquiryColumnHandler: function (payload){
-                console.log(payload);
                 // payload 就是课表的 item
                 this.makeEnquiryFormVisible = true;
                 this.enquiryForm = payload;
             },
             makeEnquiryFormSubmitHandler: function () {
-                console.log(this.enquiryForm);
                 this.enquiryForm.school_id = this.schoolId;
                 axios.post(
                     Constants.API.ENQUIRY_SUBMIT,

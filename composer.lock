@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "13a6560dd0589ac07bca3234d465b0ec",
+    "content-hash": "c900783a9a4f59c89b1bb9ade71d19cf",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -1276,6 +1276,62 @@
             ],
             "description": "Highlight PHP code in terminal",
             "time": "2018-09-29T18:48:56+00:00"
+        },
+        {
+            "name": "jpush/jpush",
+            "version": "v3.6.5",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/jpush/jpush-api-php-client.git",
+                "reference": "2ebd48f083f0dbd60ee4fe25616a50301138a4d5"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/jpush/jpush-api-php-client/zipball/2ebd48f083f0dbd60ee4fe25616a50301138a4d5",
+                "reference": "2ebd48f083f0dbd60ee4fe25616a50301138a4d5",
+                "shasum": ""
+            },
+            "require": {
+                "ext-curl": "*",
+                "php": ">=5.3.3"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "*"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "JPush\\": "src/JPush/"
+                }
+            },
+            "autoload-dev": {
+                "psr-4": {
+                    "JPush\\Tests\\": "tests/"
+                }
+            },
+            "scripts": {
+                "test": [
+                    "vendor/bin/phpunit"
+                ]
+            },
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "JPush",
+                    "email": "support@jpush.cn",
+                    "homepage": "https://www.jpush.cn/",
+                    "role": "Developer"
+                }
+            ],
+            "description": "JPush API PHP Client",
+            "homepage": "https://github.com/jpush/jpush-api-php-client",
+            "support": {
+                "source": "https://github.com/jpush/jpush-api-php-client/tree/v3.6.5",
+                "issues": "https://github.com/jpush/jpush-api-php-client/issues"
+            },
+            "time": "2019-05-30T09:52:14+00:00"
         },
         {
             "name": "khanamiryan/qrcode-detector-decoder",
