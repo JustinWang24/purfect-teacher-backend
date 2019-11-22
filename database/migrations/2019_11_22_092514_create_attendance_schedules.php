@@ -15,6 +15,8 @@ class CreateAttendanceSchedules extends Migration
     {
         Schema::create('attendance_schedules', function (Blueprint $table) {
             $table->bigIncrements('id');
+            $table->unsignedInteger('school_id')->comment('学校ID');
+            $table->unsignedInteger('campus_id')->comment('校区ID');
             $table->unsignedInteger('attendance_id')->nullable(true)->index()->comment('值周任务表id');
             $table->unsignedBigInteger('user_id')->nullable(false)->index()->comment('用户id 学生老师都有可能');
             $table->date('start_time')->nullable(true)->comment('任务开始时间');
