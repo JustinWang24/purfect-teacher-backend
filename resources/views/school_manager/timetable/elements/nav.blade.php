@@ -11,7 +11,7 @@
             </a>
         </div>
         <div class="nav-item {{ $app_name === 'courses_mgr_app' ? 'active' : null }}">
-            <a target="_blank" href="{{ route('school_manager.courses.manager',['uuid'=>session('school.uuid')]) }}" class="nav-link">
+            <a href="{{ route('school_manager.courses.manager',['uuid'=>session('school.uuid')]) }}" class="nav-link">
                 <i class="fa fa-list-alt"></i> 课程管理
             </a>
         </div>

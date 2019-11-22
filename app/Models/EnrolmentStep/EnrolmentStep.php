@@ -18,6 +18,4 @@ class EnrolmentStep extends Model
      */
     protected $fillable = ['name'];
 
-
-
 }

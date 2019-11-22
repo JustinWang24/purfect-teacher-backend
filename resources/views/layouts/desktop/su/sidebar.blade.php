@@ -37,57 +37,30 @@
                     </a>
                 </li>
 
-                <li class="nav-item">
-                    <a href="{{ route('school_manager.timetable.manager.preview',['uuid'=>session('school.uuid')]) }}" class="nav-link">
-                        <i class="material-icons">event</i>
-                        <span class="title">课程表管理</span>
-                    </a>
-                </li>
-
                     <li class="nav-item">
-                        <a href="{{ route('teacher.textbook.manager') }}" class="nav-link">
-                            <i class="material-icons">map</i>
-                            <span class="title">教材管理</span>
+                        <a href="{{ route('school_manager.facility.list') }}" class="nav-link">
+                            <i class="material-icons">dashboard</i>
+                            <span class="title">设备管理</span>
                         </a>
                     </li>
+
+@include('layouts.desktop.elements.courses_menu_group')
+@include('layouts.desktop.elements.recruitment_menu_group')
+
+
+
+                <li class="nav-item">
+                    <a href="{{ route('school_manager.welcome.manager',['uuid'=>session('school.uuid')])  }}" class="nav-link">
+                        <i class="material-icons">face</i>
+                        <span class="title">迎新助手</span>
+                    </a>
+                </li>
 
                 <li class="nav-item">
                     <a href="{{ route('teacher.conference.index',['uuid'=>session('school.uuid')])  }}" class="nav-link">
                         <i class="material-icons">event_seat</i>
                         <span class="title">会议管理</span>
                     </a>
-                </li>
-
-                <li class="nav-item">
-                    <a href="javascript:void(0);" class="nav-link nav-toggle">
-                        <i class="material-icons">people</i>
-                        <span class="title">招生管理</span>
-                        <span class="selected"></span>
-                        <span class="arrow open"></span>
-                    </a>
-                    <ul class="sub-menu">
-                        <li class="nav-item">
-                            <a href="{{ route('teacher.planRecruit.list') }}" class="nav-link ">
-                                <span class="title">预招管理</span>
-                                <span class="selected"></span>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="{{ route('school_manager.consult.list') }}" class="nav-link ">
-                                <span class="title">咨询管理</span>
-                                <span class="selected"></span>
-                            </a>
-                        </li>
-                    </ul>
-                </li>
-
-                <li class="nav-item">
-                    <a href="{{ route('school_manager.facility.list') }}" class="nav-link">
-                        <i class="material-icons">dashboard</i>
-                        <span class="title">设备管理</span>
-                    </a>
-
-
                 </li>
                 @endif
             </ul>

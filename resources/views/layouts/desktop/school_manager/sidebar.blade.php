@@ -23,80 +23,7 @@
                 </li>
 
                 <!--begin-->
-                <li class="nav-item">
-                    <a href="javascript:;" class="nav-link nav-toggle">
-                        <i class="material-icons">slideshow</i>
-                        <span class="title">Multi Level Menu</span>
-                        <span class="arrow "></span>
-                    </a>
-                    <ul class="sub-menu">
-                        <li class="nav-item">
-                            <a href="javascript:;" class="nav-link nav-toggle">
-                                <i class="fa fa-university"></i> Item 1
-                                <span class="arrow"></span>
-                            </a>
-                            <ul class="sub-menu">
-                                <li class="nav-item">
-                                    <a href="javascript:;" class="nav-link nav-toggle">
-                                        <i class="fa fa-bell-o"></i> Arrow Toggle
-                                        <span class="arrow "></span>
-                                    </a>
-                                    <ul class="sub-menu">
-                                        <li class="nav-item">
-                                            <a href="javascript:;" class="nav-link">
-                                                <i class="fa fa-calculator"></i> Sample Link 1</a>
-                                        </li>
-                                        <li class="nav-item">
-                                            <a href="#" class="nav-link">
-                                                <i class="fa fa-clone"></i> Sample Link 2</a>
-                                        </li>
-                                        <li class="nav-item">
-                                            <a href="#" class="nav-link">
-                                                <i class="fa fa-cogs"></i> Sample Link 3</a>
-                                        </li>
-                                    </ul>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="#" class="nav-link">
-                                        <i class="fa fa-file-pdf-o"></i> Sample Link 1</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="#" class="nav-link">
-                                        <i class="fa fa-rss"></i> Sample Link 2</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="#" class="nav-link">
-                                        <i class="fa fa-hdd-o"></i> Sample Link 3</a>
-                                </li>
-                            </ul>
-                        </li>
-                        <li class="nav-item">
-                            <a href="javascript:;" class="nav-link nav-toggle">
-                                <i class="fa fa-gavel"></i> Arrow Toggle
-                                <span class="arrow"></span>
-                            </a>
-                            <ul class="sub-menu">
-                                <li class="nav-item">
-                                    <a href="#" class="nav-link">
-                                        <i class="fa fa-paper-plane"></i> Sample Link 1</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="#" class="nav-link">
-                                        <i class="fa fa-power-off"></i> Sample Link 1</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="#" class="nav-link">
-                                        <i class="fa fa-recycle"></i> Sample Link 1
-                                    </a>
-                                </li>
-                            </ul>
-                        </li>
-                        <li class="nav-item">
-                            <a href="#" class="nav-link">
-                                <i class="fa fa-volume-up"></i> Item 3 </a>
-                        </li>
-                    </ul>
-                </li>
+
                 <li class="nav-item">
                     <a href="{{ route('school_manager.scenery.list') }}" class="nav-link nav-toggle">
                         <i class="material-icons">dashboard</i>
@@ -104,6 +31,31 @@
                         <span class="selected"></span>
                         <span class="arrow open"></span>
                     </a>
+                </li>
+
+                <li class="nav-item">
+                    <a href="javascript:void(0);" class="nav-link nav-toggle">
+                        <i class="material-icons">school</i>
+                        <span class="title">课程</span>
+                        <span class="arrow open"></span>
+                    </a>
+                    <ul class="sub-menu">
+                        <li class="nav-item">
+                            <a href="{{ route('school_manager.courses.manager',['uuid'=>session('school.uuid')]) }}" class="nav-link ">
+                                <span class="title">课程管理</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{ route('teacher.textbook.manager') }}" class="nav-link ">
+                                <span class="title">教材管理</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{ route('school_manager.timetable.manager.preview',['uuid'=>session('school.uuid')]) }}" class="nav-link">
+                                <span class="title">课程表管理</span>
+                            </a>
+                        </li>
+                    </ul>
                 </li>
 
                 <li class="nav-item">
