@@ -58,7 +58,6 @@ use App\Utils\Misc\ConfigurationTool;
                                 ?>&nbsp;
                             </form>
                         </div>
-
                     </div>
                 </div>
             </div>
@@ -84,7 +83,7 @@ use App\Utils\Misc\ConfigurationTool;
                                 <thead>
                                 <tr>
                                     <th>校区名称</th>
-                                    <th style="width: 400px;">校区设施</th>
+                                    <th style="width: 300px;">校区设施</th>
                                     <th style="width: 100px;text-align: center;">学院数</th>
                                     <th style="width: 100px;">教职工总数</th>
                                     <th style="width: 100px;">学生总数</th>

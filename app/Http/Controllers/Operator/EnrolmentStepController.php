@@ -18,6 +18,7 @@ class EnrolmentStepController extends Controller
         $this->dataForView['pageTitle'] = '迎新助手';
         $dao = new EnrolmentStepDao();
         $this->dataForView['basics'] = $dao->getAll();
+        $this->dataForView['campus_id'] = $request->getCampusId();
 
         return view('school_manager.welcome.manager', $this->dataForView);
     }

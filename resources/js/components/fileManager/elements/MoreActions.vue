@@ -10,7 +10,7 @@
                 </el-dropdown-item>
                 <el-dropdown-item v-if="download">
                     <el-button  v-on:click="downloadFile" type="text">
-                        <i class="el-icon-download"></i>下载
+                        <i class="el-icon-download"></i> {{ downloadText }}
                     </el-button>
                 </el-dropdown-item>
                 <el-dropdown-item v-if="share">
@@ -88,13 +88,21 @@
 
     export default {
         name: "MoreActions",
-        props:['file','color','download','share','type','rename','initCategories','userUuid'],
+        props:['file','color','download','share','rename','initCategories','userUuid'],
         computed: {
             'title': function(){
                 return '修改' + this.typeText + '名称';
             },
             'typeText': function () {
                 return (this.type === Constants.TYPE_CATEGORY ? '目录' : '文件');
+            },
+            'downloadText': function(){
+                if(Util.isImage(this.file.type) || Util.isPdfDoc(this.file.type) || Util.isVideoDoc(this.file.type) || Util.isAudioDoc(this.file.type)){
+                    return '查看';
+                }
+                else{
+                    return '下载';
+                }
             }
         },
         data() {
