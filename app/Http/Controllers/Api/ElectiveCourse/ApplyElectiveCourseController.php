@@ -18,11 +18,10 @@ class ApplyElectiveCourseController extends Controller
     /**
      * 教师创建申请页面
      * @param TeacherApplyElectiveCourseRequest $request
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return string
      */
     public function create(TeacherApplyElectiveCourseRequest $request)
     {
-
         $validated = $request->validated();
         //获取当前学校的教师数据，实际给定的是user对象
         $teacher = $request->user();
