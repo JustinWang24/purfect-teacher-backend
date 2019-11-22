@@ -46,15 +46,7 @@
 
 @include('layouts.desktop.elements.courses_menu_group')
 @include('layouts.desktop.elements.recruitment_menu_group')
-
-
-
-                <li class="nav-item">
-                    <a href="{{ route('school_manager.welcome.manager',['uuid'=>session('school.uuid')])  }}" class="nav-link">
-                        <i class="material-icons">face</i>
-                        <span class="title">迎新助手</span>
-                    </a>
-                </li>
+@include('layouts.desktop.elements.welcome_menu')
 
                 <li class="nav-item">
                     <a href="{{ route('teacher.conference.index',['uuid'=>session('school.uuid')])  }}" class="nav-link">

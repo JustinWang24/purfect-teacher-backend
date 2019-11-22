@@ -93,7 +93,8 @@ export const Constants = {
             DELETE_TEXTBOOK: '/teacher/textbook/delete',
         },
         WELCOME:{
-            LOAD_STEP_DETAILS: '/api//schoolEnrolmentStep/getEnrolmentInfo'
+            LOAD_STEP_DETAILS: '/api/enrolment-step/schoolEnrolmentStep/getEnrolmentInfo',
+            LOAD_WHOLE_PROCESS: '/api/enrolment-step/step-list', // 获取某个学校校区的迎新流程中所有步骤
         }
     },
     YEARS: ['N.A','一年级','二年级','三年级','四年级','五年级','六年级'],

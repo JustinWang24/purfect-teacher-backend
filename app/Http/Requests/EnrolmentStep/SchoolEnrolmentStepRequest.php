@@ -19,7 +19,6 @@ class SchoolEnrolmentStepRequest extends MyStandardRequest
         return $this->get('enrolment');
     }
 
-
     /**
      * 获取学校迎新步骤ID
      * @return mixed
@@ -27,5 +26,4 @@ class SchoolEnrolmentStepRequest extends MyStandardRequest
     public function getEnrolmentId() {
         return $this->get('id',null);
     }
-
 }
