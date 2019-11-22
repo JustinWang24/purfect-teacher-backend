@@ -276,3 +276,34 @@ Route::prefix('network-disk')->middleware('auth:api')->group(function () {
 
 });
 
+// 选修课申请
+Route::prefix('elective-course')->middleware('auth:api')->group(function () {
+    Route::post('/save','Api\ElectiveCourse\ApplyElectiveCourseController@create')
+        ->name('api.elective-course.save');
+
+});
+
+
+Route::prefix('enrolment-step')->middleware('auth:api')->group(function () {
+
+    // 获取系统迎新列表
+    Route::any('/enrolmentStep/getEnrolmentStepList','Api\EnrolmentStep\EnrolmentStepController@getEnrolmentStepList')
+        ->name('api.enrolmentStep.getEnrolmentStepList');
+    // 创建/修改 学校迎新步骤
+    Route::any('/schoolEnrolmentStep/saveEnrolment','Api\EnrolmentStep\SchoolEnrolmentStepController@saveEnrolment')
+        ->name('api.schoolEnrolmentStep.saveEnrolment');
+    // 更新排序
+    Route::any('/schoolEnrolmentStep/updateSort','Api\EnrolmentStep\SchoolEnrolmentStepController@updateSort')
+        ->name('api.school-enrolment-step.update-sort');
+
+    // 删除学校迎新步骤
+    Route::any('/schoolEnrolmentStep/deleteEnrolment','Api\EnrolmentStep\SchoolEnrolmentStepController@deleteEnrolment')
+        ->name('api.schoolEnrolmentStep.deleteEnrolment');
+});
+
+Route::prefix('enrolment-step')->group(function () {
+
+    // 获取学校迎新步骤详情
+    Route::any('/schoolEnrolmentStep/getEnrolmentInfo', 'Api\EnrolmentStep\SchoolEnrolmentStepController@getEnrolmentInfo')
+        ->name('api.schoolEnrolmentStep.getEnrolmentInfo');
+});

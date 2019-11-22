@@ -58,6 +58,7 @@ Route::prefix('teacher')->group(function () {
     Route::get('textbook/manager', 'TextbookController@manager')->name('teacher.textbook.manager');     // 教材管理界面
     Route::get('textbook/add', 'TextbookController@add')->name('teacher.textbook.add');     // 添加教程
     Route::get('textbook/edit', 'TextbookController@edit')->name('teacher.textbook.edit');  // 编辑教程
+    Route::post('textbook/delete', 'TextbookController@delete')->name('teacher.textbook.delete'); // 删除教程
     Route::post('textbook/save', 'TextbookController@save')->name('teacher.textbook.save'); // 保存教程
     Route::post('textbook/search', 'TextbookController@search')->name('teacher.textbook.search'); // 保存教程
     Route::get('textbook/list', 'TextbookController@list')->name('teacher.textbook.list');  // 教程列表
@@ -70,10 +71,13 @@ Route::prefix('teacher')->group(function () {
 
     Route::get('textbook/loadMajorTextbook', 'TextbookController@loadMajorTextbook')
         ->name('teacher.textbook.loadMajorTextbook'); // 获取专业教材采购情况
+
     Route::get('textbook/loadGradeTextbook', 'TextbookController@loadGradeTextbook')
         ->name('teacher.textbook.loadGradeTextbook'); // 获取班级教材采购情况
+
     Route::get('textbook/gradeTextbookDownload', 'TextbookController@gradeTextbookDownload')
         ->name('teacher.textbook.gradeTextbookDownload'); // 班级教材下载
+
     Route::post('textbook/courseBindingTextbook', 'TextbookController@courseBindingTextbook')
         ->name('teacher.textbook.courseBindingTextbook'); // 课程绑定教材
 

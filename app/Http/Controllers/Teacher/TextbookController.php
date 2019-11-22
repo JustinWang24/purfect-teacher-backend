@@ -3,12 +3,13 @@
 namespace App\Http\Controllers\Teacher;
 
 use App\Dao\Courses\CourseTextbookDao;
+use App\Dao\Schools\MajorDao;
+use App\Utils\Files\HtmlToCsv;
 use App\Utils\JsonBuilder;
 use App\Dao\Textbook\TextbookDao;
 use App\Http\Controllers\Controller;
 use App\Dao\Textbook\DownloadOfficeDao;
 use App\Http\Requests\Textbook\TextbookRequest;
-
 
 class TextbookController extends Controller
 {
@@ -86,7 +87,7 @@ class TextbookController extends Controller
             $list[$key]['type'] = $val['type_text'];
         }
 
-        $data['textbook']=$list;
+        $data['textbooks']=$list;
         return JsonBuilder::Success($data);
     }
 
@@ -103,6 +104,19 @@ class TextbookController extends Controller
         $textbookDao = new TextbookDao();
         $list = $textbookDao->getTextbookListPaginateBySchoolId($schoolId, $pageNumber, $pageSize);
         return JsonBuilder::Success($list);
+    }
+
+    /**
+     * 删除教材
+     * @param TextbookRequest $request
+     * @return string
+     */
+    public function delete(TextbookRequest $request){
+        $schoolId = $request->getSchoolId();
+        $textbookId = $request->getTextbookId();
+        $textbookDao = new TextbookDao();
+        $done = $textbookDao->delete($textbookId, $schoolId);
+        return $done ? JsonBuilder::Success(): JsonBuilder::Error();
     }
 
     /**
@@ -144,14 +158,29 @@ class TextbookController extends Controller
      * @return string
      */
     public function loadMajorTextbook(TextbookRequest $request) {
-
         $schoolId = $request->getSchoolId();
         $textbookDao = new TextbookDao();
         $majorId = $request->getMajorId();
 
         $result = $textbookDao->getTextbooksByMajor($majorId,$schoolId);
-        $data = ['major_textbook'=>$result];
-        return JsonBuilder::Success($data);
+
+        $majorDao = new MajorDao();
+        $major = $majorDao->getMajorById($majorId);
+
+        $this->dataForView['major'] = $major;
+        $this->dataForView['major_textbook'] = $result;
+
+        if($request->isDownloadRequest()){
+            $path = HtmlToCsv::Convert(
+                'teacher.textbook.elements.table_by_major',
+                $this->dataForView
+            );
+            if($path){
+                return response()->download($path,$major->name.'教材汇总表.xls');
+            }
+        }
+
+        return view('teacher.textbook.to_csv_by_major',$this->dataForView);
     }
 
     /**

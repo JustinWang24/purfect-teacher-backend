@@ -117,9 +117,8 @@ Route::prefix('school_manager')->group(function () {
     // 报名表管理
 //    Route::get('registration/examine', 'RecruitStudent\RegistrationInformatics@examine')->name('school_manager.registration.examine');  // 报名审核
 
-
     // 教材管理
-    Route::get('textbook/loadCampusTextbook', 'TextbookController@loadCampusTextbook')->name('school_manager.textbook.loadCampusTextbook'); // 获取校区教材采购情况
+    Route::get('textbook/loadCampusTextbook', 'TextbookController@loadCampusTextbook')
+        ->name('school_manager.textbook.loadCampusTextbook'); // 获取校区教材采购情况
     Route::get('textbook/campusTextbookDownload', 'TextbookController@campusTextbookDownload')->name('school_manager.textbook.campusTextbookDownload'); // 校区教材下载
-
 });

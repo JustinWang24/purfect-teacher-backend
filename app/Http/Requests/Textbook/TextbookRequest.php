@@ -28,8 +28,7 @@ class TextbookRequest extends MyStandardRequest
      * @return array
      */
     public function getTextbookIdArr() {
-        $textbookIds = $this->get('textbook_ids',null);
-        return explode(',', $textbookIds);
+        return $this->get('textbook_ids',[]);
     }
 
     public function getCourse(){
@@ -50,5 +49,9 @@ class TextbookRequest extends MyStandardRequest
 
     public function getQueryScope(){
         return $this->get('scope', null);
+    }
+
+    public function isDownloadRequest(){
+        return $this->get('download',false);
     }
 }

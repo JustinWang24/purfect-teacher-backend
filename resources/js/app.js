@@ -40,7 +40,9 @@ Vue.component('file-preview', require('./components/fileManager/elements/FilePre
 import { Constants } from './common/constants';
 import { Util } from './common/utils';
 import { getTimeSlots, getMajors } from './common/timetables';
+import { loadBuildings } from './common/facility';
 import { getEmptyElectiveCourseApplication } from './common/elective_course';
+import { loadTextbooksPaginate, deleteTextbook } from './common/textbook';
 
 /**
  * 教材管理
@@ -105,6 +107,14 @@ if(document.getElementById('textbook-manager-app')){
         },
         methods: {
             resetForm: function(){
+                this.textbookModel.id = null;
+                this.textbookModel.name = '';
+                this.textbookModel.edition = '';
+                this.textbookModel.author = '';
+                this.textbookModel.press = '';
+                this.textbookModel.purchase_price = '';
+                this.textbookModel.price = '';
+                this.textbookModel.introduce = '';
                 this.textbookModel.type = 1;
                 this.textbookModel.status = 1;
                 this.textbookModel.medias = [];// 教材关联的图片
@@ -140,10 +150,12 @@ if(document.getElementById('textbook-manager-app')){
             exportBooksSheet: function(){
                 this.showExportMajorFlag = false;
                 if(this.exportModel.type === 'major'){
-                    const u1 = Constants.API.TEXTBOOK.EXPORT_TEXTBOOKS_BY_MAJOR + '?major=' + this.exportModel.value;
-                    axios.get(u1).then(res => {
-                        console.log(res.data.data);
-                    })
+                    const u1 = Constants.API.TEXTBOOK.EXPORT_TEXTBOOKS_BY_MAJOR + '?major_id=' + this.exportModel.value;
+                    window.open(u1, '_blank');
+                }
+                if(this.exportModel.type === 'campus'){
+                    const u1 = Constants.API.TEXTBOOK.EXPORT_TEXTBOOKS_BY_CAMPUS + '?campus_id=' + this.exportModel.value;
+                    window.open(u1, '_blank');
                 }
             },
             exportByGrade: function(){
@@ -169,7 +181,17 @@ if(document.getElementById('textbook-manager-app')){
                 this.showExportMajorFlag = true;
             },
             exportByCampus: function(){
-
+                if(this.campuses.length === 0){
+                    this.isLoading = true;
+                    loadBuildings(this.schoolId).then(res => {
+                        if(Util.isAjaxResOk(res)){
+                            this.campuses = res.data.data.campuses;
+                        }
+                        this.isLoading = false;
+                    })
+                }
+                this.exportModel.type = 'campus';
+                this.showExportCampusFlag = true;
             },
             // 导出功能结束
             getCourseNameText: function(courseId){
@@ -199,11 +221,16 @@ if(document.getElementById('textbook-manager-app')){
                 // 显示对话框
                 this.showConnectedCoursesFlag = true;
             },
+            addNewTextbook: function(){
+                this.showTextbookFormFlag = true;
+                this.resetForm();
+            },
             // 编辑课本
             editBookAction: function(payload){
                 this.textbookModel = payload.book;
                 this.showTextbookFormFlag = true;
             },
+            // 保存教材数据
             saveTextbook: function(){
                 axios.post(
                     '/teacher/textbook/save',
@@ -236,6 +263,29 @@ if(document.getElementById('textbook-manager-app')){
                     }
                 })
             },
+            // 删除教材数据
+            deleteBookAction: function(payload){
+                deleteTextbook(payload.book.id)
+                    .then(res => {
+                        if(Util.isAjaxResOk(res)){
+                            const idx = Util.GetItemIndexById(payload.book.id, this.books);
+                            if(idx > -1){
+                                this.books.splice(idx, 1);
+                                this.$message({
+                                    message: '成功的删除了教材: ' + payload.book.name,
+                                    type: 'success'
+                                });
+                            }
+                        }
+                        else{
+                            this.$notify.error({
+                                title: '系统错误',
+                                message: '删除操作失败, 请稍候再试 ...',
+                                position: 'bottom-right'
+                            });
+                        }
+                    });
+            },
             cancel: function(){
                 this.showTextbookFormFlag = false;
             },
@@ -249,9 +299,8 @@ if(document.getElementById('textbook-manager-app')){
             },
             loadTextbooks: function(){
                 this.isLoading = true;
-                axios.post(
-                    Constants.API.TEXTBOOK.LOAD_TEXTBOOKS_PAGINATE,
-                    {school: this.schoolId, user_uuid: this.userUuid, pageNumber: this.pageNumber, pageSize: this.pageSize}
+                loadTextbooksPaginate(
+                    this.schoolId, this.userUuid, this.pageNumber, this.pageSize
                 ).then(res => {
                     if(Util.isAjaxResOk(res)){
                         this.books = res.data.data.books;
