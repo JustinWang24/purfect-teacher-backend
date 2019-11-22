@@ -20,9 +20,9 @@ use Illuminate\Database\Eloquent\Model;
  */
 class SchoolEnrolmentStep extends Model
 {
-    const STEP_INFO = 0;   // 查看步骤详情
-    const STEP_BEFORE = 1; // 查看步骤上一步
-    const STEP_AFTER = 2;  // 查看步骤下一步
+    const STEP_INFO   = 0;   // 查看步骤详情
+    const STEP_BEFORE = 1;   // 查看步骤上一步
+    const STEP_AFTER  = 2;   // 查看步骤下一步
     /**
      * @var array
      */
