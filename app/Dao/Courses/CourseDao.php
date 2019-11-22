@@ -394,9 +394,10 @@ class CourseDao
         DB::beginTransaction();
         try {
             $d = [
-                'course_id' => $course->id,
-                'open_num'  => $data['open_num'],
-                'max_num'   => $data['max_num'],
+                'course_id'     => $course->id,
+                'open_num'      => $data['open_num'],
+                'max_num'       => $data['max_num'],
+                'start_year'    => $data['start_year'],
             ];
             CourseElective::create($d);
             DB::commit();
