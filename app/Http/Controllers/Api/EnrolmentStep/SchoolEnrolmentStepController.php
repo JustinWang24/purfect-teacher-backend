@@ -99,5 +99,19 @@ class SchoolEnrolmentStepController extends Controller
         }
     }
 
+    /**
+     * 学校迎新列表
+     * @param SchoolEnrolmentStepRequest $request
+     * @return string
+     */
+    public function school_enrolment_step(SchoolEnrolmentStepRequest $request){
+        $schoolId = $request->get('school_id');
+        $campusId = $request->get('campus_id');
+        $dao = new SchoolEnrolmentStepDao();
+        $result = $dao->stepList($schoolId, $campusId);
+        $data = ['enrolment'=>$result];
+        return JsonBuilder::Success($data);
+    }
+
 
 }
