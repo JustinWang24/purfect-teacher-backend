@@ -219,13 +219,7 @@ Route::prefix('course')->middleware('auth:api')->group(function () {
      Route::get('/elective/getresult/{id}','Api\Course\ElectiveController@getEnrollResult')
         ->name('api.course.elective.getresult');
 });
-// 选修课申请
-Route::prefix('elective-course')->middleware('auth:api')->group(function () {
-    Route::post('/save','Api\ElectiveCourse\ApplyElectiveCourseController@create')
-        ->name('api.elective-course.save');
-    Route::post('/publish','Api\ElectiveCourse\ApplyElectiveCourseController@publish')
-        ->name('api.elective-course.publish');
-  });
+
 // 网盘
 Route::prefix('network-disk')->middleware('auth:api')->group(function () {
     // 创建目录
