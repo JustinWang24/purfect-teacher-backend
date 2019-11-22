@@ -220,12 +220,6 @@ Route::prefix('course')->middleware('auth:api')->group(function () {
         ->name('api.course.elective.getresult');
 });
 
-// 选修课申请
-Route::prefix('elective-course')->middleware('auth:api')->group(function () {
-    Route::post('/save','Api\ElectiveCourse\ApplyElectiveCourseController@create')
-        ->name('api.elective-course.save');
-  });
-
 // 网盘
 Route::prefix('network-disk')->middleware('auth:api')->group(function () {
     // 创建目录
