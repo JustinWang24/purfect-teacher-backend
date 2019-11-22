@@ -16,6 +16,7 @@ use App\Utils\UI\Button;
                         @csrf
                         <input type="hidden" name="building[id]" value="{{ $building->id }}" id="building-id-input">
                         <input type="hidden" name="building[campus_id]" value="{{ $building->campus_id }}" id="building-campus-id-input">
+                        <input type="hidden" name="building[type]" value="{{ $building->type }}" id="building-type  -input">
                         <div class="form-group">
                             <label for="building-name-input">建筑名称</label>
                             <input required type="text" class="form-control" id="building-name-input" value="{{ $building->name }}" placeholder="建筑名称" name="building[name]">

@@ -4,7 +4,8 @@ use App\Utils\UI\Button;
 ?>
 <form action="{{ route('verified_student.profile.update') }}" method="post" id="edit-student-form">
     @csrf
-    <input type="hidden" name="student[uuid]" value="{{ $student->uuid }}">
+    <input type="hidden" name="user[id]" value="{{ $student->id }}">
+    <input type="hidden" name="user[uuid]" value="{{ $student->uuid }}">
     <h3 class="text-info mt-4">学生基本信息(报名时填写)</h3>
     <hr>
     <div class="row">
@@ -154,7 +155,7 @@ use App\Utils\UI\Button;
                 <label for="student-email-input">邮件(选填)</label>
                 <div class="input-group">
                     <span class="input-group-addon"><i class="fa fa-envelope"></i></span>
-                    <input type="text" class="form-control" id="student-email-input" value="{{ $student->email }}" placeholder="电子邮件: 选填" name="profile[email]">
+                    <input type="text" class="form-control" id="student-email-input" value="{{ $student->email }}" placeholder="电子邮件: 选填" name="user[email]">
                 </div>
             </div>
         </div>
@@ -192,7 +193,7 @@ use App\Utils\UI\Button;
         <div class="col-md-6 col-sm-12 col-xs-12">
             <div class="form-group">
                 <label for="student-email-input">是否服从调剂</label>
-                <select class="form-control" id="profile-gender-input" name="profile[auto_relocate]">
+                <select class="form-control" id="profile-gender-input" name="profile[relocation_allowed]">
                     <option value="0" {{ (isset($profile) ? $profile->relocation_allowed : $student->profile->relocation_allowed) ? null :'selected' }}>不服从</option>
                     <option value="1" {{ (isset($profile) ? $profile->relocation_allowed : $student->profile->relocation_allowed) ? 'selected' : null }}>服从调剂</option>
                 </select>
