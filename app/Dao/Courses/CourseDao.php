@@ -101,7 +101,7 @@ class CourseDao
         $id = $data['id'];
         unset($data['id']);
 
-        $teachersId = $data['teachers'];
+        $teachersId = $this->_prepareTeachersId($data['teachers']);
         $majorsId = $data['majors'];
 
         $messageBag = new MessageBag(JsonBuilder::CODE_ERROR);
@@ -175,6 +175,25 @@ class CourseDao
     }
 
     /**
+     * 老师的数据, 可能会由于前段的原因, 进行了变形, 需要用这个方法整理一下
+     * @param $teachersIdAndNameStringArray
+     * @return array
+     */
+    private function _prepareTeachersId($teachersIdAndNameStringArray){
+        $result = [];
+        foreach ($teachersIdAndNameStringArray as $item) {
+            $arr = explode('ID:',$item);
+            if(count($arr)>1){
+                $result[] = $arr[1];
+            }
+            else{
+                $result[] = $arr[0];
+            }
+        }
+        return $result;
+    }
+
+    /**
      * 创建课程的方法
      * @param $data
      * @return IMessageBag
@@ -183,7 +202,8 @@ class CourseDao
         if(isset($data['id']) || empty($data['id'])){
             unset($data['id']);
         }
-        $teachersId = $data['teachers'];
+        $teachersId = $this->_prepareTeachersId($data['teachers']);
+
         $majorsId = $data['majors'];
 
         $messageBag = new MessageBag(JsonBuilder::CODE_ERROR);
