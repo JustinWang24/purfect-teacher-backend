@@ -289,9 +289,11 @@ Route::prefix('enrolment-step')->middleware('auth:api')->group(function () {
     // 获取系统迎新列表
     Route::any('/enrolmentStep/getEnrolmentStepList','Api\EnrolmentStep\EnrolmentStepController@getEnrolmentStepList')
         ->name('api.enrolmentStep.getEnrolmentStepList');
+
     // 创建/修改 学校迎新步骤
     Route::any('/schoolEnrolmentStep/saveEnrolment','Api\EnrolmentStep\SchoolEnrolmentStepController@saveEnrolment')
         ->name('api.schoolEnrolmentStep.saveEnrolment');
+
     // 更新排序
     Route::any('/schoolEnrolmentStep/updateSort','Api\EnrolmentStep\SchoolEnrolmentStepController@updateSort')
         ->name('api.school-enrolment-step.update-sort');

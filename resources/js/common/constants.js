@@ -91,6 +91,9 @@ export const Constants = {
             SEARCH_TEXTBOOKS: '/teacher/textbook/search',
             ATTACH_TEXTBOOKS: '/teacher/textbook/courseBindingTextbook',
             DELETE_TEXTBOOK: '/teacher/textbook/delete',
+        },
+        WELCOME:{
+            LOAD_STEP_DETAILS: '/api//schoolEnrolmentStep/getEnrolmentInfo'
         }
     },
     YEARS: ['N.A','一年级','二年级','三年级','四年级','五年级','六年级'],
