@@ -125,7 +125,7 @@ Route::prefix('school_manager')->group(function () {
     //选课申请管理
     Route::post('elective-course/save','Operator\ApplyElectiveCourseController@create')
         ->name('school_manager.elective-course.save');
-    Route::post('elective-course/publish','Operator\ApplyElectiveCourseController@publish')
-        ->name('school_manager.elective-course.publish');
+    Route::post('elective-course/approve','Operator\ApplyElectiveCourseController@approve')
+        ->name('school_manager.elective-course.approve');
 });
 
