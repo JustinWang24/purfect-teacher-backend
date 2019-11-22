@@ -1,14 +1,15 @@
 <?php
 
-namespace App\Http\Controllers\Api\ElectiveCourse;
+namespace App\Http\Controllers\Operator;
 
 use App\Dao\ElectiveCourses\TeacherApplyElectiveCourseDao;
 use App\Http\Requests\School\TeacherApplyElectiveCourseRequest;
+use App\Models\ElectiveCourses\TeacherApplyElectiveCourse;
 use App\Utils\JsonBuilder;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
-class ApplyElectiveCourseController extends Controller
+class AddElectiveCourseController extends Controller
 {
     public function __construct()
     {
@@ -25,29 +26,29 @@ class ApplyElectiveCourseController extends Controller
 
         $validated = $request->validated();
         //获取当前学校的教师数据，实际给定的是user对象
-        $teacher = $request->user();
-        $schoolId = $teacher->getSchoolId();
+        $user = $request->user();
+        $schoolId = $user->getSchoolId()??$request->session()->get('school.id');
+        if (empty($schoolId))
+        {
+            return  JsonBuilder::Error('没有获取到学校数据，请重试');
+        }
+
         $applyData = $validated;
         $dao = new TeacherApplyElectiveCourseDao();
         $applyData['course']['school_id'] = $schoolId;
         $applyData['course']['max_num'] = $applyData['course']['max_number'];
         $applyData['course']['start_year'] = $applyData['course']['start_year']??date("Y");
-
-        if(empty($applyData['course']['id'])){
-            // 创建新选修课程申请
-            $user = $request->user();
-            $applyData['course']['status'] = $applyData['course']['status']??$dao->getDefaultStatusByRole($user);
-            $result = $dao->createTeacherApplyElectiveCourse($applyData);
-        }
-        else{
-            // 更新操作
-            $result = $dao->updateTeacherApplyElectiveCourse($applyData);
-        }
-
+        // 创建新选修课程申请
+        $applyData['course']['status'] = $applyData['course']['status'] ?? $dao->getDefaultStatusByRole($user);
+        $result = $dao->createTeacherApplyElectiveCourse($applyData);
         $apply = $result->getData();
-
+        //如果是学校管理员添加的申请那么直接发布
+        if ($result->isSuccess() && $dao->getDefaultStatusByRole($user) == TeacherApplyElectiveCourse::STATUS_VERIFIED)
+        {
+            $result  = $dao->publishToCourse($apply->id);
+        }
         return $result->isSuccess() ?
-            JsonBuilder::Success(['id'=>$apply->id ?? $applyData['id']])
+            JsonBuilder::Success(['id' => $apply->id])
             : JsonBuilder::Error($result->getMessage());
     }
 
@@ -58,10 +59,21 @@ class ApplyElectiveCourseController extends Controller
      * @param $id
      * @return string
      */
-    public function publish(Request $request, $id)
+    public function approve(Request $request, $id)
     {
+        $validatedData = $request->validate([
+            'content' => 'nullable|max:255',
+        ]);
+        $user = $request->user();
+        $schoolId = $user->getSchoolId()??$request->session()->get('school.id');
 
         $applyDao = new TeacherApplyElectiveCourseDao();
+        $apply = $applyDao->getApplyById($id);
+        if ($apply->school_id !== $schoolId) {
+            return JsonBuilder::Error('您没有权限修改这个申请');
+        }
+        $content = $validatedData->content;
+        $applyDao->approvedApply($id, $content);
         $result  = $applyDao->publishToCourse($id);
         return $result->isSuccess() ?
             JsonBuilder::Success(['id'=>$id])
