@@ -76,7 +76,8 @@ Route::prefix('school_manager')->group(function () {
     Route::get('timetable/manager', 'TimeTables\TimetablesController@manager')->name('school_manager.timetable.manager');
     // 添加课程表项目// 添加班级
     Route::get('timetable/manager/preview', 'TimeTables\TimetablesController@preview')->name('school_manager.timetable.manager.preview');           // 添加班级
-    Route::get('timetable/manager/courses', 'TimeTables\CoursesController@manager')->name('school_manager.courses.manager');
+    Route::get('timetable/manager/courses', 'TimeTables\CoursesController@manager')
+        ->name('school_manager.courses.manager');
 
     // 从班级的, 或者是学生的角度, 查看课程表
     Route::get('timetable/manager/view-grade-timetable','TimeTables\TimetablesController@view_grade_timetable')
@@ -113,6 +114,10 @@ Route::prefix('school_manager')->group(function () {
     Route::get('registration/list', 'RecruitStudent\RegistrationInformatics@index')->name('school_manager.registration.list');  // 报名列表
     Route::get('registration/details', 'RecruitStudent\RegistrationInformatics@details')->name('school_manager.registration.details');  // 报名详情
     Route::get('registration/examine', 'RecruitStudent\RegistrationInformatics@examine')->name('school_manager.registration.examine');  // 报名审核
+
+    // 迎新助手管理界面
+    Route::get('welcome/manager', 'EnrolmentStepController@manager')
+        ->name('school_manager.welcome.manager');
 
     // 报名表管理
 //    Route::get('registration/examine', 'RecruitStudent\RegistrationInformatics@examine')->name('school_manager.registration.examine');  // 报名审核
