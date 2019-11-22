@@ -1,6 +1,6 @@
 <?php
 
-namespace App\BusinessLogic\UploadFiles\Contracts
+namespace App\BusinessLogic\UploadFiles\Contracts;
 
 interface IUploadFile
 {
