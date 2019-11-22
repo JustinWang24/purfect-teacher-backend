@@ -126,4 +126,12 @@ Route::prefix('school_manager')->group(function () {
     Route::get('textbook/loadCampusTextbook', 'TextbookController@loadCampusTextbook')
         ->name('school_manager.textbook.loadCampusTextbook'); // 获取校区教材采购情况
     Route::get('textbook/campusTextbookDownload', 'TextbookController@campusTextbookDownload')->name('school_manager.textbook.campusTextbookDownload'); // 校区教材下载
+
+    // 校历事件添加
+    Route::any('calendar/save', 'Calendar\IndexController@save')->name('school_manger.school.calendar.save');
+
+    // 校历展示
+    Route::any('calendar/index', 'Calendar\IndexController@index')->name('school_manger.school.calendar.index');
+
+
 });
