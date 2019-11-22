@@ -69,10 +69,12 @@ class CampusController extends Controller
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function buildings(CampusRequest $request){
+        $type = $request->get('type');
         $dao = new CampusDao($request->user());
         $campus = $dao->getCampusById($request->uuid());
         if($campus){
             $this->dataForView['parent'] = $campus;
+            $this->dataForView['type']   = $type;
             $buildingDao = new BuildingDao($request->user());
             $this->dataForView['buildings'] = $buildingDao->getBuildingsByType(intval($request->get('type')), $campus);
             return view('school_manager.school.buildings', $this->dataForView);

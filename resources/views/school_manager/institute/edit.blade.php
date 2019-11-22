@@ -28,7 +28,7 @@ use App\Utils\UI\Button;
                         Button::Print(['id'=>'btn-save-institute','text'=>trans('general.submit')], Button::TYPE_PRIMARY);
                         ?>&nbsp;
                         <?php
-                        Anchor::Print(['text'=>trans('general.return'),'href'=>route('school_manager.school.view'),'class'=>'pull-right link-return'], Button::TYPE_SUCCESS,'arrow-circle-o-right')
+                        Anchor::Print(['text'=>trans('general.return'),'href'=>route('school_manager.campus.institutes',['uuid'=>$institute->campus_id,'by'=>'campus']),'class'=>'pull-right link-return'], Button::TYPE_SUCCESS,'arrow-circle-o-right')
                         ?>
                     </form>
                 </div>

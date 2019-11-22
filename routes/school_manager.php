@@ -126,4 +126,11 @@ Route::prefix('school_manager')->group(function () {
     Route::get('textbook/loadCampusTextbook', 'TextbookController@loadCampusTextbook')
         ->name('school_manager.textbook.loadCampusTextbook'); // 获取校区教材采购情况
     Route::get('textbook/campusTextbookDownload', 'TextbookController@campusTextbookDownload')->name('school_manager.textbook.campusTextbookDownload'); // 校区教材下载
+
+    //选课申请管理
+    Route::post('elective-course/save','Operator\ApplyElectiveCourseController@create')
+        ->name('school_manager.elective-course.save');
+    Route::post('elective-course/approve','Operator\ApplyElectiveCourseController@approve')
+        ->name('school_manager.elective-course.approve');
 });
+
