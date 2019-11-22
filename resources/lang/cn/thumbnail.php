@@ -60,6 +60,7 @@ return [
 
     // 教材管理
     'textbook'=>'教材',
-    'loadMajorTextbook'=>'根据专业进行汇总'
+    'loadMajorTextbook'=>'根据专业进行汇总',
+    'welcome'=>'迎新',
 ];
 

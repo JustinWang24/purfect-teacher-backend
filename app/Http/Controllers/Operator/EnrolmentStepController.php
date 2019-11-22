@@ -9,6 +9,15 @@ use App\Dao\EnrolmentStep\EnrolmentStepDao;
 
 class EnrolmentStepController extends Controller
 {
+    /**
+     * 迎新助手的后台管理页面
+     * @param MyStandardRequest $request
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function manager(MyStandardRequest $request){
+        $this->dataForView['pageTitle'] = '迎新助手';
+        return view('school_manager.welcome.manager', $this->dataForView);
+    }
 
     /**
      * 创建
