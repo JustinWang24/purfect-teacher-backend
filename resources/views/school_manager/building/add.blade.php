@@ -15,6 +15,7 @@ use App\Utils\UI\Button;
                     <form action="{{ route('school_manager.building.update') }}" method="post"  id="add-building-form">
                         @csrf
                         <input type="hidden" id="building-campus-id" name="building[campus_id]" value="{{ $campus->id }}">
+                        <input type="hidden" id="building-type" name="building[type]" value="{{ $type }}">
                         <div class="form-group">
                             <label for="building-name-input">建筑名称</label>
                             <input required type="text" class="form-control" id="building-name-input" value="{{ $building->name }}" placeholder="建筑名称" name="building[name]">

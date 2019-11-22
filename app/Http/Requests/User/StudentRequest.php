@@ -13,4 +13,9 @@ use App\Http\Requests\MyStandardRequest;
 class StudentRequest extends MyStandardRequest
 {
 
+    public function getFormData() {
+        $user = $this->get('user');
+        $profile = $this->get('profile');
+        return ['user'=>$user, 'profile'=>$profile];
+    }
 }
