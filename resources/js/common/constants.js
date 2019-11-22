@@ -85,8 +85,12 @@ export const Constants = {
         },
         TEXTBOOK: {
             EXPORT_TEXTBOOKS_BY_MAJOR: '/teacher/textbook/loadMajorTextbook',
+            EXPORT_TEXTBOOKS_BY_CAMPUS: '/school_manager/textbook/loadCampusTextbook',
             LOAD_TEXTBOOKS_PAGINATE: '/teacher/textbook/list-paginate',
+            LOAD_TEXTBOOKS: '/teacher/textbook/list',
             SEARCH_TEXTBOOKS: '/teacher/textbook/search',
+            ATTACH_TEXTBOOKS: '/teacher/textbook/courseBindingTextbook',
+            DELETE_TEXTBOOK: '/teacher/textbook/delete',
         }
     },
     YEARS: ['N.A','一年级','二年级','三年级','四年级','五年级','六年级'],

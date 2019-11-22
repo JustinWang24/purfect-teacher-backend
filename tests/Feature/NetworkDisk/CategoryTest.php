@@ -17,10 +17,9 @@ class CategoryTest extends BasicPageTestCase
      */
     public function testCreateCategories() {
 
-        $token = $this->getStudent()['user']['api_token'];
 
         $data = ['parent'=>2, 'name'=>Carbon::now()->year.rand(1,99)];
-        $header = ['Authorization'=>"Bearer ".$token];
+        $header = $this->getHeaderWithApiToken();
 
         $response = $this->post(route('api.categories.create'),$data,$header);
         $result = json_decode($response->content(),true);
@@ -36,7 +35,6 @@ class CategoryTest extends BasicPageTestCase
      */
     public function testEditCategories($return) {
 
-        $token = $this->getStudent()['user']['api_token'];
         $data = [
             'parent_id'=>3,
             'name'=>Carbon::now()->year,
@@ -44,7 +42,7 @@ class CategoryTest extends BasicPageTestCase
             'public'=>0,
             'asterisk'=>1,
         ];
-        $header = ['Authorization'=>"Bearer ".$token];
+        $header = $this->getHeaderWithApiToken();
         $response = $this->post(route('api.categories.edit'),$data,$header);
         $result = json_decode($response->content(),true);
         $this->assertArrayHasKey('code', $result);
@@ -106,9 +104,8 @@ class CategoryTest extends BasicPageTestCase
      */
     public function testCateDelete($return) {
 
-        $token = $this->getStudent()['user']['api_token'];
         $data = ['uuid'=>$return['data']['uuid']];
-        $header = ['Authorization'=>"Bearer ".$token];
+        $header = $this->getHeaderWithApiToken();
         $response = $this->post(route('api.categories.delete'),$data,$header);
         $result = json_decode($response->content(),true);
 

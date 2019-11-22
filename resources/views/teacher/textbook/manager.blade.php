@@ -38,8 +38,8 @@
                 </div>
                 <div class="col-6">
                     <el-button-group class="pull-right">
-                        <el-button type="primary" icon="el-icon-plus" v-on:click="showTextbookFormFlag = true">添加新教材</el-button>
-                        <el-button icon="el-icon-files" v-on:click="exportByGrade">按班级导出</el-button>
+                        <el-button type="primary" icon="el-icon-plus" v-on:click="addNewTextbook">添加新教材</el-button>
+                        <el-button icon="el-icon-files" v-on:click="exportByGrade" disabled>按班级导出</el-button>
                         <el-button icon="el-icon-notebook-1" v-on:click="exportByMajor">按专业导出</el-button>
                         <el-button icon="el-icon-notebook-2" v-on:click="exportByCampus">按校区导出</el-button>
                     </el-button-group>
@@ -53,6 +53,7 @@
                 v-on:load-textbooks="loadTextbooks"
                 v-on:book-edit="editBookAction"
                 v-on:connect-courses="connectCoursesAction"
+                v-on:book-delete="deleteBookAction"
             ></textbooks-table>
             <div class="row">
                 <div class="col-12">
@@ -171,7 +172,7 @@
                 </div>
             </el-dialog>
 
-            <el-dialog title="教材汇总表导出工具" :visible.sync="showExportMajorFlag">
+            <el-dialog title="专业教材汇总表导出工具" :visible.sync="showExportMajorFlag">
                 <p>请选择需要导出的专业: </p>
                 <el-form :model="textbookModel">
                     <el-form-item>
@@ -187,6 +188,26 @@
                 </el-form>
                 <div slot="footer" class="dialog-footer">
                     <el-button @click="showExportMajorFlag = false">取 消</el-button>
+                    <el-button type="primary" @click="exportBooksSheet">确 定</el-button>
+                </div>
+            </el-dialog>
+
+            <el-dialog title="校区教材汇总表导出工具" :visible.sync="showExportCampusFlag">
+                <p>请选择需要导出的校区: </p>
+                <el-form :model="textbookModel">
+                    <el-form-item>
+                        <el-select v-model="exportModel.value" placeholder="请选择" style="width: 100%;">
+                            <el-option
+                                    v-for="(campus, idx) in campuses"
+                                    :key="idx"
+                                    :label="campus.campus"
+                                    :value="campus.id">
+                            </el-option>
+                        </el-select>
+                    </el-form-item>
+                </el-form>
+                <div slot="footer" class="dialog-footer">
+                    <el-button @click="showExportCampusFlag = false">取 消</el-button>
                     <el-button type="primary" @click="exportBooksSheet">确 定</el-button>
                 </div>
             </el-dialog>

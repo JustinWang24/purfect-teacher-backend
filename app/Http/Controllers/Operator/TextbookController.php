@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers\Operator;
 
+use App\Dao\Schools\CampusDao;
 use App\Dao\Textbook\DownloadOfficeDao;
 use App\Dao\Textbook\TextbookDao;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Textbook\TextbookRequest;
 use App\Utils\JsonBuilder;
+use App\Utils\Files\HtmlToCsv;
 
 class TextbookController extends Controller
 {
@@ -18,14 +20,33 @@ class TextbookController extends Controller
      */
     public function loadCampusTextbook(TextbookRequest $request) {
         $campusId = $request->getCampusId();
+
+        $campusDao = new CampusDao();
+        $campus = $campusDao->getCampusById($campusId);
+        $this->dataForView['campus'] = $campus;
+
         $textbookDao = new TextbookDao();
         $result = $textbookDao->getCampusTextbook($campusId);
-        if($result->isSuccess()) {
-            $data = ['campus_textbook'=>$result->getData()];
-            return JsonBuilder::Success($data);
-        } else {
-            return JsonBuilder::Error($result->getMessage());
+        $this->dataForView['campus_textbook'] = $result->getData();
+
+        if($request->isDownloadRequest()){
+            $path = HtmlToCsv::Convert(
+                'teacher.textbook.elements.table_by_campus',
+                $this->dataForView
+            );
+            if($path){
+                return response()->download($path,$campus->name.'教材汇总表.xls');
+            }
         }
+
+        return view('teacher.textbook.to_csv_by_campus',$this->dataForView);
+
+//        if($result->isSuccess()) {
+//            $data = ['campus_textbook'=>$result->getData()];
+//            return JsonBuilder::Success($data);
+//        } else {
+//            return JsonBuilder::Error($result->getMessage());
+//        }
 
     }
 

@@ -12,6 +12,7 @@ use App\Models\Schools\RecruitmentPlan;
 use App\Models\Students\StudentProfile;
 use App\Models\Teachers\TeacherProfile;
 use App\Models\Users\GradeUser;
+use App\Models\Users\UserDevice;
 use Illuminate\Notifications\Notifiable;
 //use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -300,5 +301,10 @@ class User extends Authenticatable implements HasMobilePhone, HasDeviceId
 
     public function medias(){
         return $this->hasMany(Media::class);
+    }
+
+    public function userDevices()
+    {
+        return $this->hasMany(UserDevice::class);
     }
 }
