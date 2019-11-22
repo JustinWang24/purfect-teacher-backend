@@ -105,6 +105,32 @@ class EnrolmentStepTest extends BasicPageTestCase
 
 
     /**
+     * 获取学校迎新列表
+     */
+    public function testStepList() {
+        $data = ['school_id'=>1,'campus_id'=>1];
+        $header = $this->getHeaderWithApiTokenForTeacher();
+        $response = $this->post(
+            route('api.school-enrolment-step.step-list'),
+            $data,$header);
+
+        $result = json_decode($response->content(),true);
+        $this->assertArrayHasKey('code', $result);
+        $this->assertEquals(JsonBuilder::CODE_SUCCESS,
+            $result['code']);
+
+        if(!empty($result['data']['enrolment'])) {
+            foreach ($result['data']['enrolment'] as $key => $val) {
+                $this->assertArrayHasKey('id', $val);
+                $this->assertArrayHasKey('name', $val);
+                $this->assertArrayHasKey('sort', $val);
+            }
+        }
+    }
+
+
+
+    /**
      * 测试获取学校迎新步骤详情
      */
     public function testGetSchoolEnrolmentStepInfo() {
