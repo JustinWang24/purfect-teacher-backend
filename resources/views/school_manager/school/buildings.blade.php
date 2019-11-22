@@ -16,10 +16,10 @@ use App\User;
                     <div class="row">
                         <div class="row table-padding">
                             <div class="col-12">
-                                <a href="{{ url()->previous() }}" class="btn btn-default">
+                                <a href="{{ url('school_manager/school/view') }}" class="btn btn-default">
                                     <i class="fa fa-arrow-circle-left"></i> 返回
                                 </a>&nbsp;
-                                <a href="{{ route('school_manager.building.add',['uuid'=>$parent->id]) }}" class="btn btn-primary pull-right" id="btn-create-building-from-campus">
+                                <a href="{{ route('school_manager.building.add',['uuid'=>$parent->id,'type'=>$type]) }}" class="btn btn-primary pull-right" id="btn-create-building-from-campus">
                                     添加新楼 <i class="fa fa-plus"></i>
                                 </a>
                             </div>
