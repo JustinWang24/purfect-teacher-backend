@@ -39,7 +39,7 @@ Vue.component('file-preview', require('./components/fileManager/elements/FilePre
 
 import { Constants } from './common/constants';
 import { Util } from './common/utils';
-import { getTimeSlots, getMajors } from './common/timetables';
+import { getTimeSlots, getMajors, saveTimeSlot } from './common/timetables';
 import { loadBuildings } from './common/facility';
 import { getEmptyElectiveCourseApplication } from './common/elective_course';
 import { loadTextbooksPaginate, deleteTextbook } from './common/textbook';
@@ -451,7 +451,37 @@ if (document.getElementById('file-manager-app')){
 // 学校时间段管理
 if(document.getElementById('school-time-slots-manager')){
     new Vue({
-        el: '#school-time-slots-manager'
+        el: '#school-time-slots-manager',
+        data(){
+            return {
+                needReload: false,
+                currentTimeSlot: {},
+                showEditForm: false,
+                schoolUuid:''
+            }
+        },
+        methods:{
+            editTimeSlotHandler: function(payload){
+                this.currentTimeSlot = payload.timeSlot;
+                this.schoolUuid = payload.schoolUuid;
+                this.showEditForm = true;
+            },
+            onSubmit: function () {
+                saveTimeSlot(this.schoolUuid, this.currentTimeSlot)
+                    .then(res => {
+                        if(Util.isAjaxResOk(res)){
+                            this.$message({
+                                message: '修改成功, 作息表正在重新加载 ...',
+                                type: 'success'
+                            });
+                            window.location.reload();
+                        }
+                        else{
+                            this.$message.error(res.data.message);
+                        }
+                    });
+            }
+        }
     });
 }
 // 学校的课程管理

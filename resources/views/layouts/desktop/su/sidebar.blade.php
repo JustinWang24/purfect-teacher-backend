@@ -30,30 +30,12 @@
                     </a>
                 </li>
                 @if(session('school.id'))
-                <li class="nav-item {{ \App\Utils\Misc\Nav::IsBasicNav() ? 'active' : null }}">
-                    <a href="{{ route('school_manager.school.view') }}" class="nav-link">
-                        <i class="material-icons">business</i>
-                        <span class="title">{{ session('school.name') }}</span>
-                    </a>
-                </li>
-
-                    <li class="nav-item">
-                        <a href="{{ route('school_manager.facility.list') }}" class="nav-link">
-                            <i class="material-icons">dashboard</i>
-                            <span class="title">设备管理</span>
-                        </a>
-                    </li>
-
+@include('layouts.desktop.elements.home_menu')
+@include('layouts.desktop.elements.equipment_menu')
 @include('layouts.desktop.elements.courses_menu_group')
 @include('layouts.desktop.elements.recruitment_menu_group')
 @include('layouts.desktop.elements.welcome_menu')
-
-                <li class="nav-item">
-                    <a href="{{ route('teacher.conference.index',['uuid'=>session('school.uuid')])  }}" class="nav-link">
-                        <i class="material-icons">event_seat</i>
-                        <span class="title">会议管理</span>
-                    </a>
-                </li>
+@include('layouts.desktop.elements.meeting_menu')
                 @endif
             </ul>
         </div>

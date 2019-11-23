@@ -7,7 +7,7 @@
     <ul class="sub-menu">
         <li class="nav-item">
             <a href="{{ route('school_manager.timetable.manager',['uuid'=>session('school.uuid')]) }}" class="nav-link ">
-                <span class="title">上课时间段管理</span>
+                <span class="title">作息时间管理</span>
             </a>
         </li>
         <li class="nav-item">
