@@ -393,6 +393,7 @@ if(document.getElementById('teacher-apply-a-new-elective-course-app')){
         created(){
             this.course = getEmptyElectiveCourseApplication(true);
             this.schoolId = document.getElementById('app-init-data-holder').dataset.school;
+            this.applicationId = document.getElementById('app-init-data-holder').dataset.application;
             this._getAllMajors();
             this._getAllTimeSlots();
         },
@@ -477,7 +478,7 @@ if(document.getElementById('school-time-slots-manager')){
                             window.location.reload();
                         }
                         else{
-                            this.$message.error(res.data.message);
+                            this.$message.error('错了哦，这是一条错误消息');
                         }
                     });
             }

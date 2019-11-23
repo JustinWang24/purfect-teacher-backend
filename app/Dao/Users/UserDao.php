@@ -4,8 +4,10 @@
  */
 
 namespace App\Dao\Users;
+use App\Models\Users\GradeUser;
 use App\User;
 use App\Models\Acl\Role;
+use Illuminate\Support\Facades\DB;
 
 class UserDao
 {
@@ -127,9 +129,26 @@ class UserDao
             case Role::VERIFIED_USER_STUDENT :
                 return trans('AppName.student');
                 break;
-            // todo :: 用到了再补充
+            // todo :: 用到了再补充, 用来获取用户身份的名字
             default: return "" ;
                 break;
         }
+    }
+
+    /**
+     * 获取指定学校的所有的教师的列表
+     * @param $schoolId
+     * @param bool $simple: 简单的返回值 id=>name 的键值对组合
+     * @return \Illuminate\Support\Collection
+     */
+    public function getTeachersBySchool($schoolId, $simple = false){
+        if($simple){
+            return GradeUser::select(DB::raw('user_id as id, name'))
+                ->where('school_id',$schoolId)
+                ->where('user_type',Role::TEACHER)
+                ->get();
+        }
+        return GradeUser::where('school_id',$schoolId)
+            ->where('user_type',Role::TEACHER)->get();
     }
 }

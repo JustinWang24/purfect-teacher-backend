@@ -26,3 +26,22 @@ export function loadWelcomeStepDetails(schoolId, campusId, type, stepId, affix) 
         }
     );
 }
+
+/**
+ * @param schoolId
+ * @param affix
+ * @returns {*}
+ */
+export function loadTeachersBySchool(schoolId,affix) {
+    const url = Util.buildUrl(Constants.API.WELCOME.LOAD_TEACHERS);
+    if(Util.isDevEnv()){
+        return axios.get(url, affix);
+    }
+    return axios.post(
+        url,
+        {
+            school_id: schoolId,
+            version:Constants.VERSION
+        }
+    );
+}

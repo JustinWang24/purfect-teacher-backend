@@ -98,4 +98,6 @@ Route::prefix('teacher')->group(function () {
     // 教师申请开设一门选修课
     Route::get('elective-course/create', 'ElectiveCoursesController@create')
         ->name('teacher.elective-course.create');
+    Route::get('elective-course/edit', 'ElectiveCoursesController@edit')
+        ->name('teacher.elective-course.edit');
 });

@@ -59,13 +59,18 @@ class ApplyElectiveCourseController extends Controller
      */
     public function publish(Request $request, $id)
     {
-
         $applyDao = new TeacherApplyElectiveCourseDao();
         $result  = $applyDao->publishToCourse($id);
         return $result->isSuccess() ?
             JsonBuilder::Success(['id'=>$id])
             : JsonBuilder::Error($result->getMessage());
+    }
 
-
+    public function load(Request $request){
+        $applyDao = new TeacherApplyElectiveCourseDao();
+        $app  = $applyDao->getApplyById($request->get('application_id'));
+        return $app ?
+            JsonBuilder::Success(['application'=>$app])
+            : JsonBuilder::Error();
     }
 }
