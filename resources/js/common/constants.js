@@ -83,6 +83,10 @@ export const Constants = {
         ELECTIVE_COURSE: {
             SAVE: '/api/elective-course/save', // 管理员直接添加
             APPLY: '/api/elective-course/apply', // 教师申请开选修课
+            LOAD: '/api/elective-course/load', // 加载教师申请的选修课
+            APPROVE: '/school_manager/elective-course/approve', // 同意教师申请的选修课
+            REFUSE: '/school_manager/elective-course/refuse', // 拒绝教师申请的选修课
+            DELETE_ARRANGEMENT: '/school_manager/elective-course/delete-arrangement', // 删除选修课上课的时间地点项
         },
         TEXTBOOK: {
             EXPORT_TEXTBOOKS_BY_MAJOR: '/teacher/textbook/loadMajorTextbook',
@@ -96,6 +100,7 @@ export const Constants = {
         WELCOME:{
             LOAD_STEP_DETAILS: '/api/enrolment-step/schoolEnrolmentStep/getEnrolmentInfo',
             LOAD_WHOLE_PROCESS: '/api/enrolment-step/step-list', // 获取某个学校校区的迎新流程中所有步骤
+            LOAD_TEACHERS: '/api/school/teachers', // 获取某个学校的所有老师
         }
     },
     YEARS: ['N.A','一年级','二年级','三年级','四年级','五年级','六年级'],

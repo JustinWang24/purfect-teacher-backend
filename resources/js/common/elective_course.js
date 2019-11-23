@@ -20,6 +20,23 @@ export function saveElectiveCourse(course, schedule, affix) {
 }
 
 /**
+ * 保存选修课报名表
+ * @param applicationId
+ * @param affix
+ * @returns Promise
+ */
+export function loadElectiveCourse(applicationId, affix) {
+    const url = Util.buildUrl(Constants.API.ELECTIVE_COURSE.LOAD);
+    if(Util.isDevEnv()){
+        return axios.get(url, affix);
+    }
+    return axios.post(
+        url,
+        {application_id: applicationId, version:Constants.VERSION}
+    );
+}
+
+/**
  * 教师申请开一门选修课
  * @param course
  * @param schedule
@@ -34,6 +51,59 @@ export function applyElectiveCourse(course, schedule, affix) {
     return axios.post(
         url,
         {course: course, schedule: schedule, version:Constants.VERSION}
+    );
+}
+
+/**
+ * 批准
+ * @param course
+ * @param schedule
+ * @param affix
+ * @returns Promise
+ */
+export function approveElectiveCourse(course, affix) {
+    const url = Util.buildUrl(Constants.API.ELECTIVE_COURSE.SAVE);
+    if(Util.isDevEnv()){
+        return axios.get(url, affix);
+    }
+    return axios.post(
+        url,
+        {course_id: course.id, reply_content: course.reply_content, version:Constants.VERSION}
+    );
+}
+
+/**
+ * 拒绝
+ * @param course
+ * @param schedule
+ * @param affix
+ * @returns Promise
+ */
+export function refuseElectiveCourse(course, affix) {
+    const url = Util.buildUrl(Constants.API.ELECTIVE_COURSE.SAVE);
+    if(Util.isDevEnv()){
+        return axios.get(url, affix);
+    }
+    return axios.post(
+        url,
+        {course_id: course.id, reply_content: course.reply_content, version:Constants.VERSION}
+    );
+}
+
+/**
+ * 删除时间段地点安排
+ * @param id
+ * @param affix
+ * @returns Promise
+ */
+export function deleteArrangement(id, affix) {
+    const url = Util.buildUrl(Constants.API.ELECTIVE_COURSE.DELETE_ARRANGEMENT);
+    if(Util.isDevEnv()){
+        return axios.get(url, affix);
+    }
+    return axios.post(
+        url,
+        {item_id: id, version:Constants.VERSION}
     );
 }
 

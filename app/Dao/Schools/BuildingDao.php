@@ -13,8 +13,11 @@ use App\User;
 
 class BuildingDao
 {
+    /**
+     * @var User $currentUser
+     */
     private $currentUser;
-    public function __construct(User $user)
+    public function __construct($user = null)
     {
         $this->currentUser = $user;
     }

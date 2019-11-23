@@ -1,5 +1,6 @@
 <template>
     <div class="elective-course-form-wrap">
+        <p v-if="loading" style="color: red;"><i class="el-icon-loading"></i> 数据加载中, 请稍候 ...</p>
         <el-form :model="courseModel" :rules="rules" ref="electivCourseModelForm" label-width="100px" class="course-form">
             <el-row>
                 <el-col :span="6">
@@ -18,7 +19,7 @@
                     </el-form-item>
                 </el-col>
                 <el-col :span="6">
-                    <el-form-item label="开课年份" prop="start_year">
+                    <el-form-item label="开课年份">
                         <el-select v-model="courseModel.start_year" placeholder="必填: 开课年份">
                             <el-option :key="idx" :label="year" :value="year" v-for="(year, idx) in allowedStartYears"></el-option>
                         </el-select>
@@ -56,8 +57,8 @@
             </el-row>
             <el-row>
                 <el-col :span="12">
-                    <el-form-item label="所属专业" prop="majors">
-                        <el-select v-model="courseModel.majors" multiple placeholder="请选择所属专业. 留空表示所有专业的学生都可以选择" style="width: 100%;">
+                    <el-form-item label="面向专业" prop="majors">
+                        <el-select v-model="courseModel.majors" multiple filterable placeholder="请选择面向专业. 留空表示面向所有专业开放" style="width: 100%;">
                             <el-option
                                     v-for="(major, idx) in majors"
                                     :key="idx"
@@ -67,35 +68,28 @@
                         </el-select>
                     </el-form-item>
                 </el-col>
-                <el-col :span="4">
+                <el-col :span="12">
                     <el-form-item label="授课教师" prop="teachers">
-                        <el-select style="width: 100%;"
-                                   v-model="courseModel.teacher_id"
-                                   filterable
-                                   remote
-                                   :reserve-keyword="false"
-                                   placeholder="请输入老师姓名"
-                                   :default-first-option="false"
-                                   :remote-method="searchTeachers"
-                                   :loading="loading"
-                                   loading-text="正在查找 ...">
+                        <el-select v-model="courseModel.teacher_id" filterable placeholder="请选择">
                             <el-option
-                                    v-for="(teacher, idx) in teachers"
-                                    :key="idx"
-                                    :label="teacher.name"
-                                    :value="teacher.id">
+                                    v-for="item in teachersInSchool"
+                                    :key="item.id"
+                                    :label="item.name"
+                                    :value="item.id">
                             </el-option>
                         </el-select>
                     </el-form-item>
                 </el-col>
-                <el-col :span="4">
-                    <el-form-item label="最多报名" prop="max_number">
-                        <el-input v-model="courseModel.max_number" placeholder="最多可容纳的学生数">
+            </el-row>
+            <el-row>
+                <el-col :span="12">
+                    <el-form-item label="最多报名" prop="max_num">
+                        <el-input v-model="courseModel.max_num" placeholder="最多可容纳的学生数">
                             <template slot="append">人</template>
                         </el-input>
                     </el-form-item>
                 </el-col>
-                <el-col :span="4">
+                <el-col :span="12">
                     <el-form-item label="开班人数" prop="open_num">
                         <el-input v-model="courseModel.open_num" placeholder="最少可以开课的学生数">
                             <template slot="append">人</template>
@@ -117,7 +111,7 @@
                     <h4 class="pl-4">上课日期, 课节与地点</h4>
                 </el-col>
             </el-row>
-            <el-row>
+            <el-row  v-if="!asAdmin">
                 <el-col :span="5">
                     <el-row>
                         <el-form-item label="哪周上课">
@@ -197,7 +191,12 @@
                             <span v-for="week in item.weeks" :key="week">
                                 <el-tag type="info" class="mr-10">第{{ week }}周</el-tag>
                             </span>
-                            <el-button style="float: right; padding: 3px 0" type="danger" icon="el-icon-delete" size="mini"></el-button>
+                            <el-button style="float: right; padding: 3px 0"
+                                       type="danger"
+                                       icon="el-icon-delete"
+                                       size="mini"
+                                       v-on:click="deleteScheduleItem(idx)"
+                            ></el-button>
                         </div>
                         <p>
                             <span class="txt-primary">日期:</span>
@@ -218,10 +217,16 @@
                     </el-card>
                 </el-col>
             </el-row>
-
-            <el-form-item>
+            <el-divider></el-divider>
+            <el-form-item v-if="!asAdmin">
                 <el-button type="primary" @click="saveCourse">保存</el-button>
-                <el-button @click="cancel">取消</el-button>
+            </el-form-item>
+            <el-form-item v-if="asAdmin" label="处理意见">
+                <el-input type="textarea" v-model="courseModel.reply_content" placeholder="必填"></el-input>
+            </el-form-item>
+            <el-form-item v-if="asAdmin">
+                <el-button type="success" @click="approve">批准</el-button>
+                <el-button type="danger" @click="refuse">拒绝</el-button>
             </el-form-item>
         </el-form>
     </div>
@@ -229,9 +234,16 @@
 
 <script>
     import { searchTeachers } from '../../common/search';
+    import { loadTeachersBySchool } from '../../common/welcome';
     import { Util } from '../../common/utils';
     import { loadBuildings, loadRoomsByBuilding } from '../../common/facility';
-    import { saveElectiveCourse } from '../../common/elective_course';
+    import {
+        saveElectiveCourse,
+        loadElectiveCourse,
+        deleteArrangement,
+        approveElectiveCourse,
+        refuseElectiveCourse
+    } from '../../common/elective_course';
 
     export default {
         name: "ElectiveCourseForm",
@@ -255,6 +267,21 @@
             schoolId:{
                 type:[Number, String],
                 required: true
+            },
+            applicationId:{
+                type:[Number, String],
+                required: false,
+                default: 0
+            },
+            asAdmin: {
+                type: Boolean,
+                required: false,
+                default: false,
+            },
+            teacherId: {
+                type:[Number, String],
+                required: false,
+                default: null
             }
         },
         watch:{
@@ -290,7 +317,7 @@
                     open_num: [
                         { required: true, message: '请输入课程最少开班人数', trigger: 'blur' }
                     ],
-                    max_number: [
+                    max_num: [
                         { required: true, message: '请输入课程最多可容纳的学生数', trigger: 'blur' }
                     ],
                     start_year: [
@@ -316,16 +343,78 @@
                 rooms:[],
                 campuses:[],
                 allowedStartYears:[],
+                teachersInSchool:[],
             }
         },
         created(){
             this._getAllBuildings();
+            this._getAllTeachers();
             const thisYear = (new Date()).getFullYear();
             this.allowedStartYears.push(thisYear);
             this.allowedStartYears.push(thisYear+1);
             this.courseModel.school_id = this.schoolId;
+            if(!Util.isEmpty(this.applicationId)){
+                this.getApplication(this.applicationId);
+            }
+        },
+        mounted(){
+            if(this.teacherId && !this.asAdmin){
+                // 如果传入了, 表示是教师在申请
+                this.courseModel.teacher_id = this.teacherId;
+            }
         },
         methods: {
+            // 删除已经存在的上课时间和地点项
+            deleteScheduleItem: function(idx, id){
+                if(this.asAdmin){
+                    // 如果是负责审核的人, 那么也要从服务器删除
+                    deleteArrangement(this.schedule[idx].id).then(res => {
+                        if(Util.isAjaxResOk(res)){
+                            this.schedule.splice(idx, 1);
+                        }
+                        else{
+                            this.$message.error('无法删除, 请稍候再试');
+                        }
+                    })
+                }else{
+                    this.schedule.splice(idx, 1);
+                }
+            },
+            // 批准选修课程
+            approve: function(){
+                if( Util.isEmpty(this.courseModel.reply_content) ){
+                    // 没有填写处理意见
+                    this.$message.error('请写下批准意见');
+                    return;
+                }
+                approveElectiveCourse(this.courseModel.id).then(res => {
+
+                });
+            },
+            // 拒绝选修课程
+            refuse: function(){
+                if( Util.isEmpty(this.courseModel.reply_content) ){
+                    // 没有填写处理意见
+                    this.$message.error('请写下拒绝原因');
+                    return;
+                }
+            },
+            getApplication: function(id){
+                this.loading = true;
+                loadElectiveCourse(id).then(res => {
+                    if(Util.isAjaxResOk(res)){
+                        const keys = Object.keys(res.data.data.application);
+                        for(let i=0;i<keys.length;i++){
+                            this.courseModel[keys[i]] = res.data.data.application[keys[i]];
+                        }
+                        this.schedule = res.data.data.application.schedule;
+                    }
+                    else{
+                        this.$message.error('数据加载失败, 请稍候再试');
+                    }
+                    this.loading = false;
+                })
+            },
             saveCourse: function(){
                 if(Util.isEmpty(this.schedule)){
                     this.$confirm('您还没有为此课程指定上课的时间和地点, 是否继续?', '提示', {
@@ -350,6 +439,9 @@
                         if(Util.isAjaxResOk(res)){
                             this.$message('选修课保存成功');
                             this.$emit('course-saved', {course: res.data.data.course});
+                            if(!this.asAdmin){
+                                window.location.href = '/home';
+                            }
                         }else{
                             this.$message.error(res.data.message);
                         }
@@ -441,6 +533,14 @@
                         this.rooms = res.data.data.rooms;
                     }else{
                         this.rooms = [];
+                    }
+                });
+            },
+            // 获取学校的老师
+            _getAllTeachers: function(){
+                loadTeachersBySchool(this.schoolId).then( res => {
+                    if(Util.isAjaxResOk(res)){
+                        this.teachersInSchool = res.data.data.teachers;
                     }
                 });
             },
