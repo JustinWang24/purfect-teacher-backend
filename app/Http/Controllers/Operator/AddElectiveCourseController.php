@@ -19,7 +19,7 @@ class AddElectiveCourseController extends Controller
     /**
      * 教师创建申请页面
      * @param TeacherApplyElectiveCourseRequest $request
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return string
      */
     public function create(TeacherApplyElectiveCourseRequest $request)
     {
@@ -78,7 +78,5 @@ class AddElectiveCourseController extends Controller
         return $result->isSuccess() ?
             JsonBuilder::Success(['id'=>$id])
             : JsonBuilder::Error($result->getMessage());
-
-
     }
 }

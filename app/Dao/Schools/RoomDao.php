@@ -13,8 +13,11 @@ use Illuminate\Support\Collection;
 
 class RoomDao
 {
+    /**
+     * @var User $currentUser
+     */
     private $currentUser;
-    public function __construct(User $user)
+    public function __construct($user = null)
     {
         $this->currentUser = $user;
     }

@@ -16,6 +16,11 @@
             </a>
         </li>
         <li class="nav-item">
+            <a href="{{ route('school_manager.elective-course.manager',['uuid'=>session('school.uuid')]) }}" class="nav-link ">
+                <span class="title">选修课审批</span>
+            </a>
+        </li>
+        <li class="nav-item">
             <a href="{{ route('teacher.textbook.manager') }}" class="nav-link ">
                 <span class="title">教材管理</span>
             </a>

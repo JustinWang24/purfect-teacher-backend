@@ -25,6 +25,10 @@ Route::prefix('school')->middleware('auth:api')->group(function () {
     Route::any('/save-time-slot','Api\School\TimeSlotsController@save_time_slot')
         ->name('api.school.save.time.slot');
 
+    // 获取指定学校的所有老师的键值对数据
+    Route::post('/teachers','Api\School\UsersController@teachers')
+        ->name('api.school.get.teachers');
+
     // 为课程表添加功能提供返回有效时间段的接口
     Route::any('/load-study-time-slots','Api\School\TimeSlotsController@load_study_time_slots')
         ->name('api.school.load.study.time.slots');
@@ -278,6 +282,8 @@ Route::prefix('elective-course')->middleware('auth:api')->group(function () {
     Route::post('/save','Api\ElectiveCourse\ApplyElectiveCourseController@create')
         ->name('api.elective-course.save');
 
+    Route::post('/load','Api\ElectiveCourse\ApplyElectiveCourseController@load')
+        ->name('api.elective-course.load');
 });
 
 
