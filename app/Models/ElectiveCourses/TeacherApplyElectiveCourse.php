@@ -3,8 +3,6 @@
 namespace App\Models\ElectiveCourses;
 
 use Illuminate\Database\Eloquent\Model;
-use App\Models\ElectiveCourses\TeacherApplyElectiveCoursesTimeSlot;
-
 
 
 class TeacherApplyElectiveCourse extends Model

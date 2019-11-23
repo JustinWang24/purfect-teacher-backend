@@ -22,6 +22,14 @@ class TimeSlotDao
         $this->currentSchool = $school;
     }
 
+    public function getById($id){
+        return TimeSlot::find($id);
+    }
+
+    public function update($id, $data){
+        return TimeSlot::where('id',$id)->update($data);
+    }
+
     /**
      * 获取系统设置的默认时间段
      * @param bool $asJsonObject

@@ -9,10 +9,12 @@ class EnrolmentStepDao
 {
 
     /**
-     * 创建
-     * @param $data
+     * 获取所有的基础数据
      * @return mixed
      */
+    public function getAll(){
+        return EnrolmentStep::all();
+    }
 
 
     /**

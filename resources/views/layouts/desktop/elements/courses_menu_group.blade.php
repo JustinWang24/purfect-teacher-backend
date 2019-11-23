@@ -6,6 +6,11 @@
     </a>
     <ul class="sub-menu">
         <li class="nav-item">
+            <a href="{{ route('school_manager.timetable.manager',['uuid'=>session('school.uuid')]) }}" class="nav-link ">
+                <span class="title">作息时间管理</span>
+            </a>
+        </li>
+        <li class="nav-item">
             <a href="{{ route('school_manager.courses.manager',['uuid'=>session('school.uuid')]) }}" class="nav-link ">
                 <span class="title">课程管理</span>
             </a>
