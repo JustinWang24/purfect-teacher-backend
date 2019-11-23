@@ -58,7 +58,7 @@ use App\Utils\UI\Button;
                                                 [
                                                     'text'=>'可执行操作',
                                                     'subs'=>[
-                                                        ['url'=>route('teacher.elective-course.create',['uuid'=>$application->id]),'text'=>'编辑/查看'],
+                                                        ['url'=>route('teacher.elective-course.edit',['application_id'=>$application->id,'uuid'=>$application->teacher_id]),'text'=>'编辑/查看'],
                                                         ['url'=>route('school_manager.elective-course.approve',['uuid'=>$application->id]),'text'=>'同意'],
                                                         ['url'=>route('school_manager.elective-course.refuse',['uuid'=>$application->id]),'text'=>'拒绝'],
                                                     ]

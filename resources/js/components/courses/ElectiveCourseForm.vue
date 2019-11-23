@@ -57,8 +57,8 @@
             </el-row>
             <el-row>
                 <el-col :span="12">
-                    <el-form-item label="所属专业" prop="majors">
-                        <el-select v-model="courseModel.majors" multiple filterable placeholder="请选择所属专业. 留空表示所有专业的学生都可以选择" style="width: 100%;">
+                    <el-form-item label="面向专业" prop="majors">
+                        <el-select v-model="courseModel.majors" multiple filterable placeholder="请选择面向专业. 留空表示面向所有专业开放" style="width: 100%;">
                             <el-option
                                     v-for="(major, idx) in majors"
                                     :key="idx"
@@ -277,6 +277,11 @@
                 type: Boolean,
                 required: false,
                 default: false,
+            },
+            teacherId: {
+                type:[Number, String],
+                required: false,
+                default: null
             }
         },
         watch:{
@@ -350,6 +355,12 @@
             this.courseModel.school_id = this.schoolId;
             if(!Util.isEmpty(this.applicationId)){
                 this.getApplication(this.applicationId);
+            }
+        },
+        mounted(){
+            if(this.teacherId && !this.asAdmin){
+                // 如果传入了, 表示是教师在申请
+                this.courseModel.teacher_id = this.teacherId;
             }
         },
         methods: {
@@ -428,6 +439,9 @@
                         if(Util.isAjaxResOk(res)){
                             this.$message('选修课保存成功');
                             this.$emit('course-saved', {course: res.data.data.course});
+                            if(!this.asAdmin){
+                                window.location.href = '/home';
+                            }
                         }else{
                             this.$message.error(res.data.message);
                         }

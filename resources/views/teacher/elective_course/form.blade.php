@@ -56,6 +56,7 @@
         :total-weeks="{{ $configuration->study_weeks_per_term }}"
         :time-slots="timeSlots"
         :majors="majors"
+        :teacher-id="{{ $teacher->id }}"
         school-id="{{ session('school.id') }}"
 ></elective-course-form>
                         </div>
