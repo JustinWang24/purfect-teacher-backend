@@ -9,7 +9,9 @@
 namespace App\Dao\ElectiveCourses;
 use App\Dao\BuildFillableData;
 use App\Dao\Courses\CourseDao;
+use App\Dao\Schools\BuildingDao;
 use App\Dao\Schools\DepartmentDao;
+use App\Dao\Schools\RoomDao;
 use App\Dao\Schools\SchoolDao;
 use App\Dao\Users\GradeUserDao;
 use App\Events\User\Student\EnrollCourseEvent;
@@ -178,13 +180,19 @@ class TeacherApplyElectiveCourseDao
 
             if ($apply) {
                 //保存课时安排
-                self::saveApplyCourseArrangements($applyGroups, $apply->id);
+                $bag = $this->saveApplyCourseArrangements($applyGroups, $apply->id);
                 //保存关联专业
-                self::saveApplyMajor($data['course']['majors'], $apply->id, $data['course']['school_id']);
+                $this->saveApplyMajor($data['course']['majors'], $apply->id, $data['course']['school_id']);
 
-                DB::commit();
-                $messageBag->setCode(JsonBuilder::CODE_SUCCESS);
-                $messageBag->setData($apply);
+                if($bag->isSuccess()){
+                    DB::commit();
+                    $messageBag->setCode(JsonBuilder::CODE_SUCCESS);
+                    $messageBag->setData($apply);
+                }
+                else{
+                    DB::rollBack();
+                    $messageBag->setMessage($bag->getMessage());
+                }
             } else {
                 DB::rollBack();
                 $messageBag->setMessage('保存选修课程数据失败, 请联系管理员');
@@ -228,7 +236,7 @@ class TeacherApplyElectiveCourseDao
                 //先删除旧的关联专业
                 ApplyCourseMajor::where('apply_id', $id)->delete();
                 //保存新的关联专业
-                self::saveApplyMajor($data['course']['majors'], $id, $data['course']['school_id']);
+                $this->saveApplyMajor($data['course']['majors'], $id, $data['course']['school_id']);
                 DB::commit();
                 $messageBag->setCode(JsonBuilder::CODE_SUCCESS);
                 $messageBag->setData($apply);
@@ -423,25 +431,45 @@ class TeacherApplyElectiveCourseDao
      */
     public function saveApplyCourseArrangements($schedule, $applyId)
     {
-        $messageBag = new MessageBag(JsonBuilder::CODE_ERROR);
+        $messageBag = new MessageBag(JsonBuilder::CODE_SUCCESS);
         if (!empty($schedule)) {
-            DB::beginTransaction();
+            $buildingDao = new BuildingDao();
+            $roomDao = new RoomDao();
+
             try {
-                $arr = [];
                 foreach ($schedule as $key => $group) {
                     foreach ($group['weeks'] as $week) {
                         foreach ($group['days'] as $day) {
                             foreach ($group['timeSlots'] as $timeSlot) {
-                                $arr[$week][$day][] = $timeSlot;
+                                $buildingName = null;
+                                $buildingId = null;
+                                if(!empty($group['building_id'])){
+                                    $building = $buildingDao->getBuildingById($group['building_id']);
+                                    if($building){
+                                        $buildingName = $building->name;
+                                        $buildingId = $group['building_id'];
+                                    }
+                                }
+
+                                $roomName = null;
+                                $roomId = null;
+                                if(!empty($group['classroom_id'])){
+                                    $room= $roomDao->getRoomById($group['classroom_id']);
+                                    if($room){
+                                        $roomName = $room->name;
+                                        $roomId = $group['classroom_id'];
+                                    }
+                                }
+
                                 $d = [
                                     'apply_id' => $applyId,
                                     'week' => $week,
                                     'day_index' => $day,
                                     'time_slot_id' => $timeSlot,
-                                    'building_id' => $group['building_id'],
-                                    'building_name' => $group['building_name'],
-                                    'classroom_id' => $group['classroom_id'],
-                                    'classroom_name' => $group['classroom_name'],
+                                    'building_id' => $buildingId,
+                                    'building_name' => $buildingName,
+                                    'classroom_id' => $roomId,
+                                    'classroom_name' => $roomName,
 
                                 ];
                                 ApplyCourseArrangement::create($d);
@@ -449,10 +477,8 @@ class TeacherApplyElectiveCourseDao
                         }
                     }
                 }
-                DB::commit();
-                $messageBag->setCode(JsonBuilder::CODE_SUCCESS);
             } catch (\Exception $exception) {
-                DB::rollBack();
+                $messageBag->setCode(JsonBuilder::CODE_ERROR);
                 $messageBag->setMessage($exception->getMessage());
             }
         }
