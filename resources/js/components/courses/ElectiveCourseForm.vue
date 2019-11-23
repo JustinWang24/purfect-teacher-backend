@@ -2,19 +2,26 @@
     <div class="elective-course-form-wrap">
         <el-form :model="courseModel" :rules="rules" ref="electivCourseModelForm" label-width="100px" class="course-form">
             <el-row>
-                <el-col :span="8">
+                <el-col :span="6">
                     <el-form-item label="课程编号" prop="code">
                         <el-input v-model="courseModel.code" placeholder="必填: 课程编号, 请注意保证课程编号的唯一性"></el-input>
                     </el-form-item>
                 </el-col>
-                <el-col :span="8">
+                <el-col :span="6">
                     <el-form-item label="课程名称" prop="name">
                         <el-input v-model="courseModel.name" placeholder="必填: 课程名称"></el-input>
                     </el-form-item>
                 </el-col>
-                <el-col :span="8">
+                <el-col :span="6">
                     <el-form-item label="学分" prop="scores">
                         <el-input v-model="courseModel.scores" placeholder="选填: 课程学分"></el-input>
+                    </el-form-item>
+                </el-col>
+                <el-col :span="6">
+                    <el-form-item label="开课年份" prop="start_year">
+                        <el-select v-model="courseModel.start_year" placeholder="必填: 开课年份">
+                            <el-option :key="idx" :label="year" :value="year" v-for="(year, idx) in allowedStartYears"></el-option>
+                        </el-select>
                     </el-form-item>
                 </el-col>
             </el-row>
@@ -285,6 +292,12 @@
                     ],
                     max_number: [
                         { required: true, message: '请输入课程最多可容纳的学生数', trigger: 'blur' }
+                    ],
+                    start_year: [
+                        { required: true, message: '开课年份', trigger: 'change' }
+                    ],
+                    scores: [
+                        { required: true, message: '学分是必填项', trigger: 'change' }
                     ]
                 },
                 loading: false,
@@ -302,10 +315,15 @@
                 buildings:[],
                 rooms:[],
                 campuses:[],
+                allowedStartYears:[],
             }
         },
         created(){
             this._getAllBuildings();
+            const thisYear = (new Date()).getFullYear();
+            this.allowedStartYears.push(thisYear);
+            this.allowedStartYears.push(thisYear+1);
+            this.courseModel.school_id = this.schoolId;
         },
         methods: {
             saveCourse: function(){

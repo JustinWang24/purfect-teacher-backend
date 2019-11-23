@@ -7,6 +7,7 @@ export const Constants = {
     AJAX_ERROR: 999,
     API: {
         LOAD_TIME_SLOTS_BY_SCHOOL: '/api/school/load-time-slots',
+        SAVE_TIME_SLOT: '/api/school/save-time-slot',
         LOAD_STUDY_TIME_SLOTS_BY_SCHOOL: '/api/school/load-study-time-slots',
         LOAD_BUILDINGS_BY_SCHOOL: '/api/school/load-buildings',
         LOAD_ROOMS_BY_BUILDING: '/api/school/load-building-rooms',
@@ -91,6 +92,10 @@ export const Constants = {
             SEARCH_TEXTBOOKS: '/teacher/textbook/search',
             ATTACH_TEXTBOOKS: '/teacher/textbook/courseBindingTextbook',
             DELETE_TEXTBOOK: '/teacher/textbook/delete',
+        },
+        WELCOME:{
+            LOAD_STEP_DETAILS: '/api/enrolment-step/schoolEnrolmentStep/getEnrolmentInfo',
+            LOAD_WHOLE_PROCESS: '/api/enrolment-step/step-list', // 获取某个学校校区的迎新流程中所有步骤
         }
     },
     YEARS: ['N.A','一年级','二年级','三年级','四年级','五年级','六年级'],

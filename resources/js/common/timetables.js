@@ -6,6 +6,12 @@ export function getTimeSlots(schoolId) {
     );
 }
 
+export function saveTimeSlot(schoolUuid, timeSlot) {
+    return axios.post(
+        Constants.API.SAVE_TIME_SLOT,{school: schoolUuid, timeSlot: timeSlot}
+    );
+}
+
 export function getCourses(schoolId, pageNumber) {
     return axios.post(
         Constants.API.LOAD_COURSES_BY_SCHOOL,{school: schoolId, pageNumber: pageNumber}
