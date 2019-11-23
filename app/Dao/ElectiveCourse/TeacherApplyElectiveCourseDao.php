@@ -15,10 +15,6 @@ use App\Dao\Users\GradeUserDao;
 use App\Events\User\Student\EnrollCourseEvent;
 use App\Models\ElectiveCourses\ApplyCourseArrangement;
 use App\Models\ElectiveCourses\ApplyCourseMajor;
-use App\Models\ElectiveCourses\ApplyDay;
-use App\Models\ElectiveCourses\ApplyGroup;
-use App\Models\ElectiveCourses\ApplyTimeSlot;
-use App\Models\ElectiveCourses\ApplyWeek;
 use App\Models\ElectiveCourses\CourseElective;
 use App\Models\ElectiveCourses\StudentEnrolledOptionalCourse;
 use App\Models\ElectiveCourses\TeacherApplyElectiveCourse;
@@ -26,6 +22,7 @@ use App\Dao\Schools\MajorDao;
 use App\Dao\Users\UserDao;
 use App\User;
 use App\Utils\JsonBuilder;
+use App\Utils\Misc\ConfigurationTool;
 use App\Utils\ReturnData\IMessageBag;
 use App\Utils\ReturnData\MessageBag;
 use Carbon\Carbon;
@@ -34,30 +31,80 @@ use Exception;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
-
 class TeacherApplyElectiveCourseDao
 {
     use BuildFillableData;
     public function __construct()
-    {
-    }
+    {}
 
-
+    /**
+     * 根据 id 获取老师的选修课申请表
+     * @param $id
+     * @return TeacherApplyElectiveCourse
+     */
     public function getApplyById($id)
     {
-        return TeacherApplyElectiveCourse::find($id);
+        $application = TeacherApplyElectiveCourse::where('id',$id)
+            ->with('openToMajors')
+            ->with('arrangements')
+            ->first();
+
+        // 一下是为了前端的表单能够显示而组件的特殊的数据结构
+        $majorsId = [];
+        foreach ($application->openToMajors as $openToMajor) {
+            $majorsId[] = $openToMajor->major_id;
+        }
+        $application->majors = $majorsId;
+
+        // 上课的时间和地点
+        $schedule = [];
+        foreach ($application->arrangements as $arrangement) {
+            $item = [
+                'weeks'=>[$arrangement->week],
+                'days'=>[$arrangement->day_index],
+                'timeSlots'=>[$arrangement->time_slot_id],
+                'building_id'=>$arrangement->building_id,
+                'building_name'=>$arrangement->building_name,
+                'classroom_name'=>$arrangement->classroom_name,
+                'classroom_id'=>$arrangement->classroom_id,
+                'id'=>$arrangement->id,
+            ];
+            $schedule[] = $item;
+        }
+        $application->schedule = $schedule;
+        //
+
+        return $application;
     }
-    //获取已经审批过的申请
+
+    /**
+     * @param $id
+     * @return mixed
+     */
+    public function deleteArrangementItem($id){
+        return ApplyCourseArrangement::where('id',$id)->delete();
+    }
+
+    /**
+     * 根据学校获取分页
+     * @param $schoolId
+     * @return mixed
+     */
+    public function getPaginatedApplications($schoolId){
+        return TeacherApplyElectiveCourse::where('school_id',$schoolId)
+            ->orderBy('created_at','desc')
+            ->paginate(ConfigurationTool::DEFAULT_PAGE_SIZE);
+    }
+
+    /**
+     * 获取已经审批过的申请
+     * @param $id
+     * @return TeacherApplyElectiveCourse|bool
+     */
     public function getVerifiedApplyById($id)
     {
-        $obj =  TeacherApplyElectiveCourse::find($id);
-        if(TeacherApplyElectiveCourse::STATUS_VERIFIED == $obj->status)
-        {
-            return $obj;
-        } else {
-            return false;
-        }
-
+        $obj =  $this->getApplyById($id);
+        return $obj->isVerified() ? $obj : false;
     }
 
     /**
@@ -160,7 +207,7 @@ class TeacherApplyElectiveCourseDao
     {
         $id = $data['course']['id'];
         unset($data['course']['id']);
-        $data['course']['teacher_name'] = self::getTeacherName($data['course']['teacher_id']);
+        $data['course']['teacher_name'] = $this->getTeacherName($data['course']['teacher_id']);
         $applyGroups = $data['schedule'];
         $data['course']['status'] = $data['course']['status']??TeacherApplyElectiveCourse::STATUS_WAITING_FOR_VERIFIED;
         $messageBag = new MessageBag(JsonBuilder::CODE_ERROR);
@@ -194,7 +241,6 @@ class TeacherApplyElectiveCourseDao
             DB::rollBack();
             $messageBag->setMessage($exception->getMessage());
         }
-
         return $messageBag;
     }
 
@@ -206,8 +252,7 @@ class TeacherApplyElectiveCourseDao
      */
     public function rejectedApply($id, $content)
     {
-        return self::operateApply($id, TeacherApplyElectiveCourse::STATUS_WAITING_FOR_REJECTED);
-
+        return $this->operateApply($id, TeacherApplyElectiveCourse::STATUS_WAITING_FOR_REJECTED);
     }
 
     /**
@@ -218,8 +263,7 @@ class TeacherApplyElectiveCourseDao
      */
     public function approvedApply($id, $content)
     {
-        return self::operateApply($id, TeacherApplyElectiveCourse::STATUS_VERIFIED, $content);
-
+        return $this->operateApply($id, TeacherApplyElectiveCourse::STATUS_VERIFIED, $content);
     }
 
     /**
@@ -229,7 +273,7 @@ class TeacherApplyElectiveCourseDao
      */
     public function publishedApply($id)
     {
-        return self::operateApply($id, TeacherApplyElectiveCourse::STATUS_PUBLISHED);
+        return $this->operateApply($id, TeacherApplyElectiveCourse::STATUS_PUBLISHED);
     }
 
     /**
@@ -241,6 +285,7 @@ class TeacherApplyElectiveCourseDao
      */
     public function operateApply($id, $status, $content=null)
     {
+        $msgBag = new MessageBag(JsonBuilder::CODE_ERROR, '系统错误');
         DB::beginTransaction();
         try {
             $apply = TeacherApplyElectiveCourse::where('id', $id)->first();
@@ -255,27 +300,39 @@ class TeacherApplyElectiveCourseDao
             } else {
                 throw new Exception('参数错误');
             }
-            $result = $apply->save();
+            $apply->save();
             DB::commit();
-            return true;
+            $msgBag->setCode(JsonBuilder::CODE_SUCCESS);
+            $msgBag->setData($apply);
+            return $msgBag;
         } catch (\Exception $exception) {
             DB::rollBack();
-            return false;
+            $msgBag->setMessage($exception->getMessage());
+            return $msgBag;
         }
     }
-    //根据教师id获取教师姓名
+
+    /**
+     * 根据 id 获取教师用户的名字
+     * @param $teacherId
+     * @return string|null
+     */
     public function getTeacherName($teacherId)
     {
         $teacherDao = new UserDao();
         $theTeacher = $teacherDao->getUserById($teacherId);
-        return $theTeacher->name;
+        return $theTeacher->name ?? null;
     }
-    //根据专业id获得专业名称
+
+    /**
+     * 根据专业id获得专业名称
+     * @param $majorId
+     * @return \App\Models\Schools\Major|null
+     */
     public function getMajor($majorId)
     {
         $majorDao = new MajorDao();
-        $major = $majorDao->getMajorById($majorId);
-        return $major;
+        return $majorDao->getMajorById($majorId);
     }
     //根据身份获取申请的状态值
 
@@ -298,7 +355,7 @@ class TeacherApplyElectiveCourseDao
     {
         $messageBag = new MessageBag(JsonBuilder::CODE_ERROR);
         //全部专业
-        $applyMajors = self::getApplyMjor($applyId);
+        $applyMajors = $this->getApplyMajor($applyId);
         $majorArrs = [];
         foreach ($applyMajors->toArray() as $majorArr)
         {
@@ -355,15 +412,19 @@ class TeacherApplyElectiveCourseDao
      */
     public function getAllBySchool($schoolId, $monthsAgo = 3){
         return TeacherApplyElectiveCourse::where('school_id',$schoolId)
-            ->where('created_at','>',Carbon::now()->subMonths(3))
+            ->where('created_at','>',Carbon::now()->subMonths($monthsAgo))
             ->get();
     }
 
-
+    /**
+     * @param $schedule
+     * @param $applyId
+     * @return IMessageBag
+     */
     public function saveApplyCourseArrangements($schedule, $applyId)
     {
+        $messageBag = new MessageBag(JsonBuilder::CODE_ERROR);
         if (!empty($schedule)) {
-            $messageBag = new MessageBag(JsonBuilder::CODE_ERROR);
             DB::beginTransaction();
             try {
                 $arr = [];
@@ -391,7 +452,6 @@ class TeacherApplyElectiveCourseDao
                 DB::commit();
                 $messageBag->setCode(JsonBuilder::CODE_SUCCESS);
             } catch (\Exception $exception) {
-                dd($exception);
                 DB::rollBack();
                 $messageBag->setMessage($exception->getMessage());
             }
@@ -403,6 +463,7 @@ class TeacherApplyElectiveCourseDao
      * 保存申请课程的关联专业
      * @param $data
      * @param $applyId
+     * @param $schoolId
      */
     public function saveApplyMajor($data, $applyId, $schoolId)
     {
@@ -425,9 +486,9 @@ class TeacherApplyElectiveCourseDao
     /**
      * 根据申请id获取相关选修课对应的专业
      * @param $applyId
-     * @return mixed
+     * @return ApplyCourseMajor|null
      */
-    public function getApplyMjor($applyId)
+    public function getApplyMajor($applyId)
     {
         return ApplyCourseMajor::where('apply_id', $applyId)->get();
     }
@@ -435,14 +496,18 @@ class TeacherApplyElectiveCourseDao
     /**
      * 根据申请id获取全部课时安排数据
      * @param $applyId
-     * @return mixed
+     * @return ApplyCourseArrangement|null
      */
     public function  getApplyCourseArrangements($applyId)
     {
         return ApplyCourseArrangement::where('apply_id',$applyId)->get();
     }
 
-    //查系或学校的相关配置获取最多能报几个选修课
+    /**
+     * 查系或学校的相关配置获取最多能报几个选修课
+     * @param User $user
+     * @return mixed
+     */
     public function getNumOfCanBeEnroll($user)
     {
         $schoolId = $user->getSchoolId();
@@ -460,26 +525,47 @@ class TeacherApplyElectiveCourseDao
         return $NumOfCanBeEnroll;
     }
 
-    //一年之内
+    /**
+     * 一年之内
+     *
+     * @param User $user
+     * @param $tableName
+     * @return int
+     */
     public function getTotalOfEnroll($user, $tableName)
     {
         //报名结果表中的数量
-        $num1 = self::getNumHasEnroll($user, $tableName);
+        $num1 = $this->getNumHasEnroll($user, $tableName);
         //报名中的数量
-        $num2 = self::getNumEnroll($user);
+        $num2 = $this->getNumEnroll($user);
         return $num1+$num2;
     }
 
+    /**
+     * @param User $user
+     * @param $tableName
+     * @return int
+     */
     public function getNumHasEnroll($user, $tableName)
     {
         return DB::table($tableName)->where('user_id', $user->id)->count();
     }
 
+    /**
+     * @param $user
+     * @return mixed
+     */
     public function getNumEnroll($user)
     {
         return StudentEnrolledOptionalCourse::where('user_id', $user->id)->count();
     }
-    //判断报名报是否存在，不存在则创建
+
+
+    /**
+     * 判断报名报是否存在，不存在则创建
+     * @param $tableName
+     * @return bool
+     */
     public function createEnrollTable($tableName)
     {
         $sql = '
@@ -504,12 +590,25 @@ class TeacherApplyElectiveCourseDao
             return true;
         }
     }
-    //查询课程是否名额已满
+
+    /**
+     * 查询课程是否名额已满
+     * @param $courseId
+     * @return bool
+     */
     public function quotaIsFull($courseId)
     {
         return CourseElective::where('course_id',$courseId)->first()->status == CourseElective::STATUS_ISFULL;
     }
-    //报名
+
+    /**
+     * 报名
+     * @param $courseId
+     * @param $userId
+     * @param $teacherId
+     * @param $schoolId
+     * @return StudentEnrolledOptionalCourse
+     */
     public function enroll($courseId, $userId, $teacherId, $schoolId)
     {
         $d = [
@@ -521,13 +620,10 @@ class TeacherApplyElectiveCourseDao
         return StudentEnrolledOptionalCourse::create($d);
     }
 
-
-
     /**
      * 处理报名结果表，查询报名总数与max_num比较，
      * 修改course_elective表的状态，删除报名表中的数据,
      * select其中前max_num条数据，写入报名结果表，
-     *
      * @param $maxNum
      * @param $courseId
      * @param $tableName
@@ -536,9 +632,9 @@ class TeacherApplyElectiveCourseDao
     public function operateEnrollResult($maxNum, $courseId, $tableName)
     {
         //创建报名结果表
-        self::createEnrollTable($tableName);
+        $this->createEnrollTable($tableName);
         if (self::quotaIsFull($courseId)) return true;
-        if (self::getEnrolleTotalForCourses($courseId) >= $maxNum)
+        if (self::getEnrolledTotalForCourses($courseId) >= $maxNum)
         {
             DB::beginTransaction();
             try {
@@ -580,12 +676,16 @@ class TeacherApplyElectiveCourseDao
         }
     }
 
-    //取消报名，加共享锁，当提交或回滚后解除锁定
-    public function cancleEnroll($userId, $courseId)
+    /**
+     * 取消报名，加共享锁，当提交或回滚后解除锁定
+     * @param $userId
+     * @param $courseId
+     */
+    public function cancelEnroll($userId, $courseId)
     {
         DB::beginTransaction();
         try {
-            $result = StudentEnrolledOptionalCourse::where('user_id', $userId)
+            StudentEnrolledOptionalCourse::where('user_id', $userId)
                 ->where('course_id', $courseId)->sharedLock()->delete();
             DB::commit();
         } catch (\Exception $exception) {
@@ -593,8 +693,12 @@ class TeacherApplyElectiveCourseDao
         }
     }
 
-    //获取某课程的报名总人数
-    public function getEnrolleTotalForCourses($courseId)
+    /**
+     * 获取某课程的报名总人数
+     * @param $courseId
+     * @return int
+     */
+    public function getEnrolledTotalForCourses($courseId)
     {
         return StudentEnrolledOptionalCourse::where('course_id', $courseId)->count();
     }
@@ -614,7 +718,6 @@ class TeacherApplyElectiveCourseDao
             {
                 return ++$key;
             }
-
         }
         return false;
     }
@@ -632,15 +735,21 @@ class TeacherApplyElectiveCourseDao
             ->where('user_id', $user->id)->get()->first();
     }
 
+    /**
+     * 通知学生
+     * @param $courseId
+     * @param $tableName
+     */
     public function notifyStudent($courseId, $tableName)
     {
         $rows = DB::table($tableName)->where('course_id', $courseId)->get();
         foreach ($rows as $row)
         {
             $row = json_decode(json_encode($row), true);
+
+            // Todo: 为什么要在循环中抛出事件???
             event(new EnrollCourseEvent($row));
         }
     }
-
 }
 

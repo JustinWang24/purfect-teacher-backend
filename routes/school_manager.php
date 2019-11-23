@@ -130,7 +130,21 @@ Route::prefix('school_manager')->group(function () {
     //选课申请管理
     Route::post('elective-course/save','Operator\ApplyElectiveCourseController@create')
         ->name('school_manager.elective-course.save');
-    Route::post('elective-course/approve','Operator\ApplyElectiveCourseController@approve')
+
+    // 同意选修课申请表
+    Route::any('elective-course/approve','Operator\ApplyElectiveCourseController@approve')
         ->name('school_manager.elective-course.approve');
+    // 拒绝选修课申请表
+    Route::any('elective-course/refuse','Operator\ApplyElectiveCourseController@refuse')
+        ->name('school_manager.elective-course.refuse');
+
+    // 管理员审批选修课的 action
+    Route::get('elective-course/management','ElectiveCoursesController@management')
+        ->name('school_manager.elective-course.manager');
+    Route::get('elective-course/edit','ElectiveCoursesController@management')
+        ->name('school_manager.elective-course.edit');
+    // 删除选修课上课的时间地点项
+    Route::post('elective-course/delete-arrangement','ElectiveCoursesController@delete_arrangement')
+        ->name('school_manager.elective-course.delete-arrangement');
 });
 

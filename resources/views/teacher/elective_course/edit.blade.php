@@ -13,17 +13,17 @@
         <div class="col-sm-12 col-md-2 col-lg-2 col-xl-2">
             @if(count($applications) > 0)
                 @foreach($applications as $index=>$application)
-                <div class="card">
-                    <div class="card-head">
-                        <header>{{ $application->name }}</header>
-                    </div>
-                    <div class="card-body">
-                        <div class="row">
-                            <p>申请人: {{ $application->teacher_name }}</p>
-                            <p>{!! $application->getStatusText() !!}</p>
+                    <div class="card">
+                        <div class="card-head">
+                            <header>{{ $application->name }}</header>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <p>申请人: {{ $application->teacher_name }}</p>
+                                <p>{!! $application->getStatusText() !!}</p>
+                            </div>
                         </div>
                     </div>
-                </div>
                 @endforeach
             @else
                 <div class="card">
@@ -46,18 +46,19 @@
                 <div class="card-body">
                     <div id="app-init-data-holder"
                          data-school="{{ session('school.id') }}"
-                         data-application=""
+                         data-application="{{ $application_id??null }}"
                     ></div>
                     <div class="row" id="teacher-apply-a-new-elective-course-app">
                         <div class="col-12">
-<elective-course-form
-        :course-model="course"
-        :application-id="applicationId"
-        :total-weeks="{{ $configuration->study_weeks_per_term }}"
-        :time-slots="timeSlots"
-        :majors="majors"
-        school-id="{{ session('school.id') }}"
-></elective-course-form>
+                            <elective-course-form
+                                :course-model="course"
+                                :application-id="applicationId"
+                                :total-weeks="{{ $configuration->study_weeks_per_term }}"
+                                :time-slots="timeSlots"
+                                :majors="majors"
+                                :as-admin="true"
+                                school-id="{{ session('school.id') }}"
+                            ></elective-course-form>
                         </div>
                     </div>
                 </div>
