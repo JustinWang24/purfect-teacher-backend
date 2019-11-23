@@ -14,6 +14,23 @@ use App\Models\School;
 
 class TimeSlotsController extends Controller
 {
+    public function save_time_slot(Request $request){
+        $dao = new SchoolDao();
+        $school = $dao->getSchoolByUuid($request->get('school'));
+        if($school){
+            $tsDao = new TimeSlotDao();
+            $timeSlot = $request->get('timeSlot');
+            $id = $timeSlot['id'];
+            $ts = $tsDao->getById($id);
+            if($ts && $ts->school_id === $school->id){
+                unset($timeSlot['id']);
+                $tsDao->update($id, $timeSlot);
+                return JsonBuilder::Success();
+            }
+        }
+        return JsonBuilder::Error('系统繁忙, 请稍候再试!');
+    }
+
     /**
      * 根据指定的学校 uuid 返回作息时间表
      * @param Request $request

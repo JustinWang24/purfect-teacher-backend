@@ -22,6 +22,9 @@ Route::prefix('school')->middleware('auth:api')->group(function () {
     Route::any('/load-time-slots','Api\School\TimeSlotsController@load_by_school')
         ->name('api.school.load.time.slots');
 
+    Route::any('/save-time-slot','Api\School\TimeSlotsController@save_time_slot')
+        ->name('api.school.save.time.slot');
+
     // 为课程表添加功能提供返回有效时间段的接口
     Route::any('/load-study-time-slots','Api\School\TimeSlotsController@load_study_time_slots')
         ->name('api.school.load.study.time.slots');
