@@ -29,7 +29,7 @@ class ApplyElectiveCourseController extends Controller
         $applyData = $validated;
         $dao = new TeacherApplyElectiveCourseDao();
         $applyData['course']['school_id'] = $schoolId;
-        $applyData['course']['max_num'] = $applyData['course']['max_number'];
+        $applyData['course']['teacher_name'] = $teacher->name;
         $applyData['course']['start_year'] = $applyData['course']['start_year']??date("Y");
 
         if(empty($applyData['course']['id'])){

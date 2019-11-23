@@ -61,14 +61,14 @@ export function applyElectiveCourse(course, schedule, affix) {
  * @param affix
  * @returns Promise
  */
-export function approveElectiveCourse(course, schedule, affix) {
+export function approveElectiveCourse(course, affix) {
     const url = Util.buildUrl(Constants.API.ELECTIVE_COURSE.SAVE);
     if(Util.isDevEnv()){
         return axios.get(url, affix);
     }
     return axios.post(
         url,
-        {course: course, schedule: schedule, version:Constants.VERSION}
+        {course_id: course.id, reply_content: course.reply_content, version:Constants.VERSION}
     );
 }
 
@@ -86,7 +86,7 @@ export function refuseElectiveCourse(course, affix) {
     }
     return axios.post(
         url,
-        {course: course, version:Constants.VERSION}
+        {course_id: course.id, reply_content: course.reply_content, version:Constants.VERSION}
     );
 }
 

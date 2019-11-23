@@ -237,7 +237,13 @@
     import { loadTeachersBySchool } from '../../common/welcome';
     import { Util } from '../../common/utils';
     import { loadBuildings, loadRoomsByBuilding } from '../../common/facility';
-    import { saveElectiveCourse, loadElectiveCourse, deleteArrangement } from '../../common/elective_course';
+    import {
+        saveElectiveCourse,
+        loadElectiveCourse,
+        deleteArrangement,
+        approveElectiveCourse,
+        refuseElectiveCourse
+    } from '../../common/elective_course';
 
     export default {
         name: "ElectiveCourseForm",
@@ -370,6 +376,9 @@
                     this.$message.error('请写下批准意见');
                     return;
                 }
+                approveElectiveCourse(this.courseModel.id).then(res => {
+
+                });
             },
             // 拒绝选修课程
             refuse: function(){
