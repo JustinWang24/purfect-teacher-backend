@@ -13,6 +13,14 @@ use Illuminate\Database\Eloquent\Collection;
 
 class CommonDao
 {
+   //支付方式 支付方式(0：免支付,1:微信,2:支付宝,3:兑换支付)
+   public static $paymentidArr = [
+      0 => '免支付' ,
+      1 => '微信' ,
+      2 => '支付宝',
+      3 => '兑换支付',
+   ];
+   //---------------------------------------api定义的静态属性--------------------------------------
    // Wifi通知状态 状态(0:关闭,1:开启)
    public static $wifiContentsStatusArr = [
       0 => '关闭' ,
@@ -54,6 +62,45 @@ class CommonDao
       return DB::table ( 'school_address' )->where ( 'id' , $id )->first ();
    }
 
+   //---------------------------------------manger定义的静态属性------------------------------------
+
+   // wifi有线产品配置
+   public static $manageWifiArr = [
+      [ 'id' => 1 , 'name' => '日卡' , 'day' => 1 ] ,
+      [ 'id' => 2 , 'name' => '1周' , 'day' => 7 ] ,
+      [ 'id' => 3 , 'name' => '1个月' , 'day' => 30 ] ,
+      [ 'id' => 4 , 'name' => '2个月' , 'day' => 60 ] ,
+      [ 'id' => 5 , 'name' => '1季度' , 'day' => 90 ] ,
+      [ 'id' => 6 , 'name' => '1学期' , 'day' => 150 ] ,
+      [ 'id' => 7 , 'name' => '1年' , 'day' => 360 ] ,
+      [ 'id' => 8 , 'name' => '2年' , 'day' => 730 ] ,
+      [ 'id' => 9 , 'name' => '3年' , 'day' => 1095 ] ,
+      ];
+
+   // wifi充值状态
+   public static $manageWifiStatusArr
+      = [
+      1 => '待支付' ,
+      2 => '支付失败' ,
+      3 => 'wifi充值中' ,
+      4 => 'wifi充值成功' ,
+      5 => 'wifi充值失败' ,
+      6 => '退款成功' ,
+   ];
+
+   // 是否评价(1:未评价,2:已评价)
+   public static $manageCommentArr = [
+      1 => '未评价',
+      2 => '已评价',
+   ];
+
+   // 状态,1:待处理,2:已接单，3:已完成,4:已取消,5:已关闭.
+   public static $manageStatusArr = [
+      1 => '待处理',
+      2 => '处理中',
+      3 => '已完成',
+   ];
+   //--------------------------------------public 公共方法——--------------------------------------
    /**
     * Func 树接口
     *
