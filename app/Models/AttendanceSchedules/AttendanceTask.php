@@ -7,12 +7,12 @@ use Illuminate\Database\Eloquent\Model;
 class AttendanceTask extends Model
 {
     protected $fillable = [
-        'school_id', 'campus_id', 'type', 'title',
+        'school_id', 'type', 'title',
         'content', 'start_time', 'end_time',
     ];
 
     public function timeSlots()
     {
-        $this->hasMany(AttendanceTimeSlot::class);
+        return $this->hasMany(AttendanceTimeSlot::class, 'task_id', 'id');
     }
 }
