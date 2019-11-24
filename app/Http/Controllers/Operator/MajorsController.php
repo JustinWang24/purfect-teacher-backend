@@ -47,6 +47,7 @@ class MajorsController extends Controller
         $majorDao = new MajorDao($request->user());
         $major = $majorDao->getMajorById($request->uuid());
         if($major){
+            $this->dataForView['all_type'] = $major->AllTypes();
             $this->dataForView['department'] = $major->department;
             $this->dataForView['major'] = $major;
             return view('school_manager.major.edit', $this->dataForView);

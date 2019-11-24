@@ -18,7 +18,7 @@ use App\User;
                                 <a href="{{ route('school_manager.institute.departments',['uuid'=>$parent->institute->id,'by'=>'institute']) }}" class="btn btn-default">
                                     <i class="fa fa-arrow-circle-left"></i> 返回
                                 </a>&nbsp;
-                                <a href="{{ route('school_manager.major.add',['uuid'=>$parent->id]) }}" class="btn btn-primary pull-right" id="btn-create-major-from-department">
+                                <a href="{{ route('school_manager.major.add',['uuid'=>$parent->id]) }}" class="btn btn-primary" id="btn-create-major-from-department">
                                     创建新专业 <i class="fa fa-plus"></i>
                                 </a>
                             @endif
