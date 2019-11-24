@@ -22,6 +22,7 @@ class TeacherApplyElectiveCourseRequest extends MyStandardRequest
             'course.teacher_id'     => ['nullable',  'numeric'],
             'course.teacher_name'   => ['nullable',  'max:255'],
             'course.desc'           => ['required',  'max:255'],
+            'course.school_id'      => ['required',  'max:255'],
             'schedule.*.weeks'      => ['required',  'array'],
             'schedule.*.days'       => ['required',  'array'],
             'schedule.*.timeSlots'  => ['required',  'array'],

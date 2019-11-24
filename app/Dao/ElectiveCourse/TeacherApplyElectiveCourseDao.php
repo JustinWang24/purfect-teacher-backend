@@ -260,17 +260,29 @@ class TeacherApplyElectiveCourseDao
      */
     public function rejectedApply($id, $content)
     {
-        return $this->operateApply($id, TeacherApplyElectiveCourse::STATUS_WAITING_FOR_REJECTED);
+        return $this->operateApply($id, TeacherApplyElectiveCourse::STATUS_WAITING_FOR_REJECTED, $content);
     }
 
     /**
      * 批准申请
      * @param $id
      * @param $content
+     * @param array $newSchedule
      * @return IMessageBag
      */
-    public function approvedApply($id, $content)
+    public function approvedApply($id, $content, $newSchedule)
     {
+        foreach ($newSchedule as $item) {
+            ApplyCourseArrangement::where('id',$item['id'])->update([
+                'week'=>$item['weeks'][0],
+                'day_index'=>$item['days'][0],
+                'time_slot_id'=>$item['timeSlots'][0],
+                'building_id'=>$item['building_id'],
+                'building_name'=>$item['building_name'],
+                'classroom_id'=>$item['classroom_id'],
+                'classroom_name'=>$item['classroom_name'],
+            ]);
+        }
         return $this->operateApply($id, TeacherApplyElectiveCourse::STATUS_VERIFIED, $content);
     }
 
@@ -287,23 +299,21 @@ class TeacherApplyElectiveCourseDao
     /**
      * 处理申请的各种状态
      * @param $id
-     * @param $status
-     * @param null $content
+     * @param int $status
+     * @param $content
      * @return IMessageBag
      */
-    public function operateApply($id, $status, $content=null)
+    public function operateApply($id, $status = TeacherApplyElectiveCourse::STATUS_VERIFIED, $content='同意')
     {
         $msgBag = new MessageBag(JsonBuilder::CODE_ERROR, '系统错误');
         DB::beginTransaction();
         try {
             $apply = TeacherApplyElectiveCourse::where('id', $id)->first();
 
-            if (TeacherApplyElectiveCourse::STATUS_VERIFIED == $status) {
+            if (TeacherApplyElectiveCourse::STATUS_VERIFIED === $status) {
                 $apply->status = TeacherApplyElectiveCourse::STATUS_VERIFIED;
                 $apply->reply_content .= $content;
-
             } elseif (in_array($status, [TeacherApplyElectiveCourse::STATUS_WAITING_FOR_REJECTED,TeacherApplyElectiveCourse::STATUS_PUBLISHED])) {
-
                 $apply->status = $status;
             } else {
                 throw new Exception('参数错误');
@@ -400,10 +410,10 @@ class TeacherApplyElectiveCourseDao
             $course = $courseDao->createCourse($data);
 
             //标记申请表为发布状态
-            $result = self::publishedApply($applyId);
+            $this->publishedApply($applyId);
             DB::commit();
             $messageBag->setCode(JsonBuilder::CODE_SUCCESS);
-            $messageBag->setData($course->getData()->id);
+            $messageBag->setData($course->getData());
         } catch (\Exception $exception) {
             DB::rollBack();
             $messageBag->setMessage($exception->getMessage());

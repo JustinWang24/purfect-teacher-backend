@@ -57,6 +57,7 @@
         :time-slots="timeSlots"
         :majors="majors"
         :teacher-id="{{ $teacher->id }}"
+        school-uuid="{{ session('school.uuid') }}"
         school-id="{{ session('school.id') }}"
 ></elective-course-form>
                         </div>
