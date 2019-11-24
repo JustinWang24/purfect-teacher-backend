@@ -61,26 +61,25 @@ export function applyElectiveCourse(course, schedule, affix) {
  * @param affix
  * @returns Promise
  */
-export function approveElectiveCourse(course, affix) {
-    const url = Util.buildUrl(Constants.API.ELECTIVE_COURSE.SAVE);
+export function approveElectiveCourse(course, schedule, affix) {
+    const url = Util.buildUrl(Constants.API.ELECTIVE_COURSE.APPROVE);
     if(Util.isDevEnv()){
         return axios.get(url, affix);
     }
     return axios.post(
         url,
-        {course_id: course.id, reply_content: course.reply_content, version:Constants.VERSION}
+        {course_id: course.id, reply_content: course.reply_content, schedule: schedule, version:Constants.VERSION}
     );
 }
 
 /**
  * 拒绝
  * @param course
- * @param schedule
  * @param affix
  * @returns Promise
  */
 export function refuseElectiveCourse(course, affix) {
-    const url = Util.buildUrl(Constants.API.ELECTIVE_COURSE.SAVE);
+    const url = Util.buildUrl(Constants.API.ELECTIVE_COURSE.REFUSE);
     if(Util.isDevEnv()){
         return axios.get(url, affix);
     }
