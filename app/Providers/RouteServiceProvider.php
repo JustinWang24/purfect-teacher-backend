@@ -37,6 +37,7 @@ class RouteServiceProvider extends ServiceProvider
     {
         $this->mapApiRoutes();
         $this->mapApiWifiRoutes();	// api wifi interface
+		$this->mapManagerWifiRoutes(); // manage wifi interface 
         $this->mapWebRoutes();
         $this->mapAdminRoutes();
         $this->mapOperatorRoutes();
@@ -113,6 +114,16 @@ class RouteServiceProvider extends ServiceProvider
             ->group(base_path('routes/school_manager.php'));
     }
 
+    /**
+     * Operator
+     */
+    protected function mapManagerWifiRoutes()
+    {
+        Route::middleware('web')
+            ->namespace($this->namespace. '\Operator')
+            ->group(base_path('routes/manager_wifi.php'));
+    }
+	
     /**
      * Teacher
      */
