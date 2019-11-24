@@ -22,6 +22,13 @@ Route::prefix('school')->middleware('auth:api')->group(function () {
     Route::any('/load-time-slots','Api\School\TimeSlotsController@load_by_school')
         ->name('api.school.load.time.slots');
 
+    Route::any('/save-time-slot','Api\School\TimeSlotsController@save_time_slot')
+        ->name('api.school.save.time.slot');
+
+    // 获取指定学校的所有老师的键值对数据
+    Route::post('/teachers','Api\School\UsersController@teachers')
+        ->name('api.school.get.teachers');
+
     // 为课程表添加功能提供返回有效时间段的接口
     Route::any('/load-study-time-slots','Api\School\TimeSlotsController@load_study_time_slots')
         ->name('api.school.load.study.time.slots');
@@ -220,12 +227,6 @@ Route::prefix('course')->middleware('auth:api')->group(function () {
         ->name('api.course.elective.getresult');
 });
 
-// 选修课申请
-Route::prefix('elective-course')->middleware('auth:api')->group(function () {
-    Route::post('/save','Api\ElectiveCourse\ApplyElectiveCourseController@create')
-        ->name('api.elective-course.save');
-  });
-
 // 网盘
 Route::prefix('network-disk')->middleware('auth:api')->group(function () {
     // 创建目录
@@ -281,6 +282,8 @@ Route::prefix('elective-course')->middleware('auth:api')->group(function () {
     Route::post('/save','Api\ElectiveCourse\ApplyElectiveCourseController@create')
         ->name('api.elective-course.save');
 
+    Route::post('/load','Api\ElectiveCourse\ApplyElectiveCourseController@load')
+        ->name('api.elective-course.load');
 });
 
 
@@ -289,9 +292,15 @@ Route::prefix('enrolment-step')->middleware('auth:api')->group(function () {
     // 获取系统迎新列表
     Route::any('/enrolmentStep/getEnrolmentStepList','Api\EnrolmentStep\EnrolmentStepController@getEnrolmentStepList')
         ->name('api.enrolmentStep.getEnrolmentStepList');
+
     // 创建/修改 学校迎新步骤
     Route::any('/schoolEnrolmentStep/saveEnrolment','Api\EnrolmentStep\SchoolEnrolmentStepController@saveEnrolment')
         ->name('api.schoolEnrolmentStep.saveEnrolment');
+
+    // 学校迎新列表
+    Route::any('/step-list','Api\EnrolmentStep\SchoolEnrolmentStepController@school_enrolment_step')
+        ->name('api.school-enrolment-step.step-list');
+
     // 更新排序
     Route::any('/schoolEnrolmentStep/updateSort','Api\EnrolmentStep\SchoolEnrolmentStepController@updateSort')
         ->name('api.school-enrolment-step.update-sort');

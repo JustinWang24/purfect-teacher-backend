@@ -24,6 +24,18 @@ class SchoolEnrolmentStepDao{
 
 
     /**
+     * 获取学校的列表
+     * @param $schoolId
+     * @param $campusId
+     * @return mixed
+     */
+    public function stepList($schoolId,$campusId) {
+        $map = ['school_id'=>$schoolId, 'campus_id'=>$campusId];
+        return SchoolEnrolmentStep::where($map)->orderBy('sort')->get();
+    }
+
+
+    /**
      * 获取当前步的下一步
      * @param int $schoolId  学校ID
      * @param int $campusId  校区ID

@@ -6,6 +6,7 @@ use App\BusinessLogic\QuickSearch\Factory;
 use App\Dao\Courses\CourseTeacherDao;
 use App\Dao\Teachers\TeacherProfileDao;
 use App\Dao\Users\GradeUserDao;
+use App\Dao\Users\UserDao;
 use App\Models\RecruitStudent\RegistrationInformatics;
 use App\Models\Users\GradeUser;
 use App\Utils\JsonBuilder;
@@ -43,6 +44,11 @@ class UsersController extends Controller
         return JsonBuilder::Success(['teachers'=>$dao->getTeachersByCourse($request->get('course'))]);
     }
 
+    /**
+     * 快速定位用户的 action
+     * @param Request $request
+     * @return string
+     */
     public function quick_search_users(Request $request){
         $logic = Factory::GetInstance($request);
 
@@ -116,5 +122,18 @@ class UsersController extends Controller
         }else{
             return JsonBuilder::Error('查找的用户不存在');
         }
+    }
+
+    /**
+     * 获取指定学校的所有老师
+     * 提交 school_id, 返回所有的教师 id 和名字
+     * @param Request $request
+     * @return string
+     */
+    public function teachers(Request $request){
+        $schoolId = $request->get('school_id');
+        $dao = new UserDao();
+        $teachers = $dao->getTeachersBySchool($schoolId, true);
+        return JsonBuilder::Success(['teachers'=>$teachers]);
     }
 }

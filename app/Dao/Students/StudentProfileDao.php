@@ -2,7 +2,11 @@
 
 namespace App\Dao\Students;
 
+use App\User;
 use App\Dao\Users\UserDao;
+use App\Utils\JsonBuilder;
+use App\Utils\ReturnData\MessageBag;
+use Illuminate\Support\Facades\DB;
 use App\Models\Students\StudentProfile;
 
 class StudentProfileDao
@@ -103,5 +107,29 @@ class StudentProfileDao
      */
     public function getProfileByUuid($profileUuid){
         return StudentProfile::where('uuid',$profileUuid)->first();
+    }
+
+
+    /**
+     * 编辑学生信息
+     * @param $userId
+     * @param $user
+     * @param $profile
+     * @return MessageBag
+     */
+    public function updateStudentInfoByUserId($userId, $user,$profile) {
+        try{
+            DB::beginTransaction();
+            User::where('id',$userId)->update($user);
+            StudentProfile::where('user_id',$userId)->update($profile);
+            DB::commit();
+            return new MessageBag(JsonBuilder::CODE_SUCCESS,'编辑成功');
+        }
+        catch (\Exception $e) {
+            DB::rollBack();
+            $msg = $e->getMessage();
+            return new MessageBag(JsonBuilder::CODE_ERROR,'编辑失败'.$msg);
+
+        }
     }
 }
