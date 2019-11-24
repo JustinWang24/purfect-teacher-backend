@@ -36,6 +36,8 @@ class BuildingsController extends Controller
      */
     public function add(BuildingRequest $request){
         $dao = new CampusDao($request->user());
+        $type = $request->get('type');
+        $this->dataForView['type'] = $type;
         $this->dataForView['campus'] = $dao->getCampusById($request->uuid());
         $this->dataForView['building'] = new Building();
         return view('school_manager.building.add', $this->dataForView);
@@ -76,6 +78,6 @@ class BuildingsController extends Controller
         }else{
             FlashMessageBuilder::Push($request, FlashMessageBuilder::DANGER,'无法保存建筑物'.$buildingData['name']);
         }
-        return redirect()->route('school_manager.campus.buildings',['uuid'=>$buildingData['campus_id']]);
+        return redirect()->route('school_manager.campus.buildings',['uuid'=>$buildingData['campus_id'],'type'=>$buildingData['type']]);
     }
 }

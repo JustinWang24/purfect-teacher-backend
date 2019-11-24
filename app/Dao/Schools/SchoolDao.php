@@ -1,6 +1,7 @@
 <?php
 namespace App\Dao\Schools;
 
+use App\Models\Schools\SchoolConfiguration;
 use App\User;
 use App\Models\School;
 use Ramsey\Uuid\Uuid;
@@ -9,7 +10,12 @@ use Illuminate\Http\Request;
 class SchoolDao
 {
     private $currentUser;
-    public function __construct(User $user)
+
+    /**
+     * SchoolDao constructor.
+     * @param User|null $user
+     */
+    public function __construct($user = null)
     {
         $this->currentUser = $user;
     }
@@ -106,5 +112,29 @@ class SchoolDao
         else{
             return $this->getSchoolById($idOrUuid);
         }
+    }
+
+    /**
+     * 更新学校的配置信息. 如果配置信息不存在, 则创建它
+     * @param $configuration
+     * @param School|int $school
+     * @return mixed
+     */
+    public function updateConfiguration($configuration, $school){
+        if($school->configuration)
+            return SchoolConfiguration::where('school_id',$school->id ?? $school)->update($configuration);
+        else{
+            $configuration['school_id'] = $school->id ?? $school;
+            return SchoolConfiguration::create($configuration);
+        }
+    }
+
+    /**
+     * 创建一个学校的默认配置项
+     * @param $school
+     * @return SchoolConfiguration
+     */
+    public function createDefaultConfig($school){
+        return (new SchoolConfiguration())->createDefaultConfig($school);
     }
 }

@@ -3,6 +3,14 @@
 Route::prefix('school_manager')->group(function () {
     // 学校管理
     Route::get('school/view', 'CampusController@school')->name('school_manager.school.view'); // 显示学校的统计信息
+    Route::get('school/institutes', 'SchoolsController@institutes')->name('school_manager.school.institutes'); // 显示学校的所有学院
+    Route::get('school/departments', 'SchoolsController@departments')->name('school_manager.school.departments'); // 显示学校的所有系
+    Route::get('school/majors', 'SchoolsController@majors')->name('school_manager.school.majors'); // 显示学校的所有专业
+    Route::get('school/grades', 'SchoolsController@grades')->name('school_manager.school.grades'); // 显示学校的所有班级
+    Route::get('school/teachers', 'SchoolsController@teachers')->name('school_manager.school.teachers'); // 显示学校的所有老师
+    Route::get('school/students', 'SchoolsController@students')->name('school_manager.school.students'); // 显示学校的所有学生
+    Route::get('school/rooms', 'SchoolsController@rooms')->name('school_manager.school.rooms'); // 显示学校的所有学生
+
     // 校区的管理
     Route::get('campus/add', 'CampusController@add')->name('school_manager.campus.add');                        // 添加校区
     Route::get('campus/edit', 'CampusController@edit')->name('school_manager.campus.edit');                     // 编辑校区
@@ -11,8 +19,9 @@ Route::prefix('school_manager')->group(function () {
 
     Route::get('campus/buildings', 'CampusController@buildings')->name('school_manager.campus.buildings');   // 显示校区的包含的建筑信息
     Route::get('campus/institutes', 'CampusController@institutes')->name('school_manager.campus.institutes');   // 显示校区的包含的学院的信息
+
     // 学院的管理
-    Route::get('institute/edit', 'InstitutesController@edit')->name('school_manager.institute.edit');           // 编辑学院
+    Route::get('institute/edit/id/id', 'InstitutesController@edit')->name('school_manager.institute.edit');           // 编辑学院
     Route::get('institute/add', 'InstitutesController@add')->name('school_manager.institute.add');              // 添加学院
     Route::post('institute/update', 'InstitutesController@update')->name('school_manager.institute.update');    // 保存学院
     Route::get('institute/users', 'UsersController@users')->name('school_manager.institute.users');        // 显示学院的学生/教师列表
@@ -67,9 +76,77 @@ Route::prefix('school_manager')->group(function () {
     Route::get('timetable/manager', 'TimeTables\TimetablesController@manager')->name('school_manager.timetable.manager');
     // 添加课程表项目// 添加班级
     Route::get('timetable/manager/preview', 'TimeTables\TimetablesController@preview')->name('school_manager.timetable.manager.preview');           // 添加班级
-    Route::get('timetable/manager/courses', 'TimeTables\CoursesController@manager')->name('school_manager.courses.manager');
+    Route::get('timetable/manager/courses', 'TimeTables\CoursesController@manager')
+        ->name('school_manager.courses.manager');
 
+    // 从班级的, 或者是学生的角度, 查看课程表
+    Route::get('timetable/manager/view-grade-timetable','TimeTables\TimetablesController@view_grade_timetable')
+        ->name('school_manager.grade.view.timetable');
+    // 从课程的角度, 查看课程表
+    Route::get('timetable/manager/view-course-timetable','TimeTables\TimetablesController@view_course_timetable')
+        ->name('school_manager.course.view.timetable');
+    // 从授课老师的角度, 查看课程表
+    Route::get('timetable/manager/view-teacher-timetable','TimeTables\TimetablesController@view_teacher_timetable')
+        ->name('school_manager.teacher.view.timetable');
+    // 从教室的角度, 查看课程表
+    Route::get('timetable/manager/view-room-timetable','TimeTables\TimetablesController@view_room_timetable')
+        ->name('school_manager.room.view.timetable');
 
+    // 学校的基础配置信息
+    Route::post('school/config/update','SchoolsController@config_update')
+        ->name('school_manager.school.config.update');
 
-    // 课程班级
+    // 招生咨询管理
+    Route::get('consult/list', 'RecruitStudent\ConsultController@list')->name('school_manager.consult.list');
+    Route::any('consult/add', 'RecruitStudent\ConsultController@add')->name('school_manager.consult.add');
+    Route::any('consult/edit', 'RecruitStudent\ConsultController@edit')->name('school_manager.consult.edit');
+    Route::get('consult/delete', 'RecruitStudent\ConsultController@delete')->name('school_manager.consult.delete');
+
+    //设备管理
+    Route::get('facility/list','FacilityController@list')->name('school_manager.facility.list');  // 设备列表
+    Route::any('facility/add','FacilityController@add')->name('school_manager.facility.add');     // 添加设备
+    Route::any('facility/edit','FacilityController@edit')->name('school_manager.facility.edit');  // 编辑设备
+    Route::get('facility/delete','FacilityController@delete')->name('school_manager.facility.delete'); // 删除设备
+    Route::get('facility/getBuildingList','FacilityController@getBuildingList')->name('school_manager.facility.getBuildingList'); // 获取建筑列表
+    Route::get('facility/getRoomList','FacilityController@getRoomList')->name('school_manager.facility.getRoomList');  // 获取教室列表
+
+    // 招生报名管理
+    Route::get('registration/list', 'RecruitStudent\RegistrationInformatics@index')->name('school_manager.registration.list');  // 报名列表
+    Route::get('registration/details', 'RecruitStudent\RegistrationInformatics@details')->name('school_manager.registration.details');  // 报名详情
+    Route::get('registration/examine', 'RecruitStudent\RegistrationInformatics@examine')->name('school_manager.registration.examine');  // 报名审核
+
+    // 迎新助手管理界面
+    Route::get('welcome/manager', 'EnrolmentStepController@manager')
+        ->name('school_manager.welcome.manager');
+
+    // 报名表管理
+//    Route::get('registration/examine', 'RecruitStudent\RegistrationInformatics@examine')->name('school_manager.registration.examine');  // 报名审核
+
+    // 教材管理
+    Route::get('textbook/loadCampusTextbook', 'TextbookController@loadCampusTextbook')
+        ->name('school_manager.textbook.loadCampusTextbook'); // 获取校区教材采购情况
+    Route::get('textbook/campusTextbookDownload', 'TextbookController@campusTextbookDownload')->name('school_manager.textbook.campusTextbookDownload'); // 校区教材下载
+
+    //选课申请管理
+    Route::post('elective-course/save','ApplyElectiveCourseController@create')
+        ->name('school_manager.elective-course.save');
+
+    // 同意选修课申请表
+    Route::any('elective-course/approve','AddElectiveCourseController@approve')
+        ->name('school_manager.elective-course.approve');
+    // 拒绝选修课申请表
+    Route::any('elective-course/refuse','ApplyElectiveCourseController@refuse')
+        ->name('school_manager.elective-course.refuse');
+
+    // 管理员审批选修课的 action
+    Route::get('elective-course/management','ElectiveCoursesController@management')
+        ->name('school_manager.elective-course.manager');
+
+    Route::get('elective-course/edit','ElectiveCoursesController@management')
+        ->name('school_manager.elective-course.edit');
+
+    // 删除选修课上课的时间地点项
+    Route::post('elective-course/delete-arrangement','ElectiveCoursesController@delete_arrangement')
+        ->name('school_manager.elective-course.delete-arrangement');
 });
+

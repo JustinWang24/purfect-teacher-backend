@@ -2,6 +2,7 @@
 
 namespace App\Models\Users;
 
+use App\Models\Misc\Enquiry;
 use App\Models\School;
 use App\Models\Schools\Campus;
 use App\Models\Schools\Department;
@@ -80,12 +81,17 @@ class GradeUser extends Model
         return $this->belongsTo(User::class);
     }
 
+    public function enquiries(){
+        return $this->hasMany(Enquiry::class, 'user_id','user_id');
+    }
+
     /**
      * 返回教职工所工作的地方的描述
      * @return string
      */
     public function workAt(){
-        return 'n.a';
+        return $this->institute->name . ' / ' . $this->department->name . ' / '
+            . $this->major->name . ' / ' . $this->grade->name;
     }
 
     /**

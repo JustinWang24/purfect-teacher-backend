@@ -13,8 +13,11 @@ use Illuminate\Support\Collection;
 
 class RoomDao
 {
+    /**
+     * @var User $currentUser
+     */
     private $currentUser;
-    public function __construct(User $user)
+    public function __construct($user = null)
     {
         $this->currentUser = $user;
     }
@@ -28,12 +31,51 @@ class RoomDao
     }
 
     /**
+     * @param $campusId
+     * @return Collection
+     */
+    public function getRoomsByCampus($campusId){
+        return Room::where('campus_id',$campusId)->paginate();
+    }
+
+    /**
      * @param $id
      * @return Room
      */
     public function getRoomById($id){
         return Room::find($id);
     }
+
+
+    /**
+     * @param $map
+     * @param $field
+     * @return mixed
+     */
+    public function getRooms($map,$field='*')
+    {
+        return Room::where($map)->select($field)->get();
+    }
+
+    /**
+     * @param $map
+     * @param $field
+     * @return mixed
+     */
+    public function getRoomsPaginate($map,$field='*')
+    {
+        return Room::where($map)->select($field)->paginate();
+    }
+
+    /**
+     * @param array $idArr
+     * @param string $field
+     * @return mixed
+     */
+    public function getRoomsByIdArr($idArr,$field='*') {
+         return Room::whereIn('id',$idArr)->select($field)->get();
+    }
+
 
     /**
      * @param $data
@@ -66,6 +108,29 @@ class RoomDao
             return Room::where($where, $whereValue)->update($data);
         }
         return Room::where('id', $id)->update($data);
+    }
+
+
+    /**
+     * @param array $map
+     * @param array $field
+     * @return mixed
+     */
+    protected function getRoomList($map, $field) {
+        return Room::where($map)->select($field)->get();
+    }
+
+
+    /**
+     * 通过建筑ID获取教室
+     * @param $buildingId
+     * @return mixed
+     */
+    public function getRoomByBuildingId($buildingId) {
+        $field = ['id', 'building_id', 'name', 'type','exam_seats', 'seats'];
+        $map = ['building_id'=>$buildingId, 'type'=>Room::TYPE_CLASSROOM];
+        $result = $this->getRoomList($map,$field);
+        return $result;
     }
 
 }

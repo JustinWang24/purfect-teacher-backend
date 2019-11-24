@@ -30,21 +30,13 @@
                     </a>
                 </li>
                 @if(session('school.id'))
-                <li class="nav-item">
-                    <a href="{{ route('school_manager.school.view') }}" class="nav-link">
-                        <i class="material-icons">business</i>
-                        <span class="title">{{ session('school.name') }}</span>
-                    </a>
-                </li>
-
-                <li class="nav-item">
-                    <a href="{{ route('school_manager.timetable.manager.preview',['uuid'=>session('school.uuid')]) }}" class="nav-link">
-                        <i class="material-icons">event</i>
-                        <span class="title">课程表管理</span>
-                    </a>
-                </li>
+@include('layouts.desktop.elements.home_menu')
+@include('layouts.desktop.elements.equipment_menu')
+@include('layouts.desktop.elements.courses_menu_group')
+@include('layouts.desktop.elements.recruitment_menu_group')
+@include('layouts.desktop.elements.welcome_menu')
+@include('layouts.desktop.elements.meeting_menu')
                 @endif
-
             </ul>
         </div>
     </div>

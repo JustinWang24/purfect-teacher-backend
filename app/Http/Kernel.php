@@ -35,12 +35,14 @@ class Kernel extends HttpKernel
             \Illuminate\View\Middleware\ShareErrorsFromSession::class,
             \App\Http\Middleware\VerifyCsrfToken::class,
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
+            \App\Http\Middleware\RedirectIfNoSessionData::class, // 如果 session 的数据丢失, 则必须跳转到 /home 路由
             \App\Http\Middleware\RoutesGuard::class, // 权限管理中间件
         ],
 
         'api' => [
             'throttle:60,1',
             'bindings',
+//            \App\Http\Middleware\GetUserInfoByToken::class, // 处理移动端传过来的token转换成user
         ],
     ];
 

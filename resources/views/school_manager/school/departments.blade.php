@@ -2,6 +2,9 @@
 use App\Utils\UI\Anchor;
 use App\Utils\UI\Button;
 use App\User;
+/**
+ * @var App\Models\Schools\Department $department
+ */
 ?>
 @extends('layouts.app')
 @section('content')
@@ -9,28 +12,33 @@ use App\User;
         <div class="col-sm-12 col-md-12 col-xl-12">
             <div class="card-box">
                 <div class="card-head">
-                    <header>学院名: {{ session('school.name') }} - {{ $parent->name }}</header>
+                    <header>{{ session('school.name') }} {{ $parent->name??'' }}</header>
                 </div>
 
                 <div class="card-body">
                     <div class="row">
-                        <div class="row table-padding">
-                            <div class="col-12">
-                                <a href="{{ url()->previous() }}" class="btn btn-default">
+                        <div class="table-padding col-12">
+                            <a href="{{ route('school_manager.school.view') }}" class="btn btn-default">
+                                返回 <i class="fa fa-arrow-circle-left"></i>
+                            </a>&nbsp;
+                            @if(isset($parent))
+                                <a href="{{ route('school_manager.campus.institutes',['uuid'=>$parent->campus->id,'by'=>'campus']) }}" class="btn btn-default">
                                     <i class="fa fa-arrow-circle-left"></i> 返回
                                 </a>&nbsp;
                                 <a href="{{ route('school_manager.department.add',['uuid'=>$parent->id]) }}" class="btn btn-primary pull-right" id="btn-create-department-from-institute">
                                     创建新系 <i class="fa fa-plus"></i>
                                 </a>
-                            </div>
+                            @endif
+                            @include('school_manager.school.reusable.nav',['highlight'=>'department'])
                         </div>
+
                         <div class="table-responsive">
                             <table class="table table-striped table-bordered table-hover table-checkable order-column valign-middle">
                                 <thead>
                                 <tr>
                                     <th>#</th>
                                     <th>系名称</th>
-                                    <th style="width: 300px;">简介</th>
+                                    <th style="width: 300px;">教学相关配置</th>
                                     <th>专业数</th>
                                     <th>教职工数</th>
                                     <th>学生数</th>
@@ -44,7 +52,11 @@ use App\User;
                                         <td>
                                             {{ $department->name }}
                                         </td>
-                                        <td>{{ $department->description }}</td>
+                                        <td>
+                                            <p>上自习课是否需要签到: <span class="text-primary">{{ $department->isSelfStudyNeedRegistration() ? '是': '否' }}</span></p>
+                                            <p>本系学生每学期可以选择 <span class="text-primary">{{ $department->getOptionalCoursesPerYear() }}</span> 门选修课</p>
+                                            <p>本系每学期的教学周数: <span class="text-primary">{{ $department->getStudyWeeksPerTerm() }}</span>周 </p>
+                                        </td>
                                         <td class="text-center">
                                             <a class="anchor-majors-counter" href="{{ route('school_manager.department.majors',['uuid'=>$department->id,'by'=>'department']) }}">{{ count($department->majors) }}</a>
                                         </td>
@@ -61,6 +73,10 @@ use App\User;
                                 @endforeach
                                 </tbody>
                             </table>
+
+                            @if(!isset($parent))
+{{ $departments->links() }}
+                            @endif
                         </div>
                     </div>
                 </div>

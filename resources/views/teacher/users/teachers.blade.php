@@ -9,30 +9,25 @@ use App\User;
         <div class="col-sm-12 col-md-12 col-xl-12">
             <div class="card-box">
                 <div class="card-head">
-                    <header>{{ $campus->name }}</header>
+                    <header>{{ $parent->name??session('school.name') }} 教职工列表: (总数: {{ $employees->total() }})</header>
                 </div>
 
                 <div class="card-body">
                     <div class="row">
-                        <div class="row table-padding">
-                            <div class="col-md-6 col-sm-6 col-6">
-                                @if(isset($returnPath))
-                                <a href="{{ $returnPath }}" class="btn btn-default">
-                                    返回 <i class="fa fa-arrow-circle-left"></i>
-                                </a>&nbsp;
-                                @endif
-                                <a href="#" class="btn btn-primary pull-right">
-                                    添加新教职工 <i class="fa fa-plus"></i>
-                                </a>
-                            </div>
+
+                        <div class="table-padding col-12">
+                            <a href="#" class="btn btn-primary">
+                                添加新教职工 <i class="fa fa-plus"></i>
+                            </a>
+                            @include('school_manager.school.reusable.nav',['highlight'=>'teacher'])
                         </div>
+
                         <div class="table-responsive">
                             <table class="table table-striped table-bordered table-hover table-checkable order-column valign-middle">
                                 <thead>
                                 <tr>
                                     <th>#</th>
                                     <th>姓名</th>
-                                    <th>角色</th>
                                     <th>所在单位</th>
                                     <th></th>
                                 </tr>
@@ -45,17 +40,18 @@ use App\User;
                                     <tr>
                                         <td>{{ $index+1 }}</td>
                                         <td>
-                                            {{ $gradeUser->user->profile->name }}
+                                            {{ $gradeUser->user->name }}
                                         </td>
-                                        <td>{{ $gradeUser->user->role() }}</td>
                                         <td>{{ $gradeUser->workAt() }}</td>
                                         <td class="text-center">
-                                            {{ Anchor::Print(['text'=>'编辑','href'=>route('school_manager.campus.edit',['uuid'=>$campus->id])], Button::TYPE_DEFAULT,'edit') }}
+                                            {{ Anchor::Print(['text'=>'编辑','href'=>route('school_manager.campus.edit',['uuid'=>$gradeUser->user_id])], Button::TYPE_DEFAULT,'edit') }}
                                         </td>
                                     </tr>
                                 @endforeach
                                 </tbody>
                             </table>
+
+                            {{ $employees->links() }}
                         </div>
                     </div>
                 </div>

@@ -38,7 +38,7 @@ use App\Utils\UI\WarningMessage;
                                 <div class="thumb-center"><img class="img-responsive" alt="user"
                                         src="{{$image['path']}}"></div>
                                 <div class="course-box">
-                                    <h4>校园一角</h4>
+                                    <h4>{{$image['name']}}</h4>
                                 </div>
                             </div>
                         </div>

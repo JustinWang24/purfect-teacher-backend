@@ -15,11 +15,10 @@
                             </el-form-item>
                             <el-form-item label="学期">
                                 <el-select v-model="timeTableItem.term" style="width: 100%;">
-                                    <el-option :label="theTerm" :value="(idx+1)" :key="theTerm" v-for="(theTerm, idx) in terms"></el-option>
+                                    <el-option v-if="idx>0" :label="theTerm" :value="idx" :key="theTerm" v-for="(theTerm, idx) in terms"></el-option>
                                 </el-select>
                                 <span class="help-text">请在这里输入课程表是对应哪个学期的</span>
                             </el-form-item>
-
                             <el-form-item label="专业">
                                 <el-select v-model="selectedMajor" style="width: 100%;">
                                     <el-option :label="major.name" :value="major.id" :key="major.id" v-for="major in majors"></el-option>
@@ -43,7 +42,8 @@
                                            :key="repeatUnit"
                                            v-for="(repeatUnit, idx) in repeatUnits"></el-option>
                             </el-select>
-                            <span class="help-text">说明: 表示这个安排是每周都延续的</span>
+                            <span class="help-text">
+                                说明: 表示这个安排是<span :class="repeatUnitBriefClass">{{ repeatUnitBrief }}</span>都有效</span>
                         </el-form-item>
                         <el-form-item label="哪一天">
                             <el-select v-model="timeTableItem.weekday_index" style="width: 100%;">
@@ -64,7 +64,12 @@
                             <el-select v-model="timeTableItem.course_id" style="width: 100%;">
                                 <el-option :label="course.name" :value="course.id" :key="course.id" v-for="course in courses"></el-option>
                             </el-select>
-                            <span class="help-text">说明: 请选择要教授哪门课程</span>
+                            <span class="help-text">
+                                说明: 请选择要教授哪门课程
+                                <span v-if="timeTableItem.course_id !== ''">
+                                    <a target="_blank" :href="previewByCourseUrl">点击查看({{ courseText }})的已有课程安排</a>
+                                </span>
+                            </span>
                         </el-form-item>
 
                         </div>
@@ -75,7 +80,12 @@
                                 <el-select v-model="timeTableItem.teacher_id" style="width: 100%;">
                                     <el-option :label="teacher.name" :value="teacher.id" :key="teacher.id" v-for="teacher in teachers"></el-option>
                                 </el-select>
-                                <span class="help-text">说明: 请选择授课的老师</span>
+                                <span class="help-text">
+                                    说明: 请选择授课的老师
+                                    <span v-if="timeTableItem.teacher_id !== ''">
+                                        <a target="_blank" :href="previewByTeacherUrl">点击查看老师: ({{ teacherText }}) 已被安排的课程</a>
+                                    </span>
+                                </span>
                             </el-form-item>
                             <el-form-item label="教学楼">
                                 <el-select v-model="timeTableItem.building_id" placeholder="请选择" style="width: 100%;">
@@ -97,7 +107,12 @@
                                 <el-select v-model="timeTableItem.room_id" style="width: 100%;">
                                     <el-option :label="room.name" :value="room.id" :key="room.id" v-for="room in rooms"></el-option>
                                 </el-select>
-                                <span class="help-text">说明: 请选择上面选择的楼的那个房间上课</span>
+                                <span v-if="timeTableItem.room_id !== ''">
+                                    <a target="_blank" :href="previewByRoomUrl">点击查看教室: ({{ locationText }}) 的排课</a>
+                                </span>
+                                <span v-else class="help-text">
+                                    说明: 请选择上面选择的楼的那个房间上课
+                                </span>
                             </el-form-item>
                         </div>
                     </div>
@@ -133,17 +148,18 @@
 
             <el-form-item style="text-align: center;">
                 <el-button icon="el-icon-back" type="primary" @click="goToPrev" :disabled="currentStep===1">上一步</el-button>
-                <el-button icon="el-icon-right el-icon--right" type="primary" @click="goToNext" v-show="currentStep === 1">下一步</el-button>
+                <el-button :loading="checkingActionInProgress" icon="el-icon-right el-icon--right" type="primary" @click="goToNext" v-show="currentStep === 1">下一步</el-button>
                 <el-button :loading="savingActionInProgress" icon="el-icon-document-add" type="primary" @click="saveItem" v-show="currentStep === 2">我确认以上信息无误, 保存</el-button>
                 <el-button :loading="reloading" icon="el-icon-refresh" @click="fireUpTimetableRefresh">刷新</el-button>
             </el-form-item>
         </el-form>
     </div>
 </template>
-RT!708!7
+
 <script>
     import { Constants } from '../../common/constants';
     import { Util } from '../../common/utils';
+    import { loadBuildings, loadAvailableRoomsByBuilding } from '../../common/facility';
 
     export default {
         name: "TimetableItemForm",
@@ -199,6 +215,7 @@ RT!708!7
                 repeatUnits:[],
                 weekdays:[],
                 savingActionInProgress: false,
+                checkingActionInProgress: false,
             }
         },
         // 监听
@@ -250,9 +267,36 @@ RT!708!7
         },
         // 计算属性
         computed: {
+            'previewByCourseUrl': function() {
+                return Constants.API.TIMETABLE.VIEW_TIMETABLE_FOR_COURSE + '?uuid=' + this.timeTableItem.course_id;
+            },
+            'previewByTeacherUrl': function() {
+                return Constants.API.TIMETABLE.VIEW_TIMETABLE_FOR_TEACHER + '?uuid=' + this.timeTableItem.teacher_id;
+            },
+            'previewByRoomUrl': function() {
+                return Constants.API.TIMETABLE.VIEW_TIMETABLE_FOR_ROOM + '?uuid=' + this.timeTableItem.room_id;
+            },
             'termText': function(){
                 if(this.timeTableItem.term)
                     return Util.GetTermText(this.timeTableItem.term);
+            },
+            'repeatUnitBrief': function() {
+                let brief = '每周';
+                if(this.timeTableItem.repeat_unit === 2){
+                    brief = '每逢单周';
+                }else if(this.timeTableItem.repeat_unit === 3){
+                    brief = '每逢双周';
+                }
+                return brief;
+            },
+            'repeatUnitBriefClass': function() {
+                let rule = '';
+                if(this.timeTableItem.repeat_unit === 2){
+                    rule = 'text-danger';
+                }else if(this.timeTableItem.repeat_unit === 3){
+                    rule = 'text-primary';
+                }
+                return rule;
             },
             'repeatUnitText': function () {
                 if(this.timeTableItem.repeat_unit)
@@ -260,7 +304,7 @@ RT!708!7
             },
             'timeSlotText': function () {
                 if(this.timeTableItem.time_slot_id !== ''){
-                    let txt =  Util.GetWeekdayText(this.timeTableItem.weekday_index) + ', ';
+                    let txt =  Util.GetWeekdayText(this.timeTableItem.weekday_index - 1) + ', ';
                     let slot = Util.GetItemById(this.timeTableItem.time_slot_id, this.timeSlots);
                     if(slot){
                         txt += slot.name;
@@ -337,36 +381,31 @@ RT!708!7
         methods: {
             // 获取学校的所有建筑, 按校区分组
             _getAllBuildings: function(){
-                axios.post(
-                    Constants.API.LOAD_BUILDINGS_BY_SCHOOL,{school: this.schoolId}
-                ).then( res => {
+                loadBuildings(this.schoolId).then( res => {
                     if(Util.isAjaxResOk(res)){
                         this.campuses = res.data.data.campuses;
                     }
-                })
+                });
             },
             // 获取某个建筑的所有房间
             _getRoomsByBuilding: function(buildingId){
                 // 获取房间时, 要根据前面一个步骤选择的时间段来进行判断.
                 // 如果给定年度的, 给定学期的, 给定时间段, 给定的建筑物内,
                 // 某个教室是可能被占用的, 因此被占用的不可以被返回
-                axios.post(
-                    Constants.API.LOAD_AVAILABLE_ROOMS_BY_BUILDING,
-                    {
-                        school: this.schoolId,
-                        building: buildingId,
-                        year: this.timeTableItem.year,
-                        term: this.timeTableItem.term,
-                        weekday_index: this.timeTableItem.weekday_index,
-                        timeSlot: this.timeTableItem.time_slot_id
-                    }
+                loadAvailableRoomsByBuilding(
+                    this.schoolId,
+                    buildingId,
+                    this.timeTableItem.year,
+                    this.timeTableItem.term,
+                    this.timeTableItem.weekday_index,
+                    this.timeTableItem.time_slot_id
                 ).then( res => {
                     if(Util.isAjaxResOk(res)){
                         this.rooms = res.data.data.rooms;
                     }else{
                         this.rooms = [];
                     }
-                })
+                });
             },
             // 获取专业
             _getAllMajors: function(){
@@ -433,9 +472,29 @@ RT!708!7
                 }
             },
             goToNext: function () {
-                if(this.currentStep < 4){
-                    this.currentStep++;
-                }
+                // 要做数据是否可以插入的检查操作
+                this.checkingActionInProgress = true;
+                axios.post(
+                    Constants.API.TIMETABLE.CAN_BE_INSERTED,
+                    {timetableItem: this.timeTableItem, school: this.schoolId, user: this.userUuid}
+                ).then(res => {
+                    if(Util.isAjaxResOk(res)){
+                        // 表示检查通过
+                        if(this.currentStep < 2){
+                            this.currentStep++;
+                        }
+                    }
+                    else{
+                        // 无法通过检查, 则显示具体的原因
+                        this.$notify.error({
+                            title: '错误',
+                            message: res.data.message,
+                            duration: 0
+                        });
+                    }
+                }).finally(()=>{
+                    this.checkingActionInProgress = false;
+                });
             },
             saveItem: function(){
                 // Todo: 课程表的 item, 保存之前应该做一些有效性检查
