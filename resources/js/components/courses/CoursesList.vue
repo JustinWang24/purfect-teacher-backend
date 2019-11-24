@@ -57,9 +57,17 @@
                     label="时间安排"
                     width="200">
                 <template slot-scope="scope">
-                    <el-tag size="medium" type="info" effect="plain" :key="idx" v-for="(m,idx) in scope.row.arrangements" style="margin:2px;">
-                        第{{ m.week }}周的星期{{ m.day_index }}的{{ describeTimeSlot(m.time_slot_id) }}
-                    </el-tag>
+                    <el-popover
+                            v-if="scope.row.arrangements.length > 0"
+                            placement="top"
+                            width="400"
+                            trigger="click">
+                        <el-tag size="medium" type="info" effect="plain" :key="idx" v-for="(m,idx) in scope.row.arrangements" style="margin:2px;">
+                            {{idx+1}}: 第{{ m.week }}周的星期{{ m.day_index }}的{{ describeTimeSlot(m.time_slot_id) }}
+                        </el-tag>
+                        <el-button size="mini" type="success" slot="reference">{{ scope.row.arrangements.length }}节课</el-button>
+                    </el-popover>
+
                     <el-tag v-if="scope.row.arrangements.length === 0" size="medium" type="success" effect="plain" style="margin:2px;">
                         整个学期
                     </el-tag>

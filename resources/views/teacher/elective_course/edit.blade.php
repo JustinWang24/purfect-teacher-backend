@@ -13,6 +13,7 @@
         <div class="col-sm-12 col-md-2 col-lg-2 col-xl-2">
             @if(count($applications) > 0)
                 @foreach($applications as $index=>$application)
+                    @if($application->id != $application_id)
                     <div class="card">
                         <div class="card-head">
                             <header>{{ $application->name }}</header>
@@ -20,16 +21,19 @@
                         <div class="card-body">
                             <div class="row">
                                 <p>申请人: {{ $application->teacher_name }}</p>
-                                <p>{!! $application->getStatusText() !!}</p>
+                            </div>
+                            <div class="row">
+                                <p class="{{ $application->getStatusColor() }}">{!! $application->getStatusText() !!}</p>
                             </div>
                         </div>
                     </div>
+                    @endif
                 @endforeach
             @else
                 <div class="card">
                     <div class="card-body">
                         <div class="row">
-                            <p>最近 3 个月没有新申请</p>
+                            <p>最近 3 个月没有其他申请</p>
                         </div>
                     </div>
                 </div>
@@ -58,6 +62,7 @@
                                 :majors="majors"
                                 :as-admin="true"
                                 school-id="{{ session('school.id') }}"
+                                school-uuid="{{ session('school.uuid') }}"
                             ></elective-course-form>
                         </div>
                     </div>

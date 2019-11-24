@@ -143,11 +143,15 @@
         >
             <elective-course-form
                     :course-model="currentElectiveCourse"
+                    :application-id="0"
                     :total-weeks="totalWeeks"
                     :time-slots="timeSlots"
                     :majors="majors"
+                    :as-admin="true"
                     :school-id="schoolId"
+                    :school-uuid="schoolUuid"
                     v-on:cancelled="currentElectiveCourseCancelled"
+                    v-on:course-saved-admin="courseSavedByAdminHandler"
             ></elective-course-form>
         </el-dialog>
 
@@ -181,6 +185,10 @@
         },
         props: {
             schoolId: {
+                type: String,
+                required: true
+            },
+            schoolUuid: {
                 type: String,
                 required: true
             },
@@ -260,6 +268,7 @@
             // 获取一个学期会有多少周
 
             // 获取学校的每天的教学时间段安排
+            // const noTime = true;
             getTimeSlots(this.schoolId).then(res => {
                 if(Util.isAjaxResOk(res)){
                     this.timeSlots = res.data.data.time_frame;
@@ -268,6 +277,10 @@
             })
         },
         methods: {
+            courseSavedByAdminHandler: function(){
+                this.showElectiveCourseFormFlag = false;
+                window.location.reload();
+            },
             _getAllCourses: function(){
                 getCourses(this.schoolId, this.pageNumber).then(res => {
                     if(res.data.code === Constants.AJAX_SUCCESS){
@@ -380,7 +393,7 @@
                 this.currentEditingCourseIdx = payload.idx;
                 this._resetCourseModule(this.courses[payload.idx]);
             },
-            // Form
+            // 必修课保存
             saveCourse: function(){
                 axios.post(
                     Constants.API.SAVE_COURSE,{course: this.courseModel, school: this.schoolId}
