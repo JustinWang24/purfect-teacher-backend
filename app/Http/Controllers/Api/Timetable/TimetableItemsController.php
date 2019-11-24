@@ -6,6 +6,7 @@ use App\BusinessLogic\TimetableLogic\SpecialItemsLoadLogic;
 use App\BusinessLogic\TimetableLogic\TimetableBuilderLogic;
 use App\BusinessLogic\TimetableLogic\TimetableItemBeforeCreate;
 use App\BusinessLogic\TimetableLogic\TimetableItemBeforeUpdate;
+use App\BusinessLogic\TimetableViewLogic\Factory;
 use App\Dao\Timetable\TimetableItemDao;
 use App\Dao\Users\UserDao;
 use App\Utils\JsonBuilder;
@@ -18,6 +19,20 @@ class TimetableItemsController extends Controller
     public function __construct()
     {
         $this->userDao = new UserDao();
+    }
+
+    /**
+     * 检查提交的数据是否可以插入到数据中
+     * @param Request $request
+     * @return string
+     */
+    public function can_be_inserted(Request $request){
+        $logic = new TimetableItemBeforeCreate($request);
+        $logic->check();
+        if($logic->checked){
+            return JsonBuilder::Success();
+        }
+        return JsonBuilder::Error($logic->errorMessage);
     }
 
     /**
@@ -63,6 +78,17 @@ class TimetableItemsController extends Controller
     }
 
     /**
+     * @param Request $request
+     * @return string
+     */
+    public function publish(Request $request){
+        $dao = new TimetableItemDao();
+        $user = $this->userDao->getUserByUuid($request->get('user'));
+        $result = $dao->publishItem($request->get('id'), $user);
+        return $result ? JsonBuilder::Success() : JsonBuilder::Error();
+    }
+
+    /**
      * 克隆项目
      * @param Request $request
      * @return string
@@ -79,13 +105,7 @@ class TimetableItemsController extends Controller
      * @return string
      */
     public function load(Request $request){
-        // Todo: 查询的必要提交是班级 id, 年和学期
-        $gradeId = $request->get('grade');
-        $year = $request->get('year');
-        $term = $request->get('term');
-        $schoolId = $request->get('school');
-
-        $logic = new TimetableBuilderLogic($schoolId,$gradeId, $term, $year);
+        $logic = Factory::GetInstance($request);
         return JsonBuilder::Success(['timetable'=>$logic->build()]);
     }
 

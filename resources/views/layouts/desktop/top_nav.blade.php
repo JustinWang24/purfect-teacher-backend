@@ -2,7 +2,7 @@
     <div class="page-header-inner ">
         <!-- logo start -->
         <div class="page-logo">
-            <a href="index.html">
+            <a href="{{ route('home') }}">
                 <span class="logo-icon material-icons fa-rotate-45">school</span>
                 <span class="logo-default">{{ env('APP_NAME') }}</span> </a>
         </div>
@@ -31,18 +31,14 @@
             <ul class="nav navbar-nav pull-right">
                 <!-- start language menu -->
                 <li><a href="javascript:;" class="fullscreen-btn"><i class="fa fa-arrows-alt"></i></a></li>
-                <li class="dropdown language-switch">
-                    <a class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false"> <img
-                                src="{{ asset('assets/img/flags/gb.png') }}" class="position-left" alt=""> English <span
-                                class="fa fa-angle-down"></span>
+
+                <li id="file-manager-app">
+                    <a class="dropdown-toggle" v-on:click="showFileManager">
+                        <i class="fa fa-database"></i>&nbsp;我的云盘
                     </a>
-                    <ul class="dropdown-menu">
-                        <li>
-                            <a class="deutsch"><img src="{{ asset('assets/img/flags/de.png') }}" alt=""> Deutsch</a>
-                        </li>
-                    </ul>
+                    @include('reusable_elements.section.file_manager_component')
                 </li>
-                <!-- end language menu -->
+
                 <!-- start notification dropdown -->
                 <li class="dropdown dropdown-extended dropdown-notification" id="header_notification_bar">
                     <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown"
@@ -117,57 +113,18 @@
                     </ul>
                 </li>
                 <!-- end notification dropdown -->
-                <!-- start message dropdown -->
-                <li class="dropdown dropdown-extended dropdown-inbox" id="header_inbox_bar">
-                    <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown"
-                       data-close-others="true">
-                        <i class="fa fa-envelope-o"></i>
-                        <span class="badge headerBadgeColor2"> 2 </span>
-                    </a>
-                    <ul class="dropdown-menu">
-                        <li class="external">
-                            <h3><span class="bold">电子邮件</span></h3>
-                            <span class="notification-label cyan-bgcolor">新 2</span>
-                        </li>
-                        <li>
-                            <ul class="dropdown-menu-list small-slimscroll-style" data-handle-color="#637283">
-                                <li>
-                                    <a href="#">
-												<span class="photo">
-													<img src="{{ asset('assets/img/prof/prof2.jpg') }}" class="img-circle" alt="">
-												</span>
-                                        <span class="subject">
-													<span class="from"> Sarah Smith </span>
-													<span class="time">Just Now </span>
-												</span>
-                                        <span class="message"> Jatin I found you on LinkedIn... </span>
-                                    </a>
-                                </li>
-                            </ul>
-                            <div class="dropdown-menu-footer">
-                                <a href="#"> 我的邮箱 </a>
-                            </div>
-                        </li>
-                    </ul>
-                </li>
-                <!-- end message dropdown -->
                 <!-- start manage user dropdown -->
                 <li class="dropdown dropdown-user">
                     <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown"
                        data-close-others="true">
                         <img alt="" class="img-circle " src="{{ asset('assets/img/dp.jpg') }}" />
-                        <span class="username username-hide-on-mobile"> Kiran </span>
+                        <span class="username username-hide-on-mobile"> {{ Auth::user()->name }} </span>
                         <i class="fa fa-angle-down"></i>
                     </a>
                     <ul class="dropdown-menu dropdown-menu-default">
                         <li>
-                            <a href="user_profile.html">
-                                <i class="icon-user"></i> 我的个人资料 </a>
-                        </li>
-                        <li>
                             <a href="#">
-                                <i class="icon-settings"></i> 设置
-                            </a>
+                                <i class="icon-user"></i> 我的个人资料 </a>
                         </li>
                         <li>
                             <a href="#">

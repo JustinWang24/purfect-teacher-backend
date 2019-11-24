@@ -61,6 +61,7 @@ abstract class AbstractDataListLogic implements IUsersListPageLogic
             default:
                 break;
         }
+
         return $result;
     }
 

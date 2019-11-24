@@ -3,14 +3,24 @@
 namespace App;
 
 use App\Models\Acl\Role;
+use App\Models\Contract\HasDeviceId;
+use App\Models\Contract\HasMobilePhone;
+use App\Models\Courses\CourseTeacher;
+use App\Models\Misc\Enquiry;
+use App\Models\NetworkDisk\Category;
+use App\Models\Schools\RecruitmentPlan;
 use App\Models\Students\StudentProfile;
 use App\Models\Teachers\TeacherProfile;
+use App\Models\Users\GradeUser;
+use App\Models\Users\UserDevice;
 use Illuminate\Notifications\Notifiable;
-use Illuminate\Contracts\Auth\MustVerifyEmail;
+//use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Kodeine\Acl\Traits\HasRole;
+use App\Models\RecruitStudent\RegistrationInformatics;
+use App\Models\NetworkDisk\Media;
 
-class User extends Authenticatable
+class User extends Authenticatable implements HasMobilePhone, HasDeviceId
 {
     use Notifiable, HasRole;
 
@@ -25,13 +35,26 @@ class User extends Authenticatable
     const TYPE_STUDENT  = 1;
     const TYPE_EMPLOYEE = 2;
 
+    const GENDER_MALE = 1;
+    const GENDER_FEMALE = 2;
+
+    // 生源类型:
+    const SOURCE_GENERAL = 1;
+    const SOURCE_SELF    = 2;
+    const SOURCE_AGENT   = 3;
+    const SOURCE_GENERAL_TEXT = '统招';
+    const SOURCE_SELF_TEXT    = '自招';
+    const SOURCE_AGENT_TEXT   = '中介';
+
+    const DEFAULT_USER_AVATAR = '/assets/img/dp.jpg';
+
     /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
     protected $fillable = [
-        'password','mobile_verified_at','mobile','uuid','status','type'
+        'password','mobile_verified_at','mobile','uuid','status','type','name','email'
     ];
 
     /**
@@ -102,16 +125,20 @@ class User extends Authenticatable
             // 学校管理员的默认首页
             $viewPath = 'school_manager.school.view';
         }
+        elseif ($this->isTeacher()){
+            // 学校管理员的默认首页
+            $viewPath = 'teacher.school.view';
+        }
         return $viewPath;
     }
 
     public function profile(){
         $roleSlug = $this->getCurrentRoleSlug();
-        if($roleSlug === Role::TEACHER_SLUG || $roleSlug === Role::EMPLOYEE_SLUG){
+        if($roleSlug === Role::TEACHER_SLUG || $roleSlug === Role::EMPLOYEE_SLUG || $roleSlug === Role::ADMINISTRATOR_SLUG){
             // 教师或者职工
-            return $this->hasOne(TeacherProfile::class,'teacher_id');
+            return $this->hasOne(TeacherProfile::class,'user_id');
         }
-        elseif ($this->type === self::TYPE_STUDENT){
+        elseif (in_array($this->type, Role::GetStudentUserTypes())){
             // 已认证学生
             return $this->hasOne(StudentProfile::class);
         }
@@ -120,8 +147,164 @@ class User extends Authenticatable
         }
     }
 
+    /**
+     * 学生提交的所有的报名表
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function registrationForm(){
+        return $this->hasMany(RegistrationInformatics::class);
+    }
+
+    /**
+     * 学生提交的所有请求
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function enquiries(){
+        return $this->hasMany(Enquiry::class);
+    }
+
+    /**
+     * Todo: 需要完成获取学校管理员所关联的学校 ID 的功能
+     * @return int
+     */
     public function getSchoolId()
     {
-        return 1;
+        if($this->isStudent() || $this->isSchoolManager()){
+            return $this->gradeUser->school_id;
+        }
+        elseif($this->isTeacher() || $this->isEmployee()){
+            $gus = $this->gradeUser;
+            if(count($gus) > 0){
+                return $gus[0]->school_id;
+            }
+        }
+        return 0;
+    }
+
+    /**
+     * 是否用户为学生
+     * @return bool
+     */
+    public function isStudent(){
+        return in_array($this->getCurrentRoleSlug(),
+            [Role::VERIFIED_USER_STUDENT_SLUG, Role::VERIFIED_USER_CLASS_LEADER_SLUG, Role::VERIFIED_USER_CLASS_SECRETARY_SLUG]);
+    }
+
+    /**
+     * 是否用户为学校管理员
+     * @return bool
+     */
+    public function isSchoolManager(){
+        return $this->type === Role::SCHOOL_MANAGER;
+    }
+
+    /**
+     * 是否用户为老师
+     * @return bool
+     */
+    public function isTeacher(){
+        return $this->type === Role::TEACHER;
+    }
+
+    /**
+     * 是否用户为教职工
+     * @return bool
+     */
+    public function isEmployee(){
+        return $this->type === Role::EMPLOYEE;
+    }
+
+    /**
+     * 获取学生的状态文字
+     * @return string
+     */
+    public function getStatusText(){
+        $arr = [
+            self::STATUS_WAITING_FOR_MOBILE_TO_BE_VERIFIED=>self::STATUS_WAITING_FOR_MOBILE_TO_BE_VERIFIED_TEXT,
+            self::STATUS_WAITING_FOR_IDENTITY_TO_BE_VERIFIED=>self::STATUS_WAITING_FOR_IDENTITY_TO_BE_VERIFIED_TEXT,
+            self::STATUS_VERIFIED=>self::STATUS_VERIFIED_TEXT,
+        ];
+        return $arr[$this->status];
+    }
+
+    /**
+     * 获取关联的用户班级
+     * @return mixed
+     */
+    public function gradeUser(){
+        if($this->isStudent() || $this->isSchoolManager()){
+            return $this->hasOne(GradeUser::class);
+        }
+        elseif($this->isTeacher() || $this->isEmployee()){
+            return $this->hasMany(GradeUser::class);
+        }
+    }
+
+    public function myCourses(){
+        if($this->isStudent()){
+            return [];
+        }
+        elseif($this->isTeacher()){
+            return $this->hasMany(CourseTeacher::class, 'teacher_id');
+        }
+    }
+
+    public function getMobile()
+    {
+        return $this->mobile;
+    }
+
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    public function getDeviceId()
+    {
+        // TODO: Implement getDeviceId() method.
+    }
+
+    /**
+     * 当前用户的指定年的其他报名表
+     * @param $plan
+     * @param null $exceptFrom
+     * @return mixed
+     */
+    public function otherRegistrationForms($plan, $exceptFrom = null){
+        $plans = [];
+        $year = $plan->year;
+        $schoolId = $plan->school_id;
+
+        $query = RecruitmentPlan::where('year',$year)->where('school_id',$schoolId);
+
+        if($exceptFrom){
+            $query->where('id','<>',$plan->id);
+        }
+
+        $ps = $query->get();
+        foreach ($ps as $p) {
+            $plans[] = $p->id;
+        }
+
+        return RegistrationInformatics::where('user_id',$exceptFrom->user_id)
+            ->where('id','<>',$this->id)
+            ->whereIn('recruitment_plan_id',$plans)
+            ->get();
+    }
+
+    /**
+     * 获取用户的网盘主目录
+     */
+    public function networkDiskRoot(){
+        return $this->hasOne(Category::class, 'owner_id')->where('type',Category::TYPE_USER_ROOT);
+    }
+
+    public function medias(){
+        return $this->hasMany(Media::class);
+    }
+
+    public function userDevices()
+    {
+        return $this->hasMany(UserDevice::class);
     }
 }

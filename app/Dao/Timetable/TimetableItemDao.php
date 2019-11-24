@@ -88,9 +88,59 @@ class TimetableItemDao
     }
 
     /**
+     * 检查给定的数据, 是否已经被别人项占用
+     * @param $data
+     * @return bool|TimetableItem
+     */
+    public function hasAnyOneTakenThePlace($data){
+        // 情况 1: 如果课程表项目, 它的重复周期是每周有效, 那么插入前要检查, 只要该时段有任意类型的项目, 则都不可插入
+        if(intval($data['repeat_unit']) === GradeAndYearUtil::TYPE_EVERY_WEEK){
+            $where = [
+                ['school_id','=',$data['school_id']],
+                ['weekday_index','=',$data['weekday_index']],
+                ['time_slot_id','=',$data['time_slot_id']],
+                ['year','=',$data['year']],
+                ['term','=',$data['term']],
+                ['building_id','=',$data['building_id']],
+                ['room_id','=',$data['room_id']],
+            ];
+        }
+        elseif(intval($data['repeat_unit']) === GradeAndYearUtil::TYPE_EVERY_EVEN_WEEK){
+            $where = [
+                ['school_id','=',$data['school_id']],
+                ['weekday_index','=',$data['weekday_index']],
+                ['time_slot_id','=',$data['time_slot_id']],
+                ['year','=',$data['year']],
+                ['term','=',$data['term']],
+                ['building_id','=',$data['building_id']],
+                ['room_id','=',$data['room_id']],
+                ['repeat_unit','<>',GradeAndYearUtil::TYPE_EVERY_ODD_WEEK], // 想插入双周, 那么相同时间地点, 不能有双周或者每周的
+            ];
+        }
+        elseif(intval($data['repeat_unit']) === GradeAndYearUtil::TYPE_EVERY_ODD_WEEK){
+            $where = [
+                ['school_id','=',$data['school_id']],
+                ['weekday_index','=',$data['weekday_index']],
+                ['time_slot_id','=',$data['time_slot_id']],
+                ['year','=',$data['year']],
+                ['term','=',$data['term']],
+                ['building_id','=',$data['building_id']],
+                ['room_id','=',$data['room_id']],
+                ['repeat_unit','<>',GradeAndYearUtil::TYPE_EVERY_EVEN_WEEK], // 想插入单周, 那么相同时间地点, 不能有单周或者每周的
+            ];
+        }
+        else{
+            return true; // 错误的数据, 直接 reject
+        }
+
+        $found = TimetableItem::where($where)->first();
+        return $found??false;
+    }
+
+    /**
      * 删除
      * @param $id
-     * @param User $doer
+     * @param User|null $doer
      * @return bool|null
      */
     public function deleteItem($id, $doer = null){
@@ -103,6 +153,24 @@ class TimetableItemDao
             }
         }
         return TimetableItem::where('id',$id)->delete();
+    }
+
+    /**
+     * @param $id
+     * @param User|null $doer
+     * @return bool
+     */
+    public function publishItem($id, $doer=null){
+        $item = $this->getItemById($id);
+        if($item){
+            if($doer){
+                // 记录下是谁删除的
+                $item->last_updated_by = $doer->id;
+            }
+            $item->published = true;
+            return $item->save();
+        }
+        return false;
     }
 
     /**
@@ -123,18 +191,13 @@ class TimetableItemDao
      * 根据给定的条件加载某个班的某一天的课程表项列表
      * @param $weekDayIndex
      * @param $year
+     * @param $weekType
      * @param $term
      * @param $gradeId
      * @return array
      */
-    public function getItemsByWeekDayIndex($weekDayIndex, $year, $term, $gradeId){
-        $where = [
-            ['year','=',$year],
-            ['term','=',$term],
-            ['grade_id','=',$gradeId],
-            ['weekday_index','=',$weekDayIndex],
-            ['to_replace','=',0], // 不需要调课记录
-        ];
+    public function getItemsByWeekDayIndex($weekDayIndex, $year, $term, $weekType, $gradeId){
+        $where = $this->_getItemsByWeekDayIndexBy($weekDayIndex, $year, $term, $weekType, ['grade_id'=>$gradeId]);
         /**
          * @var TimetableItem[] $rows
          */
@@ -146,12 +209,53 @@ class TimetableItemDao
             $result[$timeSlot->id] = '';
         }
 
-//        $specialCases = [];
         foreach ($rows as $row) {
             // 要判断一下, 是否为调课的记录
             $result[$row->time_slot_id] = [
                 'course' => $row->course->name,
-                'teacher'=> $row->teacher->profile->name,
+                'teacher'=> $row->teacher->name,
+                'teacher_id'=> $row->teacher_id,
+                'building'=>$row->building->name,
+                'room'=>$row->room->name,
+                'room_id'=>$row->room_id,
+                'id'=>$row->id,
+                'published'=>$row->published,
+                'repeat_unit'=>$row->repeat_unit,
+                'optional'=>$row->course->optional,
+                'weekday_index'=>$row->weekday_index,
+                'time_slot_id'=>$row->time_slot_id,
+                'specials'=>'',
+            ];
+        }
+        return $result;
+    }
+    /**
+     * 根据给定的条件加载某个课程的课程表项列表
+     * @param $weekDayIndex
+     * @param $year
+     * @param $weekType
+     * @param $term
+     * @param $courseId
+     * @return array
+     */
+    public function getItemsByWeekDayIndexForCourseView($weekDayIndex, $year, $term, $weekType, $courseId){
+        $where = $this->_getItemsByWeekDayIndexBy($weekDayIndex, $year, $term, $weekType, ['course_id' => $courseId]);
+        /**
+         * @var TimetableItem[] $rows
+         */
+        $rows = TimetableItem::where($where)->orderBy('time_slot_id','asc')->get();
+
+        $result = [];
+
+        foreach ($this->timeSlots as $timeSlot) {
+            $result[$timeSlot->id] = '';
+        }
+
+        foreach ($rows as $row) {
+            // 要判断一下, 是否为调课的记录
+            $result[$row->time_slot_id] = [
+                'grade_name' => $row->grade->name,
+                'teacher'=> $row->teacher->name,
                 'teacher_id'=> $row->teacher_id,
                 'building'=>$row->building->name,
                 'room'=>$row->room->name,
@@ -169,6 +273,130 @@ class TimetableItemDao
     }
 
     /**
+     * 根据给定的条件加载 某个授课老师的 排课
+     * @param $weekDayIndex
+     * @param $year
+     * @param $weekType
+     * @param $term
+     * @param $teacherId
+     * @return array
+*/
+    public function getItemsByWeekDayIndexForTeacherView($weekDayIndex, $year, $term, $weekType, $teacherId){
+        $where = $this->_getItemsByWeekDayIndexBy($weekDayIndex, $year, $term, $weekType, ['teacher_id' => $teacherId]);
+        /**
+         * @var TimetableItem[] $rows
+         */
+        $rows = TimetableItem::where($where)->orderBy('time_slot_id','asc')->get();
+
+        $result = [];
+
+        foreach ($this->timeSlots as $timeSlot) {
+            $result[$timeSlot->id] = '';
+        }
+
+        foreach ($rows as $row) {
+            // 要判断一下, 是否为调课的记录
+            $result[$row->time_slot_id] = [
+                'grade_name' => $row->grade->name,
+                'course' => $row->course->name,
+                'teacher'=>'',
+                'teacher_id'=> $row->teacher_id,
+                'building'=>$row->building->name,
+                'room'=>$row->room->name,
+                'room_id'=>$row->room_id,
+                'id'=>$row->id,
+                'published'=>$row->published,
+                'repeat_unit'=>$row->repeat_unit,
+                'optional'=>$row->course->optional,
+                'weekday_index'=>$row->weekday_index,
+                'time_slot_id'=>$row->time_slot_id,
+                'specials'=>'',
+            ];
+        }
+        return $result;
+    }
+
+    /**
+     * 根据给定的条件加载 某个教室的 排课
+     * @param $weekDayIndex
+     * @param $year
+     * @param $weekType
+     * @param $term
+     * @param $roomId
+     * @return array
+     */
+    public function getItemsByWeekDayIndexForRoomView($weekDayIndex, $year, $term, $weekType, $roomId){
+        $where = $this->_getItemsByWeekDayIndexBy($weekDayIndex, $year, $term, $weekType, ['room_id' => $roomId]);
+        /**
+         * @var TimetableItem[] $rows
+         */
+        $rows = TimetableItem::where($where)->orderBy('time_slot_id','asc')->get();
+
+        $result = [];
+
+        foreach ($this->timeSlots as $timeSlot) {
+            $result[$timeSlot->id] = '';
+        }
+
+        foreach ($rows as $row) {
+            // 要判断一下, 是否为调课的记录
+            $result[$row->time_slot_id] = [
+                'grade_name' => $row->grade->name,
+                'course' => $row->course->name,
+                'teacher'=>$row->teacher->name,
+                'teacher_id'=> $row->teacher_id,
+                'building'=>$row->building->name,
+                'room'=>'',
+                'room_id'=>$row->room_id,
+                'id'=>$row->id,
+                'published'=>$row->published,
+                'repeat_unit'=>$row->repeat_unit,
+                'optional'=>$row->course->optional,
+                'weekday_index'=>$row->weekday_index,
+                'time_slot_id'=>$row->time_slot_id,
+                'specials'=>'',
+            ];
+        }
+        return $result;
+    }
+
+    /**
+     * 根据给定的条件加载课程表项列表
+     * @param $weekDayIndex
+     * @param $year
+     * @param $term
+     * @param $weekType
+     * @param $by : 查询的关键字段数组 field=>value 键值对
+     * @return array
+     */
+    private function _getItemsByWeekDayIndexBy($weekDayIndex, $year, $term, $weekType, $by){
+        $where = [
+            ['year','=',$year],
+            ['term','=',$term],
+            ['weekday_index','=',$weekDayIndex],
+            ['to_replace','=',0], // 不需要调课记录
+        ];
+
+        foreach ($by as $k=>$v) {
+            $where[] = [$k,'=',$v];
+        }
+
+        if($weekType === GradeAndYearUtil::WEEK_ODD){
+            // 单周课程表, 那么就加载 每周 + 单周
+            $where[] = [
+                'repeat_unit','<>',GradeAndYearUtil::TYPE_EVERY_EVEN_WEEK
+            ];
+        }
+        else{
+            // 双周课程表, 那么就加载 每周 + 双周
+            $where[] = [
+                'repeat_unit','<>',GradeAndYearUtil::TYPE_EVERY_ODD_WEEK
+            ];
+        }
+        return $where;
+    }
+
+    /**
      * 获取指定条件下的调课统计数据
      * 返回: [
      *      '原始的固定课表项 ID' => [调课项的 id 数组]
@@ -180,13 +408,66 @@ class TimetableItemDao
      * @return array
      */
     public function getSpecialsAfterToday($year, $term, $gradeId, $today){
+        return $this->_getSpecialsAfterTodayBy($year, $term, $today, ['grade_id'=>$gradeId]);
+    }
+
+    /**
+     * 获取指定条件下的调课统计数据: 从课程的角度出发
+     * 返回: [
+     *      '原始的固定课表项 ID' => [调课项的 id 数组]
+     * ]
+     * @param $year
+     * @param $term
+     * @param $courseId
+     * @param $today
+     * @return array
+     */
+    public function getSpecialsAfterTodayForCourseView($year, $term, $courseId, $today){
+        return $this->_getSpecialsAfterTodayBy($year, $term, $today, ['course_id'=>$courseId]);
+    }
+
+    /**
+     * 获取指定条件下的调课统计数据: 从课程的授课教师角度出发
+     * 返回: [
+     *      '原始的固定课表项 ID' => [调课项的 id 数组]
+     * ]
+     * @param $year
+     * @param $term
+     * @param $teacherId
+     * @param $today
+     * @return array
+     */
+    public function getSpecialsAfterTodayForTeacherView($year, $term, $teacherId, $today){
+        return $this->_getSpecialsAfterTodayBy($year, $term, $today, ['teacher_id'=>$teacherId]);
+    }
+
+    /**
+     * 获取指定条件下的调课统计数据: 从教室角度出发
+     * 返回: [
+     *      '原始的固定课表项 ID' => [调课项的 id 数组]
+     * ]
+     * @param $year
+     * @param $term
+     * @param $roomId
+     * @param $today
+     * @return array
+     */
+    public function getSpecialsAfterTodayForRoomView($year, $term, $roomId, $today){
+        return $this->_getSpecialsAfterTodayBy($year, $term, $today, ['room_id'=>$roomId]);
+    }
+
+    public function _getSpecialsAfterTodayBy($year, $term, $today, $by){
         $where = [
             ['year','=',$year],
             ['term','=',$term],
-            ['grade_id','=',$gradeId],
             ['to_replace','>',0], // 只加载调课记录
             ['at_special_datetime','>=',$today->format('Y-m-d').' 00:00:00'], // 今天或者今天以后的
         ];
+
+        foreach ($by as $k=>$v) {
+            $where[] = [$k,'=',$v];
+        }
+
         /**
          * @var TimetableItem[] $rows
          */

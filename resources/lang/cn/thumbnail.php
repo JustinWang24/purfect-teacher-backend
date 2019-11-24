@@ -20,6 +20,10 @@ return [
     'course'  => '课程管理',
     'users'  => '用户列表',
     'user'  => '用户管理',
+    'students'  => '学生列表',
+    'teachers'  => '教师列表',
+    'teacher'  => '教师',
+    'profile'  => '学生资料',
     'preview'  => '预览工具',
     'list'   => '列表',
     'add'    => '添加数据',
@@ -33,6 +37,30 @@ return [
 
     // 课程表相关
     'timetable'=>'课程表',
-    'manager'=>'管理'
+    'manager'=>'管理',
+
+
+    // 招生管理
+    'planRecruit'  => '预招管理',
+    'registration' => '报名招生',
+    'forms' => '报名表',
+    'manage' => '管理',
+    'student' => '学生',
+    'enrol' => '录取',
+    'registrations.all' => '全部',
+    'registrations.refused' => '已拒绝',
+    'registrations.waiting' => '等待被批准',
+
+    //设备管理
+    'facility' => '设备管理',
+
+    // 选修课
+    'elective-course'=>'选修课',
+    'create'=>'创建',
+
+    // 教材管理
+    'textbook'=>'教材',
+    'loadMajorTextbook'=>'根据专业进行汇总',
+    'welcome'=>'迎新',
 ];
 
