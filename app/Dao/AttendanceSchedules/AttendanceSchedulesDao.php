@@ -87,7 +87,7 @@ class AttendanceSchedulesDao
         DB::beginTransaction();
         try {
             foreach ($data as $item) {
-                self::addTimeSlotsForTask($item);
+                $this->addTimeSlotsForTask($item);
             }
             DB::commit();
             return true;
@@ -188,7 +188,7 @@ class AttendanceSchedulesDao
         //拿到模板数据
         $scheduleArr = $data['schedule'];
         //查询此task，得到课时和截止时间，好用来循环
-        $taskObj = self::getTask($taskId);
+        $taskObj = $this->getTask($taskId);
         $starTime = $taskObj->start_time;
         $endTime  = $taskObj->end_time;
         $startUp = $starTime;
@@ -256,7 +256,7 @@ class AttendanceSchedulesDao
      */
     public function getAllTaskForSchool($schoolId, $type, $cycle='week', $current=0)
     {
-        $timeArr = self::getTimes($current, $cycle);
+        $timeArr = $this->getTimes($current, $cycle);
 
         $startTime = $timeArr[0];
         $endTime   = $timeArr[1];
@@ -279,7 +279,7 @@ class AttendanceSchedulesDao
      */
     public function getSomeoneTaskScheduleForSchool($schoolId, $taskId, $cycle='week', $current=0)
     {
-        $timeArr = self::getTimes($current, $cycle);
+        $timeArr = $this->getTimes($current, $cycle);
 
         $startTime = $timeArr[0];
         $endTime   = $timeArr[1];
