@@ -8,9 +8,9 @@ use App\Models\Schools\Calendar;
 class CalendarDao
 {
 
-    public function createCalendarEvent()
+    public function createCalendarEvent($data)
     {
-
+        return Calendar::create($data);
     }
 
 
