@@ -2,11 +2,11 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<meta name="keywords" content="php工具箱" />
-<meta name="description" content="php工具箱" />
+<meta name="keywords" content="mysql日志查询" />
+<meta name="description" content="mysql日志查询" />
 <!--link rel="stylesheet" type="text/css" href="css/mysqlquery.css">
 <script type="text/javascript" src="js/jquery-1.11.1.js"></script-->
-<title>php工具箱</title>
+<title>mysql日志查询</title>
 </head>
 <body style="background:#E5E5E5">
 

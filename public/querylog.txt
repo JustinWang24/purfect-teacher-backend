@@ -1,262 +1,598 @@
 
-[2019-11-13 00:29:22]select count(*) as aggregate from `wifis` where (`campus_id` = ?)
-parmars:[1]
+[2019-11-24 11:23:03]select * from `users` where `id` = ? limit 1
+parmars:[2]
 
-[2019-11-13 00:29:22]select `wifiid`, `wifi_name`, `wifi_oprice`, `wifi_price` from `wifis` where (`campus_id` = ?) order by `wifi_sort` asc limit 20 offset 0
-parmars:[1]
+[2019-11-24 11:23:03]select count(*) as aggregate from `wifi_orders` inner join `users` on `wifi_orders`.`user_id` = `users`.`id` where (`orderid` > ?)
+parmars:[0]
 
-[2019-11-13 00:30:59]select count(*) as aggregate from `wifis` where (`campus_id` = ?)
-parmars:[1]
+[2019-11-24 11:23:03]select `wifi_orders`.*, `users`.`name`, `users`.`mobile` from `wifi_orders` inner join `users` on `wifi_orders`.`user_id` = `users`.`id` where (`orderid` > ?) order by `orderid` desc limit 10 offset 0
+parmars:[0]
 
-[2019-11-13 00:30:59]select * from `wifis` where (`campus_id` = ?) order by `wifi_sort` asc limit 20 offset 0
-parmars:[1]
+[2019-11-24 11:24:21]select * from `users` where `id` = ? limit 1
+parmars:[2]
 
-[2019-11-13 00:31:38]select count(*) as aggregate from `wifis` where (`campus_id` = ?)
-parmars:[1]
+[2019-11-24 11:24:21]select count(*) as aggregate from `wifi_orders` inner join `users` on `wifi_orders`.`user_id` = `users`.`id` where (`orderid` > ?)
+parmars:[0]
 
-[2019-11-13 00:31:38]select * from `wifis` where (`campus_id` = ?) order by `wifi_sort` asc limit 20 offset 0
-parmars:[1]
+[2019-11-24 11:24:21]select `wifi_orders`.*, `users`.`name`, `users`.`mobile` from `wifi_orders` inner join `users` on `wifi_orders`.`user_id` = `users`.`id` where (`orderid` > ?) order by `orderid` desc limit 10 offset 0
+parmars:[0]
 
-[2019-11-13 01:35:41]select count(*) as aggregate from `wifi_issue_types` where (`purpose` = ? and `status` = ?)
-parmars:[1,1]
+[2019-11-24 11:24:38]select * from `users` where `id` = ? limit 1
+parmars:[2]
 
-[2019-11-13 01:36:02]select count(*) as aggregate from `wifi_issue_types` where (`purpose` = ? and `status` = ?)
-parmars:[1,1]
+[2019-11-24 11:24:38]select count(*) as aggregate from `wifi_orders` inner join `users` on `wifi_orders`.`user_id` = `users`.`id` where (`orderid` > ?)
+parmars:[0]
 
-[2019-11-13 01:36:02]select `typeid`, `type_name`, `type_name`, `type_pid` from `wifi_issue_types` where (`purpose` = ? and `status` = ?) order by `typeid` asc limit 500 offset 0
-parmars:[1,1]
+[2019-11-24 11:24:38]select `wifi_orders`.*, `users`.`name`, `users`.`mobile` from `wifi_orders` inner join `users` on `wifi_orders`.`user_id` = `users`.`id` where (`orderid` > ?) order by `orderid` desc limit 10 offset 0
+parmars:[0]
 
-[2019-11-13 01:39:12]select count(*) as aggregate from `wifi_issue_types` where (`status` = ?)
-parmars:[1]
+[2019-11-24 11:24:52]select * from `users` where `id` = ? limit 1
+parmars:[2]
 
-[2019-11-13 01:39:12]select `typeid`, `type_name`, `type_name`, `type_pid` from `wifi_issue_types` where (`status` = ?) order by `typeid` asc limit 500 offset 0
-parmars:[1]
+[2019-11-24 11:24:52]select count(*) as aggregate from `wifi_orders` inner join `users` on `wifi_orders`.`user_id` = `users`.`id` where (`orderid` > ?)
+parmars:[0]
 
-[2019-11-13 01:40:59]select count(*) as aggregate from `wifi_issue_types` where (`purpose` = ? and `status` = ?)
-parmars:[1,1]
+[2019-11-24 11:24:52]select `wifi_orders`.*, `users`.`name`, `users`.`mobile` from `wifi_orders` inner join `users` on `wifi_orders`.`user_id` = `users`.`id` where (`orderid` > ?) order by `orderid` desc limit 10 offset 0
+parmars:[0]
 
-[2019-11-13 01:40:59]select `typeid`, `type_name`, `type_name`, `type_pid` from `wifi_issue_types` where (`purpose` = ? and `status` = ?) order by `typeid` asc limit 500 offset 0
-parmars:[1,1]
+[2019-11-24 11:25:05]select * from `users` where `id` = ? limit 1
+parmars:[2]
 
-[2019-11-13 01:41:19]select count(*) as aggregate from `wifi_issue_types` where (`purpose` = ? and `status` = ?)
-parmars:[1,1]
+[2019-11-24 11:25:05]select count(*) as aggregate from `wifi_orders` inner join `users` on `wifi_orders`.`user_id` = `users`.`id` where (`orderid` > ?)
+parmars:[0]
 
-[2019-11-13 01:41:19]select `typeid`, `type_name`, `type_name`, `type_pid` from `wifi_issue_types` where (`purpose` = ? and `status` = ?) order by `typeid` asc limit 500 offset 0
-parmars:[1,1]
+[2019-11-24 11:25:05]select `wifi_orders`.*, `users`.`name`, `users`.`mobile` from `wifi_orders` inner join `users` on `wifi_orders`.`user_id` = `users`.`id` where (`orderid` > ?) order by `orderid` desc limit 10 offset 0
+parmars:[0]
 
-[2019-11-13 02:48:35]select count(*) as aggregate from `wifi_contents` where (`campus_id` = ? and `status` = ?)
-parmars:[1,1]
+[2019-11-24 11:25:15]select * from `users` where `id` = ? limit 1
+parmars:[2]
 
-[2019-11-13 02:48:35]select `typeid`, `content` from `wifi_contents` where (`campus_id` = ? and `status` = ?) order by `contentid` desc limit 10 offset 0
-parmars:[1,1]
+[2019-11-24 11:25:15]select count(*) as aggregate from `wifi_orders` inner join `users` on `wifi_orders`.`user_id` = `users`.`id` where (`orderid` > ?)
+parmars:[0]
 
-[2019-11-13 02:48:35]select `config_imgurl1`, `config_imgurl2`, `config_imgurl3`, `config_imgurl1_status`, `config_imgurl2_status`, `config_imgurl3_status` from `wifi_configs` where (`campus_id` = ? and `status` = ?) order by `configid` desc limit 1
-parmars:[1,1]
+[2019-11-24 11:25:15]select `wifi_orders`.*, `users`.`name`, `users`.`mobile` from `wifi_orders` inner join `users` on `wifi_orders`.`user_id` = `users`.`id` where (`orderid` > ?) order by `orderid` desc limit 10 offset 0
+parmars:[0]
 
-[2019-11-13 02:48:35]select count(*) as aggregate from `wifi_issues` where (`user_id` = ? and `status` <= ?)
-parmars:[1,2]
+[2019-11-24 11:25:29]select * from `users` where `id` = ? limit 1
+parmars:[2]
 
-[2019-11-13 02:48:35]select count(*) as aggregate from `wifi_user_agreements` where (`user_id` = ?)
-parmars:[1]
+[2019-11-24 11:25:29]select count(*) as aggregate from `wifi_orders` inner join `users` on `wifi_orders`.`user_id` = `users`.`id` where (`orderid` > ?)
+parmars:[0]
 
-[2019-11-13 02:48:56]select count(*) as aggregate from `wifi_user_agreements` where (`user_id` = ?)
-parmars:[1]
+[2019-11-24 11:25:29]select `wifi_orders`.*, `users`.`name`, `users`.`mobile` from `wifi_orders` inner join `users` on `wifi_orders`.`user_id` = `users`.`id` where (`orderid` > ?) order by `orderid` desc limit 10 offset 0
+parmars:[0]
 
-[2019-11-13 02:48:56]insert into `wifi_user_agreements` (`user_id`, `created_at`) values (?, ?)
-parmars:[1,"2019-11-13 02:48:56"]
+[2019-11-24 11:26:38]select * from `users` where `id` = ? limit 1
+parmars:[2]
 
-[2019-11-13 02:48:57]select count(*) as aggregate from `wifi_contents` where (`campus_id` = ? and `status` = ?)
-parmars:[1,1]
+[2019-11-24 11:26:38]select count(*) as aggregate from `wifi_orders` inner join `users` on `wifi_orders`.`user_id` = `users`.`id` where (`orderid` > ?)
+parmars:[0]
 
-[2019-11-13 02:48:57]select `typeid`, `content` from `wifi_contents` where (`campus_id` = ? and `status` = ?) order by `contentid` desc limit 10 offset 0
-parmars:[1,1]
+[2019-11-24 11:26:38]select `wifi_orders`.*, `users`.`name`, `users`.`mobile` from `wifi_orders` inner join `users` on `wifi_orders`.`user_id` = `users`.`id` where (`orderid` > ?) order by `orderid` desc limit 10 offset 0
+parmars:[0]
 
-[2019-11-13 02:48:57]select `config_imgurl1`, `config_imgurl2`, `config_imgurl3`, `config_imgurl1_status`, `config_imgurl2_status`, `config_imgurl3_status` from `wifi_configs` where (`campus_id` = ? and `status` = ?) order by `configid` desc limit 1
-parmars:[1,1]
+[2019-11-24 11:26:47]select * from `users` where `id` = ? limit 1
+parmars:[2]
 
-[2019-11-13 02:48:57]select count(*) as aggregate from `wifi_issues` where (`user_id` = ? and `status` <= ?)
-parmars:[1,2]
+[2019-11-24 11:26:47]select count(*) as aggregate from `wifi_orders` inner join `users` on `wifi_orders`.`user_id` = `users`.`id` where (`orderid` > ?)
+parmars:[0]
 
-[2019-11-13 02:48:57]select count(*) as aggregate from `wifi_user_agreements` where (`user_id` = ?)
-parmars:[1]
+[2019-11-24 11:26:47]select `wifi_orders`.*, `users`.`name`, `users`.`mobile` from `wifi_orders` inner join `users` on `wifi_orders`.`user_id` = `users`.`id` where (`orderid` > ?) order by `orderid` desc limit 10 offset 0
+parmars:[0]
 
-[2019-11-13 02:48:59]select count(*) as aggregate from `wifi_user_agreements` where (`user_id` = ?)
-parmars:[1]
+[2019-11-24 11:26:58]select * from `users` where `id` = ? limit 1
+parmars:[2]
 
-[2019-11-13 02:49:09]select `timesid` from `wifi_user_times` where (`user_id` = ?) order by `timesid` desc limit 1
-parmars:[1]
+[2019-11-24 11:26:58]select count(*) as aggregate from `wifi_orders` inner join `users` on `wifi_orders`.`user_id` = `users`.`id` where (`orderid` > ?)
+parmars:[0]
 
-[2019-11-13 02:49:09]insert into `wifi_user_times` (`user_mobile_source`, `user_mobile_password`, `user_id`, `school_id`, `campus_id`, `user_mobile_phone`, `created_at`) values (?, ?, ?, ?, ?, ?, ?)
-parmars:["2","abcd",1,1,1,"18601216091","2019-11-13 02:49:09"]
+[2019-11-24 11:26:59]select `wifi_orders`.*, `users`.`name`, `users`.`mobile` from `wifi_orders` inner join `users` on `wifi_orders`.`user_id` = `users`.`id` where (`orderid` > ?) order by `orderid` desc limit 10 offset 0
+parmars:[0]
 
-[2019-11-13 02:49:20]select `timesid` from `wifi_user_times` where (`user_id` = ?) order by `timesid` desc limit 1
-parmars:[1]
+[2019-11-24 11:27:09]select * from `users` where `id` = ? limit 1
+parmars:[2]
 
-[2019-11-13 02:49:20]update `wifi_user_times` set `user_mobile_source` = ?, `user_mobile_password` = ?, `user_id` = ?, `school_id` = ?, `campus_id` = ?, `user_mobile_phone` = ?, `wifi_user_times`.`updated_at` = ? where `timesid` = ?
-parmars:["2","abcd",1,1,1,"18601216091","2019-11-13 02:49:20",1]
+[2019-11-24 11:27:09]select count(*) as aggregate from `wifi_orders` inner join `users` on `wifi_orders`.`user_id` = `users`.`id` where (`orderid` > ?)
+parmars:[0]
 
-[2019-11-13 02:49:29]select `timesid` from `wifi_user_times` where (`user_id` = ?) order by `timesid` desc limit 1
-parmars:[1]
+[2019-11-24 11:27:09]select `wifi_orders`.*, `users`.`name`, `users`.`mobile` from `wifi_orders` inner join `users` on `wifi_orders`.`user_id` = `users`.`id` where (`orderid` > ?) order by `orderid` desc limit 10 offset 0
+parmars:[0]
 
-[2019-11-13 02:49:29]update `wifi_user_times` set `user_mobile_source` = ?, `user_mobile_password` = ?, `user_id` = ?, `school_id` = ?, `campus_id` = ?, `user_mobile_phone` = ?, `wifi_user_times`.`updated_at` = ? where `timesid` = ?
-parmars:["2","abcd",1,1,1,"18601216091","2019-11-13 02:49:29",1]
+[2019-11-24 11:28:10]select * from `users` where `id` = ? limit 1
+parmars:[2]
 
-[2019-11-13 02:49:52]select count(*) as aggregate from `wifis` where (`campus_id` = ? and `mode` = ? and `status` = ?)
-parmars:[1,2,1]
+[2019-11-24 11:28:10]select count(*) as aggregate from `wifi_orders` inner join `users` on `wifi_orders`.`user_id` = `users`.`id` where (`orderid` > ?)
+parmars:[0]
 
-[2019-11-13 02:49:52]select `wifiid`, `wifi_name`, `wifi_oprice`, `wifi_price` from `wifis` where (`campus_id` = ? and `mode` = ? and `status` = ?) order by `wifi_sort` asc limit 10 offset 0
-parmars:[1,2,1]
+[2019-11-24 11:28:10]select `wifi_orders`.*, `users`.`name`, `users`.`mobile` from `wifi_orders` inner join `users` on `wifi_orders`.`user_id` = `users`.`id` where (`orderid` > ?) order by `orderid` desc limit 10 offset 0
+parmars:[0]
 
-[2019-11-13 02:49:52]select `typeid`, `content` from `wifi_contents` where (`campus_id` = ? and `typeid` = ? and `status` = ?) order by `contentid` desc limit 1
-parmars:[1,3,1]
+[2019-11-24 11:28:35]select * from `users` where `id` = ? limit 1
+parmars:[2]
 
-[2019-11-13 02:49:52]select `user_wifi_time` from `wifi_user_times` where (`user_id` = ? and `status` = ?) order by `timesid` desc limit 1
-parmars:[1,1]
+[2019-11-24 11:28:35]select count(*) as aggregate from `wifi_orders` inner join `users` on `wifi_orders`.`user_id` = `users`.`id` where (`orderid` > ?)
+parmars:[0]
 
-[2019-11-13 02:50:10]select count(*) as aggregate from `wifi_orders` where (`user_id` = ? and `status` > ?)
-parmars:[1,0]
+[2019-11-24 11:28:35]select `wifi_orders`.*, `users`.`name`, `users`.`mobile` from `wifi_orders` inner join `users` on `wifi_orders`.`user_id` = `users`.`id` where (`orderid` > ?) order by `orderid` desc limit 10 offset 0
+parmars:[0]
 
-[2019-11-13 02:50:22]select count(*) as aggregate from `wifi_issue_types` where (`purpose` = ? and `status` = ?)
-parmars:[1,1]
+[2019-11-24 11:28:54]select * from `users` where `id` = ? limit 1
+parmars:[2]
 
-[2019-11-13 02:50:22]select `typeid`, `type_name`, `type_name`, `type_pid` from `wifi_issue_types` where (`purpose` = ? and `status` = ?) order by `typeid` asc limit 500 offset 0
-parmars:[1,1]
+[2019-11-24 11:28:54]select count(*) as aggregate from `wifi_orders` inner join `users` on `wifi_orders`.`user_id` = `users`.`id` where (`orderid` > ?)
+parmars:[0]
 
-[2019-11-13 02:53:27]select * from `school_address` where `id` = ? limit 1
-parmars:["7"]
+[2019-11-24 11:28:54]select `wifi_orders`.*, `users`.`name`, `users`.`mobile` from `wifi_orders` inner join `users` on `wifi_orders`.`user_id` = `users`.`id` where (`orderid` > ?) order by `orderid` desc limit 10 offset 0
+parmars:[0]
 
-[2019-11-13 02:53:27]select * from `school_address` where `id` = ? limit 1
-parmars:["30"]
+[2019-11-24 11:29:08]select * from `users` where `id` = ? limit 1
+parmars:[2]
 
-[2019-11-13 02:59:05]select * from `school_address` where `id` = ? limit 1
-parmars:["7"]
+[2019-11-24 11:29:08]select count(*) as aggregate from `wifi_orders` inner join `users` on `wifi_orders`.`user_id` = `users`.`id` where (`orderid` > ?)
+parmars:[0]
 
-[2019-11-13 02:59:05]select * from `school_address` where `id` = ? limit 1
-parmars:["30"]
+[2019-11-24 11:29:08]select `wifi_orders`.*, `users`.`name`, `users`.`mobile` from `wifi_orders` inner join `users` on `wifi_orders`.`user_id` = `users`.`id` where (`orderid` > ?) order by `orderid` desc limit 10 offset 0
+parmars:[0]
 
-[2019-11-13 03:00:13]select * from `school_address` where `id` = ? limit 1
-parmars:["7"]
+[2019-11-24 11:29:38]select * from `users` where `id` = ? limit 1
+parmars:[2]
 
-[2019-11-13 03:00:13]select * from `school_address` where `id` = ? limit 1
-parmars:["30"]
+[2019-11-24 11:29:38]select count(*) as aggregate from `wifi_orders` inner join `users` on `wifi_orders`.`user_id` = `users`.`id` where (`orderid` > ?)
+parmars:[0]
 
-[2019-11-13 03:00:13]insert into `wifi_issues` (`typeone_id`, `typeone_name`, `typetwo_id`, `typetwo_name`, `issue_name`, `issue_mobile`, `issue_desc`, `addressoneid`, `addresstwoid`, `addr_detail`, `trade_sn`, `user_id`, `school_id`, `campus_id`, `created_at`) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-parmars:["1","网速慢","7","打游戏特别卡","关于公益广告","1253652856","反反复复","7","30","环保部","20191113030013",1,1,1,"2019-11-13 03:00:13"]
+[2019-11-24 11:29:38]select `wifi_orders`.*, `users`.`name`, `users`.`mobile` from `wifi_orders` inner join `users` on `wifi_orders`.`user_id` = `users`.`id` where (`orderid` > ?) order by `orderid` desc limit 10 offset 0
+parmars:[0]
 
-[2019-11-13 03:01:40]select * from `school_address` where `id` = ? limit 1
-parmars:["7"]
+[2019-11-24 11:29:58]select * from `users` where `id` = ? limit 1
+parmars:[2]
 
-[2019-11-13 03:01:40]select * from `school_address` where `id` = ? limit 1
-parmars:["30"]
+[2019-11-24 11:29:58]select count(*) as aggregate from `wifi_orders` inner join `users` on `wifi_orders`.`user_id` = `users`.`id` where (`orderid` > ?)
+parmars:[0]
 
-[2019-11-13 03:01:40]insert into `wifi_issues` (`typeone_id`, `typeone_name`, `typetwo_id`, `typetwo_name`, `issue_name`, `issue_mobile`, `issue_desc`, `addressoneid`, `addresstwoid`, `addr_detail`, `trade_sn`, `user_id`, `school_id`, `campus_id`, `created_at`) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-parmars:["1","网速慢","7","打游戏特别卡","关于公益广告","1253652856","反反复复","7","30","环保部","20191113030140",1,1,1,"2019-11-13 03:01:40"]
+[2019-11-24 11:29:58]select `wifi_orders`.*, `users`.`name`, `users`.`mobile` from `wifi_orders` inner join `users` on `wifi_orders`.`user_id` = `users`.`id` where (`orderid` > ?) order by `orderid` desc limit 10 offset 0
+parmars:[0]
 
-[2019-11-13 03:02:06]select count(*) as aggregate from `wifi_issues` where (`status` > ? and `user_id` = ?)
-parmars:[0,1]
+[2019-11-24 11:30:16]select * from `users` where `id` = ? limit 1
+parmars:[2]
 
-[2019-11-13 03:02:06]select `issueid`, `trade_sn`, `typeone_id`, `typeone_name`, `typetwo_id`, `typetwo_name`, `issue_name`, `issue_mobile`, `issue_desc`, `addressoneid`, `addresstwoid`, `addressthreeid`, `addr_detail`, `admin_name`, `admin_mobile`, `admin_desc`, `status`, `is_comment` from `wifi_issues` where (`status` > ? and `user_id` = ?) order by `issueid` desc limit 10 offset 0
-parmars:[0,1]
+[2019-11-24 11:30:16]select count(*) as aggregate from `wifi_orders` inner join `users` on `wifi_orders`.`user_id` = `users`.`id` where (`orderid` > ?)
+parmars:[0]
 
-[2019-11-13 03:02:19]select * from `wifi_issues` where (`issueid` = ? and `user_id` = ?) order by `issueid` desc limit 1
-parmars:["3446",1]
+[2019-11-24 11:30:16]select `wifi_orders`.*, `users`.`name`, `users`.`mobile` from `wifi_orders` inner join `users` on `wifi_orders`.`user_id` = `users`.`id` where (`orderid` > ?) order by `orderid` desc limit 10 offset 0
+parmars:[0]
 
-[2019-11-13 03:04:39]select * from `wifi_issues` where (`issueid` = ? and `user_id` = ?) order by `issueid` desc limit 1
-parmars:["3446",1]
+[2019-11-24 11:30:26]select * from `users` where `id` = ? limit 1
+parmars:[2]
 
-[2019-11-13 03:05:01]select * from `wifi_issues` where (`issueid` = ? and `user_id` = ?) order by `issueid` desc limit 1
-parmars:["3446",1]
+[2019-11-24 11:30:26]select count(*) as aggregate from `wifi_orders` inner join `users` on `wifi_orders`.`user_id` = `users`.`id` where (`orderid` > ?)
+parmars:[0]
 
-[2019-11-13 03:05:27]select * from `wifi_issues` where (`issueid` = ? and `user_id` = ?) order by `issueid` desc limit 1
-parmars:["3446",1]
+[2019-11-24 11:30:26]select `wifi_orders`.*, `users`.`name`, `users`.`mobile` from `wifi_orders` inner join `users` on `wifi_orders`.`user_id` = `users`.`id` where (`orderid` > ?) order by `orderid` desc limit 10 offset 0
+parmars:[0]
 
-[2019-11-13 03:05:46]select * from `wifi_issues` where (`issueid` = ? and `user_id` = ?) order by `issueid` desc limit 1
-parmars:["3446",1]
+[2019-11-24 11:30:30]select * from `users` where `id` = ? limit 1
+parmars:[2]
 
-[2019-11-13 03:05:58]select * from `wifi_issues` where (`issueid` = ? and `user_id` = ?) order by `issueid` desc limit 1
-parmars:["3446",1]
+[2019-11-24 11:30:30]select count(*) as aggregate from `wifi_orders` inner join `users` on `wifi_orders`.`user_id` = `users`.`id` where (`orderid` > ?)
+parmars:[0]
 
-[2019-11-13 03:06:07]select * from `wifi_issues` where (`issueid` = ? and `user_id` = ?) order by `issueid` desc limit 1
-parmars:["3446",1]
+[2019-11-24 11:30:30]select `wifi_orders`.*, `users`.`name`, `users`.`mobile` from `wifi_orders` inner join `users` on `wifi_orders`.`user_id` = `users`.`id` where (`orderid` > ?) order by `orderid` desc limit 10 offset 0
+parmars:[0]
 
-[2019-11-13 03:06:19]select * from `wifi_issues` where (`issueid` = ? and `user_id` = ?) order by `issueid` desc limit 1
-parmars:["3446",1]
+[2019-11-24 11:33:04]select * from `users` where `id` = ? limit 1
+parmars:[2]
 
-[2019-11-13 03:06:46]select * from `wifi_issues` where (`issueid` = ? and `user_id` = ?) order by `issueid` desc limit 1
-parmars:["3446",1]
+[2019-11-24 11:33:04]select count(*) as aggregate from `wifi_orders` inner join `users` on `wifi_orders`.`user_id` = `users`.`id` where (`orderid` > ?)
+parmars:[0]
 
-[2019-11-13 03:07:07]select * from `wifi_issues` where (`issueid` = ? and `user_id` = ?) order by `issueid` desc limit 1
-parmars:["3446",1]
+[2019-11-24 11:33:04]select `wifi_orders`.*, `users`.`name`, `users`.`mobile` from `wifi_orders` inner join `users` on `wifi_orders`.`user_id` = `users`.`id` where (`orderid` > ?) order by `orderid` desc limit 10 offset 0
+parmars:[0]
 
-[2019-11-13 03:07:34]select * from `wifi_issues` where (`issueid` = ? and `user_id` = ?) order by `issueid` desc limit 1
-parmars:["3446",1]
+[2019-11-24 11:33:59]select * from `users` where `id` = ? limit 1
+parmars:[2]
 
-[2019-11-13 03:08:08]select * from `wifi_issues` where (`user_id` = ? and `issueid` = ?) order by `issueid` desc limit 1
-parmars:[1,"3446"]
+[2019-11-24 11:33:59]select count(*) as aggregate from `wifi_orders` inner join `users` on `wifi_orders`.`user_id` = `users`.`id` where (`orderid` > ?)
+parmars:[0]
 
-[2019-11-13 03:08:34]select * from `wifi_issues` where (`user_id` = ? and `issueid` = ?) order by `issueid` desc limit 1
-parmars:[1,"1"]
+[2019-11-24 11:33:59]select `wifi_orders`.*, `users`.`name`, `users`.`mobile` from `wifi_orders` inner join `users` on `wifi_orders`.`user_id` = `users`.`id` where (`orderid` > ?) order by `orderid` desc limit 10 offset 0
+parmars:[0]
 
-[2019-11-13 03:08:34]insert into `wifi_issue_comments` (`issueid`, `comment_service`, `comment_worders`, `comment_efficiency`, `comment_content`, `user_id`, `school_id`, `campus_id`, `created_at`) values (?, ?, ?, ?, ?, ?, ?, ?, ?)
-parmars:["1","5","5","5","挺好的",1,1,1,"2019-11-13 03:08:34"]
+[2019-11-24 11:34:28]select * from `users` where `id` = ? limit 1
+parmars:[2]
 
-[2019-11-13 03:08:34]update `wifi_issues` set `is_comment` = ?, `wifi_issues`.`updated_at` = ? where `issueid` = ?
-parmars:[2,"2019-11-13 03:08:34","1"]
+[2019-11-24 11:34:28]select count(*) as aggregate from `wifi_orders` inner join `users` on `wifi_orders`.`user_id` = `users`.`id` where (`orderid` > ?)
+parmars:[0]
 
-[2019-11-13 03:08:55]select `timesid`, `user_wifi_time` from `wifi_user_times` where (`user_id` = ? and `status` = ?) order by `timesid` desc limit 1
-parmars:[1,1]
+[2019-11-24 11:34:28]select `wifi_orders`.*, `users`.`name`, `users`.`mobile` from `wifi_orders` inner join `users` on `wifi_orders`.`user_id` = `users`.`id` where (`orderid` > ?) order by `orderid` desc limit 10 offset 0
+parmars:[0]
 
-[2019-11-13 03:08:55]select `addressoneid`, `addresstwoid`, `addressthreeid`, `addressfourid`, `addressoneid_name`, `addresstwoid_name`, `addressthreeid_name`, `addressfourid_name` from `wifi_orders_locations` where (`user_id` = ? and `status` = ?) order by `locationid` desc limit 1
-parmars:[1,1]
+[2019-11-24 11:34:36]select * from `users` where `id` = ? limit 1
+parmars:[2]
 
-[2019-11-13 03:11:09]select `timesid`, `user_wifi_time` from `wifi_user_times` where (`user_id` = ? and `status` = ?) order by `timesid` desc limit 1
-parmars:[1,1]
+[2019-11-24 11:34:36]select count(*) as aggregate from `wifi_orders` inner join `users` on `wifi_orders`.`user_id` = `users`.`id` where (`orderid` > ?)
+parmars:[0]
 
-[2019-11-13 03:11:38]select `timesid`, `user_wifi_time` from `wifi_user_times` where (`user_id` = ? and `status` = ?) order by `timesid` desc limit 1
-parmars:[1,1]
+[2019-11-24 11:34:36]select `wifi_orders`.*, `users`.`name`, `users`.`mobile` from `wifi_orders` inner join `users` on `wifi_orders`.`user_id` = `users`.`id` where (`orderid` > ?) order by `orderid` desc limit 10 offset 0
+parmars:[0]
 
-[2019-11-13 03:11:38]select * from `wifis` where (`wifiid` = ? and `status` = ?) order by `wifiid` desc limit 1
-parmars:["1",1]
+[2019-11-24 11:34:43]select * from `users` where `id` = ? limit 1
+parmars:[2]
 
-[2019-11-13 03:11:38]insert into `wifi_orders` (`pay_time`, `succeed_time`, `paymentid`, `payment_name`, `type`, `mode`, `trade_sn`, `user_id`, `school_id`, `campus_id`, `wifi_id`, `wifi_type`, `wifi_name`, `order_days`, `order_number`, `order_unitprice`, `order_totalprice`, `created_at`) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-parmars:["2019-11-13 03:11:38","2019-11-13 03:11:38",4,"免支付",1,2,"20191113031138",1,1,1,1,8,"3年",1,1,"258.00",258,"2019-11-13 03:11:38"]
+[2019-11-24 11:34:43]select count(*) as aggregate from `wifi_orders` inner join `users` on `wifi_orders`.`user_id` = `users`.`id` where (`orderid` > ?)
+parmars:[0]
 
-[2019-11-13 03:11:38]insert into `wifi_orders_locations` (`status`, `orderid`, `user_id`, `school_id`, `campus_id`, `addressoneid`, `addressoneid_name`, `addresstwoid`, `addresstwoid_name`, `addressthreeid`, `addressthreeid_name`, `addressfourid`, `addressfourid_name`, `created_at`) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-parmars:[1,1,1,1,1,"1","aaa","1","bbb","1","ccc","1","dddd","2019-11-13 03:11:38"]
+[2019-11-24 11:34:43]select `wifi_orders`.*, `users`.`name`, `users`.`mobile` from `wifi_orders` inner join `users` on `wifi_orders`.`user_id` = `users`.`id` where (`orderid` > ?) order by `orderid` desc limit 10 offset 0
+parmars:[0]
 
-[2019-11-13 03:11:38]update `wifi_user_times` set `user_cable_etime` = ?, `wifi_user_times`.`updated_at` = ? where `timesid` = ?
-parmars:["2020-11-12 03:11:38","2019-11-13 03:11:38",1]
+[2019-11-24 11:35:01]select * from `users` where `id` = ? limit 1
+parmars:[2]
 
-[2019-11-13 03:11:43]select `timesid`, `user_wifi_time` from `wifi_user_times` where (`user_id` = ? and `status` = ?) order by `timesid` desc limit 1
-parmars:[1,1]
+[2019-11-24 11:35:01]select count(*) as aggregate from `wifi_orders` inner join `users` on `wifi_orders`.`user_id` = `users`.`id` where (`orderid` > ?)
+parmars:[0]
 
-[2019-11-13 03:11:43]select * from `wifis` where (`wifiid` = ? and `status` = ?) order by `wifiid` desc limit 1
-parmars:["1",1]
+[2019-11-24 11:35:01]select `wifi_orders`.*, `users`.`name`, `users`.`mobile` from `wifi_orders` inner join `users` on `wifi_orders`.`user_id` = `users`.`id` where (`orderid` > ?) order by `orderid` desc limit 10 offset 0
+parmars:[0]
 
-[2019-11-13 03:11:43]insert into `wifi_orders` (`pay_time`, `succeed_time`, `paymentid`, `payment_name`, `type`, `mode`, `trade_sn`, `user_id`, `school_id`, `campus_id`, `wifi_id`, `wifi_type`, `wifi_name`, `order_days`, `order_number`, `order_unitprice`, `order_totalprice`, `created_at`) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-parmars:["2019-11-13 03:11:43","2019-11-13 03:11:43",4,"免支付",1,2,"20191113031143",1,1,1,1,8,"3年",1,1,"258.00",258,"2019-11-13 03:11:43"]
+[2019-11-24 11:35:04]select * from `users` where `id` = ? limit 1
+parmars:[2]
 
-[2019-11-13 03:11:43]insert into `wifi_orders_locations` (`status`, `orderid`, `user_id`, `school_id`, `campus_id`, `addressoneid`, `addressoneid_name`, `addresstwoid`, `addresstwoid_name`, `addressthreeid`, `addressthreeid_name`, `addressfourid`, `addressfourid_name`, `created_at`) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-parmars:[1,2,1,1,1,"1","aaa","1","bbb","1","ccc","1","dddd","2019-11-13 03:11:43"]
+[2019-11-24 11:35:12]select * from `users` where `id` = ? limit 1
+parmars:[2]
 
-[2019-11-13 03:11:43]update `wifi_user_times` set `user_cable_etime` = ?, `wifi_user_times`.`updated_at` = ? where `timesid` = ?
-parmars:["2020-11-12 03:11:43","2019-11-13 03:11:43",1]
+[2019-11-24 11:35:12]select count(*) as aggregate from `wifi_orders` inner join `users` on `wifi_orders`.`user_id` = `users`.`id` where (`orderid` > ?)
+parmars:[0]
 
-[2019-11-13 03:11:47]select `timesid`, `user_wifi_time` from `wifi_user_times` where (`user_id` = ? and `status` = ?) order by `timesid` desc limit 1
-parmars:[1,1]
+[2019-11-24 11:35:12]select `wifi_orders`.*, `users`.`name`, `users`.`mobile` from `wifi_orders` inner join `users` on `wifi_orders`.`user_id` = `users`.`id` where (`orderid` > ?) order by `orderid` desc limit 10 offset 0
+parmars:[0]
 
-[2019-11-13 03:11:47]select * from `wifis` where (`wifiid` = ? and `status` = ?) order by `wifiid` desc limit 1
-parmars:["1",1]
+[2019-11-24 11:35:23]select * from `users` where `id` = ? limit 1
+parmars:[2]
 
-[2019-11-13 03:11:47]insert into `wifi_orders` (`pay_time`, `succeed_time`, `paymentid`, `payment_name`, `type`, `mode`, `trade_sn`, `user_id`, `school_id`, `campus_id`, `wifi_id`, `wifi_type`, `wifi_name`, `order_days`, `order_number`, `order_unitprice`, `order_totalprice`, `created_at`) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-parmars:["2019-11-13 03:11:47","2019-11-13 03:11:47",4,"免支付",1,2,"20191113031147",1,1,1,1,8,"3年",1,1,"258.00",258,"2019-11-13 03:11:47"]
+[2019-11-24 11:35:23]select count(*) as aggregate from `wifi_orders` inner join `users` on `wifi_orders`.`user_id` = `users`.`id` where (`orderid` > ?)
+parmars:[0]
 
-[2019-11-13 03:11:47]insert into `wifi_orders_locations` (`status`, `orderid`, `user_id`, `school_id`, `campus_id`, `addressoneid`, `addressoneid_name`, `addresstwoid`, `addresstwoid_name`, `addressthreeid`, `addressthreeid_name`, `addressfourid`, `addressfourid_name`, `created_at`) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-parmars:[1,3,1,1,1,"1","aaa","1","bbb","1","ccc","1","dddd","2019-11-13 03:11:47"]
+[2019-11-24 11:35:23]select `wifi_orders`.*, `users`.`name`, `users`.`mobile` from `wifi_orders` inner join `users` on `wifi_orders`.`user_id` = `users`.`id` where (`orderid` > ?) order by `orderid` desc limit 10 offset 0
+parmars:[0]
 
-[2019-11-13 03:11:47]update `wifi_user_times` set `user_cable_etime` = ?, `wifi_user_times`.`updated_at` = ? where `timesid` = ?
-parmars:["2020-11-12 03:11:47","2019-11-13 03:11:47",1]
+[2019-11-24 11:35:54]select * from `users` where `id` = ? limit 1
+parmars:[2]
 
-[2019-11-13 03:14:45]select `timesid`, `user_wifi_time`, `user_cable_etime` from `wifi_user_times` where (`user_id` = ? and `status` = ?) order by `timesid` desc limit 1
-parmars:[1,1]
+[2019-11-24 11:35:54]select count(*) as aggregate from `wifi_orders` inner join `users` on `wifi_orders`.`user_id` = `users`.`id` where (`orderid` > ?)
+parmars:[0]
+
+[2019-11-24 11:35:54]select `wifi_orders`.*, `users`.`name`, `users`.`mobile` from `wifi_orders` inner join `users` on `wifi_orders`.`user_id` = `users`.`id` where (`orderid` > ?) order by `orderid` desc limit 10 offset 0
+parmars:[0]
+
+[2019-11-24 11:37:01]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-11-24 11:37:01]select count(*) as aggregate from `wifi_orders` inner join `users` on `wifi_orders`.`user_id` = `users`.`id` where (`orderid` > ?)
+parmars:[0]
+
+[2019-11-24 11:37:01]select `wifi_orders`.*, `users`.`name`, `users`.`mobile` from `wifi_orders` inner join `users` on `wifi_orders`.`user_id` = `users`.`id` where (`orderid` > ?) order by `orderid` desc limit 10 offset 0
+parmars:[0]
+
+[2019-11-24 11:40:57]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-11-24 11:40:57]select count(*) as aggregate from `wifi_orders` inner join `users` on `wifi_orders`.`user_id` = `users`.`id` where (`orderid` > ?)
+parmars:[0]
+
+[2019-11-24 11:40:57]select `wifi_orders`.*, `users`.`name`, `users`.`mobile` from `wifi_orders` inner join `users` on `wifi_orders`.`user_id` = `users`.`id` where (`orderid` > ?) order by `orderid` desc limit 10 offset 0
+parmars:[0]
+
+[2019-11-24 11:41:07]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-11-24 11:41:07]select count(*) as aggregate from `wifi_orders` inner join `users` on `wifi_orders`.`user_id` = `users`.`id` where (`orderid` > ?)
+parmars:[0]
+
+[2019-11-24 11:41:07]select `wifi_orders`.*, `users`.`name`, `users`.`mobile` from `wifi_orders` inner join `users` on `wifi_orders`.`user_id` = `users`.`id` where (`orderid` > ?) order by `orderid` desc limit 10 offset 0
+parmars:[0]
+
+[2019-11-24 11:41:26]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-11-24 11:41:26]select count(*) as aggregate from `wifi_orders` inner join `users` on `wifi_orders`.`user_id` = `users`.`id` where (`orderid` > ?)
+parmars:[0]
+
+[2019-11-24 11:41:26]select `wifi_orders`.*, `users`.`name`, `users`.`mobile` from `wifi_orders` inner join `users` on `wifi_orders`.`user_id` = `users`.`id` where (`orderid` > ?) order by `orderid` desc limit 10 offset 0
+parmars:[0]
+
+[2019-11-24 11:42:08]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-11-24 11:42:08]select count(*) as aggregate from `wifi_orders` inner join `users` on `wifi_orders`.`user_id` = `users`.`id` where (`orderid` > ?)
+parmars:[0]
+
+[2019-11-24 11:42:08]select `wifi_orders`.*, `users`.`name`, `users`.`mobile` from `wifi_orders` inner join `users` on `wifi_orders`.`user_id` = `users`.`id` where (`orderid` > ?) order by `orderid` desc limit 10 offset 0
+parmars:[0]
+
+[2019-11-24 11:44:41]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-11-24 11:44:41]select count(*) as aggregate from `wifis` inner join `schools` on `wifis`.`school_id` = `schools`.`id` inner join `campuses` on `wifis`.`campus_id` = `campuses`.`id` where (`wifiid` > ?)
+parmars:[0]
+
+[2019-11-24 11:44:41]select `wifis`.*, `schools`.`name` as `schools_name`, `campuses`.`name` as `campuses_name` from `wifis` inner join `schools` on `wifis`.`school_id` = `schools`.`id` inner join `campuses` on `wifis`.`campus_id` = `campuses`.`id` where (`wifiid` > ?) order by `wifi_sort` desc limit 10 offset 0
+parmars:[0]
+
+[2019-11-24 11:44:44]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-11-24 11:44:44]select count(*) as aggregate from `wifis` inner join `schools` on `wifis`.`school_id` = `schools`.`id` inner join `campuses` on `wifis`.`campus_id` = `campuses`.`id` where (`wifiid` > ?)
+parmars:[0]
+
+[2019-11-24 11:44:44]select `wifis`.*, `schools`.`name` as `schools_name`, `campuses`.`name` as `campuses_name` from `wifis` inner join `schools` on `wifis`.`school_id` = `schools`.`id` inner join `campuses` on `wifis`.`campus_id` = `campuses`.`id` where (`wifiid` > ?) order by `wifi_sort` desc limit 10 offset 0
+parmars:[0]
+
+[2019-11-24 11:44:47]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-11-24 11:44:47]select count(*) as aggregate from `wifis` inner join `schools` on `wifis`.`school_id` = `schools`.`id` inner join `campuses` on `wifis`.`campus_id` = `campuses`.`id` where (`wifiid` > ?)
+parmars:[0]
+
+[2019-11-24 11:44:47]select `wifis`.*, `schools`.`name` as `schools_name`, `campuses`.`name` as `campuses_name` from `wifis` inner join `schools` on `wifis`.`school_id` = `schools`.`id` inner join `campuses` on `wifis`.`campus_id` = `campuses`.`id` where (`wifiid` > ?) order by `wifi_sort` desc limit 10 offset 0
+parmars:[0]
+
+[2019-11-24 11:44:50]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-11-24 11:44:50]select count(*) as aggregate from `wifis` inner join `schools` on `wifis`.`school_id` = `schools`.`id` inner join `campuses` on `wifis`.`campus_id` = `campuses`.`id` where (`wifiid` > ?)
+parmars:[0]
+
+[2019-11-24 11:44:50]select `wifis`.*, `schools`.`name` as `schools_name`, `campuses`.`name` as `campuses_name` from `wifis` inner join `schools` on `wifis`.`school_id` = `schools`.`id` inner join `campuses` on `wifis`.`campus_id` = `campuses`.`id` where (`wifiid` > ?) order by `wifi_sort` desc limit 10 offset 0
+parmars:[0]
+
+[2019-11-24 11:44:57]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-11-24 11:44:57]select count(*) as aggregate from `wifis` inner join `schools` on `wifis`.`school_id` = `schools`.`id` inner join `campuses` on `wifis`.`campus_id` = `campuses`.`id` where (`wifiid` > ?)
+parmars:[0]
+
+[2019-11-24 11:44:57]select `wifis`.*, `schools`.`name` as `schools_name`, `campuses`.`name` as `campuses_name` from `wifis` inner join `schools` on `wifis`.`school_id` = `schools`.`id` inner join `campuses` on `wifis`.`campus_id` = `campuses`.`id` where (`wifiid` > ?) order by `wifi_sort` desc limit 10 offset 0
+parmars:[0]
+
+[2019-11-24 11:45:33]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-11-24 11:45:33]select count(*) as aggregate from `wifis` inner join `schools` on `wifis`.`school_id` = `schools`.`id` inner join `campuses` on `wifis`.`campus_id` = `campuses`.`id` where (`wifiid` > ?)
+parmars:[0]
+
+[2019-11-24 11:45:33]select `wifis`.*, `schools`.`name` as `schools_name`, `campuses`.`name` as `campuses_name` from `wifis` inner join `schools` on `wifis`.`school_id` = `schools`.`id` inner join `campuses` on `wifis`.`campus_id` = `campuses`.`id` where (`wifiid` > ?) order by `wifi_sort` desc limit 10 offset 0
+parmars:[0]
+
+[2019-11-24 11:45:40]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-11-24 11:45:40]select count(*) as aggregate from `wifis` inner join `schools` on `wifis`.`school_id` = `schools`.`id` inner join `campuses` on `wifis`.`campus_id` = `campuses`.`id` where (`wifiid` > ?)
+parmars:[0]
+
+[2019-11-24 11:45:40]select `wifis`.*, `schools`.`name` as `schools_name`, `campuses`.`name` as `campuses_name` from `wifis` inner join `schools` on `wifis`.`school_id` = `schools`.`id` inner join `campuses` on `wifis`.`campus_id` = `campuses`.`id` where (`wifiid` > ?) order by `wifi_sort` desc limit 10 offset 0
+parmars:[0]
+
+[2019-11-24 11:47:09]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-11-24 11:47:15]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-11-24 11:48:04]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-11-24 11:48:04]select count(*) as aggregate from `wifis` inner join `schools` on `wifis`.`school_id` = `schools`.`id` inner join `campuses` on `wifis`.`campus_id` = `campuses`.`id` where (`wifiid` > ?)
+parmars:[0]
+
+[2019-11-24 11:48:04]select `wifis`.*, `schools`.`name` as `schools_name`, `campuses`.`name` as `campuses_name` from `wifis` inner join `schools` on `wifis`.`school_id` = `schools`.`id` inner join `campuses` on `wifis`.`campus_id` = `campuses`.`id` where (`wifiid` > ?) order by `wifi_sort` desc limit 10 offset 0
+parmars:[0]
+
+[2019-11-24 11:48:45]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-11-24 11:48:45]select count(*) as aggregate from `wifis` inner join `schools` on `wifis`.`school_id` = `schools`.`id` inner join `campuses` on `wifis`.`campus_id` = `campuses`.`id` where (`wifiid` > ?)
+parmars:[0]
+
+[2019-11-24 11:48:45]select `wifis`.*, `schools`.`name` as `schools_name`, `campuses`.`name` as `campuses_name` from `wifis` inner join `schools` on `wifis`.`school_id` = `schools`.`id` inner join `campuses` on `wifis`.`campus_id` = `campuses`.`id` where (`wifiid` > ?) order by `wifi_sort` desc limit 10 offset 0
+parmars:[0]
+
+[2019-11-24 11:48:47]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-11-24 11:48:47]select count(*) as aggregate from `wifis` inner join `schools` on `wifis`.`school_id` = `schools`.`id` inner join `campuses` on `wifis`.`campus_id` = `campuses`.`id` where (`wifiid` > ?)
+parmars:[0]
+
+[2019-11-24 11:48:47]select `wifis`.*, `schools`.`name` as `schools_name`, `campuses`.`name` as `campuses_name` from `wifis` inner join `schools` on `wifis`.`school_id` = `schools`.`id` inner join `campuses` on `wifis`.`campus_id` = `campuses`.`id` where (`wifiid` > ?) order by `wifi_sort` desc limit 10 offset 10
+parmars:[0]
+
+[2019-11-24 11:48:52]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-11-24 11:48:53]select count(*) as aggregate from `wifis` inner join `schools` on `wifis`.`school_id` = `schools`.`id` inner join `campuses` on `wifis`.`campus_id` = `campuses`.`id` where (`wifiid` > ?)
+parmars:[0]
+
+[2019-11-24 11:48:53]select `wifis`.*, `schools`.`name` as `schools_name`, `campuses`.`name` as `campuses_name` from `wifis` inner join `schools` on `wifis`.`school_id` = `schools`.`id` inner join `campuses` on `wifis`.`campus_id` = `campuses`.`id` where (`wifiid` > ?) order by `wifi_sort` desc limit 10 offset 0
+parmars:[0]
+
+[2019-11-24 11:49:17]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-11-24 11:49:17]select count(*) as aggregate from `wifis` inner join `schools` on `wifis`.`school_id` = `schools`.`id` inner join `campuses` on `wifis`.`campus_id` = `campuses`.`id` where (`wifiid` > ?)
+parmars:[0]
+
+[2019-11-24 11:49:17]select `wifis`.*, `schools`.`name` as `schools_name`, `campuses`.`name` as `campuses_name` from `wifis` inner join `schools` on `wifis`.`school_id` = `schools`.`id` inner join `campuses` on `wifis`.`campus_id` = `campuses`.`id` where (`wifiid` > ?) order by `wifi_sort` desc limit 10 offset 0
+parmars:[0]
+
+[2019-11-24 11:49:25]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-11-24 11:49:25]select count(*) as aggregate from `wifis` inner join `schools` on `wifis`.`school_id` = `schools`.`id` inner join `campuses` on `wifis`.`campus_id` = `campuses`.`id` where (`wifiid` > ?)
+parmars:[0]
+
+[2019-11-24 11:49:25]select `wifis`.*, `schools`.`name` as `schools_name`, `campuses`.`name` as `campuses_name` from `wifis` inner join `schools` on `wifis`.`school_id` = `schools`.`id` inner join `campuses` on `wifis`.`campus_id` = `campuses`.`id` where (`wifiid` > ?) order by `wifi_sort` desc limit 10 offset 0
+parmars:[0]
+
+[2019-11-24 11:49:30]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-11-24 11:49:30]select count(*) as aggregate from `wifis` inner join `schools` on `wifis`.`school_id` = `schools`.`id` inner join `campuses` on `wifis`.`campus_id` = `campuses`.`id` where (`wifiid` > ?)
+parmars:[0]
+
+[2019-11-24 11:49:30]select `wifis`.*, `schools`.`name` as `schools_name`, `campuses`.`name` as `campuses_name` from `wifis` inner join `schools` on `wifis`.`school_id` = `schools`.`id` inner join `campuses` on `wifis`.`campus_id` = `campuses`.`id` where (`wifiid` > ?) order by `wifi_sort` desc limit 10 offset 0
+parmars:[0]
+
+[2019-11-24 11:49:35]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-11-24 11:49:35]select count(*) as aggregate from `wifis` inner join `schools` on `wifis`.`school_id` = `schools`.`id` inner join `campuses` on `wifis`.`campus_id` = `campuses`.`id` where (`wifiid` > ?)
+parmars:[0]
+
+[2019-11-24 11:49:35]select `wifis`.*, `schools`.`name` as `schools_name`, `campuses`.`name` as `campuses_name` from `wifis` inner join `schools` on `wifis`.`school_id` = `schools`.`id` inner join `campuses` on `wifis`.`campus_id` = `campuses`.`id` where (`wifiid` > ?) order by `wifi_sort` desc limit 10 offset 0
+parmars:[0]
+
+[2019-11-24 11:49:39]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-11-24 11:49:39]select count(*) as aggregate from `wifis` inner join `schools` on `wifis`.`school_id` = `schools`.`id` inner join `campuses` on `wifis`.`campus_id` = `campuses`.`id` where (`wifiid` > ?)
+parmars:[0]
+
+[2019-11-24 11:49:39]select `wifis`.*, `schools`.`name` as `schools_name`, `campuses`.`name` as `campuses_name` from `wifis` inner join `schools` on `wifis`.`school_id` = `schools`.`id` inner join `campuses` on `wifis`.`campus_id` = `campuses`.`id` where (`wifiid` > ?) order by `wifi_sort` desc limit 10 offset 0
+parmars:[0]
+
+[2019-11-24 11:49:43]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-11-24 11:49:43]select count(*) as aggregate from `wifis` inner join `schools` on `wifis`.`school_id` = `schools`.`id` inner join `campuses` on `wifis`.`campus_id` = `campuses`.`id` where (`wifiid` > ?)
+parmars:[0]
+
+[2019-11-24 11:49:43]select `wifis`.*, `schools`.`name` as `schools_name`, `campuses`.`name` as `campuses_name` from `wifis` inner join `schools` on `wifis`.`school_id` = `schools`.`id` inner join `campuses` on `wifis`.`campus_id` = `campuses`.`id` where (`wifiid` > ?) order by `wifi_sort` desc limit 10 offset 0
+parmars:[0]
+
+[2019-11-24 11:51:17]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-11-24 11:51:17]select count(*) as aggregate from `wifis` inner join `schools` on `wifis`.`school_id` = `schools`.`id` inner join `campuses` on `wifis`.`campus_id` = `campuses`.`id` where (`wifiid` > ?)
+parmars:[0]
+
+[2019-11-24 11:51:17]select `wifis`.*, `schools`.`name` as `schools_name`, `campuses`.`name` as `campuses_name` from `wifis` inner join `schools` on `wifis`.`school_id` = `schools`.`id` inner join `campuses` on `wifis`.`campus_id` = `campuses`.`id` where (`wifiid` > ?) order by `wifi_sort` desc limit 10 offset 10
+parmars:[0]
+
+[2019-11-24 11:51:34]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-11-24 11:51:34]select count(*) as aggregate from `wifis` inner join `schools` on `wifis`.`school_id` = `schools`.`id` inner join `campuses` on `wifis`.`campus_id` = `campuses`.`id` where (`wifiid` > ?)
+parmars:[0]
+
+[2019-11-24 11:51:34]select `wifis`.*, `schools`.`name` as `schools_name`, `campuses`.`name` as `campuses_name` from `wifis` inner join `schools` on `wifis`.`school_id` = `schools`.`id` inner join `campuses` on `wifis`.`campus_id` = `campuses`.`id` where (`wifiid` > ?) order by `wifi_sort` desc limit 10 offset 10
+parmars:[0]
+
+[2019-11-24 11:51:49]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-11-24 11:51:49]select count(*) as aggregate from `wifi_orders` inner join `users` on `wifi_orders`.`user_id` = `users`.`id` where (`orderid` > ?)
+parmars:[0]
+
+[2019-11-24 11:51:49]select `wifi_orders`.*, `users`.`name`, `users`.`mobile` from `wifi_orders` inner join `users` on `wifi_orders`.`user_id` = `users`.`id` where (`orderid` > ?) order by `orderid` desc limit 10 offset 10
+parmars:[0]
+
+[2019-11-24 11:51:52]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-11-24 11:51:52]select count(*) as aggregate from `wifi_orders` inner join `users` on `wifi_orders`.`user_id` = `users`.`id` where (`orderid` > ?)
+parmars:[0]
+
+[2019-11-24 11:51:52]select `wifi_orders`.*, `users`.`name`, `users`.`mobile` from `wifi_orders` inner join `users` on `wifi_orders`.`user_id` = `users`.`id` where (`orderid` > ?) order by `orderid` desc limit 10 offset 0
+parmars:[0]
+
+[2019-11-24 11:52:09]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-11-24 11:52:09]select count(*) as aggregate from `wifi_orders` inner join `users` on `wifi_orders`.`user_id` = `users`.`id` where (`orderid` > ?)
+parmars:[0]
+
+[2019-11-24 11:52:09]select `wifi_orders`.*, `users`.`name`, `users`.`mobile` from `wifi_orders` inner join `users` on `wifi_orders`.`user_id` = `users`.`id` where (`orderid` > ?) order by `orderid` desc limit 10 offset 0
+parmars:[0]
+
+[2019-11-24 11:52:22]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-11-24 11:52:22]select count(*) as aggregate from `wifi_orders` inner join `users` on `wifi_orders`.`user_id` = `users`.`id` where (`orderid` > ?)
+parmars:[0]
+
+[2019-11-24 11:52:22]select `wifi_orders`.*, `users`.`name`, `users`.`mobile` from `wifi_orders` inner join `users` on `wifi_orders`.`user_id` = `users`.`id` where (`orderid` > ?) order by `orderid` desc limit 10 offset 0
+parmars:[0]
+
+[2019-11-24 11:53:00]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-11-24 11:53:00]select count(*) as aggregate from `wifi_orders` inner join `users` on `wifi_orders`.`user_id` = `users`.`id` where (`orderid` > ?)
+parmars:[0]
+
+[2019-11-24 11:53:00]select `wifi_orders`.*, `users`.`name`, `users`.`mobile` from `wifi_orders` inner join `users` on `wifi_orders`.`user_id` = `users`.`id` where (`orderid` > ?) order by `orderid` desc limit 10 offset 0
+parmars:[0]
+
+[2019-11-24 11:53:03]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-11-24 11:56:25]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-11-24 11:56:25]select count(*) as aggregate from `wifi_orders` inner join `users` on `wifi_orders`.`user_id` = `users`.`id` where (`orderid` > ?)
+parmars:[0]
+
+[2019-11-24 11:56:25]select `wifi_orders`.*, `users`.`name`, `users`.`mobile` from `wifi_orders` inner join `users` on `wifi_orders`.`user_id` = `users`.`id` where (`orderid` > ?) order by `orderid` desc limit 10 offset 0
+parmars:[0]
+
+[2019-11-24 11:56:35]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-11-24 11:56:35]select count(*) as aggregate from `wifi_orders` inner join `users` on `wifi_orders`.`user_id` = `users`.`id` where (`orderid` > ?)
+parmars:[0]
+
+[2019-11-24 11:56:35]select `wifi_orders`.*, `users`.`name`, `users`.`mobile` from `wifi_orders` inner join `users` on `wifi_orders`.`user_id` = `users`.`id` where (`orderid` > ?) order by `orderid` desc limit 10 offset 0
+parmars:[0]
+
+[2019-11-24 11:57:10]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-11-24 11:57:10]select count(*) as aggregate from `wifi_orders` inner join `users` on `wifi_orders`.`user_id` = `users`.`id` where (`orderid` > ?)
+parmars:[0]
+
+[2019-11-24 11:57:10]select `wifi_orders`.*, `users`.`name`, `users`.`mobile` from `wifi_orders` inner join `users` on `wifi_orders`.`user_id` = `users`.`id` where (`orderid` > ?) order by `orderid` desc limit 10 offset 0
+parmars:[0]
+
+[2019-11-24 11:57:24]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-11-24 11:57:24]select count(*) as aggregate from `wifi_orders` inner join `users` on `wifi_orders`.`user_id` = `users`.`id` where (`orderid` > ?)
+parmars:[0]
+
+[2019-11-24 11:57:24]select `wifi_orders`.*, `users`.`name`, `users`.`mobile` from `wifi_orders` inner join `users` on `wifi_orders`.`user_id` = `users`.`id` where (`orderid` > ?) order by `orderid` desc limit 10 offset 0
+parmars:[0]
+
+[2019-11-24 11:57:32]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-11-24 11:57:32]select count(*) as aggregate from `wifi_orders` inner join `users` on `wifi_orders`.`user_id` = `users`.`id` where (`orderid` > ?)
+parmars:[0]
+
+[2019-11-24 11:57:32]select `wifi_orders`.*, `users`.`name`, `users`.`mobile` from `wifi_orders` inner join `users` on `wifi_orders`.`user_id` = `users`.`id` where (`orderid` > ?) order by `orderid` desc limit 10 offset 0
+parmars:[0]
+
+[2019-11-24 11:57:37]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-11-24 11:57:37]select count(*) as aggregate from `wifi_orders` inner join `users` on `wifi_orders`.`user_id` = `users`.`id` where (`orderid` > ?)
+parmars:[0]
+
+[2019-11-24 11:57:37]select `wifi_orders`.*, `users`.`name`, `users`.`mobile` from `wifi_orders` inner join `users` on `wifi_orders`.`user_id` = `users`.`id` where (`orderid` > ?) order by `orderid` desc limit 10 offset 0
+parmars:[0]
+
+[2019-11-24 11:58:34]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-11-24 11:58:34]select count(*) as aggregate from `wifi_orders` inner join `users` on `wifi_orders`.`user_id` = `users`.`id` where (`orderid` > ?)
+parmars:[0]
+
+[2019-11-24 11:58:34]select `wifi_orders`.*, `users`.`name`, `users`.`mobile` from `wifi_orders` inner join `users` on `wifi_orders`.`user_id` = `users`.`id` where (`orderid` > ?) order by `orderid` desc limit 10 offset 0
+parmars:[0]
 
