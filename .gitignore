@@ -16,5 +16,6 @@ yarn-error.log
 /.idea/*
 .idea/*
 .idea
+/public/querylog.txt
 _ide_helper.php
 _ide_helper_models.php

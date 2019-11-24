@@ -36,7 +36,6 @@ trait CustomizedAuthenticatesUsers
 
             return $this->sendLockoutResponse($request);
         }
-
         if ($this->attemptLogin($request)) {
             // 登陆成功, 将学校的信息放到 Session 中
             /**
