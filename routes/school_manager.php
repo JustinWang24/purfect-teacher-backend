@@ -133,5 +133,8 @@ Route::prefix('school_manager')->group(function () {
     // 校历展示
     Route::any('calendar/index', 'Calendar\IndexController@index')->name('school_manger.school.calendar.index');
 
+    // 获取校历事件详情
+    Route::any('calendar/event/details', 'Calendar\IndexController@getEventDetails')->name('school_manger.calendar.event.details');
+
 
 });
