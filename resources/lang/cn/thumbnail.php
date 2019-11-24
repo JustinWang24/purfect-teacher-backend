@@ -62,5 +62,9 @@ return [
     'textbook'=>'教材',
     'loadMajorTextbook'=>'根据专业进行汇总',
     'welcome'=>'迎新',
+
+    // 校历
+    'calendar' => '校历',
+    'index' => '管理'
 ];
 
