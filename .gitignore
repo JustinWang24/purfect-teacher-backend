@@ -16,3 +16,4 @@ yarn-error.log
 /.idea/*
 .idea/*
 .idea
+/public/querylog.txt
