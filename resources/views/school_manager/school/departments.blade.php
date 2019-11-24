@@ -18,16 +18,18 @@ use App\User;
                 <div class="card-body">
                     <div class="row">
                         <div class="table-padding col-12">
-                            <a href="{{ route('school_manager.school.view') }}" class="btn btn-default">
-                                返回 <i class="fa fa-arrow-circle-left"></i>
-                            </a>&nbsp;
+
                             @if(isset($parent))
-                                <a href="{{ route('school_manager.campus.institutes',['uuid'=>$parent->campus->id,'by'=>'campus']) }}" class="btn btn-default">
-                                    <i class="fa fa-arrow-circle-left"></i> 返回
+                                <a href="{{ route('school_manager.campus.institutes',['uuid'=>$parent->campus_id, 'by'=>'campus']) }}" class="btn btn-default">
+                                返回 <i class="fa fa-arrow-circle-left"></i>
                                 </a>&nbsp;
-                                <a href="{{ route('school_manager.department.add',['uuid'=>$parent->id]) }}" class="btn btn-primary pull-right" id="btn-create-department-from-institute">
+                                <a href="{{ route('school_manager.department.add',['uuid'=>$parent->id]) }}" class="btn btn-primary" id="btn-create-department-from-institute">
                                     创建新系 <i class="fa fa-plus"></i>
                                 </a>
+                            @else
+                                <a href="{{ route('school_manager.school.view') }}" class="btn btn-default">
+                                返回 <i class="fa fa-arrow-circle-left"></i>
+                                </a>&nbsp;
                             @endif
                             @include('school_manager.school.reusable.nav',['highlight'=>'department'])
                         </div>
