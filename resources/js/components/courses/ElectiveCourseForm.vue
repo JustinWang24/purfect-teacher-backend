@@ -154,7 +154,7 @@
                         </el-select>
                     </el-form-item>
                 </el-col>
-                <el-col :span="4" v-if="asAdmin">
+                <el-col :span="4" v-if="asAdmin || !applicationId">
                     <el-form-item label="教学楼">
                         <el-select v-model="scheduleItem.building_id" placeholder="请选择教学楼" style="width: 100%;">
                             <el-option-group
@@ -171,7 +171,7 @@
                         </el-select>
                     </el-form-item>
                 </el-col>
-                <el-col :span="4" v-if="asAdmin">
+                <el-col :span="4" v-if="asAdmin || !applicationId">
                     <el-form-item label="教室">
                         <el-select v-model="scheduleItem.classroom_id" placeholder="请选择教室" style="width: 100%;">
                             <el-option
@@ -184,8 +184,8 @@
                     </el-form-item>
                 </el-col>
                 <el-col :span="1">
-                    <el-button v-if="!asAdmin" v-on:click="pushToSchedule" type="success" icon="el-icon-plus" circle  style="margin-left: 10px;" ></el-button>
-                    <el-button v-if="asAdmin" v-on:click="updateToSchedule" type="success" icon="el-icon-check" circle  style="margin-left: 10px;" ></el-button>
+                    <el-button v-if="!asAdmin || !applicationId" v-on:click="pushToSchedule" type="success" icon="el-icon-plus" circle  style="margin-left: 10px;" ></el-button>
+                    <el-button v-if="asAdmin && applicationId>0" v-on:click="updateToSchedule" type="success" icon="el-icon-check" circle  style="margin-left: 10px;" ></el-button>
                 </el-col>
             </el-row>
 
@@ -227,10 +227,10 @@
                 </el-col>
             </el-row>
             <el-divider></el-divider>
-            <el-form-item v-if="!asAdmin">
+            <el-form-item v-if="!asAdmin || !applicationId">
                 <el-button type="primary" @click="saveCourse">保存</el-button>
             </el-form-item>
-            <el-form-item v-if="asAdmin" label="处理意见">
+            <el-form-item v-if="asAdmin && isInWaitingStatus" label="处理意见">
                 <el-input type="textarea" v-model="courseModel.reply_content" placeholder="必填"></el-input>
             </el-form-item>
             <el-form-item v-if="asAdmin && isInWaitingStatus">
@@ -307,7 +307,7 @@
                 }
             },
             'courseModel.teacher_id': function(newVal, oldVal){
-                if(newVal !== oldVal){
+                if(!Util.isEmpty(newVal) && newVal !== oldVal){
                     // 获取教师的名字
                     const item = Util.GetItemById(newVal, this.teachers);
                     this.courseModel.teacher_name = item.name;
@@ -443,6 +443,9 @@
                 })
             },
             getApplication: function(id){
+                if(id === 0){
+                    return;
+                }
                 this.loading = true;
                 loadElectiveCourse(id).then(res => {
                     if(Util.isAjaxResOk(res)){
@@ -485,7 +488,10 @@
                         if(Util.isAjaxResOk(res)){
                             this.$message('选修课保存成功');
                             this.$emit('course-saved', {course: res.data.data.course});
-                            if(!this.asAdmin){
+                            if(this.asAdmin){
+                                this.$emit('course-saved-admin', {course: this.courseModel, schedule: this.schedule});
+                            }
+                            else{
                                 window.location.href = '/home';
                             }
                         }else{

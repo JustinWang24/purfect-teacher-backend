@@ -300,10 +300,10 @@ class TeacherApplyElectiveCourseDao
      * 处理申请的各种状态
      * @param $id
      * @param int $status
-     * @param null $content
+     * @param $content
      * @return IMessageBag
      */
-    public function operateApply($id, $status, $content=null)
+    public function operateApply($id, $status = TeacherApplyElectiveCourse::STATUS_VERIFIED, $content='同意')
     {
         $msgBag = new MessageBag(JsonBuilder::CODE_ERROR, '系统错误');
         DB::beginTransaction();
@@ -410,10 +410,10 @@ class TeacherApplyElectiveCourseDao
             $course = $courseDao->createCourse($data);
 
             //标记申请表为发布状态
-            $result = self::publishedApply($applyId);
+            $this->publishedApply($applyId);
             DB::commit();
             $messageBag->setCode(JsonBuilder::CODE_SUCCESS);
-            $messageBag->setData($course->getData()->id);
+            $messageBag->setData($course->getData());
         } catch (\Exception $exception) {
             DB::rollBack();
             $messageBag->setMessage($exception->getMessage());
