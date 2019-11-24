@@ -7,6 +7,7 @@ namespace App\Dao\AttendanceSchedules;
 use App\Dao\BuildFillableData;
 use App\Models\AttendanceSchedules\AttendancePerson;
 use App\Models\AttendanceSchedules\AttendanceSchedule;
+use App\Models\AttendanceSchedules\AttendanceSchedulePerson;
 use App\Models\AttendanceSchedules\AttendanceTask;
 use App\Models\AttendanceSchedules\AttendanceTimeSlot;
 use App\Utils\JsonBuilder;
@@ -78,10 +79,10 @@ class AttendanceSchedulesDao
     public function addDefaultTimeSlotsForTask($taskId)
     {
         $data = [
-            ['attendance_id' => $taskId, 'title' => '上午', 'start_time' => '08:00:00', 'end_time' => '12:00:00'],
-            ['attendance_id' => $taskId, 'title' => '中午', 'start_time' => '12:00:00', 'end_time' => '14:00:00'],
-            ['attendance_id' => $taskId, 'title' => '下午', 'start_time' => '14:00:00', 'end_time' => '18:00:00'],
-            ['attendance_id' => $taskId, 'title' => '晚上', 'start_time' => '18:00:00', 'end_time' => '22:00:00'],
+            ['task_id' => $taskId, 'title' => '上午', 'start_time' => '08:00:00', 'end_time' => '12:00:00'],
+            ['task_id' => $taskId, 'title' => '中午', 'start_time' => '12:00:00', 'end_time' => '14:00:00'],
+            ['task_id' => $taskId, 'title' => '下午', 'start_time' => '14:00:00', 'end_time' => '18:00:00'],
+            ['task_id' => $taskId, 'title' => '晚上', 'start_time' => '18:00:00', 'end_time' => '22:00:00'],
         ];
         DB::beginTransaction();
         try {
@@ -137,6 +138,11 @@ class AttendanceSchedulesDao
             ->where('school_id', $schoolId)->delete();
     }
 
+    public function getTimeSlot($timeSlotId)
+    {
+        return AttendanceTimeSlot::find($timeSlotId);
+    }
+
     /**
      * 添加值周人员信息
      * @param $data
@@ -169,33 +175,73 @@ class AttendanceSchedulesDao
 
     /**
      * 添加值周计划
+     * 为了减少操作，应该是一个批量操作
+     * 提交时的数据是一个一周的模板，每周都如此循环
      * @param $data
      * @return MessageBag
      */
-    public function addSchedule($data)
+    public function addSchedules($data)
     {
-        if (!isset($data['id']) || empty($data['id'])) {
-            unset($data['id']);
-        }
+        //拿到针对的task的id
+        $taskId = $data['taskId'];
+        $schoolId = $data['school_Id'];
+        //拿到模板数据
+        $scheduleArr = $data['schedule'];
+        //查询此task，得到课时和截止时间，好用来循环
+        $taskObj = self::getTask($taskId);
+        $starTime = $taskObj->start_time;
+        $endTime  = $taskObj->end_time;
+        $startUp = $starTime;
+
         $messageBag = new MessageBag(JsonBuilder::CODE_ERROR);
         DB::beginTransaction();
         try {
-            $fillableData = $this->getFillableData(new AttendanceSchedule(), $data);
-            $schedule = AttendanceSchedule::create($fillableData);
-            if ($schedule) {
-                DB::commit();
-                $messageBag->setCode(JsonBuilder::CODE_SUCCESS);
-                $messageBag->setData($schedule);
-            } else {
-                DB::rollBack();
-                $messageBag->setMessage('保存值周计划信息失败, 请联系管理员');
+            while ($startUp <= $endTime)
+            {
+                $index = date('w', strtotime($startUp));
+                $tmpSlotArr = $scheduleArr[$index];
+                foreach ($tmpSlotArr as $slotId => $personIds)
+                {
+                    //根据slotId拿到对应的起止时间
+                    $slotObj = AttendanceTimeSlot::find($slotId);
+                    if (empty($personIds)) continue;
+                    $d = [
+                        'school_id' => $schoolId,
+                        'task_id' => $taskId,
+                        'time_slot_id'  => $slotId,
+                        'start_date_time'    => $startUp . ' ' . $slotObj->start_time,
+                        'end_date_time'    => $startUp . ' ' . $slotObj->end_time,
+
+                    ];
+                    $scheduleObj = AttendanceSchedule::create($d);
+
+                    foreach ($personIds as $personId)
+                    {
+                        AttendanceSchedulePerson::create([
+                            'task_id' => $taskId,
+                            'schedule_id'   => $scheduleObj->id,
+                            'user_id'       => $personId
+                        ]);
+                    }
+                }
+                //开始时间增加一天，判断是否到达任务的截止时间
+                $startUp = date('Y-m-d', strtotime("+1 day", strtotime($startUp)));
             }
+            DB::commit();
+            $messageBag->setCode(JsonBuilder::CODE_SUCCESS);
         } catch (\Exception $exception) {
             DB::rollBack();
             $messageBag->setMessage($exception->getMessage());
         }
         return $messageBag;
     }
+
+
+    public function getTask($taskId)
+    {
+        return AttendanceTask::find($taskId);
+    }
+
 
     /**
      * 获取某个学校的全部值周任务，按时间段获取，例如：
@@ -293,6 +339,23 @@ class AttendanceSchedulesDao
             ->delete();
         return $num>0;
     }
+
+    /**
+     * 给attendance_schedule_persons表添加一条schedule的关联记录
+     * @param $scheduleId
+     * @param $personId
+     * @param $taskId
+     * @return mixed
+     */
+    public function addSchedulePerson($scheduleId, $personId, $taskId)
+    {
+        return AttendanceSchedulePerson::create(['task_id'=>$taskId, 'schedule_id'=>$scheduleId, 'user_id'=>$personId]);
+    }
+    public function delSchedulePerson($scheduleId)
+    {
+        return AttendanceSchedulePerson::where('schedule_id',$scheduleId)->delete();
+    }
+
 
 
 }

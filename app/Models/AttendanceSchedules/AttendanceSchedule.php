@@ -7,6 +7,11 @@ use Illuminate\Database\Eloquent\Model;
 class AttendanceSchedule extends Model
 {
     protected $fillable = [
-        'attendance_id', 'user_id', 'start_time', 'end_time', 'time_slot_id', 'school_id',
+        'task_id', 'user_id', 'start_date_time', 'end_date_time', 'time_slot_id', 'school_id',
     ];
+
+    public function person()
+    {
+        return $this->hasMany(AttendanceSchedulePerson::class,'task_id', 'id');
+    }
 }
