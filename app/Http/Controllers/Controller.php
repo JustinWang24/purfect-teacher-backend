@@ -12,8 +12,11 @@ class Controller extends BaseController
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 	
-	// 分页条数
+	// APP分页条数
 	public static $api_wifi_page_limit = 10;
+
+   // 后台分页条数
+   public static $manger_wifi_page_limit = 10;
 
     /**
      * 用来承载View模板数据的container
