@@ -134,8 +134,9 @@ Route::prefix('school_manager')->group(function () {
     // 同意选修课申请表
     Route::any('elective-course/approve','AddElectiveCourseController@approve')
         ->name('school_manager.elective-course.approve');
+
     // 拒绝选修课申请表
-    Route::any('elective-course/refuse','ApplyElectiveCourseController@refuse')
+    Route::any('elective-course/refuse','AddElectiveCourseController@refuse')
         ->name('school_manager.elective-course.refuse');
 
     // 管理员审批选修课的 action
