@@ -123,6 +123,7 @@ class ElectiveController extends Controller
     public function enroll(Request $request, $courseId)
     {
         $user = $request->user();
+        $schoolId = $user->getSchoolId();
         $dao = new TeacherApplyElectiveCourseDao();
         //查自己在报名结果表中的记录
         $courseDao =  new CourseDao;
@@ -151,7 +152,7 @@ class ElectiveController extends Controller
         if ($dao->quotaIsFull($courseId)){
             return JsonBuilder::Error('此选修课报名数量已满');
         }
-        $result = $dao->enroll($courseId, $user->id, $teacherId);
+        $result = $dao->enroll($courseId, $user->id, $teacherId, $schoolId);
         return JsonBuilder::Success($result);
 
     }

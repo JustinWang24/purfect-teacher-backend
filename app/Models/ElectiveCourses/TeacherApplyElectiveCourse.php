@@ -2,10 +2,9 @@
 
 namespace App\Models\ElectiveCourses;
 
+use App\User;
 use Illuminate\Database\Eloquent\Model;
-use App\Models\ElectiveCourses\TeacherApplyElectiveCoursesTimeSlot;
-
-
+use Illuminate\Support\Facades\DB;
 
 class TeacherApplyElectiveCourse extends Model
 {
@@ -25,8 +24,32 @@ class TeacherApplyElectiveCourse extends Model
         'status', 'reply_content', 'start_year'
     ];
 
+    /**
+     * 关联的老师
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function teacher(){
+        return $this->belongsTo(User::class, 'teacher_id');
+    }
+
+    /**
+     * 关联的课程集合, 即选修课可以关联的课程
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function openToMajors(){
+        return $this->hasMany(ApplyCourseMajor::class, 'apply_id');
+    }
+
+    /**
+     * 申请所关联的上课具体的时间和地点的集合
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function arrangements(){
+        return $this->hasMany(ApplyCourseArrangement::class,'apply_id');
+    }
 
     public function TimeSlot(){
+        // Todo: **** 删除 ApplyGroup 的关联关系
         return $this->hasMany(ApplyGroup::class, 'apply_id', 'id');
     }
 
@@ -50,5 +73,13 @@ class TeacherApplyElectiveCourse extends Model
                 break;
         }
         return $text;
+    }
+
+    /**
+     * 是否申请已经获得通过
+     * @return bool
+     */
+    public function isVerified(){
+        return $this->status === self::STATUS_VERIFIED;
     }
 }

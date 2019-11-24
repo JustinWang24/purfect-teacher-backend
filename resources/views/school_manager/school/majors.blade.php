@@ -48,7 +48,7 @@ use App\User;
                                         <td>
                                             @if($major->plans)
                                                 @foreach($major->plans as $plan)
-                                                    <a target="_blank" href="{{ route('school_manager.planRecruit.list',['plan'=>$plan->id]) }}">{{ $plan->title }}: {{ _printDate($plan->start_at) }}开始招收{{ $plan->seats }}人</a>
+                                                    <a target="_blank" href="{{ route('teacher.planRecruit.list',['plan'=>$plan->id]) }}">{{ $plan->title }}: {{ _printDate($plan->start_at) }}开始招收{{ $plan->seats }}人</a>
                                                 @endforeach
                                             @endif
                                         </td>

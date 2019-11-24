@@ -30,8 +30,8 @@ class TimetablesController extends Controller
     public function manager(TimetableRequest $request){
         $schoolDao = new SchoolDao($request->user());
         $school = $schoolDao->getSchoolByUuid($request->uuid());
-        $this->dataForView['pageTitle'] = $school->name . ' 课程表管理';
-        $this->dataForView['needManagerNav'] = true;
+        $this->dataForView['pageTitle'] = $school->name . ' 上课时间段管理';
+        $this->dataForView['needManagerNav'] = false;
         $this->dataForView['school'] = $school;
         $this->dataForView['app_name'] = 'time_slots_app';
         return view('school_manager.timetable.manager', $this->dataForView);
@@ -46,7 +46,7 @@ class TimetablesController extends Controller
         $schoolDao = new SchoolDao($request->user());
         $school = $schoolDao->getSchoolByUuid($request->uuid());
         $this->dataForView['pageTitle'] = $school->name . ' 课程表管理';
-        $this->dataForView['needManagerNav'] = true;
+        $this->dataForView['needManagerNav'] = false;
         $this->dataForView['school'] = $school;
         $this->dataForView['app_name'] = 'timetable_preview_app';
         return view('school_manager.timetable.manager', $this->dataForView);

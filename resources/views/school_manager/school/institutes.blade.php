@@ -14,7 +14,7 @@
                                 返回 <i class="fa fa-arrow-circle-left"></i>
                             </a>&nbsp;
                             @if(isset($campus))
-                                <a href="{{ route('school_manager.institute.add',['uuid'=>$campus->id]) }}" class="btn btn-primary pull-right" id="btn-create-institute-from-campus">
+                                <a href="{{ route('school_manager.institute.add',['uuid'=>$campus->id]) }}" class="btn btn-primary " id="btn-create-institute-from-campus">
                                     创建新学院 <i class="fa fa-plus"></i>
                                 </a>
                             @endif
