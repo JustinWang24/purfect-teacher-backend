@@ -37,6 +37,11 @@ class CalendarApi
         $this->param  = null;
     }
 
+    /**
+     * @param $type
+     * @param $time
+     * @return bool
+     */
     public function getCalendarInfo($type, $time)
     {
         if ($type == self::GET_DAY_INFO) {
