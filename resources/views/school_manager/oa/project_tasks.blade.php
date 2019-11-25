@@ -9,7 +9,10 @@ use App\User;
         <div class="col-sm-12 col-md-12 col-xl-12">
             <div class="card-box">
                 <div class="card-head">
-                    <header>{{ session('school.name') }} 项目管理</header>
+                    <header>
+                        项目: "{{ $project->title}}" - 任务管理
+                        <a class="btn btn-primary btn-sm" href="{{ route('school_manager.oa.projects-manager',['uuid'=>session('school.uuid')]) }}">返回项目列表</a>
+                    </header>
                 </div>
                 <div class="card-body">
                     <div class="row">
@@ -18,48 +21,37 @@ use App\User;
                                 <thead>
                                 <tr>
                                     <th>创建时间</th>
-                                    <th>学校</th>
                                     <th>发起人</th>
-                                    <th>参与者</th>
-                                    <th>任务</th>
                                     <th>标题</th>
+                                    <th>详情</th>
                                     <th>状态</th>
                                     <th></th>
                                 </tr>
                                 </thead>
                                 <tbody>
-                                @foreach($projects as $index=>$project)
+                                @foreach($tasks as $index=>$task)
                                     <tr>
-                                        <td>{{ _printDate($project->created_at) }}</td>
+                                        <td>{{ _printDate($task->created_at) }}</td>
                                         <td>
-                                            {{ $project->school->name }}
+                                            {{ $task->user->name }}
                                         </td>
                                         <td>
-                                            {{ $project->user->name }}
+                                            {{ $task->title }}
                                         </td>
                                         <td>
-                                            {{ count($project->members) }}人
+                                            {{ $task->content }}
                                         </td>
                                         <td>
-                                            <a href="{{ route('school_manager.oa.tasks-manager',['project_id'=>$project->id]) }}">
-                                                {{ count($project->tasks) }}
-                                            </a>
-                                        </td>
-                                        <td>
-                                            {{ $project->title }}
-                                        </td>
-                                        <td>
-                                            {{ $project->status === \App\Models\OA\Project::STATUS_IN_PROGRESS ? '进行中': '完成' }}
+                                            {{ $task->status === \App\Models\OA\Project::STATUS_IN_PROGRESS ? '进行中': '完成' }}
                                         </td>
                                         <td class="text-center">
-                                            {{ Anchor::Print(['text'=>'查看','class'=>'btn-edit-major','href'=>route('school_manager.oa.project-view',['uuid'=>$project->id])], Button::TYPE_DEFAULT,'edit') }}
+                                            {{ Anchor::Print(['text'=>'查看','class'=>'btn-edit-major','href'=>route('school_manager.oa.task-view',['task_id'=>$task->id])], Button::TYPE_DEFAULT,'edit') }}
                                         </td>
                                     </tr>
                                 @endforeach
                                 </tbody>
                             </table>
-
-                            {{ $projects->links() }}
+                            {{ $tasks->appends($appendedParams)->links() }}
                         </div>
                     </div>
                 </div>
