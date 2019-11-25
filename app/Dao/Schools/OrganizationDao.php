@@ -43,6 +43,9 @@ class OrganizationDao
      * @return Organization
      */
     public function create($data){
+        if(empty($data['parent_id'])){
+            $data['parent_id'] = $this->getRoot($data['school_id'])->id;
+        }
         return Organization::create($data);
     }
 
