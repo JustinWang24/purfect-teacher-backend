@@ -2,6 +2,7 @@
 
 namespace App\Models\Students;
 
+use App\User;
 use Illuminate\Database\Eloquent\Model;
 
 
@@ -32,6 +33,16 @@ class Application extends Model
     ];
 
 
+    const STATUS_CHECK  = 0;
+    const STATUS_PASS   = 1;
+    const STATUS_REFUSE = 2;
+    const STATUS_CHECK_TEXT  = '审核中';
+    const STATUS_PASS_TEXT   = '已通过';
+    const STATUS_REFUSE_TEXT = '已拒绝';
+
+
+
+
     /**
      * 申请类型
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
@@ -39,4 +50,34 @@ class Application extends Model
     public function applicationType() {
          return $this->belongsTo(ApplicationType::class);
     }
+
+
+    public function user() {
+        return $this->belongsTo(User::class);
+    }
+
+
+    /**
+     * 全部状态
+     * @return array
+     */
+    public function getAllStatus() {
+        return [
+            self::STATUS_CHECK => self::STATUS_CHECK_TEXT,
+            self::STATUS_PASS  => self::STATUS_PASS_TEXT,
+            self::STATUS_REFUSE=> self::STATUS_REFUSE_TEXT,
+        ];
+    }
+
+    /**
+     * 获取当前状态
+     * @return mixed
+     */
+    public function getStatusTextAttribute() {
+        $data = $this->getAllStatus();
+        return $data["{$this->status}"];
+    }
+
+
+
 }

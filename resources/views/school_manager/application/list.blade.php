@@ -26,16 +26,20 @@
                                     <th>操作</th>
                                 </tr>
                                 </thead>
+                                @foreach($list as $key => $val)
                                     <tr>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td>查看</td>
+                                        <td>{{$key + 1}}</td>
+                                        <td>{{$val->user->name}}</td>
+                                        <td>{{$val->user->profile->gender_text}}</td>
+                                        <td>{{$val->user->gradeUser->major->name}}</td>
+                                        <td>{{$val->applicationType->name}}</td>
+                                        <td>{{$val->created_at}}</td>
+                                        <td>{{$val->status_text}}</td>
+                                        <td>
+                                            {{ \App\Utils\UI\Anchor::Print(['text'=>'编辑','class'=>'btn-edit-facility','href'=>route('school_manager.students.applications-edit',['id'=>$val->id])], \App\Utils\UI\Button::TYPE_DEFAULT,'edit') }}
+                                        </td>
                                     </tr>
+                                @endforeach
                                 <tbody>
 
                                 </tbody>
