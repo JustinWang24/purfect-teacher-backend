@@ -2,6 +2,7 @@
     <a href="javascript:void(0);" class="nav-link nav-toggle">
         <i class="material-icons">dvr</i>
         <span class="title">内容管理</span>
+        <span class="arrow open"></span>
     </a>
     <ul class="sub-menu">
         <li class="nav-item">
