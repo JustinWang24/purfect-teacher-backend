@@ -316,3 +316,11 @@ Route::prefix('enrolment-step')->group(function () {
     Route::any('/schoolEnrolmentStep/getEnrolmentInfo', 'Api\EnrolmentStep\SchoolEnrolmentStepController@getEnrolmentInfo')
         ->name('api.schoolEnrolmentStep.getEnrolmentInfo');
 });
+
+Route::prefix('students')->middleware('auth:api')->group(function () {
+
+    // 创建申请
+    Route::post('applications-create','Api\Application\ApplicationController@create')
+            ->name('api.students.applications-create');
+});
+
