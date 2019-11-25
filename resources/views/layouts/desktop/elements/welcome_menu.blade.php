@@ -6,6 +6,7 @@ $school = School::find(session('school.id'));
     <a href="javascript:void(0);" class="nav-link nav-toggle">
         <i class="material-icons">local_library</i>
         <span class="title">迎新助手</span>
+        <span class="arrow open"></span>
     </a>
     <ul class="sub-menu">
         @foreach($school->campuses as $campus)
