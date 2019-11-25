@@ -70,5 +70,7 @@ return [
     'oa' => '办公系统',
     'projects-manager' => '项目管理',
     'projects-view' => '项目详情',
+    'tasks-manager' => '任务管理',
+    'task-view' => '任务详情',
 ];
 
