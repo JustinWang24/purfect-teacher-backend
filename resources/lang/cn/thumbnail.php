@@ -69,9 +69,9 @@ return [
 
     //问卷调查
     'questionnaire' => '问卷调查',
-    'contents'      => '内容管理'
+    'contents'      => '内容管理',
     // banner
-    'banner' => '轮播图'
+    'banner' => '轮播图',
 
     'oa' => '办公系统',
     'projects-manager' => '项目管理',
