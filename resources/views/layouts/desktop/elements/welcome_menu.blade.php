@@ -4,7 +4,7 @@ $school = School::find(session('school.id'));
 @endphp
 <li class="nav-item">
     <a href="javascript:void(0);" class="nav-link nav-toggle">
-        <i class="material-icons">face</i>
+        <i class="material-icons">local_library</i>
         <span class="title">迎新助手</span>
     </a>
     <ul class="sub-menu">
