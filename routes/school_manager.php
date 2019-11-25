@@ -10,6 +10,12 @@ Route::prefix('school_manager')->group(function () {
     Route::get('school/teachers', 'SchoolsController@teachers')->name('school_manager.school.teachers'); // 显示学校的所有老师
     Route::get('school/students', 'SchoolsController@students')->name('school_manager.school.students'); // 显示学校的所有学生
     Route::get('school/rooms', 'SchoolsController@rooms')->name('school_manager.school.rooms'); // 显示学校的所有学生
+    Route::get('school/organization-manager', 'SchoolsController@organization')
+        ->name('school_manager.school.organization-manager'); // 显示学校的组织架构
+    Route::post('organizations/load-parent', 'SchoolsController@load_parent')
+        ->name('school_manager.organizations.load-parent'); // 加载某一级别机构的上级
+    Route::post('organizations/save', 'SchoolsController@save_organization')
+        ->name('school_manager.organizations.save'); // 保存学校的组织架构
 
     // 校区的管理
     Route::get('campus/add', 'CampusController@add')->name('school_manager.campus.add');                        // 添加校区

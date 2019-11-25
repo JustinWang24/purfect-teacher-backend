@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Operator;
 use App\Dao\Schools\DepartmentDao;
 use App\Dao\Schools\GradeDao;
 use App\Dao\Schools\MajorDao;
+use App\Dao\Schools\OrganizationDao;
 use App\Dao\Schools\RoomDao;
 use App\Dao\Users\GradeUserDao;
 use App\Dao\Users\UserDao;
@@ -14,6 +15,7 @@ use App\Dao\Schools\SchoolDao;
 use App\Models\Acl\Role;
 use App\Utils\FlashMessageBuilder;
 use App\Dao\Schools\InstituteDao;
+use App\Utils\JsonBuilder;
 
 class SchoolsController extends Controller
 {
@@ -94,5 +96,45 @@ class SchoolsController extends Controller
         $dao = new RoomDao($request->user());
         $this->dataForView['rooms'] = $dao->getRoomsPaginate([['school_id','=',session('school.id')]]);
         return view('school_manager.school.rooms', $this->dataForView);
+    }
+
+    /**
+     * 加载学校的组织机构
+     * @param SchoolRequest $request
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function organization(SchoolRequest $request){
+        $this->dataForView['pageTitle'] = '组织架构';
+        $dao = new OrganizationDao();
+        $this->dataForView['root'] = $dao->getRoot($request->getSchoolId());
+        $this->dataForView['level'] = $dao->getTotalLevel($request->getSchoolId());
+        return view('school_manager.school.organization', $this->dataForView);
+    }
+
+    /**
+     * @param SchoolRequest $request
+     * @return string
+     */
+    public function load_parent(SchoolRequest $request){
+        $level = intval($request->get('level')) - 1;
+        $orgs = [];
+        if($level > 0){
+            $dao = new OrganizationDao();
+            $orgs = $dao->loadByLevel($level, $request->getSchoolId());
+        }
+        return JsonBuilder::Success(['parents'=>$orgs]);
+    }
+
+    /**
+     * 保存组织结构
+     * @param SchoolRequest $request
+     * @return string
+     */
+    public function save_organization(SchoolRequest $request){
+        $form = $request->get('form');
+        $form['school_id'] = $request->getSchoolId();
+        $dao = new OrganizationDao();
+        $org = $dao->create($form);
+        return JsonBuilder::Success(['org'=>$org]);
     }
 }
