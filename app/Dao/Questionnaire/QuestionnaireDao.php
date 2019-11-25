@@ -74,6 +74,13 @@ class QuestionnaireDao
             unset($data['id']);
         }
         $messageBag = new MessageBag(JsonBuilder::CODE_ERROR);
+        if (count($this->getDuplicateForResult($data['school_id'], $data['user_id'], $data['questionnaire_id'])))
+        {
+            $messageBag->setMessage('重复投票');
+            return $messageBag;
+        }
+
+
         DB::beginTransaction();
         try {
             $fillableData = $this->getFillableData(new QuestionnaireResult(), $data);
@@ -91,5 +98,40 @@ class QuestionnaireDao
             $messageBag->setMessage($exception->getMessage());
         }
         return $messageBag;
+    }
+
+    /**
+     * 根据学校ID获取所有的问卷调查
+     * @param $schoolId
+     * @param string $field
+     * @return mixed
+     */
+    public function getQuestionnaireBySchoolId($schoolId, $field="*")
+    {
+        return Questionnaire::where('school_id', $schoolId)->select($field)->get();
+    }
+
+    /**
+     * @param $id
+     * @return mixed
+     */
+    public function getQuestionnaireById($id)
+    {
+        return Questionnaire::find($id);
+    }
+
+    /**
+     * @param $schoolId
+     * @param $userId
+     * @param $questionnaireId
+     * @return mixed
+     */
+    public function getDuplicateForResult($schoolId, $userId, $questionnaireId)
+    {
+        return QuestionnaireResult::where('school_id', $schoolId)
+            ->where('user_id', $userId)
+            ->where('questionnaire_id', $questionnaireId)
+            ->get();
+
     }
 }

@@ -11,11 +11,11 @@ class QuestionnaireRequest extends MyStandardRequest
     public function rules()
     {
         return [
-            'title'                 => ['required',  'max:255'],
-            'detail'                => ['required',  'min:20'],
-            'cfirst_question_info'  => ['required',  'max:255'],
-            'first_question_info'   => ['required',  'max:255'],
-            'first_question_info'   => ['required',  'max:255'],
+            'questionnaire.title'                 => ['required',  'max:255'],
+            'questionnaire.detail'                => ['required',  'min:20'],
+            'questionnaire.first_question_info'   => ['required',  'max:255'],
+            'questionnaire.second_question_info'  => ['required',  'max:255'],
+            'questionnaire.third_question_info'   => ['required',  'max:255'],
         ];
     }
 }
