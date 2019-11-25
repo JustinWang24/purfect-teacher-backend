@@ -1,7 +1,6 @@
 @php
 use App\Utils\UI\Anchor;
 use App\Utils\UI\Button;
-
 @endphp
 @extends('layouts.app')
 @section('content')
