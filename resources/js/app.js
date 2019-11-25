@@ -45,6 +45,65 @@ import { getEmptyElectiveCourseApplication } from './common/elective_course';
 import { loadTextbooksPaginate, deleteTextbook } from './common/textbook';
 
 /**
+ * 组织结构
+ */
+if(document.getElementById('organization-app')){
+    new Vue({
+        el: '#organization-app',
+        data(){
+            return {
+                maxLevel: 4,
+                schoolId: 0,
+                dialogFormVisible: false,
+                form: {
+                    name: '',
+                    parent_id: '',
+                    level: '',
+                },
+                parents:[]
+            }
+        },
+        watch: {
+            'form.level': function(newVal, oldVal){
+                if(newVal && newVal !== oldVal){
+                    this.loadParents(newVal);
+                }
+            }
+        },
+        created(){
+            const dom = document.getElementById('app-init-data-holder');
+            this.schoolId = dom.dataset.school;
+            this.maxLevel = parseInt(dom.dataset.level);
+        },
+        methods: {
+            showForm: function(){
+                this.dialogFormVisible = true;
+            },
+            loadParents: function(level){
+                axios.post(
+                    '/school_manager/organizations/load-parent',
+                    {level: level}
+                ).then(res => {
+                    if(Util.isAjaxResOk(res)){
+                        this.parents = res.data.data.parents;
+                    }
+                })
+            },
+            saveOrg: function(){
+                axios.post(
+                    '/school_manager/organizations/save',
+                    {form: this.form}
+                ).then(res => {
+                    if(Util.isAjaxResOk(res)){
+                        window.location.reload();
+                    }
+                })
+            }
+        }
+    });
+}
+
+/**
  * 迎新助手
  */
 if(document.getElementById('welcome-students-manager-app')){

@@ -71,7 +71,7 @@ use App\User;
                                             {{ $visitor->vehicle_license }}
                                         </td>
                                         <td>
-                                            {{ $visitor->status }}
+                                            {{ $visitor->status === \App\Models\OA\Visitor::NOT_VISITED ? '未到访' : '已到访' }}
                                         </td>
                                     </tr>
                                 @endforeach
