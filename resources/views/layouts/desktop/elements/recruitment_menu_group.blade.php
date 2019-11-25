@@ -2,8 +2,7 @@
     <a href="javascript:void(0);" class="nav-link nav-toggle">
         <i class="material-icons">people</i>
         <span class="title">招生管理</span>
-        <span class="selected"></span>
-        <span class="arrow open"></span>
+        <span class="arrow"></span>
     </a>
     <ul class="sub-menu">
         <li class="nav-item">
