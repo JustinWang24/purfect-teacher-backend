@@ -2216,3 +2216,17 @@ parmars:["2019_11_24_113822_modify_attendance_tables",25]
 [2019-11-25 01:44:59]insert into `migrations` (`migration`, `batch`) values (?, ?)
 parmars:["2019_11_25_012912_create_projects_table",25]
 
+[2019-11-25 02:45:56]select * from information_schema.tables where table_schema = ? and table_name = ? and table_type = 'BASE TABLE'
+parmars:["purfect_dev","migrations"]
+
+[2019-11-25 02:45:56]select `migration` from `migrations` order by `batch` asc, `migration` asc
+
+[2019-11-25 02:45:56]select max(`batch`) as aggregate from `migrations`
+
+[2019-11-25 02:45:56]create table `oa_project_tasks` (`id` bigint unsigned not null auto_increment primary key, `status` tinyint unsigned not null default '1' comment '关联的项目', `project_id` bigint unsigned not null comment '关联的项目', `user_id` bigint unsigned not null comment '发起人', `title` varchar(200) not null comment '任务标题', `content` text null comment '任务内容', `created_at` timestamp null, `updated_at` timestamp null) default character set utf8mb4 collate 'utf8mb4_unicode_ci'
+
+[2019-11-25 02:45:56]create table `oa_project_task_discussions` (`id` bigint unsigned not null auto_increment primary key, `project_task_id` bigint unsigned not null comment '关联的任务', `user_id` bigint unsigned not null comment '发起人', `content` text null comment '讨论的内容', `created_at` timestamp null, `updated_at` timestamp null) default character set utf8mb4 collate 'utf8mb4_unicode_ci'
+
+[2019-11-25 02:45:56]insert into `migrations` (`migration`, `batch`) values (?, ?)
+parmars:["2019_11_25_023015_create_tasks_table",26]
+
