@@ -2,7 +2,7 @@
     <a href="javascript:void(0);" class="nav-link nav-toggle">
         <i class="material-icons">school</i>
         <span class="title">课程</span>
-        <span class="arrow open"></span>
+        <span class="arrow"></span>
     </a>
     <ul class="sub-menu">
         <li class="nav-item">

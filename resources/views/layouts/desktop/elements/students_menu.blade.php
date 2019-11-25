@@ -2,7 +2,7 @@
     <a href="javascript:void(0);" class="nav-link nav-toggle">
         <i class="material-icons">face</i>
         <span class="title">学生管理</span>
-        <span class="arrow open"></span>
+        <span class="arrow"></span>
     </a>
     <ul class="sub-menu">
         <li class="nav-item">
