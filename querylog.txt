@@ -2230,3 +2230,22 @@ parmars:["purfect_dev","migrations"]
 [2019-11-25 02:45:56]insert into `migrations` (`migration`, `batch`) values (?, ?)
 parmars:["2019_11_25_023015_create_tasks_table",26]
 
+[2019-11-25 04:08:01]select * from information_schema.tables where table_schema = ? and table_name = ? and table_type = 'BASE TABLE'
+parmars:["purfect_dev","migrations"]
+
+[2019-11-25 04:08:01]select `migration` from `migrations` order by `batch` asc, `migration` asc
+
+[2019-11-25 04:08:01]select max(`batch`) as aggregate from `migrations`
+
+[2019-11-25 04:08:22]select * from information_schema.tables where table_schema = ? and table_name = ? and table_type = 'BASE TABLE'
+parmars:["purfect_dev","migrations"]
+
+[2019-11-25 04:08:22]select `migration` from `migrations` order by `batch` asc, `migration` asc
+
+[2019-11-25 04:08:22]select max(`batch`) as aggregate from `migrations`
+
+[2019-11-25 04:08:22]create table `visitors` (`id` bigint unsigned not null auto_increment primary key, `invited_by` bigint unsigned not null comment '邀请的人', `status` smallint unsigned not null default '1' comment '状态', `name` varchar(30) not null comment '访客姓名', `mobile` varchar(11) not null comment '访客电话', `vehicle_license` varchar(8) null comment '车牌', `reason` text not null comment '到访是由', `scheduled_at` datetime null comment '预约的访问日期', `arrived_at` datetime null comment '实际到达时间', `created_at` timestamp null, `updated_at` timestamp null) default character set utf8mb4 collate 'utf8mb4_unicode_ci'
+
+[2019-11-25 04:08:22]insert into `migrations` (`migration`, `batch`) values (?, ?)
+parmars:["2019_11_25_035748_create_visitors_table",27]
+
