@@ -2157,3 +2157,1829 @@ parmars:["laravel","wifi_issues"]
 [2019-11-13 03:01:16]insert into `migrations` (`migration`, `batch`) values (?, ?)
 parmars:["2019_11_13_204519_create_wifi_issues_table",7]
 
+[2019-11-25 13:25:35]select * from information_schema.tables where table_schema = ? and table_name = ? and table_type = 'BASE TABLE'
+parmars:["purfect_all","migrations"]
+
+[2019-11-25 13:25:35]select `migration` from `migrations` order by `batch` asc, `migration` asc
+
+[2019-11-25 13:25:35]select max(`batch`) as aggregate from `migrations`
+
+[2019-11-25 13:25:35]select * from information_schema.tables where table_schema = ? and table_name = ? and table_type = 'BASE TABLE'
+parmars:["purfect_all","wifis"]
+
+[2019-11-25 13:25:35]create table `wifis` (`wifiid` bigint unsigned not null auto_increment primary key, `mode` tinyint not null default '0' comment '类型(1:无线,2:有线)', `school_id` mediumint unsigned not null default '0' comment '学校id', `campus_id` mediumint unsigned not null default '0' comment '校区id', `wifi_type` tinyint not null default '0' comment 'wifi类型id', `wifi_name` varchar(50) null comment 'wifi类型名称', `wifi_days` mediumint unsigned not null default '0' comment '天数', `wifi_sort` mediumint unsigned not null default '0' comment '排序', `wifi_oprice` decimal(8, 2) not null default '0' comment '原始价格', `wifi_price` decimal(8, 2) not null default '0' comment '支付价格', `status` tinyint not null default '1' comment '状态(1:显示,0:不显示)', `created_at` timestamp null, `updated_at` timestamp null) default character set utf8mb4 collate 'utf8mb4_unicode_ci'
+
+[2019-11-25 13:25:35]alter table `wifis` add index `wifis_school_id_index`(`school_id`)
+
+[2019-11-25 13:25:35]alter table `wifis` add index `wifis_campus_id_index`(`campus_id`)
+
+[2019-11-25 13:25:35] ALTER TABLE wifis comment 'wifi产品表' 
+
+[2019-11-25 13:25:35]insert into `wifis` (`campus_id`, `created_at`, `mode`, `school_id`, `status`, `updated_at`, `wifi_days`, `wifi_name`, `wifi_oprice`, `wifi_price`, `wifi_sort`, `wifi_type`, `wifiid`) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?), (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?), (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?), (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?), (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?), (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?), (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?), (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?), (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?), (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?), (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?), (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?), (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?), (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?), (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+parmars:[1,"2019-11-13 00:26:33",1,1,1,"2019-11-13 00:26:33",1080,"3年","400.00","258.00",1,8,1,1,"2019-11-13 00:26:34",1,1,1,"2019-11-13 00:26:34",720,"2年","298.00","258.00",1,12,2,1,"2019-11-13 00:24:15",1,1,1,"2019-11-13 00:24:15",360,"1年","150.00","138.00",2,7,3,1,"2019-11-13 00:26:30",1,1,1,"2019-11-13 00:26:30",60,"2个月","60.00","60.00",2,5,4,1,"2019-11-13 00:24:05",1,1,1,"2019-11-13 00:24:05",150,"1学期","108.00","98.00",3,3,5,1,"2019-11-13 00:24:21",1,1,1,"2019-11-13 00:24:21",90,"1季度","80.00","69.90",3,6,6,1,"2019-11-13 00:24:04",1,1,1,"2019-11-13 00:24:04",30,"1个月","30.00","28.00",5,2,7,1,"2019-11-13 00:24:01",1,1,1,"2019-11-13 00:24:01",1,"日卡","2.00","2.00",7,1,8,1,"2019-11-13 00:26:36",2,1,1,"2019-11-13 00:26:36",1080,"3年（含无线）","450.00","298.00",8,11,9,1,"2019-11-13 00:26:36",2,1,1,"2019-11-13 00:26:36",720,"2年（含无线）","300.00","258.00",9,10,10,1,"2019-11-13 00:26:32",1,1,1,"2019-11-13 00:26:32",7,"1周","10.00","7.00",10,4,11,1,"2019-11-13 00:26:35",2,1,1,"2019-11-13 00:26:35",360,"1年（含无线）","150.00","138.00",10,9,12,1,"2019-11-13 00:26:37",2,1,1,"2019-11-13 00:26:37",150,"1学期(含无线)","108.00","98.00",11,13,13,1,"2019-11-13 00:26:38",2,1,1,"2019-11-13 00:26:38",30,"1个月(含无线)","30.00","28.00",12,14,14,1,"2019-11-13 00:18:19",2,3,1,"2019-11-13 00:18:19",7,"1周(含无线)","10.00","7.00",13,15,15]
+
+[2019-11-25 13:25:35]insert into `migrations` (`migration`, `batch`) values (?, ?)
+parmars:["2019_11_13_204513_create_wifis_table",15]
+
+[2019-11-25 13:25:35]select * from information_schema.tables where table_schema = ? and table_name = ? and table_type = 'BASE TABLE'
+parmars:["purfect_all","wifi_configs"]
+
+[2019-11-25 13:25:35]create table `wifi_configs` (`configid` bigint unsigned not null auto_increment primary key, `typeid` tinyint not null default '0' comment '类型(1:校园网通知,2:用网须知,3:充值通知,4:套餐说明,5:网络协议)', `school_id` mediumint unsigned not null default '0' comment '学校id', `campus_id` mediumint unsigned not null default '0' comment '校区id', `config_imgurl1` varchar(255) null comment '使用网络图片url', `config_imgurl2` varchar(255) null comment '联合套餐免费用网图片url', `config_imgurl3` varchar(255) null comment '申请有线图片url', `config_imgurl1_status` tinyint not null default '1' comment '使用网络状态(0:不显示,1:显示)', `config_imgurl2_status` tinyint not null default '1' comment '联合套餐免费用网状态(0:不显示,1:显示)', `config_imgurl3_status` tinyint not null default '1' comment '申请有线状态(0:不显示,1:显示)', `status` tinyint not null default '1' comment '状态(1:显示,0:不显示)', `created_at` timestamp null, `updated_at` timestamp null) default character set utf8mb4 collate 'utf8mb4_unicode_ci'
+
+[2019-11-25 13:25:35]alter table `wifi_configs` add index `wifi_configs_school_id_index`(`school_id`)
+
+[2019-11-25 13:25:35]alter table `wifi_configs` add index `wifi_configs_campus_id_index`(`campus_id`)
+
+[2019-11-25 13:25:35] ALTER TABLE wifis comment 'wifi全局配置表' 
+
+[2019-11-25 13:25:35]insert into `wifi_configs` (`campus_id`, `config_imgurl1`, `config_imgurl1_status`, `config_imgurl2`, `config_imgurl2_status`, `config_imgurl3`, `config_imgurl3_status`, `configid`, `created_at`, `school_id`, `status`, `typeid`, `updated_at`) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+parmars:[1,"/assets/img/mega-img2.jpg",1,"/assets/img/mega-img2.jpg",1,"/assets/img/mega-img2.jpg",1,1,"2019-11-13 00:26:33",1,1,1,"2019-11-13 00:26:33"]
+
+[2019-11-25 13:25:35]insert into `migrations` (`migration`, `batch`) values (?, ?)
+parmars:["2019_11_13_204514_create_wifi_configs_table",15]
+
+[2019-11-25 13:25:35]select * from information_schema.tables where table_schema = ? and table_name = ? and table_type = 'BASE TABLE'
+parmars:["purfect_all","wifi_contents"]
+
+[2019-11-25 13:25:35]create table `wifi_contents` (`contentid` bigint unsigned not null auto_increment primary key, `typeid` tinyint not null default '0' comment '类型(1:校园网通知,2:用网须知,3:充值通知,4:套餐说明,5:网络协议)', `school_id` mediumint unsigned not null default '0' comment '学校id', `campus_id` mediumint unsigned not null default '0' comment '校区id', `content` longtext not null comment '内容', `status` tinyint not null default '1' comment '状态(1:显示,0:不显示)', `created_at` timestamp null, `updated_at` timestamp null) default character set utf8mb4 collate 'utf8mb4_unicode_ci'
+
+[2019-11-25 13:25:35]alter table `wifi_contents` add index `wifi_contents_school_id_index`(`school_id`)
+
+[2019-11-25 13:25:36]alter table `wifi_contents` add index `wifi_contents_campus_id_index`(`campus_id`)
+
+[2019-11-25 13:25:36] ALTER TABLE wifi_contents comment 'wifi网络信息表' 
+
+[2019-11-25 13:25:36]insert into `wifi_contents` (`campus_id`, `content`, `contentid`, `created_at`, `school_id`, `status`, `typeid`, `updated_at`) values (?, ?, ?, ?, ?, ?, ?, ?), (?, ?, ?, ?, ?, ?, ?, ?), (?, ?, ?, ?, ?, ?, ?, ?), (?, ?, ?, ?, ?, ?, ?, ?), (?, ?, ?, ?, ?, ?, ?, ?)
+parmars:[1,"校园网通知",1,"2019-11-13 00:26:33",1,1,1,"2019-11-13 00:26:33",1,"用网须知",2,"2019-11-13 00:26:33",1,1,2,"2019-11-13 00:26:33",1,"充值通知",3,"2019-11-13 00:26:33",1,1,3,"2019-11-13 00:26:33",1,"套餐说明",4,"2019-11-13 00:26:33",1,1,4,"2019-11-13 00:26:33",1,"网络协议",5,"2019-11-13 00:26:33",1,1,5,"2019-11-13 00:26:33"]
+
+[2019-11-25 13:25:36]insert into `migrations` (`migration`, `batch`) values (?, ?)
+parmars:["2019_11_13_204515_create_wifi_contents_table",15]
+
+[2019-11-25 13:25:36]select * from information_schema.tables where table_schema = ? and table_name = ? and table_type = 'BASE TABLE'
+parmars:["purfect_all","wifi_issue_comments"]
+
+[2019-11-25 13:25:36]create table `wifi_issue_comments` (`commentid` bigint unsigned not null auto_increment primary key, `user_id` mediumint unsigned not null default '0' comment '用户id', `school_id` mediumint unsigned not null default '0' comment '学校id', `campus_id` mediumint unsigned not null default '0' comment '校区id', `issueid` mediumint unsigned not null default '0' comment '保修单id', `comment_service` tinyint not null default '0' comment '服务态度', `comment_worders` tinyint not null default '0' comment '工作效率', `comment_efficiency` tinyint not null default '0' comment '满意度', `comment_content` varchar(300) null comment '评论内容', `status` tinyint not null default '1' comment '状态(1:显示,0:不显示)', `created_at` timestamp null, `updated_at` timestamp null) default character set utf8mb4 collate 'utf8mb4_unicode_ci'
+
+[2019-11-25 13:25:36]alter table `wifi_issue_comments` add index `wifi_issue_comments_user_id_index`(`user_id`)
+
+[2019-11-25 13:25:36]alter table `wifi_issue_comments` add index `wifi_issue_comments_school_id_index`(`school_id`)
+
+[2019-11-25 13:25:36]alter table `wifi_issue_comments` add index `wifi_issue_comments_campus_id_index`(`campus_id`)
+
+[2019-11-25 13:25:36]alter table `wifi_issue_comments` add index `wifi_issue_comments_issueid_index`(`issueid`)
+
+[2019-11-25 13:25:36] ALTER TABLE wifi_issue_comments comment '保修单评价表' 
+
+[2019-11-25 13:25:36]insert into `migrations` (`migration`, `batch`) values (?, ?)
+parmars:["2019_11_13_204516_create_wifi_issue_comments_table",15]
+
+[2019-11-25 13:25:36]select * from information_schema.tables where table_schema = ? and table_name = ? and table_type = 'BASE TABLE'
+parmars:["purfect_all","wifi_issue_disposes"]
+
+[2019-11-25 13:25:36]create table `wifi_issue_disposes` (`disposeid` bigint unsigned not null auto_increment primary key, `issueid` mediumint unsigned not null default '0' comment '保修单id', `school_id` mediumint unsigned not null default '0' comment '学校id', `campus_id` mediumint unsigned not null default '0' comment '校区id', `typeone_id` mediumint unsigned not null default '0' comment '一级问题id', `typeone_name` varchar(50) null comment '一级问题名称', `typetwo_id` mediumint unsigned not null default '0' comment '二级问题id', `typetwo_name` varchar(50) null comment '二级问题名称', `admin_desc` varchar(2000) null comment '处理回复描述', `status` tinyint not null default '1' comment '状态(1:待处理，2:已接单，3:已完成,，4:已取消，5:已关闭)', `created_at` timestamp null, `updated_at` timestamp null) default character set utf8mb4 collate 'utf8mb4_unicode_ci'
+
+[2019-11-25 13:25:36]alter table `wifi_issue_disposes` add index `wifi_issue_disposes_issueid_index`(`issueid`)
+
+[2019-11-25 13:25:36]alter table `wifi_issue_disposes` add index `wifi_issue_disposes_school_id_index`(`school_id`)
+
+[2019-11-25 13:25:36]alter table `wifi_issue_disposes` add index `wifi_issue_disposes_campus_id_index`(`campus_id`)
+
+[2019-11-25 13:25:36]alter table `wifi_issue_disposes` add index `wifi_issue_disposes_typeone_id_index`(`typeone_id`)
+
+[2019-11-25 13:25:36]alter table `wifi_issue_disposes` add index `wifi_issue_disposes_typetwo_id_index`(`typetwo_id`)
+
+[2019-11-25 13:25:36] ALTER TABLE wifi_issue_disposes comment '保修单处理表' 
+
+[2019-11-25 13:25:36]insert into `migrations` (`migration`, `batch`) values (?, ?)
+parmars:["2019_11_13_204517_create_wifi_issue_disposes_table",15]
+
+[2019-11-25 13:25:36]select * from information_schema.tables where table_schema = ? and table_name = ? and table_type = 'BASE TABLE'
+parmars:["purfect_all","wifi_issue_types"]
+
+[2019-11-25 13:25:36]create table `wifi_issue_types` (`typeid` bigint unsigned not null auto_increment primary key, `type_name` varchar(50) null comment '类型名称', `type_pid` mediumint unsigned not null default '0' comment '父id', `purpose` mediumint unsigned not null default '1' comment '用途（1:客户选择故障类型,2:维修人员类型选择故障)', `status` tinyint not null default '1' comment '状态(0:不显示,1:显示)', `created_at` timestamp null, `updated_at` timestamp null) default character set utf8mb4 collate 'utf8mb4_unicode_ci'
+
+[2019-11-25 13:25:36]alter table `wifi_issue_types` add index `wifi_issue_types_type_pid_index`(`type_pid`)
+
+[2019-11-25 13:25:36]alter table `wifi_issue_types` add index `wifi_issue_types_purpose_index`(`purpose`)
+
+[2019-11-25 13:25:36] ALTER TABLE wifi_issue_types comment '保修类型表' 
+
+[2019-11-25 13:25:36]insert into `wifi_issue_types` (`type_name`, `type_pid`, `typeid`) values (?, ?, ?), (?, ?, ?), (?, ?, ?), (?, ?, ?), (?, ?, ?), (?, ?, ?), (?, ?, ?), (?, ?, ?), (?, ?, ?), (?, ?, ?), (?, ?, ?), (?, ?, ?), (?, ?, ?), (?, ?, ?), (?, ?, ?), (?, ?, ?), (?, ?, ?), (?, ?, ?), (?, ?, ?), (?, ?, ?), (?, ?, ?), (?, ?, ?), (?, ?, ?), (?, ?, ?), (?, ?, ?), (?, ?, ?), (?, ?, ?), (?, ?, ?), (?, ?, ?), (?, ?, ?), (?, ?, ?)
+parmars:["网速慢",0,1,"断网",0,2,"无法充值",0,3,"一直显示充值中",3,4,"搜不到网络，无法连接",2,5,"网络不稳定，频繁掉线",2,6,"打游戏特别卡",1,7,"视频无法观看",1,8,"开通有线网络",0,9,"1号端口",9,10,"2号端口",9,11,"3号端口",9,12,"4号端口",9,13,"网络侧问题",0,14,"线路侧问题",0,15,"用户侧问题",0,16,"上联传输线路故障",14,17,"机房设备故障",14,18,"机房设备数据配置问题",14,19,"楼道设备故障",14,20,"楼道设备断电",14,21,"APP设备故障",14,22,"用户自好",14,23,"光缆跳纤终端",15,24,"光缆跳纤衰减",15,25,"综合布线问题",15,26,"用户手机问题",16,27,"用户电脑问题",16,28,"用户端水晶头问题",16,29,"用户内部布线问题",16,30,"用户账号/密码问题",16,31]
+
+[2019-11-25 13:25:36]insert into `migrations` (`migration`, `batch`) values (?, ?)
+parmars:["2019_11_13_204518_create_wifi_issue_types_table",15]
+
+[2019-11-25 13:25:36]select * from information_schema.tables where table_schema = ? and table_name = ? and table_type = 'BASE TABLE'
+parmars:["purfect_all","wifi_issues"]
+
+[2019-11-25 13:25:36]create table `wifi_issues` (`issueid` bigint unsigned not null auto_increment primary key, `user_id` mediumint unsigned not null default '0' comment '用户id', `school_id` mediumint unsigned not null default '0' comment '学校id', `campus_id` mediumint unsigned not null default '0' comment '校区id', `trade_sn` varchar(60) null comment '订单号', `typeone_id` mediumint unsigned not null default '0' comment '大类型ID', `typeone_name` varchar(50) null comment '大类型名称', `typetwo_id` mediumint unsigned not null default '0' comment '小类型ID', `typetwo_name` varchar(50) null comment '小类型名称', `issue_name` varchar(20) null comment '故障申请联系人姓名', `issue_mobile` varchar(15) null comment '故障申请联系人电话', `issue_desc` varchar(2000) null comment '故障问题描述', `addressoneid` mediumint unsigned not null default '0' comment '地址一级id', `addresstwoid` mediumint unsigned not null default '0' comment '地址二级id', `addressthreeid` mediumint unsigned not null default '0' comment '地址三级id', `addr_detail` varchar(150) null comment '保修详细地址', `adminid` mediumint unsigned not null default '0' comment '后台处理人', `admin_name` varchar(10) null comment '后台处理人姓名', `admin_mobile` varchar(15) null comment '后台处理人手机号', `admin_desc` varchar(2000) null comment '后台处理人反馈', `is_comment` tinyint not null default '1' comment '是否评价(1:未评价,2:已评价)', `jiedan_time` datetime null comment '接单时间', `chulis_time` datetime null comment '处理时间', `status` tinyint not null default '1' comment '状态,1:待处理,2:已接单，3:已完成,4:已取消,5:已关闭.)', `created_at` datetime null comment '添加时间', `updated_at` datetime null comment '更新时间') default character set utf8mb4 collate 'utf8mb4_unicode_ci'
+
+[2019-11-25 13:25:36]alter table `wifi_issues` add index `wifi_issues_user_id_index`(`user_id`)
+
+[2019-11-25 13:25:36]alter table `wifi_issues` add index `wifi_issues_school_id_index`(`school_id`)
+
+[2019-11-25 13:25:36]alter table `wifi_issues` add index `wifi_issues_campus_id_index`(`campus_id`)
+
+[2019-11-25 13:25:36]alter table `wifi_issues` add index `wifi_issues_addressoneid_index`(`addressoneid`)
+
+[2019-11-25 13:25:37]alter table `wifi_issues` add index `wifi_issues_addresstwoid_index`(`addresstwoid`)
+
+[2019-11-25 13:25:37]alter table `wifi_issues` add index `wifi_issues_addressthreeid_index`(`addressthreeid`)
+
+[2019-11-25 13:25:37]alter table `wifi_issues` add index `wifi_issues_adminid_index`(`adminid`)
+
+[2019-11-25 13:25:37] ALTER TABLE wifi_issues comment '保修单表' 
+
+[2019-11-25 13:25:37]insert into `migrations` (`migration`, `batch`) values (?, ?)
+parmars:["2019_11_13_204519_create_wifi_issues_table",15]
+
+[2019-11-25 13:25:37]select * from information_schema.tables where table_schema = ? and table_name = ? and table_type = 'BASE TABLE'
+parmars:["purfect_all","wifi_notices"]
+
+[2019-11-25 13:25:37]create table `wifi_notices` (`noticeid` bigint unsigned not null auto_increment primary key, `notice_title` varchar(60) null comment '文档标题', `notice_content` longtext not null comment '文档内容', `sort` mediumint unsigned not null default '1000' comment '排序', `created_at` datetime null comment '添加时间', `updated_at` datetime null comment '更新时间') default character set utf8mb4 collate 'utf8mb4_unicode_ci'
+
+[2019-11-25 13:25:37] ALTER TABLE wifi_notices comment 'wifi帮助' 
+
+[2019-11-25 13:25:37]insert into `wifi_notices` (`notice_content`, `notice_title`, `noticeid`) values (?, ?, ?), (?, ?, ?), (?, ?, ?), (?, ?, ?), (?, ?, ?), (?, ?, ?)
+parmars:["无法成功连接WiFi接入号","无法成功连接WiFi接入号",1,"连接WiFi，APP内“点击上线”，但不能上线","连接WiFi，APP内“点击上线”，但不能上线",2,"已连上WiFi，弹不出登录页面","已连上WiFi，弹不出登录页面",3,"使用时断网","使用时断网",4,"手机锁屏后断网","手机锁屏后断网",5,"校园网服务协议","校园网服务协议",6]
+
+[2019-11-25 13:25:37]insert into `migrations` (`migration`, `batch`) values (?, ?)
+parmars:["2019_11_13_204520_create_wifi_notices_table",15]
+
+[2019-11-25 13:25:37]select * from information_schema.tables where table_schema = ? and table_name = ? and table_type = 'BASE TABLE'
+parmars:["purfect_all","wifi_orders"]
+
+[2019-11-25 13:25:37]create table `wifi_orders` (`orderid` bigint unsigned not null auto_increment primary key, `trade_sn` varchar(60) null comment '订单号', `type` tinyint not null default '1' comment '类型(1:充值,2:赠送)', `mode` tinyint not null default '0' comment '类型(1:无线,2:有线)', `user_id` mediumint unsigned not null default '0' comment '用户id', `school_id` mediumint unsigned not null default '0' comment '学校id', `campus_id` mediumint unsigned not null default '0' comment '校区id', `wifi_id` mediumint unsigned not null default '0' comment 'wifi_id', `wifi_type` tinyint not null default '0' comment 'wifi类型', `wifi_name` varchar(50) null comment 'wifi类型名称', `order_days` mediumint unsigned not null default '0' comment '天数', `order_number` mediumint unsigned not null default '1' comment '购买数量', `order_unitprice` decimal(8, 2) not null default '0' comment 'wifi单价', `order_totalprice` decimal(8, 2) not null default '0' comment '支付总价', `paymentid` tinyint not null default '0' comment '支付方式(1:微信,2:支付宝,3:钱包支付,4:免支付)', `payment_name` varchar(15) null comment '支付名称', `pay_time` datetime null comment '支付时间', `succeed_time` datetime null comment '支付成功-WIFI充值成功', `defeated_time` datetime null comment '支付成功-WIFI充值失败', `refund_time` datetime null comment '支付成功-退款成功时间', `cancle_time` datetime null comment '取消时间', `wifi_rechargeLog` varchar(500) null comment 'wifi充值日志', `wifi_refund` tinyint not null default '0' comment '退款(1:已退款)', `wifi_refundtime` datetime null comment '退款时间', `wifi_refundprice` decimal(8, 2) not null default '0' comment '退款金额', `wifi_operatdesc` varchar(500) null comment '处理描述', `status` tinyint not null default '1' comment '状态(0:关闭,1:待支付,2:支付失败,3:支付成功-WIFI充值中,4:支付成功-WIFI充值成功,5:支付成功-充值失败,6:支付成功-退款成功)', `is_chuli` tinyint not null default '0' comment '是否处理(0:未处理,1:已处理)', `created_at` datetime null comment '添加时间', `updated_at` datetime null comment '更新时间') default character set utf8mb4 collate 'utf8mb4_unicode_ci'
+
+[2019-11-25 13:25:37]alter table `wifi_orders` add index `wifi_orders_school_id_index`(`school_id`)
+
+[2019-11-25 13:25:37]alter table `wifi_orders` add index `wifi_orders_campus_id_index`(`campus_id`)
+
+[2019-11-25 13:25:37] ALTER TABLE wifi_orders comment 'wifi订单表' 
+
+[2019-11-25 13:25:37]insert into `migrations` (`migration`, `batch`) values (?, ?)
+parmars:["2019_11_13_204521_create_wifi_orders_table",15]
+
+[2019-11-25 13:25:37]select * from information_schema.tables where table_schema = ? and table_name = ? and table_type = 'BASE TABLE'
+parmars:["purfect_all","wifi_orders_locations"]
+
+[2019-11-25 13:25:37]create table `wifi_orders_locations` (`locationid` bigint unsigned not null auto_increment primary key, `orderid` mediumint unsigned not null comment 'wifi订单id', `user_id` mediumint unsigned not null comment '用户id', `school_id` mediumint unsigned not null default '0' comment '学校id', `campus_id` mediumint unsigned not null default '0' comment '校区id', `addressoneid` mediumint unsigned not null default '0' comment '有线(宿舍楼id)', `addresstwoid` mediumint unsigned not null default '0' comment '有线(房间id)', `addressthreeid` mediumint unsigned not null default '0' comment '有线(房间id)', `addressfourid` mediumint unsigned not null default '0' comment '有线(端口id)', `addressoneid_name` varchar(50) null comment '有线(宿舍楼名称)', `addresstwoid_name` varchar(50) null comment '有线(楼层名称)', `addressthreeid_name` varchar(50) null comment '有线(房间名称)', `addressfourid_name` varchar(50) null comment '有线(端口名称)', `status` tinyint not null default '0' comment '状态(0:未开通,1:已开通)', `created_at` datetime null comment '添加时间', `updated_at` datetime null comment '更新时间') default character set utf8mb4 collate 'utf8mb4_unicode_ci'
+
+[2019-11-25 13:25:37]alter table `wifi_orders_locations` add index `wifi_orders_locations_school_id_index`(`school_id`)
+
+[2019-11-25 13:25:37]alter table `wifi_orders_locations` add index `wifi_orders_locations_campus_id_index`(`campus_id`)
+
+[2019-11-25 13:25:37] ALTER TABLE wifi_orders_locations comment 'wifi订单有线地址表' 
+
+[2019-11-25 13:25:37]insert into `migrations` (`migration`, `batch`) values (?, ?)
+parmars:["2019_11_13_204522_create_wifi_orders_locations_table",15]
+
+[2019-11-25 13:25:37]select * from information_schema.tables where table_schema = ? and table_name = ? and table_type = 'BASE TABLE'
+parmars:["purfect_all","wifi_user_agreements"]
+
+[2019-11-25 13:25:37]create table `wifi_user_agreements` (`agreementid` bigint unsigned not null auto_increment primary key, `user_id` mediumint unsigned not null comment '用户id', `created_at` datetime null comment '添加时间') default character set utf8mb4 collate 'utf8mb4_unicode_ci'
+
+[2019-11-25 13:25:37] ALTER TABLE wifi_user_agreements comment 'wifi用户协议同意表' 
+
+[2019-11-25 13:25:37]insert into `migrations` (`migration`, `batch`) values (?, ?)
+parmars:["2019_11_13_204523_create_wifi_user_agreements_table",15]
+
+[2019-11-25 13:25:37]select * from information_schema.tables where table_schema = ? and table_name = ? and table_type = 'BASE TABLE'
+parmars:["purfect_all","wifi_user_times"]
+
+[2019-11-25 13:25:37]create table `wifi_user_times` (`timesid` bigint unsigned not null auto_increment primary key, `user_id` mediumint unsigned not null comment '用户id', `school_id` mediumint unsigned not null default '0' comment '学校id', `campus_id` mediumint unsigned not null default '0' comment '校区id', `user_wifi_time` datetime null comment 'wifi到期时间', `user_wifi_name` varchar(50) null comment 'wifi账号', `user_wifi_password` varchar(50) null comment 'wifi密码', `user_cable_etime` datetime null comment 'wifi有线开通结束时间', `user_mobile_source` tinyint not null default '0' comment '运营商(1:移动,2:联通,3:电信,4:其他)', `user_mobile_phone` varchar(15) null comment '套餐手机号', `user_mobile_password` varchar(15) null comment '套餐手机号密码', `user_phone_package_desc` varchar(300) null comment '套餐描述信息', `status` tinyint not null default '1' comment 'wifi是否可用(0:不可用,1:可用)', `created_at` datetime null comment '添加时间', `updated_at` datetime null comment '更新时间') default character set utf8mb4 collate 'utf8mb4_unicode_ci'
+
+[2019-11-25 13:25:37]alter table `wifi_user_times` add index `wifi_user_times_school_id_index`(`school_id`)
+
+[2019-11-25 13:25:37]alter table `wifi_user_times` add index `wifi_user_times_campus_id_index`(`campus_id`)
+
+[2019-11-25 13:25:37] ALTER TABLE wifi_user_times comment '用户wifi时长和电话套餐表' 
+
+[2019-11-25 13:25:37]insert into `migrations` (`migration`, `batch`) values (?, ?)
+parmars:["2019_11_13_204524_create_wifi_user_times_table",15]
+
+[2019-11-25 13:25:37]alter table `attendance_tasks` drop `campus_id`
+
+[2019-11-25 13:25:38]alter table `attendance_schedules` drop `campus_id`
+
+[2019-11-25 13:25:38]insert into `migrations` (`migration`, `batch`) values (?, ?)
+parmars:["2019_11_22_162940_modify_attendance_task",15]
+
+[2019-11-25 13:25:38]create table `attendance_schedule_persons` (`id` bigint unsigned not null auto_increment primary key, `attendance_id` int unsigned null comment '值周任务表id', `schedule_id` int unsigned null comment 'attendance_schedule表id', `user_id` bigint unsigned not null comment '用户id 学生老师都有可能', `created_at` timestamp null, `updated_at` timestamp null) default character set utf8mb4 collate 'utf8mb4_unicode_ci'
+
+[2019-11-25 13:25:38]alter table `attendance_schedule_persons` add index `attendance_schedule_persons_attendance_id_index`(`attendance_id`)
+
+[2019-11-25 13:25:38]alter table `attendance_schedule_persons` add index `attendance_schedule_persons_schedule_id_index`(`schedule_id`)
+
+[2019-11-25 13:25:38]alter table `attendance_schedule_persons` add index `attendance_schedule_persons_user_id_index`(`user_id`)
+
+[2019-11-25 13:25:38]insert into `migrations` (`migration`, `batch`) values (?, ?)
+parmars:["2019_11_22_172123_create_attendance_schedule_persons",15]
+
+[2019-11-25 13:25:38]alter table `attendance_schedules` add `start_date_time` datetime null comment '任务开始时间', add `end_date_time` datetime null comment '任务截止时间'
+
+[2019-11-25 13:25:38]alter table `attendance_schedules` drop `user_id`
+
+[2019-11-25 13:25:38]alter table `attendance_schedules` drop `start_time`
+
+[2019-11-25 13:25:38]alter table `attendance_schedules` drop `end_time`
+
+[2019-11-25 13:25:38]insert into `migrations` (`migration`, `batch`) values (?, ?)
+parmars:["2019_11_22_205254_modify_attendance_schedules",15]
+
+[2019-11-25 13:25:39]ALTER TABLE attendance_schedules CHANGE attendance_id task_id INT UNSIGNED DEFAULT NULL COMMENT '值周任务表id'
+
+[2019-11-25 13:25:39]ALTER TABLE attendance_time_slots CHANGE attendance_id task_id INT UNSIGNED DEFAULT NULL COMMENT '值周任务表id'
+
+[2019-11-25 13:25:39]ALTER TABLE attendance_schedule_persons CHANGE attendance_id task_id INT UNSIGNED DEFAULT NULL COMMENT '值周任务表id'
+
+[2019-11-25 13:25:39]insert into `migrations` (`migration`, `batch`) values (?, ?)
+parmars:["2019_11_24_113822_modify_attendance_tables",15]
+
+[2019-11-25 15:33:59]select max(`batch`) as aggregate from `migrations`
+
+[2019-11-25 15:33:59]select * from `migrations` where `batch` = ? order by `migration` desc
+parmars:[15]
+
+[2019-11-25 15:34:01]ALTER TABLE attendance_schedules CHANGE task_id attendance_id INT UNSIGNED DEFAULT NULL COMMENT '值周任务表id'
+
+[2019-11-25 15:34:01]ALTER TABLE attendance_time_slots CHANGE task_id attendance_id INT UNSIGNED DEFAULT NULL COMMENT '值周任务表id'
+
+[2019-11-25 15:34:01]ALTER TABLE attendance_schedule_persons CHANGE task_id attendance_id INT UNSIGNED DEFAULT NULL COMMENT '值周任务表id'
+
+[2019-11-25 15:34:01]delete from `migrations` where `migration` = ?
+parmars:["2019_11_24_113822_modify_attendance_tables"]
+
+[2019-11-25 15:34:01]alter table `attendance_schedules` add `user_id` bigint unsigned not null comment '用户id 学生老师都有可能', add `start_time` date null comment '任务开始时间', add `end_time` date null comment '任务截止时间'
+
+[2019-11-25 15:34:01]alter table `attendance_schedules` drop `start_date_time`
+
+[2019-11-25 15:34:02]alter table `attendance_schedules` drop `end_date_time`
+
+[2019-11-25 15:34:02]alter table `attendance_schedules` add index `attendance_schedules_user_id_index`(`user_id`)
+
+[2019-11-25 15:34:02]delete from `migrations` where `migration` = ?
+parmars:["2019_11_22_205254_modify_attendance_schedules"]
+
+[2019-11-25 15:34:02]drop table if exists `attendance_schedule_persons`
+
+[2019-11-25 15:34:02]delete from `migrations` where `migration` = ?
+parmars:["2019_11_22_172123_create_attendance_schedule_persons"]
+
+[2019-11-25 15:34:02]alter table `attendance_tasks` add `campus_id` int unsigned not null comment '校区ID'
+
+[2019-11-25 15:34:02]alter table `attendance_schedules` add `campus_id` int unsigned not null comment '校区ID'
+
+[2019-11-25 15:34:02]delete from `migrations` where `migration` = ?
+parmars:["2019_11_22_162940_modify_attendance_task"]
+
+[2019-11-25 15:34:02]drop table if exists `wifi_user_times`
+
+[2019-11-25 15:34:02]delete from `migrations` where `migration` = ?
+parmars:["2019_11_13_204524_create_wifi_user_times_table"]
+
+[2019-11-25 15:34:02]drop table if exists `wifi_user_agreements`
+
+[2019-11-25 15:34:02]delete from `migrations` where `migration` = ?
+parmars:["2019_11_13_204523_create_wifi_user_agreements_table"]
+
+[2019-11-25 15:34:02]drop table if exists `wifi_orders_locations`
+
+[2019-11-25 15:34:02]delete from `migrations` where `migration` = ?
+parmars:["2019_11_13_204522_create_wifi_orders_locations_table"]
+
+[2019-11-25 15:34:02]drop table if exists `wifi_orders`
+
+[2019-11-25 15:34:02]delete from `migrations` where `migration` = ?
+parmars:["2019_11_13_204521_create_wifi_orders_table"]
+
+[2019-11-25 15:34:02]drop table if exists `wifi_notices`
+
+[2019-11-25 15:34:02]delete from `migrations` where `migration` = ?
+parmars:["2019_11_13_204520_create_wifi_notices_table"]
+
+[2019-11-25 15:34:02]drop table if exists `wifi_issues`
+
+[2019-11-25 15:34:02]delete from `migrations` where `migration` = ?
+parmars:["2019_11_13_204519_create_wifi_issues_table"]
+
+[2019-11-25 15:34:02]drop table if exists `wifi_issue_types`
+
+[2019-11-25 15:34:02]delete from `migrations` where `migration` = ?
+parmars:["2019_11_13_204518_create_wifi_issue_types_table"]
+
+[2019-11-25 15:34:02]drop table if exists `wifi_issue_disposes`
+
+[2019-11-25 15:34:02]delete from `migrations` where `migration` = ?
+parmars:["2019_11_13_204517_create_wifi_issue_disposes_table"]
+
+[2019-11-25 15:34:02]drop table if exists `wifi_issue_comments`
+
+[2019-11-25 15:34:02]delete from `migrations` where `migration` = ?
+parmars:["2019_11_13_204516_create_wifi_issue_comments_table"]
+
+[2019-11-25 15:34:02]drop table if exists `wifi_contents`
+
+[2019-11-25 15:34:02]delete from `migrations` where `migration` = ?
+parmars:["2019_11_13_204515_create_wifi_contents_table"]
+
+[2019-11-25 15:34:02]drop table if exists `wifi_configs`
+
+[2019-11-25 15:34:02]delete from `migrations` where `migration` = ?
+parmars:["2019_11_13_204514_create_wifi_configs_table"]
+
+[2019-11-25 15:34:02]drop table if exists `wifis`
+
+[2019-11-25 15:34:02]delete from `migrations` where `migration` = ?
+parmars:["2019_11_13_204513_create_wifis_table"]
+
+[2019-11-25 15:34:20]select max(`batch`) as aggregate from `migrations`
+
+[2019-11-25 15:34:20]select * from `migrations` where `batch` = ? order by `migration` desc
+parmars:[14]
+
+[2019-11-25 15:34:20]drop table if exists `banners`
+
+[2019-11-25 15:34:20]delete from `migrations` where `migration` = ?
+parmars:["2019_11_25_112939_create_banners_table"]
+
+[2019-11-25 15:36:01]select * from information_schema.tables where table_schema = ? and table_name = ? and table_type = 'BASE TABLE'
+parmars:["purfect_all","migrations"]
+
+[2019-11-25 15:36:01]select `migration` from `migrations` order by `batch` asc, `migration` asc
+
+[2019-11-25 15:36:01]select max(`batch`) as aggregate from `migrations`
+
+[2019-11-25 15:36:01]select * from information_schema.tables where table_schema = ? and table_name = ? and table_type = 'BASE TABLE'
+parmars:["purfect_all","wifis"]
+
+[2019-11-25 15:36:02]create table `wifis` (`wifiid` bigint unsigned not null auto_increment primary key, `mode` tinyint not null default '0' comment '类型(1:无线,2:有线)', `school_id` mediumint unsigned not null default '0' comment '学校id', `campus_id` mediumint unsigned not null default '0' comment '校区id', `wifi_type` tinyint not null default '0' comment 'wifi类型id', `wifi_name` varchar(50) null comment 'wifi类型名称', `wifi_days` mediumint unsigned not null default '0' comment '天数', `wifi_sort` mediumint unsigned not null default '0' comment '排序', `wifi_oprice` decimal(8, 2) not null default '0' comment '原始价格', `wifi_price` decimal(8, 2) not null default '0' comment '支付价格', `status` tinyint not null default '1' comment '状态(1:显示,0:不显示)', `created_at` timestamp null, `updated_at` timestamp null) default character set utf8mb4 collate 'utf8mb4_unicode_ci'
+
+[2019-11-25 15:36:02]alter table `wifis` add index `wifis_school_id_index`(`school_id`)
+
+[2019-11-25 15:36:02]alter table `wifis` add index `wifis_campus_id_index`(`campus_id`)
+
+[2019-11-25 15:36:02] ALTER TABLE wifis comment 'wifi产品表' 
+
+[2019-11-25 15:36:02]insert into `wifis` (`campus_id`, `created_at`, `mode`, `school_id`, `status`, `updated_at`, `wifi_days`, `wifi_name`, `wifi_oprice`, `wifi_price`, `wifi_sort`, `wifi_type`, `wifiid`) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?), (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?), (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?), (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?), (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?), (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?), (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?), (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?), (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?), (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?), (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?), (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?), (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?), (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?), (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+parmars:[1,"2019-11-13 00:26:33",1,1,1,"2019-11-13 00:26:33",1080,"3年","400.00","258.00",1,8,1,1,"2019-11-13 00:26:34",1,1,1,"2019-11-13 00:26:34",720,"2年","298.00","258.00",1,12,2,1,"2019-11-13 00:24:15",1,1,1,"2019-11-13 00:24:15",360,"1年","150.00","138.00",2,7,3,1,"2019-11-13 00:26:30",1,1,1,"2019-11-13 00:26:30",60,"2个月","60.00","60.00",2,5,4,1,"2019-11-13 00:24:05",1,1,1,"2019-11-13 00:24:05",150,"1学期","108.00","98.00",3,3,5,1,"2019-11-13 00:24:21",1,1,1,"2019-11-13 00:24:21",90,"1季度","80.00","69.90",3,6,6,1,"2019-11-13 00:24:04",1,1,1,"2019-11-13 00:24:04",30,"1个月","30.00","28.00",5,2,7,1,"2019-11-13 00:24:01",1,1,1,"2019-11-13 00:24:01",1,"日卡","2.00","2.00",7,1,8,1,"2019-11-13 00:26:36",2,1,1,"2019-11-13 00:26:36",1080,"3年（含无线）","450.00","298.00",8,11,9,1,"2019-11-13 00:26:36",2,1,1,"2019-11-13 00:26:36",720,"2年（含无线）","300.00","258.00",9,10,10,1,"2019-11-13 00:26:32",1,1,1,"2019-11-13 00:26:32",7,"1周","10.00","7.00",10,4,11,1,"2019-11-13 00:26:35",2,1,1,"2019-11-13 00:26:35",360,"1年（含无线）","150.00","138.00",10,9,12,1,"2019-11-13 00:26:37",2,1,1,"2019-11-13 00:26:37",150,"1学期(含无线)","108.00","98.00",11,13,13,1,"2019-11-13 00:26:38",2,1,1,"2019-11-13 00:26:38",30,"1个月(含无线)","30.00","28.00",12,14,14,1,"2019-11-13 00:18:19",2,3,1,"2019-11-13 00:18:19",7,"1周(含无线)","10.00","7.00",13,15,15]
+
+[2019-11-25 15:36:02]insert into `migrations` (`migration`, `batch`) values (?, ?)
+parmars:["2019_11_13_204513_create_wifis_table",14]
+
+[2019-11-25 15:36:02]select * from information_schema.tables where table_schema = ? and table_name = ? and table_type = 'BASE TABLE'
+parmars:["purfect_all","wifi_configs"]
+
+[2019-11-25 15:36:02]create table `wifi_configs` (`configid` bigint unsigned not null auto_increment primary key, `typeid` tinyint not null default '0' comment '类型(1:校园网通知,2:用网须知,3:充值通知,4:套餐说明,5:网络协议)', `school_id` mediumint unsigned not null default '0' comment '学校id', `campus_id` mediumint unsigned not null default '0' comment '校区id', `config_imgurl1` varchar(255) null comment '使用网络图片url', `config_imgurl2` varchar(255) null comment '联合套餐免费用网图片url', `config_imgurl3` varchar(255) null comment '申请有线图片url', `config_imgurl1_status` tinyint not null default '1' comment '使用网络状态(0:不显示,1:显示)', `config_imgurl2_status` tinyint not null default '1' comment '联合套餐免费用网状态(0:不显示,1:显示)', `config_imgurl3_status` tinyint not null default '1' comment '申请有线状态(0:不显示,1:显示)', `status` tinyint not null default '1' comment '状态(1:显示,0:不显示)', `created_at` timestamp null, `updated_at` timestamp null) default character set utf8mb4 collate 'utf8mb4_unicode_ci'
+
+[2019-11-25 15:36:02]alter table `wifi_configs` add index `wifi_configs_school_id_index`(`school_id`)
+
+[2019-11-25 15:36:02]alter table `wifi_configs` add index `wifi_configs_campus_id_index`(`campus_id`)
+
+[2019-11-25 15:36:02] ALTER TABLE wifis comment 'wifi全局配置表' 
+
+[2019-11-25 15:36:02]insert into `wifi_configs` (`campus_id`, `config_imgurl1`, `config_imgurl1_status`, `config_imgurl2`, `config_imgurl2_status`, `config_imgurl3`, `config_imgurl3_status`, `configid`, `created_at`, `school_id`, `status`, `typeid`, `updated_at`) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+parmars:[1,"/assets/img/mega-img2.jpg",1,"/assets/img/mega-img2.jpg",1,"/assets/img/mega-img2.jpg",1,1,"2019-11-13 00:26:33",1,1,1,"2019-11-13 00:26:33"]
+
+[2019-11-25 15:36:02]insert into `migrations` (`migration`, `batch`) values (?, ?)
+parmars:["2019_11_13_204514_create_wifi_configs_table",14]
+
+[2019-11-25 15:36:02]select * from information_schema.tables where table_schema = ? and table_name = ? and table_type = 'BASE TABLE'
+parmars:["purfect_all","wifi_contents"]
+
+[2019-11-25 15:36:02]create table `wifi_contents` (`contentid` bigint unsigned not null auto_increment primary key, `typeid` tinyint not null default '0' comment '类型(1:校园网通知,2:用网须知,3:充值通知,4:套餐说明,5:网络协议)', `school_id` mediumint unsigned not null default '0' comment '学校id', `campus_id` mediumint unsigned not null default '0' comment '校区id', `content` longtext not null comment '内容', `status` tinyint not null default '1' comment '状态(1:显示,0:不显示)', `created_at` timestamp null, `updated_at` timestamp null) default character set utf8mb4 collate 'utf8mb4_unicode_ci'
+
+[2019-11-25 15:36:02]alter table `wifi_contents` add index `wifi_contents_school_id_index`(`school_id`)
+
+[2019-11-25 15:36:02]alter table `wifi_contents` add index `wifi_contents_campus_id_index`(`campus_id`)
+
+[2019-11-25 15:36:02] ALTER TABLE wifi_contents comment 'wifi网络信息表' 
+
+[2019-11-25 15:36:02]insert into `wifi_contents` (`campus_id`, `content`, `contentid`, `created_at`, `school_id`, `status`, `typeid`, `updated_at`) values (?, ?, ?, ?, ?, ?, ?, ?), (?, ?, ?, ?, ?, ?, ?, ?), (?, ?, ?, ?, ?, ?, ?, ?), (?, ?, ?, ?, ?, ?, ?, ?), (?, ?, ?, ?, ?, ?, ?, ?)
+parmars:[1,"校园网通知",1,"2019-11-13 00:26:33",1,1,1,"2019-11-13 00:26:33",1,"用网须知",2,"2019-11-13 00:26:33",1,1,2,"2019-11-13 00:26:33",1,"充值通知",3,"2019-11-13 00:26:33",1,1,3,"2019-11-13 00:26:33",1,"套餐说明",4,"2019-11-13 00:26:33",1,1,4,"2019-11-13 00:26:33",1,"网络协议",5,"2019-11-13 00:26:33",1,1,5,"2019-11-13 00:26:33"]
+
+[2019-11-25 15:36:02]insert into `migrations` (`migration`, `batch`) values (?, ?)
+parmars:["2019_11_13_204515_create_wifi_contents_table",14]
+
+[2019-11-25 15:36:02]select * from information_schema.tables where table_schema = ? and table_name = ? and table_type = 'BASE TABLE'
+parmars:["purfect_all","wifi_issue_comments"]
+
+[2019-11-25 15:36:02]create table `wifi_issue_comments` (`commentid` bigint unsigned not null auto_increment primary key, `user_id` mediumint unsigned not null default '0' comment '用户id', `school_id` mediumint unsigned not null default '0' comment '学校id', `campus_id` mediumint unsigned not null default '0' comment '校区id', `issueid` mediumint unsigned not null default '0' comment '保修单id', `comment_service` tinyint not null default '0' comment '服务态度', `comment_worders` tinyint not null default '0' comment '工作效率', `comment_efficiency` tinyint not null default '0' comment '满意度', `comment_content` varchar(300) null comment '评论内容', `status` tinyint not null default '1' comment '状态(1:显示,0:不显示)', `created_at` timestamp null, `updated_at` timestamp null) default character set utf8mb4 collate 'utf8mb4_unicode_ci'
+
+[2019-11-25 15:36:02]alter table `wifi_issue_comments` add index `wifi_issue_comments_user_id_index`(`user_id`)
+
+[2019-11-25 15:36:02]alter table `wifi_issue_comments` add index `wifi_issue_comments_school_id_index`(`school_id`)
+
+[2019-11-25 15:36:02]alter table `wifi_issue_comments` add index `wifi_issue_comments_campus_id_index`(`campus_id`)
+
+[2019-11-25 15:36:02]alter table `wifi_issue_comments` add index `wifi_issue_comments_issueid_index`(`issueid`)
+
+[2019-11-25 15:36:02] ALTER TABLE wifi_issue_comments comment '保修单评价表' 
+
+[2019-11-25 15:36:02]insert into `migrations` (`migration`, `batch`) values (?, ?)
+parmars:["2019_11_13_204516_create_wifi_issue_comments_table",14]
+
+[2019-11-25 15:36:02]select * from information_schema.tables where table_schema = ? and table_name = ? and table_type = 'BASE TABLE'
+parmars:["purfect_all","wifi_issue_disposes"]
+
+[2019-11-25 15:36:02]create table `wifi_issue_disposes` (`disposeid` bigint unsigned not null auto_increment primary key, `issueid` mediumint unsigned not null default '0' comment '保修单id', `school_id` mediumint unsigned not null default '0' comment '学校id', `campus_id` mediumint unsigned not null default '0' comment '校区id', `typeone_id` mediumint unsigned not null default '0' comment '一级问题id', `typeone_name` varchar(50) null comment '一级问题名称', `typetwo_id` mediumint unsigned not null default '0' comment '二级问题id', `typetwo_name` varchar(50) null comment '二级问题名称', `admin_desc` varchar(2000) null comment '处理回复描述', `status` tinyint not null default '1' comment '状态(1:待处理，2:已接单，3:已完成,，4:已取消，5:已关闭)', `created_at` timestamp null, `updated_at` timestamp null) default character set utf8mb4 collate 'utf8mb4_unicode_ci'
+
+[2019-11-25 15:36:02]alter table `wifi_issue_disposes` add index `wifi_issue_disposes_issueid_index`(`issueid`)
+
+[2019-11-25 15:36:02]alter table `wifi_issue_disposes` add index `wifi_issue_disposes_school_id_index`(`school_id`)
+
+[2019-11-25 15:36:03]alter table `wifi_issue_disposes` add index `wifi_issue_disposes_campus_id_index`(`campus_id`)
+
+[2019-11-25 15:36:03]alter table `wifi_issue_disposes` add index `wifi_issue_disposes_typeone_id_index`(`typeone_id`)
+
+[2019-11-25 15:36:03]alter table `wifi_issue_disposes` add index `wifi_issue_disposes_typetwo_id_index`(`typetwo_id`)
+
+[2019-11-25 15:36:03] ALTER TABLE wifi_issue_disposes comment '保修单处理表' 
+
+[2019-11-25 15:36:03]insert into `migrations` (`migration`, `batch`) values (?, ?)
+parmars:["2019_11_13_204517_create_wifi_issue_disposes_table",14]
+
+[2019-11-25 15:36:03]select * from information_schema.tables where table_schema = ? and table_name = ? and table_type = 'BASE TABLE'
+parmars:["purfect_all","wifi_issue_types"]
+
+[2019-11-25 15:36:03]create table `wifi_issue_types` (`typeid` bigint unsigned not null auto_increment primary key, `type_name` varchar(50) null comment '类型名称', `type_pid` mediumint unsigned not null default '0' comment '父id', `purpose` mediumint unsigned not null default '1' comment '用途（1:客户选择故障类型,2:维修人员类型选择故障)', `status` tinyint not null default '1' comment '状态(0:不显示,1:显示)', `created_at` timestamp null, `updated_at` timestamp null) default character set utf8mb4 collate 'utf8mb4_unicode_ci'
+
+[2019-11-25 15:36:03]alter table `wifi_issue_types` add index `wifi_issue_types_type_pid_index`(`type_pid`)
+
+[2019-11-25 15:36:03]alter table `wifi_issue_types` add index `wifi_issue_types_purpose_index`(`purpose`)
+
+[2019-11-25 15:36:03] ALTER TABLE wifi_issue_types comment '保修类型表' 
+
+[2019-11-25 15:36:03]insert into `wifi_issue_types` (`type_name`, `type_pid`, `typeid`) values (?, ?, ?), (?, ?, ?), (?, ?, ?), (?, ?, ?), (?, ?, ?), (?, ?, ?), (?, ?, ?), (?, ?, ?), (?, ?, ?), (?, ?, ?), (?, ?, ?), (?, ?, ?), (?, ?, ?), (?, ?, ?), (?, ?, ?), (?, ?, ?), (?, ?, ?), (?, ?, ?), (?, ?, ?), (?, ?, ?), (?, ?, ?), (?, ?, ?), (?, ?, ?), (?, ?, ?), (?, ?, ?), (?, ?, ?), (?, ?, ?), (?, ?, ?), (?, ?, ?), (?, ?, ?), (?, ?, ?)
+parmars:["网速慢",0,1,"断网",0,2,"无法充值",0,3,"一直显示充值中",3,4,"搜不到网络，无法连接",2,5,"网络不稳定，频繁掉线",2,6,"打游戏特别卡",1,7,"视频无法观看",1,8,"开通有线网络",0,9,"1号端口",9,10,"2号端口",9,11,"3号端口",9,12,"4号端口",9,13,"网络侧问题",0,14,"线路侧问题",0,15,"用户侧问题",0,16,"上联传输线路故障",14,17,"机房设备故障",14,18,"机房设备数据配置问题",14,19,"楼道设备故障",14,20,"楼道设备断电",14,21,"APP设备故障",14,22,"用户自好",14,23,"光缆跳纤终端",15,24,"光缆跳纤衰减",15,25,"综合布线问题",15,26,"用户手机问题",16,27,"用户电脑问题",16,28,"用户端水晶头问题",16,29,"用户内部布线问题",16,30,"用户账号/密码问题",16,31]
+
+[2019-11-25 15:36:03]insert into `migrations` (`migration`, `batch`) values (?, ?)
+parmars:["2019_11_13_204518_create_wifi_issue_types_table",14]
+
+[2019-11-25 15:36:03]select * from information_schema.tables where table_schema = ? and table_name = ? and table_type = 'BASE TABLE'
+parmars:["purfect_all","wifi_issues"]
+
+[2019-11-25 15:36:03]create table `wifi_issues` (`issueid` bigint unsigned not null auto_increment primary key, `user_id` mediumint unsigned not null default '0' comment '用户id', `school_id` mediumint unsigned not null default '0' comment '学校id', `campus_id` mediumint unsigned not null default '0' comment '校区id', `trade_sn` varchar(60) null comment '订单号', `typeone_id` mediumint unsigned not null default '0' comment '大类型ID', `typeone_name` varchar(50) null comment '大类型名称', `typetwo_id` mediumint unsigned not null default '0' comment '小类型ID', `typetwo_name` varchar(50) null comment '小类型名称', `issue_name` varchar(20) null comment '故障申请联系人姓名', `issue_mobile` varchar(15) null comment '故障申请联系人电话', `issue_desc` varchar(2000) null comment '故障问题描述', `addressoneid` mediumint unsigned not null default '0' comment '地址一级id', `addresstwoid` mediumint unsigned not null default '0' comment '地址二级id', `addressthreeid` mediumint unsigned not null default '0' comment '地址三级id', `addr_detail` varchar(150) null comment '保修详细地址', `adminid` mediumint unsigned not null default '0' comment '后台处理人', `admin_name` varchar(10) null comment '后台处理人姓名', `admin_mobile` varchar(15) null comment '后台处理人手机号', `admin_desc` varchar(2000) null comment '后台处理人反馈', `is_comment` tinyint not null default '1' comment '是否评价(1:未评价,2:已评价)', `jiedan_time` datetime null comment '接单时间', `chulis_time` datetime null comment '处理时间', `status` tinyint not null default '1' comment '状态,1:待处理,2:已接单，3:已完成,4:已取消,5:已关闭.)', `created_at` datetime null comment '添加时间', `updated_at` datetime null comment '更新时间') default character set utf8mb4 collate 'utf8mb4_unicode_ci'
+
+[2019-11-25 15:36:03]alter table `wifi_issues` add index `wifi_issues_user_id_index`(`user_id`)
+
+[2019-11-25 15:36:03]alter table `wifi_issues` add index `wifi_issues_school_id_index`(`school_id`)
+
+[2019-11-25 15:36:03]alter table `wifi_issues` add index `wifi_issues_campus_id_index`(`campus_id`)
+
+[2019-11-25 15:36:03]alter table `wifi_issues` add index `wifi_issues_addressoneid_index`(`addressoneid`)
+
+[2019-11-25 15:36:03]alter table `wifi_issues` add index `wifi_issues_addresstwoid_index`(`addresstwoid`)
+
+[2019-11-25 15:36:03]alter table `wifi_issues` add index `wifi_issues_addressthreeid_index`(`addressthreeid`)
+
+[2019-11-25 15:36:03]alter table `wifi_issues` add index `wifi_issues_adminid_index`(`adminid`)
+
+[2019-11-25 15:36:03] ALTER TABLE wifi_issues comment '保修单表' 
+
+[2019-11-25 15:36:03]insert into `migrations` (`migration`, `batch`) values (?, ?)
+parmars:["2019_11_13_204519_create_wifi_issues_table",14]
+
+[2019-11-25 15:36:03]select * from information_schema.tables where table_schema = ? and table_name = ? and table_type = 'BASE TABLE'
+parmars:["purfect_all","wifi_notices"]
+
+[2019-11-25 15:36:03]create table `wifi_notices` (`noticeid` bigint unsigned not null auto_increment primary key, `notice_title` varchar(60) null comment '文档标题', `notice_content` longtext not null comment '文档内容', `sort` mediumint unsigned not null default '1000' comment '排序', `created_at` datetime null comment '添加时间', `updated_at` datetime null comment '更新时间') default character set utf8mb4 collate 'utf8mb4_unicode_ci'
+
+[2019-11-25 15:36:03] ALTER TABLE wifi_notices comment 'wifi帮助' 
+
+[2019-11-25 15:36:03]insert into `wifi_notices` (`notice_content`, `notice_title`, `noticeid`) values (?, ?, ?), (?, ?, ?), (?, ?, ?), (?, ?, ?), (?, ?, ?), (?, ?, ?)
+parmars:["无法成功连接WiFi接入号","无法成功连接WiFi接入号",1,"连接WiFi，APP内“点击上线”，但不能上线","连接WiFi，APP内“点击上线”，但不能上线",2,"已连上WiFi，弹不出登录页面","已连上WiFi，弹不出登录页面",3,"使用时断网","使用时断网",4,"手机锁屏后断网","手机锁屏后断网",5,"校园网服务协议","校园网服务协议",6]
+
+[2019-11-25 15:36:03]insert into `migrations` (`migration`, `batch`) values (?, ?)
+parmars:["2019_11_13_204520_create_wifi_notices_table",14]
+
+[2019-11-25 15:36:03]select * from information_schema.tables where table_schema = ? and table_name = ? and table_type = 'BASE TABLE'
+parmars:["purfect_all","wifi_orders"]
+
+[2019-11-25 15:36:03]create table `wifi_orders` (`orderid` bigint unsigned not null auto_increment primary key, `trade_sn` varchar(60) null comment '订单号', `type` tinyint not null default '1' comment '类型(1:充值,2:赠送)', `mode` tinyint not null default '0' comment '类型(1:无线,2:有线)', `user_id` mediumint unsigned not null default '0' comment '用户id', `school_id` mediumint unsigned not null default '0' comment '学校id', `campus_id` mediumint unsigned not null default '0' comment '校区id', `wifi_id` mediumint unsigned not null default '0' comment 'wifi_id', `wifi_type` tinyint not null default '0' comment 'wifi类型', `wifi_name` varchar(50) null comment 'wifi类型名称', `order_days` mediumint unsigned not null default '0' comment '天数', `order_number` mediumint unsigned not null default '1' comment '购买数量', `order_unitprice` decimal(8, 2) not null default '0' comment 'wifi单价', `order_totalprice` decimal(8, 2) not null default '0' comment '支付总价', `paymentid` tinyint not null default '0' comment '支付方式(1:微信,2:支付宝,3:钱包支付,4:免支付)', `payment_name` varchar(15) null comment '支付名称', `pay_time` datetime null comment '支付时间', `succeed_time` datetime null comment '支付成功-WIFI充值成功', `defeated_time` datetime null comment '支付成功-WIFI充值失败', `refund_time` datetime null comment '支付成功-退款成功时间', `cancle_time` datetime null comment '取消时间', `wifi_rechargeLog` varchar(500) null comment 'wifi充值日志', `wifi_refund` tinyint not null default '0' comment '退款(1:已退款)', `wifi_refundtime` datetime null comment '退款时间', `wifi_refundprice` decimal(8, 2) not null default '0' comment '退款金额', `wifi_operatdesc` varchar(500) null comment '处理描述', `status` tinyint not null default '1' comment '状态(0:关闭,1:待支付,2:支付失败,3:支付成功-WIFI充值中,4:支付成功-WIFI充值成功,5:支付成功-充值失败,6:支付成功-退款成功)', `is_chuli` tinyint not null default '0' comment '是否处理(0:未处理,1:已处理)', `created_at` datetime null comment '添加时间', `updated_at` datetime null comment '更新时间') default character set utf8mb4 collate 'utf8mb4_unicode_ci'
+
+[2019-11-25 15:36:03]alter table `wifi_orders` add index `wifi_orders_school_id_index`(`school_id`)
+
+[2019-11-25 15:36:04]alter table `wifi_orders` add index `wifi_orders_campus_id_index`(`campus_id`)
+
+[2019-11-25 15:36:04] ALTER TABLE wifi_orders comment 'wifi订单表' 
+
+[2019-11-25 15:36:04]insert into `migrations` (`migration`, `batch`) values (?, ?)
+parmars:["2019_11_13_204521_create_wifi_orders_table",14]
+
+[2019-11-25 15:36:04]select * from information_schema.tables where table_schema = ? and table_name = ? and table_type = 'BASE TABLE'
+parmars:["purfect_all","wifi_orders_locations"]
+
+[2019-11-25 15:36:04]create table `wifi_orders_locations` (`locationid` bigint unsigned not null auto_increment primary key, `orderid` mediumint unsigned not null comment 'wifi订单id', `user_id` mediumint unsigned not null comment '用户id', `school_id` mediumint unsigned not null default '0' comment '学校id', `campus_id` mediumint unsigned not null default '0' comment '校区id', `addressoneid` mediumint unsigned not null default '0' comment '有线(宿舍楼id)', `addresstwoid` mediumint unsigned not null default '0' comment '有线(房间id)', `addressthreeid` mediumint unsigned not null default '0' comment '有线(房间id)', `addressfourid` mediumint unsigned not null default '0' comment '有线(端口id)', `addressoneid_name` varchar(50) null comment '有线(宿舍楼名称)', `addresstwoid_name` varchar(50) null comment '有线(楼层名称)', `addressthreeid_name` varchar(50) null comment '有线(房间名称)', `addressfourid_name` varchar(50) null comment '有线(端口名称)', `status` tinyint not null default '0' comment '状态(0:未开通,1:已开通)', `created_at` datetime null comment '添加时间', `updated_at` datetime null comment '更新时间') default character set utf8mb4 collate 'utf8mb4_unicode_ci'
+
+[2019-11-25 15:36:04]alter table `wifi_orders_locations` add index `wifi_orders_locations_school_id_index`(`school_id`)
+
+[2019-11-25 15:36:04]alter table `wifi_orders_locations` add index `wifi_orders_locations_campus_id_index`(`campus_id`)
+
+[2019-11-25 15:36:04] ALTER TABLE wifi_orders_locations comment 'wifi订单有线地址表' 
+
+[2019-11-25 15:36:04]insert into `migrations` (`migration`, `batch`) values (?, ?)
+parmars:["2019_11_13_204522_create_wifi_orders_locations_table",14]
+
+[2019-11-25 15:36:04]select * from information_schema.tables where table_schema = ? and table_name = ? and table_type = 'BASE TABLE'
+parmars:["purfect_all","wifi_user_agreements"]
+
+[2019-11-25 15:36:04]create table `wifi_user_agreements` (`agreementid` bigint unsigned not null auto_increment primary key, `user_id` mediumint unsigned not null comment '用户id', `created_at` datetime null comment '添加时间') default character set utf8mb4 collate 'utf8mb4_unicode_ci'
+
+[2019-11-25 15:36:04] ALTER TABLE wifi_user_agreements comment 'wifi用户协议同意表' 
+
+[2019-11-25 15:36:04]insert into `migrations` (`migration`, `batch`) values (?, ?)
+parmars:["2019_11_13_204523_create_wifi_user_agreements_table",14]
+
+[2019-11-25 15:36:04]select * from information_schema.tables where table_schema = ? and table_name = ? and table_type = 'BASE TABLE'
+parmars:["purfect_all","wifi_user_times"]
+
+[2019-11-25 15:36:04]create table `wifi_user_times` (`timesid` bigint unsigned not null auto_increment primary key, `user_id` mediumint unsigned not null comment '用户id', `school_id` mediumint unsigned not null default '0' comment '学校id', `campus_id` mediumint unsigned not null default '0' comment '校区id', `user_wifi_time` datetime null comment 'wifi到期时间', `user_wifi_name` varchar(50) null comment 'wifi账号', `user_wifi_password` varchar(50) null comment 'wifi密码', `user_cable_etime` datetime null comment 'wifi有线开通结束时间', `user_mobile_source` tinyint not null default '0' comment '运营商(1:移动,2:联通,3:电信,4:其他)', `user_mobile_phone` varchar(15) null comment '套餐手机号', `user_mobile_password` varchar(15) null comment '套餐手机号密码', `user_phone_package_desc` varchar(300) null comment '套餐描述信息', `status` tinyint not null default '1' comment 'wifi是否可用(0:不可用,1:可用)', `created_at` datetime null comment '添加时间', `updated_at` datetime null comment '更新时间') default character set utf8mb4 collate 'utf8mb4_unicode_ci'
+
+[2019-11-25 15:36:04]alter table `wifi_user_times` add index `wifi_user_times_school_id_index`(`school_id`)
+
+[2019-11-25 15:36:04]alter table `wifi_user_times` add index `wifi_user_times_campus_id_index`(`campus_id`)
+
+[2019-11-25 15:36:04] ALTER TABLE wifi_user_times comment '用户wifi时长和电话套餐表' 
+
+[2019-11-25 15:36:04]insert into `migrations` (`migration`, `batch`) values (?, ?)
+parmars:["2019_11_13_204524_create_wifi_user_times_table",14]
+
+[2019-11-25 15:36:04]alter table `attendance_tasks` drop `campus_id`
+
+[2019-11-25 15:36:04]alter table `attendance_schedules` drop `campus_id`
+
+[2019-11-25 15:36:04]insert into `migrations` (`migration`, `batch`) values (?, ?)
+parmars:["2019_11_22_162940_modify_attendance_task",14]
+
+[2019-11-25 15:36:04]create table `attendance_schedule_persons` (`id` bigint unsigned not null auto_increment primary key, `attendance_id` int unsigned null comment '值周任务表id', `schedule_id` int unsigned null comment 'attendance_schedule表id', `user_id` bigint unsigned not null comment '用户id 学生老师都有可能', `created_at` timestamp null, `updated_at` timestamp null) default character set utf8mb4 collate 'utf8mb4_unicode_ci'
+
+[2019-11-25 15:36:04]alter table `attendance_schedule_persons` add index `attendance_schedule_persons_attendance_id_index`(`attendance_id`)
+
+[2019-11-25 15:36:04]alter table `attendance_schedule_persons` add index `attendance_schedule_persons_schedule_id_index`(`schedule_id`)
+
+[2019-11-25 15:36:04]alter table `attendance_schedule_persons` add index `attendance_schedule_persons_user_id_index`(`user_id`)
+
+[2019-11-25 15:36:04]insert into `migrations` (`migration`, `batch`) values (?, ?)
+parmars:["2019_11_22_172123_create_attendance_schedule_persons",14]
+
+[2019-11-25 15:36:04]alter table `attendance_schedules` add `start_date_time` datetime null comment '任务开始时间', add `end_date_time` datetime null comment '任务截止时间'
+
+[2019-11-25 15:36:05]alter table `attendance_schedules` drop `user_id`
+
+[2019-11-25 15:36:05]alter table `attendance_schedules` drop `start_time`
+
+[2019-11-25 15:36:05]alter table `attendance_schedules` drop `end_time`
+
+[2019-11-25 15:36:05]insert into `migrations` (`migration`, `batch`) values (?, ?)
+parmars:["2019_11_22_205254_modify_attendance_schedules",14]
+
+[2019-11-25 15:36:05]ALTER TABLE attendance_schedules CHANGE attendance_id task_id INT UNSIGNED DEFAULT NULL COMMENT '值周任务表id'
+
+[2019-11-25 15:36:05]ALTER TABLE attendance_time_slots CHANGE attendance_id task_id INT UNSIGNED DEFAULT NULL COMMENT '值周任务表id'
+
+[2019-11-25 15:36:05]ALTER TABLE attendance_schedule_persons CHANGE attendance_id task_id INT UNSIGNED DEFAULT NULL COMMENT '值周任务表id'
+
+[2019-11-25 15:36:05]insert into `migrations` (`migration`, `batch`) values (?, ?)
+parmars:["2019_11_24_113822_modify_attendance_tables",14]
+
+[2019-11-25 15:36:05]create table `banners` (`id` bigint unsigned not null auto_increment primary key, `school_id` int unsigned not null, `campus_id` int unsigned not null, `posit` smallint unsigned not null comment '位置 1首页', `type` bigint unsigned not null comment '0:无跳转, 1:图文, 2:url', `sort` tinyint not null default '0' comment '排序', `title` varchar(100) not null comment '标题', `image_url` varchar(255) null comment '图片url', `content` varchar(255) null comment '图文内容', `status` smallint unsigned not null default '1' comment '状态 0:不显示, 1显示', `created_at` timestamp null, `updated_at` timestamp null) default character set utf8mb4 collate 'utf8mb4_unicode_ci'
+
+[2019-11-25 15:36:05] ALTER TABLE banners comment 'banner表' 
+
+[2019-11-25 15:36:05]insert into `migrations` (`migration`, `batch`) values (?, ?)
+parmars:["2019_11_25_112939_create_banners_table",14]
+
+[2019-11-25 18:33:17]select max(`batch`) as aggregate from `migrations`
+
+[2019-11-25 18:33:17]select * from `migrations` where `batch` = ? order by `migration` desc
+parmars:[14]
+
+[2019-11-25 18:33:18]drop table if exists `banners`
+
+[2019-11-25 18:33:18]delete from `migrations` where `migration` = ?
+parmars:["2019_11_25_112939_create_banners_table"]
+
+[2019-11-25 18:33:19]ALTER TABLE attendance_schedules CHANGE task_id attendance_id INT UNSIGNED DEFAULT NULL COMMENT '值周任务表id'
+
+[2019-11-25 18:33:19]ALTER TABLE attendance_time_slots CHANGE task_id attendance_id INT UNSIGNED DEFAULT NULL COMMENT '值周任务表id'
+
+[2019-11-25 18:33:19]ALTER TABLE attendance_schedule_persons CHANGE task_id attendance_id INT UNSIGNED DEFAULT NULL COMMENT '值周任务表id'
+
+[2019-11-25 18:33:19]delete from `migrations` where `migration` = ?
+parmars:["2019_11_24_113822_modify_attendance_tables"]
+
+[2019-11-25 18:33:19]alter table `attendance_schedules` add `user_id` bigint unsigned not null comment '用户id 学生老师都有可能', add `start_time` date null comment '任务开始时间', add `end_time` date null comment '任务截止时间'
+
+[2019-11-25 18:33:19]alter table `attendance_schedules` drop `start_date_time`
+
+[2019-11-25 18:33:19]alter table `attendance_schedules` drop `end_date_time`
+
+[2019-11-25 18:33:19]alter table `attendance_schedules` add index `attendance_schedules_user_id_index`(`user_id`)
+
+[2019-11-25 18:33:19]delete from `migrations` where `migration` = ?
+parmars:["2019_11_22_205254_modify_attendance_schedules"]
+
+[2019-11-25 18:33:19]drop table if exists `attendance_schedule_persons`
+
+[2019-11-25 18:33:19]delete from `migrations` where `migration` = ?
+parmars:["2019_11_22_172123_create_attendance_schedule_persons"]
+
+[2019-11-25 18:33:19]alter table `attendance_tasks` add `campus_id` int unsigned not null comment '校区ID'
+
+[2019-11-25 18:33:20]alter table `attendance_schedules` add `campus_id` int unsigned not null comment '校区ID'
+
+[2019-11-25 18:33:20]delete from `migrations` where `migration` = ?
+parmars:["2019_11_22_162940_modify_attendance_task"]
+
+[2019-11-25 18:33:20]drop table if exists `wifi_user_times`
+
+[2019-11-25 18:33:20]delete from `migrations` where `migration` = ?
+parmars:["2019_11_13_204524_create_wifi_user_times_table"]
+
+[2019-11-25 18:33:20]drop table if exists `wifi_user_agreements`
+
+[2019-11-25 18:33:20]delete from `migrations` where `migration` = ?
+parmars:["2019_11_13_204523_create_wifi_user_agreements_table"]
+
+[2019-11-25 18:33:20]drop table if exists `wifi_orders_locations`
+
+[2019-11-25 18:33:20]delete from `migrations` where `migration` = ?
+parmars:["2019_11_13_204522_create_wifi_orders_locations_table"]
+
+[2019-11-25 18:33:20]drop table if exists `wifi_orders`
+
+[2019-11-25 18:33:20]delete from `migrations` where `migration` = ?
+parmars:["2019_11_13_204521_create_wifi_orders_table"]
+
+[2019-11-25 18:33:20]drop table if exists `wifi_notices`
+
+[2019-11-25 18:33:20]delete from `migrations` where `migration` = ?
+parmars:["2019_11_13_204520_create_wifi_notices_table"]
+
+[2019-11-25 18:33:20]drop table if exists `wifi_issues`
+
+[2019-11-25 18:33:20]delete from `migrations` where `migration` = ?
+parmars:["2019_11_13_204519_create_wifi_issues_table"]
+
+[2019-11-25 18:33:20]drop table if exists `wifi_issue_types`
+
+[2019-11-25 18:33:20]delete from `migrations` where `migration` = ?
+parmars:["2019_11_13_204518_create_wifi_issue_types_table"]
+
+[2019-11-25 18:33:20]drop table if exists `wifi_issue_disposes`
+
+[2019-11-25 18:33:20]delete from `migrations` where `migration` = ?
+parmars:["2019_11_13_204517_create_wifi_issue_disposes_table"]
+
+[2019-11-25 18:33:20]drop table if exists `wifi_issue_comments`
+
+[2019-11-25 18:33:20]delete from `migrations` where `migration` = ?
+parmars:["2019_11_13_204516_create_wifi_issue_comments_table"]
+
+[2019-11-25 18:33:20]drop table if exists `wifi_contents`
+
+[2019-11-25 18:33:20]delete from `migrations` where `migration` = ?
+parmars:["2019_11_13_204515_create_wifi_contents_table"]
+
+[2019-11-25 18:33:20]drop table if exists `wifi_configs`
+
+[2019-11-25 18:33:20]delete from `migrations` where `migration` = ?
+parmars:["2019_11_13_204514_create_wifi_configs_table"]
+
+[2019-11-25 18:33:20]drop table if exists `wifis`
+
+[2019-11-25 18:33:20]delete from `migrations` where `migration` = ?
+parmars:["2019_11_13_204513_create_wifis_table"]
+
+[2019-11-25 18:33:31]select max(`batch`) as aggregate from `migrations`
+
+[2019-11-25 18:33:31]select * from `migrations` where `batch` = ? order by `migration` desc
+parmars:[13]
+
+[2019-11-25 18:33:32]delete from `migrations` where `migration` = ?
+parmars:["2019_11_23_141606_change_build_room_nullable_in_elective_course_arragement"]
+
+[2019-11-25 18:33:33]drop table if exists `attendance_time_slots`
+
+[2019-11-25 18:33:33]delete from `migrations` where `migration` = ?
+parmars:["2019_11_22_093556_create_attendance_time_slots"]
+
+[2019-11-25 18:33:33]drop table if exists `attendance_schedules`
+
+[2019-11-25 18:33:33]delete from `migrations` where `migration` = ?
+parmars:["2019_11_22_092514_create_attendance_schedules"]
+
+[2019-11-25 18:33:33]drop table if exists `attendance_persons`
+
+[2019-11-25 18:33:33]delete from `migrations` where `migration` = ?
+parmars:["2019_11_22_085459_create_attendance_person"]
+
+[2019-11-25 18:33:33]drop table if exists `attendance_tasks`
+
+[2019-11-25 18:33:33]delete from `migrations` where `migration` = ?
+parmars:["2019_11_22_085404_create_attendance_task"]
+
+[2019-11-25 18:33:33]alter table `teacher_apply_elective_courses` drop index `idx_taec_school_id`
+
+[2019-11-25 18:33:33]alter table `teacher_apply_elective_courses` drop index `idx_taec_teacher_id`
+
+[2019-11-25 18:33:33]alter table `teacher_apply_elective_courses` drop index `idx_taec_start_year_term`
+
+[2019-11-25 18:33:33]alter table `teacher_apply_elective_courses` drop index `idx_taec_created_at`
+
+[2019-11-25 18:33:33]alter table `student_enrolled_optional_courses` drop index `idx_seoc_course_id`
+
+[2019-11-25 18:33:33]alter table `student_enrolled_optional_courses` drop index `idx_seoc_user_id`
+
+[2019-11-25 18:33:53]select * from information_schema.tables where table_schema = ? and table_name = ? and table_type = 'BASE TABLE'
+parmars:["purfect_all","migrations"]
+
+[2019-11-25 18:33:53]select `migration` from `migrations` order by `batch` asc, `migration` asc
+
+[2019-11-25 18:33:53]select max(`batch`) as aggregate from `migrations`
+
+[2019-11-25 18:33:53]select * from information_schema.tables where table_schema = ? and table_name = ? and table_type = 'BASE TABLE'
+parmars:["purfect_all","wifis"]
+
+[2019-11-25 18:33:53]create table `wifis` (`wifiid` bigint unsigned not null auto_increment primary key, `mode` tinyint not null default '0' comment '类型(1:无线,2:有线)', `school_id` mediumint unsigned not null default '0' comment '学校id', `campus_id` mediumint unsigned not null default '0' comment '校区id', `wifi_type` tinyint not null default '0' comment 'wifi类型id', `wifi_name` varchar(50) null comment 'wifi类型名称', `wifi_days` mediumint unsigned not null default '0' comment '天数', `wifi_sort` mediumint unsigned not null default '0' comment '排序', `wifi_oprice` decimal(8, 2) not null default '0' comment '原始价格', `wifi_price` decimal(8, 2) not null default '0' comment '支付价格', `status` tinyint not null default '1' comment '状态(1:显示,0:不显示)', `created_at` timestamp null, `updated_at` timestamp null) default character set utf8mb4 collate 'utf8mb4_unicode_ci'
+
+[2019-11-25 18:33:54]alter table `wifis` add index `wifis_school_id_index`(`school_id`)
+
+[2019-11-25 18:33:54]alter table `wifis` add index `wifis_campus_id_index`(`campus_id`)
+
+[2019-11-25 18:33:54] ALTER TABLE wifis comment 'wifi产品表' 
+
+[2019-11-25 18:33:54]insert into `wifis` (`campus_id`, `created_at`, `mode`, `school_id`, `status`, `updated_at`, `wifi_days`, `wifi_name`, `wifi_oprice`, `wifi_price`, `wifi_sort`, `wifi_type`, `wifiid`) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?), (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?), (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?), (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?), (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?), (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?), (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?), (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?), (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?), (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?), (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?), (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?), (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?), (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?), (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+parmars:[1,"2019-11-13 00:26:33",1,1,1,"2019-11-13 00:26:33",1080,"3年","400.00","258.00",1,8,1,1,"2019-11-13 00:26:34",1,1,1,"2019-11-13 00:26:34",720,"2年","298.00","258.00",1,12,2,1,"2019-11-13 00:24:15",1,1,1,"2019-11-13 00:24:15",360,"1年","150.00","138.00",2,7,3,1,"2019-11-13 00:26:30",1,1,1,"2019-11-13 00:26:30",60,"2个月","60.00","60.00",2,5,4,1,"2019-11-13 00:24:05",1,1,1,"2019-11-13 00:24:05",150,"1学期","108.00","98.00",3,3,5,1,"2019-11-13 00:24:21",1,1,1,"2019-11-13 00:24:21",90,"1季度","80.00","69.90",3,6,6,1,"2019-11-13 00:24:04",1,1,1,"2019-11-13 00:24:04",30,"1个月","30.00","28.00",5,2,7,1,"2019-11-13 00:24:01",1,1,1,"2019-11-13 00:24:01",1,"日卡","2.00","2.00",7,1,8,1,"2019-11-13 00:26:36",2,1,1,"2019-11-13 00:26:36",1080,"3年（含无线）","450.00","298.00",8,11,9,1,"2019-11-13 00:26:36",2,1,1,"2019-11-13 00:26:36",720,"2年（含无线）","300.00","258.00",9,10,10,1,"2019-11-13 00:26:32",1,1,1,"2019-11-13 00:26:32",7,"1周","10.00","7.00",10,4,11,1,"2019-11-13 00:26:35",2,1,1,"2019-11-13 00:26:35",360,"1年（含无线）","150.00","138.00",10,9,12,1,"2019-11-13 00:26:37",2,1,1,"2019-11-13 00:26:37",150,"1学期(含无线)","108.00","98.00",11,13,13,1,"2019-11-13 00:26:38",2,1,1,"2019-11-13 00:26:38",30,"1个月(含无线)","30.00","28.00",12,14,14,1,"2019-11-13 00:18:19",2,3,1,"2019-11-13 00:18:19",7,"1周(含无线)","10.00","7.00",13,15,15]
+
+[2019-11-25 18:33:54]insert into `migrations` (`migration`, `batch`) values (?, ?)
+parmars:["2019_11_13_204513_create_wifis_table",14]
+
+[2019-11-25 18:33:54]select * from information_schema.tables where table_schema = ? and table_name = ? and table_type = 'BASE TABLE'
+parmars:["purfect_all","wifi_configs"]
+
+[2019-11-25 18:33:54]create table `wifi_configs` (`configid` bigint unsigned not null auto_increment primary key, `typeid` tinyint not null default '0' comment '类型(1:校园网通知,2:用网须知,3:充值通知,4:套餐说明,5:网络协议)', `school_id` mediumint unsigned not null default '0' comment '学校id', `campus_id` mediumint unsigned not null default '0' comment '校区id', `config_imgurl1` varchar(255) null comment '使用网络图片url', `config_imgurl2` varchar(255) null comment '联合套餐免费用网图片url', `config_imgurl3` varchar(255) null comment '申请有线图片url', `config_imgurl1_status` tinyint not null default '1' comment '使用网络状态(0:不显示,1:显示)', `config_imgurl2_status` tinyint not null default '1' comment '联合套餐免费用网状态(0:不显示,1:显示)', `config_imgurl3_status` tinyint not null default '1' comment '申请有线状态(0:不显示,1:显示)', `status` tinyint not null default '1' comment '状态(1:显示,0:不显示)', `created_at` timestamp null, `updated_at` timestamp null) default character set utf8mb4 collate 'utf8mb4_unicode_ci'
+
+[2019-11-25 18:33:54]alter table `wifi_configs` add index `wifi_configs_school_id_index`(`school_id`)
+
+[2019-11-25 18:33:54]alter table `wifi_configs` add index `wifi_configs_campus_id_index`(`campus_id`)
+
+[2019-11-25 18:33:54] ALTER TABLE wifis comment 'wifi全局配置表' 
+
+[2019-11-25 18:33:54]insert into `wifi_configs` (`campus_id`, `config_imgurl1`, `config_imgurl1_status`, `config_imgurl2`, `config_imgurl2_status`, `config_imgurl3`, `config_imgurl3_status`, `configid`, `created_at`, `school_id`, `status`, `typeid`, `updated_at`) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+parmars:[1,"/assets/img/mega-img2.jpg",1,"/assets/img/mega-img2.jpg",1,"/assets/img/mega-img2.jpg",1,1,"2019-11-13 00:26:33",1,1,1,"2019-11-13 00:26:33"]
+
+[2019-11-25 18:33:54]insert into `migrations` (`migration`, `batch`) values (?, ?)
+parmars:["2019_11_13_204514_create_wifi_configs_table",14]
+
+[2019-11-25 18:33:54]select * from information_schema.tables where table_schema = ? and table_name = ? and table_type = 'BASE TABLE'
+parmars:["purfect_all","wifi_contents"]
+
+[2019-11-25 18:33:54]create table `wifi_contents` (`contentid` bigint unsigned not null auto_increment primary key, `typeid` tinyint not null default '0' comment '类型(1:校园网通知,2:用网须知,3:充值通知,4:套餐说明,5:网络协议)', `school_id` mediumint unsigned not null default '0' comment '学校id', `campus_id` mediumint unsigned not null default '0' comment '校区id', `content` longtext not null comment '内容', `status` tinyint not null default '1' comment '状态(1:显示,0:不显示)', `created_at` timestamp null, `updated_at` timestamp null) default character set utf8mb4 collate 'utf8mb4_unicode_ci'
+
+[2019-11-25 18:33:54]alter table `wifi_contents` add index `wifi_contents_school_id_index`(`school_id`)
+
+[2019-11-25 18:33:54]alter table `wifi_contents` add index `wifi_contents_campus_id_index`(`campus_id`)
+
+[2019-11-25 18:33:54] ALTER TABLE wifi_contents comment 'wifi网络信息表' 
+
+[2019-11-25 18:33:54]insert into `wifi_contents` (`campus_id`, `content`, `contentid`, `created_at`, `school_id`, `status`, `typeid`, `updated_at`) values (?, ?, ?, ?, ?, ?, ?, ?), (?, ?, ?, ?, ?, ?, ?, ?), (?, ?, ?, ?, ?, ?, ?, ?), (?, ?, ?, ?, ?, ?, ?, ?), (?, ?, ?, ?, ?, ?, ?, ?)
+parmars:[1,"校园网通知",1,"2019-11-13 00:26:33",1,1,1,"2019-11-13 00:26:33",1,"用网须知",2,"2019-11-13 00:26:33",1,1,2,"2019-11-13 00:26:33",1,"充值通知",3,"2019-11-13 00:26:33",1,1,3,"2019-11-13 00:26:33",1,"套餐说明",4,"2019-11-13 00:26:33",1,1,4,"2019-11-13 00:26:33",1,"网络协议",5,"2019-11-13 00:26:33",1,1,5,"2019-11-13 00:26:33"]
+
+[2019-11-25 18:33:54]insert into `migrations` (`migration`, `batch`) values (?, ?)
+parmars:["2019_11_13_204515_create_wifi_contents_table",14]
+
+[2019-11-25 18:33:54]select * from information_schema.tables where table_schema = ? and table_name = ? and table_type = 'BASE TABLE'
+parmars:["purfect_all","wifi_issue_comments"]
+
+[2019-11-25 18:33:54]create table `wifi_issue_comments` (`commentid` bigint unsigned not null auto_increment primary key, `user_id` mediumint unsigned not null default '0' comment '用户id', `school_id` mediumint unsigned not null default '0' comment '学校id', `campus_id` mediumint unsigned not null default '0' comment '校区id', `issueid` mediumint unsigned not null default '0' comment '保修单id', `comment_service` tinyint not null default '0' comment '服务态度', `comment_worders` tinyint not null default '0' comment '工作效率', `comment_efficiency` tinyint not null default '0' comment '满意度', `comment_content` varchar(300) null comment '评论内容', `status` tinyint not null default '1' comment '状态(1:显示,0:不显示)', `created_at` timestamp null, `updated_at` timestamp null) default character set utf8mb4 collate 'utf8mb4_unicode_ci'
+
+[2019-11-25 18:33:54]alter table `wifi_issue_comments` add index `wifi_issue_comments_user_id_index`(`user_id`)
+
+[2019-11-25 18:33:54]alter table `wifi_issue_comments` add index `wifi_issue_comments_school_id_index`(`school_id`)
+
+[2019-11-25 18:33:54]alter table `wifi_issue_comments` add index `wifi_issue_comments_campus_id_index`(`campus_id`)
+
+[2019-11-25 18:33:54]alter table `wifi_issue_comments` add index `wifi_issue_comments_issueid_index`(`issueid`)
+
+[2019-11-25 18:33:54] ALTER TABLE wifi_issue_comments comment '保修单评价表' 
+
+[2019-11-25 18:33:54]insert into `migrations` (`migration`, `batch`) values (?, ?)
+parmars:["2019_11_13_204516_create_wifi_issue_comments_table",14]
+
+[2019-11-25 18:33:54]select * from information_schema.tables where table_schema = ? and table_name = ? and table_type = 'BASE TABLE'
+parmars:["purfect_all","wifi_issue_disposes"]
+
+[2019-11-25 18:33:54]create table `wifi_issue_disposes` (`disposeid` bigint unsigned not null auto_increment primary key, `issueid` mediumint unsigned not null default '0' comment '保修单id', `school_id` mediumint unsigned not null default '0' comment '学校id', `campus_id` mediumint unsigned not null default '0' comment '校区id', `typeone_id` mediumint unsigned not null default '0' comment '一级问题id', `typeone_name` varchar(50) null comment '一级问题名称', `typetwo_id` mediumint unsigned not null default '0' comment '二级问题id', `typetwo_name` varchar(50) null comment '二级问题名称', `admin_desc` varchar(2000) null comment '处理回复描述', `status` tinyint not null default '1' comment '状态(1:待处理，2:已接单，3:已完成,，4:已取消，5:已关闭)', `created_at` timestamp null, `updated_at` timestamp null) default character set utf8mb4 collate 'utf8mb4_unicode_ci'
+
+[2019-11-25 18:33:54]alter table `wifi_issue_disposes` add index `wifi_issue_disposes_issueid_index`(`issueid`)
+
+[2019-11-25 18:33:54]alter table `wifi_issue_disposes` add index `wifi_issue_disposes_school_id_index`(`school_id`)
+
+[2019-11-25 18:33:54]alter table `wifi_issue_disposes` add index `wifi_issue_disposes_campus_id_index`(`campus_id`)
+
+[2019-11-25 18:33:54]alter table `wifi_issue_disposes` add index `wifi_issue_disposes_typeone_id_index`(`typeone_id`)
+
+[2019-11-25 18:33:54]alter table `wifi_issue_disposes` add index `wifi_issue_disposes_typetwo_id_index`(`typetwo_id`)
+
+[2019-11-25 18:33:54] ALTER TABLE wifi_issue_disposes comment '保修单处理表' 
+
+[2019-11-25 18:33:55]insert into `migrations` (`migration`, `batch`) values (?, ?)
+parmars:["2019_11_13_204517_create_wifi_issue_disposes_table",14]
+
+[2019-11-25 18:33:55]select * from information_schema.tables where table_schema = ? and table_name = ? and table_type = 'BASE TABLE'
+parmars:["purfect_all","wifi_issue_types"]
+
+[2019-11-25 18:33:55]create table `wifi_issue_types` (`typeid` bigint unsigned not null auto_increment primary key, `type_name` varchar(50) null comment '类型名称', `type_pid` mediumint unsigned not null default '0' comment '父id', `purpose` mediumint unsigned not null default '1' comment '用途（1:客户选择故障类型,2:维修人员类型选择故障)', `status` tinyint not null default '1' comment '状态(0:不显示,1:显示)', `created_at` timestamp null, `updated_at` timestamp null) default character set utf8mb4 collate 'utf8mb4_unicode_ci'
+
+[2019-11-25 18:33:55]alter table `wifi_issue_types` add index `wifi_issue_types_type_pid_index`(`type_pid`)
+
+[2019-11-25 18:33:55]alter table `wifi_issue_types` add index `wifi_issue_types_purpose_index`(`purpose`)
+
+[2019-11-25 18:33:55] ALTER TABLE wifi_issue_types comment '保修类型表' 
+
+[2019-11-25 18:33:55]insert into `wifi_issue_types` (`type_name`, `type_pid`, `typeid`) values (?, ?, ?), (?, ?, ?), (?, ?, ?), (?, ?, ?), (?, ?, ?), (?, ?, ?), (?, ?, ?), (?, ?, ?), (?, ?, ?), (?, ?, ?), (?, ?, ?), (?, ?, ?), (?, ?, ?), (?, ?, ?), (?, ?, ?), (?, ?, ?), (?, ?, ?), (?, ?, ?), (?, ?, ?), (?, ?, ?), (?, ?, ?), (?, ?, ?), (?, ?, ?), (?, ?, ?), (?, ?, ?), (?, ?, ?), (?, ?, ?), (?, ?, ?), (?, ?, ?), (?, ?, ?), (?, ?, ?)
+parmars:["网速慢",0,1,"断网",0,2,"无法充值",0,3,"一直显示充值中",3,4,"搜不到网络，无法连接",2,5,"网络不稳定，频繁掉线",2,6,"打游戏特别卡",1,7,"视频无法观看",1,8,"开通有线网络",0,9,"1号端口",9,10,"2号端口",9,11,"3号端口",9,12,"4号端口",9,13,"网络侧问题",0,14,"线路侧问题",0,15,"用户侧问题",0,16,"上联传输线路故障",14,17,"机房设备故障",14,18,"机房设备数据配置问题",14,19,"楼道设备故障",14,20,"楼道设备断电",14,21,"APP设备故障",14,22,"用户自好",14,23,"光缆跳纤终端",15,24,"光缆跳纤衰减",15,25,"综合布线问题",15,26,"用户手机问题",16,27,"用户电脑问题",16,28,"用户端水晶头问题",16,29,"用户内部布线问题",16,30,"用户账号/密码问题",16,31]
+
+[2019-11-25 18:33:55]insert into `migrations` (`migration`, `batch`) values (?, ?)
+parmars:["2019_11_13_204518_create_wifi_issue_types_table",14]
+
+[2019-11-25 18:33:55]select * from information_schema.tables where table_schema = ? and table_name = ? and table_type = 'BASE TABLE'
+parmars:["purfect_all","wifi_issues"]
+
+[2019-11-25 18:33:55]create table `wifi_issues` (`issueid` bigint unsigned not null auto_increment primary key, `user_id` mediumint unsigned not null default '0' comment '用户id', `school_id` mediumint unsigned not null default '0' comment '学校id', `campus_id` mediumint unsigned not null default '0' comment '校区id', `trade_sn` varchar(60) null comment '订单号', `typeone_id` mediumint unsigned not null default '0' comment '大类型ID', `typeone_name` varchar(50) null comment '大类型名称', `typetwo_id` mediumint unsigned not null default '0' comment '小类型ID', `typetwo_name` varchar(50) null comment '小类型名称', `issue_name` varchar(20) null comment '故障申请联系人姓名', `issue_mobile` varchar(15) null comment '故障申请联系人电话', `issue_desc` varchar(2000) null comment '故障问题描述', `addressoneid` mediumint unsigned not null default '0' comment '地址一级id', `addresstwoid` mediumint unsigned not null default '0' comment '地址二级id', `addressthreeid` mediumint unsigned not null default '0' comment '地址三级id', `addr_detail` varchar(150) null comment '保修详细地址', `adminid` mediumint unsigned not null default '0' comment '后台处理人', `admin_name` varchar(10) null comment '后台处理人姓名', `admin_mobile` varchar(15) null comment '后台处理人手机号', `admin_desc` varchar(2000) null comment '后台处理人反馈', `is_comment` tinyint not null default '1' comment '是否评价(1:未评价,2:已评价)', `jiedan_time` datetime null comment '接单时间', `chulis_time` datetime null comment '处理时间', `status` tinyint not null default '1' comment '状态,1:待处理,2:已接单，3:已完成,4:已取消,5:已关闭.)', `created_at` datetime null comment '添加时间', `updated_at` datetime null comment '更新时间') default character set utf8mb4 collate 'utf8mb4_unicode_ci'
+
+[2019-11-25 18:33:55]alter table `wifi_issues` add index `wifi_issues_user_id_index`(`user_id`)
+
+[2019-11-25 18:33:55]alter table `wifi_issues` add index `wifi_issues_school_id_index`(`school_id`)
+
+[2019-11-25 18:33:55]alter table `wifi_issues` add index `wifi_issues_campus_id_index`(`campus_id`)
+
+[2019-11-25 18:33:55]alter table `wifi_issues` add index `wifi_issues_addressoneid_index`(`addressoneid`)
+
+[2019-11-25 18:33:55]alter table `wifi_issues` add index `wifi_issues_addresstwoid_index`(`addresstwoid`)
+
+[2019-11-25 18:33:55]alter table `wifi_issues` add index `wifi_issues_addressthreeid_index`(`addressthreeid`)
+
+[2019-11-25 18:33:55]alter table `wifi_issues` add index `wifi_issues_adminid_index`(`adminid`)
+
+[2019-11-25 18:33:55] ALTER TABLE wifi_issues comment '保修单表' 
+
+[2019-11-25 18:33:55]insert into `migrations` (`migration`, `batch`) values (?, ?)
+parmars:["2019_11_13_204519_create_wifi_issues_table",14]
+
+[2019-11-25 18:33:55]select * from information_schema.tables where table_schema = ? and table_name = ? and table_type = 'BASE TABLE'
+parmars:["purfect_all","wifi_notices"]
+
+[2019-11-25 18:33:55]create table `wifi_notices` (`noticeid` bigint unsigned not null auto_increment primary key, `notice_title` varchar(60) null comment '文档标题', `notice_content` longtext not null comment '文档内容', `sort` mediumint unsigned not null default '1000' comment '排序', `created_at` datetime null comment '添加时间', `updated_at` datetime null comment '更新时间') default character set utf8mb4 collate 'utf8mb4_unicode_ci'
+
+[2019-11-25 18:33:55] ALTER TABLE wifi_notices comment 'wifi帮助' 
+
+[2019-11-25 18:33:55]insert into `wifi_notices` (`notice_content`, `notice_title`, `noticeid`) values (?, ?, ?), (?, ?, ?), (?, ?, ?), (?, ?, ?), (?, ?, ?), (?, ?, ?)
+parmars:["无法成功连接WiFi接入号","无法成功连接WiFi接入号",1,"连接WiFi，APP内“点击上线”，但不能上线","连接WiFi，APP内“点击上线”，但不能上线",2,"已连上WiFi，弹不出登录页面","已连上WiFi，弹不出登录页面",3,"使用时断网","使用时断网",4,"手机锁屏后断网","手机锁屏后断网",5,"校园网服务协议","校园网服务协议",6]
+
+[2019-11-25 18:33:55]insert into `migrations` (`migration`, `batch`) values (?, ?)
+parmars:["2019_11_13_204520_create_wifi_notices_table",14]
+
+[2019-11-25 18:33:55]select * from information_schema.tables where table_schema = ? and table_name = ? and table_type = 'BASE TABLE'
+parmars:["purfect_all","wifi_orders"]
+
+[2019-11-25 18:33:55]create table `wifi_orders` (`orderid` bigint unsigned not null auto_increment primary key, `trade_sn` varchar(60) null comment '订单号', `type` tinyint not null default '1' comment '类型(1:充值,2:赠送)', `mode` tinyint not null default '0' comment '类型(1:无线,2:有线)', `user_id` mediumint unsigned not null default '0' comment '用户id', `school_id` mediumint unsigned not null default '0' comment '学校id', `campus_id` mediumint unsigned not null default '0' comment '校区id', `wifi_id` mediumint unsigned not null default '0' comment 'wifi_id', `wifi_type` tinyint not null default '0' comment 'wifi类型', `wifi_name` varchar(50) null comment 'wifi类型名称', `order_days` mediumint unsigned not null default '0' comment '天数', `order_number` mediumint unsigned not null default '1' comment '购买数量', `order_unitprice` decimal(8, 2) not null default '0' comment 'wifi单价', `order_totalprice` decimal(8, 2) not null default '0' comment '支付总价', `paymentid` tinyint not null default '0' comment '支付方式(1:微信,2:支付宝,3:钱包支付,4:免支付)', `payment_name` varchar(15) null comment '支付名称', `pay_time` datetime null comment '支付时间', `succeed_time` datetime null comment '支付成功-WIFI充值成功', `defeated_time` datetime null comment '支付成功-WIFI充值失败', `refund_time` datetime null comment '支付成功-退款成功时间', `cancle_time` datetime null comment '取消时间', `wifi_rechargeLog` varchar(500) null comment 'wifi充值日志', `wifi_refund` tinyint not null default '0' comment '退款(1:已退款)', `wifi_refundtime` datetime null comment '退款时间', `wifi_refundprice` decimal(8, 2) not null default '0' comment '退款金额', `wifi_operatdesc` varchar(500) null comment '处理描述', `status` tinyint not null default '1' comment '状态(0:关闭,1:待支付,2:支付失败,3:支付成功-WIFI充值中,4:支付成功-WIFI充值成功,5:支付成功-充值失败,6:支付成功-退款成功)', `is_chuli` tinyint not null default '0' comment '是否处理(0:未处理,1:已处理)', `created_at` datetime null comment '添加时间', `updated_at` datetime null comment '更新时间') default character set utf8mb4 collate 'utf8mb4_unicode_ci'
+
+[2019-11-25 18:33:55]alter table `wifi_orders` add index `wifi_orders_school_id_index`(`school_id`)
+
+[2019-11-25 18:33:55]alter table `wifi_orders` add index `wifi_orders_campus_id_index`(`campus_id`)
+
+[2019-11-25 18:33:55] ALTER TABLE wifi_orders comment 'wifi订单表' 
+
+[2019-11-25 18:33:55]insert into `migrations` (`migration`, `batch`) values (?, ?)
+parmars:["2019_11_13_204521_create_wifi_orders_table",14]
+
+[2019-11-25 18:33:55]select * from information_schema.tables where table_schema = ? and table_name = ? and table_type = 'BASE TABLE'
+parmars:["purfect_all","wifi_orders_locations"]
+
+[2019-11-25 18:33:55]create table `wifi_orders_locations` (`locationid` bigint unsigned not null auto_increment primary key, `orderid` mediumint unsigned not null comment 'wifi订单id', `user_id` mediumint unsigned not null comment '用户id', `school_id` mediumint unsigned not null default '0' comment '学校id', `campus_id` mediumint unsigned not null default '0' comment '校区id', `addressoneid` mediumint unsigned not null default '0' comment '有线(宿舍楼id)', `addresstwoid` mediumint unsigned not null default '0' comment '有线(房间id)', `addressthreeid` mediumint unsigned not null default '0' comment '有线(房间id)', `addressfourid` mediumint unsigned not null default '0' comment '有线(端口id)', `addressoneid_name` varchar(50) null comment '有线(宿舍楼名称)', `addresstwoid_name` varchar(50) null comment '有线(楼层名称)', `addressthreeid_name` varchar(50) null comment '有线(房间名称)', `addressfourid_name` varchar(50) null comment '有线(端口名称)', `status` tinyint not null default '0' comment '状态(0:未开通,1:已开通)', `created_at` datetime null comment '添加时间', `updated_at` datetime null comment '更新时间') default character set utf8mb4 collate 'utf8mb4_unicode_ci'
+
+[2019-11-25 18:33:56]alter table `wifi_orders_locations` add index `wifi_orders_locations_school_id_index`(`school_id`)
+
+[2019-11-25 18:33:56]alter table `wifi_orders_locations` add index `wifi_orders_locations_campus_id_index`(`campus_id`)
+
+[2019-11-25 18:33:56] ALTER TABLE wifi_orders_locations comment 'wifi订单有线地址表' 
+
+[2019-11-25 18:33:56]insert into `migrations` (`migration`, `batch`) values (?, ?)
+parmars:["2019_11_13_204522_create_wifi_orders_locations_table",14]
+
+[2019-11-25 18:33:56]select * from information_schema.tables where table_schema = ? and table_name = ? and table_type = 'BASE TABLE'
+parmars:["purfect_all","wifi_user_agreements"]
+
+[2019-11-25 18:33:56]create table `wifi_user_agreements` (`agreementid` bigint unsigned not null auto_increment primary key, `user_id` mediumint unsigned not null comment '用户id', `created_at` datetime null comment '添加时间') default character set utf8mb4 collate 'utf8mb4_unicode_ci'
+
+[2019-11-25 18:33:56] ALTER TABLE wifi_user_agreements comment 'wifi用户协议同意表' 
+
+[2019-11-25 18:33:56]insert into `migrations` (`migration`, `batch`) values (?, ?)
+parmars:["2019_11_13_204523_create_wifi_user_agreements_table",14]
+
+[2019-11-25 18:33:56]select * from information_schema.tables where table_schema = ? and table_name = ? and table_type = 'BASE TABLE'
+parmars:["purfect_all","wifi_user_times"]
+
+[2019-11-25 18:33:56]create table `wifi_user_times` (`timesid` bigint unsigned not null auto_increment primary key, `user_id` mediumint unsigned not null comment '用户id', `school_id` mediumint unsigned not null default '0' comment '学校id', `campus_id` mediumint unsigned not null default '0' comment '校区id', `user_wifi_time` datetime null comment 'wifi到期时间', `user_wifi_name` varchar(50) null comment 'wifi账号', `user_wifi_password` varchar(50) null comment 'wifi密码', `user_cable_etime` datetime null comment 'wifi有线开通结束时间', `user_mobile_source` tinyint not null default '0' comment '运营商(1:移动,2:联通,3:电信,4:其他)', `user_mobile_phone` varchar(15) null comment '套餐手机号', `user_mobile_password` varchar(15) null comment '套餐手机号密码', `user_phone_package_desc` varchar(300) null comment '套餐描述信息', `status` tinyint not null default '1' comment 'wifi是否可用(0:不可用,1:可用)', `created_at` datetime null comment '添加时间', `updated_at` datetime null comment '更新时间') default character set utf8mb4 collate 'utf8mb4_unicode_ci'
+
+[2019-11-25 18:33:56]alter table `wifi_user_times` add index `wifi_user_times_school_id_index`(`school_id`)
+
+[2019-11-25 18:33:56]alter table `wifi_user_times` add index `wifi_user_times_campus_id_index`(`campus_id`)
+
+[2019-11-25 18:33:56] ALTER TABLE wifi_user_times comment '用户wifi时长和电话套餐表' 
+
+[2019-11-25 18:33:56]insert into `migrations` (`migration`, `batch`) values (?, ?)
+parmars:["2019_11_13_204524_create_wifi_user_times_table",14]
+
+[2019-11-25 18:33:56]create table `attendance_tasks` (`id` bigint unsigned not null auto_increment primary key, `school_id` int unsigned not null comment '学校ID', `campus_id` int unsigned not null comment '校区ID', `type` tinyint unsigned not null default '1' comment '任务类型 1 教师任务， 2 学生任务, 3 其它任务(学生老师都可见)', `title` varchar(255) null comment '任务名称', `content` text null comment '值周内容', `start_time` date null comment '任务开始时间', `end_time` date null comment '任务截止时间', `created_at` timestamp null, `updated_at` timestamp null) default character set utf8mb4 collate 'utf8mb4_unicode_ci'
+
+[2019-11-25 18:33:56]insert into `migrations` (`migration`, `batch`) values (?, ?)
+parmars:["2019_11_22_085404_create_attendance_task",14]
+
+[2019-11-25 18:33:56]create table `attendance_persons` (`id` bigint unsigned not null auto_increment primary key, `user_id` bigint unsigned not null comment '用户id 学生老师都有可能', `type` tinyint unsigned not null comment '人员类型，老师还是学生 1 老师 2 学生', `school_id` int unsigned not null comment '学校ID', `campus_id` int unsigned not null comment '校区ID', `created_at` timestamp null, `updated_at` timestamp null) default character set utf8mb4 collate 'utf8mb4_unicode_ci'
+
+[2019-11-25 18:33:56]alter table `attendance_persons` add index `attendance_persons_user_id_index`(`user_id`)
+
+[2019-11-25 18:33:56]insert into `migrations` (`migration`, `batch`) values (?, ?)
+parmars:["2019_11_22_085459_create_attendance_person",14]
+
+[2019-11-25 18:33:56]create table `attendance_schedules` (`id` bigint unsigned not null auto_increment primary key, `school_id` int unsigned not null comment '学校ID', `campus_id` int unsigned not null comment '校区ID', `attendance_id` int unsigned null comment '值周任务表id', `user_id` bigint unsigned not null comment '用户id 学生老师都有可能', `start_time` date null comment '任务开始时间', `end_time` date null comment '任务截止时间', `time_slot_id` int unsigned null comment '时间槽id', `created_at` timestamp null, `updated_at` timestamp null) default character set utf8mb4 collate 'utf8mb4_unicode_ci'
+
+[2019-11-25 18:33:56]alter table `attendance_schedules` add index `attendance_schedules_attendance_id_index`(`attendance_id`)
+
+[2019-11-25 18:33:56]alter table `attendance_schedules` add index `attendance_schedules_user_id_index`(`user_id`)
+
+[2019-11-25 18:33:56]insert into `migrations` (`migration`, `batch`) values (?, ?)
+parmars:["2019_11_22_092514_create_attendance_schedules",14]
+
+[2019-11-25 18:33:56]create table `attendance_time_slots` (`id` bigint unsigned not null auto_increment primary key, `attendance_id` int unsigned null comment '值周任务表id', `title` varchar(40) null comment '时段名称', `start_time` time null comment '时段开始时间', `end_time` time null comment '时段截止时间', `created_at` timestamp null, `updated_at` timestamp null) default character set utf8mb4 collate 'utf8mb4_unicode_ci'
+
+[2019-11-25 18:33:56]alter table `attendance_time_slots` add index `attendance_time_slots_attendance_id_index`(`attendance_id`)
+
+[2019-11-25 18:33:56]insert into `migrations` (`migration`, `batch`) values (?, ?)
+parmars:["2019_11_22_093556_create_attendance_time_slots",14]
+
+[2019-11-25 18:33:56]alter table `attendance_tasks` drop `campus_id`
+
+[2019-11-25 18:33:56]alter table `attendance_schedules` drop `campus_id`
+
+[2019-11-25 18:33:56]insert into `migrations` (`migration`, `batch`) values (?, ?)
+parmars:["2019_11_22_162940_modify_attendance_task",14]
+
+[2019-11-25 18:33:56]create table `attendance_schedule_persons` (`id` bigint unsigned not null auto_increment primary key, `attendance_id` int unsigned null comment '值周任务表id', `schedule_id` int unsigned null comment 'attendance_schedule表id', `user_id` bigint unsigned not null comment '用户id 学生老师都有可能', `created_at` timestamp null, `updated_at` timestamp null) default character set utf8mb4 collate 'utf8mb4_unicode_ci'
+
+[2019-11-25 18:33:57]alter table `attendance_schedule_persons` add index `attendance_schedule_persons_attendance_id_index`(`attendance_id`)
+
+[2019-11-25 18:33:57]alter table `attendance_schedule_persons` add index `attendance_schedule_persons_schedule_id_index`(`schedule_id`)
+
+[2019-11-25 18:33:57]alter table `attendance_schedule_persons` add index `attendance_schedule_persons_user_id_index`(`user_id`)
+
+[2019-11-25 18:33:57]insert into `migrations` (`migration`, `batch`) values (?, ?)
+parmars:["2019_11_22_172123_create_attendance_schedule_persons",14]
+
+[2019-11-25 18:33:57]alter table `attendance_schedules` add `start_date_time` datetime null comment '任务开始时间', add `end_date_time` datetime null comment '任务截止时间'
+
+[2019-11-25 18:33:57]alter table `attendance_schedules` drop `user_id`
+
+[2019-11-25 18:33:57]alter table `attendance_schedules` drop `start_time`
+
+[2019-11-25 18:33:57]alter table `attendance_schedules` drop `end_time`
+
+[2019-11-25 18:33:57]insert into `migrations` (`migration`, `batch`) values (?, ?)
+parmars:["2019_11_22_205254_modify_attendance_schedules",14]
+
+[2019-11-25 18:33:57]ALTER TABLE apply_course_arrangements CHANGE building_id building_id INT UNSIGNED DEFAULT NULL COMMENT '教学楼id', CHANGE building_name building_name VARCHAR(255) DEFAULT NULL COLLATE utf8mb4_unicode_ci COMMENT '教学楼名称', CHANGE classroom_id classroom_id INT UNSIGNED DEFAULT NULL COMMENT '教室id', CHANGE classroom_name classroom_name VARCHAR(255) DEFAULT NULL COLLATE utf8mb4_unicode_ci COMMENT '教室名称'
+
+[2019-11-25 18:33:57]insert into `migrations` (`migration`, `batch`) values (?, ?)
+parmars:["2019_11_23_141606_change_build_room_nullable_in_elective_course_arragement",14]
+
+[2019-11-25 18:33:57]ALTER TABLE attendance_schedules CHANGE attendance_id task_id INT UNSIGNED DEFAULT NULL COMMENT '值周任务表id'
+
+[2019-11-25 18:33:57]ALTER TABLE attendance_time_slots CHANGE attendance_id task_id INT UNSIGNED DEFAULT NULL COMMENT '值周任务表id'
+
+[2019-11-25 18:33:57]ALTER TABLE attendance_schedule_persons CHANGE attendance_id task_id INT UNSIGNED DEFAULT NULL COMMENT '值周任务表id'
+
+[2019-11-25 18:33:57]insert into `migrations` (`migration`, `batch`) values (?, ?)
+parmars:["2019_11_24_113822_modify_attendance_tables",14]
+
+[2019-11-25 18:33:57]create table `banners` (`id` bigint unsigned not null auto_increment primary key, `school_id` int unsigned not null, `campus_id` int unsigned not null, `posit` smallint unsigned not null comment '位置 1首页', `type` bigint unsigned not null comment '0:无跳转, 1:图文, 2:url', `sort` tinyint not null default '0' comment '排序', `title` varchar(100) not null comment '标题', `image_url` varchar(255) null comment '图片url', `content` varchar(255) null comment '图文内容', `status` smallint unsigned not null default '1' comment '状态 0:不显示, 1显示', `created_at` timestamp null, `updated_at` timestamp null) default character set utf8mb4 collate 'utf8mb4_unicode_ci'
+
+[2019-11-25 18:33:57] ALTER TABLE banners comment 'banner表' 
+
+[2019-11-25 18:33:57]insert into `migrations` (`migration`, `batch`) values (?, ?)
+parmars:["2019_11_25_112939_create_banners_table",14]
+
+[2019-11-25 18:34:28]select max(`batch`) as aggregate from `migrations`
+
+[2019-11-25 18:34:28]select * from `migrations` where `batch` = ? order by `migration` desc
+parmars:[14]
+
+[2019-11-25 18:34:30]drop table if exists `banners`
+
+[2019-11-25 18:34:30]delete from `migrations` where `migration` = ?
+parmars:["2019_11_25_112939_create_banners_table"]
+
+[2019-11-25 18:34:31]ALTER TABLE attendance_schedules CHANGE task_id attendance_id INT UNSIGNED DEFAULT NULL COMMENT '值周任务表id'
+
+[2019-11-25 18:34:31]ALTER TABLE attendance_time_slots CHANGE task_id attendance_id INT UNSIGNED DEFAULT NULL COMMENT '值周任务表id'
+
+[2019-11-25 18:34:31]ALTER TABLE attendance_schedule_persons CHANGE task_id attendance_id INT UNSIGNED DEFAULT NULL COMMENT '值周任务表id'
+
+[2019-11-25 18:34:31]delete from `migrations` where `migration` = ?
+parmars:["2019_11_24_113822_modify_attendance_tables"]
+
+[2019-11-25 18:34:31]delete from `migrations` where `migration` = ?
+parmars:["2019_11_23_141606_change_build_room_nullable_in_elective_course_arragement"]
+
+[2019-11-25 18:34:31]alter table `attendance_schedules` add `user_id` bigint unsigned not null comment '用户id 学生老师都有可能', add `start_time` date null comment '任务开始时间', add `end_time` date null comment '任务截止时间'
+
+[2019-11-25 18:34:31]alter table `attendance_schedules` drop `start_date_time`
+
+[2019-11-25 18:34:31]alter table `attendance_schedules` drop `end_date_time`
+
+[2019-11-25 18:34:31]alter table `attendance_schedules` add index `attendance_schedules_user_id_index`(`user_id`)
+
+[2019-11-25 18:34:31]delete from `migrations` where `migration` = ?
+parmars:["2019_11_22_205254_modify_attendance_schedules"]
+
+[2019-11-25 18:34:31]drop table if exists `attendance_schedule_persons`
+
+[2019-11-25 18:34:31]delete from `migrations` where `migration` = ?
+parmars:["2019_11_22_172123_create_attendance_schedule_persons"]
+
+[2019-11-25 18:34:31]alter table `attendance_tasks` add `campus_id` int unsigned not null comment '校区ID'
+
+[2019-11-25 18:34:31]alter table `attendance_schedules` add `campus_id` int unsigned not null comment '校区ID'
+
+[2019-11-25 18:34:31]delete from `migrations` where `migration` = ?
+parmars:["2019_11_22_162940_modify_attendance_task"]
+
+[2019-11-25 18:34:31]drop table if exists `attendance_time_slots`
+
+[2019-11-25 18:34:31]delete from `migrations` where `migration` = ?
+parmars:["2019_11_22_093556_create_attendance_time_slots"]
+
+[2019-11-25 18:34:31]drop table if exists `attendance_schedules`
+
+[2019-11-25 18:34:31]delete from `migrations` where `migration` = ?
+parmars:["2019_11_22_092514_create_attendance_schedules"]
+
+[2019-11-25 18:34:31]drop table if exists `attendance_persons`
+
+[2019-11-25 18:34:31]delete from `migrations` where `migration` = ?
+parmars:["2019_11_22_085459_create_attendance_person"]
+
+[2019-11-25 18:34:32]drop table if exists `attendance_tasks`
+
+[2019-11-25 18:34:32]delete from `migrations` where `migration` = ?
+parmars:["2019_11_22_085404_create_attendance_task"]
+
+[2019-11-25 18:34:32]drop table if exists `wifi_user_times`
+
+[2019-11-25 18:34:32]delete from `migrations` where `migration` = ?
+parmars:["2019_11_13_204524_create_wifi_user_times_table"]
+
+[2019-11-25 18:34:32]drop table if exists `wifi_user_agreements`
+
+[2019-11-25 18:34:32]delete from `migrations` where `migration` = ?
+parmars:["2019_11_13_204523_create_wifi_user_agreements_table"]
+
+[2019-11-25 18:34:32]drop table if exists `wifi_orders_locations`
+
+[2019-11-25 18:34:32]delete from `migrations` where `migration` = ?
+parmars:["2019_11_13_204522_create_wifi_orders_locations_table"]
+
+[2019-11-25 18:34:32]drop table if exists `wifi_orders`
+
+[2019-11-25 18:34:32]delete from `migrations` where `migration` = ?
+parmars:["2019_11_13_204521_create_wifi_orders_table"]
+
+[2019-11-25 18:34:32]drop table if exists `wifi_notices`
+
+[2019-11-25 18:34:32]delete from `migrations` where `migration` = ?
+parmars:["2019_11_13_204520_create_wifi_notices_table"]
+
+[2019-11-25 18:34:32]drop table if exists `wifi_issues`
+
+[2019-11-25 18:34:32]delete from `migrations` where `migration` = ?
+parmars:["2019_11_13_204519_create_wifi_issues_table"]
+
+[2019-11-25 18:34:32]drop table if exists `wifi_issue_types`
+
+[2019-11-25 18:34:32]delete from `migrations` where `migration` = ?
+parmars:["2019_11_13_204518_create_wifi_issue_types_table"]
+
+[2019-11-25 18:34:32]drop table if exists `wifi_issue_disposes`
+
+[2019-11-25 18:34:32]delete from `migrations` where `migration` = ?
+parmars:["2019_11_13_204517_create_wifi_issue_disposes_table"]
+
+[2019-11-25 18:34:32]drop table if exists `wifi_issue_comments`
+
+[2019-11-25 18:34:32]delete from `migrations` where `migration` = ?
+parmars:["2019_11_13_204516_create_wifi_issue_comments_table"]
+
+[2019-11-25 18:34:32]drop table if exists `wifi_contents`
+
+[2019-11-25 18:34:32]delete from `migrations` where `migration` = ?
+parmars:["2019_11_13_204515_create_wifi_contents_table"]
+
+[2019-11-25 18:34:32]drop table if exists `wifi_configs`
+
+[2019-11-25 18:34:32]delete from `migrations` where `migration` = ?
+parmars:["2019_11_13_204514_create_wifi_configs_table"]
+
+[2019-11-25 18:34:32]drop table if exists `wifis`
+
+[2019-11-25 18:34:32]delete from `migrations` where `migration` = ?
+parmars:["2019_11_13_204513_create_wifis_table"]
+
+[2019-11-25 18:35:14]select * from information_schema.tables where table_schema = ? and table_name = ? and table_type = 'BASE TABLE'
+parmars:["purfect_all","migrations"]
+
+[2019-11-25 18:35:14]select `migration` from `migrations` order by `batch` asc, `migration` asc
+
+[2019-11-25 18:35:14]select max(`batch`) as aggregate from `migrations`
+
+[2019-11-25 18:35:14]select * from information_schema.tables where table_schema = ? and table_name = ? and table_type = 'BASE TABLE'
+parmars:["purfect_all","wifis"]
+
+[2019-11-25 18:35:14]create table `wifis` (`wifiid` bigint unsigned not null auto_increment primary key, `mode` tinyint not null default '0' comment '类型(1:无线,2:有线)', `school_id` mediumint unsigned not null default '0' comment '学校id', `campus_id` mediumint unsigned not null default '0' comment '校区id', `wifi_type` tinyint not null default '0' comment 'wifi类型id', `wifi_name` varchar(50) null comment 'wifi类型名称', `wifi_days` mediumint unsigned not null default '0' comment '天数', `wifi_sort` mediumint unsigned not null default '0' comment '排序', `wifi_oprice` decimal(8, 2) not null default '0' comment '原始价格', `wifi_price` decimal(8, 2) not null default '0' comment '支付价格', `status` tinyint not null default '1' comment '状态(1:显示,0:不显示)', `created_at` timestamp null, `updated_at` timestamp null) default character set utf8mb4 collate 'utf8mb4_unicode_ci'
+
+[2019-11-25 18:35:14]alter table `wifis` add index `wifis_school_id_index`(`school_id`)
+
+[2019-11-25 18:35:14]alter table `wifis` add index `wifis_campus_id_index`(`campus_id`)
+
+[2019-11-25 18:35:14] ALTER TABLE wifis comment 'wifi产品表' 
+
+[2019-11-25 18:35:14]insert into `wifis` (`campus_id`, `created_at`, `mode`, `school_id`, `status`, `updated_at`, `wifi_days`, `wifi_name`, `wifi_oprice`, `wifi_price`, `wifi_sort`, `wifi_type`, `wifiid`) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?), (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?), (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?), (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?), (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?), (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?), (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?), (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?), (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?), (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?), (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?), (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?), (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?), (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?), (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+parmars:[1,"2019-11-13 00:26:33",1,1,1,"2019-11-13 00:26:33",1080,"3年","400.00","258.00",1,8,1,1,"2019-11-13 00:26:34",1,1,1,"2019-11-13 00:26:34",720,"2年","298.00","258.00",1,12,2,1,"2019-11-13 00:24:15",1,1,1,"2019-11-13 00:24:15",360,"1年","150.00","138.00",2,7,3,1,"2019-11-13 00:26:30",1,1,1,"2019-11-13 00:26:30",60,"2个月","60.00","60.00",2,5,4,1,"2019-11-13 00:24:05",1,1,1,"2019-11-13 00:24:05",150,"1学期","108.00","98.00",3,3,5,1,"2019-11-13 00:24:21",1,1,1,"2019-11-13 00:24:21",90,"1季度","80.00","69.90",3,6,6,1,"2019-11-13 00:24:04",1,1,1,"2019-11-13 00:24:04",30,"1个月","30.00","28.00",5,2,7,1,"2019-11-13 00:24:01",1,1,1,"2019-11-13 00:24:01",1,"日卡","2.00","2.00",7,1,8,1,"2019-11-13 00:26:36",2,1,1,"2019-11-13 00:26:36",1080,"3年（含无线）","450.00","298.00",8,11,9,1,"2019-11-13 00:26:36",2,1,1,"2019-11-13 00:26:36",720,"2年（含无线）","300.00","258.00",9,10,10,1,"2019-11-13 00:26:32",1,1,1,"2019-11-13 00:26:32",7,"1周","10.00","7.00",10,4,11,1,"2019-11-13 00:26:35",2,1,1,"2019-11-13 00:26:35",360,"1年（含无线）","150.00","138.00",10,9,12,1,"2019-11-13 00:26:37",2,1,1,"2019-11-13 00:26:37",150,"1学期(含无线)","108.00","98.00",11,13,13,1,"2019-11-13 00:26:38",2,1,1,"2019-11-13 00:26:38",30,"1个月(含无线)","30.00","28.00",12,14,14,1,"2019-11-13 00:18:19",2,3,1,"2019-11-13 00:18:19",7,"1周(含无线)","10.00","7.00",13,15,15]
+
+[2019-11-25 18:35:14]insert into `migrations` (`migration`, `batch`) values (?, ?)
+parmars:["2019_11_13_204513_create_wifis_table",14]
+
+[2019-11-25 18:35:14]select * from information_schema.tables where table_schema = ? and table_name = ? and table_type = 'BASE TABLE'
+parmars:["purfect_all","wifi_configs"]
+
+[2019-11-25 18:35:14]create table `wifi_configs` (`configid` bigint unsigned not null auto_increment primary key, `typeid` tinyint not null default '0' comment '类型(1:校园网通知,2:用网须知,3:充值通知,4:套餐说明,5:网络协议)', `school_id` mediumint unsigned not null default '0' comment '学校id', `campus_id` mediumint unsigned not null default '0' comment '校区id', `config_imgurl1` varchar(255) null comment '使用网络图片url', `config_imgurl2` varchar(255) null comment '联合套餐免费用网图片url', `config_imgurl3` varchar(255) null comment '申请有线图片url', `config_imgurl1_status` tinyint not null default '1' comment '使用网络状态(0:不显示,1:显示)', `config_imgurl2_status` tinyint not null default '1' comment '联合套餐免费用网状态(0:不显示,1:显示)', `config_imgurl3_status` tinyint not null default '1' comment '申请有线状态(0:不显示,1:显示)', `status` tinyint not null default '1' comment '状态(1:显示,0:不显示)', `created_at` timestamp null, `updated_at` timestamp null) default character set utf8mb4 collate 'utf8mb4_unicode_ci'
+
+[2019-11-25 18:35:14]alter table `wifi_configs` add index `wifi_configs_school_id_index`(`school_id`)
+
+[2019-11-25 18:35:14]alter table `wifi_configs` add index `wifi_configs_campus_id_index`(`campus_id`)
+
+[2019-11-25 18:35:14] ALTER TABLE wifis comment 'wifi全局配置表' 
+
+[2019-11-25 18:35:14]insert into `wifi_configs` (`campus_id`, `config_imgurl1`, `config_imgurl1_status`, `config_imgurl2`, `config_imgurl2_status`, `config_imgurl3`, `config_imgurl3_status`, `configid`, `created_at`, `school_id`, `status`, `typeid`, `updated_at`) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+parmars:[1,"/assets/img/mega-img2.jpg",1,"/assets/img/mega-img2.jpg",1,"/assets/img/mega-img2.jpg",1,1,"2019-11-13 00:26:33",1,1,1,"2019-11-13 00:26:33"]
+
+[2019-11-25 18:35:14]insert into `migrations` (`migration`, `batch`) values (?, ?)
+parmars:["2019_11_13_204514_create_wifi_configs_table",14]
+
+[2019-11-25 18:35:14]select * from information_schema.tables where table_schema = ? and table_name = ? and table_type = 'BASE TABLE'
+parmars:["purfect_all","wifi_contents"]
+
+[2019-11-25 18:35:14]create table `wifi_contents` (`contentid` bigint unsigned not null auto_increment primary key, `typeid` tinyint not null default '0' comment '类型(1:校园网通知,2:用网须知,3:充值通知,4:套餐说明,5:网络协议)', `school_id` mediumint unsigned not null default '0' comment '学校id', `campus_id` mediumint unsigned not null default '0' comment '校区id', `content` longtext not null comment '内容', `status` tinyint not null default '1' comment '状态(1:显示,0:不显示)', `created_at` timestamp null, `updated_at` timestamp null) default character set utf8mb4 collate 'utf8mb4_unicode_ci'
+
+[2019-11-25 18:35:14]alter table `wifi_contents` add index `wifi_contents_school_id_index`(`school_id`)
+
+[2019-11-25 18:35:14]alter table `wifi_contents` add index `wifi_contents_campus_id_index`(`campus_id`)
+
+[2019-11-25 18:35:14] ALTER TABLE wifi_contents comment 'wifi网络信息表' 
+
+[2019-11-25 18:35:14]insert into `wifi_contents` (`campus_id`, `content`, `contentid`, `created_at`, `school_id`, `status`, `typeid`, `updated_at`) values (?, ?, ?, ?, ?, ?, ?, ?), (?, ?, ?, ?, ?, ?, ?, ?), (?, ?, ?, ?, ?, ?, ?, ?), (?, ?, ?, ?, ?, ?, ?, ?), (?, ?, ?, ?, ?, ?, ?, ?)
+parmars:[1,"校园网通知",1,"2019-11-13 00:26:33",1,1,1,"2019-11-13 00:26:33",1,"用网须知",2,"2019-11-13 00:26:33",1,1,2,"2019-11-13 00:26:33",1,"充值通知",3,"2019-11-13 00:26:33",1,1,3,"2019-11-13 00:26:33",1,"套餐说明",4,"2019-11-13 00:26:33",1,1,4,"2019-11-13 00:26:33",1,"网络协议",5,"2019-11-13 00:26:33",1,1,5,"2019-11-13 00:26:33"]
+
+[2019-11-25 18:35:15]insert into `migrations` (`migration`, `batch`) values (?, ?)
+parmars:["2019_11_13_204515_create_wifi_contents_table",14]
+
+[2019-11-25 18:35:15]select * from information_schema.tables where table_schema = ? and table_name = ? and table_type = 'BASE TABLE'
+parmars:["purfect_all","wifi_issue_comments"]
+
+[2019-11-25 18:35:15]create table `wifi_issue_comments` (`commentid` bigint unsigned not null auto_increment primary key, `user_id` mediumint unsigned not null default '0' comment '用户id', `school_id` mediumint unsigned not null default '0' comment '学校id', `campus_id` mediumint unsigned not null default '0' comment '校区id', `issueid` mediumint unsigned not null default '0' comment '保修单id', `comment_service` tinyint not null default '0' comment '服务态度', `comment_worders` tinyint not null default '0' comment '工作效率', `comment_efficiency` tinyint not null default '0' comment '满意度', `comment_content` varchar(300) null comment '评论内容', `status` tinyint not null default '1' comment '状态(1:显示,0:不显示)', `created_at` timestamp null, `updated_at` timestamp null) default character set utf8mb4 collate 'utf8mb4_unicode_ci'
+
+[2019-11-25 18:35:15]alter table `wifi_issue_comments` add index `wifi_issue_comments_user_id_index`(`user_id`)
+
+[2019-11-25 18:35:15]alter table `wifi_issue_comments` add index `wifi_issue_comments_school_id_index`(`school_id`)
+
+[2019-11-25 18:35:15]alter table `wifi_issue_comments` add index `wifi_issue_comments_campus_id_index`(`campus_id`)
+
+[2019-11-25 18:35:15]alter table `wifi_issue_comments` add index `wifi_issue_comments_issueid_index`(`issueid`)
+
+[2019-11-25 18:35:15] ALTER TABLE wifi_issue_comments comment '保修单评价表' 
+
+[2019-11-25 18:35:15]insert into `migrations` (`migration`, `batch`) values (?, ?)
+parmars:["2019_11_13_204516_create_wifi_issue_comments_table",14]
+
+[2019-11-25 18:35:15]select * from information_schema.tables where table_schema = ? and table_name = ? and table_type = 'BASE TABLE'
+parmars:["purfect_all","wifi_issue_disposes"]
+
+[2019-11-25 18:35:15]create table `wifi_issue_disposes` (`disposeid` bigint unsigned not null auto_increment primary key, `issueid` mediumint unsigned not null default '0' comment '保修单id', `school_id` mediumint unsigned not null default '0' comment '学校id', `campus_id` mediumint unsigned not null default '0' comment '校区id', `typeone_id` mediumint unsigned not null default '0' comment '一级问题id', `typeone_name` varchar(50) null comment '一级问题名称', `typetwo_id` mediumint unsigned not null default '0' comment '二级问题id', `typetwo_name` varchar(50) null comment '二级问题名称', `admin_desc` varchar(2000) null comment '处理回复描述', `status` tinyint not null default '1' comment '状态(1:待处理，2:已接单，3:已完成,，4:已取消，5:已关闭)', `created_at` timestamp null, `updated_at` timestamp null) default character set utf8mb4 collate 'utf8mb4_unicode_ci'
+
+[2019-11-25 18:35:15]alter table `wifi_issue_disposes` add index `wifi_issue_disposes_issueid_index`(`issueid`)
+
+[2019-11-25 18:35:15]alter table `wifi_issue_disposes` add index `wifi_issue_disposes_school_id_index`(`school_id`)
+
+[2019-11-25 18:35:15]alter table `wifi_issue_disposes` add index `wifi_issue_disposes_campus_id_index`(`campus_id`)
+
+[2019-11-25 18:35:15]alter table `wifi_issue_disposes` add index `wifi_issue_disposes_typeone_id_index`(`typeone_id`)
+
+[2019-11-25 18:35:15]alter table `wifi_issue_disposes` add index `wifi_issue_disposes_typetwo_id_index`(`typetwo_id`)
+
+[2019-11-25 18:35:15] ALTER TABLE wifi_issue_disposes comment '保修单处理表' 
+
+[2019-11-25 18:35:15]insert into `migrations` (`migration`, `batch`) values (?, ?)
+parmars:["2019_11_13_204517_create_wifi_issue_disposes_table",14]
+
+[2019-11-25 18:35:15]select * from information_schema.tables where table_schema = ? and table_name = ? and table_type = 'BASE TABLE'
+parmars:["purfect_all","wifi_issue_types"]
+
+[2019-11-25 18:35:15]create table `wifi_issue_types` (`typeid` bigint unsigned not null auto_increment primary key, `type_name` varchar(50) null comment '类型名称', `type_pid` mediumint unsigned not null default '0' comment '父id', `purpose` mediumint unsigned not null default '1' comment '用途（1:客户选择故障类型,2:维修人员类型选择故障)', `status` tinyint not null default '1' comment '状态(0:不显示,1:显示)', `created_at` timestamp null, `updated_at` timestamp null) default character set utf8mb4 collate 'utf8mb4_unicode_ci'
+
+[2019-11-25 18:35:15]alter table `wifi_issue_types` add index `wifi_issue_types_type_pid_index`(`type_pid`)
+
+[2019-11-25 18:35:15]alter table `wifi_issue_types` add index `wifi_issue_types_purpose_index`(`purpose`)
+
+[2019-11-25 18:35:15] ALTER TABLE wifi_issue_types comment '保修类型表' 
+
+[2019-11-25 18:35:15]insert into `wifi_issue_types` (`type_name`, `type_pid`, `typeid`) values (?, ?, ?), (?, ?, ?), (?, ?, ?), (?, ?, ?), (?, ?, ?), (?, ?, ?), (?, ?, ?), (?, ?, ?), (?, ?, ?), (?, ?, ?), (?, ?, ?), (?, ?, ?), (?, ?, ?), (?, ?, ?), (?, ?, ?), (?, ?, ?), (?, ?, ?), (?, ?, ?), (?, ?, ?), (?, ?, ?), (?, ?, ?), (?, ?, ?), (?, ?, ?), (?, ?, ?), (?, ?, ?), (?, ?, ?), (?, ?, ?), (?, ?, ?), (?, ?, ?), (?, ?, ?), (?, ?, ?)
+parmars:["网速慢",0,1,"断网",0,2,"无法充值",0,3,"一直显示充值中",3,4,"搜不到网络，无法连接",2,5,"网络不稳定，频繁掉线",2,6,"打游戏特别卡",1,7,"视频无法观看",1,8,"开通有线网络",0,9,"1号端口",9,10,"2号端口",9,11,"3号端口",9,12,"4号端口",9,13,"网络侧问题",0,14,"线路侧问题",0,15,"用户侧问题",0,16,"上联传输线路故障",14,17,"机房设备故障",14,18,"机房设备数据配置问题",14,19,"楼道设备故障",14,20,"楼道设备断电",14,21,"APP设备故障",14,22,"用户自好",14,23,"光缆跳纤终端",15,24,"光缆跳纤衰减",15,25,"综合布线问题",15,26,"用户手机问题",16,27,"用户电脑问题",16,28,"用户端水晶头问题",16,29,"用户内部布线问题",16,30,"用户账号/密码问题",16,31]
+
+[2019-11-25 18:35:15]insert into `migrations` (`migration`, `batch`) values (?, ?)
+parmars:["2019_11_13_204518_create_wifi_issue_types_table",14]
+
+[2019-11-25 18:35:15]select * from information_schema.tables where table_schema = ? and table_name = ? and table_type = 'BASE TABLE'
+parmars:["purfect_all","wifi_issues"]
+
+[2019-11-25 18:35:15]create table `wifi_issues` (`issueid` bigint unsigned not null auto_increment primary key, `user_id` mediumint unsigned not null default '0' comment '用户id', `school_id` mediumint unsigned not null default '0' comment '学校id', `campus_id` mediumint unsigned not null default '0' comment '校区id', `trade_sn` varchar(60) null comment '订单号', `typeone_id` mediumint unsigned not null default '0' comment '大类型ID', `typeone_name` varchar(50) null comment '大类型名称', `typetwo_id` mediumint unsigned not null default '0' comment '小类型ID', `typetwo_name` varchar(50) null comment '小类型名称', `issue_name` varchar(20) null comment '故障申请联系人姓名', `issue_mobile` varchar(15) null comment '故障申请联系人电话', `issue_desc` varchar(2000) null comment '故障问题描述', `addressoneid` mediumint unsigned not null default '0' comment '地址一级id', `addresstwoid` mediumint unsigned not null default '0' comment '地址二级id', `addressthreeid` mediumint unsigned not null default '0' comment '地址三级id', `addr_detail` varchar(150) null comment '保修详细地址', `adminid` mediumint unsigned not null default '0' comment '后台处理人', `admin_name` varchar(10) null comment '后台处理人姓名', `admin_mobile` varchar(15) null comment '后台处理人手机号', `admin_desc` varchar(2000) null comment '后台处理人反馈', `is_comment` tinyint not null default '1' comment '是否评价(1:未评价,2:已评价)', `jiedan_time` datetime null comment '接单时间', `chulis_time` datetime null comment '处理时间', `status` tinyint not null default '1' comment '状态,1:待处理,2:已接单，3:已完成,4:已取消,5:已关闭.)', `created_at` datetime null comment '添加时间', `updated_at` datetime null comment '更新时间') default character set utf8mb4 collate 'utf8mb4_unicode_ci'
+
+[2019-11-25 18:35:15]alter table `wifi_issues` add index `wifi_issues_user_id_index`(`user_id`)
+
+[2019-11-25 18:35:15]alter table `wifi_issues` add index `wifi_issues_school_id_index`(`school_id`)
+
+[2019-11-25 18:35:15]alter table `wifi_issues` add index `wifi_issues_campus_id_index`(`campus_id`)
+
+[2019-11-25 18:35:15]alter table `wifi_issues` add index `wifi_issues_addressoneid_index`(`addressoneid`)
+
+[2019-11-25 18:35:16]alter table `wifi_issues` add index `wifi_issues_addresstwoid_index`(`addresstwoid`)
+
+[2019-11-25 18:35:16]alter table `wifi_issues` add index `wifi_issues_addressthreeid_index`(`addressthreeid`)
+
+[2019-11-25 18:35:16]alter table `wifi_issues` add index `wifi_issues_adminid_index`(`adminid`)
+
+[2019-11-25 18:35:16] ALTER TABLE wifi_issues comment '保修单表' 
+
+[2019-11-25 18:35:16]insert into `migrations` (`migration`, `batch`) values (?, ?)
+parmars:["2019_11_13_204519_create_wifi_issues_table",14]
+
+[2019-11-25 18:35:16]select * from information_schema.tables where table_schema = ? and table_name = ? and table_type = 'BASE TABLE'
+parmars:["purfect_all","wifi_notices"]
+
+[2019-11-25 18:35:16]create table `wifi_notices` (`noticeid` bigint unsigned not null auto_increment primary key, `notice_title` varchar(60) null comment '文档标题', `notice_content` longtext not null comment '文档内容', `sort` mediumint unsigned not null default '1000' comment '排序', `created_at` datetime null comment '添加时间', `updated_at` datetime null comment '更新时间') default character set utf8mb4 collate 'utf8mb4_unicode_ci'
+
+[2019-11-25 18:35:16] ALTER TABLE wifi_notices comment 'wifi帮助' 
+
+[2019-11-25 18:35:16]insert into `wifi_notices` (`notice_content`, `notice_title`, `noticeid`) values (?, ?, ?), (?, ?, ?), (?, ?, ?), (?, ?, ?), (?, ?, ?), (?, ?, ?)
+parmars:["无法成功连接WiFi接入号","无法成功连接WiFi接入号",1,"连接WiFi，APP内“点击上线”，但不能上线","连接WiFi，APP内“点击上线”，但不能上线",2,"已连上WiFi，弹不出登录页面","已连上WiFi，弹不出登录页面",3,"使用时断网","使用时断网",4,"手机锁屏后断网","手机锁屏后断网",5,"校园网服务协议","校园网服务协议",6]
+
+[2019-11-25 18:35:16]insert into `migrations` (`migration`, `batch`) values (?, ?)
+parmars:["2019_11_13_204520_create_wifi_notices_table",14]
+
+[2019-11-25 18:35:16]select * from information_schema.tables where table_schema = ? and table_name = ? and table_type = 'BASE TABLE'
+parmars:["purfect_all","wifi_orders"]
+
+[2019-11-25 18:35:16]create table `wifi_orders` (`orderid` bigint unsigned not null auto_increment primary key, `trade_sn` varchar(60) null comment '订单号', `type` tinyint not null default '1' comment '类型(1:充值,2:赠送)', `mode` tinyint not null default '0' comment '类型(1:无线,2:有线)', `user_id` mediumint unsigned not null default '0' comment '用户id', `school_id` mediumint unsigned not null default '0' comment '学校id', `campus_id` mediumint unsigned not null default '0' comment '校区id', `wifi_id` mediumint unsigned not null default '0' comment 'wifi_id', `wifi_type` tinyint not null default '0' comment 'wifi类型', `wifi_name` varchar(50) null comment 'wifi类型名称', `order_days` mediumint unsigned not null default '0' comment '天数', `order_number` mediumint unsigned not null default '1' comment '购买数量', `order_unitprice` decimal(8, 2) not null default '0' comment 'wifi单价', `order_totalprice` decimal(8, 2) not null default '0' comment '支付总价', `paymentid` tinyint not null default '0' comment '支付方式(1:微信,2:支付宝,3:钱包支付,4:免支付)', `payment_name` varchar(15) null comment '支付名称', `pay_time` datetime null comment '支付时间', `succeed_time` datetime null comment '支付成功-WIFI充值成功', `defeated_time` datetime null comment '支付成功-WIFI充值失败', `refund_time` datetime null comment '支付成功-退款成功时间', `cancle_time` datetime null comment '取消时间', `wifi_rechargeLog` varchar(500) null comment 'wifi充值日志', `wifi_refund` tinyint not null default '0' comment '退款(1:已退款)', `wifi_refundtime` datetime null comment '退款时间', `wifi_refundprice` decimal(8, 2) not null default '0' comment '退款金额', `wifi_operatdesc` varchar(500) null comment '处理描述', `status` tinyint not null default '1' comment '状态(0:关闭,1:待支付,2:支付失败,3:支付成功-WIFI充值中,4:支付成功-WIFI充值成功,5:支付成功-充值失败,6:支付成功-退款成功)', `is_chuli` tinyint not null default '0' comment '是否处理(0:未处理,1:已处理)', `created_at` datetime null comment '添加时间', `updated_at` datetime null comment '更新时间') default character set utf8mb4 collate 'utf8mb4_unicode_ci'
+
+[2019-11-25 18:35:16]alter table `wifi_orders` add index `wifi_orders_school_id_index`(`school_id`)
+
+[2019-11-25 18:35:16]alter table `wifi_orders` add index `wifi_orders_campus_id_index`(`campus_id`)
+
+[2019-11-25 18:35:16] ALTER TABLE wifi_orders comment 'wifi订单表' 
+
+[2019-11-25 18:35:16]insert into `migrations` (`migration`, `batch`) values (?, ?)
+parmars:["2019_11_13_204521_create_wifi_orders_table",14]
+
+[2019-11-25 18:35:16]select * from information_schema.tables where table_schema = ? and table_name = ? and table_type = 'BASE TABLE'
+parmars:["purfect_all","wifi_orders_locations"]
+
+[2019-11-25 18:35:16]create table `wifi_orders_locations` (`locationid` bigint unsigned not null auto_increment primary key, `orderid` mediumint unsigned not null comment 'wifi订单id', `user_id` mediumint unsigned not null comment '用户id', `school_id` mediumint unsigned not null default '0' comment '学校id', `campus_id` mediumint unsigned not null default '0' comment '校区id', `addressoneid` mediumint unsigned not null default '0' comment '有线(宿舍楼id)', `addresstwoid` mediumint unsigned not null default '0' comment '有线(房间id)', `addressthreeid` mediumint unsigned not null default '0' comment '有线(房间id)', `addressfourid` mediumint unsigned not null default '0' comment '有线(端口id)', `addressoneid_name` varchar(50) null comment '有线(宿舍楼名称)', `addresstwoid_name` varchar(50) null comment '有线(楼层名称)', `addressthreeid_name` varchar(50) null comment '有线(房间名称)', `addressfourid_name` varchar(50) null comment '有线(端口名称)', `status` tinyint not null default '0' comment '状态(0:未开通,1:已开通)', `created_at` datetime null comment '添加时间', `updated_at` datetime null comment '更新时间') default character set utf8mb4 collate 'utf8mb4_unicode_ci'
+
+[2019-11-25 18:35:16]alter table `wifi_orders_locations` add index `wifi_orders_locations_school_id_index`(`school_id`)
+
+[2019-11-25 18:35:16]alter table `wifi_orders_locations` add index `wifi_orders_locations_campus_id_index`(`campus_id`)
+
+[2019-11-25 18:35:16] ALTER TABLE wifi_orders_locations comment 'wifi订单有线地址表' 
+
+[2019-11-25 18:35:16]insert into `migrations` (`migration`, `batch`) values (?, ?)
+parmars:["2019_11_13_204522_create_wifi_orders_locations_table",14]
+
+[2019-11-25 18:35:16]select * from information_schema.tables where table_schema = ? and table_name = ? and table_type = 'BASE TABLE'
+parmars:["purfect_all","wifi_user_agreements"]
+
+[2019-11-25 18:35:16]create table `wifi_user_agreements` (`agreementid` bigint unsigned not null auto_increment primary key, `user_id` mediumint unsigned not null comment '用户id', `created_at` datetime null comment '添加时间') default character set utf8mb4 collate 'utf8mb4_unicode_ci'
+
+[2019-11-25 18:35:16] ALTER TABLE wifi_user_agreements comment 'wifi用户协议同意表' 
+
+[2019-11-25 18:35:16]insert into `migrations` (`migration`, `batch`) values (?, ?)
+parmars:["2019_11_13_204523_create_wifi_user_agreements_table",14]
+
+[2019-11-25 18:35:16]select * from information_schema.tables where table_schema = ? and table_name = ? and table_type = 'BASE TABLE'
+parmars:["purfect_all","wifi_user_times"]
+
+[2019-11-25 18:35:16]create table `wifi_user_times` (`timesid` bigint unsigned not null auto_increment primary key, `user_id` mediumint unsigned not null comment '用户id', `school_id` mediumint unsigned not null default '0' comment '学校id', `campus_id` mediumint unsigned not null default '0' comment '校区id', `user_wifi_time` datetime null comment 'wifi到期时间', `user_wifi_name` varchar(50) null comment 'wifi账号', `user_wifi_password` varchar(50) null comment 'wifi密码', `user_cable_etime` datetime null comment 'wifi有线开通结束时间', `user_mobile_source` tinyint not null default '0' comment '运营商(1:移动,2:联通,3:电信,4:其他)', `user_mobile_phone` varchar(15) null comment '套餐手机号', `user_mobile_password` varchar(15) null comment '套餐手机号密码', `user_phone_package_desc` varchar(300) null comment '套餐描述信息', `status` tinyint not null default '1' comment 'wifi是否可用(0:不可用,1:可用)', `created_at` datetime null comment '添加时间', `updated_at` datetime null comment '更新时间') default character set utf8mb4 collate 'utf8mb4_unicode_ci'
+
+[2019-11-25 18:35:16]alter table `wifi_user_times` add index `wifi_user_times_school_id_index`(`school_id`)
+
+[2019-11-25 18:35:16]alter table `wifi_user_times` add index `wifi_user_times_campus_id_index`(`campus_id`)
+
+[2019-11-25 18:35:16] ALTER TABLE wifi_user_times comment '用户wifi时长和电话套餐表' 
+
+[2019-11-25 18:35:16]insert into `migrations` (`migration`, `batch`) values (?, ?)
+parmars:["2019_11_13_204524_create_wifi_user_times_table",14]
+
+[2019-11-25 18:35:16]create table `attendance_tasks` (`id` bigint unsigned not null auto_increment primary key, `school_id` int unsigned not null comment '学校ID', `campus_id` int unsigned not null comment '校区ID', `type` tinyint unsigned not null default '1' comment '任务类型 1 教师任务， 2 学生任务, 3 其它任务(学生老师都可见)', `title` varchar(255) null comment '任务名称', `content` text null comment '值周内容', `start_time` date null comment '任务开始时间', `end_time` date null comment '任务截止时间', `created_at` timestamp null, `updated_at` timestamp null) default character set utf8mb4 collate 'utf8mb4_unicode_ci'
+
+[2019-11-25 18:35:16]insert into `migrations` (`migration`, `batch`) values (?, ?)
+parmars:["2019_11_22_085404_create_attendance_task",14]
+
+[2019-11-25 18:35:16]create table `attendance_persons` (`id` bigint unsigned not null auto_increment primary key, `user_id` bigint unsigned not null comment '用户id 学生老师都有可能', `type` tinyint unsigned not null comment '人员类型，老师还是学生 1 老师 2 学生', `school_id` int unsigned not null comment '学校ID', `campus_id` int unsigned not null comment '校区ID', `created_at` timestamp null, `updated_at` timestamp null) default character set utf8mb4 collate 'utf8mb4_unicode_ci'
+
+[2019-11-25 18:35:16]alter table `attendance_persons` add index `attendance_persons_user_id_index`(`user_id`)
+
+[2019-11-25 18:35:16]insert into `migrations` (`migration`, `batch`) values (?, ?)
+parmars:["2019_11_22_085459_create_attendance_person",14]
+
+[2019-11-25 18:35:17]create table `attendance_schedules` (`id` bigint unsigned not null auto_increment primary key, `school_id` int unsigned not null comment '学校ID', `campus_id` int unsigned not null comment '校区ID', `attendance_id` int unsigned null comment '值周任务表id', `user_id` bigint unsigned not null comment '用户id 学生老师都有可能', `start_time` date null comment '任务开始时间', `end_time` date null comment '任务截止时间', `time_slot_id` int unsigned null comment '时间槽id', `created_at` timestamp null, `updated_at` timestamp null) default character set utf8mb4 collate 'utf8mb4_unicode_ci'
+
+[2019-11-25 18:35:17]alter table `attendance_schedules` add index `attendance_schedules_attendance_id_index`(`attendance_id`)
+
+[2019-11-25 18:35:17]alter table `attendance_schedules` add index `attendance_schedules_user_id_index`(`user_id`)
+
+[2019-11-25 18:35:17]insert into `migrations` (`migration`, `batch`) values (?, ?)
+parmars:["2019_11_22_092514_create_attendance_schedules",14]
+
+[2019-11-25 18:35:17]create table `attendance_time_slots` (`id` bigint unsigned not null auto_increment primary key, `attendance_id` int unsigned null comment '值周任务表id', `title` varchar(40) null comment '时段名称', `start_time` time null comment '时段开始时间', `end_time` time null comment '时段截止时间', `created_at` timestamp null, `updated_at` timestamp null) default character set utf8mb4 collate 'utf8mb4_unicode_ci'
+
+[2019-11-25 18:35:17]alter table `attendance_time_slots` add index `attendance_time_slots_attendance_id_index`(`attendance_id`)
+
+[2019-11-25 18:35:17]insert into `migrations` (`migration`, `batch`) values (?, ?)
+parmars:["2019_11_22_093556_create_attendance_time_slots",14]
+
+[2019-11-25 18:35:17]alter table `attendance_tasks` drop `campus_id`
+
+[2019-11-25 18:35:17]alter table `attendance_schedules` drop `campus_id`
+
+[2019-11-25 18:35:17]insert into `migrations` (`migration`, `batch`) values (?, ?)
+parmars:["2019_11_22_162940_modify_attendance_task",14]
+
+[2019-11-25 18:35:17]create table `attendance_schedule_persons` (`id` bigint unsigned not null auto_increment primary key, `attendance_id` int unsigned null comment '值周任务表id', `schedule_id` int unsigned null comment 'attendance_schedule表id', `user_id` bigint unsigned not null comment '用户id 学生老师都有可能', `created_at` timestamp null, `updated_at` timestamp null) default character set utf8mb4 collate 'utf8mb4_unicode_ci'
+
+[2019-11-25 18:35:17]alter table `attendance_schedule_persons` add index `attendance_schedule_persons_attendance_id_index`(`attendance_id`)
+
+[2019-11-25 18:35:17]alter table `attendance_schedule_persons` add index `attendance_schedule_persons_schedule_id_index`(`schedule_id`)
+
+[2019-11-25 18:35:17]alter table `attendance_schedule_persons` add index `attendance_schedule_persons_user_id_index`(`user_id`)
+
+[2019-11-25 18:35:17]insert into `migrations` (`migration`, `batch`) values (?, ?)
+parmars:["2019_11_22_172123_create_attendance_schedule_persons",14]
+
+[2019-11-25 18:35:17]alter table `attendance_schedules` add `start_date_time` datetime null comment '任务开始时间', add `end_date_time` datetime null comment '任务截止时间'
+
+[2019-11-25 18:35:17]alter table `attendance_schedules` drop `user_id`
+
+[2019-11-25 18:35:17]alter table `attendance_schedules` drop `start_time`
+
+[2019-11-25 18:35:18]alter table `attendance_schedules` drop `end_time`
+
+[2019-11-25 18:35:18]insert into `migrations` (`migration`, `batch`) values (?, ?)
+parmars:["2019_11_22_205254_modify_attendance_schedules",14]
+
+[2019-11-25 18:35:18]ALTER TABLE apply_course_arrangements CHANGE building_id building_id INT UNSIGNED DEFAULT NULL COMMENT '教学楼id', CHANGE building_name building_name VARCHAR(255) DEFAULT NULL COLLATE utf8mb4_unicode_ci COMMENT '教学楼名称', CHANGE classroom_id classroom_id INT UNSIGNED DEFAULT NULL COMMENT '教室id', CHANGE classroom_name classroom_name VARCHAR(255) DEFAULT NULL COLLATE utf8mb4_unicode_ci COMMENT '教室名称'
+
+[2019-11-25 18:35:18]insert into `migrations` (`migration`, `batch`) values (?, ?)
+parmars:["2019_11_23_141606_change_build_room_nullable_in_elective_course_arragement",14]
+
+[2019-11-25 18:35:18]ALTER TABLE attendance_schedules CHANGE attendance_id task_id INT UNSIGNED DEFAULT NULL COMMENT '值周任务表id'
+
+[2019-11-25 18:35:18]ALTER TABLE attendance_time_slots CHANGE attendance_id task_id INT UNSIGNED DEFAULT NULL COMMENT '值周任务表id'
+
+[2019-11-25 18:35:18]ALTER TABLE attendance_schedule_persons CHANGE attendance_id task_id INT UNSIGNED DEFAULT NULL COMMENT '值周任务表id'
+
+[2019-11-25 18:35:18]insert into `migrations` (`migration`, `batch`) values (?, ?)
+parmars:["2019_11_24_113822_modify_attendance_tables",14]
+
+[2019-11-25 18:35:18]create table `banners` (`id` bigint unsigned not null auto_increment primary key, `school_id` int unsigned not null, `posit` smallint unsigned not null comment '位置 1首页', `type` bigint unsigned not null comment '0:无跳转, 1:图文, 2:url', `sort` tinyint not null default '0' comment '排序', `title` varchar(100) not null comment '标题', `image_url` varchar(255) null comment '图片url', `content` varchar(255) null comment '图文内容', `status` smallint unsigned not null default '1' comment '状态 0:不显示, 1显示', `created_at` timestamp null, `updated_at` timestamp null) default character set utf8mb4 collate 'utf8mb4_unicode_ci'
+
+[2019-11-25 18:35:18] ALTER TABLE banners comment 'banner表' 
+
+[2019-11-25 18:35:18]insert into `migrations` (`migration`, `batch`) values (?, ?)
+parmars:["2019_11_25_112939_create_banners_table",14]
+
+[2019-11-25 19:51:20]select max(`batch`) as aggregate from `migrations`
+
+[2019-11-25 19:51:20]select * from `migrations` where `batch` = ? order by `migration` desc
+parmars:[14]
+
+[2019-11-25 19:51:22]drop table if exists `banners`
+
+[2019-11-25 19:51:22]delete from `migrations` where `migration` = ?
+parmars:["2019_11_25_112939_create_banners_table"]
+
+[2019-11-25 19:51:23]ALTER TABLE attendance_schedules CHANGE task_id attendance_id INT UNSIGNED DEFAULT NULL COMMENT '值周任务表id'
+
+[2019-11-25 19:51:23]ALTER TABLE attendance_time_slots CHANGE task_id attendance_id INT UNSIGNED DEFAULT NULL COMMENT '值周任务表id'
+
+[2019-11-25 19:51:23]ALTER TABLE attendance_schedule_persons CHANGE task_id attendance_id INT UNSIGNED DEFAULT NULL COMMENT '值周任务表id'
+
+[2019-11-25 19:51:23]delete from `migrations` where `migration` = ?
+parmars:["2019_11_24_113822_modify_attendance_tables"]
+
+[2019-11-25 19:51:23]delete from `migrations` where `migration` = ?
+parmars:["2019_11_23_141606_change_build_room_nullable_in_elective_course_arragement"]
+
+[2019-11-25 19:51:23]alter table `attendance_schedules` add `user_id` bigint unsigned not null comment '用户id 学生老师都有可能', add `start_time` date null comment '任务开始时间', add `end_time` date null comment '任务截止时间'
+
+[2019-11-25 19:51:24]alter table `attendance_schedules` drop `start_date_time`
+
+[2019-11-25 19:51:24]alter table `attendance_schedules` drop `end_date_time`
+
+[2019-11-25 19:51:24]alter table `attendance_schedules` add index `attendance_schedules_user_id_index`(`user_id`)
+
+[2019-11-25 19:51:24]delete from `migrations` where `migration` = ?
+parmars:["2019_11_22_205254_modify_attendance_schedules"]
+
+[2019-11-25 19:51:24]drop table if exists `attendance_schedule_persons`
+
+[2019-11-25 19:51:24]delete from `migrations` where `migration` = ?
+parmars:["2019_11_22_172123_create_attendance_schedule_persons"]
+
+[2019-11-25 19:51:24]alter table `attendance_tasks` add `campus_id` int unsigned not null comment '校区ID'
+
+[2019-11-25 19:51:24]alter table `attendance_schedules` add `campus_id` int unsigned not null comment '校区ID'
+
+[2019-11-25 19:51:24]delete from `migrations` where `migration` = ?
+parmars:["2019_11_22_162940_modify_attendance_task"]
+
+[2019-11-25 19:51:24]drop table if exists `attendance_time_slots`
+
+[2019-11-25 19:51:24]delete from `migrations` where `migration` = ?
+parmars:["2019_11_22_093556_create_attendance_time_slots"]
+
+[2019-11-25 19:51:24]drop table if exists `attendance_schedules`
+
+[2019-11-25 19:51:24]delete from `migrations` where `migration` = ?
+parmars:["2019_11_22_092514_create_attendance_schedules"]
+
+[2019-11-25 19:51:24]drop table if exists `attendance_persons`
+
+[2019-11-25 19:51:24]delete from `migrations` where `migration` = ?
+parmars:["2019_11_22_085459_create_attendance_person"]
+
+[2019-11-25 19:51:24]drop table if exists `attendance_tasks`
+
+[2019-11-25 19:51:24]delete from `migrations` where `migration` = ?
+parmars:["2019_11_22_085404_create_attendance_task"]
+
+[2019-11-25 19:51:25]drop table if exists `wifi_user_times`
+
+[2019-11-25 19:51:25]delete from `migrations` where `migration` = ?
+parmars:["2019_11_13_204524_create_wifi_user_times_table"]
+
+[2019-11-25 19:51:25]drop table if exists `wifi_user_agreements`
+
+[2019-11-25 19:51:25]delete from `migrations` where `migration` = ?
+parmars:["2019_11_13_204523_create_wifi_user_agreements_table"]
+
+[2019-11-25 19:51:25]drop table if exists `wifi_orders_locations`
+
+[2019-11-25 19:51:25]delete from `migrations` where `migration` = ?
+parmars:["2019_11_13_204522_create_wifi_orders_locations_table"]
+
+[2019-11-25 19:51:25]drop table if exists `wifi_orders`
+
+[2019-11-25 19:51:25]delete from `migrations` where `migration` = ?
+parmars:["2019_11_13_204521_create_wifi_orders_table"]
+
+[2019-11-25 19:51:25]drop table if exists `wifi_notices`
+
+[2019-11-25 19:51:25]delete from `migrations` where `migration` = ?
+parmars:["2019_11_13_204520_create_wifi_notices_table"]
+
+[2019-11-25 19:51:25]drop table if exists `wifi_issues`
+
+[2019-11-25 19:51:25]delete from `migrations` where `migration` = ?
+parmars:["2019_11_13_204519_create_wifi_issues_table"]
+
+[2019-11-25 19:51:25]drop table if exists `wifi_issue_types`
+
+[2019-11-25 19:51:25]delete from `migrations` where `migration` = ?
+parmars:["2019_11_13_204518_create_wifi_issue_types_table"]
+
+[2019-11-25 19:51:25]drop table if exists `wifi_issue_disposes`
+
+[2019-11-25 19:51:25]delete from `migrations` where `migration` = ?
+parmars:["2019_11_13_204517_create_wifi_issue_disposes_table"]
+
+[2019-11-25 19:51:25]drop table if exists `wifi_issue_comments`
+
+[2019-11-25 19:51:25]delete from `migrations` where `migration` = ?
+parmars:["2019_11_13_204516_create_wifi_issue_comments_table"]
+
+[2019-11-25 19:51:25]drop table if exists `wifi_contents`
+
+[2019-11-25 19:51:25]delete from `migrations` where `migration` = ?
+parmars:["2019_11_13_204515_create_wifi_contents_table"]
+
+[2019-11-25 19:51:25]drop table if exists `wifi_configs`
+
+[2019-11-25 19:51:25]delete from `migrations` where `migration` = ?
+parmars:["2019_11_13_204514_create_wifi_configs_table"]
+
+[2019-11-25 19:51:25]drop table if exists `wifis`
+
+[2019-11-25 19:51:25]delete from `migrations` where `migration` = ?
+parmars:["2019_11_13_204513_create_wifis_table"]
+
+[2019-11-25 19:51:43]select * from information_schema.tables where table_schema = ? and table_name = ? and table_type = 'BASE TABLE'
+parmars:["purfect_all","migrations"]
+
+[2019-11-25 19:51:43]select `migration` from `migrations` order by `batch` asc, `migration` asc
+
+[2019-11-25 19:51:43]select max(`batch`) as aggregate from `migrations`
+
+[2019-11-25 19:51:43]select * from information_schema.tables where table_schema = ? and table_name = ? and table_type = 'BASE TABLE'
+parmars:["purfect_all","wifis"]
+
+[2019-11-25 19:51:43]create table `wifis` (`wifiid` bigint unsigned not null auto_increment primary key, `mode` tinyint not null default '0' comment '类型(1:无线,2:有线)', `school_id` mediumint unsigned not null default '0' comment '学校id', `campus_id` mediumint unsigned not null default '0' comment '校区id', `wifi_type` tinyint not null default '0' comment 'wifi类型id', `wifi_name` varchar(50) null comment 'wifi类型名称', `wifi_days` mediumint unsigned not null default '0' comment '天数', `wifi_sort` mediumint unsigned not null default '0' comment '排序', `wifi_oprice` decimal(8, 2) not null default '0' comment '原始价格', `wifi_price` decimal(8, 2) not null default '0' comment '支付价格', `status` tinyint not null default '1' comment '状态(1:显示,0:不显示)', `created_at` timestamp null, `updated_at` timestamp null) default character set utf8mb4 collate 'utf8mb4_unicode_ci'
+
+[2019-11-25 19:51:43]alter table `wifis` add index `wifis_school_id_index`(`school_id`)
+
+[2019-11-25 19:51:43]alter table `wifis` add index `wifis_campus_id_index`(`campus_id`)
+
+[2019-11-25 19:51:43] ALTER TABLE wifis comment 'wifi产品表' 
+
+[2019-11-25 19:51:43]insert into `wifis` (`campus_id`, `created_at`, `mode`, `school_id`, `status`, `updated_at`, `wifi_days`, `wifi_name`, `wifi_oprice`, `wifi_price`, `wifi_sort`, `wifi_type`, `wifiid`) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?), (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?), (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?), (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?), (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?), (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?), (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?), (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?), (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?), (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?), (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?), (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?), (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?), (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?), (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+parmars:[1,"2019-11-13 00:26:33",1,1,1,"2019-11-13 00:26:33",1080,"3年","400.00","258.00",1,8,1,1,"2019-11-13 00:26:34",1,1,1,"2019-11-13 00:26:34",720,"2年","298.00","258.00",1,12,2,1,"2019-11-13 00:24:15",1,1,1,"2019-11-13 00:24:15",360,"1年","150.00","138.00",2,7,3,1,"2019-11-13 00:26:30",1,1,1,"2019-11-13 00:26:30",60,"2个月","60.00","60.00",2,5,4,1,"2019-11-13 00:24:05",1,1,1,"2019-11-13 00:24:05",150,"1学期","108.00","98.00",3,3,5,1,"2019-11-13 00:24:21",1,1,1,"2019-11-13 00:24:21",90,"1季度","80.00","69.90",3,6,6,1,"2019-11-13 00:24:04",1,1,1,"2019-11-13 00:24:04",30,"1个月","30.00","28.00",5,2,7,1,"2019-11-13 00:24:01",1,1,1,"2019-11-13 00:24:01",1,"日卡","2.00","2.00",7,1,8,1,"2019-11-13 00:26:36",2,1,1,"2019-11-13 00:26:36",1080,"3年（含无线）","450.00","298.00",8,11,9,1,"2019-11-13 00:26:36",2,1,1,"2019-11-13 00:26:36",720,"2年（含无线）","300.00","258.00",9,10,10,1,"2019-11-13 00:26:32",1,1,1,"2019-11-13 00:26:32",7,"1周","10.00","7.00",10,4,11,1,"2019-11-13 00:26:35",2,1,1,"2019-11-13 00:26:35",360,"1年（含无线）","150.00","138.00",10,9,12,1,"2019-11-13 00:26:37",2,1,1,"2019-11-13 00:26:37",150,"1学期(含无线)","108.00","98.00",11,13,13,1,"2019-11-13 00:26:38",2,1,1,"2019-11-13 00:26:38",30,"1个月(含无线)","30.00","28.00",12,14,14,1,"2019-11-13 00:18:19",2,3,1,"2019-11-13 00:18:19",7,"1周(含无线)","10.00","7.00",13,15,15]
+
+[2019-11-25 19:51:43]insert into `migrations` (`migration`, `batch`) values (?, ?)
+parmars:["2019_11_13_204513_create_wifis_table",14]
+
+[2019-11-25 19:51:43]select * from information_schema.tables where table_schema = ? and table_name = ? and table_type = 'BASE TABLE'
+parmars:["purfect_all","wifi_configs"]
+
+[2019-11-25 19:51:43]create table `wifi_configs` (`configid` bigint unsigned not null auto_increment primary key, `typeid` tinyint not null default '0' comment '类型(1:校园网通知,2:用网须知,3:充值通知,4:套餐说明,5:网络协议)', `school_id` mediumint unsigned not null default '0' comment '学校id', `campus_id` mediumint unsigned not null default '0' comment '校区id', `config_imgurl1` varchar(255) null comment '使用网络图片url', `config_imgurl2` varchar(255) null comment '联合套餐免费用网图片url', `config_imgurl3` varchar(255) null comment '申请有线图片url', `config_imgurl1_status` tinyint not null default '1' comment '使用网络状态(0:不显示,1:显示)', `config_imgurl2_status` tinyint not null default '1' comment '联合套餐免费用网状态(0:不显示,1:显示)', `config_imgurl3_status` tinyint not null default '1' comment '申请有线状态(0:不显示,1:显示)', `status` tinyint not null default '1' comment '状态(1:显示,0:不显示)', `created_at` timestamp null, `updated_at` timestamp null) default character set utf8mb4 collate 'utf8mb4_unicode_ci'
+
+[2019-11-25 19:51:43]alter table `wifi_configs` add index `wifi_configs_school_id_index`(`school_id`)
+
+[2019-11-25 19:51:43]alter table `wifi_configs` add index `wifi_configs_campus_id_index`(`campus_id`)
+
+[2019-11-25 19:51:43] ALTER TABLE wifis comment 'wifi全局配置表' 
+
+[2019-11-25 19:51:43]insert into `wifi_configs` (`campus_id`, `config_imgurl1`, `config_imgurl1_status`, `config_imgurl2`, `config_imgurl2_status`, `config_imgurl3`, `config_imgurl3_status`, `configid`, `created_at`, `school_id`, `status`, `typeid`, `updated_at`) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+parmars:[1,"/assets/img/mega-img2.jpg",1,"/assets/img/mega-img2.jpg",1,"/assets/img/mega-img2.jpg",1,1,"2019-11-13 00:26:33",1,1,1,"2019-11-13 00:26:33"]
+
+[2019-11-25 19:51:43]insert into `migrations` (`migration`, `batch`) values (?, ?)
+parmars:["2019_11_13_204514_create_wifi_configs_table",14]
+
+[2019-11-25 19:51:43]select * from information_schema.tables where table_schema = ? and table_name = ? and table_type = 'BASE TABLE'
+parmars:["purfect_all","wifi_contents"]
+
+[2019-11-25 19:51:43]create table `wifi_contents` (`contentid` bigint unsigned not null auto_increment primary key, `typeid` tinyint not null default '0' comment '类型(1:校园网通知,2:用网须知,3:充值通知,4:套餐说明,5:网络协议)', `school_id` mediumint unsigned not null default '0' comment '学校id', `campus_id` mediumint unsigned not null default '0' comment '校区id', `content` longtext not null comment '内容', `status` tinyint not null default '1' comment '状态(1:显示,0:不显示)', `created_at` timestamp null, `updated_at` timestamp null) default character set utf8mb4 collate 'utf8mb4_unicode_ci'
+
+[2019-11-25 19:51:43]alter table `wifi_contents` add index `wifi_contents_school_id_index`(`school_id`)
+
+[2019-11-25 19:51:43]alter table `wifi_contents` add index `wifi_contents_campus_id_index`(`campus_id`)
+
+[2019-11-25 19:51:43] ALTER TABLE wifi_contents comment 'wifi网络信息表' 
+
+[2019-11-25 19:51:43]insert into `wifi_contents` (`campus_id`, `content`, `contentid`, `created_at`, `school_id`, `status`, `typeid`, `updated_at`) values (?, ?, ?, ?, ?, ?, ?, ?), (?, ?, ?, ?, ?, ?, ?, ?), (?, ?, ?, ?, ?, ?, ?, ?), (?, ?, ?, ?, ?, ?, ?, ?), (?, ?, ?, ?, ?, ?, ?, ?)
+parmars:[1,"校园网通知",1,"2019-11-13 00:26:33",1,1,1,"2019-11-13 00:26:33",1,"用网须知",2,"2019-11-13 00:26:33",1,1,2,"2019-11-13 00:26:33",1,"充值通知",3,"2019-11-13 00:26:33",1,1,3,"2019-11-13 00:26:33",1,"套餐说明",4,"2019-11-13 00:26:33",1,1,4,"2019-11-13 00:26:33",1,"网络协议",5,"2019-11-13 00:26:33",1,1,5,"2019-11-13 00:26:33"]
+
+[2019-11-25 19:51:43]insert into `migrations` (`migration`, `batch`) values (?, ?)
+parmars:["2019_11_13_204515_create_wifi_contents_table",14]
+
+[2019-11-25 19:51:43]select * from information_schema.tables where table_schema = ? and table_name = ? and table_type = 'BASE TABLE'
+parmars:["purfect_all","wifi_issue_comments"]
+
+[2019-11-25 19:51:43]create table `wifi_issue_comments` (`commentid` bigint unsigned not null auto_increment primary key, `user_id` mediumint unsigned not null default '0' comment '用户id', `school_id` mediumint unsigned not null default '0' comment '学校id', `campus_id` mediumint unsigned not null default '0' comment '校区id', `issueid` mediumint unsigned not null default '0' comment '保修单id', `comment_service` tinyint not null default '0' comment '服务态度', `comment_worders` tinyint not null default '0' comment '工作效率', `comment_efficiency` tinyint not null default '0' comment '满意度', `comment_content` varchar(300) null comment '评论内容', `status` tinyint not null default '1' comment '状态(1:显示,0:不显示)', `created_at` timestamp null, `updated_at` timestamp null) default character set utf8mb4 collate 'utf8mb4_unicode_ci'
+
+[2019-11-25 19:51:44]alter table `wifi_issue_comments` add index `wifi_issue_comments_user_id_index`(`user_id`)
+
+[2019-11-25 19:51:44]alter table `wifi_issue_comments` add index `wifi_issue_comments_school_id_index`(`school_id`)
+
+[2019-11-25 19:51:44]alter table `wifi_issue_comments` add index `wifi_issue_comments_campus_id_index`(`campus_id`)
+
+[2019-11-25 19:51:44]alter table `wifi_issue_comments` add index `wifi_issue_comments_issueid_index`(`issueid`)
+
+[2019-11-25 19:51:44] ALTER TABLE wifi_issue_comments comment '保修单评价表' 
+
+[2019-11-25 19:51:44]insert into `migrations` (`migration`, `batch`) values (?, ?)
+parmars:["2019_11_13_204516_create_wifi_issue_comments_table",14]
+
+[2019-11-25 19:51:44]select * from information_schema.tables where table_schema = ? and table_name = ? and table_type = 'BASE TABLE'
+parmars:["purfect_all","wifi_issue_disposes"]
+
+[2019-11-25 19:51:44]create table `wifi_issue_disposes` (`disposeid` bigint unsigned not null auto_increment primary key, `issueid` mediumint unsigned not null default '0' comment '保修单id', `school_id` mediumint unsigned not null default '0' comment '学校id', `campus_id` mediumint unsigned not null default '0' comment '校区id', `typeone_id` mediumint unsigned not null default '0' comment '一级问题id', `typeone_name` varchar(50) null comment '一级问题名称', `typetwo_id` mediumint unsigned not null default '0' comment '二级问题id', `typetwo_name` varchar(50) null comment '二级问题名称', `admin_desc` varchar(2000) null comment '处理回复描述', `status` tinyint not null default '1' comment '状态(1:待处理，2:已接单，3:已完成,，4:已取消，5:已关闭)', `created_at` timestamp null, `updated_at` timestamp null) default character set utf8mb4 collate 'utf8mb4_unicode_ci'
+
+[2019-11-25 19:51:44]alter table `wifi_issue_disposes` add index `wifi_issue_disposes_issueid_index`(`issueid`)
+
+[2019-11-25 19:51:44]alter table `wifi_issue_disposes` add index `wifi_issue_disposes_school_id_index`(`school_id`)
+
+[2019-11-25 19:51:44]alter table `wifi_issue_disposes` add index `wifi_issue_disposes_campus_id_index`(`campus_id`)
+
+[2019-11-25 19:51:44]alter table `wifi_issue_disposes` add index `wifi_issue_disposes_typeone_id_index`(`typeone_id`)
+
+[2019-11-25 19:51:44]alter table `wifi_issue_disposes` add index `wifi_issue_disposes_typetwo_id_index`(`typetwo_id`)
+
+[2019-11-25 19:51:44] ALTER TABLE wifi_issue_disposes comment '保修单处理表' 
+
+[2019-11-25 19:51:44]insert into `migrations` (`migration`, `batch`) values (?, ?)
+parmars:["2019_11_13_204517_create_wifi_issue_disposes_table",14]
+
+[2019-11-25 19:51:44]select * from information_schema.tables where table_schema = ? and table_name = ? and table_type = 'BASE TABLE'
+parmars:["purfect_all","wifi_issue_types"]
+
+[2019-11-25 19:51:44]create table `wifi_issue_types` (`typeid` bigint unsigned not null auto_increment primary key, `type_name` varchar(50) null comment '类型名称', `type_pid` mediumint unsigned not null default '0' comment '父id', `purpose` mediumint unsigned not null default '1' comment '用途（1:客户选择故障类型,2:维修人员类型选择故障)', `status` tinyint not null default '1' comment '状态(0:不显示,1:显示)', `created_at` timestamp null, `updated_at` timestamp null) default character set utf8mb4 collate 'utf8mb4_unicode_ci'
+
+[2019-11-25 19:51:44]alter table `wifi_issue_types` add index `wifi_issue_types_type_pid_index`(`type_pid`)
+
+[2019-11-25 19:51:44]alter table `wifi_issue_types` add index `wifi_issue_types_purpose_index`(`purpose`)
+
+[2019-11-25 19:51:44] ALTER TABLE wifi_issue_types comment '保修类型表' 
+
+[2019-11-25 19:51:44]insert into `wifi_issue_types` (`type_name`, `type_pid`, `typeid`) values (?, ?, ?), (?, ?, ?), (?, ?, ?), (?, ?, ?), (?, ?, ?), (?, ?, ?), (?, ?, ?), (?, ?, ?), (?, ?, ?), (?, ?, ?), (?, ?, ?), (?, ?, ?), (?, ?, ?), (?, ?, ?), (?, ?, ?), (?, ?, ?), (?, ?, ?), (?, ?, ?), (?, ?, ?), (?, ?, ?), (?, ?, ?), (?, ?, ?), (?, ?, ?), (?, ?, ?), (?, ?, ?), (?, ?, ?), (?, ?, ?), (?, ?, ?), (?, ?, ?), (?, ?, ?), (?, ?, ?)
+parmars:["网速慢",0,1,"断网",0,2,"无法充值",0,3,"一直显示充值中",3,4,"搜不到网络，无法连接",2,5,"网络不稳定，频繁掉线",2,6,"打游戏特别卡",1,7,"视频无法观看",1,8,"开通有线网络",0,9,"1号端口",9,10,"2号端口",9,11,"3号端口",9,12,"4号端口",9,13,"网络侧问题",0,14,"线路侧问题",0,15,"用户侧问题",0,16,"上联传输线路故障",14,17,"机房设备故障",14,18,"机房设备数据配置问题",14,19,"楼道设备故障",14,20,"楼道设备断电",14,21,"APP设备故障",14,22,"用户自好",14,23,"光缆跳纤终端",15,24,"光缆跳纤衰减",15,25,"综合布线问题",15,26,"用户手机问题",16,27,"用户电脑问题",16,28,"用户端水晶头问题",16,29,"用户内部布线问题",16,30,"用户账号/密码问题",16,31]
+
+[2019-11-25 19:51:44]insert into `migrations` (`migration`, `batch`) values (?, ?)
+parmars:["2019_11_13_204518_create_wifi_issue_types_table",14]
+
+[2019-11-25 19:51:44]select * from information_schema.tables where table_schema = ? and table_name = ? and table_type = 'BASE TABLE'
+parmars:["purfect_all","wifi_issues"]
+
+[2019-11-25 19:51:44]create table `wifi_issues` (`issueid` bigint unsigned not null auto_increment primary key, `user_id` mediumint unsigned not null default '0' comment '用户id', `school_id` mediumint unsigned not null default '0' comment '学校id', `campus_id` mediumint unsigned not null default '0' comment '校区id', `trade_sn` varchar(60) null comment '订单号', `typeone_id` mediumint unsigned not null default '0' comment '大类型ID', `typeone_name` varchar(50) null comment '大类型名称', `typetwo_id` mediumint unsigned not null default '0' comment '小类型ID', `typetwo_name` varchar(50) null comment '小类型名称', `issue_name` varchar(20) null comment '故障申请联系人姓名', `issue_mobile` varchar(15) null comment '故障申请联系人电话', `issue_desc` varchar(2000) null comment '故障问题描述', `addressoneid` mediumint unsigned not null default '0' comment '地址一级id', `addresstwoid` mediumint unsigned not null default '0' comment '地址二级id', `addressthreeid` mediumint unsigned not null default '0' comment '地址三级id', `addr_detail` varchar(150) null comment '保修详细地址', `adminid` mediumint unsigned not null default '0' comment '后台处理人', `admin_name` varchar(10) null comment '后台处理人姓名', `admin_mobile` varchar(15) null comment '后台处理人手机号', `admin_desc` varchar(2000) null comment '后台处理人反馈', `is_comment` tinyint not null default '1' comment '是否评价(1:未评价,2:已评价)', `jiedan_time` datetime null comment '接单时间', `chulis_time` datetime null comment '处理时间', `status` tinyint not null default '1' comment '状态,1:待处理,2:已接单，3:已完成,4:已取消,5:已关闭.)', `created_at` datetime null comment '添加时间', `updated_at` datetime null comment '更新时间') default character set utf8mb4 collate 'utf8mb4_unicode_ci'
+
+[2019-11-25 19:51:44]alter table `wifi_issues` add index `wifi_issues_user_id_index`(`user_id`)
+
+[2019-11-25 19:51:44]alter table `wifi_issues` add index `wifi_issues_school_id_index`(`school_id`)
+
+[2019-11-25 19:51:44]alter table `wifi_issues` add index `wifi_issues_campus_id_index`(`campus_id`)
+
+[2019-11-25 19:51:44]alter table `wifi_issues` add index `wifi_issues_addressoneid_index`(`addressoneid`)
+
+[2019-11-25 19:51:44]alter table `wifi_issues` add index `wifi_issues_addresstwoid_index`(`addresstwoid`)
+
+[2019-11-25 19:51:44]alter table `wifi_issues` add index `wifi_issues_addressthreeid_index`(`addressthreeid`)
+
+[2019-11-25 19:51:44]alter table `wifi_issues` add index `wifi_issues_adminid_index`(`adminid`)
+
+[2019-11-25 19:51:45] ALTER TABLE wifi_issues comment '保修单表' 
+
+[2019-11-25 19:51:45]insert into `migrations` (`migration`, `batch`) values (?, ?)
+parmars:["2019_11_13_204519_create_wifi_issues_table",14]
+
+[2019-11-25 19:51:45]select * from information_schema.tables where table_schema = ? and table_name = ? and table_type = 'BASE TABLE'
+parmars:["purfect_all","wifi_notices"]
+
+[2019-11-25 19:51:45]create table `wifi_notices` (`noticeid` bigint unsigned not null auto_increment primary key, `notice_title` varchar(60) null comment '文档标题', `notice_content` longtext not null comment '文档内容', `sort` mediumint unsigned not null default '1000' comment '排序', `created_at` datetime null comment '添加时间', `updated_at` datetime null comment '更新时间') default character set utf8mb4 collate 'utf8mb4_unicode_ci'
+
+[2019-11-25 19:51:45] ALTER TABLE wifi_notices comment 'wifi帮助' 
+
+[2019-11-25 19:51:45]insert into `wifi_notices` (`notice_content`, `notice_title`, `noticeid`) values (?, ?, ?), (?, ?, ?), (?, ?, ?), (?, ?, ?), (?, ?, ?), (?, ?, ?)
+parmars:["无法成功连接WiFi接入号","无法成功连接WiFi接入号",1,"连接WiFi，APP内“点击上线”，但不能上线","连接WiFi，APP内“点击上线”，但不能上线",2,"已连上WiFi，弹不出登录页面","已连上WiFi，弹不出登录页面",3,"使用时断网","使用时断网",4,"手机锁屏后断网","手机锁屏后断网",5,"校园网服务协议","校园网服务协议",6]
+
+[2019-11-25 19:51:45]insert into `migrations` (`migration`, `batch`) values (?, ?)
+parmars:["2019_11_13_204520_create_wifi_notices_table",14]
+
+[2019-11-25 19:51:45]select * from information_schema.tables where table_schema = ? and table_name = ? and table_type = 'BASE TABLE'
+parmars:["purfect_all","wifi_orders"]
+
+[2019-11-25 19:51:45]create table `wifi_orders` (`orderid` bigint unsigned not null auto_increment primary key, `trade_sn` varchar(60) null comment '订单号', `type` tinyint not null default '1' comment '类型(1:充值,2:赠送)', `mode` tinyint not null default '0' comment '类型(1:无线,2:有线)', `user_id` mediumint unsigned not null default '0' comment '用户id', `school_id` mediumint unsigned not null default '0' comment '学校id', `campus_id` mediumint unsigned not null default '0' comment '校区id', `wifi_id` mediumint unsigned not null default '0' comment 'wifi_id', `wifi_type` tinyint not null default '0' comment 'wifi类型', `wifi_name` varchar(50) null comment 'wifi类型名称', `order_days` mediumint unsigned not null default '0' comment '天数', `order_number` mediumint unsigned not null default '1' comment '购买数量', `order_unitprice` decimal(8, 2) not null default '0' comment 'wifi单价', `order_totalprice` decimal(8, 2) not null default '0' comment '支付总价', `paymentid` tinyint not null default '0' comment '支付方式(1:微信,2:支付宝,3:钱包支付,4:免支付)', `payment_name` varchar(15) null comment '支付名称', `pay_time` datetime null comment '支付时间', `succeed_time` datetime null comment '支付成功-WIFI充值成功', `defeated_time` datetime null comment '支付成功-WIFI充值失败', `refund_time` datetime null comment '支付成功-退款成功时间', `cancle_time` datetime null comment '取消时间', `wifi_rechargeLog` varchar(500) null comment 'wifi充值日志', `wifi_refund` tinyint not null default '0' comment '退款(1:已退款)', `wifi_refundtime` datetime null comment '退款时间', `wifi_refundprice` decimal(8, 2) not null default '0' comment '退款金额', `wifi_operatdesc` varchar(500) null comment '处理描述', `status` tinyint not null default '1' comment '状态(0:关闭,1:待支付,2:支付失败,3:支付成功-WIFI充值中,4:支付成功-WIFI充值成功,5:支付成功-充值失败,6:支付成功-退款成功)', `is_chuli` tinyint not null default '0' comment '是否处理(0:未处理,1:已处理)', `created_at` datetime null comment '添加时间', `updated_at` datetime null comment '更新时间') default character set utf8mb4 collate 'utf8mb4_unicode_ci'
+
+[2019-11-25 19:51:45]alter table `wifi_orders` add index `wifi_orders_school_id_index`(`school_id`)
+
+[2019-11-25 19:51:45]alter table `wifi_orders` add index `wifi_orders_campus_id_index`(`campus_id`)
+
+[2019-11-25 19:51:45] ALTER TABLE wifi_orders comment 'wifi订单表' 
+
+[2019-11-25 19:51:45]insert into `migrations` (`migration`, `batch`) values (?, ?)
+parmars:["2019_11_13_204521_create_wifi_orders_table",14]
+
+[2019-11-25 19:51:45]select * from information_schema.tables where table_schema = ? and table_name = ? and table_type = 'BASE TABLE'
+parmars:["purfect_all","wifi_orders_locations"]
+
+[2019-11-25 19:51:45]create table `wifi_orders_locations` (`locationid` bigint unsigned not null auto_increment primary key, `orderid` mediumint unsigned not null comment 'wifi订单id', `user_id` mediumint unsigned not null comment '用户id', `school_id` mediumint unsigned not null default '0' comment '学校id', `campus_id` mediumint unsigned not null default '0' comment '校区id', `addressoneid` mediumint unsigned not null default '0' comment '有线(宿舍楼id)', `addresstwoid` mediumint unsigned not null default '0' comment '有线(房间id)', `addressthreeid` mediumint unsigned not null default '0' comment '有线(房间id)', `addressfourid` mediumint unsigned not null default '0' comment '有线(端口id)', `addressoneid_name` varchar(50) null comment '有线(宿舍楼名称)', `addresstwoid_name` varchar(50) null comment '有线(楼层名称)', `addressthreeid_name` varchar(50) null comment '有线(房间名称)', `addressfourid_name` varchar(50) null comment '有线(端口名称)', `status` tinyint not null default '0' comment '状态(0:未开通,1:已开通)', `created_at` datetime null comment '添加时间', `updated_at` datetime null comment '更新时间') default character set utf8mb4 collate 'utf8mb4_unicode_ci'
+
+[2019-11-25 19:51:45]alter table `wifi_orders_locations` add index `wifi_orders_locations_school_id_index`(`school_id`)
+
+[2019-11-25 19:51:45]alter table `wifi_orders_locations` add index `wifi_orders_locations_campus_id_index`(`campus_id`)
+
+[2019-11-25 19:51:45] ALTER TABLE wifi_orders_locations comment 'wifi订单有线地址表' 
+
+[2019-11-25 19:51:45]insert into `migrations` (`migration`, `batch`) values (?, ?)
+parmars:["2019_11_13_204522_create_wifi_orders_locations_table",14]
+
+[2019-11-25 19:51:45]select * from information_schema.tables where table_schema = ? and table_name = ? and table_type = 'BASE TABLE'
+parmars:["purfect_all","wifi_user_agreements"]
+
+[2019-11-25 19:51:45]create table `wifi_user_agreements` (`agreementid` bigint unsigned not null auto_increment primary key, `user_id` mediumint unsigned not null comment '用户id', `created_at` datetime null comment '添加时间') default character set utf8mb4 collate 'utf8mb4_unicode_ci'
+
+[2019-11-25 19:51:45] ALTER TABLE wifi_user_agreements comment 'wifi用户协议同意表' 
+
+[2019-11-25 19:51:45]insert into `migrations` (`migration`, `batch`) values (?, ?)
+parmars:["2019_11_13_204523_create_wifi_user_agreements_table",14]
+
+[2019-11-25 19:51:45]select * from information_schema.tables where table_schema = ? and table_name = ? and table_type = 'BASE TABLE'
+parmars:["purfect_all","wifi_user_times"]
+
+[2019-11-25 19:51:45]create table `wifi_user_times` (`timesid` bigint unsigned not null auto_increment primary key, `user_id` mediumint unsigned not null comment '用户id', `school_id` mediumint unsigned not null default '0' comment '学校id', `campus_id` mediumint unsigned not null default '0' comment '校区id', `user_wifi_time` datetime null comment 'wifi到期时间', `user_wifi_name` varchar(50) null comment 'wifi账号', `user_wifi_password` varchar(50) null comment 'wifi密码', `user_cable_etime` datetime null comment 'wifi有线开通结束时间', `user_mobile_source` tinyint not null default '0' comment '运营商(1:移动,2:联通,3:电信,4:其他)', `user_mobile_phone` varchar(15) null comment '套餐手机号', `user_mobile_password` varchar(15) null comment '套餐手机号密码', `user_phone_package_desc` varchar(300) null comment '套餐描述信息', `status` tinyint not null default '1' comment 'wifi是否可用(0:不可用,1:可用)', `created_at` datetime null comment '添加时间', `updated_at` datetime null comment '更新时间') default character set utf8mb4 collate 'utf8mb4_unicode_ci'
+
+[2019-11-25 19:51:45]alter table `wifi_user_times` add index `wifi_user_times_school_id_index`(`school_id`)
+
+[2019-11-25 19:51:45]alter table `wifi_user_times` add index `wifi_user_times_campus_id_index`(`campus_id`)
+
+[2019-11-25 19:51:45] ALTER TABLE wifi_user_times comment '用户wifi时长和电话套餐表' 
+
+[2019-11-25 19:51:45]insert into `migrations` (`migration`, `batch`) values (?, ?)
+parmars:["2019_11_13_204524_create_wifi_user_times_table",14]
+
+[2019-11-25 19:51:45]create table `attendance_tasks` (`id` bigint unsigned not null auto_increment primary key, `school_id` int unsigned not null comment '学校ID', `campus_id` int unsigned not null comment '校区ID', `type` tinyint unsigned not null default '1' comment '任务类型 1 教师任务， 2 学生任务, 3 其它任务(学生老师都可见)', `title` varchar(255) null comment '任务名称', `content` text null comment '值周内容', `start_time` date null comment '任务开始时间', `end_time` date null comment '任务截止时间', `created_at` timestamp null, `updated_at` timestamp null) default character set utf8mb4 collate 'utf8mb4_unicode_ci'
+
+[2019-11-25 19:51:45]insert into `migrations` (`migration`, `batch`) values (?, ?)
+parmars:["2019_11_22_085404_create_attendance_task",14]
+
+[2019-11-25 19:51:45]create table `attendance_persons` (`id` bigint unsigned not null auto_increment primary key, `user_id` bigint unsigned not null comment '用户id 学生老师都有可能', `type` tinyint unsigned not null comment '人员类型，老师还是学生 1 老师 2 学生', `school_id` int unsigned not null comment '学校ID', `campus_id` int unsigned not null comment '校区ID', `created_at` timestamp null, `updated_at` timestamp null) default character set utf8mb4 collate 'utf8mb4_unicode_ci'
+
+[2019-11-25 19:51:46]alter table `attendance_persons` add index `attendance_persons_user_id_index`(`user_id`)
+
+[2019-11-25 19:51:46]insert into `migrations` (`migration`, `batch`) values (?, ?)
+parmars:["2019_11_22_085459_create_attendance_person",14]
+
+[2019-11-25 19:51:46]create table `attendance_schedules` (`id` bigint unsigned not null auto_increment primary key, `school_id` int unsigned not null comment '学校ID', `campus_id` int unsigned not null comment '校区ID', `attendance_id` int unsigned null comment '值周任务表id', `user_id` bigint unsigned not null comment '用户id 学生老师都有可能', `start_time` date null comment '任务开始时间', `end_time` date null comment '任务截止时间', `time_slot_id` int unsigned null comment '时间槽id', `created_at` timestamp null, `updated_at` timestamp null) default character set utf8mb4 collate 'utf8mb4_unicode_ci'
+
+[2019-11-25 19:51:46]alter table `attendance_schedules` add index `attendance_schedules_attendance_id_index`(`attendance_id`)
+
+[2019-11-25 19:51:46]alter table `attendance_schedules` add index `attendance_schedules_user_id_index`(`user_id`)
+
+[2019-11-25 19:51:46]insert into `migrations` (`migration`, `batch`) values (?, ?)
+parmars:["2019_11_22_092514_create_attendance_schedules",14]
+
+[2019-11-25 19:51:46]create table `attendance_time_slots` (`id` bigint unsigned not null auto_increment primary key, `attendance_id` int unsigned null comment '值周任务表id', `title` varchar(40) null comment '时段名称', `start_time` time null comment '时段开始时间', `end_time` time null comment '时段截止时间', `created_at` timestamp null, `updated_at` timestamp null) default character set utf8mb4 collate 'utf8mb4_unicode_ci'
+
+[2019-11-25 19:51:46]alter table `attendance_time_slots` add index `attendance_time_slots_attendance_id_index`(`attendance_id`)
+
+[2019-11-25 19:51:46]insert into `migrations` (`migration`, `batch`) values (?, ?)
+parmars:["2019_11_22_093556_create_attendance_time_slots",14]
+
+[2019-11-25 19:51:46]alter table `attendance_tasks` drop `campus_id`
+
+[2019-11-25 19:51:46]alter table `attendance_schedules` drop `campus_id`
+
+[2019-11-25 19:51:46]insert into `migrations` (`migration`, `batch`) values (?, ?)
+parmars:["2019_11_22_162940_modify_attendance_task",14]
+
+[2019-11-25 19:51:46]create table `attendance_schedule_persons` (`id` bigint unsigned not null auto_increment primary key, `attendance_id` int unsigned null comment '值周任务表id', `schedule_id` int unsigned null comment 'attendance_schedule表id', `user_id` bigint unsigned not null comment '用户id 学生老师都有可能', `created_at` timestamp null, `updated_at` timestamp null) default character set utf8mb4 collate 'utf8mb4_unicode_ci'
+
+[2019-11-25 19:51:46]alter table `attendance_schedule_persons` add index `attendance_schedule_persons_attendance_id_index`(`attendance_id`)
+
+[2019-11-25 19:51:46]alter table `attendance_schedule_persons` add index `attendance_schedule_persons_schedule_id_index`(`schedule_id`)
+
+[2019-11-25 19:51:46]alter table `attendance_schedule_persons` add index `attendance_schedule_persons_user_id_index`(`user_id`)
+
+[2019-11-25 19:51:46]insert into `migrations` (`migration`, `batch`) values (?, ?)
+parmars:["2019_11_22_172123_create_attendance_schedule_persons",14]
+
+[2019-11-25 19:51:46]alter table `attendance_schedules` add `start_date_time` datetime null comment '任务开始时间', add `end_date_time` datetime null comment '任务截止时间'
+
+[2019-11-25 19:51:46]alter table `attendance_schedules` drop `user_id`
+
+[2019-11-25 19:51:47]alter table `attendance_schedules` drop `start_time`
+
+[2019-11-25 19:51:47]alter table `attendance_schedules` drop `end_time`
+
+[2019-11-25 19:51:47]insert into `migrations` (`migration`, `batch`) values (?, ?)
+parmars:["2019_11_22_205254_modify_attendance_schedules",14]
+
+[2019-11-25 19:51:47]ALTER TABLE apply_course_arrangements CHANGE building_id building_id INT UNSIGNED DEFAULT NULL COMMENT '教学楼id', CHANGE building_name building_name VARCHAR(255) DEFAULT NULL COLLATE utf8mb4_unicode_ci COMMENT '教学楼名称', CHANGE classroom_id classroom_id INT UNSIGNED DEFAULT NULL COMMENT '教室id', CHANGE classroom_name classroom_name VARCHAR(255) DEFAULT NULL COLLATE utf8mb4_unicode_ci COMMENT '教室名称'
+
+[2019-11-25 19:51:47]insert into `migrations` (`migration`, `batch`) values (?, ?)
+parmars:["2019_11_23_141606_change_build_room_nullable_in_elective_course_arragement",14]
+
+[2019-11-25 19:51:47]ALTER TABLE attendance_schedules CHANGE attendance_id task_id INT UNSIGNED DEFAULT NULL COMMENT '值周任务表id'
+
+[2019-11-25 19:51:47]ALTER TABLE attendance_time_slots CHANGE attendance_id task_id INT UNSIGNED DEFAULT NULL COMMENT '值周任务表id'
+
+[2019-11-25 19:51:47]ALTER TABLE attendance_schedule_persons CHANGE attendance_id task_id INT UNSIGNED DEFAULT NULL COMMENT '值周任务表id'
+
+[2019-11-25 19:51:47]insert into `migrations` (`migration`, `batch`) values (?, ?)
+parmars:["2019_11_24_113822_modify_attendance_tables",14]
+
+[2019-11-25 19:51:47]create table `banners` (`id` bigint unsigned not null auto_increment primary key, `school_id` int unsigned not null, `posit` smallint unsigned not null comment '位置 1首页', `type` bigint unsigned not null comment '0:无跳转, 1:图文, 2:url', `sort` tinyint not null default '0' comment '排序', `title` varchar(100) not null comment '标题', `image_url` varchar(255) null comment '图片url', `content` varchar(255) null comment '图文内容', `external` varchar(255) null comment '外部URL', `status` smallint unsigned not null default '1' comment '状态 0:不显示, 1显示', `created_at` timestamp null, `updated_at` timestamp null) default character set utf8mb4 collate 'utf8mb4_unicode_ci'
+
+[2019-11-25 19:51:47] ALTER TABLE banners comment 'banner表' 
+
+[2019-11-25 19:51:47]insert into `migrations` (`migration`, `batch`) values (?, ?)
+parmars:["2019_11_25_112939_create_banners_table",14]
+
