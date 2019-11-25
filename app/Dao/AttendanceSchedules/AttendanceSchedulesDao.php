@@ -22,6 +22,10 @@ class AttendanceSchedulesDao
     {
     }
 
+    /**
+     * @param $data
+     * @return MessageBag
+     */
     public function createTask($data)
     {
         if (!isset($data['id']) || empty($data['id'])) {
@@ -47,6 +51,11 @@ class AttendanceSchedulesDao
         return $messageBag;
 
     }
+
+    /**
+     * @param $data
+     * @return MessageBag
+     */
     public function updateTask($data)
     {
         $id = $data['id'];
@@ -117,6 +126,11 @@ class AttendanceSchedulesDao
             return false;
         }
     }
+
+    /**
+     * @param $data
+     * @return bool
+     */
     public function updateTimeSlotsForTask($data)
     {
         $id = $data['id'];
@@ -132,12 +146,22 @@ class AttendanceSchedulesDao
             return false;
         }
     }
+
+    /**
+     * @param $schoolId
+     * @param $timeSlotId
+     * @return mixed
+     */
     public function deleteTimeSlots($schoolId, $timeSlotId)
     {
         return AttendanceTimeSlot::where('id', $timeSlotId)
             ->where('school_id', $schoolId)->delete();
     }
 
+    /**
+     * @param $timeSlotId
+     * @return mixed
+     */
     public function getTimeSlot($timeSlotId)
     {
         return AttendanceTimeSlot::find($timeSlotId);
@@ -167,6 +191,12 @@ class AttendanceSchedulesDao
             return false;
         }
     }
+
+    /**
+     * @param $schoolId
+     * @param $personId
+     * @return mixed
+     */
     public function delPerson($schoolId, $personId)
     {
         return AttendancePerson::where('id', $personId)
@@ -236,7 +266,10 @@ class AttendanceSchedulesDao
         return $messageBag;
     }
 
-
+    /**
+     * @param $taskId
+     * @return mixed
+     */
     public function getTask($taskId)
     {
         return AttendanceTask::find($taskId);
@@ -351,6 +384,11 @@ class AttendanceSchedulesDao
     {
         return AttendanceSchedulePerson::create(['task_id'=>$taskId, 'schedule_id'=>$scheduleId, 'user_id'=>$personId]);
     }
+
+    /**
+     * @param $scheduleId
+     * @return mixed
+     */
     public function delSchedulePerson($scheduleId)
     {
         return AttendanceSchedulePerson::where('schedule_id',$scheduleId)->delete();
