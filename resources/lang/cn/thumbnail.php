@@ -65,6 +65,10 @@ return [
 
     // 校历
     'calendar' => '校历',
-    'index' => '管理'
+    'index' => '管理',
+
+    // banner
+    'banner' => 'banner'
+
 ];
 

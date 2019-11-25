@@ -11,7 +11,7 @@ use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 class Controller extends BaseController
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
-	
+
 	// APP分页条数
 	public static $api_wifi_page_limit = 10;
 
@@ -29,8 +29,9 @@ class Controller extends BaseController
         'the_referer'=>null,        // 跟踪客户的referer
         'autoThumbnail'=>true,      // 是否自动生成面包屑部分
         'needChart'=>false,         // 是否前端需要 Chart
+        'js' => []                  // web 需要引入的js
     ];
-	
+
   /**
    * Func 获取post参数信息
    * @param $postArr 提交参数
