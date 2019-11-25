@@ -1,12 +1,14 @@
 <?php
 namespace App\Dao\Schools;
 
+use App\Models\Schools\Organization;
 use App\Models\Schools\SchoolConfiguration;
 use App\User;
 use App\Models\School;
+use Illuminate\Support\Facades\DB;
 use Ramsey\Uuid\Uuid;
 use App\Models\Schools\Campus;
-use Illuminate\Http\Request;
+
 class SchoolDao
 {
     private $currentUser;
@@ -40,6 +42,7 @@ class SchoolDao
     public function createSchool($schoolData, $extra = []){
         if($this->currentUser->isSuperAdmin()){
             // 只有超级管理员能更新
+            DB::beginTransaction();
             try{
                 $schoolData['uuid'] = Uuid::uuid4()->toString();
                 $school =  School::create($schoolData);
@@ -51,11 +54,18 @@ class SchoolDao
                         'name'=>'主校区',
                         'description'=>$school->name.'主校区'
                     ]);
+                    // 创建学校的基本配置信息
+                    $this->createDefaultConfig($school);
+                    // 创建学校的最基本的组织
+                    $this->createRootOrganization($school);
+
                     return $school;
                 }else{
+                    DB::rollBack();
                     return false;
                 }
             }catch (\Exception $exception){
+                DB::rollBack();
                 return false;
             }
         }
@@ -131,10 +141,24 @@ class SchoolDao
 
     /**
      * 创建一个学校的默认配置项
-     * @param $school
+     * @param School|int $school
      * @return SchoolConfiguration
      */
     public function createDefaultConfig($school){
         return (new SchoolConfiguration())->createDefaultConfig($school);
+    }
+
+    /**
+     * 创建学校的根组织机构
+     * @param $school
+     * @return Organization
+     */
+    public function createRootOrganization($school){
+        return (new OrganizationDao())->create([
+            'school_id'=>$school->id??$school,
+            'name'=>'学校组织机构',
+            'level'=>Organization::ROOT,
+            'parent_id'=>0,
+        ]);
     }
 }
