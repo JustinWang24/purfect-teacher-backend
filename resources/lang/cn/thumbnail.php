@@ -67,6 +67,9 @@ return [
     'calendar' => '校历',
     'index' => '管理',
 
+    // banner
+    'banner' => '轮播图'
+
     'oa' => '办公系统',
     'projects-manager' => '项目管理',
     'projects-view' => '项目详情',

@@ -86,5 +86,4 @@ use App\Models\Schools\SchoolResource;
         </div>
     </div>
 @endsection
-<script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
 

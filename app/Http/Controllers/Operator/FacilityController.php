@@ -55,7 +55,7 @@ class FacilityController extends Controller
         $campus = $campusDao->getCampusesBySchool($schoolId,$field);
         $this->dataForView['campus'] = $campus;
         $this->dataForView['type'] = $facilityDao->getType();
-        return view('school_manager.facility.add', $this->dataForView);
+    return view('school_manager.facility.add', $this->dataForView);
 
     }
 
