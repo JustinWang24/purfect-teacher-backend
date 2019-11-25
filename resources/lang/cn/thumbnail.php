@@ -65,6 +65,13 @@ return [
 
     // 校历
     'calendar' => '校历',
-    'index' => '管理'
+    'index' => '管理',
+
+
+
+    // 申请管理
+    'applications-manager' => '申请管理',
+    'applications-set' => '申请设置',
+    'applications-set-add' => '添加',
 ];
 
