@@ -12,7 +12,7 @@ use App\Utils\UI\Button;
                 </div>
                 <div class="card-body">
                     <form action="{{ route('school_manager.students.applications-set-save') }}" method="post"  id="add-application-type-form">
-
+                        @include('school_manager.application_type._form')
                         <?php
                         Button::Print(['id'=>'btn-create-facility','text'=>trans('general.submit')], Button::TYPE_PRIMARY);
                         ?>&nbsp;
