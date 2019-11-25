@@ -2249,3 +2249,15 @@ parmars:["purfect_dev","migrations"]
 [2019-11-25 04:08:22]insert into `migrations` (`migration`, `batch`) values (?, ?)
 parmars:["2019_11_25_035748_create_visitors_table",27]
 
+[2019-11-25 08:47:13]select * from information_schema.tables where table_schema = ? and table_name = ? and table_type = 'BASE TABLE'
+parmars:["purfect_dev","migrations"]
+
+[2019-11-25 08:47:13]select `migration` from `migrations` order by `batch` asc, `migration` asc
+
+[2019-11-25 08:47:13]select max(`batch`) as aggregate from `migrations`
+
+[2019-11-25 08:47:13]create table `organizations` (`id` bigint unsigned not null auto_increment primary key, `school_id` bigint unsigned not null comment '关联的学校', `name` varchar(50) not null comment '机构名称', `level` smallint unsigned not null default '1' comment '机构层级', `parent_id` bigint unsigned not null default '0' comment '上级机构, 0 表示是根', `phone` varchar(255) null comment '联系电话', `address` varchar(255) null comment '地址', `description` text null comment '机构职能介绍', `created_at` timestamp null, `updated_at` timestamp null) default character set utf8mb4 collate 'utf8mb4_unicode_ci'
+
+[2019-11-25 08:47:13]insert into `migrations` (`migration`, `batch`) values (?, ?)
+parmars:["2019_11_25_082615_create_organizations_table",28]
+

@@ -15,7 +15,8 @@ class CreateVisitorsTable extends Migration
     {
         Schema::create('visitors', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->unsignedBigInteger('invited_by')->comment('邀请的人');
+            $table->unsignedBigInteger('school_id')->comment('关联的学校');
+            $table->unsignedBigInteger('invited_by')->comment('邀请人');
             $table->unsignedSmallInteger('status')->default(1)->comment('状态');
             $table->string('name',30)->comment('访客姓名');
             $table->string('mobile',11)->comment('访客电话');
