@@ -166,10 +166,12 @@ Route::prefix('school_manager')->group(function () {
             ->name('school_manager.oa.projects-manager');
         Route::get('projects-manager/view','OA\ProjectsController@view')
             ->name('school_manager.oa.project-view');
+        Route::get('projects-manager/task-view','OA\ProjectsController@task_view')
+            ->name('school_manager.oa.task-view');
         Route::post('projects-manager/save','OA\ProjectsController@save')
             ->name('school_manager.oa.project-save');
         // 任务管理
-        Route::get('tasks-manager','ElectiveCoursesController@management')
+        Route::get('tasks-manager','OA\ProjectsController@tasks')
             ->name('school_manager.oa.tasks-manager');
         // 来访管理
         Route::get('visitors-manager','ElectiveCoursesController@management')
