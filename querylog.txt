@@ -2157,3 +2157,62 @@ parmars:["laravel","wifi_issues"]
 [2019-11-13 03:01:16]insert into `migrations` (`migration`, `batch`) values (?, ?)
 parmars:["2019_11_13_204519_create_wifi_issues_table",7]
 
+[2019-11-25 01:44:59]select * from information_schema.tables where table_schema = ? and table_name = ? and table_type = 'BASE TABLE'
+parmars:["purfect_dev","migrations"]
+
+[2019-11-25 01:44:59]select `migration` from `migrations` order by `batch` asc, `migration` asc
+
+[2019-11-25 01:44:59]select max(`batch`) as aggregate from `migrations`
+
+[2019-11-25 01:44:59]create table `school_calendars` (`id` bigint unsigned not null auto_increment primary key, `school_id` int unsigned not null default '0' comment '学校id', `tag` varchar(100) not null comment '事件标签', `content` varchar(255) not null comment '事件内容', `event_time` timestamp not null comment '事件时间', `created_at` timestamp null, `updated_at` timestamp null) default character set utf8mb4 collate 'utf8mb4_unicode_ci'
+
+[2019-11-25 01:44:59] ALTER TABLE school_calendars comment '校历表' 
+
+[2019-11-25 01:44:59]insert into `migrations` (`migration`, `batch`) values (?, ?)
+parmars:["2019_11_22_150310_create_school_calendars",25]
+
+[2019-11-25 01:44:59]alter table `attendance_tasks` drop `campus_id`
+
+[2019-11-25 01:44:59]alter table `attendance_schedules` drop `campus_id`
+
+[2019-11-25 01:44:59]insert into `migrations` (`migration`, `batch`) values (?, ?)
+parmars:["2019_11_22_162940_modify_attendance_task",25]
+
+[2019-11-25 01:44:59]create table `attendance_schedule_persons` (`id` bigint unsigned not null auto_increment primary key, `attendance_id` int unsigned null comment '值周任务表id', `schedule_id` int unsigned null comment 'attendance_schedule表id', `user_id` bigint unsigned not null comment '用户id 学生老师都有可能', `created_at` timestamp null, `updated_at` timestamp null) default character set utf8mb4 collate 'utf8mb4_unicode_ci'
+
+[2019-11-25 01:44:59]alter table `attendance_schedule_persons` add index `attendance_schedule_persons_attendance_id_index`(`attendance_id`)
+
+[2019-11-25 01:44:59]alter table `attendance_schedule_persons` add index `attendance_schedule_persons_schedule_id_index`(`schedule_id`)
+
+[2019-11-25 01:44:59]alter table `attendance_schedule_persons` add index `attendance_schedule_persons_user_id_index`(`user_id`)
+
+[2019-11-25 01:44:59]insert into `migrations` (`migration`, `batch`) values (?, ?)
+parmars:["2019_11_22_172123_create_attendance_schedule_persons",25]
+
+[2019-11-25 01:44:59]alter table `attendance_schedules` add `start_date_time` datetime null comment '任务开始时间', add `end_date_time` datetime null comment '任务截止时间'
+
+[2019-11-25 01:44:59]alter table `attendance_schedules` drop `user_id`
+
+[2019-11-25 01:44:59]alter table `attendance_schedules` drop `start_time`
+
+[2019-11-25 01:44:59]alter table `attendance_schedules` drop `end_time`
+
+[2019-11-25 01:44:59]insert into `migrations` (`migration`, `batch`) values (?, ?)
+parmars:["2019_11_22_205254_modify_attendance_schedules",25]
+
+[2019-11-25 01:44:59]ALTER TABLE attendance_schedules CHANGE attendance_id task_id INT UNSIGNED DEFAULT NULL COMMENT '值周任务表id'
+
+[2019-11-25 01:44:59]ALTER TABLE attendance_time_slots CHANGE attendance_id task_id INT UNSIGNED DEFAULT NULL COMMENT '值周任务表id'
+
+[2019-11-25 01:44:59]ALTER TABLE attendance_schedule_persons CHANGE attendance_id task_id INT UNSIGNED DEFAULT NULL COMMENT '值周任务表id'
+
+[2019-11-25 01:44:59]insert into `migrations` (`migration`, `batch`) values (?, ?)
+parmars:["2019_11_24_113822_modify_attendance_tables",25]
+
+[2019-11-25 01:44:59]create table `oa_projects` (`id` bigint unsigned not null auto_increment primary key, `school_id` bigint unsigned not null comment '发起人所属的学校', `user_id` bigint unsigned not null comment '发起人', `title` varchar(200) not null comment '项目标题', `content` text null comment '项目内容', `status` smallint unsigned not null default '1' comment '项目状态', `created_at` timestamp null, `updated_at` timestamp null) default character set utf8mb4 collate 'utf8mb4_unicode_ci'
+
+[2019-11-25 01:44:59]create table `oa_project_members` (`id` bigint unsigned not null auto_increment primary key, `user_id` bigint unsigned not null comment '参与成员的 id') default character set utf8mb4 collate 'utf8mb4_unicode_ci'
+
+[2019-11-25 01:44:59]insert into `migrations` (`migration`, `batch`) values (?, ?)
+parmars:["2019_11_25_012912_create_projects_table",25]
+
