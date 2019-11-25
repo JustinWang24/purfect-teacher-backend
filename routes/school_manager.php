@@ -149,5 +149,53 @@ Route::prefix('school_manager')->group(function () {
     // 删除选修课上课的时间地点项
     Route::post('elective-course/delete-arrangement','ElectiveCoursesController@delete_arrangement')
         ->name('school_manager.elective-course.delete-arrangement');
+
+    // 办公管理
+    Route::prefix('oa')->group(function(){
+        // 项目管理
+        Route::get('projects-manager','ElectiveCoursesController@management')
+            ->name('school_manager.oa.projects-manager');
+        // 任务管理
+        Route::get('tasks-manager','ElectiveCoursesController@management')
+            ->name('school_manager.oa.tasks-manager');
+        // 来访管理
+        Route::get('visitors-manager','ElectiveCoursesController@management')
+            ->name('school_manager.oa.visitors-manager');
+        // 公文管理
+        Route::get('documents-manager','ElectiveCoursesController@management')
+            ->name('school_manager.oa.documents-manager');
+        // 考勤管理
+        Route::get('attendances-manager','ElectiveCoursesController@management')
+            ->name('school_manager.oa.attendances-manager');
+        // 审批管理
+        Route::get('approval-manager','ElectiveCoursesController@management')
+            ->name('school_manager.oa.approval-manager');
+        // 通知公告
+        Route::get('system-messages-manager','ElectiveCoursesController@management')
+            ->name('school_manager.oa.system-messages-manager');
+    });
+
+    // 学生管理
+    Route::prefix('students')->group(function(){
+        // 申请管理
+        Route::get('applications-manager','ElectiveCoursesController@management')
+            ->name('school_manager.students.applications-manager');
+        // 签到管理
+        Route::get('check-in-manager','ElectiveCoursesController@management')
+            ->name('school_manager.students.check-in-manager');
+        // 评分管理
+        Route::get('performances-manager','ElectiveCoursesController@management')
+            ->name('school_manager.students.performances-manager');
+    });
+
+    // 内容管理
+    Route::prefix('contents')->group(function (){
+        // 动态管理
+        Route::get('news-manager','ElectiveCoursesController@management')
+            ->name('school_manager.contents.news-manager');
+        // 日常安排
+        Route::get('regular-manager','ElectiveCoursesController@management')
+            ->name('school_manager.contents.regular-manager');
+    });
 });
 
