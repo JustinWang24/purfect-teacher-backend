@@ -17,8 +17,9 @@ class CreateApplicationTypesTable extends Migration
         Schema::create('application_types', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name', 20);
-            $table->integer('school_id');
-            $table->timestamps();
+            $table->integer('school_id')->comment('学校ID');
+            $table->integer('media_id')->nullable()->comment('文件ID');
+            $table->tinyInteger('status')->default(1)->comment('状态 1:开启 0:关闭');
         });
         DB::statement(" ALTER TABLE application_types comment '申请类型表' ");
 

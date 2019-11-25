@@ -18,9 +18,10 @@ class CreateApplicationsTable extends Migration
             $table->increments('id');
             $table->integer('user_id')->comment('用户ID');
             $table->integer('school_id')->comment('学校ID');
+            $table->integer('grade_id')->comment('班级ID');
             $table->integer('application_type_id')->comment('申请类型');
             $table->text('reason')->comment('申请理由');
-            $table->enum('census',[1,2])->nullable()->comment('户口类型 1:农村 2:城市');
+            $table->tinyInteger('census')->nullable()->comment('户口类型 1:农村 2:城市');
             $table->tinyInteger('family_population')->nullable()->comment('家庭人口');
             $table->smallInteger('general_income')->nullable()->comment('家庭月总收入');
             $table->smallInteger('per_capita_income')->nullable()->comment('人均收入');

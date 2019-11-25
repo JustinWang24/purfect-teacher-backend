@@ -187,8 +187,21 @@ Route::prefix('school_manager')->group(function () {
     // 学生管理
     Route::prefix('students')->group(function(){
         // 申请管理
-        Route::get('applications-manager','ElectiveCoursesController@management')
+        Route::get('applications-manager','Applications\ApplicationController@list')
             ->name('school_manager.students.applications-manager');
+        // 申请设置
+        Route::get('applications-set','Applications\ApplicationTypeController@list')
+            ->name('school_manager.students.applications-set');
+        Route::get('applications-set-add','Applications\ApplicationTypeController@add')
+            ->name('school_manager.students.applications-set-add');
+        // 设置保存
+        Route::any('applications-set-save','Applications\ApplicationTypeController@save')
+            ->name('school_manager.students.applications-set-save');
+        // 设置详情
+        Route::get('applications-set-info','Applications\ApplicationTypeController@edit')
+            ->name('school_manager.students.applications-set-info');
+
+
         // 签到管理
         Route::get('check-in-manager','ElectiveCoursesController@management')
             ->name('school_manager.students.check-in-manager');
