@@ -68,7 +68,14 @@ return [
     'index' => '管理',
 
     // banner
-    'banner' => 'banner'
+    'banner' => '轮播图'
 
+    'oa' => '办公系统',
+    'projects-manager' => '项目管理',
+    'projects-view' => '项目详情',
+    'tasks-manager' => '任务管理',
+    'task-view' => '任务详情',
+    'visitors-manager' => '来访管理',
+    'organization-manager' => '组织架构管理',
 ];
 
