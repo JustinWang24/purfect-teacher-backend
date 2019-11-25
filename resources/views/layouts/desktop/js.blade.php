@@ -26,10 +26,18 @@
 <script src="{{ asset('assets/js/pages/summernote/summernote-data.js') }}"></script>
 @endif
 <!-- 漂亮的表单控件 -->
-<script src="{{ asset('assets/plugins/select2/js/select2.js') }}"></script>
+<script src="{{ asset('assets/plugins/select2/js/select2.js') }}"></script>ƒ
 <script src="{{ asset('assets/js/pages/select2/select2-init.js') }}"></script>
 <script src="{{ asset('js/app.js') }}" defer></script>
 
 <!-- dropzone -->
 <script src="{{ asset('assets/plugins/dropzone/dropzone.js') }}"></script>
 <script src="{{ asset('assets/plugins/dropzone/dropzone-call.js') }}"></script>
+
+<!-- redactor -->
+<script src="{{ asset('assets/plugins/redactor/redactor.js') }}"></script>
+<script src="{{ asset('assets/plugins/redactor/_langs/zh_cn.js') }}"></script>
+
+@foreach($js as $j)
+@include($j)
+@endforeach
