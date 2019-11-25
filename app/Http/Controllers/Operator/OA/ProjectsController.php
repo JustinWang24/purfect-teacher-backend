@@ -35,12 +35,18 @@ class ProjectsController extends Controller
     public function tasks(MyStandardRequest $request){
         $dao = new ProjectDao();
         $this->dataForView['pageTitle'] = '办公/项目/任务管理';
-        $this->dataForView['project'] = $dao->getProjectById($request->get('project_id'));
-        $this->dataForView['tasks'] = $dao->getTasksPaginateByProject($request->get('project_id'));
+
+        $projectId = $request->get('project_id', null);
+        if($projectId){
+            $this->dataForView['project'] = $dao->getProjectById($projectId);
+        }
+
+        $this->dataForView['tasks'] = $dao->getTasksPaginateByProject($projectId);
         $this->dataForView['appendedParams'] = [
             'project_id'=>$request->get('project_id')
         ];
-        return view('school_manager.oa.project_tasks',$this->dataForView);
+        return $projectId ? view('school_manager.oa.project_tasks',$this->dataForView)
+            : view('school_manager.oa.tasks',$this->dataForView);
     }
 
     public function task_view(MyStandardRequest $request){

@@ -53,8 +53,13 @@ class ProjectDao
      * @return Collection
      */
     public function getTasksPaginateByProject($projectId){
-        return ProjectTask::where('project_id',$projectId)
-            ->orderBy('id','desc')
-            ->paginate(ConfigurationTool::DEFAULT_PAGE_SIZE);
+        if($projectId){
+            return ProjectTask::where('project_id',$projectId)
+                ->orderBy('id','desc')
+                ->paginate(ConfigurationTool::DEFAULT_PAGE_SIZE);
+        }else{
+            return ProjectTask::orderBy('id','desc')
+                ->paginate(ConfigurationTool::DEFAULT_PAGE_SIZE);
+        }
     }
 }
