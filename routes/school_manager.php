@@ -217,6 +217,15 @@ Route::prefix('school_manager')->group(function () {
         // 日常安排
         Route::get('regular-manager','ElectiveCoursesController@management')
             ->name('school_manager.contents.regular-manager');
+        // 调查问卷
+        Route::get('questionnaire/list','QuestionnaireController@management')
+            ->name('school_manager.contents.questionnaire');
+        Route::get('questionnaire/add','QuestionnaireController@add')
+            ->name('school_manager.contents.questionnaire.add');
+        Route::get('questionnaire/edit/{id}','QuestionnaireController@edit')
+            ->name('school_manager.contents.questionnaire.edit');
+        Route::post('questionnaire/update','QuestionnaireController@update')
+            ->name('school_manager.contents.questionnaire.update');
     });
 
     // banner 展示
