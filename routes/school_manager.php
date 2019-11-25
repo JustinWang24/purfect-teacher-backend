@@ -174,7 +174,7 @@ Route::prefix('school_manager')->group(function () {
         Route::get('tasks-manager','OA\ProjectsController@tasks')
             ->name('school_manager.oa.tasks-manager');
         // 来访管理
-        Route::get('visitors-manager','ElectiveCoursesController@management')
+        Route::get('visitors-manager','OA\VisitorsController@management')
             ->name('school_manager.oa.visitors-manager');
         // 公文管理
         Route::get('documents-manager','ElectiveCoursesController@management')
