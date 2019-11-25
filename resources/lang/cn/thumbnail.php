@@ -73,5 +73,6 @@ return [
     'applications-manager' => '申请管理',
     'applications-set' => '申请设置',
     'applications-set-add' => '添加',
+    'applications-edit'   => '编辑',
 ];
 

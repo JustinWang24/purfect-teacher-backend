@@ -189,6 +189,9 @@ Route::prefix('school_manager')->group(function () {
         // 申请管理
         Route::get('applications-manager','Applications\ApplicationController@list')
             ->name('school_manager.students.applications-manager');
+        // 编辑申请
+        Route::any('applications-edit','Applications\ApplicationController@edit')
+            ->name('school_manager.students.applications-edit');
         // 申请设置
         Route::get('applications-set','Applications\ApplicationTypeController@list')
             ->name('school_manager.students.applications-set');
