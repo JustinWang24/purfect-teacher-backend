@@ -218,5 +218,19 @@ Route::prefix('school_manager')->group(function () {
         Route::get('regular-manager','ElectiveCoursesController@management')
             ->name('school_manager.contents.regular-manager');
     });
+
+    // banner 展示
+    Route::get('banner/list','BannerController@index')->name('school_manager.banner.list');
+
+    // banner 添加页面展示
+    Route::get('banner/add','BannerController@add')->name('school_manager.banner.add');
+
+    // banner 修改页面展示
+    Route::get('banner/edit','BannerController@edit')->name('school_manager.banner.edit');
+
+    // banner 保存数据
+    Route::post('banner/save','BannerController@save')->name('school_manager.banner.save');
+
+
 });
 
