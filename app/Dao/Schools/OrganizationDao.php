@@ -56,7 +56,7 @@ class OrganizationDao
             ->where('parent_id',0)
             ->first();
          if(!$root){
-            $dao = (new SchoolDao())->createRootOrganization($schoolId);
+             $root = (new SchoolDao())->createRootOrganization($schoolId);
          }
          return $root;
     }
