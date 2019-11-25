@@ -162,8 +162,12 @@ Route::prefix('school_manager')->group(function () {
     // 办公管理
     Route::prefix('oa')->group(function(){
         // 项目管理
-        Route::get('projects-manager','ElectiveCoursesController@management')
+        Route::get('projects-manager','OA\ProjectsController@management')
             ->name('school_manager.oa.projects-manager');
+        Route::get('projects-manager/view','OA\ProjectsController@view')
+            ->name('school_manager.oa.project-view');
+        Route::post('projects-manager/save','OA\ProjectsController@save')
+            ->name('school_manager.oa.project-save');
         // 任务管理
         Route::get('tasks-manager','ElectiveCoursesController@management')
             ->name('school_manager.oa.tasks-manager');

@@ -65,6 +65,10 @@ return [
 
     // 校历
     'calendar' => '校历',
-    'index' => '管理'
+    'index' => '管理',
+
+    'oa' => '办公系统',
+    'projects-manager' => '项目管理',
+    'projects-view' => '项目详情',
 ];
 
