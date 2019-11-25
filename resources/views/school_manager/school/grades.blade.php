@@ -25,7 +25,7 @@ use App\User;
                                 <a href="{{ route('school_manager.department.majors',['uuid'=>$parent->department->id,'by'=>'department']) }}" class="btn btn-default">
                                     <i class="fa fa-arrow-circle-left"></i> 返回
                                 </a>&nbsp;
-                                <a href="{{ route('school_manager.grade.add',['uuid'=>$parent->id]) }}" class="btn btn-primary pull-right" id="btn-create-brade-from-major">
+                                <a href="{{ route('school_manager.grade.add',['uuid'=>$parent->id]) }}" class="btn btn-primary" id="btn-create-brade-from-major">
                                     创建班级 <i class="fa fa-plus"></i>
                                 </a>
                             @endif
