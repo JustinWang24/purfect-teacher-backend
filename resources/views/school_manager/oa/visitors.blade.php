@@ -20,7 +20,7 @@ use App\User;
                         <header>{{ $todayVisitor->name }}</header>
                     </div>
                     <div class="card-body">
-                        <p>邀请人: {{ $todayVisitor->invitedBy->name }}</p>
+                        <p>邀请人: {{ $todayVisitor->invitedBy->name }} (<span class="text-primary">电话: {{ $todayVisitor->invitedBy->mobile }}</span>)</p>
                         <p>事宜: {{ $todayVisitor->reason }}</p>
                         @if($todayVisitor->vehicle_license)
                             <p>车辆: {{ $todayVisitor->vehicle_license }}</p>
