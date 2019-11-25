@@ -65,6 +65,10 @@ return [
 
     // 校历
     'calendar' => '校历',
-    'index' => '管理'
+    'index' => '管理',
+
+    //问卷调查
+    'questionnaire' => '问卷调查',
+    'contents'      => '内容管理'
 ];
 

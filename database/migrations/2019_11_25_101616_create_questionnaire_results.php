@@ -19,6 +19,7 @@ class CreateQuestionnaireResults extends Migration
             $table->unsignedInteger('questionnaire_id')->nullable(false)->comment('问卷ID');
             $table->unsignedBigInteger('user_id')->nullable(false)->index()->comment('用户id 学生老师都有可能');
             $table->unsignedInteger('result')->nullable(false)->index()->comment('答题结果');
+            $table->unique(['school_id', 'questionnaire_id', 'user_id']);
             $table->timestamps();
         });
     }
