@@ -33,11 +33,11 @@ use App\Utils\UI\Button;
             <select  name="major[type]" id="major-type-select" class="form-control">
                 @foreach($all_type as $key => $val)
                      <option value="{{$key}}"
-
-                     @if(isset($facility['type']))
-                    @if($val['id'] == $facility['type']) selected @endif
-                @endif >
-                {{$val['val']}}
+                             @if(isset($major['type']))
+                                @if($key == $major['type']) selected @endif
+                            @endif>
+                    {{$val}}
+                     </option>
                 @endforeach
             </select>
         </div>
