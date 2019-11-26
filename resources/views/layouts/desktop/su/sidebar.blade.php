@@ -30,15 +30,13 @@
                     </a>
                 </li>
                 @if(session('school.id'))
-@include('layouts.desktop.elements.home_menu')
+                    @include('layouts.desktop.elements.home_menu')
                     @include('layouts.desktop.elements.oa_menu')
                     @include('layouts.desktop.elements.students_menu')
-@include('layouts.desktop.elements.equipment_menu')
-@include('layouts.desktop.elements.courses_menu_group')
-@include('layouts.desktop.elements.recruitment_menu_group')
-@include('layouts.desktop.elements.content_menu')
-@include('layouts.desktop.elements.welcome_menu')
-
+                    @include('layouts.desktop.elements.courses_menu_group')
+                    @include('layouts.desktop.elements.recruitment_menu_group')
+                    @include('layouts.desktop.elements.content_menu')
+                    @include('layouts.desktop.elements.welcome_menu')
                 @endif
             </ul>
         </div>
