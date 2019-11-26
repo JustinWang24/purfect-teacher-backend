@@ -16,6 +16,10 @@ Route::prefix('school_manager')->group(function () {
         ->name('school_manager.organizations.load-parent'); // 加载某一级别机构的上级
     Route::post('organizations/save', 'SchoolsController@save_organization')
         ->name('school_manager.organizations.save'); // 保存学校的组织架构
+    Route::post('organizations/load', 'SchoolsController@load_organization')
+        ->name('school_manager.organizations.load'); // 加载 单个 学校的组织架构
+    Route::post('organizations/delete', 'SchoolsController@delete_organization')
+        ->name('school_manager.organizations.delete'); // 加载 单个 学校的组织架构
 
     // 校区的管理
     Route::get('campus/add', 'CampusController@add')->name('school_manager.campus.add');                        // 添加校区
