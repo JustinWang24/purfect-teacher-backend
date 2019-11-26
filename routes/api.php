@@ -326,4 +326,12 @@ Route::prefix('students')->middleware('auth:api')->group(function () {
     Route::get('applications-type','Api\Application\ApplicationController@applicationTypeList')
             ->name('api.students.applications-type');
 });
+Route::prefix('questionnaire')->middleware('auth:api')->group(function () {
 
+    // 问卷调查列表
+    Route::get('/index', 'Api\Questionnaire\QuestionnaireController@index')
+        ->name('api.questionnaire.index');
+    //问卷调查投票
+    Route::get('/vote/{id}', 'Api\Questionnaire\QuestionnaireController@vote')
+        ->name('api.questionnaire.vote');
+});
