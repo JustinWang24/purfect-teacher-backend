@@ -106,6 +106,12 @@ export const Constants = {
             ORG: '/api/campus/handleAffairs/getAddressBook/official',
             GRADE:'/api/campus/handleAffairs/getAddressBook/class',
             ALL_GRADES: '/api/campus/all-grades'
+        },
+        NEWS: {
+            SAVE: '/school_manager/contents/news/save',
+            DELETE: '/school_manager/contents/news/delete',
+            LOAD: '/school_manager/contents/news/load',
+            SAVE_SECTION: '/school_manager/contents/news/save-section',
         }
     },
     YEARS: ['N.A','一年级','二年级','三年级','四年级','五年级','六年级'],
