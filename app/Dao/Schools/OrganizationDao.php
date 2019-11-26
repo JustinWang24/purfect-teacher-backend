@@ -50,6 +50,34 @@ class OrganizationDao
     }
 
     /**
+     * @param $id
+     * @return mixed
+     */
+    public function deleteOrganization($id){
+        $this->deleteBranches($id);
+        return Organization::where('id',$id)->delete();
+    }
+
+    /**
+     * @param $parentId
+     */
+    public function deleteBranches($parentId){
+        $orgs = Organization::where('parent_id',$parentId)->get();
+        foreach ($orgs as $org) {
+            $this->deleteOrganization($org->id);
+        }
+    }
+
+    /**
+     * @param $data
+     * @param $id
+     * @return mixed
+     */
+    public function update($data, $id){
+        return Organization::where('id',$id)->update($data);
+    }
+
+    /**
      * @param $schoolId
      * @return Organization
      */

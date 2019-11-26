@@ -14,6 +14,12 @@ use Illuminate\Support\Facades\Log;
 class StudentProfile extends Model
 {
 
+
+    const GENDER_MAN   = 1;
+    const GENDER_WOMAN = 0;
+    const GENDER_MAN_TEXT   = '男';
+    const GENDER_WOMAN_TEXT = '女';
+
     protected $fillable = [
         'uuid',
         'user_id',
@@ -102,5 +108,17 @@ class StudentProfile extends Model
 
     public function getAvatarAttribute(){
         return $this->avatar ?? User::DEFAULT_USER_AVATAR;
+    }
+
+    /**
+     * 获取性别
+     * @return mixed
+     */
+    public function getGenderTextAttribute() {
+        $sex = [
+            self::GENDER_MAN => self::GENDER_MAN_TEXT,
+            self::GENDER_WOMAN => self::GENDER_WOMAN_TEXT,
+        ];
+        return $sex["{$this->gender}"];
     }
 }

@@ -16,7 +16,10 @@ class BannerDao
      */
     public function getBannerBySchoolId($schoolId)
     {
-       return Banner::where('school_id', $schoolId)->paginate(ConfigurationTool::DEFAULT_PAGE_SIZE);
+       return Banner::where('school_id', $schoolId)
+           ->orderBy('posit','asc')
+           ->orderBy('sort','asc')
+           ->paginate(ConfigurationTool::DEFAULT_PAGE_SIZE);
     }
 
 

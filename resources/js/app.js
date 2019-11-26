@@ -45,6 +45,50 @@ import { getEmptyElectiveCourseApplication } from './common/elective_course';
 import { loadTextbooksPaginate, deleteTextbook } from './common/textbook';
 
 /**
+ * 申请类型
+ */
+if(document.getElementById('application-type-app')){
+    new Vue({
+        el:'#application-type-app',
+        data(){
+            return {
+                type:{
+                    name:'',
+                    media_id:''
+                },
+                showFileManagerFlag: false,
+                selectedImgUrl: null,
+            }
+        },
+        methods:{
+            onSubmit: function(){
+                axios.post(
+                    '/school_manager/students/applications-set-save',{
+                        type: this.type
+                    }
+                ).then(res => {
+                    if(Util.isAjaxResOk(res)){
+                        this.$message({
+                            type: 'success',
+                            message: '保存成功!'
+                        });
+                        window.location.href = '/school_manager/students/applications-set';
+                    }
+                    else{
+                        this.$message.error(res.data.data.message);
+                    }
+                })
+            },
+            pickFileHandler: function(payload){
+                this.type.media_id = payload.file.id;
+                this.selectedImgUrl = payload.file.url;
+                this.showFileManagerFlag = false;
+            },
+        }
+    })
+}
+
+/**
  * 组织结构
  */
 if(document.getElementById('organization-app')){
@@ -55,12 +99,16 @@ if(document.getElementById('organization-app')){
                 maxLevel: 4,
                 schoolId: 0,
                 dialogFormVisible: false,
+                dialogEditFormVisible: false,
                 form: {
                     name: '',
                     parent_id: '',
                     level: '',
+                    phone: '',
+                    address: '',
                 },
-                parents:[]
+                parents:[],
+                loading: false
             }
         },
         watch: {
@@ -95,9 +143,69 @@ if(document.getElementById('organization-app')){
                     {form: this.form}
                 ).then(res => {
                     if(Util.isAjaxResOk(res)){
+                        this.$message({
+                            message: this.form.name + '已经保存成功, 页面将重新加载',
+                            type: 'success'
+                        });
                         window.location.reload();
                     }
                 })
+            },
+            // 显示组织机构编辑表格
+            showEdit: function(id){
+                this.loading = true;
+                axios.post(
+                    '/school_manager/organizations/load',
+                    {organization_id: id}
+                ).then(res => {
+                    if(Util.isAjaxResOk(res)){
+                        this.form = res.data.data.organization;
+                    }
+                    this.loading = false;
+                });
+                this.dialogEditFormVisible = true;
+            },
+            remove: function(){
+                this.$confirm('此操作将永久删除该机构以及所属的下级机构, 是否继续?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    this.loading = true;
+                    axios.post(
+                        '/school_manager/organizations/delete',
+                        {organization_id: this.form.id}
+                    ).then(res => {
+                        if(Util.isAjaxResOk(res)){
+                            this.$message({
+                                type: 'success',
+                                message: '删除成功!'
+                            });
+                            window.location.reload();
+                        }
+                        this.loading = false;
+                    });
+                }).catch(() => {
+                    this.$message({
+                        type: 'info',
+                        message: '已取消删除'
+                    });
+                });
+            },
+            close: function(){
+                this._resetForm();
+                this.dialogEditFormVisible = false;
+            },
+            handleClose: function(done){
+                this._resetForm();
+                done();
+            },
+            _resetForm: function(){
+                const keys = Object.keys(this.form);
+                let that = this;
+                keys.forEach(function (key) {
+                    that.form[key] = '';
+                });
             }
         }
     });
