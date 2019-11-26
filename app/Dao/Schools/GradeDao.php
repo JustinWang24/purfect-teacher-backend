@@ -11,6 +11,7 @@ use App\User;
 use App\Models\Users\GradeUser;
 use App\Models\Schools\Grade;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
 
 class GradeDao
 {
@@ -49,6 +50,14 @@ class GradeDao
      */
     public function getBySchool($id){
         return Grade::where('school_id',$id)->paginate();
+    }
+
+    /**
+     * @param $id
+     * @return Collection
+     */
+    public function getAllBySchool($id){
+        return Grade::select('id','name')->where('school_id',$id)->get();
     }
 
     /**
