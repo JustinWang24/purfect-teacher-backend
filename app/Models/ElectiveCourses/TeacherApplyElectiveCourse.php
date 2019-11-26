@@ -54,11 +54,33 @@ class TeacherApplyElectiveCourse extends Model
     }
 
     /**
+     * 获取文字的颜色
+     * @return string
+     */
+    public function getStatusColor(){
+        $text = 'text-warning';
+        switch ($this->status){
+            case self::STATUS_VERIFIED:
+                $text = 'text-success';
+                break;
+            case self::STATUS_WAITING_FOR_REJECTED:
+                $text = 'text-danger';
+                break;
+            case self::STATUS_PUBLISHED:
+                $text = 'text-success';
+                break;
+            default:
+                break;
+        }
+        return $text;
+    }
+
+    /**
+     * 获取状态的文本
      * @return string
      */
     public function getStatusText(){
         $text = self::STATUS_WAITING_FOR_VERIFIED_TEXT;
-
         switch ($this->status){
             case self::STATUS_VERIFIED:
                 $text = self::STATUS_VERIFIED_TEXT;

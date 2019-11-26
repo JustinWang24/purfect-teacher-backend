@@ -67,7 +67,7 @@ class ApplyDaoTest extends BasicPageTestCase
         $status = DB::table('teacher_apply_elective_courses')->where('id', $val)
             ->first()->status;
         $this->assertEquals(4, $status);
-        return $result->getData();
+        return $result->getData()->id;
     }
 
     /**

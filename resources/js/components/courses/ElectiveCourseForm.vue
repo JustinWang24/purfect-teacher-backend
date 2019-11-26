@@ -1,7 +1,11 @@
 <template>
     <div class="elective-course-form-wrap">
         <p v-if="loading" style="color: red;"><i class="el-icon-loading"></i> 数据加载中, 请稍候 ...</p>
-        <el-form :model="courseModel" :rules="rules" ref="electivCourseModelForm" label-width="100px" class="course-form">
+        <p>
+            <el-button v-if="isApproved" type="success" icon="el-icon-circle-check" round>已通过</el-button>
+            <el-button v-if="isRefused" type="danger" icon="el-icon-circle-close" round>已拒绝</el-button>
+        </p>
+        <el-form :model="courseModel" :rules="rules" ref="electivCourseModelForm" label-width="80px" class="course-form" style="margin-top: 20px;">
             <el-row>
                 <el-col :span="6">
                     <el-form-item label="课程编号" prop="code">
@@ -111,7 +115,7 @@
                     <h4 class="pl-4">上课日期, 课节与地点</h4>
                 </el-col>
             </el-row>
-            <el-row  v-if="!asAdmin">
+            <el-row>
                 <el-col :span="5">
                     <el-row>
                         <el-form-item label="哪周上课">
@@ -150,7 +154,7 @@
                         </el-select>
                     </el-form-item>
                 </el-col>
-                <el-col :span="4">
+                <el-col :span="4" v-if="asAdmin || !applicationId">
                     <el-form-item label="教学楼">
                         <el-select v-model="scheduleItem.building_id" placeholder="请选择教学楼" style="width: 100%;">
                             <el-option-group
@@ -167,7 +171,7 @@
                         </el-select>
                     </el-form-item>
                 </el-col>
-                <el-col :span="4">
+                <el-col :span="4" v-if="asAdmin || !applicationId">
                     <el-form-item label="教室">
                         <el-select v-model="scheduleItem.classroom_id" placeholder="请选择教室" style="width: 100%;">
                             <el-option
@@ -180,12 +184,13 @@
                     </el-form-item>
                 </el-col>
                 <el-col :span="1">
-                    <el-button v-on:click="pushToSchedule" type="success" icon="el-icon-plus" circle  style="margin-left: 10px;" ></el-button>
+                    <el-button v-if="!asAdmin || !applicationId" v-on:click="pushToSchedule" type="success" icon="el-icon-plus" circle  style="margin-left: 10px;" ></el-button>
+                    <el-button v-if="asAdmin && applicationId>0" v-on:click="updateToSchedule" type="success" icon="el-icon-check" circle  style="margin-left: 10px;" ></el-button>
                 </el-col>
             </el-row>
 
             <el-row v-if="schedule.length > 0" class="mb-10">
-                <el-col :span="5" v-for="(item,idx) in schedule" :key="idx" class="mr-10 mb-10">
+                <el-col :span="6" v-for="(item,idx) in schedule" :key="idx" class="mb-10 p-5">
                     <el-card class="box-card">
                         <div slot="header" class="clearfix">
                             <span v-for="week in item.weeks" :key="week">
@@ -212,19 +217,23 @@
                         </p>
                         <p>
                             <span class="txt-primary">地点:</span>
-                            <el-tag size="mini" type="info" class="mr-10">{{ item.building_name }} - {{ item.classroom_name }}</el-tag>
+                            <el-tag v-if="item.building_name" size="mini" type="info" class="mr-10">{{ item.building_name }} - {{ item.classroom_name }}</el-tag>
+                            <el-tag v-else size="mini" type="danger" class="mr-10">待分配</el-tag>
+                        </p>
+                        <p v-if="asAdmin">
+                            <el-button v-on:click="assignLocation(item)">分配教室</el-button>
                         </p>
                     </el-card>
                 </el-col>
             </el-row>
             <el-divider></el-divider>
-            <el-form-item v-if="!asAdmin">
+            <el-form-item v-if="!asAdmin || !applicationId">
                 <el-button type="primary" @click="saveCourse">保存</el-button>
             </el-form-item>
-            <el-form-item v-if="asAdmin" label="处理意见">
+            <el-form-item v-if="asAdmin && isInWaitingStatus" label="处理意见">
                 <el-input type="textarea" v-model="courseModel.reply_content" placeholder="必填"></el-input>
             </el-form-item>
-            <el-form-item v-if="asAdmin">
+            <el-form-item v-if="asAdmin && isInWaitingStatus">
                 <el-button type="success" @click="approve">批准</el-button>
                 <el-button type="danger" @click="refuse">拒绝</el-button>
             </el-form-item>
@@ -236,6 +245,7 @@
     import { searchTeachers } from '../../common/search';
     import { loadTeachersBySchool } from '../../common/welcome';
     import { Util } from '../../common/utils';
+    import { Constants } from '../../common/constants';
     import { loadBuildings, loadRoomsByBuilding } from '../../common/facility';
     import {
         saveElectiveCourse,
@@ -268,6 +278,11 @@
                 type:[Number, String],
                 required: true
             },
+            schoolUuid:{
+                type:String,
+                required: false,
+                default:''
+            },
             applicationId:{
                 type:[Number, String],
                 required: false,
@@ -292,12 +307,17 @@
                 }
             },
             'courseModel.teacher_id': function(newVal, oldVal){
-                if(newVal !== oldVal){
+                if(!Util.isEmpty(newVal) && newVal !== oldVal){
                     // 获取教师的名字
                     const item = Util.GetItemById(newVal, this.teachers);
                     this.courseModel.teacher_name = item.name;
                 }
             },
+        },
+        computed: {
+            'redirectUrl': function(){
+                return '/school_manager/elective-course/management?uuid='+this.schoolUuid;
+            }
         },
         data() {
             return {
@@ -344,6 +364,10 @@
                 campuses:[],
                 allowedStartYears:[],
                 teachersInSchool:[],
+                // 申请表状态
+                isApproved: false,
+                isRefused: false,
+                isInWaitingStatus: false,
             }
         },
         created(){
@@ -364,6 +388,9 @@
             }
         },
         methods: {
+            assignLocation: function(item){
+                this.scheduleItem = item;
+            },
             // 删除已经存在的上课时间和地点项
             deleteScheduleItem: function(idx, id){
                 if(this.asAdmin){
@@ -387,8 +414,14 @@
                     this.$message.error('请写下批准意见');
                     return;
                 }
-                approveElectiveCourse(this.courseModel.id).then(res => {
-
+                approveElectiveCourse(this.courseModel, this.schedule).then(res => {
+                    if(Util.isAjaxResOk(res)){
+                        this.$message({
+                            message: '该申请已经被通过, 等待学生报名',
+                            type: 'success'
+                        });
+                        window.location.href = this.redirectUrl;
+                    }
                 });
             },
             // 拒绝选修课程
@@ -398,8 +431,21 @@
                     this.$message.error('请写下拒绝原因');
                     return;
                 }
+                refuseElectiveCourse(this.courseModel).then(res => {
+                    if(Util.isAjaxResOk(res)){
+                        // 返回选修课审批页面
+                        this.$message({
+                            message: '该申请已经被驳回',
+                            type: 'success'
+                        });
+                        window.location.href = this.redirectUrl;
+                    }
+                })
             },
             getApplication: function(id){
+                if(id === 0){
+                    return;
+                }
                 this.loading = true;
                 loadElectiveCourse(id).then(res => {
                     if(Util.isAjaxResOk(res)){
@@ -408,6 +454,9 @@
                             this.courseModel[keys[i]] = res.data.data.application[keys[i]];
                         }
                         this.schedule = res.data.data.application.schedule;
+                        this.isInWaitingStatus = this.courseModel.status === Constants.ELECTIVE_COURSE.STATUS_WAITING;
+                        this.isRefused = this.courseModel.status === Constants.ELECTIVE_COURSE.STATUS_REFUSED;
+                        this.isApproved = this.courseModel.status === Constants.ELECTIVE_COURSE.STATUS_APPROVED || this.courseModel.status === Constants.ELECTIVE_COURSE.STATUS_PUBLISHED;
                     }
                     else{
                         this.$message.error('数据加载失败, 请稍候再试');
@@ -439,7 +488,10 @@
                         if(Util.isAjaxResOk(res)){
                             this.$message('选修课保存成功');
                             this.$emit('course-saved', {course: res.data.data.course});
-                            if(!this.asAdmin){
+                            if(this.asAdmin){
+                                this.$emit('course-saved-admin', {course: this.courseModel, schedule: this.schedule});
+                            }
+                            else{
                                 window.location.href = '/home';
                             }
                         }else{
@@ -450,6 +502,7 @@
                         this.$message.error('系统繁忙, 请稍候再试');
                     });
             },
+            // 教师添加上课的时间地点项
             pushToSchedule: function(){
                 if(Util.isEmpty(this.scheduleItem.weeks) || Util.isEmpty(this.scheduleItem.days) || Util.isEmpty(this.scheduleItem.timeSlots) ){
                     this.$message.error('请输入正确的周次, 日期和时间');
@@ -472,6 +525,15 @@
                 this.scheduleItem.building_name = '';
                 this.scheduleItem.classroom_id = '';
                 this.scheduleItem.classroom_name = '';
+            },
+            // 管理员修改上课的时间地点项
+            updateToSchedule: function(){
+                const idx = Util.GetItemIndexById(this.scheduleItem.id, this.schedule);
+                this.schedule[idx].building_id = this.scheduleItem.building_id;
+                this.schedule[idx].building_name = this.getBuildingName(this.scheduleItem.building_id);
+                this.schedule[idx].classroom_id = this.scheduleItem.classroom_id;
+                this.schedule[idx].classroom_name = this.getClassroomName(this.scheduleItem.classroom_id);
+                // 更新远端数据库
             },
             cancel: function(){
                 this.$emit('cancelled');
@@ -556,6 +618,9 @@
         margin-right: 10px;
     }
     .mb-10{
-        margin-bottom: 10px;
+         margin-bottom: 10px;
+     }
+    .p-5{
+        padding: 5px;
     }
 </style>

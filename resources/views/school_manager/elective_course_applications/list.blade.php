@@ -1,5 +1,4 @@
 <?php
-use App\Utils\UI\Anchor;
 use App\Utils\UI\Button;
 ?>
 @extends('layouts.app')
@@ -35,7 +34,7 @@ use App\Utils\UI\Button;
                                         <td>{{ _printDate($application->updated_at) }}</td>
                                         <td>{{ $application->teacher_name }}</td>
                                         <td>
-                                            <a target="_blank" href="{{ route('teacher.elective-course.edit',['application_id'=>$application->id,'uuid'=>$application->teacher_id]) }}">
+                                            <a href="{{ route('teacher.elective-course.edit',['application_id'=>$application->id,'uuid'=>$application->teacher_id]) }}">
                                                 {{ $application->name }}
                                             </a>
                                         </td>
@@ -48,22 +47,26 @@ use App\Utils\UI\Button;
                                         </td>
                                         <td></td>
                                         <td>
-                                            <span>
+                                            <span class="{{ $application->getStatusColor() }}">
                                                 {{ $application->getStatusText() }}
                                             </span>
                                         </td>
                                         <td>
                                         <?php
+                                            $subs = [
+                                                ['url'=>route('teacher.elective-course.edit',['application_id'=>$application->id,'uuid'=>$application->teacher_id]),'text'=>'编辑/查看'],
+                                            ];
+                                            if($application->status === \App\Models\ElectiveCourses\TeacherApplyElectiveCourse::STATUS_WAITING_FOR_VERIFIED){
+                                                $subs[] = ['url'=>route('school_manager.elective-course.refuse',['course_id'=>$application->id]),'text'=>'拒绝'];
+                                            }
                                             Button::PrintGroup(
                                                 [
                                                     'text'=>'可执行操作',
-                                                    'subs'=>[
-                                                        ['url'=>route('teacher.elective-course.edit',['application_id'=>$application->id,'uuid'=>$application->teacher_id]),'text'=>'编辑/查看'],
-                                                        ['url'=>route('school_manager.elective-course.approve',['uuid'=>$application->id]),'text'=>'同意'],
-                                                        ['url'=>route('school_manager.elective-course.refuse',['uuid'=>$application->id]),'text'=>'拒绝'],
-                                                    ]
+                                                    'subs'=>$subs
                                                 ],
-                                                Button::TYPE_PRIMARY
+                                                Button::TYPE_PRIMARY,
+                                                false,
+                                                true
                                             );
                                         ?>
                                         </td>

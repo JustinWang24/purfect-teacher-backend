@@ -58,6 +58,8 @@ class TimeSlotsController extends Controller
      */
     public function load_study_time_slots(Request $request){
         $schoolIdOrUuid = $request->get('school');
+        $noTime = $request->get('no_time', false);
+
         $school = null;
         $schoolDao = new SchoolDao(new User());
 
@@ -76,7 +78,7 @@ class TimeSlotsController extends Controller
             $field = ConfigurationTool::KEY_STUDY_WEEKS_PER_TERM;
             return JsonBuilder::Success(
                 [
-                    'time_frame'=>$timeSlotDao->getAllStudyTimeSlots($schoolIdOrUuid, true),
+                    'time_frame'=>$timeSlotDao->getAllStudyTimeSlots($schoolIdOrUuid, true, $noTime),
                     'total_weeks'=>$school->configuration->$field,
                 ]
             );

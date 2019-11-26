@@ -96,3 +96,20 @@ $factory->define(RecruitmentPlan::class, function (Faker $faker) {
         'how_to_enrol'=>$faker->paragraph, // 录取方式
     ];
 });
+
+// 办公/项目的 mock
+$factory->define(\App\Models\OA\Project::class, function (Faker $faker) {
+    return [
+        'school_id'=>1,
+        'user_id'=>11,
+        'title'=>$faker->title,// 专业名
+        'status'=>\App\Models\OA\Project::STATUS_IN_PROGRESS, // 招生类型: 自主招生/统招 等
+        'content'=>$faker->paragraph,// 本次招生计划的标题
+    ];
+});
+$factory->define(\App\Models\OA\ProjectMember::class, function (Faker $faker) {
+    return [
+        'oa_project_id'=>1,
+        'user_id'=>10,
+    ];
+});
