@@ -5,7 +5,7 @@ use App\Utils\UI\Button;
 @extends('layouts.app')
 @section('content')
  <div class="row">
-        <div class="col-sm-12 col-md-12 col-xl-12">
+        <div class="col-sm-12 col-md-12 col-xl-12" id="application-type-app">
             <div class="card-box">
                 <div class="card-head">
                     <header>添加</header>
