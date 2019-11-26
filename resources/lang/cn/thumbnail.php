@@ -91,5 +91,8 @@ return [
     'science' => '科技成果',
     'versions' => '版本管理',
     'contacts' => '联系方式',
+
+    // 校园动态
+    'news-manager' => '校园动态',
 ];
 

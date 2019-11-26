@@ -7,16 +7,20 @@ namespace App\Dao\Schools;
 use App\Models\Schools\NewsSection;
 use App\Utils\JsonBuilder;
 use App\Models\Schools\News;
+use App\Utils\ReturnData\IMessageBag;
 use App\Utils\ReturnData\MessageBag;
 use Illuminate\Support\Facades\DB;
 
 class NewsDao
 {
+    public function getById($id){
+        return News::where('id',$id)->with('sections')->first();
+    }
 
     /**
      * 创建标题
      * @param $data
-     * @return MessageBag
+     * @return IMessageBag
      */
     public function create($data) {
         $info = $this->getNewByTitleAndSchoolId($data['title'], $data['school_id']);
@@ -25,7 +29,9 @@ class NewsDao
         }
         $re = News::create($data);
         if($re) {
-            return new MessageBag(JsonBuilder::CODE_SUCCESS, '创建成功');
+            $msgBag = new MessageBag(JsonBuilder::CODE_SUCCESS, '创建成功');
+            $msgBag->setData($re);
+            return $msgBag;
         } else {
             return new MessageBag(JsonBuilder::CODE_ERROR, '创建失败');
         }
@@ -65,7 +71,7 @@ class NewsDao
         try{
             News::where('id', $id)->delete();
 
-            NewsSection::whereIn('news_id', $id)->delete();
+            NewsSection::where('news_id', $id)->delete();
 
             DB::commit();
             return new MessageBag(JsonBuilder::CODE_SUCCESS, '删除成功');
