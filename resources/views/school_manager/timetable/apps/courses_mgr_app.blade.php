@@ -4,6 +4,7 @@
             <courses-manager
                     user-uuid="{{ Auth::user()->uuid }}"
                     school-id="{{ $school->id }}"
+                    school-uuid="{{ $school->uuid }}"
                     :can-delete="{{ Auth::user()->isSchoolAdminOrAbove() ? 'true' : 'false' }}"
             ></courses-manager>
         </div>

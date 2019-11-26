@@ -29,4 +29,8 @@
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
     <!-- dropzone -->
     <link rel="stylesheet" href="{{ asset('assets/plugins/dropzone/dropzone.css') }}">
+
+    <!-- redactor -->
+    <link rel="stylesheet" href="{{ asset('assets/plugins/redactor/redactor.min.css') }}">
+
 </head>

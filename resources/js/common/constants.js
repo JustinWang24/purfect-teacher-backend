@@ -132,5 +132,11 @@ export const Constants = {
         VIDEO: 10,
         AUDIO: 11,
         TXT: 12
+    },
+    ELECTIVE_COURSE: {
+        STATUS_APPROVED: 2,
+        STATUS_REFUSED: 3,
+        STATUS_WAITING: 1,
+        STATUS_PUBLISHED: 4,
     }
 };

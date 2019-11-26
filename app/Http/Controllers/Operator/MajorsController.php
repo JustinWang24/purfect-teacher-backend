@@ -38,8 +38,10 @@ class MajorsController extends Controller
 
     public function add(MajorRequest $request){
         $dao = new DepartmentDao($request->user());
+        $major = new Major();
         $this->dataForView['department'] = $dao->getDepartmentById($request->uuid());
-        $this->dataForView['major'] = new Major();
+        $this->dataForView['major'] = $major;
+        $this->dataForView['all_type'] = $major->AllTypes();
         return view('school_manager.major.add', $this->dataForView);
     }
 
@@ -47,8 +49,10 @@ class MajorsController extends Controller
         $majorDao = new MajorDao($request->user());
         $major = $majorDao->getMajorById($request->uuid());
         if($major){
+            $this->dataForView['all_type'] = $major->AllTypes();
             $this->dataForView['department'] = $major->department;
             $this->dataForView['major'] = $major;
+
             return view('school_manager.major.edit', $this->dataForView);
         }else{
             // major 没取到

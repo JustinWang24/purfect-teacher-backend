@@ -316,3 +316,22 @@ Route::prefix('enrolment-step')->group(function () {
     Route::any('/schoolEnrolmentStep/getEnrolmentInfo', 'Api\EnrolmentStep\SchoolEnrolmentStepController@getEnrolmentInfo')
         ->name('api.schoolEnrolmentStep.getEnrolmentInfo');
 });
+
+Route::prefix('students')->middleware('auth:api')->group(function () {
+
+    // 创建申请
+    Route::post('applications-create','Api\Application\ApplicationController@create')
+            ->name('api.students.applications-create');
+    // 申请类型
+    Route::get('applications-type','Api\Application\ApplicationController@applicationTypeList')
+            ->name('api.students.applications-type');
+});
+Route::prefix('questionnaire')->middleware('auth:api')->group(function () {
+
+    // 问卷调查列表
+    Route::get('/index', 'Api\Questionnaire\QuestionnaireController@index')
+        ->name('api.questionnaire.index');
+    //问卷调查投票
+    Route::get('/vote/{id}', 'Api\Questionnaire\QuestionnaireController@vote')
+        ->name('api.questionnaire.vote');
+});

@@ -81,10 +81,14 @@ class Button extends BasicComponent
      * @param $options
      * @param $type
      * @param bool $codeOnly
+     * @param mixed $self
      * @return string
      */
-    public static function PrintGroup($options, $type, $codeOnly = false){
+    public static function PrintGroup($options, $type, $codeOnly = false, $self = null){
         $options['type'] = $type;
+        if($self){
+            $options['self'] = $self;
+        }
         $view = View::make('reusable_elements.ui.button_group',$options);
         if($codeOnly){
             return $view->render();
