@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateNoticeInspectsTable extends Migration
+class CreateNoticeMediasTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,10 @@ class CreateNoticeInspectsTable extends Migration
      */
     public function up()
     {
-        Schema::create('notice_inspects', function (Blueprint $table) {
+        Schema::create('notice_medias', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->unsignedInteger('school_id')->comment('学校id');
-            $table->string('name')->comment('检查类型名称');
+            $table->unsignedInteger('notice_id')->comment('通知公告ID');
+            $table->unsignedInteger('media_id')->comment('附件ID');
             $table->timestamps();
         });
     }
@@ -28,6 +28,6 @@ class CreateNoticeInspectsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('notice_inspects');
+        Schema::dropIfExists('notice_medias');
     }
 }
