@@ -209,6 +209,9 @@ Route::prefix('campus')->middleware('auth:api')->group(function () {
      // 学校部门通讯录
      Route::post('/handleAffairs/getAddressBook/official','Api\Address\AddressBookController@official')
         ->name('api.address.book.official');
+     // 加载所有的班级
+     Route::post('/all-grades','Api\Address\AddressBookController@all_grades')
+        ->name('api.school.all-grades');
 });
 
 
@@ -334,4 +337,9 @@ Route::prefix('questionnaire')->middleware('auth:api')->group(function () {
     //问卷调查投票
     Route::get('/vote/{id}', 'Api\Questionnaire\QuestionnaireController@vote')
         ->name('api.questionnaire.vote');
+});
+//最新版本号
+Route::prefix('version')->group(function () {
+    Route::get('/index', 'Api\Version\VersionController@index')->name('api.version.index');
+
 });
