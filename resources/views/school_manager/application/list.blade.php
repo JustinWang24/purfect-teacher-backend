@@ -26,7 +26,8 @@
                                     <th>操作</th>
                                 </tr>
                                 </thead>
-                                @foreach($list as $key => $val)
+                                <tbody>
+                                    @foreach($list as $key => $val)
                                     <tr>
                                         <td>{{$key + 1}}</td>
                                         <td>{{$val->user->name}}</td>
@@ -39,11 +40,10 @@
                                             {{ \App\Utils\UI\Anchor::Print(['text'=>'编辑','class'=>'btn-edit-facility','href'=>route('school_manager.students.applications-edit',['id'=>$val->id])], \App\Utils\UI\Button::TYPE_DEFAULT,'edit') }}
                                         </td>
                                     </tr>
-                                @endforeach
-                                <tbody>
-
+                                    @endforeach
                                 </tbody>
                             </table>
+                             {{ $list->links() }}
                         </div>
                     </div>
                 </div>

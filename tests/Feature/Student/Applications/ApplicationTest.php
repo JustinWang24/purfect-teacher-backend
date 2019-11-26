@@ -36,7 +36,6 @@ class ApplicationTest extends BasicPageTestCase
         $response = $this->post(route('api.students.applications-create'),
             $data,$header);
         $result = json_decode($response->content(),true);
-        dd($result);
         $this->assertArrayHasKey('code', $result);
         $this->assertEquals(JsonBuilder::CODE_SUCCESS,
             $result['code']);
