@@ -29,7 +29,7 @@ class Application extends Model
     protected $fillable = [
         'user_id', 'school_id', 'grade_id', 'application_type_id', 'reason',
         'census', 'family_population', 'general_income', 'per_capita_income',
-        'income_source', 'status', 'last_update_by'
+        'income_source', 'status', 'last_update_by', 'check_cause'
     ];
 
 
