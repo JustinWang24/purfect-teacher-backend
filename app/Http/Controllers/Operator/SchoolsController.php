@@ -134,7 +134,38 @@ class SchoolsController extends Controller
         $form = $request->get('form');
         $form['school_id'] = $request->getSchoolId();
         $dao = new OrganizationDao();
-        $org = $dao->create($form);
+        if(isset($form['id']) && !empty($form['id'])){
+            $id = $form['id'];
+            unset($form['id']);
+            $org = $dao->update($form, $id);
+        }
+        else{
+            $org = $dao->create($form);
+        }
         return JsonBuilder::Success(['org'=>$org]);
+    }
+
+    /**
+     * 保存组织结构
+     * @param SchoolRequest $request
+     * @return string
+     */
+    public function load_organization(SchoolRequest $request){
+        $id = $request->get('organization_id');
+        $dao = new OrganizationDao();
+        $org = $dao->getById($id);
+        return JsonBuilder::Success(['organization'=>$org]);
+    }
+
+    /**
+     * 删除组织结构
+     * @param SchoolRequest $request
+     * @return string
+     */
+    public function delete_organization(SchoolRequest $request){
+        $id = $request->get('organization_id');
+        $dao = new OrganizationDao();
+        $dao->deleteOrganization($id);
+        return JsonBuilder::Success();
     }
 }
