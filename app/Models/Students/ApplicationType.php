@@ -16,7 +16,7 @@ use Illuminate\Database\Eloquent\Model;
 class ApplicationType extends Model
 {
 
-    protected $fillable = ['name', 'school_id'];
+    protected $fillable = ['name', 'school_id','media_id'];
 
     public $timestamps = false;
 
@@ -42,8 +42,7 @@ class ApplicationType extends Model
         ];
     }
 
-
-     public function media() {
+    public function media() {
         return $this->belongsTo(Media::class)->select($this->media_field);
     }
 }
