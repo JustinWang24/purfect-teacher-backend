@@ -246,6 +246,19 @@ Route::prefix('school_manager')->group(function () {
             ->name('school_manager.contents.questionnaire.edit');
         Route::post('questionnaire/update','QuestionnaireController@update')
             ->name('school_manager.contents.questionnaire.update');
+
+        // 科技成功
+        Route::get('science-list','Contents\ScienceController@list')
+            ->name('school_manager.contents.science.list');
+        // 添加
+        Route::any('science-add','Contents\ScienceController@create')
+            ->name('school_manager.contents.science.add');
+        // 编辑
+        Route::any('science-edit','Contents\ScienceController@edit')
+            ->name('school_manager.contents.science.edit');
+        // 删除
+        Route::any('science-delete','Contents\ScienceController@delete')
+            ->name('school_manager.contents.science.delete');
     });
 
     // banner 展示
