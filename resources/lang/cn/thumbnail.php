@@ -67,6 +67,12 @@ return [
     'calendar' => '校历',
     'index' => '管理',
 
+    // 申请管理
+    'applications-manager' => '申请管理',
+    'applications-set' => '申请设置',
+    'applications-set-add' => '添加',
+    'applications-edit'   => '编辑',
+
     //问卷调查
     'questionnaire' => '问卷调查',
     'contents'      => '内容管理',
