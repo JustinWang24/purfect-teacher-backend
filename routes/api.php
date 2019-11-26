@@ -338,3 +338,8 @@ Route::prefix('questionnaire')->middleware('auth:api')->group(function () {
     Route::get('/vote/{id}', 'Api\Questionnaire\QuestionnaireController@vote')
         ->name('api.questionnaire.vote');
 });
+//最新版本号
+Route::prefix('version')->group(function () {
+    Route::get('/index', 'Api\Version\VersionController@index')->name('api.version.index');
+
+});
