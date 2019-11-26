@@ -46,6 +46,48 @@ import { loadTextbooksPaginate, deleteTextbook } from './common/textbook';
 import { loadOrgContacts, loadGradeContacts, loadGrades } from './common/contacts';
 
 /**
+ * 动态新闻的管理
+ */
+if(document.getElementById('school-news-list-app')){
+    new Vue({
+        el:'#school-news-list-app',
+        data(){
+            return {
+                schoolId: null,
+                newsForm:{
+                    title: '',
+                    id:'',
+                    type: 1
+                },
+                sections:[],
+                newsFormFlag:false,
+                sectionsFormFlag:false,
+                formLabelWidth: '100px',
+            }
+        },
+        created(){
+            const dom = document.getElementById('app-init-data-holder');
+            this.schoolId = dom.dataset.school;
+            this.newsForm.type = parseInt(dom.dataset.type);// 文章类型
+        },
+        methods: {
+            addNew: function(){
+                this.newsFormFlag = true;
+                this.newsForm.title = '';
+            },
+            saveNews: function(){
+                // Todo 保存新闻
+                this.newsFormFlag = false;
+                this.sectionsFormFlag = true;
+            },
+            cancelSaveNews: function(){
+                this.newsFormFlag = false;
+            }
+        }
+    })
+}
+
+/**
  * 通讯录
  */
 if(document.getElementById('school-contacts-list-app')){
