@@ -25,5 +25,10 @@
                 <span class="title">设备管理</span>
             </a>
         </li>
+        <li class="nav-item">
+            <a href="{{ route('school_manger.school.calendar.index',['uuid'=>session('school.uuid')]) }}" class="nav-link ">
+                <span class="title">校历</span>
+            </a>
+        </li>
     </ul>
 </li>

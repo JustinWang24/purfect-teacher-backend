@@ -3,6 +3,7 @@
 
 namespace App\Models\Notices;
 
+use App\User;
 use Illuminate\Database\Eloquent\Model;
 
 class Notice extends Model
@@ -25,9 +26,28 @@ class Notice extends Model
         ];
     }
 
+    protected $fillable = ['school_id', 'title', 'content', 'organization_id', 'media_id',
+                           'image', 'release_time', 'note', 'inspect_id', 'type', 'user_id',
+                           'status'
+    ];
 
     public function getTypeText()
     {
         return self::allType()[$this->type];
+    }
+
+    public function user()
+    {
+        return $this->hasOne(User::class, 'id', 'user_id');
+    }
+
+    public function inspect()
+    {
+        return $this->hasOne(NoticeInspect::class);
+    }
+
+    public function noticeMedias()
+    {
+        return $this->hasMany(NoticeMedia::class);
     }
 }

@@ -88,5 +88,8 @@ return [
     'organization-manager' => '组织架构管理',
     'versions' => '版本管理',
     'contacts' => '联系方式',
+
+    'notice' => '通知公告',
+    'show-notice' => '列表'
 ];
 

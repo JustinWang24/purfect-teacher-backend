@@ -7,7 +7,7 @@
     <ul class="sub-menu">
         <li class="nav-item">
             <a href="{{ route('school_manager.scenery.list') }}" class="nav-link ">
-                <span class="title">基本信息</span>
+                <span class="title">校园风采</span>
             </a>
         </li>
         <li class="nav-item">
