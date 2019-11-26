@@ -231,12 +231,10 @@ Route::prefix('school_manager')->group(function () {
 
     // 内容管理
     Route::prefix('contents')->group(function (){
-        // 动态管理
-        Route::get('news-manager','NewsController@management')
-            ->name('school_manager.contents.news-manager');
         // 日常安排
         Route::get('regular-manager','ElectiveCoursesController@management')
             ->name('school_manager.contents.regular-manager');
+
         // 调查问卷
         Route::get('questionnaire/list','QuestionnaireController@management')
             ->name('school_manager.contents.questionnaire');
@@ -259,6 +257,18 @@ Route::prefix('school_manager')->group(function () {
         // 删除
         Route::any('science-delete','Contents\ScienceController@delete')
             ->name('school_manager.contents.science.delete');
+
+        // 动态管理
+        Route::get('news-manager','Contents\NewsController@management')
+            ->name('school_manager.contents.news-manager');
+        Route::post('news/save','Contents\NewsController@save')
+            ->name('school_manager.contents.news.save');
+        Route::post('news/delete','Contents\NewsController@delete')
+            ->name('school_manager.contents.news.delete');
+        Route::any('news/load','Contents\NewsController@load')
+            ->name('school_manager.contents.news.load');
+        Route::post('news/save-section','Contents\NewsController@save_section')
+            ->name('school_manager.contents.news.save-section');
     });
 
     // banner 展示
