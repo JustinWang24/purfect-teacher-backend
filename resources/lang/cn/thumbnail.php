@@ -77,7 +77,7 @@ return [
     'questionnaire' => '问卷调查',
     'contents'      => '内容管理',
     // banner
-    'banner' => '轮播图',
+    'banner' => '资源位',
 
     'oa' => '办公系统',
     'projects-manager' => '项目管理',
