@@ -43,6 +43,60 @@ import { getTimeSlots, getMajors, saveTimeSlot } from './common/timetables';
 import { loadBuildings } from './common/facility';
 import { getEmptyElectiveCourseApplication } from './common/elective_course';
 import { loadTextbooksPaginate, deleteTextbook } from './common/textbook';
+import { loadOrgContacts, loadGradeContacts, loadGrades } from './common/contacts';
+
+/**
+ * 通讯录
+ */
+if(document.getElementById('school-contacts-list-app')){
+    new Vue({
+        el:'#school-contacts-list-app',
+        data(){
+            return {
+                contacts: [],
+                mates: [],
+                teachers: [],
+                schoolUuid: null,
+                schoolId: null,
+                grades:[],
+                gradeId: null,
+            }
+        },
+        watch: {
+            'gradeId': function(val){
+                loadGradeContacts(this.schoolUuid, this.gradeId).then(res => {
+                    if(Util.isAjaxResOk(res)){
+                        this.mates = res.data.data.schoolmate_list;
+                        this.teachers = res.data.data.teacher_list;
+                    }
+                })
+            }
+        },
+        created(){
+            const dom = document.getElementById('app-init-data-holder');
+            this.schoolUuid = dom.dataset.school;
+            this.schoolId = dom.dataset.id;
+            this.loadContacts();
+            this.loadAllGrades();
+        },
+        methods: {
+            loadContacts: function(){
+                loadOrgContacts(this.schoolUuid).then(res => {
+                    if(Util.isAjaxResOk(res)){
+                        this.contacts = res.data.data.department_list;
+                    }
+                });
+            },
+            loadAllGrades: function(){
+                loadGrades(this.schoolId).then(res => {
+                    if(Util.isAjaxResOk(res)){
+                        this.grades = res.data.data.grades;
+                    }
+                })
+            }
+        }
+    });
+}
 
 /**
  * 申请类型
