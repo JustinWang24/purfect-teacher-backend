@@ -67,11 +67,17 @@ return [
     'calendar' => '校历',
     'index' => '管理',
 
+    // 申请管理
+    'applications-manager' => '申请管理',
+    'applications-set' => '申请设置',
+    'applications-set-add' => '添加',
+    'applications-edit'   => '编辑',
+
     //问卷调查
     'questionnaire' => '问卷调查',
     'contents'      => '内容管理',
     // banner
-    'banner' => '轮播图',
+    'banner' => '资源位',
 
     'oa' => '办公系统',
     'projects-manager' => '项目管理',
@@ -80,5 +86,7 @@ return [
     'task-view' => '任务详情',
     'visitors-manager' => '来访管理',
     'organization-manager' => '组织架构管理',
+    'versions' => '版本管理',
+    'contacts' => '联系方式',
 ];
 

@@ -63,6 +63,13 @@ return [
             'bucket' => env('AWS_BUCKET'),
             'url' => env('AWS_URL'),
         ],
+        //android的apk文件存储路径
+        'apk' => [
+            'driver' => 'local',
+            'root' => storage_path('app/apk'),
+            'url' => env('APP_URL').'/storage/app/apk',
+            'visibility' => 'public',
+        ],
 
     ],
 
