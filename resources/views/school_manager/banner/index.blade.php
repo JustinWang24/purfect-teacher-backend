@@ -6,9 +6,9 @@ use App\Utils\UI\Button;
 @extends('layouts.app')
 @section('content')
         <div class="col-sm-12 col-md-12 col-xl-12">
-            <div class="card-box">
+            <div class="card">
                 <div class="card-head">
-                    <header>banner列表</header>
+                    <header>资源位列表</header>
                 </div>
                 <div class="card-body">
                     <div class="row">
@@ -23,6 +23,7 @@ use App\Utils\UI\Button;
                             <table class="table table-striped table-bordered table-hover table-checkable order-column valign-middle">
                                 <tr>
                                     <th>序号</th>
+                                    <th>权限</th>
                                     <th>位置</th>
                                     <th>类型</th>
                                     <th>标题</th>
@@ -35,12 +36,13 @@ use App\Utils\UI\Button;
                                 <tbody>
                                 @foreach($data as $val)
                                     <tr>
-                                        <td>{{$val->id}}</td>
-                                        <td>{{$val->posit_name}}</td>
-                                        <td>{{$val->type_name}}</td>
-                                        <td>{{$val->title}}</td>
-                                        <td>{{$val->image_url}}</td>
-                                        <td>{{$val->created_at}}</td>
+                                        <td>{{ $val->id }}</td>
+                                        <td>{{ $val->isPublicText() }}</td>
+                                        <td>{{ $val->getPositionText() }} - {{ $val->sort }}</td>
+                                        <td>{{ $val->getTypeText() }}</td>
+                                        <td>{{ $val->title }}</td>
+                                        <td>{{ $val->image_url }}</td>
+                                        <td>{{ _printDate($val->created_at) }}</td>
                                         <td>
                                             @if($val['status'] == 1)
                                             <span class="label label-sm label-success"> 开启 </span>
