@@ -86,6 +86,9 @@ return [
     'task-view' => '任务详情',
     'visitors-manager' => '来访管理',
     'organization-manager' => '组织架构管理',
+
+    // 科技成果
+    'science' => '科技成果',
     'versions' => '版本管理',
     'contacts' => '联系方式',
 ];
