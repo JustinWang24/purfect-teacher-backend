@@ -209,6 +209,9 @@ Route::prefix('campus')->middleware('auth:api')->group(function () {
      // 学校部门通讯录
      Route::post('/handleAffairs/getAddressBook/official','Api\Address\AddressBookController@official')
         ->name('api.address.book.official');
+     // 加载所有的班级
+     Route::post('/all-grades','Api\Address\AddressBookController@all_grades')
+        ->name('api.school.all-grades');
 });
 
 
