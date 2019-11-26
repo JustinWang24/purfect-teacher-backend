@@ -1,98 +1,70 @@
 @extends('layouts.app')
 @section('content')
     <div class="row" id="school-news-list-app">
-        <div class="col-6">
+        <div class="col-4">
             <div class="card">
                 <div class="card-head">
-                    <header>{{ session('school.name') }} - 校内通讯录</header>
+                    <header>
+                        {{ session('school.name') }} - 校园动态
+                        <button class="btn btn-primary btn-sm" v-on:click="addNew">添加动态</button>
+                    </header>
                 </div>
                 <div class="card-body">
-                    <el-table
-                            :data="contacts"
-                            stripe
-                            style="width: 100%">
-                        <el-table-column
-                                prop="name"
-                                label="机构名称"
-                                width="200">
-                        </el-table-column>
-                        <el-table-column
-                                prop="tel"
-                                label="电话号码"
-                                width="200">
-                        </el-table-column>
-                        <el-table-column
-                                prop="address"
-                                label="地址">
-                        </el-table-column>
-                    </el-table>
+                    <table class="table table-striped table-hover valign-middle">
+                    <thead>
+                        <tr>
+                            <th>标题</th>
+                            <th>状态</th>
+                            <th></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        @foreach($newsList as $news)
+<tr>
+    <td>{{ $news->title }}</td>
+    <td>{{ $news->publish ? '发布':'等待' }}</td>
+    <td>
+        <button class="btn btn-sm btn-success"><i class="fa fa-edit"></i></button>
+        <button class="btn btn-sm btn-danger"><i class="fa fa-trash-o"></i></button>
+    </td>
+</tr>
+                        @endforeach
+                        </tbody>
+                    </table>
+                    {{ $newsList->links() }}
                 </div>
             </div>
         </div>
 
-        <div class="col-6">
+        <div class="col-8">
             <div class="card">
                 <div class="card-head">
                     <header>
-                        班级通讯录&nbsp;
-                        <el-select v-model="gradeId" filterable placeholder="请选择">
-                            <el-option
-                                    v-for="grade in grades"
-                                    :key="grade.id"
-                                    :label="grade.name"
-                                    :value="grade.id">
-                            </el-option>
-                        </el-select>
+                        数据表
                     </header>
                 </div>
                 <div class="card-body">
-                    <el-table
-                            v-if="teachers.length > 0"
-                            :data="teachers"
-                            stripe
-                            style="width: 100%">
-                        <el-table-column
-                                prop="type"
-                                label="职务"
-                                width="200">
-                        </el-table-column>
-                        <el-table-column
-                                prop="name"
-                                label="老师姓名">
-                        </el-table-column>
-                        <el-table-column
-                                prop="tel"
-                                label="电话号码"
-                                width="200">
-                        </el-table-column>
-                    </el-table>
-                    <h3 class="mt-4" v-if="mates.length > 0">学生联系方式: </h3>
-                    <el-table
-                            v-if="mates.length > 0"
-                            :data="mates"
-                            stripe
-                            style="width: 100%">
-                        <el-table-column
-                                prop="type"
-                                label="职务"
-                                width="200">
-                        </el-table-column>
-                        <el-table-column
-                                prop="name"
-                                label="姓名">
-                        </el-table-column>
-                        <el-table-column
-                                prop="tel"
-                                label="电话号码"
-                                width="200">
-                        </el-table-column>
-                    </el-table>
+                    <div class="news-form-wrap" v-show="newsFormFlag">
+                        <el-form :model="newsForm">
+                            <el-form-item label="活动名称" :label-width="formLabelWidth">
+                                <el-input v-model="newsForm.title" autocomplete="off"></el-input>
+                            </el-form-item>
+                            <el-form-item>
+                                <el-button type="primary" @click="saveNews">保存, 并进入下一步</el-button>
+                                <el-button @click="cancelSaveNews">取消</el-button>
+                            </el-form-item>
+                        </el-form>
+                    </div>
+                    <div class="news-form-wrap" v-show="!sectionsFormFlag">
+                        <el-button class="pull-left" icon="el-icon-document" type="primary" @click="addNewTextSection">添加文本内容</el-button>
+                        <el-button class="pull-right" icon="el-icon-picture" type="primary" @click="addNewMediaSection">添加文本内容</el-button>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
     <div id="app-init-data-holder"
-         data-school="{{ session('school.uuid') }}"
-         data-id="{{ session('school.id') }}"
+         data-school="{{ session('school.id') }}"
+         data-type="{{ \App\Models\Schools\News::TYPE_NEWS }}"
     ></div>
 @endsection
