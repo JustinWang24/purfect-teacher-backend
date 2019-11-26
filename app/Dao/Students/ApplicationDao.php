@@ -1,10 +1,12 @@
 <?php
 namespace App\Dao\Students;
 
+use App\Models\Students\ApplicationMedia;
 use App\Utils\JsonBuilder;
 use App\Models\Students\Application;
 use App\Utils\Misc\ConfigurationTool;
 use App\Utils\ReturnData\MessageBag;
+use Illuminate\Support\Facades\DB;
 
 class ApplicationDao
 {
@@ -15,11 +17,27 @@ class ApplicationDao
      * @return MessageBag
      */
     public function create($data) {
-        $result = Application::create($data);
-        if($result) {
+        $mediaId = $data['media_id'];
+        unset($data['media_id']);
+        DB::beginTransaction();
+        try{
+            $result = Application::create($data);
+
+            // 创建申请文件关联
+            if(!empty($mediaId)) {
+                foreach ($mediaId as $key => $val) {
+                    $insert = ['application_id' => $result->id, 'media_id'=>$val];
+                    ApplicationMedia::create($insert);
+                }
+            }
+            DB::commit();
             return new MessageBag(JsonBuilder::CODE_SUCCESS, '创建成功',$result);
-        } else {
-            return new MessageBag(JsonBuilder::CODE_ERROR, '创建失败');
+
+        } catch (\Exception $e) {
+            $msg = $e->getMessage();
+            DB::rollBack();
+            return new MessageBag(JsonBuilder::CODE_ERROR, '创建失败'.$msg);
+
         }
     }
 

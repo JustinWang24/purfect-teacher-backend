@@ -41,6 +41,12 @@ class Application extends Model
     const STATUS_REFUSE_TEXT = '已拒绝';
 
 
+    const CENSUS_COUNTRY = 1;
+    const CENSUS_CITY    = 2;
+    const CENSUS_COUNTRY_TEXT = '农村';
+    const CENSUS_CITY_TEXT    = '城市';
+
+
 
 
     /**
@@ -76,6 +82,30 @@ class Application extends Model
     public function getStatusTextAttribute() {
         $data = $this->getAllStatus();
         return $data["{$this->status}"];
+    }
+
+
+    public function getAllCensus() {
+        return [
+            self::CENSUS_COUNTRY => self::CENSUS_COUNTRY_TEXT,
+            self::CENSUS_CITY    => self::CENSUS_CITY_TEXT
+        ];
+    }
+
+
+    /**
+     * 获取当前的户口类型
+     * @return mixed
+     */
+    public function getCensusTextAttribute() {
+        $data = $this->getAllCensus();
+
+        return $data["{$this->census}"];
+    }
+
+
+    public function ApplicationMedias() {
+        return $this->hasMany(ApplicationMedia::class);
     }
 
 
