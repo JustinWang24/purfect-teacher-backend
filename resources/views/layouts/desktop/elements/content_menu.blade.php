@@ -25,5 +25,10 @@
                 <span class="title">问卷调查</span>
             </a>
         </li>
+        <li class="nav-item">
+            <a href="{{ route('admin.versions.list') }}" class="nav-link ">
+                <span class="title">版本号管理</span>
+            </a>
+        </li>
     </ul>
 </li>
