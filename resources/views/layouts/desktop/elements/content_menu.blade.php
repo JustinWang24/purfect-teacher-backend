@@ -25,5 +25,10 @@
                 <span class="title">问卷调查</span>
             </a>
         </li>
+        <li class="nav-item">
+            <a href="{{ route('school_manager.banner.list',['uuid'=>session('school.uuid')]) }}" class="nav-link ">
+                <span class="title">资源位管理</span>
+            </a>
+        </li>
     </ul>
 </li>

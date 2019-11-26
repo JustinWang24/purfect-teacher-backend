@@ -19,16 +19,9 @@ class BannerController extends Controller
     public function index(BannerRequest $request)
     {
         $schoolId = $request->getSchoolId();
-
+        $this->dataForView['pageTitle'] = '资源位管理';
         $dao = new BannerDao;
-
-        $datas = $dao->getBannerBySchoolId($schoolId);
-
-        foreach ($datas as $key => $data) {
-            $datas[$key]['posit_name'] = Banner::GetAllPositByPosit($data->posit);
-            $datas[$key]['type_name']  = Banner::GetAllTypeByType($data->type);
-        }
-        $this->dataForView['data'] = $datas;
+        $this->dataForView['data'] = $dao->getBannerBySchoolId($schoolId);
         return view('school_manager.banner.index', $this->dataForView);
     }
 
@@ -49,7 +42,7 @@ class BannerController extends Controller
 
         $dao = new  BannerDao;
 
-        if ($data['id']){
+        if (isset($data['id'])){
             $result = $dao->update($data);
         } else {
             $result = $dao->add($data);
