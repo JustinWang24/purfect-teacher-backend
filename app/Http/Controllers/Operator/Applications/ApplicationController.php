@@ -24,10 +24,9 @@ class ApplicationController extends Controller
     public function edit(ApplicationRequest $request) {
         $dao = new ApplicationDao();
         if($request->isMethod('post')) {
-            $id = $request->get('id');
-            $user = $request->user()->id;
-            $status = $request->get('status');
-            $data = ['last_update_by'=> $user, 'status'=>$status];
+            $data = $request->getApplicationEditFormData();
+            $id = $data['id'];
+            unset($data['id']);
             $re = $dao->updateStatusById($id, $data);
             if($re) {
                 FlashMessageBuilder::Push($request, FlashMessageBuilder::SUCCESS,'编辑成功');
