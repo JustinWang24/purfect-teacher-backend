@@ -25,7 +25,7 @@ class CreateApplicationsTable extends Migration
             $table->tinyInteger('family_population')->nullable()->comment('家庭人口');
             $table->smallInteger('general_income')->nullable()->comment('家庭月总收入');
             $table->smallInteger('per_capita_income')->nullable()->comment('人均收入');
-            $table->string('income_source')->nullable()->comment('收入来源');
+            $table->string('income_source',30)->nullable()->comment('收入来源');
             $table->tinyInteger('status')->default(0)->comment('状态');
             $table->integer('last_update_by')->nullable()->comment('审核人');
             $table->timestamps();
