@@ -1,7 +1,7 @@
 @extends('layouts.app')
 @section('content')
   <div class="col-sm-12 col-md-12 col-xl-12">
-            <div class="card-box">
+            <div class="card">
                 <div class="card-head">
                     <header>设置列表</header>
                 </div>
@@ -30,10 +30,15 @@
                                     <th>操作</th>
                                 </tr>
                                 </thead>
+                                <tbody>
                                 @foreach($list as $key => $val)
                                     <tr>
                                         <td>{{$key + 1}}</td>
-                                        <td></td>
+                                        <td>
+                                            @if($val->media)
+                                                <img src="{{ $val->media->url }}" width="200">
+                                            @endif
+                                        </td>
                                         <td>{{$val->name}}</td>
                                         <td>{{$val->getStatusText($val->status)}}</td>
                                         <td>
@@ -41,8 +46,6 @@
                                         </td>
                                     </tr>
                                 @endforeach
-                                <tbody>
-
                                 </tbody>
                             </table>
                         </div>
