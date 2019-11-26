@@ -37,6 +37,17 @@ class ApplicationTypeDao
 
 
     /**
+     * 获取申请类型列表
+     * @param $schoolId
+     * @return mixed
+     */
+    public function getOpenTypeListBySchoolId($schoolId) {
+        $map = ['school_id'=>$schoolId, 'status'=>ApplicationType::STATUS_OPEN];
+        return ApplicationType::where($map)->get();
+    }
+
+
+    /**
      * 根据id获取详情
      * @param $id
      * @return mixed

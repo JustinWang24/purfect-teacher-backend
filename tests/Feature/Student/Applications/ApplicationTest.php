@@ -24,6 +24,57 @@ class ApplicationTest extends BasicPageTestCase
         return ['application'=>$data];
     }
 
+
+    /**
+     * 测试创建类型
+     */
+    public function testCreateApplicationType() {
+        $url = 'school_manager.students.applications-set-save';
+        $user = $this->getSuperAdmin();
+        $this->withoutExceptionHandling();
+
+        $data['type'] = [
+            'name'=>$this->randomCreateChinese(4),
+            'media_id' =>1,
+            ];
+        $response = $this->setSchoolAsUser($user, 1)
+            ->actingAs($user)
+            ->withSession($this->schoolSessionData)
+            ->get(route($url,$data));
+//        dd($response->content());
+    }
+
+
+
+    /**
+     * 测试申请类型列表
+     */
+    public function testApplicationTypeList() {
+        $this->withoutExceptionHandling();
+
+        $header = $this->getHeaderWithApiToken();
+        $response = $this->get(route('api.students.applications-type'),
+            $header);
+        $result = json_decode($response->content(),true);
+        $this->assertArrayHasKey('code', $result);
+        $this->assertEquals(JsonBuilder::CODE_SUCCESS,
+            $result['code']);
+        $this->assertArrayHasKey('type', $result['data']);
+
+        if(!empty($result['data']['type'])) {
+            foreach ($result['data']['type'] as $key => $val){
+                $this->assertArrayHasKey('name', $val);
+                $this->assertArrayHasKey('media', $val);
+                if(!empty($val['media'])) {
+                    $this->assertArrayHasKey('url', $val['media']);
+                }
+            }
+        }
+    }
+
+
+
+
     /**
      * 测试创建申请
      */

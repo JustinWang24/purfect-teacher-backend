@@ -322,5 +322,8 @@ Route::prefix('students')->middleware('auth:api')->group(function () {
     // 创建申请
     Route::post('applications-create','Api\Application\ApplicationController@create')
             ->name('api.students.applications-create');
+    // 申请类型
+    Route::get('applications-type','Api\Application\ApplicationController@applicationTypeList')
+            ->name('api.students.applications-type');
 });
 
