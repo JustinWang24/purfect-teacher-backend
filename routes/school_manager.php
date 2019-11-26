@@ -232,7 +232,7 @@ Route::prefix('school_manager')->group(function () {
     // 内容管理
     Route::prefix('contents')->group(function (){
         // 动态管理
-        Route::get('news-manager','ElectiveCoursesController@management')
+        Route::get('news-manager','NewsController@management')
             ->name('school_manager.contents.news-manager');
         // 日常安排
         Route::get('regular-manager','ElectiveCoursesController@management')
