@@ -27,4 +27,18 @@ class ApplicationRequest extends MyStandardRequest
         $data['grade_id'] = $this->user()->gradeUser->grade_id;
         return $data;
     }
+
+
+    /**
+     * 获取编辑申请
+     * @return mixed
+     */
+    public function getApplicationEditFormData() {
+        $data = $this->get('application');
+        if(empty($data['status'])) {
+            unset($data['status']);
+        }
+        $data['last_update_by'] = $this->user()->id;
+        return $data;
+    }
 }
