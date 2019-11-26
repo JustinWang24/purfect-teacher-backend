@@ -64,7 +64,7 @@ use App\Utils\UI\Button;
                             <div class="col-3">
                                 <div class="form-group">
                                     <label for="application-profile-">学制:</label>
-
+                                    {{ $application->user->gradeUser->major->period }}年
                                 </div>
                             </div>
 
@@ -75,9 +75,6 @@ use App\Utils\UI\Button;
                                     {{$application->user->gradeUser->major->name}}
                                 </div>
                             </div>
-
-
-
 
                             <div class="col-3">
                                 <div class="form-group">
@@ -138,35 +135,30 @@ use App\Utils\UI\Button;
                                     {{$application->user->profile->state}}省{{$application->user->profile->city}}市{{$application->user->profile->area}}{{$application->user->profile->address_line}}
                                 </div>
                             </div>
-
                         </div>
-
-
-
 
                         <div class="form-group">
-                            <label for="application-reason-text">申请理由</label>&nbsp&nbsp&nbsp&nbsp
-                            <textarea name="" id="" cols="30" rows="10" class="form-control">
+                            <label for="application-reason-text">申请理由</label>&nbsp;&nbsp;&nbsp;&nbsp;
+                            <p class="text-info">
                                 {{$application->reason}}
-                            </textarea>
+                            </p>
                         </div>
-
 
                          <div class="form-group">
                              <label for="application-type-input">申请类型</label>
-                             <select name="" id="application-type-select" type="select" class="form-control">
+                             <select disabled id="application-type-select" type="select" class="form-control">
                                  <option value="">{{$application->applicationType->name}}</option>
                              </select>
                          </div>
                         <div class="form-group">
-                             <label for="application-type-input">申请时间</label>&nbsp&nbsp&nbsp&nbsp
-                            <input type="text" class="form-control" value="{{$application->created_at}}">
+                             <label for="application-type-input">申请时间</label>&nbsp;&nbsp;&nbsp;&nbsp;
+                            <input disabled type="text" class="form-control" value="{{$application->created_at}}">
                         </div>
 
                         <div class="form-group">
-                            <label for="application-status-radio">状态</label>&nbsp&nbsp&nbsp&nbsp
+                            <label for="application-status-radio">状态</label>&nbsp;&nbsp;&nbsp;&nbsp;
                              <input type="radio" class="form-control-radio" id="application-status-radio-close" value="1"  name="status"
-                                   @if($application['status'] == 1) checked @endif> 通过  &nbsp&nbsp&nbsp&nbsp
+                                   @if($application['status'] == 1) checked @endif> 通过  &nbsp;&nbsp;&nbsp;&nbsp;
                             <input type="radio" class="form-control-radio" id="application-status-radio-open"  value="2"  name="status"
                                    @if($application['status'] == 2) checked @endif> 拒绝
                         </div>
