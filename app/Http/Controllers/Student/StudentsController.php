@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Http\Controllers\Student;
 
 use App\Dao\Users\UserDao;
@@ -10,13 +9,20 @@ use App\Http\Requests\User\StudentRequest;
 
 class StudentsController extends Controller
 {
+    /**
+     * @param StudentRequest $request
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function edit(StudentRequest $request){
         $dao = new UserDao();
         $this->dataForView['student'] = $dao->getUserByUuid($request->uuid());
         return view('student.edit', $this->dataForView);
     }
 
-
+    /**
+     * @param StudentRequest $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function update(StudentRequest $request) {
         $data = $request->getFormData();
         $userId = $data['user']['id'];
@@ -32,5 +38,17 @@ class StudentsController extends Controller
             FlashMessageBuilder::Push($request, FlashMessageBuilder::DANGER,'编辑失败');
         }
         return redirect()->route('verified_student.profile.edit',['uuid'=>$uuid]);
+    }
+
+    /**
+     * 通讯录页面
+     * @param StudentRequest $request
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function contacts_list(StudentRequest $request){
+        $this->dataForView['pageTitle'] = '通讯录';
+        $this->dataForView['schoolId'] = $request->getSchoolId();
+
+        return view('student.contacts.list',$this->dataForView);
     }
 }

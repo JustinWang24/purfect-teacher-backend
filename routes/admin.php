@@ -11,4 +11,11 @@ Route::prefix('admin')->group(function () {
     Route::get('roles/list', 'RolesController@index')->name('admin.roles.list');
     Route::get('roles/edit', 'RolesController@edit')->name('admin.roles.edit');
     Route::post('roles/update_permission', 'RolesController@update_permission')->name('admin.roles.update_permission');
+
+    //版本管理
+    Route::get('versions/list', 'VersionController@index')->name('admin.versions.list');
+    Route::get('versions/add', 'VersionController@add')->name('admin.versions.add');
+    Route::get('versions/edit', 'VersionController@edit')->name('admin.versions.edit');
+    Route::get('versions/delete', 'VersionController@delete')->name('admin.versions.delete');
+    Route::post('versions/update', 'VersionController@update')->name('admin.versions.update');
 });
