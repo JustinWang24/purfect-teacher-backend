@@ -6,8 +6,13 @@
     </a>
     <ul class="sub-menu">
         <li class="nav-item">
+            <a href="{{ route('school_manager.contents.science.list') }}" class="nav-link ">
+                <span class="title">科技成果</span>
+            </a>
+        </li>
+        <li class="nav-item">
             <a href="{{ route('school_manager.scenery.list') }}" class="nav-link ">
-                <span class="title">基本信息</span>
+                <span class="title">校园风采</span>
             </a>
         </li>
         <li class="nav-item">
@@ -23,6 +28,12 @@
         <li class="nav-item">
             <a href="{{ route('school_manager.contents.questionnaire',['uuid'=>session('school.uuid')]) }}" class="nav-link ">
                 <span class="title">问卷调查</span>
+            </a>
+        </li>
+        <li class="nav-item">
+
+            <a href="{{ route('admin.versions.list') }}" class="nav-link ">
+                <span class="title">版本号管理</span>
             </a>
         </li>
         <li class="nav-item">
