@@ -101,6 +101,17 @@ export const Constants = {
             LOAD_STEP_DETAILS: '/api/enrolment-step/schoolEnrolmentStep/getEnrolmentInfo',
             LOAD_WHOLE_PROCESS: '/api/enrolment-step/step-list', // 获取某个学校校区的迎新流程中所有步骤
             LOAD_TEACHERS: '/api/school/teachers', // 获取某个学校的所有老师
+        },
+        CONTACTS: {
+            ORG: '/api/campus/handleAffairs/getAddressBook/official',
+            GRADE:'/api/campus/handleAffairs/getAddressBook/class',
+            ALL_GRADES: '/api/campus/all-grades'
+        },
+        NEWS: {
+            SAVE: '/school_manager/contents/news/save',
+            DELETE: '/school_manager/contents/news/delete',
+            LOAD: '/school_manager/contents/news/load',
+            SAVE_SECTION: '/school_manager/contents/news/save-section',
         }
     },
     YEARS: ['N.A','一年级','二年级','三年级','四年级','五年级','六年级'],

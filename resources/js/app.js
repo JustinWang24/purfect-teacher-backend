@@ -43,6 +43,206 @@ import { getTimeSlots, getMajors, saveTimeSlot } from './common/timetables';
 import { loadBuildings } from './common/facility';
 import { getEmptyElectiveCourseApplication } from './common/elective_course';
 import { loadTextbooksPaginate, deleteTextbook } from './common/textbook';
+import { loadOrgContacts, loadGradeContacts, loadGrades } from './common/contacts';
+import { saveNews, loadNews, saveSections, deleteNews } from './common/news';
+
+/**
+ * 动态新闻的管理
+ */
+if(document.getElementById('school-news-list-app')){
+    new Vue({
+        el:'#school-news-list-app',
+        data(){
+            return {
+                schoolId: null,
+                newsForm:{
+                    title: '',
+                    id:'',
+                    type: 1
+                },
+                selectedImgUrl: null,
+                mediaForm:{
+                    content: '',
+                    media_id: null,
+                    id:'',
+                    position:1,
+                },
+                sections:[],
+                newsFormFlag:false,
+                sectionsFormFlag:false,
+                textContentWrapFlag: false,
+                mediaContentWrapFlag: false,
+                showFileManagerFlag: false,
+                formLabelWidth: '100px',
+                loading: false,
+            }
+        },
+        created(){
+            const dom = document.getElementById('app-init-data-holder');
+            this.schoolId = dom.dataset.school;
+            this.newsForm.type = parseInt(dom.dataset.type);// 文章类型
+        },
+        methods: {
+            addNew: function(){
+                this.newsFormFlag = true;
+                this.newsForm.title = '';
+            },
+            saveNews: function(){
+                // Todo 保存新闻
+                saveNews(this.schoolId, this.newsForm).then(res => {
+                    if(Util.isAjaxResOk(res)){
+                        this.newsFormFlag = false;
+                        this.sectionsFormFlag = true;
+                        if(!Util.isEmpty(res.data.data.news)){
+                            this.newsForm.id = res.data.data.news.id;
+                        }
+                    }
+                    else{
+                        this.$message.error(res.data.data.message);
+                    }
+                })
+
+            },
+            cancelSaveNews: function(){
+                this.newsFormFlag = false;
+            },
+            addNewTextSection: function(){
+                this.textContentWrapFlag = true;
+            },
+            addNewMediaSection: function(){
+                this.mediaContentWrapFlag = true;
+            },
+            loadNews: function(id){
+                this.loading = true;
+                loadNews(id).then(res => {
+                    if(Util.isAjaxResOk(res)){
+                        this.newsForm = res.data.data.news;
+                        this.sections = res.data.data.news.sections;
+                        this.newsFormFlag = true;
+                    }
+                    else{
+                        this.$message.error(res.data.data.message);
+                    }
+                    this.loading = false;
+                })
+            },
+            deleteNews: function(id){
+                this.loading = true;
+                deleteNews(this.schoolId, id).then(res => {
+                    if(Util.isAjaxResOk(res)){
+                        window.location.reload();
+                    }
+                    else{
+                        this.$message.error('删除失败, 请稍候再试');
+                        this.loading = false;
+                    }
+                })
+            },
+            pushNewSection: function(){
+                if(Util.isEmpty(this.mediaForm.content) && Util.isEmpty(this.mediaForm.media_id)){
+                    this.$message.error('您没有输入内容, 无法保存');
+                    return;
+                }
+
+                if(!Util.isEmpty(this.mediaForm.media_id)){
+                    this.mediaForm.content = this.selectedImgUrl;
+                }
+
+                saveSections(this.newsForm.id, [this.mediaForm]).then(res => {
+                    if(Util.isAjaxResOk(res)){
+                        const media = {};
+                        const keys = Object.keys(this.mediaForm);
+                        let that = this;
+                        keys.forEach(function(key){
+                            media[key] = that.mediaForm[key];
+                        });
+                        this.sections.push(media);
+                        this.resetMediaForm();
+                    }
+                    else{
+                        this.$message.error(res.data.data.message);
+                    }
+                })
+            },
+            // 关闭添加 section 的表单
+            cancelNewSection: function(type){
+                if(type ===1){
+                    this.textContentWrapFlag = false;
+                    this.mediaForm.content = '';
+                }
+                else if(type ===2){
+                    this.mediaContentWrapFlag = false;
+                    this.mediaForm.media_id = null;
+                }
+            },
+            resetMediaForm: function(){
+                this.mediaForm.id = '';
+                this.mediaForm.content = '';
+                this.mediaForm.media_id = null;
+                this.mediaForm.position = 1;
+                this.selectedImgUrl = null;
+            },
+            pickFileHandler: function(payload){
+                this.mediaForm.media_id = payload.file.id;
+                this.selectedImgUrl = payload.file.url;
+                this.showFileManagerFlag = false;
+            },
+        }
+    })
+}
+
+/**
+ * 通讯录
+ */
+if(document.getElementById('school-contacts-list-app')){
+    new Vue({
+        el:'#school-contacts-list-app',
+        data(){
+            return {
+                contacts: [],
+                mates: [],
+                teachers: [],
+                schoolUuid: null,
+                schoolId: null,
+                grades:[],
+                gradeId: null,
+            }
+        },
+        watch: {
+            'gradeId': function(val){
+                loadGradeContacts(this.schoolUuid, this.gradeId).then(res => {
+                    if(Util.isAjaxResOk(res)){
+                        this.mates = res.data.data.schoolmate_list;
+                        this.teachers = res.data.data.teacher_list;
+                    }
+                })
+            }
+        },
+        created(){
+            const dom = document.getElementById('app-init-data-holder');
+            this.schoolUuid = dom.dataset.school;
+            this.schoolId = dom.dataset.id;
+            this.loadContacts();
+            this.loadAllGrades();
+        },
+        methods: {
+            loadContacts: function(){
+                loadOrgContacts(this.schoolUuid).then(res => {
+                    if(Util.isAjaxResOk(res)){
+                        this.contacts = res.data.data.department_list;
+                    }
+                });
+            },
+            loadAllGrades: function(){
+                loadGrades(this.schoolId).then(res => {
+                    if(Util.isAjaxResOk(res)){
+                        this.grades = res.data.data.grades;
+                    }
+                })
+            }
+        }
+    });
+}
 
 /**
  * 申请类型
