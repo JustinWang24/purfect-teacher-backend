@@ -283,6 +283,30 @@ Route::prefix('school_manager')->group(function () {
     // banner 保存数据
     Route::post('banner/save','BannerController@save')->name('school_manager.banner.save');
 
+   // 通知管理
+    Route::prefix('notice')->group(function (){
+        // 添加
+        Route::get('news-notice','NoticeController@add')
+            ->name('school_manager.notice.add');
+
+        // 展示
+        Route::get('show-notice', 'NoticeController@index')
+            ->name('school_manager.notice.list');
+
+        // 详情
+        Route::get('details-notice', 'NoticeController@details')
+            ->name('school_manager.notice.details');
+
+        // 修改
+        Route::get('edit-notice', 'NoticeController@edit')
+            ->name('school_manager.notice.edit');
+
+        // 保存数据
+        Route::post('save-notice', 'NoticeController@save')
+            ->name('school_manager.notice.save');
+    });
+
+
 
 });
 
