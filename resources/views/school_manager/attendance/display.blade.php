@@ -10,6 +10,9 @@ use App\Utils\UI\Button;
             <div class="card-box">
                 <div class="card-head">
                     <header>{{ session('school.name') }} - 《{{$task->title}}》任务的本周安排</header>
+                    <?php
+                    Anchor::Print(['text'=>trans('general.return'),'href'=>route('school_manager.attendance.list'),'class'=>'pull-right link-return'], Button::TYPE_SUCCESS,'arrow-circle-o-right')
+                    ?>
                 </div>
 
                 <div class="card-body">

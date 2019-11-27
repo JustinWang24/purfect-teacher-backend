@@ -10,24 +10,28 @@ use App\Utils\UI\Button;
             <div class="card-box">
                 <div class="card-head">
                     <header>在学校 ({{ session('school.name') }}) 搜索学生或老师</header>
+                    <?php
+                    Anchor::Print(['text'=>trans('general.return'),'href'=>route('school_manager.attendance.list'),'class'=>'pull-right link-return'], Button::TYPE_SUCCESS,'arrow-circle-o-right')
+                    ?>
                 </div>
                 <div class="card-body">
+
                     <form action="{{ route('school_manager.attendance.person.search', ['id'=>$taskId]) }}" method="get"  id="search-attendance-form">
                         @csrf
-                        <div class="row">
+                        <div class="row form-inline">
                             <label for="attendance-title-input">查询</label>
                             <div class="dataTables_length" id="example4_length">
                                 <label>分类<select name="search[type]" class="form-control"><option value="1">教师</option><option value="2">学生</option></select>
                                 </label>
                             </div>
-                            <div class="col-sm-12 col-md-6">
-                                <div id="example4_filter" class="dataTables_filter">
-                                    <label> _<input type="search" class="form-control form-control-sm" placeholder="" aria-controls="example4" value="{{ $search['keyword'] }}" placeholder="查询" name="search[keyword]"></label>
-                                </div>
-                            </div>
 
+                                <div id="example4_filter" class="dataTables_filter">
+                                    <label><input type="search" class="form-control form-control-sm" placeholder="" aria-controls="example4" value="{{ $search['keyword'] }}" placeholder="查询" name="search[keyword]"></label>
+                                </div>
+
+                            <button type="submit" class="btn btn-primary">查询</button>
                         </div>
-                        <button type="submit" class="btn btn-primary">查询</button>
+
                     </form>
                 </div>
                 @if($result)
@@ -44,7 +48,7 @@ use App\Utils\UI\Button;
                                     <th>身份</th>
                                     <th>院系</th>
                                     <th>专业</th>
-                                    <th style="width: 500px;">操作</th>
+                                    <th>操作</th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -59,16 +63,16 @@ use App\Utils\UI\Button;
                                             {{$userProfile[$person->user_id]['department']}}
 
                                         </td>
-                                        <td class="text-center">
+                                        <td>
                                             {{$userProfile[$person->user_id]['major']}}
                                         </td>
-                                        <td>
-                                            <div class="row">
+                                        <td class="text-center">
+
                                                 <form action="{{ route('school_manager.attendance.person.add', ['id'=>$taskId]) }}" method="get"  id="search-attendance-form">
                                                     @csrf
                                                     <input type="hidden" name="personId" value="{{ $person->user_id }}">
-                                                <div class="dataTables_length" id="example5_length">
-                                                    <label>周期
+                                                    <div class="form-inline">
+                                                    <label>
                                                             <select name="week" class="form-control">
                                                                 <option value="1">周一</option>
                                                                 <option value="2">周二</option>
@@ -79,19 +83,19 @@ use App\Utils\UI\Button;
                                                                 <option value="0">周日</option>
                                                             </select>
                                                     </label>
-                                                </div>
-                                                <div class="dataTables_length" id="example5_length">
-                                                    <label>时间
+
+                                                    <label>
                                                         <select name="slotId" class="form-control">
                                                             @foreach($timeSlots as $timeSlot)
                                                             <option value="{{$timeSlot->id}}">{{$timeSlot->title}}</option>
                                                             @endforeach
                                                         </select>
                                                     </label>
-                                                </div>
+
                                                     <button type="submit" class="btn btn-primary">添加</button>
+                                                    </div>
                                                 </form>
-                                            </div>
+
                                         </td>
                                     </tr>
                                 @endforeach
