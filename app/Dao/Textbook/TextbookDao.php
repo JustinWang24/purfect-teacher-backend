@@ -13,6 +13,8 @@ use App\Models\Courses\CourseTextbook;
 use App\Models\RecruitStudent\RegistrationInformatics;
 use App\Models\Schools\RecruitmentPlan;
 use App\Models\Schools\Textbook;
+use App\Models\Students\StudentTextbook;
+use App\Models\Users\GradeUser;
 use App\Utils\JsonBuilder;
 use App\Utils\Misc\ConfigurationTool;
 use App\Utils\ReturnData\MessageBag;
@@ -422,5 +424,51 @@ class TextbookDao
 
         }
         return new MessageBag(JsonBuilder::CODE_SUCCESS,'请求成功',$courseList);
+    }
+
+
+    /**
+     * 获取当前时间用户所使用的教材
+     * @param GradeUser $gradeUser
+     * @param $year
+     * @return array
+     */
+    public function userTextbook(GradeUser $gradeUser, $year) {
+        // 专业下的课程
+        $coursesMajor = $gradeUser->major->courseMajors;
+        // 入学年份
+        $timeOfEnrollment = $gradeUser->grade->year;
+        // 当前所在的年级
+        $year = $year - $timeOfEnrollment + 1;
+
+        $coursesMajorIds = array_column($coursesMajor->toArray(),'course_id');
+        $courseDao = new CourseDao();
+        // 该专业当前学年所上的课程
+        $courses = $courseDao->getCourseByIdsAndYear($coursesMajorIds, $year);
+        // 教材
+        foreach ($courses as $key => $val) {
+
+            $courseTextbooks = $val->courseTextbooks;
+
+            foreach ($courseTextbooks as $k => $v) {
+                $textbooks[$k] = $v->textbook;
+                $map = ['user_id'=>$gradeUser->user->id,'textbook_id'=>$v->textbook_id];
+                $get = StudentTextbook::where($map)->first();
+                $textbooks[$k]['status'] = $get ? '已领取' : '未领取';
+                $textbooks[$k]['getTime'] = $get ? $get->created_at : '';
+            }
+        }
+
+        return $textbooks;
+    }
+
+
+    /**
+     * 领取教材
+     * @param $data
+     * @return mixed
+     */
+    public function getTextbook($data) {
+        return StudentTextbook::create($data);
     }
 }
