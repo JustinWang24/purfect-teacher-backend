@@ -86,5 +86,11 @@ return [
     'task-view' => '任务详情',
     'visitors-manager' => '来访管理',
     'organization-manager' => '组织架构管理',
+
+    'attendance' => '值周管理',
+    'schedule' => '计划',
+    'display' => '展示',
+    'timeslots' => '时间段',
+
 ];
 

@@ -261,5 +261,30 @@ Route::prefix('school_manager')->group(function () {
     Route::post('banner/save','BannerController@save')->name('school_manager.banner.save');
 
 
+    //值周功能
+    Route::get('attendance/add', 'AttendanceSchedulesController@add')->name('school_manager.attendance.add');                        // 添加校区
+    Route::get('attendance/edit/{id}', 'AttendanceSchedulesController@edit')->name('school_manager.attendance.edit');                     // 编辑校区
+    Route::post('attendance/update', 'AttendanceSchedulesController@update')->name('school_manager.attendance.update');              // 保存校区
+    Route::get('attendance/list', 'AttendanceSchedulesController@index')->name('school_manager.attendance.list');
+
+    Route::get('attendance/timeslots/edit/{taskid}', 'AttendanceSchedulesController@editTimeSlots')
+        ->name('school_manager.attendance.timeslots.edit');
+    Route::post('attendance/timeslots/update', 'AttendanceSchedulesController@updateTimeSlots')
+        ->name('school_manager.attendance.timeslots.update');
+
+    Route::get('attendance/schedule/display/{taskid}', 'AttendanceSchedulesController@display')
+        ->name('school_manager.attendance.schedule.display');
+    Route::post('attendance/schedule/update', 'AttendanceSchedulesController@createSchedules')
+        ->name('school_manager.attendance.schedule.update');
+
+    Route::get('attendance/person/add/{id}', 'AttendanceSchedulesController@addPerson')
+        ->name('school_manager.attendance.person.add');
+    Route::get('attendance/person/search/{id}', 'AttendanceSchedulesController@searchPerson')
+        ->name('school_manager.attendance.person.search');
+
+
+
+
+
 });
 
