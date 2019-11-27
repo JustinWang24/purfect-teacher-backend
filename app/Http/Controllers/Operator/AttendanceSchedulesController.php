@@ -1,11 +1,6 @@
 <?php
-
-
 namespace App\Http\Controllers\Operator;
-
-
 use App\Dao\AttendanceSchedules\AttendanceSchedulesDao;
-use App\Dao\Teachers\TeacherProfileDao;
 use App\Dao\Users\GradeUserDao;
 use App\Http\Controllers\Controller;
 use App\Models\Acl\Role;
@@ -115,21 +110,11 @@ class AttendanceSchedulesController extends Controller
         return redirect()->back();
     }
 
-
-    public function editSchedules(Request $request)
-    {
-
-    }
-    public function createSchedules()
-    {
-
-    }
-
-    public function deleteSomeOneSchedule()
-    {
-
-    }
-
+    /**
+     * @param Request $request
+     * @param $taskId
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function searchPerson(Request $request, $taskId)
     {
         $search = $request->get('search');
@@ -157,6 +142,11 @@ class AttendanceSchedulesController extends Controller
         return view('school_manager.attendance.search', $this->dataForView);
     }
 
+    /**
+     * @param Request $request
+     * @param $taskId
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function addPerson(Request $request, $taskId)
     {
         $userId = $request->personId;
@@ -186,6 +176,11 @@ class AttendanceSchedulesController extends Controller
 
     }
 
+    /**
+     * @param Request $request
+     * @param $taskId
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function display(Request $request, $taskId)
     {
         $dao = new AttendanceSchedulesDao();

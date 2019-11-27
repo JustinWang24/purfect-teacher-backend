@@ -30,12 +30,7 @@ use App\Utils\UI\Button;
                             <label for="attendance-option-input">结束时间</label>
                             <input required type="date" class="input-small form-control" id="attendance-option-input" value="{{ old('task.end_time') }}" placeholder="结束时间" name="task[end_time]">
                         </div>
-                        <div class="form-group">
-                            <label for="questionnaire-option-input">是否使用默认周期</label>
-                            <input type="radio" value="1" name="task[status]" @if(old('task.status') == 1 || empty(old('task.status'))) checked @endif> 是&nbsp&nbsp&nbsp&nbsp
-                            <input type="radio" value="2" name="task[status]" @if(old('task.status') == 2) checked @endif> 否
 
-                        </div>
                         <?php
                         Button::Print(['id'=>'btn-create-attendance','text'=>trans('general.submit')], Button::TYPE_PRIMARY);
                         ?>&nbsp;
