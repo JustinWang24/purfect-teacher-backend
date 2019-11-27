@@ -29,10 +29,10 @@ class NoticeController extends Controller
         if ($search) {
             $where = ['school_id' => $schoolId, $search];
         } else {
-            $where = ['school_id' =>$schoolId];
+            $where = ['school_id' => $schoolId];
         }
 
-        $data = $dao->getNoticeBySchoolId($where);
+        $data                      = $dao->getNoticeBySchoolId($where);
         $this->dataForView['data'] = $data;
         return view('school_manager.notice.list', $this->dataForView);
     }
@@ -47,7 +47,7 @@ class NoticeController extends Controller
     {
         $dao = new NoticeInspectDao;
 
-        $data  = $dao->getInspectsBySchoolId($request->getSchoolId());
+        $data = $dao->getInspectsBySchoolId($request->getSchoolId());
 
         $this->dataForView['type'] = $data;
 
@@ -64,9 +64,17 @@ class NoticeController extends Controller
      */
     public function edit(NoticeRequest $request)
     {
+        $id  = $request->get('id');
+        $dao = new NoticeDao;
 
-        $this->dataForView['data'] = Notice::allType();
-        $this->dataForView['js'][] = 'school_manager.notice.notice_js';
+        $inspectDao = new NoticeInspectDao;
+
+        $data = $dao->getNoticeById($id);
+
+        $this->dataForView['notice_type']  = Notice::allType();
+        $this->dataForView['inspect_type'] = $inspectDao->getInspectsBySchoolId($request->getSchoolId());
+        $this->dataForView['data']         = $data;
+        $this->dataForView['js'][]         = 'school_manager.notice.notice_js';
 
         return view('school_manager.notice.edit', $this->dataForView);
     }
@@ -81,29 +89,21 @@ class NoticeController extends Controller
 
         $schoolId = $request->getSchoolId();
 
-        $data = $request->get('notice');
+        $data              = $request->get('notice');
         $data['school_id'] = $schoolId;
         $data['user_id']   = Auth::id();
 
-//        给王哥看
-//        $data['media_id'] = [1, 2];
-//        $data['title'] = 'xxx';
-//        $data['content'] = 'xxx';
-//        $data['organization_id'] = 1;
-//        $data['release_time'] = '2019-10-01';
-//        $data['status'] = 0;
-
         $dao = new  NoticeDao;
-        if (isset($data['id'])){
+        if (isset($data['id'])) {
             $result = $dao->update($data);
         } else {
             $result = $dao->add($data);
         }
 
         if ($result->isSuccess()) {
-            FlashMessageBuilder::Push($request, FlashMessageBuilder::SUCCESS,'保存成功');
+            FlashMessageBuilder::Push($request, FlashMessageBuilder::SUCCESS, '保存成功');
         } else {
-            FlashMessageBuilder::Push($request, FlashMessageBuilder::DANGER,'保存失败');
+            FlashMessageBuilder::Push($request, FlashMessageBuilder::DANGER, '保存失败');
         }
 
         return redirect()->route('school_manager.notice.list');

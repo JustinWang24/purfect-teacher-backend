@@ -94,7 +94,7 @@ return [
 
     'notice' => '通知公告',
     'show-notice' => '列表',
-    
+
     // 校园动态
     'news-manager' => '校园动态',
 ];

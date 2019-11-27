@@ -23,6 +23,13 @@ class NoticeDao
     }
 
 
+    public function getNoticeById($id)
+    {
+        return Notice::where('id', $id)->first();
+    }
+
+
+
     /**
      * 添加
      * @param $data
@@ -77,5 +84,7 @@ class NoticeDao
             return new MessageBag(JsonBuilder::CODE_ERROR, $e->getMessage());
         }
     }
+
+
 
 }

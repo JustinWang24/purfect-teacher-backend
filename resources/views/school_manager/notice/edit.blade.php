@@ -18,23 +18,27 @@ use App\Utils\UI\Button;
                             <label for="facility-name-input">类型</label>
                             <select required type="select" class="form-control"  id="select" placeholder="类型" name="notice[type]">
                                 <option value="-1">请选择</option>
-                                @foreach($data as $key => $val)
-                                    <option value="{{ $key }}">{{ $val }}</option>
+                                @foreach($notice_type as $key => $val)
+                                    <option value="{{ $key }}"
+                                            @if ($key == $data->type)
+                                                selected
+                                            @endif
+                                    >{{ $val }}</option>
                                 @endforeach
                             </select>
                         </div>
                         <div class="form-group">
                             <label>标题</label>
-                            <input required type="text" class="form-control"  placeholder="标题" name="notice[title]">
+                            <input required type="text" class="form-control"  placeholder="标题" name="notice[title]" value="{{ $data->title }}">
                         </div>
                         <div class="form-group" id="image_text">
                             <label for="content">内容</label>
-                            <textarea id="content" name="notice[content]"></textarea>
+                            <textarea id="content" name="notice[content]">{{ $data->content }}</textarea>
                         </div>
                         {{-- todo :: 可见范围 和 上传封面 和 上传附件 需要vue来写 --}}
                         <div class="form-group">
                             <label>可见范围</label>
-                            <input required type="text" class="form-control"  placeholder="可见范围" name="notice[organization_id]">
+                            <input required type="text" class="form-control"  placeholder="可见范围" name="notice[organization_id]" value="{{ $data->organization_id }}">
                         </div>
                         <div class="form-group" id="image">
                             <label for="school-name-input">上传封面</label>
@@ -48,15 +52,19 @@ use App\Utils\UI\Button;
 
                         <div class="form-group" id="note">
                             <label for="school-name-input">备注</label>
-                            <input  type="text" class="form-control"  placeholder="标题" name="notice[note]">
+                            <input  type="text" class="form-control"  placeholder="标题" name="notice[note]" value="{{ $data->note }}">
                         </div>
 
                         <div class="form-group" id="inspect_id">
                             <label for="facility-name-input">检查类型</label>
                             <select  type="select" class="form-control"  placeholder="类型" name="notice[inspect_id]">
                                 <option value="-1">请选择</option>
-                                @foreach($type as $key => $val)
-                                    <option value="{{ $val->id }}">{{ $val->name }}</option>
+                                @foreach($inspect_type as $key => $val)
+                                    <option value="{{ $val->id }}"
+                                        @if ($val->id == $data->inspect_id)
+                                            selected
+                                        @endif>{{ $val->name }}
+                                    </option>
                                 @endforeach
                             </select>
                         </div>
