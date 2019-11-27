@@ -22,6 +22,10 @@ class AttendanceSchedulesDao
     {
     }
 
+    /**
+     * @param $data
+     * @return MessageBag
+     */
     public function createTask($data)
     {
         if (!isset($data['id']) || empty($data['id'])) {
@@ -47,6 +51,11 @@ class AttendanceSchedulesDao
         return $messageBag;
 
     }
+
+    /**
+     * @param $data
+     * @return MessageBag
+     */
     public function updateTask($data)
     {
         $id = $data['id'];
@@ -78,6 +87,11 @@ class AttendanceSchedulesDao
      */
     public function addDefaultTimeSlotsForTask($taskId)
     {
+        //已经创建过时间槽的不能再创建
+        if (count(AttendanceTimeSlot::where('task_id', $taskId)->get())>0)
+        {
+            return true;
+        }
         $data = [
             ['task_id' => $taskId, 'title' => '上午', 'start_time' => '08:00:00', 'end_time' => '12:00:00'],
             ['task_id' => $taskId, 'title' => '中午', 'start_time' => '12:00:00', 'end_time' => '14:00:00'],
@@ -87,7 +101,7 @@ class AttendanceSchedulesDao
         DB::beginTransaction();
         try {
             foreach ($data as $item) {
-                self::addTimeSlotsForTask($item);
+                $this->addTimeSlotsForTask($item);
             }
             DB::commit();
             return true;
@@ -117,6 +131,11 @@ class AttendanceSchedulesDao
             return false;
         }
     }
+
+    /**
+     * @param $data
+     * @return bool
+     */
     public function updateTimeSlotsForTask($data)
     {
         $id = $data['id'];
@@ -132,45 +151,25 @@ class AttendanceSchedulesDao
             return false;
         }
     }
+
+    /**
+     * @param $schoolId
+     * @param $timeSlotId
+     * @return mixed
+     */
     public function deleteTimeSlots($schoolId, $timeSlotId)
     {
         return AttendanceTimeSlot::where('id', $timeSlotId)
             ->where('school_id', $schoolId)->delete();
     }
 
+    /**
+     * @param $timeSlotId
+     * @return mixed
+     */
     public function getTimeSlot($timeSlotId)
     {
         return AttendanceTimeSlot::find($timeSlotId);
-    }
-
-    /**
-     * 添加值周人员信息
-     * @param $data
-     * @return bool
-     */
-    public function addPerson($data)
-    {
-        DB::beginTransaction();
-        try {
-            $fillableData = $this->getFillableData(new AttendancePerson(), $data);
-            $person = AttendancePerson::create($fillableData);
-            if ($person)
-            {
-                DB::commit();
-                return true;
-            } else {
-                DB::rollBack();
-                return false;
-            }
-        } catch (\Exception $exception) {
-            DB::rollBack();
-            return false;
-        }
-    }
-    public function delPerson($schoolId, $personId)
-    {
-        return AttendancePerson::where('id', $personId)
-            ->where('school_id', $schoolId)->delete();
     }
 
     /**
@@ -187,48 +186,27 @@ class AttendanceSchedulesDao
         $schoolId = $data['school_Id'];
         //拿到模板数据
         $scheduleArr = $data['schedule'];
-        //查询此task，得到课时和截止时间，好用来循环
-        $taskObj = self::getTask($taskId);
-        $starTime = $taskObj->start_time;
-        $endTime  = $taskObj->end_time;
-        $startUp = $starTime;
-
         $messageBag = new MessageBag(JsonBuilder::CODE_ERROR);
         DB::beginTransaction();
         try {
-            while ($startUp <= $endTime)
-            {
-                $index = date('w', strtotime($startUp));
-                $tmpSlotArr = $scheduleArr[$index];
-                foreach ($tmpSlotArr as $slotId => $personIds)
-                {
-                    //根据slotId拿到对应的起止时间
-                    $slotObj = AttendanceTimeSlot::find($slotId);
-                    if (empty($personIds)) continue;
-                    $d = [
-                        'school_id' => $schoolId,
-                        'task_id' => $taskId,
-                        'time_slot_id'  => $slotId,
-                        'start_date_time'    => $startUp . ' ' . $slotObj->start_time,
-                        'end_date_time'    => $startUp . ' ' . $slotObj->end_time,
+            foreach ($scheduleArr as $week => $tmpSlotArr) {
+                foreach ($tmpSlotArr as $slotId => $personIds) {
+                    foreach ($personIds as $user_id) {
+                        $d = [
+                            'school_id'     => $schoolId,
+                            'task_id'       => $taskId,
+                            'time_slot_id'  => $slotId,
+                            'user_id'       => $user_id,
+                            'week'          => $week,
 
-                    ];
-                    $scheduleObj = AttendanceSchedule::create($d);
-
-                    foreach ($personIds as $personId)
-                    {
-                        AttendanceSchedulePerson::create([
-                            'task_id' => $taskId,
-                            'schedule_id'   => $scheduleObj->id,
-                            'user_id'       => $personId
-                        ]);
+                        ];
+                        $scheduleObj = AttendanceSchedule::create($d);
                     }
                 }
-                //开始时间增加一天，判断是否到达任务的截止时间
-                $startUp = date('Y-m-d', strtotime("+1 day", strtotime($startUp)));
             }
             DB::commit();
             $messageBag->setCode(JsonBuilder::CODE_SUCCESS);
+            $messageBag->setData($scheduleObj);
         } catch (\Exception $exception) {
             DB::rollBack();
             $messageBag->setMessage($exception->getMessage());
@@ -236,7 +214,10 @@ class AttendanceSchedulesDao
         return $messageBag;
     }
 
-
+    /**
+     * @param $taskId
+     * @return mixed
+     */
     public function getTask($taskId)
     {
         return AttendanceTask::find($taskId);
@@ -249,20 +230,19 @@ class AttendanceSchedulesDao
      * 当current==1 && cycle==week时表示获取下周数据
      * cycle可以为week和month
      * @param $schoolId
-     * @param $type
      * @param string $cycle
      * @param int $current
      * @return mixed
      */
-    public function getAllTaskForSchool($schoolId, $type, $cycle='week', $current=0)
+    public function getAllTaskForSchool($schoolId, $cycle='week', $current=0)
     {
-        $timeArr = self::getTimes($current, $cycle);
-
+        $timeArr = $this->getTimes($current, $cycle);
         $startTime = $timeArr[0];
         $endTime   = $timeArr[1];
         $result = AttendanceTask::where('start_time','>=', $startTime)
-            ->where('end_time', '<=', $endTime)
+            //->where('end_time', '<=', $endTime)
             ->where('school_id', $schoolId)
+            ->orderby('id', 'DESC')
             ->get();
         return $result;
 
@@ -277,14 +257,9 @@ class AttendanceSchedulesDao
      * @param int $current
      * @return mixed
      */
-    public function getSomeoneTaskScheduleForSchool($schoolId, $taskId, $cycle='week', $current=0)
+    public function getSomeoneTaskScheduleForSchool($schoolId, $taskId)
     {
-        $timeArr = self::getTimes($current, $cycle);
-
-        $startTime = $timeArr[0];
-        $endTime   = $timeArr[1];
-        $result = AttendanceSchedule::where('start_time','>=', $startTime)
-            ->where('end_time', '<=', $endTime)
+        $result = AttendanceSchedule::where('task_id', $taskId)
             ->where('school_id', $schoolId)
             ->get();
         return $result;
@@ -296,7 +271,7 @@ class AttendanceSchedulesDao
      * @param string $cycle
      * @return array|bool
      */
-    public function getTimes($current, $cycle='week')
+    public function getTimes($current=0, $cycle='week')
     {
         if ($cycle == 'week') {
             if ($current == 0) {
@@ -312,7 +287,7 @@ class AttendanceSchedulesDao
             }
         } elseif ($cycle == 'month') {
             if ($current == 0) {
-                $startStr = 'first weeks of this month';
+                $startStr = 'first day of this month';
                 $endStr = 'last day of this month';
             } else {
                 $startStr = 'first day of +'.$current.' month';
@@ -340,22 +315,11 @@ class AttendanceSchedulesDao
         return $num>0;
     }
 
-    /**
-     * 给attendance_schedule_persons表添加一条schedule的关联记录
-     * @param $scheduleId
-     * @param $personId
-     * @param $taskId
-     * @return mixed
-     */
-    public function addSchedulePerson($scheduleId, $personId, $taskId)
-    {
-        return AttendanceSchedulePerson::create(['task_id'=>$taskId, 'schedule_id'=>$scheduleId, 'user_id'=>$personId]);
-    }
-    public function delSchedulePerson($scheduleId)
-    {
-        return AttendanceSchedulePerson::where('schedule_id',$scheduleId)->delete();
-    }
 
+    public function getTaskBySchoolId($taskId, $schoolId)
+    {
+        return AttendanceTask::where('id', $taskId)->where('school_id', $schoolId)->first();
+    }
 
 
 }
