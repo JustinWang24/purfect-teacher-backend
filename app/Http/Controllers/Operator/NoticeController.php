@@ -103,7 +103,7 @@ class NoticeController extends Controller
         if ($result->isSuccess()) {
             FlashMessageBuilder::Push($request, FlashMessageBuilder::SUCCESS,'保存成功');
         } else {
-            FlashMessageBuilder::Push($request, FlashMessageBuilder::DANGER,'保存失败'.$result->getMessage());
+            FlashMessageBuilder::Push($request, FlashMessageBuilder::DANGER,'保存失败');
         }
 
         return redirect()->route('school_manager.notice.list');
