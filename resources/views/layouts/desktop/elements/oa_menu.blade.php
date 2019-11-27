@@ -6,7 +6,7 @@
     </a>
     <ul class="sub-menu">
         <li class="nav-item">
-            <a href="{{ route('school_manager.oa.system-messages-manager',['uuid'=>session('school.uuid')]) }}" class="nav-link ">
+            <a href="{{ route('school_manager.notice.list',['uuid'=>session('school.uuid')]) }}" class="nav-link ">
                 <span class="title">通知公告</span>
             </a>
         </li>

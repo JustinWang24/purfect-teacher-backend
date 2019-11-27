@@ -231,12 +231,10 @@ Route::prefix('school_manager')->group(function () {
 
     // 内容管理
     Route::prefix('contents')->group(function (){
-        // 动态管理
-        Route::get('news-manager','ElectiveCoursesController@management')
-            ->name('school_manager.contents.news-manager');
         // 日常安排
         Route::get('regular-manager','ElectiveCoursesController@management')
             ->name('school_manager.contents.regular-manager');
+
         // 调查问卷
         Route::get('questionnaire/list','QuestionnaireController@management')
             ->name('school_manager.contents.questionnaire');
@@ -246,6 +244,31 @@ Route::prefix('school_manager')->group(function () {
             ->name('school_manager.contents.questionnaire.edit');
         Route::post('questionnaire/update','QuestionnaireController@update')
             ->name('school_manager.contents.questionnaire.update');
+
+        // 科技成功
+        Route::get('science-list','Contents\ScienceController@list')
+            ->name('school_manager.contents.science.list');
+        // 添加
+        Route::any('science-add','Contents\ScienceController@create')
+            ->name('school_manager.contents.science.add');
+        // 编辑
+        Route::any('science-edit','Contents\ScienceController@edit')
+            ->name('school_manager.contents.science.edit');
+        // 删除
+        Route::any('science-delete','Contents\ScienceController@delete')
+            ->name('school_manager.contents.science.delete');
+
+        // 动态管理
+        Route::get('news-manager','Contents\NewsController@management')
+            ->name('school_manager.contents.news-manager');
+        Route::post('news/save','Contents\NewsController@save')
+            ->name('school_manager.contents.news.save');
+        Route::post('news/delete','Contents\NewsController@delete')
+            ->name('school_manager.contents.news.delete');
+        Route::any('news/load','Contents\NewsController@load')
+            ->name('school_manager.contents.news.load');
+        Route::post('news/save-section','Contents\NewsController@save_section')
+            ->name('school_manager.contents.news.save-section');
     });
 
     // banner 展示
@@ -259,6 +282,30 @@ Route::prefix('school_manager')->group(function () {
 
     // banner 保存数据
     Route::post('banner/save','BannerController@save')->name('school_manager.banner.save');
+
+   // 通知管理
+    Route::prefix('notice')->group(function (){
+        // 添加
+        Route::get('news-notice','NoticeController@add')
+            ->name('school_manager.notice.add');
+
+        // 展示
+        Route::get('show-notice', 'NoticeController@index')
+            ->name('school_manager.notice.list');
+
+        // 详情
+        Route::get('details-notice', 'NoticeController@details')
+            ->name('school_manager.notice.details');
+
+        // 修改
+        Route::get('edit-notice', 'NoticeController@edit')
+            ->name('school_manager.notice.edit');
+
+        // 保存数据
+        Route::post('save-notice', 'NoticeController@save')
+            ->name('school_manager.notice.save');
+    });
+
 
 
     //值周功能
