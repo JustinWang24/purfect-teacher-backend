@@ -876,6 +876,15 @@ if(document.getElementById('school-time-slots-manager')){
                 this.showEditForm = true;
             },
             onSubmit: function () {
+                if(this.currentTimeSlot.name.trim() === ''){
+                    this.$message.error('作息时间表的名称不可以为空');
+                    return;
+                }
+                if(Util.isEmpty(this.currentTimeSlot.from)  || Util.isEmpty(this.currentTimeSlot.to)){
+                    this.$message.error('作息时间表的时间段不可以为空');
+                    return;
+                }
+
                 saveTimeSlot(this.schoolUuid, this.currentTimeSlot)
                     .then(res => {
                         if(Util.isAjaxResOk(res)){
