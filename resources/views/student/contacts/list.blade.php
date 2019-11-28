@@ -34,6 +34,7 @@
             <div class="card">
                 <div class="card-head">
                     <header>
+                        <i class="el-icon-loading" v-show="loading"></i>&nbsp;
                         班级通讯录&nbsp;
                         <el-select v-model="gradeId" filterable placeholder="请选择">
                             <el-option

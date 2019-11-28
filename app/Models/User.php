@@ -55,7 +55,7 @@ class User extends Authenticatable implements HasMobilePhone, HasDeviceId
      * @var array
      */
     protected $fillable = [
-        'password','mobile_verified_at','mobile','uuid','status','type','name','email'
+        'password','mobile_verified_at','mobile','uuid','status','type','name','email','api_token'
     ];
 
     /**
