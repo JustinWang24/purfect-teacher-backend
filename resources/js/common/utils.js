@@ -48,7 +48,7 @@ export const Util = {
     },
     // 输出学期文字的方法
     GetTermText: function (term) {
-        return Constants.TERMS[term - 1];
+        return Constants.TERMS[term];
     },
     GetRepeatUnitText: function (idx) {
         return Constants.REPEAT_UNITS[idx - 1];
