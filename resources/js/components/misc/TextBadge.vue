@@ -58,7 +58,7 @@
         border-radius: 5px;
         border: solid 1px white;
         box-sizing: border-box;
-        padding-top: 5px;
+        padding-top: 1px;
         padding-left:5px;
         padding-right:5px;
     }
