@@ -87,10 +87,20 @@ return [
     'visitors-manager' => '来访管理',
     'organization-manager' => '组织架构管理',
 
+
+    'attendance' => '值周管理',
+    'schedule' => '计划',
+    'display' => '展示',
+    'timeslots' => '时间段',
+    'person' => '分配人员',
+    'search' => '搜索',
     // 科技成果
     'science' => '科技成果',
     'versions' => '版本管理',
     'contacts' => '联系方式',
+
+    'notice' => '通知公告',
+    'show-notice' => '列表',
 
     // 校园动态
     'news-manager' => '校园动态',
