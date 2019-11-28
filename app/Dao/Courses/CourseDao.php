@@ -408,4 +408,15 @@ class CourseDao
 
     }
 
+
+    /**
+     * 根据课程ID和学年获取课程
+     * @param $ids
+     * @param $year
+     * @return mixed
+     */
+    public function getCourseByIdsAndYear($ids, $year){
+        return Course::whereIn('id',$ids)->where('year', $year)->get();
+    }
+
 }
