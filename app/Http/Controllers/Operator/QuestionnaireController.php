@@ -86,6 +86,16 @@ class QuestionnaireController extends Controller
             FlashMessageBuilder::Push($request, FlashMessageBuilder::DANGER,'无法保存问卷');
             return redirect()->back();
         }
+    }
 
+    /**
+     * @param $id
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function delete($id)
+    {
+        $dao = new QuestionnaireDao();
+        $result = $dao->delete($id);
+        return redirect()->back();
     }
 }
