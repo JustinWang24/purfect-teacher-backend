@@ -31,6 +31,7 @@ return [
     'view'   => '查看',
     'delete' => '删除',
     'update' => '更新',
+    'school-manager' => '学校管理员',
 
     //风采管理
     'scenery' => '风采管理',

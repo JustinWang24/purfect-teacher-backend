@@ -170,8 +170,15 @@ class User extends Authenticatable implements HasMobilePhone, HasDeviceId
      */
     public function getSchoolId()
     {
-        if($this->isStudent() || $this->isSchoolManager()){
+        if($this->isStudent()){
             return $this->gradeUser->school_id;
+        }
+        elseif ($this->isSchoolManager()){
+            $gradeUser = $this->gradeUser;
+            if(!$gradeUser){
+                // 如果还没有创建对应的记录, 那么就创建一条
+            }
+            return 1;
         }
         elseif($this->isTeacher() || $this->isEmployee()){
             $gus = $this->gradeUser;
