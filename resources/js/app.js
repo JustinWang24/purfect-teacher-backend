@@ -247,15 +247,23 @@ if(document.getElementById('school-contacts-list-app')){
                 schoolId: null,
                 grades:[],
                 gradeId: null,
+                loading: false,
             }
         },
         watch: {
             'gradeId': function(val){
+                this.loading = true;
+                this.mates = [];
+                this.teachers = [];
                 loadGradeContacts(this.schoolUuid, this.gradeId).then(res => {
                     if(Util.isAjaxResOk(res)){
                         this.mates = res.data.data.schoolmate_list;
                         this.teachers = res.data.data.teacher_list;
                     }
+                    else{
+                        this.$message.error('没有找到班级的数据');
+                    }
+                    this.loading = false;
                 })
             }
         },
