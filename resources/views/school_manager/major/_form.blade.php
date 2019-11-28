@@ -23,7 +23,7 @@ use App\Utils\UI\Button;
     <div class="col-3">
         <div class="form-group">
             <label for="major-period-input">学制</label>
-            <input required type="number" class="form-control" id="major-period-input" value="{{$major['period'] ?? old('period')}}" placeholder="学制" name="major[period]">
+            <input required type="number" class="form-control" id="major-period-input" value="{{$major['period'] ?? old('period')}}" placeholder="学制" name="major[period]" min="1" max="10">
         </div>
     </div>
 

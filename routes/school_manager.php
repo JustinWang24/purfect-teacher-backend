@@ -135,7 +135,22 @@ Route::prefix('school_manager')->group(function () {
     // 教材管理
     Route::get('textbook/loadCampusTextbook', 'TextbookController@loadCampusTextbook')
         ->name('school_manager.textbook.loadCampusTextbook'); // 获取校区教材采购情况
-    Route::get('textbook/campusTextbookDownload', 'TextbookController@campusTextbookDownload')->name('school_manager.textbook.campusTextbookDownload'); // 校区教材下载
+    Route::get('textbook/campusTextbookDownload', 'TextbookController@campusTextbookDownload')
+        ->name('school_manager.textbook.campusTextbookDownload'); // 校区教材下载
+    // 班级学生列表
+    Route::get('textbook-grade', 'TextbookController@grade')
+        ->name('school_manager.textbook.grade');
+    // 学生教材列表
+    Route::get('textbook-users', 'TextbookController@users')
+        ->name('school_manager.textbook.users');
+
+    // 当个领取教材
+    Route::get('textbook-get', 'TextbookController@getTextbook')
+        ->name('school_manager.textbook.get');
+    // 批量领取
+    Route::post('textbook-submit', 'TextbookController@submit')
+        ->name('school_manager.textbook.submit');
+
 
     // 校历事件添加
     Route::any('calendar/save', 'Calendar\IndexController@save')->name('school_manger.school.calendar.save');
