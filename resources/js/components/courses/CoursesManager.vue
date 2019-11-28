@@ -395,6 +395,38 @@
             },
             // 必修课保存
             saveCourse: function(){
+                if(this.courseModel.code.trim() === ''){
+                    this.$message.error('请输入本课程的编号');
+                    return;
+                }
+                if(this.courseModel.name.trim() === ''){
+                    this.$message.error('请输入本课程的名称');
+                    return;
+                }
+
+                if(Util.isEmpty(this.courseModel.year)){
+                    this.$message.error('请输入本课程适用的年级');
+                    return;
+                }
+
+                if(Util.isEmpty(this.courseModel.term)){
+                    this.$message.error('请输入本课程适用的学期');
+                    return;
+                }
+
+                if(this.courseModel.majors.length === 0){
+                    this.$message.error('请至少选择一个本课程所关联的专业');
+                    return;
+                }
+                if(this.courseModel.teachers.length === 0){
+                    this.$message.error('请至少选择一位本课程的授课老师');
+                    return;
+                }
+
+                if(this.courseModel.desc.trim() === ''){
+                    this.courseModel.desc = this.courseModel.name;
+                }
+
                 axios.post(
                     Constants.API.SAVE_COURSE,{course: this.courseModel, school: this.schoolId}
                 ).then(res => {
