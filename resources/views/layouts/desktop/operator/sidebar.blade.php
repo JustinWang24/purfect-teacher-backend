@@ -1,7 +1,7 @@
 <div class="sidebar-container">
     <div class="sidemenu-container navbar-collapse collapse fixed-menu">
         <div id="remove-scroll" class="left-sidemenu">
-            <ul class="sidemenu  page-header-fixed sidemenu-hover-submenu" data-keep-expanded="false"
+            <ul class="sidemenu  page-header-fixed sidemenu-closed" data-keep-expanded="false"
                 data-auto-scroll="true" data-slide-speed="200" style="padding-top: 20px">
                 <li class="sidebar-toggler-wrapper hide">
                     <div class="sidebar-toggler">
@@ -15,14 +15,12 @@
                                  alt="User Image" />
                         </div>
                         <div class="pull-left info">
-                            <p>{{ Auth::user()->name }}</p>
-                            <a href="#">
-                                <i class="fa fa-circle user-online"></i>
-                                <span class="txtOnline">Online</span>
-                            </a>
+                            <p>{{ \Illuminate\Support\Facades\Auth::user()->name }}</p>
                         </div>
                     </div>
                 </li>
+
+                <!--begin-->
                 <li class="nav-item start">
                     <a href="{{ route('home') }}" class="nav-link nav-toggle">
                         <i class="material-icons">home</i>
@@ -35,8 +33,8 @@
                     @include('layouts.desktop.elements.students_menu')
                     @include('layouts.desktop.elements.courses_menu_group')
                     @include('layouts.desktop.elements.recruitment_menu_group')
+                    @include('layouts.desktop.elements.content_menu')
                     @include('layouts.desktop.elements.welcome_menu')
-                    @include('layouts.desktop.elements.meeting_menu')
                 @endif
             </ul>
         </div>
