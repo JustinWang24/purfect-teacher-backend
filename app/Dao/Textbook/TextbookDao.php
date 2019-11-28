@@ -430,22 +430,20 @@ class TextbookDao
     /**
      * 获取当前时间用户所使用的教材
      * @param GradeUser $gradeUser
-     * @param $year
+     * @param  int $year 当前班所在的年级
      * @return array
      */
     public function userTextbook(GradeUser $gradeUser, $year) {
         // 专业下的课程
         $coursesMajor = $gradeUser->major->courseMajors;
-        // 入学年份
-        $timeOfEnrollment = $gradeUser->grade->year;
-        // 当前所在的年级
-        $year = $year - $timeOfEnrollment + 1;
+
 
         $coursesMajorIds = array_column($coursesMajor->toArray(),'course_id');
         $courseDao = new CourseDao();
         // 该专业当前学年所上的课程
         $courses = $courseDao->getCourseByIdsAndYear($coursesMajorIds, $year);
         // 教材
+        $textbooks = [];
         foreach ($courses as $key => $val) {
 
             $courseTextbooks = $val->courseTextbooks;
@@ -454,7 +452,7 @@ class TextbookDao
                 $textbooks[$k] = $v->textbook;
                 $map = ['user_id'=>$gradeUser->user->id,'textbook_id'=>$v->textbook_id];
                 $get = StudentTextbook::where($map)->first();
-                $textbooks[$k]['status'] = $get ? '已领取' : '未领取';
+                $textbooks[$k]['status']  = $get ? '已领取' : '未领取';
                 $textbooks[$k]['getTime'] = $get ? $get->created_at : '';
             }
         }
@@ -466,9 +464,60 @@ class TextbookDao
     /**
      * 领取教材
      * @param $data
+     * @return MessageBag
+     */
+    public function addStudentTextbook($data) {
+        $re = $this->getStudentTextbook($data['user_id'], $data['textbook_id']);
+        if(!is_null($re)) {
+            return new MessageBag(JsonBuilder::CODE_SUCCESS, '请勿重复添加');
+        }
+
+        $result = StudentTextbook::create($data);
+        if($result){
+            return new MessageBag(JsonBuilder::CODE_SUCCESS,'创建成功');
+        } else {
+            return new MessageBag(JsonBuilder::CODE_ERROR, '创建失败');
+        }
+    }
+
+
+    /**
+     * 获取学生领取教材
+     * @param $userId
+     * @param $textbookId
      * @return mixed
      */
-    public function getTextbook($data) {
-        return StudentTextbook::create($data);
+    public function getStudentTextbook($userId, $textbookId) {
+        $map = ['user_id'=>$userId, 'textbook_id'=>$textbookId];
+        return StudentTextbook::where($map)->first();
+    }
+
+
+    /**
+     * 批量领取教材
+     * @param $userId
+     * @param int $year 班级当前所在时间的年级
+     * @param $textbookIds
+     * @return MessageBag
+     */
+    public function batchAddStudentTextbook($userId, $year, $textbookIds) {
+        DB::beginTransaction();
+        try {
+            foreach ($textbookIds as $key => $val) {
+                $insert = [
+                    'user_id'=>$userId,
+                    'year'=>$year,
+                    'textbook_id'=>$val
+                ];
+                $this->addStudentTextbook($insert);
+            }
+            DB::commit();
+            return new MessageBag(JsonBuilder::CODE_SUCCESS, '创建成功');
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            $msg = $e->getMessage();
+            return new MessageBag(JsonBuilder::CODE_ERROR, '创建失败'.$msg);
+        }
     }
 }

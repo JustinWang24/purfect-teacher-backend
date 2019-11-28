@@ -10,6 +10,7 @@ use App\Models\Misc\Enquiry;
 use App\Models\NetworkDisk\Category;
 use App\Models\Schools\RecruitmentPlan;
 use App\Models\Students\StudentProfile;
+use App\Models\Students\StudentTextbook;
 use App\Models\Teachers\TeacherProfile;
 use App\Models\Users\GradeUser;
 use App\Models\Users\UserDevice;
@@ -306,5 +307,18 @@ class User extends Authenticatable implements HasMobilePhone, HasDeviceId
     public function userDevices()
     {
         return $this->hasMany(UserDevice::class);
+    }
+
+
+    /**
+     * 获取学生当年领取最后一本教材
+     * @param $year
+     * @return mixed
+     */
+    public function getStudentLastTextbookByYear($year) {
+        $map = ['user_id'=>$this->id,'year'=>$year];
+
+        $re = StudentTextbook::where($map)->orderBy('created_at','desc')->first();
+        return $re;
     }
 }

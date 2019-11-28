@@ -18,6 +18,7 @@ class CreateStudentTextbooksTable extends Migration
             $table->bigIncrements('id');
             $table->integer('user_id')->comment('用户ID');
             $table->integer('textbook_id')->comment('教材ID');
+            $table->mediumInteger('year')->comment('年级');
             $table->dateTime('created_at');
         });
         DB::statement(" ALTER TABLE student_textbooks comment '学生教材关联表' ");
