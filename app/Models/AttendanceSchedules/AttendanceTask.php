@@ -15,4 +15,8 @@ class AttendanceTask extends Model
     {
         return $this->hasMany(AttendanceTimeSlot::class, 'task_id', 'id');
     }
+    public function schedules()
+    {
+        return $this->hasMany(AttendanceSchedule::class, 'task_id', 'id');
+    }
 }

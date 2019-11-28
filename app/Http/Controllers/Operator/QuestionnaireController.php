@@ -49,7 +49,7 @@ class QuestionnaireController extends Controller
      * 加载添加问卷的表单
      */
     public function add(){
-        $this->dataForView['questionnaire'] = new Questionnaire();
+        $this->dataForView['questionnaire'] = [];
         return view('school_manager.questionnaire.add', $this->dataForView);
     }
     /**
@@ -69,22 +69,23 @@ class QuestionnaireController extends Controller
      * @return \Illuminate\Http\RedirectResponse
      */
     public function update(QuestionnaireRequest $request){
-        $questionnaireData = $request->get('questionnaire');
+        $requestArr = $request->validated();
+        $questionnaireData = $requestArr['questionnaire'];
         $questionnaireData['school_id'] = $request->session()->get('school.id');
         $dao = new QuestionnaireDao();
-
         if(isset($questionnaireData['id'])){
             $result = $dao->update($questionnaireData);
         }
         else{
             $result = $dao->create($questionnaireData);
         }
-
-        if($result){
-            FlashMessageBuilder::Push($request, FlashMessageBuilder::SUCCESS,$questionnaireData['title'].'问卷保存成功');
+        if($result->getCode() == 1000){
+            FlashMessageBuilder::Push($request, FlashMessageBuilder::SUCCESS,$result->getData()->title.'问卷保存成功');
+            return redirect()->route('school_manager.contents.questionnaire');
         }else{
-            FlashMessageBuilder::Push($request, FlashMessageBuilder::DANGER,'无法保存问卷'.$questionnaireData['title']);
+            FlashMessageBuilder::Push($request, FlashMessageBuilder::DANGER,'无法保存问卷');
+            return redirect()->back();
         }
-        return redirect()->route('school_manager.contents.questionnaire');
+
     }
 }

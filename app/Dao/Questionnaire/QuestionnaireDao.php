@@ -56,7 +56,7 @@ class QuestionnaireDao
             if ($questionnaire) {
                 DB::commit();
                 $messageBag->setCode(JsonBuilder::CODE_SUCCESS);
-                $messageBag->setData($questionnaire);
+                $messageBag->setData(Questionnaire::find($id));
             } else {
                 DB::rollBack();
                 $messageBag->setMessage('更新问卷调查失败, 请联系管理员');
