@@ -134,4 +134,9 @@ class QuestionnaireDao
             ->get();
 
     }
+
+    public function delete($id)
+    {
+        return Questionnaire::where('id', $id)->delete();
+    }
 }

@@ -242,8 +242,8 @@ Route::prefix('school_manager')->group(function () {
             ->name('school_manager.contents.questionnaire.add');
         Route::get('questionnaire/edit/{id}','QuestionnaireController@edit')
             ->name('school_manager.contents.questionnaire.edit');
-        Route::post('questionnaire/update','QuestionnaireController@update')
-            ->name('school_manager.contents.questionnaire.update');
+        Route::post('questionnaire/update','QuestionnaireController@update')->name('school_manager.contents.questionnaire.update');
+        Route::get('questionnaire/delete/{id}','QuestionnaireController@delete')->name('school_manager.contents.questionnaire.delete');
 
         // 科技成功
         Route::get('science-list','Contents\ScienceController@list')
