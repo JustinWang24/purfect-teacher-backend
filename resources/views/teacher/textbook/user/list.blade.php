@@ -38,7 +38,10 @@ use App\User;
                                 @foreach($students as $index=>$gradeUser)
                                     @php
                                         /** @var \App\Models\Users\GradeUser $gradeUser */
+                                        /**计算当前学生领书情况*/
+                                    $studentTextbook = $gradeUser->user->getStudentLastTextbookByYear($gradeYear)
                                     @endphp
+
                                     <tr>
                                         <td>{{ $gradeUser->user->id }}</td>
                                         <td>
@@ -47,16 +50,13 @@ use App\User;
                                         <td>{{ $gradeUser->user->profile->student_number }}</td>
                                         <td>{{ $gradeUser->studyAt() }}</td>
                                         <td></td>
-                                        <td></td>
-                                        <td></td>
+                                        <td>{{ $studentTextbook?'已领取':'未领取' }}</td>
+                                        <td>{{ $studentTextbook?$studentTextbook->created_at:'' }}</td>
                                         <td class="text-center">
                                             {{ \App\Utils\UI\Anchor::Print(['text'=>'查看','class'=>'btn-edit-facility',
-                                            'href'=>route('school_manager.textbook.users',['user_id'=>$gradeUser->user_id])],
+                                            'href'=>route('school_manager.textbook.users',
+                                            ['user_id'=>$gradeUser->user_id,'year'=>$gradeYear])],
                                              \App\Utils\UI\Button::TYPE_INFO,'info') }}
-
-                                            {{ \App\Utils\UI\Anchor::Print(['text'=>'领取','class'=>'btn-edit-facility',
-                                            'href'=>route('school_manager.facility.edit',['id'=>$gradeUser->id])],
-                                             \App\Utils\UI\Button::TYPE_DEFAULT,'edit') }}
 
                                         </td>
                                     </tr>

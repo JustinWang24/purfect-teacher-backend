@@ -144,9 +144,12 @@ Route::prefix('school_manager')->group(function () {
     Route::get('textbook-users', 'TextbookController@users')
         ->name('school_manager.textbook.users');
 
-    // 领取教材
+    // 当个领取教材
     Route::get('textbook-get', 'TextbookController@getTextbook')
         ->name('school_manager.textbook.get');
+    // 批量领取
+    Route::post('textbook-submit', 'TextbookController@submit')
+        ->name('school_manager.textbook.submit');
 
 
     // 校历事件添加
