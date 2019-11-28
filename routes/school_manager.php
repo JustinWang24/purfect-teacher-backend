@@ -263,6 +263,10 @@ Route::prefix('school_manager')->group(function () {
             ->name('school_manager.contents.news-manager');
         Route::post('news/save','Contents\NewsController@save')
             ->name('school_manager.contents.news.save');
+
+        Route::post('news/publish','Contents\NewsController@publish')
+            ->name('school_manager.contents.news.publish');
+
         Route::post('news/delete','Contents\NewsController@delete')
             ->name('school_manager.contents.news.delete');
         Route::any('news/load','Contents\NewsController@load')

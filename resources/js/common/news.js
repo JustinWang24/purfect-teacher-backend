@@ -18,6 +18,17 @@ export function saveNews(schoolId, news, affix) {
     );
 }
 
+export function publishNews(schoolId, newsId, affix) {
+    const url = Util.buildUrl(Constants.API.NEWS.PUBLISH);
+    if(Util.isDevEnv()){
+        return axios.get(url, affix);
+    }
+    return axios.post(
+        url,
+        {school: schoolId, news_id: newsId, version:Constants.VERSION}
+    );
+}
+
 export function deleteNews(schoolId, newsId, affix) {
     const url = Util.buildUrl(Constants.API.NEWS.DELETE);
     if(Util.isDevEnv()){
