@@ -36,7 +36,8 @@ class Organization extends Model
      * @return string
      */
     public function output(){
-        return '<div class="org '.($this->level > 1 && $this->level < 4 ? 'the-box' : null).'">'
+        $branchesCount = count($this->branch);
+        return '<div class="org '.($this->level > 1 && $this->level < 4 ? 'the-box' : null).'" style="'.($branchesCount===0?'border:none;':null).'">'
             .View::make('reusable_elements.ui.org'.$this->level,['name'=>$this->name,'id'=>$this->id])->render()
             .$this->outputBranch()
             .'</div>';
