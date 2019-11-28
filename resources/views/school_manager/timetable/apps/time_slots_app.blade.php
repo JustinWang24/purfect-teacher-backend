@@ -29,6 +29,7 @@
                                 v-model="currentTimeSlot.to"
                                 value-format="HH:mm:ss"
                                 :picker-options="{selectableRange: '05:00:00 - 22:00:00', format: 'HH:mm:ss'}"
+                                @change="toChangedHandler"
                                 placeholder="结束时间">
                         </el-time-picker>
                     </el-form-item>

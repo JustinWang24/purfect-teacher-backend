@@ -1,6 +1,6 @@
 <template>
     <div class="block">
-        <h2 class="title-bar">学校作息时间表</h2>
+        <h2 class="title-bar">作息时间表</h2>
         <el-timeline class="frame-wrap">
             <el-timeline-item
                     v-for="(activity, index) in timeFrame"
@@ -10,7 +10,11 @@
                     :color="activity.color"
                     :size="activity.size"
                     :timestamp="activity.timestamp">
-                <el-button type="text" style="padding: 0;" v-on:click="editTimeSlot(activity)">{{activity.content}}</el-button>
+                <p style="padding: 0;color: #409EFF;" v-on:click="editTimeSlot(activity, index)">
+                    {{activity.content}}
+                    &nbsp;
+                    <i class="el-icon-check" v-if="index === highlightIdx"></i>
+                </p>
             </el-timeline-item>
         </el-timeline>
         <slot></slot>
@@ -35,7 +39,8 @@
         },
         data() {
             return {
-                timeFrame: []
+                timeFrame: [],
+                highlightIdx: -1,
             };
         },
         mounted() {
@@ -59,7 +64,8 @@
             })
         },
         methods: {
-            editTimeSlot: function(activity){
+            editTimeSlot: function(activity, index){
+                this.highlightIdx = index;
                 const timeSlot = Util.GetItemById(activity.id, this.timeFrame);
                 this.$emit('edit-time-slot', {timeSlot: timeSlot.origin, schoolUuid: this.school});
             }
