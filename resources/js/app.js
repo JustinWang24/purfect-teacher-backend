@@ -13,6 +13,9 @@ import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
 Vue.use(ElementUI);
 
+// 拖拽
+
+
 /**
 
 * The following block of code may be used to automatically register your
@@ -36,6 +39,7 @@ Vue.component('file-manager', require('./components/fileManager/FileManager.vue'
 Vue.component('elective-course-form', require('./components/courses/ElectiveCourseForm.vue').default);
 Vue.component('textbooks-table', require('./components/textbook/TextbooksTable.vue').default); // 教材列表
 Vue.component('file-preview', require('./components/fileManager/elements/FilePreview.vue').default);      // 教材表单
+Vue.component('drag-to-sort', require('./components/dnd/DragToSort.vue').default);      // 教材表单
 
 import { Constants } from './common/constants';
 import { Util } from './common/utils';
@@ -44,7 +48,7 @@ import { loadBuildings } from './common/facility';
 import { getEmptyElectiveCourseApplication } from './common/elective_course';
 import { loadTextbooksPaginate, deleteTextbook } from './common/textbook';
 import { loadOrgContacts, loadGradeContacts, loadGrades } from './common/contacts';
-import { saveNews, loadNews, saveSections, deleteNews } from './common/news';
+import { saveNews, loadNews, saveSections, deleteNews, publishNews } from './common/news';
 
 /**
  * 动态新闻的管理
@@ -75,17 +79,43 @@ if(document.getElementById('school-news-list-app')){
                 showFileManagerFlag: false,
                 formLabelWidth: '100px',
                 loading: false,
+                // 当前的新闻列表
+                news:[],
+                totalNews: 0,
+                dndOptions:{},
             }
         },
         created(){
             const dom = document.getElementById('app-init-data-holder');
             this.schoolId = dom.dataset.school;
             this.newsForm.type = parseInt(dom.dataset.type);// 文章类型
+            const injectedData = JSON.parse(dom.dataset.news);// 文章类型
+
+            // 加载文章列表
+            this.news = injectedData.data;
+            this.totalNews = injectedData.total;
         },
         methods: {
             addNew: function(){
                 this.newsFormFlag = true;
                 this.newsForm.title = '';
+            },
+            publish: function(){
+                publishNews(this.schoolId, this.newsForm.id).then(res => {
+                    if(Util.isAjaxResOk(res)){
+                        this.$message({
+                            message: '发布成功',
+                            type: 'success'
+                        });
+                        const idx = Util.GetItemIndexById(this.newsForm.id, this.news);
+                        if(idx > -1){
+                            this.news[idx].publish = true;
+                        }
+                    }
+                    else{
+                        this.$message.error(res.data.data.message);
+                    }
+                })
             },
             saveNews: function(){
                 // Todo 保存新闻
@@ -127,16 +157,27 @@ if(document.getElementById('school-news-list-app')){
                 })
             },
             deleteNews: function(id){
-                this.loading = true;
-                deleteNews(this.schoolId, id).then(res => {
-                    if(Util.isAjaxResOk(res)){
-                        window.location.reload();
-                    }
-                    else{
-                        this.$message.error('删除失败, 请稍候再试');
-                        this.loading = false;
-                    }
-                })
+                this.$confirm('此操作将永久删除该动态, 是否继续?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    this.loading = true;
+                    deleteNews(this.schoolId, id).then(res => {
+                        if(Util.isAjaxResOk(res)){
+                            window.location.reload();
+                        }
+                        else{
+                            this.$message.error('删除失败, 请稍候再试');
+                            this.loading = false;
+                        }
+                    })
+                }).catch(() => {
+                    this.$message({
+                        type: 'info',
+                        message: '已取消删除'
+                    });
+                });
             },
             pushNewSection: function(){
                 if(Util.isEmpty(this.mediaForm.content) && Util.isEmpty(this.mediaForm.media_id)){

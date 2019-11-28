@@ -109,6 +109,7 @@ export const Constants = {
         },
         NEWS: {
             SAVE: '/school_manager/contents/news/save',
+            PUBLISH: '/school_manager/contents/news/publish',
             DELETE: '/school_manager/contents/news/delete',
             LOAD: '/school_manager/contents/news/load',
             SAVE_SECTION: '/school_manager/contents/news/save-section',
