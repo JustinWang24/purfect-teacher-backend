@@ -12,6 +12,7 @@ class RedirectIfNoSessionData
         'operator.schools.enter',
         'admin.create.school-manager',
         'admin.edit.school-manager',
+        'logout',
     ];
     /**
      * Handle an incoming request.
