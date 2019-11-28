@@ -2,3 +2,26 @@
 .custom-add-on{
   background: #d2d6de !important;
 }
+
+// 模拟手机进行内容预览
+.mobile-phone-previewer{
+    background-image: url("/assets/img/ios_bg.png");
+    background-repeat:no-repeat;
+  background-size:100% 100%;
+  width: 440px;
+  height: 996px;
+  display: block;
+  margin: 0 auto;
+  position: relative;
+  .preview-wrap{
+    display: block;
+    position: absolute;
+    top: 122px;
+    left: 32px;
+    width: 374px;
+    height: 744px;
+    background-color: white;
+    overflow-y: scroll;
+    padding: 10px;
+  }
+}
