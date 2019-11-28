@@ -1,7 +1,7 @@
 @extends('layouts.app')
 @section('content')
     <div class="row" id="school-news-list-app">
-        <div class="col-4">
+        <div class="col-3">
             <div class="card">
                 <div class="card-head">
                     <header>
@@ -10,33 +10,35 @@
                     </header>
                 </div>
                 <div class="card-body">
-                    <table class="table table-striped table-hover valign-middle">
-                    <thead>
-                        <tr>
-                            <th>标题</th>
-                            <th>状态</th>
-                            <th></th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        @foreach($newsList as $news)
-<tr>
-    <td>{{ $news->title }}</td>
-    <td>{{ $news->publish ? '发布':'等待' }}</td>
-    <td>
-        <button class="btn btn-sm btn-success" @click="loadNews({{ $news->id }})"><i class="fa fa-edit"></i></button>
-        <button class="btn btn-sm btn-danger" @click="deleteNews({{ $news->id }})"><i class="fa fa-trash-o"></i></button>
-    </td>
-</tr>
-                        @endforeach
-                        </tbody>
-                    </table>
+                    <el-table
+                            :data="news"
+                            style="width: 100%">
+                        <el-table-column
+                                label="标题">
+                            <template slot-scope="scope">
+                                <el-button type="text" @click="loadNews(scope.row.id)">
+                                    @{{ scope.row.title }}
+                                </el-button>
+                                <p>状态: @{{ scope.row.publish ? '已发布':'等待发布' }}</p>
+                            </template>
+                        </el-table-column>
+                        <el-table-column label="操作" width="80">
+                            <template slot-scope="scope">
+                                <el-button
+                                        icon="el-icon-delete"
+                                        size="mini"
+                                        type="danger"
+                                        @click="deleteNews(scope.row.id)"></el-button>
+                            </template>
+                        </el-table-column>
+                    </el-table>
+
                     {{ $newsList->links() }}
                 </div>
             </div>
         </div>
 
-        <div class="col-8">
+        <div class="col-5">
             <div class="card">
                 <div class="card-head">
                     <header>
@@ -88,18 +90,35 @@
                         </div>
                     </div>
                     <div class="clearfix"></div>
-                    <div v-if="sections.length > 0" class="preview-wrap mt-4" style="width: 380px;margin: 0 auto;border: solid 1px #cccccc;padding: 10px;">
-                        <p v-for="(section, idx) in sections" :key="idx">
-                            <span v-if="section.media_id">
-                                <img :src="section.content" style="width: 360px;">
-                            </span>
-                            <span v-else>@{{ section.content }}</span>
-                        </p>
+                    <div class="existed-section-wrapper">
                     </div>
                 </div>
             </div>
         </div>
 
+        <div class="col-4">
+            <div class="card">
+                <div class="card-head">
+                    <header>
+                        内容预览
+                        <el-button type="primary" @click="publish">发布</el-button>
+                    </header>
+                </div>
+                <div class="card-body">
+                    <div v-if="sections.length > 0" class="mobile-phone-previewer">
+                        <div class="preview-wrap">
+                            <h3 class="mb-4 text-primary">@{{ newsForm.title }}</h3>
+                            <p v-for="(section, idx) in sections" :key="idx">
+                                    <span v-if="section.media_id">
+                                        <img :src="section.content" style="width: 360px;">
+                                    </span>
+                                <span v-else>@{{ section.content }}</span>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
         @include(
                 'reusable_elements.section.file_manager_component',
                 ['pickFileHandler'=>'pickFileHandler']
@@ -108,5 +127,6 @@
     <div id="app-init-data-holder"
          data-school="{{ session('school.id') }}"
          data-type="{{ \App\Models\Schools\News::TYPE_NEWS }}"
+         data-news='{!! $newsList->toJson() !!}'
     ></div>
 @endsection

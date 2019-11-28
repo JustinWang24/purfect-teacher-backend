@@ -61,4 +61,10 @@ class NewsController extends Controller
         $dao->delete($request->get('news_id'));
         return JsonBuilder::Success();
     }
+
+    public function publish(Request $request){
+        $dao = new NewsDao();
+        $dao->updateNewById($request->get('news_id'),['publish'=>true]);
+        return JsonBuilder::Success();
+    }
 }
