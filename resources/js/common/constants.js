@@ -113,6 +113,9 @@ export const Constants = {
             DELETE: '/school_manager/contents/news/delete',
             LOAD: '/school_manager/contents/news/load',
             SAVE_SECTION: '/school_manager/contents/news/save-section',
+            DELETE_SECTION: '/school_manager/contents/news/delete-section',
+            MOVE_UP_SECTION: '/school_manager/contents/news/move-up-section',
+            MOVE_DOWN_SECTION: '/school_manager/contents/news/move-down-section',
         },
         CALENDAR: {
             SAVE: '/school_manager/calendar/save',

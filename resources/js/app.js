@@ -49,7 +49,7 @@ import { loadBuildings } from './common/facility';
 import { getEmptyElectiveCourseApplication } from './common/elective_course';
 import { loadTextbooksPaginate, deleteTextbook } from './common/textbook';
 import { loadOrgContacts, loadGradeContacts, loadGrades } from './common/contacts';
-import { saveNews, loadNews, saveSections, deleteNews, publishNews } from './common/news';
+import { saveNews, loadNews, saveSections, deleteNews, publishNews, deleteSection, moveUpSection, moveDownSection } from './common/news';
 
 /**
  * 校历应用
@@ -181,9 +181,50 @@ if(document.getElementById('school-news-list-app')){
             this.totalNews = injectedData.total;
         },
         methods: {
+            // 新闻的 sections 的编辑
+            moveUp: function(section){
+                moveUpSection(section.id).then(res => {
+                    if(Util.isAjaxResOk(res)){
+                        const idx = Util.GetItemIndexById(section.id, this.sections);
+                        this.sections = Util.swapArray(this.sections, idx -1, idx);
+                    }
+                    else{
+                        this.$message.error('系统繁忙, 请稍候再试');
+                    }
+                });
+            },
+            moveDown: function(section){
+                moveDownSection(section.id).then(res => {
+                    if(Util.isAjaxResOk(res)){
+                        const idx = Util.GetItemIndexById(section.id, this.sections);
+                        this.sections = Util.swapArray(this.sections, idx, idx + 1);
+                    }
+                    else{
+                        this.$message.error('系统繁忙, 请稍候再试');
+                    }
+                });
+            },
+            deleteSection: function(section){
+                deleteSection(section.id).then(res => {
+                    if(Util.isAjaxResOk(res)){
+                        const idx = Util.GetItemIndexById(section.id, this.sections);
+                        this.sections.splice(idx, 1);
+                        this.$message({
+                            type:'success',
+                            message:'文章段落删除成功'
+                        });
+                    }
+                    else{
+                        this.$message.error('系统繁忙, 请稍候再试');
+                    }
+                })
+            },
+            // 新闻的 sections 的编辑完毕
             addNew: function(){
                 this.newsFormFlag = true;
                 this.newsForm.title = '';
+                this.newsForm.id = '';
+                this.sections = [];
             },
             publish: function(){
                 publishNews(this.schoolId, this.newsForm.id).then(res => {
@@ -210,13 +251,13 @@ if(document.getElementById('school-news-list-app')){
                         this.sectionsFormFlag = true;
                         if(!Util.isEmpty(res.data.data.news)){
                             this.newsForm.id = res.data.data.news.id;
+                            this.news.push(this.newsForm);
                         }
                     }
                     else{
                         this.$message.error(res.data.data.message);
                     }
                 })
-
             },
             cancelSaveNews: function(){
                 this.newsFormFlag = false;
@@ -282,6 +323,7 @@ if(document.getElementById('school-news-list-app')){
                         keys.forEach(function(key){
                             media[key] = that.mediaForm[key];
                         });
+                        media.id = res.data.data.id;
                         this.sections.push(media);
                         this.resetMediaForm();
                     }
