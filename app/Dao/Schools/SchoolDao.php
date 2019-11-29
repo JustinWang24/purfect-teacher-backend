@@ -58,7 +58,7 @@ class SchoolDao
                     $this->createDefaultConfig($school);
                     // 创建学校的最基本的组织
                     $this->createRootOrganization($school);
-
+                    DB::commit();
                     return $school;
                 }else{
                     DB::rollBack();
@@ -154,11 +154,13 @@ class SchoolDao
      * @return Organization
      */
     public function createRootOrganization($school){
-        return (new OrganizationDao())->create([
+        $data = [
             'school_id'=>$school->id??$school,
             'name'=>'学校组织机构',
             'level'=>Organization::ROOT,
             'parent_id'=>0,
-        ]);
+        ];
+
+        return Organization::create($data);
     }
 }
