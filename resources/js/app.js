@@ -85,6 +85,7 @@ if(document.getElementById('school-calendar-app')){
             const dom = document.getElementById('app-init-data-holder');
             this.schoolId = dom.dataset.school;
             this.events = JSON.parse(dom.dataset.events);// 校历内容
+            this.tags = JSON.parse(dom.dataset.tags);// 校历内容
         },
         methods:{
             // 点击的时候, 会把点击的日期发过来, 如果是月份, 会发来第一天
