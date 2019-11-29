@@ -54,10 +54,16 @@ class SchoolConfiguration extends Model
      * @param int $term
      * @return Carbon
      */
-    public function getTermStartDate($term){
+    public function getTermStartDate($term = null){
+        $now = now();
+        if(!$term){
+            $term = $now->month > 6 ? 2 : 1;
+        }
         $fieldName = 'first_day_term_'.$term;
-        return $this->$fieldName;
+        return $this->$fieldName->setYear($now->year);
     }
+
+
 
     /**
      * 获取指定的起始日期. 注意, 返回的 Carbon 对象, 只能使用月份和日期, 不能使用年

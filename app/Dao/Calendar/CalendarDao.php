@@ -25,7 +25,13 @@ class CalendarDao
      */
     public function updateCalendarEvent($data)
     {
-        return SchoolCalendar::where('id', $data['id'])->update($data);
+        $event = SchoolCalendar::find($data['id']);
+        if($event){
+            $event->tag = $data['tag'];
+            $event->content = $data['content'];
+            $event->event_time = $data['event_time'];
+            return $event->save();
+        }
     }
 
     /**

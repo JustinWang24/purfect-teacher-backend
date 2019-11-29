@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Operator\Calendar;
 
 use App\Dao\Calendar\CalendarDao;
+use App\Dao\Schools\SchoolDao;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Calendar\CalendarRequest;
 use App\Utils\FlashMessageBuilder;
@@ -19,7 +20,7 @@ class IndexController extends Controller
     /**
      * 校历事件保存
      * @param CalendarRequest $request
-     * @return \Illuminate\Http\RedirectResponse|void
+     * @return \Illuminate\Http\RedirectResponse|string
      */
     public function save(CalendarRequest $request)
     {
@@ -30,15 +31,21 @@ class IndexController extends Controller
             $result = $dao->updateCalendarEvent($data);
         } else {
             $result = $dao->createCalendarEvent($data);
+            $data['id'] = $result->id;
         }
 
-        if ($request) {
-            FlashMessageBuilder::Push($request, FlashMessageBuilder::SUCCESS,'保存成功');
-        } else {
-            FlashMessageBuilder::Push($request, FlashMessageBuilder::DANGER,'保存失败');
+        if($request->ajax()){
+            return JsonBuilder::Success(['id'=>$data['id']]);
         }
+        else{
+            if ($result) {
+                FlashMessageBuilder::Push($request, FlashMessageBuilder::SUCCESS,'保存成功');
+            } else {
+                FlashMessageBuilder::Push($request, FlashMessageBuilder::DANGER,'保存失败');
+            }
 
-        return redirect()->route('school_manger.school.calendar.index');
+            return redirect()->route('school_manger.school.calendar.index');
+        }
     }
 
     /**
@@ -48,13 +55,16 @@ class IndexController extends Controller
      */
     public function index(CalendarRequest $request)
     {
+        $this->dataForView['pageTitle'] = '校历管理';
         $schoolId = $request->getSchoolId();
 
         $dao = new CalendarDao;
+        $school = (new SchoolDao())->getSchoolById($request->getSchoolId());
 
         $data = $dao->getCalendarEvent($schoolId);
-
-        $this->dataForView['data'] = $data;
+        $this->dataForView['events'] = $data;
+        $this->dataForView['school'] = $school;
+        $this->dataForView['config'] = $school->configuration;
 
         return view('school_manager.calendar.index', $this->dataForView);
     }
