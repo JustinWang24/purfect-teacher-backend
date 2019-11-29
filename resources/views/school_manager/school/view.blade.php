@@ -6,6 +6,10 @@ use App\Utils\Misc\ConfigurationTool;
 /**
  * @var \App\Models\Schools\SchoolConfiguration $config
  */
+$ecFrom1 = $config->getElectiveCourseAvailableFrom(1); // 第一学期选修课开始选课的时间
+$ecTo1= $config->getElectiveCourseAvailableTo(1); // 第一学期选修课结束选课的时间
+$ecFrom2 = $config->getElectiveCourseAvailableFrom(2); // 第2学期选修课开始选课的时间
+$ecTo2= $config->getElectiveCourseAvailableTo(2); // 第2学期选修课结束选课的时间
 @endphp
 @extends('layouts.app')
 @section('content')
@@ -52,7 +56,65 @@ use App\Utils\Misc\ConfigurationTool;
                                         <option value="0" {{ !$needRegistration ? 'selected':null }}>自习课不需要签到</option>
                                     </select>
                                 </div>
+                                <hr>
+                                <div class="form-group">
+                                    <label>第一学期, 学生可以在以下时间段选择选修课</label>
+                                    <div class="clearfix"></div>
+                                    @php
+                                        $months = range(1,12);
+                                        $days = range(1,31);
+                                    @endphp
+                                    <select class="form-control pull-left mr-2" name="ec1[from][month]" style="width: 20%;">
+                                        @foreach($months as $month)
+                                        <option value="{{ $month }}" {{ $month===$ecFrom1->month ? 'selected':null }}>{{ $month }}月</option>
+                                        @endforeach
+                                    </select>
+                                    <select class="form-control pull-left" name="ec1[from][day]" style="width: 20%;">
+                                        @foreach($days as $day)
+                                            <option value="{{ $day }}" {{ $ecFrom1->day === $day ? 'selected':null }}>{{ $day }}日</option>
+                                        @endforeach
+                                    </select>
+<p class="pull-left m-2"> - </p>
+                                    <select class="form-control pull-left mr-2" name="ec1[to][month]" style="width: 20%;">
+                                        @foreach($months as $month)
+                                            <option value="{{ $month }}" {{ $month===$ecTo1->month ? 'selected':null }}>{{ $month }}月</option>
+                                        @endforeach
+                                    </select>
+                                    <select class="form-control pull-left" name="ec1[to][day]" style="width: 20%;">
+                                        @foreach($days as $day)
+                                            <option value="{{ $day }}" {{ $ecTo1->day === $day ? 'selected':null }}>{{ $day }}日</option>
+                                        @endforeach
+                                    </select>
+                                </div>
 
+<div class="clearfix"></div>
+                                <div class="form-group mt-4">
+                                    <label>第二学期, 学生可以在一下时间段选择选修课</label>
+                                    <div class="clearfix"></div>
+                                    <select class="form-control pull-left mr-2" name="ec2[from][month]" style="width: 20%;">
+                                        @foreach($months as $month)
+                                            <option value="{{ $month }}" {{ $month===$ecFrom2->month ? 'selected':null }}>{{ $month }}月</option>
+                                        @endforeach
+                                    </select>
+                                    <select class="form-control pull-left" name="ec2[from][day]" style="width: 20%;">
+                                        @foreach($days as $day)
+                                            <option value="{{ $day }}" {{ $ecFrom2->day === $day ? 'selected':null }}>{{ $day }}日</option>
+                                        @endforeach
+                                    </select>
+                                    <p class="pull-left m-2"> - </p>
+                                    <select class="form-control pull-left mr-2" name="ec2[to][month]" style="width: 20%;">
+                                        @foreach($months as $month)
+                                            <option value="{{ $month }}" {{ $month===$ecTo2->month ? 'selected':null }}>{{ $month }}月</option>
+                                        @endforeach
+                                    </select>
+                                    <select class="form-control pull-left" name="ec2[to][day]" style="width: 20%;">
+                                        @foreach($days as $day)
+                                            <option value="{{ $day }}" {{ $ecTo2->day === $day ? 'selected':null }}>{{ $day }}日</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+<div class="clearfix"></div>
+                                <hr>
                                 <?php
                                 Button::Print(['id'=>'btn-save-school-config','text'=>trans('general.submit')], Button::TYPE_PRIMARY);
                                 ?>&nbsp;
