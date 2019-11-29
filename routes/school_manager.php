@@ -20,6 +20,10 @@ Route::prefix('school_manager')->group(function () {
         ->name('school_manager.organizations.load'); // 加载 单个 学校的组织架构
     Route::post('organizations/delete', 'SchoolsController@delete_organization')
         ->name('school_manager.organizations.delete'); // 加载 单个 学校的组织架构
+    Route::post('organizations/add-member', 'SchoolsController@add_member')
+        ->name('school_manager.organizations.add-member'); // 给机构添加成员
+    Route::post('organizations/remove-member', 'SchoolsController@remove_member')
+        ->name('school_manager.organizations.remove-member'); // 删除
 
     // 校区的管理
     Route::get('campus/add', 'CampusController@add')->name('school_manager.campus.add');                        // 添加校区

@@ -3,6 +3,7 @@
 namespace App\Models\Schools;
 
 use App\Models\School;
+use App\Models\Users\UserOrganization;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\View;
 
@@ -18,6 +19,15 @@ class Organization extends Model
         'description',
         'address',
     ];
+
+    /**
+     * 部门的成员
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function members(){
+        return $this->hasMany(UserOrganization::class)
+            ->orderBy('title_id','asc');
+    }
 
     public function school(){
         return $this->belongsTo(School::class);
