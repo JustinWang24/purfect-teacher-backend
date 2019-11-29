@@ -15,28 +15,33 @@ use App\Utils\UI\Button;
                 </div>
                 <div class="card-body">
                     <el-form ref="form" :model="form" label-width="80px">
-                        <el-form-item label="活动日期">
-                            <el-input v-model="form.event_time"></el-input>
-                        </el-form-item>
-                        <el-form-item label="活动区域">
-                            <el-select
-                                    v-model="form.tag"
-                                    multiple
-                                    filterable
-                                    allow-create
-                                    default-first-option
-                                    placeholder="请选择文章标签">
-                                <el-option
-                                        v-for="item in tags"
-                                        :key="item.value"
-                                        :label="item.label"
-                                        :value="item.value">
-                                </el-option>
-                            </el-select>
-                        </el-form-item>
-                        <el-form-item label="活动形式">
-                            <el-input type="textarea" v-model="form.content"></el-input>
-                        </el-form-item>
+                        <label for="">活动日期</label>
+                        <el-input v-model="form.event_time"></el-input>
+                        <br>
+                        <br>
+                        <label for="">事件标签</label><br>
+                        <el-select
+                                v-model="form.tag"
+                                style="width: 100%;"
+                                multiple
+                                filterable
+                                allow-create
+                                default-first-option
+                                placeholder="请选择文章标签">
+                            <el-option
+                                    v-for="(item, id) in tags"
+                                    :key="id"
+                                    :label="item"
+                                    :value="item">
+                            </el-option>
+                        </el-select>
+                        <br>
+                        <br>
+                        <label for="">活动形式</label>
+                        <br>
+                        <el-input type="textarea" v-model="form.content"></el-input>
+                        <br>
+                        <br>
                         <el-form-item>
                             <el-button type="primary" @click="onSubmit">保 存</el-button>
                             <el-button >取 消</el-button>
@@ -80,5 +85,6 @@ use App\Utils\UI\Button;
     <div id="app-init-data-holder"
          data-school="{{ session('school.id') }}"
          data-events='{!! $events->toJson() !!}'
+         data-tags='{!! json_encode($tags) !!}'
     ></div>
 @endsection
