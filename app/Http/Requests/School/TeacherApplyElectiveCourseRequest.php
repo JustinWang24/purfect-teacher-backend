@@ -12,7 +12,7 @@ class TeacherApplyElectiveCourseRequest extends MyStandardRequest
             'course.id'             => 'nullable|numeric',
             'course.code'           => ['required',  'max:255'],
             'course.scores'         => ['required',  'numeric'],
-            'course.max_num'        => ['required',  'numeric'],
+            'course.max_num'        => ['required',  'numeric', 'gt:course.open_num'],
             'course.open_num'       => ['required',  'numeric'],
             'course.name'           => ['required',  'max:255'],
             'course.term'           => ['required',  'numeric'],
