@@ -31,6 +31,11 @@ class AppendElectiveCoursesAvailabilityPeriod extends Migration
      */
     public function down()
     {
-        //
+        Schema::table('school_configurations', function(Blueprint $table){
+            $table->dropColumn('apply_elective_course_from_1');
+            $table->dropColumn('apply_elective_course_to_1');
+            $table->dropColumn('apply_elective_course_from_2');
+            $table->dropColumn('apply_elective_course_to_2');
+        });
     }
 }

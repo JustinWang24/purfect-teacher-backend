@@ -26,6 +26,14 @@ class SchoolRequest extends MyStandardRequest
      * @return array
      */
     public function getElectiveCourseAvailableTerm($term){
-        return $this->get('ec'.$term);
+        return $this->get('ec'.$term,null);
+    }
+
+    /**
+     * 获取指定学期的起始日期
+     * @return array
+     */
+    public function getTermStart(){
+        return $this->get('term_start',null);
     }
 }
