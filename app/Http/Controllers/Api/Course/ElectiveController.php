@@ -9,6 +9,7 @@ use App\Dao\Schools\DepartmentDao;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Course\ElectiveRequest;
 use App\Dao\Users\GradeUserDao;
+use App\Models\ElectiveCourses\CourseElective;
 use App\Utils\JsonBuilder;
 use App\Utils\ReturnData\MessageBag;
 use Illuminate\Http\Request;
@@ -38,10 +39,18 @@ class ElectiveController extends Controller
         foreach ($major->courseMajors as $key => $courseMajor) {
             $course       = $courseMajor->course;
 
-            $elective     = $course->courseElective()->get();
-            $elective     = $elective[0];
+            $elective     = $course->courseElective()->first();
+            $currentTime  = time();
+            //报名已满和不在允许的报名时段内不展示
+            if ($elective->status == CourseElective::STATUS_ISFULL ||
+                (!empty($elective->expired_at) && $currentTime > $elective->expired_at) ||
+                (!empty($elective->expired_at) && $currentTime < $elective->enrol_start_at))
+            {
+                continue;
+            }
 
-            $studentCount = $course->studentEnrolledOptionalCourse->count(); // 学生报名数量
+            $electiveDao = new TeacherApplyElectiveCourseDao();
+            $studentCount = $electiveDao->getEnrolledTotalForCourses($course->id); // 学生报名数量
 
             $arrangements = $course->courseArrangements;
 

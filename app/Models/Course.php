@@ -14,6 +14,11 @@ use Illuminate\Support\Facades\DB;
 
 class Course extends Model
 {
+    const OBLIGATORY_COURSE = 0; //必修课
+    const ELECTIVE_COURSE   = 1; //选修课
+    const FIRST_TERM        = 1; //第一学期
+    const SECOND_TERM       = 2; //第二学期
+
     use SoftDeletes;
     protected $fillable = [
         'code','name','uuid',
@@ -52,10 +57,6 @@ class Course extends Model
         return $this->hasOne(CourseElective::class);
     }
 
-    public function studentEnrolledOptionalCourse()
-    {
-        return $this->hasMany(StudentEnrolledOptionalCourse::class);
-    }
 
     /**
      * 本课程的课程安排
