@@ -47,7 +47,11 @@ class SchoolsController extends Controller
         $school = $dao->getSchoolByUuid($request->uuid());
         // 要比较学校中每个系的相同的配置项目, 如果学校的要求高于系的要求, 那么就要覆盖系的. 如果低于系的要求, 那么就保留
         if($school){
-            $dao->updateConfiguration($request->getConfiguration(), $school);
+            $dao->updateConfiguration(
+                $request->getConfiguration(),
+                $request->getElectiveCourseAvailableTerm(1),
+                $request->getElectiveCourseAvailableTerm(2),
+                $school);
             FlashMessageBuilder::Push($request, 'success','配置已更新');
         }
         else{

@@ -5,6 +5,7 @@ use App\Models\Schools\Organization;
 use App\Models\Schools\SchoolConfiguration;
 use App\User;
 use App\Models\School;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Ramsey\Uuid\Uuid;
 use App\Models\Schools\Campus;
@@ -127,12 +128,20 @@ class SchoolDao
     /**
      * 更新学校的配置信息. 如果配置信息不存在, 则创建它
      * @param $configuration
+     * @param array $ec1
+     * @param array $ec2
      * @param School|int $school
      * @return mixed
      */
-    public function updateConfiguration($configuration, $school){
-        if($school->configuration)
+    public function updateConfiguration($configuration, $ec1, $ec2, $school){
+        $configuration['apply_elective_course_from_1'] = SchoolConfiguration::CreateMockEcDate($ec1,'from');
+        $configuration['apply_elective_course_to_1'] = SchoolConfiguration::CreateMockEcDate($ec1,'to');
+        $configuration['apply_elective_course_from_2'] = SchoolConfiguration::CreateMockEcDate($ec2,'from');
+        $configuration['apply_elective_course_to_2'] = SchoolConfiguration::CreateMockEcDate($ec2,'to');
+
+        if(isset($school->configuration->id)){
             return SchoolConfiguration::where('school_id',$school->id ?? $school)->update($configuration);
+        }
         else{
             $configuration['school_id'] = $school->id ?? $school;
             return SchoolConfiguration::create($configuration);
