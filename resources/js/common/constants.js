@@ -116,6 +116,14 @@ export const Constants = {
         },
         CALENDAR: {
             SAVE: '/school_manager/calendar/save',
+        },
+        ORGANIZATION: {
+            LOAD_PARENTS: '/school_manager/organizations/load-parent',
+            SAVE: '/school_manager/organizations/save',
+            LOAD: '/school_manager/organizations/load',
+            DELETE: '/school_manager/organizations/delete',
+            ADD_TO_ORG: '/school_manager/organizations/add-member',
+            DELETE_FROM_ORG: '/school_manager/organizations/remove-member',
         }
     },
     YEARS: ['N.A','一年级','二年级','三年级','四年级','五年级','六年级'],
