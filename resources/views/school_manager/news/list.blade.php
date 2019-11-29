@@ -5,7 +5,7 @@
             <div class="card">
                 <div class="card-head">
                     <header>
-                        {{ session('school.name') }} - 校园动态 &nbsp;
+                        校园动态 &nbsp;
                         <button class="btn btn-primary btn-sm" v-on:click="addNew"><i class="fa fa-plus"></i>添加动态</button>
                     </header>
                 </div>
@@ -42,7 +42,11 @@
             <div class="card">
                 <div class="card-head">
                     <header>
-                        @{{ newsForm.title }} <i class="el-icon-loading" v-show="loading"></i>
+                        <span v-if="newsForm.title">
+                            @{{ newsForm.title }}
+                        </span>
+                        <span v-if="newsFormFlag && !newsForm.title">新动态</span>
+                        <i class="el-icon-loading" v-show="loading"></i>
                     </header>
                 </div>
                 <div class="card-body">
@@ -91,6 +95,21 @@
                     </div>
                     <div class="clearfix"></div>
                     <div class="existed-section-wrapper">
+                        <el-card class="box-card mt-4" v-for="(section, idx) in sections" :key="idx">
+                            <div slot="header" class="clearfix">
+                                <el-button v-on:click="moveUp(section)" v-if="idx > 0" style="float: left; padding: 3px 0" type="text">
+                                    向上 <i class="el-icon-top"></i>
+                                </el-button>
+                                <el-button v-on:click="moveDown(section)" v-if="idx < sections.length - 1" style="float: left; padding: 3px 0" type="text">
+                                    向下 <i class="el-icon-bottom"></i>
+                                </el-button>
+                                <el-button v-on:click="deleteSection(section)" style="float: right; padding: 3px 0;color: red;" type="text">删除</el-button>
+                            </div>
+                            <span v-if="section.media_id">
+                                <img :src="section.content" style="max-width: 360px;">
+                            </span>
+                            <span v-else>@{{ section.content }}</span>
+                        </el-card>
                     </div>
                 </div>
             </div>

@@ -17,6 +17,6 @@ class News extends Model
     ];
 
     public function sections(){
-        return $this->hasMany(NewsSection::class);
+        return $this->hasMany(NewsSection::class)->orderBy('position','asc');
     }
 }
