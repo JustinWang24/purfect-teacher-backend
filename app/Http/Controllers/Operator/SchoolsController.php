@@ -9,10 +9,12 @@ use App\Dao\Schools\OrganizationDao;
 use App\Dao\Schools\RoomDao;
 use App\Dao\Users\GradeUserDao;
 use App\Dao\Users\UserDao;
+use App\Dao\Users\UserOrganizationDao;
 use App\Http\Requests\SchoolRequest;
 use App\Http\Controllers\Controller;
 use App\Dao\Schools\SchoolDao;
 use App\Models\Acl\Role;
+use App\Models\School;
 use App\Utils\FlashMessageBuilder;
 use App\Dao\Schools\InstituteDao;
 use App\Utils\JsonBuilder;
@@ -164,7 +166,7 @@ class SchoolsController extends Controller
         $id = $request->get('organization_id');
         $dao = new OrganizationDao();
         $org = $dao->getById($id);
-        return JsonBuilder::Success(['organization'=>$org]);
+        return JsonBuilder::Success(['organization'=>$org,'members'=>$org->members]);
     }
 
     /**
@@ -177,5 +179,50 @@ class SchoolsController extends Controller
         $dao = new OrganizationDao();
         $dao->deleteOrganization($id);
         return JsonBuilder::Success();
+    }
+
+    /**
+     * 保存机构成员
+     * @param SchoolRequest $request
+     * @return string
+     */
+    public function add_member(SchoolRequest $request){
+        $dao = new UserOrganizationDao();
+        $member = $request->get('member');
+        if(empty($member['id'])){
+            $result = $dao->create($member);
+            if($result){
+                return JsonBuilder::Success(['id'=>$result->id]);
+            }
+            else{
+                return JsonBuilder::Error();
+            }
+        }
+        else{
+            // 更新
+            $id = $member['id'];
+            unset($member['id']);
+            $result = $dao->update($id, $member);
+            if($result){
+                return JsonBuilder::Success(['id'=>$id]);
+            }
+            else{
+                return JsonBuilder::Error();
+            }
+        }
+    }
+
+    /**
+     * @param SchoolRequest $request
+     * @return string
+     */
+    public function remove_member(SchoolRequest $request){
+        $dao = new UserOrganizationDao();
+        if($dao->delete($request->get('id'))){
+            return JsonBuilder::Success();
+        }
+        else{
+            return JsonBuilder::Error();
+        }
     }
 }
