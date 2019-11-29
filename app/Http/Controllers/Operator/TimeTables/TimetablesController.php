@@ -33,6 +33,7 @@ class TimetablesController extends Controller
         $this->dataForView['pageTitle'] = $school->name . ' 上课时间段管理';
         $this->dataForView['needManagerNav'] = false;
         $this->dataForView['school'] = $school;
+        $this->dataForView['config'] = $school->configuration;
         $this->dataForView['app_name'] = 'time_slots_app';
         return view('school_manager.timetable.manager', $this->dataForView);
     }
