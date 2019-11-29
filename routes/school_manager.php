@@ -292,6 +292,15 @@ Route::prefix('school_manager')->group(function () {
             ->name('school_manager.contents.news.load');
         Route::post('news/save-section','Contents\NewsController@save_section')
             ->name('school_manager.contents.news.save-section');
+
+        Route::post('news/delete-section','Contents\NewsController@delete_section')
+            ->name('school_manager.contents.news.delete-section');
+
+        Route::post('news/move-up-section','Contents\NewsController@move_up_section')
+            ->name('school_manager.contents.news.move-up-section');
+
+        Route::post('news/move-down-section','Contents\NewsController@move_down_section')
+            ->name('school_manager.contents.news.move-down-section');
     });
 
     // banner 展示

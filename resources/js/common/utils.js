@@ -37,6 +37,17 @@ export const Util = {
         });
         return result;
     },
+    /**
+     * 数组换位
+     * @param arr
+     * @param index1
+     * @param index2
+     * @returns {*}
+     */
+    swapArray: function (arr, index1, index2) {
+        arr[index1] = arr.splice(index2, 1, arr[index1])[0];
+        return arr;
+    },
     GetItemIndexByUuid: function (uuid, obj) {
         let result = null;
         _.each(obj, (item, idx) => {

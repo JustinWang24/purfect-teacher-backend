@@ -37,7 +37,7 @@ use App\Utils\UI\Button;
                         </el-select>
                         <br>
                         <br>
-                        <label for="">活动形式</label>
+                        <label for="">时间内容</label>
                         <br>
                         <el-input type="textarea" v-model="form.content"></el-input>
                         <br>
