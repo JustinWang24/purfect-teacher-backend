@@ -20,6 +20,8 @@ class SchoolConfiguration extends Model
         'apply_elective_course_to_1',
         'apply_elective_course_from_2',
         'apply_elective_course_to_2',
+        'first_day_term_1',
+        'first_day_term_2',
     ];
 
     public $casts = [
@@ -28,6 +30,8 @@ class SchoolConfiguration extends Model
         'apply_elective_course_to_1'=>'datetime',
         'apply_elective_course_from_2'=>'datetime',
         'apply_elective_course_to_2'=>'datetime',
+        'first_day_term_1'=>'datetime',
+        'first_day_term_2'=>'datetime',
     ];
 
     /**
@@ -43,6 +47,16 @@ class SchoolConfiguration extends Model
             'school_id'=>$school->id ?? $school
         ];
         return self::create($data);
+    }
+
+    /**
+     * 获取指定的学期的当年的起始日期
+     * @param int $term
+     * @return Carbon
+     */
+    public function getTermStartDate($term){
+        $fieldName = 'first_day_term_'.$term;
+        return $this->$fieldName;
     }
 
     /**

@@ -2,10 +2,11 @@
 use App\Utils\UI\Anchor;
 use App\Utils\UI\Button;
 @endphp
+
 @extends('layouts.app')
 @section('content')
-    <div class="row">
-        <div class="col-sm-12 col-md-6 col-lg-5 col-xl-5">
+    <div class="row" id="school-calendar-app">
+        <div class="col-sm-12 col-md-4 col-lg-4 col-xl-4">
             <div class="card">
                 <div class="card-head">
                     <header>
@@ -27,7 +28,7 @@ use App\Utils\UI\Button;
                             </div>
                             <div class="form-group">
                                 <label for="calendar-time-input">事件时间</label>
-                                <input required type="text" class="form-control" id="" name="event[event_time]" placeholder="事件的执行时间" value="">
+                                <input required type="date" class="form-control" id="" name="event[event_time]" placeholder="事件的执行时间" value="">
                             </div>
                         </div>
                         <?php
@@ -38,14 +39,23 @@ use App\Utils\UI\Button;
             </div>
         </div>
 
-        <div class="col-sm-12 col-md-6 col-lg-5 col-xl-6">
+        <div class="col-sm-12 col-md-8 col-lg-8 col-xl-8">
             <div class="card">
                 <div class="card-head">
                     <header>{{ session('school.name') }} 校历</header>
                 </div>
                 <div class="card-body">
                     <div class="row">
-
+                        <el-calendar v-on:input="dateClicked">
+                            <!-- 这里使用的是 2.5 slot 语法，对于新项目请使用 2.6 slot 语法-->
+                            <template
+                                    slot="dateCell"
+                                    slot-scope="{date, data}">
+                                <p :class="data.isSelected ? 'is-selected' : ''">
+                                    @{{ data.day.split('-').slice(1).join('-') }} @{{ data.isSelected ? '✔️' : ''}}
+                                </p>
+                            </template>
+                        </el-calendar>
                     </div>
                 </div>
             </div>

@@ -127,17 +127,25 @@ class SchoolDao
 
     /**
      * 更新学校的配置信息. 如果配置信息不存在, 则创建它
+     * @param School|int $school
      * @param $configuration
      * @param array $ec1
      * @param array $ec2
-     * @param School|int $school
+     * @param array $termStartDates
      * @return mixed
      */
-    public function updateConfiguration($configuration, $ec1, $ec2, $school){
-        $configuration['apply_elective_course_from_1'] = SchoolConfiguration::CreateMockEcDate($ec1,'from');
-        $configuration['apply_elective_course_to_1'] = SchoolConfiguration::CreateMockEcDate($ec1,'to');
-        $configuration['apply_elective_course_from_2'] = SchoolConfiguration::CreateMockEcDate($ec2,'from');
-        $configuration['apply_elective_course_to_2'] = SchoolConfiguration::CreateMockEcDate($ec2,'to');
+    public function updateConfiguration( $school, $configuration, $ec1 = null, $ec2 = null, $termStartDates){
+        if($ec1 && $ec2){
+            $configuration['apply_elective_course_from_1'] = SchoolConfiguration::CreateMockEcDate($ec1,'from');
+            $configuration['apply_elective_course_to_1'] = SchoolConfiguration::CreateMockEcDate($ec1,'to');
+            $configuration['apply_elective_course_from_2'] = SchoolConfiguration::CreateMockEcDate($ec2,'from');
+            $configuration['apply_elective_course_to_2'] = SchoolConfiguration::CreateMockEcDate($ec2,'to');
+        }
+
+        if($termStartDates){
+            $configuration['first_day_term_1'] = SchoolConfiguration::CreateMockEcDate($termStartDates,'term1');
+            $configuration['first_day_term_2'] = SchoolConfiguration::CreateMockEcDate($termStartDates,'term2');
+        }
 
         if(isset($school->configuration->id)){
             return SchoolConfiguration::where('school_id',$school->id ?? $school)->update($configuration);
