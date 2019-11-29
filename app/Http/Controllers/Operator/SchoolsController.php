@@ -48,14 +48,20 @@ class SchoolsController extends Controller
         // 要比较学校中每个系的相同的配置项目, 如果学校的要求高于系的要求, 那么就要覆盖系的. 如果低于系的要求, 那么就保留
         if($school){
             $dao->updateConfiguration(
+                $school,
                 $request->getConfiguration(),
                 $request->getElectiveCourseAvailableTerm(1),
                 $request->getElectiveCourseAvailableTerm(2),
-                $school);
+                $request->getTermStart()
+            );
             FlashMessageBuilder::Push($request, 'success','配置已更新');
         }
         else{
             FlashMessageBuilder::Push($request, 'danger','无法获取学校数据');
+        }
+
+        if($request->get('redirectTo',null)){
+            return redirect($request->get('redirectTo',null));
         }
         return redirect()->route('school_manager.school.view');
     }

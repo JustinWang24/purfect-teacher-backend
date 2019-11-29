@@ -7,6 +7,7 @@
 require('./bootstrap');
 
 window.Vue = require('vue');
+window.moment = require('moment');
 
 // 引入 Element UI 库
 import ElementUI from 'element-ui';
@@ -49,6 +50,21 @@ import { getEmptyElectiveCourseApplication } from './common/elective_course';
 import { loadTextbooksPaginate, deleteTextbook } from './common/textbook';
 import { loadOrgContacts, loadGradeContacts, loadGrades } from './common/contacts';
 import { saveNews, loadNews, saveSections, deleteNews, publishNews } from './common/news';
+
+/**
+ * 校历应用
+ */
+if(document.getElementById('school-calendar-app')){
+    new Vue({
+        el:'#school-calendar-app',
+        methods:{
+            dateClicked: function(payload){
+                const d = moment(payload);
+                console.log(d);
+            }
+        }
+    });
+}
 
 /**
  * 动态新闻的管理
