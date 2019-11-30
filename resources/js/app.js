@@ -204,20 +204,54 @@ if(document.getElementById('school-news-list-app')){
                     }
                 });
             },
+            editSection: function(section){
+                this.newsFormFlag = false;
+                this.sectionsFormFlag = true;
+                // 判断此段落是什么类型
+                const type = Util.checkArticleSectionType(section);
+                const that = this;
+                const keys = Object.keys(section);
+                keys.forEach(function(key){
+                    that.mediaForm[key] = section[key];
+                });
+
+                switch (type){
+                    case Constants.SECTION_TYPE.TEXT:
+                        // 文字类型
+                        this.textContentWrapFlag = true;
+                        this.mediaContentWrapFlag = false;
+                        break;
+                    case Constants.SECTION_TYPE.IMAGE:
+                        break;
+                    default:
+                        break;
+                }
+            },
             deleteSection: function(section){
-                deleteSection(section.id).then(res => {
-                    if(Util.isAjaxResOk(res)){
-                        const idx = Util.GetItemIndexById(section.id, this.sections);
-                        this.sections.splice(idx, 1);
-                        this.$message({
-                            type:'success',
-                            message:'文章段落删除成功'
-                        });
-                    }
-                    else{
-                        this.$message.error('系统繁忙, 请稍候再试');
-                    }
-                })
+                this.$confirm('此操作将永久删除该段落, 是否继续?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    deleteSection(section.id).then(res => {
+                        if(Util.isAjaxResOk(res)){
+                            const idx = Util.GetItemIndexById(section.id, this.sections);
+                            this.sections.splice(idx, 1);
+                            this.$message({
+                                type:'success',
+                                message:'文章段落删除成功'
+                            });
+                        }
+                        else{
+                            this.$message.error('系统繁忙, 请稍候再试');
+                        }
+                    })
+                }).catch(() => {
+                    this.$message({
+                        type: 'info',
+                        message: '已取消删除'
+                    });
+                });
             },
             // 新闻的 sections 的编辑完毕
             addNew: function(){
@@ -317,15 +351,28 @@ if(document.getElementById('school-news-list-app')){
 
                 saveSections(this.newsForm.id, [this.mediaForm]).then(res => {
                     if(Util.isAjaxResOk(res)){
-                        const media = {};
-                        const keys = Object.keys(this.mediaForm);
-                        let that = this;
-                        keys.forEach(function(key){
-                            media[key] = that.mediaForm[key];
-                        });
-                        media.id = res.data.data.id;
-                        this.sections.push(media);
+                        const that = this;
+                        if(Util.isEmpty(res.data.data.id)){
+                            // 更新
+                            const idx = Util.GetItemIndexById(this.mediaForm.id, this.sections);
+                            const keys = Object.keys(this.mediaForm);
+                            keys.forEach(function(key){
+                                that.sections[idx][key] = that.mediaForm[key];
+                            });
+                        }
+                        else{
+                            // 新增段落的处理
+                            const media = {};
+                            const keys = Object.keys(this.mediaForm);
+                            keys.forEach(function(key){
+                                media[key] = that.mediaForm[key];
+                            });
+                            media.id = res.data.data.id;
+                            this.sections.push(media);
+                        }
+
                         this.resetMediaForm();
+                        this.$message({type:'success',message:'段落保存成功'});
                     }
                     else{
                         this.$message.error(res.data.data.message);
@@ -347,7 +394,7 @@ if(document.getElementById('school-news-list-app')){
                 this.mediaForm.id = '';
                 this.mediaForm.content = '';
                 this.mediaForm.media_id = null;
-                this.mediaForm.position = 1;
+                this.mediaForm.position = '';
                 this.selectedImgUrl = null;
             },
             pickFileHandler: function(payload){

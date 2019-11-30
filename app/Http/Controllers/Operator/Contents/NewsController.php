@@ -12,8 +12,14 @@ use App\Http\Controllers\Controller;
 class NewsController extends Controller
 {
     public function management(Request $request){
-        $this->dataForView['pageTitle'] = '校园动态';
-        $this->dataForView['newsList'] = News::paginate();
+        $this->dataForView['typeText'] = News::TypeText($request->get('type'));
+        $this->dataForView['pageTitle'] = $this->dataForView['typeText'].'管理';
+        $this->dataForView['type'] = $request->get('type');
+        $dao = new NewsDao();
+        $this->dataForView['newsList'] = $dao->paginateByType(
+            $request->get('type'),
+            $request->session()->get('school.id')
+        );
         return view('school_manager.news.list',$this->dataForView);
     }
 
