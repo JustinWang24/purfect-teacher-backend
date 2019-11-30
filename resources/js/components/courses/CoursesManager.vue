@@ -3,53 +3,76 @@
         <div class="courses-list-col">
             <p class="courses-list-title">
                 课程列表 &nbsp;
-                <el-button type="primary" @click="newCourseForm">添加课程</el-button>
+                <el-button icon="el-icon-circle-plus" type="primary" @click="newCourseForm">添加必修课</el-button>
+                <el-button icon="el-icon-circle-plus" type="success" @click="newElectiveCourseForm">添加选修课</el-button>
             </p>
-            <courses-list :courses="courses" @course-delete="onCourseNeedDelete" @course-edit="onCourseNeedEdit" :can-delete="canDelete"></courses-list>
+            <courses-list
+                    :courses="courses"
+                    :time-slots="timeSlots"
+                    v-on:course-view="onCourseNeedView"
+                    v-on:course-delete="onCourseNeedDelete"
+                    v-on:course-edit="onCourseNeedEdit"
+                    v-on:attach-textbook="onCourseAttacheTextbook"
+                    :can-delete="canDelete"
+            ></courses-list>
         </div>
 
-        <el-drawer
-            title="课程登记表"
+        <el-dialog
+            title="必修课程登记表"
             :visible.sync="showCourseFormFlag"
-            direction="rtl"
+            :fullscreen="true"
             custom-class="course-form-drawer"
         >
             <el-form :model="courseModel" :rules="rules" ref="courseModelForm" label-width="100px" class="course-form">
-                <el-form-item label="课程编号" prop="code">
-                    <el-input v-model="courseModel.code" placeholder="必填: 课程编号, 请注意保证课程编号的唯一性"></el-input>
-                </el-form-item>
-                <el-form-item label="课程名称" prop="name">
-                    <el-input v-model="courseModel.name" placeholder="必填: 课程名称"></el-input>
-                </el-form-item>
-                <el-form-item label="学分" prop="scores">
-                    <el-input v-model="courseModel.scores" placeholder="选填: 课程学分"></el-input>
-                </el-form-item>
-                <el-form-item label="适用年级" prop="year">
-                    <el-select v-model="courseModel.year" placeholder="课程针对哪个年级">
-                        <el-option label="1年级" value="1"></el-option>
-                        <el-option label="2年级" value="2"></el-option>
-                        <el-option label="3年级" value="3"></el-option>
-                        <el-option label="4年级" value="4"></el-option>
-                        <el-option label="5年级" value="5"></el-option>
-                        <el-option label="6年级" value="6"></el-option>
-                    </el-select>
-                </el-form-item>
-                <el-form-item label="适用学期" prop="term">
-                    <el-select v-model="courseModel.term" placeholder="课程针对哪个学期">
-                        <el-option label="第一学期" value="1"></el-option>
-                        <el-option label="第二学期" value="2"></el-option>
-                        <el-option label="第三学期" value="3"></el-option>
-                        <el-option label="第四学期" value="4"></el-option>
-                    </el-select>
-                </el-form-item>
-                <el-form-item label="课程类型">
-                    <el-select v-model="courseModel.optional" placeholder="课程类型">
-                        <el-option label="必修课" value="0"></el-option>
-                        <el-option label="选修课" value="1"></el-option>
-                    </el-select>
-                </el-form-item>
+                <el-row>
+                    <el-col :span="8">
+                        <el-form-item label="课程编号" prop="code">
+                            <el-input v-model="courseModel.code" placeholder="必填: 课程编号, 请注意保证课程编号的唯一性"></el-input>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="8">
+                        <el-form-item label="课程名称" prop="name">
+                            <el-input v-model="courseModel.name" placeholder="必填: 课程名称"></el-input>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="8">
+                        <el-form-item label="学分" prop="scores">
+                            <el-input v-model="courseModel.scores" placeholder="选填: 课程学分"></el-input>
+                        </el-form-item>
+                    </el-col>
+                </el-row>
+                <el-row>
+                    <el-col :span="8">
+                        <el-form-item label="适用年级" prop="year">
+                            <el-select v-model="courseModel.year" placeholder="课程针对哪个年级">
+                                <el-option label="1年级" :value="1"></el-option>
+                                <el-option label="2年级" :value="2"></el-option>
+                                <el-option label="3年级" :value="3"></el-option>
+                                <el-option label="4年级" :value="4"></el-option>
+                                <el-option label="5年级" :value="5"></el-option>
+                                <el-option label="6年级" :value="6"></el-option>
+                            </el-select>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="8">
+                        <el-form-item label="适用学期" prop="term">
+                            <el-select v-model="courseModel.term" placeholder="课程针对哪个学期">
+                                <el-option label="第一学期" :value="1"></el-option>
+                                <el-option label="第二学期" :value="2"></el-option>
+                            </el-select>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="8">
+                        <el-form-item label="课程类型">
+                            <el-select v-model="courseModel.optional" placeholder="课程类型">
+                                <el-option label="必修课" value="0"></el-option>
+                            </el-select>
+                        </el-form-item>
+                    </el-col>
+                </el-row>
+
                 <el-form-item label="所属专业" prop="majors">
-                    <el-select v-model="courseModel.majors" multiple placeholder="请选择所属专业" style="width: 100%;">
+                    <el-select v-model="courseModel.majors" multiple placeholder="请选择所属专业. 留空表示对所有的专业都有效" style="width: 100%;">
                         <el-option
                                 v-for="(major, idx) in majors"
                                 :key="idx"
@@ -64,18 +87,21 @@
                                multiple
                                filterable
                                remote
-                               reserve-keyword
+                               :reserve-keyword="false"
                                placeholder="请输入老师姓名"
+                               :default-first-option="false"
                                :remote-method="searchTeachers"
-                               :loading="loading">
+                               :loading="loading"
+                               loading-text="正在查找 ...">
                         <el-option
                                 v-for="(teacher, idx) in teachers"
                                 :key="idx"
                                 :label="teacher.name"
-                                :value="teacher.id">
+                                :value="teacher.name + ' - ID:'+ teacher.id">
                         </el-option>
                     </el-select>
                 </el-form-item>
+
                 <el-form-item label="课程概述">
                     <el-input type="textarea" v-model="courseModel.desc" placeholder="可选"></el-input>
                 </el-form-item>
@@ -84,6 +110,61 @@
                     <el-button @click="showCourseFormFlag = false">取消</el-button>
                 </el-form-item>
             </el-form>
+        </el-dialog>
+
+        <el-dialog
+                title="为课程选择教材"
+                :visible.sync="showChooseTextbookFormFlag"
+                custom-class="course-form-drawer"
+        >
+            <el-form :model="attachForm" ref="attachTextbooksForm">
+                <el-form-item label="所属专业" prop="majors">
+                    <el-select v-model="attachForm.attachedTextbooks" multiple placeholder="请选择教材" style="width: 90%;">
+                        <el-option
+                                v-for="(tb, idx) in textbooks"
+                                :key="idx"
+                                :label="tb.name"
+                                :value="tb.id">
+                        </el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item>
+                    <el-button type="primary" @click="attachTextbookConfirmed">保存</el-button>
+                    <el-button @click="showChooseTextbookFormFlag = false">取消</el-button>
+                </el-form-item>
+            </el-form>
+        </el-dialog>
+
+        <el-dialog
+                title="选修课程登记表"
+                :visible.sync="showElectiveCourseFormFlag"
+                :fullscreen="true"
+                custom-class="course-form-drawer"
+        >
+            <elective-course-form
+                    :course-model="currentElectiveCourse"
+                    :application-id="0"
+                    :total-weeks="totalWeeks"
+                    :time-slots="timeSlots"
+                    :majors="majors"
+                    :as-admin="true"
+                    :school-id="schoolId"
+                    :school-uuid="schoolUuid"
+                    v-on:cancelled="currentElectiveCourseCancelled"
+                    v-on:course-saved-admin="courseSavedByAdminHandler"
+            ></elective-course-form>
+        </el-dialog>
+
+        <el-drawer
+                title="课程表"
+                :visible.sync="showCourseScheduleFlag"
+                direction="rtl"
+                size="50%">
+            <el-table :data="courseSchedule">
+                <el-table-column property="date" label="日期" width="150"></el-table-column>
+                <el-table-column property="name" label="教师" width="120"></el-table-column>
+                <el-table-column property="grade" label="班级信息"></el-table-column>
+            </el-table>
         </el-drawer>
     </div>
 </template>
@@ -91,14 +172,23 @@
 <script>
     import { Constants } from '../../common/constants';
     import { Util } from '../../common/utils';
+    import { getTimeSlots, getCourses, getMajors } from '../../common/timetables';
+    import { searchTeachers } from '../../common/search';
+    import { getEmptyElectiveCourseApplication } from '../../common/elective_course';
+    import { loadTextbooks, attachTextbooksToCourse } from '../../common/textbook';
     import CoursesList from './CoursesList.vue';
+    import ElectiveCourseForm from './ElectiveCourseForm.vue';
     export default {
         name: "CoursesManager",
         components:{
-            CoursesList
+            CoursesList,ElectiveCourseForm
         },
         props: {
             schoolId: {
+                type: String,
+                required: true
+            },
+            schoolUuid: {
                 type: String,
                 required: true
             },
@@ -106,6 +196,10 @@
                 type: Boolean,
                 required: false,
                 default: false
+            },
+            userUuid: {
+                type: String,
+                required: true,
             }
         },
         data(){
@@ -125,7 +219,10 @@
                     optional: '0', // 必修还是选修
                     year: '',
                     term: '', // 学期
-                    desc: '',  // 学期
+                    desc: '',  // 课程描述
+                    timeSlots: [], // 课程上课的时间段
+                    dayIndexes: [], // 课程上课的时间段
+                    weekNumbers: [], // 课程上课的时间段
                 },
                 rules:{
                     code: [
@@ -134,12 +231,6 @@
                     name: [
                         { required: true, message: '请输入课程名称', trigger: 'blur' }
                     ],
-                    // teachers: [
-                    //     { type: 'array', required: true, message: '请至少选择一个任课教师', trigger: 'change' }
-                    // ],
-                    // majors: [
-                    //     { type: 'array', required: true, message: '请至少选择一个所属专业', trigger: 'change' }
-                    // ],
                     year: [
                         { required: true, message: '请选择年级', trigger: 'change' }
                     ],
@@ -152,21 +243,72 @@
                 teachers:[], // 被搜索出的老师
                 loading: false,
                 passedCourseId: null,
+                // 关联教科书
+                textbooks:[], // 教科书
+                showChooseTextbookFormFlag: false,
+                attachForm:{
+                    attachedTextbooks:[],
+                    courseId: null
+                },
+                // 根据课程总结的汇总表
+                showCourseScheduleFlag: false,
+                courseSchedule:[],
+                timeSlots:[],
+                totalWeeks: 20,
+                pageNumber: 0,
+                // 选修课程相关
+                showElectiveCourseFormFlag: false,
+                currentElectiveCourse:{}
             };
         },
         created(){
+            this.courseModel = getEmptyElectiveCourseApplication();
             this._getAllCourses();
             this._getAllMajors();
+            // 获取一个学期会有多少周
+
+            // 获取学校的每天的教学时间段安排
+            // const noTime = true;
+            getTimeSlots(this.schoolId).then(res => {
+                if(Util.isAjaxResOk(res)){
+                    this.timeSlots = res.data.data.time_frame;
+                    this.totalWeeks = res.data.data.total_weeks;
+                }
+            })
         },
         methods: {
+            courseSavedByAdminHandler: function(){
+                this.showElectiveCourseFormFlag = false;
+                window.location.reload();
+            },
             _getAllCourses: function(){
-                axios.post(
-                    Constants.API.LOAD_COURSES_BY_SCHOOL,{school: this.schoolId}
-                ).then(res => {
+                getCourses(this.schoolId, this.pageNumber).then(res => {
                     if(res.data.code === Constants.AJAX_SUCCESS){
                         this.courses = res.data.data.courses;
                     }
                 })
+            },
+            // 课程要关联教科书
+            onCourseAttacheTextbook: function(payload){
+                if(this.textbooks.length === 0){
+                    loadTextbooks(this.schoolId).then(res => {
+                        this.textbooks = res.data.data.textbooks;
+                    })
+                }
+                this.attachForm.attachedTextbooks = [];
+                this.attachForm.courseId = payload.course.id;
+                this.showChooseTextbookFormFlag = true;
+            },
+            attachTextbookConfirmed: function(){
+                attachTextbooksToCourse(this.schoolId, this.attachForm.courseId, this.attachForm.attachedTextbooks)
+                    .then(res => {
+                        if(Util.isAjaxResOk(res)){
+                            // 关联成功
+                            this.showChooseTextbookFormFlag = false;
+                            // 刷新
+                            window.location.reload();
+                        }
+                    })
             },
             onNewCourseCreated: function(payload){
                 this.courses.unshift(payload);
@@ -214,6 +356,10 @@
             onDrawerClosed: function(){
                 this.showCourseFormFlag = false;
             },
+            // 当课程名被点击, 去加载该课程的课程表
+            onCourseNeedView: function(payload){
+                this.showCourseScheduleFlag = true;
+            },
             // 当需要删除的时候
             onCourseNeedDelete: function(payload){
                 this.$confirm('此操作将永久删除该课程, 是否继续?', '提示', {
@@ -247,9 +393,40 @@
                 this.currentEditingCourseIdx = payload.idx;
                 this._resetCourseModule(this.courses[payload.idx]);
             },
-            // Form
+            // 必修课保存
             saveCourse: function(){
-                const isUpdate = this.courseModel.id;
+                if(this.courseModel.code.trim() === ''){
+                    this.$message.error('请输入本课程的编号');
+                    return;
+                }
+                if(this.courseModel.name.trim() === ''){
+                    this.$message.error('请输入本课程的名称');
+                    return;
+                }
+
+                if(Util.isEmpty(this.courseModel.year)){
+                    this.$message.error('请输入本课程适用的年级');
+                    return;
+                }
+
+                if(Util.isEmpty(this.courseModel.term)){
+                    this.$message.error('请输入本课程适用的学期');
+                    return;
+                }
+
+                if(this.courseModel.majors.length === 0){
+                    this.$message.error('请至少选择一个本课程所关联的专业');
+                    return;
+                }
+                if(this.courseModel.teachers.length === 0){
+                    this.$message.error('请至少选择一位本课程的授课老师');
+                    return;
+                }
+
+                if(this.courseModel.desc.trim() === ''){
+                    this.courseModel.desc = this.courseModel.name;
+                }
+
                 axios.post(
                     Constants.API.SAVE_COURSE,{course: this.courseModel, school: this.schoolId}
                 ).then(res => {
@@ -279,9 +456,10 @@
                 if (teacherName !== '') {
                     this.loading = true;
                     // 从服务器获取老师信息
-                    axios.post(
-                        Constants.API.SEARCH_TEACHERS_BY_NAME,
-                        {query: teacherName, school: this.schoolId, majors: this.majors}
+                    searchTeachers(
+                        this.schoolId,
+                        teacherName,
+                        this.courseModel.majors
                     ).then(res => {
                         this.loading = false;
                         if(Util.isAjaxResOk(res) && res.data.data.teachers.length > 0){
@@ -294,9 +472,7 @@
             },
             // 获取所有可能的专业列表
             _getAllMajors: function () {
-                axios.post(
-                    Constants.API.LOAD_MAJORS_BY_SCHOOL, {id: this.schoolId}
-                ).then(res=>{
+                getMajors(this.schoolId, this.pageNumber).then(res=>{
                     if(Util.isAjaxResOk(res) && res.data.data.majors.length > 0){
                         this.majors = res.data.data.majors;
                     }
@@ -309,6 +485,14 @@
                     }
                 })
             },
+
+            // 选修课相关操作
+            newElectiveCourseForm: function(){
+                this.showElectiveCourseFormFlag = true;
+            },
+            currentElectiveCourseCancelled: function(payload){
+                this.showElectiveCourseFormFlag = false;
+            }
         }
     }
 </script>

@@ -31,7 +31,7 @@ class CampusTest extends BasicPageTestCase
         $response->assertSee('class="employees-counter"');
         $response->assertSee('class="students-counter"');
         $response->assertSee('btn-edit-campus'); // 编辑校园的按钮
-    }
+}
 
     /**
      * 测试在添加学校的页面上, 完整的表单

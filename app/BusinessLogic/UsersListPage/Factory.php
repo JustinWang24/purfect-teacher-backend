@@ -11,6 +11,7 @@ namespace App\BusinessLogic\UsersListPage;
 
 use App\BusinessLogic\UsersListPage\Contracts\IUsersListPageLogic;
 use App\BusinessLogic\UsersListPage\Impl\RegisteredStudentsListLogic;
+use App\BusinessLogic\UsersListPage\Impl\TeachersListLogic;
 use App\User;
 use Illuminate\Http\Request;
 
@@ -26,6 +27,9 @@ class Factory
         switch ($type){
             case User::TYPE_STUDENT:
                 $instance = new RegisteredStudentsListLogic($request);
+                break;
+            case User::TYPE_EMPLOYEE:
+                $instance = new TeachersListLogic($request);
                 break;
             default:
                 break;

@@ -28,9 +28,10 @@
                     :timetable="timetable"
                     :time-slots="timeSlots"
                     :sub-title="subTitle"
+                    :week-type="weekType"
+                    :as-manager="{{ Auth::user()->isSchoolAdminOrAbove() ? 'true' : 'false' }}"
                     v-on:create-new-by-click="createNewByClickHandler"
                     v-on:edit-unit-by-click="editUnitByClickHandler"
-                    v-on:clone-action-success="refreshTimetableHandler"
                     v-on:timetable-refresh="refreshTimetableHandler"
                 ></timetable-previewer>
             </div>

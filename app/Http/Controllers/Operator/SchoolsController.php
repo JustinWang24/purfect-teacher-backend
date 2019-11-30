@@ -2,10 +2,22 @@
 
 namespace App\Http\Controllers\Operator;
 
+use App\Dao\Schools\DepartmentDao;
+use App\Dao\Schools\GradeDao;
+use App\Dao\Schools\MajorDao;
+use App\Dao\Schools\OrganizationDao;
+use App\Dao\Schools\RoomDao;
+use App\Dao\Users\GradeUserDao;
+use App\Dao\Users\UserDao;
+use App\Dao\Users\UserOrganizationDao;
 use App\Http\Requests\SchoolRequest;
 use App\Http\Controllers\Controller;
 use App\Dao\Schools\SchoolDao;
+use App\Models\Acl\Role;
 use App\Models\School;
+use App\Utils\FlashMessageBuilder;
+use App\Dao\Schools\InstituteDao;
+use App\Utils\JsonBuilder;
 
 class SchoolsController extends Controller
 {
@@ -25,5 +37,192 @@ class SchoolsController extends Controller
         $school = $dao->getSchoolByUuid($request->uuid());
         $school->savedInSession($request);
         return redirect()->route('school_manager.school.view');
+    }
+
+    /**
+     * 更新学校的配置信息
+     * @param SchoolRequest $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function config_update(SchoolRequest $request){
+        $dao = new SchoolDao($request->user());
+        $school = $dao->getSchoolByUuid($request->uuid());
+        // 要比较学校中每个系的相同的配置项目, 如果学校的要求高于系的要求, 那么就要覆盖系的. 如果低于系的要求, 那么就保留
+        if($school){
+            $dao->updateConfiguration(
+                $school,
+                $request->getConfiguration(),
+                $request->getElectiveCourseAvailableTerm(1),
+                $request->getElectiveCourseAvailableTerm(2),
+                $request->getTermStart()
+            );
+            FlashMessageBuilder::Push($request, 'success','配置已更新');
+        }
+        else{
+            FlashMessageBuilder::Push($request, 'danger','无法获取学校数据');
+        }
+
+        if($request->get('redirectTo',null)){
+            return redirect($request->get('redirectTo',null));
+        }
+        return redirect()->route('school_manager.school.view');
+    }
+
+    public function institutes(SchoolRequest $request){
+        $instituteDao = new InstituteDao($request->user());
+        $this->dataForView['institutes'] = $instituteDao->getBySchool(session('school.id'));
+        return view('school_manager.school.institutes', $this->dataForView);
+    }
+
+    public function departments(SchoolRequest $request){
+        $dao = new DepartmentDao($request->user());
+        $this->dataForView['departments'] = $dao->getBySchool(session('school.id'));
+        return view('school_manager.school.departments', $this->dataForView);
+    }
+
+    public function majors(SchoolRequest $request){
+        $dao = new MajorDao($request->user());
+        $this->dataForView['majors'] = $dao->getBySchool(session('school.id'));
+        return view('school_manager.school.majors', $this->dataForView);
+    }
+
+    public function grades(SchoolRequest $request){
+        $dao = new GradeDao($request->user());
+        $this->dataForView['grades'] = $dao->getBySchool(session('school.id'));
+        return view('school_manager.school.grades', $this->dataForView);
+    }
+
+    public function teachers(SchoolRequest $request){
+        $dao = new GradeUserDao($request->user());
+        $this->dataForView['employees'] = $dao->getBySchool(session('school.id'), Role::GetTeacherUserTypes());
+        return view('teacher.users.teachers', $this->dataForView);
+    }
+
+    public function students(SchoolRequest $request){
+        $dao = new GradeUserDao($request->user());
+        $this->dataForView['students'] = $dao->getBySchool(session('school.id'),Role::GetStudentUserTypes());
+        return view('teacher.users.students', $this->dataForView);
+    }
+
+    public function rooms(SchoolRequest $request){
+        $dao = new RoomDao($request->user());
+        $this->dataForView['rooms'] = $dao->getRoomsPaginate([['school_id','=',session('school.id')]]);
+        return view('school_manager.school.rooms', $this->dataForView);
+    }
+
+    /**
+     * 加载学校的组织机构
+     * @param SchoolRequest $request
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function organization(SchoolRequest $request){
+        $this->dataForView['pageTitle'] = '组织架构';
+        $dao = new OrganizationDao();
+        $this->dataForView['root'] = $dao->getRoot($request->getSchoolId());
+        $this->dataForView['level'] = $dao->getTotalLevel($request->getSchoolId());
+        return view('school_manager.school.organization', $this->dataForView);
+    }
+
+    /**
+     * @param SchoolRequest $request
+     * @return string
+     */
+    public function load_parent(SchoolRequest $request){
+        $level = intval($request->get('level')) - 1;
+        $orgs = [];
+        if($level > 0){
+            $dao = new OrganizationDao();
+            $orgs = $dao->loadByLevel($level, $request->getSchoolId());
+        }
+        return JsonBuilder::Success(['parents'=>$orgs]);
+    }
+
+    /**
+     * 保存组织结构
+     * @param SchoolRequest $request
+     * @return string
+     */
+    public function save_organization(SchoolRequest $request){
+        $form = $request->get('form');
+        $form['school_id'] = $request->getSchoolId();
+        $dao = new OrganizationDao();
+        if(isset($form['id']) && !empty($form['id'])){
+            $id = $form['id'];
+            unset($form['id']);
+            $org = $dao->update($form, $id);
+        }
+        else{
+            $org = $dao->create($form);
+        }
+        return JsonBuilder::Success(['org'=>$org]);
+    }
+
+    /**
+     * 保存组织结构
+     * @param SchoolRequest $request
+     * @return string
+     */
+    public function load_organization(SchoolRequest $request){
+        $id = $request->get('organization_id');
+        $dao = new OrganizationDao();
+        $org = $dao->getById($id);
+        return JsonBuilder::Success(['organization'=>$org,'members'=>$org->members]);
+    }
+
+    /**
+     * 删除组织结构
+     * @param SchoolRequest $request
+     * @return string
+     */
+    public function delete_organization(SchoolRequest $request){
+        $id = $request->get('organization_id');
+        $dao = new OrganizationDao();
+        $dao->deleteOrganization($id);
+        return JsonBuilder::Success();
+    }
+
+    /**
+     * 保存机构成员
+     * @param SchoolRequest $request
+     * @return string
+     */
+    public function add_member(SchoolRequest $request){
+        $dao = new UserOrganizationDao();
+        $member = $request->get('member');
+        if(empty($member['id'])){
+            $result = $dao->create($member);
+            if($result){
+                return JsonBuilder::Success(['id'=>$result->id]);
+            }
+            else{
+                return JsonBuilder::Error();
+            }
+        }
+        else{
+            // 更新
+            $id = $member['id'];
+            unset($member['id']);
+            $result = $dao->update($id, $member);
+            if($result){
+                return JsonBuilder::Success(['id'=>$id]);
+            }
+            else{
+                return JsonBuilder::Error();
+            }
+        }
+    }
+
+    /**
+     * @param SchoolRequest $request
+     * @return string
+     */
+    public function remove_member(SchoolRequest $request){
+        $dao = new UserOrganizationDao();
+        if($dao->delete($request->get('id'))){
+            return JsonBuilder::Success();
+        }
+        else{
+            return JsonBuilder::Error();
+        }
     }
 }

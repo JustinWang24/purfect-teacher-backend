@@ -2,15 +2,25 @@
 
 namespace App\Models\Schools;
 
+use App\Models\Acl\Role;
 use App\Models\School;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Users\GradeUser;
-use App\User;
+use App\Utils\Misc\ConfigurationTool;
 
 class Department extends Model
 {
+    use HasConfigurations;
+
     protected $fillable = [
-        'school_id', 'institute_id', 'name', 'description'
+        'school_id', 'institute_id', 'name', 'description','campus_id',
+        ConfigurationTool::KEY_STUDY_WEEKS_PER_TERM,
+        ConfigurationTool::KEY_SELF_STUDY_NEED_REGISTRATION,
+        ConfigurationTool::KEY_OPTIONAL_COURSES_PER_YEAR,
+    ];
+
+    public $casts = [
+        ConfigurationTool::KEY_SELF_STUDY_NEED_REGISTRATION => 'boolean'
     ];
 
     public function school(){
@@ -26,10 +36,10 @@ class Department extends Model
     }
 
     public function employeesCount(){
-        return GradeUser::where('department_id', $this->id)->where('user_type',User::TYPE_EMPLOYEE)->count();
+        return GradeUser::where('department_id', $this->id)->where('user_type',Role::GetTeacherUserTypes())->count();
     }
 
     public function studentsCount(){
-        return GradeUser::where('department_id', $this->id)->where('user_type',User::TYPE_STUDENT)->count();
+        return GradeUser::where('department_id', $this->id)->where('user_type',Role::GetStudentUserTypes())->count();
     }
 }

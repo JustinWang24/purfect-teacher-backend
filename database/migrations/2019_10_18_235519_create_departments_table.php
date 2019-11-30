@@ -19,7 +19,7 @@ class CreateDepartmentsTable extends Migration
                 $table->integerIncrements('id');
                 // 该系关联的学校
                 $table->unsignedInteger('school_id')->comment('学校ID');
-                $table->unsignedInteger('campuses_id')->default(0)->comment('校区ID');
+                $table->unsignedInteger('campus_id')->default(0)->comment('校区ID');
                 // 该系关联的学院, 如果为 0 无关联
                 $table->unsignedInteger('institute_id')->default(0)->comment('学院ID');
                 $table->string('name', 100)->comment('系名称');   // 学院(系)的名称

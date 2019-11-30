@@ -4,8 +4,17 @@
  */
 
 namespace App\Dao\Users;
+use App\Dao\Teachers\TeacherProfileDao;
+use App\Models\School;
+use App\Models\Users\GradeUser;
 use App\User;
 use App\Models\Acl\Role;
+use App\Utils\JsonBuilder;
+use App\Utils\ReturnData\MessageBag;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
+use Ramsey\Uuid\Uuid;
 
 class UserDao
 {
@@ -29,7 +38,7 @@ class UserDao
         if(is_string($idOrUuid) && strlen($idOrUuid) > 10){
             return $this->getUserByUuid($idOrUuid);
         }
-        elseif (is_int($idOrUuid)){
+        elseif ($idOrUuid){
             return $this->getUserById($idOrUuid);
         }
         return null;
@@ -108,6 +117,132 @@ class UserDao
         }
         else{
             return false;
+        }
+    }
+
+    /**
+     * 返回 APP 用户身份
+     * @param $userType
+     * @return string
+     */
+    public function  getUserRoleName($userType)
+    {
+        switch ($userType) {
+            case Role::TEACHER :
+                return trans('AppName.teacher');
+                break;
+            case Role::VERIFIED_USER_STUDENT :
+                return trans('AppName.student');
+                break;
+            // todo :: 用到了再补充, 用来获取用户身份的名字
+            default: return "" ;
+                break;
+        }
+    }
+
+    /**
+     * 获取指定学校的所有的教师的列表
+     * @param $schoolId
+     * @param bool $simple: 简单的返回值 id=>name 的键值对组合
+     * @return \Illuminate\Support\Collection
+     */
+    public function getTeachersBySchool($schoolId, $simple = false){
+        if($simple){
+            return GradeUser::select(DB::raw('user_id as id, name'))
+                ->where('school_id',$schoolId)
+                ->where('user_type',Role::TEACHER)
+                ->get();
+        }
+        return GradeUser::where('school_id',$schoolId)
+            ->where('user_type',Role::TEACHER)->get();
+    }
+
+    /**
+     * 创建学校管理员账户
+     * @param School $school
+     * @param $mobile
+     * @param $passwordInPlainText
+     * @param $name
+     * @param $email
+     * @return MessageBag
+     */
+    public function createSchoolManager($school, $mobile, $passwordInPlainText,$name, $email){
+        $bag = new MessageBag(JsonBuilder::CODE_ERROR);
+        DB::beginTransaction();
+        try{
+            $data = [
+                'mobile'=>$mobile,
+                'name'=>$name,
+                'email'=>$email,
+                'api_token'=>Uuid::uuid4()->toString(),
+                'uuid'=>Uuid::uuid4()->toString(),
+                'password'=>Hash::make($passwordInPlainText),
+                'status'=>User::STATUS_VERIFIED,
+                'type'=>Role::SCHOOL_MANAGER,
+                'mobile_verified_at'=>Carbon::now(),
+            ];
+            $user = User::create($data);
+
+            if($user){
+                // 创建 grade user 的记录
+                $gradeUserDao = new GradeUserDao();
+                $gradeUserDao->addGradUser([
+                    'user_id'=>$user->id,
+                    'name'=>$name,
+                    'user_type'=>Role::SCHOOL_MANAGER,
+                    'school_id'=>$school->id,
+                ]);
+                // 创建他的资料账户
+                $teacherProfileDao = new TeacherProfileDao();
+                $teacherProfileDao->createProfile([
+                    'uuid'=>Uuid::uuid4()->toString(),
+                    'user_id'=>$user->id,
+                    'school_id'=>$school->id,
+                    'serial_number'=>'n.a',
+                    'group_name'=>'管理',
+                    'title'=>'易同学管理员',
+                    'avatar'=>User::DEFAULT_USER_AVATAR,
+                ]);
+                DB::commit();
+                $bag->setCode(JsonBuilder::CODE_SUCCESS);
+            }else{
+                $bag->setMessage('无法创建用户');
+            }
+        }
+        catch (\Exception $exception){
+            DB::rollBack();
+            $bag->setMessage($exception->getMessage());
+        }
+        return $bag;
+    }
+
+    /**
+     * 更新用户的基本数据
+     * @param $userId
+     * @param null $mobile
+     * @param null $password
+     * @param null $name
+     * @param null $email
+     * @return mixed
+     */
+    public function updateUser($userId, $mobile=null, $password=null, $name=null, $email = null){
+        $data = [];
+
+        if($mobile){
+            $data['mobile'] = $mobile;
+        }
+        if($password){
+            $data['password'] = Hash::make($password);
+        }
+        if($name){
+            $data['name'] = $name;
+        }
+        if($mobile){
+            $data['email'] = $email;
+        }
+
+        if(!empty($data)){
+            return User::where('id',$userId)->update($data);
         }
     }
 }

@@ -8,6 +8,7 @@ use App\Http\Requests\School\MajorRequest;
 use App\Http\Controllers\Controller;
 use App\Models\Schools\Major;
 use App\Utils\FlashMessageBuilder;
+use App\BusinessLogic\UsersListPage\Factory;
 
 class MajorsController extends Controller
 {
@@ -27,13 +28,20 @@ class MajorsController extends Controller
     }
 
     public function users(MajorRequest $request){
-
+        $logic = Factory::GetLogic($request);
+        $this->dataForView['parent'] = $logic->getParentModel();
+        $this->dataForView['returnPath'] = $logic->getReturnPath();
+        // 给 Pagination 用
+        $this->dataForView['appendedParams'] = $logic->getAppendedParams();
+        return view($logic->getViewPath(), array_merge($this->dataForView, $logic->getUsers()));
     }
 
     public function add(MajorRequest $request){
         $dao = new DepartmentDao($request->user());
+        $major = new Major();
         $this->dataForView['department'] = $dao->getDepartmentById($request->uuid());
-        $this->dataForView['major'] = new Major();
+        $this->dataForView['major'] = $major;
+        $this->dataForView['all_type'] = $major->AllTypes();
         return view('school_manager.major.add', $this->dataForView);
     }
 
@@ -41,8 +49,10 @@ class MajorsController extends Controller
         $majorDao = new MajorDao($request->user());
         $major = $majorDao->getMajorById($request->uuid());
         if($major){
+            $this->dataForView['all_type'] = $major->AllTypes();
             $this->dataForView['department'] = $major->department;
             $this->dataForView['major'] = $major;
+
             return view('school_manager.major.edit', $this->dataForView);
         }else{
             // major 没取到
