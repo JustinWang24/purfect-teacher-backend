@@ -14,9 +14,9 @@ class AddNewsTypeInNewsTable extends Migration
     public function up()
     {
         Schema::table('news', function(Blueprint $table){
-            $table->unsignedSmallInteger('type')
-                ->default(\App\Models\Schools\News::TYPE_NEWS)
-                ->comment('文章类型');
+//            $table->unsignedSmallInteger('type')
+//                ->default(\App\Models\Schools\News::TYPE_NEWS)
+//                ->comment('文章类型');
             $table->json('tags')->nullable()->comment('文章的标签');
         });
     }
@@ -29,7 +29,7 @@ class AddNewsTypeInNewsTable extends Migration
     public function down()
     {
         Schema::table('news', function (Blueprint $table) {
-            $table->dropColumn('type');
+//            $table->dropColumn('type');
             $table->dropColumn('tags');
         });
     }
