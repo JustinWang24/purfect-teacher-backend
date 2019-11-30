@@ -127,4 +127,10 @@ class CommonDao
       }
       return $tree;
    }
+
+   public function get()
+   {
+
+   }
+
 }

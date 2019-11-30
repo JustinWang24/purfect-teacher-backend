@@ -40,7 +40,7 @@ use App\User;
 									<th>支付时间</th>
 									<th>支付方式</th>
 									<th>支付状态</th>
-                                    <th width="10%">操作</th>
+                                    <!--th width="10%">操作</th-->
                                     <th></th>
                                 </tr>
                                 </thead>
@@ -59,9 +59,9 @@ use App\User;
 										<td>{{$val['pay_time']}}</td>
 										<td>{{$paymentidArr[$val['paymentid']]}}</td>
 										<td>{{$manageWifiStatusArr[$val['status']]}}</td>
-                                        <td class="text-center">
+                                        <!--td class="text-center">
                                             {{ Anchor::Print(['text'=>'详情','class'=>'btn-edit-room','href'=>route('manager_wifi.wifiOrder.detail',['wifiid'=>$val->wifiid])], Button::TYPE_DEFAULT,'') }}
-                                        </td>
+                                        </td-->
                                     </tr>
                                 @endforeach
                                 </tbody>

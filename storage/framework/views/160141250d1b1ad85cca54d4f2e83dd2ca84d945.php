@@ -40,7 +40,7 @@ use App\User;
 									<th>支付时间</th>
 									<th>支付方式</th>
 									<th>支付状态</th>
-                                    <th width="10%">操作</th>
+                                    <!--th width="10%">操作</th-->
                                     <th></th>
                                 </tr>
                                 </thead>
@@ -59,10 +59,10 @@ use App\User;
 										<td><?php echo e($val['pay_time']); ?></td>
 										<td><?php echo e($paymentidArr[$val['paymentid']]); ?></td>
 										<td><?php echo e($manageWifiStatusArr[$val['status']]); ?></td>
-                                        <td class="text-center">
+                                        <!--td class="text-center">
                                             <?php echo e(Anchor::Print(['text'=>'详情','class'=>'btn-edit-room','href'=>route('manager_wifi.wifiOrder.detail',['wifiid'=>$val->wifiid])], Button::TYPE_DEFAULT,'')); ?>
 
-                                        </td>
+                                        </td-->
                                     </tr>
                                 <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                 </tbody>

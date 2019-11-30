@@ -14,6 +14,7 @@
       {
          $this->middleware('auth');
       }
+
       /**
        * Func wifi订单列表
        * @param WifiOrderRequest $request
@@ -22,6 +23,7 @@
       public function list(WifiOrderRequest $request)
       {
          $param = $request->only ( [ 'school_id' , 'campus_id' , 'page' ] );
+         $param[ 'page' ] = $request->input ( 'page' , 1 );
 
          // 查询条件
          $condition[] = [ 'orderid' , '>' , 0 ];
