@@ -159,6 +159,14 @@ export const Constants = {
         AUDIO: 11,
         TXT: 12
     },
+    // 文章段落类型的定义
+    SECTION_TYPE: {
+        TEXT: 1,
+        IMAGE: 2,
+        VIDEO: 3,
+        AUDIO: 4,
+        SLIDER: 5, // 轮播图
+    },
     ELECTIVE_COURSE: {
         STATUS_APPROVED: 2,
         STATUS_REFUSED: 3,
