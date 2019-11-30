@@ -48,6 +48,15 @@ export const Util = {
         arr[index1] = arr.splice(index2, 1, arr[index1])[0];
         return arr;
     },
+    // 判断文章段落类型的通用方法
+    checkArticleSectionType: function(section){
+        if(this.isEmpty(section.media_id)){
+            return Constants.SECTION_TYPE.TEXT;
+        }
+        else{
+            return Constants.SECTION_TYPE.IMAGE;
+        }
+    },
     GetItemIndexByUuid: function (uuid, obj) {
         let result = null;
         _.each(obj, (item, idx) => {

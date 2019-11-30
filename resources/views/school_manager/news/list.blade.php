@@ -4,9 +4,11 @@
         <div class="col-3">
             <div class="card">
                 <div class="card-head">
-                    <header>
-                        校园动态 &nbsp;
-                        <button class="btn btn-primary btn-sm" v-on:click="addNew"><i class="fa fa-plus"></i>添加动态</button>
+                    <header class="full-width">
+                        <span class="pull-left" style="padding-top: 6px;">{{ $pageTitle }}</span>
+                        <button class="btn btn-primary btn-sm pull-right" v-on:click="addNew">
+                            <i class="fa fa-plus"></i>添加{{ $typeText }}
+                        </button>
                     </header>
                 </div>
                 <div class="card-body">
@@ -77,18 +79,18 @@
                                 </el-form-item>
                                 <el-form-item>
                                     <el-button type="primary" @click="pushNewSection">保存</el-button>
-                                    <el-button @click="cancelNewSection(2)">取消</el-button>
+                                    <el-button @click="cancelNewSection(2)">切换类型</el-button>
                                 </el-form-item>
                             </el-form>
                         </div>
                         <div class="text-content-wrap mt-4" v-show="textContentWrapFlag">
                             <el-form :model="mediaForm">
                                 <el-form-item label="内容">
-                                    <el-input type="textarea" v-model="mediaForm.content"></el-input>
+                                    <el-input type="textarea" :rows="10" v-model="mediaForm.content"></el-input>
                                 </el-form-item>
                                 <el-form-item>
                                     <el-button type="primary" @click="pushNewSection">保存</el-button>
-                                    <el-button @click="cancelNewSection(1)">取消</el-button>
+                                    <el-button @click="cancelNewSection(1)">切换类型</el-button>
                                 </el-form-item>
                             </el-form>
                         </div>
@@ -103,7 +105,8 @@
                                 <el-button v-on:click="moveDown(section)" v-if="idx < sections.length - 1" style="float: left; padding: 3px 0" type="text">
                                     向下 <i class="el-icon-bottom"></i>
                                 </el-button>
-                                <el-button v-on:click="deleteSection(section)" style="float: right; padding: 3px 0;color: red;" type="text">删除</el-button>
+                                <el-button icon="el-icon-edit" v-on:click="editSection(section)" style="float: right; padding: 3px 0;" type="text">编辑</el-button>
+                                <el-button icon="el-icon-delete" v-on:click="deleteSection(section)" style="float: right; padding: 3px 0;color: red;" type="text">删除</el-button>
                             </div>
                             <span v-if="section.media_id">
                                 <img :src="section.content" style="max-width: 360px;">
@@ -118,9 +121,9 @@
         <div class="col-4">
             <div class="card">
                 <div class="card-head">
-                    <header>
-                        内容预览
-                        <el-button type="primary" @click="publish">发布</el-button>
+                    <header class="full-width">
+                        <span class="pull-left" style="padding-top: 6px;">内容预览</span>
+                        <el-button class="pull-right" size="mini" type="primary" @click="publish">发布</el-button>
                     </header>
                 </div>
                 <div class="card-body">
@@ -145,7 +148,7 @@
     </div>
     <div id="app-init-data-holder"
          data-school="{{ session('school.id') }}"
-         data-type="{{ \App\Models\Schools\News::TYPE_NEWS }}"
+         data-type="{{ $type }}"
          data-news='{!! $newsList->toJson() !!}'
     ></div>
 @endsection
