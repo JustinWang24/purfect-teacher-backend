@@ -14,6 +14,7 @@ abstract class AbstractImporter implements IImportExcel
     public function __construct($configArr)
     {
         $this->config = $configArr;
+        $this->data   = [];
     }
 
     /**
@@ -23,21 +24,12 @@ abstract class AbstractImporter implements IImportExcel
     {
         set_time_limit(0);
         ini_set('memory_limit', -1);
-        //$filePath = $this->config['path'];
-        $filePath = config('filesystems.disks.apk')['root'].'/技术部加班表-11月-朱晨光.xlsx';
+        $filePath = config('filesystems.disks.apk')['root'].DIRECTORY_SEPARATOR .$this->config['file_path'];
         Excel::load($filePath, function($reader) {
             $data = $reader->all()->toArray();
-            dd($data);
-            foreach($data as $key=>$value)
-            {
-                foreach ($value as $k=>$v)
-                {
-                    dd($v);
-                }
-            }
-            return $data;
+            $this->data = $data;
+            return true;
         });
-        // TODO: Implement loadExcelFile() method.
     }
 
 
