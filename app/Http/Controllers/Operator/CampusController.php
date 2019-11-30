@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Operator;
 
 use App\Dao\Schools\BuildingDao;
+use App\Dao\Schools\RoomDao;
 use App\Http\Controllers\Controller;
 use App\Dao\Schools\SchoolDao;
 use App\Http\Requests\School\CampusRequest;
@@ -10,6 +11,7 @@ use App\Dao\Schools\InstituteDao;
 use App\Dao\Schools\CampusDao;
 use App\Utils\FlashMessageBuilder;
 use App\Models\Schools\Campus;
+use Illuminate\Support\Facades\Route;
 
 class CampusController extends Controller
 {
@@ -28,6 +30,11 @@ class CampusController extends Controller
         $school = $dao->getSchoolById($request->session()->get('school.id'));
         if($school){
             $this->dataForView['school'] = $school;
+            $config = $school->configuration;
+            if(is_null($config)){
+                $config = $dao->createDefaultConfig($school);
+            }
+            $this->dataForView['config'] = $config;
             return view('school_manager.school.view', $this->dataForView);
         }
         else{
@@ -62,10 +69,12 @@ class CampusController extends Controller
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function buildings(CampusRequest $request){
+        $type = $request->get('type');
         $dao = new CampusDao($request->user());
         $campus = $dao->getCampusById($request->uuid());
         if($campus){
             $this->dataForView['parent'] = $campus;
+            $this->dataForView['type']   = $type;
             $buildingDao = new BuildingDao($request->user());
             $this->dataForView['buildings'] = $buildingDao->getBuildingsByType(intval($request->get('type')), $campus);
             return view('school_manager.school.buildings', $this->dataForView);
@@ -86,7 +95,8 @@ class CampusController extends Controller
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function edit(CampusRequest $request){
-        $this->dataForView['campus'] = Campus::find($request->uuid());
+        $campusDao = new CampusDao($request->user());
+        $this->dataForView['campus'] = $campusDao->getCampusById($request->uuid());
         return view('school_manager.campus.edit', $this->dataForView);
     }
 

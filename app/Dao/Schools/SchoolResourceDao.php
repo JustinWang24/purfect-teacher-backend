@@ -113,12 +113,15 @@ class SchoolResourceDao
     }
 
     /**
-     * 修改
      * @param $data
+     * @return mixed
      */
     public function  updateSchoolResource($data)
     {
+        $id = $data['id'];
+        unset($data['id']);
 
+        return SchoolResource::where('id', $id)->update($data);
     }
 
 }

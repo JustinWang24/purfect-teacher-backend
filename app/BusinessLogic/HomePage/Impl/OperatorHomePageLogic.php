@@ -10,15 +10,17 @@ namespace App\BusinessLogic\HomePage\Impl;
 use App\BusinessLogic\HomePage\Contracts\IHomePageLogic;
 use App\User;
 use App\Dao\Schools\SchoolDao;
+use Illuminate\Http\Request;
 
 class OperatorHomePageLogic implements IHomePageLogic
 {
     private $user = null;
     private $data = [];
 
-    public function __construct(User $user)
+    public function __construct(Request $request)
     {
-        $this->user = $user;
+        $this->user = $request->user();
+
     }
 
     public function getDataForView()

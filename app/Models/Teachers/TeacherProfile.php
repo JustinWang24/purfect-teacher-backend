@@ -2,26 +2,36 @@
 
 namespace App\Models\Teachers;
 
+use App\User;
 use Illuminate\Database\Eloquent\Model;
 
 class TeacherProfile extends Model
 {
     protected $fillable = [
         'uuid',
-        'teacher_id',
-        'school_id',
+        'user_id',
         'name',
+        'school_id', // 教师任职的学校
+        'serial_number', // 教师编号
+        'group_name', // 所在部门: 基础教学部
         'gender',
-        'country',
-        'state',
-        'city',
-        'postcode',
-        'address_line',
-        'address_in_school',
-        'device',
+        'title', // 教师职称: 教授, 讲师
+        'id_number', // 身份证号
+        'political_code',//政治面貌代码
+        'political_name',//政治面貌名称
+        'nation_code',//民族代码
+        'nation_name',//民族名称
+        'education',//学历
+        'degree',//学位
         'birthday',
+        'joined_at', // 入职日期
         'avatar',
+        'famous',
     ];
+
+    public $casts = ['famous'=>'boolean'];
+
+    public $dates = ['joined_at'];
 
     /**
      * 获取教师ID
@@ -29,7 +39,7 @@ class TeacherProfile extends Model
      */
     public function getTeacherId()
     {
-        return $this->teacher_id;
+        return $this->user_id;
     }
 
     /**
@@ -42,4 +52,12 @@ class TeacherProfile extends Model
     }
 
 
+    public function user() {
+        $field = ['id','name'];
+        return $this->belongsTo(User::class)->select($field);
+    }
+
+    public function getAvatarAttribute(){
+        return $this->avatar ?? User::DEFAULT_USER_AVATAR;
+    }
 }

@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
@@ -21,6 +22,7 @@ class CreateRoomsTable extends Migration
             $table->unsignedBigInteger('campus_id')->default(0); // 如果学校只有一个校区
             $table->unsignedBigInteger('building_id'); // 如果学校只有一个校区
             $table->string('name',40);
+            $table->smallInteger('exam_seats')->comment('考试可容纳的人数')->nullable();
             $table->unsignedTinyInteger('type')->default(1)->comment('类型: 1教室, 2会议室, 3学生宿舍'); //
             });
         }

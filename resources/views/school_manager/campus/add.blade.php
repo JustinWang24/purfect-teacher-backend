@@ -16,11 +16,11 @@ use App\Utils\UI\Button;
                         @csrf
                         <div class="form-group">
                             <label for="school-name-input">校区名称</label>
-                            <input required type="text" class="form-control" id="campus-name-input" value="{{ $campus->name }}" placeholder="学校名称" name="campus[name]">
+                            <input required type="text" class="form-control" id="campus-name-input" value="{{ $campus->name }}" placeholder="校区名称" name="campus[name]">
                         </div>
                         <div class="form-group">
                             <label for="max-students">简介</label>
-                            <textarea class="form-control" name="campus[description]" id="campus-desc-input" cols="30" rows="10" placeholder="学校简介">{{ $campus->description }}</textarea>
+                            <textarea required class="form-control" name="campus[description]" id="campus-desc-input" cols="30" rows="10" placeholder="校区简介">{{ $campus->description }}</textarea>
                         </div>
                         <?php
                         Button::Print(['id'=>'btn-create-campus','text'=>trans('general.submit')], Button::TYPE_PRIMARY);

@@ -1,0 +1,18 @@
+.organization-wrap{
+  display: flex;
+  flex-direction: column;
+}
+.level-row{
+  display: flex;
+  justify-content: center;
+}
+.org{
+  display: flex;
+  flex-direction: column;
+  margin: 5px;
+}
+.the-box{
+  padding: 5px;
+  border: solid 1px #efeeee;
+  margin-left: 0;
+}

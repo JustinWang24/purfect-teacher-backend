@@ -13,8 +13,11 @@ use App\User;
 
 class BuildingDao
 {
+    /**
+     * @var User $currentUser
+     */
     private $currentUser;
-    public function __construct(User $user)
+    public function __construct($user = null)
     {
         $this->currentUser = $user;
     }
@@ -87,11 +90,40 @@ class BuildingDao
             $buildings = $this->getBuildingsByCampus($campus);
             if(count($buildings)){
                 $data[] = [
+                    'id'=>$campus->id,
                     'campus'=>$campus->name,
                     'buildings'=>$buildings
                 ];
             }
         }
         return $data;
+    }
+
+
+    /**
+     * 获取列表
+     * @param $map
+     * @param $field
+     * @return mixed
+     */
+    protected function getBuildingList($map,$field) {
+        return Building::where($map)->select($field)->get();
+    }
+
+
+    /**
+     * 根据校区id获取建筑
+     * @param $campusId
+     * @param int $type
+     * @return mixed
+     */
+    public function getBuildingByCampusId($campusId, $type = null) {
+        $field = ['id', 'campus_id', 'name', 'type', 'description'];
+        $map = ['campus_id'=>$campusId];
+        if($type){
+            $map['type']=$type;
+        }
+        $result = $this->getBuildingList($map,$field);
+        return $result;
     }
 }

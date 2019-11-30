@@ -12,6 +12,7 @@
 <script src="{{ asset('assets/js/app.js') }}"></script>
 <script src="{{ asset('assets/js/layout.js') }}"></script>
 <script src="{{ asset('assets/js/theme-color.js') }}"></script>
+<script src="{{ asset('assets/js/custom.js') }}"></script>
 <!-- material -->
 <!-- chart js -->
 @if($needChart??false)
@@ -32,3 +33,11 @@
 <!-- dropzone -->
 <script src="{{ asset('assets/plugins/dropzone/dropzone.js') }}"></script>
 <script src="{{ asset('assets/plugins/dropzone/dropzone-call.js') }}"></script>
+
+<!-- redactor -->
+<script src="{{ asset('assets/plugins/redactor/redactor.js') }}"></script>
+<script src="{{ asset('assets/plugins/redactor/_langs/zh_cn.js') }}"></script>
+
+@foreach($js as $j)
+@include($j)
+@endforeach

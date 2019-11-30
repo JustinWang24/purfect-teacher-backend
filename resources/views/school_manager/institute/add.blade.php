@@ -22,7 +22,7 @@ use App\Utils\UI\Button;
                         </div>
                         <div class="form-group">
                             <label for="institute-desc-input">简介</label>
-                            <textarea class="form-control" name="institute[description]" id="institute-desc-input" cols="30" rows="10" placeholder="学院简介">{{ $institute->description }}</textarea>
+                            <textarea required class="form-control" name="institute[description]" id="institute-desc-input" cols="30" rows="10" placeholder="学院简介">{{ $institute->description }}</textarea>
                         </div>
                         <?php
                         Button::Print(['id'=>'btn-save-institute','text'=>trans('general.submit')], Button::TYPE_PRIMARY);

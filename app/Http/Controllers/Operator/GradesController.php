@@ -58,7 +58,7 @@ class GradesController extends Controller
                 FlashMessageBuilder::Push($request, FlashMessageBuilder::DANGER, $majorData['name'].'班级创建失败, 请重新试一下');
             }
         }
-        return redirect()->route('school_manager.major.grades',['uuid'=>$uuid,'by'=>'major']);
+        return redirect()->route('school_manager.major.grades',['uuid'=>$uuid, 'by'=>'major']);
     }
 
     /**
@@ -71,6 +71,7 @@ class GradesController extends Controller
         $this->dataForView['parent'] = $logic->getParentModel();
         $this->dataForView['appendedParams'] = $logic->getAppendedParams();
         $this->dataForView['returnPath'] = $logic->getReturnPath();
+
         return view($logic->getViewPath(),array_merge($this->dataForView, $logic->getUsers()));
     }
 }

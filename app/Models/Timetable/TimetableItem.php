@@ -27,8 +27,8 @@ class TimetableItem extends Model
 
     public $casts = [
         'published' => 'boolean', // 是否本 item 是发布状态
-        'at_special_datetime' => 'datetime', // 是否本 item 是发布状态
-        'to_special_datetime' => 'datetime', // 是否本 item 是发布状态
+        'at_special_datetime' => 'datetime', // 调课记录的开始事件
+        'to_special_datetime' => 'datetime', // 调课记录的结束时间
     ];
 
     public function getPublishedTextAttribute(){
@@ -61,5 +61,13 @@ class TimetableItem extends Model
 
     public function updatedBy(){
         return $this->belongsTo(User::class, 'last_updated_by');
+    }
+
+    public function describeItself(){
+        return $txt = $this->grade->name . ' - ' . $this->course->name;
+    }
+
+    public function itemEnquiries(){
+        return $this->hasMany(TimetableItemEnquiry::class);
     }
 }

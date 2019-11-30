@@ -2,7 +2,9 @@
 
 namespace App\Dao\Teachers;
 
+use App\Models\Users\GradeUser;
 use App\Models\Teachers\TeacherProfile;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\DB;
 
 /**
@@ -22,7 +24,7 @@ class TeacherProfileDao
             return TeacherProfile::where('uuid', $teacherIdOrUuid)->first();
         }
         elseif (is_int($teacherIdOrUuid)){
-            return TeacherProfile::where('teacher_id', $teacherIdOrUuid)->first();
+            return TeacherProfile::where('user_id', $teacherIdOrUuid)->first();
         }
         return null;
     }
@@ -30,13 +32,20 @@ class TeacherProfileDao
     /**
      * @param $name
      * @param $schoolId
+     * @param $majorsId
      * @return \Illuminate\Support\Collection
      */
-    public function searchTeacherByNameSimple($name, $schoolId){
-        return DB::table('teacher_profiles')
-            ->select(DB::raw('teacher_id as id, name, avatar'))
+    public function searchTeacherByNameSimple($name, $schoolId, $majorsId = []){
+        if(!empty($majorsId)){
+            return GradeUser::select(DB::raw('user_id as id, name'))
+                ->where('school_id',$schoolId)
+                ->whereIn('major_id',$majorsId)
+                ->where('name','like',$name.'%')
+                ->get();
+        }
+        return GradeUser::select(DB::raw('user_id as id, name'))
             ->where('school_id',$schoolId)
-            ->where('name','like','%'.$name.'%')
+            ->where('name','like',$name.'%')
             ->get();
     }
 
@@ -47,5 +56,17 @@ class TeacherProfileDao
      */
     public function createProfile($data){
         return TeacherProfile::create($data);
+    }
+
+    /**
+     * 获取老师列表
+     * @param $map
+     * @param $field
+     * @return Collection
+     */
+    public function getTeachers($map,$field)
+    {
+        $list = TeacherProfile::where($map)->select($field)->with('user')->get();
+        return $list;
     }
 }
