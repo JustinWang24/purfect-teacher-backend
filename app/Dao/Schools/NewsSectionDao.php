@@ -26,11 +26,19 @@ class NewsSectionDao
 
             $theLastId = null;
             foreach ($data['sections'] as $key => $val) {
-                $val['news_id'] = $data['news_id'];
-                $lastPosition++;
-                $val['position'] = $lastPosition;
-                $sec = NewsSection::create($val);
-                $theLastId = $sec->id;
+                if(empty($val['id'])){
+                    // 添加的操作
+                    $val['news_id'] = $data['news_id'];
+                    $lastPosition++;
+                    $val['position'] = $lastPosition;
+                    $sec = NewsSection::create($val);
+                    $theLastId = $sec->id;
+                }
+                else{
+                    // 更新的操作: 非常重要的是, 在这个操作中, 是不更新 position 的, 因为前方提交过来的是错误的, 所以直接删除即可
+                    unset($val['position']);
+                    NewsSection::where('id',$val['id'])->update($val);
+                }
             }
             DB::commit();
             $bag = new MessageBag(JsonBuilder::CODE_SUCCESS, '创建成功');
