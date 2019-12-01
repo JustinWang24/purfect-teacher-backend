@@ -2,6 +2,7 @@
 
 namespace App\Models\Teachers\Performance;
 
+use App\User;
 use Illuminate\Database\Eloquent\Model;
 
 class TeacherPerformance extends Model
@@ -22,10 +23,10 @@ class TeacherPerformance extends Model
         'year',
         'result',
         'comments',
-        'approved_by',
+        'approved_by','title','organisation_name'
     ];
 
-    public function Results(){
+    public static function Results(){
         return [
             self::RESULT_A=>self::RESULT_A_TXT,
             self::RESULT_B=>self::RESULT_B_TXT,
@@ -40,5 +41,9 @@ class TeacherPerformance extends Model
 
     public function items(){
         return $this->hasMany(TeacherPerformanceItem::class);
+    }
+
+    public function approvedBy(){
+        return $this->belongsTo(User::class,'approved_by');
     }
 }

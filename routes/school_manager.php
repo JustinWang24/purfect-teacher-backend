@@ -371,6 +371,14 @@ Route::prefix('school_manager')->group(function () {
             ->name('school_manger.configs.performance-teacher-save');
     });
 
-
+    // 教师档案管理
+    Route::prefix('teachers')->group(function(){
+        Route::get('edit-profile','Teachers\ProfilesController@edit')
+            ->name('school_manager.teachers.edit-profile');
+        Route::get('manage-performance','Teachers\ProfilesController@manage_performance')
+            ->name('school_manager.teachers.manage-performance');
+        Route::post('manage-performance-save','Teachers\ProfilesController@manage_performance_save')
+            ->name('school_manager.teachers.manage-performance-save');
+    });
 });
 
