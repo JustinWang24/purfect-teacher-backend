@@ -6,6 +6,7 @@
 namespace App\Dao\Users;
 use App\Dao\Teachers\TeacherProfileDao;
 use App\Models\School;
+use App\Models\Teachers\Teacher;
 use App\Models\Users\GradeUser;
 use App\User;
 use App\Models\Acl\Role;
@@ -58,6 +59,22 @@ class UserDao
      */
     public function getUserById($id){
         return User::find($id);
+    }
+
+    /**
+     * @param $id
+     * @return Teacher|null
+     */
+    public function getTeacherById($id){
+        return Teacher::find($id);
+    }
+
+    /**
+     * @param $uuid
+     * @return Teacher|null
+     */
+    public function getTeacherByUuid($uuid){
+        return Teacher::where('uuid',$uuid)->first();
     }
 
 	/**

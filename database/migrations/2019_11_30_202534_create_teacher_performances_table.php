@@ -21,6 +21,8 @@ class CreateTeacherPerformancesTable extends Migration
             $table->unsignedSmallInteger('result')->comment('考核结果');
             $table->text('comments')->nullable()->comment('考核评语');
             $table->unsignedBigInteger('approved_by')->comment('考核人');
+            $table->string('title')->comment('当年的最终职称');
+            $table->string('organisation_name')->comment('当年所在部门');
             $table->timestamps();
         });
 

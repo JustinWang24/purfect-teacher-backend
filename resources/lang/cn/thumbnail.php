@@ -107,5 +107,6 @@ return [
     'news-manager' => '校园动态',
     'configs'=>'系统配置',
     'performance-teacher'=>'教职工业绩考核',
+    'edit-profile'=>'档案管理',
 ];
 
