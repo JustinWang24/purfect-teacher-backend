@@ -30,5 +30,11 @@ Route::prefix('manager_wifi')->group(function () {
     Route::any('wifiIssueComment/list', 'WifiIssueCommentController@list')->name('manager_wifi.wifiIssueComment.list'); // wifi报修评论列表
     Route::any('wifiIssueComment/detail', 'WifiIssueCommentController@detail')->name('manager_wifi.wifiIssueComment.detail'); // wifi报修评论详情
 
+   // wifi网络资讯表
+   Route::any('wifiContent/list', 'WifiContentController@list')->name('manager_wifi.wifiContent.list'); // 列表
+   Route::any('wifiContent/add', 'WifiContentController@add')->name('manager_wifi.wifiContent.add'); // 添加
+   Route::any('wifiContent/edit', 'WifiContentController@edit')->name('manager_wifi.wifiContent.edit'); // 修改
+   Route::any('wifiContent/delete', 'WifiContentController@delete')->name('manager_wifi.wifiContent.delete'); // 删除
+
 
 });
