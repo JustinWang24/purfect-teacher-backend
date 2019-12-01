@@ -2564,3 +2564,2956 @@ parmars:[2]
 [2019-11-30 18:44:27]select count(*) as aggregate from `wifi_issue_types` where (`typeid` > ? and `type_pid` = ?)
 parmars:[0,55]
 
+[2019-11-30 20:42:29]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-11-30 20:42:29]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-11-30 20:42:29]select * from `schools` where `schools`.`deleted_at` is null order by `updated_at` desc
+
+[2019-11-30 20:42:39]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-11-30 20:42:39]select * from `schools` where `uuid` = ? and `schools`.`deleted_at` is null limit 1
+parmars:["9eafb7dd-e96c-418b-8808-bb360e35ecb4"]
+
+[2019-11-30 20:42:40]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-11-30 20:42:40]select * from `schools` where `schools`.`id` = ? and `schools`.`deleted_at` is null limit 1
+parmars:[46]
+
+[2019-11-30 20:44:47]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-11-30 20:44:47]select count(*) as aggregate from `wifi_issue_types` where (`typeid` > ? and `type_pid` = ?)
+parmars:[0,0]
+
+[2019-11-30 20:44:47]select * from `wifi_issue_types` where (`typeid` > ? and `type_pid` = ?) order by `typeid` asc limit 10 offset 0
+parmars:[0,0]
+
+[2019-11-30 20:44:47]select * from `schools` where `schools`.`id` = ? and `schools`.`deleted_at` is null limit 1
+parmars:[46]
+
+[2019-11-30 20:44:47]select * from `campuses` where `campuses`.`school_id` = ? and `campuses`.`school_id` is not null and `campuses`.`deleted_at` is null order by `name` asc
+parmars:[46]
+
+[2019-11-30 20:44:51]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-11-30 20:44:51]select * from `wifi_issue_types` where (`typeid` = ?) order by `typeid` desc limit 1
+parmars:["2"]
+
+[2019-11-30 20:44:51]select * from `schools` where `schools`.`id` = ? and `schools`.`deleted_at` is null limit 1
+parmars:[46]
+
+[2019-11-30 20:44:51]select * from `campuses` where `campuses`.`school_id` = ? and `campuses`.`school_id` is not null and `campuses`.`deleted_at` is null order by `name` asc
+parmars:[46]
+
+[2019-12-01 11:48:56]select * from `users` where `id` = ? limit 1
+parmars:["2"]
+
+[2019-12-01 11:48:57]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 11:48:57]select * from `schools` where `schools`.`deleted_at` is null order by `updated_at` desc
+
+[2019-12-01 11:49:12]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 11:49:12]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 11:49:12]select * from `schools` where `schools`.`deleted_at` is null order by `updated_at` desc
+
+[2019-12-01 11:49:28]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 11:49:29]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 11:49:29]select * from `schools` where `schools`.`deleted_at` is null order by `updated_at` desc
+
+[2019-12-01 11:50:02]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 11:50:02]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 11:50:02]select * from `schools` where `schools`.`deleted_at` is null order by `updated_at` desc
+
+[2019-12-01 11:50:08]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 11:50:08]select * from `schools` where `schools`.`deleted_at` is null order by `updated_at` desc
+
+[2019-12-01 11:50:15]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 11:50:15]select * from `schools` where `schools`.`deleted_at` is null order by `updated_at` desc
+
+[2019-12-01 11:50:46]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 11:50:46]select * from `schools` where `schools`.`deleted_at` is null order by `updated_at` desc
+
+[2019-12-01 11:50:53]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 11:50:54]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 11:50:54]select * from `schools` where `schools`.`deleted_at` is null order by `updated_at` desc
+
+[2019-12-01 11:50:57]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 11:50:57]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 11:50:57]select * from `schools` where `schools`.`deleted_at` is null order by `updated_at` desc
+
+[2019-12-01 11:51:02]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 11:51:02]update `users` set `remember_token` = ? where `id` = ?
+parmars:["u1Epfr4MH7Eo3j2oaCCvXNJe0jk3mZ49QPWicQvVHXo11aw9zbxb3caDRpwz",2]
+
+[2019-12-01 11:51:05]select * from `users` where `mobile` = ? limit 1
+parmars:["18888888888"]
+
+[2019-12-01 11:51:09]select * from `users` where `mobile` = ? limit 1
+parmars:["18888888888"]
+
+[2019-12-01 11:55:39]select * from `users` where `mobile` = ? limit 1
+parmars:["18888888888"]
+
+[2019-12-01 12:04:39]select * from `users` where `mobile` = ? limit 1
+parmars:["18510209803"]
+
+[2019-12-01 12:04:40]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 12:04:40]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 12:04:40]select * from `schools` where `schools`.`deleted_at` is null order by `updated_at` desc
+
+[2019-12-01 12:04:55]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 12:04:56]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 12:04:56]select * from `schools` where `schools`.`deleted_at` is null order by `updated_at` desc
+
+[2019-12-01 12:05:11]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 12:05:11]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 12:05:11]select * from `schools` where `schools`.`deleted_at` is null order by `updated_at` desc
+
+[2019-12-01 12:05:36]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 12:05:37]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 12:05:37]select * from `schools` where `schools`.`deleted_at` is null order by `updated_at` desc
+
+[2019-12-01 12:11:34]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 12:11:34]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 12:11:34]select * from `schools` where `schools`.`deleted_at` is null order by `updated_at` desc
+
+[2019-12-01 12:17:48]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 12:17:48]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 12:17:48]select * from `schools` where `schools`.`deleted_at` is null order by `updated_at` desc
+
+[2019-12-01 12:32:40]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 12:32:41]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 12:32:41]select * from `schools` where `schools`.`deleted_at` is null order by `updated_at` desc
+
+[2019-12-01 12:33:14]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 12:33:14]select * from `schools` where `schools`.`deleted_at` is null order by `updated_at` desc
+
+[2019-12-01 12:33:15]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 12:33:15]select * from `schools` where `schools`.`deleted_at` is null order by `updated_at` desc
+
+[2019-12-01 12:33:24]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 12:33:24]select * from `schools` where `schools`.`deleted_at` is null order by `updated_at` desc
+
+[2019-12-01 12:33:26]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 12:33:26]select * from `schools` where `uuid` = ? and `schools`.`deleted_at` is null limit 1
+parmars:["93683db4-ea25-40d1-a938-d5536a1f4b79"]
+
+[2019-12-01 12:33:27]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 12:33:27]select * from `schools` where `schools`.`id` = ? and `schools`.`deleted_at` is null limit 1
+parmars:[50]
+
+[2019-12-01 12:33:42]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 12:33:42]select count(*) as aggregate from `wifi_issue_types` where (`typeid` > ? and `type_pid` = ?)
+parmars:[0,0]
+
+[2019-12-01 12:33:42]select * from `wifi_issue_types` where (`typeid` > ? and `type_pid` = ?) order by `typeid` asc limit 10 offset 0
+parmars:[0,0]
+
+[2019-12-01 12:33:42]select * from `schools` where `schools`.`id` = ? and `schools`.`deleted_at` is null limit 1
+parmars:[50]
+
+[2019-12-01 12:33:42]select * from `campuses` where `campuses`.`school_id` = ? and `campuses`.`school_id` is not null and `campuses`.`deleted_at` is null order by `name` asc
+parmars:[50]
+
+[2019-12-01 12:33:56]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 12:33:56]select count(*) as aggregate from `wifi_issue_types` where (`typeid` > ? and `type_pid` = ?)
+parmars:[0,0]
+
+[2019-12-01 12:33:57]select * from `wifi_issue_types` where (`typeid` > ? and `type_pid` = ?) order by `typeid` asc limit 10 offset 0
+parmars:[0,0]
+
+[2019-12-01 12:33:57]select * from `schools` where `schools`.`id` = ? and `schools`.`deleted_at` is null limit 1
+parmars:[50]
+
+[2019-12-01 12:33:57]select * from `campuses` where `campuses`.`school_id` = ? and `campuses`.`school_id` is not null and `campuses`.`deleted_at` is null order by `name` asc
+parmars:[50]
+
+[2019-12-01 12:34:08]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 12:34:08]select count(*) as aggregate from `wifi_issue_types` where (`typeid` > ? and `type_pid` = ?)
+parmars:[0,0]
+
+[2019-12-01 12:34:08]select * from `wifi_issue_types` where (`typeid` > ? and `type_pid` = ?) order by `typeid` asc limit 10 offset 0
+parmars:[0,0]
+
+[2019-12-01 12:34:08]select * from `schools` where `schools`.`id` = ? and `schools`.`deleted_at` is null limit 1
+parmars:[50]
+
+[2019-12-01 12:34:08]select * from `campuses` where `campuses`.`school_id` = ? and `campuses`.`school_id` is not null and `campuses`.`deleted_at` is null order by `name` asc
+parmars:[50]
+
+[2019-12-01 12:34:37]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 12:34:37]select count(*) as aggregate from `wifi_issue_types` where (`typeid` > ? and `type_pid` = ?)
+parmars:[0,55]
+
+[2019-12-01 12:34:37]select * from `schools` where `schools`.`id` = ? and `schools`.`deleted_at` is null limit 1
+parmars:[50]
+
+[2019-12-01 12:34:37]select * from `campuses` where `campuses`.`school_id` = ? and `campuses`.`school_id` is not null and `campuses`.`deleted_at` is null order by `name` asc
+parmars:[50]
+
+[2019-12-01 12:34:41]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 12:34:41]select count(*) as aggregate from `wifi_issue_types` where (`type_pid` = ?)
+parmars:["55"]
+
+[2019-12-01 12:34:41]delete from `wifi_issue_types` where (`typeid` = ?)
+parmars:["55"]
+
+[2019-12-01 12:34:41]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 12:34:42]select count(*) as aggregate from `wifi_issue_types` where (`typeid` > ? and `type_pid` = ?)
+parmars:[0,0]
+
+[2019-12-01 12:34:42]select * from `wifi_issue_types` where (`typeid` > ? and `type_pid` = ?) order by `typeid` asc limit 10 offset 0
+parmars:[0,0]
+
+[2019-12-01 12:34:42]select * from `schools` where `schools`.`id` = ? and `schools`.`deleted_at` is null limit 1
+parmars:[50]
+
+[2019-12-01 12:34:42]select * from `campuses` where `campuses`.`school_id` = ? and `campuses`.`school_id` is not null and `campuses`.`deleted_at` is null order by `name` asc
+parmars:[50]
+
+[2019-12-01 12:34:45]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 12:34:45]select count(*) as aggregate from `wifi_issue_types` where (`type_pid` = ?)
+parmars:["58"]
+
+[2019-12-01 12:34:45]delete from `wifi_issue_types` where (`typeid` = ?)
+parmars:["58"]
+
+[2019-12-01 12:34:46]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 12:34:46]select count(*) as aggregate from `wifi_issue_types` where (`typeid` > ? and `type_pid` = ?)
+parmars:[0,0]
+
+[2019-12-01 12:34:46]select * from `wifi_issue_types` where (`typeid` > ? and `type_pid` = ?) order by `typeid` asc limit 10 offset 0
+parmars:[0,0]
+
+[2019-12-01 12:34:46]select * from `schools` where `schools`.`id` = ? and `schools`.`deleted_at` is null limit 1
+parmars:[50]
+
+[2019-12-01 12:34:46]select * from `campuses` where `campuses`.`school_id` = ? and `campuses`.`school_id` is not null and `campuses`.`deleted_at` is null order by `name` asc
+parmars:[50]
+
+[2019-12-01 12:34:49]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 12:34:49]select * from `schools` where `schools`.`id` = ? and `schools`.`deleted_at` is null limit 1
+parmars:[50]
+
+[2019-12-01 12:34:49]select * from `campuses` where `campuses`.`school_id` = ? and `campuses`.`school_id` is not null and `campuses`.`deleted_at` is null order by `name` asc
+parmars:[50]
+
+[2019-12-01 12:34:52]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 12:34:52]insert into `wifi_issue_types` (`type_name`, `type_pid`, `created_at`) values (?, ?, ?)
+parmars:["test",0,"2019-12-01 12:34:52"]
+
+[2019-12-01 12:34:53]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 12:34:53]select count(*) as aggregate from `wifi_issue_types` where (`typeid` > ? and `type_pid` = ?)
+parmars:[0,0]
+
+[2019-12-01 12:34:53]select * from `wifi_issue_types` where (`typeid` > ? and `type_pid` = ?) order by `typeid` asc limit 10 offset 0
+parmars:[0,0]
+
+[2019-12-01 12:34:53]select * from `schools` where `schools`.`id` = ? and `schools`.`deleted_at` is null limit 1
+parmars:[50]
+
+[2019-12-01 12:34:53]select * from `campuses` where `campuses`.`school_id` = ? and `campuses`.`school_id` is not null and `campuses`.`deleted_at` is null order by `name` asc
+parmars:[50]
+
+[2019-12-01 12:34:56]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 12:34:56]select count(*) as aggregate from `wifi_issue_types` where (`typeid` > ? and `type_pid` = ?)
+parmars:[0,64]
+
+[2019-12-01 12:34:56]select * from `schools` where `schools`.`id` = ? and `schools`.`deleted_at` is null limit 1
+parmars:[50]
+
+[2019-12-01 12:34:56]select * from `campuses` where `campuses`.`school_id` = ? and `campuses`.`school_id` is not null and `campuses`.`deleted_at` is null order by `name` asc
+parmars:[50]
+
+[2019-12-01 12:34:58]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 12:34:58]select * from `schools` where `schools`.`id` = ? and `schools`.`deleted_at` is null limit 1
+parmars:[50]
+
+[2019-12-01 12:34:58]select * from `campuses` where `campuses`.`school_id` = ? and `campuses`.`school_id` is not null and `campuses`.`deleted_at` is null order by `name` asc
+parmars:[50]
+
+[2019-12-01 12:35:02]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 12:35:02]insert into `wifi_issue_types` (`type_name`, `type_pid`, `created_at`) values (?, ?, ?)
+parmars:["test1","64","2019-12-01 12:35:02"]
+
+[2019-12-01 12:35:02]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 12:35:02]select count(*) as aggregate from `wifi_issue_types` where (`typeid` > ? and `type_pid` = ?)
+parmars:[0,64]
+
+[2019-12-01 12:35:02]select * from `wifi_issue_types` where (`typeid` > ? and `type_pid` = ?) order by `typeid` asc limit 10 offset 0
+parmars:[0,64]
+
+[2019-12-01 12:35:02]select * from `schools` where `schools`.`id` = ? and `schools`.`deleted_at` is null limit 1
+parmars:[50]
+
+[2019-12-01 12:35:02]select * from `campuses` where `campuses`.`school_id` = ? and `campuses`.`school_id` is not null and `campuses`.`deleted_at` is null order by `name` asc
+parmars:[50]
+
+[2019-12-01 12:35:05]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 12:35:05]select * from `schools` where `schools`.`id` = ? and `schools`.`deleted_at` is null limit 1
+parmars:[50]
+
+[2019-12-01 12:35:05]select * from `campuses` where `campuses`.`school_id` = ? and `campuses`.`school_id` is not null and `campuses`.`deleted_at` is null order by `name` asc
+parmars:[50]
+
+[2019-12-01 12:35:08]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 12:35:08]insert into `wifi_issue_types` (`type_name`, `type_pid`, `created_at`) values (?, ?, ?)
+parmars:["test2","64","2019-12-01 12:35:08"]
+
+[2019-12-01 12:35:09]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 12:35:09]select count(*) as aggregate from `wifi_issue_types` where (`typeid` > ? and `type_pid` = ?)
+parmars:[0,64]
+
+[2019-12-01 12:35:09]select * from `wifi_issue_types` where (`typeid` > ? and `type_pid` = ?) order by `typeid` asc limit 10 offset 0
+parmars:[0,64]
+
+[2019-12-01 12:35:09]select * from `schools` where `schools`.`id` = ? and `schools`.`deleted_at` is null limit 1
+parmars:[50]
+
+[2019-12-01 12:35:09]select * from `campuses` where `campuses`.`school_id` = ? and `campuses`.`school_id` is not null and `campuses`.`deleted_at` is null order by `name` asc
+parmars:[50]
+
+[2019-12-01 12:35:11]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 12:35:11]select count(*) as aggregate from `wifi_issue_types` where (`typeid` > ? and `type_pid` = ?)
+parmars:[0,0]
+
+[2019-12-01 12:35:11]select * from `wifi_issue_types` where (`typeid` > ? and `type_pid` = ?) order by `typeid` asc limit 10 offset 0
+parmars:[0,0]
+
+[2019-12-01 12:35:11]select * from `schools` where `schools`.`id` = ? and `schools`.`deleted_at` is null limit 1
+parmars:[50]
+
+[2019-12-01 12:35:11]select * from `campuses` where `campuses`.`school_id` = ? and `campuses`.`school_id` is not null and `campuses`.`deleted_at` is null order by `name` asc
+parmars:[50]
+
+[2019-12-01 12:35:14]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 12:35:14]select count(*) as aggregate from `wifi_issue_types` where (`typeid` > ? and `type_pid` = ?)
+parmars:[0,64]
+
+[2019-12-01 12:35:14]select * from `wifi_issue_types` where (`typeid` > ? and `type_pid` = ?) order by `typeid` asc limit 10 offset 0
+parmars:[0,64]
+
+[2019-12-01 12:35:14]select * from `schools` where `schools`.`id` = ? and `schools`.`deleted_at` is null limit 1
+parmars:[50]
+
+[2019-12-01 12:35:14]select * from `campuses` where `campuses`.`school_id` = ? and `campuses`.`school_id` is not null and `campuses`.`deleted_at` is null order by `name` asc
+parmars:[50]
+
+[2019-12-01 12:35:16]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 12:35:16]select count(*) as aggregate from `wifi_issue_types` where (`type_pid` = ?)
+parmars:["66"]
+
+[2019-12-01 12:35:16]delete from `wifi_issue_types` where (`typeid` = ?)
+parmars:["66"]
+
+[2019-12-01 12:35:16]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 12:35:16]select count(*) as aggregate from `wifi_issue_types` where (`typeid` > ? and `type_pid` = ?)
+parmars:[0,64]
+
+[2019-12-01 12:35:16]select * from `wifi_issue_types` where (`typeid` > ? and `type_pid` = ?) order by `typeid` asc limit 10 offset 0
+parmars:[0,64]
+
+[2019-12-01 12:35:16]select * from `schools` where `schools`.`id` = ? and `schools`.`deleted_at` is null limit 1
+parmars:[50]
+
+[2019-12-01 12:35:16]select * from `campuses` where `campuses`.`school_id` = ? and `campuses`.`school_id` is not null and `campuses`.`deleted_at` is null order by `name` asc
+parmars:[50]
+
+[2019-12-01 12:35:19]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 12:35:19]select * from `wifi_issue_types` where (`typeid` = ?) order by `typeid` desc limit 1
+parmars:["65"]
+
+[2019-12-01 12:35:19]select * from `schools` where `schools`.`id` = ? and `schools`.`deleted_at` is null limit 1
+parmars:[50]
+
+[2019-12-01 12:35:19]select * from `campuses` where `campuses`.`school_id` = ? and `campuses`.`school_id` is not null and `campuses`.`deleted_at` is null order by `name` asc
+parmars:[50]
+
+[2019-12-01 12:35:22]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 12:35:22]select * from `wifi_issue_types` where (`typeid` = ?) order by `typeid` desc limit 1
+parmars:["65"]
+
+[2019-12-01 12:35:22]update `wifi_issue_types` set `type_name` = ?, `wifi_issue_types`.`updated_at` = ? where `typeid` = ?
+parmars:["test11","2019-12-01 12:35:22",65]
+
+[2019-12-01 12:35:22]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 12:35:22]select count(*) as aggregate from `wifi_issue_types` where (`typeid` > ? and `type_pid` = ?)
+parmars:[0,64]
+
+[2019-12-01 12:35:22]select * from `wifi_issue_types` where (`typeid` > ? and `type_pid` = ?) order by `typeid` asc limit 10 offset 0
+parmars:[0,64]
+
+[2019-12-01 12:35:22]select * from `schools` where `schools`.`id` = ? and `schools`.`deleted_at` is null limit 1
+parmars:[50]
+
+[2019-12-01 12:35:22]select * from `campuses` where `campuses`.`school_id` = ? and `campuses`.`school_id` is not null and `campuses`.`deleted_at` is null order by `name` asc
+parmars:[50]
+
+[2019-12-01 12:35:24]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 12:35:25]select * from `schools` where `schools`.`id` = ? and `schools`.`deleted_at` is null limit 1
+parmars:[50]
+
+[2019-12-01 12:35:25]select * from `campuses` where `campuses`.`school_id` = ? and `campuses`.`school_id` is not null and `campuses`.`deleted_at` is null order by `name` asc
+parmars:[50]
+
+[2019-12-01 12:35:28]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 12:35:28]insert into `wifi_issue_types` (`type_name`, `type_pid`, `created_at`) values (?, ?, ?)
+parmars:["test22","65","2019-12-01 12:35:28"]
+
+[2019-12-01 12:35:28]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 12:35:28]select count(*) as aggregate from `wifi_issue_types` where (`typeid` > ? and `type_pid` = ?)
+parmars:[0,65]
+
+[2019-12-01 12:35:28]select * from `wifi_issue_types` where (`typeid` > ? and `type_pid` = ?) order by `typeid` asc limit 10 offset 0
+parmars:[0,65]
+
+[2019-12-01 12:35:28]select * from `schools` where `schools`.`id` = ? and `schools`.`deleted_at` is null limit 1
+parmars:[50]
+
+[2019-12-01 12:35:28]select * from `campuses` where `campuses`.`school_id` = ? and `campuses`.`school_id` is not null and `campuses`.`deleted_at` is null order by `name` asc
+parmars:[50]
+
+[2019-12-01 12:35:31]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 12:35:31]select count(*) as aggregate from `wifi_issue_types` where (`typeid` > ? and `type_pid` = ?)
+parmars:[0,65]
+
+[2019-12-01 12:35:31]select * from `wifi_issue_types` where (`typeid` > ? and `type_pid` = ?) order by `typeid` asc limit 10 offset 0
+parmars:[0,65]
+
+[2019-12-01 12:35:31]select * from `schools` where `schools`.`id` = ? and `schools`.`deleted_at` is null limit 1
+parmars:[50]
+
+[2019-12-01 12:35:31]select * from `campuses` where `campuses`.`school_id` = ? and `campuses`.`school_id` is not null and `campuses`.`deleted_at` is null order by `name` asc
+parmars:[50]
+
+[2019-12-01 12:35:33]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 12:35:33]select * from `schools` where `schools`.`id` = ? and `schools`.`deleted_at` is null limit 1
+parmars:[50]
+
+[2019-12-01 12:35:33]select * from `campuses` where `campuses`.`school_id` = ? and `campuses`.`school_id` is not null and `campuses`.`deleted_at` is null order by `name` asc
+parmars:[50]
+
+[2019-12-01 12:35:37]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 12:35:37]insert into `wifi_issue_types` (`type_name`, `type_pid`, `created_at`) values (?, ?, ?)
+parmars:["test222","65","2019-12-01 12:35:37"]
+
+[2019-12-01 12:35:38]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 12:35:38]select count(*) as aggregate from `wifi_issue_types` where (`typeid` > ? and `type_pid` = ?)
+parmars:[0,65]
+
+[2019-12-01 12:35:38]select * from `wifi_issue_types` where (`typeid` > ? and `type_pid` = ?) order by `typeid` asc limit 10 offset 0
+parmars:[0,65]
+
+[2019-12-01 12:35:38]select * from `schools` where `schools`.`id` = ? and `schools`.`deleted_at` is null limit 1
+parmars:[50]
+
+[2019-12-01 12:35:38]select * from `campuses` where `campuses`.`school_id` = ? and `campuses`.`school_id` is not null and `campuses`.`deleted_at` is null order by `name` asc
+parmars:[50]
+
+[2019-12-01 12:35:41]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 12:35:41]select * from `wifi_issue_types` where (`typeid` = ?) order by `typeid` desc limit 1
+parmars:["68"]
+
+[2019-12-01 12:35:41]select * from `schools` where `schools`.`id` = ? and `schools`.`deleted_at` is null limit 1
+parmars:[50]
+
+[2019-12-01 12:35:41]select * from `campuses` where `campuses`.`school_id` = ? and `campuses`.`school_id` is not null and `campuses`.`deleted_at` is null order by `name` asc
+parmars:[50]
+
+[2019-12-01 12:35:43]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 12:35:43]select * from `wifi_issue_types` where (`typeid` = ?) order by `typeid` desc limit 1
+parmars:["68"]
+
+[2019-12-01 12:35:43]update `wifi_issue_types` set `type_name` = ?, `wifi_issue_types`.`updated_at` = ? where `typeid` = ?
+parmars:["test222","2019-12-01 12:35:43",68]
+
+[2019-12-01 12:35:43]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 12:35:43]select count(*) as aggregate from `wifi_issue_types` where (`typeid` > ? and `type_pid` = ?)
+parmars:[0,65]
+
+[2019-12-01 12:35:43]select * from `wifi_issue_types` where (`typeid` > ? and `type_pid` = ?) order by `typeid` asc limit 10 offset 0
+parmars:[0,65]
+
+[2019-12-01 12:35:43]select * from `schools` where `schools`.`id` = ? and `schools`.`deleted_at` is null limit 1
+parmars:[50]
+
+[2019-12-01 12:35:43]select * from `campuses` where `campuses`.`school_id` = ? and `campuses`.`school_id` is not null and `campuses`.`deleted_at` is null order by `name` asc
+parmars:[50]
+
+[2019-12-01 12:35:53]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 12:35:53]select count(*) as aggregate from `wifi_issue_types` where (`typeid` > ? and `type_pid` = ?)
+parmars:[0,0]
+
+[2019-12-01 12:35:53]select * from `wifi_issue_types` where (`typeid` > ? and `type_pid` = ?) order by `typeid` asc limit 10 offset 0
+parmars:[0,0]
+
+[2019-12-01 12:35:53]select * from `schools` where `schools`.`id` = ? and `schools`.`deleted_at` is null limit 1
+parmars:[50]
+
+[2019-12-01 12:35:53]select * from `campuses` where `campuses`.`school_id` = ? and `campuses`.`school_id` is not null and `campuses`.`deleted_at` is null order by `name` asc
+parmars:[50]
+
+[2019-12-01 12:35:57]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 12:35:57]select count(*) as aggregate from `wifi_issue_types` where (`typeid` > ? and `type_pid` = ?)
+parmars:[0,0]
+
+[2019-12-01 12:35:57]select * from `wifi_issue_types` where (`typeid` > ? and `type_pid` = ?) order by `typeid` asc limit 10 offset 0
+parmars:[0,0]
+
+[2019-12-01 12:35:57]select * from `schools` where `schools`.`id` = ? and `schools`.`deleted_at` is null limit 1
+parmars:[50]
+
+[2019-12-01 12:35:57]select * from `campuses` where `campuses`.`school_id` = ? and `campuses`.`school_id` is not null and `campuses`.`deleted_at` is null order by `name` asc
+parmars:[50]
+
+[2019-12-01 12:36:00]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 12:36:00]select count(*) as aggregate from `wifi_issue_types` where (`typeid` > ? and `type_pid` = ?)
+parmars:[0,64]
+
+[2019-12-01 12:36:00]select * from `wifi_issue_types` where (`typeid` > ? and `type_pid` = ?) order by `typeid` asc limit 10 offset 0
+parmars:[0,64]
+
+[2019-12-01 12:36:00]select * from `schools` where `schools`.`id` = ? and `schools`.`deleted_at` is null limit 1
+parmars:[50]
+
+[2019-12-01 12:36:00]select * from `campuses` where `campuses`.`school_id` = ? and `campuses`.`school_id` is not null and `campuses`.`deleted_at` is null order by `name` asc
+parmars:[50]
+
+[2019-12-01 12:37:06]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 12:37:06]select count(*) as aggregate from `wifi_issue_types` where (`typeid` > ? and `type_pid` = ?)
+parmars:[0,0]
+
+[2019-12-01 12:37:06]select * from `wifi_issue_types` where (`typeid` > ? and `type_pid` = ?) order by `typeid` asc limit 10 offset 0
+parmars:[0,0]
+
+[2019-12-01 12:37:06]select * from `schools` where `schools`.`id` = ? and `schools`.`deleted_at` is null limit 1
+parmars:[50]
+
+[2019-12-01 12:37:06]select * from `campuses` where `campuses`.`school_id` = ? and `campuses`.`school_id` is not null and `campuses`.`deleted_at` is null order by `name` asc
+parmars:[50]
+
+[2019-12-01 12:37:11]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 12:37:12]select count(*) as aggregate from `wifi_issue_types` where (`typeid` > ? and `type_pid` = ?)
+parmars:[0,64]
+
+[2019-12-01 12:37:12]select * from `wifi_issue_types` where (`typeid` > ? and `type_pid` = ?) order by `typeid` asc limit 10 offset 0
+parmars:[0,64]
+
+[2019-12-01 12:37:12]select * from `schools` where `schools`.`id` = ? and `schools`.`deleted_at` is null limit 1
+parmars:[50]
+
+[2019-12-01 12:37:12]select * from `campuses` where `campuses`.`school_id` = ? and `campuses`.`school_id` is not null and `campuses`.`deleted_at` is null order by `name` asc
+parmars:[50]
+
+[2019-12-01 12:37:14]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 12:37:14]select * from `schools` where `schools`.`id` = ? and `schools`.`deleted_at` is null limit 1
+parmars:[50]
+
+[2019-12-01 12:37:14]select * from `campuses` where `campuses`.`school_id` = ? and `campuses`.`school_id` is not null and `campuses`.`deleted_at` is null order by `name` asc
+parmars:[50]
+
+[2019-12-01 12:37:19]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 12:37:19]insert into `wifi_issue_types` (`type_name`, `type_pid`, `created_at`) values (?, ?, ?)
+parmars:["test123","64","2019-12-01 12:37:19"]
+
+[2019-12-01 12:37:19]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 12:37:19]select count(*) as aggregate from `wifi_issue_types` where (`typeid` > ? and `type_pid` = ?)
+parmars:[0,64]
+
+[2019-12-01 12:37:19]select * from `wifi_issue_types` where (`typeid` > ? and `type_pid` = ?) order by `typeid` asc limit 10 offset 0
+parmars:[0,64]
+
+[2019-12-01 12:37:19]select * from `schools` where `schools`.`id` = ? and `schools`.`deleted_at` is null limit 1
+parmars:[50]
+
+[2019-12-01 12:37:19]select * from `campuses` where `campuses`.`school_id` = ? and `campuses`.`school_id` is not null and `campuses`.`deleted_at` is null order by `name` asc
+parmars:[50]
+
+[2019-12-01 12:37:28]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 12:37:28]select * from `wifi_issue_types` where (`typeid` = ?) order by `typeid` desc limit 1
+parmars:["69"]
+
+[2019-12-01 12:37:28]select * from `schools` where `schools`.`id` = ? and `schools`.`deleted_at` is null limit 1
+parmars:[50]
+
+[2019-12-01 12:37:28]select * from `campuses` where `campuses`.`school_id` = ? and `campuses`.`school_id` is not null and `campuses`.`deleted_at` is null order by `name` asc
+parmars:[50]
+
+[2019-12-01 12:37:32]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 12:37:32]select * from `wifi_issue_types` where (`typeid` = ?) order by `typeid` desc limit 1
+parmars:["69"]
+
+[2019-12-01 12:37:32]update `wifi_issue_types` set `type_name` = ?, `wifi_issue_types`.`updated_at` = ? where `typeid` = ?
+parmars:["test12312","2019-12-01 12:37:32",69]
+
+[2019-12-01 12:37:33]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 12:37:33]select count(*) as aggregate from `wifi_issue_types` where (`typeid` > ? and `type_pid` = ?)
+parmars:[0,64]
+
+[2019-12-01 12:37:33]select * from `wifi_issue_types` where (`typeid` > ? and `type_pid` = ?) order by `typeid` asc limit 10 offset 0
+parmars:[0,64]
+
+[2019-12-01 12:37:33]select * from `schools` where `schools`.`id` = ? and `schools`.`deleted_at` is null limit 1
+parmars:[50]
+
+[2019-12-01 12:37:33]select * from `campuses` where `campuses`.`school_id` = ? and `campuses`.`school_id` is not null and `campuses`.`deleted_at` is null order by `name` asc
+parmars:[50]
+
+[2019-12-01 12:37:37]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 12:37:38]select * from `schools` where `schools`.`id` = ? and `schools`.`deleted_at` is null limit 1
+parmars:[50]
+
+[2019-12-01 12:37:38]select * from `campuses` where `campuses`.`school_id` = ? and `campuses`.`school_id` is not null and `campuses`.`deleted_at` is null order by `name` asc
+parmars:[50]
+
+[2019-12-01 12:37:41]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 12:37:42]insert into `wifi_issue_types` (`type_name`, `type_pid`, `created_at`) values (?, ?, ?)
+parmars:["test4444","69","2019-12-01 12:37:42"]
+
+[2019-12-01 12:37:42]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 12:37:42]select count(*) as aggregate from `wifi_issue_types` where (`typeid` > ? and `type_pid` = ?)
+parmars:[0,69]
+
+[2019-12-01 12:37:42]select * from `wifi_issue_types` where (`typeid` > ? and `type_pid` = ?) order by `typeid` asc limit 10 offset 0
+parmars:[0,69]
+
+[2019-12-01 12:37:42]select * from `schools` where `schools`.`id` = ? and `schools`.`deleted_at` is null limit 1
+parmars:[50]
+
+[2019-12-01 12:37:42]select * from `campuses` where `campuses`.`school_id` = ? and `campuses`.`school_id` is not null and `campuses`.`deleted_at` is null order by `name` asc
+parmars:[50]
+
+[2019-12-01 12:37:59]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 12:37:59]select count(*) as aggregate from `wifi_issue_types` where (`typeid` > ? and `type_pid` = ?)
+parmars:[0,0]
+
+[2019-12-01 12:37:59]select * from `wifi_issue_types` where (`typeid` > ? and `type_pid` = ?) order by `typeid` asc limit 10 offset 0
+parmars:[0,0]
+
+[2019-12-01 12:37:59]select * from `schools` where `schools`.`id` = ? and `schools`.`deleted_at` is null limit 1
+parmars:[50]
+
+[2019-12-01 12:37:59]select * from `campuses` where `campuses`.`school_id` = ? and `campuses`.`school_id` is not null and `campuses`.`deleted_at` is null order by `name` asc
+parmars:[50]
+
+[2019-12-01 12:38:02]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 12:38:02]select * from `schools` where `schools`.`id` = ? and `schools`.`deleted_at` is null limit 1
+parmars:[50]
+
+[2019-12-01 12:38:02]select * from `campuses` where `campuses`.`school_id` = ? and `campuses`.`school_id` is not null and `campuses`.`deleted_at` is null order by `name` asc
+parmars:[50]
+
+[2019-12-01 12:38:05]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 12:38:05]insert into `wifi_issue_types` (`type_name`, `type_pid`, `created_at`) values (?, ?, ?)
+parmars:["test",0,"2019-12-01 12:38:05"]
+
+[2019-12-01 12:38:06]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 12:38:06]select count(*) as aggregate from `wifi_issue_types` where (`typeid` > ? and `type_pid` = ?)
+parmars:[0,0]
+
+[2019-12-01 12:38:06]select * from `wifi_issue_types` where (`typeid` > ? and `type_pid` = ?) order by `typeid` asc limit 10 offset 0
+parmars:[0,0]
+
+[2019-12-01 12:38:06]select * from `schools` where `schools`.`id` = ? and `schools`.`deleted_at` is null limit 1
+parmars:[50]
+
+[2019-12-01 12:38:06]select * from `campuses` where `campuses`.`school_id` = ? and `campuses`.`school_id` is not null and `campuses`.`deleted_at` is null order by `name` asc
+parmars:[50]
+
+[2019-12-01 12:38:09]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 12:38:09]select count(*) as aggregate from `wifi_issue_types` where (`typeid` > ? and `type_pid` = ?)
+parmars:[0,71]
+
+[2019-12-01 12:38:09]select * from `schools` where `schools`.`id` = ? and `schools`.`deleted_at` is null limit 1
+parmars:[50]
+
+[2019-12-01 12:38:09]select * from `campuses` where `campuses`.`school_id` = ? and `campuses`.`school_id` is not null and `campuses`.`deleted_at` is null order by `name` asc
+parmars:[50]
+
+[2019-12-01 12:38:13]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 12:38:13]select * from `wifi_issue_types` where (`typeid` = ?) order by `typeid` desc limit 1
+parmars:["71"]
+
+[2019-12-01 12:38:13]select * from `schools` where `schools`.`id` = ? and `schools`.`deleted_at` is null limit 1
+parmars:[50]
+
+[2019-12-01 12:38:13]select * from `campuses` where `campuses`.`school_id` = ? and `campuses`.`school_id` is not null and `campuses`.`deleted_at` is null order by `name` asc
+parmars:[50]
+
+[2019-12-01 12:38:15]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 12:38:15]select count(*) as aggregate from `wifi_issue_types` where (`typeid` > ? and `type_pid` = ?)
+parmars:[0,0]
+
+[2019-12-01 12:38:15]select * from `wifi_issue_types` where (`typeid` > ? and `type_pid` = ?) order by `typeid` asc limit 10 offset 0
+parmars:[0,0]
+
+[2019-12-01 12:38:15]select * from `schools` where `schools`.`id` = ? and `schools`.`deleted_at` is null limit 1
+parmars:[50]
+
+[2019-12-01 12:38:15]select * from `campuses` where `campuses`.`school_id` = ? and `campuses`.`school_id` is not null and `campuses`.`deleted_at` is null order by `name` asc
+parmars:[50]
+
+[2019-12-01 12:38:18]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 12:38:18]select * from `wifi_issue_types` where (`typeid` = ?) order by `typeid` desc limit 1
+parmars:["71"]
+
+[2019-12-01 12:38:18]select * from `schools` where `schools`.`id` = ? and `schools`.`deleted_at` is null limit 1
+parmars:[50]
+
+[2019-12-01 12:38:18]select * from `campuses` where `campuses`.`school_id` = ? and `campuses`.`school_id` is not null and `campuses`.`deleted_at` is null order by `name` asc
+parmars:[50]
+
+[2019-12-01 12:38:21]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 12:38:22]select * from `wifi_issue_types` where (`typeid` = ?) order by `typeid` desc limit 1
+parmars:["71"]
+
+[2019-12-01 12:38:22]update `wifi_issue_types` set `type_name` = ?, `wifi_issue_types`.`updated_at` = ? where `typeid` = ?
+parmars:["test1","2019-12-01 12:38:22",71]
+
+[2019-12-01 12:38:22]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 12:38:22]select count(*) as aggregate from `wifi_issue_types` where (`typeid` > ? and `type_pid` = ?)
+parmars:[0,0]
+
+[2019-12-01 12:38:22]select * from `wifi_issue_types` where (`typeid` > ? and `type_pid` = ?) order by `typeid` asc limit 10 offset 0
+parmars:[0,0]
+
+[2019-12-01 12:38:22]select * from `schools` where `schools`.`id` = ? and `schools`.`deleted_at` is null limit 1
+parmars:[50]
+
+[2019-12-01 12:38:22]select * from `campuses` where `campuses`.`school_id` = ? and `campuses`.`school_id` is not null and `campuses`.`deleted_at` is null order by `name` asc
+parmars:[50]
+
+[2019-12-01 12:38:30]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 12:38:30]select count(*) as aggregate from `wifi_issue_types` where (`typeid` > ? and `type_pid` = ?)
+parmars:[0,0]
+
+[2019-12-01 12:38:30]select * from `wifi_issue_types` where (`typeid` > ? and `type_pid` = ?) order by `typeid` asc limit 10 offset 0
+parmars:[0,0]
+
+[2019-12-01 12:38:30]select * from `schools` where `schools`.`id` = ? and `schools`.`deleted_at` is null limit 1
+parmars:[50]
+
+[2019-12-01 12:38:30]select * from `campuses` where `campuses`.`school_id` = ? and `campuses`.`school_id` is not null and `campuses`.`deleted_at` is null order by `name` asc
+parmars:[50]
+
+[2019-12-01 12:38:32]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 12:38:32]select count(*) as aggregate from `wifi_issue_types` where (`typeid` > ? and `type_pid` = ?)
+parmars:[0,71]
+
+[2019-12-01 12:38:32]select * from `schools` where `schools`.`id` = ? and `schools`.`deleted_at` is null limit 1
+parmars:[50]
+
+[2019-12-01 12:38:32]select * from `campuses` where `campuses`.`school_id` = ? and `campuses`.`school_id` is not null and `campuses`.`deleted_at` is null order by `name` asc
+parmars:[50]
+
+[2019-12-01 12:38:34]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 12:38:34]select * from `schools` where `schools`.`id` = ? and `schools`.`deleted_at` is null limit 1
+parmars:[50]
+
+[2019-12-01 12:38:34]select * from `campuses` where `campuses`.`school_id` = ? and `campuses`.`school_id` is not null and `campuses`.`deleted_at` is null order by `name` asc
+parmars:[50]
+
+[2019-12-01 12:38:39]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 12:38:40]insert into `wifi_issue_types` (`type_name`, `type_pid`, `created_at`) values (?, ?, ?)
+parmars:["test123","71","2019-12-01 12:38:40"]
+
+[2019-12-01 12:38:40]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 12:38:40]select count(*) as aggregate from `wifi_issue_types` where (`typeid` > ? and `type_pid` = ?)
+parmars:[0,71]
+
+[2019-12-01 12:38:40]select * from `wifi_issue_types` where (`typeid` > ? and `type_pid` = ?) order by `typeid` asc limit 10 offset 0
+parmars:[0,71]
+
+[2019-12-01 12:38:40]select * from `schools` where `schools`.`id` = ? and `schools`.`deleted_at` is null limit 1
+parmars:[50]
+
+[2019-12-01 12:38:40]select * from `campuses` where `campuses`.`school_id` = ? and `campuses`.`school_id` is not null and `campuses`.`deleted_at` is null order by `name` asc
+parmars:[50]
+
+[2019-12-01 12:38:46]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 12:38:46]select * from `wifi_issue_types` where (`typeid` = ?) order by `typeid` desc limit 1
+parmars:["72"]
+
+[2019-12-01 12:38:46]select * from `schools` where `schools`.`id` = ? and `schools`.`deleted_at` is null limit 1
+parmars:[50]
+
+[2019-12-01 12:38:46]select * from `campuses` where `campuses`.`school_id` = ? and `campuses`.`school_id` is not null and `campuses`.`deleted_at` is null order by `name` asc
+parmars:[50]
+
+[2019-12-01 12:38:50]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 12:38:50]select * from `wifi_issue_types` where (`typeid` = ?) order by `typeid` desc limit 1
+parmars:["72"]
+
+[2019-12-01 12:38:50]update `wifi_issue_types` set `type_name` = ?, `wifi_issue_types`.`updated_at` = ? where `typeid` = ?
+parmars:["test1234","2019-12-01 12:38:50",72]
+
+[2019-12-01 12:38:50]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 12:38:50]select count(*) as aggregate from `wifi_issue_types` where (`typeid` > ? and `type_pid` = ?)
+parmars:[0,71]
+
+[2019-12-01 12:38:50]select * from `wifi_issue_types` where (`typeid` > ? and `type_pid` = ?) order by `typeid` asc limit 10 offset 0
+parmars:[0,71]
+
+[2019-12-01 12:38:50]select * from `schools` where `schools`.`id` = ? and `schools`.`deleted_at` is null limit 1
+parmars:[50]
+
+[2019-12-01 12:38:50]select * from `campuses` where `campuses`.`school_id` = ? and `campuses`.`school_id` is not null and `campuses`.`deleted_at` is null order by `name` asc
+parmars:[50]
+
+[2019-12-01 12:38:57]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 12:38:57]select * from `schools` where `schools`.`id` = ? and `schools`.`deleted_at` is null limit 1
+parmars:[50]
+
+[2019-12-01 12:38:57]select * from `campuses` where `campuses`.`school_id` = ? and `campuses`.`school_id` is not null and `campuses`.`deleted_at` is null order by `name` asc
+parmars:[50]
+
+[2019-12-01 12:39:08]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 12:39:09]insert into `wifi_issue_types` (`type_name`, `type_pid`, `created_at`) values (?, ?, ?)
+parmars:["test345","72","2019-12-01 12:39:09"]
+
+[2019-12-01 12:39:09]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 12:39:09]select count(*) as aggregate from `wifi_issue_types` where (`typeid` > ? and `type_pid` = ?)
+parmars:[0,72]
+
+[2019-12-01 12:39:09]select * from `wifi_issue_types` where (`typeid` > ? and `type_pid` = ?) order by `typeid` asc limit 10 offset 0
+parmars:[0,72]
+
+[2019-12-01 12:39:09]select * from `schools` where `schools`.`id` = ? and `schools`.`deleted_at` is null limit 1
+parmars:[50]
+
+[2019-12-01 12:39:09]select * from `campuses` where `campuses`.`school_id` = ? and `campuses`.`school_id` is not null and `campuses`.`deleted_at` is null order by `name` asc
+parmars:[50]
+
+[2019-12-01 12:39:18]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 12:39:18]select * from `schools` where `schools`.`id` = ? and `schools`.`deleted_at` is null limit 1
+parmars:[50]
+
+[2019-12-01 12:39:18]select * from `campuses` where `campuses`.`school_id` = ? and `campuses`.`school_id` is not null and `campuses`.`deleted_at` is null order by `name` asc
+parmars:[50]
+
+[2019-12-01 12:40:21]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 12:40:40]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 12:40:40]insert into `wifi_issue_types` (`type_name`, `type_pid`, `created_at`) values (?, ?, ?)
+parmars:["test345","71","2019-12-01 12:40:40"]
+
+[2019-12-01 12:40:40]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 12:40:40]select count(*) as aggregate from `wifi_issue_types` where (`typeid` > ? and `type_pid` = ?)
+parmars:[0,71]
+
+[2019-12-01 12:40:40]select * from `wifi_issue_types` where (`typeid` > ? and `type_pid` = ?) order by `typeid` asc limit 10 offset 0
+parmars:[0,71]
+
+[2019-12-01 12:40:40]select * from `schools` where `schools`.`id` = ? and `schools`.`deleted_at` is null limit 1
+parmars:[50]
+
+[2019-12-01 12:40:40]select * from `campuses` where `campuses`.`school_id` = ? and `campuses`.`school_id` is not null and `campuses`.`deleted_at` is null order by `name` asc
+parmars:[50]
+
+[2019-12-01 12:40:50]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 12:40:50]select * from `wifi_issue_types` where (`typeid` = ?) order by `typeid` desc limit 1
+parmars:["74"]
+
+[2019-12-01 12:40:50]select * from `schools` where `schools`.`id` = ? and `schools`.`deleted_at` is null limit 1
+parmars:[50]
+
+[2019-12-01 12:40:50]select * from `campuses` where `campuses`.`school_id` = ? and `campuses`.`school_id` is not null and `campuses`.`deleted_at` is null order by `name` asc
+parmars:[50]
+
+[2019-12-01 12:40:53]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 12:40:53]select * from `wifi_issue_types` where (`typeid` = ?) order by `typeid` desc limit 1
+parmars:["74"]
+
+[2019-12-01 12:40:53]update `wifi_issue_types` set `type_name` = ?, `wifi_issue_types`.`updated_at` = ? where `typeid` = ?
+parmars:["test3456","2019-12-01 12:40:53",74]
+
+[2019-12-01 12:40:54]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 12:40:54]select count(*) as aggregate from `wifi_issue_types` where (`typeid` > ? and `type_pid` = ?)
+parmars:[0,71]
+
+[2019-12-01 12:40:54]select * from `wifi_issue_types` where (`typeid` > ? and `type_pid` = ?) order by `typeid` asc limit 10 offset 0
+parmars:[0,71]
+
+[2019-12-01 12:40:54]select * from `schools` where `schools`.`id` = ? and `schools`.`deleted_at` is null limit 1
+parmars:[50]
+
+[2019-12-01 12:40:54]select * from `campuses` where `campuses`.`school_id` = ? and `campuses`.`school_id` is not null and `campuses`.`deleted_at` is null order by `name` asc
+parmars:[50]
+
+[2019-12-01 12:41:05]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 12:41:05]select count(*) as aggregate from `wifi_issue_types` where (`type_pid` = ?)
+parmars:["72"]
+
+[2019-12-01 12:41:05]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 12:41:05]select count(*) as aggregate from `wifi_issue_types` where (`typeid` > ? and `type_pid` = ?)
+parmars:[0,71]
+
+[2019-12-01 12:41:05]select * from `wifi_issue_types` where (`typeid` > ? and `type_pid` = ?) order by `typeid` asc limit 10 offset 0
+parmars:[0,71]
+
+[2019-12-01 12:41:05]select * from `schools` where `schools`.`id` = ? and `schools`.`deleted_at` is null limit 1
+parmars:[50]
+
+[2019-12-01 12:41:05]select * from `campuses` where `campuses`.`school_id` = ? and `campuses`.`school_id` is not null and `campuses`.`deleted_at` is null order by `name` asc
+parmars:[50]
+
+[2019-12-01 12:41:10]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 12:41:10]select count(*) as aggregate from `wifi_issue_types` where (`type_pid` = ?)
+parmars:["74"]
+
+[2019-12-01 12:41:10]delete from `wifi_issue_types` where (`typeid` = ?)
+parmars:["74"]
+
+[2019-12-01 12:41:10]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 12:41:10]select count(*) as aggregate from `wifi_issue_types` where (`typeid` > ? and `type_pid` = ?)
+parmars:[0,71]
+
+[2019-12-01 12:41:10]select * from `wifi_issue_types` where (`typeid` > ? and `type_pid` = ?) order by `typeid` asc limit 10 offset 0
+parmars:[0,71]
+
+[2019-12-01 12:41:10]select * from `schools` where `schools`.`id` = ? and `schools`.`deleted_at` is null limit 1
+parmars:[50]
+
+[2019-12-01 12:41:10]select * from `campuses` where `campuses`.`school_id` = ? and `campuses`.`school_id` is not null and `campuses`.`deleted_at` is null order by `name` asc
+parmars:[50]
+
+[2019-12-01 12:41:25]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 12:41:25]select count(*) as aggregate from `wifi_issue_types` where (`typeid` > ? and `type_pid` = ?)
+parmars:[0,71]
+
+[2019-12-01 12:41:25]select * from `wifi_issue_types` where (`typeid` > ? and `type_pid` = ?) order by `typeid` asc limit 10 offset 0
+parmars:[0,71]
+
+[2019-12-01 12:41:25]select * from `schools` where `schools`.`id` = ? and `schools`.`deleted_at` is null limit 1
+parmars:[50]
+
+[2019-12-01 12:41:25]select * from `campuses` where `campuses`.`school_id` = ? and `campuses`.`school_id` is not null and `campuses`.`deleted_at` is null order by `name` asc
+parmars:[50]
+
+[2019-12-01 12:41:27]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 12:41:27]select * from `schools` where `schools`.`id` = ? and `schools`.`deleted_at` is null limit 1
+parmars:[50]
+
+[2019-12-01 12:41:27]select * from `campuses` where `campuses`.`school_id` = ? and `campuses`.`school_id` is not null and `campuses`.`deleted_at` is null order by `name` asc
+parmars:[50]
+
+[2019-12-01 12:41:32]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 12:41:32]insert into `wifi_issue_types` (`type_name`, `type_pid`, `created_at`) values (?, ?, ?)
+parmars:["test34567","71","2019-12-01 12:41:32"]
+
+[2019-12-01 12:41:33]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 12:41:33]select count(*) as aggregate from `wifi_issue_types` where (`typeid` > ? and `type_pid` = ?)
+parmars:[0,71]
+
+[2019-12-01 12:41:33]select * from `wifi_issue_types` where (`typeid` > ? and `type_pid` = ?) order by `typeid` asc limit 10 offset 0
+parmars:[0,71]
+
+[2019-12-01 12:41:33]select * from `schools` where `schools`.`id` = ? and `schools`.`deleted_at` is null limit 1
+parmars:[50]
+
+[2019-12-01 12:41:33]select * from `campuses` where `campuses`.`school_id` = ? and `campuses`.`school_id` is not null and `campuses`.`deleted_at` is null order by `name` asc
+parmars:[50]
+
+[2019-12-01 12:41:35]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 12:41:35]select * from `wifi_issue_types` where (`typeid` = ?) order by `typeid` desc limit 1
+parmars:["75"]
+
+[2019-12-01 12:41:35]select * from `schools` where `schools`.`id` = ? and `schools`.`deleted_at` is null limit 1
+parmars:[50]
+
+[2019-12-01 12:41:35]select * from `campuses` where `campuses`.`school_id` = ? and `campuses`.`school_id` is not null and `campuses`.`deleted_at` is null order by `name` asc
+parmars:[50]
+
+[2019-12-01 12:41:38]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 12:41:38]select * from `wifi_issue_types` where (`typeid` = ?) order by `typeid` desc limit 1
+parmars:["75"]
+
+[2019-12-01 12:41:38]update `wifi_issue_types` set `type_name` = ?, `wifi_issue_types`.`updated_at` = ? where `typeid` = ?
+parmars:["test34567","2019-12-01 12:41:38",75]
+
+[2019-12-01 12:41:38]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 12:41:38]select count(*) as aggregate from `wifi_issue_types` where (`typeid` > ? and `type_pid` = ?)
+parmars:[0,71]
+
+[2019-12-01 12:41:38]select * from `wifi_issue_types` where (`typeid` > ? and `type_pid` = ?) order by `typeid` asc limit 10 offset 0
+parmars:[0,71]
+
+[2019-12-01 12:41:38]select * from `schools` where `schools`.`id` = ? and `schools`.`deleted_at` is null limit 1
+parmars:[50]
+
+[2019-12-01 12:41:38]select * from `campuses` where `campuses`.`school_id` = ? and `campuses`.`school_id` is not null and `campuses`.`deleted_at` is null order by `name` asc
+parmars:[50]
+
+[2019-12-01 12:41:43]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 12:41:43]select * from `wifi_issue_types` where (`typeid` = ?) order by `typeid` desc limit 1
+parmars:["75"]
+
+[2019-12-01 12:41:43]select * from `schools` where `schools`.`id` = ? and `schools`.`deleted_at` is null limit 1
+parmars:[50]
+
+[2019-12-01 12:41:43]select * from `campuses` where `campuses`.`school_id` = ? and `campuses`.`school_id` is not null and `campuses`.`deleted_at` is null order by `name` asc
+parmars:[50]
+
+[2019-12-01 12:41:46]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 12:41:46]select * from `wifi_issue_types` where (`typeid` = ?) order by `typeid` desc limit 1
+parmars:["75"]
+
+[2019-12-01 12:41:47]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 12:41:47]select * from `wifi_issue_types` where (`typeid` = ?) order by `typeid` desc limit 1
+parmars:["75"]
+
+[2019-12-01 12:41:47]select * from `schools` where `schools`.`id` = ? and `schools`.`deleted_at` is null limit 1
+parmars:[50]
+
+[2019-12-01 12:41:47]select * from `campuses` where `campuses`.`school_id` = ? and `campuses`.`school_id` is not null and `campuses`.`deleted_at` is null order by `name` asc
+parmars:[50]
+
+[2019-12-01 12:41:50]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 12:41:50]select * from `wifi_issue_types` where (`typeid` = ?) order by `typeid` desc limit 1
+parmars:["75"]
+
+[2019-12-01 12:41:50]update `wifi_issue_types` set `type_name` = ?, `wifi_issue_types`.`updated_at` = ? where `typeid` = ?
+parmars:["test34567","2019-12-01 12:41:50",75]
+
+[2019-12-01 12:41:50]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 12:41:50]select count(*) as aggregate from `wifi_issue_types` where (`typeid` > ? and `type_pid` = ?)
+parmars:[0,71]
+
+[2019-12-01 12:41:50]select * from `wifi_issue_types` where (`typeid` > ? and `type_pid` = ?) order by `typeid` asc limit 10 offset 0
+parmars:[0,71]
+
+[2019-12-01 12:41:50]select * from `schools` where `schools`.`id` = ? and `schools`.`deleted_at` is null limit 1
+parmars:[50]
+
+[2019-12-01 12:41:50]select * from `campuses` where `campuses`.`school_id` = ? and `campuses`.`school_id` is not null and `campuses`.`deleted_at` is null order by `name` asc
+parmars:[50]
+
+[2019-12-01 12:42:08]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 12:42:08]select * from `wifi_issue_types` where (`typeid` = ?) order by `typeid` desc limit 1
+parmars:["75"]
+
+[2019-12-01 12:42:08]select * from `schools` where `schools`.`id` = ? and `schools`.`deleted_at` is null limit 1
+parmars:[50]
+
+[2019-12-01 12:42:08]select * from `campuses` where `campuses`.`school_id` = ? and `campuses`.`school_id` is not null and `campuses`.`deleted_at` is null order by `name` asc
+parmars:[50]
+
+[2019-12-01 12:42:11]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 12:42:11]select * from `wifi_issue_types` where (`typeid` = ?) order by `typeid` desc limit 1
+parmars:["75"]
+
+[2019-12-01 12:42:11]update `wifi_issue_types` set `type_name` = ?, `wifi_issue_types`.`updated_at` = ? where `typeid` = ?
+parmars:["test345678","2019-12-01 12:42:11",75]
+
+[2019-12-01 12:42:12]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 12:42:12]select count(*) as aggregate from `wifi_issue_types` where (`typeid` > ? and `type_pid` = ?)
+parmars:[0,71]
+
+[2019-12-01 12:42:12]select * from `wifi_issue_types` where (`typeid` > ? and `type_pid` = ?) order by `typeid` asc limit 10 offset 0
+parmars:[0,71]
+
+[2019-12-01 12:42:12]select * from `schools` where `schools`.`id` = ? and `schools`.`deleted_at` is null limit 1
+parmars:[50]
+
+[2019-12-01 12:42:12]select * from `campuses` where `campuses`.`school_id` = ? and `campuses`.`school_id` is not null and `campuses`.`deleted_at` is null order by `name` asc
+parmars:[50]
+
+[2019-12-01 12:42:17]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 12:42:17]select * from `wifi_issue_types` where (`typeid` = ?) order by `typeid` desc limit 1
+parmars:["72"]
+
+[2019-12-01 12:42:17]select * from `schools` where `schools`.`id` = ? and `schools`.`deleted_at` is null limit 1
+parmars:[50]
+
+[2019-12-01 12:42:17]select * from `campuses` where `campuses`.`school_id` = ? and `campuses`.`school_id` is not null and `campuses`.`deleted_at` is null order by `name` asc
+parmars:[50]
+
+[2019-12-01 12:42:21]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 12:42:21]select * from `wifi_issue_types` where (`typeid` = ?) order by `typeid` desc limit 1
+parmars:["72"]
+
+[2019-12-01 12:42:21]update `wifi_issue_types` set `type_name` = ?, `wifi_issue_types`.`updated_at` = ? where `typeid` = ?
+parmars:["test1234888","2019-12-01 12:42:21",72]
+
+[2019-12-01 12:42:21]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 12:42:21]select count(*) as aggregate from `wifi_issue_types` where (`typeid` > ? and `type_pid` = ?)
+parmars:[0,71]
+
+[2019-12-01 12:42:21]select * from `wifi_issue_types` where (`typeid` > ? and `type_pid` = ?) order by `typeid` asc limit 10 offset 0
+parmars:[0,71]
+
+[2019-12-01 12:42:21]select * from `schools` where `schools`.`id` = ? and `schools`.`deleted_at` is null limit 1
+parmars:[50]
+
+[2019-12-01 12:42:21]select * from `campuses` where `campuses`.`school_id` = ? and `campuses`.`school_id` is not null and `campuses`.`deleted_at` is null order by `name` asc
+parmars:[50]
+
+[2019-12-01 12:43:12]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 12:43:12]select count(*) as aggregate from `wifi_issue_types` where (`typeid` > ? and `type_pid` = ?)
+parmars:[0,71]
+
+[2019-12-01 12:43:12]select * from `wifi_issue_types` where (`typeid` > ? and `type_pid` = ?) order by `typeid` asc limit 10 offset 0
+parmars:[0,71]
+
+[2019-12-01 12:43:12]select * from `schools` where `schools`.`id` = ? and `schools`.`deleted_at` is null limit 1
+parmars:[50]
+
+[2019-12-01 12:43:12]select * from `campuses` where `campuses`.`school_id` = ? and `campuses`.`school_id` is not null and `campuses`.`deleted_at` is null order by `name` asc
+parmars:[50]
+
+[2019-12-01 12:43:16]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 12:43:16]select * from `wifi_issue_types` where (`typeid` = ?) order by `typeid` desc limit 1
+parmars:["75"]
+
+[2019-12-01 12:43:16]select * from `schools` where `schools`.`id` = ? and `schools`.`deleted_at` is null limit 1
+parmars:[50]
+
+[2019-12-01 12:43:16]select * from `campuses` where `campuses`.`school_id` = ? and `campuses`.`school_id` is not null and `campuses`.`deleted_at` is null order by `name` asc
+parmars:[50]
+
+[2019-12-01 12:43:19]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 12:43:19]select * from `schools` where `schools`.`id` = ? and `schools`.`deleted_at` is null limit 1
+parmars:[50]
+
+[2019-12-01 12:43:19]select * from `campuses` where `campuses`.`school_id` = ? and `campuses`.`school_id` is not null and `campuses`.`deleted_at` is null order by `name` asc
+parmars:[50]
+
+[2019-12-01 12:43:26]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 12:43:26]insert into `wifi_issue_types` (`type_name`, `type_pid`, `created_at`) values (?, ?, ?)
+parmars:["无法上网","71","2019-12-01 12:43:26"]
+
+[2019-12-01 12:43:26]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 12:43:26]select count(*) as aggregate from `wifi_issue_types` where (`typeid` > ? and `type_pid` = ?)
+parmars:[0,71]
+
+[2019-12-01 12:43:26]select * from `wifi_issue_types` where (`typeid` > ? and `type_pid` = ?) order by `typeid` asc limit 10 offset 0
+parmars:[0,71]
+
+[2019-12-01 12:43:26]select * from `schools` where `schools`.`id` = ? and `schools`.`deleted_at` is null limit 1
+parmars:[50]
+
+[2019-12-01 12:43:26]select * from `campuses` where `campuses`.`school_id` = ? and `campuses`.`school_id` is not null and `campuses`.`deleted_at` is null order by `name` asc
+parmars:[50]
+
+[2019-12-01 12:43:36]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 12:43:36]select count(*) as aggregate from `wifi_issue_types` where (`typeid` > ? and `type_pid` = ?)
+parmars:[0,71]
+
+[2019-12-01 12:43:36]select * from `wifi_issue_types` where (`typeid` > ? and `type_pid` = ?) order by `typeid` asc limit 10 offset 0
+parmars:[0,71]
+
+[2019-12-01 12:43:36]select * from `schools` where `schools`.`id` = ? and `schools`.`deleted_at` is null limit 1
+parmars:[50]
+
+[2019-12-01 12:43:36]select * from `campuses` where `campuses`.`school_id` = ? and `campuses`.`school_id` is not null and `campuses`.`deleted_at` is null order by `name` asc
+parmars:[50]
+
+[2019-12-01 12:43:38]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 12:43:38]select count(*) as aggregate from `wifi_issue_types` where (`type_pid` = ?)
+parmars:["76"]
+
+[2019-12-01 12:43:38]delete from `wifi_issue_types` where (`typeid` = ?)
+parmars:["76"]
+
+[2019-12-01 12:43:39]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 12:43:39]select count(*) as aggregate from `wifi_issue_types` where (`typeid` > ? and `type_pid` = ?)
+parmars:[0,71]
+
+[2019-12-01 12:43:39]select * from `wifi_issue_types` where (`typeid` > ? and `type_pid` = ?) order by `typeid` asc limit 10 offset 0
+parmars:[0,71]
+
+[2019-12-01 12:43:39]select * from `schools` where `schools`.`id` = ? and `schools`.`deleted_at` is null limit 1
+parmars:[50]
+
+[2019-12-01 12:43:39]select * from `campuses` where `campuses`.`school_id` = ? and `campuses`.`school_id` is not null and `campuses`.`deleted_at` is null order by `name` asc
+parmars:[50]
+
+[2019-12-01 12:43:41]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 12:43:41]select count(*) as aggregate from `wifi_issue_types` where (`typeid` > ? and `type_pid` = ?)
+parmars:[0,0]
+
+[2019-12-01 12:43:41]select * from `wifi_issue_types` where (`typeid` > ? and `type_pid` = ?) order by `typeid` asc limit 10 offset 0
+parmars:[0,0]
+
+[2019-12-01 12:43:41]select * from `schools` where `schools`.`id` = ? and `schools`.`deleted_at` is null limit 1
+parmars:[50]
+
+[2019-12-01 12:43:41]select * from `campuses` where `campuses`.`school_id` = ? and `campuses`.`school_id` is not null and `campuses`.`deleted_at` is null order by `name` asc
+parmars:[50]
+
+[2019-12-01 12:43:45]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 12:43:45]select count(*) as aggregate from `wifi_issue_types` where (`type_pid` = ?)
+parmars:["71"]
+
+[2019-12-01 12:43:45]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 12:43:45]select count(*) as aggregate from `wifi_issue_types` where (`typeid` > ? and `type_pid` = ?)
+parmars:[0,0]
+
+[2019-12-01 12:43:45]select * from `wifi_issue_types` where (`typeid` > ? and `type_pid` = ?) order by `typeid` asc limit 10 offset 0
+parmars:[0,0]
+
+[2019-12-01 12:43:45]select * from `schools` where `schools`.`id` = ? and `schools`.`deleted_at` is null limit 1
+parmars:[50]
+
+[2019-12-01 12:43:45]select * from `campuses` where `campuses`.`school_id` = ? and `campuses`.`school_id` is not null and `campuses`.`deleted_at` is null order by `name` asc
+parmars:[50]
+
+[2019-12-01 12:44:00]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 12:44:00]select * from `wifi_issue_types` where (`typeid` = ?) order by `typeid` desc limit 1
+parmars:["71"]
+
+[2019-12-01 12:44:00]select * from `schools` where `schools`.`id` = ? and `schools`.`deleted_at` is null limit 1
+parmars:[50]
+
+[2019-12-01 12:44:00]select * from `campuses` where `campuses`.`school_id` = ? and `campuses`.`school_id` is not null and `campuses`.`deleted_at` is null order by `name` asc
+parmars:[50]
+
+[2019-12-01 12:44:04]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 12:44:04]select * from `wifi_issue_types` where (`typeid` = ?) order by `typeid` desc limit 1
+parmars:["71"]
+
+[2019-12-01 12:44:04]update `wifi_issue_types` set `type_name` = ?, `wifi_issue_types`.`updated_at` = ? where `typeid` = ?
+parmars:["test11","2019-12-01 12:44:04",71]
+
+[2019-12-01 12:44:05]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 12:44:05]select count(*) as aggregate from `wifi_issue_types` where (`typeid` > ? and `type_pid` = ?)
+parmars:[0,0]
+
+[2019-12-01 12:44:05]select * from `wifi_issue_types` where (`typeid` > ? and `type_pid` = ?) order by `typeid` asc limit 10 offset 0
+parmars:[0,0]
+
+[2019-12-01 12:44:05]select * from `schools` where `schools`.`id` = ? and `schools`.`deleted_at` is null limit 1
+parmars:[50]
+
+[2019-12-01 12:44:05]select * from `campuses` where `campuses`.`school_id` = ? and `campuses`.`school_id` is not null and `campuses`.`deleted_at` is null order by `name` asc
+parmars:[50]
+
+[2019-12-01 12:44:08]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 12:44:08]select count(*) as aggregate from `wifi_issue_types` where (`typeid` > ? and `type_pid` = ?)
+parmars:[0,71]
+
+[2019-12-01 12:44:08]select * from `wifi_issue_types` where (`typeid` > ? and `type_pid` = ?) order by `typeid` asc limit 10 offset 0
+parmars:[0,71]
+
+[2019-12-01 12:44:08]select * from `schools` where `schools`.`id` = ? and `schools`.`deleted_at` is null limit 1
+parmars:[50]
+
+[2019-12-01 12:44:08]select * from `campuses` where `campuses`.`school_id` = ? and `campuses`.`school_id` is not null and `campuses`.`deleted_at` is null order by `name` asc
+parmars:[50]
+
+[2019-12-01 12:44:13]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 12:44:13]select * from `schools` where `schools`.`id` = ? and `schools`.`deleted_at` is null limit 1
+parmars:[50]
+
+[2019-12-01 12:44:13]select * from `campuses` where `campuses`.`school_id` = ? and `campuses`.`school_id` is not null and `campuses`.`deleted_at` is null order by `name` asc
+parmars:[50]
+
+[2019-12-01 12:44:27]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 12:44:27]select count(*) as aggregate from `wifi_issue_types` where (`typeid` > ? and `type_pid` = ?)
+parmars:[0,71]
+
+[2019-12-01 12:44:27]select * from `wifi_issue_types` where (`typeid` > ? and `type_pid` = ?) order by `typeid` asc limit 10 offset 0
+parmars:[0,71]
+
+[2019-12-01 12:44:27]select * from `schools` where `schools`.`id` = ? and `schools`.`deleted_at` is null limit 1
+parmars:[50]
+
+[2019-12-01 12:44:27]select * from `campuses` where `campuses`.`school_id` = ? and `campuses`.`school_id` is not null and `campuses`.`deleted_at` is null order by `name` asc
+parmars:[50]
+
+[2019-12-01 12:44:47]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 12:44:47]select count(*) as aggregate from `wifi_issue_types` where (`typeid` > ? and `type_pid` = ?)
+parmars:[0,0]
+
+[2019-12-01 12:44:47]select * from `wifi_issue_types` where (`typeid` > ? and `type_pid` = ?) order by `typeid` asc limit 10 offset 0
+parmars:[0,0]
+
+[2019-12-01 12:44:47]select * from `schools` where `schools`.`id` = ? and `schools`.`deleted_at` is null limit 1
+parmars:[50]
+
+[2019-12-01 12:44:47]select * from `campuses` where `campuses`.`school_id` = ? and `campuses`.`school_id` is not null and `campuses`.`deleted_at` is null order by `name` asc
+parmars:[50]
+
+[2019-12-01 12:44:51]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 12:44:51]select * from `schools` where `schools`.`id` = ? and `schools`.`deleted_at` is null limit 1
+parmars:[50]
+
+[2019-12-01 12:44:51]select * from `campuses` where `campuses`.`school_id` = ? and `campuses`.`school_id` is not null and `campuses`.`deleted_at` is null order by `name` asc
+parmars:[50]
+
+[2019-12-01 12:44:57]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 12:44:57]select * from `wifi_issue_types` where (`typeid` = ?) order by `typeid` desc limit 1
+parmars:["14"]
+
+[2019-12-01 12:44:57]select * from `schools` where `schools`.`id` = ? and `schools`.`deleted_at` is null limit 1
+parmars:[50]
+
+[2019-12-01 12:44:57]select * from `campuses` where `campuses`.`school_id` = ? and `campuses`.`school_id` is not null and `campuses`.`deleted_at` is null order by `name` asc
+parmars:[50]
+
+[2019-12-01 12:44:57]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 12:44:57]select * from `wifi_issue_types` where (`typeid` = ?) order by `typeid` desc limit 1
+parmars:["14"]
+
+[2019-12-01 12:44:57]select * from `schools` where `schools`.`id` = ? and `schools`.`deleted_at` is null limit 1
+parmars:[50]
+
+[2019-12-01 12:44:57]select * from `campuses` where `campuses`.`school_id` = ? and `campuses`.`school_id` is not null and `campuses`.`deleted_at` is null order by `name` asc
+parmars:[50]
+
+[2019-12-01 12:44:58]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 12:45:10]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 12:45:10]select * from `wifi_issue_types` where (`typeid` = ?) order by `typeid` desc limit 1
+parmars:["14"]
+
+[2019-12-01 12:45:10]select * from `schools` where `schools`.`id` = ? and `schools`.`deleted_at` is null limit 1
+parmars:[50]
+
+[2019-12-01 12:45:10]select * from `campuses` where `campuses`.`school_id` = ? and `campuses`.`school_id` is not null and `campuses`.`deleted_at` is null order by `name` asc
+parmars:[50]
+
+[2019-12-01 12:45:19]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 12:45:19]select * from `wifi_issue_types` where (`typeid` = ?) order by `typeid` desc limit 1
+parmars:["9"]
+
+[2019-12-01 12:45:19]select * from `schools` where `schools`.`id` = ? and `schools`.`deleted_at` is null limit 1
+parmars:[50]
+
+[2019-12-01 12:45:19]select * from `campuses` where `campuses`.`school_id` = ? and `campuses`.`school_id` is not null and `campuses`.`deleted_at` is null order by `name` asc
+parmars:[50]
+
+[2019-12-01 12:45:37]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 12:45:37]select * from `wifi_issue_types` where (`typeid` = ?) order by `typeid` desc limit 1
+parmars:["9"]
+
+[2019-12-01 12:45:37]select * from `schools` where `schools`.`id` = ? and `schools`.`deleted_at` is null limit 1
+parmars:[50]
+
+[2019-12-01 12:45:37]select * from `campuses` where `campuses`.`school_id` = ? and `campuses`.`school_id` is not null and `campuses`.`deleted_at` is null order by `name` asc
+parmars:[50]
+
+[2019-12-01 12:45:44]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 12:45:44]select * from `wifi_issue_types` where (`typeid` = ?) order by `typeid` desc limit 1
+parmars:["9"]
+
+[2019-12-01 12:45:44]select * from `schools` where `schools`.`id` = ? and `schools`.`deleted_at` is null limit 1
+parmars:[50]
+
+[2019-12-01 12:45:44]select * from `campuses` where `campuses`.`school_id` = ? and `campuses`.`school_id` is not null and `campuses`.`deleted_at` is null order by `name` asc
+parmars:[50]
+
+[2019-12-01 12:45:49]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 12:45:49]select * from `wifi_issue_types` where (`typeid` = ?) order by `typeid` desc limit 1
+parmars:["3"]
+
+[2019-12-01 12:45:50]select * from `schools` where `schools`.`id` = ? and `schools`.`deleted_at` is null limit 1
+parmars:[50]
+
+[2019-12-01 12:45:50]select * from `campuses` where `campuses`.`school_id` = ? and `campuses`.`school_id` is not null and `campuses`.`deleted_at` is null order by `name` asc
+parmars:[50]
+
+[2019-12-01 12:46:17]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 12:46:17]select count(*) as aggregate from `wifi_issue_types` where (`typeid` > ? and `type_pid` = ?)
+parmars:[0,0]
+
+[2019-12-01 12:46:17]select * from `wifi_issue_types` where (`typeid` > ? and `type_pid` = ?) order by `typeid` asc limit 10 offset 0
+parmars:[0,0]
+
+[2019-12-01 12:46:17]select * from `schools` where `schools`.`id` = ? and `schools`.`deleted_at` is null limit 1
+parmars:[50]
+
+[2019-12-01 12:46:17]select * from `campuses` where `campuses`.`school_id` = ? and `campuses`.`school_id` is not null and `campuses`.`deleted_at` is null order by `name` asc
+parmars:[50]
+
+[2019-12-01 12:46:28]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 12:46:28]select * from `wifi_issue_types` where (`typeid` = ?) order by `typeid` desc limit 1
+parmars:["3"]
+
+[2019-12-01 12:46:28]select * from `schools` where `schools`.`id` = ? and `schools`.`deleted_at` is null limit 1
+parmars:[50]
+
+[2019-12-01 12:46:28]select * from `campuses` where `campuses`.`school_id` = ? and `campuses`.`school_id` is not null and `campuses`.`deleted_at` is null order by `name` asc
+parmars:[50]
+
+[2019-12-01 12:46:38]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 12:46:38]select count(*) as aggregate from `wifi_issue_types` where (`typeid` > ? and `type_pid` = ?)
+parmars:[0,9]
+
+[2019-12-01 12:46:38]select * from `wifi_issue_types` where (`typeid` > ? and `type_pid` = ?) order by `typeid` asc limit 10 offset 0
+parmars:[0,9]
+
+[2019-12-01 12:46:38]select * from `schools` where `schools`.`id` = ? and `schools`.`deleted_at` is null limit 1
+parmars:[50]
+
+[2019-12-01 12:46:38]select * from `campuses` where `campuses`.`school_id` = ? and `campuses`.`school_id` is not null and `campuses`.`deleted_at` is null order by `name` asc
+parmars:[50]
+
+[2019-12-01 12:46:45]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 12:46:45]select * from `schools` where `schools`.`id` = ? and `schools`.`deleted_at` is null limit 1
+parmars:[50]
+
+[2019-12-01 12:46:45]select * from `campuses` where `campuses`.`school_id` = ? and `campuses`.`school_id` is not null and `campuses`.`deleted_at` is null order by `name` asc
+parmars:[50]
+
+[2019-12-01 12:47:38]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 12:47:38]select * from `schools` where `schools`.`id` = ? and `schools`.`deleted_at` is null limit 1
+parmars:[50]
+
+[2019-12-01 12:47:38]select * from `campuses` where `campuses`.`school_id` = ? and `campuses`.`school_id` is not null and `campuses`.`deleted_at` is null order by `name` asc
+parmars:[50]
+
+[2019-12-01 12:47:54]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 12:47:54]select * from `schools` where `schools`.`id` = ? and `schools`.`deleted_at` is null limit 1
+parmars:[50]
+
+[2019-12-01 12:47:54]select * from `campuses` where `campuses`.`school_id` = ? and `campuses`.`school_id` is not null and `campuses`.`deleted_at` is null order by `name` asc
+parmars:[50]
+
+[2019-12-01 12:48:48]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 12:48:48]select * from `schools` where `schools`.`id` = ? and `schools`.`deleted_at` is null limit 1
+parmars:[50]
+
+[2019-12-01 12:48:48]select * from `campuses` where `campuses`.`school_id` = ? and `campuses`.`school_id` is not null and `campuses`.`deleted_at` is null order by `name` asc
+parmars:[50]
+
+[2019-12-01 12:48:53]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 12:48:53]select count(*) as aggregate from `wifi_issue_types` where (`typeid` > ? and `type_pid` = ?)
+parmars:[0,9]
+
+[2019-12-01 12:48:53]select * from `wifi_issue_types` where (`typeid` > ? and `type_pid` = ?) order by `typeid` asc limit 10 offset 0
+parmars:[0,9]
+
+[2019-12-01 12:48:53]select * from `schools` where `schools`.`id` = ? and `schools`.`deleted_at` is null limit 1
+parmars:[50]
+
+[2019-12-01 12:48:53]select * from `campuses` where `campuses`.`school_id` = ? and `campuses`.`school_id` is not null and `campuses`.`deleted_at` is null order by `name` asc
+parmars:[50]
+
+[2019-12-01 12:49:20]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 12:49:20]select count(*) as aggregate from `wifi_issue_types` where (`typeid` > ? and `type_pid` = ?)
+parmars:[0,9]
+
+[2019-12-01 12:49:20]select * from `wifi_issue_types` where (`typeid` > ? and `type_pid` = ?) order by `typeid` asc limit 10 offset 0
+parmars:[0,9]
+
+[2019-12-01 12:49:20]select * from `schools` where `schools`.`id` = ? and `schools`.`deleted_at` is null limit 1
+parmars:[50]
+
+[2019-12-01 12:49:20]select * from `campuses` where `campuses`.`school_id` = ? and `campuses`.`school_id` is not null and `campuses`.`deleted_at` is null order by `name` asc
+parmars:[50]
+
+[2019-12-01 12:49:22]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 12:49:22]select count(*) as aggregate from `wifi_issue_types` where (`typeid` > ? and `type_pid` = ?)
+parmars:[0,0]
+
+[2019-12-01 12:49:22]select * from `wifi_issue_types` where (`typeid` > ? and `type_pid` = ?) order by `typeid` asc limit 10 offset 0
+parmars:[0,0]
+
+[2019-12-01 12:49:22]select * from `schools` where `schools`.`id` = ? and `schools`.`deleted_at` is null limit 1
+parmars:[50]
+
+[2019-12-01 12:49:22]select * from `campuses` where `campuses`.`school_id` = ? and `campuses`.`school_id` is not null and `campuses`.`deleted_at` is null order by `name` asc
+parmars:[50]
+
+[2019-12-01 12:49:26]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 12:49:26]select * from `wifi_issue_types` where (`typeid` = ?) order by `typeid` desc limit 1
+parmars:["1"]
+
+[2019-12-01 12:49:26]select * from `schools` where `schools`.`id` = ? and `schools`.`deleted_at` is null limit 1
+parmars:[50]
+
+[2019-12-01 12:49:26]select * from `campuses` where `campuses`.`school_id` = ? and `campuses`.`school_id` is not null and `campuses`.`deleted_at` is null order by `name` asc
+parmars:[50]
+
+[2019-12-01 12:49:28]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 12:49:28]select count(*) as aggregate from `wifi_issue_types` where (`typeid` > ? and `type_pid` = ?)
+parmars:[0,0]
+
+[2019-12-01 12:49:28]select * from `wifi_issue_types` where (`typeid` > ? and `type_pid` = ?) order by `typeid` asc limit 10 offset 0
+parmars:[0,0]
+
+[2019-12-01 12:49:28]select * from `schools` where `schools`.`id` = ? and `schools`.`deleted_at` is null limit 1
+parmars:[50]
+
+[2019-12-01 12:49:28]select * from `campuses` where `campuses`.`school_id` = ? and `campuses`.`school_id` is not null and `campuses`.`deleted_at` is null order by `name` asc
+parmars:[50]
+
+[2019-12-01 12:49:30]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 12:49:30]select count(*) as aggregate from `wifi_issue_types` where (`typeid` > ? and `type_pid` = ?)
+parmars:[0,2]
+
+[2019-12-01 12:49:30]select * from `wifi_issue_types` where (`typeid` > ? and `type_pid` = ?) order by `typeid` asc limit 10 offset 0
+parmars:[0,2]
+
+[2019-12-01 12:49:30]select * from `schools` where `schools`.`id` = ? and `schools`.`deleted_at` is null limit 1
+parmars:[50]
+
+[2019-12-01 12:49:30]select * from `campuses` where `campuses`.`school_id` = ? and `campuses`.`school_id` is not null and `campuses`.`deleted_at` is null order by `name` asc
+parmars:[50]
+
+[2019-12-01 12:49:33]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 12:49:33]select * from `wifi_issue_types` where (`typeid` = ?) order by `typeid` desc limit 1
+parmars:["5"]
+
+[2019-12-01 12:49:33]select * from `schools` where `schools`.`id` = ? and `schools`.`deleted_at` is null limit 1
+parmars:[50]
+
+[2019-12-01 12:49:33]select * from `campuses` where `campuses`.`school_id` = ? and `campuses`.`school_id` is not null and `campuses`.`deleted_at` is null order by `name` asc
+parmars:[50]
+
+[2019-12-01 12:49:35]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 12:49:35]select count(*) as aggregate from `wifi_issue_types` where (`typeid` > ? and `type_pid` = ?)
+parmars:[0,2]
+
+[2019-12-01 12:49:35]select * from `wifi_issue_types` where (`typeid` > ? and `type_pid` = ?) order by `typeid` asc limit 10 offset 0
+parmars:[0,2]
+
+[2019-12-01 12:49:35]select * from `schools` where `schools`.`id` = ? and `schools`.`deleted_at` is null limit 1
+parmars:[50]
+
+[2019-12-01 12:49:35]select * from `campuses` where `campuses`.`school_id` = ? and `campuses`.`school_id` is not null and `campuses`.`deleted_at` is null order by `name` asc
+parmars:[50]
+
+[2019-12-01 12:49:44]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 12:49:44]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 12:49:44]select count(*) as aggregate from `wifi_issue_types` where (`typeid` > ? and `type_pid` = ?)
+parmars:[0,0]
+
+[2019-12-01 12:49:44]select * from `wifi_issue_types` where (`typeid` > ? and `type_pid` = ?) order by `typeid` asc limit 10 offset 0
+parmars:[0,0]
+
+[2019-12-01 12:49:44]select * from `schools` where `schools`.`id` = ? and `schools`.`deleted_at` is null limit 1
+parmars:[50]
+
+[2019-12-01 12:49:44]select * from `campuses` where `campuses`.`school_id` = ? and `campuses`.`school_id` is not null and `campuses`.`deleted_at` is null order by `name` asc
+parmars:[50]
+
+[2019-12-01 12:49:52]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 12:49:52]select * from `wifi_issue_types` where (`typeid` = ?) order by `typeid` desc limit 1
+parmars:["71"]
+
+[2019-12-01 12:49:52]select * from `schools` where `schools`.`id` = ? and `schools`.`deleted_at` is null limit 1
+parmars:[50]
+
+[2019-12-01 12:49:52]select * from `campuses` where `campuses`.`school_id` = ? and `campuses`.`school_id` is not null and `campuses`.`deleted_at` is null order by `name` asc
+parmars:[50]
+
+[2019-12-01 12:49:55]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 12:49:55]select count(*) as aggregate from `wifi_issue_types` where (`typeid` > ? and `type_pid` = ?)
+parmars:[0,0]
+
+[2019-12-01 12:49:55]select * from `wifi_issue_types` where (`typeid` > ? and `type_pid` = ?) order by `typeid` asc limit 10 offset 0
+parmars:[0,0]
+
+[2019-12-01 12:49:55]select * from `schools` where `schools`.`id` = ? and `schools`.`deleted_at` is null limit 1
+parmars:[50]
+
+[2019-12-01 12:49:55]select * from `campuses` where `campuses`.`school_id` = ? and `campuses`.`school_id` is not null and `campuses`.`deleted_at` is null order by `name` asc
+parmars:[50]
+
+[2019-12-01 12:49:58]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 12:49:58]select * from `wifi_issue_types` where (`typeid` = ?) order by `typeid` desc limit 1
+parmars:["71"]
+
+[2019-12-01 12:49:58]select * from `schools` where `schools`.`id` = ? and `schools`.`deleted_at` is null limit 1
+parmars:[50]
+
+[2019-12-01 12:49:58]select * from `campuses` where `campuses`.`school_id` = ? and `campuses`.`school_id` is not null and `campuses`.`deleted_at` is null order by `name` asc
+parmars:[50]
+
+[2019-12-01 12:50:01]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 12:50:01]select * from `wifi_issue_types` where (`typeid` = ?) order by `typeid` desc limit 1
+parmars:["71"]
+
+[2019-12-01 12:50:01]update `wifi_issue_types` set `type_name` = ?, `wifi_issue_types`.`updated_at` = ? where `typeid` = ?
+parmars:["test11134","2019-12-01 12:50:01",71]
+
+[2019-12-01 12:50:01]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 12:50:01]select count(*) as aggregate from `wifi_issue_types` where (`typeid` > ? and `type_pid` = ?)
+parmars:[0,0]
+
+[2019-12-01 12:50:01]select * from `wifi_issue_types` where (`typeid` > ? and `type_pid` = ?) order by `typeid` asc limit 10 offset 0
+parmars:[0,0]
+
+[2019-12-01 12:50:01]select * from `schools` where `schools`.`id` = ? and `schools`.`deleted_at` is null limit 1
+parmars:[50]
+
+[2019-12-01 12:50:01]select * from `campuses` where `campuses`.`school_id` = ? and `campuses`.`school_id` is not null and `campuses`.`deleted_at` is null order by `name` asc
+parmars:[50]
+
+[2019-12-01 12:50:07]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 12:50:07]select count(*) as aggregate from `wifi_issue_types` where (`typeid` > ? and `type_pid` = ?)
+parmars:[0,71]
+
+[2019-12-01 12:50:07]select * from `wifi_issue_types` where (`typeid` > ? and `type_pid` = ?) order by `typeid` asc limit 10 offset 0
+parmars:[0,71]
+
+[2019-12-01 12:50:07]select * from `schools` where `schools`.`id` = ? and `schools`.`deleted_at` is null limit 1
+parmars:[50]
+
+[2019-12-01 12:50:07]select * from `campuses` where `campuses`.`school_id` = ? and `campuses`.`school_id` is not null and `campuses`.`deleted_at` is null order by `name` asc
+parmars:[50]
+
+[2019-12-01 12:50:10]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 12:50:10]select * from `schools` where `schools`.`id` = ? and `schools`.`deleted_at` is null limit 1
+parmars:[50]
+
+[2019-12-01 12:50:10]select * from `campuses` where `campuses`.`school_id` = ? and `campuses`.`school_id` is not null and `campuses`.`deleted_at` is null order by `name` asc
+parmars:[50]
+
+[2019-12-01 12:50:13]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 12:50:13]insert into `wifi_issue_types` (`type_name`, `type_pid`, `created_at`) values (?, ?, ?)
+parmars:["124121","71","2019-12-01 12:50:13"]
+
+[2019-12-01 12:50:13]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 12:50:13]select count(*) as aggregate from `wifi_issue_types` where (`typeid` > ? and `type_pid` = ?)
+parmars:[0,71]
+
+[2019-12-01 12:50:13]select * from `wifi_issue_types` where (`typeid` > ? and `type_pid` = ?) order by `typeid` asc limit 10 offset 0
+parmars:[0,71]
+
+[2019-12-01 12:50:13]select * from `schools` where `schools`.`id` = ? and `schools`.`deleted_at` is null limit 1
+parmars:[50]
+
+[2019-12-01 12:50:13]select * from `campuses` where `campuses`.`school_id` = ? and `campuses`.`school_id` is not null and `campuses`.`deleted_at` is null order by `name` asc
+parmars:[50]
+
+[2019-12-01 12:50:16]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 12:50:16]select * from `wifi_issue_types` where (`typeid` = ?) order by `typeid` desc limit 1
+parmars:["77"]
+
+[2019-12-01 12:50:16]select * from `schools` where `schools`.`id` = ? and `schools`.`deleted_at` is null limit 1
+parmars:[50]
+
+[2019-12-01 12:50:16]select * from `campuses` where `campuses`.`school_id` = ? and `campuses`.`school_id` is not null and `campuses`.`deleted_at` is null order by `name` asc
+parmars:[50]
+
+[2019-12-01 12:50:19]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 12:50:19]select * from `wifi_issue_types` where (`typeid` = ?) order by `typeid` desc limit 1
+parmars:["77"]
+
+[2019-12-01 12:50:19]update `wifi_issue_types` set `type_name` = ?, `wifi_issue_types`.`updated_at` = ? where `typeid` = ?
+parmars:["1241213434","2019-12-01 12:50:19",77]
+
+[2019-12-01 12:50:19]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 12:50:19]select count(*) as aggregate from `wifi_issue_types` where (`typeid` > ? and `type_pid` = ?)
+parmars:[0,71]
+
+[2019-12-01 12:50:19]select * from `wifi_issue_types` where (`typeid` > ? and `type_pid` = ?) order by `typeid` asc limit 10 offset 0
+parmars:[0,71]
+
+[2019-12-01 12:50:19]select * from `schools` where `schools`.`id` = ? and `schools`.`deleted_at` is null limit 1
+parmars:[50]
+
+[2019-12-01 12:50:19]select * from `campuses` where `campuses`.`school_id` = ? and `campuses`.`school_id` is not null and `campuses`.`deleted_at` is null order by `name` asc
+parmars:[50]
+
+[2019-12-01 12:50:24]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 12:50:24]select count(*) as aggregate from `wifi_issue_types` where (`type_pid` = ?)
+parmars:["77"]
+
+[2019-12-01 12:50:24]delete from `wifi_issue_types` where (`typeid` = ?)
+parmars:["77"]
+
+[2019-12-01 12:50:25]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 12:50:25]select count(*) as aggregate from `wifi_issue_types` where (`typeid` > ? and `type_pid` = ?)
+parmars:[0,71]
+
+[2019-12-01 12:50:25]select * from `wifi_issue_types` where (`typeid` > ? and `type_pid` = ?) order by `typeid` asc limit 10 offset 0
+parmars:[0,71]
+
+[2019-12-01 12:50:25]select * from `schools` where `schools`.`id` = ? and `schools`.`deleted_at` is null limit 1
+parmars:[50]
+
+[2019-12-01 12:50:25]select * from `campuses` where `campuses`.`school_id` = ? and `campuses`.`school_id` is not null and `campuses`.`deleted_at` is null order by `name` asc
+parmars:[50]
+
+[2019-12-01 12:50:27]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 12:50:27]select count(*) as aggregate from `wifi_issue_types` where (`type_pid` = ?)
+parmars:["75"]
+
+[2019-12-01 12:50:27]delete from `wifi_issue_types` where (`typeid` = ?)
+parmars:["75"]
+
+[2019-12-01 12:50:27]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 12:50:27]select count(*) as aggregate from `wifi_issue_types` where (`typeid` > ? and `type_pid` = ?)
+parmars:[0,71]
+
+[2019-12-01 12:50:27]select * from `wifi_issue_types` where (`typeid` > ? and `type_pid` = ?) order by `typeid` asc limit 10 offset 0
+parmars:[0,71]
+
+[2019-12-01 12:50:28]select * from `schools` where `schools`.`id` = ? and `schools`.`deleted_at` is null limit 1
+parmars:[50]
+
+[2019-12-01 12:50:28]select * from `campuses` where `campuses`.`school_id` = ? and `campuses`.`school_id` is not null and `campuses`.`deleted_at` is null order by `name` asc
+parmars:[50]
+
+[2019-12-01 12:50:29]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 12:50:29]select count(*) as aggregate from `wifi_issue_types` where (`type_pid` = ?)
+parmars:["72"]
+
+[2019-12-01 12:50:29]delete from `wifi_issue_types` where (`typeid` = ?)
+parmars:["72"]
+
+[2019-12-01 12:50:30]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 12:50:30]select count(*) as aggregate from `wifi_issue_types` where (`typeid` > ? and `type_pid` = ?)
+parmars:[0,71]
+
+[2019-12-01 12:50:30]select * from `schools` where `schools`.`id` = ? and `schools`.`deleted_at` is null limit 1
+parmars:[50]
+
+[2019-12-01 12:50:30]select * from `campuses` where `campuses`.`school_id` = ? and `campuses`.`school_id` is not null and `campuses`.`deleted_at` is null order by `name` asc
+parmars:[50]
+
+[2019-12-01 12:50:32]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 12:50:32]select count(*) as aggregate from `wifi_issue_types` where (`typeid` > ? and `type_pid` = ?)
+parmars:[0,0]
+
+[2019-12-01 12:50:32]select * from `wifi_issue_types` where (`typeid` > ? and `type_pid` = ?) order by `typeid` asc limit 10 offset 0
+parmars:[0,0]
+
+[2019-12-01 12:50:32]select * from `schools` where `schools`.`id` = ? and `schools`.`deleted_at` is null limit 1
+parmars:[50]
+
+[2019-12-01 12:50:32]select * from `campuses` where `campuses`.`school_id` = ? and `campuses`.`school_id` is not null and `campuses`.`deleted_at` is null order by `name` asc
+parmars:[50]
+
+[2019-12-01 12:50:38]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 12:50:38]select count(*) as aggregate from `wifi_issue_types` where (`type_pid` = ?)
+parmars:["71"]
+
+[2019-12-01 12:50:38]delete from `wifi_issue_types` where (`typeid` = ?)
+parmars:["71"]
+
+[2019-12-01 12:50:38]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 12:50:38]select count(*) as aggregate from `wifi_issue_types` where (`typeid` > ? and `type_pid` = ?)
+parmars:[0,0]
+
+[2019-12-01 12:50:38]select * from `wifi_issue_types` where (`typeid` > ? and `type_pid` = ?) order by `typeid` asc limit 10 offset 0
+parmars:[0,0]
+
+[2019-12-01 12:50:38]select * from `schools` where `schools`.`id` = ? and `schools`.`deleted_at` is null limit 1
+parmars:[50]
+
+[2019-12-01 12:50:38]select * from `campuses` where `campuses`.`school_id` = ? and `campuses`.`school_id` is not null and `campuses`.`deleted_at` is null order by `name` asc
+parmars:[50]
+
+[2019-12-01 12:53:24]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 12:53:25]select count(*) as aggregate from `wifi_issue_types` where (`typeid` > ? and `type_pid` = ?)
+parmars:[0,0]
+
+[2019-12-01 12:53:25]select * from `wifi_issue_types` where (`typeid` > ? and `type_pid` = ?) order by `typeid` asc limit 10 offset 0
+parmars:[0,0]
+
+[2019-12-01 12:53:25]select * from `schools` where `schools`.`id` = ? and `schools`.`deleted_at` is null limit 1
+parmars:[50]
+
+[2019-12-01 12:53:25]select * from `campuses` where `campuses`.`school_id` = ? and `campuses`.`school_id` is not null and `campuses`.`deleted_at` is null order by `name` asc
+parmars:[50]
+
+[2019-12-01 12:53:35]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 12:53:35]select count(*) as aggregate from `wifi_issue_types` where (`typeid` > ? and `type_pid` = ?)
+parmars:[0,0]
+
+[2019-12-01 12:53:35]select * from `wifi_issue_types` where (`typeid` > ? and `type_pid` = ?) order by `typeid` asc limit 10 offset 0
+parmars:[0,0]
+
+[2019-12-01 12:53:35]select * from `schools` where `schools`.`id` = ? and `schools`.`deleted_at` is null limit 1
+parmars:[50]
+
+[2019-12-01 12:53:35]select * from `campuses` where `campuses`.`school_id` = ? and `campuses`.`school_id` is not null and `campuses`.`deleted_at` is null order by `name` asc
+parmars:[50]
+
+[2019-12-01 13:15:22]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 13:15:22]select count(*) as aggregate from `wifi_issue_types` where (`typeid` > ? and `type_pid` = ?)
+parmars:[0,0]
+
+[2019-12-01 13:15:22]select * from `wifi_issue_types` where (`typeid` > ? and `type_pid` = ?) order by `typeid` asc limit 10 offset 0
+parmars:[0,0]
+
+[2019-12-01 13:15:22]select * from `schools` where `schools`.`id` = ? and `schools`.`deleted_at` is null limit 1
+parmars:[50]
+
+[2019-12-01 13:15:22]select * from `campuses` where `campuses`.`school_id` = ? and `campuses`.`school_id` is not null and `campuses`.`deleted_at` is null order by `name` asc
+parmars:[50]
+
+[2019-12-01 13:15:25]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 13:15:25]select count(*) as aggregate from `wifi_issue_types` where (`typeid` > ? and `type_pid` = ?)
+parmars:[0,1]
+
+[2019-12-01 13:15:25]select * from `schools` where `schools`.`id` = ? and `schools`.`deleted_at` is null limit 1
+parmars:[50]
+
+[2019-12-01 13:15:25]select * from `campuses` where `campuses`.`school_id` = ? and `campuses`.`school_id` is not null and `campuses`.`deleted_at` is null order by `name` asc
+parmars:[50]
+
+[2019-12-01 13:15:30]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 13:15:30]select count(*) as aggregate from `wifi_issue_types` where (`typeid` > ? and `type_pid` = ?)
+parmars:[0,2]
+
+[2019-12-01 13:15:30]select * from `wifi_issue_types` where (`typeid` > ? and `type_pid` = ?) order by `typeid` asc limit 10 offset 0
+parmars:[0,2]
+
+[2019-12-01 13:15:30]select * from `schools` where `schools`.`id` = ? and `schools`.`deleted_at` is null limit 1
+parmars:[50]
+
+[2019-12-01 13:15:30]select * from `campuses` where `campuses`.`school_id` = ? and `campuses`.`school_id` is not null and `campuses`.`deleted_at` is null order by `name` asc
+parmars:[50]
+
+[2019-12-01 13:15:35]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 13:15:35]select count(*) as aggregate from `wifi_issue_types` where (`typeid` > ? and `type_pid` = ?)
+parmars:[0,3]
+
+[2019-12-01 13:15:35]select * from `wifi_issue_types` where (`typeid` > ? and `type_pid` = ?) order by `typeid` asc limit 10 offset 0
+parmars:[0,3]
+
+[2019-12-01 13:15:35]select * from `schools` where `schools`.`id` = ? and `schools`.`deleted_at` is null limit 1
+parmars:[50]
+
+[2019-12-01 13:15:35]select * from `campuses` where `campuses`.`school_id` = ? and `campuses`.`school_id` is not null and `campuses`.`deleted_at` is null order by `name` asc
+parmars:[50]
+
+[2019-12-01 13:15:38]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 13:15:38]select * from `wifi_issue_types` where (`typeid` = ?) order by `typeid` desc limit 1
+parmars:["4"]
+
+[2019-12-01 13:15:38]select * from `schools` where `schools`.`id` = ? and `schools`.`deleted_at` is null limit 1
+parmars:[50]
+
+[2019-12-01 13:15:38]select * from `campuses` where `campuses`.`school_id` = ? and `campuses`.`school_id` is not null and `campuses`.`deleted_at` is null order by `name` asc
+parmars:[50]
+
+[2019-12-01 13:15:40]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 13:15:40]select * from `wifi_issue_types` where (`typeid` = ?) order by `typeid` desc limit 1
+parmars:["4"]
+
+[2019-12-01 13:15:40]update `wifi_issue_types` set `type_name` = ?, `wifi_issue_types`.`updated_at` = ? where `typeid` = ?
+parmars:["一直显示充值中","2019-12-01 13:15:40",4]
+
+[2019-12-01 13:15:40]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 13:15:40]select count(*) as aggregate from `wifi_issue_types` where (`typeid` > ? and `type_pid` = ?)
+parmars:[0,3]
+
+[2019-12-01 13:15:40]select * from `wifi_issue_types` where (`typeid` > ? and `type_pid` = ?) order by `typeid` asc limit 10 offset 0
+parmars:[0,3]
+
+[2019-12-01 13:15:40]select * from `schools` where `schools`.`id` = ? and `schools`.`deleted_at` is null limit 1
+parmars:[50]
+
+[2019-12-01 13:15:40]select * from `campuses` where `campuses`.`school_id` = ? and `campuses`.`school_id` is not null and `campuses`.`deleted_at` is null order by `name` asc
+parmars:[50]
+
+[2019-12-01 13:15:45]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 13:15:45]select count(*) as aggregate from `wifi_issue_types` where (`typeid` > ? and `type_pid` = ?)
+parmars:[0,0]
+
+[2019-12-01 13:15:45]select * from `wifi_issue_types` where (`typeid` > ? and `type_pid` = ?) order by `typeid` asc limit 10 offset 0
+parmars:[0,0]
+
+[2019-12-01 13:15:45]select * from `schools` where `schools`.`id` = ? and `schools`.`deleted_at` is null limit 1
+parmars:[50]
+
+[2019-12-01 13:15:45]select * from `campuses` where `campuses`.`school_id` = ? and `campuses`.`school_id` is not null and `campuses`.`deleted_at` is null order by `name` asc
+parmars:[50]
+
+[2019-12-01 13:16:37]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 13:18:29]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 13:19:01]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 13:19:25]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 13:20:21]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 13:20:21]select count(*) as aggregate from `wifi_issues` inner join `users` on `wifi_issues`.`user_id` = `users`.`id` where (`issueid` > ?)
+parmars:[0]
+
+[2019-12-01 13:20:21]select `wifi_issues`.*, `users`.`name`, `users`.`mobile` from `wifi_issues` inner join `users` on `wifi_issues`.`user_id` = `users`.`id` where (`issueid` > ?) order by `issueid` desc limit 10 offset 0
+parmars:[0]
+
+[2019-12-01 13:21:48]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 13:21:48]select count(*) as aggregate from `wifi_issues` inner join `users` on `wifi_issues`.`user_id` = `users`.`id` where (`issueid` > ?)
+parmars:[0]
+
+[2019-12-01 13:21:48]select `wifi_issues`.*, `users`.`name`, `users`.`mobile` from `wifi_issues` inner join `users` on `wifi_issues`.`user_id` = `users`.`id` where (`issueid` > ?) order by `issueid` desc limit 10 offset 0
+parmars:[0]
+
+[2019-12-01 13:22:04]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 13:22:04]select count(*) as aggregate from `wifi_issues` inner join `users` on `wifi_issues`.`user_id` = `users`.`id` where (`issueid` > ?)
+parmars:[0]
+
+[2019-12-01 13:22:04]select `wifi_issues`.*, `users`.`name`, `users`.`mobile` from `wifi_issues` inner join `users` on `wifi_issues`.`user_id` = `users`.`id` where (`issueid` > ?) order by `issueid` desc limit 10 offset 0
+parmars:[0]
+
+[2019-12-01 13:22:30]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 13:22:30]select count(*) as aggregate from `wifi_issues` inner join `users` on `wifi_issues`.`user_id` = `users`.`id` where (`issueid` > ?)
+parmars:[0]
+
+[2019-12-01 13:22:30]select `wifi_issues`.*, `users`.`name`, `users`.`mobile` from `wifi_issues` inner join `users` on `wifi_issues`.`user_id` = `users`.`id` where (`issueid` > ?) order by `issueid` desc limit 10 offset 0
+parmars:[0]
+
+[2019-12-01 13:24:42]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 13:24:42]select count(*) as aggregate from `wifi_issues` inner join `users` on `wifi_issues`.`user_id` = `users`.`id` where (`issueid` > ?)
+parmars:[0]
+
+[2019-12-01 13:24:42]select `wifi_issues`.*, `users`.`name`, `users`.`mobile` from `wifi_issues` inner join `users` on `wifi_issues`.`user_id` = `users`.`id` where (`issueid` > ?) order by `issueid` desc limit 10 offset 0
+parmars:[0]
+
+[2019-12-01 13:25:10]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 13:25:10]select count(*) as aggregate from `wifi_issues` inner join `users` on `wifi_issues`.`user_id` = `users`.`id` where (`issueid` > ?)
+parmars:[0]
+
+[2019-12-01 13:25:10]select `wifi_issues`.*, `users`.`name`, `users`.`mobile` from `wifi_issues` inner join `users` on `wifi_issues`.`user_id` = `users`.`id` where (`issueid` > ?) order by `issueid` desc limit 10 offset 0
+parmars:[0]
+
+[2019-12-01 13:25:10]select * from `schools` where `schools`.`id` = ? and `schools`.`deleted_at` is null limit 1
+parmars:[50]
+
+[2019-12-01 13:25:10]select * from `campuses` where `campuses`.`school_id` = ? and `campuses`.`school_id` is not null and `campuses`.`deleted_at` is null order by `name` asc
+parmars:[50]
+
+[2019-12-01 13:25:36]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 13:25:36]select count(*) as aggregate from `wifi_issues` inner join `users` on `wifi_issues`.`user_id` = `users`.`id` where (`issueid` > ?)
+parmars:[0]
+
+[2019-12-01 13:25:36]select `wifi_issues`.*, `users`.`name`, `users`.`mobile` from `wifi_issues` inner join `users` on `wifi_issues`.`user_id` = `users`.`id` where (`issueid` > ?) order by `issueid` desc limit 10 offset 0
+parmars:[0]
+
+[2019-12-01 13:25:36]select * from `schools` where `schools`.`id` = ? and `schools`.`deleted_at` is null limit 1
+parmars:[50]
+
+[2019-12-01 13:25:36]select * from `campuses` where `campuses`.`school_id` = ? and `campuses`.`school_id` is not null and `campuses`.`deleted_at` is null order by `name` asc
+parmars:[50]
+
+[2019-12-01 13:26:21]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 13:26:21]select count(*) as aggregate from `wifi_issues` inner join `users` on `wifi_issues`.`user_id` = `users`.`id` where (`issueid` > ?)
+parmars:[0]
+
+[2019-12-01 13:26:21]select `wifi_issues`.*, `users`.`name`, `users`.`mobile` from `wifi_issues` inner join `users` on `wifi_issues`.`user_id` = `users`.`id` where (`issueid` > ?) order by `issueid` desc limit 10 offset 0
+parmars:[0]
+
+[2019-12-01 13:26:21]select * from `schools` where `schools`.`id` = ? and `schools`.`deleted_at` is null limit 1
+parmars:[50]
+
+[2019-12-01 13:26:21]select * from `campuses` where `campuses`.`school_id` = ? and `campuses`.`school_id` is not null and `campuses`.`deleted_at` is null order by `name` asc
+parmars:[50]
+
+[2019-12-01 13:26:40]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 13:26:40]select count(*) as aggregate from `wifi_issues` inner join `users` on `wifi_issues`.`user_id` = `users`.`id` where (`issueid` > ?)
+parmars:[0]
+
+[2019-12-01 13:26:40]select `wifi_issues`.*, `users`.`name`, `users`.`mobile` from `wifi_issues` inner join `users` on `wifi_issues`.`user_id` = `users`.`id` where (`issueid` > ?) order by `issueid` desc limit 10 offset 0
+parmars:[0]
+
+[2019-12-01 13:26:40]select * from `schools` where `schools`.`id` = ? and `schools`.`deleted_at` is null limit 1
+parmars:[50]
+
+[2019-12-01 13:26:40]select * from `campuses` where `campuses`.`school_id` = ? and `campuses`.`school_id` is not null and `campuses`.`deleted_at` is null order by `name` asc
+parmars:[50]
+
+[2019-12-01 13:26:52]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 13:26:52]select count(*) as aggregate from `wifi_issues` inner join `users` on `wifi_issues`.`user_id` = `users`.`id` where (`issueid` > ?)
+parmars:[0]
+
+[2019-12-01 13:26:52]select `wifi_issues`.*, `users`.`name`, `users`.`mobile` from `wifi_issues` inner join `users` on `wifi_issues`.`user_id` = `users`.`id` where (`issueid` > ?) order by `issueid` desc limit 10 offset 0
+parmars:[0]
+
+[2019-12-01 13:26:58]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 13:26:58]select count(*) as aggregate from `wifi_issues` inner join `users` on `wifi_issues`.`user_id` = `users`.`id` where (`issueid` > ?)
+parmars:[0]
+
+[2019-12-01 13:26:58]select `wifi_issues`.*, `users`.`name`, `users`.`mobile` from `wifi_issues` inner join `users` on `wifi_issues`.`user_id` = `users`.`id` where (`issueid` > ?) order by `issueid` desc limit 10 offset 0
+parmars:[0]
+
+[2019-12-01 13:26:58]select * from `schools` where `schools`.`id` = ? and `schools`.`deleted_at` is null limit 1
+parmars:[50]
+
+[2019-12-01 13:26:58]select * from `campuses` where `campuses`.`school_id` = ? and `campuses`.`school_id` is not null and `campuses`.`deleted_at` is null order by `name` asc
+parmars:[50]
+
+[2019-12-01 13:27:11]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 13:27:11]select count(*) as aggregate from `wifi_issues` inner join `users` on `wifi_issues`.`user_id` = `users`.`id` where (`issueid` > ?)
+parmars:[0]
+
+[2019-12-01 13:27:11]select `wifi_issues`.*, `users`.`name`, `users`.`mobile` from `wifi_issues` inner join `users` on `wifi_issues`.`user_id` = `users`.`id` where (`issueid` > ?) order by `issueid` desc limit 10 offset 0
+parmars:[0]
+
+[2019-12-01 13:27:11]select * from `schools` where `schools`.`id` = ? and `schools`.`deleted_at` is null limit 1
+parmars:[50]
+
+[2019-12-01 13:27:11]select * from `campuses` where `campuses`.`school_id` = ? and `campuses`.`school_id` is not null and `campuses`.`deleted_at` is null order by `name` asc
+parmars:[50]
+
+[2019-12-01 13:27:46]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 13:27:46]select count(*) as aggregate from `wifi_issues` inner join `users` on `wifi_issues`.`user_id` = `users`.`id` where (`issueid` > ?)
+parmars:[0]
+
+[2019-12-01 13:27:46]select `wifi_issues`.*, `users`.`name`, `users`.`mobile` from `wifi_issues` inner join `users` on `wifi_issues`.`user_id` = `users`.`id` where (`issueid` > ?) order by `issueid` desc limit 10 offset 0
+parmars:[0]
+
+[2019-12-01 13:28:02]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 13:28:02]select count(*) as aggregate from `wifi_issues` inner join `users` on `wifi_issues`.`user_id` = `users`.`id` where (`issueid` > ?)
+parmars:[0]
+
+[2019-12-01 13:28:02]select `wifi_issues`.*, `users`.`name`, `users`.`mobile` from `wifi_issues` inner join `users` on `wifi_issues`.`user_id` = `users`.`id` where (`issueid` > ?) order by `issueid` desc limit 10 offset 0
+parmars:[0]
+
+[2019-12-01 13:28:02]select * from `schools` where `schools`.`id` = ? and `schools`.`deleted_at` is null limit 1
+parmars:[50]
+
+[2019-12-01 13:28:02]select * from `campuses` where `campuses`.`school_id` = ? and `campuses`.`school_id` is not null and `campuses`.`deleted_at` is null order by `name` asc
+parmars:[50]
+
+[2019-12-01 13:28:23]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 13:28:23]select count(*) as aggregate from `wifi_issues` inner join `users` on `wifi_issues`.`user_id` = `users`.`id` where (`issueid` > ?)
+parmars:[0]
+
+[2019-12-01 13:28:23]select `wifi_issues`.*, `users`.`name`, `users`.`mobile` from `wifi_issues` inner join `users` on `wifi_issues`.`user_id` = `users`.`id` where (`issueid` > ?) order by `issueid` desc limit 10 offset 0
+parmars:[0]
+
+[2019-12-01 13:28:50]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 13:28:50]select count(*) as aggregate from `wifi_issues` inner join `users` on `wifi_issues`.`user_id` = `users`.`id` where (`issueid` > ?)
+parmars:[0]
+
+[2019-12-01 13:28:50]select `wifi_issues`.*, `users`.`name`, `users`.`mobile` from `wifi_issues` inner join `users` on `wifi_issues`.`user_id` = `users`.`id` where (`issueid` > ?) order by `issueid` desc limit 10 offset 0
+parmars:[0]
+
+[2019-12-01 13:28:55]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 13:28:55]select count(*) as aggregate from `wifi_issues` inner join `users` on `wifi_issues`.`user_id` = `users`.`id` where (`issueid` > ?)
+parmars:[0]
+
+[2019-12-01 13:28:55]select `wifi_issues`.*, `users`.`name`, `users`.`mobile` from `wifi_issues` inner join `users` on `wifi_issues`.`user_id` = `users`.`id` where (`issueid` > ?) order by `issueid` desc limit 10 offset 0
+parmars:[0]
+
+[2019-12-01 13:29:15]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 13:29:15]select count(*) as aggregate from `wifi_issues` inner join `users` on `wifi_issues`.`user_id` = `users`.`id` where (`issueid` > ?)
+parmars:[0]
+
+[2019-12-01 13:29:15]select `wifi_issues`.*, `users`.`name`, `users`.`mobile` from `wifi_issues` inner join `users` on `wifi_issues`.`user_id` = `users`.`id` where (`issueid` > ?) order by `issueid` desc limit 10 offset 0
+parmars:[0]
+
+[2019-12-01 13:29:15]select * from `schools` where `schools`.`id` = ? and `schools`.`deleted_at` is null limit 1
+parmars:[50]
+
+[2019-12-01 13:29:15]select * from `campuses` where `campuses`.`school_id` = ? and `campuses`.`school_id` is not null and `campuses`.`deleted_at` is null order by `name` asc
+parmars:[50]
+
+[2019-12-01 13:29:25]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 13:29:25]select count(*) as aggregate from `wifi_issues` inner join `users` on `wifi_issues`.`user_id` = `users`.`id` where (`issueid` > ?)
+parmars:[0]
+
+[2019-12-01 13:29:25]select `wifi_issues`.*, `users`.`name`, `users`.`mobile` from `wifi_issues` inner join `users` on `wifi_issues`.`user_id` = `users`.`id` where (`issueid` > ?) order by `issueid` desc limit 10 offset 0
+parmars:[0]
+
+[2019-12-01 13:29:49]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 13:29:49]select count(*) as aggregate from `wifi_issues` inner join `users` on `wifi_issues`.`user_id` = `users`.`id` where (`issueid` > ?)
+parmars:[0]
+
+[2019-12-01 13:29:49]select `wifi_issues`.*, `users`.`name`, `users`.`mobile` from `wifi_issues` inner join `users` on `wifi_issues`.`user_id` = `users`.`id` where (`issueid` > ?) order by `issueid` desc limit 10 offset 0
+parmars:[0]
+
+[2019-12-01 13:29:49]select * from `schools` where `schools`.`id` = ? and `schools`.`deleted_at` is null limit 1
+parmars:[50]
+
+[2019-12-01 13:29:49]select * from `campuses` where `campuses`.`school_id` = ? and `campuses`.`school_id` is not null and `campuses`.`deleted_at` is null order by `name` asc
+parmars:[50]
+
+[2019-12-01 13:31:04]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 13:31:04]select count(*) as aggregate from `wifi_issues` inner join `users` on `wifi_issues`.`user_id` = `users`.`id` where (`issueid` > ?)
+parmars:[0]
+
+[2019-12-01 13:31:04]select `wifi_issues`.*, `users`.`name`, `users`.`mobile` from `wifi_issues` inner join `users` on `wifi_issues`.`user_id` = `users`.`id` where (`issueid` > ?) order by `issueid` desc limit 10 offset 0
+parmars:[0]
+
+[2019-12-01 13:31:04]select * from `schools` where `schools`.`id` = ? and `schools`.`deleted_at` is null limit 1
+parmars:[50]
+
+[2019-12-01 13:31:04]select * from `campuses` where `campuses`.`school_id` = ? and `campuses`.`school_id` is not null and `campuses`.`deleted_at` is null order by `name` asc
+parmars:[50]
+
+[2019-12-01 13:32:24]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 13:32:24]select count(*) as aggregate from `wifi_issues` inner join `users` on `wifi_issues`.`user_id` = `users`.`id` where (`issueid` > ?)
+parmars:[0]
+
+[2019-12-01 13:32:24]select `wifi_issues`.*, `users`.`name`, `users`.`mobile` from `wifi_issues` inner join `users` on `wifi_issues`.`user_id` = `users`.`id` where (`issueid` > ?) order by `issueid` desc limit 10 offset 0
+parmars:[0]
+
+[2019-12-01 13:32:25]select * from `schools` where `schools`.`id` = ? and `schools`.`deleted_at` is null limit 1
+parmars:[50]
+
+[2019-12-01 13:32:25]select * from `campuses` where `campuses`.`school_id` = ? and `campuses`.`school_id` is not null and `campuses`.`deleted_at` is null order by `name` asc
+parmars:[50]
+
+[2019-12-01 13:32:32]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 13:32:32]select count(*) as aggregate from `wifi_issues` inner join `users` on `wifi_issues`.`user_id` = `users`.`id` where (`issueid` > ?)
+parmars:[0]
+
+[2019-12-01 13:32:32]select `wifi_issues`.*, `users`.`name`, `users`.`mobile` from `wifi_issues` inner join `users` on `wifi_issues`.`user_id` = `users`.`id` where (`issueid` > ?) order by `issueid` desc limit 10 offset 0
+parmars:[0]
+
+[2019-12-01 13:32:32]select * from `schools` where `schools`.`id` = ? and `schools`.`deleted_at` is null limit 1
+parmars:[50]
+
+[2019-12-01 13:32:32]select * from `campuses` where `campuses`.`school_id` = ? and `campuses`.`school_id` is not null and `campuses`.`deleted_at` is null order by `name` asc
+parmars:[50]
+
+[2019-12-01 13:33:12]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 13:33:12]select count(*) as aggregate from `wifi_issues` inner join `users` on `wifi_issues`.`user_id` = `users`.`id` where (`issueid` > ?)
+parmars:[0]
+
+[2019-12-01 13:33:12]select `wifi_issues`.*, `users`.`name`, `users`.`mobile` from `wifi_issues` inner join `users` on `wifi_issues`.`user_id` = `users`.`id` where (`issueid` > ?) order by `issueid` desc limit 10 offset 0
+parmars:[0]
+
+[2019-12-01 13:33:12]select * from `schools` where `schools`.`id` = ? and `schools`.`deleted_at` is null limit 1
+parmars:[50]
+
+[2019-12-01 13:33:12]select * from `campuses` where `campuses`.`school_id` = ? and `campuses`.`school_id` is not null and `campuses`.`deleted_at` is null order by `name` asc
+parmars:[50]
+
+[2019-12-01 13:33:23]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 13:33:23]select count(*) as aggregate from `wifi_issues` inner join `users` on `wifi_issues`.`user_id` = `users`.`id` where (`issueid` > ?)
+parmars:[0]
+
+[2019-12-01 13:33:23]select `wifi_issues`.*, `users`.`name`, `users`.`mobile` from `wifi_issues` inner join `users` on `wifi_issues`.`user_id` = `users`.`id` where (`issueid` > ?) order by `issueid` desc limit 10 offset 0
+parmars:[0]
+
+[2019-12-01 13:33:23]select * from `schools` where `schools`.`id` = ? and `schools`.`deleted_at` is null limit 1
+parmars:[50]
+
+[2019-12-01 13:33:23]select * from `campuses` where `campuses`.`school_id` = ? and `campuses`.`school_id` is not null and `campuses`.`deleted_at` is null order by `name` asc
+parmars:[50]
+
+[2019-12-01 13:34:14]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 13:34:14]select count(*) as aggregate from `wifi_issues` inner join `users` on `wifi_issues`.`user_id` = `users`.`id` where (`issueid` > ?)
+parmars:[0]
+
+[2019-12-01 13:34:14]select `wifi_issues`.*, `users`.`name`, `users`.`mobile` from `wifi_issues` inner join `users` on `wifi_issues`.`user_id` = `users`.`id` where (`issueid` > ?) order by `issueid` desc limit 10 offset 0
+parmars:[0]
+
+[2019-12-01 13:34:14]select * from `schools` where `schools`.`id` = ? and `schools`.`deleted_at` is null limit 1
+parmars:[50]
+
+[2019-12-01 13:34:14]select * from `campuses` where `campuses`.`school_id` = ? and `campuses`.`school_id` is not null and `campuses`.`deleted_at` is null order by `name` asc
+parmars:[50]
+
+[2019-12-01 13:34:32]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 13:34:32]select count(*) as aggregate from `wifi_issues` inner join `users` on `wifi_issues`.`user_id` = `users`.`id` where (`issueid` > ?)
+parmars:[0]
+
+[2019-12-01 13:34:32]select `wifi_issues`.*, `users`.`name`, `users`.`mobile` from `wifi_issues` inner join `users` on `wifi_issues`.`user_id` = `users`.`id` where (`issueid` > ?) order by `issueid` desc limit 10 offset 0
+parmars:[0]
+
+[2019-12-01 13:34:32]select * from `schools` where `schools`.`id` = ? and `schools`.`deleted_at` is null limit 1
+parmars:[50]
+
+[2019-12-01 13:34:32]select * from `campuses` where `campuses`.`school_id` = ? and `campuses`.`school_id` is not null and `campuses`.`deleted_at` is null order by `name` asc
+parmars:[50]
+
+[2019-12-01 13:34:41]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 13:34:41]select count(*) as aggregate from `wifi_issues` inner join `users` on `wifi_issues`.`user_id` = `users`.`id` where (`issueid` > ?)
+parmars:[0]
+
+[2019-12-01 13:34:41]select `wifi_issues`.*, `users`.`name`, `users`.`mobile` from `wifi_issues` inner join `users` on `wifi_issues`.`user_id` = `users`.`id` where (`issueid` > ?) order by `issueid` desc limit 10 offset 0
+parmars:[0]
+
+[2019-12-01 13:34:41]select * from `schools` where `schools`.`id` = ? and `schools`.`deleted_at` is null limit 1
+parmars:[50]
+
+[2019-12-01 13:34:41]select * from `campuses` where `campuses`.`school_id` = ? and `campuses`.`school_id` is not null and `campuses`.`deleted_at` is null order by `name` asc
+parmars:[50]
+
+[2019-12-01 13:34:56]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 13:34:56]select count(*) as aggregate from `wifi_issues` inner join `users` on `wifi_issues`.`user_id` = `users`.`id` where (`issueid` > ?)
+parmars:[0]
+
+[2019-12-01 13:34:56]select `wifi_issues`.*, `users`.`name`, `users`.`mobile` from `wifi_issues` inner join `users` on `wifi_issues`.`user_id` = `users`.`id` where (`issueid` > ?) order by `issueid` desc limit 10 offset 0
+parmars:[0]
+
+[2019-12-01 13:34:56]select * from `schools` where `schools`.`id` = ? and `schools`.`deleted_at` is null limit 1
+parmars:[50]
+
+[2019-12-01 13:34:56]select * from `campuses` where `campuses`.`school_id` = ? and `campuses`.`school_id` is not null and `campuses`.`deleted_at` is null order by `name` asc
+parmars:[50]
+
+[2019-12-01 13:37:43]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 13:37:43]select count(*) as aggregate from `wifi_issues` inner join `users` on `wifi_issues`.`user_id` = `users`.`id` where (`issueid` > ?)
+parmars:[0]
+
+[2019-12-01 13:37:43]select `wifi_issues`.*, `users`.`name`, `users`.`mobile` from `wifi_issues` inner join `users` on `wifi_issues`.`user_id` = `users`.`id` where (`issueid` > ?) order by `issueid` desc limit 10 offset 0
+parmars:[0]
+
+[2019-12-01 13:37:43]select * from `schools` where `schools`.`id` = ? and `schools`.`deleted_at` is null limit 1
+parmars:[50]
+
+[2019-12-01 13:37:43]select * from `campuses` where `campuses`.`school_id` = ? and `campuses`.`school_id` is not null and `campuses`.`deleted_at` is null order by `name` asc
+parmars:[50]
+
+[2019-12-01 13:40:18]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 13:40:45]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 13:40:45]select count(*) as aggregate from `wifi_issues` inner join `users` on `wifi_issues`.`user_id` = `users`.`id` inner join `schools` on `wifi_issues`.`school_id` = `schools`.`id` where (`issueid` > ?)
+parmars:[0]
+
+[2019-12-01 13:40:45]select `wifi_issues`.*, `users`.`name`, `users`.`mobile`, `schools`.`name` as `schools_name` from `wifi_issues` inner join `users` on `wifi_issues`.`user_id` = `users`.`id` inner join `schools` on `wifi_issues`.`school_id` = `schools`.`id` where (`issueid` > ?) order by `issueid` desc limit 10 offset 0
+parmars:[0]
+
+[2019-12-01 13:40:45]select * from `schools` where `schools`.`id` = ? and `schools`.`deleted_at` is null limit 1
+parmars:[50]
+
+[2019-12-01 13:40:45]select * from `campuses` where `campuses`.`school_id` = ? and `campuses`.`school_id` is not null and `campuses`.`deleted_at` is null order by `name` asc
+parmars:[50]
+
+[2019-12-01 13:41:31]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 13:41:31]select count(*) as aggregate from `wifi_issues` inner join `users` on `wifi_issues`.`user_id` = `users`.`id` inner join `schools` on `wifi_issues`.`school_id` = `schools`.`id` where (`issueid` > ?)
+parmars:[0]
+
+[2019-12-01 13:41:31]select `wifi_issues`.*, `users`.`name`, `users`.`mobile`, `schools`.`name` as `schools_name` from `wifi_issues` inner join `users` on `wifi_issues`.`user_id` = `users`.`id` inner join `schools` on `wifi_issues`.`school_id` = `schools`.`id` where (`issueid` > ?) order by `issueid` desc limit 10 offset 0
+parmars:[0]
+
+[2019-12-01 13:41:31]select * from `schools` where `schools`.`id` = ? and `schools`.`deleted_at` is null limit 1
+parmars:[50]
+
+[2019-12-01 13:41:31]select * from `campuses` where `campuses`.`school_id` = ? and `campuses`.`school_id` is not null and `campuses`.`deleted_at` is null order by `name` asc
+parmars:[50]
+
+[2019-12-01 13:42:51]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 13:42:51]select count(*) as aggregate from `wifi_issues` inner join `users` on `wifi_issues`.`user_id` = `users`.`id` inner join `schools` on `wifi_issues`.`school_id` = `schools`.`id` where (`issueid` > ?)
+parmars:[0]
+
+[2019-12-01 13:42:51]select `wifi_issues`.*, `users`.`name`, `users`.`mobile`, `schools`.`name` as `schools_name` from `wifi_issues` inner join `users` on `wifi_issues`.`user_id` = `users`.`id` inner join `schools` on `wifi_issues`.`school_id` = `schools`.`id` where (`issueid` > ?) order by `issueid` desc limit 10 offset 0
+parmars:[0]
+
+[2019-12-01 13:42:51]select * from `schools` where `schools`.`id` = ? and `schools`.`deleted_at` is null limit 1
+parmars:[50]
+
+[2019-12-01 13:42:51]select * from `campuses` where `campuses`.`school_id` = ? and `campuses`.`school_id` is not null and `campuses`.`deleted_at` is null order by `name` asc
+parmars:[50]
+
+[2019-12-01 13:43:25]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 13:43:25]select count(*) as aggregate from `wifi_issues` inner join `users` on `wifi_issues`.`user_id` = `users`.`id` inner join `schools` on `wifi_issues`.`school_id` = `schools`.`id` where (`issueid` > ?)
+parmars:[0]
+
+[2019-12-01 13:43:25]select `wifi_issues`.*, `users`.`name`, `users`.`mobile`, `schools`.`name` as `schools_name` from `wifi_issues` inner join `users` on `wifi_issues`.`user_id` = `users`.`id` inner join `schools` on `wifi_issues`.`school_id` = `schools`.`id` where (`issueid` > ?) order by `issueid` desc limit 10 offset 0
+parmars:[0]
+
+[2019-12-01 13:43:25]select * from `schools` where `schools`.`id` = ? and `schools`.`deleted_at` is null limit 1
+parmars:[50]
+
+[2019-12-01 13:43:25]select * from `campuses` where `campuses`.`school_id` = ? and `campuses`.`school_id` is not null and `campuses`.`deleted_at` is null order by `name` asc
+parmars:[50]
+
+[2019-12-01 13:43:29]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 13:44:17]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 13:56:22]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 13:56:22]select count(*) as aggregate from `wifi_issue_comments` inner join `wifi_issues` on `wifi_issue_comments`.`issueid` = `wifi_issues`.`issueid` where (`commentid` > ?)
+parmars:[0]
+
+[2019-12-01 13:57:43]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 13:57:43]select count(*) as aggregate from `wifi_issue_comments` inner join `wifi_issues` on `wifi_issue_comments`.`issueid` = `wifi_issues`.`issueid` where (`commentid` > ?)
+parmars:[0]
+
+[2019-12-01 13:58:14]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 13:58:14]select count(*) as aggregate from `wifi_issue_comments` inner join `wifi_issues` on `wifi_issue_comments`.`issueid` = `wifi_issues`.`issueid` where (`commentid` > ?)
+parmars:[0]
+
+[2019-12-01 13:58:14]select `wifi_issue_comments`.*, `wifi_issues`.`issue_name`, `wifi_issues`.`issue_mobile`, `wifi_issues`.`issue_desc`, `wifi_issues`.`addr_detail`, `wifi_issues`.`admin_name`, `wifi_issues`.`admin_mobile`, `wifi_issues`.`admin_desc`, `wifi_issues`.`created_at`, `wifi_issues`.`typeone_name`, `wifi_issues`.`typetwo_name`, `wifi_issues`.`jiedan_time`, `wifi_issues`.`chulis_time`, `wifi_issues`.`typeone_name`, `wifi_issues`.`typetwo_name`, `wifi_issues`.`addr_detail`, `wifi_issues`.`issue_desc`, `wifi_issues`.`trade_sn` from `wifi_issue_comments` inner join `wifi_issues` on `wifi_issue_comments`.`issueid` = `wifi_issues`.`issueid` where (`commentid` > ?) order by `commentid` desc limit 10 offset 0
+parmars:[0]
+
+[2019-12-01 13:58:40]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 13:58:40]select count(*) as aggregate from `wifi_issue_comments` inner join `wifi_issues` on `wifi_issue_comments`.`issueid` = `wifi_issues`.`issueid` where (`commentid` > ?)
+parmars:[0]
+
+[2019-12-01 13:58:40]select `wifi_issue_comments`.*, `wifi_issues`.`issue_name`, `wifi_issues`.`issue_mobile`, `wifi_issues`.`issue_desc`, `wifi_issues`.`addr_detail`, `wifi_issues`.`admin_name`, `wifi_issues`.`admin_mobile`, `wifi_issues`.`admin_desc`, `wifi_issues`.`created_at`, `wifi_issues`.`typeone_name`, `wifi_issues`.`typetwo_name`, `wifi_issues`.`jiedan_time`, `wifi_issues`.`chulis_time`, `wifi_issues`.`typeone_name`, `wifi_issues`.`typetwo_name`, `wifi_issues`.`addr_detail`, `wifi_issues`.`issue_desc`, `wifi_issues`.`trade_sn` from `wifi_issue_comments` inner join `wifi_issues` on `wifi_issue_comments`.`issueid` = `wifi_issues`.`issueid` where (`commentid` > ?) order by `commentid` desc limit 10 offset 0
+parmars:[0]
+
+[2019-12-01 13:58:51]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 13:58:51]select count(*) as aggregate from `wifi_issue_comments` inner join `wifi_issues` on `wifi_issue_comments`.`issueid` = `wifi_issues`.`issueid` where (`commentid` > ?)
+parmars:[0]
+
+[2019-12-01 13:58:51]select `wifi_issue_comments`.*, `wifi_issues`.`issue_name`, `wifi_issues`.`issue_mobile`, `wifi_issues`.`issue_desc`, `wifi_issues`.`addr_detail`, `wifi_issues`.`admin_name`, `wifi_issues`.`admin_mobile`, `wifi_issues`.`admin_desc`, `wifi_issues`.`created_at`, `wifi_issues`.`typeone_name`, `wifi_issues`.`typetwo_name`, `wifi_issues`.`jiedan_time`, `wifi_issues`.`chulis_time`, `wifi_issues`.`typeone_name`, `wifi_issues`.`typetwo_name`, `wifi_issues`.`addr_detail`, `wifi_issues`.`issue_desc`, `wifi_issues`.`trade_sn` from `wifi_issue_comments` inner join `wifi_issues` on `wifi_issue_comments`.`issueid` = `wifi_issues`.`issueid` where (`commentid` > ?) order by `commentid` desc limit 10 offset 0
+parmars:[0]
+
+[2019-12-01 13:59:02]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 13:59:02]select count(*) as aggregate from `wifi_issue_comments` inner join `wifi_issues` on `wifi_issue_comments`.`issueid` = `wifi_issues`.`issueid` where (`commentid` > ?)
+parmars:[0]
+
+[2019-12-01 13:59:02]select `wifi_issue_comments`.*, `wifi_issues`.`issue_name`, `wifi_issues`.`issue_mobile`, `wifi_issues`.`issue_desc`, `wifi_issues`.`addr_detail`, `wifi_issues`.`admin_name`, `wifi_issues`.`admin_mobile`, `wifi_issues`.`admin_desc`, `wifi_issues`.`created_at`, `wifi_issues`.`typeone_name`, `wifi_issues`.`typetwo_name`, `wifi_issues`.`jiedan_time`, `wifi_issues`.`chulis_time`, `wifi_issues`.`typeone_name`, `wifi_issues`.`typetwo_name`, `wifi_issues`.`addr_detail`, `wifi_issues`.`issue_desc`, `wifi_issues`.`trade_sn` from `wifi_issue_comments` inner join `wifi_issues` on `wifi_issue_comments`.`issueid` = `wifi_issues`.`issueid` where (`commentid` > ?) order by `commentid` desc limit 10 offset 0
+parmars:[0]
+
+[2019-12-01 13:59:02]select * from `schools` where `schools`.`id` = ? and `schools`.`deleted_at` is null limit 1
+parmars:[50]
+
+[2019-12-01 13:59:02]select * from `campuses` where `campuses`.`school_id` = ? and `campuses`.`school_id` is not null and `campuses`.`deleted_at` is null order by `name` asc
+parmars:[50]
+
+[2019-12-01 14:02:48]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 14:02:48]select count(*) as aggregate from `wifi_issue_comments` inner join `wifi_issues` on `wifi_issue_comments`.`issueid` = `wifi_issues`.`issueid` inner join `schools` on `wifi_issue_comments`.`school_id` = `schools`.`id` where (`commentid` > ?)
+parmars:[0]
+
+[2019-12-01 14:02:48]select `wifi_issue_comments`.*, `wifi_issues`.`issue_name`, `wifi_issues`.`issue_mobile`, `wifi_issues`.`issue_desc`, `wifi_issues`.`addr_detail`, `wifi_issues`.`admin_name`, `wifi_issues`.`admin_mobile`, `wifi_issues`.`admin_desc`, `wifi_issues`.`created_at`, `wifi_issues`.`typeone_name`, `wifi_issues`.`typetwo_name`, `wifi_issues`.`jiedan_time`, `wifi_issues`.`chulis_time`, `wifi_issues`.`typeone_name`, `wifi_issues`.`typetwo_name`, `wifi_issues`.`addr_detail`, `wifi_issues`.`issue_desc`, `wifi_issues`.`trade_sn`, `schools`.`name` as `schools_name` from `wifi_issue_comments` inner join `wifi_issues` on `wifi_issue_comments`.`issueid` = `wifi_issues`.`issueid` inner join `schools` on `wifi_issue_comments`.`school_id` = `schools`.`id` where (`commentid` > ?) order by `commentid` desc limit 10 offset 0
+parmars:[0]
+
+[2019-12-01 14:02:48]select * from `schools` where `schools`.`id` = ? and `schools`.`deleted_at` is null limit 1
+parmars:[50]
+
+[2019-12-01 14:02:48]select * from `campuses` where `campuses`.`school_id` = ? and `campuses`.`school_id` is not null and `campuses`.`deleted_at` is null order by `name` asc
+parmars:[50]
+
+[2019-12-01 14:02:59]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 14:02:59]select count(*) as aggregate from `wifi_issue_comments` inner join `wifi_issues` on `wifi_issue_comments`.`issueid` = `wifi_issues`.`issueid` inner join `schools` on `wifi_issue_comments`.`school_id` = `schools`.`id` where (`commentid` > ?)
+parmars:[0]
+
+[2019-12-01 14:02:59]select `wifi_issue_comments`.*, `wifi_issues`.`issue_name`, `wifi_issues`.`issue_mobile`, `wifi_issues`.`issue_desc`, `wifi_issues`.`addr_detail`, `wifi_issues`.`admin_name`, `wifi_issues`.`admin_mobile`, `wifi_issues`.`admin_desc`, `wifi_issues`.`created_at`, `wifi_issues`.`typeone_name`, `wifi_issues`.`typetwo_name`, `wifi_issues`.`jiedan_time`, `wifi_issues`.`chulis_time`, `wifi_issues`.`typeone_name`, `wifi_issues`.`typetwo_name`, `wifi_issues`.`addr_detail`, `wifi_issues`.`issue_desc`, `wifi_issues`.`trade_sn`, `schools`.`name` as `schools_name` from `wifi_issue_comments` inner join `wifi_issues` on `wifi_issue_comments`.`issueid` = `wifi_issues`.`issueid` inner join `schools` on `wifi_issue_comments`.`school_id` = `schools`.`id` where (`commentid` > ?) order by `commentid` desc limit 10 offset 0
+parmars:[0]
+
+[2019-12-01 14:03:00]select * from `schools` where `schools`.`id` = ? and `schools`.`deleted_at` is null limit 1
+parmars:[50]
+
+[2019-12-01 14:03:00]select * from `campuses` where `campuses`.`school_id` = ? and `campuses`.`school_id` is not null and `campuses`.`deleted_at` is null order by `name` asc
+parmars:[50]
+
+[2019-12-01 14:04:07]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 14:04:07]select count(*) as aggregate from `wifi_issue_comments` inner join `wifi_issues` on `wifi_issue_comments`.`issueid` = `wifi_issues`.`issueid` inner join `schools` on `wifi_issue_comments`.`school_id` = `schools`.`id` where (`commentid` > ?)
+parmars:[0]
+
+[2019-12-01 14:04:07]select `wifi_issue_comments`.*, `wifi_issues`.`issue_name`, `wifi_issues`.`issue_mobile`, `wifi_issues`.`issue_desc`, `wifi_issues`.`addr_detail`, `wifi_issues`.`admin_name`, `wifi_issues`.`admin_mobile`, `wifi_issues`.`admin_desc`, `wifi_issues`.`created_at`, `wifi_issues`.`typeone_name`, `wifi_issues`.`typetwo_name`, `wifi_issues`.`jiedan_time`, `wifi_issues`.`chulis_time`, `wifi_issues`.`typeone_name`, `wifi_issues`.`typetwo_name`, `wifi_issues`.`addr_detail`, `wifi_issues`.`issue_desc`, `wifi_issues`.`trade_sn`, `schools`.`name` as `schools_name` from `wifi_issue_comments` inner join `wifi_issues` on `wifi_issue_comments`.`issueid` = `wifi_issues`.`issueid` inner join `schools` on `wifi_issue_comments`.`school_id` = `schools`.`id` where (`commentid` > ?) order by `commentid` desc limit 10 offset 0
+parmars:[0]
+
+[2019-12-01 14:04:07]select * from `schools` where `schools`.`id` = ? and `schools`.`deleted_at` is null limit 1
+parmars:[50]
+
+[2019-12-01 14:04:07]select * from `campuses` where `campuses`.`school_id` = ? and `campuses`.`school_id` is not null and `campuses`.`deleted_at` is null order by `name` asc
+parmars:[50]
+
+[2019-12-01 14:04:39]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 14:04:39]select count(*) as aggregate from `wifi_issue_comments` inner join `wifi_issues` on `wifi_issue_comments`.`issueid` = `wifi_issues`.`issueid` inner join `schools` on `wifi_issue_comments`.`school_id` = `schools`.`id` where (`commentid` > ?)
+parmars:[0]
+
+[2019-12-01 14:04:39]select `wifi_issue_comments`.*, `wifi_issues`.`issue_name`, `wifi_issues`.`issue_mobile`, `wifi_issues`.`issue_desc`, `wifi_issues`.`addr_detail`, `wifi_issues`.`admin_name`, `wifi_issues`.`admin_mobile`, `wifi_issues`.`admin_desc`, `wifi_issues`.`created_at`, `wifi_issues`.`typeone_name`, `wifi_issues`.`typetwo_name`, `wifi_issues`.`jiedan_time`, `wifi_issues`.`chulis_time`, `wifi_issues`.`typeone_name`, `wifi_issues`.`typetwo_name`, `wifi_issues`.`addr_detail`, `wifi_issues`.`issue_desc`, `wifi_issues`.`trade_sn`, `schools`.`name` as `schools_name` from `wifi_issue_comments` inner join `wifi_issues` on `wifi_issue_comments`.`issueid` = `wifi_issues`.`issueid` inner join `schools` on `wifi_issue_comments`.`school_id` = `schools`.`id` where (`commentid` > ?) order by `commentid` desc limit 10 offset 0
+parmars:[0]
+
+[2019-12-01 14:04:39]select * from `schools` where `schools`.`id` = ? and `schools`.`deleted_at` is null limit 1
+parmars:[50]
+
+[2019-12-01 14:04:39]select * from `campuses` where `campuses`.`school_id` = ? and `campuses`.`school_id` is not null and `campuses`.`deleted_at` is null order by `name` asc
+parmars:[50]
+
+[2019-12-01 14:05:16]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 14:05:16]select count(*) as aggregate from `wifi_issue_comments` inner join `wifi_issues` on `wifi_issue_comments`.`issueid` = `wifi_issues`.`issueid` inner join `schools` on `wifi_issue_comments`.`school_id` = `schools`.`id` where (`commentid` > ?)
+parmars:[0]
+
+[2019-12-01 14:05:16]select `wifi_issue_comments`.*, `wifi_issues`.`issue_name`, `wifi_issues`.`issue_mobile`, `wifi_issues`.`issue_desc`, `wifi_issues`.`addr_detail`, `wifi_issues`.`admin_name`, `wifi_issues`.`admin_mobile`, `wifi_issues`.`admin_desc`, `wifi_issues`.`created_at`, `wifi_issues`.`typeone_name`, `wifi_issues`.`typetwo_name`, `wifi_issues`.`jiedan_time`, `wifi_issues`.`chulis_time`, `wifi_issues`.`typeone_name`, `wifi_issues`.`typetwo_name`, `wifi_issues`.`addr_detail`, `wifi_issues`.`issue_desc`, `wifi_issues`.`trade_sn`, `schools`.`name` as `schools_name` from `wifi_issue_comments` inner join `wifi_issues` on `wifi_issue_comments`.`issueid` = `wifi_issues`.`issueid` inner join `schools` on `wifi_issue_comments`.`school_id` = `schools`.`id` where (`commentid` > ?) order by `commentid` desc limit 10 offset 0
+parmars:[0]
+
+[2019-12-01 14:05:16]select * from `schools` where `schools`.`id` = ? and `schools`.`deleted_at` is null limit 1
+parmars:[50]
+
+[2019-12-01 14:05:16]select * from `campuses` where `campuses`.`school_id` = ? and `campuses`.`school_id` is not null and `campuses`.`deleted_at` is null order by `name` asc
+parmars:[50]
+
+[2019-12-01 14:05:41]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 14:05:41]select count(*) as aggregate from `wifi_issue_comments` inner join `wifi_issues` on `wifi_issue_comments`.`issueid` = `wifi_issues`.`issueid` inner join `schools` on `wifi_issue_comments`.`school_id` = `schools`.`id` where (`commentid` > ?)
+parmars:[0]
+
+[2019-12-01 14:05:41]select `wifi_issue_comments`.*, `wifi_issues`.`issue_name`, `wifi_issues`.`issue_mobile`, `wifi_issues`.`issue_desc`, `wifi_issues`.`addr_detail`, `wifi_issues`.`admin_name`, `wifi_issues`.`admin_mobile`, `wifi_issues`.`admin_desc`, `wifi_issues`.`created_at`, `wifi_issues`.`typeone_name`, `wifi_issues`.`typetwo_name`, `wifi_issues`.`jiedan_time`, `wifi_issues`.`chulis_time`, `wifi_issues`.`typeone_name`, `wifi_issues`.`typetwo_name`, `wifi_issues`.`addr_detail`, `wifi_issues`.`issue_desc`, `wifi_issues`.`trade_sn`, `schools`.`name` as `schools_name` from `wifi_issue_comments` inner join `wifi_issues` on `wifi_issue_comments`.`issueid` = `wifi_issues`.`issueid` inner join `schools` on `wifi_issue_comments`.`school_id` = `schools`.`id` where (`commentid` > ?) order by `commentid` desc limit 10 offset 0
+parmars:[0]
+
+[2019-12-01 14:05:41]select * from `schools` where `schools`.`id` = ? and `schools`.`deleted_at` is null limit 1
+parmars:[50]
+
+[2019-12-01 14:05:41]select * from `campuses` where `campuses`.`school_id` = ? and `campuses`.`school_id` is not null and `campuses`.`deleted_at` is null order by `name` asc
+parmars:[50]
+
+[2019-12-01 14:05:51]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 14:05:51]select count(*) as aggregate from `wifi_issue_comments` inner join `wifi_issues` on `wifi_issue_comments`.`issueid` = `wifi_issues`.`issueid` inner join `schools` on `wifi_issue_comments`.`school_id` = `schools`.`id` where (`commentid` > ?)
+parmars:[0]
+
+[2019-12-01 14:05:51]select `wifi_issue_comments`.*, `wifi_issues`.`issue_name`, `wifi_issues`.`issue_mobile`, `wifi_issues`.`issue_desc`, `wifi_issues`.`addr_detail`, `wifi_issues`.`admin_name`, `wifi_issues`.`admin_mobile`, `wifi_issues`.`admin_desc`, `wifi_issues`.`created_at`, `wifi_issues`.`typeone_name`, `wifi_issues`.`typetwo_name`, `wifi_issues`.`jiedan_time`, `wifi_issues`.`chulis_time`, `wifi_issues`.`typeone_name`, `wifi_issues`.`typetwo_name`, `wifi_issues`.`addr_detail`, `wifi_issues`.`issue_desc`, `wifi_issues`.`trade_sn`, `schools`.`name` as `schools_name` from `wifi_issue_comments` inner join `wifi_issues` on `wifi_issue_comments`.`issueid` = `wifi_issues`.`issueid` inner join `schools` on `wifi_issue_comments`.`school_id` = `schools`.`id` where (`commentid` > ?) order by `commentid` desc limit 10 offset 0
+parmars:[0]
+
+[2019-12-01 14:05:51]select * from `schools` where `schools`.`id` = ? and `schools`.`deleted_at` is null limit 1
+parmars:[50]
+
+[2019-12-01 14:05:51]select * from `campuses` where `campuses`.`school_id` = ? and `campuses`.`school_id` is not null and `campuses`.`deleted_at` is null order by `name` asc
+parmars:[50]
+
+[2019-12-01 14:19:30]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 14:19:30]select count(*) as aggregate from `wifi_issues` inner join `users` on `wifi_issues`.`user_id` = `users`.`id` inner join `schools` on `wifi_issues`.`school_id` = `schools`.`id` where (`issueid` > ?)
+parmars:[0]
+
+[2019-12-01 14:19:30]select `wifi_issues`.*, `users`.`name`, `users`.`mobile`, `schools`.`name` as `schools_name` from `wifi_issues` inner join `users` on `wifi_issues`.`user_id` = `users`.`id` inner join `schools` on `wifi_issues`.`school_id` = `schools`.`id` where (`issueid` > ?) order by `issueid` desc limit 10 offset 0
+parmars:[0]
+
+[2019-12-01 14:19:30]select * from `schools` where `schools`.`id` = ? and `schools`.`deleted_at` is null limit 1
+parmars:[50]
+
+[2019-12-01 14:19:30]select * from `campuses` where `campuses`.`school_id` = ? and `campuses`.`school_id` is not null and `campuses`.`deleted_at` is null order by `name` asc
+parmars:[50]
+
+[2019-12-01 14:19:34]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 14:30:09]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 14:30:23]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 14:31:19]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 14:31:57]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 14:31:57]select count(*) as aggregate from `wifi_issue_comments` inner join `wifi_issues` on `wifi_issue_comments`.`issueid` = `wifi_issues`.`issueid` inner join `schools` on `wifi_issue_comments`.`school_id` = `schools`.`id` where (`commentid` > ?)
+parmars:[0]
+
+[2019-12-01 14:31:57]select `wifi_issue_comments`.*, `wifi_issues`.`issue_name`, `wifi_issues`.`issue_mobile`, `wifi_issues`.`issue_desc`, `wifi_issues`.`addr_detail`, `wifi_issues`.`admin_name`, `wifi_issues`.`admin_mobile`, `wifi_issues`.`admin_desc`, `wifi_issues`.`created_at`, `wifi_issues`.`typeone_name`, `wifi_issues`.`typetwo_name`, `wifi_issues`.`jiedan_time`, `wifi_issues`.`chulis_time`, `wifi_issues`.`typeone_name`, `wifi_issues`.`typetwo_name`, `wifi_issues`.`addr_detail`, `wifi_issues`.`issue_desc`, `wifi_issues`.`trade_sn`, `schools`.`name` as `schools_name` from `wifi_issue_comments` inner join `wifi_issues` on `wifi_issue_comments`.`issueid` = `wifi_issues`.`issueid` inner join `schools` on `wifi_issue_comments`.`school_id` = `schools`.`id` where (`commentid` > ?) order by `commentid` desc limit 10 offset 0
+parmars:[0]
+
+[2019-12-01 14:31:57]select * from `schools` where `schools`.`id` = ? and `schools`.`deleted_at` is null limit 1
+parmars:[50]
+
+[2019-12-01 14:31:57]select * from `campuses` where `campuses`.`school_id` = ? and `campuses`.`school_id` is not null and `campuses`.`deleted_at` is null order by `name` asc
+parmars:[50]
+
+[2019-12-01 14:32:05]select * from `users` where `id` = ? limit 1
+parmars:[2]
+
+[2019-12-01 14:32:05]select count(*) as aggregate from `wifi_issues` inner join `users` on `wifi_issues`.`user_id` = `users`.`id` inner join `schools` on `wifi_issues`.`school_id` = `schools`.`id` where (`issueid` > ?)
+parmars:[0]
+
+[2019-12-01 14:32:05]select `wifi_issues`.*, `users`.`name`, `users`.`mobile`, `schools`.`name` as `schools_name` from `wifi_issues` inner join `users` on `wifi_issues`.`user_id` = `users`.`id` inner join `schools` on `wifi_issues`.`school_id` = `schools`.`id` where (`issueid` > ?) order by `issueid` desc limit 10 offset 0
+parmars:[0]
+
+[2019-12-01 14:32:05]select * from `schools` where `schools`.`id` = ? and `schools`.`deleted_at` is null limit 1
+parmars:[50]
+
+[2019-12-01 14:32:05]select * from `campuses` where `campuses`.`school_id` = ? and `campuses`.`school_id` is not null and `campuses`.`deleted_at` is null order by `name` asc
+parmars:[50]
+

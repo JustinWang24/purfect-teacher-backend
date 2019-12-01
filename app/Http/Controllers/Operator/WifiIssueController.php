@@ -19,21 +19,22 @@
        * @param WifiOrderRequest $request
        * @return view
        */
-      public function list(WifiIssueCommentRequest $request)
+      public function list(WifiIssueRequest $request)
       {
-         $param = $request->only ( [ 'school_id','campus_id','page' ] );
+         $param = $request->only ( [ 'school_id' , 'campus_id' ] );
+         $param[ 'page' ] = $request->input ( 'page' , 1 );
 
          // 查询条件
-         $condition[] = [ 'commentid' , '>' , 0 ];
+         $condition[] = [ 'issueid' , '>' , 0 ];
          // 状态
          if ( isset( $param[ 'status' ] ) && $param[ 'status' ] )
          {
-            $condition[] = [ 'wifi_issue_comments.status' , '=' , $param[ 'status' ] ];
+            $condition[] = [ 'wifi_issue.status' , '=' , $param[ 'status' ] ];
          }
          // 学校id
          if ( isset( $param[ 'school_id' ] ) && $param[ 'school_id' ] )
          {
-            $condition[] = [ 'wifi_issue_comments.school_id' , '=' , $param[ 'school_id' ] ];
+            $condition[] = [ 'wifi_issue.school_id' , '=' , $param[ 'school_id' ] ];
          }
 
          // 搜索关键词
@@ -45,12 +46,13 @@
 
          // 获取字段
          $fieldArr = [
-            'wifi_issues.*' , 'users.name' , 'users.mobile',
+            'wifi_issues.*' , 'users.name' , 'users.mobile','schools.name as schools_name'
          ];
 
          // 关联表信息
          $joinArr = [
             [ "users" , 'wifi_issues.user_id' , '=' , 'users.id' ] ,
+            [ "schools" , 'wifi_issues.school_id' , '=' , 'schools.id' ] ,
          ];
 
          // 获取数据

@@ -24,7 +24,7 @@ use App\User;
                             </div>
                         </div>
                         <div class="table-responsive">
-                            <table class="table table-striped table-bordered table-hover table-checkable order-column valign-middle">
+                            <table class="table table-striped table-bordered table-hover table-checkable order-column valign-middle text-center">
                                 <thead>
 								<tr>
 									<th>序号</th>
@@ -48,7 +48,7 @@ use App\User;
                                             @if($val['type_pid'] === 0)
                                                 <a href="{{ route('manager_wifi.wifiIssueType.list',['typeid'=>$val->typeid,'type_pid'=>$val->typeid]) }}" class="btn btn-primary btn-sm">子菜单</a>
                                             @endif
-                                            {{ Anchor::Print(['text'=>'编辑','class'=>'btn-edit-room','href'=>route('manager_wifi.wifiIssueType.edit',['typeid'=>$val->typeid,'type_pid'=>$val->typeid])], Button::TYPE_DEFAULT,'edit') }}
+                                            {{ Anchor::Print(['text'=>'编辑','class'=>'btn-edit-room','href'=>route('manager_wifi.wifiIssueType.edit',['typeid'=>$val->typeid,'type_pid'=>$val->type_pid])], Button::TYPE_DEFAULT,'edit') }}
                                             {{ Anchor::Print(['text'=>'删除','class'=>'btn-delete-room','href'=>route('manager_wifi.wifiIssueType.delete',['typeid'=>$val->typeid,'type_pid'=>$val->type_pid])], Button::TYPE_DEFAULT,'delete') }}
                                         </td>
                                     </tr>
