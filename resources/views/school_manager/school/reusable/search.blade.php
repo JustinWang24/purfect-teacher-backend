@@ -25,7 +25,7 @@
 @endphp
 <div id="user-quick-search-app" class="pull-left mr-4">
         <search-bar
-                style="width: 260px;"
+                style="width: 300px;"
                 school-id="{{ session('school.id') }}"
                 scope="{{ $highlight }}"
                 tip="{{ $tip }}"
