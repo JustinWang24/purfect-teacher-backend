@@ -57,7 +57,7 @@
       public function add(WifiIssueTypeRequest $request)
       {
          $param[ 'typeid' ]   = $request->input ( 'typeid' , 0 );
-         $param[ 'type_pid' ] = $request->input ( 'typeid' , 0 );
+         $param[ 'type_pid' ] = $request->input ( 'type_pid' , 0 );
 
          // 提交数据保存
          if ( $request->isMethod ( 'post' ) )
@@ -142,8 +142,8 @@
 
             if ( Cache::has ( $dataSign ) )
             {
-               FlashMessageBuilder::Push ( $request , FlashMessageBuilder::DANGER , '您提交太快了，先歇息一下' );
-               return redirect ()->route ( 'manager_wifi.wifiIssueType.edit', [ 'typeid' => $param[ 'typeid' ],'type_pid'=>$getWifiIssueTypesOneInfo[ 'type_pid' ] ] );
+               // FlashMessageBuilder::Push ( $request , FlashMessageBuilder::DANGER , '您提交太快了，先歇息一下' );
+               // return redirect ()->route ( 'manager_wifi.wifiIssueType.edit', [ 'typeid' => $param[ 'typeid' ],'type_pid'=>$getWifiIssueTypesOneInfo[ 'type_pid' ] ] );
             }
 
             if ( WifiIssueTypesDao::addOrUpdateWifiIssueTypesInfo ( array_merge ( $param1 , $param2 ) , $getWifiIssueTypesOneInfo[ 'typeid' ] ) )
@@ -186,7 +186,7 @@
          $condition[] = [ 'type_pid' , '=' , $param[ 'typeid' ] ];
          if ( WifiIssueTypesDao::getWifiIssueTypesStatistics ( $condition , $mode = 'count' ) > 0)
          {
-            FlashMessageBuilder::Push($request, FlashMessageBuilder::DANGER,'该数据下面有子类数据不能删除');
+            FlashMessageBuilder::Push($request, FlashMessageBuilder::DANGER,'该分类下面有子类数据不能删除');
             return redirect ()->route ( 'manager_wifi.wifiIssueType.list'  , [ 'type_pid' => $param[ 'type_pid' ] ]);
          }
 

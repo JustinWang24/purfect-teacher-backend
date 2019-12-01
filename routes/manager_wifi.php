@@ -24,11 +24,11 @@ Route::prefix('manager_wifi')->group(function () {
 
 	// wifi报修
     Route::any('wifiIssue/list', 'WifiIssueController@list')->name('manager_wifi.wifiIssue.list'); // wifi报修列表
-    Route::any('wifiIssue/add', 'WifiIssueController@detail')->name('manager_wifi.wifiIssue.detail'); // wifi报修详情
+    Route::any('wifiIssue/detail', 'WifiIssueController@detail')->name('manager_wifi.wifiIssue.detail'); // wifi报修详情
 	
 	// wifi报修评论
     Route::any('wifiIssueComment/list', 'WifiIssueCommentController@list')->name('manager_wifi.wifiIssueComment.list'); // wifi报修评论列表
-    Route::any('wifiIssueComment/add', 'WifiIssueCommentController@detail')->name('manager_wifi.wifiIssueComment.detail'); // wifi报修评论详情
+    Route::any('wifiIssueComment/detail', 'WifiIssueCommentController@detail')->name('manager_wifi.wifiIssueComment.detail'); // wifi报修评论详情
 
 
 });
