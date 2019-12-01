@@ -21,6 +21,10 @@ class TeacherPerformanceItem extends Model
     }
 
     protected function config(){
-        return $this->belongsTo(TeacherPerformanceConfig::class);
+        return $this->belongsTo(TeacherPerformanceConfig::class,'teacher_performance_config_id','id');
+    }
+
+    public function getResultText(){
+        return TeacherPerformance::Results()[$this->result];
     }
 }

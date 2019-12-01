@@ -5,7 +5,9 @@ use App\Models\Teachers\Performance\TeacherPerformance;
 use App\User;
 class Teacher extends User
 {
+    protected $table = 'users';
+
     public function performances(){
-        return $this->hasMany(TeacherPerformance::class)->orderBy('year','desc');
+        return $this->hasMany(TeacherPerformance::class, 'user_id')->orderBy('year','desc');
     }
 }
