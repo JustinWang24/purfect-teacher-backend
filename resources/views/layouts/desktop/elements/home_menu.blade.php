@@ -30,5 +30,10 @@
                 <span class="title">校历</span>
             </a>
         </li>
+        <li class="nav-item">
+            <a href="{{ route('school_manger.configs.performance-teacher') }}" class="nav-link ">
+                <span class="title">教职工工作考评</span>
+            </a>
+        </li>
     </ul>
 </li>

@@ -361,8 +361,15 @@ Route::prefix('school_manager')->group(function () {
     Route::get('attendance/person/search/{id}', 'AttendanceSchedulesController@searchPerson')
         ->name('school_manager.attendance.person.search');
 
-
-
+    // 学校的基本配置
+    Route::prefix('configs')->group(function(){
+        Route::get('performance-teacher','Configs\PerformancesController@teachers')
+            ->name('school_manger.configs.performance-teacher');
+        Route::get('performance-teacher-delete','Configs\PerformancesController@teacher_delete')
+            ->name('school_manger.configs.performance-teacher-delete');
+        Route::post('performance-teacher-save','Configs\PerformancesController@teacher_save')
+            ->name('school_manger.configs.performance-teacher-save');
+    });
 
 
 });

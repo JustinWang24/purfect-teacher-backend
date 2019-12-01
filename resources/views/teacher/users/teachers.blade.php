@@ -9,16 +9,17 @@ use App\User;
         <div class="col-sm-12 col-md-12 col-xl-12">
             <div class="card-box">
                 <div class="card-head">
-                    <header>{{ $parent->name??session('school.name') }} 教职工列表: (总数: {{ $employees->total() }})</header>
+                    <header class="full-width">
+                        <span class="pull-left pt-2">{{ $parent->name??session('school.name') }} 教职工列表: (总数: {{ $employees->total() }})</span>
+                        <a href="#" class="btn btn-primary pull-right">
+                            添加新教职工 <i class="fa fa-plus"></i>
+                        </a>
+                    </header>
                 </div>
 
                 <div class="card-body">
                     <div class="row">
-
                         <div class="table-padding col-12">
-                            <a href="#" class="btn btn-primary">
-                                添加新教职工 <i class="fa fa-plus"></i>
-                            </a>
                             @include('school_manager.school.reusable.nav',['highlight'=>'teacher'])
                         </div>
 
