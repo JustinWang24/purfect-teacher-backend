@@ -10,8 +10,11 @@
 namespace App\Utils\Pipeline;
 
 
-interface INode
+interface INode extends IPersistent
 {
+    const TYPE_SIMPLE  = 1; // 简单节点: 出入口的数量 <= 1
+    const TYPE_COMPLEX = 2; // 复杂节点: 表示有多个出入口
+
     /**
      * 是否是起始点
      * @return boolean
