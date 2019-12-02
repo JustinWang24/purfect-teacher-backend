@@ -8,8 +8,7 @@
 
 namespace App\Utils\Pipeline;
 
-
-interface IFlow
+interface IFlow extends IPersistent
 {
     /**
      * 返回当前流程中等待处理的步骤
