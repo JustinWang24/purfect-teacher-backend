@@ -25,20 +25,9 @@ class ImporterController extends Controller
              'file_path'   => '技术部加班表-11月-朱晨光.xlsx',
             ]);
         $obj->loadExcelFile();
-        dd($obj->data);
+        dd($obj->data->toArray());
 
         //Artisan::call('命令名称');
 
-/*        $users = User::all();
-        $bar = $this->output->createProgressBar(count($users));
-        $bar->start();
-
-        foreach ($users as $user) {
-            $this->performTask($user);
-var_dump($user);
-            $bar->advance();
-        }
-
-        $bar->finish();*/
     }
 }
