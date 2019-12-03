@@ -6,7 +6,7 @@ namespace App\BusinessLogic\ImportExcel\Impl;
 
 use App\BusinessLogic\ImportExcel\Contracts\IImportExcel;
 use League\Flysystem\Config;
-use Maatwebsite\Excel\Facades\Excel;
+use PhpOffice\PhpSpreadsheet\IOFactory;
 
 abstract class AbstractImporter implements IImportExcel
 {
@@ -25,11 +25,12 @@ abstract class AbstractImporter implements IImportExcel
         set_time_limit(0);
         ini_set('memory_limit', -1);
         $filePath = config('filesystems.disks.apk')['root'].DIRECTORY_SEPARATOR .$this->config['file_path'];
-        Excel::load($filePath, function($reader) {
-            $data = $reader->all()->toArray();
-            $this->data = $data;
-            return true;
-        });
+
+        $objReader = IOFactory::createReader('Xlsx');
+        $objPHPExcel = $objReader->load($filePath);  //$filename可以是上传的表格，或者是指定的表格
+        $worksheet = $objPHPExcel->getActiveSheet();
+
+        $this->data = $worksheet;
     }
 
 
