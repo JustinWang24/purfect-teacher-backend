@@ -55,4 +55,20 @@ class BannerDao
         return Banner::where('id', $data['id'])->update($data);
     }
 
+
+    /**
+     * 根据学校 位置 获取banner
+     * @param $schoolId
+     * @param $posit
+     * @return mixed
+     */
+    public function getBannerBySchoolIdAndPosit($schoolId, $posit)
+    {
+        $where = ['school_id' => $schoolId, 'posit' => $posit, 'status' => Banner::STATUS_OPEN];
+       return Banner::where($where)
+           ->select('id', 'type', 'title', 'image_url')
+           ->orderBy('posit','asc')
+           ->orderBy('sort','asc')
+           ->get();
+    }
 }
