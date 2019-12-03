@@ -128,7 +128,8 @@
                     </el-col>
                     <el-col :span="10">
                         <el-form-item label="选择图标">
-                            <el-button type="primary" icon="el-icon-picture" v-on:click="showFileManagerFlag=true">选择流程的图标</el-button>
+                            <el-button type="primary" icon="el-icon-picture-outline-round" v-on:click="iconSelectorShowFlag=true">系统图标</el-button>
+                            <el-button type="primary" icon="el-icon-picture" v-on:click="showFileManagerFlag=true">我的云盘</el-button>
                             <span v-if="selectedImgUrl" class="ml-4">
                                 <img :src="selectedImgUrl" width="50">
                             </span>
@@ -145,6 +146,14 @@
                     <el-button @click="flowFormFlag = false">取消</el-button>
                 </el-form-item>
             </el-form>
+
+            <el-dialog
+                    width="30%"
+                    title="选择图标"
+                    :visible.sync="iconSelectorShowFlag"
+                    append-to-body>
+                <icon-selector v-on:icon-selected="iconSelectedHandler"></icon-selector>
+            </el-dialog>
         </el-drawer>
         @include(
                 'reusable_elements.section.file_manager_component',
