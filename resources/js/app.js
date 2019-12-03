@@ -49,7 +49,168 @@ import { loadBuildings } from './common/facility';
 import { getEmptyElectiveCourseApplication } from './common/elective_course';
 import { loadTextbooksPaginate, deleteTextbook } from './common/textbook';
 import { loadOrgContacts, loadGradeContacts, loadGrades } from './common/contacts';
+import { saveFlow, loadNodes, deleteNode } from './common/flow';
 import { saveNews, loadNews, saveSections, deleteNews, publishNews, deleteSection, moveUpSection, moveDownSection } from './common/news';
+
+if(document.getElementById('pipeline-flows-manager-app')){
+    new Vue({
+        el:'#pipeline-flows-manager-app',
+        data(){
+            return {
+                currentFlow: {
+                    name: '',
+                    id: '',
+                    type: 0,
+                    school_id: null,
+                    icon: '',
+                },
+                selectedImgUrl: '',
+                lastNewFlow: null,
+                schoolId: '',
+                flowFormFlag: false,
+                showFileManagerFlag: false,
+                node: {
+                    description: '', // 创建新流程是, 发起流程的第一步的说明
+                    handlers: [], // node 流程步骤的处理人
+                    organizations: [], // node 流程步骤针对的部门
+                    titles: [], // node 流程步骤针对的部门的角色
+                },
+                flowNodes: [],
+                props: {
+                    lazy: true,
+                    multiple: true,
+                    value:'id',
+                    label:'name',
+                    lazyLoad (node, resolve) {
+                        console.log(node);
+                        let parentId = null;
+                        if(!Util.isEmpty(node.data)){
+                            parentId = node.data.id;
+                        }
+                        axios.post(
+                            Constants.API.ORGANIZATION.LOAD_CHILDREN,
+                            {level: node.level+1, parent_id: parentId}
+                        ).then(res => {
+                            if(Util.isAjaxResOk(res)){
+                                resolve(res.data.data.orgs);
+                            }
+                        });
+                    }
+                }
+            }
+        },
+        created(){
+            const dom = document.getElementById('app-init-data-holder');
+            this.schoolId = dom.dataset.school;
+            this.currentFlow.school_id = this.schoolId;
+
+            // 可能是刚刚创建了新流程, 检查一下
+            this.lastNewFlow = dom.dataset.newflow;
+            if(!Util.isEmpty(this.lastNewFlow)){
+                // 去加载这个流程的所有节点
+                this.loadFlowNodes(this.lastNewFlow);
+            }
+        },
+        methods:{
+            loadFlowNodes: function(flowId, flowName){
+                this.currentFlow.name = flowName;
+                this.currentFlow.id = flowId;
+                loadNodes(flowId).then(res => {
+                    if(Util.isAjaxResOk(res)){
+                        this.currentFlow = res.data.data.flow;
+                        this.flowNodes = res.data.data.nodes;
+                    }
+                    else{
+                        this.$notify.error(
+                            {title: '加载失败',message: res.data.message, duration: 0}
+                        );
+                    }
+                })
+            },
+            createNewFlow: function(type){
+                this.currentFlow.name = '';
+                this.currentFlow.id = '';
+                this.currentFlow.type = type;
+                this.node.description = '';
+                this.node.handlers = [];
+                this.node.organizations = [];
+                this.node.titles = [];
+                this.flowFormFlag = true;
+            },
+            onNewFlowSubmit: function(){
+                if(this.currentFlow.name.trim() === ''){
+                    this.$notify.error({
+                        title: '错误',
+                        message: '流程的名称必须填写'
+                    });
+                    return;
+                }
+                if(this.node.description.trim() === ''){
+                    this.$notify.error({
+                        title: '错误',
+                        message: '新流程必须填写 - "如何发起流程"'
+                    });
+                    return;
+                }
+                if(this.node.organizations.length === 0 && this.node.handlers.length === 0){
+                    this.$notify.error({
+                        title: '错误',
+                        message: '新流程必须选择: 哪些用户可以发起本流程'
+                    });
+                    return;
+                }
+                // 创建新的流程
+                saveFlow(this.currentFlow, this.node).then(res => {
+                    if(Util.isAjaxResOk(res)){
+                        window.location.href = '/school_manager/pipeline/flows/manager?lastNewFlow=' + res.data.data.id;
+                    }
+                    else{
+                        this.$notify.error(
+                            {title: '保存失败',message: res.data.message, duration: 0}
+                        );
+                    }
+                })
+            },
+            // 对 node 的操作
+            deleteNode: function(idx, node){
+                this.$confirm('此操作将永久删除步骤: "'+node.name+'", 是否继续?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    deleteNode(node.id, this.schoolId).then(res => {
+                        if(Util.isAjaxResOk(res)){
+                            this.flowNodes.splice(idx, 1);
+                            this.$message({type:'success',message: '删除成功'});
+                        }
+                        else{
+                            this.$message.error(res.data.message);
+                        }
+                    })
+                }).catch(() => {
+                    this.$message({
+                        type: 'info',
+                        message: '已取消删除'
+                    });
+                });
+            },
+            pickFileHandler: function(payload){
+                this.currentFlow.icon = payload.file.url;
+                this.selectedImgUrl = payload.file.url;
+                this.showFileManagerFlag = false;
+            },
+            // 辅助函数
+            timelineItemTitle: function(idx, node){
+                if(idx === 0){
+                    return '流程开始: ' + node.name;
+                }
+                else{
+                    return '第'+ idx +'步: ' + node.name;
+                }
+            }
+        }
+    });
+}
 
 /**
  * 校历应用

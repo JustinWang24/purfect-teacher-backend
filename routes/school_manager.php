@@ -14,6 +14,10 @@ Route::prefix('school_manager')->group(function () {
         ->name('school_manager.school.organization-manager'); // 显示学校的组织架构
     Route::post('organizations/load-parent', 'SchoolsController@load_parent')
         ->name('school_manager.organizations.load-parent'); // 加载某一级别机构的上级
+
+    Route::post('organizations/load-children', 'SchoolsController@load_children')
+        ->name('school_manager.organizations.load-children'); // 加载某一级别机构的下级
+
     Route::post('organizations/save', 'SchoolsController@save_organization')
         ->name('school_manager.organizations.save'); // 保存学校的组织架构
     Route::post('organizations/load', 'SchoolsController@load_organization')
@@ -379,6 +383,21 @@ Route::prefix('school_manager')->group(function () {
             ->name('school_manager.teachers.manage-performance');
         Route::post('manage-performance-save','Teachers\ProfilesController@manage_performance_save')
             ->name('school_manager.teachers.manage-performance-save');
+    });
+
+    // 工作流程管理
+    Route::prefix('pipeline')->group(function(){
+        Route::get('flows/manager','Pipeline\FlowsController@manager')
+            ->name('school_manager.pipeline.flows-manager');
+
+        Route::post('flows/save-flow','Pipeline\FlowsController@save_flow')
+            ->name('school_manager.pipeline.save-flow');
+
+        Route::post('flows/load-nodes','Pipeline\FlowsController@load_nodes')
+            ->name('school_manager.pipeline.load-nodes');
+
+        Route::post('flows/delete-node','Pipeline\FlowsController@delete_node')
+            ->name('school_manager.pipeline.delete-node');
     });
 });
 

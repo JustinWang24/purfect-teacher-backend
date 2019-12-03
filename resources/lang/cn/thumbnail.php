@@ -107,6 +107,11 @@ return [
     'news-manager' => '校园动态',
     'configs'=>'系统配置',
     'performance-teacher'=>'教职工业绩考核',
+    'manage-performance'=>'教职工业绩考核',
     'edit-profile'=>'档案管理',
+
+    // 工作流
+    'pipeline'=>'工作流',
+    'flows-manager'=>'流程管理',
 ];
 
