@@ -98,10 +98,7 @@ class NoticeDao
             ->paginate(ConfigurationTool::DEFAULT_PAGE_SIZE);
 
         foreach ($notice as $key => $val) {
-            $medias = $val->noticeMedias;
-            foreach ($medias as $k => $v) {
-                $medias[$k] = $v->media;
-            }
+
             // 公告封面图
             if($type == Notice::TYPE_NOTICE) {
                 $val->image_media;
