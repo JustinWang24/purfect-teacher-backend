@@ -343,3 +343,12 @@ Route::prefix('version')->group(function () {
     Route::get('/index', 'Api\Version\VersionController@index')->name('api.version.index');
 
 });
+
+
+
+// 消息通知
+Route::prefix('notice')->middleware('auth:api')->group(function () {
+    Route::post('/notice-list', 'Api\Notice\NoticeController@getNotice')
+    ->name('api.notice.list');
+
+});
