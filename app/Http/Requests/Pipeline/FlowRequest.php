@@ -11,5 +11,15 @@ use App\Http\Requests\MyStandardRequest;
 
 class FlowRequest extends MyStandardRequest
 {
+    public function getFlowFormData(){
+        return $this->get('flow');
+    }
 
+    public function getNewFlowFirstNode(){
+        return $this->get('node');
+    }
+
+    public function getLastNewFlow(){
+        return $this->get('lastNewFlow', null);
+    }
 }

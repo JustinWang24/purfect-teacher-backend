@@ -18,4 +18,5 @@ interface Title
     const LEADER_TXT    = '部门领导';
     const DEPUTY_TXT    = '部门副职';
     const MEMBER_TXT    = '部门职员';
+    const ALL_TXT    = '所有成员';
 }
