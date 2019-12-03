@@ -41,6 +41,7 @@ Vue.component('elective-course-form', require('./components/courses/ElectiveCour
 Vue.component('textbooks-table', require('./components/textbook/TextbooksTable.vue').default); // 教材列表
 Vue.component('file-preview', require('./components/fileManager/elements/FilePreview.vue').default);      // 教材表单
 Vue.component('drag-to-sort', require('./components/dnd/DragToSort.vue').default);      // 教材表单
+Vue.component('icon-selector', require('./components/misc/IconSelector.vue').default);      // 教材表单
 
 import { Constants } from './common/constants';
 import { Util } from './common/utils';
@@ -69,6 +70,7 @@ if(document.getElementById('pipeline-flows-manager-app')){
                 schoolId: '',
                 flowFormFlag: false,
                 showFileManagerFlag: false,
+                iconSelectorShowFlag: false, // 控制图标选择器的显示
                 node: {
                     description: '', // 创建新流程是, 发起流程的第一步的说明
                     handlers: [], // node 流程步骤的处理人
@@ -198,6 +200,11 @@ if(document.getElementById('pipeline-flows-manager-app')){
                 this.currentFlow.icon = payload.file.url;
                 this.selectedImgUrl = payload.file.url;
                 this.showFileManagerFlag = false;
+            },
+            iconSelectedHandler: function(payload){
+                this.currentFlow.icon = payload.url;
+                this.selectedImgUrl = payload.url;
+                this.iconSelectorShowFlag = false;
             },
             // 辅助函数
             timelineItemTitle: function(idx, node){
