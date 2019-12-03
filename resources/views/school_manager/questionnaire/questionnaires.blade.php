@@ -59,7 +59,7 @@ use App\Utils\UI\Button;
                                         </td>
                                         <td class="text-center">
                                             {{ Anchor::Print(['text'=>'编辑','class'=>'btn-edit-building','href'=>route('school_manager.contents.questionnaire.edit',['id'=>$qiestionnaire->id])], Button::TYPE_DEFAULT,'edit') }}
-                                            {{ Anchor::Print(['text'=>'删除','class'=>'btn-edit-building','href'=>route('school_manager.contents.questionnaire.delete',['id'=>$qiestionnaire->id])], Button::TYPE_DEFAULT,'delete') }}
+                                            {{ Anchor::Print(['text'=>'删除','class'=>'btn-edit-building btn-need-confirm','href'=>route('school_manager.contents.questionnaire.delete',['id'=>$qiestionnaire->id])], Button::TYPE_DEFAULT,'delete') }}
                                         </td>
                                     </tr>
                                 @endforeach
