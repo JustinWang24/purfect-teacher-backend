@@ -46,7 +46,7 @@ class Flow extends Model implements IFlow
         $node = $this->getHeadNode();
         $collection->add($node);
         while ($node->next_node > 0){
-            $next = Node::find($node->next_node);
+            $next = Node::where('id',$node->next_node)->with('handler')->first();
             $collection->add($next);
             $node = $next;
         }

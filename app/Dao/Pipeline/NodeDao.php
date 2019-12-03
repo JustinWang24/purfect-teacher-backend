@@ -88,4 +88,34 @@ class NodeDao
         }
         return Node::where('flow_id',$flowId)->where('prev_node',0)->first();
     }
+
+    /**
+     * @param $id
+     * @return mixed
+     */
+    public function delete($id){
+
+        $node = $this->getById($id);
+        $result = false;
+
+        if($node && $node->prev_node !== 0){
+            // 前一个 node 的 next 应该被更新为 当前 node 的 next, 保证链表的链接正确; 永远不能删除流程中的第一步: 发起
+            $prev = $node->prev;
+            $currentNextNode = $node->next_node;
+            $prev->next_node = $currentNextNode;
+            DB::beginTransaction();
+            try{
+                $prev->save();
+                Node::where('id',$id)->delete();
+                DB::commit();
+                $result = true;
+            }
+            catch (\Exception $exception){
+                DB::rollBack();
+                $result = $exception->getMessage();
+            }
+        }
+
+        return $result;
+    }
 }

@@ -29,3 +29,14 @@ export function loadNodes(flowId,affix) {
         {flow_id: flowId, version:Constants.VERSION}
     );
 }
+
+export function deleteNode(nodeId, schoolId,affix) {
+    const url = Util.buildUrl(Constants.API.FLOW.DELETE_NODE);
+    if(Util.isDevEnv()){
+        return axios.get(url, affix);
+    }
+    return axios.post(
+        url,
+        {node_id: nodeId, school_id: schoolId, version:Constants.VERSION}
+    );
+}

@@ -37,7 +37,7 @@ class Node extends Model implements INode
      * @return \Illuminate\Database\Eloquent\Relations\HasOne|null
      */
     public function next(){
-        return $this->hasOne(Node::class, 'id', 'next_node')->with('handler');
+        return $this->hasOne(Node::class, 'id', 'next_node');
     }
 
     public function isHead()

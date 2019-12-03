@@ -49,7 +49,7 @@ import { loadBuildings } from './common/facility';
 import { getEmptyElectiveCourseApplication } from './common/elective_course';
 import { loadTextbooksPaginate, deleteTextbook } from './common/textbook';
 import { loadOrgContacts, loadGradeContacts, loadGrades } from './common/contacts';
-import { saveFlow, loadNodes } from './common/flow';
+import { saveFlow, loadNodes, deleteNode } from './common/flow';
 import { saveNews, loadNews, saveSections, deleteNews, publishNews, deleteSection, moveUpSection, moveDownSection } from './common/news';
 
 if(document.getElementById('pipeline-flows-manager-app')){
@@ -171,27 +171,41 @@ if(document.getElementById('pipeline-flows-manager-app')){
                     }
                 })
             },
+            // 对 node 的操作
+            deleteNode: function(idx, node){
+                this.$confirm('此操作将永久删除步骤: "'+node.name+'", 是否继续?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    deleteNode(node.id, this.schoolId).then(res => {
+                        if(Util.isAjaxResOk(res)){
+                            this.flowNodes.splice(idx, 1);
+                            this.$message({type:'success',message: '删除成功'});
+                        }
+                        else{
+                            this.$message.error(res.data.message);
+                        }
+                    })
+                }).catch(() => {
+                    this.$message({
+                        type: 'info',
+                        message: '已取消删除'
+                    });
+                });
+            },
             pickFileHandler: function(payload){
                 this.currentFlow.icon = payload.file.url;
                 this.selectedImgUrl = payload.file.url;
                 this.showFileManagerFlag = false;
             },
             // 辅助函数
-            timelineItemTitle: function(idx){
+            timelineItemTitle: function(idx, node){
                 if(idx === 0){
-                    return '发起流程';
+                    return '流程开始: ' + node.name;
                 }
                 else{
-                    return '第'+(idx + 1)+'步';
-                }
-            },
-            targetString: function(handler){
-                if(!Util.isEmpty(handler.organizations)){
-                    return handler.organizations.substring(0, handler.organizations.length - 1) +
-                        ' -> ' + handler.titles.substring(0, handler.titles.length -1);
-                }
-                else if(!Util.isEmpty(handler.role_slugs)){
-                    return handler.role_slugs.substring(0, handler.role_slugs.length - 1);
+                    return '第'+ idx +'步: ' + node.name;
                 }
             }
         }

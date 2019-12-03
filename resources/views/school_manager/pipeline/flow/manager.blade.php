@@ -62,14 +62,12 @@
                             <el-timeline-item
                                     v-for="(node, index) in flowNodes"
                                     :key="index"
-                                    :timestamp="timelineItemTitle(index)" placement="top">
+                                    :timestamp="timelineItemTitle(index, node)" placement="top" color="green">
                                 <el-card>
-                                    <h4>
-                                        <span>@{{ node.name }}</span>
-                                        <el-button icon="el-icon-edit" size="mini" type="primary"></el-button>
-                                        <el-button class="pull-right" v-if="index > 0" icon="el-icon-delete" size="mini" type="danger"></el-button>
-                                    </h4>
-                                    <el-divider></el-divider>
+                                    <p class="pull-right">
+                                        <el-button icon="el-icon-edit" size="mini" type="primary" @click="editNode(node)"></el-button>
+                                        <el-button v-if="index > 0" icon="el-icon-delete" size="mini" type="danger" @click="deleteNode(index, node)"></el-button>
+                                    </p>
                                     <p v-if="node.handler.organizations.length > 0">
                                         <span class="text-primary"><b>部门: </b></span>
                                         <span class="mr-2" v-for="dept in node.handler.organizations.substring(0,node.handler.organizations.length -1).split(';')">
@@ -96,6 +94,11 @@
                                     </p>
                                     <p><span class="text-primary"><b>说明: </b></span>@{{ node.description }}</p>
                                 </el-card>
+                            </el-timeline-item>
+
+                            <el-timeline-item v-if="flowNodes.length > 1" timestamp="流程结束" placement="top">
+                            </el-timeline-item>
+                            <el-timeline-item v-if="flowNodes.length === 1" timestamp="流程发起后还没有任何处理步骤, 请继续完善" color="red" placement="top">
                             </el-timeline-item>
                         </el-timeline>
                     </div>
@@ -136,38 +139,7 @@
                 <el-divider></el-divider>
                 <h5 class="text-center text-danger">可以使用本流程的用户群体, 请在以下用户群中二选一, 部门+角色的组合优先 </h5>
                 <el-divider></el-divider>
-                <el-row>
-                    <el-col :span="15">
-                        <el-form-item label="部门">
-                            <el-cascader style="width: 90%;" :props="props" v-model="node.organizations"></el-cascader>
-                        </el-form-item>
-                        <el-form-item label="部门角色">
-                            <el-checkbox-group v-model="node.titles">
-                                <el-checkbox label="{{ \App\Utils\Misc\Contracts\Title::ALL_TXT }}"></el-checkbox>
-                                @foreach(\App\Models\Schools\Organization::AllTitles() as $title)
-                                <el-checkbox label="{{ $title }}"></el-checkbox>
-                                @endforeach
-                            </el-checkbox-group>
-                        </el-form-item>
-                    </el-col>
-                    <el-col :span="1">
-                        <p class="text-center text-info" style="margin-top: 50px;">或</p>
-                    </el-col>
-                    <el-col :span="8">
-                        <el-form-item label="目标用户">
-                            <el-checkbox-group v-model="node.handlers">
-                                <el-checkbox label="教师"></el-checkbox>
-                                <el-checkbox label="职工"></el-checkbox>
-                                <br>
-                                <el-checkbox label="学生"></el-checkbox>
-                            </el-checkbox-group>
-                        </el-form-item>
-                    </el-col>
-                </el-row>
-
-                <el-form-item label="如何发起流程">
-                    <el-input type="textarea" placeholder="必填: 例如您可以详细描述, 如果要发起本流程, 需要具备的条件, 可能需要提交的文档等" rows="6" v-model="node.description"></el-input>
-                </el-form-item>
+                @include('school_manager.pipeline.flow.node_form')
                 <el-form-item>
                     <el-button type="primary" @click="onNewFlowSubmit">立即创建</el-button>
                     <el-button @click="flowFormFlag = false">取消</el-button>
