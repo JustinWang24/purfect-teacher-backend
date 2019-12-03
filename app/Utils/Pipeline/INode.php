@@ -50,4 +50,10 @@ interface INode extends IPersistent
      * @return string
      */
     public function getName(): string ;
+
+    /**
+     * 获取该步骤的最后一次执行
+     * @return IAction
+     */
+    public function getLastAction(): IAction;
 }

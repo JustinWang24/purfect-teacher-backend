@@ -8,6 +8,8 @@
 
 namespace App\Utils\Pipeline;
 
+use App\User;
+
 class FlowEngine
 {
     const FLOW_MOVED_FORWARD = 1;   // 流程向前了一步
@@ -18,10 +20,12 @@ class FlowEngine
      * @var IFlow
      */
     protected $flow;
+    protected $user;
 
-    public function __construct(IFlow $flow)
+    public function __construct(IFlow $flow, User $user)
     {
         $this->flow = $flow;
+        $this->user = $user;
     }
 
     /**
@@ -32,10 +36,14 @@ class FlowEngine
      * @throws NodeHandlerMissingException
      */
     public function process(){
-        $node = $this->flow->getCurrentPendingNode();
+        $action = $this->flow->getCurrentPendingAction($this->user);
 
-        if($node){
+        if($action){
             // 表示流程处理正停留在某个步骤:
+            /**
+             * @var INode $node
+             */
+            $node = $action->getNode();
             $handler = HandlerFactory::GetHandlerInstance($node);
             if($handler){
                 $messageBag = $handler->handle($node);
@@ -46,7 +54,7 @@ class FlowEngine
                     }
                     else{
                         // 表示不是最后一个步骤, 那么开启下一步
-                        $this->flow->setCurrentPendingNode($node->next());
+                        $this->flow->setCurrentPendingNode($node->next(), $this->user);
                         return self::FLOW_MOVED_FORWARD;
                     }
                 }
@@ -68,9 +76,10 @@ class FlowEngine
      * @throws NodeHandlerMissingException
      */
     public function resume(){
-        $node = $this->flow->getCurrentPendingNode();
+        $action = $this->flow->getCurrentPendingAction($this->user);
 
-        if($node){
+        if($action){
+            $node = $action->getNode();
             // 表示流程处理正停留在某个步骤的前一个步骤
             $handler = HandlerFactory::GetHandlerInstance($node);
             if($handler){
@@ -78,7 +87,10 @@ class FlowEngine
                 if($messageBag->isSuccess()){
                     if(!$node->isHead()){
                         // 如果被驳回的流程不是整个流程的第一步
-                        $this->flow->setCurrentPendingNode($node->prev());
+                        $this->flow->setCurrentPendingNode(
+                            $node->prev(),
+                            $node->prev()->getLastAction()->getUser()
+                        );
                         return self::FLOW_RESUMED;
                     }
                     else{
