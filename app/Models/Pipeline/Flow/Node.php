@@ -19,40 +19,34 @@ class Node extends Model implements INode
     ];
     public $casts = ['dynamic'=>'boolean'];
 
+    public function handler(){
+        return $this->hasOne(Handler::class);
+    }
+
     /**
      * 获取前一个节点
-     * @return INode|\Illuminate\Database\Eloquent\Relations\HasOne|null
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne|null
      */
     public function prev(){
-        if($this->prev_node === 0){
-            return null;
-        }
-        else{
-            return $this->hasOne(Node::class, 'prev_node','id');
-        }
+        return $this->hasOne(Node::class, 'id','prev_node');
     }
 
     /**
      * 获取下一个节点
-     * @return INode|\Illuminate\Database\Eloquent\Relations\HasOne|null
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne|null
      */
     public function next(){
-        if($this->next_node === 0){
-            return null;
-        }
-        else{
-            return $this->hasOne(Node::class, 'next_node');
-        }
+        return $this->hasOne(Node::class, 'id', 'next_node');
     }
 
     public function isHead()
     {
-        return is_null($this->prev);
+        return $this->prev_node === 0;
     }
 
     public function isEnd()
     {
-        return is_null($this->next);
+        return $this->next_node === 0;
     }
 
     public function isDynamic()

@@ -14,19 +14,11 @@ class Handler extends Model implements INodeHandler
     public $table = 'pipeline_handlers';
     public $fillable = [
         'node_id',
-        'user_id',
-        'organization_id',
-        'title_id',
+        'role_slugs',
+        'user_ids',
+        'organizations',
+        'titles',
     ];
-
-    public function user(){
-        if($this->user_id === 0){
-            return null;
-        }
-        else{
-            return $this->belongsTo(User::class);
-        }
-    }
 
     public function node(){
         return $this->belongsTo(Node::class,'node_id');
