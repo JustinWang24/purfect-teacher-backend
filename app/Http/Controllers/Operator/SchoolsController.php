@@ -139,6 +139,25 @@ class SchoolsController extends Controller
     }
 
     /**
+     * 获取某个级别或者指定的父级单位的下级单位集合
+     * @param SchoolRequest $request
+     * @return string
+     */
+    public function load_children(SchoolRequest $request){
+        $level = intval($request->get('level'));
+        $parentId = $request->get('parent_id', null);
+        $dao = new OrganizationDao();
+        $orgs = [];
+        if($parentId){
+            $orgs = $dao->getById($parentId)->branch;
+        }
+        else{
+            $orgs = $dao->loadByLevel($level, $request->getSchoolId());
+        }
+        return JsonBuilder::Success(['orgs'=>$orgs]);
+    }
+
+    /**
      * 保存组织结构
      * @param SchoolRequest $request
      * @return string
