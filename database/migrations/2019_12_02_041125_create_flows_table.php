@@ -61,7 +61,8 @@ class CreateFlowsTable extends Migration
                 ->comment('归属的节点');
 
             // 对于是否可以使用该流程, 特别是第一步的发起流程, 要通过这个字段来判定, 基本上其实只有几种组合, 老师, 学生, 教职工
-            $table->text('role_slugs')->comment('允许发起流程的角色');
+            $table->text('role_slugs')
+                ->nullable()->comment('允许发起流程的角色Slug');
 
             // 以下三个是给审核专用的
             $table->text('user_ids')

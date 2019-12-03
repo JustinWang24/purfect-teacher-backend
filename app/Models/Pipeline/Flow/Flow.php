@@ -74,11 +74,11 @@ class Flow extends Model implements IFlow
 
     public function getHeadNode()
     {
-        return Node::where('flow_id', $this->id)->where('prev_node',0)->first();
+        return Node::where('flow_id', $this->id)->where('prev_node',0)->with('handler')->first();
     }
 
     public function getTailNode()
     {
-        return Node::where('flow_id', $this->id)->where('next_node',0)->first();
+        return Node::where('flow_id', $this->id)->where('next_node',0)->with('handler')->first();
     }
 }

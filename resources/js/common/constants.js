@@ -122,11 +122,16 @@ export const Constants = {
         },
         ORGANIZATION: {
             LOAD_PARENTS: '/school_manager/organizations/load-parent',
+            LOAD_CHILDREN: '/school_manager/organizations/load-children',
             SAVE: '/school_manager/organizations/save',
             LOAD: '/school_manager/organizations/load',
             DELETE: '/school_manager/organizations/delete',
             ADD_TO_ORG: '/school_manager/organizations/add-member',
             DELETE_FROM_ORG: '/school_manager/organizations/remove-member',
+        },
+        FLOW: {
+            SAVE: '/school_manager/pipeline/flows/save-flow',
+            LOAD_FLOW_NODES: '/school_manager/pipeline/flows/load-nodes',
         }
     },
     YEARS: ['N.A','一年级','二年级','三年级','四年级','五年级','六年级'],
