@@ -349,6 +349,9 @@ Route::prefix('version')->group(function () {
 // 消息通知
 Route::prefix('notice')->middleware('auth:api')->group(function () {
     Route::post('/notice-list', 'Api\Notice\NoticeController@getNotice')
-    ->name('api.notice.list');
+        ->name('api.notice.list');
+
+    Route::post('/notice-info', 'Api\Notice\NoticeController@noticeInfo')
+    ->name('api.notice.info');
 
 });

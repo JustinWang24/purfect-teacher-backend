@@ -25,6 +25,7 @@ class Notice extends Model
     const STATUS_UNPUBLISHED_TEXT = '未发布';
     const STATUS_PUBLISH_TEXT     = '已发布';
 
+    public $hidden = ['updated_at'];
 
     public static function allType()
     {
