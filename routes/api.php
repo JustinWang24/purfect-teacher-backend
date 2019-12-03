@@ -349,8 +349,17 @@ Route::prefix('home')->middleware('auth:api')->group(function () {
     Route::post('/getHomePageInfo', 'Api\Home\IndexController@index')->name('api.home.index');
 });
 
+// 消息通知
+Route::prefix('notice')->middleware('auth:api')->group(function () {
+    Route::post('/notice-list', 'Api\Notice\NoticeController@getNotice')
+        ->name('api.notice.list');
+
+    Route::post('/notice-info', 'Api\Notice\NoticeController@noticeInfo')
+    ->name('api.notice.info');
+
+});
+
 // APP banner 接口
 Route::prefix('banner')->middleware('auth:api')->group(function () {
     Route::post('/getBanner', 'Api\Home\IndexController@banner')->name('api.banner.index');
 });
-
