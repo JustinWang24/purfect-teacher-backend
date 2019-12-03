@@ -85,6 +85,8 @@
         .icon-box{
             color: $themeColor;
             font-size: 15px;
+            display: flex;
+            justify-content: space-between;
             .file-name-box{
                 .el-button--text{
                     font-weight: bold;

@@ -3,26 +3,27 @@
         <el-table
                 :data="courses"
                 style="width: 100%">
-            <el-table-column label="课程名称/编号" width="250">
+            <el-table-column label="课程名称/编号" width="200">
                 <template slot-scope="scope">
                     <el-button type="text" v-on:click="courseNameClickedHandler">
+                        <p class="txt-primary">
                         <text-badge :text="scope.row.optional ? '选修' : '必修'" :color="scope.row.optional ? 'default' : 'danger'"></text-badge>
-                        <span>{{ scope.row.name }} (编号: {{ scope.row.code }})</span>
+                        {{ scope.row.name }}
+                        </p>
+                        <p class="txt-primary">编号: {{ scope.row.code }}</p>
                     </el-button>
                 </template>
             </el-table-column>
             <el-table-column
                     label="适用年级"
-                    width="80">
+                    width="100">
                 <template slot-scope="scope">
-                    <el-tag size="medium" type="default">{{ yearText(scope.row.year) }}</el-tag>
-                </template>
-            </el-table-column>
-            <el-table-column
-                    label="适用学期"
-                    width="80">
-                <template slot-scope="scope">
-                    <el-tag size="medium" type="default">{{ termText(scope.row.term) }}</el-tag>
+                    <p class="txt-primary">
+                        {{ yearText(scope.row.year) }}
+                    </p>
+                    <p class="txt-primary">
+                        {{ termText(scope.row.term) }}
+                    </p>
                 </template>
             </el-table-column>
             <el-table-column
@@ -55,7 +56,7 @@
             </el-table-column>
             <el-table-column
                     label="时间安排"
-                    width="200">
+                    width="100">
                 <template slot-scope="scope">
                     <el-popover
                             v-if="scope.row.arrangements.length > 0"
@@ -161,5 +162,9 @@
 <style scoped lang="scss">
     .courses-list-wrap{
         padding: 10px;
+    }
+    .txt-primary{
+        color: #409EFF;
+        margin-bottom: 4px;
     }
 </style>

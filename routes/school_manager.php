@@ -20,6 +20,10 @@ Route::prefix('school_manager')->group(function () {
         ->name('school_manager.organizations.load'); // 加载 单个 学校的组织架构
     Route::post('organizations/delete', 'SchoolsController@delete_organization')
         ->name('school_manager.organizations.delete'); // 加载 单个 学校的组织架构
+    Route::post('organizations/add-member', 'SchoolsController@add_member')
+        ->name('school_manager.organizations.add-member'); // 给机构添加成员
+    Route::post('organizations/remove-member', 'SchoolsController@remove_member')
+        ->name('school_manager.organizations.remove-member'); // 删除
 
     // 校区的管理
     Route::get('campus/add', 'CampusController@add')->name('school_manager.campus.add');                        // 添加校区
@@ -135,7 +139,22 @@ Route::prefix('school_manager')->group(function () {
     // 教材管理
     Route::get('textbook/loadCampusTextbook', 'TextbookController@loadCampusTextbook')
         ->name('school_manager.textbook.loadCampusTextbook'); // 获取校区教材采购情况
-    Route::get('textbook/campusTextbookDownload', 'TextbookController@campusTextbookDownload')->name('school_manager.textbook.campusTextbookDownload'); // 校区教材下载
+    Route::get('textbook/campusTextbookDownload', 'TextbookController@campusTextbookDownload')
+        ->name('school_manager.textbook.campusTextbookDownload'); // 校区教材下载
+    // 班级学生列表
+    Route::get('textbook-grade', 'TextbookController@grade')
+        ->name('school_manager.textbook.grade');
+    // 学生教材列表
+    Route::get('textbook-users', 'TextbookController@users')
+        ->name('school_manager.textbook.users');
+
+    // 当个领取教材
+    Route::get('textbook-get', 'TextbookController@getTextbook')
+        ->name('school_manager.textbook.get');
+    // 批量领取
+    Route::post('textbook-submit', 'TextbookController@submit')
+        ->name('school_manager.textbook.submit');
+
 
     // 校历事件添加
     Route::any('calendar/save', 'Calendar\IndexController@save')->name('school_manger.school.calendar.save');
@@ -242,8 +261,8 @@ Route::prefix('school_manager')->group(function () {
             ->name('school_manager.contents.questionnaire.add');
         Route::get('questionnaire/edit/{id}','QuestionnaireController@edit')
             ->name('school_manager.contents.questionnaire.edit');
-        Route::post('questionnaire/update','QuestionnaireController@update')
-            ->name('school_manager.contents.questionnaire.update');
+        Route::post('questionnaire/update','QuestionnaireController@update')->name('school_manager.contents.questionnaire.update');
+        Route::get('questionnaire/delete/{id}','QuestionnaireController@delete')->name('school_manager.contents.questionnaire.delete');
 
         // 科技成功
         Route::get('science-list','Contents\ScienceController@list')
@@ -263,12 +282,25 @@ Route::prefix('school_manager')->group(function () {
             ->name('school_manager.contents.news-manager');
         Route::post('news/save','Contents\NewsController@save')
             ->name('school_manager.contents.news.save');
+
+        Route::post('news/publish','Contents\NewsController@publish')
+            ->name('school_manager.contents.news.publish');
+
         Route::post('news/delete','Contents\NewsController@delete')
             ->name('school_manager.contents.news.delete');
         Route::any('news/load','Contents\NewsController@load')
             ->name('school_manager.contents.news.load');
         Route::post('news/save-section','Contents\NewsController@save_section')
             ->name('school_manager.contents.news.save-section');
+
+        Route::post('news/delete-section','Contents\NewsController@delete_section')
+            ->name('school_manager.contents.news.delete-section');
+
+        Route::post('news/move-up-section','Contents\NewsController@move_up_section')
+            ->name('school_manager.contents.news.move-up-section');
+
+        Route::post('news/move-down-section','Contents\NewsController@move_down_section')
+            ->name('school_manager.contents.news.move-down-section');
     });
 
     // banner 展示
@@ -329,9 +361,24 @@ Route::prefix('school_manager')->group(function () {
     Route::get('attendance/person/search/{id}', 'AttendanceSchedulesController@searchPerson')
         ->name('school_manager.attendance.person.search');
 
+    // 学校的基本配置
+    Route::prefix('configs')->group(function(){
+        Route::get('performance-teacher','Configs\PerformancesController@teachers')
+            ->name('school_manger.configs.performance-teacher');
+        Route::get('performance-teacher-delete','Configs\PerformancesController@teacher_delete')
+            ->name('school_manger.configs.performance-teacher-delete');
+        Route::post('performance-teacher-save','Configs\PerformancesController@teacher_save')
+            ->name('school_manger.configs.performance-teacher-save');
+    });
 
-
-
-
+    // 教师档案管理
+    Route::prefix('teachers')->group(function(){
+        Route::get('edit-profile','Teachers\ProfilesController@edit')
+            ->name('school_manager.teachers.edit-profile');
+        Route::get('manage-performance','Teachers\ProfilesController@manage_performance')
+            ->name('school_manager.teachers.manage-performance');
+        Route::post('manage-performance-save','Teachers\ProfilesController@manage_performance_save')
+            ->name('school_manager.teachers.manage-performance-save');
+    });
 });
 

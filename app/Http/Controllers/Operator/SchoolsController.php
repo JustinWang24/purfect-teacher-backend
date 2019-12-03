@@ -9,13 +9,16 @@ use App\Dao\Schools\OrganizationDao;
 use App\Dao\Schools\RoomDao;
 use App\Dao\Users\GradeUserDao;
 use App\Dao\Users\UserDao;
+use App\Dao\Users\UserOrganizationDao;
 use App\Http\Requests\SchoolRequest;
 use App\Http\Controllers\Controller;
 use App\Dao\Schools\SchoolDao;
 use App\Models\Acl\Role;
+use App\Models\School;
 use App\Utils\FlashMessageBuilder;
 use App\Dao\Schools\InstituteDao;
 use App\Utils\JsonBuilder;
+use Illuminate\Support\Facades\DB;
 
 class SchoolsController extends Controller
 {
@@ -47,11 +50,21 @@ class SchoolsController extends Controller
         $school = $dao->getSchoolByUuid($request->uuid());
         // 要比较学校中每个系的相同的配置项目, 如果学校的要求高于系的要求, 那么就要覆盖系的. 如果低于系的要求, 那么就保留
         if($school){
-            $dao->updateConfiguration($request->getConfiguration(), $school);
+            $dao->updateConfiguration(
+                $school,
+                $request->getConfiguration(),
+                $request->getElectiveCourseAvailableTerm(1),
+                $request->getElectiveCourseAvailableTerm(2),
+                $request->getTermStart()
+            );
             FlashMessageBuilder::Push($request, 'success','配置已更新');
         }
         else{
             FlashMessageBuilder::Push($request, 'danger','无法获取学校数据');
+        }
+
+        if($request->get('redirectTo',null)){
+            return redirect($request->get('redirectTo',null));
         }
         return redirect()->route('school_manager.school.view');
     }
@@ -137,6 +150,12 @@ class SchoolsController extends Controller
         if(isset($form['id']) && !empty($form['id'])){
             $id = $form['id'];
             unset($form['id']);
+            if(isset($form['members'])) {
+                unset($form['members']);
+            }
+            if(isset($form['updated_at'])) {
+                unset($form['updated_at']);
+            }
             $org = $dao->update($form, $id);
         }
         else{
@@ -154,18 +173,75 @@ class SchoolsController extends Controller
         $id = $request->get('organization_id');
         $dao = new OrganizationDao();
         $org = $dao->getById($id);
-        return JsonBuilder::Success(['organization'=>$org]);
+        return JsonBuilder::Success(['organization'=>$org,'members'=>$org->members]);
     }
 
+
     /**
-     * 删除组织结构
+     * 删除组织结构及人员
      * @param SchoolRequest $request
      * @return string
+     * @throws \Exception
      */
     public function delete_organization(SchoolRequest $request){
         $id = $request->get('organization_id');
         $dao = new OrganizationDao();
-        $dao->deleteOrganization($id);
-        return JsonBuilder::Success();
+
+        try {
+            DB::beginTransaction();
+            $dao->deleteOrganization($id);
+            DB::commit();
+            return JsonBuilder::Success();
+        } catch (\Exception $e) {
+            DB::rollBack();
+            $msg = $e->getMessage();
+            return JsonBuilder::Error($msg);
+        }
+
+    }
+
+    /**
+     * 保存机构成员
+     * @param SchoolRequest $request
+     * @return string
+     */
+    public function add_member(SchoolRequest $request){
+        $dao = new UserOrganizationDao();
+        $member = $request->get('member');
+        if(empty($member['id'])){
+            $result = $dao->create($member);
+            if($result->isSuccess()){
+                return JsonBuilder::Success(['id'=>$result->getData()->id]);
+            }
+            else{
+                return JsonBuilder::Error($result->getMessage());
+            }
+        }
+        else{
+            // 更新
+            $id = $member['id'];
+            unset($member['id']);
+            $result = $dao->update($id, $member);
+            if($result){
+                return JsonBuilder::Success(['id'=>$id]);
+            }
+            else{
+                return JsonBuilder::Error();
+            }
+        }
+    }
+
+    /**
+     * @param SchoolRequest $request
+     * @return string
+     */
+    public function remove_member(SchoolRequest $request){
+        $dao = new UserOrganizationDao();
+        if($dao->delete($request->get('id'))){
+            return JsonBuilder::Success();
+        }
+        else{
+            return JsonBuilder::Error();
+        }
     }
 }

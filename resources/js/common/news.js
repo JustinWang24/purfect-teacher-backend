@@ -18,6 +18,17 @@ export function saveNews(schoolId, news, affix) {
     );
 }
 
+export function publishNews(schoolId, newsId, affix) {
+    const url = Util.buildUrl(Constants.API.NEWS.PUBLISH);
+    if(Util.isDevEnv()){
+        return axios.get(url, affix);
+    }
+    return axios.post(
+        url,
+        {school: schoolId, news_id: newsId, version:Constants.VERSION}
+    );
+}
+
 export function deleteNews(schoolId, newsId, affix) {
     const url = Util.buildUrl(Constants.API.NEWS.DELETE);
     if(Util.isDevEnv()){
@@ -48,5 +59,57 @@ export function saveSections(newsId, sections, affix) {
     return axios.post(
         url,
         {news_id: newsId, sections: sections, version:Constants.VERSION}
+    );
+}
+
+/**
+ * 删除文章的段落
+ * @param sectionId
+ * @param affix
+ * @returns {*}
+ */
+export function deleteSection(sectionId, affix) {
+    const url = Util.buildUrl(Constants.API.NEWS.DELETE_SECTION);
+    if(Util.isDevEnv()){
+        return axios.get(url, affix);
+    }
+    return axios.post(
+        url,
+        {section_id: sectionId, version:Constants.VERSION}
+    );
+}
+
+/**
+ * 删除文章的段落
+ * @param sectionId
+ * @param affix
+ * @returns {*}
+ */
+export function moveUpSection(sectionId, affix) {
+    const url = Util.buildUrl(Constants.API.NEWS.MOVE_UP_SECTION);
+    if(Util.isDevEnv()){
+        return axios.get(url, affix);
+    }
+    return axios.post(
+        url,
+        {section_id: sectionId, version:Constants.VERSION}
+    );
+}
+
+
+/**
+ * 删除文章的段落
+ * @param sectionId
+ * @param affix
+ * @returns {*}
+ */
+export function moveDownSection(sectionId, affix) {
+    const url = Util.buildUrl(Constants.API.NEWS.MOVE_DOWN_SECTION);
+    if(Util.isDevEnv()){
+        return axios.get(url, affix);
+    }
+    return axios.post(
+        url,
+        {section_id: sectionId, version:Constants.VERSION}
     );
 }

@@ -1,15 +1,13 @@
 <?php
 
 namespace App\Models\Teachers;
-
-
-use Illuminate\Database\Eloquent\Model;
-class Teacher extends Model
+use App\Models\Teachers\Performance\TeacherPerformance;
+use App\User;
+class Teacher extends User
 {
-    public  function  teacherProfile()
-    {
-        $this->hasOne(teacherProfile::class);
+    protected $table = 'users';
+
+    public function performances(){
+        return $this->hasMany(TeacherPerformance::class, 'user_id')->orderBy('year','desc');
     }
-
-
 }

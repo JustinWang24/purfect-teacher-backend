@@ -31,6 +31,7 @@ return [
     'view'   => '查看',
     'delete' => '删除',
     'update' => '更新',
+    'school-manager' => '学校管理员',
 
     //风采管理
     'scenery' => '风采管理',
@@ -104,5 +105,8 @@ return [
 
     // 校园动态
     'news-manager' => '校园动态',
+    'configs'=>'系统配置',
+    'performance-teacher'=>'教职工业绩考核',
+    'edit-profile'=>'档案管理',
 ];
 

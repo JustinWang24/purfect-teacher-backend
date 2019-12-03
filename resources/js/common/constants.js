@@ -109,9 +109,24 @@ export const Constants = {
         },
         NEWS: {
             SAVE: '/school_manager/contents/news/save',
+            PUBLISH: '/school_manager/contents/news/publish',
             DELETE: '/school_manager/contents/news/delete',
             LOAD: '/school_manager/contents/news/load',
             SAVE_SECTION: '/school_manager/contents/news/save-section',
+            DELETE_SECTION: '/school_manager/contents/news/delete-section',
+            MOVE_UP_SECTION: '/school_manager/contents/news/move-up-section',
+            MOVE_DOWN_SECTION: '/school_manager/contents/news/move-down-section',
+        },
+        CALENDAR: {
+            SAVE: '/school_manager/calendar/save',
+        },
+        ORGANIZATION: {
+            LOAD_PARENTS: '/school_manager/organizations/load-parent',
+            SAVE: '/school_manager/organizations/save',
+            LOAD: '/school_manager/organizations/load',
+            DELETE: '/school_manager/organizations/delete',
+            ADD_TO_ORG: '/school_manager/organizations/add-member',
+            DELETE_FROM_ORG: '/school_manager/organizations/remove-member',
         }
     },
     YEARS: ['N.A','一年级','二年级','三年级','四年级','五年级','六年级'],
@@ -143,6 +158,14 @@ export const Constants = {
         VIDEO: 10,
         AUDIO: 11,
         TXT: 12
+    },
+    // 文章段落类型的定义
+    SECTION_TYPE: {
+        TEXT: 1,
+        IMAGE: 2,
+        VIDEO: 3,
+        AUDIO: 4,
+        SLIDER: 5, // 轮播图
     },
     ELECTIVE_COURSE: {
         STATUS_APPROVED: 2,

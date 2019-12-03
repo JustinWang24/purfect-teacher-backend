@@ -15,6 +15,7 @@ use App\Dao\Schools\RoomDao;
 use App\Dao\Schools\SchoolDao;
 use App\Dao\Users\GradeUserDao;
 use App\Events\User\Student\EnrollCourseEvent;
+use App\Models\Course;
 use App\Models\ElectiveCourses\ApplyCourseArrangement;
 use App\Models\ElectiveCourses\ApplyCourseMajor;
 use App\Models\ElectiveCourses\CourseElective;
@@ -388,19 +389,23 @@ class TeacherApplyElectiveCourseDao
             $messageBag->setMessage('没有审批过的申请不能发布！');
             return $messageBag;
         }
+        //获取选修课的起止时间
+        $electiveCourseStartAndEnd = $this->getElectiveCourseStartAndEndTime($apply->school_id,$apply->term);
         $data['school_id']      = $apply->school_id;
         $data['teachers'][0]    = $apply->teacher_id;
         $data['majors']         = $majorArrs;
         $data['code']           = $apply->code;
         $data['name']           = $apply->name;
         $data['scores']         = $apply->scores;
-        $data['optional']       = 1;
+        $data['optional']       = Course::ELECTIVE_COURSE;
         $data['year']           = $apply->year;
         $data['term']           = $apply->term;
         $data['desc']           = $apply->desc;
         $data['open_num']       = $apply->open_num;
         $data['max_num']        = $apply->max_num;
         $data['start_year']     = $apply->start_year;
+        $data['enrol_start_at'] = $electiveCourseStartAndEnd[0];
+        $data['expired_at']     = $electiveCourseStartAndEnd[1];
 
 
         DB::beginTransaction();
@@ -786,6 +791,22 @@ class TeacherApplyElectiveCourseDao
             // Todo: 为什么要在循环中抛出事件???
             event(new EnrollCourseEvent($row));
         }
+    }
+
+    public function getElectiveCourseStartAndEndTime($schoolId, $term)
+    {
+        $schoolDao = new SchoolDao();
+        $school = $schoolDao->getSchoolById($schoolId);
+        if ($term == Course::FIRST_TERM)
+        {
+            $start = $school->configuration->apply_elective_course_from_1;
+            $end = $school->configuration->apply_elective_course_to_1;
+        } else {
+            $start = $school->configuration->apply_elective_course_from_2;
+            $end = $school->configuration->apply_elective_course_to_2;
+        }
+        $year = date("Y-");
+        return [$year.date("m-d",strtotime($start)), $year.date("m-d",strtotime($end))];
     }
 }
 

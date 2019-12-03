@@ -18,4 +18,16 @@ Route::prefix('admin')->group(function () {
     Route::get('versions/edit', 'VersionController@edit')->name('admin.versions.edit');
     Route::get('versions/delete', 'VersionController@delete')->name('admin.versions.delete');
     Route::post('versions/update', 'VersionController@update')->name('admin.versions.update');
+
+    // 创建学校管理员
+    Route::any('create/school-manager', 'SchoolsController@create_school_manager')
+        ->name('admin.create.school-manager');
+    // 创建学校管理员
+    Route::get('edit/school-manager', 'SchoolsController@edit_school_manager')
+        ->name('admin.edit.school-manager');
+
+    Route::get('importer/manager', 'ImporterController@manager')->name('admin.importer.manager');
+    Route::post('importer/update', 'ImporterController@update')->name('admin.importer.update');
+    Route::get('importer/add', 'ImporterController@add')->name('admin.importer.add');
+    Route::get('importer/edit', 'ImporterController@edit')->name('admin.importer.edit');
 });

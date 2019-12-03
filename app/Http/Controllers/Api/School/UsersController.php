@@ -7,6 +7,7 @@ use App\Dao\Courses\CourseTeacherDao;
 use App\Dao\Teachers\TeacherProfileDao;
 use App\Dao\Users\GradeUserDao;
 use App\Dao\Users\UserDao;
+use App\Models\Acl\Role;
 use App\Models\RecruitStudent\RegistrationInformatics;
 use App\Models\Users\GradeUser;
 use App\Utils\JsonBuilder;
@@ -79,12 +80,22 @@ class UsersController extends Controller
                         /**
                          * @var GradeUser $gradeUser
                          */
-                        $item = [
-                            'id'=>$gradeUser->user_id,
-                            'value'=>$gradeUser->name . ' - ' . $gradeUser->grade->name . ' ' . $gradeUser->major->name,
-                            'scope'=>'user',
-                            'uuid'=>$gradeUser->user->uuid,
-                        ];
+                        if($gradeUser->user_type === Role::VERIFIED_USER_STUDENT){
+                            $item = [
+                                'id'=>$gradeUser->user_id,
+                                'value'=>$gradeUser->name . ' - ' . $gradeUser->grade->name . ' ' . $gradeUser->major->name,
+                                'scope'=>'user',
+                                'uuid'=>$gradeUser->user->uuid,
+                            ];
+                        }
+                        else{
+                            $item = [
+                                'id'=>$gradeUser->user_id,
+                                'value'=>$gradeUser->name,
+                                'scope'=>'user',
+                                'uuid'=>$gradeUser->user->uuid,
+                            ];
+                        }
                     }
                     elseif($gradeUser instanceof RegistrationInformatics){
                         // 这里是对报名学生的搜索结果
