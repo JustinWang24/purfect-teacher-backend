@@ -17,8 +17,12 @@ class Flow extends Model implements IFlow
     public $table = 'pipeline_flows';
     public $timestamps = false;
     protected $fillable = [
-        'school_id','name','type'
+        'school_id','name','type','icon'
     ];
+
+    public function getIconUrl(){
+        return $this->icon ?? asset('assets/img/node-icon.png');
+    }
 
     /**
      * 流程的所有分类

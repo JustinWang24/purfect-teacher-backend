@@ -13,6 +13,7 @@ use App\Models\Pipeline\Flow\Flow;
 use App\User;
 use App\Utils\JsonBuilder;
 use App\Utils\Pipeline\IAction;
+use App\Utils\Pipeline\IFlow;
 use App\Utils\ReturnData\IMessageBag;
 use App\Utils\ReturnData\MessageBag;
 use Illuminate\Support\Arr;
@@ -21,6 +22,25 @@ use App\Models\Pipeline\Flow\Handler;
 
 class FlowDao
 {
+    /**
+     * 获取分类的流程集合
+     * @param $schoolId
+     * @return array
+     */
+    public function getGroupedFlows($schoolId){
+        $flows = Flow::where('school_id',$schoolId)->orderBy('type','asc')->get();
+        $data = [
+            IFlow::TYPE_1=>[],
+            IFlow::TYPE_2=>[],
+            IFlow::TYPE_3=>[],
+            IFlow::TYPE_4=>[],
+        ];
+        foreach ($flows as $flow) {
+            $data[$flow->type][] = $flow;
+        }
+        return $data;
+    }
+
     /**
      * 开始一个流程
      * @param Flow|int $flow
