@@ -21,7 +21,6 @@ class HandlerFactory
          * @var INodeHandler $instance
          */
         $instance = null;
-
         return $instance;
     }
 }

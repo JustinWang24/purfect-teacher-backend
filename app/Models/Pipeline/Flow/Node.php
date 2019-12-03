@@ -2,6 +2,7 @@
 
 namespace App\Models\Pipeline\Flow;
 
+use App\Utils\Pipeline\IAction;
 use App\Utils\Pipeline\INode;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -61,5 +62,10 @@ class Node extends Model implements INode
 
     public function flow(){
         return $this->belongsTo(Flow::class,'flow_id');
+    }
+
+    public function getLastAction(): IAction
+    {
+        return Action::where('node_id', $this->id)->orderBy('updated_at','desc')->first();
     }
 }
