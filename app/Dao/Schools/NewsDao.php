@@ -51,6 +51,7 @@ class NewsDao
     }
 
 
+
     /**
      * 修改
      * @param $id
@@ -94,5 +95,17 @@ class NewsDao
         return News::where('type',$type)
             ->where('school_id',$schoolId)
             ->paginate(ConfigurationTool::DEFAULT_PAGE_SIZE);
+    }
+
+    /**
+     * 根据学校获取新闻动态
+     * @param $schoolId
+     * @param $page
+     * @return mixed
+     */
+    public function getNewBySchoolId($schoolId, $page)
+    {
+        $where = ['school_id' => $schoolId, 'type' => News::TYPE_NEWS, 'publish' => News::PUBLISH_YES];
+        return News::where($where)->orderBy('created_at', 'desc')->paginate($page);
     }
 }

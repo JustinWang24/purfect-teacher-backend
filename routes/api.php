@@ -329,8 +329,8 @@ Route::prefix('students')->middleware('auth:api')->group(function () {
     Route::get('applications-type','Api\Application\ApplicationController@applicationTypeList')
             ->name('api.students.applications-type');
 });
-Route::prefix('questionnaire')->middleware('auth:api')->group(function () {
 
+Route::prefix('questionnaire')->middleware('auth:api')->group(function () {
     // 问卷调查列表
     Route::get('/index', 'Api\Questionnaire\QuestionnaireController@index')
         ->name('api.questionnaire.index');
@@ -338,13 +338,16 @@ Route::prefix('questionnaire')->middleware('auth:api')->group(function () {
     Route::get('/vote/{id}', 'Api\Questionnaire\QuestionnaireController@vote')
         ->name('api.questionnaire.vote');
 });
-//最新版本号
+
+// 最新版本号
 Route::prefix('version')->group(function () {
     Route::get('/index', 'Api\Version\VersionController@index')->name('api.version.index');
-
 });
 
-
+// APP 首页接口
+Route::prefix('home')->middleware('auth:api')->group(function () {
+    Route::post('/getHomePageInfo', 'Api\Home\IndexController@index')->name('api.home.index');
+});
 
 // 消息通知
 Route::prefix('notice')->middleware('auth:api')->group(function () {
@@ -354,4 +357,9 @@ Route::prefix('notice')->middleware('auth:api')->group(function () {
     Route::post('/notice-info', 'Api\Notice\NoticeController@noticeInfo')
     ->name('api.notice.info');
 
+});
+
+// APP banner 接口
+Route::prefix('banner')->middleware('auth:api')->group(function () {
+    Route::post('/getBanner', 'Api\Home\IndexController@banner')->name('api.banner.index');
 });
