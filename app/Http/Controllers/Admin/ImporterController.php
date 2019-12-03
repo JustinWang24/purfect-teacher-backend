@@ -24,14 +24,6 @@ class ImporterController extends Controller
 
     public function manager(Request $request)
     {
-        $obj = Factory::createAdapter(
-            ['importerName'=>'App\BusinessLogic\ImportExcel\Impl\LixianImporter',
-             'file_path'   => '技术部加班表-11月-朱晨光.xlsx',
-            ]);
-        $obj->loadExcelFile();
-        //dd($obj->data->toArray());
-
-        //Artisan::call('命令名称');
         $dao = new ImporterDao();
         $tasks = $dao->getTasks();
         $this->dataForView['tasks'] = $tasks;
@@ -106,5 +98,31 @@ class ImporterController extends Controller
 
     }
 
+
+    public function handle(Request $request, $id)
+    {
+        $user = $request->user();
+        $dao = new ImporterDao();
+        $taskObj = $dao->getTaskById($id);
+        $taskConfig = json_decode($taskObj->config, true);
+        $taskConfig['importerName'] =  'App\BusinessLogic\ImportExcel\Impl\\'.$taskConfig['importerName'].'Importer';
+        $taskConfig['file_path']    =  $taskObj->file_path;
+        $taskConfig['task_id']      =  $id;
+        $obj = Factory::createAdapter($taskConfig);
+        $obj->loadExcelFile();
+        //检测配置文件
+
+        //获取学校对象
+        $schoolObj = $obj->getSchoolId($user);
+        dd($schoolObj);
+        foreach($obj->data as $k => $sheetObj)
+        {
+            if ($k==1)
+                dd($sheetObj->toArray());
+        }
+
+
+        //Artisan::call('命令名称');
+    }
 
 }
