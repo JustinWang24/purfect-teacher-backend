@@ -30,4 +30,5 @@ Route::prefix('admin')->group(function () {
     Route::post('importer/update', 'ImporterController@update')->name('admin.importer.update');
     Route::get('importer/add', 'ImporterController@add')->name('admin.importer.add');
     Route::get('importer/edit', 'ImporterController@edit')->name('admin.importer.edit');
+    Route::get('importer/handle/{id}', 'ImporterController@handle')->name('admin.importer.handle');
 });

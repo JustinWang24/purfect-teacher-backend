@@ -20,7 +20,7 @@ use App\Utils\UI\Button;
                         </div>
                         <div class="form-group">
                             <label for="task-config">配置文件</label>
-                            <textarea required cols="30" rows="50" class="form-control" id="task-config-input"  placeholder="配置" name="task[config]">{{ old('task.config') }}</textarea>
+                            <textarea required cols="30" rows="25" class="form-control" id="task-config-input"  placeholder="配置" name="task[config]">{{ old('task.config') }}</textarea>
                         </div>
                         <div class="form-group">
                             <label for="task-file-input">选择文件</label>
