@@ -26,5 +26,8 @@ Route::prefix('admin')->group(function () {
     Route::get('edit/school-manager', 'SchoolsController@edit_school_manager')
         ->name('admin.edit.school-manager');
 
-    Route::get('/importer', 'ImporterController@manager')->name('manager');
+    Route::get('importer/manager', 'ImporterController@manager')->name('admin.importer.manager');
+    Route::post('importer/update', 'ImporterController@update')->name('admin.importer.update');
+    Route::get('importer/add', 'ImporterController@add')->name('admin.importer.add');
+    Route::get('importer/edit', 'ImporterController@edit')->name('admin.importer.edit');
 });
