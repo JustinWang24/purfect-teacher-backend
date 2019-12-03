@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "35770fde013ab043b14e76fde3b9e7e7",
+    "content-hash": "0c23865cf6a9a5655802c6136ced4e26",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -743,16 +743,16 @@
         },
         {
             "name": "endroid/qr-code",
-            "version": "3.5.9",
+            "version": "3.7.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/endroid/qr-code.git",
-                "reference": "ae14093866558c1d91aa1f9b0ca07c09a95effc7"
+                "reference": "a19e3fef5fa5b92d94219947a63944ecf2493e4b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/endroid/qr-code/zipball/ae14093866558c1d91aa1f9b0ca07c09a95effc7",
-                "reference": "ae14093866558c1d91aa1f9b0ca07c09a95effc7",
+                "url": "https://api.github.com/repos/endroid/qr-code/zipball/a19e3fef5fa5b92d94219947a63944ecf2493e4b",
+                "reference": "a19e3fef5fa5b92d94219947a63944ecf2493e4b",
                 "shasum": "",
                 "mirrors": [
                     {
@@ -766,15 +766,13 @@
                 "ext-gd": "*",
                 "khanamiryan/qrcode-detector-decoder": "^1.0.2",
                 "myclabs/php-enum": "^1.5",
-                "php": ">=7.1",
-                "symfony/options-resolver": "^2.7|^3.0|^4.0",
-                "symfony/property-access": "^2.7|^3.0|^4.0"
+                "php": ">=7.2",
+                "symfony/http-foundation": "^3.4||^4.0||^5.0",
+                "symfony/options-resolver": "^3.4||^4.0||^5.0",
+                "symfony/property-access": "^3.4||^4.0||^5.0"
             },
             "require-dev": {
-                "phpunit/phpunit": "^5.7|^6.0"
-            },
-            "suggest": {
-                "symfony/http-foundation": "Install if you want to use QrCodeResponse"
+                "endroid/test": "dev-master"
             },
             "type": "library",
             "extra": {
@@ -807,7 +805,7 @@
                 "qr",
                 "qrcode"
             ],
-            "time": "2019-11-15T12:32:01+00:00"
+            "time": "2019-11-23T10:53:01+00:00"
         },
         {
             "name": "erusev/parsedown",
