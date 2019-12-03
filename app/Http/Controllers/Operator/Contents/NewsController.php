@@ -12,8 +12,14 @@ use App\Http\Controllers\Controller;
 class NewsController extends Controller
 {
     public function management(Request $request){
-        $this->dataForView['pageTitle'] = '校园动态';
-        $this->dataForView['newsList'] = News::paginate();
+        $this->dataForView['typeText'] = News::TypeText($request->get('type'));
+        $this->dataForView['pageTitle'] = $this->dataForView['typeText'].'管理';
+        $this->dataForView['type'] = $request->get('type');
+        $dao = new NewsDao();
+        $this->dataForView['newsList'] = $dao->paginateByType(
+            $request->get('type'),
+            $request->session()->get('school.id')
+        );
         return view('school_manager.news.list',$this->dataForView);
     }
 
@@ -35,7 +41,6 @@ class NewsController extends Controller
                 return JsonBuilder::Error();
             }
         }else{
-//            unset($newsData['id']);
             unset($newsData['sections']);
             $dao->updateNewById($newsData['id'], $newsData);
             return JsonBuilder::Success();
@@ -49,16 +54,65 @@ class NewsController extends Controller
         return JsonBuilder::Success(['news'=>$news]);
     }
 
+    /**
+     * 保存段落
+     * @param Request $request
+     * @return string
+     */
     public function save_section(Request $request){
         $dao = new NewsSectionDao();
         $result = $dao->batchCreate($request->all());
-        return $result->isSuccess() ?
-            JsonBuilder::Success() : JsonBuilder::Error($result->getMessage());
+        if($result->isSuccess()){
+            $d = $result->getData();
+            return $d ? JsonBuilder::Success(['id'=>$d]) : JsonBuilder::Success();
+        }
+        else{
+            return JsonBuilder::Error($result->getMessage());
+        }
     }
 
     public function delete(Request $request){
         $dao = new NewsDao();
         $dao->delete($request->get('news_id'));
         return JsonBuilder::Success();
+    }
+
+    public function publish(Request $request){
+        $dao = new NewsDao();
+        $dao->updateNewById($request->get('news_id'),['publish'=>true]);
+        return JsonBuilder::Success();
+    }
+
+    /**
+     * 删除段落
+     * @param Request $request
+     * @return string
+     */
+    public function delete_section(Request $request){
+        $dao = new NewsSectionDao();
+        $deleted = $dao->delete($request->get('section_id'));
+        return $deleted ? JsonBuilder::Success(): JsonBuilder::Error();
+    }
+
+    /**
+     * 段落上移
+     * @param Request $request
+     * @return string
+     */
+    public function move_up_section(Request $request){
+        $dao = new NewsSectionDao();
+        $result = $dao->moveUp($request->get('section_id'));
+        return $result ? JsonBuilder::Success() : JsonBuilder::Error();
+    }
+
+    /**
+     * 段落下移
+     * @param Request $request
+     * @return string
+     */
+    public function move_down_section(Request $request){
+        $dao = new NewsSectionDao();
+        return $dao->moveDown($request->get('section_id'))
+            ? JsonBuilder::Success() : JsonBuilder::Error();
     }
 }

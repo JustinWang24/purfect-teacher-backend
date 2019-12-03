@@ -3,6 +3,7 @@
 namespace App\Models\Schools;
 
 use App\Models\School;
+use App\Models\Users\UserOrganization;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\View;
 
@@ -18,6 +19,15 @@ class Organization extends Model
         'description',
         'address',
     ];
+
+    /**
+     * 部门的成员
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function members(){
+        return $this->hasMany(UserOrganization::class)
+            ->orderBy('title_id','asc');
+    }
 
     public function school(){
         return $this->belongsTo(School::class);
@@ -36,7 +46,8 @@ class Organization extends Model
      * @return string
      */
     public function output(){
-        return '<div class="org '.($this->level > 1 && $this->level < 4 ? 'the-box' : null).'">'
+        $branchesCount = count($this->branch);
+        return '<div class="org '.($this->level > 1 && $this->level < 4 ? 'the-box' : null).'" style="'.($branchesCount===0?'border:none;':null).'">'
             .View::make('reusable_elements.ui.org'.$this->level,['name'=>$this->name,'id'=>$this->id])->render()
             .$this->outputBranch()
             .'</div>';

@@ -6,6 +6,10 @@ use App\Utils\Misc\ConfigurationTool;
 /**
  * @var \App\Models\Schools\SchoolConfiguration $config
  */
+$ecFrom1 = $config->getElectiveCourseAvailableFrom(1); // 第一学期选修课开始选课的时间
+$ecTo1= $config->getElectiveCourseAvailableTo(1); // 第一学期选修课结束选课的时间
+$ecFrom2 = $config->getElectiveCourseAvailableFrom(2); // 第2学期选修课开始选课的时间
+$ecTo2= $config->getElectiveCourseAvailableTo(2); // 第2学期选修课结束选课的时间
 @endphp
 @extends('layouts.app')
 @section('content')
@@ -52,7 +56,7 @@ use App\Utils\Misc\ConfigurationTool;
                                         <option value="0" {{ !$needRegistration ? 'selected':null }}>自习课不需要签到</option>
                                     </select>
                                 </div>
-
+                                <hr>
                                 <?php
                                 Button::Print(['id'=>'btn-save-school-config','text'=>trans('general.submit')], Button::TYPE_PRIMARY);
                                 ?>&nbsp;

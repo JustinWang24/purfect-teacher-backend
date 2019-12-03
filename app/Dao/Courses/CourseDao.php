@@ -251,7 +251,7 @@ class CourseDao
                 }
 
                 // 检查是选修课还是必修课, 如果是选修课, 则需要保留选修课的上课时间信息, 并保存到单独的记录表中
-                if(intval($data['optional']) === 1){
+                if(intval($data['optional']) === Course::ELECTIVE_COURSE){
                     // 是选修课
                     $this->_saveCourseArrangement($course, $data);
                     //添加course_electives表的关联数据
@@ -398,6 +398,8 @@ class CourseDao
                 'open_num'      => $data['open_num'],
                 'max_num'       => $data['max_num'],
                 'start_year'    => $data['start_year'],
+                'enrol_start_at'=> $data['enrol_start_at'],
+                'expired_at'    => $data['expired_at'],
             ];
             CourseElective::create($d);
             DB::commit();
@@ -406,6 +408,17 @@ class CourseDao
             DB::rollBack();
         }
 
+    }
+
+
+    /**
+     * 根据课程ID和学年获取课程
+     * @param $ids
+     * @param $year
+     * @return mixed
+     */
+    public function getCourseByIdsAndYear($ids, $year){
+        return Course::whereIn('id',$ids)->where('year', $year)->get();
     }
 
 }

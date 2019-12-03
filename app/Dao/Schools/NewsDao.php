@@ -7,6 +7,7 @@ namespace App\Dao\Schools;
 use App\Models\Schools\NewsSection;
 use App\Utils\JsonBuilder;
 use App\Models\Schools\News;
+use App\Utils\Misc\ConfigurationTool;
 use App\Utils\ReturnData\IMessageBag;
 use App\Utils\ReturnData\MessageBag;
 use Illuminate\Support\Facades\DB;
@@ -50,6 +51,7 @@ class NewsDao
     }
 
 
+
     /**
      * 修改
      * @param $id
@@ -81,5 +83,29 @@ class NewsDao
             $msg = $e->getMessage();
             return new MessageBag(JsonBuilder::CODE_ERROR, '删除失败'.$msg);
         }
+    }
+
+    /**
+     * 获取指定类型的分页文章
+     * @param $type
+     * @param $schoolId
+     * @return mixed
+     */
+    public function paginateByType($type, $schoolId){
+        return News::where('type',$type)
+            ->where('school_id',$schoolId)
+            ->paginate(ConfigurationTool::DEFAULT_PAGE_SIZE);
+    }
+
+    /**
+     * 根据学校获取新闻动态
+     * @param $schoolId
+     * @param $page
+     * @return mixed
+     */
+    public function getNewBySchoolId($schoolId, $page)
+    {
+        $where = ['school_id' => $schoolId, 'type' => News::TYPE_NEWS, 'publish' => News::PUBLISH_YES];
+        return News::where($where)->orderBy('created_at', 'desc')->paginate($page);
     }
 }

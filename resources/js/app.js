@@ -7,11 +7,15 @@
 require('./bootstrap');
 
 window.Vue = require('vue');
+window.moment = require('moment');
 
 // 引入 Element UI 库
 import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
 Vue.use(ElementUI);
+
+// 拖拽
+
 
 /**
 
@@ -36,6 +40,7 @@ Vue.component('file-manager', require('./components/fileManager/FileManager.vue'
 Vue.component('elective-course-form', require('./components/courses/ElectiveCourseForm.vue').default);
 Vue.component('textbooks-table', require('./components/textbook/TextbooksTable.vue').default); // 教材列表
 Vue.component('file-preview', require('./components/fileManager/elements/FilePreview.vue').default);      // 教材表单
+Vue.component('drag-to-sort', require('./components/dnd/DragToSort.vue').default);      // 教材表单
 
 import { Constants } from './common/constants';
 import { Util } from './common/utils';
@@ -44,7 +49,91 @@ import { loadBuildings } from './common/facility';
 import { getEmptyElectiveCourseApplication } from './common/elective_course';
 import { loadTextbooksPaginate, deleteTextbook } from './common/textbook';
 import { loadOrgContacts, loadGradeContacts, loadGrades } from './common/contacts';
-import { saveNews, loadNews, saveSections, deleteNews } from './common/news';
+import { saveNews, loadNews, saveSections, deleteNews, publishNews, deleteSection, moveUpSection, moveDownSection } from './common/news';
+
+/**
+ * 校历应用
+ */
+if(document.getElementById('school-calendar-app')){
+    new Vue({
+        el:'#school-calendar-app',
+        data(){
+            return {
+                currentDate: null,
+                tags: [],
+                form:{
+                    event_time:'',
+                    tag:'',
+                    content:'',
+                    id:'',
+                },
+                events: [],
+                schoolId: null,
+            }
+        },
+        watch: {
+            'currentDate': function(newDate, oldDate){
+                if(!Util.isEmpty(newDate)){
+                    this.form.event_time = newDate.format('YYYY-MM-DD');
+                }else{
+                    this.form.event_time = '';
+                }
+            }
+        },
+        created(){
+            this.currentDate = moment();
+            const dom = document.getElementById('app-init-data-holder');
+            this.schoolId = dom.dataset.school;
+            this.events = JSON.parse(dom.dataset.events);// 校历内容
+            this.tags = JSON.parse(dom.dataset.tags);// 校历内容
+        },
+        methods:{
+            // 点击的时候, 会把点击的日期发过来, 如果是月份, 会发来第一天
+            dateClicked: function(payload){
+                this.currentDate = moment(payload);
+                const ev = this._locateEvent(this.currentDate.format('YYYY-MM-DD'));
+                if(!Util.isEmpty(ev)){
+                    this.form = ev;
+                }
+                this.$message('正在编辑 ' + this.currentDate.format('YYYY-MM-DD') + ' 的校历');
+            },
+            onSubmit: function(){
+                axios.post(
+                    Constants.API.CALENDAR.SAVE,
+                    {event: this.form}
+                ).then(res => {
+                    if(Util.isAjaxResOk(res)){
+                        this.$message({
+                            message: '校历保存成功, 正在从新加载 ...',
+                            type: 'success'
+                        });
+                        window.location.reload();
+                    }
+                })
+            },
+            loadEvents: function(){
+
+            },
+            /**
+             *
+             * @param day: YYYY-MM-DD
+             * @returns {*}
+             */
+            getEvent: function(day){
+                return this._locateEvent(day);
+            },
+            _locateEvent: function(day){
+                let result = null;
+                _.each(this.events, item => {
+                    if(day === item.event_time){
+                        result = item;
+                    }
+                });
+                return result;
+            }
+        }
+    });
+}
 
 /**
  * 动态新闻的管理
@@ -75,17 +164,118 @@ if(document.getElementById('school-news-list-app')){
                 showFileManagerFlag: false,
                 formLabelWidth: '100px',
                 loading: false,
+                // 当前的新闻列表
+                news:[],
+                totalNews: 0,
+                dndOptions:{},
             }
         },
         created(){
             const dom = document.getElementById('app-init-data-holder');
             this.schoolId = dom.dataset.school;
             this.newsForm.type = parseInt(dom.dataset.type);// 文章类型
+            const injectedData = JSON.parse(dom.dataset.news);// 文章类型
+
+            // 加载文章列表
+            this.news = injectedData.data;
+            this.totalNews = injectedData.total;
         },
         methods: {
+            // 新闻的 sections 的编辑
+            moveUp: function(section){
+                moveUpSection(section.id).then(res => {
+                    if(Util.isAjaxResOk(res)){
+                        const idx = Util.GetItemIndexById(section.id, this.sections);
+                        this.sections = Util.swapArray(this.sections, idx -1, idx);
+                    }
+                    else{
+                        this.$message.error('系统繁忙, 请稍候再试');
+                    }
+                });
+            },
+            moveDown: function(section){
+                moveDownSection(section.id).then(res => {
+                    if(Util.isAjaxResOk(res)){
+                        const idx = Util.GetItemIndexById(section.id, this.sections);
+                        this.sections = Util.swapArray(this.sections, idx, idx + 1);
+                    }
+                    else{
+                        this.$message.error('系统繁忙, 请稍候再试');
+                    }
+                });
+            },
+            editSection: function(section){
+                this.newsFormFlag = false;
+                this.sectionsFormFlag = true;
+                // 判断此段落是什么类型
+                const type = Util.checkArticleSectionType(section);
+                const that = this;
+                const keys = Object.keys(section);
+                keys.forEach(function(key){
+                    that.mediaForm[key] = section[key];
+                });
+
+                switch (type){
+                    case Constants.SECTION_TYPE.TEXT:
+                        // 文字类型
+                        this.textContentWrapFlag = true;
+                        this.mediaContentWrapFlag = false;
+                        break;
+                    case Constants.SECTION_TYPE.IMAGE:
+                        break;
+                    default:
+                        break;
+                }
+            },
+            deleteSection: function(section){
+                this.$confirm('此操作将永久删除该段落, 是否继续?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    deleteSection(section.id).then(res => {
+                        if(Util.isAjaxResOk(res)){
+                            const idx = Util.GetItemIndexById(section.id, this.sections);
+                            this.sections.splice(idx, 1);
+                            this.$message({
+                                type:'success',
+                                message:'文章段落删除成功'
+                            });
+                        }
+                        else{
+                            this.$message.error('系统繁忙, 请稍候再试');
+                        }
+                    })
+                }).catch(() => {
+                    this.$message({
+                        type: 'info',
+                        message: '已取消删除'
+                    });
+                });
+            },
+            // 新闻的 sections 的编辑完毕
             addNew: function(){
                 this.newsFormFlag = true;
                 this.newsForm.title = '';
+                this.newsForm.id = '';
+                this.sections = [];
+            },
+            publish: function(){
+                publishNews(this.schoolId, this.newsForm.id).then(res => {
+                    if(Util.isAjaxResOk(res)){
+                        this.$message({
+                            message: '发布成功',
+                            type: 'success'
+                        });
+                        const idx = Util.GetItemIndexById(this.newsForm.id, this.news);
+                        if(idx > -1){
+                            this.news[idx].publish = true;
+                        }
+                    }
+                    else{
+                        this.$message.error(res.data.data.message);
+                    }
+                })
             },
             saveNews: function(){
                 // Todo 保存新闻
@@ -95,13 +285,13 @@ if(document.getElementById('school-news-list-app')){
                         this.sectionsFormFlag = true;
                         if(!Util.isEmpty(res.data.data.news)){
                             this.newsForm.id = res.data.data.news.id;
+                            this.news.push(this.newsForm);
                         }
                     }
                     else{
                         this.$message.error(res.data.data.message);
                     }
                 })
-
             },
             cancelSaveNews: function(){
                 this.newsFormFlag = false;
@@ -127,16 +317,27 @@ if(document.getElementById('school-news-list-app')){
                 })
             },
             deleteNews: function(id){
-                this.loading = true;
-                deleteNews(this.schoolId, id).then(res => {
-                    if(Util.isAjaxResOk(res)){
-                        window.location.reload();
-                    }
-                    else{
-                        this.$message.error('删除失败, 请稍候再试');
-                        this.loading = false;
-                    }
-                })
+                this.$confirm('此操作将永久删除该动态, 是否继续?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    this.loading = true;
+                    deleteNews(this.schoolId, id).then(res => {
+                        if(Util.isAjaxResOk(res)){
+                            window.location.reload();
+                        }
+                        else{
+                            this.$message.error('删除失败, 请稍候再试');
+                            this.loading = false;
+                        }
+                    })
+                }).catch(() => {
+                    this.$message({
+                        type: 'info',
+                        message: '已取消删除'
+                    });
+                });
             },
             pushNewSection: function(){
                 if(Util.isEmpty(this.mediaForm.content) && Util.isEmpty(this.mediaForm.media_id)){
@@ -150,14 +351,28 @@ if(document.getElementById('school-news-list-app')){
 
                 saveSections(this.newsForm.id, [this.mediaForm]).then(res => {
                     if(Util.isAjaxResOk(res)){
-                        const media = {};
-                        const keys = Object.keys(this.mediaForm);
-                        let that = this;
-                        keys.forEach(function(key){
-                            media[key] = that.mediaForm[key];
-                        });
-                        this.sections.push(media);
+                        const that = this;
+                        if(Util.isEmpty(res.data.data.id)){
+                            // 更新
+                            const idx = Util.GetItemIndexById(this.mediaForm.id, this.sections);
+                            const keys = Object.keys(this.mediaForm);
+                            keys.forEach(function(key){
+                                that.sections[idx][key] = that.mediaForm[key];
+                            });
+                        }
+                        else{
+                            // 新增段落的处理
+                            const media = {};
+                            const keys = Object.keys(this.mediaForm);
+                            keys.forEach(function(key){
+                                media[key] = that.mediaForm[key];
+                            });
+                            media.id = res.data.data.id;
+                            this.sections.push(media);
+                        }
+
                         this.resetMediaForm();
+                        this.$message({type:'success',message:'段落保存成功'});
                     }
                     else{
                         this.$message.error(res.data.data.message);
@@ -179,7 +394,7 @@ if(document.getElementById('school-news-list-app')){
                 this.mediaForm.id = '';
                 this.mediaForm.content = '';
                 this.mediaForm.media_id = null;
-                this.mediaForm.position = 1;
+                this.mediaForm.position = '';
                 this.selectedImgUrl = null;
             },
             pickFileHandler: function(payload){
@@ -206,15 +421,23 @@ if(document.getElementById('school-contacts-list-app')){
                 schoolId: null,
                 grades:[],
                 gradeId: null,
+                loading: false,
             }
         },
         watch: {
             'gradeId': function(val){
+                this.loading = true;
+                this.mates = [];
+                this.teachers = [];
                 loadGradeContacts(this.schoolUuid, this.gradeId).then(res => {
                     if(Util.isAjaxResOk(res)){
                         this.mates = res.data.data.schoolmate_list;
                         this.teachers = res.data.data.teacher_list;
                     }
+                    else{
+                        this.$message.error('没有找到班级的数据');
+                    }
+                    this.loading = false;
                 })
             }
         },
@@ -308,7 +531,17 @@ if(document.getElementById('organization-app')){
                     address: '',
                 },
                 parents:[],
-                loading: false
+                loading: false,
+                members:[], // 当前组织的成员
+                currentMember:{
+                    name:'',
+                    user_id:'',
+                    title:'',
+                    title_id:'',
+                    school_id: '',
+                    organization_id: '',
+                    id: '',
+                }
             }
         },
         watch: {
@@ -322,14 +555,96 @@ if(document.getElementById('organization-app')){
             const dom = document.getElementById('app-init-data-holder');
             this.schoolId = dom.dataset.school;
             this.maxLevel = parseInt(dom.dataset.level);
+            this.currentMember.school_id = this.schoolId;
         },
         methods: {
+            editMember: function(member){
+                const keys = Object.keys(member);
+                keys.forEach(k => {
+                    this.currentMember[k] = member[k];
+                });
+            },
+            // 把成员加入到当前的组织中
+            addToOrg: function(){
+                // 检查是否选定了机构
+                if(Util.isEmpty(this.form.id)){
+                    this.$message.error('请指定用户所在的部门');
+                }
+                this.currentMember.organization_id = this.form.id;
+                axios.post(
+                    Constants.API.ORGANIZATION.ADD_TO_ORG,
+                    {member: this.currentMember}
+                ).then(res => {
+                    if(Util.isAjaxResOk(res)){
+                        const m = {};
+                        const keys = Object.keys(this.currentMember);
+                        keys.forEach(k => {
+                            m[k] = this.currentMember[k];
+                        });
+
+                        if(Util.isEmpty(this.currentMember.id)){
+                            m.id = res.data.data.id;
+                            this.members.push(m);
+                        }
+                        else{
+                            const idx = Util.GetItemIndexById(item.id, this.members);
+                            if(idx > -1){
+                                this.members[idx] = m;
+                            }
+                        }
+
+                        this.$message({
+                            type:'success',
+                            message: '数据已保存'
+                        });
+                    }
+                    else{
+                        this.$message.error('操作失败, 请稍候再试.')
+                    }
+                })
+            },
+            selectMember: function(payload){
+                this.currentMember.user_id = payload.item.id;
+                this.currentMember.name = payload.item.value;
+            },
+            removeFromOrg: function(item){
+                const msg = '你确认从 ' + this.form.name + ' 删除' + item.title + ': ' + item.name + '吗?';
+                this.$confirm(msg, '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    axios.post(
+                        Constants.API.ORGANIZATION.DELETE_FROM_ORG,
+                        {id: item.id}
+                    ).then(res => {
+                        if(Util.isAjaxResOk(res)){
+                            const idx = Util.GetItemIndexById(item.id, this.members);
+                            if(idx > -1){
+                                this.members.splice(idx, 1);
+                            }
+                            this.$message({
+                                type:'success',
+                                message: '删除成功'
+                            });
+                        }
+                        else{
+                            this.$message.error('操作失败, 请稍候再试.')
+                        }
+                    });
+                }).catch(() => {
+                    this.$message({
+                        type: 'info',
+                        message: '已取消删除'
+                    });
+                });
+            },
             showForm: function(){
                 this.dialogFormVisible = true;
             },
             loadParents: function(level){
                 axios.post(
-                    '/school_manager/organizations/load-parent',
+                    Constants.API.ORGANIZATION.LOAD_PARENTS,
                     {level: level}
                 ).then(res => {
                     if(Util.isAjaxResOk(res)){
@@ -339,7 +654,7 @@ if(document.getElementById('organization-app')){
             },
             saveOrg: function(){
                 axios.post(
-                    '/school_manager/organizations/save',
+                    Constants.API.ORGANIZATION.SAVE,
                     {form: this.form}
                 ).then(res => {
                     if(Util.isAjaxResOk(res)){
@@ -355,11 +670,12 @@ if(document.getElementById('organization-app')){
             showEdit: function(id){
                 this.loading = true;
                 axios.post(
-                    '/school_manager/organizations/load',
+                    Constants.API.ORGANIZATION.LOAD,
                     {organization_id: id}
                 ).then(res => {
                     if(Util.isAjaxResOk(res)){
                         this.form = res.data.data.organization;
+                        this.members = res.data.data.members;
                     }
                     this.loading = false;
                 });
@@ -373,7 +689,7 @@ if(document.getElementById('organization-app')){
                 }).then(() => {
                     this.loading = true;
                     axios.post(
-                        '/school_manager/organizations/delete',
+                        Constants.API.ORGANIZATION.DELETE,
                         {organization_id: this.form.id}
                     ).then(res => {
                         if(Util.isAjaxResOk(res)){
@@ -823,18 +1139,41 @@ if(document.getElementById('school-time-slots-manager')){
         data(){
             return {
                 needReload: false,
-                currentTimeSlot: {},
+                currentTimeSlot: {
+                    id:'',
+                    from:'',
+                    to:'',
+                    name:'',
+                    type:''
+                },
                 showEditForm: false,
-                schoolUuid:''
+                schoolUuid:'',
             }
         },
         methods:{
             editTimeSlotHandler: function(payload){
-                this.currentTimeSlot = payload.timeSlot;
+                const keys = Object.keys(payload.timeSlot);
+                keys.forEach(key => {
+                    this.currentTimeSlot[key] = payload.timeSlot[key];
+                });
+                // this.currentTimeSlot = payload.timeSlot;
                 this.schoolUuid = payload.schoolUuid;
                 this.showEditForm = true;
             },
             onSubmit: function () {
+                if(this.currentTimeSlot.name.trim() === ''){
+                    this.$message.error('作息时间表的名称不可以为空');
+                    return;
+                }
+                if(Util.isEmpty(this.currentTimeSlot.from)  || Util.isEmpty(this.currentTimeSlot.to)){
+                    this.$message.error('作息时间表的时间段不可以为空');
+                    return;
+                }
+                if(this.currentTimeSlot.to < this.currentTimeSlot.from){
+                    this.$message.error('作息时间表的结束时间不可以早于开始时间');
+                    return;
+                }
+
                 saveTimeSlot(this.schoolUuid, this.currentTimeSlot)
                     .then(res => {
                         if(Util.isAjaxResOk(res)){
@@ -848,6 +1187,11 @@ if(document.getElementById('school-time-slots-manager')){
                             this.$message.error('错了哦，这是一条错误消息');
                         }
                     });
+            },
+            toChangedHandler: function (to) {
+                if(to < this.currentTimeSlot.from){
+                    this.$message.error('作息时间表的结束时间不可以早于开始时间');
+                }
             }
         }
     });

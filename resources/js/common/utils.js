@@ -37,6 +37,26 @@ export const Util = {
         });
         return result;
     },
+    /**
+     * 数组换位
+     * @param arr
+     * @param index1
+     * @param index2
+     * @returns {*}
+     */
+    swapArray: function (arr, index1, index2) {
+        arr[index1] = arr.splice(index2, 1, arr[index1])[0];
+        return arr;
+    },
+    // 判断文章段落类型的通用方法
+    checkArticleSectionType: function(section){
+        if(this.isEmpty(section.media_id)){
+            return Constants.SECTION_TYPE.TEXT;
+        }
+        else{
+            return Constants.SECTION_TYPE.IMAGE;
+        }
+    },
     GetItemIndexByUuid: function (uuid, obj) {
         let result = null;
         _.each(obj, (item, idx) => {
@@ -48,7 +68,7 @@ export const Util = {
     },
     // 输出学期文字的方法
     GetTermText: function (term) {
-        return Constants.TERMS[term - 1];
+        return Constants.TERMS[term];
     },
     GetRepeatUnitText: function (idx) {
         return Constants.REPEAT_UNITS[idx - 1];

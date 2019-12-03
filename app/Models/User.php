@@ -10,6 +10,7 @@ use App\Models\Misc\Enquiry;
 use App\Models\NetworkDisk\Category;
 use App\Models\Schools\RecruitmentPlan;
 use App\Models\Students\StudentProfile;
+use App\Models\Students\StudentTextbook;
 use App\Models\Teachers\TeacherProfile;
 use App\Models\Users\GradeUser;
 use App\Models\Users\UserDevice;
@@ -54,7 +55,7 @@ class User extends Authenticatable implements HasMobilePhone, HasDeviceId
      * @var array
      */
     protected $fillable = [
-        'password','mobile_verified_at','mobile','uuid','status','type','name','email'
+        'password','mobile_verified_at','mobile','uuid','status','type','name','email','api_token'
     ];
 
     /**
@@ -169,8 +170,15 @@ class User extends Authenticatable implements HasMobilePhone, HasDeviceId
      */
     public function getSchoolId()
     {
-        if($this->isStudent() || $this->isSchoolManager()){
+        if($this->isStudent()){
             return $this->gradeUser->school_id;
+        }
+        elseif ($this->isSchoolManager()){
+            $gradeUser = $this->gradeUser;
+            if(!$gradeUser){
+                // 如果还没有创建对应的记录, 那么就创建一条
+            }
+            return 1;
         }
         elseif($this->isTeacher() || $this->isEmployee()){
             $gus = $this->gradeUser;
@@ -306,5 +314,18 @@ class User extends Authenticatable implements HasMobilePhone, HasDeviceId
     public function userDevices()
     {
         return $this->hasMany(UserDevice::class);
+    }
+
+
+    /**
+     * 获取学生当年领取最后一本教材
+     * @param $year
+     * @return mixed
+     */
+    public function getStudentLastTextbookByYear($year) {
+        $map = ['user_id'=>$this->id,'year'=>$year];
+
+        $re = StudentTextbook::where($map)->orderBy('created_at','desc')->first();
+        return $re;
     }
 }

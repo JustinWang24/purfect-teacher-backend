@@ -71,6 +71,7 @@ class GradesController extends Controller
         $this->dataForView['parent'] = $logic->getParentModel();
         $this->dataForView['appendedParams'] = $logic->getAppendedParams();
         $this->dataForView['returnPath'] = $logic->getReturnPath();
+
         return view($logic->getViewPath(),array_merge($this->dataForView, $logic->getUsers()));
     }
 }

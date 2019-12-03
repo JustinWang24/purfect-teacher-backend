@@ -5,6 +5,7 @@ use App\Models\Schools\Organization;
 use App\Models\Schools\SchoolConfiguration;
 use App\User;
 use App\Models\School;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Ramsey\Uuid\Uuid;
 use App\Models\Schools\Campus;
@@ -58,7 +59,7 @@ class SchoolDao
                     $this->createDefaultConfig($school);
                     // 创建学校的最基本的组织
                     $this->createRootOrganization($school);
-
+                    DB::commit();
                     return $school;
                 }else{
                     DB::rollBack();
@@ -126,13 +127,29 @@ class SchoolDao
 
     /**
      * 更新学校的配置信息. 如果配置信息不存在, 则创建它
-     * @param $configuration
      * @param School|int $school
+     * @param $configuration
+     * @param array $ec1
+     * @param array $ec2
+     * @param array $termStartDates
      * @return mixed
      */
-    public function updateConfiguration($configuration, $school){
-        if($school->configuration)
+    public function updateConfiguration( $school, $configuration, $ec1 = null, $ec2 = null, $termStartDates){
+        if($ec1 && $ec2){
+            $configuration['apply_elective_course_from_1'] = SchoolConfiguration::CreateMockEcDate($ec1,'from');
+            $configuration['apply_elective_course_to_1'] = SchoolConfiguration::CreateMockEcDate($ec1,'to');
+            $configuration['apply_elective_course_from_2'] = SchoolConfiguration::CreateMockEcDate($ec2,'from');
+            $configuration['apply_elective_course_to_2'] = SchoolConfiguration::CreateMockEcDate($ec2,'to');
+        }
+
+        if($termStartDates){
+            $configuration['first_day_term_1'] = SchoolConfiguration::CreateMockEcDate($termStartDates,'term1');
+            $configuration['first_day_term_2'] = SchoolConfiguration::CreateMockEcDate($termStartDates,'term2');
+        }
+
+        if(isset($school->configuration->id)){
             return SchoolConfiguration::where('school_id',$school->id ?? $school)->update($configuration);
+        }
         else{
             $configuration['school_id'] = $school->id ?? $school;
             return SchoolConfiguration::create($configuration);
@@ -154,11 +171,13 @@ class SchoolDao
      * @return Organization
      */
     public function createRootOrganization($school){
-        return (new OrganizationDao())->create([
+        $data = [
             'school_id'=>$school->id??$school,
             'name'=>'学校组织机构',
             'level'=>Organization::ROOT,
             'parent_id'=>0,
-        ]);
+        ];
+
+        return Organization::create($data);
     }
 }

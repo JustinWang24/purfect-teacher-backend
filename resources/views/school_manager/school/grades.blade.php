@@ -41,7 +41,7 @@ use App\User;
                                     <th>班级名称</th>
                                     <th style="width: 500px;">简介</th>
                                     <th class="text-center">学生数</th>
-                                    <th></th>
+                                    <th>操作</th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -59,6 +59,8 @@ use App\User;
                                             <a class="students-counter" href="{{ route('school_manager.grade.users',['type'=>User::TYPE_STUDENT,'by'=>'grade','uuid'=>$grade->id]) }}">{{ $grade->studentsCount() }}</a>
                                         </td>
                                         <td class="text-center">
+                                            <a target="_blank" href="{{ route('school_manager.textbook.grade',['type'=>User::TYPE_STUDENT,'by'=>'grade','uuid'=>$grade->id]) }}" class="btn btn-round btn-primary btn-view-timetable">
+                                                <i class="fa ">教材</i></a>
                                             <a target="_blank" href="{{ route('school_manager.grade.view.timetable',['uuid'=>$grade->id]) }}" class="btn btn-round btn-primary btn-view-timetable">
                                                 <i class="fa fa-calendar"></i>查看课表
                                             </a>
