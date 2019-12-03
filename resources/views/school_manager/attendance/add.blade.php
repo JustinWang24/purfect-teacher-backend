@@ -24,11 +24,11 @@ use App\Utils\UI\Button;
                         </div>
                         <div class="form-group">
                             <label for="attendance-option-input">开始时间</label>
-                            <input required type="date" class="input-small form-control" id="attendance-option-input" value="{{ old('task.start_time') }}" placeholder="开始时间" name="task[start_time]">
+                            <input required type="date" class="form-control" style="width:200px;" id="attendance-option-input" value="{{ old('task.start_time') }}" placeholder="开始时间" name="task[start_time]">
                         </div>
                         <div class="form-group">
                             <label for="attendance-option-input">结束时间</label>
-                            <input required type="date" class="input-small form-control" id="attendance-option-input" value="{{ old('task.end_time') }}" placeholder="结束时间" name="task[end_time]">
+                            <input required type="date" class="form-control" style="width:200px;" id="attendance-option-input" value="{{ old('task.end_time') }}" placeholder="结束时间" name="task[end_time]">
                         </div>
 
                         <?php
