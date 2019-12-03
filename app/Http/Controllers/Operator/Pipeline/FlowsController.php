@@ -8,6 +8,7 @@
 
 namespace App\Http\Controllers\Operator\Pipeline;
 use App\Dao\Pipeline\FlowDao;
+use App\Dao\Pipeline\NodeDao;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Pipeline\FlowRequest;
 use App\Utils\JsonBuilder;
@@ -65,5 +66,27 @@ class FlowsController extends Controller
             return JsonBuilder::Success(['flow'=>$flow,'nodes'=>$nodes]);
         }
         return JsonBuilder::Error();
+    }
+
+    /**
+     * 删除流程中的节点
+     * @param FlowRequest $request
+     * @return string
+     */
+    public function delete_node(FlowRequest $request){
+        $schoolId = $request->get('school_id');
+        if(intval($schoolId) !== $request->session()->get('school.id')){
+            return JsonBuilder::Error('您无权进行此操作');
+        }
+
+        $nodeId = $request->get('node_id');
+        $dao = new NodeDao();
+        $result = $dao->delete($nodeId);
+        if($result === true){
+            return JsonBuilder::Success();
+        }
+        else{
+            return JsonBuilder::Error('系统繁忙, 请稍候再试');
+        }
     }
 }

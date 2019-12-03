@@ -132,6 +132,7 @@ export const Constants = {
         FLOW: {
             SAVE: '/school_manager/pipeline/flows/save-flow',
             LOAD_FLOW_NODES: '/school_manager/pipeline/flows/load-nodes',
+            DELETE_NODE: '/school_manager/pipeline/flows/delete-node',
         }
     },
     YEARS: ['N.A','一年级','二年级','三年级','四年级','五年级','六年级'],
