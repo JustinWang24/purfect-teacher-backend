@@ -380,5 +380,11 @@ Route::prefix('school_manager')->group(function () {
         Route::post('manage-performance-save','Teachers\ProfilesController@manage_performance_save')
             ->name('school_manager.teachers.manage-performance-save');
     });
+
+    // 工作流程管理
+    Route::prefix('pipeline')->group(function(){
+        Route::get('flows/manager','Pipeline\FlowsController@manager')
+            ->name('school_manager.pipeline.flows-manager');
+    });
 });
 

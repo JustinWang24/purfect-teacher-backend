@@ -17,9 +17,10 @@ class CreateFlowsTable extends Migration
         Schema::create('pipeline_flows', function (Blueprint $table) {
             $table->increments('id');
             $table->unsignedBigInteger('school_id')->comment('关联的学校');
-            $table->string('name',100)->comment('流程的名称');
             $table->unsignedSmallInteger('type')
                 ->default(0)->comment('流程的分类: 比如财务, 行政');
+            $table->string('name',100)->comment('流程的名称');
+            $table->string('icon')->nullable()->comment('流程的图标');
             $table->softDeletes();
         });
 

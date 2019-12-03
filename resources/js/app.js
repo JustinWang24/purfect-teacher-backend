@@ -51,6 +51,38 @@ import { loadTextbooksPaginate, deleteTextbook } from './common/textbook';
 import { loadOrgContacts, loadGradeContacts, loadGrades } from './common/contacts';
 import { saveNews, loadNews, saveSections, deleteNews, publishNews, deleteSection, moveUpSection, moveDownSection } from './common/news';
 
+if(document.getElementById('pipeline-flows-manager-app')){
+    new Vue({
+        el:'#pipeline-flows-manager-app',
+        data(){
+            return {
+                currentFlow:{
+                    name:'',
+                    id:'',
+                    type:0,
+                },
+                schoolId:''
+            }
+        },
+        created(){
+            const dom = document.getElementById('app-init-data-holder');
+            this.schoolId = dom.dataset.school;
+            this.currentFlow.schoolId = this.schoolId;
+        },
+        methods:{
+            loadFlowNodes: function(flowId, flowName){
+                this.currentFlow.name = flowName;
+                this.currentFlow.id = flowId;
+            },
+            createNewFlow: function(type){
+                this.currentFlow.name = '';
+                this.currentFlow.id = '';
+                this.currentFlow.type = type;
+            }
+        }
+    });
+}
+
 /**
  * 校历应用
  */
