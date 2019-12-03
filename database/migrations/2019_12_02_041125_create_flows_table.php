@@ -59,17 +59,33 @@ class CreateFlowsTable extends Migration
                 ->default(0)
                 ->comment('归属的节点');
 
-            $table->unsignedBigInteger('user_id')
-                ->default(0)
-                ->comment('关联的用户的 id (可以为空) 这个为静态节点');
+            // 对于是否可以使用该流程, 特别是第一步的发起流程, 要通过这个字段来判定, 基本上其实只有几种组合, 老师, 学生, 教职工
+            $table->text('role_slugs')->comment('允许发起流程的角色');
 
-            $table->unsignedBigInteger('organization_id')
-                ->default(0)
-                ->comment('关联的组织 (可以为空) 这个为动态节点');
+            // 以下三个是给审核专用的
+            $table->text('user_ids')
+                ->nullable()
+                ->comment('所有可以审核该步骤的用户的 id 组合');
 
-            $table->unsignedBigInteger('title_id')
-                ->default(0)
-                ->comment('组织内的职务 (可以为空) 这个为动态节点');
+            $table->text('organizations')
+                ->nullable()
+                ->comment('所有可以审核该步骤的 组织的 id 组合');
+
+            $table->text('titles')
+                ->nullable()
+                ->comment('所有可以审核该步骤的 组织内的职务的id 的 组合');
+
+//            $table->unsignedBigInteger('user_id')
+//                ->default(0)
+//                ->comment('关联的用户的 id (可以为空) 这个为静态节点');
+//
+//            $table->unsignedBigInteger('organization_id')
+//                ->default(0)
+//                ->comment('关联的组织 (可以为空) 这个为动态节点');
+//
+//            $table->unsignedBigInteger('title_id')
+//                ->default(0)
+//                ->comment('组织内的职务 (可以为空) 这个为动态节点');
         });
 
         // 节点的处理以及结果
@@ -106,7 +122,7 @@ class CreateFlowsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('flows');
+        Schema::dropIfExists('pipeline_flows');
         Schema::dropIfExists('pipeline_nodes');
         Schema::dropIfExists('pipeline_handlers');
         Schema::dropIfExists('pipeline_actions');

@@ -2,11 +2,14 @@
 
 namespace App\Models\Pipeline\Flow;
 
+use App\Dao\Pipeline\ActionDao;
+use App\User;
 use App\Utils\Pipeline\IFlow;
 use App\Utils\Pipeline\INode;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-
+use App\Utils\Pipeline\IAction;
 
 class Flow extends Model implements IFlow
 {
@@ -17,13 +20,61 @@ class Flow extends Model implements IFlow
         'school_id','name','type'
     ];
 
-    public function getCurrentPendingNode(): INode
-    {
-        // TODO: Implement getCurrentPendingNode() method.
+    /**
+     * 流程的所有分类
+     */
+    public static function Types(){
+        return [
+            IFlow::TYPE_1=>IFlow::TYPE_1_TXT,
+            IFlow::TYPE_2=>IFlow::TYPE_2_TXT,
+            IFlow::TYPE_3=>IFlow::TYPE_3_TXT,
+            IFlow::TYPE_4=>IFlow::TYPE_4_TXT,
+        ];
     }
 
-    public function setCurrentPendingNode(INode $node)
+    /**
+     * 获取简单的流程的按顺序排列的步骤集合
+     *
+     * @return Collection
+     */
+    public function getSimpleLinkedNodes(){
+        $collection = new Collection();
+        $node = $this->getHeadNode();
+        $collection->add($node);
+        while ($node->next_node > 0){
+            $next = Node::find($node->next_node);
+            $collection->add($next);
+            $node = $next;
+        }
+        return $collection;
+    }
+
+    /**
+     * 获取流程的分类描述文字
+     * @return string
+     */
+    public function getTypeText(){
+        return self::Types()[$this->type];
+    }
+
+    public function getCurrentPendingAction(User $user): IAction
+    {
+        $actionDao = new ActionDao();
+        return $actionDao->getByFlowAndResult(IAction::RESULT_PENDING, $this, $user);
+    }
+
+    public function setCurrentPendingNode(INode $node, User $user)
     {
         // TODO: Implement setCurrentPendingNode() method.
+    }
+
+    public function getHeadNode()
+    {
+        return Node::where('flow_id', $this->id)->where('prev_node',0)->first();
+    }
+
+    public function getTailNode()
+    {
+        return Node::where('flow_id', $this->id)->where('next_node',0)->first();
     }
 }
