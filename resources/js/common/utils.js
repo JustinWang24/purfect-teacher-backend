@@ -176,4 +176,12 @@ export const Util = {
     isGeneralDoc: function (type) {
         return type === Constants.FILE_TYPE.GENERAL;
     },
+    // 返回系统图标所在的数组
+    icons: function () {
+        const a = [];
+        for(let i=1;i<16;i++){
+            a.push('/assets/img/pipeline/node-'+i+'.png');
+        }
+        return a;
+    }
 };
