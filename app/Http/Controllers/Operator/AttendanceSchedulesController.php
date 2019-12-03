@@ -118,10 +118,16 @@ class AttendanceSchedulesController extends Controller
     public function searchPerson(Request $request, $taskId)
     {
         $search = $request->get('search');
+        if ($search['type']==1)
+        {
+            $type = [9,10];
+        } else {
+            $type = [6,7,8];
+        }
         $schoolId = $request->session()->get('school.id');
         if (!empty($search)) {
             $gradeDao = new GradeUserDao();
-            $result = $gradeDao->getUsersWithNameLike($search['keyword'], $schoolId);
+            $result = $gradeDao->getUsersWithNameLike($search['keyword'], $schoolId, $type);
             $userProfile = [];
             foreach ($result as $gradeUser) {
                 $userProfile[$gradeUser->user_id]['slug'] = Role::AllNames()[Role::GetRoleSlugByUserType($gradeUser->user_type)];
