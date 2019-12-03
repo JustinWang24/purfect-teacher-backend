@@ -49,6 +49,12 @@ class Banner extends Model
     const TYPE_IMAGE_WRITING_TEXT = '图文';
     const TYPE_URL_TEXT = 'URL';
 
+    const STATUS_OPEN  = 1;
+    const STATUS_CLOSE = 0;
+
+    const STATUS_OPEN_TEXT = '显示';
+    const STATUS_CLOSE_TEXT = '不显示';
+
     public $casts = [
         'public'=>'boolean'
     ];
