@@ -134,7 +134,9 @@ export const Constants = {
             SAVE_NODE: '/school_manager/pipeline/flows/save-node',
             UPDATE_NODE: '/school_manager/pipeline/flows/update-node',
             LOAD_FLOW_NODES: '/school_manager/pipeline/flows/load-nodes',
+            DELETE_FLOW: '/school_manager/pipeline/flows/delete-flow',
             DELETE_NODE: '/school_manager/pipeline/flows/delete-node',
+            DELETE_NODE_ATTACHMENT: '/school_manager/pipeline/flows/delete-node-attachment',
         }
     },
     YEARS: ['N.A','一年级','二年级','三年级','四年级','五年级','六年级'],

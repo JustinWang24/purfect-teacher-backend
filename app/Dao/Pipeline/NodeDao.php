@@ -10,6 +10,7 @@ namespace App\Dao\Pipeline;
 
 use App\Models\Pipeline\Flow\Flow;
 use App\Models\Pipeline\Flow\Node;
+use App\Models\Pipeline\Flow\NodeAttachment;
 use App\Utils\Pipeline\NodeHandlersDescriptor;
 use Illuminate\Support\Facades\DB;
 
@@ -30,9 +31,9 @@ class NodeDao
             // 因为流程在创建的时候, 是永远默认创建了头部 node 的, 所以 getTail 总是可以取到至少 head 的
             $prevNode = $flow->getTailNode();
         }
+        DB::beginTransaction();
 
         if($prevNode){
-            DB::beginTransaction();
             try{
                 $originNext = $prevNode->next; // 原本的下一个节点
 
@@ -53,6 +54,15 @@ class NodeDao
                     $originNext->save();
                 }
 
+                // 步骤所关联的附件
+                foreach ($data['attachments'] as $attachment){
+                    dd($attachment);
+                    if(empty($attachment['id'])){
+                        $attachment['node_id'] = $currentNode->id;
+                        NodeAttachment::create($attachment);
+                    }
+                }
+
                 DB::commit();
                 return $currentNode;
             }
@@ -62,19 +72,34 @@ class NodeDao
             }
         }
         else{
-            // 如果还是没有取到 prev 的节点, 那么相当于是创建 head 节点
-            return Node::create($data);
+            try{
+                // 如果还是没有取到 prev 的节点, 那么相当于是创建 head 节点
+                $node = Node::create($data);
+                // 步骤所关联的附件
+                foreach ($data['attachments'] as $attachment){
+                    if(empty($attachment['id'])){
+                        $attachment['node_id'] = $node->id;
+                        NodeAttachment::create($attachment);
+                    }
+                }
+                DB::commit();
+                return $node;
+            }
+            catch (\Exception $exception){
+                DB::rollBack();
+                return $exception->getMessage();
+            }
         }
     }
 
     /**
      * 更新流程的步骤节点
      * @param $data
-     * @param $prevNode
+     * @param Node $prevNode
      * @param $flow
      * @return mixed
      */
-    public function update($data, Node $prevNode, $flow, $organizationsLeftOver){
+    public function update($data, $prevNode, $flow, $organizationsLeftOver){
         DB::beginTransaction();
         try{
             /**
@@ -87,9 +112,7 @@ class NodeDao
 
             $currentNode = Node::find($data['id']);
 
-//            dd(intval($currentNode->prev_node) !== $prevNode->id);
-
-            if(intval($currentNode->prev_node) !== $prevNode->id){
+            if($prevNode && intval($currentNode->prev_node) !== $prevNode->id){
                 // 表示链表发生了变化
                 $prevNodeNext = $prevNode->next;
 
@@ -125,6 +148,14 @@ class NodeDao
             $currentNode->description = $data['description'];
             $currentNode->save();
 
+            // 关联的文档
+            foreach ($data['attachments'] as $attachment){
+                if(empty($attachment['id'])){
+                    $attachment['node_id'] = $currentNode->id;
+                    NodeAttachment::create($attachment);
+                }
+            }
+
             $handler = $currentNode->handler;
             $parsed = NodeHandlersDescriptor::Parse($data);
 
@@ -140,10 +171,6 @@ class NodeDao
                 $parsed['organizations'] = $leftOverString;
             }
 
-//            dump($data);
-//            dump($parsed);
-//            dd($organizationsLeftOver);
-
             /**
              * 目标的用户, 只能从部门和用户群中取一个, organizations 优先
              */
@@ -157,7 +184,6 @@ class NodeDao
                 $handler->titles = $parsed['titles'];
                 $handler->role_slugs = null;
             }
-
             $handler->save();
             DB::commit();
             return true;

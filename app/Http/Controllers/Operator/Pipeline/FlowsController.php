@@ -12,8 +12,8 @@ use App\Dao\Pipeline\HandlerDao;
 use App\Dao\Pipeline\NodeDao;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Pipeline\FlowRequest;
+use App\Models\Pipeline\Flow\NodeAttachment;
 use App\Utils\JsonBuilder;
-use App\Utils\Pipeline\NodeHandlersDescriptor;
 
 class FlowsController extends Controller
 {
@@ -26,7 +26,6 @@ class FlowsController extends Controller
         $dao = new FlowDao();
         $this->dataForView['groupedFlows'] = $dao->getGroupedFlows($request->session()->get('school.id'));
         $this->dataForView['lastNewFlow'] = $request->getLastNewFlow(); // 上次可能刚创建了新流程
-
         return view('school_manager.pipeline.flow.manager', $this->dataForView);
     }
 
@@ -47,9 +46,6 @@ class FlowsController extends Controller
             return $result->isSuccess() ?
                 JsonBuilder::Success(['id'=>$result->getData()->id]) :
                 JsonBuilder::Error($result->getMessage());
-        }
-        else{
-            // 更新
         }
     }
 
@@ -138,6 +134,37 @@ class FlowsController extends Controller
         }
         else{
             return JsonBuilder::Error('系统繁忙, 请稍候再试');
+        }
+    }
+
+    /**
+     * 删除步骤所关联的附件
+     * @param FlowRequest $request
+     * @return string
+     */
+    public function delete_node_attachment(FlowRequest $request){
+        if(NodeAttachment::where('id',$request->get('attachment_id'))->delete()){
+            return JsonBuilder::Success();
+        }
+        else{
+            return JsonBuilder::Error();
+        }
+    }
+
+    /**
+     * 删除流程
+     * @param FlowRequest $request
+     * @return string
+     */
+    public function delete_flow(FlowRequest $request)
+    {
+        $id = $request->get('flow_id');
+        $dao = new FlowDao();
+        if($dao->delete($id)){
+            return JsonBuilder::Success();
+        }
+        else{
+            return JsonBuilder::Error();
         }
     }
 }

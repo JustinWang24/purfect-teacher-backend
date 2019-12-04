@@ -25,6 +25,14 @@ class Node extends Model implements INode
     }
 
     /**
+     * 关联的附件
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function attachments(){
+        return $this->hasMany(NodeAttachment::class);
+    }
+
+    /**
      * 获取前一个节点
      * @return \Illuminate\Database\Eloquent\Relations\HasOne|null
      */
