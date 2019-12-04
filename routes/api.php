@@ -363,3 +363,8 @@ Route::prefix('notice')->middleware('auth:api')->group(function () {
 Route::prefix('banner')->middleware('auth:api')->group(function () {
     Route::post('/getBanner', 'Api\Home\IndexController@banner')->name('api.banner.index');
 });
+
+// APP 生成二维码 接口
+Route::prefix('QrCode')->middleware('auth:api')->group(function () {
+    Route::post('/getQrCode', 'Api\QrCode\IndexController@generate')->name('api.generate.qr.code');
+});
