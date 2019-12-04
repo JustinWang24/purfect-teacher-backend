@@ -16,7 +16,7 @@ class NoticeTest extends BasicPageTestCase
         $header = $this->getHeaderWithApiToken();
         $header['school_id'] = '1';
         $url = 'api.notice.list';
-        $data = ['type'=>2];
+        $data = ['type'=>Notice::TYPE_NOTIFY];
         $response = $this->post(route($url),$data,$header);
 //        dd($response->content());
         $result = json_decode($response->content(), true);
