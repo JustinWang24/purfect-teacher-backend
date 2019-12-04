@@ -37,7 +37,23 @@
         </el-form-item>
     </el-col>
 </el-row>
+<el-row>
+    <el-col :span="14">
+        <el-form-item label="说明">
+            <el-input type="textarea" placeholder="必填: 例如您可以详细描述, 如果要发起本流程, 需要具备的条件, 可能需要提交的文档等" rows="6" v-model="node.description"></el-input>
+        </el-form-item>
+    </el-col>
+    <el-col :span="10">
+        <el-form-item label="选择附件">
+            <el-button type="primary" icon="el-icon-document" v-on:click="showFileManagerFlag=true">选择附件</el-button>
+            <ul style="padding-left: 0;">
+                <li v-for="(a, idx) in node.attachments" :key="idx">
+                    <p style="margin-bottom: 0;">
+                        <span>@{{ a.file_name }}</span>&nbsp;<el-button v-on:click="dropAttachment(idx, a)" type="text" style="color: red">删除</el-button>
+                    </p>
+                </li>
+            </ul>
+        </el-form-item>
+    </el-col>
+</el-row>
 
-<el-form-item label="说明">
-    <el-input type="textarea" placeholder="必填: 例如您可以详细描述, 如果要发起本流程, 需要具备的条件, 可能需要提交的文档等" rows="6" v-model="node.description"></el-input>
-</el-form-item>

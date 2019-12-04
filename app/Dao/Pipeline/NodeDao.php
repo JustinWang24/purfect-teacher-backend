@@ -10,6 +10,7 @@ namespace App\Dao\Pipeline;
 
 use App\Models\Pipeline\Flow\Flow;
 use App\Models\Pipeline\Flow\Node;
+use App\Models\Pipeline\Flow\NodeAttachment;
 use App\Utils\Pipeline\NodeHandlersDescriptor;
 use Illuminate\Support\Facades\DB;
 
@@ -53,6 +54,14 @@ class NodeDao
                     $originNext->save();
                 }
 
+                // 步骤所关联的附件
+                foreach ($data['attachments'] as $attachment){
+                    if(empty($attachment['id'])){
+                        $attachment['node_id'] = $currentNode->id;
+                        NodeAttachment::create($attachment);
+                    }
+                }
+
                 DB::commit();
                 return $currentNode;
             }
@@ -70,11 +79,11 @@ class NodeDao
     /**
      * 更新流程的步骤节点
      * @param $data
-     * @param $prevNode
+     * @param Node $prevNode
      * @param $flow
      * @return mixed
      */
-    public function update($data, Node $prevNode, $flow, $organizationsLeftOver){
+    public function update($data, $prevNode, $flow, $organizationsLeftOver){
         DB::beginTransaction();
         try{
             /**
@@ -87,9 +96,7 @@ class NodeDao
 
             $currentNode = Node::find($data['id']);
 
-//            dd(intval($currentNode->prev_node) !== $prevNode->id);
-
-            if(intval($currentNode->prev_node) !== $prevNode->id){
+            if($prevNode && intval($currentNode->prev_node) !== $prevNode->id){
                 // 表示链表发生了变化
                 $prevNodeNext = $prevNode->next;
 
@@ -125,6 +132,14 @@ class NodeDao
             $currentNode->description = $data['description'];
             $currentNode->save();
 
+            // 关联的文档
+            foreach ($data['attachments'] as $attachment){
+                if(empty($attachment['id'])){
+                    $attachment['node_id'] = $currentNode->id;
+                    NodeAttachment::create($attachment);
+                }
+            }
+
             $handler = $currentNode->handler;
             $parsed = NodeHandlersDescriptor::Parse($data);
 
@@ -140,10 +155,6 @@ class NodeDao
                 $parsed['organizations'] = $leftOverString;
             }
 
-//            dump($data);
-//            dump($parsed);
-//            dd($organizationsLeftOver);
-
             /**
              * 目标的用户, 只能从部门和用户群中取一个, organizations 优先
              */
@@ -157,7 +168,6 @@ class NodeDao
                 $handler->titles = $parsed['titles'];
                 $handler->role_slugs = null;
             }
-
             $handler->save();
             DB::commit();
             return true;

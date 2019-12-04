@@ -8,7 +8,6 @@
 
 namespace App\Dao\Pipeline;
 
-use App\Models\Acl\Role;
 use App\Models\Pipeline\Flow\Flow;
 use App\User;
 use App\Utils\JsonBuilder;
@@ -16,9 +15,7 @@ use App\Utils\Pipeline\IAction;
 use App\Utils\Pipeline\IFlow;
 use App\Utils\ReturnData\IMessageBag;
 use App\Utils\ReturnData\MessageBag;
-use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
-use App\Models\Pipeline\Flow\Handler;
 
 class FlowDao
 {
@@ -119,5 +116,13 @@ class FlowDao
             $bag->setMessage($exception->getMessage());
             return $bag;
         }
+    }
+
+    /**
+     * @param $flowId
+     * @return mixed
+     */
+    public function delete($flowId){
+        return Flow::where('id',$flowId)->delete();
     }
 }
