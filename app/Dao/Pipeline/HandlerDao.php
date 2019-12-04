@@ -28,14 +28,20 @@ class HandlerDao
 
         $result = NodeHandlersDescriptor::Parse($handlersDescriptor);
 
-        if(!empty($result)){
-            // 表示不是任何人都可以发起该流程
-            $handlerData = array_merge($handlerData, $result);
+        /**
+         * 目标的用户, 只能从部门和用户群中取一个, organizations 优先
+         */
+        if(empty($result['organizations'])){
+            $handlerData['organizations'] = null;
+            $handlerData['titles'] = null;
+            $handlerData['role_slugs'] = $result['role_slugs'];
         }
         else{
-            // 任何人都可以发起流程
-            $handlerData['role_slugs'] = json_encode(Arr::flatten(Role::AllTypes()));
+            $handlerData['organizations'] = $result['organizations'];
+            $handlerData['titles'] = $result['titles'];
+            $handlerData['role_slugs'] = null;
         }
+
         return Handler::create($handlerData);
     }
 }

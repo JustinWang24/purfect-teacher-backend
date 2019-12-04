@@ -23,17 +23,37 @@ export function saveFlow(flow, node, affix) {
  * 保存新步骤
  * @param flow
  * @param node
+ * @param prevNodeId
  * @param affix
  * @returns {*}
  */
-export function saveNode(flow, node, affix) {
+export function saveNode(flow, node, prevNodeId, affix) {
     const url = Util.buildUrl(Constants.API.FLOW.SAVE_NODE);
     if(Util.isDevEnv()){
         return axios.get(url, affix);
     }
     return axios.post(
         url,
-        {flow_id: flow.id, node: node, version:Constants.VERSION}
+        {flow_id: flow.id, node: node, prev_node: prevNodeId, version:Constants.VERSION}
+    );
+}
+
+/**
+ * @param flow
+ * @param node
+ * @param prevNodeId
+ * @param prevOrganizations: 编辑之前的步骤遗留的部门
+ * @param affix
+ * @returns {*}
+ */
+export function updateNode(flow, node, prevNodeId, prevOrganizations, affix) {
+    const url = Util.buildUrl(Constants.API.FLOW.UPDATE_NODE);
+    if(Util.isDevEnv()){
+        return axios.get(url, affix);
+    }
+    return axios.post(
+        url,
+        {flow_id: flow.id, node: node, prev_node: prevNodeId, prev_orgs: prevOrganizations, version:Constants.VERSION}
     );
 }
 
