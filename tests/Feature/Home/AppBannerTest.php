@@ -13,10 +13,9 @@ class AppBannerTest extends BasicPageTestCase
     public function testItCanGetBanner()
     {
         $this->withoutExceptionHandling();
-
-        $header = $this->getHeaderWithApiToken();
-
-        $header['school_uuid'] = '7a45642a-ef85-4f9b-96af-2ab546f2ffe5';
+        $token = $this->getHeaderWithApiToken();
+        $schoolUuId = $this->getHeaderWithUuidForSchool($this->getStudent());
+        $header = array_merge($token, $schoolUuId);
 
         $data = ['posit' => 1];
         $response = $this->post(route('api.banner.index'), $data, $header);
@@ -32,6 +31,9 @@ class AppBannerTest extends BasicPageTestCase
             $this->assertArrayHasKey('image_url', $val,'返回数据中必须有 image_url 字段');
         }
     }
+
+
+
 
 
 }
