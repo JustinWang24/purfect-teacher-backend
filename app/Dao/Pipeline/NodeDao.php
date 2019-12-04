@@ -20,7 +20,7 @@ class NodeDao
      * @param $data
      * @param Flow $flow
      * @param null $prevNode
-     * @return null|Node
+     * @return Node|string
      */
     public function insert($data, Flow $flow, $prevNode = null){
         $data['flow_id'] = $flow->id;
@@ -58,8 +58,7 @@ class NodeDao
             }
             catch (\Exception $exception){
                 DB::rollBack();
-                dump($exception->getMessage());
-                return null;
+                return $exception->getMessage();
             }
         }
         else{
@@ -73,7 +72,7 @@ class NodeDao
      * @return Node
      */
     public function getById($id){
-        return Node::find($id);
+        return Node::where('id',$id)->with('handler')->first();
     }
 
     /**

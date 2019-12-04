@@ -27,6 +27,6 @@
     </el-col>
 </el-row>
 
-<el-form-item label="如何发起流程">
+<el-form-item label="说明">
     <el-input type="textarea" placeholder="必填: 例如您可以详细描述, 如果要发起本流程, 需要具备的条件, 可能需要提交的文档等" rows="6" v-model="node.description"></el-input>
 </el-form-item>
