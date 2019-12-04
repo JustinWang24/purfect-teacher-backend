@@ -68,6 +68,24 @@ export function loadNodes(flowId,affix) {
     );
 }
 
+/**
+ * 删除流程
+ * @param flowId
+ * @param schoolId
+ * @param affix
+ * @returns {*}
+ */
+export function deleteFlow(flowId, schoolId,affix) {
+    const url = Util.buildUrl(Constants.API.FLOW.DELETE_FLOW);
+    if(Util.isDevEnv()){
+        return axios.get(url, affix);
+    }
+    return axios.post(
+        url,
+        {flow_id: flowId, school_id: schoolId, version:Constants.VERSION}
+    );
+}
+
 export function deleteNode(nodeId, schoolId,affix) {
     const url = Util.buildUrl(Constants.API.FLOW.DELETE_NODE);
     if(Util.isDevEnv()){
@@ -76,5 +94,16 @@ export function deleteNode(nodeId, schoolId,affix) {
     return axios.post(
         url,
         {node_id: nodeId, school_id: schoolId, version:Constants.VERSION}
+    );
+}
+
+export function deleteNodeAttachment(attachmentId,affix) {
+    const url = Util.buildUrl(Constants.API.FLOW.DELETE_NODE_ATTACHMENT);
+    if(Util.isDevEnv()){
+        return axios.get(url, affix);
+    }
+    return axios.post(
+        url,
+        {attachment_id: attachmentId, version:Constants.VERSION}
     );
 }

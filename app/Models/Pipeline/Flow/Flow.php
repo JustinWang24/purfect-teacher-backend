@@ -46,7 +46,10 @@ class Flow extends Model implements IFlow
         $node = $this->getHeadNode();
         $collection->add($node);
         while ($node->next_node > 0){
-            $next = Node::where('id',$node->next_node)->with('handler')->first();
+            $next = Node::where('id',$node->next_node)
+                ->with('handler')
+                ->with('attachments')
+                ->first();
             $collection->add($next);
             $node = $next;
         }
@@ -74,11 +77,18 @@ class Flow extends Model implements IFlow
 
     public function getHeadNode()
     {
-        return Node::where('flow_id', $this->id)->where('prev_node',0)->with('handler')->first();
+        return Node::where('flow_id', $this->id)->where('prev_node',0)
+            ->with('handler')
+            ->with('attachments')
+            ->first();
     }
 
     public function getTailNode()
     {
-        return Node::where('flow_id', $this->id)->where('next_node',0)->with('handler')->first();
+        return Node::where('flow_id', $this->id)
+            ->where('next_node',0)
+            ->with('handler')
+            ->with('attachments')
+            ->first();
     }
 }

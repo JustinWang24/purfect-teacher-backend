@@ -50,7 +50,7 @@ import { loadBuildings } from './common/facility';
 import { getEmptyElectiveCourseApplication } from './common/elective_course';
 import { loadTextbooksPaginate, deleteTextbook } from './common/textbook';
 import { loadOrgContacts, loadGradeContacts, loadGrades } from './common/contacts';
-import { saveFlow, loadNodes, deleteNode, saveNode, updateNode } from './common/flow';
+import { saveFlow, loadNodes, deleteNode, saveNode, updateNode, deleteNodeAttachment, deleteFlow } from './common/flow';
 import { saveNews, loadNews, saveSections, deleteNews, publishNews, deleteSection, moveUpSection, moveDownSection } from './common/news';
 
 if(document.getElementById('pipeline-flows-manager-app')){
@@ -78,6 +78,7 @@ if(document.getElementById('pipeline-flows-manager-app')){
                     description: '', // 创建新流程时, 发起流程的第一步的说明
                     handlers: [], // node 流程步骤的处理人
                     organizations: [], // node 流程步骤针对的部门
+                    attachments: [], // node 流程步骤关联的附件
                     titles: [], // node 流程步骤针对的部门的角色
                 },
                 prevNodeId:null, // 编辑 node 的时候, 前一个步骤的 ID
@@ -179,6 +180,30 @@ if(document.getElementById('pipeline-flows-manager-app')){
                         );
                     }
                 })
+            },
+            deleteFlow: function(){
+                this.$confirm('此操作将彻底删除此流程, 是否继续?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    this.loadingNodes = true;
+                    deleteFlow(this.currentFlow.id, this.schoolId).then(res => {
+                        if(Util.isAjaxResOk(res)){
+                            this.$message({type:'success',message:'删除成功, 页面将重新加载, 请稍候!'});
+                            window.location.reload();
+                        }
+                        else{
+                            this.$message.error('系统繁忙, 请稍候再试');
+                        }
+                        this.loadingNodes = false;
+                    })
+                }).catch(() => {
+                    this.$message({
+                        type: 'info',
+                        message: '已取消删除'
+                    });
+                });
             },
             // 对 node 的操作
             deleteNode: function(idx, node){
@@ -307,10 +332,35 @@ if(document.getElementById('pipeline-flows-manager-app')){
                         });
                 }
             },
+            // 选择步骤的附件所用的监听器
             pickFileHandler: function(payload){
-                this.currentFlow.icon = payload.file.url;
-                this.selectedImgUrl = payload.file.url;
                 this.showFileManagerFlag = false;
+                const attachment = {
+                    id:null,
+                    node_id: this.node.id,
+                    media_id: payload.file.id,
+                    url: payload.file.url,
+                    file_name: payload.file.file_name
+                };
+                this.node.attachments.push(attachment);
+            },
+            dropAttachment: function(idx, attachment, nodeIndex){
+                if(!Util.isEmpty(attachment.id)){
+                    // 从服务器删除
+                    deleteNodeAttachment(attachment.id).then(res => {
+                        if(Util.isAjaxResOk(res)){
+                            if(Util.isEmpty(nodeIndex)){
+                                this.node.attachments.splice(idx, 1);
+                            }else{
+                                this.flowNodes[nodeIndex].attachments.splice(idx, 1);
+                            }
+                        }else{
+                            this.$message.error('无法删除附件');
+                        }
+                    })
+                }else{
+                    this.node.attachments.splice(idx, 1);
+                }
             },
             iconSelectedHandler: function(payload){
                 this.currentFlow.icon = payload.url;
