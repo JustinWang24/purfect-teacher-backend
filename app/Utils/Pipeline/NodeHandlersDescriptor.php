@@ -20,10 +20,11 @@ class NodeHandlersDescriptor
         $handlers = $data['handlers']??[];
 
         $handlersDescriptor = [];
+        $orgDao = new OrganizationDao();
+
         if(!empty($organizations)){
-            $orgDao = new OrganizationDao();
             $orgStr = '';
-            $titlesStr = '';
+
             // 对应的是 handlers 表中的 organizations 字段, 需要解析提交的 title 和 organizations
             foreach ($organizations as $organization) {
                 /**
@@ -31,7 +32,11 @@ class NodeHandlersDescriptor
                  */
                 $orgStr .= $orgDao->getById($organization[count($organization) - 1])->name.';';
             }
+            $handlersDescriptor['organizations'] = $orgStr;
+        }
 
+        if(!empty($titles)){
+            $titlesStr = '';
             // titles 表示的是所有可以使用这个流程的角色的中文名称
             if(in_array(Title::ALL_TXT, $titles)){
                 foreach (Organization::AllTitles() as $title) {
@@ -43,11 +48,10 @@ class NodeHandlersDescriptor
                     $titlesStr .= $title.';';
                 }
             }
-
-            $handlersDescriptor['organizations'] = $orgStr;
             $handlersDescriptor['titles'] = $titlesStr;
         }
-        elseif(!empty($handlers)){
+
+        if(!empty($handlers)){
             // 对应的是 handlers 表中的 role_slugs 字段
             $handlersDescriptor['role_slugs'] = '';
             foreach ($handlers as $slugText) {

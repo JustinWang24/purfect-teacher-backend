@@ -132,6 +132,7 @@ export const Constants = {
         FLOW: {
             SAVE: '/school_manager/pipeline/flows/save-flow',
             SAVE_NODE: '/school_manager/pipeline/flows/save-node',
+            UPDATE_NODE: '/school_manager/pipeline/flows/update-node',
             LOAD_FLOW_NODES: '/school_manager/pipeline/flows/load-nodes',
             DELETE_NODE: '/school_manager/pipeline/flows/delete-node',
         }
