@@ -36,7 +36,12 @@ class HomeTest extends BasicPageTestCase
         $data = [];
 
         $response = $this->post(route('api.generate.qr.code'), $data, $header);
-        dd($response->content());
+        $result = json_decode($response->content(), true);
+
+        $this->assertArrayHasKey('code', $result);
+        $this->assertArrayHasKey('message', $result);
+        $this->assertArrayHasKey('data', $result,'返回数据中必须有 data 字段');
+        $this->assertArrayHasKey('code', $result['data'],'返回数据中必须有 code 字段');
     }
 
 }
