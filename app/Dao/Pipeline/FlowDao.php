@@ -85,10 +85,10 @@ class FlowDao
      * 创建流程, 那么应该同时创建第一步, "发起" node. 也就是表示, 任意流程, 创建时会默认创建头部
      * @param $data
      * @param string $headNodeDescription
-     * @param array $handlersDescriptor: 该流程可以由谁来发起, 如果为空数组, 表示可以由任何人发起.
+     * @param array $nodeAndHandlersDescriptor: 该流程可以由谁来发起, 如果为空数组, 表示可以由任何人发起.
      * @return IMessageBag
      */
-    public function create($data, $headNodeDescription = '', $handlersDescriptor = []){
+    public function create($data, $headNodeDescription = '', $nodeAndHandlersDescriptor = []){
         $bag = new MessageBag(JsonBuilder::CODE_ERROR);
 
         DB::beginTransaction();
@@ -99,12 +99,13 @@ class FlowDao
             // 创建流程后, 默认必须创建一个"发起"的步骤作为第一步
             $headNode = $nodeDao->insert([
                 'name'=>'发起'.$flow->name.'流程',
-                'description'=>$headNodeDescription
+                'description'=>$headNodeDescription,
+                'attachments'=>$nodeAndHandlersDescriptor['attachments']
             ], $flow);
 
             // 创建头部流程的 handlers
             $handlerDao = new HandlerDao();
-            $handlerDao->create($headNode, $handlersDescriptor);
+            $handlerDao->create($headNode, $nodeAndHandlersDescriptor);
 
             DB::commit();
             $bag->setCode(JsonBuilder::CODE_SUCCESS);

@@ -31,9 +31,9 @@ class NodeDao
             // 因为流程在创建的时候, 是永远默认创建了头部 node 的, 所以 getTail 总是可以取到至少 head 的
             $prevNode = $flow->getTailNode();
         }
+        DB::beginTransaction();
 
         if($prevNode){
-            DB::beginTransaction();
             try{
                 $originNext = $prevNode->next; // 原本的下一个节点
 
@@ -56,6 +56,7 @@ class NodeDao
 
                 // 步骤所关联的附件
                 foreach ($data['attachments'] as $attachment){
+                    dd($attachment);
                     if(empty($attachment['id'])){
                         $attachment['node_id'] = $currentNode->id;
                         NodeAttachment::create($attachment);
@@ -71,8 +72,23 @@ class NodeDao
             }
         }
         else{
-            // 如果还是没有取到 prev 的节点, 那么相当于是创建 head 节点
-            return Node::create($data);
+            try{
+                // 如果还是没有取到 prev 的节点, 那么相当于是创建 head 节点
+                $node = Node::create($data);
+                // 步骤所关联的附件
+                foreach ($data['attachments'] as $attachment){
+                    if(empty($attachment['id'])){
+                        $attachment['node_id'] = $node->id;
+                        NodeAttachment::create($attachment);
+                    }
+                }
+                DB::commit();
+                return $node;
+            }
+            catch (\Exception $exception){
+                DB::rollBack();
+                return $exception->getMessage();
+            }
         }
     }
 
