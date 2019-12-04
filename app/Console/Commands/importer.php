@@ -14,7 +14,7 @@ class importer extends Command
      *
      * @var string
      */
-    protected $signature = 'importer {configId} {userId}';
+    protected $signature = 'importer {configId}';
 
     /**
      * The console command description.
@@ -40,7 +40,8 @@ class importer extends Command
      */
     public function handle()
     {
-        $optUserId = $this->argument('userId');
+        $this->info('任务开始');
+        $optUserId = 1;
         $id = $this->argument('configId');
         $dao = new ImporterDao();
         $taskObj = $dao->getTaskById($id);
@@ -51,6 +52,7 @@ class importer extends Command
         $taskConfig['manager_id'] = $optUserId;
         $obj = Factory::createAdapter($taskConfig);
         $obj->handle();
+        $this->info('任务结束');
     }
 
 }

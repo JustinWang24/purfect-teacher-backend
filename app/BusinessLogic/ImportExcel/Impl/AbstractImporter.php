@@ -32,7 +32,7 @@ abstract class AbstractImporter implements IImportExcel
     }
 
     /**
-     *
+     * @throws \PhpOffice\PhpSpreadsheet\Reader\Exception
      */
     public function loadExcelFile()
     {
@@ -46,6 +46,10 @@ abstract class AbstractImporter implements IImportExcel
         $this->data = $worksheet;
     }
 
+    /**
+     * @param $user
+     * @return bool
+     */
     public function getSchoolId($user)
     {
         $schoolName = $this->config['school']['schoolName'];
@@ -67,10 +71,19 @@ abstract class AbstractImporter implements IImportExcel
         }
         return $schoolObj;
     }
+
+    /**
+     * @param $school
+     */
     protected function setSchool($school)
     {
         $this->school = $school;
     }
+
+    /**
+     * @param $schoolId
+     * @return \App\Models\School
+     */
     protected function getSchool($schoolId)
     {
         if ($this->school) {
@@ -82,24 +95,46 @@ abstract class AbstractImporter implements IImportExcel
             return $schoolObj;
         }
     }
+
+    /**
+     * @return mixed
+     */
     public function getConfig()
     {
         return $this->config;
     }
+
+    /**
+     * @return array
+     */
     public function getData()
     {
         return $this->data;
     }
+
+    /**
+     * @return array
+     */
     public function getSheetIndexArray()
     {
         return array_keys($this->data);
     }
+
+    /**
+     * @param $sheetIndex
+     * @return mixed
+     */
     public function getSheetData($sheetIndex)
     {
         return $this->data[$sheetIndex]->toArray();
     }
 
-
+    /**
+     * @param $row
+     * @param $coloumn
+     * @param $sheetId
+     * @return string
+     */
     public function getColoumn($row, $coloumn, $sheetId)
     {
         $header = $this->getHeader($sheetId);
@@ -116,6 +151,12 @@ abstract class AbstractImporter implements IImportExcel
         }
     }
 
+    /**
+     * @param $coloumn
+     * @param $header
+     * @param $sheetId
+     * @return array
+     */
     public function getColoumnIndex($coloumn, $header, $sheetId)
     {
         $config = $this->config['school']['sheet'][$sheetId][$coloumn];
@@ -129,6 +170,12 @@ abstract class AbstractImporter implements IImportExcel
         }
     }
 
+    /**
+     * @param $name
+     * @param $header
+     * @param $sheetId
+     * @return string
+     */
     public function getDefaultValue($name, $header, $sheetId)
     {
         $config = $this->config['school']['sheet'][$sheetId][$name];
@@ -140,6 +187,11 @@ abstract class AbstractImporter implements IImportExcel
         }
     }
 
+    /**
+     * @param $name
+     * @param $array
+     * @return int|string
+     */
     public function getIndex($name, $array)
     {
         foreach ($array as $key=>$value){
@@ -148,6 +200,10 @@ abstract class AbstractImporter implements IImportExcel
         }
     }
 
+    /**
+     * @param $sheetId
+     * @return mixed
+     */
     public function getHeader($sheetId)
     {
         $header = $this->header;
@@ -164,12 +220,20 @@ abstract class AbstractImporter implements IImportExcel
             return $header;
         }
     }
+
+    /**
+     * @param $header
+     */
     public function setHeader($header)
     {
         $this->header = $header;
     }
 
-
+    /**
+     * @param $sheetId
+     * @param $row
+     * @return array
+     */
     public function getRowData($sheetId, $row)
     {
         $data = [];
@@ -183,6 +247,12 @@ abstract class AbstractImporter implements IImportExcel
         return $data;
     }
 
+    /**
+     * @param $user
+     * @param $name
+     * @param $schoolId
+     * @return bool|mixed
+     */
     public function getInstitute($user, $name, $schoolId)
     {
         $instituteDao = new InstituteDao($user);
@@ -215,12 +285,20 @@ abstract class AbstractImporter implements IImportExcel
                     'source' => $name,
                     'table_name'=> 'institutes',
                     'task_id' => $this->config['task_id'],
-                    'task_status' => -1,
+                    'task_status' => 2,
                 ]);
                 return false;
             }
         }
     }
+
+    /**
+     * @param $user
+     * @param $name
+     * @param $schoolId
+     * @param $institute
+     * @return \App\Models\Schools\Department|bool
+     */
     public function getDepartment($user, $name, $schoolId, $institute)
     {
         $departmentDao = new DepartmentDao($user);
@@ -253,12 +331,21 @@ abstract class AbstractImporter implements IImportExcel
                     'source' => $name,
                     'table_name'=> 'departments',
                     'task_id' => $this->config['task_id'],
-                    'task_status' => -1,
+                    'task_status' => 2,
                 ]);
                 return false;
             }
         }
     }
+
+    /**
+     * @param $user
+     * @param $name
+     * @param $schoolId
+     * @param $institute
+     * @param $department
+     * @return \App\Models\Schools\Major|bool|mixed
+     */
     public function getMajor($user, $name, $schoolId, $institute, $department)
     {
         $majorDao = new MajorDao($user);
@@ -294,12 +381,21 @@ abstract class AbstractImporter implements IImportExcel
                     'source' => $name,
                     'table_name'=> 'majors',
                     'task_id' => $this->config['task_id'],
-                    'task_status' => -1,
+                    'task_status' => 2,
                 ]);
                 return false;
             }
         }
     }
+
+    /**
+     * @param $user
+     * @param $name
+     * @param $schoolId
+     * @param $major
+     * @param $year
+     * @return \App\Models\Schools\Grade|bool|mixed
+     */
     public function getGrade($user, $name, $schoolId, $major, $year)
     {
         $gradeDao = new GradeDao($user);
@@ -332,12 +428,24 @@ abstract class AbstractImporter implements IImportExcel
                     'source' => $name,
                     'table_name'=> 'grades',
                     'task_id' => $this->config['task_id'],
-                    'task_status' => -1,
+                    'task_status' => 2,
                 ]);
                 return false;
             }
         }
     }
+
+    /**
+     * @param $user
+     * @param $rowData
+     * @param $schoolId
+     * @param $institute
+     * @param $department
+     * @param $major
+     * @param $grade
+     * @param $row
+     * @return \App\Models\Users\GradeUser|bool
+     */
     public function getGradeUser($user, $rowData,$schoolId, $institute, $department, $major, $grade, $row)
     {
         $gradeUserDao = new GradeUserDao();
@@ -376,12 +484,21 @@ abstract class AbstractImporter implements IImportExcel
                     'source' => json_encode($row),
                     'table_name'=> 'grade_users',
                     'task_id' => $this->config['task_id'],
-                    'task_status' => -1,
+                    'task_status' => 2,
                 ]);
                 return false;
             }
         }
     }
+
+    /**
+     * @param $mobile
+     * @param $name
+     * @param $passwdTxt
+     * @param $row
+     * @return \App\User|bool|mixed
+     * @throws \Exception
+     */
     public function getUser($mobile, $name, $passwdTxt,$row)
     {
         $userDao = new UserDao();
@@ -407,16 +524,24 @@ abstract class AbstractImporter implements IImportExcel
                     'source' => json_encode($row),
                     'table_name'=> 'users',
                     'task_id' => $this->config['task_id'],
-                    'task_status' => -1,
+                    'task_status' => 2,
                 ]);
                 return false;
             }
         }
     }
 
-    public function writeLog($row, $tableName='', $target='', $result='', $type=3, $status=-1)
+    /**
+     * @param $row
+     * @param string $result
+     * @param string $tableName
+     * @param string $target
+     * @param int $type
+     * @param int $status
+     */
+    public function writeLog($row, $result='', $tableName='', $target='', $type=3, $status=2)
     {
-       return $this->importDao->writeLog([
+       $result = $this->importDao->writeLog([
             'type' => $type,
             'source' => json_encode($row),
             'target' => $target?json_encode($target):'',

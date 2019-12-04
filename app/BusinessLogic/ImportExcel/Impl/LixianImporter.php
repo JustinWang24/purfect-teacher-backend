@@ -39,10 +39,10 @@ class LixianImporter extends AbstractImporter
                     continue;
 
                 $rowData = $this->getRowData($sheetIndex, $row);
-                echo '获取到一行资料'.json_encode($row,JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT|JSON_UNESCAPED_SLASHES).'<br>';
+                echo '获取到一行资料'.json_encode($rowData,JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT|JSON_UNESCAPED_SLASHES).'<br>';
                 //手机号不能为空
                 if (empty($rowData['mobile']) || strlen($rowData['mobile'])!=11) {
-                    $this->writeLog($row);
+                    $this->writeLog($row,'手机号格式错误');
                     echo '手机号为空或者位数不对跳过<br>';
                     continue;
                 }
