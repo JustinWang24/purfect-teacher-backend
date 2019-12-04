@@ -98,4 +98,9 @@ class ImporterDao
         }
         return $messageBag;
     }
+
+    public function result($id)
+    {
+        return ImoprtLog::where('task_id', $id)->where('task_status',2)->get();
+    }
 }
