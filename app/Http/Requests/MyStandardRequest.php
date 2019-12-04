@@ -146,7 +146,7 @@ class MyStandardRequest extends FormRequest
      */
     public function getAppSchool()
     {
-        $schoolUuId = $this->header('school_uuid', null);
+        $schoolUuId = $this->header('schoolUuid', null);
         $dao = new SchoolDao;
         return $dao->getSchoolByUuid($schoolUuId);
     }

@@ -14,15 +14,29 @@ class HomeTest extends BasicPageTestCase
     public function testItCanGetHome()
     {
         $this->withoutExceptionHandling();
-
-        $header = $this->getHeaderWithApiToken();
-        $header['school_uuid'] = '7a45642a-ef85-4f9b-96af-2ab546f2ffe5';
-
+        $token = $this->getHeaderWithApiToken();
+        $schoolUuId = $this->getHeaderWithUuidForSchool($this->getStudent());
+        $header = array_merge($token, $schoolUuId);
         $data = [];
 
         $response = $this->post(route('api.home.index'), $data, $header);
 
+    }
 
+    /**
+     * 测试正常生成二维码
+     */
+    public function testItCanGenerateQrCode()
+    {
+        $this->withoutExceptionHandling();
+        $token = $this->getHeaderWithApiToken();
+        $schoolUuId = $this->getHeaderWithUuidForSchool($this->getStudent());
+
+        $header = array_merge($token, $schoolUuId);
+        $data = [];
+
+        $response = $this->post(route('api.generate.qr.code'), $data, $header);
+        dd($response->content());
     }
 
 }

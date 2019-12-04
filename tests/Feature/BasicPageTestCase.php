@@ -116,6 +116,20 @@ class BasicPageTestCase extends TestCase
         return  ['Authorization'=>"Bearer ".$token];
     }
 
+    /**
+     * 获取学校UUID
+     * @param $user
+     * @param int $schoolId
+     * @return array
+     */
+    public function getHeaderWithUuidForSchool($user, $schoolId = 1)
+    {
+        $schoolDao = new SchoolDao($user);
+        $this->school = $schoolDao->getSchoolById($schoolId);
+
+        return  ['schoolUuid' => $this->school->uuid];
+    }
+
 
     /**
      * 随机生成汉字
