@@ -10,8 +10,8 @@ namespace App\Dao\Pipeline;
 
 use App\Models\Pipeline\Flow\Flow;
 use App\Models\Pipeline\Flow\Node;
+use App\Utils\Pipeline\NodeHandlersDescriptor;
 use Illuminate\Support\Facades\DB;
-use App\Models\Pipeline\Flow\Handler;
 
 class NodeDao
 {
@@ -64,6 +64,107 @@ class NodeDao
         else{
             // 如果还是没有取到 prev 的节点, 那么相当于是创建 head 节点
             return Node::create($data);
+        }
+    }
+
+    /**
+     * 更新流程的步骤节点
+     * @param $data
+     * @param $prevNode
+     * @param $flow
+     * @return mixed
+     */
+    public function update($data, Node $prevNode, $flow, $organizationsLeftOver){
+        DB::beginTransaction();
+        try{
+            /**
+             * 由于 nodes 是个双向链表, 修改node 的操作, 实际上也要考虑链表元素间的关联关系
+             * 前面的 node 的 next, 应该指向 当前 的 node
+             * 前面 node 的原来的 next, 应该作为当前的 node 的 next
+             *
+             * @var Node $currentNode
+             */
+
+            $currentNode = Node::find($data['id']);
+
+//            dd(intval($currentNode->prev_node) !== $prevNode->id);
+
+            if(intval($currentNode->prev_node) !== $prevNode->id){
+                // 表示链表发生了变化
+                $prevNodeNext = $prevNode->next;
+
+                $currentPrev = $currentNode->prev;
+                $currentNext = $currentNode->next;
+
+                $currentNode->prev_node = $prevNode->id;
+                $prevNode->next_node = $currentNode->id;
+                $currentNode->next_node = $prevNodeNext->id ?? 0;
+
+                if($prevNodeNext){
+                    $prevNodeNext->prev_node = $currentNode->id;
+                }
+
+                $currentPrev->next_node = isset($currentNext->id) ? $currentNext->id : 0;
+
+                if($currentNext){
+                    $currentNext->prev_node = $currentPrev->id;
+                }
+
+                $prevNode->save();
+                if($prevNodeNext){
+                    $prevNodeNext->save();
+                }
+
+                $currentPrev->save();
+                if($currentNext){
+                    $currentNext->save();
+                }
+            }
+
+            $currentNode->name = $data['name'];
+            $currentNode->description = $data['description'];
+            $currentNode->save();
+
+            $handler = $currentNode->handler;
+            $parsed = NodeHandlersDescriptor::Parse($data);
+
+            $leftOverString = '';
+            foreach ($organizationsLeftOver as $item) {
+                $leftOverString .= $item.';';
+            }
+
+            if(isset($parsed['organizations'])){
+                $parsed['organizations'] .= $leftOverString;
+            }
+            else{
+                $parsed['organizations'] = $leftOverString;
+            }
+
+//            dump($data);
+//            dump($parsed);
+//            dd($organizationsLeftOver);
+
+            /**
+             * 目标的用户, 只能从部门和用户群中取一个, organizations 优先
+             */
+            if(empty($parsed['organizations'])){
+                $handler->organizations = null;
+                $handler->titles = null;
+                $handler->role_slugs = $parsed['role_slugs'];
+            }
+            else{
+                $handler->organizations = $parsed['organizations'];
+                $handler->titles = $parsed['titles'];
+                $handler->role_slugs = null;
+            }
+
+            $handler->save();
+            DB::commit();
+            return true;
+        }
+        catch (\Exception $exception){
+            DB::rollBack();
+            return $exception->getMessage().$exception->getLine();
         }
     }
 

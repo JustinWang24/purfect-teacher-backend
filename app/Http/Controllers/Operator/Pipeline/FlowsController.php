@@ -61,15 +61,43 @@ class FlowsController extends Controller
     public function save_node(FlowRequest $request){
         $nodeData = $request->getNewFlowFirstNode();
         $flowId = $request->get('flow_id');
+        $prevNodeId = $request->get('prev_node');
         $flowDao = new FlowDao();
         $flow = $flowDao->getById($flowId);
-        $tail = $flow->getTailNode();
         $nodeDao = new NodeDao();
-        $result = $nodeDao->insert($nodeData, $flow, $tail);
+        $prevNode = $nodeDao->getById($prevNodeId);
+        $result = $nodeDao->insert($nodeData, $flow, $prevNode);
         if(is_object($result)){
             $handlerDao = new HandlerDao();
             $handlerDao->create($result, $nodeData);
-            return JsonBuilder::Success(['node'=>$nodeDao->getById($result->id)]);
+            return JsonBuilder::Success(['nodes'=>$flow->getSimpleLinkedNodes()]);
+        }
+        else{
+            return JsonBuilder::Error($result);
+        }
+    }
+
+    /**
+     * 更新节点的操作
+     * @param FlowRequest $request
+     * @return string
+     */
+    public function update_node(FlowRequest $request){
+        $nodeData = $request->getNewFlowFirstNode();
+        $flowId = $request->get('flow_id');
+        $prevNodeId = $request->get('prev_node');
+        $organizationsLeftOver = $request->get('prev_orgs'); // 遗留的组织
+
+        $flowDao = new FlowDao();
+        $flow = $flowDao->getById($flowId);
+
+        $nodeDao = new NodeDao();
+        $prevNode = $nodeDao->getById($prevNodeId);
+
+        $result = $nodeDao->update($nodeData, $prevNode, $flow, $organizationsLeftOver);
+
+        if($result === true){
+            return JsonBuilder::Success(['nodes'=>$flow->getSimpleLinkedNodes()]);
         }
         else{
             return JsonBuilder::Error($result);

@@ -3,6 +3,17 @@
         <el-form-item label="部门">
             <el-cascader style="width: 90%;" :props="props" v-model="node.organizations"></el-cascader>
         </el-form-item>
+        <el-form-item label="当前部门" v-if="organizationsTabArrayWhenEdit.length > 0">
+            <el-tag
+                    class="mr-2"
+                    :key="idx"
+                    v-for="(tag, idx) in organizationsTabArrayWhenEdit"
+                    closable
+                    :disable-transitions="false"
+                    @close="handleOrganizationTagClose(idx)">
+                @{{ tag }}
+            </el-tag>
+        </el-form-item>
         <el-form-item label="部门角色">
             <el-checkbox-group v-model="node.titles">
                 <el-checkbox label="{{ \App\Utils\Misc\Contracts\Title::ALL_TXT }}"></el-checkbox>
