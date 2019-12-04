@@ -19,6 +19,24 @@ export function saveFlow(flow, node, affix) {
     );
 }
 
+/**
+ * 保存新步骤
+ * @param flow
+ * @param node
+ * @param affix
+ * @returns {*}
+ */
+export function saveNode(flow, node, affix) {
+    const url = Util.buildUrl(Constants.API.FLOW.SAVE_NODE);
+    if(Util.isDevEnv()){
+        return axios.get(url, affix);
+    }
+    return axios.post(
+        url,
+        {flow_id: flow.id, node: node, version:Constants.VERSION}
+    );
+}
+
 export function loadNodes(flowId,affix) {
     const url = Util.buildUrl(Constants.API.FLOW.LOAD_FLOW_NODES);
     if(Util.isDevEnv()){

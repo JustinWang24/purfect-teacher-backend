@@ -14,7 +14,7 @@
                             <h4 class="text-primary">
                                 <b>{{ \App\Models\Pipeline\Flow\Flow::Types()[$type] }}</b>
                                 <el-button type="primary" size="mini" @click="createNewFlow({{ $type }})" icon="el-icon-plus" class="pull-right">
-                                    添加新流程
+                                    新流程
                                 </el-button>
                             </h4>
                             <el-divider></el-divider>
@@ -49,10 +49,10 @@
                                 v-if="flowNodes.length > 0"
                                 type="primary"
                                 size="mini"
-                                @click="createNewNode"
+                                v-on:click="createNewNode"
                                 icon="el-icon-plus"
                                 class="pull-right">
-                            添加新步骤
+                            新步骤
                         </el-button>
                     </header>
                 </div>
@@ -161,9 +161,11 @@
                 size="80%"
                 :visible.sync="nodeFormFlag">
             <el-form ref="currentNodeForm" :model="node" label-width="120px" style="padding: 10px;">
-
+                <el-form-item label="步骤名称">
+                    <el-input v-model="node.name" placeholder="必填: 步骤名称"></el-input>
+                </el-form-item>
                 <el-divider></el-divider>
-                <h5 class="text-center text-danger">可以使用本流程的用户群体, 请在以下用户群中二选一, 部门+角色的组合优先 </h5>
+                <h5 class="text-center text-danger">可以操作此步骤的用户群体, 请在以下用户群中二选一, 部门+角色的组合优先 </h5>
                 <el-divider></el-divider>
                 @include('school_manager.pipeline.flow.node_form')
                 <el-form-item>
@@ -171,17 +173,7 @@
                     <el-button @click="nodeFormFlag = false">取消</el-button>
                 </el-form-item>
             </el-form>
-
-            <el-dialog
-                    width="30%"
-                    title="选择图标"
-                    :visible.sync="iconSelectorShowFlag"
-                    append-to-body>
-                <icon-selector v-on:icon-selected="iconSelectedHandler"></icon-selector>
-            </el-dialog>
         </el-drawer>
-
-
 
         @include(
                 'reusable_elements.section.file_manager_component',
