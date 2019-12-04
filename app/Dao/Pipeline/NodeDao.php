@@ -56,7 +56,6 @@ class NodeDao
 
                 // 步骤所关联的附件
                 foreach ($data['attachments'] as $attachment){
-                    dd($attachment);
                     if(empty($attachment['id'])){
                         $attachment['node_id'] = $currentNode->id;
                         NodeAttachment::create($attachment);
