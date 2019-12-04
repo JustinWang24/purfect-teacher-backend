@@ -401,6 +401,9 @@ Route::prefix('school_manager')->group(function () {
 
         Route::post('flows/save-node','Pipeline\FlowsController@save_node')
             ->name('school_manager.pipeline.save-node');
+
+        Route::post('flows/update-node','Pipeline\FlowsController@update_node')
+            ->name('school_manager.pipeline.update-node');
     });
 });
 
