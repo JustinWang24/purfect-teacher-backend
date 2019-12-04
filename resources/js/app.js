@@ -69,6 +69,7 @@ if(document.getElementById('pipeline-flows-manager-app')){
                 lastNewFlow: null,
                 schoolId: '',
                 flowFormFlag: false,
+                nodeFormFlag: false,    // 步骤编辑表单显示
                 showFileManagerFlag: false,
                 iconSelectorShowFlag: false, // 控制图标选择器的显示
                 node: {
@@ -84,7 +85,6 @@ if(document.getElementById('pipeline-flows-manager-app')){
                     value:'id',
                     label:'name',
                     lazyLoad (node, resolve) {
-                        console.log(node);
                         let parentId = null;
                         if(!Util.isEmpty(node.data)){
                             parentId = node.data.id;
@@ -195,6 +195,14 @@ if(document.getElementById('pipeline-flows-manager-app')){
                         message: '已取消删除'
                     });
                 });
+            },
+            // 创建新的步骤
+            createNewNode: function(){
+
+            },
+            // 保存选定的步骤
+            onNodeFormSubmit: function(){
+
             },
             pickFileHandler: function(payload){
                 this.currentFlow.icon = payload.file.url;

@@ -49,6 +49,7 @@ class NodeHandlersDescriptor
         }
         elseif(!empty($handlers)){
             // 对应的是 handlers 表中的 role_slugs 字段
+            $handlersDescriptor['role_slugs'] = '';
             foreach ($handlers as $slugText) {
                 $handlersDescriptor['role_slugs'] .= $slugText.';';
             }
