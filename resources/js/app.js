@@ -50,7 +50,7 @@ import { loadBuildings } from './common/facility';
 import { getEmptyElectiveCourseApplication } from './common/elective_course';
 import { loadTextbooksPaginate, deleteTextbook } from './common/textbook';
 import { loadOrgContacts, loadGradeContacts, loadGrades } from './common/contacts';
-import { saveFlow, loadNodes, deleteNode } from './common/flow';
+import { saveFlow, loadNodes, deleteNode, saveNode } from './common/flow';
 import { saveNews, loadNews, saveSections, deleteNews, publishNews, deleteSection, moveUpSection, moveDownSection } from './common/news';
 
 if(document.getElementById('pipeline-flows-manager-app')){
@@ -73,7 +73,8 @@ if(document.getElementById('pipeline-flows-manager-app')){
                 showFileManagerFlag: false,
                 iconSelectorShowFlag: false, // 控制图标选择器的显示
                 node: {
-                    description: '', // 创建新流程是, 发起流程的第一步的说明
+                    name: '', // 步骤名称
+                    description: '', // 创建新流程时, 发起流程的第一步的说明
                     handlers: [], // node 流程步骤的处理人
                     organizations: [], // node 流程步骤针对的部门
                     titles: [], // node 流程步骤针对的部门的角色
@@ -196,13 +197,33 @@ if(document.getElementById('pipeline-flows-manager-app')){
                     });
                 });
             },
+            _resetNodeForm: function(){
+                this.node.description = '';
+                this.node.name = '';
+                this.node.handlers = [];
+                this.node.organizations = [];
+                this.node.titles = [];
+            },
             // 创建新的步骤
             createNewNode: function(){
-
+                this.nodeFormFlag = true;
+                this._resetNodeForm();
             },
             // 保存选定的步骤
             onNodeFormSubmit: function(){
-
+                saveNode(this.currentFlow, this.node).then(res => {
+                    if(Util.isAjaxResOk(res)){
+                        this.flowNodes.push(res.data.data.node);
+                        this.nodeFormFlag = false;
+                        this.$message({type:'success', message:'步骤保存成功'});
+                        this._resetNodeForm();
+                    }
+                    else{
+                        this.$notify.error(
+                            {title: '保存失败',message: res.data.message, duration: 0}
+                        );
+                    }
+                });
             },
             pickFileHandler: function(payload){
                 this.currentFlow.icon = payload.file.url;

@@ -8,6 +8,7 @@
 
 namespace App\Http\Controllers\Operator\Pipeline;
 use App\Dao\Pipeline\FlowDao;
+use App\Dao\Pipeline\HandlerDao;
 use App\Dao\Pipeline\NodeDao;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Pipeline\FlowRequest;
@@ -36,7 +37,6 @@ class FlowsController extends Controller
      */
     public function save_flow(FlowRequest $request){
         $flow = $request->getFlowFormData();
-
         if(empty($flow['id'])){
             // 创建新流程
             $node = $request->getNewFlowFirstNode();
@@ -50,6 +50,29 @@ class FlowsController extends Controller
         }
         else{
             // 更新
+        }
+    }
+
+    /**
+     * 保存流程中的步骤节点
+     * @param FlowRequest $request
+     * @return string
+     */
+    public function save_node(FlowRequest $request){
+        $nodeData = $request->getNewFlowFirstNode();
+        $flowId = $request->get('flow_id');
+        $flowDao = new FlowDao();
+        $flow = $flowDao->getById($flowId);
+        $tail = $flow->getTailNode();
+        $nodeDao = new NodeDao();
+        $result = $nodeDao->insert($nodeData, $flow, $tail);
+        if(is_object($result)){
+            $handlerDao = new HandlerDao();
+            $handlerDao->create($result, $nodeData);
+            return JsonBuilder::Success(['node'=>$nodeDao->getById($result->id)]);
+        }
+        else{
+            return JsonBuilder::Error($result);
         }
     }
 
