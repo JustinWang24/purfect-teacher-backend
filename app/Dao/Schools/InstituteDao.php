@@ -84,4 +84,14 @@ class InstituteDao
         $data['last_updated_by'] = $this->currentUser->id;
         return Institute::create($data);
     }
+
+    /**
+     * 根据名字获得学院信息
+     * @param $name
+     * @param $schoolId
+     * @return mixed
+     */
+    public function getByName($name, $schoolId){
+        return Institute::where('school_id',$schoolId)->where('name',$name)->first();
+    }
 }

@@ -6,6 +6,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\BusinessLogic\ImportExcel\Factory;
 use App\Dao\Importer\ImporterDao;
+use App\Dao\Users\UserDao;
 use App\Http\Controllers\Controller;
 use App\Models\Importer\ImoprtTask;
 use App\User;
@@ -24,14 +25,6 @@ class ImporterController extends Controller
 
     public function manager(Request $request)
     {
-        $obj = Factory::createAdapter(
-            ['importerName'=>'App\BusinessLogic\ImportExcel\Impl\LixianImporter',
-             'file_path'   => '技术部加班表-11月-朱晨光.xlsx',
-            ]);
-        $obj->loadExcelFile();
-        //dd($obj->data->toArray());
-
-        //Artisan::call('命令名称');
         $dao = new ImporterDao();
         $tasks = $dao->getTasks();
         $this->dataForView['tasks'] = $tasks;
@@ -103,6 +96,25 @@ class ImporterController extends Controller
         }
         return redirect()->route('admin.importer.manager');
 
+
+    }
+
+
+    public function handle(Request $request, $id)
+    {
+        $user = $request->user();
+        Artisan::call('importer', [
+            'configId' => $id,
+            'userId' => $user->id,
+        ]);
+    }
+
+    public function result(Request $request,$id)
+    {
+        $dao = new ImporterDao();
+        $messages = $dao->result($id);
+        $this->dataForView['messages'] = $messages;
+        return view('admin.importer.result', $this->dataForView);
 
     }
 

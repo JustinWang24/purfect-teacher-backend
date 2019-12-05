@@ -50,6 +50,7 @@ use App\Utils\UI\Button;
                                         <td class="text-center">{{ $task->file_info }}</td>
                                         <td class="text-center">
                                             {{ Anchor::Print(['text'=>'编辑','class'=>'btn-edit-building','href'=>route('admin.importer.edit',['id'=>$task->id])], Button::TYPE_DEFAULT,'edit') }}
+                                            {{ Anchor::Print(['text'=>'结果','class'=>'btn-edit-building','href'=>route('admin.importer.result',['id'=>$task->id])], Button::TYPE_DEFAULT,'result') }}
                                         </td>
                                     </tr>
                                 @endforeach
