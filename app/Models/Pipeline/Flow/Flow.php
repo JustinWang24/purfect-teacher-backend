@@ -29,7 +29,9 @@ class Flow extends Model implements IFlow
      */
     public static function Types(){
         return [
-            IFlow::TYPE_1=>IFlow::TYPE_1_TXT,
+            IFlow::TYPE_STUDENT_ONLY=>IFlow::TYPE_STUDENT_ONLY_TXT,
+            IFlow::TYPE_TEACHER_ONLY=>IFlow::TYPE_TEACHER_ONLY_TXT,
+            IFlow::TYPE_OFFICE=>IFlow::TYPE_OFFICE_TXT,
             IFlow::TYPE_2=>IFlow::TYPE_2_TXT,
             IFlow::TYPE_3=>IFlow::TYPE_3_TXT,
             IFlow::TYPE_4=>IFlow::TYPE_4_TXT,
@@ -90,5 +92,16 @@ class Flow extends Model implements IFlow
             ->with('handler')
             ->with('attachments')
             ->first();
+    }
+
+    public function canBeStartBy(User $user): INode
+    {
+        // Todo: 对于一个流程是否可以被一个用户启动的功能, 需要实现
+        return $this->getHeadNode();
+    }
+
+    public function getName()
+    {
+        return $this->name;
     }
 }

@@ -368,3 +368,30 @@ Route::prefix('banner')->middleware('auth:api')->group(function () {
 Route::prefix('QrCode')->middleware('auth:api')->group(function () {
     Route::post('/getQrCode', 'Api\QrCode\IndexController@generate')->name('api.generate.qr.code');
 });
+
+// 工作流的应用接口
+Route::prefix('pipeline')->middleware('auth:api')->group(function (){
+    /**
+     * 用户调取可用的流程集合的接口
+     */
+    Route::post('/flows/my', 'Api\Pipeline\FlowsController@my')
+        ->name('api.pipeline.flows.my');
+
+    /**
+     * 用户调取可用的流程集合的接口
+     */
+    Route::post('/flow/open', 'Api\Pipeline\FlowsController@open')
+        ->name('api.pipeline.flow.open');
+
+    Route::post('/flow/start', 'Api\Pipeline\FlowsController@start')
+        ->name('api.pipeline.flow.start');
+
+    Route::post('/flow/process', 'Api\Pipeline\FlowsController@process')
+        ->name('api.pipeline.flow.process');
+
+    Route::post('/flow/resume', 'Api\Pipeline\FlowsController@resume')
+        ->name('api.pipeline.flow.resume');
+
+    Route::post('/flow/watch', 'Api\Pipeline\FlowsController@watch')
+        ->name('api.pipeline.flow.watch');
+});

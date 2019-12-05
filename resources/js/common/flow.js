@@ -38,6 +38,17 @@ export function saveNode(flow, node, prevNodeId, affix) {
     );
 }
 
+export function start(action, affix) {
+    const url = Util.buildUrl(Constants.API.FLOW.START);
+    if(Util.isDevEnv()){
+        return axios.get(url, affix);
+    }
+    return axios.post(
+        url,
+        {action: action, version:Constants.VERSION}
+    );
+}
+
 /**
  * @param flow
  * @param node
@@ -107,3 +118,4 @@ export function deleteNodeAttachment(attachmentId,affix) {
         {attachment_id: attachmentId, version:Constants.VERSION}
     );
 }
+

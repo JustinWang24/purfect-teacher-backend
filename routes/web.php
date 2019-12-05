@@ -40,3 +40,11 @@ Route::get('/home', 'HomeController@index')->name('home');
 // 校园风光
 //Route::get('/scenery', 'Admin\CampusSceneryController@index')->name('home');
 
+Route::prefix('pipeline')->group(function () {
+    // 打开流程
+    Route::get('/flow/open','Teacher\Pipeline\FlowsController@open')
+        ->name('teacher.pipeline.flow-open');
+    // 开始流程
+    Route::get('/flow/start','Teacher\Pipeline\FlowsController@start')
+        ->name('teacher.pipeline.flow-start');
+});
