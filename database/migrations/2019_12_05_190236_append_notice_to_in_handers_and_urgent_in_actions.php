@@ -14,7 +14,7 @@ class AppendNoticeToInHandersAndUrgentInActions extends Migration
     public function up()
     {
         Schema::table('pipeline_handlers', function (Blueprint $table) {
-            $table->string('notice_to')->comment('通知人');
+            $table->string('notice_to')->nullable()->comment('通知人');
         });
 
         Schema::table('pipeline_actions', function (Blueprint $table) {
