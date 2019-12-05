@@ -14,7 +14,7 @@ class IndexController extends Controller
 {
 
     /**
-     * 账户中心
+     * 充值中心
      * @param AccountRequest $request
      * @return string
      */
@@ -23,7 +23,6 @@ class IndexController extends Controller
         $school = $request->getAppSchool();
 
         $user = $request->user();
-
 
         $mesDao  = new AccountCoreMessageDao;
         $message = $mesDao->getCoreMassageBySchoolId($school->id);
@@ -41,6 +40,12 @@ class IndexController extends Controller
         return JsonBuilder::Success($data, '充值中心');
     }
 
+
+    public function addOrder(AccountRequest $request)
+    {
+         $id = $request->get('id');
+
+    }
 
 
 
