@@ -156,4 +156,15 @@ class MajorDao
 
         return Major::where('campus_id',$campusId)->select($field)->get();
     }
+
+    /**
+     * 根据名字和院系获取专业
+     * @param $name
+     * @param $schoolId
+     * @return mixed
+     */
+    public function getByName($name, $schoolId, $instituteId, $departmentId){
+        return Major::where('school_id',$schoolId)->where('institute_id',$instituteId)->
+                      where('department_id',$departmentId)->where('name', $name)->first();
+    }
 }

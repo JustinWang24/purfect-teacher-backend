@@ -20,3 +20,23 @@ if(!function_exists('_maybeUuid')){
         return is_string($id) && strlen($id) >= 20;
     }
 }
+
+
+if(!function_exists('pageReturn')){
+
+    /**
+     * 分页api统一返回方法
+     * @param $result
+     * @return array
+     */
+    function pageReturn($result){
+        $data = [
+            'currentPage' => $result->currentPage(),
+            'lastPage'    => $result->lastPage(),
+            'total'       => $result->total(),
+            'list'        =>$result->getCollection()
+        ];
+
+        return $data;
+    }
+}

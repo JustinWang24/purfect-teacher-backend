@@ -24,6 +24,12 @@ interface IAction extends IMessageBag, IPersistent
     public function getUser(): User;
 
     /**
+     * 是否紧急通知下一步的操作人员
+     * @return bool
+     */
+    public function isUrgent():bool ;
+
+    /**
      * 对任意的一个处理, 可能都关联 0 -> N 个附件
      * @return IActionAttachment[]
      */
