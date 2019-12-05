@@ -368,3 +368,8 @@ Route::prefix('banner')->middleware('auth:api')->group(function () {
 Route::prefix('QrCode')->middleware('auth:api')->group(function () {
     Route::post('/getQrCode', 'Api\QrCode\IndexController@generate')->name('api.generate.qr.code');
 });
+
+// APP 账户中心 接口
+Route::prefix('account')->middleware('auth:api')->group(function () {
+    Route::post('/getAccountCore', 'Api\Account\IndexController@index')->name('api.account.core');
+});
