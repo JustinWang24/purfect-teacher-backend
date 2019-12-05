@@ -44,7 +44,17 @@
             <div class="card">
                 <div class="card-head">
                     <header class="full-width">
-                        <span class="pull-left pt-2">流程: @{{ currentFlow.name }}</span>
+                        <span class="pull-left pt-2">流程: @{{ currentFlow.name }} <i class="el-icon-loading" v-if="loadingNodes"></i></span>
+
+                        <el-button
+                                v-if="flowNodes.length > 0"
+                                type="danger"
+                                size="mini"
+                                v-on:click="deleteFlow"
+                                icon="el-icon-delete"
+                                class="pull-right ml-2">
+                        </el-button>
+
                         <el-button
                                 v-if="flowNodes.length > 0"
                                 type="primary"
@@ -92,6 +102,19 @@
                                             </el-tag>
                                         </span>
                                     </p>
+                                    <p v-if="node.attachments.length > 0" style="margin-bottom: 0;">
+                                        <span class="text-primary"><b>关联的附件: </b></span>
+                                    </p>
+                                    <ul style="padding-left: 10px;list-style: none;" v-if="node.attachments.length > 0">
+                                        <li v-for="(at, idx) in node.attachments" :key="idx">
+                                            <p style="margin-bottom: 0;">
+                                                <a :href="at.url" target="_blank">
+                                                    <span style="color: #0c0c0c;">@{{ idx+1 }}: @{{ at.file_name }}</span>
+                                                </a>&nbsp;
+                                                <el-button v-on:click="dropAttachment(idx, at, index)" type="text" style="color: red">删除</el-button>
+                                            </p>
+                                        </li>
+                                    </ul>
                                     <p><span class="text-primary"><b>说明: </b></span>@{{ node.description }}</p>
                                 </el-card>
                             </el-timeline-item>
@@ -108,7 +131,7 @@
 
         <el-drawer
                 title="流程管理"
-                size="80%"
+                size="90%"
                 :visible.sync="flowFormFlag">
             <el-form ref="currentFlowForm" :model="currentFlow" label-width="120px" style="padding: 10px;">
                 <el-row>
@@ -128,8 +151,10 @@
                     </el-col>
                     <el-col :span="10">
                         <el-form-item label="选择图标">
-                            <el-button type="primary" icon="el-icon-picture-outline-round" v-on:click="iconSelectorShowFlag=true">系统图标</el-button>
-                            <el-button type="primary" icon="el-icon-picture" v-on:click="showFileManagerFlag=true">我的云盘</el-button>
+                            <el-button type="primary"
+                                       icon="el-icon-picture-outline-round"
+                                       v-on:click="iconSelectorShowFlag=true"
+                            >选择图标</el-button>
                             <span v-if="selectedImgUrl" class="ml-4">
                                 <img :src="selectedImgUrl" width="50">
                             </span>
@@ -161,9 +186,23 @@
                 size="80%"
                 :visible.sync="nodeFormFlag">
             <el-form ref="currentNodeForm" :model="node" label-width="120px" style="padding: 10px;">
-                <el-form-item label="步骤名称">
-                    <el-input v-model="node.name" placeholder="必填: 步骤名称"></el-input>
-                </el-form-item>
+                <el-row>
+                    <el-col :span="12">
+                        <el-form-item label="步骤名称">
+                            <el-input v-model="node.name" placeholder="必填: 步骤名称"></el-input>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="12">
+                        <el-form-item label="前一步">
+                            <el-select v-model="prevNodeId" placeholder="必填: 前一步" style="width: 90%;">
+                                <el-option
+                                        v-for="(n, idx) in flowNodes"
+                                        :label="timelineItemTitle(idx, n)" :value="n.id" :key="idx">
+                                </el-option>
+                            </el-select>
+                        </el-form-item>
+                    </el-col>
+                </el-row>
                 <el-divider></el-divider>
                 <h5 class="text-center text-danger">可以操作此步骤的用户群体, 请在以下用户群中二选一, 部门+角色的组合优先 </h5>
                 <el-divider></el-divider>

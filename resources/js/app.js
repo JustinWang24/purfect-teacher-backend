@@ -50,7 +50,7 @@ import { loadBuildings } from './common/facility';
 import { getEmptyElectiveCourseApplication } from './common/elective_course';
 import { loadTextbooksPaginate, deleteTextbook } from './common/textbook';
 import { loadOrgContacts, loadGradeContacts, loadGrades } from './common/contacts';
-import { saveFlow, loadNodes, deleteNode, saveNode } from './common/flow';
+import { saveFlow, loadNodes, deleteNode, saveNode, updateNode, deleteNodeAttachment, deleteFlow } from './common/flow';
 import { saveNews, loadNews, saveSections, deleteNews, publishNews, deleteSection, moveUpSection, moveDownSection } from './common/news';
 
 if(document.getElementById('pipeline-flows-manager-app')){
@@ -73,13 +73,18 @@ if(document.getElementById('pipeline-flows-manager-app')){
                 showFileManagerFlag: false,
                 iconSelectorShowFlag: false, // 控制图标选择器的显示
                 node: {
+                    id: null,
                     name: '', // 步骤名称
                     description: '', // 创建新流程时, 发起流程的第一步的说明
                     handlers: [], // node 流程步骤的处理人
                     organizations: [], // node 流程步骤针对的部门
+                    attachments: [], // node 流程步骤关联的附件
                     titles: [], // node 流程步骤针对的部门的角色
                 },
+                prevNodeId:null, // 编辑 node 的时候, 前一个步骤的 ID
+                organizationsTabArrayWhenEdit: [],
                 flowNodes: [],
+                loadingNodes: false, // 正在加载步骤
                 props: {
                     lazy: true,
                     multiple: true,
@@ -118,6 +123,7 @@ if(document.getElementById('pipeline-flows-manager-app')){
             loadFlowNodes: function(flowId, flowName){
                 this.currentFlow.name = flowName;
                 this.currentFlow.id = flowId;
+                this.loadingNodes = true;
                 loadNodes(flowId).then(res => {
                     if(Util.isAjaxResOk(res)){
                         this.currentFlow = res.data.data.flow;
@@ -128,6 +134,7 @@ if(document.getElementById('pipeline-flows-manager-app')){
                             {title: '加载失败',message: res.data.message, duration: 0}
                         );
                     }
+                    this.loadingNodes = false;
                 })
             },
             createNewFlow: function(type){
@@ -151,7 +158,7 @@ if(document.getElementById('pipeline-flows-manager-app')){
                 if(this.node.description.trim() === ''){
                     this.$notify.error({
                         title: '错误',
-                        message: '新流程必须填写 - "如何发起流程"'
+                        message: '新流程必须填写说明信息 - "如何发起流程"'
                     });
                     return;
                 }
@@ -173,6 +180,30 @@ if(document.getElementById('pipeline-flows-manager-app')){
                         );
                     }
                 })
+            },
+            deleteFlow: function(){
+                this.$confirm('此操作将彻底删除此流程, 是否继续?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    this.loadingNodes = true;
+                    deleteFlow(this.currentFlow.id, this.schoolId).then(res => {
+                        if(Util.isAjaxResOk(res)){
+                            this.$message({type:'success',message:'删除成功, 页面将重新加载, 请稍候!'});
+                            window.location.reload();
+                        }
+                        else{
+                            this.$message.error('系统繁忙, 请稍候再试');
+                        }
+                        this.loadingNodes = false;
+                    })
+                }).catch(() => {
+                    this.$message({
+                        type: 'info',
+                        message: '已取消删除'
+                    });
+                });
             },
             // 对 node 的操作
             deleteNode: function(idx, node){
@@ -198,6 +229,7 @@ if(document.getElementById('pipeline-flows-manager-app')){
                 });
             },
             _resetNodeForm: function(){
+                this.node.id = null;
                 this.node.description = '';
                 this.node.name = '';
                 this.node.handlers = [];
@@ -207,28 +239,128 @@ if(document.getElementById('pipeline-flows-manager-app')){
             // 创建新的步骤
             createNewNode: function(){
                 this.nodeFormFlag = true;
+                if(this.flowNodes.length > 0){
+                    // 默认的新的前一个步骤的 id
+                    this.prevNodeId = this.flowNodes[this.flowNodes.length - 1].id;
+                }
                 this._resetNodeForm();
+            },
+            editNode: function(node){
+                this.nodeFormFlag = true;
+                this.prevNodeId = node.prev_node;
+                this.node.id = node.id;
+                this.node.description = node.description;
+                this.node.name = node.name;
+                this.node.handlers = node.handler.role_slugs === '' ? [] : this.splitHelper(node.handler.role_slugs);
+                this.organizationsTabArrayWhenEdit = node.handler.organizations === '' ? [] : this.splitHelper(node.handler.organizations);
+                this.node.titles = node.handler.titles === '' ? [] : this.splitHelper(node.handler.titles);
+            },
+            splitHelper: function(str){
+                return str.substring(0,str.length -1).split(';')
             },
             // 保存选定的步骤
             onNodeFormSubmit: function(){
-                saveNode(this.currentFlow, this.node).then(res => {
-                    if(Util.isAjaxResOk(res)){
-                        this.flowNodes.push(res.data.data.node);
-                        this.nodeFormFlag = false;
-                        this.$message({type:'success', message:'步骤保存成功'});
-                        this._resetNodeForm();
+                if(this.node.name.trim() === ''){
+                    this.$notify.error({
+                        title: '错误',
+                        message: '步骤的名称必须填写'
+                    });
+                    return;
+                }
+                if(this.node.description.trim() === ''){
+                    this.$notify.error({
+                        title: '错误',
+                        message: '步骤的说明必须填写'
+                    });
+                    return;
+                }
+
+                if(Util.isEmpty(this.node.id)){
+                    // 创建新步骤的操作
+                    if(this.node.organizations.length === 0 && this.node.handlers.length === 0){
+                        this.$notify.error({
+                            title: '错误',
+                            message: '流程必须选择相关的部门或用户群'
+                        });
+                        return;
                     }
-                    else{
-                        this.$notify.error(
-                            {title: '保存失败',message: res.data.message, duration: 0}
-                        );
+
+                    saveNode(this.currentFlow, this.node, this.prevNodeId).then(res => {
+                        if(Util.isAjaxResOk(res)){
+                            this.flowNodes = res.data.data.nodes;
+                            this.prevNodeId = null;
+                            this.nodeFormFlag = false;
+                            this.$message({type:'success', message:'步骤保存成功'});
+                            this._resetNodeForm();
+                        }
+                        else{
+                            this.$notify.error(
+                                {title: '保存失败',message: res.data.message, duration: 0}
+                            );
+                        }
+                    });
+                }
+                else{
+                    // 更新操作
+                    if(
+                        this.node.organizations.length === 0
+                        && this.organizationsTabArrayWhenEdit.length ===0
+                        && this.node.handlers.length === 0
+                    ){
+                        this.$notify.error({
+                            title: '错误',
+                            message: '流程必须选择相关的部门或用户群'
+                        });
+                        return;
                     }
-                });
+
+                    updateNode(this.currentFlow, this.node, this.prevNodeId, this.organizationsTabArrayWhenEdit)
+                        .then(res => {
+                            if(Util.isAjaxResOk(res)){
+                                this.flowNodes = res.data.data.nodes;
+                                this.prevNodeId = null;
+                                this.organizationsTabArrayWhenEdit = [];
+                                this.nodeFormFlag = false;
+                                this.$message({type:'success', message:'步骤保存成功'});
+                                this._resetNodeForm();
+                            }
+                            else{
+                                this.$notify.error(
+                                    {title: '保存失败',message: res.data.message, duration: 0}
+                                );
+                            }
+                        });
+                }
             },
+            // 选择步骤的附件所用的监听器
             pickFileHandler: function(payload){
-                this.currentFlow.icon = payload.file.url;
-                this.selectedImgUrl = payload.file.url;
                 this.showFileManagerFlag = false;
+                const attachment = {
+                    id:null,
+                    node_id: this.node.id,
+                    media_id: payload.file.id,
+                    url: payload.file.url,
+                    file_name: payload.file.file_name
+                };
+                this.node.attachments.push(attachment);
+            },
+            dropAttachment: function(idx, attachment, nodeIndex){
+                if(!Util.isEmpty(attachment.id)){
+                    // 从服务器删除
+                    deleteNodeAttachment(attachment.id).then(res => {
+                        if(Util.isAjaxResOk(res)){
+                            if(Util.isEmpty(nodeIndex)){
+                                this.node.attachments.splice(idx, 1);
+                            }else{
+                                this.flowNodes[nodeIndex].attachments.splice(idx, 1);
+                            }
+                        }else{
+                            this.$message.error('无法删除附件');
+                        }
+                    })
+                }else{
+                    this.node.attachments.splice(idx, 1);
+                }
             },
             iconSelectedHandler: function(payload){
                 this.currentFlow.icon = payload.url;
@@ -243,6 +375,20 @@ if(document.getElementById('pipeline-flows-manager-app')){
                 else{
                     return '第'+ idx +'步: ' + node.name;
                 }
+            },
+            handleOrganizationTagClose: function (idx) {
+                this.$confirm('此操作将从本步骤中删除此部门, 是否继续?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    this.organizationsTabArrayWhenEdit.splice(idx, 1);
+                }).catch(() => {
+                    this.$message({
+                        type: 'info',
+                        message: '已取消删除'
+                    });
+                });
             }
         }
     });

@@ -96,7 +96,6 @@ class NoticeDao
         $map = ['type'=>$type, 'school_id'=>$schoolId, 'status'=>Notice::STATUS_PUBLISH];
         $notice = Notice::where($map)->select($field)
             ->paginate(ConfigurationTool::DEFAULT_PAGE_SIZE);
-
         foreach ($notice as $key => $val) {
 
             // 公告封面图
@@ -107,7 +106,7 @@ class NoticeDao
             if($type == Notice::TYPE_INSPECTION) {
                 $val->inspect->name;
             }
-            unset($val['img']);
+            unset($val['image']);
             unset($val['inspect_id']);
         }
         return $notice;
