@@ -137,6 +137,12 @@ export const Constants = {
             DELETE_FLOW: '/school_manager/pipeline/flows/delete-flow',
             DELETE_NODE: '/school_manager/pipeline/flows/delete-node',
             DELETE_NODE_ATTACHMENT: '/school_manager/pipeline/flows/delete-node-attachment',
+            // Action相关
+            OPEN: '/api/pipeline/flow/open', // 打开流程
+            START: '/api/pipeline/flow/start', // 流程开始
+            PROCESS: '/api/pipeline/flow/process', // 同意流程向下一步
+            RESUME: '/api/pipeline/flow/resume', // 流程驳回
+            WATCH: '/api/pipeline/flow/watch', // 查看一个流程的最新状态
         }
     },
     YEARS: ['N.A','一年级','二年级','三年级','四年级','五年级','六年级'],

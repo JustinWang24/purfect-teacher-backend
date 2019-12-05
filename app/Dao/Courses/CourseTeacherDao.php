@@ -32,4 +32,13 @@ class CourseTeacherDao
         }
         return CourseTeacher::where('course_id',$courseId)->get();
     }
+
+    /**
+     * 删除
+     * @param $id
+     * @return mixed
+     */
+    public function delete($id){
+        return CourseTeacher::where('id',$id)->delete();
+    }
 }

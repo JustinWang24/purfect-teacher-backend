@@ -10,7 +10,7 @@ namespace App\Utils\Pipeline;
 
 use App\User;
 
-class FlowEngine
+class FlowEngine implements IFlowEngine
 {
     const FLOW_MOVED_FORWARD = 1;   // 流程向前了一步
     const FLOW_RESUMED       = 2;   // 流程回退了一步
@@ -26,6 +26,16 @@ class FlowEngine
     {
         $this->flow = $flow;
         $this->user = $user;
+    }
+
+    public function getFlow(): IFlow
+    {
+        return $this->flow;
+    }
+
+    public function start(INode $headNode, IAction $startAction)
+    {
+        // TODO: Implement start() method.
     }
 
     /**
