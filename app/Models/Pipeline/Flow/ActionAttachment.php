@@ -12,7 +12,7 @@ class ActionAttachment extends Model implements IActionAttachment
     public $table = 'pipeline_action_attachments';
     public $timestamps = false;
     protected $fillable = [
-        'action_id','media_id','url'
+        'action_id','media_id','url','file_name'
     ];
 
     public function media(){
@@ -37,6 +37,7 @@ class ActionAttachment extends Model implements IActionAttachment
         if(is_object($media)){
             $this->media_id = $media->id;
             $this->url = $media->url;
+            $this->file_name = $media->file_name;
             $this->save();
         }
         else{
@@ -44,6 +45,7 @@ class ActionAttachment extends Model implements IActionAttachment
             if($mediaModel){
                 $this->media_id = $media;
                 $this->url = $mediaModel->url;
+                $this->file_name = $mediaModel->file_name;
                 $this->save();
             }
         }

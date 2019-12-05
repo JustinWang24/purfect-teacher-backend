@@ -113,5 +113,6 @@ return [
     // 工作流
     'pipeline'=>'工作流',
     'flows-manager'=>'流程管理',
+    'flow-open'=>'发起',
 ];
 
