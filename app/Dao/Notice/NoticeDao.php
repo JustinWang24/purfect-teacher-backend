@@ -89,7 +89,7 @@ class NoticeDao
     /**
      * @param $type
      * @param $schoolId
-     * @return Notice
+     * @return mixed
      */
     public function getNotice($type, $schoolId) {
         $field = ['id', 'title', 'type', 'created_at', 'inspect_id', 'image'];

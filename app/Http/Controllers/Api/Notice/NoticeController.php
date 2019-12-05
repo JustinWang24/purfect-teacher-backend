@@ -22,13 +22,8 @@ class NoticeController extends Controller
         $type = $request->getType();
         $dao = new NoticeDao();
         $schoolId = 1;
-        $result = $dao->getNotice($type, $schoolId)->toArray();
-        $data = [
-            'currentPage'=> $result['current_page'],
-            'lastPage'   => $result['last_page'],
-            'total'      => $result['total'],
-            'data'       => $result['data']
-            ];
+        $result = $dao->getNotice($type, $schoolId);
+        $data = pageReturn($result);
         return JsonBuilder::Success($data);
     }
 
