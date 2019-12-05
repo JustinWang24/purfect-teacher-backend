@@ -17,7 +17,7 @@ class IndexController extends Controller
      * @param HomeRequest $request
      */
     public function index(HomeRequest $request)
-{
+    {
         $school = $request->getAppSchool();
         $page   = $request->get('page');
 
@@ -36,6 +36,7 @@ class IndexController extends Controller
         // todo :: 新闻动态表结构 可能字段缺少
     }
 
+
     /**
      * banner
      * @param BannerRequest $request
@@ -46,6 +47,10 @@ class IndexController extends Controller
         $posit = $request->get('posit');
 
         $school = $request->getAppSchool();
+
+        if (empty($school)) {
+            return JsonBuilder::Error('未找到学校');
+        }
 
         $dao = new BannerDao;
 
