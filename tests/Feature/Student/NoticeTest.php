@@ -28,9 +28,9 @@ class NoticeTest extends BasicPageTestCase
             $this->assertArrayHasKey('currentPage', $result['data']);
             $this->assertArrayHasKey('lastPage', $result['data']);
             $this->assertArrayHasKey('total', $result['data']);
-            $this->assertArrayHasKey('data', $result['data']);
+            $this->assertArrayHasKey('list', $result['data']);
 
-            foreach ($result['data']['data'] as $key => $val) {
+            foreach ($result['data']['list'] as $key => $val) {
                 $this->assertArrayHasKey('type', $val);
                 $this->assertArrayHasKey('title', $val);
                 $this->assertArrayHasKey('created_at', $val);

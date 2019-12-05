@@ -60,12 +60,7 @@ class ApplicationController extends Controller
             unset($result[$key]['applicationType']);
             unset($result[$key]['application_type_id']);
         }
-        $data = [
-            'currentPage' => $result->currentPage(),
-            'lastPage' => $result->lastPage(),
-            'total' => $result->total(),
-            'data'=>$result->getCollection()
-        ];
+        $data = pageReturn($result);
         return JsonBuilder::Success($data);
 
     }
