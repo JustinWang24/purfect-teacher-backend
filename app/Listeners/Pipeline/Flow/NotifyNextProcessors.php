@@ -26,6 +26,6 @@ class NotifyNextProcessors
      */
     public function handle(IFlowAccessor $event)
     {
-        //
+
     }
 }
