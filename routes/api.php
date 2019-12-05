@@ -328,6 +328,10 @@ Route::prefix('students')->middleware('auth:api')->group(function () {
     // 申请类型
     Route::get('applications-type','Api\Application\ApplicationController@applicationTypeList')
             ->name('api.students.applications-type');
+
+    // 根据用户查询申请列表
+    Route::get('applications-list','Api\Application\ApplicationController@applicationList')
+            ->name('api.students.applications-list');
 });
 
 Route::prefix('questionnaire')->middleware('auth:api')->group(function () {
@@ -369,7 +373,31 @@ Route::prefix('QrCode')->middleware('auth:api')->group(function () {
     Route::post('/getQrCode', 'Api\QrCode\IndexController@generate')->name('api.generate.qr.code');
 });
 
-// APP 账户中心 接口
 Route::prefix('account')->middleware('auth:api')->group(function () {
     Route::post('/getAccountCore', 'Api\Account\IndexController@index')->name('api.account.core');
+
+Route::prefix('pipeline')->middleware('auth:api')->group(function (){
+    /**
+     * 用户调取可用的流程集合的接口
+     */
+    Route::post('/flows/my', 'Api\Pipeline\FlowsController@my')
+        ->name('api.pipeline.flows.my');
+
+    /**
+     * 用户调取可用的流程集合的接口
+     */
+    Route::post('/flow/open', 'Api\Pipeline\FlowsController@open')
+        ->name('api.pipeline.flow.open');
+
+    Route::post('/flow/start', 'Api\Pipeline\FlowsController@start')
+        ->name('api.pipeline.flow.start');
+
+    Route::post('/flow/process', 'Api\Pipeline\FlowsController@process')
+        ->name('api.pipeline.flow.process');
+
+    Route::post('/flow/resume', 'Api\Pipeline\FlowsController@resume')
+        ->name('api.pipeline.flow.resume');
+
+    Route::post('/flow/watch', 'Api\Pipeline\FlowsController@watch')
+        ->name('api.pipeline.flow.watch');
 });

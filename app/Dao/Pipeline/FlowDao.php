@@ -22,18 +22,24 @@ class FlowDao
     /**
      * 获取分类的流程集合
      * @param $schoolId
+     * @param array $types
      * @return array
      */
-    public function getGroupedFlows($schoolId){
+    public function getGroupedFlows($schoolId, $types = []){
         $flows = Flow::where('school_id',$schoolId)->orderBy('type','asc')->get();
-        $data = [
-            IFlow::TYPE_1=>[],
-            IFlow::TYPE_2=>[],
-            IFlow::TYPE_3=>[],
-            IFlow::TYPE_4=>[],
-        ];
+        $data = [];
+        if(empty($types)){
+            $types = array_keys(Flow::Types());
+        }
+
+        foreach ($types as $key){
+            $data[$key] = [];
+        }
+
         foreach ($flows as $flow) {
-            $data[$flow->type][] = $flow;
+            if(in_array($flow->type, $types)){
+                $data[$flow->type][] = $flow;
+            }
         }
         return $data;
     }

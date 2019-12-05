@@ -99,4 +99,9 @@ class DepartmentDao
     {
         return Department::where('school_id',$schoolId)->select($field)->get();
     }
+
+    public function getByName($name, $schoolId, $campusId, $instituteId){
+        return Department::where('school_id',$schoolId)->where('campus_id',$campusId)->
+                           where('institute_id',$instituteId)->where('name', $name)->first();
+    }
 }

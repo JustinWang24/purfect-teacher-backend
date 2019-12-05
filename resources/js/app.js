@@ -40,7 +40,7 @@ Vue.component('file-manager', require('./components/fileManager/FileManager.vue'
 Vue.component('elective-course-form', require('./components/courses/ElectiveCourseForm.vue').default);
 Vue.component('textbooks-table', require('./components/textbook/TextbooksTable.vue').default); // 教材列表
 Vue.component('file-preview', require('./components/fileManager/elements/FilePreview.vue').default);      // 教材表单
-Vue.component('drag-to-sort', require('./components/dnd/DragToSort.vue').default);      // 教材表单
+// Vue.component('drag-to-sort', require('./components/dnd/DragToSort.vue').default);      // 教材表单
 Vue.component('icon-selector', require('./components/misc/IconSelector.vue').default);      // 教材表单
 
 import { Constants } from './common/constants';
@@ -50,9 +50,115 @@ import { loadBuildings } from './common/facility';
 import { getEmptyElectiveCourseApplication } from './common/elective_course';
 import { loadTextbooksPaginate, deleteTextbook } from './common/textbook';
 import { loadOrgContacts, loadGradeContacts, loadGrades } from './common/contacts';
-import { saveFlow, loadNodes, deleteNode, saveNode, updateNode, deleteNodeAttachment, deleteFlow } from './common/flow';
+import { saveFlow, loadNodes, deleteNode, saveNode, updateNode, deleteNodeAttachment, deleteFlow, start } from './common/flow';
 import { saveNews, loadNews, saveSections, deleteNews, publishNews, deleteSection, moveUpSection, moveDownSection } from './common/news';
 
+/**
+ * Open一个流程
+ */
+if(document.getElementById('pipeline-flow-open-app')){
+    new Vue({
+        el:'#pipeline-flow-open-app',
+        data(){
+            return {
+                schoolId: null,
+                action:{
+                    id:null,
+                    flow_id:'',
+                    node_id:'',
+                    content:'',
+                    attachments:[],
+                },
+                showFileManagerFlag: false,
+                isLoading: false,
+                done: false,
+            }
+        },
+        created(){
+            const dom = document.getElementById('app-init-data-holder');
+            this.schoolId = dom.dataset.school;
+            this.action.node_id = dom.dataset.nodeid;
+            this.action.flow_id = dom.dataset.flowid;
+        },
+        methods:{
+            closeWindow: function(){
+                window.close();
+            },
+            onStartActionSubmit: function () {
+                this.isLoading = true;
+                start(this.action).then(res => {
+                    if(Util.isAjaxResOk(res)){
+                        this.action.id = res.data.data.id;
+                        this.$message({type:'success',message: '提交成功'});
+                        this.updateEventObserverResult();
+                        this.done = true;
+                    }
+                    else{
+                        this.$message.error(res.data.message);
+                        this.done = false;
+                    }
+                    this.isLoading = false;
+                })
+            },
+            // 观察流程启动之后, 事件的监听结果
+            updateEventObserverResult: function(){
+                if(!Util.isEmpty(this.action.id)){
+                    // Todo: 观察流程启动之后, 事件的监听结果. 如果不实现, 也可以
+                }
+            },
+            pickFileHandler: function(payload){
+                this.showFileManagerFlag = false;
+                const attachment = {
+                    id:null,
+                    action_id: null,
+                    media_id: payload.file.id,
+                    url: payload.file.url,
+                    file_name: payload.file.file_name
+                };
+                this.action.attachments.push(attachment);
+            },
+            dropAttachment: function(idx, attachment){
+                this.action.attachments.splice(idx, 1);
+                this.$message({type:'info', message: '移除文件: ' + attachment.file_name});
+            }
+        }
+    });
+}
+
+/**
+ * 教师 app
+ */
+if(document.getElementById('teacher-homepage-app')){
+    new Vue({
+        el:'#teacher-homepage-app',
+        data(){
+            return {
+                schoolId: null,
+                userUuid: null,
+                url:{
+                    flowOpen: ''
+                }
+            }
+        },
+        created(){
+            const dom = document.getElementById('app-init-data-holder');
+            this.schoolId = dom.dataset.school;
+            this.userUuid = dom.dataset.useruuid;
+            this.url.flowOpen = dom.dataset.flowopen;
+        },
+        methods:{
+            startFlow: function(flowId){
+                const url = this.url.flowOpen + '?flow=' + flowId + '&uuid=' + this.userUuid;
+                window.open(url,'_blank');
+            }
+        }
+    });
+}
+
+
+/**
+ * 工作流程管理
+ */
 if(document.getElementById('pipeline-flows-manager-app')){
     new Vue({
         el:'#pipeline-flows-manager-app',

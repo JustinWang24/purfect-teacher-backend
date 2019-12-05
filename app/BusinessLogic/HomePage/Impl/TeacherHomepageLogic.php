@@ -8,6 +8,8 @@
 
 namespace App\BusinessLogic\HomePage\Impl;
 use App\BusinessLogic\HomePage\Contracts\IHomePageLogic;
+use App\Dao\Pipeline\FlowDao;
+use App\Models\Teachers\Teacher;
 use App\User;
 use Illuminate\Http\Request;
 
@@ -45,6 +47,8 @@ class TeacherHomepageLogic implements IHomePageLogic
         // Todo: 加载系统发给老师的消息
 
         // Todo: 加载老师提交的任何申请
+        $flowDao = new FlowDao();
+        $this->data['groupedFlows'] = $flowDao->getGroupedFlows($this->teacher->getSchoolId(), Teacher::FlowTypes());
 
         // Todo: 加载老师所教授的课程
 

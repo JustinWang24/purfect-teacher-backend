@@ -13,7 +13,11 @@ class Action extends Model implements IAction
     public $table = 'pipeline_actions';
     protected $fillable = [
         'flow_id','node_id',
-        'result','content','user_id'
+        'result','content','user_id','urgent'
+    ];
+
+    public $casts = [
+        'urgent'=>'boolean'
     ];
 
     public function attachments(){
@@ -87,5 +91,10 @@ class Action extends Model implements IAction
     public function isSuccess()
     {
         return true;
+    }
+
+    public function isUrgent(): bool
+    {
+        return $this->urgent;
     }
 }
