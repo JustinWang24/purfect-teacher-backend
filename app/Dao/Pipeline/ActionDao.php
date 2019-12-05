@@ -10,6 +10,9 @@ namespace App\Dao\Pipeline;
 use App\Dao\NetworkDisk\MediaDao;
 use App\Models\Pipeline\Flow\Action;
 use App\Models\Pipeline\Flow\ActionAttachment;
+use App\Utils\Pipeline\IAction;
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
@@ -100,5 +103,36 @@ class ActionDao
             DB::rollBack();
             return false;
         }
+    }
+
+    /**
+     * 获取给定用户的所有发起的流程
+     * @param $user
+     * @return Collection
+     */
+    public function getFlowsWhichStartBy($user){
+        return Action::where('user_id',$user->id??$user)
+            ->join('pipeline_nodes', function ($join){
+                $join->on('pipeline_actions.node_id','=','pipeline_nodes.id')
+                    ->where('pipeline_nodes.prev_node','=',0);
+            })
+            ->with('flow')
+            ->get();
+    }
+
+    /**
+     * 获取给定用户的所有等待审核的流程
+     * @param $user
+     * @return Collection
+     */
+    public function getFlowsWaitingFor($user){
+        return Action::where('user_id',$user->id??$user)
+            ->where('result','=',IAction::RESULT_PENDING)
+            ->join('pipeline_nodes', function ($join){
+                $join->on('pipeline_actions.node_id','=','pipeline_nodes.id')
+                    ->where('pipeline_nodes.prev_node','>',0);
+            })
+            ->with('flow')
+            ->get();
     }
 }

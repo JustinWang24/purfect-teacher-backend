@@ -27,6 +27,24 @@ class FlowsController extends Controller
     }
 
     /**
+     * @param FlowRequest $request
+     * @return string
+     */
+    public function started_by_me(FlowRequest $request){
+        $logic = FlowLogicFactory::GetInstance($request->user());
+        return JsonBuilder::Success(['actions'=>$logic->startedByMe()]);
+    }
+
+    /**
+     * @param FlowRequest $request
+     * @return string
+     */
+    public function waiting_for_me(FlowRequest $request){
+        $logic = FlowLogicFactory::GetInstance($request->user());
+        return JsonBuilder::Success(['actions'=>$logic->waitingForMe()]);
+    }
+
+    /**
      * 启动一个流程的接口
      * @param FlowRequest $request
      * @return string
