@@ -48,7 +48,8 @@ class ApplicationDao
      * @return mixed
      */
     public function getApplicationBySchoolId($schoolId) {
-        return Application::where('school_id', $schoolId)->paginate(ConfigurationTool::DEFAULT_PAGE_SIZE);
+        return Application::where('school_id', $schoolId)
+            ->paginate(ConfigurationTool::DEFAULT_PAGE_SIZE);
     }
 
 
@@ -71,6 +72,23 @@ class ApplicationDao
         return Application::where('id', $id)->update($data);
     }
 
+
+    /**
+     * 根据用户获取申请列表
+     * @param $userId
+     * @param $simpleness
+     * @return mixed
+     */
+    public function getApplicationByUserId($userId, $simpleness = true) {
+        $field = '*';
+        if($simpleness) {
+            $field = ['id', 'application_type_id', 'created_at', 'status'];
+        }
+        return Application::where('user_id', $userId)
+            ->select($field)
+            ->orderBy('created_at','desc')
+            ->paginate(ConfigurationTool::DEFAULT_PAGE_SIZE);
+    }
 
 
 

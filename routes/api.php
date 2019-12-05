@@ -328,6 +328,10 @@ Route::prefix('students')->middleware('auth:api')->group(function () {
     // 申请类型
     Route::get('applications-type','Api\Application\ApplicationController@applicationTypeList')
             ->name('api.students.applications-type');
+
+    // 根据用户查询申请列表
+    Route::get('applications-list','Api\Application\ApplicationController@applicationList')
+            ->name('api.students.applications-list');
 });
 
 Route::prefix('questionnaire')->middleware('auth:api')->group(function () {
