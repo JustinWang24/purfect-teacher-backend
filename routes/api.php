@@ -375,6 +375,7 @@ Route::prefix('QrCode')->middleware('auth:api')->group(function () {
 
 Route::prefix('account')->middleware('auth:api')->group(function () {
     Route::post('/getAccountCore', 'Api\Account\IndexController@index')->name('api.account.core');
+});
 
 Route::prefix('pipeline')->middleware('auth:api')->group(function (){
     /**
