@@ -58,7 +58,7 @@ class FlowEngine implements IFlowEngine
             if($handler){
                 $messageBag = $handler->handle($node);
                 if($messageBag->isSuccess()){
-                    if(!$node->isEnd()){
+                    if($node->isEnd()){
                         // 表示整个流程已经完成了
                         return self::FLOW_END;
                     }

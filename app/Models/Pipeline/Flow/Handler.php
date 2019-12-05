@@ -18,6 +18,7 @@ class Handler extends Model implements INodeHandler
         'user_ids',
         'organizations',
         'titles',
+        'notice_to'
     ];
 
     public function node(){
@@ -26,11 +27,16 @@ class Handler extends Model implements INodeHandler
 
     public function handle(INode $node): IAction
     {
-        // TODO: Implement handle() method.
+        // TODO:
     }
 
     public function resume(INode $node): IAction
     {
         // TODO: Implement resume() method.
+    }
+
+    public function getNoticeTo()
+    {
+        // TODO: Implement getNoticeTo() method.
     }
 }
