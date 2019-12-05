@@ -385,6 +385,18 @@ Route::prefix('pipeline')->middleware('auth:api')->group(function (){
         ->name('api.pipeline.flows.my');
 
     /**
+     * 用户调取自己发起的申请的接口
+     */
+    Route::post('/flows/started-by-me', 'Api\Pipeline\FlowsController@started_by_me')
+        ->name('api.pipeline.flows.started-by-me');
+
+    /**
+     * 用户调取正在等待自己审核的申请
+     */
+    Route::post('/flows/waiting-for-me', 'Api\Pipeline\FlowsController@waiting_for_me')
+        ->name('api.pipeline.flows.waiting-for-me');
+
+    /**
      * 用户调取可用的流程集合的接口
      */
     Route::post('/flow/open', 'Api\Pipeline\FlowsController@open')
