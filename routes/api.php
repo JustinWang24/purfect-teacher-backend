@@ -373,7 +373,9 @@ Route::prefix('QrCode')->middleware('auth:api')->group(function () {
     Route::post('/getQrCode', 'Api\QrCode\IndexController@generate')->name('api.generate.qr.code');
 });
 
-// 工作流的应用接口
+Route::prefix('account')->middleware('auth:api')->group(function () {
+    Route::post('/getAccountCore', 'Api\Account\IndexController@index')->name('api.account.core');
+
 Route::prefix('pipeline')->middleware('auth:api')->group(function (){
     /**
      * 用户调取可用的流程集合的接口
