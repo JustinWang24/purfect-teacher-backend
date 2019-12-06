@@ -14,11 +14,8 @@ class Handler extends Model implements INodeHandler
     public $table = 'pipeline_handlers';
     public $fillable = [
         'node_id',
-        'role_slugs',
-        'user_ids',
-        'organizations',
-        'titles',
-        'notice_to'
+        'role_slugs','organizations','titles', // 当前步骤谁来使用
+        'notice_to','user_ids', // 下一步交由谁来审核
     ];
 
     public function node(){
@@ -38,5 +35,22 @@ class Handler extends Model implements INodeHandler
     public function getNoticeTo()
     {
         // TODO: Implement getNoticeTo() method.
+    }
+
+    /**
+     * 获取所有可以参与审核的角色
+     * @return array
+     */
+    public static function HigherLevels(){
+        return [
+            INodeHandler::CLASS_ADVISER,
+            INodeHandler::GRADE_ADVISER,
+            INodeHandler::ORGANIZATION_DEPUTY,
+            INodeHandler::ORGANIZATION_LEADER,
+            INodeHandler::DEPARTMENT_LEADER,
+            INodeHandler::SCHOOL_DEPUTY,
+            INodeHandler::SCHOOL_PRINCIPLE,
+            INodeHandler::SCHOOL_COORDINATOR,
+        ];
     }
 }

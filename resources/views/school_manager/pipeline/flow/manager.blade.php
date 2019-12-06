@@ -78,7 +78,8 @@
                                         <el-button icon="el-icon-edit" size="mini" type="primary" @click="editNode(node)"></el-button>
                                         <el-button v-if="index > 0" icon="el-icon-delete" size="mini" type="danger" @click="deleteNode(index, node)"></el-button>
                                     </p>
-                                    <p v-if="node.handler.organizations.length > 0">
+                                    <h5><b>负责发起: </b></h5>
+                                    <p class="pl-4" v-if="node.handler.organizations.length > 0">
                                         <span class="text-primary"><b>部门: </b></span>
                                         <span class="mr-2" v-for="dept in node.handler.organizations.substring(0,node.handler.organizations.length -1).split(';')">
                                             <el-tag effect="plain" type="info" size="mini">
@@ -86,7 +87,7 @@
                                             </el-tag>
                                         </span>
                                     </p>
-                                    <p v-if="node.handler.titles.length > 0">
+                                    <p class="pl-4" v-if="node.handler.titles.length > 0">
                                         <span class="text-primary"><b>成员角色: </b></span>
                                         <span v-for="title in node.handler.titles.substring(0,node.handler.titles.length -1).split(';')" class="mr-2">
                                             <el-tag effect="plain" type="info" size="mini">
@@ -94,7 +95,7 @@
                                             </el-tag>
                                         </span>
                                     </p>
-                                    <p v-if="node.handler.role_slugs.length > 0">
+                                    <p class="pl-4" v-if="node.handler.role_slugs.length > 0">
                                         <span class="text-primary"><b>用户组: </b></span>
                                         <span v-for="slugTxt in node.handler.role_slugs.substring(0,node.handler.role_slugs.length -1).split(';')" class="mr-2">
                                             <el-tag effect="plain" type="info" size="mini">
@@ -102,6 +103,20 @@
                                             </el-tag>
                                         </span>
                                     </p>
+
+                                    <h5><b>负责审核</b></h5>
+                                    <p class="pl-4" v-if="node.handler.notice_to.length === 0">
+                                        <span class="text-danger">无需审核</span>
+                                    </p>
+                                    <p class="pl-4" v-if="node.handler.notice_to.length > 0">
+                                        <span class="text-primary"><b>角色: </b></span>
+                                        <span v-for="notice in node.handler.notice_to.substring(0,node.handler.notice_to.length -1).split(';')" class="mr-2">
+                                            <el-tag effect="plain" type="info" size="mini">
+                                                @{{ notice }}
+                                            </el-tag>
+                                        </span>
+                                    </p>
+<el-divider></el-divider>
                                     <p v-if="node.attachments.length > 0" style="margin-bottom: 0;">
                                         <span class="text-primary"><b>关联的附件: </b></span>
                                     </p>
@@ -164,7 +179,6 @@
 
                 <el-divider></el-divider>
                 <h5 class="text-center text-danger">可以使用本流程的用户群体, 请在以下用户群中二选一, 部门+角色的组合优先 </h5>
-                <el-divider></el-divider>
                 @include('school_manager.pipeline.flow.node_form')
                 <el-form-item>
                     <el-button type="primary" @click="onNewFlowSubmit">立即创建</el-button>
@@ -205,7 +219,6 @@
                 </el-row>
                 <el-divider></el-divider>
                 <h5 class="text-center text-danger">可以操作此步骤的用户群体, 请在以下用户群中二选一, 部门+角色的组合优先 </h5>
-                <el-divider></el-divider>
                 @include('school_manager.pipeline.flow.node_form')
                 <el-form-item>
                     <el-button type="primary" @click="onNodeFormSubmit">保存</el-button>

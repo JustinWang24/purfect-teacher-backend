@@ -49,6 +49,28 @@ export function start(action, affix) {
     );
 }
 
+export function startedByMe(userUuid, affix) {
+    const url = Util.buildUrl(Constants.API.FLOW.START_BY_ME);
+    if(Util.isDevEnv()){
+        return axios.get(url, affix);
+    }
+    return axios.post(
+        url,
+        {user_uuid: userUuid, version:Constants.VERSION}
+    );
+}
+
+export function waitingForMe(userUuid, affix) {
+    const url = Util.buildUrl(Constants.API.FLOW.WAITING_FOR_ME);
+    if(Util.isDevEnv()){
+        return axios.get(url, affix);
+    }
+    return axios.post(
+        url,
+        {user_uuid: userUuid, version:Constants.VERSION}
+    );
+}
+
 /**
  * @param flow
  * @param node

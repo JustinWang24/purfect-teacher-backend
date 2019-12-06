@@ -156,6 +156,7 @@ class NodeDao
             }
 
             $handler = $currentNode->handler;
+
             $parsed = NodeHandlersDescriptor::Parse($data);
 
             $leftOverString = '';
@@ -183,6 +184,12 @@ class NodeDao
                 $handler->titles = $parsed['titles'];
                 $handler->role_slugs = null;
             }
+
+            /**
+             * 审核的角色
+             */
+            $handler->notice_to = $parsed['notice_to'];
+
             $handler->save();
             DB::commit();
             return true;
