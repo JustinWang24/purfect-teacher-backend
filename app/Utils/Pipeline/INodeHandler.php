@@ -13,18 +13,6 @@ use App\User;
 interface INodeHandler extends IPersistent
 {
     /**
-     * 以下定义用于在发送消息通知时, 定位消息的接收者
-     */
-    const CLASS_ADVISER = '班主任';
-    const GRADE_ADVISER = '年级组长';
-    const ORGANIZATION_DEPUTY = '部门副职领导'; // 用户所在科室/机构/教研组的副职领导
-    const ORGANIZATION_LEADER = '部门正职领导';
-    const DEPARTMENT_LEADER = '系主任';
-    const SCHOOL_DEPUTY = '副校长';
-    const SCHOOL_PRINCIPLE = '校长';
-    const SCHOOL_COORDINATOR = '书记';
-
-    /**
      * 流程中某一节点的具体处理逻辑, 并返回处理的结果
      * @param INode $node
      * @return IAction

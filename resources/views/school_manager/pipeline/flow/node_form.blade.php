@@ -38,7 +38,7 @@
     </el-col>
 </el-row>
 <el-divider style="margin-top:0;"></el-divider>
-<h5 class="text-center text-danger">下一步由谁来审核: (如果是最后一步则无需指定)</h5>
+<h5 class="text-center text-danger">下一步由谁来审核或接手: (如果是最后一步则无需指定)</h5>
 
 <el-row>
     <el-col :span="24">
