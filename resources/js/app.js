@@ -211,6 +211,7 @@ if(document.getElementById('pipeline-flows-manager-app')){
                     handlers: [], // node 流程步骤的处理人
                     organizations: [], // node 流程步骤针对的部门
                     attachments: [], // node 流程步骤关联的附件
+                    notice_to: [], // node 流程步骤关联的附件
                     titles: [], // node 流程步骤针对的部门的角色
                 },
                 prevNodeId:null, // 编辑 node 的时候, 前一个步骤的 ID
@@ -367,6 +368,8 @@ if(document.getElementById('pipeline-flows-manager-app')){
                 this.node.handlers = [];
                 this.node.organizations = [];
                 this.node.titles = [];
+                this.node.notice_to = [];
+                this.organizationsTabArrayWhenEdit = [];
             },
             // 创建新的步骤
             createNewNode: function(){
@@ -386,6 +389,7 @@ if(document.getElementById('pipeline-flows-manager-app')){
                 this.node.handlers = node.handler.role_slugs === '' ? [] : this.splitHelper(node.handler.role_slugs);
                 this.organizationsTabArrayWhenEdit = node.handler.organizations === '' ? [] : this.splitHelper(node.handler.organizations);
                 this.node.titles = node.handler.titles === '' ? [] : this.splitHelper(node.handler.titles);
+                this.node.notice_to = node.handler.notice_to === '' ? [] : this.splitHelper(node.handler.notice_to);
             },
             splitHelper: function(str){
                 return str.substring(0,str.length -1).split(';')

@@ -37,6 +37,20 @@
         </el-form-item>
     </el-col>
 </el-row>
+<el-divider style="margin-top:0;"></el-divider>
+<h5 class="text-center text-danger">下一步由谁来审核: (如果是最后一步则无需指定)</h5>
+
+<el-row>
+    <el-col :span="24">
+        <el-form-item label="审核角色">
+            <el-checkbox-group v-model="node.notice_to">
+                @foreach(\App\Models\Pipeline\Flow\Handler::HigherLevels() as $roleName)
+                    <el-checkbox label="{{ $roleName }}"></el-checkbox>
+                @endforeach
+            </el-checkbox-group>
+        </el-form-item>
+    </el-col>
+</el-row>
 <el-row>
     <el-col :span="14">
         <el-form-item label="说明">
