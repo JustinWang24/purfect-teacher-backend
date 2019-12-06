@@ -2,12 +2,12 @@
 
 namespace App\Listeners\Pipeline\Flow;
 
+use App\BusinessLogic\Pipeline\CreateActionMessage\Factory;
 use App\Events\IFlowAccessor;
-use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Support\Facades\Log;
 
-class NotifyStarter
+class NotifyStarter implements ShouldQueue
 {
     /**
      * Create the event listener.
@@ -29,15 +29,24 @@ class NotifyStarter
     {
         // Todo: 实现流程审批过程中通知流程发起人的监听器方法
         // 简单判断一下就知道该发送什么消息
+
+        $logic = Factory::GetInstance($event->getNode());
+        $logic->actionAndMessage($event->getAction());
+
         if($event->getNode()->isHead()){
             // 流程启动消息
-            Log::info('流程开始',['msg'=>$event->getUser()->getName().': '.$event->getFlow()->getName().': '.$event->getNode()->getName().' 成功']);
-        }
-        elseif ($event->getNode()->isEnd()){
+            Log::info('流程开始111',['msg'=>$event->getUser()->getName().': '.$event->getFlow()->getName().': '.$event->getNode()->getName().' 成功']);
+            $logic = new Factory;
+            $result = $logic::GetInstance('start');
+            $result->actionAndMessage($event);
+
+        } elseif ($event->getNode()->isEnd()){
             // 流程完毕消息
             Log::info('流程结束',['msg'=>$event->getUser()->getName().': '.$event->getFlow()->getName().': '.$event->getNode()->getName().' 已经处理完毕']);
-        }
-        else{
+            $logic = new Factory;
+            $result = $logic::GetInstance('end');
+            $result->actionAndMessage($event);
+        } else {
             // 流程处理消息
             if($event->getAction()->isSuccess()){
                 // 流程某个步骤通过了
