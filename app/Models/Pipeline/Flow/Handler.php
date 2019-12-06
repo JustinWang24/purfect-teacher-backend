@@ -32,9 +32,9 @@ class Handler extends Model implements INodeHandler
         // TODO: Implement resume() method.
     }
 
-    public function getNoticeTo()
+    public function getNoticeTo(User $user)
     {
-        // TODO: Implement getNoticeTo() method.
+        
     }
 
     /**
