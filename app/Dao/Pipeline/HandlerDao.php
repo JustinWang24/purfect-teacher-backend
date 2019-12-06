@@ -42,6 +42,13 @@ class HandlerDao
             $handlerData['role_slugs'] = null;
         }
 
+        /**
+         * 负责审核的角色
+         */
+        if(!empty($result['notice_to'])){
+            $handlerData['notice_to'] = $result['notice_to'];
+        }
+
         return Handler::create($handlerData);
     }
 }

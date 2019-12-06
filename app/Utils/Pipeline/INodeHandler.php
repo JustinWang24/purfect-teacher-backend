@@ -21,7 +21,7 @@ interface INodeHandler extends IPersistent
     const ORGANIZATION_LEADER = '部门正职领导';
     const DEPARTMENT_LEADER = '系主任';
     const SCHOOL_DEPUTY = '副校长';
-    const SCHOOL_LEADER = '校长';
+    const SCHOOL_PRINCIPLE = '校长';
     const SCHOOL_COORDINATOR = '书记';
 
     /**

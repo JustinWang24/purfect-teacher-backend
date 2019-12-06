@@ -46,6 +46,22 @@ class TeacherFlowsLogic implements IFlowLogic
     }
 
     /**
+     * 获取我发起的流程
+     * @return IAction[]|\Illuminate\Database\Eloquent\Collection
+     */
+    public function startedByMe()
+    {
+        $actionDao = new ActionDao();
+        return $actionDao->getFlowsWhichStartBy($this->user);
+    }
+
+    public function waitingForMe()
+    {
+        $actionDao = new ActionDao();
+        return $actionDao->getFlowsWaitingFor($this->user);
+    }
+
+    /**
      * @param IFlow $flow
      * @return IMessageBag
      */

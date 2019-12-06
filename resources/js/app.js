@@ -50,7 +50,10 @@ import { loadBuildings } from './common/facility';
 import { getEmptyElectiveCourseApplication } from './common/elective_course';
 import { loadTextbooksPaginate, deleteTextbook } from './common/textbook';
 import { loadOrgContacts, loadGradeContacts, loadGrades } from './common/contacts';
-import { saveFlow, loadNodes, deleteNode, saveNode, updateNode, deleteNodeAttachment, deleteFlow, start } from './common/flow';
+import {
+    saveFlow, loadNodes, deleteNode, saveNode, updateNode,
+    deleteNodeAttachment, deleteFlow, start, startedByMe, waitingForMe
+} from './common/flow';
 import { saveNews, loadNews, saveSections, deleteNews, publishNews, deleteSection, moveUpSection, moveDownSection } from './common/news';
 
 /**
@@ -82,6 +85,8 @@ if(document.getElementById('pipeline-flow-open-app')){
         },
         methods:{
             closeWindow: function(){
+                window.opener = null;
+                window.open('','_self');
                 window.close();
             },
             onStartActionSubmit: function () {
@@ -137,7 +142,10 @@ if(document.getElementById('teacher-homepage-app')){
                 userUuid: null,
                 url:{
                     flowOpen: ''
-                }
+                },
+                isLoading: false,
+                flowsStartedByMe:[],
+                flowsWaitingForMe:[],
             }
         },
         created(){
@@ -145,11 +153,29 @@ if(document.getElementById('teacher-homepage-app')){
             this.schoolId = dom.dataset.school;
             this.userUuid = dom.dataset.useruuid;
             this.url.flowOpen = dom.dataset.flowopen;
+            this.loadFlowsStartedByMe();
+            this.loadFlowsWaitingForMe();
         },
         methods:{
             startFlow: function(flowId){
                 const url = this.url.flowOpen + '?flow=' + flowId + '&uuid=' + this.userUuid;
                 window.open(url,'_blank');
+            },
+            loadFlowsStartedByMe: function(){
+                this.isLoading = true;
+                startedByMe(this.userUuid).then(res => {
+                    if(Util.isAjaxResOk(res)){
+                        this.flowsStartedByMe = res.data.data.actions;
+                    }
+                    this.isLoading = false;
+                });
+            },
+            loadFlowsWaitingForMe: function(){
+                waitingForMe(this.userUuid).then(res => {
+                    if(Util.isAjaxResOk(res)){
+                        this.flowsWaitingForMe = res.data.data.actions;
+                    }
+                });
             }
         }
     });
@@ -185,6 +211,7 @@ if(document.getElementById('pipeline-flows-manager-app')){
                     handlers: [], // node 流程步骤的处理人
                     organizations: [], // node 流程步骤针对的部门
                     attachments: [], // node 流程步骤关联的附件
+                    notice_to: [], // node 流程步骤关联的附件
                     titles: [], // node 流程步骤针对的部门的角色
                 },
                 prevNodeId:null, // 编辑 node 的时候, 前一个步骤的 ID
@@ -341,6 +368,8 @@ if(document.getElementById('pipeline-flows-manager-app')){
                 this.node.handlers = [];
                 this.node.organizations = [];
                 this.node.titles = [];
+                this.node.notice_to = [];
+                this.organizationsTabArrayWhenEdit = [];
             },
             // 创建新的步骤
             createNewNode: function(){
@@ -360,6 +389,7 @@ if(document.getElementById('pipeline-flows-manager-app')){
                 this.node.handlers = node.handler.role_slugs === '' ? [] : this.splitHelper(node.handler.role_slugs);
                 this.organizationsTabArrayWhenEdit = node.handler.organizations === '' ? [] : this.splitHelper(node.handler.organizations);
                 this.node.titles = node.handler.titles === '' ? [] : this.splitHelper(node.handler.titles);
+                this.node.notice_to = node.handler.notice_to === '' ? [] : this.splitHelper(node.handler.notice_to);
             },
             splitHelper: function(str){
                 return str.substring(0,str.length -1).split(';')
