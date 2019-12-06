@@ -18,13 +18,24 @@ class NodeHandlersDescriptor
         $organizations = $data['organizations']??[];
         $titles = $data['titles']??[];
         $handlers = $data['handlers']??[];
+        $noticeTo = $data['notice_to']??[];
 
         $handlersDescriptor = [];
         $orgDao = new OrganizationDao();
 
+        /**
+         * 负责审核的人
+         */
+        if(!empty($noticeTo)){
+            $noticeToStr = '';
+            foreach ($noticeTo as $to) {
+                $noticeToStr .= $to.';';
+            }
+            $handlersDescriptor['notice_to'] = $noticeToStr;
+        }
+
         if(!empty($organizations)){
             $orgStr = '';
-
             // 对应的是 handlers 表中的 organizations 字段, 需要解析提交的 title 和 organizations
             foreach ($organizations as $organization) {
                 /**
