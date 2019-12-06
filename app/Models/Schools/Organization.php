@@ -27,9 +27,16 @@ class Organization extends Model
      */
     public static function AllTitles(){
         return [
-            Title::LEADER=>Title::LEADER_TXT,
-            Title::DEPUTY=>Title::DEPUTY_TXT,
-            Title::MEMBER=>Title::MEMBER_TXT,
+            Title::ORGANIZATION_EMPLOYEE_ID=>Title::ORGANIZATION_EMPLOYEE,
+            Title::ORGANIZATION_DEPUTY_ID=>Title::ORGANIZATION_DEPUTY,
+            Title::ORGANIZATION_LEADER_ID=>Title::ORGANIZATION_LEADER,
+
+            Title::CLASS_ADVISER_ID=>Title::CLASS_ADVISER,
+            Title::GRADE_ADVISER_ID=>Title::GRADE_ADVISER,
+            Title::DEPARTMENT_LEADER_ID=>Title::DEPARTMENT_LEADER,
+            Title::SCHOOL_DEPUTY_ID=>Title::SCHOOL_DEPUTY,
+            Title::SCHOOL_PRINCIPLE_ID=>Title::SCHOOL_PRINCIPLE,
+            Title::SCHOOL_COORDINATOR_ID=>Title::SCHOOL_COORDINATOR,
         ];
     }
 

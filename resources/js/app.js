@@ -274,10 +274,7 @@ if(document.getElementById('pipeline-flows-manager-app')){
                 this.currentFlow.name = '';
                 this.currentFlow.id = '';
                 this.currentFlow.type = type;
-                this.node.description = '';
-                this.node.handlers = [];
-                this.node.organizations = [];
-                this.node.titles = [];
+                this._resetNodeForm();
                 this.flowFormFlag = true;
             },
             onNewFlowSubmit: function(){
@@ -411,6 +408,22 @@ if(document.getElementById('pipeline-flows-manager-app')){
                     return;
                 }
 
+                if(this.node.notice_to.length === 0){
+                    this.$confirm('没有指定下一步的负责人, 表示这将是本流程的最后一步, 是否确认?', '提示', {
+                        confirmButtonText: '确定',
+                        cancelButtonText: '取消',
+                        type: 'warning'
+                    }).then(() => {
+                        this._updateNode();
+                    }).catch(() => {
+
+                    });
+                }
+                else{
+                    this._updateNode();
+                }
+            },
+            _updateNode: function(){
                 if(Util.isEmpty(this.node.id)){
                     // 创建新步骤的操作
                     if(this.node.organizations.length === 0 && this.node.handlers.length === 0){
