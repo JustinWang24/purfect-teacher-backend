@@ -39,8 +39,9 @@ interface INodeHandler extends IPersistent
     public function resume(INode $node): IAction;
 
     /**
-     * 获取消息发送到哪些用户的方法
+     * 根据谁执行的动作, 获取下一步发送到哪些用户的方法
+     * @param  User $user: 执行了操作的用户
      * @return User[]
      */
-    public function getNoticeTo();
+    public function getNoticeTo(User $user);
 }
