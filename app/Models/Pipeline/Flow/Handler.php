@@ -7,6 +7,7 @@ use App\Utils\Pipeline\IAction;
 use App\Utils\Pipeline\INode;
 use App\Utils\Pipeline\INodeHandler;
 use Illuminate\Database\Eloquent\Model;
+use App\Utils\Misc\Contracts\Title;
 
 class Handler extends Model implements INodeHandler
 {
@@ -32,9 +33,35 @@ class Handler extends Model implements INodeHandler
         // TODO: Implement resume() method.
     }
 
+    /**
+     * 给定了一个动作的执行者, 找出对这个执行者来说, 应该通知谁
+     * @param User $user:
+     * @return User[]
+     */
     public function getNoticeTo(User $user)
     {
-        
+        $users = [];
+
+        if(!empty($this->user_ids)){
+            // 表示本步骤指定了确定的用户, 因此使用它
+            $usersId = explode(';',$this->user_ids);
+            $users = User::whereIn('id',$usersId)->get();
+        }
+        elseif (!empty($this->notice_to)){
+            $roles = explode(';',$this->notice_to);
+            $schoolId = $user->getSchoolId();
+
+            foreach ($roles as $role) {
+                switch ($role){
+                    case Title::SCHOOL_PRINCIPLE: // 校长
+
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
+        return $users;
     }
 
     /**
@@ -43,14 +70,14 @@ class Handler extends Model implements INodeHandler
      */
     public static function HigherLevels(){
         return [
-            INodeHandler::CLASS_ADVISER,
-            INodeHandler::GRADE_ADVISER,
-            INodeHandler::ORGANIZATION_DEPUTY,
-            INodeHandler::ORGANIZATION_LEADER,
-            INodeHandler::DEPARTMENT_LEADER,
-            INodeHandler::SCHOOL_DEPUTY,
-            INodeHandler::SCHOOL_PRINCIPLE,
-            INodeHandler::SCHOOL_COORDINATOR,
+            Title::CLASS_ADVISER,
+            Title::GRADE_ADVISER,
+            Title::ORGANIZATION_DEPUTY,
+            Title::ORGANIZATION_LEADER,
+            Title::DEPARTMENT_LEADER,
+            Title::SCHOOL_DEPUTY,
+            Title::SCHOOL_PRINCIPLE,
+            Title::SCHOOL_COORDINATOR,
         ];
     }
 }

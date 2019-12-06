@@ -188,7 +188,7 @@ class NodeDao
             /**
              * 审核的角色
              */
-            $handler->notice_to = $parsed['notice_to'];
+            $handler->notice_to = $parsed['notice_to']??null;
 
             $handler->save();
             DB::commit();
@@ -196,7 +196,7 @@ class NodeDao
         }
         catch (\Exception $exception){
             DB::rollBack();
-            return $exception->getMessage().$exception->getLine();
+            return $exception->getMessage().', 行数: '.$exception->getLine();
         }
     }
 
