@@ -5874,3 +5874,450 @@ parmars:[1,2]
 [2019-12-07 14:55:06]select count(*) as aggregate from `wifi_user_agreements` where (`user_id` = ?)
 parmars:[1]
 
+[2019-12-07 16:24:22]select * from `users` where `api_token` = ? limit 1
+parmars:["349aa4c7-de77-4df6-a476-5583da710cdf"]
+
+[2019-12-07 16:29:22]select * from `users` where `api_token` = ? limit 1
+parmars:["349aa4c7-de77-4df6-a476-5583da710cdf"]
+
+[2019-12-07 16:30:30]select * from `users` where `api_token` = ? limit 1
+parmars:["ba1f00c7-5b39-4df2-ad72-b99cb33da75c"]
+
+[2019-12-07 16:30:38]select * from `users` where `api_token` = ? limit 1
+parmars:["ba1f00c7-5b39-4df2-ad72-b99cb33da75c"]
+
+[2019-12-07 16:33:44]select * from `users` where `api_token` = ? limit 1
+parmars:["841296ba-42f5-4396-b171-2d604f7dbd10"]
+
+[2019-12-07 16:33:44]select * from `users` where `api_token` = ? limit 1
+parmars:["841296ba-42f5-4396-b171-2d604f7dbd10"]
+
+[2019-12-07 16:33:45]select * from `users` where `api_token` = ? limit 1
+parmars:["841296ba-42f5-4396-b171-2d604f7dbd10"]
+
+[2019-12-07 16:33:45]select * from `users` where `api_token` = ? limit 1
+parmars:["841296ba-42f5-4396-b171-2d604f7dbd10"]
+
+[2019-12-07 16:33:45]select * from `users` where `api_token` = ? limit 1
+parmars:["841296ba-42f5-4396-b171-2d604f7dbd10"]
+
+[2019-12-07 16:34:12]select * from `users` where `api_token` = ? limit 1
+parmars:["ba1f00c7-5b39-4df2-ad72-b99cb33da75c"]
+
+[2019-12-07 16:34:18]select * from `users` where `api_token` = ? limit 1
+parmars:["841296ba-42f5-4396-b171-2d604f7dbd10"]
+
+[2019-12-07 16:34:31]select * from `users` where `api_token` = ? limit 1
+parmars:["841296ba-42f5-4396-b171-2d604f7dbd10"]
+
+[2019-12-07 16:34:34]select * from `users` where `api_token` = ? limit 1
+parmars:["841296ba-42f5-4396-b171-2d604f7dbd10"]
+
+[2019-12-07 16:34:41]select * from `users` where `api_token` = ? limit 1
+parmars:["841296ba-42f5-4396-b171-2d604f7dbd10"]
+
+[2019-12-07 16:35:23]select * from `users` where `api_token` = ? limit 1
+parmars:["841296ba-42f5-4396-b171-2d604f7dbd10"]
+
+[2019-12-07 16:40:08]select * from `users` where `api_token` = ? limit 1
+parmars:["841296ba-42f5-4396-b171-2d604f7dbd10"]
+
+[2019-12-07 16:40:23]select * from `users` where `api_token` = ? limit 1
+parmars:["841296ba-42f5-4396-b171-2d604f7dbd10"]
+
+[2019-12-07 16:40:47]select * from `users` where `api_token` = ? limit 1
+parmars:["dbb44919-629c-480d-99b2-24e5568eb56f"]
+
+[2019-12-07 16:51:43]select * from `users` where `api_token` = ? limit 1
+parmars:["dbb44919-629c-480d-99b2-24e5568eb56f"]
+
+[2019-12-07 16:52:04]select * from `users` where `api_token` = ? limit 1
+parmars:["dbb44919-629c-480d-99b2-24e5568eb56f"]
+
+[2019-12-07 16:53:36]select * from `users` where `api_token` = ? limit 1
+parmars:["dbb44919-629c-480d-99b2-24e5568eb56f"]
+
+[2019-12-07 16:54:39]select * from `users` where `api_token` = ? limit 1
+parmars:["dbb44919-629c-480d-99b2-24e5568eb56f"]
+
+[2019-12-07 16:54:39]select * from `grade_users` where `grade_users`.`user_id` = ? and `grade_users`.`user_id` is not null limit 1
+parmars:[6]
+
+[2019-12-07 16:55:11]select * from `users` where `api_token` = ? limit 1
+parmars:["dbb44919-629c-480d-99b2-24e5568eb56f"]
+
+[2019-12-07 16:56:47]select * from `users` where `api_token` = ? limit 1
+parmars:["dbb44919-629c-480d-99b2-24e5568eb56f"]
+
+[2019-12-07 16:56:55]select * from `users` where `api_token` = ? limit 1
+parmars:["dbb44919-629c-480d-99b2-24e5568eb56f"]
+
+[2019-12-07 16:56:55]select * from `grade_users` where `grade_users`.`user_id` = ? and `grade_users`.`user_id` is not null limit 1
+parmars:[6]
+
+[2019-12-07 16:57:04]select * from `users` where `api_token` = ? limit 1
+parmars:["dbb44919-629c-480d-99b2-24e5568eb56f"]
+
+[2019-12-07 16:57:18]select * from `users` where `api_token` = ? limit 1
+parmars:["dbb44919-629c-480d-99b2-24e5568eb56f"]
+
+[2019-12-07 16:58:35]select * from `users` where `api_token` = ? limit 1
+parmars:["dbb44919-629c-480d-99b2-24e5568eb56f"]
+
+[2019-12-07 16:59:19]select * from `users` where `api_token` = ? limit 1
+parmars:["dbb44919-629c-480d-99b2-24e5568eb56f"]
+
+[2019-12-07 16:59:30]select * from `users` where `api_token` = ? limit 1
+parmars:["dbb44919-629c-480d-99b2-24e5568eb56f"]
+
+[2019-12-07 16:59:41]select * from `users` where `api_token` = ? limit 1
+parmars:["dbb44919-629c-480d-99b2-24e5568eb56f"]
+
+[2019-12-07 17:00:00]select * from `users` where `api_token` = ? limit 1
+parmars:["dbb44919-629c-480d-99b2-24e5568eb56f"]
+
+[2019-12-07 17:00:20]select * from `users` where `api_token` = ? limit 1
+parmars:["dbb44919-629c-480d-99b2-24e5568eb56f"]
+
+[2019-12-07 17:00:27]select * from `users` where `api_token` = ? limit 1
+parmars:["dbb44919-629c-480d-99b2-24e5568eb56f"]
+
+[2019-12-07 17:00:35]select * from `users` where `api_token` = ? limit 1
+parmars:["dbb44919-629c-480d-99b2-24e5568eb56f"]
+
+[2019-12-07 17:00:44]select * from `users` where `api_token` = ? limit 1
+parmars:["dbb44919-629c-480d-99b2-24e5568eb56f"]
+
+[2019-12-07 17:01:02]select * from `users` where `api_token` = ? limit 1
+parmars:["dbb44919-629c-480d-99b2-24e5568eb56f"]
+
+[2019-12-07 17:01:02]select * from `grade_users` where `grade_users`.`user_id` = ? and `grade_users`.`user_id` is not null limit 1
+parmars:[6]
+
+[2019-12-07 17:01:09]select * from `users` where `api_token` = ? limit 1
+parmars:["dbb44919-629c-480d-99b2-24e5568eb56f"]
+
+[2019-12-07 17:02:54]select * from `users` where `api_token` = ? limit 1
+parmars:["dbb44919-629c-480d-99b2-24e5568eb56f"]
+
+[2019-12-07 17:05:32]select * from `users` where `api_token` = ? limit 1
+parmars:["dbb44919-629c-480d-99b2-24e5568eb56f"]
+
+[2019-12-07 17:05:32]select * from `grade_users` where `grade_users`.`user_id` = ? and `grade_users`.`user_id` is not null limit 1
+parmars:[6]
+
+[2019-12-07 17:05:32]select * from `campuses` where `campuses`.`id` = ? and `campuses`.`deleted_at` is null limit 1
+parmars:[1]
+
+[2019-12-07 17:05:45]select * from `users` where `api_token` = ? limit 1
+parmars:["dbb44919-629c-480d-99b2-24e5568eb56f"]
+
+[2019-12-07 17:05:45]select * from `grade_users` where `grade_users`.`user_id` = ? and `grade_users`.`user_id` is not null limit 1
+parmars:[6]
+
+[2019-12-07 17:06:25]select * from `users` where `api_token` = ? limit 1
+parmars:["dbb44919-629c-480d-99b2-24e5568eb56f"]
+
+[2019-12-07 17:06:25]select * from `grade_users` where `grade_users`.`user_id` = ? and `grade_users`.`user_id` is not null limit 1
+parmars:[6]
+
+[2019-12-07 17:06:25]select count(*) as aggregate from `wifi_contents` where (`campus_id` = ? and `status` = ?)
+parmars:[1,1]
+
+[2019-12-07 17:06:25]select `typeid`, `content` from `wifi_contents` where (`campus_id` = ? and `status` = ?) order by `contentid` desc limit 10 offset 0
+parmars:[1,1]
+
+[2019-12-07 17:06:25]select `config_imgurl1`, `config_imgurl2`, `config_imgurl3`, `config_imgurl1_status`, `config_imgurl2_status`, `config_imgurl3_status` from `wifi_configs` where (`campus_id` = ? and `status` = ?) order by `configid` desc limit 1
+parmars:[1,1]
+
+[2019-12-07 17:06:36]select * from `users` where `api_token` = ? limit 1
+parmars:["dbb44919-629c-480d-99b2-24e5568eb56f"]
+
+[2019-12-07 17:06:37]select * from `grade_users` where `grade_users`.`user_id` = ? and `grade_users`.`user_id` is not null limit 1
+parmars:[6]
+
+[2019-12-07 17:06:44]select * from `users` where `api_token` = ? limit 1
+parmars:["dbb44919-629c-480d-99b2-24e5568eb56f"]
+
+[2019-12-07 17:06:44]select * from `grade_users` where `grade_users`.`user_id` = ? and `grade_users`.`user_id` is not null limit 1
+parmars:[6]
+
+[2019-12-07 17:06:55]select * from `users` where `api_token` = ? limit 1
+parmars:["dbb44919-629c-480d-99b2-24e5568eb56f"]
+
+[2019-12-07 17:06:55]select * from `grade_users` where `grade_users`.`user_id` = ? and `grade_users`.`user_id` is not null limit 1
+parmars:[6]
+
+[2019-12-07 17:07:08]select * from `users` where `api_token` = ? limit 1
+parmars:["dbb44919-629c-480d-99b2-24e5568eb56f"]
+
+[2019-12-07 17:07:08]select * from `grade_users` where `grade_users`.`user_id` = ? and `grade_users`.`user_id` is not null limit 1
+parmars:[6]
+
+[2019-12-07 17:07:21]select * from `users` where `api_token` = ? limit 1
+parmars:["dbb44919-629c-480d-99b2-24e5568eb56f"]
+
+[2019-12-07 17:07:21]select * from `grade_users` where `grade_users`.`user_id` = ? and `grade_users`.`user_id` is not null limit 1
+parmars:[6]
+
+[2019-12-07 17:07:21]select count(*) as aggregate from `wifi_contents` where (`campus_id` = ? and `status` = ?)
+parmars:[1,1]
+
+[2019-12-07 17:07:21]select `typeid`, `content` from `wifi_contents` where (`campus_id` = ? and `status` = ?) order by `contentid` desc limit 10 offset 0
+parmars:[1,1]
+
+[2019-12-07 17:07:26]select * from `users` where `api_token` = ? limit 1
+parmars:["dbb44919-629c-480d-99b2-24e5568eb56f"]
+
+[2019-12-07 17:07:27]select * from `grade_users` where `grade_users`.`user_id` = ? and `grade_users`.`user_id` is not null limit 1
+parmars:[6]
+
+[2019-12-07 17:07:27]select count(*) as aggregate from `wifi_contents` where (`campus_id` = ? and `status` = ?)
+parmars:[1,1]
+
+[2019-12-07 17:07:27]select `typeid`, `content` from `wifi_contents` where (`campus_id` = ? and `status` = ?) order by `contentid` desc limit 10 offset 0
+parmars:[1,1]
+
+[2019-12-07 17:07:27]select `config_imgurl1`, `config_imgurl2`, `config_imgurl3`, `config_imgurl1_status`, `config_imgurl2_status`, `config_imgurl3_status` from `wifi_configs` where (`campus_id` = ? and `status` = ?) order by `configid` desc limit 1
+parmars:[1,1]
+
+[2019-12-07 17:08:20]select * from `users` where `api_token` = ? limit 1
+parmars:["dbb44919-629c-480d-99b2-24e5568eb56f"]
+
+[2019-12-07 17:08:20]select * from `grade_users` where `grade_users`.`user_id` = ? and `grade_users`.`user_id` is not null limit 1
+parmars:[6]
+
+[2019-12-07 17:08:20]select count(*) as aggregate from `wifi_contents` where (`campus_id` = ? and `status` = ?)
+parmars:[1,1]
+
+[2019-12-07 17:08:20]select `typeid`, `content` from `wifi_contents` where (`campus_id` = ? and `status` = ?) order by `contentid` desc limit 10 offset 0
+parmars:[1,1]
+
+[2019-12-07 17:08:20]select `config_imgurl1`, `config_imgurl2`, `config_imgurl3`, `config_imgurl1_status`, `config_imgurl2_status`, `config_imgurl3_status` from `wifi_configs` where (`campus_id` = ? and `status` = ?) order by `configid` desc limit 1
+parmars:[6,1]
+
+[2019-12-07 17:08:20]select count(*) as aggregate from `wifi_issues` where (`user_id` = ? and `status` <= ?)
+parmars:[6,2]
+
+[2019-12-07 17:08:35]select * from `users` where `api_token` = ? limit 1
+parmars:["dbb44919-629c-480d-99b2-24e5568eb56f"]
+
+[2019-12-07 17:08:35]select * from `grade_users` where `grade_users`.`user_id` = ? and `grade_users`.`user_id` is not null limit 1
+parmars:[6]
+
+[2019-12-07 17:08:35]select count(*) as aggregate from `wifi_contents` where (`campus_id` = ? and `status` = ?)
+parmars:[1,1]
+
+[2019-12-07 17:08:35]select `typeid`, `content` from `wifi_contents` where (`campus_id` = ? and `status` = ?) order by `contentid` desc limit 10 offset 0
+parmars:[1,1]
+
+[2019-12-07 17:08:35]select `config_imgurl1`, `config_imgurl2`, `config_imgurl3`, `config_imgurl1_status`, `config_imgurl2_status`, `config_imgurl3_status` from `wifi_configs` where (`campus_id` = ? and `status` = ?) order by `configid` desc limit 1
+parmars:[6,1]
+
+[2019-12-07 17:08:43]select * from `users` where `api_token` = ? limit 1
+parmars:["dbb44919-629c-480d-99b2-24e5568eb56f"]
+
+[2019-12-07 17:08:43]select * from `grade_users` where `grade_users`.`user_id` = ? and `grade_users`.`user_id` is not null limit 1
+parmars:[6]
+
+[2019-12-07 17:08:43]select count(*) as aggregate from `wifi_contents` where (`campus_id` = ? and `status` = ?)
+parmars:[1,1]
+
+[2019-12-07 17:08:43]select `typeid`, `content` from `wifi_contents` where (`campus_id` = ? and `status` = ?) order by `contentid` desc limit 10 offset 0
+parmars:[1,1]
+
+[2019-12-07 17:08:43]select `config_imgurl1`, `config_imgurl2`, `config_imgurl3`, `config_imgurl1_status`, `config_imgurl2_status`, `config_imgurl3_status` from `wifi_configs` where (`campus_id` = ? and `status` = ?) order by `configid` desc limit 1
+parmars:[6,1]
+
+[2019-12-07 17:08:59]select * from `users` where `api_token` = ? limit 1
+parmars:["dbb44919-629c-480d-99b2-24e5568eb56f"]
+
+[2019-12-07 17:08:59]select * from `grade_users` where `grade_users`.`user_id` = ? and `grade_users`.`user_id` is not null limit 1
+parmars:[6]
+
+[2019-12-07 17:08:59]select count(*) as aggregate from `wifi_contents` where (`campus_id` = ? and `status` = ?)
+parmars:[1,1]
+
+[2019-12-07 17:08:59]select `typeid`, `content` from `wifi_contents` where (`campus_id` = ? and `status` = ?) order by `contentid` desc limit 10 offset 0
+parmars:[1,1]
+
+[2019-12-07 17:09:16]select * from `users` where `api_token` = ? limit 1
+parmars:["841296ba-42f5-4396-b171-2d604f7dbd10"]
+
+[2019-12-07 17:09:31]select * from `users` where `api_token` = ? limit 1
+parmars:["841296ba-42f5-4396-b171-2d604f7dbd10"]
+
+[2019-12-07 17:09:46]select * from `users` where `api_token` = ? limit 1
+parmars:["841296ba-42f5-4396-b171-2d604f7dbd10"]
+
+[2019-12-07 17:10:05]select * from `users` where `api_token` = ? limit 1
+parmars:["841296ba-42f5-4396-b171-2d604f7dbd10"]
+
+[2019-12-07 17:10:35]select * from `users` where `api_token` = ? limit 1
+parmars:["841296ba-42f5-4396-b171-2d604f7dbd10"]
+
+[2019-12-07 17:10:57]select * from `users` where `api_token` = ? limit 1
+parmars:["841296ba-42f5-4396-b171-2d604f7dbd10"]
+
+[2019-12-07 17:11:02]select * from `users` where `api_token` = ? limit 1
+parmars:["841296ba-42f5-4396-b171-2d604f7dbd10"]
+
+[2019-12-07 17:11:18]select * from `users` where `api_token` = ? limit 1
+parmars:["841296ba-42f5-4396-b171-2d604f7dbd10"]
+
+[2019-12-07 17:11:29]select * from `users` where `api_token` = ? limit 1
+parmars:["841296ba-42f5-4396-b171-2d604f7dbd10"]
+
+[2019-12-07 17:11:43]select * from `users` where `api_token` = ? limit 1
+parmars:["841296ba-42f5-4396-b171-2d604f7dbd10"]
+
+[2019-12-07 17:11:55]select * from `users` where `api_token` = ? limit 1
+parmars:["841296ba-42f5-4396-b171-2d604f7dbd10"]
+
+[2019-12-07 17:12:12]select * from `users` where `api_token` = ? limit 1
+parmars:["841296ba-42f5-4396-b171-2d604f7dbd10"]
+
+[2019-12-07 17:12:24]select * from `users` where `api_token` = ? limit 1
+parmars:["841296ba-42f5-4396-b171-2d604f7dbd10"]
+
+[2019-12-07 17:12:39]select * from `users` where `api_token` = ? limit 1
+parmars:["349aa4c7-de77-4df6-a476-5583da710cdf"]
+
+[2019-12-07 17:12:39]select * from `grade_users` where `grade_users`.`user_id` = ? and `grade_users`.`user_id` is not null limit 1
+parmars:[5]
+
+[2019-12-07 17:13:05]select * from `users` where `api_token` = ? limit 1
+parmars:["349aa4c7-de77-4df6-a476-5583da710cdf"]
+
+[2019-12-07 17:13:05]select * from `grade_users` where `grade_users`.`user_id` = ? and `grade_users`.`user_id` is not null limit 1
+parmars:[5]
+
+[2019-12-07 17:13:56]select * from `users` where `api_token` = ? limit 1
+parmars:["349aa4c7-de77-4df6-a476-5583da710cdf"]
+
+[2019-12-07 17:13:56]select * from `grade_users` where `grade_users`.`user_id` = ? and `grade_users`.`user_id` is not null limit 1
+parmars:[5]
+
+[2019-12-07 17:13:56]select count(*) as aggregate from `wifi_contents` where (`campus_id` = ? and `status` = ?)
+parmars:[1,1]
+
+[2019-12-07 17:13:56]select `typeid`, `content` from `wifi_contents` where (`campus_id` = ? and `status` = ?) order by `contentid` desc limit 10 offset 0
+parmars:[1,1]
+
+[2019-12-07 17:13:56]select `config_imgurl1`, `config_imgurl2`, `config_imgurl3`, `config_imgurl1_status`, `config_imgurl2_status`, `config_imgurl3_status` from `wifi_configs` where (`campus_id` = ? and `status` = ?) order by `configid` desc limit 1
+parmars:[1,1]
+
+[2019-12-07 17:13:56]select count(*) as aggregate from `wifi_issues` where (`user_id` = ? and `status` <= ?)
+parmars:[5,2]
+
+[2019-12-07 17:13:56]select count(*) as aggregate from `wifi_user_agreements` where (`user_id` = ?)
+parmars:[5]
+
+[2019-12-07 17:16:59]select * from `users` where `api_token` = ? limit 1
+parmars:["349aa4c7-de77-4df6-a476-5583da710cdf"]
+
+[2019-12-07 17:16:59]select * from `grade_users` where `grade_users`.`user_id` = ? and `grade_users`.`user_id` is not null limit 1
+parmars:[5]
+
+[2019-12-07 17:16:59]select count(*) as aggregate from `wifi_contents` where (`campus_id` = ? and `status` = ?)
+parmars:[1,1]
+
+[2019-12-07 17:16:59]select `typeid`, `content` from `wifi_contents` where (`campus_id` = ? and `status` = ?) order by `contentid` desc limit 10 offset 0
+parmars:[1,1]
+
+[2019-12-07 17:16:59]select `config_imgurl1`, `config_imgurl2`, `config_imgurl3`, `config_imgurl1_status`, `config_imgurl2_status`, `config_imgurl3_status` from `wifi_configs` where (`campus_id` = ? and `status` = ?) order by `configid` desc limit 1
+parmars:[1,1]
+
+[2019-12-07 17:16:59]select count(*) as aggregate from `wifi_issues` where (`user_id` = ? and `status` <= ?)
+parmars:[5,2]
+
+[2019-12-07 17:16:59]select count(*) as aggregate from `wifi_user_agreements` where (`user_id` = ?)
+parmars:[5]
+
+[2019-12-07 17:17:44]select * from `users` where `api_token` = ? limit 1
+parmars:["349aa4c7-de77-4df6-a476-5583da710cdf"]
+
+[2019-12-07 17:17:54]select * from `users` where `api_token` = ? limit 1
+parmars:["349aa4c7-de77-4df6-a476-5583da710cdf"]
+
+[2019-12-07 17:17:54]select * from `grade_users` where `grade_users`.`user_id` = ? and `grade_users`.`user_id` is not null limit 1
+parmars:[5]
+
+[2019-12-07 17:17:54]select count(*) as aggregate from `wifi_contents` where (`campus_id` = ? and `status` = ?)
+parmars:[1,1]
+
+[2019-12-07 17:17:54]select `typeid`, `content` from `wifi_contents` where (`campus_id` = ? and `status` = ?) order by `contentid` desc limit 10 offset 0
+parmars:[1,1]
+
+[2019-12-07 17:17:54]select `config_imgurl1`, `config_imgurl2`, `config_imgurl3`, `config_imgurl1_status`, `config_imgurl2_status`, `config_imgurl3_status` from `wifi_configs` where (`campus_id` = ? and `status` = ?) order by `configid` desc limit 1
+parmars:[1,1]
+
+[2019-12-07 17:17:54]select count(*) as aggregate from `wifi_issues` where (`user_id` = ? and `status` <= ?)
+parmars:[5,2]
+
+[2019-12-07 17:17:54]select count(*) as aggregate from `wifi_user_agreements` where (`user_id` = ?)
+parmars:[5]
+
+[2019-12-07 17:17:57]select * from `users` where `api_token` = ? limit 1
+parmars:["349aa4c7-de77-4df6-a476-5583da710cdf"]
+
+[2019-12-07 17:20:41]select * from `users` where `api_token` = ? limit 1
+parmars:["349aa4c7-de77-4df6-a476-5583da710cdf"]
+
+[2019-12-07 17:20:41]select * from `grade_users` where `grade_users`.`user_id` = ? and `grade_users`.`user_id` is not null limit 1
+parmars:[5]
+
+[2019-12-07 17:21:25]select * from `users` where `api_token` = ? limit 1
+parmars:["349aa4c7-de77-4df6-a476-5583da710cdf"]
+
+[2019-12-07 17:21:25]select * from `grade_users` where `grade_users`.`user_id` = ? and `grade_users`.`user_id` is not null limit 1
+parmars:[5]
+
+[2019-12-07 17:21:25]select count(*) as aggregate from `wifi_contents` where (`campus_id` = ? and `status` = ?)
+parmars:[1,1]
+
+[2019-12-07 17:21:25]select `typeid`, `content` from `wifi_contents` where (`campus_id` = ? and `status` = ?) order by `contentid` desc limit 10 offset 0
+parmars:[1,1]
+
+[2019-12-07 17:21:25]select `config_imgurl1`, `config_imgurl2`, `config_imgurl3`, `config_imgurl1_status`, `config_imgurl2_status`, `config_imgurl3_status` from `wifi_configs` where (`campus_id` = ? and `status` = ?) order by `configid` desc limit 1
+parmars:[1,1]
+
+[2019-12-07 17:21:25]select count(*) as aggregate from `wifi_issues` where (`user_id` = ? and `status` <= ?)
+parmars:[5,2]
+
+[2019-12-07 17:21:25]select count(*) as aggregate from `wifi_user_agreements` where (`user_id` = ?)
+parmars:[5]
+
+[2019-12-07 17:23:32]select * from `users` where `api_token` = ? limit 1
+parmars:["349aa4c7-de77-4df6-a476-5583da710cdf"]
+
+[2019-12-07 17:23:32]select count(*) as aggregate from `wifi_user_agreements` where (`user_id` = ?)
+parmars:[5]
+
+[2019-12-07 17:23:32]insert into `wifi_user_agreements` (`user_id`, `created_at`) values (?, ?)
+parmars:[5,"2019-12-07 17:23:32"]
+
+[2019-12-07 17:25:16]select * from `users` where `api_token` = ? limit 1
+parmars:["349aa4c7-de77-4df6-a476-5583da710cdf"]
+
+[2019-12-07 17:25:16]select count(*) as aggregate from `wifi_user_agreements` where (`user_id` = ?)
+parmars:[5]
+
+[2019-12-07 17:28:24]select * from `users` where `api_token` = ? limit 1
+parmars:["349aa4c7-de77-4df6-a476-5583da710cdf"]
+
+[2019-12-07 17:28:54]select * from `users` where `api_token` = ? limit 1
+parmars:["349aa4c7-de77-4df6-a476-5583da710cdf"]
+
+[2019-12-07 17:29:16]select * from `users` where `api_token` = ? limit 1
+parmars:["349aa4c7-de77-4df6-a476-5583da710cdf"]
+
+[2019-12-07 17:29:16]select * from `grade_users` where `grade_users`.`user_id` = ? and `grade_users`.`user_id` is not null limit 1
+parmars:[5]
+
+[2019-12-07 17:29:30]select * from `users` where `api_token` = ? limit 1
+parmars:["349aa4c7-de77-4df6-a476-5583da710cdf"]
+
+[2019-12-07 17:29:30]select * from `grade_users` where `grade_users`.`user_id` = ? and `grade_users`.`user_id` is not null limit 1
+parmars:[5]
+

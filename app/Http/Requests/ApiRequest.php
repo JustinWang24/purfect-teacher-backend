@@ -8,13 +8,14 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use App\Http\Requests\MyStandardRequest;
 
 /**
  * Fun端 Api 接口请求
  * Class ApiRequest
  * @package App\Http\Requests
  */
-class ApiRequest extends FormRequest
+class ApiRequest extends MyStandardRequest
 {
    public function __construct ()
    {
