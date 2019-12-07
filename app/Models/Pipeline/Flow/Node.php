@@ -45,7 +45,7 @@ class Node extends Model implements INode
      * @return \Illuminate\Database\Eloquent\Relations\HasOne|null
      */
     public function next(){
-        return $this->hasOne(Node::class, 'id', 'next_node');
+        return $this->hasOne(Node::class, 'id', 'next_node')->with('handler');
     }
 
     public function isHead()
@@ -76,4 +76,16 @@ class Node extends Model implements INode
     {
         return Action::where('node_id', $this->id)->orderBy('updated_at','desc')->first();
     }
+
+    public function getPrev()
+    {
+        return $this->prev;
+    }
+
+    public function getNext()
+    {
+        return $this->next;
+    }
+
+
 }
