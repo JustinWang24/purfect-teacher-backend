@@ -56,4 +56,10 @@ interface INode extends IPersistent
      * @return IAction
      */
     public function getLastAction(): IAction;
+
+    /**
+     * 获取步骤的处理器
+     * @return INodeHandler
+     */
+    public function getHandler(): INodeHandler;
 }

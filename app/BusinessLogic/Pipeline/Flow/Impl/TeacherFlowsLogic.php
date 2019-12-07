@@ -18,8 +18,10 @@ use App\Utils\JsonBuilder;
 use App\Utils\Pipeline\IAction;
 use App\Utils\Pipeline\IFlow;
 use App\Utils\Pipeline\IFlowEngine;
+use App\Utils\Pipeline\INode;
 use App\Utils\ReturnData\IMessageBag;
 use App\Utils\ReturnData\MessageBag;
+use Illuminate\Support\Facades\DB;
 
 class TeacherFlowsLogic implements IFlowLogic
 {
@@ -81,39 +83,54 @@ class TeacherFlowsLogic implements IFlowLogic
 
     /**
      * 启动流程的逻辑
-     * @param IFlowEngine $engine
+     * @param IFlow $flow
      * @param array $actionData
      * @return IMessageBag
      */
-    public function start(IFlowEngine $engine, $actionData)
+    public function start(IFlow $flow, $actionData)
     {
-        // TODO: Implement start() method.
         $bag = new MessageBag(JsonBuilder::CODE_ERROR);
 
-        if($startNode = $engine->getFlow()->canBeStartBy($this->user)){
+        /**
+         * @var INode $startNode
+         */
+        $startNode = $flow->canBeStartBy($this->user);
+
+        if($startNode){
             // 用户可以启动流程, 那么就获得了启动流程的第一个步骤节点
             $actionData['node_id'] = $startNode->id;
             $actionData['user_id'] = $this->user->id;
             $actionData['result'] = IAction::RESULT_PASS; // 启动工作没有审核, 直接就是 pass 的状态
 
             $dao = new ActionDao();
-            $action = $dao->create($actionData);
+            DB::beginTransaction();
+            try{
+                $action = $dao->create($actionData);
+                $nextNode = $startNode->getNext();
+                if($nextNode){
+                    // 生成下一步需要的操作
+                    $handler = $nextNode->getHandler();
+                    if($handler){
+                        // 根据当前提交 action 的用户和流程, 创建所有需要的下一步流程
+                        $handler->handle($this->user, $flow);
+                    }
+                }
 
-            /**
-             * 让工作流引擎完成启动流程
-             */
-            $engine->start($startNode, $action);
-
-            $bag->setCode(JsonBuilder::CODE_SUCCESS);
-            $bag->setData([
-                'action'=>$action,
-                'node'=>$startNode,
-            ]);
+                $bag->setCode(JsonBuilder::CODE_SUCCESS);
+                $bag->setData([
+                    'action'=>$action,
+                    'node'=>$startNode,
+                ]);
+                DB::commit();
+            }
+            catch (\Exception $exception){
+                $bag->setMessage($exception->getMessage().', line='.$exception->getLine());
+                DB::rollBack();
+            }
         }
         else{
             $bag->setMessage('用户没有权限启动本流程');
         }
-
         return $bag;
     }
 }

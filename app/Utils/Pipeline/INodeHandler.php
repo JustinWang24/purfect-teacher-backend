@@ -14,17 +14,19 @@ interface INodeHandler extends IPersistent
 {
     /**
      * 流程中某一节点的具体处理逻辑, 并返回处理的结果
-     * @param INode $node
-     * @return IAction
+     * @param User $user
+     * @param IFlow $flow
+     * @return boolean
      */
-    public function handle(INode $node): IAction;
+    public function handle(User $user, IFlow $flow);
 
     /**
      * 流程中某个节点需要被驳回的处理逻辑
-     * @param INode $node
-     * @return IAction
+     * @param User $user
+     * @param IFlow $flow
+     * @return boolean
      */
-    public function resume(INode $node): IAction;
+    public function reject(User $user, IFlow $flow);
 
     /**
      * 根据谁执行的动作, 获取下一步发送到哪些用户的方法
