@@ -2,28 +2,25 @@
 /**
  * Created by PhpStorm.
  * User: justinwang
- * Date: 4/12/19
- * Time: 8:49 PM
+ * Date: 7/12/19
+ * Time: 5:07 PM
  */
 
 namespace App\BusinessLogic\Pipeline\Flow\Impl;
 
 
 use App\BusinessLogic\Pipeline\Flow\Contracts\IFlowLogic;
-use App\Dao\Pipeline\ActionDao;
-use App\Dao\Pipeline\FlowDao;
-use App\Models\Teachers\Teacher;
-use App\User;
-use App\Utils\JsonBuilder;
 use App\Utils\Pipeline\IAction;
 use App\Utils\Pipeline\IFlow;
-use App\Utils\Pipeline\IFlowEngine;
-use App\Utils\Pipeline\INode;
 use App\Utils\ReturnData\IMessageBag;
+use App\User;
+use App\Dao\Pipeline\ActionDao;
 use App\Utils\ReturnData\MessageBag;
+use App\Utils\JsonBuilder;
 use Illuminate\Support\Facades\DB;
+use App\Utils\Pipeline\INode;
 
-class TeacherFlowsLogic implements IFlowLogic
+class StudentFlowsLogic implements IFlowLogic
 {
     /**
      * @var User $user
@@ -35,22 +32,11 @@ class TeacherFlowsLogic implements IFlowLogic
         $this->user = $user;
     }
 
-    /**
-     * 获取教师的专用流程
-     * @return IFlow[]|array
-     */
     public function getMyFlows()
     {
-        $dao = new FlowDao();
-        return $dao->getGroupedFlows(
-            $this->user->getSchoolId(),Teacher::FlowTypes()
-        );
+        // TODO: Implement getMyFlows() method.
     }
 
-    /**
-     * 获取我发起的流程
-     * @return IAction[]|\Illuminate\Database\Eloquent\Collection
-     */
     public function startedByMe()
     {
         $actionDao = new ActionDao();
@@ -59,14 +45,9 @@ class TeacherFlowsLogic implements IFlowLogic
 
     public function waitingForMe()
     {
-        $actionDao = new ActionDao();
-        return $actionDao->getFlowsWaitingFor($this->user);
+        // TODO: Implement waitingForMe() method.
     }
 
-    /**
-     * @param IFlow $flow
-     * @return IMessageBag
-     */
     public function open(IFlow $flow)
     {
         $bag = new MessageBag(JsonBuilder::CODE_ERROR);
@@ -81,12 +62,6 @@ class TeacherFlowsLogic implements IFlowLogic
         return $bag;
     }
 
-    /**
-     * 启动流程的逻辑
-     * @param IFlow $flow
-     * @param array $actionData
-     * @return IMessageBag
-     */
     public function start(IFlow $flow, $actionData)
     {
         $bag = new MessageBag(JsonBuilder::CODE_ERROR);
