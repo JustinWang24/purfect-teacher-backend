@@ -99,4 +99,10 @@ class FlowDaoTest extends TestCase
             }
         });
     }
+
+    public function testNodeCanGetHandler(){
+        $dao = new NodeDao();
+        $node = $dao->getById(4);
+        $this->assertNotNull($node->next()->handler);
+    }
 }
