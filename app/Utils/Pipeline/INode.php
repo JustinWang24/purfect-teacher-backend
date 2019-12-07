@@ -37,13 +37,13 @@ interface INode extends IPersistent
      * 前一个节点
      * @return INode|null
      */
-    public function prev();
+    public function getPrev();
 
     /**
      * 后一个节点
      * @return INode|null
      */
-    public function next();
+    public function getNext();
 
     /**
      * 获取名字
