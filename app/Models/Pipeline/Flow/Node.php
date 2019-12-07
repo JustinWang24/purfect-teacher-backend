@@ -4,6 +4,7 @@ namespace App\Models\Pipeline\Flow;
 
 use App\Utils\Pipeline\IAction;
 use App\Utils\Pipeline\INode;
+use App\Utils\Pipeline\INodeHandler;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -87,5 +88,8 @@ class Node extends Model implements INode
         return $this->next;
     }
 
-
+    public function getHandler(): INodeHandler
+    {
+        return $this->handler;
+    }
 }

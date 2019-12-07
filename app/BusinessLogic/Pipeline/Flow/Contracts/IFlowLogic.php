@@ -8,6 +8,7 @@
 
 namespace App\BusinessLogic\Pipeline\Flow\Contracts;
 
+use App\User;
 use App\Utils\Pipeline\IAction;
 use App\Utils\Pipeline\IFlow;
 use App\Utils\Pipeline\IFlowEngine;
@@ -39,9 +40,9 @@ interface IFlowLogic
     public function open(IFlow $flow);
 
     /**
-     * @param IFlowEngine $engine
+     * @param IFlow $flow
      * @param array $actionData
      * @return IMessageBag
      */
-    public function start(IFlowEngine $engine, $actionData);
+    public function start(IFlow $flow, $actionData);
 }

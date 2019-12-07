@@ -24,7 +24,9 @@ class OrganizationDeputy implements TitleToUsers
     {
         $users = [];
         if($this->user->isTeacher()){
-
+            // Todo: 临时逻辑, 以后可能会修正. 对于老师来讲, 部门付经理也是系主任
+            $obj = new DepartmentManager($this->user);
+            $users = $obj->getUsers();
         }
         elseif ($this->user->isEmployee()){
             // 获取职工所在的部门
