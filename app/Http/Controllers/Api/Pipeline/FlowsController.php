@@ -58,7 +58,7 @@ class FlowsController extends Controller
         $logic = FlowLogicFactory::GetInstance($request->user());
 
         $bag = $logic->start(
-            FlowEngineFactory::GetInstance($flow, $request->user()),
+            $flow,
             $actionData
         );
 

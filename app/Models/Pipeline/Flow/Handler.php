@@ -3,8 +3,10 @@
 namespace App\Models\Pipeline\Flow;
 
 use App\BusinessLogic\OrganizationTitleHelpers\TitleToUsersFactory;
+use App\Dao\Pipeline\ActionDao;
 use App\User;
 use App\Utils\Pipeline\IAction;
+use App\Utils\Pipeline\IFlow;
 use App\Utils\Pipeline\INode;
 use App\Utils\Pipeline\INodeHandler;
 use Illuminate\Database\Eloquent\Model;
@@ -24,14 +26,31 @@ class Handler extends Model implements INodeHandler
         return $this->belongsTo(Node::class,'node_id');
     }
 
-    public function handle(INode $node): IAction
+    public function handle(User $user, IFlow $flow)
     {
-        // TODO:
+        /**
+         * 根据传入的用户, 就是刚刚完成一个步骤的用户
+         */
+        $users = $this->getNoticeTo($user);
+        foreach ($users as $u) {
+            /**
+             * @var User $u
+             */
+            Action::create([
+                'flow_id'=>$flow->id,
+                'node_id'=>$this->node_id,
+                'user_id'=>$u->id,
+                'result'=>IAction::RESULT_PENDING,
+            ]);
+        }
+        return true;
     }
 
-    public function resume(INode $node): IAction
+    public function reject(User $user, IFlow $flow)
     {
         // TODO: Implement resume() method.
+
+        return true;
     }
 
     /**

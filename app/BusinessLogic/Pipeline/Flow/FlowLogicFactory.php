@@ -7,6 +7,7 @@
  */
 namespace App\BusinessLogic\Pipeline\Flow;
 use App\BusinessLogic\Pipeline\Flow\Contracts\IFlowLogic;
+use App\BusinessLogic\Pipeline\Flow\Impl\StudentFlowsLogic;
 use App\BusinessLogic\Pipeline\Flow\Impl\TeacherFlowsLogic;
 use App\User;
 
@@ -22,7 +23,9 @@ class FlowLogicFactory
         if($user->isTeacher()){
             $instance = new TeacherFlowsLogic($user);
         }
-
+        elseif ($user->isStudent()){
+            $instance = new StudentFlowsLogic($user);
+        }
         return $instance;
     }
 }

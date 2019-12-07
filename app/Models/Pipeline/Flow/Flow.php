@@ -3,6 +3,7 @@
 namespace App\Models\Pipeline\Flow;
 
 use App\Dao\Pipeline\ActionDao;
+use App\Models\Teachers\Teacher;
 use App\User;
 use App\Utils\Pipeline\IFlow;
 use App\Utils\Pipeline\INode;
@@ -97,7 +98,19 @@ class Flow extends Model implements IFlow
     public function canBeStartBy(User $user): INode
     {
         // Todo: 对于一个流程是否可以被一个用户启动的功能, 需要实现
-        return $this->getHeadNode();
+        $node = null;
+        if($user->isStudent()){
+            if($this->type === IFlow::TYPE_STUDENT_ONLY){
+                $node = $this->getHeadNode();
+            }
+        }
+        elseif($user->isTeacher()){
+            if(in_array($this->type, Teacher::FlowTypes())){
+                $node = $this->getHeadNode();
+            }
+        }
+
+        return $node;
     }
 
     public function getName()
