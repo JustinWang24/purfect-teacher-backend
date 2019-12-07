@@ -2,8 +2,8 @@
 use App\Utils\UI\Anchor;
 use App\Utils\UI\Button;
 ?>
-@extends('layouts.app')
-@section('content')
+
+<?php $__env->startSection('content'); ?>
     <div class="row">
         <div class="col-sm-10 col-md-12 col-xl-12">
             <div class="card-box">
@@ -11,8 +11,8 @@ use App\Utils\UI\Button;
                     <header>添加</header>
                 </div>
                 <div class="card-body">
-                    <form action="{{ route('manager_wifi.wifiNotice.add') }}" method="post"  id="add-building-form">
-                        @csrf
+                    <form action="<?php echo e(route('manager_wifi.wifiNotice.add')); ?>" method="post"  id="add-building-form">
+                        <?php echo csrf_field(); ?>
                         <div class="form-group">
                             <label for="building-name-input">标题</label>
                             <input required type="text" class="form-control" id="building-name-input" value="" placeholder="" name="infos[notice_title]">
@@ -32,4 +32,5 @@ use App\Utils\UI\Button;
             </div>
         </div>
     </div>
-@endsection
+<?php $__env->stopSection(); ?>
+<?php echo $__env->make('layouts.app', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH D:\wamp64\www\etx-t\purfect-teacher-backend\resources\views/manager_wifi/wifiNotice/add.blade.php ENDPATH**/ ?>

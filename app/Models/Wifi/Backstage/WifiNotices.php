@@ -87,7 +87,7 @@ class WifiNotices extends Model
    }
 
    /**
-    * Func:  获取多条数据
+    * Func:  获取多条数据 调试实时数据，和
     * @Param $condition array 查询条件
     * @Param $orderArr array 排序字段
     * @Param $pageArr  array 分页数据

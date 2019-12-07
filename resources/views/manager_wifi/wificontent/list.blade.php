@@ -9,10 +9,8 @@ use App\User;
         <div class="col-sm-12 col-md-12 col-xl-12">
             <div class="card-box">
                 <div class="card-head">
-                  
-                    <header>aaaaaaaaa- bbbbbbbbbbb</header>
+                    <!--header>title1- title2</header-->
                 </div>
-
                 <div class="card-body">
                     <div class="row">
                         <div class="row table-padding">
@@ -20,44 +18,41 @@ use App\User;
                                 <a href="{{ url()->previous() }}" class="btn btn-default">
                                     <i class="fa fa-arrow-circle-left"></i> 返回
                                 </a>&nbsp;
-                                <a href="{{ route('manager_wifi.wifi.add') }}" class="btn btn-primary pull-right" id="btn-create-room-from-building">
+                                <a href="{{ route('manager_wifi.wifiContent.add') }}" class="btn btn-primary pull-right" id="btn-create-room-from-building">
                                     添加 <i class="fa fa-plus"></i>
                                 </a>
                             </div>
                         </div>
                         <div class="table-responsive">
-                            <table class="table table-striped table-bordered table-hover table-checkable order-column valign-middle">
+                            <table class="table table-striped table-bordered table-hover table-checkable order-column valign-middle text-center">
                                 <thead>
-								<tr>
+                                <tr>
 									<th>序号</th>
-									<th>名称</th>
+									<th>学校</th>
 									<th>类型</th>
 									<th>添加时间</th>
 									<th>修改时间</th>
-                                    <th style="width: 300px;">管理操作</th>
-                                    <th></th>
+									<th>操作</th>
                                 </tr>
                                 </thead>
                                 <tbody>
                                 @foreach($dataList as $key=>$val)
                                     <tr>
-                                        <td>{{ $val->typeid }}</td>
-                                        <td>{{ $val->type_name }}</td>
-                                        <td>{{ $val->purpose }}</td>
-                                        <td>{{ $val->create_time }}</td>
-                                        <td>{{ $val->update_time }}</td>
+										<td>{{$val['contentid']}}</td>
+										<td>{{$val['contentid']}}</td>
+										<td>{{$wifiContentsTypeArr[$val['typeid']]}}</td>
+										<td>{{$val['created_at']}}</td>
+										<td>{{$val['updated_at']}}</td>
                                         <td class="text-center">
-											<eq name="vo.type_pid" value='0'>
-												<a href="{:U('list',array('typeid'=>$vo['typeid']))}" class="btn btn-primary btn-sm">子菜单</a>
-											</eq>
-                                            {{ Anchor::Print(['text'=>'编辑','class'=>'btn-edit-room','href'=>route('manager_wifi.wifiissuetype.edit',['typeid'=>$val->typeid])], Button::TYPE_DEFAULT,'edit') }}
-                                            {{ Anchor::Print(['text'=>'删除','class'=>'btn-edit-room','href'=>route('manager_wifi.wifiissuetype.delete',['typeid'=>$val->typeid])], Button::TYPE_DEFAULT,'edit') }}
+                                            {{ Anchor::Print(['text'=>'编辑','class'=>'btn-edit-room','href'=>route('manager_wifi.wifiNotice.edit',['noticeid'=>$val->noticeid])], Button::TYPE_DEFAULT,'edit') }}
+                                            {{ Anchor::Print(['text'=>'删除','class'=>'btn-edit-room','href'=>route('manager_wifi.wifiNotice.delete',['noticeid'=>$val->noticeid])], Button::TYPE_DEFAULT,'delete') }}
                                         </td>
                                     </tr>
                                 @endforeach
                                 </tbody>
                             </table>
                         </div>
+                        {!! $dataList->fragment('feed')->render() !!}
                     </div>
                 </div>
             </div>
