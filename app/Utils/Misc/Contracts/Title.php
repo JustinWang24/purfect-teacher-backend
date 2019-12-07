@@ -31,7 +31,7 @@ interface Title
     const ORGANIZATION_LEADER = '部门正职领导';
     const DEPARTMENT_LEADER = '系主任';
     const SCHOOL_DEPUTY = '副校长';
-    const SCHOOL_PRINCIPLE = '校长';
+    const SCHOOL_PRINCIPAL = '校长';
     const SCHOOL_COORDINATOR = '书记';
 
     /**
@@ -47,6 +47,6 @@ interface Title
     const DEPARTMENT_LEADER_ID  = 22;
 
     const SCHOOL_DEPUTY_ID      = 30;
-    const SCHOOL_PRINCIPLE_ID   = 31;
+    const SCHOOL_PRINCIPAL_ID   = 31;
     const SCHOOL_COORDINATOR_ID = 32;
 }

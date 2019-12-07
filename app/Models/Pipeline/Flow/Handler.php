@@ -2,6 +2,7 @@
 
 namespace App\Models\Pipeline\Flow;
 
+use App\BusinessLogic\OrganizationTitleHelpers\TitleToUsersFactory;
 use App\User;
 use App\Utils\Pipeline\IAction;
 use App\Utils\Pipeline\INode;
@@ -49,16 +50,10 @@ class Handler extends Model implements INodeHandler
         }
         elseif (!empty($this->notice_to)){
             $roles = explode(';',$this->notice_to);
-            $schoolId = $user->getSchoolId();
-
             foreach ($roles as $role) {
-                switch ($role){
-                    case Title::SCHOOL_PRINCIPLE: // 校长
-
-                        break;
-                    default:
-                        break;
-                }
+                $helper = TitleToUsersFactory::GetInstance($role, $user);
+                $titleUsers = $helper->getUsers();
+                $users = array_merge($users, $titleUsers);
             }
         }
         return $users;
@@ -76,7 +71,7 @@ class Handler extends Model implements INodeHandler
             Title::ORGANIZATION_LEADER,
             Title::DEPARTMENT_LEADER,
             Title::SCHOOL_DEPUTY,
-            Title::SCHOOL_PRINCIPLE,
+            Title::SCHOOL_PRINCIPAL,
             Title::SCHOOL_COORDINATOR,
         ];
     }
