@@ -130,6 +130,10 @@ class User extends Authenticatable implements HasMobilePhone, HasDeviceId
             // 学校管理员的默认首页
             $viewPath = 'teacher.school.view';
         }
+        elseif ($this->isStudent()){
+            // 学校管理员的默认首页
+            $viewPath = 'student.school.view';
+        }
         return $viewPath;
     }
 
