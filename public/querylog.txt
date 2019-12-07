@@ -5859,3 +5859,18 @@ parmars:[50]
 [2019-12-01 15:27:07]select * from `campuses` where `campuses`.`school_id` = ? and `campuses`.`school_id` is not null and `campuses`.`deleted_at` is null order by `name` asc
 parmars:[50]
 
+[2019-12-07 14:55:06]select count(*) as aggregate from `wifi_contents` where (`campus_id` = ? and `status` = ?)
+parmars:[1,1]
+
+[2019-12-07 14:55:06]select `typeid`, `content` from `wifi_contents` where (`campus_id` = ? and `status` = ?) order by `contentid` desc limit 10 offset 0
+parmars:[1,1]
+
+[2019-12-07 14:55:06]select `config_imgurl1`, `config_imgurl2`, `config_imgurl3`, `config_imgurl1_status`, `config_imgurl2_status`, `config_imgurl3_status` from `wifi_configs` where (`campus_id` = ? and `status` = ?) order by `configid` desc limit 1
+parmars:[1,1]
+
+[2019-12-07 14:55:06]select count(*) as aggregate from `wifi_issues` where (`user_id` = ? and `status` <= ?)
+parmars:[1,2]
+
+[2019-12-07 14:55:06]select count(*) as aggregate from `wifi_user_agreements` where (`user_id` = ?)
+parmars:[1]
+
