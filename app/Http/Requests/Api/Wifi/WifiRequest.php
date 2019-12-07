@@ -31,19 +31,18 @@ class WifiRequest extends \App\Http\Requests\ApiRequest
       // 校园网首页
       if(stripos($getActionName,'index_wifi'))
       {
-         $rules[ 'uuid' ] = 'required'; // uuid
+         // $rules[ 'uuid' ] = 'required'; // uuid
       }
 
       // 用户同意wifi协议
       if(stripos($getActionName,'edit_agreement_info'))
       {
-         $rules[ 'uuid' ] = 'required'; // uuid
+         // $rules[ 'uuid' ] = 'required'; // uuid
       }
 
       // 修改运营商信息
       if(stripos($getActionName,'edit_operator_info'))
       {
-         $rules[ 'uuid' ] = 'required'; // uuid
          $rules[ 'user_mobile_source' ] = 'required|integer|between:1,4'; // 运营商(1:移动,2:联通,3:电信,4:其他)
          $rules[ 'user_mobile_password' ] = 'required'; // 手机卡密码
       }

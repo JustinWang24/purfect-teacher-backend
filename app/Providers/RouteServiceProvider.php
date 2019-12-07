@@ -80,7 +80,7 @@ class RouteServiceProvider extends ServiceProvider
      */
     protected function mapApiWifiRoutes()
     {
-        Route::middleware('api')
+        Route::prefix('api')->middleware('api')
             ->namespace($this->namespace. '\Api')
             ->group(base_path('routes/api_wifi.php'));
     }

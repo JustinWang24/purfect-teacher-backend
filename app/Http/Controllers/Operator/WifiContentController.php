@@ -5,59 +5,60 @@
    use App\Http\Controllers\Controller;
    use Illuminate\Support\Facades\Cache;
 
-   use App\Http\Requests\Backstage\WifiNoticeRequest;
+   use App\Http\Requests\Backstage\WifiContentRequest;
 
-   use App\Dao\Wifi\Backstage\WifiNoticesDao;
-   class WifiNoticeController extends Controller
+   use App\Dao\Wifi\Backstage\WifiContentsDao;
+   class WifiContentController extends Controller
    {
       public function __construct()
       {
          $this->middleware('auth');
       }
       /**
-       * Func wifi文档列表
+       * Func wifi公告列表
        * @param WifiRequest $request
        * @return view
        */
-      public function list(WifiNoticeRequest $request)
+      public function list(WifiContentRequest $request)
       {
          $param           = $request->only ( [ 'page' ] );
          $param[ 'page' ] = $request->input ( 'page' , 1 );
 
          // 查询条件
-         $condition[] = [ 'noticeid' , '>' , 0 ];
+         $condition[] = [ 'contentid' , '>' , 0 ];
 
          // 获取字段
          $fieldArr = [ '*' ];
 
          $joinArr = [];
 
-         $dataList = WifiNoticesDao::getWifiNoticesListInfo (
-            $condition , [ [ 'sort' , 'desc' ],[ 'noticeid' , 'desc' ] ] ,
+         $dataList = WifiContentsDao::getWifiContentsListInfo (
+            $condition , [ [ 'contentid' , 'desc' ],[ 'contentid' , 'desc' ] ] ,
             [ 'page' => $param[ 'page' ] , 'limit' => self::$manger_wifi_page_limit ] ,
             $fieldArr , $joinArr
          );
 
          // 返回数据
          $this->dataForView[ 'dataList' ] = $dataList;
+         $this->dataForView['wifiContentsTypeArr'] = WifiContentsDao::$wifiContentsTypeArr;
 
-         return view ( 'manager_wifi.wifiNotice.list' , $this->dataForView );
-
+         return view ( 'manager_wifi.wifiContent.list' , $this->dataForView );
       }
 
       /**
-       * Func wifi文档添加
+       * Func wifi公告添加
        * @param WifiRequest $request
        * @return view
        */
-      public function add(WifiNoticeRequest $request)
+      public function add(WifiContentRequest $request)
       {
          // 提交数据保存
          if($request->isMethod('post'))
          {
             // 表单要插入的字段信息
             $param1 = self::getPostParamInfo (
-               $request->infos , [ 'notice_title' , 'notice_content' ,]
+               $request->infos ,
+               [ 'typeid' , 'school_id' , 'campus_id' , 'content' ]
             );
 
             // 附加数据
@@ -70,36 +71,46 @@
             {
                FlashMessageBuilder::Push ( $request , FlashMessageBuilder::DANGER , '您提交太快了，先歇息一下');
 
-               return redirect()->route('manager_wifi.wifiNotice.add');
+               return redirect()->route('manager_wifi.wifiContent.add');
             }
 
-            if ( WifiNoticesDao::addOrUpdateWifiNoticesInfo ( array_merge ( $param1 , $param2 ) ) )
+            // 检索是否存在
+            $condition[] = [ 'campus_id' , '=' , $param1[ 'campus_id' ] ];
+            $condition[] = [ 'typeid' , '=' , $param1[ 'typeid' ] ];
+            if ( WifiContentsDao::getWifiContentsStatistics ( $condition , $mode = 'count' ) > 0 )
+            {
+               FlashMessageBuilder::Push ( $request , FlashMessageBuilder::DANGER , '校区所对应的类型已存在' );
+               return redirect ()->route ( 'manager_wifi.wifiContent.add' );
+            }
+
+            if ( WifiContentsDao::addOrUpdateWifiContentsInfo ( array_merge ( $param1 , $param2 ) ) )
             {
                // 生成重复提交签名
                Cache::put ( $dataSign , $dataSign , 10 );
 
                FlashMessageBuilder::Push ( $request , FlashMessageBuilder::SUCCESS , '数据添加成功');
 
-               return redirect()->route('manager_wifi.wifiNotice.list');
+               return redirect()->route('manager_wifi.wifiContent.list');
+
             } else {
 
                FlashMessageBuilder::Push ( $request , FlashMessageBuilder::DANGER , '数据添加失败,请稍后重试' );
 
-               return redirect()->route('manager_wifi.wifiNotice.add');
+               return redirect()->route('manager_wifi.wifiContent.add');
             }
          }
-         $this->dataForView[ 'infos' ] = []; // 数据信息
+         $this->dataForView['wifiContentsTypeArr'] = WifiContentsDao::$wifiContentsTypeArr;
 
-         return view ( 'manager_wifi.wifiNotice.add' , $this->dataForView );
+         return view ( 'manager_wifi.wifiContent.add' , $this->dataForView );
       }
 
 
       /**
-       * Func wifi文档修改
+       * Func wifi公告修改
        * @param WifiRequest $request
        * @return view
        */
-      public function edit(WifiNoticeRequest $request)
+      public function edit(WifiContentRequest $request)
       {
          $param = $request->only ( [ 'noticeid', ] );
 
@@ -166,11 +177,11 @@
       }
 
       /**
-       * Func wifi文档删除
+       * Func wifi公告删除
        * @param WifiRequest $request
        * @return view
        */
-      public function delete(WifiNoticeRequest $request)
+      public function delete(WifiContentRequest $request)
       {
          $param = $request->only ( [ 'noticeid', ] );
 

@@ -61,6 +61,7 @@ class WifiCableController extends Controller
       $infos['address_info'] = $getWifiOrdersLocationsOneInfo ? $getWifiOrdersLocationsOneInfo->toArray() : (object)null;
 
       return JsonBuilder::Success ( $infos ,'已开通有线信息');
+
    }
 
    /**
@@ -77,6 +78,7 @@ class WifiCableController extends Controller
       $condition[] = [ 'campus_id' , '=' , $authUserInfo[ 'campus_id' ] ];
       $condition[] = [ 'type' , '=' , 2 ]; // 类型 1教学楼 2宿舍楼
       $condition[] = [ 'status' , '=' , 1 ]; // 状态(0:不显示,1:显示)
+
       // 获取的字段信息
       $fieldArr = [ 'id' , 'pid' , 'name' , 'type' ];
       $getSchoolAddressListInfo = SchoolAddressDao::getSchoolAddressListInfo (

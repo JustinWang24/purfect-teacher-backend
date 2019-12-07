@@ -21,7 +21,8 @@
        */
       public function list(WifiIssueCommentRequest $request)
       {
-         $param = $request->only ( [ 'school_id','campus_id','page' ] );
+         $param = $request->only ( [ 'school_id' , 'campus_id' ] );
+         $param[ 'page' ] = $request->input ( 'page' , 1 );
 
          // 查询条件
          $condition[] = [ 'commentid' , '>' , 0 ];
@@ -47,15 +48,17 @@
          $fieldArr = [
             'wifi_issue_comments.*' , 'wifi_issues.issue_name' , 'wifi_issues.issue_mobile' ,
             'wifi_issues.issue_desc' , 'wifi_issues.addr_detail' , 'wifi_issues.admin_name' ,
-            'wifi_issues.admin_mobile' , 'wifi_issues.admin_desc' , 'wifi_issues.create_time ccreate_time' ,
+            'wifi_issues.admin_mobile' , 'wifi_issues.admin_desc' , 'wifi_issues.created_at' ,
             'wifi_issues.typeone_name' , 'wifi_issues.typetwo_name' , 'wifi_issues.jiedan_time' ,
             'wifi_issues.chulis_time' , 'wifi_issues.typeone_name' , 'wifi_issues.typetwo_name' ,
-            'wifi_issues.addr_detail' , 'wifi_issues.issue_desc' , 'wifi_issues.trade_sn'
+            'wifi_issues.addr_detail' , 'wifi_issues.issue_desc' , 'wifi_issues.trade_sn',
+            'schools.name as schools_name'
          ];
 
          // 关联表信息
          $joinArr = [
             [ "wifi_issues" , 'wifi_issue_comments.issueid' , '=' , 'wifi_issues.issueid' ] ,
+            [ "schools" , 'wifi_issue_comments.school_id' , '=' , 'schools.id' ] ,
          ];
 
          // 获取数据

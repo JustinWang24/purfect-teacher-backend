@@ -20,11 +20,11 @@ use App\Dao\Wifi\Api\WifiIssuesDao; // 报修单
 use App\Dao\Wifi\Api\WifiUserAgreementsDao; // wifi协议
 use App\Dao\Wifi\Api\WifiUserTimesDao; // 用户wifi时长和电话套餐
 
-
 use App\BusinessLogic\WifiInterface\Factory;
 
 class WifiController extends Controller
 {
+
    /**
     * Func 校园网首页
     * @param Request $request
@@ -32,17 +32,23 @@ class WifiController extends Controller
     */
    public function index_wifi(WifiRequest $request)
    {
-      $param        = $request->only ( [ 'uuid' ] );
-      $authUserInfo = self::authUserInfo ( $param[ 'uuid' ] );
+      $user      = $request->user ();
+      $user_id   = $user->id;
+      $campus_id = $user->gradeUser->campus_id;
 
+      if ( ! intval ( $campus_id ) || ! intval ( $user_id ) )
+      {
+         return JsonBuilder::Error ( '参数错误' );
+      }
       // 获取通知须知+用网须知
-      $condition[] = [ 'campus_id' , '=' , $authUserInfo[ 'campus_id' ] ];
+      $condition[] = [ 'campus_id' , '=' , $campus_id ];
       $condition[] = [ 'status' , '=' , 1 ];
 
       $contentsList = WifiContentsDao::getWifiContentsListInfo (
          $condition , [ [ 'contentid' , 'desc' ] ] , [ 'page' => 1 , 'limit' => 10 ] ,
          [ 'typeid' , 'content' ]
       )->toArray ()[ 'data' ];
+
       $contentsListArr = array_column($contentsList,'content','typeid');
 	  // 类型(1:校园网通知,2:用网须知,3:充值通知,4:套餐说明,5:网络协议)
 	  $infos['contentsList']['contents_1'] = (String)$contentsListArr[1];
@@ -52,9 +58,9 @@ class WifiController extends Controller
 	  $infos['contentsList']['contents_5'] = (String)$contentsListArr[5];
 
       // 获取配置信息
-      $condition1[] = ['campus_id','=',$authUserInfo['campus_id']];
-      $condition1[] = ['status','=',1];
-	  
+      $condition1[] = [ 'campus_id' , '=' , $campus_id ];
+      $condition1[] = [ 'status' , '=' , 1 ];
+
       // 获取的字段信息
       $fieldArr1    = [
          'config_imgurl1','config_imgurl2','config_imgurl3',
@@ -66,15 +72,15 @@ class WifiController extends Controller
       );
 
       // 获取是否有待处理的工单
-      $condition2[]           = [ 'user_id' , '=' , $authUserInfo[ 'user_id' ] ];
+      $condition2[]           = [ 'user_id' , '=' , $user_id ];
       $condition2[]           = [ 'status' , '<=' , 2 ]; // 状态(1:待处理，2:已接单，3:已完成,，4:已取消，5:已关闭)
       $infos[ 'issue_count' ] = (Int)WifiIssuesDao::getWifiIssuesStatistics ( $condition2 , 'count' );
 
       // 获取是否同意协议
-      $condition3[] = [ 'user_id' , '=' , $authUserInfo[ 'user_id' ] ];
+      $condition3[] = [ 'user_id' , '=' , $user_id ];
       $infos[ 'wifi_is_agree' ] = (Int)WifiUserAgreementsDao::getWifiUserAgreementsStatistics ( $condition3 ,'count');
 
-      return JsonBuilder::Success($infos);
+      return JsonBuilder::Success ( $infos , '校园网首页' );
    }
 
    /**
@@ -82,21 +88,22 @@ class WifiController extends Controller
     * @param Request $request
     * @return Json
     */
-   public function edit_agreement_info(WifiUserAgreementsRequest $request)
+   public function edit_agreement_info(WifiRequest $request)
    {
-      // 获取参数
-      $param = $request->only ( [ 'uuid' ] );
-      $authUserInfo = self::authUserInfo ( $param[ 'uuid' ] );
-
+      $user = $request->user ();
+      if ( ! intval ( $user->id ) )
+      {
+         return JsonBuilder::Error ( '参数错误' );
+      }
       // 获取是否同意协议
-      $condition[] = [ 'user_id' , '=' , $authUserInfo[ 'user_id' ] ];
+      $condition[] = [ 'user_id' , '=' , $user->id ];
       if(WifiUserAgreementsDao::getWifiUserAgreementsStatistics ( $condition , 'count' ) )
       {
          return JsonBuilder::Error ( '您已同意协议' );
       }
 
       // 添加数据
-      $param1[ 'user_id' ] = $authUserInfo[ 'user_id' ];
+      $param1[ 'user_id' ] = $user->id;
       if ( WifiUserAgreementsDao::addOrUpdateWifiUserAgreementsInfo ( $param1 ) )
       {
          return JsonBuilder::Success ( '操作成功' );
@@ -112,11 +119,12 @@ class WifiController extends Controller
     */
    public function edit_operator_info(WifiRequest $request)
    {
-      $param        = $request->only ( [ 'uuid' , 'user_mobile_source' , 'user_mobile_password' ] );
-      $authUserInfo = self::authUserInfo ( $param[ 'uuid' ] );
+      $user = $request->user ();
+
+      $param = $request->only ( [ 'uuid' , 'user_mobile_source' , 'user_mobile_password' ] );
 
       // 获取已存在的用户数据
-      $condition[] = [ 'user_id' , '=' , $authUserInfo[ 'user_id' ] ];
+      $condition[] = [ 'user_id' , '=' , $user->id ];
       $getWifiUserTimesOneInfo = WifiUserTimesDao::getWifiUserTimesOneInfo (
          $condition , [ [ 'timesid' , 'desc' ] ] , [ 'timesid' ]
       );
@@ -124,10 +132,10 @@ class WifiController extends Controller
 
       // 表单要插入的字段信息
       $param1 = self::getPostParamInfo ( $param , [ 'user_mobile_source' , 'user_mobile_password' ] );
-      $param2[ 'user_id' ] = $authUserInfo[ 'user_id' ];
-      $param2[ 'school_id' ] = $authUserInfo[ 'school_id' ];
-      $param2[ 'campus_id' ] = $authUserInfo[ 'campus_id' ];
-      $param2[ 'user_mobile_phone' ] = $authUserInfo[ 'mobile' ];
+      $param2[ 'user_id' ] = $user->id;
+      $param2[ 'school_id' ] = $user->gradeUser->school_id;
+      $param2[ 'campus_id' ] = $user->gradeUser->campus_id;
+      $param2[ 'user_mobile_phone' ] = $user->mobile;
 
       if ( WifiUserTimesDao::addOrUpdateWifiUserTimesInfo ( array_merge ( $param1 , $param2 ) , $timesid ) )
       {
