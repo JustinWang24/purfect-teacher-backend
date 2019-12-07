@@ -35,7 +35,7 @@ class Organization extends Model
             Title::GRADE_ADVISER_ID=>Title::GRADE_ADVISER,
             Title::DEPARTMENT_LEADER_ID=>Title::DEPARTMENT_LEADER,
             Title::SCHOOL_DEPUTY_ID=>Title::SCHOOL_DEPUTY,
-            Title::SCHOOL_PRINCIPLE_ID=>Title::SCHOOL_PRINCIPLE,
+            Title::SCHOOL_PRINCIPAL_ID=>Title::SCHOOL_PRINCIPAL,
             Title::SCHOOL_COORDINATOR_ID=>Title::SCHOOL_COORDINATOR,
         ];
     }
