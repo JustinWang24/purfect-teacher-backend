@@ -12,7 +12,7 @@ use Illuminate\Http\Request;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
-Route::prefix('api_wifi')->group(function () {
+Route::prefix('api_wifi')->middleware('auth:api')->group(function () {
     // 校园版首页wifi
     Route::any('/v1/wifi/index-wifi','\App\Http\Controllers\Api\Wifi\WifiController@index_wifi');
     // 校园网同意协议
