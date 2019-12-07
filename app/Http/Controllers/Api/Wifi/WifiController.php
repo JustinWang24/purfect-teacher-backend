@@ -20,7 +20,6 @@ use App\Dao\Wifi\Api\WifiIssuesDao; // 报修单
 use App\Dao\Wifi\Api\WifiUserAgreementsDao; // wifi协议
 use App\Dao\Wifi\Api\WifiUserTimesDao; // 用户wifi时长和电话套餐
 
-
 use App\BusinessLogic\WifiInterface\Factory;
 
 class WifiController extends Controller
@@ -32,8 +31,10 @@ class WifiController extends Controller
     */
    public function index_wifi(WifiRequest $request)
    {
-      $param        = $request->only ( [ 'uuid' ] );
-      $authUserInfo = self::authUserInfo ( $param[ 'uuid' ] );
+      echo '<pre>';
+      print_r($request->user());exit;
+
+      $authUserInfo = self::authUserInfo ();
 
       // 获取通知须知+用网须知
       $condition[] = [ 'campus_id' , '=' , $authUserInfo[ 'campus_id' ] ];
@@ -74,7 +75,7 @@ class WifiController extends Controller
       $condition3[] = [ 'user_id' , '=' , $authUserInfo[ 'user_id' ] ];
       $infos[ 'wifi_is_agree' ] = (Int)WifiUserAgreementsDao::getWifiUserAgreementsStatistics ( $condition3 ,'count');
 
-      return JsonBuilder::Success($infos);
+      return JsonBuilder::Success ( $infos , '校园网首页' );
    }
 
    /**
