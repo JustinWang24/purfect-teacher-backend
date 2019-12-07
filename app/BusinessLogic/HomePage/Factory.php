@@ -10,6 +10,7 @@ namespace App\BusinessLogic\HomePage;
 use App\BusinessLogic\HomePage\Contracts\IHomePageLogic;
 use App\BusinessLogic\HomePage\Impl\OperatorHomePageLogic;
 use App\BusinessLogic\HomePage\Impl\SchoolManagerHomePageLogic;
+use App\BusinessLogic\HomePage\Impl\StudentHomePageLogic;
 use App\BusinessLogic\HomePage\Impl\SuHomePageLogic;
 use App\BusinessLogic\HomePage\Impl\TeacherHomepageLogic;
 use App\User;
@@ -37,6 +38,9 @@ class Factory
         }
         elseif ($user->isTeacher()){
             $instance = new TeacherHomepageLogic($request);
+        }
+        elseif ($user->isStudent()){
+            $instance = new StudentHomePageLogic($request);
         }
 
         return $instance;
