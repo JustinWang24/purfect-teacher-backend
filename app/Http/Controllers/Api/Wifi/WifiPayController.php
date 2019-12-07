@@ -32,11 +32,15 @@ class WifiPayController extends Controller
     */
    public function index_recharge(WifiPayRequest $request)
    {
-      $param        = $request->only ( [ 'uuid' ] );
-      $authUserInfo = self::authUserInfo ( $param[ 'uuid' ] );
+      $user = $request->user ();
+
+      if ( ! intval ( $user->gradeUser->campus_id ) )
+      {
+         return JsonBuilder::Error ( '参数错误' );
+      }
 
       // wifi产品列表
-      $condition[] = [ 'campus_id' , '=' , $authUserInfo[ 'campus_id' ] ];
+      $condition[] = [ 'campus_id' , '=' , $user->gradeUser->campus_id ];
       $condition[] = [ 'mode' , '=' , 2 ];
       $condition[] = [ 'status' , '=' , 1 ];
 
@@ -49,7 +53,7 @@ class WifiPayController extends Controller
       )->toArray ()[ 'data' ];
 
       // 获取通知信息
-      $condition1[] = [ 'campus_id' , '=' , $authUserInfo[ 'campus_id' ] ];
+      $condition1[] = [ 'campus_id' , '=' , $user->gradeUser->campus_id ];
       $condition1[] = [ 'typeid' , '=' , 3 ];
       $condition1[] = [ 'status' , '=' , 1 ];
 
@@ -63,7 +67,7 @@ class WifiPayController extends Controller
       }
 
       // 获取wifi时长
-      $condition2[] = [ 'user_id' , '=' , $authUserInfo[ 'user_id' ] ];
+      $condition2[] = [ 'user_id' , '=' , $user->id ];
       $condition2[] = [ 'status' , '=' , 1 ];
       $getWifiUserTimesOneInfo = WifiUserTimesDao::getWifiUserTimesOneInfo (
          $condition2 , [ [ 'timesid' , 'desc' ] ] , [ 'user_wifi_time' ]
@@ -85,11 +89,12 @@ class WifiPayController extends Controller
     */
    public function list_recharge_info(WifiPayRequest $request)
    {
-      $param        = $request->only ( [ 'uuid' , 'page' ] );
-      $authUserInfo = self::authUserInfo ( $param[ 'uuid' ] );
+      $user            = $request->user ();
+      $param           = $request->only ( [ 'page' ] );
+      $param[ 'page' ] = max ( 1 , intval ( $param[ 'page' ] ) );
 
       // 获取充值明细
-      $condition[] = [ 'user_id' , '=' , $authUserInfo[ 'user_id' ] ];
+      $condition[] = [ 'user_id' , '=' , $user->id ];
       // 状态(0:关闭,1:待支付,2:支付失败,3:支付成功-WIFI充值中,4:支付成功-WIFI充值成功,5:支付成功-充值失败,6:支付成功-退款成功)
       $condition[] = [ 'status' , '>' , 0 ];
 
@@ -100,10 +105,12 @@ class WifiPayController extends Controller
          'defeated_time' , 'refund_time' , 'cancle_time' , 'status' ,
       ];
       $infos    = WifiOrdersDao::getWifiOrdersListInfo (
-         $condition , [ [ 'orderid' , 'desc' ] ] , [ 'page' => $param['page'] , 'limit' => self::$api_wifi_page_limit ] , $fieldArr
+         $condition , [ [ 'orderid' , 'desc' ] ] ,
+         [ 'page' => $param['page'] , 'limit' => self::$api_wifi_page_limit ] ,
+         $fieldArr
       )->toArray()['data'];
 
-      return JsonBuilder::Success ( 'wifi充值记录列表' );
+      return JsonBuilder::Success ( $infos,'wifi充值记录列表' );
    }
 
 

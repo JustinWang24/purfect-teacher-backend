@@ -121,7 +121,7 @@ class WifiController extends Controller
    {
       $user = $request->user ();
 
-      $param = $request->only ( [ 'uuid' , 'user_mobile_source' , 'user_mobile_password' ] );
+      $param = $request->only ( [ 'user_mobile_source' , 'user_mobile_password' ] );
 
       // 获取已存在的用户数据
       $condition[] = [ 'user_id' , '=' , $user->id ];
@@ -133,9 +133,9 @@ class WifiController extends Controller
       // 表单要插入的字段信息
       $param1 = self::getPostParamInfo ( $param , [ 'user_mobile_source' , 'user_mobile_password' ] );
       $param2[ 'user_id' ] = $user->id;
+      $param2[ 'user_mobile_phone' ] = $user->mobile;
       $param2[ 'school_id' ] = $user->gradeUser->school_id;
       $param2[ 'campus_id' ] = $user->gradeUser->campus_id;
-      $param2[ 'user_mobile_phone' ] = $user->mobile;
 
       if ( WifiUserTimesDao::addOrUpdateWifiUserTimesInfo ( array_merge ( $param1 , $param2 ) , $timesid ) )
       {

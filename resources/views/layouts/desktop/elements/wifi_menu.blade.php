@@ -25,6 +25,10 @@
                 <span class="title">文档列表</span>
             </a>
         </li>
-
+        <li class="nav-item">
+            <a href="{{ route('manager_wifi.wifiContent.list',['uuid'=>session('school.uuid')]) }}" class="nav-link ">
+                <span class="title">网络资讯</span>
+            </a>
+        </li>
     </ul>
 </li>

@@ -20,17 +20,17 @@ Route::prefix('api_wifi')->middleware('auth:api')->group(function () {
 	// 修改运营商信息
     Route::any('/v1/wifi/edit-operator-info','\App\Http\Controllers\Api\Wifi\WifiController@edit_operator_info');	
 
-
 	// 无线充值上网首页
     Route::any('/v1/wifi_pay/index-recharge','\App\Http\Controllers\Api\Wifi\WifiPayController@index_recharge');	
 	// 无线充值明细
     Route::any('/v1/wifi_pay/list-recharge-info','\App\Http\Controllers\Api\Wifi\WifiPayController@list_recharge_info');
 
-
    // 有线上网首页
    Route::any('/v1/wifi_cable/index-cable','\App\Http\Controllers\Api\Wifi\WifiCableController@index_cable');
    // 宿舍楼地址列表
    Route::any('/v1/wifi_cable/list-category-info','\App\Http\Controllers\Api\Wifi\WifiCableController@list_category_info');
+   // 通过地址获取已开通的端口
+   Route::any('/v1/wifi_cable/list-open-cable-info','\App\Http\Controllers\Api\Wifi\WifiCableController@list_open_cable_info');
    // 开通有线
    Route::any('/v1/wifi_cable/add-cable-info','\App\Http\Controllers\Api\Wifi\WifiCableController@add_cable_info');
 
