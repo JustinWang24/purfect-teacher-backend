@@ -60,4 +60,6 @@ interface IAction extends IPipelineMessageBag, IPersistent
      * @return string
      */
     public function getTransactionId(): string;
+
+    public function getUserFlow(): IUserFlow;
 }
