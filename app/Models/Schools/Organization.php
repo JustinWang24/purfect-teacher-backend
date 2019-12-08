@@ -4,6 +4,7 @@ namespace App\Models\Schools;
 
 use App\Models\School;
 use App\Models\Users\UserOrganization;
+use App\Utils\Misc\Contracts\Title;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\View;
 
@@ -19,6 +20,25 @@ class Organization extends Model
         'description',
         'address',
     ];
+
+    /**
+     * 返回部门所有成员角色的集合
+     * @return array
+     */
+    public static function AllTitles(){
+        return [
+            Title::ORGANIZATION_EMPLOYEE_ID=>Title::ORGANIZATION_EMPLOYEE,
+            Title::ORGANIZATION_DEPUTY_ID=>Title::ORGANIZATION_DEPUTY,
+            Title::ORGANIZATION_LEADER_ID=>Title::ORGANIZATION_LEADER,
+
+            Title::CLASS_ADVISER_ID=>Title::CLASS_ADVISER,
+            Title::GRADE_ADVISER_ID=>Title::GRADE_ADVISER,
+            Title::DEPARTMENT_LEADER_ID=>Title::DEPARTMENT_LEADER,
+            Title::SCHOOL_DEPUTY_ID=>Title::SCHOOL_DEPUTY,
+            Title::SCHOOL_PRINCIPAL_ID=>Title::SCHOOL_PRINCIPAL,
+            Title::SCHOOL_COORDINATOR_ID=>Title::SCHOOL_COORDINATOR,
+        ];
+    }
 
     /**
      * 部门的成员

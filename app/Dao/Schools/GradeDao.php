@@ -101,4 +101,16 @@ class GradeDao
         }
         return Grade::where('id',$id)->update($data);
     }
+
+    /**
+     * 根据名字和专业获取班级
+     * @param $name
+     * @param $schoolId
+     * @param $majorId
+     * @return mixed
+     */
+    public function getByName($name, $schoolId, $majorId, $year){
+        return Grade::where('school_id',$schoolId)->where('major_id',$majorId)->
+                      where('year',$year)->where('name',$name)->first();
+    }
 }

@@ -6,7 +6,9 @@ use App\Models\Misc\Enquiry;
 use App\Models\School;
 use App\Models\Schools\Campus;
 use App\Models\Schools\Department;
+use App\Models\Schools\DepartmentAdviser;
 use App\Models\Schools\Grade;
+use App\Models\Schools\GradeManager;
 use App\Models\Schools\Institute;
 use App\Models\Schools\Major;
 use App\User;
@@ -71,6 +73,21 @@ class GradeUser extends Model
      */
     public function grade(){
         return $this->belongsTo(Grade::class);
+    }
+
+    /**
+     * 班主任和班长
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function gradeManager(){
+        return $this->hasOne(GradeManager::class, 'grade_id','grade_id');
+    }
+
+    /**
+     * 系主任的关联
+     */
+    public function departmentAdviser(){
+        return $this->hasOne(DepartmentAdviser::class, 'department_id','department_id');
     }
 
     /**

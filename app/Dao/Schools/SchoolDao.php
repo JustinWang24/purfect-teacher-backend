@@ -180,4 +180,14 @@ class SchoolDao
 
         return Organization::create($data);
     }
+
+    /**
+     * 根据名字查询学校
+     * @param $schoolName
+     * @return
+     */
+    public function getSchoolByName($schoolName)
+    {
+        return School::where('name',$schoolName)->first();
+    }
 }

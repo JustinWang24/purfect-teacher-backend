@@ -28,10 +28,12 @@ $factory->define(User::class, function (Faker $faker) {
         'mobile'=>'3333'.rand(1, 99).rand(1, 99),
         'name' => $faker->name,
         'uuid'=>Uuid::uuid4()->toString(),
+        'api_token'=>Uuid::uuid4()->toString(),
         'password'=>Hash::make('ac59075b964b0715'),
         'status'=>Role::VISITOR,
         'type'=>Role::VISITOR,
         'mobile_verified_at'=>Carbon::now(),
+        'email'=>$faker->safeEmail,
     ];
 });
 

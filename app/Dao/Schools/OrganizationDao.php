@@ -9,6 +9,7 @@
 namespace App\Dao\Schools;
 
 use App\Models\Schools\Organization;
+use App\Models\Users\UserOrganization;
 use Illuminate\Support\Collection;
 
 class OrganizationDao
@@ -49,14 +50,19 @@ class OrganizationDao
         return Organization::create($data);
     }
 
+
     /**
+     * 删除组织及人员构成
      * @param $id
-     * @return mixed
+     * @return bool
      */
     public function deleteOrganization($id){
         $this->deleteBranches($id);
-        return Organization::where('id',$id)->delete();
+        Organization::where('id',$id)->delete();
+        UserOrganization::where('organization_id',$id)->delete();
+        return true;
     }
+
 
     /**
      * @param $parentId

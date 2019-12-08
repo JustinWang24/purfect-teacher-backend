@@ -83,6 +83,8 @@ class CourseDao
                 $dao->deleteByCourseId($id);
                 CourseTeacher::where('course_id',$id)->delete();
                 CourseMajor::where('course_id',$id)->delete();
+
+                // Todo: 删除课程时, 同时也要删除选修课的申请表
                 $course->delete();
                 DB::commit();
             }catch (\Exception $exception){
