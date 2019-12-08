@@ -8,6 +8,7 @@
 
 namespace App\Http\Requests;
 
+use App\Dao\Schools\SchoolDao;
 use App\Utils\Misc\ConfigurationTool;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
@@ -138,5 +139,15 @@ class MyStandardRequest extends FormRequest
      */
     public function getTextbookId() {
         return $this->get('textbook_id', null);
+    }
+
+    /**
+     * 获取移动端学校信息
+     */
+    public function getAppSchool()
+    {
+        $schoolUuId = $this->header('schoolUuid', null);
+        $dao = new SchoolDao;
+        return $dao->getSchoolByUuid($schoolUuId);
     }
 }

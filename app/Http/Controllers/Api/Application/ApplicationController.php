@@ -41,9 +41,27 @@ class ApplicationController extends Controller
         $list = $dao->getOpenTypeListBySchoolId($schoolId);
         foreach ($list as $key => $val) {
             $val->media;
+            unset($list[$key]['school_id']);
+            unset($list[$key]['media_id']);
+            unset($list[$key]['status']);
         }
         $result = ['type'=>$list];
         return JsonBuilder::Success($result);
+
+    }
+
+
+    public function applicationList(ApplicationRequest $request) {
+        $uid = $request->user()->id;
+        $dao = new ApplicationDao();
+        $result = $dao->getApplicationByUserId($uid);
+        foreach ($result as $key => $val) {
+            $result[$key]['application_type'] = $val->applicationType->name;
+            unset($result[$key]['applicationType']);
+            unset($result[$key]['application_type_id']);
+        }
+        $data = pageReturn($result);
+        return JsonBuilder::Success($data);
 
     }
 

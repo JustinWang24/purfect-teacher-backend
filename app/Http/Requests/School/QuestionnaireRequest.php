@@ -20,4 +20,15 @@ class QuestionnaireRequest extends MyStandardRequest
         ];
     }
 
+    public function messages()
+    {
+        return [
+            'questionnaire.title.max'  => '最多255个汉字',
+            'questionnaire.first_question_info.max'  => '最多255个汉字',
+            'questionnaire.second_question_info.max'  => '最多255个汉字',
+            'questionnaire.third_question_info.max'  => '最多255个汉字',
+            'questionnaire.detail.min' => '最少20个汉字',
+        ];
+    }
+
 }

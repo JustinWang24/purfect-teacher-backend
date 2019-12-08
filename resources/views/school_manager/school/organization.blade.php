@@ -122,9 +122,9 @@
                                     <el-col :span="12">
                                         <el-form-item label="职务"  label-width="70px">
                                             <el-select v-model="currentMember.title_id" placeholder=""  style="width: 90%;">
-                                                <el-option label="职员" :value="{{ \App\Utils\Misc\Contracts\Title::MEMBER }}"></el-option>
-                                                <el-option label="副手" :value="{{ \App\Utils\Misc\Contracts\Title::DEPUTY }}"></el-option>
-                                                <el-option label="主管" :value="{{ \App\Utils\Misc\Contracts\Title::LEADER }}"></el-option>
+                                                @foreach(\App\Models\Pipeline\Flow\Handler::HigherLevels() as $role)
+                                                <el-option label="{{ $role }}" :value="{{ $role }}"></el-option>
+                                                @endforeach
                                             </el-select>
                                         </el-form-item>
                                     </el-col>

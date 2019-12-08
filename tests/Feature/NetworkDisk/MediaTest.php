@@ -24,13 +24,13 @@ class MediaTest extends BasicPageTestCase
 
         $data = [
             'file' => $file,
-            'category'=>$user->networkDiskRoot->uuid,
+//            'category'=>$user->networkDiskRoot->uuid,
             'description'=>'测试文件上传',
             ];
 
         $header = $this->getHeaderWithApiToken();
         $response = $this->json('post',route('api.media.upload'),$data,$header);
-
+        dd($response->content());
         $result = json_decode($response->content(),true);
 
         $this->assertArrayHasKey('code', $result);

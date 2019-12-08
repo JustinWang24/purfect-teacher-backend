@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Models\Acl\Role;
 use App\Models\Schools\SchoolConfiguration;
+use App\Models\Teachers\Performance\TeacherPerformanceConfig;
 use App\Models\Users\GradeUser;
 use App\User;
 use Illuminate\Database\Eloquent\Model;
@@ -72,5 +73,9 @@ class School extends Model
      */
     public function schoolManagers(){
         return $this->hasMany(GradeUser::class)->where('user_type',Role::SCHOOL_MANAGER);
+    }
+
+    public function teacherPerformanceConfigs(){
+        return $this->hasMany(TeacherPerformanceConfig::class);
     }
 }

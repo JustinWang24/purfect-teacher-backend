@@ -18,6 +18,7 @@ use App\Models\School;
 use App\Utils\FlashMessageBuilder;
 use App\Dao\Schools\InstituteDao;
 use App\Utils\JsonBuilder;
+use Illuminate\Support\Facades\DB;
 
 class SchoolsController extends Controller
 {
@@ -138,6 +139,25 @@ class SchoolsController extends Controller
     }
 
     /**
+     * 获取某个级别或者指定的父级单位的下级单位集合
+     * @param SchoolRequest $request
+     * @return string
+     */
+    public function load_children(SchoolRequest $request){
+        $level = intval($request->get('level'));
+        $parentId = $request->get('parent_id', null);
+        $dao = new OrganizationDao();
+        $orgs = [];
+        if($parentId){
+            $orgs = $dao->getById($parentId)->branch;
+        }
+        else{
+            $orgs = $dao->loadByLevel($level, $request->getSchoolId());
+        }
+        return JsonBuilder::Success(['orgs'=>$orgs]);
+    }
+
+    /**
      * 保存组织结构
      * @param SchoolRequest $request
      * @return string
@@ -149,6 +169,12 @@ class SchoolsController extends Controller
         if(isset($form['id']) && !empty($form['id'])){
             $id = $form['id'];
             unset($form['id']);
+            if(isset($form['members'])) {
+                unset($form['members']);
+            }
+            if(isset($form['updated_at'])) {
+                unset($form['updated_at']);
+            }
             $org = $dao->update($form, $id);
         }
         else{
@@ -169,16 +195,28 @@ class SchoolsController extends Controller
         return JsonBuilder::Success(['organization'=>$org,'members'=>$org->members]);
     }
 
+
     /**
-     * 删除组织结构
+     * 删除组织结构及人员
      * @param SchoolRequest $request
      * @return string
+     * @throws \Exception
      */
     public function delete_organization(SchoolRequest $request){
         $id = $request->get('organization_id');
         $dao = new OrganizationDao();
-        $dao->deleteOrganization($id);
-        return JsonBuilder::Success();
+
+        try {
+            DB::beginTransaction();
+            $dao->deleteOrganization($id);
+            DB::commit();
+            return JsonBuilder::Success();
+        } catch (\Exception $e) {
+            DB::rollBack();
+            $msg = $e->getMessage();
+            return JsonBuilder::Error($msg);
+        }
+
     }
 
     /**
@@ -191,11 +229,11 @@ class SchoolsController extends Controller
         $member = $request->get('member');
         if(empty($member['id'])){
             $result = $dao->create($member);
-            if($result){
-                return JsonBuilder::Success(['id'=>$result->id]);
+            if($result->isSuccess()){
+                return JsonBuilder::Success(['id'=>$result->getData()->id]);
             }
             else{
-                return JsonBuilder::Error();
+                return JsonBuilder::Error($result->getMessage());
             }
         }
         else{
