@@ -25,9 +25,9 @@ class Factory
         if ($node->isHead()) {
             $instance = new StartFlowsLogic($node, $user);
         } elseif ($node->isEnd()) {
-            $instance = new EndFlowsLogic;
+            $instance = new EndFlowsLogic($node, $user);
         } else {
-            $instance = new OngoingFlowsLogic;
+            $instance = new OngoingFlowsLogic($node, $user);
         }
 
         return $instance;

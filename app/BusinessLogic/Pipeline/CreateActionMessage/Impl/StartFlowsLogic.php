@@ -4,7 +4,6 @@
 namespace App\BusinessLogic\Pipeline\CreateActionMessage\Impl;
 
 use App\BusinessLogic\Pipeline\CreateActionMessage\Contracts\IActionMessageLogic;
-use App\Events\IFlowAccessor;
 use App\Jobs\Notifier\Push;
 use App\Models\Misc\SystemNotification;
 use App\Jobs\Notifier\InternalMessage;
@@ -50,8 +49,8 @@ class StartFlowsLogic implements IActionMessageLogic
             if(count($users) > 0){
                 Push::dispatch(
                     $users,
-                    '流程开始',
-                    $this->user->getName().'您发起了: '. $action->getFlow()->getName(). '流程',
+                    '有新的审批',
+                    $this->user->getName().'发起了: '. $action->getFlow()->getName(). '流程, 需要您的审批',
                     new ViewFlowProgress($action->getFlow())
                 )->delay(now()->addSecond());
             }
@@ -62,7 +61,7 @@ class StartFlowsLogic implements IActionMessageLogic
                 $this->user->id,
                 SystemNotification::PRIORITY_LOW,
                 SystemNotification::TYPE_NONE,
-                $this->user->getName().'您发起了: '. $action->getFlow()->getName(). '流程'
+                $this->user->getName().'发起了: '. $action->getFlow()->getName(). '流程, 需要您的审批'
             );
             $mes->handle();
 
@@ -73,7 +72,7 @@ class StartFlowsLogic implements IActionMessageLogic
                     $user->id,
                     SystemNotification::PRIORITY_LOW,
                     SystemNotification::TYPE_NONE,
-                    $this->user->getName().'您发起了: '. $action->getFlow()->getName(). '流程'
+                    $this->user->getName().'发起了: '. $action->getFlow()->getName(). '流程, 需要您的审批'
                 );
                 $mes->handle();
             }
