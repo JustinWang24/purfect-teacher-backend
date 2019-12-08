@@ -33,6 +33,18 @@ class FlowsController extends Controller
     }
 
     /**
+     * 查看某个申请的详情
+     * @param FlowRequest $request
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function view_history(FlowRequest $request){
+        $this->dataForView['pageTitle'] = '查看申请';
+        $this->dataForView['actionId'] = $request->getActionId();
+        $this->dataForView['userFlowId'] = $request->getUserFlowId();
+        return view('pipeline.flows.view_history',$this->dataForView);
+    }
+
+    /**
      * 教师开始一个流程, 这个时候, 如果执行成功, 流程就算正式开始了
      * @param FlowRequest $request
      */

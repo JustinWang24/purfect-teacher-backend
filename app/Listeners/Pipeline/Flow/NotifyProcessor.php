@@ -5,6 +5,9 @@ namespace App\Listeners\Pipeline\Flow;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use App\Events\IFlowAccessor;
+use App\BusinessLogic\Pipeline\Messenger\MessengerFactory;
+use App\BusinessLogic\Pipeline\Messenger\Contracts\IMessenger;
+use Illuminate\Support\Facades\Log;
 
 class NotifyProcessor
 {
@@ -26,6 +29,15 @@ class NotifyProcessor
      */
     public function handle(IFlowAccessor $event)
     {
-        //
+        $messenger = MessengerFactory::GetInstance(
+            IMessenger::TYPE_PROCESSOR,
+            $event->getFlow(),
+            $event->getNode(),
+            $event->getUser()
+        );
+        $bag = $messenger->handle($event->getAction());
+        if(!$bag->isSuccess()){
+            Log::error('通知流程发起者错误',['msg'=>$bag->getMessage()]);
+        }
     }
 }

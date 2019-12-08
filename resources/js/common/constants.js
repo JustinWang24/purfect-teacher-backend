@@ -145,6 +145,8 @@ export const Constants = {
             PROCESS: '/api/pipeline/flow/process', // 同意流程向下一步
             RESUME: '/api/pipeline/flow/resume', // 流程驳回
             WATCH: '/api/pipeline/flow/watch', // 查看一个流程的最新状态
+            CANCEL_ACTION: '/api/pipeline/flow/cancel-action', // 取消一个流程中的 action
+            VIEW_ACTION: '/api/pipeline/flow/view-action', // 查看一个流程中的 action
         }
     },
     YEARS: ['N.A','一年级','二年级','三年级','四年级','五年级','六年级'],
@@ -190,5 +192,19 @@ export const Constants = {
         STATUS_REFUSED: 3,
         STATUS_WAITING: 1,
         STATUS_PUBLISHED: 4,
+    },
+    FLOW_ACTION_RESULT: {
+        PENDING: 1,
+        PENDING_TXT: '审核中',
+        PENDING_CLASS: 'text-warning',
+        NOTICED: 2,
+        NOTICED_TXT: '已阅',
+        NOTICED_CLASS: 'text-success',
+        PASSED: 3,
+        PASSED_TXT: '已通过',
+        PASSED_CLASS: 'text-success',
+        REJECTED: 4,
+        REJECTED_TXT: '已驳回',
+        REJECTED_CLASS: 'text-danger',
     }
 };

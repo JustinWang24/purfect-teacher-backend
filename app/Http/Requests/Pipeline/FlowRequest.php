@@ -34,4 +34,12 @@ class FlowRequest extends MyStandardRequest
     public function getLastNewFlow(){
         return $this->get('lastNewFlow', null);
     }
+
+    public function getUserFlowId(){
+        return $this->get('user_flow_id', null);
+    }
+
+    public function getActionId(){
+        return $this->get('action_id', null);
+    }
 }

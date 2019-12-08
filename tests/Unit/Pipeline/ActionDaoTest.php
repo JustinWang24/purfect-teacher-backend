@@ -9,6 +9,8 @@
 namespace Tests\Unit\Pipeline;
 use App\Dao\Pipeline\ActionDao;
 use App\Models\NetworkDisk\Media;
+use App\Models\Pipeline\Flow\Handler;
+use App\User;
 use Tests\TestCase;
 
 class ActionDaoTest extends TestCase
@@ -31,6 +33,15 @@ class ActionDaoTest extends TestCase
         $this->assertGreaterThan(0, count($action->attachments));
 
         $this->assertTrue($dao->delete($action->id));
+    }
+
+    public function testCanGetNoticeToByHandler(){
+        $handler = Handler::find(28);
+        $user = User::find(5);
+        if($handler && $user){
+            $users = $handler->getNoticeTo($user);
+            $this->assertTrue(count($users) > 0);
+        }
     }
 
     private function mockActionData(){

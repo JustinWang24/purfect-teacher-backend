@@ -53,7 +53,7 @@
     </div>
 
     <div class="row" id="student-homepage-app">
-        <div class="col-lg-6 col-md-12 col-sm-12 col-12">
+        <div class="col-lg-4 col-md-4 col-sm-12">
             <div class="card">
                 <div class="card-body">
                     @foreach($groupedFlows as $type=>$flows)
@@ -77,25 +77,29 @@
                 </div>
             </div>
         </div>
-        <div class="col-lg-6 col-md-12 col-sm-12 col-12">
+        <div class="col-lg-8 col-md-12 col-sm-12">
             <div class="card">
                 <div class="card-head">
-                    <header>我发起的流程 <i class="el-icon-loading" v-if="isLoading"></i> </header>
+                    <header>我的申请 <i class="el-icon-loading" v-if="isLoading"></i> </header>
                 </div>
                 <div class="card-body no-padding height-9">
                     <div class="row">
-                        <div class="col-md-4 col-lg-4 col-xl-4" v-for="(act, idx) in flowsStartedByMe" :key="idx">
+                        <div class="col-md-4 col-lg-4 col-xl-4" v-for="(userFlow, idx) in flowsStartedByMe" :key="idx">
                             <el-card shadow="hover" class="pb-3">
                                 <h3>
-                                    <img :src="act.flow.icon" width="40">
-                                    <span>@{{ act.flow.name }}</span>
+                                    <img :src="userFlow.flow.icon" width="40">
+                                    <span>@{{ userFlow.flow.name }}</span>
                                 </h3>
                                 <el-divider></el-divider>
-                                <h4 class="text-info">
-                                    @{{ act.name }}
-                                </h4>
-                                <time class="pull-left" style="font-size: 13px;color: #999;">@{{ act.created_at }}</time>
-                                <el-button type="danger" icon="el-icon-delete" size="mini" class="button pull-right">撤销</el-button>
+                                <h5 :class="userFlow.done ? 'text-info' : 'text-danger'">
+                                    @{{ userFlow.done ? '已批准' : '审核中 ...' }}
+                                </h5>
+                                <time class="pull-left" style="font-size: 13px;color: #999;">申请日期: @{{ userFlow.created_at.substring(0, 10) }}</time>
+                                <br>
+                                <el-divider></el-divider>
+                                <div class="clearfix"></div>
+                                <el-button @click="cancelMyApplication(userFlow)" type="primary" size="mini" class="button pull-left">进度</el-button>
+                                <el-button @click="cancelMyApplication(userFlow)" type="danger" size="mini" class="button pull-right">撤销</el-button>
                             </el-card>
                         </div>
                     </div>

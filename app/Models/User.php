@@ -14,6 +14,7 @@ use App\Models\Students\StudentTextbook;
 use App\Models\Teachers\TeacherProfile;
 use App\Models\Users\GradeUser;
 use App\Models\Users\UserDevice;
+use App\Utils\Pipeline\IUser;
 use Illuminate\Notifications\Notifiable;
 //use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -21,7 +22,7 @@ use Kodeine\Acl\Traits\HasRole;
 use App\Models\RecruitStudent\RegistrationInformatics;
 use App\Models\NetworkDisk\Media;
 
-class User extends Authenticatable implements HasMobilePhone, HasDeviceId
+class User extends Authenticatable implements HasMobilePhone, HasDeviceId, IUser
 {
     use Notifiable, HasRole;
 
@@ -266,7 +267,7 @@ class User extends Authenticatable implements HasMobilePhone, HasDeviceId
         return $this->mobile;
     }
 
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }
@@ -331,5 +332,25 @@ class User extends Authenticatable implements HasMobilePhone, HasDeviceId
 
         $re = StudentTextbook::where($map)->orderBy('created_at','desc')->first();
         return $re;
+    }
+
+    public function getId(): int
+    {
+        return $this->id;
+    }
+
+    public function getUuid(): string
+    {
+        return $this->uuid;
+    }
+
+    public function getApiToken(): string
+    {
+        return $this->api_token;
+    }
+
+    public function getType(): int
+    {
+        return $this->type;
     }
 }
