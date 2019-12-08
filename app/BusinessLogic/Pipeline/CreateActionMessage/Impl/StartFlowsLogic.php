@@ -56,8 +56,8 @@ class StartFlowsLogic implements IActionMessageLogic
             }
         } else {
             $mes = new InternalMessage(
-                0,
-                0,
+                SystemNotification::SCHOOL_EMPTY,
+                SystemNotification::FROM_SYSTEM,
                 $this->user->id,
                 SystemNotification::PRIORITY_LOW,
                 SystemNotification::TYPE_NONE,
@@ -67,8 +67,8 @@ class StartFlowsLogic implements IActionMessageLogic
 
             foreach ($users as $user) {
                 new InternalMessage(
-                    0,
-                    0,
+                    SystemNotification::SCHOOL_EMPTY,
+                    SystemNotification::FROM_SYSTEM,
                     $user->id,
                     SystemNotification::PRIORITY_LOW,
                     SystemNotification::TYPE_NONE,
