@@ -17,6 +17,9 @@ class SystemNotification extends Model
     const TYPE_NONE         = 0;// 消息类别: 无
     const TYPE_STUDENT_REGISTRATION = 0;// 消息类别: 学生填写招生报名表
 
+    const SCHOOL_EMPTY = 0; // 针对哪个学校 0 表示不针对学校
+
+
     protected $fillable = [
         'sender',
         'to',
