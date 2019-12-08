@@ -22,9 +22,11 @@
       public function list(WifiRequest $request)
       {
          $param = $request->only ( [ 'school_id','campus_id','page' ] );
+         $param[ 'page' ] = $request->input ( 'page' , 1 );
 
          // 查询条件
          $condition[] = [ 'wifiid' , '>' , 0 ];
+
          // 学校id
          if ( isset( $param[ 'school_id' ] )  && $param[ 'school_id' ])
          {

@@ -3,8 +3,8 @@ use App\Utils\UI\Anchor;
 use App\Utils\UI\Button;
 use App\User;
 ?>
-@extends('layouts.app')
-@section('content')
+
+<?php $__env->startSection('content'); ?>
     <div class="row">
         <div class="col-sm-12 col-md-12 col-xl-12">
             <div class="card-box">
@@ -15,10 +15,10 @@ use App\User;
                     <div class="row">
                         <div class="row table-padding">
                             <div class="col-12">
-                                <a href="{{ url()->previous() }}" class="btn btn-default">
+                                <a href="<?php echo e(url()->previous()); ?>" class="btn btn-default">
                                     <i class="fa fa-arrow-circle-left"></i> 返回
                                 </a>&nbsp;
-                                <a href="{{ route('manager_wifi.wifiNotice.add') }}" class="btn btn-primary pull-right" id="btn-create-room-from-building">
+                                <a href="<?php echo e(route('manager_wifi.wifiNotice.add')); ?>" class="btn btn-primary pull-right" id="btn-create-room-from-building">
                                     添加 <i class="fa fa-plus"></i>
                                 </a>
                             </div>
@@ -36,26 +36,30 @@ use App\User;
                                 </tr>
                                 </thead>
                                 <tbody>
-                                @foreach($dataList as $key=>$val)
+                                <?php $__currentLoopData = $dataList; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $key=>$val): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                     <tr>
-										<td>{{$val['noticeid']}}</td>
-										<td>{{$val['notice_title']}}</td>
-										<td>{{$val['sort']}}</td>
-										<td>{{$val['created_at']}}</td>
-										<td>{{$val['updated_at']}}</td>
+										<td><?php echo e($val['noticeid']); ?></td>
+										<td><?php echo e($val['notice_title']); ?></td>
+										<td><?php echo e($val['sort']); ?></td>
+										<td><?php echo e($val['created_at']); ?></td>
+										<td><?php echo e($val['updated_at']); ?></td>
                                         <td class="text-center">
-                                            {{ Anchor::Print(['text'=>'编辑','class'=>'btn-edit-room','href'=>route('manager_wifi.wifiNotice.edit',['noticeid'=>$val->noticeid])], Button::TYPE_DEFAULT,'edit') }}
-                                            {{ Anchor::Print(['text'=>'删除','class'=>'btn-edit-room','href'=>route('manager_wifi.wifiNotice.delete',['noticeid'=>$val->noticeid])], Button::TYPE_DEFAULT,'delete') }}
+                                            <?php echo e(Anchor::Print(['text'=>'编辑','class'=>'btn-edit-room','href'=>route('manager_wifi.wifiNotice.edit',['noticeid'=>$val->noticeid])], Button::TYPE_DEFAULT,'edit')); ?>
+
+                                            <?php echo e(Anchor::Print(['text'=>'删除','class'=>'btn-edit-room','href'=>route('manager_wifi.wifiNotice.delete',['noticeid'=>$val->noticeid])], Button::TYPE_DEFAULT,'delete')); ?>
+
                                         </td>
                                     </tr>
-                                @endforeach
+                                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                 </tbody>
                             </table>
                         </div>
-                        {!! $dataList->fragment('feed')->render() !!}
+                        <?php echo $dataList->fragment('feed')->render(); ?>
+
                     </div>
                 </div>
             </div>
         </div>
     </div>
-@endsection
+<?php $__env->stopSection(); ?>
+<?php echo $__env->make('layouts.app', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH D:\wamp64\www\etx-t\purfect-teacher-backend\resources\views/manager_wifi/wifiNotice/list.blade.php ENDPATH**/ ?>

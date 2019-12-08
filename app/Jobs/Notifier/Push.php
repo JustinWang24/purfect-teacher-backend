@@ -24,7 +24,7 @@ class Push implements ShouldQueue
      * @param string $content
      * @param INextAction $nextStep
      */
-    public function __construct( $noticedTo, $title, $content, $nextStep = null)
+    public function __construct($noticedTo, $title, $content, $nextStep = null)
     {
         $this->title = $title;
         $this->content = $content;
