@@ -24,7 +24,8 @@ class ClassAdviser implements TitleToUsers
     public function getUsers()
     {
         $users = [];
-        if($adviser = $this->student->gradeUser->gradeManager->adviser){
+        $adviser = $this->student->gradeUser->gradeManager->adviser;
+        if($adviser){
             $users[] = $adviser;
         }
         return $users;

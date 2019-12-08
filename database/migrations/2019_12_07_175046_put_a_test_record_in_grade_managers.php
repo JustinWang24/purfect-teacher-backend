@@ -38,7 +38,10 @@ class PutATestRecordInGradeManagers extends Migration
     public function down()
     {
         Schema::table('grade_managers', function (Blueprint $table) {
-            //
+            $table->dropColumn('adviser_name');
+            $table->dropColumn('monitor_name');
+            $table->dropColumn('school_id');
+            $table->unsignedBigInteger('school');
         });
     }
 }

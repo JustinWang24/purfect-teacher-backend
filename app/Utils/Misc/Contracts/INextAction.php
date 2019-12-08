@@ -3,10 +3,15 @@
 
 namespace App\Utils\Misc\Contracts;
 
-
-use App\User;
-
 interface INextAction
 {
-    public function getActionUrl(User $user);
+    /**
+     * @return string
+     */
+    public function getActionUrl();
+
+    /**
+     * @return array
+     */
+    public function getActionData();
 }

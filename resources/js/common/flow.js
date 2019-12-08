@@ -72,6 +72,24 @@ export function waitingForMe(userUuid, affix) {
 }
 
 /**
+ * 查看流程详情
+ * @param actionId
+ * @param userFlowId
+ * @param affix
+ * @returns {*}
+ */
+export function viewApplicationByAction(actionId, userFlowId, affix) {
+    const url = Util.buildUrl(Constants.API.FLOW.VIEW_ACTION);
+    if(Util.isDevEnv()){
+        return axios.get(url, affix);
+    }
+    return axios.post(
+        url,
+        {action_id: actionId, user_flow_id: userFlowId, version:Constants.VERSION}
+    );
+}
+
+/**
  * @param flow
  * @param node
  * @param prevNodeId
@@ -141,3 +159,14 @@ export function deleteNodeAttachment(attachmentId,affix) {
     );
 }
 
+// 取消已经发起的流程
+export function cancelApplicationByUser(userFlowId,affix) {
+    const url = Util.buildUrl(Constants.API.FLOW.CANCEL_ACTION);
+    if(Util.isDevEnv()){
+        return axios.get(url, affix);
+    }
+    return axios.post(
+        url,
+        {user_flow_id: userFlowId, version:Constants.VERSION}
+    );
+}

@@ -6,6 +6,7 @@ use App\User;
 use App\Utils\Pipeline\IAction;
 use App\Utils\Pipeline\IFlow;
 use App\Utils\Pipeline\INode;
+use App\Utils\Pipeline\IUser;
 use Illuminate\Database\Eloquent\Model;
 
 class Action extends Model implements IAction
@@ -13,7 +14,8 @@ class Action extends Model implements IAction
     public $table = 'pipeline_actions';
     protected $fillable = [
         'flow_id','node_id',
-        'result','content','user_id','urgent'
+        'result','content','user_id','urgent',
+        'transaction_id', // 标识动作属于同一流程的唯一识别号
     ];
 
     public $casts = [
@@ -32,6 +34,9 @@ class Action extends Model implements IAction
     public function user(){
         return $this->belongsTo(User::class);
     }
+    public function userFlow(){
+        return $this->belongsTo(UserFlow::class, 'transaction_id');
+    }
 
     public function getNode(): INode
     {
@@ -43,7 +48,7 @@ class Action extends Model implements IAction
         return $this->flow;
     }
 
-    public function getUser(): User
+    public function getUser(): IUser
     {
         return $this->user;
     }
@@ -90,11 +95,16 @@ class Action extends Model implements IAction
 
     public function isSuccess()
     {
-        return true;
+        return $this->result === IAction::RESULT_PASS || $this->result === IAction::RESULT_NOTICED;
     }
 
     public function isUrgent(): bool
     {
         return $this->urgent;
+    }
+
+    public function getTransactionId(): string
+    {
+        return $this->transaction_id;
     }
 }

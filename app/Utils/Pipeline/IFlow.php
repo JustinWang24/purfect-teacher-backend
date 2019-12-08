@@ -8,8 +8,6 @@
 
 namespace App\Utils\Pipeline;
 
-use App\User;
-
 interface IFlow extends IPersistent
 {
     // 以下随便定义了几个流程的分类
@@ -47,24 +45,24 @@ interface IFlow extends IPersistent
 
     /**
      * 流程是否可以被指定的用户 user 启动
-     * @param User $user
+     * @param IUser $user
      * @return INode
      */
-    public function canBeStartBy(User $user): INode;
+    public function canBeStartBy(IUser $user): INode;
 
     /**
      * 返回当前流程中等待处理的步骤
-     * @param User $user
+     * @param IUser $user
      * @return IAction
      */
-    public function getCurrentPendingAction(User $user): IAction;
+    public function getCurrentPendingAction(IUser $user): IAction;
 
     /**
      * 设置传入的 node 为当前流程
      *
      * @param INode $node
-     * @param User $user
+     * @param IUser $user
      * @return boolean
      */
-    public function setCurrentPendingNode(INode $node, User $user);
+    public function setCurrentPendingNode(INode $node, IUser $user);
 }

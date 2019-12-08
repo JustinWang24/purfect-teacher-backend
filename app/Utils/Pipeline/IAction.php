@@ -7,10 +7,8 @@
  */
 
 namespace App\Utils\Pipeline;
-use App\User;
-use App\Utils\ReturnData\IMessageBag;
 
-interface IAction extends IMessageBag, IPersistent
+interface IAction extends IPipelineMessageBag, IPersistent
 {
     const RESULT_PENDING = 1; // 等待处理
     const RESULT_NOTICED = 2; // 已阅
@@ -21,7 +19,7 @@ interface IAction extends IMessageBag, IPersistent
 
     public function getFlow(): IFlow;
 
-    public function getUser(): User;
+    public function getUser(): IUser;
 
     /**
      * 是否紧急通知下一步的操作人员
@@ -56,4 +54,12 @@ interface IAction extends IMessageBag, IPersistent
      * @return string
      */
     public function getContent(): string;
+
+    /**
+     * 表示动作归属于某个流程的唯一识别号
+     * @return string
+     */
+    public function getTransactionId(): string;
+
+    public function getUserFlow(): IUserFlow;
 }

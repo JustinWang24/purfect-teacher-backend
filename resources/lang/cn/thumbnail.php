@@ -114,5 +114,6 @@ return [
     'pipeline'=>'工作流',
     'flows-manager'=>'流程管理',
     'flow-open'=>'发起',
+    'flow-view-history'=>'查看流程详情',
 ];
 

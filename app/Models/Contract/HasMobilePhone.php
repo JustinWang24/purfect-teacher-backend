@@ -17,5 +17,5 @@ interface HasMobilePhone
      * 获取持有手机的人的名字
      * @return string
      */
-    public function getName();
+    public function getName(): string ;
 }
