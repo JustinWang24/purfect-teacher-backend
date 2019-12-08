@@ -18,16 +18,15 @@ class GradeManager extends Model
 
     /**
      * 班长
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function monitor(){
-        return $this->belongsTo(User::class, 'monitor_id');
+        return $this->hasOne(User::class, 'id','monitor_id');
     }
 
     /**
      * 关联的班主任
      */
     public function adviser(){
-        return $this->belongsTo(Teacher::class, 'adviser_id');
+        return $this->hasOne(User::class, 'id','adviser_id');
     }
 }

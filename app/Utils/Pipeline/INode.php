@@ -9,7 +9,6 @@
 
 namespace App\Utils\Pipeline;
 
-
 interface INode extends IPersistent
 {
     const TYPE_SIMPLE  = 1; // 简单节点: 出入口的数量 <= 1

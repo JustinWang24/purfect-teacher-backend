@@ -52,7 +52,8 @@ import { loadTextbooksPaginate, deleteTextbook } from './common/textbook';
 import { loadOrgContacts, loadGradeContacts, loadGrades } from './common/contacts';
 import {
     saveFlow, loadNodes, deleteNode, saveNode, updateNode,
-    deleteNodeAttachment, deleteFlow, start, startedByMe, waitingForMe
+    deleteNodeAttachment, deleteFlow, start, startedByMe, waitingForMe,
+    cancelApplicationByUser, viewApplicationByAction
 } from './common/flow';
 import { saveNews, loadNews, saveSections, deleteNews, publishNews, deleteSection, moveUpSection, moveDownSection } from './common/news';
 
@@ -131,6 +132,110 @@ if(document.getElementById('pipeline-flow-open-app')){
 }
 
 /**
+ * 查看一个流程
+ */
+if(document.getElementById('pipeline-flow-view-history-app')){
+    new Vue({
+        el:'#pipeline-flow-view-history-app',
+        data(){
+            return {
+                userUuid: null,
+                actionId: null,
+                userFlowId: null,
+                schoolId: null,
+                action:{
+                    content:'',
+                    attachments:[],
+                    result: null
+                },
+                showFileManagerFlag: false,
+                isLoading: false,
+                history:[],
+                results:[
+                    {id: Constants.FLOW_ACTION_RESULT.PENDING, label: Constants.FLOW_ACTION_RESULT.PENDING_TXT},
+                    {id: Constants.FLOW_ACTION_RESULT.NOTICED, label: Constants.FLOW_ACTION_RESULT.NOTICED_TXT},
+                    {id: Constants.FLOW_ACTION_RESULT.PASSED, label: Constants.FLOW_ACTION_RESULT.PASSED_TXT},
+                    {id: Constants.FLOW_ACTION_RESULT.REJECTED, label: Constants.FLOW_ACTION_RESULT.REJECTED_TXT},
+                ],
+            }
+        },
+        created(){
+            const dom = document.getElementById('app-init-data-holder');
+            this.schoolId = dom.dataset.school;
+            this.actionId = dom.dataset.actionid;
+            this.userUuid = dom.dataset.useruuid;
+            this.userFlowId = dom.dataset.flowid;
+            this.loadLastAction();
+        },
+        methods: {
+            loadLastAction: function(){
+                this.isLoading = true;
+                viewApplicationByAction(this.actionId, this.userFlowId).then(res => {
+                    if(Util.isAjaxResOk(res)){
+                        this.history = res.data.data.actions;
+                        this.action = this.history[this.history.length - 1];
+                    }
+                    else{
+                        this.$message.error(res.data.message);
+                    }
+                    this.isLoading = false;
+                }).catch(e => {
+                    this.$message.error('系统繁忙!');
+                })
+            },
+            onCreateActionSubmit: function(){
+
+            },
+            pickFileHandler: function(payload){
+                this.showFileManagerFlag = false;
+                const attachment = {
+                    id:null,
+                    action_id: null,
+                    media_id: payload.file.id,
+                    url: payload.file.url,
+                    file_name: payload.file.file_name
+                };
+                this.action.attachments.push(attachment);
+            },
+            resultText: function(result){
+                let txt = Constants.FLOW_ACTION_RESULT.PENDING_TXT;
+                switch (result){
+                    case Constants.FLOW_ACTION_RESULT.PASSED:
+                        txt = Constants.FLOW_ACTION_RESULT.PASSED_TXT;
+                        break;
+                    case Constants.FLOW_ACTION_RESULT.NOTICED:
+                        txt = Constants.FLOW_ACTION_RESULT.NOTICED_TXT;
+                        break;
+                    case Constants.FLOW_ACTION_RESULT.REJECTED:
+                        txt = Constants.FLOW_ACTION_RESULT.REJECTED_TXT;
+                        break;
+                    default:
+                        break;
+                }
+                return txt;
+            },
+            resultTextClass: function(result){
+                let txt = Constants.FLOW_ACTION_RESULT.PENDING_CLASS;
+                switch (result){
+                    case Constants.FLOW_ACTION_RESULT.PASSED:
+                        txt = Constants.FLOW_ACTION_RESULT.PASSED_CLASS;
+                        break;
+                    case Constants.FLOW_ACTION_RESULT.NOTICED:
+                        txt = Constants.FLOW_ACTION_RESULT.NOTICED_CLASS;
+                        break;
+                    case Constants.FLOW_ACTION_RESULT.REJECTED:
+                        txt = Constants.FLOW_ACTION_RESULT.REJECTED_CLASS;
+                        break;
+                    default:
+                        break;
+                }
+                return txt;
+            }
+        }
+    });
+}
+
+/**
  * 教师 app
  */
 if(document.getElementById('teacher-homepage-app')){
@@ -176,6 +281,9 @@ if(document.getElementById('teacher-homepage-app')){
                         this.flowsWaitingForMe = res.data.data.actions;
                     }
                 });
+            },
+            viewApplicationDetail: function(action){
+                window.location.href = '/pipeline/flow/view-history?action_id=' + action.id;
             }
         }
     });
@@ -196,7 +304,6 @@ if(document.getElementById('student-homepage-app')){
                 },
                 isLoading: false,
                 flowsStartedByMe:[],
-                flowsWaitingForMe:[],
             }
         },
         created(){
@@ -215,11 +322,23 @@ if(document.getElementById('student-homepage-app')){
                 this.isLoading = true;
                 startedByMe(this.userUuid).then(res => {
                     if(Util.isAjaxResOk(res)){
-                        this.flowsStartedByMe = res.data.data.actions;
+                        this.flowsStartedByMe = res.data.data.flows;
                     }
                     this.isLoading = false;
                 });
             },
+            // 取消一个申请
+            cancelMyApplication: function(userFlow){
+                cancelApplicationByUser(userFlow.id).then(res => {
+                    if(Util.isAjaxResOk(res)){
+                        const idx = Util.GetItemIndexById(userFlow.id, this.flowsStartedByMe);
+                        this.flowsStartedByMe.splice(idx, 1);
+                    }
+                    else{
+                        this.$message.error(res.data.message);
+                    }
+                })
+            }
         }
     });
 }

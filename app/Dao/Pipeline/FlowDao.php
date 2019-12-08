@@ -9,6 +9,7 @@
 namespace App\Dao\Pipeline;
 
 use App\Models\Pipeline\Flow\Flow;
+use App\Models\Pipeline\Flow\UserFlow;
 use App\User;
 use App\Utils\JsonBuilder;
 use App\Utils\Pipeline\IAction;
@@ -66,11 +67,22 @@ class FlowDao
                 'node_id'=>$headNode->id,
                 'result'=>IAction::RESULT_PENDING,
             ];
-            $actionDao = new ActionDao();
-            $action = $actionDao->create($actionData);
-            if($action){
+
+            DB::beginTransaction();
+
+            try{
+                $userFlow = UserFlow::create(
+                    ['flow_id' => $flowId, 'user_id' => $user->id??$user]
+                );
+                $actionDao = new ActionDao();
+                $action = $actionDao->create($actionData, $userFlow);
                 $bag->setData($action);
                 $bag->setCode(JsonBuilder::CODE_SUCCESS);
+                DB::commit();
+            }
+            catch (\Exception $exception){
+                DB::rollBack();
+                $bag->setMessage($exception->getMessage());
             }
             return $bag;
         }

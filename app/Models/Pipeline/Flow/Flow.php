@@ -7,6 +7,7 @@ use App\Models\Teachers\Teacher;
 use App\User;
 use App\Utils\Pipeline\IFlow;
 use App\Utils\Pipeline\INode;
+use App\Utils\Pipeline\IUser;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -67,13 +68,13 @@ class Flow extends Model implements IFlow
         return self::Types()[$this->type];
     }
 
-    public function getCurrentPendingAction(User $user): IAction
+    public function getCurrentPendingAction(IUser $user): IAction
     {
         $actionDao = new ActionDao();
         return $actionDao->getByFlowAndResult(IAction::RESULT_PENDING, $this, $user);
     }
 
-    public function setCurrentPendingNode(INode $node, User $user)
+    public function setCurrentPendingNode(INode $node, IUser $user)
     {
         // TODO: Implement setCurrentPendingNode() method.
     }
@@ -95,7 +96,7 @@ class Flow extends Model implements IFlow
             ->first();
     }
 
-    public function canBeStartBy(User $user): INode
+    public function canBeStartBy(IUser $user): INode
     {
         // Todo: 对于一个流程是否可以被一个用户启动的功能, 需要实现
         $node = null;

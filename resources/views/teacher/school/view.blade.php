@@ -71,7 +71,7 @@ $slot = \App\Utils\Time\GradeAndYearUtil::GetTimeSlot();
     </div>
 
     <div class="row" id="teacher-homepage-app">
-        <div class="col-lg-6 col-md-12 col-sm-12 col-12">
+        <div class="col-lg-4 col-md-4 col-sm-12">
             <div class="card">
             <div class="card-body">
                 @foreach($groupedFlows as $type=>$flows)
@@ -95,7 +95,31 @@ $slot = \App\Utils\Time\GradeAndYearUtil::GetTimeSlot();
             </div>
             </div>
         </div>
-        <div class="col-lg-6 col-md-12 col-sm-12 col-12">
+        <div class="col-lg-8 col-md-8 col-sm-12">
+            <div class="card">
+                <div class="card-head">
+                    <header>等待我审核的流程 <i class="el-icon-loading" v-if="isLoading"></i> </header>
+                </div>
+                <div class="card-body no-padding height-9">
+                    <div class="row">
+                        <div class="col-md-4 col-lg-4 col-xl-4" v-for="(act, idx) in flowsWaitingForMe" :key="idx">
+                            <el-card shadow="hover" class="pb-3">
+                                <h3>
+                                    <img :src="act.flow.icon" width="40">
+                                    <span>@{{ act.flow.name }}</span>
+                                </h3>
+                                <el-divider></el-divider>
+                                <h4 class="text-info">
+                                    申请人: @{{ act.user_flow.user_name }}
+                                </h4>
+                                <time class="pull-left" style="font-size: 13px;color: #999;">申请日期: @{{ act.created_at.substring(0, 10) }}</time>
+                                <el-button @click="viewApplicationDetail(act)" type="primary" icon="el-icon-edit" size="mini" class="button pull-right">查看</el-button>
+                            </el-card>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <div class="card">
                 <div class="card-head">
                     <header>我发起的流程 <i class="el-icon-loading" v-if="isLoading"></i> </header>
@@ -114,30 +138,6 @@ $slot = \App\Utils\Time\GradeAndYearUtil::GetTimeSlot();
                                 </h4>
                                 <time class="pull-left" style="font-size: 13px;color: #999;">@{{ act.created_at }}</time>
                                 <el-button type="danger" icon="el-icon-delete" size="mini" class="button pull-right">撤销</el-button>
-                            </el-card>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="card">
-                <div class="card-head">
-                    <header>等待我审核的流程 <i class="el-icon-loading" v-if="isLoading"></i> </header>
-                </div>
-                <div class="card-body no-padding height-9">
-                    <div class="row">
-                        <div class="col-md-4 col-lg-4 col-xl-4" v-for="(act, idx) in flowsWaitingForMe" :key="idx">
-                            <el-card shadow="hover" class="pb-3">
-                                <h3>
-                                    <img :src="act.flow.icon" width="40">
-                                    <span>@{{ act.flow.name }}</span>
-                                </h3>
-                                <el-divider></el-divider>
-                                <h4 class="text-info">
-                                    @{{ act.name }}
-                                </h4>
-                                <time class="pull-left" style="font-size: 13px;color: #999;">@{{ act.created_at }}</time>
-                                <el-button type="primary" icon="el-icon-edit" size="mini" class="button pull-right">查看</el-button>
                             </el-card>
                         </div>
                     </div>

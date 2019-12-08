@@ -10,7 +10,13 @@ namespace App\Dao\Pipeline;
 use App\Dao\NetworkDisk\MediaDao;
 use App\Models\Pipeline\Flow\Action;
 use App\Models\Pipeline\Flow\ActionAttachment;
+use App\Models\Pipeline\Flow\UserFlow;
+use App\User;
+use App\Utils\JsonBuilder;
 use App\Utils\Pipeline\IAction;
+use App\Utils\Pipeline\IUserFlow;
+use App\Utils\ReturnData\IMessageBag;
+use App\Utils\ReturnData\MessageBag;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Facades\DB;
@@ -18,6 +24,49 @@ use Illuminate\Support\Facades\Log;
 
 class ActionDao
 {
+    /**
+     * @param User $user
+     * @param $userFlowId
+     * @return IMessageBag
+     */
+    public function cancelUserFlow($user, $userFlowId){
+        $bag = new MessageBag(JsonBuilder::CODE_ERROR);
+        // 定位指定的 action
+        /**
+         * @var UserFlow $userFlow
+         */
+        if($user->isSchoolAdminOrAbove()){
+            $userFlow = UserFlow::find($userFlowId);
+        }
+        else{
+            $userFlow = UserFlow::where('id',$userFlowId)->where('user_id',$user->id)->first();
+        }
+
+        if($userFlow){
+            // 找到了 action, 那么就删除此 action 已经相关的操作
+            DB::beginTransaction();
+            try{
+                $actions = $userFlow->actions;
+
+                foreach ($actions as $action) {
+                    $this->delete($action->id);
+                }
+                $userFlow->delete();
+
+                DB::commit();
+                $bag->setCode(JsonBuilder::CODE_SUCCESS);
+            }
+            catch (\Exception $exception){
+                $bag->setMessage($exception->getMessage());
+                DB::rollBack();
+            }
+        }
+        else{
+            $bag->setMessage('您无权进行此操作');
+        }
+        return $bag;
+    }
+
     /**
      * @param $result
      * @param $flow
@@ -48,11 +97,15 @@ class ActionDao
 
     /**
      * @param $data
+     * @param IUserFlow|int $userFlow: 用户流程接口的对象或者用户流程接口 ID
      * @return Action
      */
-    public function create($data){
+    public function create($data, $userFlow){
         DB::beginTransaction();
         try{
+            // 为了可以让流程的动作形成关联关系, 必须生成一个标识当前流程的 transaction id.
+            $data['transaction_id'] = $userFlow->id ?? $userFlow;
+
             $action = Action::create($data);
             if(isset($data['attachments'])){
                 foreach ($data['attachments'] as $attachment) {
@@ -111,11 +164,7 @@ class ActionDao
      * @return Collection
      */
     public function getFlowsWhichStartBy($user){
-        return Action::where('user_id',$user->id??$user)
-            ->join('pipeline_nodes', function ($join){
-                $join->on('pipeline_actions.node_id','=','pipeline_nodes.id')
-                    ->where('pipeline_nodes.prev_node','=',0);
-            })
+        return UserFlow::where('user_id',$user->id??$user)
             ->with('flow')
             ->get();
     }
@@ -128,11 +177,29 @@ class ActionDao
     public function getFlowsWaitingFor($user){
         return Action::where('user_id',$user->id??$user)
             ->where('result','=',IAction::RESULT_PENDING)
-            ->join('pipeline_nodes', function ($join){
-                $join->on('pipeline_actions.node_id','=','pipeline_nodes.id')
-                    ->where('pipeline_nodes.prev_node','>',0);
-            })
             ->with('flow')
+            ->with('userFlow')
             ->get();
+    }
+
+    /**
+     * 根据 user flow 的 id 获取历史记录
+     * @param $userFlowId
+     * @return Collection
+     */
+    public function getHistoryByUserFlow($userFlowId){
+        return Action::where('transaction_id',$userFlowId)
+            ->with('node')
+            ->orderBy('updated_at','desc')
+            ->get();
+    }
+
+    /**
+     * @param $actionId
+     * @param $userId
+     * @return Action
+     */
+    public function getByActionIdAndUserId($actionId, $userId){
+        return Action::where('id',$actionId)->where('user_id',$userId)->first();
     }
 }
