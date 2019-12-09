@@ -19,6 +19,10 @@ class FlowRequest extends MyStandardRequest
         return $this->get('action',null);
     }
 
+    public function getActionFormData(){
+        return $this->get('action',null);
+    }
+
     /**
      * 启动一个流程时, 获取提交的流程 ID
      * @return mixed

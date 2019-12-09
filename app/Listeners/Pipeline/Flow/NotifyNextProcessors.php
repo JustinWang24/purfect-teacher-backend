@@ -30,9 +30,7 @@ class NotifyNextProcessors
     {
         $messenger = MessengerFactory::GetInstance(
             IMessenger::TYPE_NEXT_PROCESSORS,
-            $event->getFlow(),
-            $event->getNode(),
-            $event->getUser()
+            $event->getUser(), $event->getAction(), $event->getNode(), $event->getFlow()
         );
         $messenger->handle($event->getAction());
         return true;

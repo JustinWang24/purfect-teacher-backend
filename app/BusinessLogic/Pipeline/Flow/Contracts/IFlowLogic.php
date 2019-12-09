@@ -45,4 +45,18 @@ interface IFlowLogic
      * @return IMessageBag
      */
     public function start(IFlow $flow, $actionData);
+
+    /**
+     * @param IAction $currentAction
+     * @param $actionData
+     * @return IMessageBag
+     */
+    public function process(IAction $currentAction, $actionData);
+
+    /**
+     * @param IAction $currentAction
+     * @param $actionData
+     * @return IMessageBag
+     */
+    public function reject(IAction $currentAction, $actionData);
 }

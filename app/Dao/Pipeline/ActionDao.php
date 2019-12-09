@@ -166,6 +166,7 @@ class ActionDao
     public function getFlowsWhichStartBy($user){
         return UserFlow::where('user_id',$user->id??$user)
             ->with('flow')
+            ->orderBy('updated_at','desc')
             ->get();
     }
 
@@ -195,11 +196,43 @@ class ActionDao
     }
 
     /**
+     * 根据 user flow 的 id 获取最后一个动作
+     * @param $userFlowId
+     * @return Action
+     */
+    public function getLastActionByUserFlow($userFlowId){
+        return Action::where('transaction_id',$userFlowId)
+            ->with('node')
+            ->orderBy('updated_at','desc')
+            ->first();
+    }
+
+    /**
+     * 根据 user flow 的 id 获取第一个动作, 就是整个流程发起的动作
+     * @param $userFlowId
+     * @return Action
+     */
+    public function getFirstActionByUserFlow($userFlowId){
+        return Action::where('transaction_id',$userFlowId)
+            ->with('node')
+            ->orderBy('created_at','asc')
+            ->first();
+    }
+
+    /**
      * @param $actionId
      * @param $userId
      * @return Action
      */
     public function getByActionIdAndUserId($actionId, $userId){
         return Action::where('id',$actionId)->where('user_id',$userId)->first();
+    }
+
+    /**
+     * @param $actionId
+     * @return Action
+     */
+    public function getByActionId($actionId){
+        return Action::find($actionId);
     }
 }

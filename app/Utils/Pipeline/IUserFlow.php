@@ -7,6 +7,10 @@ namespace App\Utils\Pipeline;
 
 interface IUserFlow extends IPersistent
 {
+    const IN_PROGRESS   = 0; // 处理中
+    const DONE          = 1; // 通过
+    const DENIED        = 2; // 否决了
+
     public function getFlow(): IFlow;
 
     public function getUser(): IUser;
@@ -17,8 +21,13 @@ interface IUserFlow extends IPersistent
     public function getActions();
 
     /**
-     * 是否结束
+     * 是否通过
      * @return bool
      */
     public function isDone(): bool;
+    /**
+     * 是否被否决
+     * @return bool
+     */
+    public function isTerminated(): bool;
 }

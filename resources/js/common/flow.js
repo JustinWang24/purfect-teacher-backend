@@ -170,3 +170,20 @@ export function cancelApplicationByUser(userFlowId,affix) {
         {user_flow_id: userFlowId, version:Constants.VERSION}
     );
 }
+
+/**
+ * 处理某个步骤
+ * @param action
+ * @param affix
+ * @returns {*}
+ */
+export function processAction(action, affix) {
+    const url = Util.buildUrl(Constants.API.FLOW.PROCESS);
+    if(Util.isDevEnv()){
+        return axios.get(url, affix);
+    }
+    return axios.post(
+        url,
+        {action: action, version:Constants.VERSION}
+    );
+}

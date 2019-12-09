@@ -20,7 +20,13 @@ class ForActionNextProcessors extends AbstractMessenger
 {
     private $currentUser;
 
-    public function __construct(IFlow $flow, INode $node, User $user)
+    /**
+     * ForActionNextProcessors constructor.
+     * @param IFlow $flow
+     * @param INode|null $node
+     * @param User $user
+     */
+    public function __construct(IFlow $flow, $node, User $user)
     {
         parent::__construct($flow, $node, $user);
         $this->currentUser = $user;
@@ -28,13 +34,13 @@ class ForActionNextProcessors extends AbstractMessenger
 
     public function handle(IAction $action)
     {
-        $handler = $this->node->getHandler();
+        $handler = $this->node ? $this->node->getHandler() : null;
         if($handler){
             $users = $handler->getNoticeTo($this->currentUser);
 
             $content = $this->currentUser->getName();
 
-            if($this->node->isHead()){
+            if($this->node && $this->node->isHead()){
                 $content .= '提交 "' . $this->flow->getName() .'" 申请等您审核';
             }
             else{
@@ -50,7 +56,6 @@ class ForActionNextProcessors extends AbstractMessenger
                 // 紧急, 利用 APP 的消息通知下一步的处理人员
                 $title = '有一个' . $this->flow->getName() .'流程在等待您处理';
                 foreach ($users as $key => $user){
-                    Log::info('info',['msg'=>'Push to '.$user->getName()]);
                     $pushData = ['noticedTo'=>$user, 'title'=>$title, 'content'=>$content, 'nextStep'=>$this->getActionUrl()];
                     Push::dispatch($pushData)
                         ->delay(now()->addSeconds($key+1));

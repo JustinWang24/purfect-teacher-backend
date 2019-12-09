@@ -14,9 +14,10 @@ interface INodeHandler extends IPersistent
      * 流程中某一节点的具体处理逻辑, 并返回处理的结果
      * @param IUser $prevActionUser
      * @param IAction $prevAction
+     * @param INode $nextNode
      * @return boolean
      */
-    public function handle(IUser $prevActionUser, IAction $prevAction);
+    public function handle(IUser $prevActionUser, IAction $prevAction, $nextNode);
 
     /**
      * 流程中某个节点需要被驳回的处理逻辑

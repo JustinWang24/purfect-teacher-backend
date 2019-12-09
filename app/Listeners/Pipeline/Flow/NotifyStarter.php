@@ -30,9 +30,7 @@ class NotifyStarter
     {
         $messenger = MessengerFactory::GetInstance(
             IMessenger::TYPE_STARTER,
-            $event->getFlow(),
-            $event->getNode(),
-            $event->getUser()
+            $event->getUser(), $event->getAction(), $event->getNode(), $event->getFlow()
         );
         $bag = $messenger->handle($event->getAction());
         if(!$bag->isSuccess()){

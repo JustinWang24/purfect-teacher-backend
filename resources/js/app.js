@@ -53,7 +53,7 @@ import { loadOrgContacts, loadGradeContacts, loadGrades } from './common/contact
 import {
     saveFlow, loadNodes, deleteNode, saveNode, updateNode,
     deleteNodeAttachment, deleteFlow, start, startedByMe, waitingForMe,
-    cancelApplicationByUser, viewApplicationByAction
+    cancelApplicationByUser, viewApplicationByAction, processAction
 } from './common/flow';
 import { saveNews, loadNews, saveSections, deleteNews, publishNews, deleteSection, moveUpSection, moveDownSection } from './common/news';
 
@@ -97,8 +97,7 @@ if(document.getElementById('pipeline-flow-open-app')){
                     if(Util.isAjaxResOk(res)){
                         this.action.id = res.data.data.id;
                         this.$message({type:'success',message: '提交成功'});
-                        this.updateEventObserverResult();
-                        this.done = true;
+                        window.location.href = '/home';
                     }
                     else{
                         this.$message.error(res.data.message);
@@ -106,12 +105,6 @@ if(document.getElementById('pipeline-flow-open-app')){
                     }
                     this.isLoading = false;
                 })
-            },
-            // 观察流程启动之后, 事件的监听结果
-            updateEventObserverResult: function(){
-                if(!Util.isEmpty(this.action.id)){
-                    // Todo: 观察流程启动之后, 事件的监听结果. 如果不实现, 也可以
-                }
             },
             pickFileHandler: function(payload){
                 this.showFileManagerFlag = false;
@@ -186,7 +179,28 @@ if(document.getElementById('pipeline-flow-view-history-app')){
                 })
             },
             onCreateActionSubmit: function(){
+                if(this.action.result === Constants.FLOW_ACTION_RESULT.PENDING){
+                    this.$message.info('请给出您的审核意见');
+                    return;
+                }
 
+                if(this.action.content.trim() === ''){
+                    this.$message.info('请写下您的审核意见的说明文字');
+                    return;
+                }
+
+                processAction(this.action).then(res => {
+                    if(Util.isAjaxResOk(res)){
+                        this.$message({
+                            type:'success',
+                            message:'审核完毕'
+                        });
+                        window.location.href = '/home';
+                    }
+                    else{
+                        this.$message.error(res.data.message);
+                    }
+                });
             },
             pickFileHandler: function(payload){
                 this.showFileManagerFlag = false;
@@ -238,7 +252,7 @@ if(document.getElementById('pipeline-flow-view-history-app')){
 }
 
 /**
- * 教师 app
+ * 教师首页 app
  */
 if(document.getElementById('teacher-homepage-app')){
     new Vue({
@@ -286,13 +300,16 @@ if(document.getElementById('teacher-homepage-app')){
             },
             viewApplicationDetail: function(action){
                 window.location.href = '/pipeline/flow/view-history?action_id=' + action.id;
+            },
+            reloadThisPage: function(){
+                Util.reloadCurrentPage(this);
             }
         }
     });
 }
 
 /**
- * 教师 app
+ * 学生首页 app
  */
 if(document.getElementById('student-homepage-app')){
     new Vue({
@@ -317,8 +334,7 @@ if(document.getElementById('student-homepage-app')){
         },
         methods:{
             startFlow: function(flowId){
-                const url = this.url.flowOpen + '?flow=' + flowId + '&uuid=' + this.userUuid;
-                window.open(url,'_blank');
+                window.location.href = this.url.flowOpen + '?flow=' + flowId + '&uuid=' + this.userUuid;
             },
             loadFlowsStartedByMe: function(){
                 this.isLoading = true;
@@ -351,6 +367,35 @@ if(document.getElementById('student-homepage-app')){
                         message: '操作取消'
                     });
                 });
+            },
+            // 学生查看自己的申请详情
+            viewMyApplication: function(userFlow){
+                window.location.href = '/pipeline/flow/view-history?user_flow_id=' + userFlow.id;
+            },
+            reloadThisPage: function(){
+                Util.reloadCurrentPage(this);
+            },
+            flowResultText: function(done){
+                if(done === Constants.FLOW_FINAL_RESULT.PENDING){
+                    return Constants.FLOW_FINAL_RESULT.PENDING_TXT;
+                }
+                else if(done === Constants.FLOW_FINAL_RESULT.DONE){
+                    return Constants.FLOW_FINAL_RESULT.DONE_TXT;
+                }
+                else if(done === Constants.FLOW_FINAL_RESULT.REJECTED){
+                    return Constants.FLOW_FINAL_RESULT.REJECTED_TXT;
+                }
+            },
+            flowResultClass: function(done){
+                if(done === Constants.FLOW_FINAL_RESULT.PENDING){
+                    return Constants.FLOW_FINAL_RESULT.PENDING_CLASS;
+                }
+                else if(done === Constants.FLOW_FINAL_RESULT.DONE){
+                    return Constants.FLOW_FINAL_RESULT.DONE_CLASS;
+                }
+                else if(done === Constants.FLOW_FINAL_RESULT.REJECTED){
+                    return Constants.FLOW_FINAL_RESULT.REJECTED_CLASS;
+                }
             }
         }
     });
