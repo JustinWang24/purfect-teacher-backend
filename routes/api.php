@@ -426,3 +426,7 @@ Route::prefix('notification')->middleware('auth:api')->group(function () {
     Route::get('/list','Api\Notice\SystemNotificationController@index')
         ->name('api.notification.list');
 });
+
+Route::post('/user/login', 'Api\Login\LoginController@index')
+        ->name('api.user.login');
+
