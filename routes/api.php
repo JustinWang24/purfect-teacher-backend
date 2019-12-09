@@ -420,3 +420,9 @@ Route::prefix('pipeline')->middleware('auth:api')->group(function (){
     Route::post('/flow/view-action', 'Api\Pipeline\FlowsController@view_action')
         ->name('api.pipeline.flow.view-action');
 });
+
+Route::prefix('notification')->middleware('auth:api')->group(function () {
+    // 消息中心
+    Route::get('/list','Api\Notice\SystemNotificationController@index')
+        ->name('api.notification.list');
+});
