@@ -11,6 +11,7 @@ use App\Utils\Pipeline\INodeHandler;
 use App\Utils\Pipeline\IUser;
 use Illuminate\Database\Eloquent\Model;
 use App\Utils\Misc\Contracts\Title;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 
 class Handler extends Model implements INodeHandler

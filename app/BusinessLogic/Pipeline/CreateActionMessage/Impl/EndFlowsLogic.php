@@ -4,7 +4,7 @@ namespace App\BusinessLogic\Pipeline\CreateActionMessage\Impl;
 
 use App\BusinessLogic\Pipeline\CreateActionMessage\Contracts\IActionMessageLogic;
 use App\Utils\Pipeline\IAction;
-use App\Jobs\Notifier\Push;
+use App\Jobs\Notifier\txt;
 use App\User;
 use App\Utils\Misc\Impl\ViewFlowProgress;
 
@@ -35,7 +35,7 @@ class EndFlowsLogic implements IActionMessageLogic
      */
     public function actionAndMessage(IAction $action)
     {
-        Push::dispatch(
+        txt::dispatch(
             $this->user,
             '审批结束',
             '您发起的流程已审批结束,请查看',

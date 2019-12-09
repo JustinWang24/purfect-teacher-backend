@@ -7,8 +7,6 @@
  */
 
 namespace App\BusinessLogic\OrganizationTitleHelpers\Impl;
-
-
 use App\BusinessLogic\OrganizationTitleHelpers\Contracts\TitleToUsers;
 use App\User;
 
