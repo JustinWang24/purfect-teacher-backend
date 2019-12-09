@@ -16,9 +16,13 @@ use App\Utils\ReturnData\IMessageBag;
 use App\Utils\Pipeline\INode;
 use App\Utils\ReturnData\MessageBag;
 use App\Models\Misc\SystemNotification;
+use Illuminate\Support\Facades\Log;
 
 class ForActionStarter extends AbstractMessenger
 {
+    /**
+     * @var User $starter
+     */
     protected $starter;
 
     public function __construct(IFlow $flow, INode $node, User $user)
@@ -68,6 +72,11 @@ class ForActionStarter extends AbstractMessenger
                 $content,
                 $nextMove
             );
+
+            if(env('APP_DEBUG', false)){
+                Log::info('系统消息', ['msg'=>'给流程发起人发送系统消息:' . $action->getTransactionId()]);
+            }
+
             $bag->setCode(JsonBuilder::CODE_SUCCESS);
         }
         catch (\Exception $exception){

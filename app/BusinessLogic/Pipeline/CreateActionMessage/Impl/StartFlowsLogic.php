@@ -4,7 +4,7 @@
 namespace App\BusinessLogic\Pipeline\CreateActionMessage\Impl;
 
 use App\BusinessLogic\Pipeline\CreateActionMessage\Contracts\IActionMessageLogic;
-use App\Jobs\Notifier\Push;
+use App\Jobs\Notifier\txt;
 use App\Models\Misc\SystemNotification;
 use App\Jobs\Notifier\InternalMessage;
 use App\Utils\Misc\Impl\ViewFlowProgress;
@@ -47,7 +47,7 @@ class StartFlowsLogic implements IActionMessageLogic
         // 是否紧急通知
         if ($action->isUrgent()) {
             if(count($users) > 0){
-                Push::dispatch(
+                txt::dispatch(
                     $users,
                     '有新的审批',
                     $this->user->getName().'发起了: '. $action->getFlow()->getName(). '流程, 需要您的审批',
