@@ -201,10 +201,21 @@ export const Constants = {
         NOTICED_TXT: '已阅',
         NOTICED_CLASS: 'text-success',
         PASSED: 3,
-        PASSED_TXT: '已通过',
+        PASSED_TXT: '通过',
         PASSED_CLASS: 'text-success',
         REJECTED: 4,
-        REJECTED_TXT: '已驳回',
+        REJECTED_TXT: '退回',
+        REJECTED_CLASS: 'text-danger',
+    },
+    FLOW_FINAL_RESULT: {
+        PENDING: 0,
+        PENDING_TXT: '审核中',
+        PENDING_CLASS: 'text-warning',
+        DONE: 1,
+        DONE_TXT: '批准',
+        DONE_CLASS: 'text-success',
+        REJECTED: 2,
+        REJECTED_TXT: '驳回',
         REJECTED_CLASS: 'text-danger',
     }
 };

@@ -14,6 +14,7 @@ interface IAction extends IPipelineMessageBag, IPersistent
     const RESULT_NOTICED = 2; // 已阅
     const RESULT_PASS    = 3; // 同意
     const RESULT_REJECT  = 4; // 不同意
+    const RESULT_TERMINATE  = 5; // 终止, 整个流程停止处理, 作废
 
     public function getNode(): INode;
 

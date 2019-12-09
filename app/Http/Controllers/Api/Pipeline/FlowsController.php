@@ -8,12 +8,15 @@ namespace App\Http\Controllers\Api\Pipeline;
 use App\BusinessLogic\Pipeline\Flow\FlowLogicFactory;
 use App\Dao\Pipeline\ActionDao;
 use App\Dao\Pipeline\FlowDao;
+use App\Events\Pipeline\Flow\FlowProcessed;
+use App\Events\Pipeline\Flow\FlowRejected;
 use App\Events\Pipeline\Flow\FlowStarted;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Pipeline\FlowRequest;
 use App\Models\Pipeline\Flow\Action;
 use App\Models\Pipeline\Flow\Node;
 use App\Utils\JsonBuilder;
+use App\Utils\Pipeline\IAction;
 
 class FlowsController extends Controller
 {
@@ -51,12 +54,19 @@ class FlowsController extends Controller
      */
     public function view_action(FlowRequest $request){
         $actionId = $request->getActionId();
-        $user = $request->user();
+        $userFlowId = $request->getUserFlowId();
 
         $actionDao = new ActionDao();
-        $action = $actionDao->getByActionIdAndUserId($actionId, $user->id);
 
-        return $action ? JsonBuilder::Success(['actions'=>$actionDao->getHistoryByUserFlow($action->getTransactionId())])
+        if($userFlowId){
+            $actions = $actionDao->getHistoryByUserFlow($userFlowId);
+        }
+        else{
+            $action = $actionDao->getByActionId($actionId);
+            $actions = $actionDao->getHistoryByUserFlow($action->getTransactionId());
+        }
+
+        return $actions ? JsonBuilder::Success(['actions'=>$actions])
             : JsonBuilder::Error('您没有权限执行此操作');
     }
 
@@ -110,5 +120,57 @@ class FlowsController extends Controller
         $bag = $dao->cancelUserFlow($user, $actionId);
 
         return $bag->isSuccess() ? JsonBuilder::Success() : JsonBuilder::Error($bag->getMessage());
+    }
+
+    /**
+     * 流程中某个步骤的处理: 通过/驳回
+     * @param FlowRequest $request
+     * @return string
+     */
+    public function process(FlowRequest $request){
+        $actionFormData = $request->getActionFormData();
+        $dao = new ActionDao();
+        $action = $dao->getByActionIdAndUserId($actionFormData['id'], $request->user()->id);
+
+        if($action){
+            $logic = FlowLogicFactory::GetInstance($request->user());
+
+            switch ($actionFormData['result']){
+                case IAction::RESULT_REJECT:
+                    $bag = $logic->reject($action, $actionFormData); // 进入驳回流程的操作
+                    break;
+                case IAction::RESULT_TERMINATE:
+                    $bag = $logic->reject($action, $actionFormData); // 进入终止流程的操作
+                    break;
+                default:
+                    $bag = $logic->process($action, $actionFormData); // 进入同意流程的操作, 默认
+                    break;
+            }
+
+            if ($bag->isSuccess()){
+                switch ($actionFormData['result']){
+                    case IAction::RESULT_REJECT:
+                        // 驳回流程的事件
+                        $event = new FlowRejected($request->user(),$action, $bag->getData()['prevNode'], $action->getFlow());
+                        break;
+                    case IAction::RESULT_TERMINATE:
+                        $event = new FlowRejected($request->user(),$action, $bag->getData()['prevNode'], $action->getFlow());
+                        break;
+                    default:
+                        // 同意流程的事件, 默认
+                        $event = new FlowProcessed($request->user(),$action, $bag->getData()['nextNode'], $action->getFlow());
+                        break;
+                }
+
+                event($event); // 发布事件
+                return JsonBuilder::Success();
+            }
+            else{
+                return JsonBuilder::Error($bag->getMessage());
+            }
+        }
+        else{
+            return JsonBuilder::Error('你无权进行此操作');
+        }
     }
 }

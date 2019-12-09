@@ -29,9 +29,9 @@ class FlowStarted implements IFlowAccessor
      * @param IFlow $flow
      * @param User $user
      * @param IAction $action
-     * @param INode $currentNode
+     * @param INode|null $currentNode
      */
-    public function __construct(User $user, IAction $action, IFlow $flow = null, INode $currentNode = null)
+    public function __construct(User $user, IAction $action, IFlow $flow = null, $currentNode = null)
     {
         $this->flow = $flow;
         $this->user = $user;
@@ -48,7 +48,7 @@ class FlowStarted implements IFlowAccessor
         return $this->flow;
     }
 
-    public function getNode(): INode
+    public function getNode()
     {
         if(!$this->currentNode){
             $this->currentNode = $this->action->getNode();

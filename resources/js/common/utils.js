@@ -183,5 +183,9 @@ export const Util = {
             a.push('/assets/img/pipeline/node-'+i+'.png');
         }
         return a;
+    },
+    reloadCurrentPage: function(vm){
+        vm.$message({type:'success',message:'正在刷新 ... '});
+        window.location.reload();
     }
 };

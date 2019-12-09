@@ -5,10 +5,12 @@
 
 namespace App\Http\Controllers\Teacher\Pipeline;
 use App\BusinessLogic\Pipeline\Flow\FlowLogicFactory;
+use App\Dao\Pipeline\ActionDao;
 use App\Dao\Pipeline\FlowDao;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Pipeline\FlowRequest;
 use App\Utils\Pipeline\FlowEngineFactory;
+use App\Utils\Pipeline\IAction;
 
 class FlowsController extends Controller
 {
@@ -39,7 +41,21 @@ class FlowsController extends Controller
      */
     public function view_history(FlowRequest $request){
         $this->dataForView['pageTitle'] = '查看申请';
+
+        $userFlowId = $request->getUserFlowId();
         $this->dataForView['actionId'] = $request->getActionId();
+        $dao = new ActionDao();
+        if($userFlowId){
+            $action = $dao->getLastActionByUserFlow($userFlowId);
+            $this->dataForView['showActionEditForm'] = false;
+        }else{
+            $action = $dao->getByActionIdAndUserId($request->getActionId(), $request->user()->id);
+            $this->dataForView['showActionEditForm'] =
+                $action->result === IAction::RESULT_PENDING && $action->user_id === $request->user()->id;
+        }
+
+        $this->dataForView['action'] = $action;
+
         $this->dataForView['userFlowId'] = $request->getUserFlowId();
         return view('pipeline.flows.view_history',$this->dataForView);
     }

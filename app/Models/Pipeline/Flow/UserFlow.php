@@ -15,11 +15,7 @@ class UserFlow extends Model implements IUserFlow
     public $table = 'pipeline_user_flows';
 
     protected $fillable = [
-        'user_id','flow_id','user_name'
-    ];
-
-    public $casts = [
-        'done'=>'boolean'
+        'user_id','flow_id','user_name','done'
     ];
 
     public function user(){
@@ -52,8 +48,21 @@ class UserFlow extends Model implements IUserFlow
         return $this->actions;
     }
 
+    /**
+     * 是否流程被通过了
+     * @return bool
+     */
     public function isDone(): bool
     {
-        return $this->done;
+        return $this->done === IUserFlow::DONE;
+    }
+
+    /**
+     * 是否流程被否决了
+     * @return bool
+     */
+    public function isTerminated(): bool
+    {
+        return $this->done === IUserFlow::DENIED;
     }
 }

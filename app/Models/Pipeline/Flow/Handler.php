@@ -7,6 +7,7 @@ use App\Dao\Pipeline\ActionDao;
 use App\User;
 use App\Utils\Pipeline\IAction;
 use App\Utils\Pipeline\IFlow;
+use App\Utils\Pipeline\INode;
 use App\Utils\Pipeline\INodeHandler;
 use App\Utils\Pipeline\IUser;
 use Illuminate\Database\Eloquent\Model;
@@ -32,9 +33,10 @@ class Handler extends Model implements INodeHandler
      * 当前步骤的处理器, 接受前一个步骤的用户和动作, 然后根据当前设定的审核人, 生成所有等待执行 pending 的动作记录
      * @param IUser $prevActionUser
      * @param IAction $prevAction
+     * @param INode $nextNode
      * @return bool
      */
-    public function handle(IUser $prevActionUser, IAction $prevAction)
+    public function handle(IUser $prevActionUser, IAction $prevAction, $nextNode)
     {
         /**
          * 根据传入的用户, 就是刚刚完成一个步骤的用户
@@ -47,7 +49,7 @@ class Handler extends Model implements INodeHandler
              */
             $data = [
                 'flow_id'=>$prevAction->flow_id,
-                'node_id'=>$this->node_id,
+                'node_id'=>$nextNode->id,
                 'user_id'=>$u->id,
                 'result'=>IAction::RESULT_PENDING,
             ];
