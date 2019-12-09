@@ -50,4 +50,22 @@ class LoginController extends Controller
         }
     }
 
+    /**
+     * 修改密码
+     */
+    public function editPassword()
+    {
+
+    }
+
+    /**
+     * 忘记密码
+     */
+    public function forgetPassword()
+    {
+
+    }
+
+
+
 }
