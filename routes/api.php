@@ -420,3 +420,6 @@ Route::prefix('pipeline')->middleware('auth:api')->group(function (){
     Route::post('/flow/view-action', 'Api\Pipeline\FlowsController@view_action')
         ->name('api.pipeline.flow.view-action');
 });
+
+    Route::post('/user/login', 'Api\Login\LoginController@index')
+        ->name('api.user.login');

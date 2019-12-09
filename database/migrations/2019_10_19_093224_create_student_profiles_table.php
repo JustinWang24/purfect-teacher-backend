@@ -35,7 +35,7 @@ class CreateStudentProfilesTable extends Migration
                 $table->text('address_in_school')->nullable()->comment('学生在学校的住宿地址');
 
                 // 学生的登陆设备, 如果是手机, 则其串号保存在这里用来推送. 电脑的话为空
-                $table->string('device')->nullable()->comment('学生的登陆设备');
+
                 // 学生的生日
                 $table->date('birthday')->nullable()->comment('生日');
                 // 学生的头像
