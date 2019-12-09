@@ -72,6 +72,7 @@ if(document.getElementById('pipeline-flow-open-app')){
                     node_id:'',
                     content:'',
                     attachments:[],
+                    urgent: false,
                 },
                 showFileManagerFlag: false,
                 isLoading: false,
@@ -329,15 +330,26 @@ if(document.getElementById('student-homepage-app')){
             },
             // 取消一个申请
             cancelMyApplication: function(userFlow){
-                cancelApplicationByUser(userFlow.id).then(res => {
-                    if(Util.isAjaxResOk(res)){
-                        const idx = Util.GetItemIndexById(userFlow.id, this.flowsStartedByMe);
-                        this.flowsStartedByMe.splice(idx, 1);
-                    }
-                    else{
-                        this.$message.error(res.data.message);
-                    }
-                })
+                this.$confirm('您确认撤销此申请吗?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    cancelApplicationByUser(userFlow.id).then(res => {
+                        if(Util.isAjaxResOk(res)){
+                            const idx = Util.GetItemIndexById(userFlow.id, this.flowsStartedByMe);
+                            this.flowsStartedByMe.splice(idx, 1);
+                        }
+                        else{
+                            this.$message.error(res.data.message);
+                        }
+                    });
+                }).catch(() => {
+                    this.$message({
+                        type: 'info',
+                        message: '操作取消'
+                    });
+                });
             }
         }
     });

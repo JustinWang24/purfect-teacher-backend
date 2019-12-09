@@ -6,9 +6,10 @@ use App\BusinessLogic\Pipeline\Messenger\Contracts\IMessenger;
 use App\BusinessLogic\Pipeline\Messenger\MessengerFactory;
 use App\Events\IFlowAccessor;
 use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Support\Facades\Log;
 
-class NotifyStarter implements ShouldQueue
+class NotifyStarter
 {
     /**
      * Create the event listener.
@@ -17,7 +18,6 @@ class NotifyStarter implements ShouldQueue
      */
     public function __construct()
     {
-        //
     }
 
     /**
@@ -28,9 +28,6 @@ class NotifyStarter implements ShouldQueue
      */
     public function handle(IFlowAccessor $event)
     {
-//        $logic = Factory::GetInstance($event->getNode(), $event->getUser());
-//        $logic->actionAndMessage($event->getAction());
-
         $messenger = MessengerFactory::GetInstance(
             IMessenger::TYPE_STARTER,
             $event->getFlow(),
@@ -42,4 +39,16 @@ class NotifyStarter implements ShouldQueue
             Log::error('通知流程发起者错误',['msg'=>$bag->getMessage()]);
         }
     }
+
+    /**
+     * 处理失败任务
+     *
+     * @param  IFlowAccessor  $event
+     * @param  \Exception  $exception
+     * @return void
+     */
+//    public function failed(IFlowAccessor $event, $exception)
+//    {
+//        Log::error($exception->getMessage());
+//    }
 }

@@ -3,7 +3,9 @@
 namespace App\Exceptions;
 
 use Exception;
+use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use App\Utils\JsonBuilder;
 
 class Handler extends ExceptionHandler
 {
@@ -48,4 +50,13 @@ class Handler extends ExceptionHandler
     {
         return parent::render($request, $exception);
     }
+
+    protected function unauthenticated($request, AuthenticationException $exception)
+    {
+        return $request->expectsJson()
+                    ? JsonBuilder::Error('Token错误, 请重新登录','-1')
+                    : redirect()->guest($exception->redirectTo() ?? route('login'));
+    }
+
+
 }
