@@ -12,17 +12,17 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Support\Facades\Log;
 
-class InternalMessage implements ShouldQueue
+class InternalMessage
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    private $schoolId;
-    private $from;
-    private $to;
-    private $type;
-    private $priority;
-    private $content;
-    private $nextMove;
+    protected $schoolId;
+    protected $from;
+    protected $to;
+    protected $type;
+    protected $priority;
+    protected $content;
+    protected $nextMove;
 
     /**
      * InternalMessage constructor.

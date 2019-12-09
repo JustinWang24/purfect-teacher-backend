@@ -2,48 +2,47 @@
 
 namespace App\Jobs\Notifier;
 
-use App\User;
-use App\Utils\Misc\Contracts\INextAction;
-use App\Utils\Misc\JPushFactory;
-use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Bus\Queueable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
-use Illuminate\Bus\Queueable;
 use Illuminate\Support\Facades\Log;
+use App\Utils\Misc\JPushFactory;
 
 class Push implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    private $title;
+    protected $title;
 
-    private $content;
+    protected $content;
 
-    private $nextStep;
+    protected $nextStep;
 
-    private $noticedTo;
+    protected $noticedTo;
 
     /**
      * Push constructor.
-     * @param User[] $noticedTo
-     * @param string $title
-     * @param string $content
-     * @param INextAction $nextStep
+     * @param $data
      */
-    public function __construct($noticedTo, $title, $content, $nextStep = null)
+    public function __construct($data)
     {
-        $this->title = $title;
-        $this->content = $content;
-        $this->nextStep = $nextStep;
-        $this->noticedTo = $noticedTo;
+        $this->title = $data['title'];
+        $this->content = $data['content'];
+        $this->nextStep = $data['nextStep'];
+        $this->noticedTo = $data['noticedTo'];
     }
 
+    /**
+     * Execute the job.
+     *
+     * @return void
+     */
     public function handle()
     {
-
         if(env('APP_DEBUG', false)){
-            Log::info('流程开始111',['msg'=> '123123123']);
+            Log::info('推消息',['msg'=> $this->title,'content'=>$this->content]);
         }
         else{
             $push = JPushFactory::GetInstance();
@@ -51,11 +50,8 @@ class Push implements ShouldQueue
                 $url = null;
                 if($this->nextStep)
                     $url = $this->nextStep->getActionUrl($user);
-
                 $response = $push->send();
             }
         }
     }
-
-
 }
