@@ -19,6 +19,28 @@ class SystemNotification extends Model
 
     const SCHOOL_EMPTY = 0; // 针对哪个学校 0 表示不针对学校
 
+    const CATEGORY = [
+        1=>'易码通',
+        2=>'校园网',
+        3=>'通知',
+        4=>'公告',
+        5=>'检查',
+        6=>'课件',
+        7=>'课程',
+        8=>'考试',
+        9=>'招生',
+        10=>'申请',
+        11=>'订单',
+        12=>'值周',
+        13=>'就业',
+        14=>'选课',
+        15=>'会员',
+        16=>'签到',
+        17=>'优惠券',
+        18=>'绿色通道',
+        19=>'退费',
+        20=>'消息',
+    ];
 
     protected $fillable = [
         'sender',
@@ -28,5 +50,7 @@ class SystemNotification extends Model
         'school_id',
         'content',
         'next_move',
+        'title',
+        'money',
     ];
 }

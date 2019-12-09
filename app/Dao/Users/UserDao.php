@@ -13,6 +13,8 @@ use App\Models\Acl\Role;
 use App\Utils\JsonBuilder;
 use App\Utils\ReturnData\MessageBag;
 use Carbon\Carbon;
+use Exception;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Ramsey\Uuid\Uuid;
@@ -161,7 +163,7 @@ class UserDao
      * 获取指定学校的所有的教师的列表
      * @param $schoolId
      * @param bool $simple: 简单的返回值 id=>name 的键值对组合
-     * @return \Illuminate\Support\Collection
+     * @return Collection
      */
     public function getTeachersBySchool($schoolId, $simple = false){
         if($simple){
@@ -226,7 +228,7 @@ class UserDao
                 $bag->setMessage('无法创建用户');
             }
         }
-        catch (\Exception $exception){
+        catch (Exception $exception){
             DB::rollBack();
             $bag->setMessage($exception->getMessage());
         }
@@ -270,7 +272,7 @@ class UserDao
      * @param $email
      * @param $passwordInPlainText
      * @return mixed
-     * @throws \Exception
+     * @throws Exception
      */
     public function importUser($mobile,$name,$passwordInPlainText)
     {
@@ -284,5 +286,20 @@ class UserDao
             'type'=>Role::REGISTERED_USER,
         ];
         return $user = User::create($data);
+    }
+
+    /**
+     * 更新 api_token
+     * @param $userId
+     * @param string $token
+     * @return User
+     * @throws Exception
+     */
+    public function updateApiToken($userId, $token = '')
+    {
+        if (empty($token)) {
+            $token = Uuid::uuid4()->toString();
+        }
+        return User::where('id', $userId)->update(['api_token' => $token]);
     }
 }
