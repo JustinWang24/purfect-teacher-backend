@@ -17,6 +17,9 @@
                                 <el-option v-for="(re, idx) in results" :key="idx" :label="re.label" :value="re.id"></el-option>
                             </el-select>
                         </el-form-item>
+                        <el-form-item label="申请加急">
+                            <el-switch v-model="action.urgent"></el-switch>
+                        </el-form-item>
                         <el-form-item label="原因说明">
                             <el-input type="textarea" placeholder="必填: 请写明原因" rows="6" v-model="action.content"></el-input>
                         </el-form-item>

@@ -147,7 +147,8 @@ if(document.getElementById('pipeline-flow-view-history-app')){
                 action:{
                     content:'',
                     attachments:[],
-                    result: null
+                    result: null,
+                    urgent: false,
                 },
                 showFileManagerFlag: false,
                 isLoading: false,
