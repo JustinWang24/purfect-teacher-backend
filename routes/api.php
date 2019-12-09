@@ -427,6 +427,13 @@ Route::prefix('notification')->middleware('auth:api')->group(function () {
         ->name('api.notification.list');
 });
 
+Route::prefix('attendance')->middleware('auth:api')->group(function () {
+    // 消息中心
+    Route::get('/list','Api\AttendanceSchedule\AttendanceScheduleController@display')
+        ->name('api.attendance.list');
+});
+
+
 Route::post('/user/login', 'Api\Login\LoginController@index')
         ->name('api.user.login');
 
