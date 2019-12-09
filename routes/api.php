@@ -421,5 +421,12 @@ Route::prefix('pipeline')->middleware('auth:api')->group(function (){
         ->name('api.pipeline.flow.view-action');
 });
 
-    Route::post('/user/login', 'Api\Login\LoginController@index')
+Route::prefix('notification')->middleware('auth:api')->group(function () {
+    // 消息中心
+    Route::get('/list','Api\Notice\SystemNotificationController@index')
+        ->name('api.notification.list');
+});
+
+Route::post('/user/login', 'Api\Login\LoginController@index')
         ->name('api.user.login');
+
