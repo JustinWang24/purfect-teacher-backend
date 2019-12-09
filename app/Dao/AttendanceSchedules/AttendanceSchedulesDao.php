@@ -239,8 +239,11 @@ class AttendanceSchedulesDao
         $timeArr = $this->getTimes($current, $cycle);
         $startTime = $timeArr[0];
         $endTime   = $timeArr[1];
-        $result = AttendanceTask::where('start_time','>=', $startTime)
-            //->where('end_time', '<=', $endTime)
+        $result = AttendanceTask::where(
+                function ($query) use ($startTime, $endTime) {
+                    $query->where('start_time','>=', $startTime)->orWhere('end_time', '>=', $endTime);
+                })
+            //->orWhere('end_time', '<=', $endTime)
             ->where('school_id', $schoolId)
             ->orderby('id', 'DESC')
             ->get();
