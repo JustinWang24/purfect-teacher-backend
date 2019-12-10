@@ -19,6 +19,7 @@ class IndexController extends Controller
     public function index(HomeRequest $request)
     {
         $school = $request->getAppSchool();
+
         $page   = $request->get('page');
 
         $dao = new NewsDao;
@@ -47,7 +48,7 @@ class IndexController extends Controller
         $posit = $request->get('posit');
 
         $school = $request->getAppSchool();
-        
+
         if (empty($school)) {
             return JsonBuilder::Error('未找到学校');
         }

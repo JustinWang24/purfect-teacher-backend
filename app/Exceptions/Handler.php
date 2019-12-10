@@ -6,6 +6,7 @@ use Exception;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use App\Utils\JsonBuilder;
+use Illuminate\Support\Facades\Route;
 
 class Handler extends ExceptionHandler
 {
@@ -53,9 +54,14 @@ class Handler extends ExceptionHandler
 
     protected function unauthenticated($request, AuthenticationException $exception)
     {
-        return $request->expectsJson()
+        if (strpos(Route::currentRouteName(), 'api.') === 0 ){
+            echo JsonBuilder::Error('Token错误, 请重新登录','-1');die;
+        } else {
+            return $request->expectsJson()
                     ? JsonBuilder::Error('Token错误, 请重新登录','-1')
                     : redirect()->guest($exception->redirectTo() ?? route('login'));
+        }
+
     }
 
 

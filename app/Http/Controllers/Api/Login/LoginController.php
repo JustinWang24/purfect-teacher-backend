@@ -68,7 +68,8 @@ class LoginController extends Controller
         }
 
         $dao    = new UserDao;
-        $result = $dao->updateApiToken($user->id, null);
+        $token  = Uuid::uuid4()->toString();
+        $result = $dao->updateApiToken($user->id, $token);
         if ($result) {
             return JsonBuilder::Success('退出成功');
         } else {
@@ -89,8 +90,8 @@ class LoginController extends Controller
         $password    = $request->getPassword();
         $newPassword = $request->get('new_password');
 
-        if ($user->password != Hash::make($password)) {
-            return JsonBuilder::Success('原密码错误');
+        if (!Hash::check($password, $user->password)) {
+            return JsonBuilder::Error('原密码错误');
         }
 
         $dao = new UserDao;
