@@ -434,9 +434,26 @@ Route::prefix('attendance')->middleware('auth:api')->group(function () {
 });
 
 
-Route::post('/user/login', 'Api\Login\LoginController@index')
+
+
+Route::prefix('user')->group(function () {
+
+    // 登录
+    Route::post('/login', 'Api\Login\LoginController@index')
         ->name('api.user.login');
 
+    // 退出
+    Route::post('/logout', 'Api\Login\LoginController@logout')
+        ->middleware('auth:api')->name('api.user.logout');
+
+    // 修改密码
+    Route::post('/editUserPasswordInfo', 'Api\Login\LoginController@editPassword')
+        ->middleware('auth:api')->name('api.user.edit.password');
+
+    // 忘记密码
+    Route::post('/findUserPasswordInfo', 'Api\Login\LoginController@forgetPassword')
+        ->name('api.user.edit.password');
+});
 
 // 地区列表
 Route::prefix('location')->middleware('auth:api')->group(function () {
@@ -450,7 +467,3 @@ Route::prefix('location')->middleware('auth:api')->group(function () {
     Route::post('/get-districts','Api\Location\AreaController@getDistricts')
         ->name('api.location.get-districts');
 });
-
-
-
-

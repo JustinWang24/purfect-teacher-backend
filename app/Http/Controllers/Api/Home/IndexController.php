@@ -47,7 +47,7 @@ class IndexController extends Controller
         $posit = $request->get('posit');
 
         $school = $request->getAppSchool();
-
+        
         if (empty($school)) {
             return JsonBuilder::Error('未找到学校');
         }

@@ -12,6 +12,11 @@ class LoginRequest extends MyStandardRequest
         return true;
     }
 
+
+    /**
+     * 登录 提交的数据
+     * @return array
+     */
     public function getUserDevice()
     {
         return [
@@ -72,5 +77,23 @@ class LoginRequest extends MyStandardRequest
     {
         return $this->get('app_type');
     }
+
+    /**
+     * 获取手机号
+     */
+    public function getMobile()
+    {
+        return $this->get('mobile', null);
+    }
+
+    /**
+     * 获取密码
+     * @return string|null
+     */
+    public function getPassword()
+    {
+        return $this->get('password', null);
+    }
+
 
 }
