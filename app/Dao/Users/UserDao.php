@@ -297,9 +297,6 @@ class UserDao
      */
     public function updateApiToken($userId, $token = '')
     {
-        if (empty($token)) {
-            $token = Uuid::uuid4()->toString();
-        }
         return User::where('id', $userId)->update(['api_token' => $token]);
     }
 }
