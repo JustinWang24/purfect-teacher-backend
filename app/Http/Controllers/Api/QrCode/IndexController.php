@@ -31,7 +31,7 @@ class IndexController extends Controller
         $codeStr = base64_encode(json_encode(['school_id' => $school->id, 'api_token' => $user->api_token, 'time' => time()]));
         $qrCode = new QrCode($codeStr);
         $qrCode->setSize(200);
-        $qrCode->setLogoPath(config('filesystems.disks.public.root') . '/Logo/logo.png');
+        $qrCode->setLogoPath(public_path('assets/img/logo.png'));
         $qrCode->setLogoSize(30, 30);
         $code = 'data:image/png;base64,' . base64_encode($qrCode->writeString());
 
