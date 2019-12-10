@@ -166,7 +166,7 @@ class ActionDao
     public function getFlowsWhichStartBy($user){
         return UserFlow::where('user_id',$user->id??$user)
             ->with('flow')
-            ->orderBy('updated_at','desc')
+            ->orderBy('id','asc')
             ->get();
     }
 
@@ -180,18 +180,25 @@ class ActionDao
             ->where('result','=',IAction::RESULT_PENDING)
             ->with('flow')
             ->with('userFlow')
+            ->orderBy('id','asc')
             ->get();
     }
 
     /**
      * 根据 user flow 的 id 获取历史记录
      * @param $userFlowId
+     * @param $actionsOnly
      * @return Collection
      */
-    public function getHistoryByUserFlow($userFlowId){
+    public function getHistoryByUserFlow($userFlowId, $actionsOnly = false){
+        if($actionsOnly){
+            return Action::where('transaction_id',$userFlowId)
+                ->orderBy('id','asc')
+                ->get();
+        }
         return Action::where('transaction_id',$userFlowId)
             ->with('node')
-            ->orderBy('updated_at','desc')
+            ->orderBy('id','asc')
             ->get();
     }
 
@@ -203,7 +210,7 @@ class ActionDao
     public function getLastActionByUserFlow($userFlowId){
         return Action::where('transaction_id',$userFlowId)
             ->with('node')
-            ->orderBy('updated_at','desc')
+            ->orderBy('id','desc')
             ->first();
     }
 
@@ -215,7 +222,7 @@ class ActionDao
     public function getFirstActionByUserFlow($userFlowId){
         return Action::where('transaction_id',$userFlowId)
             ->with('node')
-            ->orderBy('created_at','asc')
+            ->orderBy('id','asc')
             ->first();
     }
 

@@ -12,6 +12,7 @@ use App\Models\Pipeline\Flow\Flow;
 use App\Models\Pipeline\Flow\Node;
 use App\Models\Pipeline\Flow\NodeAttachment;
 use App\Utils\Pipeline\NodeHandlersDescriptor;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 
 class NodeDao
@@ -249,5 +250,13 @@ class NodeDao
         }
 
         return $result;
+    }
+
+    /**
+     * @param $flowId
+     * @return Collection
+     */
+    public function getNodesByFlowId($flowId){
+        return Node::where('flow_id',$flowId)->get();
     }
 }

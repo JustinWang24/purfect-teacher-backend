@@ -63,6 +63,6 @@ class UserFlow extends Model implements IUserFlow
      */
     public function isTerminated(): bool
     {
-        return $this->done === IUserFlow::DENIED;
+        return $this->done === IUserFlow::TERMINATED;
     }
 }
