@@ -455,4 +455,15 @@ Route::prefix('user')->group(function () {
         ->name('api.user.edit.password');
 });
 
-
+// 地区列表
+Route::prefix('location')->middleware('auth:api')->group(function () {
+    // 省份列表
+    Route::get('/get-provinces','Api\Location\AreaController@getProvinces')
+        ->name('api.location.get-provinces');
+    // 城市列表
+    Route::post('/get-cities','Api\Location\AreaController@getCities')
+        ->name('api.location.get-cities');
+    // 区县列表
+    Route::post('/get-districts','Api\Location\AreaController@getDistricts')
+        ->name('api.location.get-districts');
+});
