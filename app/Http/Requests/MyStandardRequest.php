@@ -143,11 +143,10 @@ class MyStandardRequest extends FormRequest
 
     /**
      * 获取移动端学校信息
+     * @return int
      */
     public function getAppSchool()
     {
-        $schoolUuId = $this->header('schoolUuid', null);
-        $dao = new SchoolDao;
-        return $dao->getSchoolByUuid($schoolUuId);
+        return $this->user()->gradeUser->school;
     }
 }
