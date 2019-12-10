@@ -166,7 +166,7 @@ class ActionDao
     public function getFlowsWhichStartBy($user){
         return UserFlow::where('user_id',$user->id??$user)
             ->with('flow')
-            ->orderBy('id','desc')
+            ->orderBy('id','asc')
             ->get();
     }
 
@@ -180,7 +180,7 @@ class ActionDao
             ->where('result','=',IAction::RESULT_PENDING)
             ->with('flow')
             ->with('userFlow')
-            ->orderBy('id','desc')
+            ->orderBy('id','asc')
             ->get();
     }
 
@@ -193,12 +193,12 @@ class ActionDao
     public function getHistoryByUserFlow($userFlowId, $actionsOnly = false){
         if($actionsOnly){
             return Action::where('transaction_id',$userFlowId)
-                ->orderBy('id','desc')
+                ->orderBy('id','asc')
                 ->get();
         }
         return Action::where('transaction_id',$userFlowId)
             ->with('node')
-            ->orderBy('id','desc')
+            ->orderBy('id','asc')
             ->get();
     }
 

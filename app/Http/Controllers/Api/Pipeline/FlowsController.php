@@ -8,6 +8,7 @@ namespace App\Http\Controllers\Api\Pipeline;
 use App\BusinessLogic\Pipeline\Flow\FlowLogicFactory;
 use App\Dao\Pipeline\ActionDao;
 use App\Dao\Pipeline\FlowDao;
+use App\Dao\Pipeline\UserFlowDao;
 use App\Events\Pipeline\Flow\FlowProcessed;
 use App\Events\Pipeline\Flow\FlowRejected;
 use App\Events\Pipeline\Flow\FlowStarted;
@@ -57,16 +58,17 @@ class FlowsController extends Controller
         $userFlowId = $request->getUserFlowId();
 
         $actionDao = new ActionDao();
+        $userFlowDao = new UserFlowDao();
 
         if($userFlowId){
-            $actions = $actionDao->getHistoryByUserFlow($userFlowId);
+            $flow = $userFlowDao->getFlowHistory($userFlowId);
         }
         else{
             $action = $actionDao->getByActionId($actionId);
-            $actions = $actionDao->getHistoryByUserFlow($action->getTransactionId());
+            $flow = $userFlowDao->getFlowHistory($action->getTransactionId());
         }
 
-        return $actions ? JsonBuilder::Success(['actions'=>$actions])
+        return $flow ? JsonBuilder::Success(['flow'=>$flow])
             : JsonBuilder::Error('您没有权限执行此操作');
     }
 

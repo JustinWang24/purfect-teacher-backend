@@ -42,6 +42,7 @@ Vue.component('textbooks-table', require('./components/textbook/TextbooksTable.v
 Vue.component('file-preview', require('./components/fileManager/elements/FilePreview.vue').default);      // 教材表单
 // Vue.component('drag-to-sort', require('./components/dnd/DragToSort.vue').default);      // 教材表单
 Vue.component('icon-selector', require('./components/misc/IconSelector.vue').default);      // 教材表单
+Vue.component('node', require('./components/pipeline/Node.vue').default);      // 教材表单
 
 import { Constants } from './common/constants';
 import { Util } from './common/utils';
@@ -152,6 +153,7 @@ if(document.getElementById('pipeline-flow-view-history-app')){
                     {id: Constants.FLOW_ACTION_RESULT.PASSED, label: Constants.FLOW_ACTION_RESULT.PASSED_TXT},
                     {id: Constants.FLOW_ACTION_RESULT.REJECTED, label: Constants.FLOW_ACTION_RESULT.REJECTED_TXT},
                 ],
+                userFlow:{}, // 服务器端返回的
             }
         },
         created(){
@@ -160,21 +162,22 @@ if(document.getElementById('pipeline-flow-view-history-app')){
             this.actionId = dom.dataset.actionid;
             this.userUuid = dom.dataset.useruuid;
             this.userFlowId = dom.dataset.flowid;
-            this.loadLastAction();
+            this.action = JSON.parse(dom.dataset.theaction);
+            if(this.action.node.next_node === 0){
+                this.results.push({
+                    id: Constants.FLOW_ACTION_RESULT.TERMINATED,
+                    label: Constants.FLOW_ACTION_RESULT.TERMINATED_TXT
+                });
+            }
+            this.loadWholeFlow();
         },
         methods: {
-            loadLastAction: function(){
+            loadWholeFlow: function(){
                 this.isLoading = true;
                 viewApplicationByAction(this.actionId, this.userFlowId).then(res => {
                     if(Util.isAjaxResOk(res)){
-                        this.history = res.data.data.actions;
-                        this.action = this.history[0];
-                        if(this.action.node.next_node === 0){
-                            this.results.push({
-                                id: Constants.FLOW_ACTION_RESULT.TERMINATED,
-                                label: Constants.FLOW_ACTION_RESULT.TERMINATED_TXT
-                            });
-                        }
+                        this.userFlow = res.data.data.flow.userFlow;
+                        this.history = res.data.data.flow.nodes;
                     }
                     else{
                         this.$message.error(res.data.message);
@@ -219,45 +222,23 @@ if(document.getElementById('pipeline-flow-view-history-app')){
                 };
                 this.action.attachments.push(attachment);
             },
-            resultText: function(result){
-                let txt = Constants.FLOW_ACTION_RESULT.PENDING_TXT;
-                switch (result){
-                    case Constants.FLOW_ACTION_RESULT.PASSED:
-                        txt = Constants.FLOW_ACTION_RESULT.PASSED_TXT;
-                        break;
-                    case Constants.FLOW_ACTION_RESULT.NOTICED:
-                        txt = Constants.FLOW_ACTION_RESULT.NOTICED_TXT;
-                        break;
-                    case Constants.FLOW_ACTION_RESULT.REJECTED:
-                        txt = Constants.FLOW_ACTION_RESULT.REJECTED_TXT;
-                        break;
-                    case Constants.FLOW_ACTION_RESULT.TERMINATED:
-                        txt = Constants.FLOW_ACTION_RESULT.TERMINATED_TXT;
-                        break;
-                    default:
-                        break;
+            getDotColor: function(node, currentNodeId, done){
+                let color = '#0bbd87';
+                if(done === Constants.FLOW_FINAL_RESULT.PENDING){
+                    if(node.id !== currentNodeId){
+                        if(node.actions.length === 0){
+                            color = '#F2F6FC';
+                        }
+                    }
+                    else{
+                        color = '#409EFF';
+                    }
+                    return color;
                 }
-                return txt;
-            },
-            resultTextClass: function(result){
-                let txt = Constants.FLOW_ACTION_RESULT.PENDING_CLASS;
-                switch (result){
-                    case Constants.FLOW_ACTION_RESULT.PASSED:
-                        txt = Constants.FLOW_ACTION_RESULT.PASSED_CLASS;
-                        break;
-                    case Constants.FLOW_ACTION_RESULT.NOTICED:
-                        txt = Constants.FLOW_ACTION_RESULT.NOTICED_CLASS;
-                        break;
-                    case Constants.FLOW_ACTION_RESULT.REJECTED:
-                        txt = Constants.FLOW_ACTION_RESULT.REJECTED_CLASS;
-                        break;
-                    case Constants.FLOW_ACTION_RESULT.TERMINATED:
-                        txt = Constants.FLOW_ACTION_RESULT.TERMINATED_CLASS;
-                        break;
-                    default:
-                        break;
+                else if(done === Constants.FLOW_FINAL_RESULT.REJECTED){
+                    color = '#F56C6C';
                 }
-                return txt;
+                return color;
             }
         }
     });

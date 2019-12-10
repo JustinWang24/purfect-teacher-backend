@@ -1,6 +1,7 @@
 @php
     use App\Utils\UI\Anchor;
     use App\Utils\UI\Button;
+    $flowStillInProgress = $userFlow->done === \App\Utils\Pipeline\IUserFlow::IN_PROGRESS;
 @endphp
 @extends('layouts.app')
 @section('content')
@@ -9,7 +10,7 @@
         <div class="col-lg-4 col-md-4 col-sm-12">
             <div class="card">
                 <div class="card-head">
-                    <header>审核 <i class="el-icon-loading" v-if="isLoading"></i> </header>
+                    <header>{{ $node->name }}</header>
                 </div>
                 <div class="card-body">
                     <el-form ref="currentActionForm" :model="action" label-width="120px" style="padding: 10px;">
@@ -47,23 +48,39 @@
         <div class="col-lg-{{ $showActionEditForm ? 8 : 12 }} col-md-12 col-sm-12 col-12">
             <div class="card">
                 <div class="card-head">
-                    <header>详细流程 <i class="el-icon-loading" v-if="isLoading"></i></header>
+                    <header class="full-width">
+                        <p class="pull-left pt-2">{{ $node->flow->name }}: {{ $action->userFlow->user_name }} <i class="el-icon-loading" v-if="isLoading"></i></p>
+
+                        <span class="pull-right">
+                            @if($flowStillInProgress)
+                                <el-tag>处理中 ...</el-tag>
+                            @elseif($userFlow->done === \App\Utils\Pipeline\IUserFlow::DONE)
+                                <el-tag type="success"><i class="el-icon-check"></i>&nbsp;批准</el-tag>
+                            @else
+                                <el-tag type="danger">驳回</el-tag>
+                            @endif
+                        </span>
+                    </header>
                 </div>
                 <div class="card-body">
                     <div class="row">
                         <div class="col-12">
                             <el-timeline :reverse="false">
                                 <el-timeline-item
-                                        v-for="(act, index) in history"
+                                        v-for="(node, index) in history"
                                         :key="index"
-                                        :timestamp="act.updated_at">
-                                    <el-card>
-                                        <h4 :class="resultTextClass(act.result)">
-                                            @{{  resultText(act.result) }}
-                                        </h4>
-                                        <p>@{{ act.content }}</p>
-                                    </el-card>
+                                        :color="getDotColor(node, {{ $node->id }}, {{ $userFlow->done }})"
+                                        :timestamp="node.name" placement="top">
+                                    <node :node="node" :starter="index===0" :highlight="node.id === {{ $node->id }} && {{ $flowStillInProgress ? 'true' : 'false' }}"></node>
                                 </el-timeline-item>
+                                @if($flowStillInProgress)
+                                    <el-timeline-item v-if="!isLoading" icon="el-icon-more" color="#409EFF" timestamp="审核中 ..." placement="top">&nbsp;</el-timeline-item>
+                                @elseif($userFlow->done === \App\Utils\Pipeline\IUserFlow::DONE)
+                                    <el-timeline-item v-if="!isLoading" icon="el-icon-check" color="#0bbd87" timestamp="批准" placement="top">&nbsp;</el-timeline-item>
+                                @else
+                                    <el-timeline-item v-if="!isLoading" icon="el-icon-close" color="#F56C6C" timestamp="驳回" placement="top">&nbsp;</el-timeline-item>
+                                @endif
+
                             </el-timeline>
                         </div>
                     </div>
@@ -81,5 +98,6 @@
          data-actionid="{{ $actionId }}"
          data-flowid="{{ $userFlowId }}"
          data-useruuid="{{ \Illuminate\Support\Facades\Auth::user()->uuid }}"
+         data-theaction="{{ $action }}"
     ></div>
 @endsection
