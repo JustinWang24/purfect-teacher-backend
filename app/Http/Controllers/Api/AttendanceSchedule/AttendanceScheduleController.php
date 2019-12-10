@@ -20,9 +20,11 @@ class AttendanceScheduleController extends Controller
         $schoolId = $user->getSchoolId();
         $dao = new AttendanceSchedulesDao();
 
-        $tasks = $dao->getAllTaskForSchool($schoolId, $cycle='week', $current=0);
+        $current =  $request->input('week', 0);;
+        $tasks = $dao->getAllTaskForSchool($schoolId, 'week', $current);
 
-        $time       = $dao->getTimes();
+        $time       = $dao->getTimes($current);
+        $time1       = $dao->getTimes($current,'month');
         $displayArr = [];
         foreach ($tasks as $key=> $task)
         {
