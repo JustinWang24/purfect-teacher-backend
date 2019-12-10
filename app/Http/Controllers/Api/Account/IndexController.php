@@ -26,6 +26,11 @@ class IndexController extends Controller
 
         $mesDao  = new AccountCoreMessageDao;
         $message = $mesDao->getCoreMassageBySchoolId($school->id);
+        if ($message) {
+            $content = $message->content;
+        } else {
+            $content = "";
+        }
 
         $coreDao       = new AccountCoreDao;
         $rechargeMoney = $coreDao->getAccountCoreMoneyBySchoolId($school->id);
@@ -33,7 +38,7 @@ class IndexController extends Controller
         $data = [
             'account_money' => $user->profile->account_money,
             'red_envelope'  => $user->profile->red_envelope,
-            'message'       => $message->content,
+            'message'       => $content,
             'recharge'      => $rechargeMoney
         ];
 
