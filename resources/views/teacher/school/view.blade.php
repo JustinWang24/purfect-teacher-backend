@@ -98,7 +98,10 @@ $slot = \App\Utils\Time\GradeAndYearUtil::GetTimeSlot();
         <div class="col-lg-8 col-md-8 col-sm-12">
             <div class="card">
                 <div class="card-head">
-                    <header>等待我审核的流程 <i class="el-icon-loading" v-if="isLoading"></i> </header>
+                    <header class="full-width">
+                        <p class="pull-left pt-2">等待我审核的流程 <i class="el-icon-loading" v-if="isLoading"></i></p>
+                        <el-button @click="reloadThisPage" size="medium" type="text" class="pull-right"><i class="el-icon-refresh"></i>&nbsp;刷新</el-button>
+                    </header>
                 </div>
                 <div class="card-body no-padding height-9">
                     <div class="row">
@@ -122,7 +125,10 @@ $slot = \App\Utils\Time\GradeAndYearUtil::GetTimeSlot();
 
             <div class="card">
                 <div class="card-head">
-                    <header>我发起的流程 <i class="el-icon-loading" v-if="isLoading"></i> </header>
+                    <header class="full-width">
+                        <p class="pull-left pt-2">我发起的流程 <i class="el-icon-loading" v-if="isLoading"></i></p>
+                        <el-button @click="reloadThisPage" size="medium" type="text" class="pull-right"><i class="el-icon-refresh"></i>&nbsp;刷新</el-button>
+                    </header>
                 </div>
                 <div class="card-body no-padding height-9">
                     <div class="row">

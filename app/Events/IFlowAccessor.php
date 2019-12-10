@@ -15,7 +15,11 @@ use App\Utils\Pipeline\INode;
 interface IFlowAccessor
 {
     public function getFlow():IFlow;
-    public function getNode():INode;
+
+    /**
+     * @return INode|null
+     */
+    public function getNode();
     public function getAction():IAction;
     public function getUser():User;
 }

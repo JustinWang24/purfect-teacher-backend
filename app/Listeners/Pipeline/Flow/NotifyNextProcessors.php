@@ -7,7 +7,6 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use App\Events\IFlowAccessor;
 use App\BusinessLogic\Pipeline\Messenger\MessengerFactory;
 use App\BusinessLogic\Pipeline\Messenger\Contracts\IMessenger;
-use Illuminate\Support\Facades\Log;
 
 class NotifyNextProcessors
 {
@@ -25,19 +24,15 @@ class NotifyNextProcessors
      * Handle the event.
      *
      * @param  IFlowAccessor  $event
-     * @return void
+     * @return boolean
      */
     public function handle(IFlowAccessor $event)
     {
         $messenger = MessengerFactory::GetInstance(
             IMessenger::TYPE_NEXT_PROCESSORS,
-            $event->getFlow(),
-            $event->getNode(),
-            $event->getUser()
+            $event->getUser(), $event->getAction(), $event->getNode(), $event->getFlow()
         );
-        $bag = $messenger->handle($event->getAction());
-        if(!$bag->isSuccess()){
-            Log::error('通知流程发起者错误',['msg'=>$bag->getMessage()]);
-        }
+        $messenger->handle($event->getAction());
+        return true;
     }
 }

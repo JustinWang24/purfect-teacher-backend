@@ -19,6 +19,9 @@
                         <el-form-item label="原因说明">
                             <el-input type="textarea" placeholder="必填: 请写明原因" rows="6" v-model="action.content"></el-input>
                         </el-form-item>
+                        <el-form-item label="申请加急">
+                            <el-switch v-model="action.urgent"></el-switch>
+                        </el-form-item>
                         <el-form-item label="选择附件">
                             <el-button type="primary" icon="el-icon-document" v-on:click="showFileManagerFlag=true">选择附件</el-button>
                             <ul style="padding-left: 0;">
@@ -38,7 +41,7 @@
 
                     <p v-if="done" class="text-primary">
                         提交成功!
-                        <el-button v-on:click="closeWindow" type="danger" icon="el-icon-close"> 关闭窗口 </el-button>
+                        <el-button size="mini" class="pull-right" v-on:click="closeWindow" type="danger" icon="el-icon-close"> 关闭窗口 </el-button>
                     </p>
                 </div>
             </div>

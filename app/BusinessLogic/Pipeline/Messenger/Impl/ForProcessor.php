@@ -25,7 +25,13 @@ class ForProcessor extends AbstractMessenger
      */
     protected $processor;
 
-    public function __construct(IFlow $flow, INode $node, User $user)
+    /**
+     * ForProcessor constructor.
+     * @param IFlow $flow
+     * @param INode|null $node
+     * @param User $user
+     */
+    public function __construct(IFlow $flow, $node, User $user)
     {
         parent::__construct($flow, $node, $user);
         $this->processor = $user;
@@ -44,12 +50,12 @@ class ForProcessor extends AbstractMessenger
             $userFlow = $action->getUserFlow();
 
             // 把查看此流程详情的链接放进去
-            $nextMove = route('teacher.pipeline.flow-view-history',['action_id'=>$action->id, 'user_flow_id'=>$action->getTransactionId()]);
+            $nextMove = route('pipeline.flow-view-history',['action_id'=>$action->id, 'user_flow_id'=>$action->getTransactionId()]);
 
             if($action->isSuccess())
                 $content .= '通过了' . $userFlow->user_name . '提交的' . $flowName . '流程';
             else
-                $content .= '驳回了' . $userFlow->user_name . '提交的' . $flowName . '流程';
+                $content .= '退回了' . $userFlow->user_name . '提交的' . $flowName . '流程';
 
             InternalMessage::dispatchNow(
                 SystemNotification::SCHOOL_EMPTY,

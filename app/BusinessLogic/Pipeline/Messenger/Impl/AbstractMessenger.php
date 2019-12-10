@@ -26,10 +26,19 @@ abstract class AbstractMessenger implements IMessenger, INextAction
      */
     protected $flow;
 
-    public function __construct(IFlow $flow, INode $node, User $user)
+    protected $userOfLastAction;
+
+    /**
+     * AbstractMessenger constructor.
+     * @param IFlow $flow
+     * @param INode|null $node
+     * @param User $user
+     */
+    public function __construct(IFlow $flow, $node, User $user)
     {
         $this->node = $node;
         $this->flow = $flow;
+        $this->userOfLastAction = $user;
     }
 
     public abstract function handle(IAction $action);

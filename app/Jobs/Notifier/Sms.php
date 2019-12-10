@@ -13,9 +13,9 @@ use Illuminate\Foundation\Bus\Dispatchable;
 class Sms implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
-    private $receivers;
-    private $contentHolder;
-    private $template;
+    protected $receivers;
+    protected $contentHolder;
+    protected $template;
 
     /**
      * Sms constructor.

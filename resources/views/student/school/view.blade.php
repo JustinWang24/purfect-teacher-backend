@@ -80,7 +80,10 @@
         <div class="col-lg-8 col-md-12 col-sm-12">
             <div class="card">
                 <div class="card-head">
-                    <header>我的申请 <i class="el-icon-loading" v-if="isLoading"></i> </header>
+                    <header class="full-width">
+                        <p class="pull-left pt-2">我的申请 <i class="el-icon-loading" v-if="isLoading"></i></p>
+                        <el-button @click="reloadThisPage" size="medium" type="text" class="pull-right"><i class="el-icon-refresh"></i>&nbsp;刷新</el-button>
+                    </header>
                 </div>
                 <div class="card-body no-padding height-9">
                     <div class="row">
@@ -91,15 +94,15 @@
                                     <span>@{{ userFlow.flow.name }}</span>
                                 </h3>
                                 <el-divider></el-divider>
-                                <h5 :class="userFlow.done ? 'text-info' : 'text-danger'">
-                                    @{{ userFlow.done ? '已批准' : '审核中 ...' }}
+                                <h5 :class="flowResultClass(userFlow.done)">
+                                    @{{ flowResultText(userFlow.done) }}
                                 </h5>
                                 <time class="pull-left" style="font-size: 13px;color: #999;">申请日期: @{{ userFlow.created_at.substring(0, 10) }}</time>
                                 <br>
                                 <el-divider></el-divider>
                                 <div class="clearfix"></div>
-                                <el-button @click="cancelMyApplication(userFlow)" type="primary" size="mini" class="button pull-left">进度</el-button>
-                                <el-button @click="cancelMyApplication(userFlow)" type="danger" size="mini" class="button pull-right">撤销</el-button>
+                                <el-button @click="viewMyApplication(userFlow)" type="primary" size="mini" class="button pull-left">查看详情</el-button>
+                                <el-button v-if="!userFlow.done" @click="cancelMyApplication(userFlow)" type="danger" size="mini" class="button pull-right">撤销</el-button>
                             </el-card>
                         </div>
                     </div>

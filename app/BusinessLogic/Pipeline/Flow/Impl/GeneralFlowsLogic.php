@@ -9,6 +9,7 @@
 namespace App\BusinessLogic\Pipeline\Flow\Impl;
 
 use App\BusinessLogic\Pipeline\Flow\Contracts\IFlowLogic;
+use App\Dao\Pipeline\UserFlowDao;
 use App\Models\Pipeline\Flow\UserFlow;
 use App\Utils\Pipeline\IAction;
 use App\Utils\Pipeline\IFlow;
@@ -106,6 +107,7 @@ abstract class GeneralFlowsLogic implements IFlowLogic
                     'flow_id'=>$flow->id,
                     'user_id'=>$this->user->id,
                     'user_name'=>$this->user->getName(),
+                    'done'=>IUserFlow::IN_PROGRESS,
                 ]);
 
                 // 用户流程创建之后, 创建该流程的第一个 action
@@ -116,7 +118,7 @@ abstract class GeneralFlowsLogic implements IFlowLogic
                 $handler = $startNode->getHandler();
                 if($handler){
                     // 根据当前提交 action 的用户和流程, 创建所有需要的下一步流程
-                    $handler->handle($this->user, $action);
+                    $handler->handle($this->user, $action, $startNode->getNext());
                 }
 
                 $bag->setCode(JsonBuilder::CODE_SUCCESS);
@@ -135,5 +137,100 @@ abstract class GeneralFlowsLogic implements IFlowLogic
             $bag->setMessage('用户没有权限启动本流程');
         }
         return $bag;
+    }
+
+    /**
+     * 同意
+     * @param IAction $action
+     * @param $actionData
+     * @return \App\Utils\ReturnData\IMessageBag
+     */
+    public function process(IAction $action, $actionData)
+    {
+        $messageBag = new MessageBag(JsonBuilder::CODE_ERROR);
+        if($action){
+            /**
+             * @var INode $node
+             */
+            $node = $action->getNode();
+            if($node){
+                DB::beginTransaction();
+                try{
+                    $action->result = $actionData['result'];
+                    $action->content = $actionData['content'];
+                    $action->urgent = $actionData['urgent'];
+                    $action->save();
+
+                    $next = $node->getNext();
+
+                    if($next){
+                        $handler = $node->getHandler();
+                        $handler->handle($this->user, $action, $next);
+                    }
+                    else{
+                        // 已经是流程的最后一步, 标记流程已经完成
+                        $userFlowDao = new UserFlowDao();
+                        // 整个流程被通过了
+                        $userFlowDao->update($action->getTransactionId(),['done'=>IUserFlow::DONE]);
+
+                        // 通知流程的发起人, 流程已经获得批准
+//                        $actionDao = new ActionDao();
+//                        $firstAction = $actionDao->getFirstActionByUserFlow($action->getTransactionId());
+                    }
+                    DB::commit();
+                    $messageBag->setCode(JsonBuilder::CODE_SUCCESS);
+                    $messageBag->setData(['nextNode'=>$next]);
+                }
+                catch (\Exception $exception){
+                    DB::rollBack();
+                    $messageBag->setMessage($exception->getMessage());
+                }
+            }
+            else{
+                $messageBag->setMessage('没有找到对应的步骤');
+            }
+        }
+        return $messageBag;
+    }
+
+    /**
+     * 驳回
+     * @param IAction $action
+     * @param $actionData
+     * @return \App\Utils\ReturnData\IMessageBag
+     */
+    public function reject(IAction $action, $actionData)
+    {
+        $messageBag = new MessageBag(JsonBuilder::CODE_ERROR);
+        if($action){
+            /**
+             * @var INode $node
+             */
+            $node = $action->getNode();
+            if($node){
+                DB::beginTransaction();
+                try{
+                    $action->result = $actionData['result'];
+                    $action->content = $actionData['content'];
+                    $action->urgent = $actionData['urgent'];
+                    $action->save();
+
+                    // Todo:  这里的逻辑不对, 要尽快修复
+                    $handler = $node->getPrev()->getHandler();
+                    $handler->handle($this->user, $action, $node);
+
+                    DB::commit();
+                    $messageBag->setCode(JsonBuilder::CODE_SUCCESS);
+                }
+                catch (\Exception $exception){
+                    DB::rollBack();
+                    $messageBag->setMessage($exception->getMessage());
+                }
+            }
+            else{
+                $messageBag->setMessage('没有找到对应的步骤');
+            }
+        }
+        return $messageBag;
     }
 }

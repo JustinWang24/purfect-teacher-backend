@@ -49,7 +49,7 @@ Route::prefix('pipeline')->group(function () {
         ->name('teacher.pipeline.flow-start');
     // 查看流程的历史
     Route::get('/flow/view-history','Teacher\Pipeline\FlowsController@view_history')
-        ->name('teacher.pipeline.flow-view-history');
+        ->name('pipeline.flow-view-history');
 
     // 学生专用
     Route::get('/flow/student/open','Teacher\Pipeline\FlowsController@open')

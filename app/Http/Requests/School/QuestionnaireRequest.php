@@ -13,7 +13,7 @@ class QuestionnaireRequest extends MyStandardRequest
         return [
             'questionnaire.id'                    => 'nullable|numeric',
             'questionnaire.title'                 => ['required',  'max:255'],
-            'questionnaire.detail'                => ['required',  'min:20'],
+            'questionnaire.detail'                => ['required'],
             'questionnaire.first_question_info'   => ['required',  'max:255'],
             'questionnaire.second_question_info'  => ['required',  'max:255'],
             'questionnaire.third_question_info'   => ['required',  'max:255'],
@@ -27,7 +27,6 @@ class QuestionnaireRequest extends MyStandardRequest
             'questionnaire.first_question_info.max'  => '最多255个汉字',
             'questionnaire.second_question_info.max'  => '最多255个汉字',
             'questionnaire.third_question_info.max'  => '最多255个汉字',
-            'questionnaire.detail.min' => '最少20个汉字',
         ];
     }
 
