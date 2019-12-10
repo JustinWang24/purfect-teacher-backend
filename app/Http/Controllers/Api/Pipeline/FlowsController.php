@@ -140,7 +140,7 @@ class FlowsController extends Controller
                     $bag = $logic->reject($action, $actionFormData); // 进入驳回流程的操作
                     break;
                 case IAction::RESULT_TERMINATE:
-                    $bag = $logic->reject($action, $actionFormData); // 进入终止流程的操作
+                    $bag = $logic->terminate($action, $actionFormData); // 进入终止流程的操作
                     break;
                 default:
                     $bag = $logic->process($action, $actionFormData); // 进入同意流程的操作, 默认
@@ -158,7 +158,7 @@ class FlowsController extends Controller
                         break;
                     default:
                         // 同意流程的事件, 默认
-                        $event = new FlowProcessed($request->user(),$action, $bag->getData()['nextNode'], $action->getFlow());
+                        $event = new FlowProcessed($request->user(),$action, $bag->getData()['currentNode'], $action->getFlow());
                         break;
                 }
 

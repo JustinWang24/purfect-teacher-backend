@@ -10,22 +10,31 @@ namespace App\BusinessLogic\OrganizationTitleHelpers\Impl;
 
 
 use App\BusinessLogic\OrganizationTitleHelpers\Contracts\TitleToUsers;
+use App\Models\Users\GradeUser;
 use App\User;
 
 class DepartmentManager implements TitleToUsers
 {
-    private $student;
+    private $user;
 
-    public function __construct(User $student)
+    public function __construct(User $user)
     {
-        $this->student = $student;
+        $this->user = $user;
     }
 
     public function getUsers()
     {
         $users = [];
-        if($manager = $this->student->gradeUser->departmentAdviser){
-            $users[] = $manager;
+        /**
+         * @var GradeUser $gradeUser
+         */
+        $gradeUser = $this->user->gradeUser;
+
+        if (isset($gradeUser[0])){
+            $gradeUser = $gradeUser[0];
+        }
+        if($departmentAdviser = $gradeUser->departmentAdviser){
+            $users[] = $departmentAdviser->user;
         }
         return $users;
     }

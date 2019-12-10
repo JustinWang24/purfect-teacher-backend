@@ -168,7 +168,13 @@ if(document.getElementById('pipeline-flow-view-history-app')){
                 viewApplicationByAction(this.actionId, this.userFlowId).then(res => {
                     if(Util.isAjaxResOk(res)){
                         this.history = res.data.data.actions;
-                        this.action = this.history[this.history.length - 1];
+                        this.action = this.history[0];
+                        if(this.action.node.next_node === 0){
+                            this.results.push({
+                                id: Constants.FLOW_ACTION_RESULT.TERMINATED,
+                                label: Constants.FLOW_ACTION_RESULT.TERMINATED_TXT
+                            });
+                        }
                     }
                     else{
                         this.$message.error(res.data.message);
@@ -225,6 +231,9 @@ if(document.getElementById('pipeline-flow-view-history-app')){
                     case Constants.FLOW_ACTION_RESULT.REJECTED:
                         txt = Constants.FLOW_ACTION_RESULT.REJECTED_TXT;
                         break;
+                    case Constants.FLOW_ACTION_RESULT.TERMINATED:
+                        txt = Constants.FLOW_ACTION_RESULT.TERMINATED_TXT;
+                        break;
                     default:
                         break;
                 }
@@ -241,6 +250,9 @@ if(document.getElementById('pipeline-flow-view-history-app')){
                         break;
                     case Constants.FLOW_ACTION_RESULT.REJECTED:
                         txt = Constants.FLOW_ACTION_RESULT.REJECTED_CLASS;
+                        break;
+                    case Constants.FLOW_ACTION_RESULT.TERMINATED:
+                        txt = Constants.FLOW_ACTION_RESULT.TERMINATED_CLASS;
                         break;
                     default:
                         break;

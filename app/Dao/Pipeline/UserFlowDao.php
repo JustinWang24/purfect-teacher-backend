@@ -10,6 +10,7 @@ namespace App\Dao\Pipeline;
 
 
 use App\Models\Pipeline\Flow\UserFlow;
+use App\Utils\Pipeline\IUserFlow;
 
 class UserFlowDao
 {
@@ -29,5 +30,15 @@ class UserFlowDao
      */
     public function update($id, $data){
         return UserFlow::where('id',$id)->update($data);
+    }
+
+    /**
+     * @param $id
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
+    public function terminate($id){
+        $actions = (new ActionDao())->getHistoryByUserFlow($id, true);
+        $this->update($id,['done'=>IUserFlow::TERMINATED]);
+        return $actions;
     }
 }
