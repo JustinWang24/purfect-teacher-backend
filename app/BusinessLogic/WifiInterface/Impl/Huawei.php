@@ -275,8 +275,8 @@ class Huawei implements WifiInterface
       $result = Curl::to ( self::$apiUrl . '/controller/campus/v1/portalauth/logout' )
                     ->withHeaders ( [ 'Content-Type: application/json'] )
                     ->withData ( json_encode ( $param ) )
-                    ->post ();
-      $resultArr = json_decode ( $result , true ); 
+                    ->post (); 
+      $resultArr = json_decode ( $result , true );
       if ( isset($resultArr[ 'errcode' ]) && $resultArr[ 'errcode' ] == '0' )
       {
          return [ 'status' => true , 'message' => '下线成功' ];
