@@ -283,6 +283,9 @@ class AttendanceSchedulesDao
             } elseif ($current == 1) {
                 $startStr = 'next week';
                 $endStr = '+1 week Monday';
+            } elseif ($current < 0) {
+                $endStr = $current .' week Monday';
+                $startStr = --$current .' week Monday';
             } else {
                 $num = $current - 1;
                 $startStr = '+ ' . $num . ' week Monday';
@@ -292,6 +295,9 @@ class AttendanceSchedulesDao
             if ($current == 0) {
                 $startStr = 'first day of this month';
                 $endStr = 'last day of this month';
+            } elseif ($current < 0) {
+                $startStr = 'first day of '.$current.' month';
+                $endStr = 'last day of '.$current.' month';
             } else {
                 $startStr = 'first day of +'.$current.' month';
                 $endStr = 'last day of +'.++$current.' month';
