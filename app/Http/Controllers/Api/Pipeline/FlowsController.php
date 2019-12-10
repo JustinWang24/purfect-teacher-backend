@@ -89,7 +89,7 @@ class FlowsController extends Controller
             $node = $bag->getData()['node'];
 
             // 发布流程启动成功事件
-//            event(new FlowStarted($request->user(),$action, $flow, $node));
+            event(new FlowStarted($request->user(),$action, $flow, $node));
             return JsonBuilder::Success(['id'=>$action->id]);
         }
         else{

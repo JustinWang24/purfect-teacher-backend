@@ -7,6 +7,7 @@ use App\Utils\Pipeline\IAction;
 use App\Utils\Pipeline\IFlow;
 use App\Utils\Pipeline\INode;
 use App\Utils\Pipeline\IUser;
+use App\Utils\Pipeline\IUserFlow;
 use Illuminate\Database\Eloquent\Model;
 
 class Action extends Model implements IAction
@@ -106,5 +107,10 @@ class Action extends Model implements IAction
     public function getTransactionId(): string
     {
         return $this->transaction_id;
+    }
+
+    public function getUserFlow(): IUserFlow
+    {
+        return $this->userFlow;
     }
 }
