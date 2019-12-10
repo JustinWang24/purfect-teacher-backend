@@ -24,6 +24,12 @@ Route::prefix('api_wifi')->middleware('auth:api')->group(function () {
     Route::any('/v1/wifi_pay/index-recharge','\App\Http\Controllers\Api\Wifi\WifiPayController@index_recharge');	
 	// 无线充值明细
     Route::any('/v1/wifi_pay/list-recharge-info','\App\Http\Controllers\Api\Wifi\WifiPayController@list_recharge_info');
+   // 检测是否在线
+   Route::any('/v1/wifi_pay/check-wifi-status-info','\App\Http\Controllers\Api\Wifi\WifiPayController@check_wifi_status_info');
+   // 上线
+   Route::any('/v1/wifi_pay/up-wifi-status-info','\App\Http\Controllers\Api\Wifi\WifiPayController@up_wifi_status_info');
+   // 下线
+   Route::any('/v1/wifi_pay/down-wifi-status-info','\App\Http\Controllers\Api\Wifi\WifiPayController@down_wifi_status_info');
 
    // 有线上网首页
    Route::any('/v1/wifi_cable/index-cable','\App\Http\Controllers\Api\Wifi\WifiCableController@index_cable');

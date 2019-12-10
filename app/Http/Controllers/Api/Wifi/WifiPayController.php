@@ -17,11 +17,11 @@ use App\Dao\Wifi\Api\WifiContentsDao; // 常用须知
 use App\Dao\Wifi\Api\WifiUserTimesDao; // 用户wifi和套餐时长
 use App\Dao\Wifi\Api\WifiOrdersDao; // wifi订单
 
-
-
 use App\Dao\Wifi\Api\WifiConfigsDao; // wifi 配置
 use App\Dao\Wifi\Api\WifiIssuesDao; // 报修单
 use App\Dao\Wifi\Api\WifiUserAgreementsDao; // wifi协议
+
+use App\BusinessLogic\WifiInterface\Factory;
 
 class WifiPayController extends Controller
 {
@@ -46,7 +46,7 @@ class WifiPayController extends Controller
 
       $infos[ 'wifiList' ] = WifisDao::getWifisListInfo (
 
-         $condition , [ [ 'wifi_sort' , 'asc' ] ] , [ 'page' => 1 , 'limit' => 10 ] ,
+         $condition , [ 'wifi_sort' , 'asc' ] , [ 'page' => 1 , 'limit' => 10 ] ,
 
          [ 'wifiid' , 'wifi_name' , 'wifi_oprice' , 'wifi_price' ]
 
@@ -58,7 +58,7 @@ class WifiPayController extends Controller
       $condition1[] = [ 'status' , '=' , 1 ];
 
       $getWifiContentsOneInfo = WifiContentsDao::getWifiContentsOneInfo (
-         $condition1 , [ [ 'contentid' , 'desc' ] ] , [ 'typeid' , 'content' ]
+         $condition1 , [ 'contentid' , 'desc' ] , [ 'typeid' , 'content' ]
       );
       $infos[ 'wifi_notice' ] = '';
       if ( $getWifiContentsOneInfo && $getWifiContentsOneInfo->content )
@@ -70,7 +70,7 @@ class WifiPayController extends Controller
       $condition2[] = [ 'user_id' , '=' , $user->id ];
       $condition2[] = [ 'status' , '=' , 1 ];
       $getWifiUserTimesOneInfo = WifiUserTimesDao::getWifiUserTimesOneInfo (
-         $condition2 , [ [ 'timesid' , 'desc' ] ] , [ 'user_wifi_time' ]
+         $condition2 , [ 'timesid' , 'desc' ] , [ 'user_wifi_time' ]
       );
 
       $infos[ 'user_wifi_time' ] = 0;
@@ -105,12 +105,119 @@ class WifiPayController extends Controller
          'defeated_time' , 'refund_time' , 'cancle_time' , 'status' ,
       ];
       $infos    = WifiOrdersDao::getWifiOrdersListInfo (
-         $condition , [ [ 'orderid' , 'desc' ] ] ,
+         $condition , [ 'orderid' , 'desc' ] ,
          [ 'page' => $param['page'] , 'limit' => self::$api_wifi_page_limit ] ,
          $fieldArr
       )->toArray()['data'];
 
       return JsonBuilder::Success ( $infos,'wifi充值记录列表' );
+   }
+
+   /**
+    * Func 检测是否在线
+    * @param Request $request
+    * @return Json
+    */
+   public function check_wifi_status_info(WifiPayRequest $request)
+   {
+      $user = $request->user ();
+
+      // 获取wifi数据
+      $condition[] = [ 'user_id' , '=' , $user->id ];
+      $getWifiUserTimesOneInfo = WifiUserTimesDao::getWifiUserTimesOneInfo (
+         $condition , [ 'timesid' , 'desc' ] , [ 'wif_psessionid' , 'user_wifi_time' ]
+      );
+      // wifi处于为连接状态
+      $infos['status'] = 0;
+      if($getWifiUserTimesOneInfo
+         && $getWifiUserTimesOneInfo->wif_psessionid != ''
+         && strtotime ($getWifiUserTimesOneInfo->user_wifi_time) > time())
+      {
+         $produce = Factory::produce(1);
+         $checkAccountOnline = $produce->checkAccountOnline(
+            ['psessionid'=>$getWifiUserTimesOneInfo->wif_psessionid]
+         );
+         $infos['status'] = $checkAccountOnline['status'] == true ? 1: 0;
+      }
+      // status 值为1 在线 0:不在线
+      return JsonBuilder::Success ( $infos,'检测wifi状态');
+   }
+
+
+   /**
+    * Func wifi上线
+    * @param Request $request
+    * @return Json
+    */
+   public function up_wifi_status_info(WifiPayRequest $request)
+   {
+      $user = $request->user ();
+
+      // TODO.....验证参数
+      $param = $request->only ( [ 'authType' , 'deviceMac', 'ssid', 'terminalIp', 'terminalMac' ] );
+
+      // 获取wifi数据
+      $condition[] = [ 'user_id' , '=' , $user->id ];
+      $getWifiUserTimesOneInfo = WifiUserTimesDao::getWifiUserTimesOneInfo (
+         $condition , [ 'timesid' , 'desc' ] , [ 'timesid','wif_psessionid','user_wifi_time' ]
+      );
+      // 未充值wifi,请先充值
+      if($getWifiUserTimesOneInfo && strtotime ($getWifiUserTimesOneInfo->user_wifi_time) < time() )
+      {
+         return JsonBuilder::Error ( '请先购买wifi' );
+      }
+      // 华为上线
+      $produce = Factory::produce(1);
+      $param1['ssid']  =  $param['ssid'];
+      $param1['authType']  =  $param['authType'];
+      $param1['deviceMac']  =  $param['deviceMac'];
+      $param1['terminalIp']  =  $param['terminalIp'];
+      $param1['terminalMac']  =  $param['terminalMac'];
+      $param1['userName']  =  $getWifiUserTimesOneInfo['user_wifi_name'];
+      $param1['password']  =  $getWifiUserTimesOneInfo['user_wifi_password'];
+      $AccountOnline = $produce->AccountOnline($param1);
+      if($AccountOnline['status'] == true)
+      {
+         $saveData['wif_psessionid'] = (String)$AccountOnline['data']['psessionid'];
+         WifiUserTimesDao::addOrUpdateWifiUserTimesInfo ($saveData,$getWifiUserTimesOneInfo['timesid']);
+         return JsonBuilder::Success ( '上线成功' );
+      } else {
+         return JsonBuilder::Error ( '上线失败,请稍后重试' );
+      }
+   }
+
+   /**
+    * Func wifi下线
+    * @param Request $request
+    * @return Json
+    */
+   public function down_wifi_status_info(WifiPayRequest $request)
+   {
+      $user = $request->user ();
+
+      // 获取wifi数据
+      $condition[] = [ 'user_id' , '=' , $user->id ];
+      $getWifiUserTimesOneInfo = WifiUserTimesDao::getWifiUserTimesOneInfo (
+         $condition , [ 'timesid' , 'desc' ] , [ 'timesid','wif_psessionid' ]
+      );
+      // wifi处于为连接状态
+      if($getWifiUserTimesOneInfo && $getWifiUserTimesOneInfo->wif_psessionid != '' )
+      {
+         $produce = Factory::produce(1);
+         $checkAccountOnline = $produce->AccountOffline(
+            ['psessionid'=>$getWifiUserTimesOneInfo->wif_psessionid]
+         );
+         if($checkAccountOnline['status'] == true)
+         {
+            $saveData['wif_psessionid'] = '';
+            WifiUserTimesDao::addOrUpdateWifiUserTimesInfo ($saveData,$getWifiUserTimesOneInfo['timesid']);
+            return JsonBuilder::Success ( '下线成功' );
+         } else {
+            return JsonBuilder::Error ( '下线失败,请稍后重试' );
+         }
+      } else {
+         return JsonBuilder::Error ( '下线失败,请稍后重试' );
+      }
    }
 
 

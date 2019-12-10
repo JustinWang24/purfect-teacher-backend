@@ -1,103 +1,85 @@
 
-[2019-12-08 06:31:27]select * from `users` where `api_token` = ? limit 1
+[2019-12-11 00:18:33]select * from `users` where `api_token` = ? limit 1
 parmars:["349aa4c7-de77-4df6-a476-5583da710cdf"]
 
-[2019-12-08 06:31:27]select `timesid`, `user_wifi_time`, `user_cable_etime` from `wifi_user_times` where (`user_id` = ? and `status` = ?) order by `timesid` desc limit 1
-parmars:[5,1]
-
-[2019-12-08 06:31:27]select * from `wifis` where (`mode` = ? and `status` = ?) order by `wifiid` desc limit 1
-parmars:[2,1]
-
-[2019-12-08 06:33:01]select * from `users` where `api_token` = ? limit 1
-parmars:["349aa4c7-de77-4df6-a476-5583da710cdf"]
-
-[2019-12-08 06:33:02]select `timesid`, `user_wifi_time`, `user_cable_etime` from `wifi_user_times` where (`user_id` = ? and `status` = ?) order by `timesid` desc limit 1
-parmars:[5,1]
-
-[2019-12-08 06:33:02]select * from `grade_users` where `grade_users`.`user_id` = ? and `grade_users`.`user_id` is not null limit 1
+[2019-12-11 00:18:33]select `timesid`, `wif_psessionid` from `wifi_user_times` where (`user_id` = ?) order by `timesid` desc limit 1
 parmars:[5]
 
-[2019-12-08 06:33:02]select * from `wifis` where (`campus_id` = ? and `mode` = ? and `status` = ?) order by `wifiid` desc limit 1
-parmars:[1,2,1]
-
-[2019-12-08 06:34:01]select * from `users` where `api_token` = ? limit 1
+[2019-12-11 00:19:35]select * from `users` where `api_token` = ? limit 1
 parmars:["349aa4c7-de77-4df6-a476-5583da710cdf"]
 
-[2019-12-08 06:34:01]select `timesid`, `user_wifi_time`, `user_cable_etime` from `wifi_user_times` where (`user_id` = ? and `status` = ?) order by `timesid` desc limit 1
-parmars:[5,1]
-
-[2019-12-08 06:34:01]select * from `grade_users` where `grade_users`.`user_id` = ? and `grade_users`.`user_id` is not null limit 1
+[2019-12-11 00:19:35]select `timesid`, `wif_psessionid` from `wifi_user_times` where (`user_id` = ?) order by `timesid` desc limit 1
 parmars:[5]
 
-[2019-12-08 06:34:01]select * from `wifis` where (`campus_id` = ? and `mode` = ? and `status` = ?) order by `wifiid` desc limit 1
-parmars:[1,2,1]
-
-[2019-12-08 06:34:10]select * from `users` where `api_token` = ? limit 1
+[2019-12-11 00:20:01]select * from `users` where `api_token` = ? limit 1
 parmars:["349aa4c7-de77-4df6-a476-5583da710cdf"]
 
-[2019-12-08 06:34:10]select `timesid`, `user_wifi_time`, `user_cable_etime` from `wifi_user_times` where (`user_id` = ? and `status` = ?) order by `timesid` desc limit 1
-parmars:[5,1]
-
-[2019-12-08 06:34:10]select * from `grade_users` where `grade_users`.`user_id` = ? and `grade_users`.`user_id` is not null limit 1
+[2019-12-11 00:20:01]select `timesid`, `wif_psessionid` from `wifi_user_times` where (`user_id` = ?) order by `timesid` desc limit 1
 parmars:[5]
 
-[2019-12-08 06:34:10]select * from `wifis` where (`campus_id` = ? and `mode` = ? and `status` = ?) order by `wifiid` desc limit 1
-parmars:[1,2,1]
+[2019-12-11 00:20:01]update `wifi_user_times` set `wif_psessionid` = ?, `wifi_user_times`.`updated_at` = ? where `timesid` = ?
+parmars:["","2019-12-11 00:20:01",2]
 
-[2019-12-08 06:34:10]insert into `wifi_orders` (`pay_time`, `succeed_time`, `paymentid`, `payment_name`, `type`, `mode`, `trade_sn`, `user_id`, `school_id`, `campus_id`, `wifi_id`, `wifi_type`, `wifi_name`, `order_days`, `order_number`, `order_unitprice`, `order_totalprice`, `created_at`) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-parmars:["2019-12-08 06:34:10","2019-12-08 06:34:10",4,"免支付",1,2,"20191208063410",5,1,1,15,15,"1周(含无线)",1,1,"7.00",7,"2019-12-08 06:34:10"]
-
-[2019-12-08 06:34:55]select * from `users` where `api_token` = ? limit 1
+[2019-12-11 00:24:44]select * from `users` where `api_token` = ? limit 1
 parmars:["349aa4c7-de77-4df6-a476-5583da710cdf"]
 
-[2019-12-08 06:34:55]select `timesid`, `user_wifi_time`, `user_cable_etime` from `wifi_user_times` where (`user_id` = ? and `status` = ?) order by `timesid` desc limit 1
-parmars:[5,1]
-
-[2019-12-08 06:34:55]select * from `grade_users` where `grade_users`.`user_id` = ? and `grade_users`.`user_id` is not null limit 1
+[2019-12-11 00:24:44]select * from `grade_users` where `grade_users`.`user_id` = ? and `grade_users`.`user_id` is not null limit 1
 parmars:[5]
 
-[2019-12-08 06:34:55]select * from `wifis` where (`campus_id` = ? and `mode` = ? and `status` = ?) order by `wifiid` desc limit 1
+[2019-12-11 00:24:44]select count(*) as aggregate from `wifis` where (`campus_id` = ? and `mode` = ? and `status` = ?)
 parmars:[1,2,1]
 
-[2019-12-08 06:34:55]insert into `wifi_orders` (`pay_time`, `succeed_time`, `paymentid`, `payment_name`, `type`, `mode`, `trade_sn`, `user_id`, `school_id`, `campus_id`, `wifi_id`, `wifi_type`, `wifi_name`, `order_days`, `order_number`, `order_unitprice`, `order_totalprice`, `created_at`) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-parmars:["2019-12-08 06:34:55","2019-12-08 06:34:55",4,"免支付",1,2,"20191208063455",5,1,1,15,15,"1周(含无线)",1,1,"7.00",7,"2019-12-08 06:34:55"]
+[2019-12-11 00:24:44]select `wifiid`, `wifi_name`, `wifi_oprice`, `wifi_price` from `wifis` where (`campus_id` = ? and `mode` = ? and `status` = ?) order by `wifi_sort` asc limit 10 offset 0
+parmars:[1,2,1]
 
-[2019-12-08 06:34:55]insert into `wifi_orders_locations` (`status`, `orderid`, `user_id`, `school_id`, `campus_id`, `created_at`) values (?, ?, ?, ?, ?, ?)
-parmars:[1,5,5,1,1,"2019-12-08 06:34:55"]
+[2019-12-11 00:24:44]select `typeid`, `content` from `wifi_contents` where (`campus_id` = ? and `typeid` = ? and `status` = ?) order by `contentid` desc limit 1
+parmars:[1,3,1]
 
-[2019-12-08 06:34:55]update `wifi_user_times` set `user_cable_etime` = ?, `wifi_user_times`.`updated_at` = ? where `timesid` = ?
-parmars:["2020-12-07 06:34:55","2019-12-08 06:34:55",2]
-
-[2019-12-08 06:35:01]select * from `users` where `api_token` = ? limit 1
-parmars:["349aa4c7-de77-4df6-a476-5583da710cdf"]
-
-[2019-12-08 06:35:01]select `timesid`, `user_wifi_time`, `user_cable_etime` from `wifi_user_times` where (`user_id` = ? and `status` = ?) order by `timesid` desc limit 1
+[2019-12-11 00:24:44]select `user_wifi_time` from `wifi_user_times` where (`user_id` = ? and `status` = ?) order by `timesid` desc limit 1
 parmars:[5,1]
 
-[2019-12-08 06:35:25]select * from `users` where `api_token` = ? limit 1
+[2019-12-11 00:25:08]select * from `users` where `api_token` = ? limit 1
 parmars:["349aa4c7-de77-4df6-a476-5583da710cdf"]
 
-[2019-12-08 06:35:25]select `timesid`, `user_wifi_time`, `user_cable_etime` from `wifi_user_times` where (`user_id` = ? and `status` = ?) order by `timesid` desc limit 1
-parmars:[5,1]
-
-[2019-12-08 06:35:48]select * from `users` where `api_token` = ? limit 1
-parmars:["349aa4c7-de77-4df6-a476-5583da710cdf"]
-
-[2019-12-08 06:35:48]select `timesid`, `user_wifi_time`, `user_cable_etime` from `wifi_user_times` where (`user_id` = ? and `status` = ?) order by `timesid` desc limit 1
-parmars:[5,1]
-
-[2019-12-08 06:35:48]select * from `grade_users` where `grade_users`.`user_id` = ? and `grade_users`.`user_id` is not null limit 1
+[2019-12-11 00:25:09]select * from `grade_users` where `grade_users`.`user_id` = ? and `grade_users`.`user_id` is not null limit 1
 parmars:[5]
 
-[2019-12-08 06:35:48]select * from `wifis` where (`campus_id` = ? and `mode` = ? and `status` = ?) order by `wifiid` desc limit 1
-parmars:[1,2,1]
+[2019-12-11 00:25:09]select count(*) as aggregate from `wifi_contents` where (`campus_id` = ? and `status` = ?)
+parmars:[1,1]
 
-[2019-12-08 06:35:48]insert into `wifi_orders` (`pay_time`, `succeed_time`, `paymentid`, `payment_name`, `type`, `mode`, `trade_sn`, `user_id`, `school_id`, `campus_id`, `wifi_id`, `wifi_type`, `wifi_name`, `order_days`, `order_number`, `order_unitprice`, `order_totalprice`, `created_at`) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-parmars:["2019-12-08 06:35:48","2019-12-08 06:35:48",4,"免支付",1,2,"20191208063548",5,1,1,15,15,"1周(含无线)",1,1,"7.00",7,"2019-12-08 06:35:48"]
+[2019-12-11 00:25:09]select `typeid`, `content` from `wifi_contents` where (`campus_id` = ? and `status` = ?) order by `contentid` desc limit 10 offset 0
+parmars:[1,1]
 
-[2019-12-08 06:35:48]insert into `wifi_orders_locations` (`status`, `orderid`, `user_id`, `school_id`, `campus_id`, `created_at`) values (?, ?, ?, ?, ?, ?)
-parmars:[1,6,5,1,1,"2019-12-08 06:35:48"]
+[2019-12-11 00:25:09]select `config_imgurl1`, `config_imgurl2`, `config_imgurl3`, `config_imgurl1_status`, `config_imgurl2_status`, `config_imgurl3_status` from `wifi_configs` where (`campus_id` = ? and `status` = ?) order by `configid` desc limit 1
+parmars:[1,1]
 
-[2019-12-08 06:35:48]update `wifi_user_times` set `user_cable_etime` = ?, `wifi_user_times`.`updated_at` = ? where `timesid` = ?
-parmars:["2020-12-07 06:35:48","2019-12-08 06:35:48",2]
+[2019-12-11 00:25:09]select count(*) as aggregate from `wifi_issues` where (`user_id` = ? and `status` <= ?)
+parmars:[5,2]
+
+[2019-12-11 00:25:09]select count(*) as aggregate from `wifi_user_agreements` where (`user_id` = ?)
+parmars:[5]
+
+[2019-12-11 00:25:34]select * from `users` where `api_token` = ? limit 1
+parmars:["349aa4c7-de77-4df6-a476-5583da710cdf"]
+
+[2019-12-11 00:25:34]select `timesid` from `wifi_user_times` where (`user_id` = ?) order by `timesid` desc limit 1
+parmars:[5]
+
+[2019-12-11 00:25:34]select * from `grade_users` where `grade_users`.`user_id` = ? and `grade_users`.`user_id` is not null limit 1
+parmars:[5]
+
+[2019-12-11 00:25:34]update `wifi_user_times` set `user_mobile_source` = ?, `user_mobile_password` = ?, `user_id` = ?, `user_mobile_phone` = ?, `school_id` = ?, `campus_id` = ?, `wifi_user_times`.`updated_at` = ? where `timesid` = ?
+parmars:["1","123123",5,"1000001",1,1,"2019-12-11 00:25:34",2]
+
+[2019-12-11 00:26:55]select * from `users` where `api_token` = ? limit 1
+parmars:["349aa4c7-de77-4df6-a476-5583da710cdf"]
+
+[2019-12-11 00:26:56]select * from `grade_users` where `grade_users`.`user_id` = ? and `grade_users`.`user_id` is not null limit 1
+parmars:[5]
+
+[2019-12-11 00:26:56]select count(*) as aggregate from `rooms` where (`campus_id` = ? and `type` = ?)
+parmars:[1,5]
+
+[2019-12-11 00:26:56]select `id` as `addresstwoid`, `building_id` as `addressoneid`, `name` from `rooms` where (`campus_id` = ? and `type` = ?) order by `id` asc limit 800 offset 0
+parmars:[1,5]
 

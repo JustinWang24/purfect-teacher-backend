@@ -43,10 +43,13 @@ class WifiController extends Controller
       // 获取通知须知+用网须知
       $condition[] = [ 'campus_id' , '=' , $campus_id ];
       $condition[] = [ 'status' , '=' , 1 ];
-
+      // 获取学校和校区
+      $joinArr = [];
       $contentsList = WifiContentsDao::getWifiContentsListInfo (
-         $condition , [ [ 'contentid' , 'desc' ] ] , [ 'page' => 1 , 'limit' => 10 ] ,
-         [ 'typeid' , 'content' ]
+         $condition , [ 'contentid' , 'desc' ] ,
+         [ 'page' => 1 , 'limit' => 10 ] ,
+         [ 'typeid' , 'content' ],
+         $joinArr
       )->toArray ()[ 'data' ];
 
       $contentsListArr = array_column($contentsList,'content','typeid');
@@ -68,7 +71,7 @@ class WifiController extends Controller
       ];
       
 	  $infos['wifiConfig'] = WifiConfigsDao::getWifiConfigsOneInfo(
-         $condition1,[['configid','desc']],$fieldArr1
+         $condition1,['configid','desc'],$fieldArr1
       );
 
       // 获取是否有待处理的工单
@@ -79,7 +82,7 @@ class WifiController extends Controller
       // 获取是否同意协议
       $condition3[] = [ 'user_id' , '=' , $user_id ];
       $infos[ 'wifi_is_agree' ] = (Int)WifiUserAgreementsDao::getWifiUserAgreementsStatistics ( $condition3 ,'count');
-
+ 
       return JsonBuilder::Success ( $infos , '校园网首页' );
    }
 
@@ -126,7 +129,7 @@ class WifiController extends Controller
       // 获取已存在的用户数据
       $condition[] = [ 'user_id' , '=' , $user->id ];
       $getWifiUserTimesOneInfo = WifiUserTimesDao::getWifiUserTimesOneInfo (
-         $condition , [ [ 'timesid' , 'desc' ] ] , [ 'timesid' ]
+         $condition , [ 'timesid' , 'desc' ] , [ 'timesid' ]
       );
       $timesid = $getWifiUserTimesOneInfo ? $getWifiUserTimesOneInfo->timesid : 0;
 
@@ -144,4 +147,5 @@ class WifiController extends Controller
          return JsonBuilder::Error ( '操作失败,请稍后重试' );
       }
    }
+
 }

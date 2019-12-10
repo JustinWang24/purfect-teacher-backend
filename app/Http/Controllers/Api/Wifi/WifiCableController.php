@@ -38,7 +38,7 @@ class WifiCableController extends Controller
       $condition[] = [ 'user_id' , '=' , $user->id ];
       $condition[] = [ 'status' , '=' , 1 ];
       $getWifiUserTimesOneInfo = WifiUserTimesDao::getWifiUserTimesOneInfo (
-         $condition , [ [ 'timesid' , 'desc' ] ] , [ 'timesid' , 'user_wifi_time' ]
+         $condition , [ 'timesid' , 'desc' ] , [ 'timesid' , 'user_wifi_time' ]
       );
 
       // 用户有线有效期时间
@@ -53,7 +53,7 @@ class WifiCableController extends Controller
       $condition1[] = [ 'status' , '=' , 1 ];
 
       $getWifiConfigsOneInfo = WifiConfigsDao::getWifiConfigsOneInfo (
-         $condition1 , [ [ 'configid' , 'desc' ] ] , [ 'config_port_count' ]
+         $condition1 , [ 'configid' , 'desc' ] , [ 'config_port_count' ]
       );
 
       $infos['config_port_count'] = 0;
@@ -71,7 +71,7 @@ class WifiCableController extends Controller
          'addressfourid_name','address_port'
       ];
       $getWifiOrdersLocationsOneInfo = WifiOrdersLocationsDao::getWifiOrdersLocationsOneInfo (
-         $condition2 , [ [ 'locationid' , 'desc' ] ] , $fieldArr1
+         $condition2 , [ 'locationid' , 'desc' ] , $fieldArr1
       );
       $infos[ 'address_info' ] = $getWifiOrdersLocationsOneInfo ? $getWifiOrdersLocationsOneInfo->toArray () : [];
 
@@ -94,7 +94,7 @@ class WifiCableController extends Controller
       // 获取的字段信息
       $fieldArr = [ 'id as addresstwoid' , 'building_id as addressoneid' , 'name' ];
       $getSchoolAddressListInfo = RoomsDao::getRoomsListInfo (
-         $condition , [ [ 'id' , 'asc' ] ] , [ 'page' => 1 , 'limit' => 800 ] , $fieldArr
+         $condition , [ 'id' , 'asc' ] , [ 'page' => 1 , 'limit' => 800 ] , $fieldArr
       );
 
       $infos = $getSchoolAddressListInfo ? $getSchoolAddressListInfo->toArray ()[ 'data' ] : [];
@@ -125,7 +125,7 @@ class WifiCableController extends Controller
 
       // 获取的字段信息
       $getWifiOrdersLocationsListInfo = WifiOrdersLocationsDao::getWifiOrdersLocationsListInfo (
-         $condition , [ [ 'address_port' , 'asc' ] ] , [ 'page' => 1 , 'limit' => 10 ] , [ 'address_port' ]
+         $condition , [ 'address_port' , 'asc' ] , [ 'page' => 1 , 'limit' => 10 ] , [ 'address_port' ]
       );
       $infos = $getWifiOrdersLocationsListInfo ? $getWifiOrdersLocationsListInfo->toArray ()[ 'data' ] : [];
 
@@ -153,7 +153,7 @@ class WifiCableController extends Controller
       $condition[] = [ 'status' , '=' , 1 ];
 
       $getWifiUserTimesOneInfo = WifiUserTimesDao::getWifiUserTimesOneInfo (
-         $condition , [ [ 'timesid' , 'desc' ] ] , [ 'timesid' , 'user_wifi_time','user_cable_etime' ]
+         $condition , [ 'timesid' , 'desc' ] , [ 'timesid' , 'user_wifi_time','user_cable_etime' ]
       );
 
       // 未开通wifi无线不能申请有线
@@ -172,7 +172,7 @@ class WifiCableController extends Controller
       $condition1[]    = [ 'campus_id' , '=' , $user->gradeUser->campus_id ];
       $condition1[]    = [ 'mode' , '=' , 2 ];
       $condition1[]    = [ 'status' , '=' , 1 ];
-      $getWifisOneInfo = WifisDao::getWifisOneInfo ( $condition1 , [ [ 'wifiid' , 'desc' ] ] , [ '*' ] );
+      $getWifisOneInfo = WifisDao::getWifisOneInfo ( $condition1 , [ 'wifiid' , 'desc' ] , [ '*' ] );
       if ( empty( $getWifisOneInfo ) ) return JsonBuilder::Error ( '产品不存在' );
 
       // 表单要插入的字段信息

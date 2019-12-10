@@ -39,7 +39,7 @@ class wifiIssueController extends Controller
 
       $infos = WifiIssueTypesDao::getWifiIssueTypesListInfo (
 
-         $condition , [ [ 'typeid' , 'asc' ] ] , [ 'page' => 1 , 'limit' => 500 ] , $fieldArr
+         $condition , [ 'typeid' , 'asc' ] , [ 'page' => 1 , 'limit' => 500 ] , $fieldArr
 
       )->toArray()['data'];
 
@@ -129,7 +129,7 @@ class wifiIssueController extends Controller
       
 	  // 获取报修数据
       $infos = WifiIssuesDao::getWifiIssuesListInfo (
-         $condition,[['issueid','desc']],['page'=>$param['page'],'limit'=>10],$fieldsArr
+         $condition,['issueid','desc'],['page'=>$param['page'],'limit'=>10],$fieldsArr
       )->toArray()['data'];
 
       // 处理数据
@@ -164,7 +164,7 @@ class wifiIssueController extends Controller
       $condition[] = [ 'user_id' , '=' , $authUserInfo[ 'user_id' ] ];
 
       // 获取数据
-      $infos = WifiIssuesDao::getWifiIssuesOneInfo ( $condition,[['issueid','desc']],['*']);
+      $infos = WifiIssuesDao::getWifiIssuesOneInfo ( $condition,['issueid','desc'],['*']);
       $infos = $infos != null ? $infos->toArray() : null;
 
       if ( $infos )
@@ -206,7 +206,7 @@ class wifiIssueController extends Controller
       // 验证我是否有权限操作
       $condition[] = [ 'user_id' , '=' , $authUserInfo[ 'user_id' ] ];
       $condition[] = [ 'issueid' , '=' , $param[ 'issueid' ] ];
-      $getWifiIssuesOneInfo = WifiIssuesDao::getWifiIssuesOneInfo ( $condition , [ [ 'issueid' , 'desc' ] ] , [ '*' ] );
+      $getWifiIssuesOneInfo = WifiIssuesDao::getWifiIssuesOneInfo ( $condition , [ 'issueid' , 'desc' ] , [ '*' ] );
       if ( !$getWifiIssuesOneInfo ) return JsonBuilder::Error ( '您没有权限评论此信息' );
       if ( $getWifiIssuesOneInfo['is_comment'] == 2 ) return JsonBuilder::Error ( '您已评价' );
 
