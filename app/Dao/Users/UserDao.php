@@ -6,6 +6,7 @@
 namespace App\Dao\Users;
 use App\Dao\Teachers\TeacherProfileDao;
 use App\Models\School;
+use App\Models\Teachers\Teacher;
 use App\Models\Users\GradeUser;
 use App\User;
 use App\Models\Acl\Role;
@@ -58,6 +59,22 @@ class UserDao
      */
     public function getUserById($id){
         return User::find($id);
+    }
+
+    /**
+     * @param $id
+     * @return Teacher|null
+     */
+    public function getTeacherById($id){
+        return Teacher::find($id);
+    }
+
+    /**
+     * @param $uuid
+     * @return Teacher|null
+     */
+    public function getTeacherByUuid($uuid){
+        return Teacher::where('uuid',$uuid)->first();
     }
 
 	/**
@@ -244,5 +261,28 @@ class UserDao
         if(!empty($data)){
             return User::where('id',$userId)->update($data);
         }
+    }
+
+    /**
+     * excel导入用户时使用
+     * @param $mobile
+     * @param $name
+     * @param $email
+     * @param $passwordInPlainText
+     * @return mixed
+     * @throws \Exception
+     */
+    public function importUser($mobile,$name,$passwordInPlainText)
+    {
+        $data = [
+            'mobile'=>$mobile,
+            'name'=>$name,
+            'api_token'=>Uuid::uuid4()->toString(),
+            'uuid'=>Uuid::uuid4()->toString(),
+            'password'=>Hash::make($passwordInPlainText),
+            'status'=>User::STATUS_WAITING_FOR_MOBILE_TO_BE_VERIFIED,
+            'type'=>Role::REGISTERED_USER,
+        ];
+        return $user = User::create($data);
     }
 }

@@ -1,15 +1,23 @@
 <?php
 
 namespace App\Models\Teachers;
+use App\Models\Teachers\Performance\TeacherPerformance;
+use App\User;
+use App\Utils\Pipeline\IFlow;
 
-
-use Illuminate\Database\Eloquent\Model;
-class Teacher extends Model
+class Teacher extends User
 {
-    public  function  teacherProfile()
-    {
-        $this->hasOne(teacherProfile::class);
+    protected $table = 'users';
+
+    /**
+     * 老师需要使用的流程的类型集合
+     * @return array
+     */
+    public static function FlowTypes(){
+        return [IFlow::TYPE_OFFICE,IFlow::TYPE_TEACHER_ONLY];
     }
 
-
+    public function performances(){
+        return $this->hasMany(TeacherPerformance::class, 'user_id')->orderBy('year','desc');
+    }
 }

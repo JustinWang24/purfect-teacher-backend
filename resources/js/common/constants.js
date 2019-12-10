@@ -122,11 +122,29 @@ export const Constants = {
         },
         ORGANIZATION: {
             LOAD_PARENTS: '/school_manager/organizations/load-parent',
+            LOAD_CHILDREN: '/school_manager/organizations/load-children',
             SAVE: '/school_manager/organizations/save',
             LOAD: '/school_manager/organizations/load',
             DELETE: '/school_manager/organizations/delete',
             ADD_TO_ORG: '/school_manager/organizations/add-member',
             DELETE_FROM_ORG: '/school_manager/organizations/remove-member',
+        },
+        FLOW: {
+            SAVE: '/school_manager/pipeline/flows/save-flow',
+            SAVE_NODE: '/school_manager/pipeline/flows/save-node',
+            UPDATE_NODE: '/school_manager/pipeline/flows/update-node',
+            LOAD_FLOW_NODES: '/school_manager/pipeline/flows/load-nodes',
+            DELETE_FLOW: '/school_manager/pipeline/flows/delete-flow',
+            DELETE_NODE: '/school_manager/pipeline/flows/delete-node',
+            DELETE_NODE_ATTACHMENT: '/school_manager/pipeline/flows/delete-node-attachment',
+            // Action相关
+            OPEN: '/api/pipeline/flow/open', // 打开流程
+            START_BY_ME: '/api/pipeline/flows/started-by-me', // 获取我的流程
+            WAITING_FOR_ME: '/api/pipeline/flows/waiting-for-me', // 获取等待我处理的流程
+            START: '/api/pipeline/flow/start', // 流程开始
+            PROCESS: '/api/pipeline/flow/process', // 同意流程向下一步
+            RESUME: '/api/pipeline/flow/resume', // 流程驳回
+            WATCH: '/api/pipeline/flow/watch', // 查看一个流程的最新状态
         }
     },
     YEARS: ['N.A','一年级','二年级','三年级','四年级','五年级','六年级'],

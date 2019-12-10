@@ -328,9 +328,13 @@ Route::prefix('students')->middleware('auth:api')->group(function () {
     // 申请类型
     Route::get('applications-type','Api\Application\ApplicationController@applicationTypeList')
             ->name('api.students.applications-type');
-});
-Route::prefix('questionnaire')->middleware('auth:api')->group(function () {
 
+    // 根据用户查询申请列表
+    Route::get('applications-list','Api\Application\ApplicationController@applicationList')
+            ->name('api.students.applications-list');
+});
+
+Route::prefix('questionnaire')->middleware('auth:api')->group(function () {
     // 问卷调查列表
     Route::get('/index', 'Api\Questionnaire\QuestionnaireController@index')
         ->name('api.questionnaire.index');
@@ -338,8 +342,75 @@ Route::prefix('questionnaire')->middleware('auth:api')->group(function () {
     Route::get('/vote/{id}', 'Api\Questionnaire\QuestionnaireController@vote')
         ->name('api.questionnaire.vote');
 });
-//最新版本号
+
+// 最新版本号
 Route::prefix('version')->group(function () {
     Route::get('/index', 'Api\Version\VersionController@index')->name('api.version.index');
+});
 
+// APP 首页接口
+Route::prefix('home')->middleware('auth:api')->group(function () {
+    Route::post('/getHomePageInfo', 'Api\Home\IndexController@index')->name('api.home.index');
+});
+
+// 消息通知
+Route::prefix('notice')->middleware('auth:api')->group(function () {
+    Route::post('/notice-list', 'Api\Notice\NoticeController@getNotice')
+        ->name('api.notice.list');
+
+    Route::post('/notice-info', 'Api\Notice\NoticeController@noticeInfo')
+    ->name('api.notice.info');
+
+});
+
+// APP banner 接口
+Route::prefix('banner')->middleware('auth:api')->group(function () {
+    Route::post('/getBanner', 'Api\Home\IndexController@banner')->name('api.banner.index');
+});
+
+// APP 生成二维码 接口
+Route::prefix('QrCode')->middleware('auth:api')->group(function () {
+    Route::post('/getQrCode', 'Api\QrCode\IndexController@generate')->name('api.generate.qr.code');
+});
+
+Route::prefix('account')->middleware('auth:api')->group(function () {
+    Route::post('/getAccountCore', 'Api\Account\IndexController@index')->name('api.account.core');
+});
+
+Route::prefix('pipeline')->middleware('auth:api')->group(function (){
+    /**
+     * 用户调取可用的流程集合的接口
+     */
+    Route::post('/flows/my', 'Api\Pipeline\FlowsController@my')
+        ->name('api.pipeline.flows.my');
+
+    /**
+     * 用户调取自己发起的申请的接口
+     */
+    Route::post('/flows/started-by-me', 'Api\Pipeline\FlowsController@started_by_me')
+        ->name('api.pipeline.flows.started-by-me');
+
+    /**
+     * 用户调取正在等待自己审核的申请
+     */
+    Route::post('/flows/waiting-for-me', 'Api\Pipeline\FlowsController@waiting_for_me')
+        ->name('api.pipeline.flows.waiting-for-me');
+
+    /**
+     * 用户调取可用的流程集合的接口
+     */
+    Route::post('/flow/open', 'Api\Pipeline\FlowsController@open')
+        ->name('api.pipeline.flow.open');
+
+    Route::post('/flow/start', 'Api\Pipeline\FlowsController@start')
+        ->name('api.pipeline.flow.start');
+
+    Route::post('/flow/process', 'Api\Pipeline\FlowsController@process')
+        ->name('api.pipeline.flow.process');
+
+    Route::post('/flow/resume', 'Api\Pipeline\FlowsController@resume')
+        ->name('api.pipeline.flow.resume');
+
+    Route::post('/flow/watch', 'Api\Pipeline\FlowsController@watch')
+        ->name('api.pipeline.flow.watch');
 });

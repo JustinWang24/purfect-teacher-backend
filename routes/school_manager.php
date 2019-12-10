@@ -14,6 +14,10 @@ Route::prefix('school_manager')->group(function () {
         ->name('school_manager.school.organization-manager'); // 显示学校的组织架构
     Route::post('organizations/load-parent', 'SchoolsController@load_parent')
         ->name('school_manager.organizations.load-parent'); // 加载某一级别机构的上级
+
+    Route::post('organizations/load-children', 'SchoolsController@load_children')
+        ->name('school_manager.organizations.load-children'); // 加载某一级别机构的下级
+
     Route::post('organizations/save', 'SchoolsController@save_organization')
         ->name('school_manager.organizations.save'); // 保存学校的组织架构
     Route::post('organizations/load', 'SchoolsController@load_organization')
@@ -361,9 +365,51 @@ Route::prefix('school_manager')->group(function () {
     Route::get('attendance/person/search/{id}', 'AttendanceSchedulesController@searchPerson')
         ->name('school_manager.attendance.person.search');
 
+    // 学校的基本配置
+    Route::prefix('configs')->group(function(){
+        Route::get('performance-teacher','Configs\PerformancesController@teachers')
+            ->name('school_manger.configs.performance-teacher');
+        Route::get('performance-teacher-delete','Configs\PerformancesController@teacher_delete')
+            ->name('school_manger.configs.performance-teacher-delete');
+        Route::post('performance-teacher-save','Configs\PerformancesController@teacher_save')
+            ->name('school_manger.configs.performance-teacher-save');
+    });
 
+    // 教师档案管理
+    Route::prefix('teachers')->group(function(){
+        Route::get('edit-profile','Teachers\ProfilesController@edit')
+            ->name('school_manager.teachers.edit-profile');
+        Route::get('manage-performance','Teachers\ProfilesController@manage_performance')
+            ->name('school_manager.teachers.manage-performance');
+        Route::post('manage-performance-save','Teachers\ProfilesController@manage_performance_save')
+            ->name('school_manager.teachers.manage-performance-save');
+    });
 
+    // 工作流程管理
+    Route::prefix('pipeline')->group(function(){
+        Route::get('flows/manager','Pipeline\FlowsController@manager')
+            ->name('school_manager.pipeline.flows-manager');
 
+        Route::post('flows/save-flow','Pipeline\FlowsController@save_flow')
+            ->name('school_manager.pipeline.save-flow');
 
+        Route::post('flows/load-nodes','Pipeline\FlowsController@load_nodes')
+            ->name('school_manager.pipeline.load-nodes');
+
+        Route::post('flows/delete-flow','Pipeline\FlowsController@delete_flow')
+            ->name('school_manager.pipeline.delete-flow');
+
+        Route::post('flows/delete-node','Pipeline\FlowsController@delete_node')
+            ->name('school_manager.pipeline.delete-node');
+
+        Route::post('flows/delete-node-attachment','Pipeline\FlowsController@delete_node_attachment')
+            ->name('school_manager.pipeline.delete-node-attachment');
+
+        Route::post('flows/save-node','Pipeline\FlowsController@save_node')
+            ->name('school_manager.pipeline.save-node');
+
+        Route::post('flows/update-node','Pipeline\FlowsController@update_node')
+            ->name('school_manager.pipeline.update-node');
+    });
 });
 
