@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Banner\BannerRequest;
 use App\Models\Banner\Banner;
 use App\Utils\FlashMessageBuilder;
+use App\Utils\JsonBuilder;
 
 class BannerController extends Controller
 {
@@ -28,12 +29,10 @@ class BannerController extends Controller
     /**
      * 保持数据
      * @param BannerRequest $request
-     * @return \Illuminate\Http\RedirectResponse
+     * @return string
      */
     public function save(BannerRequest $request)
     {
-        // todo :: 上传图片需要传到云盘;
-
         $schoolId = $request->getSchoolId();
 
         $data = $request->get('banner');
@@ -48,55 +47,31 @@ class BannerController extends Controller
             $result = $dao->add($data);
         }
 
-        if ($result) {
-            FlashMessageBuilder::Push($request, FlashMessageBuilder::SUCCESS,'保存成功');
-        } else {
-            FlashMessageBuilder::Push($request, FlashMessageBuilder::DANGER,'保存失败');
-        }
+        return $result ? JsonBuilder::Success() : JsonBuilder::Error('保存失败');
+    }
 
+    /**
+     * @param BannerRequest $request
+     * @return string
+     */
+    public function load(BannerRequest $request){
+        $banner = (new BannerDao())->getBannerById($request->get('id'));
+        return $banner ? JsonBuilder::Success(['banner'=>$banner]) : JsonBuilder::Error('找不到指定的资源位');
+    }
+
+    /**
+     * @param BannerRequest $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function delete(BannerRequest $request){
+        $id = $request->get('id');
+        $dao = new BannerDao;
+        if($dao->delete($id)){
+            FlashMessageBuilder::Push($request,'success','删除成功');
+        }
+        else{
+            FlashMessageBuilder::Push($request,'danger','删除失败');
+        }
         return redirect()->route('school_manager.banner.list');
     }
-
-
-    /**
-     * 添加页面展示
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
-     */
-    public function add()
-    {
-        $posit = Banner::allPosit();
-        $type = Banner::allType();
-        $this->dataForView['posit'] = $posit;
-        $this->dataForView['type']  = $type;
-        $this->dataForView['js'][] = 'school_manager.banner.custom_js';
-        return view('school_manager.banner.add', $this->dataForView);
-    }
-
-
-    /**
-     * 修改页面展示
-     * @param BannerRequest $request
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
-     */
-    public function edit(BannerRequest $request)
-    {
-
-        $id = $request->get('id');
-
-        $dao = new BannerDao;
-
-        $data = $dao->getBannerById($id);
-
-        $posit = Banner::allPosit();
-        $type = Banner::allType();
-
-        $this->dataForView['data']  = $data;
-
-        $this->dataForView['posit'] = $posit;
-        $this->dataForView['type']  = $type;
-        $this->dataForView['js'][]  = 'school_manager.banner.custom_js';
-
-        return view('school_manager.banner.edit', $this->dataForView);
-    }
-
 }

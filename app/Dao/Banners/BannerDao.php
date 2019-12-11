@@ -44,6 +44,10 @@ class BannerDao
         return Banner::create($data);
     }
 
+    public function delete($id)
+    {
+        return Banner::where('id',$id)->delete();
+    }
 
     /**
      * 修改
