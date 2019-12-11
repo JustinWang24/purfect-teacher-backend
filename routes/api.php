@@ -217,16 +217,16 @@ Route::prefix('campus')->middleware('auth:api')->group(function () {
 
 Route::prefix('course')->middleware('auth:api')->group(function () {
      // 选修课列表
-     Route::get('/elective/list','Api\Course\ElectiveController@index')
+     Route::post('/elective/list','Api\Course\ElectiveController@index')
         ->name('api.course.elective.list');
      // 选课详情
-     Route::get('/elective/details','Api\Course\ElectiveController@details')
+     Route::post('/elective/details','Api\Course\ElectiveController@details')
         ->name('api.course.elective.details');
      // 选课报名操作
-     Route::get('/elective/enroll/{id}','Api\Course\ElectiveController@enroll')
+     Route::post('/elective/enroll/{id}','Api\Course\ElectiveController@enroll')
         ->name('api.course.elective.enroll');
      // 选课查询报名结果操作
-     Route::get('/elective/getresult/{id}','Api\Course\ElectiveController@getEnrollResult')
+     Route::post('/elective/getresult/{id}','Api\Course\ElectiveController@getEnrollResult')
         ->name('api.course.elective.getresult');
 });
 
@@ -423,13 +423,13 @@ Route::prefix('pipeline')->middleware('auth:api')->group(function (){
 
 Route::prefix('notification')->middleware('auth:api')->group(function () {
     // 消息中心
-    Route::get('/list','Api\Notice\SystemNotificationController@index')
+    Route::post('/list','Api\Notice\SystemNotificationController@index')
         ->name('api.notification.list');
 });
 
 Route::prefix('attendance')->middleware('auth:api')->group(function () {
     // 消息中心
-    Route::get('/list','Api\AttendanceSchedule\AttendanceScheduleController@display')
+    Route::post('/list','Api\AttendanceSchedule\AttendanceScheduleController@display')
         ->name('api.attendance.list');
 });
 
