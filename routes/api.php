@@ -360,7 +360,6 @@ Route::prefix('notice')->middleware('auth:api')->group(function () {
 
     Route::post('/notice-info', 'Api\Notice\NoticeController@noticeInfo')
     ->name('api.notice.info');
-
 });
 
 // APP banner 接口

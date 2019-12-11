@@ -27,14 +27,16 @@ if(!function_exists('pageReturn')){
     /**
      * 分页api统一返回方法
      * @param $result
+     * @param $total
+     * @param $page
      * @return array
      */
-    function pageReturn($result){
+    function pageReturn($result, $total , $page = 1){
         $data = [
-            'currentPage' => $result->currentPage(),
-            'lastPage'    => $result->lastPage(),
-            'total'       => $result->total(),
-            'list'        =>$result->getCollection()
+            'currentPage' => $page,
+            'lastPage'    => null,
+            'total'       => $total,
+            'list'        => $result
         ];
 
         return $data;

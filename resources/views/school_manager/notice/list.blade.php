@@ -23,6 +23,14 @@ use App\Utils\UI\Button;
                         <el-input placeholder="必填: 标题" v-model="notice.title"></el-input>
                     </el-form-item>
 
+                    <el-form-item label="发布">
+                        <el-switch
+                                v-model="notice.status"
+                                active-text="发布"
+                                inactive-text="暂不发布">
+                        </el-switch>
+                    </el-form-item>
+
                     <el-form-item label="文字说明">
                         <el-input rows="5" placeholder="选填: 通知内容" type="textarea" v-model="notice.content"></el-input>
                     </el-form-item>

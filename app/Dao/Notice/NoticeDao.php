@@ -93,27 +93,27 @@ class NoticeDao
     /**
      * @param $type
      * @param $schoolId
-     * @return mixed
+     * @param $pageNumber
+     * @param $pageSize
+     * @return array
      */
-    public function getNotice($type, $schoolId) {
+    public function getNotice($type, $schoolId, $pageNumber = 0, $pageSize = ConfigurationTool::DEFAULT_PAGE_SIZE) {
         $field = ['id', 'title', 'type', 'created_at', 'inspect_id', 'image'];
         $map = ['type'=>$type, 'school_id'=>$schoolId, 'status'=>Notice::STATUS_PUBLISH];
-        $notice = Notice::where($map)->select($field)
-            ->paginate(ConfigurationTool::DEFAULT_PAGE_SIZE);
-        foreach ($notice as $key => $val) {
+        $notices = Notice::where($map)->select($field)->with('attachments')
+            ->skip($pageSize * ($pageNumber - 1))
+            ->take($pageSize)
+            ->get();
+        $total = Notice::where($map)->select($field)->count();
 
-            // 公告封面图
-            if($type == Notice::TYPE_NOTICE) {
-                $val->image_media;
-            }
-            // 检查标签
-            if($type == Notice::TYPE_INSPECTION) {
-                $val->inspect->name;
-            }
-            unset($val['image']);
-            unset($val['inspect_id']);
+        $data = [];
+        foreach ($notices as $notice) {
+            $notice->image_media = $notice->image ? asset($notice->image) : null;
         }
-        return $notice;
+        return [
+            'notices'=>$data,
+            'total'=>$total
+        ];
     }
 
     public function deleteNoticeMedia($id){

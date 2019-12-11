@@ -14,20 +14,26 @@ class NoticeController extends Controller
 {
 
     /**
-     * 获取通知
+     * 前端 APP 获取通知列表
      * @param NoticeRequest $request
      * @return string
      */
     public function getNotice(NoticeRequest $request) {
         $type = $request->getType();
         $dao = new NoticeDao();
-        $schoolId = 1;
-        $result = $dao->getNotice($type, $schoolId);
-        $data = pageReturn($result);
+        $schoolId = $request->user()->getSchoolId();
+        $pageNumber = $request->get('page',0);
+        $result = $dao->getNotice($type, $schoolId, $pageNumber);
+        $data = pageReturn($result['notices'], $pageNumber, $result['total']);
+
         return JsonBuilder::Success($data);
     }
 
-
+    /**
+     * 消息通知前端接口
+     * @param NoticeRequest $request
+     * @return string
+     */
     public function noticeInfo(NoticeRequest $request) {
         $noticeId = $request->getNoticeId();
         $dao = new NoticeDao();
@@ -49,6 +55,5 @@ class NoticeController extends Controller
 
         $data = ['notice'=>$result];
         return JsonBuilder::Success($data);
-
     }
 }

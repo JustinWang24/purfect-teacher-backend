@@ -7,7 +7,6 @@ use App\Http\Requests\MyStandardRequest;
 
 class NoticeRequest extends MyStandardRequest
 {
-
     public function getType() {
         return $this->get('type', Notice::TYPE_NOTIFY);
     }
