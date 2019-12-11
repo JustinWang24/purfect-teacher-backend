@@ -5,6 +5,7 @@ namespace App\Dao\Banners;
 
 use App\Models\Banner\Banner;
 use App\Utils\Misc\ConfigurationTool;
+use Illuminate\Database\Eloquent\Collection;
 
 class BannerDao
 {
@@ -64,14 +65,17 @@ class BannerDao
      * 根据学校 位置 获取banner
      * @param $schoolId
      * @param $posit
-     * @return mixed
+     * @param $publicOnly : 为真表示只能登陆可看
+     * @return Collection
      */
-    public function getBannerBySchoolIdAndPosit($schoolId, $posit)
+    public function getBannerBySchoolIdAndPosit($schoolId, $posit, $publicOnly = false)
     {
         $where = ['school_id' => $schoolId, 'posit' => $posit, 'status' => Banner::STATUS_OPEN];
+        if($publicOnly){
+            $where['public'] = true;
+        }
        return Banner::where($where)
-           ->select('id', 'type', 'title', 'image_url')
-           ->orderBy('posit','asc')
+           ->select(['id', 'type', 'title', 'image_url','content','external'])
            ->orderBy('sort','asc')
            ->get();
     }
