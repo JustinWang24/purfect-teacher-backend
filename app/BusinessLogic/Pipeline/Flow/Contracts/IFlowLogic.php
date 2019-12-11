@@ -59,4 +59,12 @@ interface IFlowLogic
      * @return IMessageBag
      */
     public function reject(IAction $currentAction, $actionData);
+
+    /**
+     * 终止流程
+     * @param IAction $currentAction
+     * @param $actionData
+     * @return IMessageBag
+     */
+    public function terminate(IAction $currentAction, $actionData);
 }

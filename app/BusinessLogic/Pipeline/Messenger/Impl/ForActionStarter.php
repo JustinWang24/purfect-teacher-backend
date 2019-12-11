@@ -23,12 +23,12 @@ class ForActionStarter extends AbstractMessenger
     /**
      * ForActionStarter constructor.
      * @param IFlow $flow
-     * @param INode|null $node
+     * @param INode|null $currentNode
      * @param User $user
      */
-    public function __construct(IFlow $flow, $node, User $user)
+    public function __construct(IFlow $flow, $currentNode, User $user)
     {
-        parent::__construct($flow, $node, $user);
+        parent::__construct($flow, $currentNode, $user);
     }
 
     /**
@@ -51,27 +51,31 @@ class ForActionStarter extends AbstractMessenger
             $nextMove = route('pipeline.flow-view-history',['action_id'=>$action->id, 'user_flow_id'=>$action->getTransactionId()]);
 
             if($this->node){
-                // 表示还有后面的步骤
+
                 if($this->node->isHead()){
                     $content .= '成功发起' . $flowName . '流程, 目前进入' . $this->node->getNext()->getName() . '阶段';
                 }
                 else{
-                    if($action->isSuccess())
-                        $content .= '发起的' . $flowName . '流程, 已经通过了' . $this->node->getName() . '阶段, 目前进入' . $this->node->getNext()->getName().'阶段';
-                    else
-                        $content .= '发起的' . $flowName . '流程在' . $this->node->getName() . '阶段被'.$this->userOfLastAction->getName().'驳回, 目前在'. $this->node->getPrev()->getName(). '阶段从新处理';
-                }
-            }
-            else{
-                // 表示是最后一步了
-                if($userFlow->isDone()){
-                    $content .= '发起的' . $flowName . '流程已经获得批准!';
-                }
-                elseif ($userFlow->isTerminated()){
-                    $content .= '发起的' . $flowName . '流程被否决了';
-                }
-                elseif ($action->isSuccess()){
-                    $content .= '发起的' . $flowName . '流程被退回到' . $action->getNode()->getPrev()->getName().'阶段';
+                    // 这个时候, 传入的 node, 是当前步骤
+                    if($this->node->getNext()){
+                        // 表示还有后面的步骤
+                        if($action->isSuccess())
+                            $content .= '发起的' . $flowName . '流程, 已经通过了' . $this->node->getName() . '阶段, 目前进入' . $this->node->getNext()->getName().'阶段';
+                        else
+                            $content .= '发起的' . $flowName . '流程在' . $this->node->getName() . '阶段被'.$this->userOfLastAction->getName().'驳回, 目前在'. $this->node->getPrev()->getName(). '阶段从新处理';
+                    }
+                    else{
+                        // 已经是最后一步了
+                        if($userFlow->isDone()){
+                            $content .= '发起的' . $flowName . '流程已经获得批准!';
+                        }
+                        elseif ($userFlow->isTerminated()){
+                            $content .= '发起的' . $flowName . '流程被否决了';
+                        }
+                        elseif (!$action->isSuccess()){
+                            $content .= '发起的' . $flowName . '流程被退回到' . $this->node->getPrev()->getName().'阶段';
+                        }
+                    }
                 }
             }
 

@@ -66,14 +66,12 @@ class ConferenceController extends Controller
     public function create(ConferenceRequest $request) {
         $conferenceData = $request->all();
         $conferenceData['school_id'] = $request->getSchoolId();
-
         $conferenceDao = new ConferenceDao();
         $return = $conferenceDao->addConferenceFlow($conferenceData);
-
         if($return->isSuccess()) {
-            return JsonBuilder::Success($return['msg']);
+            return JsonBuilder::Success($return->getMessage());
         } else {
-            return JsonBuilder::Error($return['msg']);
+            return JsonBuilder::Error($return->getMessage());
         }
 
     }

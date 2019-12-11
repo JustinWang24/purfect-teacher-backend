@@ -54,7 +54,9 @@ class FlowsController extends Controller
                 $action->result === IAction::RESULT_PENDING && $action->user_id === $request->user()->id;
         }
 
+        $this->dataForView['node'] = $action->node;
         $this->dataForView['action'] = $action;
+        $this->dataForView['userFlow'] = $action->userFlow;
 
         $this->dataForView['userFlowId'] = $request->getUserFlowId();
         return view('pipeline.flows.view_history',$this->dataForView);

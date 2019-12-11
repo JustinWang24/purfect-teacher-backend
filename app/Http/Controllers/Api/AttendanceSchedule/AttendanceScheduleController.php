@@ -20,9 +20,11 @@ class AttendanceScheduleController extends Controller
         $schoolId = $user->getSchoolId();
         $dao = new AttendanceSchedulesDao();
 
-        $tasks = $dao->getAllTaskForSchool($schoolId, $cycle='week', $current=0);
+        $current =  $request->input('week', 0);;
+        $tasks = $dao->getAllTaskForSchool($schoolId, 'week', $current);
 
-        $time       = $dao->getTimes();
+        $time       = $dao->getTimes($current);
+        $time1       = $dao->getTimes($current,'month');
         $displayArr = [];
         foreach ($tasks as $key=> $task)
         {
@@ -40,6 +42,7 @@ class AttendanceScheduleController extends Controller
                     $tmp['userName'] = $tmpUser->name;
                     $tmp['department'] = $tmpUser->department()->first()->name;
                     $tmp['major'] = $tmpUser->major()->first()->name;
+                    $tmp['mobile'] = $tmpUser->user()->first()->mobile;
                 }
                 $week = $schedule->week==0?7:$schedule->week;
                 $data[$week][$schedule->time_slot_id][] = $tmp;
@@ -55,8 +58,10 @@ class AttendanceScheduleController extends Controller
                                 $arr['teacher'][$k]['name']= $user['userName'];
                                 $arr['teacher'][$k]['department']=$user['department'];
                                 $arr['teacher'][$k]['major']=$user['major'];
+                                $arr['teacher'][$k]['mobile']=$user['mobile'];
                             }
                             $arr['task'] = $taskObj->title;
+                            $arr['detail'] = $taskObj->content;
                             $displayArr[] = $arr;
                         } else {
                             continue;
@@ -68,5 +73,11 @@ class AttendanceScheduleController extends Controller
             }
         }
         return JsonBuilder::Success($displayArr);
+    }
+    public function detail(Request $request, $schedultId)
+    {
+        $user = $request->user();
+        $schoolId = $user->getSchoolId();
+        $dao = new AttendanceSchedulesDao();
     }
 }

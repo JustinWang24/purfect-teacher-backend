@@ -2,6 +2,7 @@
 
 namespace App\Models\Teachers;
 
+use App\Models\NetworkDisk\Media;
 use Illuminate\Database\Eloquent\Model;
 
 class ConferencesMedia extends Model
@@ -13,10 +14,12 @@ class ConferencesMedia extends Model
         'conference_id','media_id'
     ];
 
+    public $media_field = ['url'];
+
 
     public function media()
     {
-        return $this->belongsTo('', 'foreign_key', 'other_key');
+        return $this->belongsTo(Media::class)->select($this->media_field);
     }
 
 }

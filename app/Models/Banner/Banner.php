@@ -7,7 +7,7 @@ class Banner extends Model
 {
     protected $fillable = [
         'school_id', 'campus_id', 'posit', 'type', 'sort',
-        'title', 'image_url', 'content', 'external','public','clicks'
+        'title', 'image_url', 'content', 'external','public','clicks','status'
     ];
 
     // 展示位置
@@ -56,7 +56,7 @@ class Banner extends Model
     const STATUS_CLOSE_TEXT = '不显示';
 
     public $casts = [
-        'public'=>'boolean'
+        'public'=>'boolean','status'=>'boolean'
     ];
 
     public static function allPosit(){
