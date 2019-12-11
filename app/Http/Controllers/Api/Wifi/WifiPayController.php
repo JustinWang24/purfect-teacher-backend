@@ -7,8 +7,10 @@
  */
 namespace App\Http\Controllers\Api\Wifi;
 
+use App\Models\Wifi\Backstage\WifiOrders;
 use Psy\Util\Json;
 use App\Utils\JsonBuilder;
+use Illuminate\Support\Facades\Cache; // 缓存
 use App\Http\Requests\Api\Wifi\WifiPayRequest;
 use App\Http\Controllers\Controller;
 
@@ -43,7 +45,7 @@ class WifiPayController extends Controller
 
       // wifi产品列表
       $condition[] = [ 'campus_id' , '=' , $user->gradeUser->campus_id ];
-      $condition[] = [ 'mode' , '=' , 2 ];
+      $condition[] = [ 'mode' , '=' , 1 ];
       $condition[] = [ 'status' , '=' , 1 ];
 
       $infos[ 'wifiList' ] = WifisDao::getWifisListInfo (
@@ -91,64 +93,57 @@ class WifiPayController extends Controller
     */
    public function pay_recharge_info(WifiPayRequest $request)
    {
-      $order = [
+/*      $order = [
          'out_trade_no' => time(),
          'body' => 'subject-测试',
          'total_fee'      => '1',
       ];
       $result = Pay::wechat()->app($order);
-      var_dump($result);exit;
-
-
-
+      var_dump($result);exit;*/
       $user = $request->user ();
 
-      if ( ! intval ( $user->gradeUser->campus_id ) )
-      {
-         return JsonBuilder::Error ( '参数错误' );
-      }
+      $param = $request->only ( [ 'paymentid' ,'wifiid','number'] );
 
-      // wifi产品列表
-      $condition[] = [ 'campus_id' , '=' , $user->gradeUser->campus_id ];
-      $condition[] = [ 'mode' , '=' , 2 ];
+      // 验证wifi产品
+      $condition[] = [ 'wifiid' , '=' , $param['wifiid'] ];
+      $condition[] = [ 'mode' , '=' , 1 ];
       $condition[] = [ 'status' , '=' , 1 ];
+      $getWifisOneInfo = WifisDao::getWifisOneInfo ( $condition , [ 'wifiid' , 'asc' ] , [ '*' ] );
+      if(empty($getWifisOneInfo))  return JsonBuilder::Error ( '参数错误' );
 
-      $infos[ 'wifiList' ] = WifisDao::getWifisListInfo (
+      // 组装数据
+      $param1[ 'type' ]           	   = 1;  // 类型(1:充值,2:赠送)
+      $param1[ 'mode' ]           	   = 1;  // 类型(1:无线,2:有线)
+      $param1[ 'user_id' ]           	= $user->id; // 用户id
+      $param1[ 'trade_sn' ]         	= date('YmdHis').rand (100000,999999);
+      $param1[ 'school_id' ]         	= $user->gradeUser->school_id;
+      $param1[ 'campus_id' ]     	   = $user->gradeUser->campus_id;
+      $param1[ 'wifi_id' ]          	= $getWifisOneInfo->wifiid;
+      $param1[ 'wifi_type' ]        	= $getWifisOneInfo->wifi_type;
+      $param1[ 'wifi_name' ]        	= $getWifisOneInfo->wifi_name;
+      $param1[ 'order_days' ]       	= $getWifisOneInfo->wifi_days;
+      $param1[ 'order_number' ]     	= isset($param['number']) ? intval($param['number']) : 1;  // 数量
+      $param1[ 'order_unitprice' ]  	= $getWifisOneInfo->wifi_price;
+      $param1[ 'order_totalprice' ] 	= $getWifisOneInfo->wifi_price * $param1[ 'order_number' ]; // wifi价格
+      $param1[ 'paymentid' ]        	= $param['paymentid'];  // 支付方式
+      $param1[ 'payment_name' ]     	= WifisDao::$paymentidArr[ $param1[ 'paymentid' ] ];
 
-         $condition , [ 'wifi_sort' , 'asc' ] , [ 'page' => 1 , 'limit' => 10 ] ,
+      // 验证数据是否重复提交
+      $dataSign = sha1 ( $user->id . 'pay_recharge_info' );
 
-         [ 'wifiid' , 'wifi_name' , 'wifi_oprice' , 'wifi_price' ]
+      if ( Cache::has ( $dataSign ) ) return JsonBuilder::Error ( '您提交太快了，先歇息一下。' );
 
-      )->toArray ()[ 'data' ];
-
-      // 获取通知信息
-      $condition1[] = [ 'campus_id' , '=' , $user->gradeUser->campus_id ];
-      $condition1[] = [ 'typeid' , '=' , 3 ];
-      $condition1[] = [ 'status' , '=' , 1 ];
-
-      $getWifiContentsOneInfo = WifiContentsDao::getWifiContentsOneInfo (
-         $condition1 , [ 'contentid' , 'desc' ] , [ 'typeid' , 'content' ]
-      );
-      $infos[ 'wifi_notice' ] = '';
-      if ( $getWifiContentsOneInfo && $getWifiContentsOneInfo->content )
+      if ( WifiOrders::addOrUpdateWifiOrdersInfo ($param1) )
       {
-         $infos[ 'wifi_notice' ] = (String)$getWifiContentsOneInfo->content;
+         // 生成重复提交签名
+         Cache::put ( $dataSign , $dataSign , 10 );
+
+         // TODO....生成订单信息..
+         $infos = ['info'=>'待开发中....'];
+         return JsonBuilder::Success ( $infos ,'购买无线wifi');
+      } else {
+         return JsonBuilder::Error ( '购买失败,请稍后重试' );
       }
-
-      // 获取wifi时长
-      $condition2[] = [ 'user_id' , '=' , $user->id ];
-      $condition2[] = [ 'status' , '=' , 1 ];
-      $getWifiUserTimesOneInfo = WifiUserTimesDao::getWifiUserTimesOneInfo (
-         $condition2 , [ 'timesid' , 'desc' ] , [ 'user_wifi_time' ]
-      );
-
-      $infos[ 'user_wifi_time' ] = 0;
-      if ( $getWifiUserTimesOneInfo && $getWifiUserTimesOneInfo->user_wifi_time )
-      {
-         $infos[ 'user_wifi_time' ] = strtotime ($getWifiUserTimesOneInfo->user_wifi_time);
-      }
-
-      return JsonBuilder::Success ( $infos ,'wifi无线产品列表');
    }
 
    /**

@@ -93,13 +93,13 @@ class WifiCableController extends Controller
 
       // 获取的字段信息
       $fieldArr = [ 'id as addresstwoid' , 'building_id as addressoneid' , 'name' ];
-      $getSchoolAddressListInfo = RoomsDao::getRoomsListInfo (
+      $getRoomsListInfo = RoomsDao::getRoomsListInfo (
          $condition , [ 'id' , 'asc' ] , [ 'page' => 1 , 'limit' => 800 ] , $fieldArr
       );
 
-      $infos = $getSchoolAddressListInfo ? $getSchoolAddressListInfo->toArray ()[ 'data' ] : [];
+      $infos = $getRoomsListInfo ? $getRoomsListInfo->toArray ()[ 'data' ] : [];
 
-      $infos1 = SchoolAddressDao::cateTree( $infos , 'addresstwoid' , 'addressoneid' );
+      $infos1 = RoomsDao::cateTree( $infos , 'addresstwoid' , 'addressoneid' );
 ;
       return JsonBuilder::Success ( $infos ,'宿舍楼地址列表');
    }
