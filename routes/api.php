@@ -455,6 +455,12 @@ Route::prefix('user')->group(function () {
         ->name('api.user.edit.password');
 });
 
+
+    // 发送短信
+    Route::post('/index/sms', 'Api\Home\IndexController@sendSms')
+        ->name('api.user.edit.password');
+
+
 // 地区列表
 Route::prefix('location')->middleware('auth:api')->group(function () {
     // 省份列表
@@ -467,3 +473,4 @@ Route::prefix('location')->middleware('auth:api')->group(function () {
     Route::post('/get-districts','Api\Location\AreaController@getDistricts')
         ->name('api.location.get-districts');
 });
+

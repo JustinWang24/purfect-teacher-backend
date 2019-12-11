@@ -60,6 +60,9 @@ class EventServiceProvider extends ServiceProvider
             'App\Listeners\Pipeline\Flow\NotifyProcessor',  // 通知流程中本步骤操作的人
             'App\Listeners\Pipeline\Flow\NotifyNextProcessors',  // 通知流程中下一步需要知晓的人
         ],
+        'App\Events\User\ForgetPasswordEvent' => [  // 忘记密码
+            'App\Listeners\Send\Sms',  // 发送短信
+        ],
     ];
 
     /**

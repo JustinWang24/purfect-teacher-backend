@@ -43,7 +43,7 @@ class AddressBookController extends Controller
         if (!$gradeId) {
             return JsonBuilder::Error('未找到用户所在班级');
         }
-        
+
         $gradeUserDao = new GradeUserDao;
         $data = $gradeUserDao->getGradeAddressBook($gradeId);
         return JsonBuilder::Success($data, '获取通讯录班级数据');
