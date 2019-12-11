@@ -46,20 +46,17 @@ class IndexController extends Controller
     public function banner(BannerRequest $request)
     {
         $posit = $request->get('posit');
+        $publicOnly = $request->has('public') && intval($request->get('public',0)) === 1;
+        $dao = new BannerDao;
+        $data = $dao->getBannerBySchoolIdAndPosit($request->user()->getSchoolId(), $posit, $publicOnly);
 
-        $school = $request->getAppSchool();
+        $banners = [];
 
-        if (empty($school)) {
-            return JsonBuilder::Error('未找到学校');
+        foreach ($data as $item) {
+            $item->image_url = asset($item->image_url);
+            $banners[] = $item;
         }
 
-        $dao = new BannerDao;
-
-        $data = $dao->getBannerBySchoolIdAndPosit($school->id, $posit);
-
-        return JsonBuilder::Success($data);
+        return JsonBuilder::Success($banners);
     }
-
-
-
 }
