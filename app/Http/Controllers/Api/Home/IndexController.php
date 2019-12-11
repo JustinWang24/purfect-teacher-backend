@@ -49,6 +49,14 @@ class IndexController extends Controller
         $publicOnly = $request->has('public') && intval($request->get('public',0)) === 1;
         $dao = new BannerDao;
         $data = $dao->getBannerBySchoolIdAndPosit($request->user()->getSchoolId(), $posit, $publicOnly);
-        return JsonBuilder::Success($data);
+
+        $banners = [];
+
+        foreach ($data as $item) {
+            $item->image_url = asset($item->image_url);
+            $banners[] = $item;
+        }
+
+        return JsonBuilder::Success($banners);
     }
 }
