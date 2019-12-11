@@ -15,7 +15,6 @@ use App\Http\Requests\MyStandardRequest;
 use App\Http\Requests\SendSms\SendSmeRequest;
 use App\Models\Users\UserVerification;
 use App\Utils\JsonBuilder;
-use Illuminate\Http\Request;
 
 class IndexController extends Controller
 {

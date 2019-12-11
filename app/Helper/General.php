@@ -31,14 +31,23 @@ if(!function_exists('pageReturn')){
      * @param $page
      * @return array
      */
-    function pageReturn($result, $total , $page = 1){
-        $data = [
-            'currentPage' => $page,
-            'lastPage'    => null,
-            'total'       => $total,
-            'list'        => $result
-        ];
-
+    function pageReturn($result, $total = null , $page = 1){
+        if($total){
+            $data = [
+                'currentPage' => $page,
+                'lastPage'    => null,
+                'total'       => $total,
+                'list'        => $result
+            ];
+        }
+        else{
+            $data = [
+                'currentPage' => $result->currentPage(),
+                'lastPage'    => $result->lastPage(),
+                'total'       => $result->total(),
+                'list'        => $result->getCollection()
+            ];
+        }
         return $data;
     }
 }
