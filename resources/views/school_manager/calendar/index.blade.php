@@ -37,9 +37,9 @@ use App\Utils\UI\Button;
                         </el-select>
                         <br>
                         <br>
-                        <label for="">时间内容</label>
+                        <label>事件说明</label>
                         <br>
-                        <el-input type="textarea" v-model="form.content"></el-input>
+                        <el-input rows="5" placeholder="必填: 关于事件的简要说明" type="textarea" v-model="form.content"></el-input>
                         <br>
                         <br>
                         <el-form-item>

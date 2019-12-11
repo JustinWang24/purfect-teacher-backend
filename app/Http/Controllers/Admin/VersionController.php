@@ -25,6 +25,7 @@ class VersionController extends Controller
         $dao = new VersionDao();
         $versions = $dao->getVersions();
         $this->dataForView['versions'] = $versions;
+        $this->dataForView['pageTitle'] = 'APP软件版本号管理';
         return view('admin.versions.list', $this->dataForView);
 
     }
@@ -33,20 +34,28 @@ class VersionController extends Controller
      * 加载添加问卷的表单
      */
     public function add(){
+        $this->dataForView['pageTitle'] = '添加新版本APP软件';
         $this->dataForView['version'] = new Version();
         return view('admin.versions.add', $this->dataForView);
     }
+
     /**
-     * 加载添加问卷的表单
+     * @param Request $request
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function edit(Request $request){
         $dao = new VersionDao();
         $version = $dao->getVersionById($request->id);
         $this->dataForView['version'] = $version;
+        $this->dataForView['pageTitle'] = '修改APP软件版本';
         return view('admin.versions.edit', $this->dataForView);
     }
 
-
+    /**
+     * 保存
+     * @param Request $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function update(Request $request){
         $versionData = $request->get('version');
         $fileCharater = $request->file('source');
@@ -92,10 +101,21 @@ class VersionController extends Controller
         return redirect()->route('admin.versions.list');
     }
 
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\RedirectResponse
+     * @throws \Exception
+     */
     public  function delete(Request $request)
     {
         $dao = new VersionDao();
-        $version = $dao->delete($request->id);
+        $deleted = $dao->delete($request->id);
+        if($deleted){
+            FlashMessageBuilder::Push($request, 'success','删除成功');
+        }
+        else{
+            FlashMessageBuilder::Push($request, 'success','删除失败');
+        }
         return redirect()->route('admin.versions.list');
     }
 }

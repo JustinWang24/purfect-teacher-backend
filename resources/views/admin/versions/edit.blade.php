@@ -7,9 +7,9 @@ use App\Utils\UI\Button;
 @section('content')
     <div class="row">
         <div class="col-sm-12 col-md-12 col-xl-12">
-            <div class="card-box">
+            <div class="card">
                 <div class="card-head">
-                    <header>修改版本号</header>
+                    <header>修改版本号: {{ $version->code }}</header>
                 </div>
                 <div class="card-body">
                     <form action="{{ route('admin.versions.update') }}" method="post"  id="edit-version-form" enctype="multipart/form-data">
