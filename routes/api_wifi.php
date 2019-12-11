@@ -21,7 +21,9 @@ Route::prefix('api_wifi')->middleware('auth:api')->group(function () {
     Route::any('/v1/wifi/edit-operator-info','\App\Http\Controllers\Api\Wifi\WifiController@edit_operator_info');	
 
 	// 无线充值上网首页
-    Route::any('/v1/wifi_pay/index-recharge','\App\Http\Controllers\Api\Wifi\WifiPayController@index_recharge');	
+    Route::any('/v1/wifi_pay/index-recharge','\App\Http\Controllers\Api\Wifi\WifiPayController@index_recharge');
+   // 充值无线
+   Route::any('/v1/wifi_pay/pay-recharge-info','\App\Http\Controllers\Api\Wifi\WifiPayController@pay_recharge_info');
 	// 无线充值明细
     Route::any('/v1/wifi_pay/list-recharge-info','\App\Http\Controllers\Api\Wifi\WifiPayController@list_recharge_info');
    // 检测是否在线

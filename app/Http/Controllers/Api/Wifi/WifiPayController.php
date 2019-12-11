@@ -23,6 +23,8 @@ use App\Dao\Wifi\Api\WifiUserAgreementsDao; // wifi协议
 
 use App\BusinessLogic\WifiInterface\Factory;
 
+use Pay;
+
 class WifiPayController extends Controller
 {
    /**
@@ -32,6 +34,73 @@ class WifiPayController extends Controller
     */
    public function index_recharge(WifiPayRequest $request)
    {
+      $user = $request->user ();
+
+      if ( ! intval ( $user->gradeUser->campus_id ) )
+      {
+         return JsonBuilder::Error ( '参数错误' );
+      }
+
+      // wifi产品列表
+      $condition[] = [ 'campus_id' , '=' , $user->gradeUser->campus_id ];
+      $condition[] = [ 'mode' , '=' , 2 ];
+      $condition[] = [ 'status' , '=' , 1 ];
+
+      $infos[ 'wifiList' ] = WifisDao::getWifisListInfo (
+
+         $condition , [ 'wifi_sort' , 'asc' ] , [ 'page' => 1 , 'limit' => 10 ] ,
+
+         [ 'wifiid' , 'wifi_name' , 'wifi_oprice' , 'wifi_price' ]
+
+      )->toArray ()[ 'data' ];
+
+      // 获取通知信息
+      $condition1[] = [ 'campus_id' , '=' , $user->gradeUser->campus_id ];
+      $condition1[] = [ 'typeid' , '=' , 3 ];
+      $condition1[] = [ 'status' , '=' , 1 ];
+
+      $getWifiContentsOneInfo = WifiContentsDao::getWifiContentsOneInfo (
+         $condition1 , [ 'contentid' , 'desc' ] , [ 'typeid' , 'content' ]
+      );
+      $infos[ 'wifi_notice' ] = '';
+      if ( $getWifiContentsOneInfo && $getWifiContentsOneInfo->content )
+      {
+         $infos[ 'wifi_notice' ] = (String)$getWifiContentsOneInfo->content;
+      }
+
+      // 获取wifi时长
+      $condition2[] = [ 'user_id' , '=' , $user->id ];
+      $condition2[] = [ 'status' , '=' , 1 ];
+      $getWifiUserTimesOneInfo = WifiUserTimesDao::getWifiUserTimesOneInfo (
+         $condition2 , [ 'timesid' , 'desc' ] , [ 'user_wifi_time' ]
+      );
+
+      $infos[ 'user_wifi_time' ] = 0;
+      if ( $getWifiUserTimesOneInfo && $getWifiUserTimesOneInfo->user_wifi_time )
+      {
+         $infos[ 'user_wifi_time' ] = strtotime ($getWifiUserTimesOneInfo->user_wifi_time);
+      }
+
+      return JsonBuilder::Success ( $infos ,'wifi无线产品列表');
+   }
+
+   /**
+    * Func
+    * @param Request $request
+    * @return Json
+    */
+   public function pay_recharge_info(WifiPayRequest $request)
+   {
+      $order = [
+         'out_trade_no' => time(),
+         'body' => 'subject-测试',
+         'total_fee'      => '1',
+      ];
+      $result = Pay::wechat()->app($order);
+      var_dump($result);exit;
+
+
+
       $user = $request->user ();
 
       if ( ! intval ( $user->gradeUser->campus_id ) )
