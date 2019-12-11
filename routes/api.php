@@ -474,3 +474,18 @@ Route::prefix('location')->middleware('auth:api')->group(function () {
         ->name('api.location.get-districts');
 });
 
+// 会议管理
+Route::prefix('conferences')->middleware('auth:api')->group(function () {
+    // 待完成
+    Route::get('/unfinished','Api\Conferences\ConferenceController@unfinished')
+        ->name('api.conferences.unfinished');
+    // 已完成
+    Route::get('/accomplish','Api\Conferences\ConferenceController@accomplish')
+        ->name('api.conferences.accomplish');
+    // 自己创建的
+    Route::get('/oneselfCreate','Api\Conferences\ConferenceController@oneselfCreate')
+        ->name('api.conferences.oneselfCreate');
+    // 会议详情
+    Route::post('/conference-info','Api\Conferences\ConferenceController@conferenceInfo')
+        ->name('api.conferences.conferenceInfo');
+});
