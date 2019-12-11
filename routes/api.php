@@ -455,4 +455,7 @@ Route::prefix('user')->group(function () {
         ->name('api.user.edit.password');
 });
 
+    // 发送短信
+    Route::post('/index/sms', 'Api\Home\IndexController@sendSms')
+        ->name('api.user.edit.password');
 
