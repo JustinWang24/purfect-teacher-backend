@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers\Operator;
 
+use App\Dao\Schools\OrganizationDao;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Notice\NoticeRequest;
 use App\Dao\Notice\NoticeDao;
 use App\Dao\Notice\NoticeInspectDao;
 use App\Models\Notices\Notice;
-use Auth;
 use App\Utils\FlashMessageBuilder;
+use App\Utils\JsonBuilder;
 
 class NoticeController extends Controller
 {
@@ -22,6 +23,8 @@ class NoticeController extends Controller
     {
         $schoolId = $request->getSchoolId();
 
+        $orgDao = new OrganizationDao();
+        $this->dataForView['organizations'] = $orgDao->getBySchoolId($schoolId);
         $dao = new NoticeDao;
 
         $search = $request->get('search');
@@ -60,38 +63,26 @@ class NoticeController extends Controller
     /**
      * 编辑页面展示
      * @param NoticeRequest $request
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return string
      */
-    public function edit(NoticeRequest $request)
+    public function load(NoticeRequest $request)
     {
         $id  = $request->get('id');
         $dao = new NoticeDao;
-
-        $inspectDao = new NoticeInspectDao;
-
-        $data = $dao->getNoticeById($id);
-
-        $this->dataForView['notice_type']  = Notice::allType();
-        $this->dataForView['inspect_type'] = $inspectDao->getInspectsBySchoolId($request->getSchoolId());
-        $this->dataForView['data']         = $data;
-        $this->dataForView['js'][]         = 'school_manager.notice.notice_js';
-
-        return view('school_manager.notice.edit', $this->dataForView);
+        return JsonBuilder::Success(['notice'=>$dao->getNoticeById($id)]);
     }
 
     /**
      * 保存数据
      * @param NoticeRequest $request
-     * @return \Illuminate\Http\RedirectResponse
+     * @return string
      */
     public function save(NoticeRequest $request)
     {
-
         $schoolId = $request->getSchoolId();
-
         $data              = $request->get('notice');
         $data['school_id'] = $schoolId;
-        $data['user_id']   = Auth::id();
+        $data['user_id']   = $request->user()->id;
 
         $dao = new  NoticeDao;
         if (isset($data['id'])) {
@@ -99,14 +90,33 @@ class NoticeController extends Controller
         } else {
             $result = $dao->add($data);
         }
-
-        if ($result->isSuccess()) {
-            FlashMessageBuilder::Push($request, FlashMessageBuilder::SUCCESS, '保存成功');
-        } else {
-            FlashMessageBuilder::Push($request, FlashMessageBuilder::DANGER, '保存失败');
-        }
-
-        return redirect()->route('school_manager.notice.list');
+        return $result->isSuccess() ? JsonBuilder::Success() : JsonBuilder::Error($result->getMessage());
     }
 
+    /**
+     * 删除 Notice media
+     * @param NoticeRequest $request
+     * @return string
+     */
+    public function delete_media(NoticeRequest $request){
+        $dao = new NoticeDao();
+        $result = $dao->deleteNoticeMedia($request->get('id'));
+        return $result ? JsonBuilder::Success() : JsonBuilder::Error();
+    }
+
+    /**
+     * @param NoticeRequest $request
+     * @return string
+     */
+    public function delete(NoticeRequest $request){
+        $dao = new NoticeDao();
+        $deleted = $dao->delete($request->get('id'));
+        if($deleted){
+            FlashMessageBuilder::Push($request, 'success','删除成功');
+        }
+        else{
+            FlashMessageBuilder::Push($request,'danger','删除失败, 请稍候再试');
+        }
+        return  redirect()->route('school_manager.notice.list');
+    }
 }

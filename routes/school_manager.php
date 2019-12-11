@@ -331,16 +331,20 @@ Route::prefix('school_manager')->group(function () {
         Route::get('details-notice', 'NoticeController@details')
             ->name('school_manager.notice.details');
 
-        // 修改
-        Route::get('edit-notice', 'NoticeController@edit')
-            ->name('school_manager.notice.edit');
-
         // 保存数据
         Route::post('save-notice', 'NoticeController@save')
             ->name('school_manager.notice.save');
+
+        // 加载数据
+        Route::post('load', 'NoticeController@load')
+            ->name('school_manager.notice.load');
+
+        // 删除数据
+        Route::get('delete', 'NoticeController@delete')->name('school_manager.notice.delete');
+
+        Route::post('delete-media', 'NoticeController@delete_media')
+            ->name('school_manager.notice.delete-media');
     });
-
-
 
     //值周功能
     Route::get('attendance/add', 'AttendanceSchedulesController@add')->name('school_manager.attendance.add');                        // 添加校区

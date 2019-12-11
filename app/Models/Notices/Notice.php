@@ -32,14 +32,18 @@ class Notice extends Model
         return [
             self::TYPE_NOTIFY     => self::TYPE_NOTIFY_TEXT,
             self::TYPE_NOTICE     => self::TYPE_NOTICE_TEXT,
-            self::TYPE_INSPECTION => self::TYPE_INSPECTION_TEXT,
+//            self::TYPE_INSPECTION => self::TYPE_INSPECTION_TEXT,
         ];
     }
 
     protected $fillable = [
-        'school_id', 'title', 'content', 'organization_id', 'media_id',
+        'school_id', 'title', 'content', 'organization_id',
         'image', 'release_time', 'note', 'inspect_id', 'type', 'user_id',
         'status'];
+
+    public $casts = [
+        'release_time'=>'datetime'
+    ];
 
     public $media_field = ['url'];
 
@@ -52,8 +56,7 @@ class Notice extends Model
 
     public function user()
     {
-        return $this->hasOne(User::class,
-            'id', 'user_id');
+        return $this->belongsTo(User::class);
     }
 
     public function inspect()
@@ -63,14 +66,12 @@ class Notice extends Model
         select($this->inspect_field);
     }
 
-    public function noticeMedias()
+    public function attachments()
     {
         return $this->hasMany(NoticeMedia::class);
     }
 
-
-    public function image_media() {
-        return $this->belongsTo(Media::class,'image')
-            ->select($this->media_field);
+    public function getImageAttribute($value){
+        return asset($value);
     }
 }
