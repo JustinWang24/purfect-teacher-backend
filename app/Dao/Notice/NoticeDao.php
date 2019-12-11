@@ -98,17 +98,18 @@ class NoticeDao
      * @return array
      */
     public function getNotice($type, $schoolId, $pageNumber = 0, $pageSize = ConfigurationTool::DEFAULT_PAGE_SIZE) {
-        $field = ['id', 'title', 'type', 'created_at', 'inspect_id', 'image'];
+        $field = ['id', 'title', 'type', 'created_at', 'inspect_id', 'image','status'];
         $map = ['type'=>$type, 'school_id'=>$schoolId, 'status'=>Notice::STATUS_PUBLISH];
-        $notices = Notice::where($map)->select($field)->with('attachments')
-            ->skip($pageSize * ($pageNumber - 1))
+        $notices = Notice::where('type',$type)->select($field)->with('attachments')
+            ->skip($pageSize * $pageNumber)
             ->take($pageSize)
             ->get();
-        $total = Notice::where($map)->select($field)->count();
+        $total = Notice::where($map)->count();
 
         $data = [];
         foreach ($notices as $notice) {
             $notice->image_media = $notice->image ? asset($notice->image) : null;
+            $data[] = $notice;
         }
         return [
             'notices'=>$data,

@@ -10,7 +10,6 @@ use App\Dao\Notice\NoticeInspectDao;
 use App\Models\Notices\Notice;
 use App\Utils\FlashMessageBuilder;
 use App\Utils\JsonBuilder;
-use Psy\Util\Json;
 
 class NoticeController extends Controller
 {
@@ -27,7 +26,6 @@ class NoticeController extends Controller
         $orgDao = new OrganizationDao();
         $this->dataForView['organizations'] = $orgDao->getBySchoolId($schoolId);
         $dao = new NoticeDao;
-
         $search = $request->get('search');
 
         if ($search) {
