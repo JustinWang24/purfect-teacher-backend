@@ -221,16 +221,16 @@ Route::prefix('campus')->middleware('auth:api')->group(function () {
 
 Route::prefix('course')->middleware('auth:api')->group(function () {
      // 选修课列表
-     Route::get('/elective/list','Api\Course\ElectiveController@index')
+     Route::post('/elective/list','Api\Course\ElectiveController@index')
         ->name('api.course.elective.list');
      // 选课详情
-     Route::get('/elective/details','Api\Course\ElectiveController@details')
+     Route::post('/elective/details','Api\Course\ElectiveController@details')
         ->name('api.course.elective.details');
      // 选课报名操作
-     Route::get('/elective/enroll/{id}','Api\Course\ElectiveController@enroll')
+     Route::post('/elective/enroll/{id}','Api\Course\ElectiveController@enroll')
         ->name('api.course.elective.enroll');
      // 选课查询报名结果操作
-     Route::get('/elective/getresult/{id}','Api\Course\ElectiveController@getEnrollResult')
+     Route::post('/elective/getresult/{id}','Api\Course\ElectiveController@getEnrollResult')
         ->name('api.course.elective.getresult');
 });
 
@@ -426,13 +426,13 @@ Route::prefix('pipeline')->middleware('auth:api')->group(function (){
 
 Route::prefix('notification')->middleware('auth:api')->group(function () {
     // 消息中心
-    Route::get('/list','Api\Notice\SystemNotificationController@index')
+    Route::post('/list','Api\Notice\SystemNotificationController@index')
         ->name('api.notification.list');
 });
 
 Route::prefix('attendance')->middleware('auth:api')->group(function () {
     // 消息中心
-    Route::get('/list','Api\AttendanceSchedule\AttendanceScheduleController@display')
+    Route::post('/list','Api\AttendanceSchedule\AttendanceScheduleController@display')
         ->name('api.attendance.list');
 });
 
@@ -458,6 +458,12 @@ Route::prefix('user')->group(function () {
         ->name('api.user.edit.password');
 });
 
+
+    // 发送短信
+    Route::post('/index/sms', 'Api\Home\IndexController@sendSms')
+        ->name('api.user.edit.password');
+
+
 // 地区列表
 Route::prefix('location')->middleware('auth:api')->group(function () {
     // 省份列表
@@ -469,4 +475,20 @@ Route::prefix('location')->middleware('auth:api')->group(function () {
     // 区县列表
     Route::post('/get-districts','Api\Location\AreaController@getDistricts')
         ->name('api.location.get-districts');
+});
+
+// 会议管理
+Route::prefix('conferences')->middleware('auth:api')->group(function () {
+    // 待完成
+    Route::get('/unfinished','Api\Conferences\ConferenceController@unfinished')
+        ->name('api.conferences.unfinished');
+    // 已完成
+    Route::get('/accomplish','Api\Conferences\ConferenceController@accomplish')
+        ->name('api.conferences.accomplish');
+    // 自己创建的
+    Route::get('/oneselfCreate','Api\Conferences\ConferenceController@oneselfCreate')
+        ->name('api.conferences.oneselfCreate');
+    // 会议详情
+    Route::post('/conference-info','Api\Conferences\ConferenceController@conferenceInfo')
+        ->name('api.conferences.conferenceInfo');
 });

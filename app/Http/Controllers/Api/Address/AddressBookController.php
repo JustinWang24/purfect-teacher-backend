@@ -24,6 +24,11 @@ class AddressBookController extends Controller
     public function index(AddressBookRequest $request)
     {
         $gradeId = null;
+
+        $user = $request->user();
+
+        $gradeId = $user->gradeUser->grade_id; // 班级ID
+
         if ($request->has('grade_id')) {
             $gradeId = $request->get('grade_id');
         }
@@ -43,6 +48,7 @@ class AddressBookController extends Controller
         $data = $gradeUserDao->getGradeAddressBook($gradeId);
         return JsonBuilder::Success($data, '获取通讯录班级数据');
     }
+
 
     /**
      * 办公室通讯录
