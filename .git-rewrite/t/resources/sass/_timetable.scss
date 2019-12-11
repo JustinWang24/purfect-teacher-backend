@@ -1,0 +1,26 @@
+$txt-color: #444444;
+$txt-blue: #3490dc;
+
+// 课程表的外观控制
+#timetable-mgr-nav-bar{
+  display: flex;
+  .nav-item{
+    background-color: white;
+    margin-right: 10px;
+    .nav-link{
+      color: $txt-color;
+      &:hover{
+        color: $txt-blue;
+      }
+    }
+  }
+  .active{
+    background: $txt-blue;
+    .nav-link{
+      color: white;
+      &:hover{
+        color: white;
+      }
+    }
+  }
+}
