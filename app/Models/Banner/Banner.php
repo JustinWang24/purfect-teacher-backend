@@ -104,4 +104,8 @@ class Banner extends Model
     public function isPublicText(){
         return $this->public ? '不需登录' : '需要登录';
     }
+
+    public function getImageUrlAttribute($value){
+        return asset($value);
+    }
 }

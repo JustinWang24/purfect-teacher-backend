@@ -70,4 +70,8 @@ class Notice extends Model
     {
         return $this->hasMany(NoticeMedia::class);
     }
+
+    public function getImageAttribute($value){
+        return asset($value);
+    }
 }

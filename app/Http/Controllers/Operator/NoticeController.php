@@ -26,6 +26,7 @@ class NoticeController extends Controller
         $orgDao = new OrganizationDao();
         $this->dataForView['organizations'] = $orgDao->getBySchoolId($schoolId);
         $dao = new NoticeDao;
+
         $search = $request->get('search');
 
         if ($search) {

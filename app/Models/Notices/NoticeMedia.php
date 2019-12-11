@@ -15,4 +15,8 @@ class NoticeMedia extends Model
     public function media() {
         return $this->belongsTo(Media::class);
     }
+
+    public function getUrlAttribute($value){
+        return asset($value);
+    }
 }

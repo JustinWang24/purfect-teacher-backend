@@ -25,7 +25,6 @@ class NoticeController extends Controller
         $pageNumber = $request->get('page',0);
         $result = $dao->getNotice($type, $schoolId, $pageNumber);
         $data = pageReturn($result['notices'], $result['total'], $pageNumber);
-
         return JsonBuilder::Success($data);
     }
 
@@ -41,19 +40,6 @@ class NoticeController extends Controller
         if(is_null($result)) {
             return JsonBuilder::Error('该通知不存在');
         }
-        $medias = $result->noticeMedias;
-        foreach ($medias as $key => $val) {
-            $medias[$key] = $val->media;
-        }
-        if($result['type'] == Notice::TYPE_NOTICE) {
-            $result->image_media;
-        }
-
-        if($result['type'] == Notice::TYPE_INSPECTION) {
-            $result->inspect->name;
-        }
-
-        $data = ['notice'=>$result];
-        return JsonBuilder::Success($data);
+        return JsonBuilder::Success(['notice'=>$result]);
     }
 }

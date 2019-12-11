@@ -105,14 +105,8 @@ class NoticeDao
             ->take($pageSize)
             ->get();
         $total = Notice::where($map)->count();
-
-        $data = [];
-        foreach ($notices as $notice) {
-            $notice->image_media = $notice->image ? asset($notice->image) : null;
-            $data[] = $notice;
-        }
         return [
-            'notices'=>$data,
+            'notices'=>$notices,
             'total'=>$total
         ];
     }
