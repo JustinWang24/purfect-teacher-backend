@@ -33,7 +33,9 @@ class IndexController extends Controller
             $data[$key]['time'] = $val['created_at'];
             $data[$key]['image'] = "";
             foreach ($val->sections as $new) {
-                $data[$key]['image'] = $new->media->url;
+                if (!empty($new->meia)) {
+                    $data[$key]['image'] = $new->media->url;
+                }
             }
             unset($data[$key]['sections']);
             unset($data[$key]['created_at']);
@@ -100,7 +102,6 @@ class IndexController extends Controller
                 event(new ForgetPasswordEvent($user));
                 break;
         default:
-            return JsonBuilder::Error('系统错误~');
             break;
         }
 
