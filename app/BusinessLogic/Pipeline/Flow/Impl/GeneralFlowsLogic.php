@@ -9,6 +9,7 @@
 namespace App\BusinessLogic\Pipeline\Flow\Impl;
 
 use App\BusinessLogic\Pipeline\Flow\Contracts\IFlowLogic;
+use App\Dao\Misc\SystemNotificationDao;
 use App\Dao\Pipeline\UserFlowDao;
 use App\Models\Pipeline\Flow\UserFlow;
 use App\Utils\Pipeline\IAction;
@@ -21,6 +22,7 @@ use App\Utils\JsonBuilder;
 use Illuminate\Support\Facades\DB;
 use App\Utils\Pipeline\INode;
 use App\Utils\ReturnData\IMessageBag;
+use App\Models\Misc\SystemNotification;
 
 abstract class GeneralFlowsLogic implements IFlowLogic
 {
@@ -172,14 +174,10 @@ abstract class GeneralFlowsLogic implements IFlowLogic
                         $userFlowDao = new UserFlowDao();
                         // 整个流程被通过了
                         $userFlowDao->update($action->getTransactionId(),['done'=>IUserFlow::DONE]);
-
-                        // 通知流程的发起人, 流程已经获得批准
-//                        $actionDao = new ActionDao();
-//                        $firstAction = $actionDao->getFirstActionByUserFlow($action->getTransactionId());
                     }
                     DB::commit();
                     $messageBag->setCode(JsonBuilder::CODE_SUCCESS);
-                    $messageBag->setData(['nextNode'=>$next]);
+                    $messageBag->setData(['nextNode'=>$next,'currentNode'=>$node]);
                 }
                 catch (\Exception $exception){
                     DB::rollBack();
@@ -221,6 +219,62 @@ abstract class GeneralFlowsLogic implements IFlowLogic
 
                     DB::commit();
                     $messageBag->setCode(JsonBuilder::CODE_SUCCESS);
+                }
+                catch (\Exception $exception){
+                    DB::rollBack();
+                    $messageBag->setMessage($exception->getMessage());
+                }
+            }
+            else{
+                $messageBag->setMessage('没有找到对应的步骤');
+            }
+        }
+        return $messageBag;
+    }
+
+    public function terminate(IAction $action, $actionData)
+    {
+        $messageBag = new MessageBag(JsonBuilder::CODE_ERROR);
+        if($action){
+            /**
+             * @var INode $node
+             */
+            $node = $action->getNode();
+            if($node){
+                DB::beginTransaction();
+                try{
+                    $action->result = $actionData['result'];
+                    $action->content = $actionData['content'];
+                    $action->urgent = $actionData['urgent'];
+                    $action->save();
+
+                    // 将整个流程终止
+                    $userFlowDao = new UserFlowDao();
+                    $allActions = $userFlowDao->terminate($action->getTransactionId());
+
+                    $systemMessageDao = new SystemNotificationDao();
+
+                    $flow = $action->getFlow();
+                    $userFlow = $userFlowDao->getById($action->getTransactionId());
+
+                    foreach ($allActions as $act) {
+                        // 所有涉及的人都被通知一下
+                        $systemMessageDao->create(
+                            [
+                                'sender'=>SystemNotification::FROM_SYSTEM,
+                                'to'=>$act->user_id,
+                                'type'=>SystemNotification::TYPE_NONE,
+                                'priority'=>SystemNotification::PRIORITY_LOW,
+                                'school_id'=>SystemNotification::SCHOOL_EMPTY,
+                                'content'=>$userFlow->user_name . '的'.$flow->getName().'申请被驳回了',
+                                'next_move'=>'',
+                            ]
+                        );
+                    }
+
+                    DB::commit();
+                    $messageBag->setCode(JsonBuilder::CODE_SUCCESS);
+
                 }
                 catch (\Exception $exception){
                     DB::rollBack();

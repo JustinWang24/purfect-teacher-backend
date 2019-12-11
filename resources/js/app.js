@@ -42,6 +42,7 @@ Vue.component('textbooks-table', require('./components/textbook/TextbooksTable.v
 Vue.component('file-preview', require('./components/fileManager/elements/FilePreview.vue').default);      // 教材表单
 // Vue.component('drag-to-sort', require('./components/dnd/DragToSort.vue').default);      // 教材表单
 Vue.component('icon-selector', require('./components/misc/IconSelector.vue').default);      // 教材表单
+Vue.component('node', require('./components/pipeline/Node.vue').default);      // 教材表单
 
 import { Constants } from './common/constants';
 import { Util } from './common/utils';
@@ -56,6 +57,112 @@ import {
     cancelApplicationByUser, viewApplicationByAction, processAction
 } from './common/flow';
 import { saveNews, loadNews, saveSections, deleteNews, publishNews, deleteSection, moveUpSection, moveDownSection } from './common/news';
+
+if(document.getElementById('banner-manager-app')){
+    new Vue({
+        el:'#banner-manager-app',
+        data(){
+            return {
+                banner:{
+                    id:'',
+                    schoolId:'',
+                    title:'',
+                    posit:0,
+                    type:0,
+                    content:'',
+                    external:'', // 跳转到 url
+                    image_url:'',
+                    sort:1,
+                    public:true,
+                    status:false,
+                },
+                positions:[],
+                types:[],
+                showFileManagerFlag: false,
+                isLoading: false,
+            }
+        },
+        computed: {
+            'isUrlOnly': function(){
+                return this.banner.type === 2;
+            },
+            'isPictureAndText': function(){
+                return this.banner.type === 1;
+            },
+            'isStatic': function(){
+                return this.banner.type === 0;
+            },
+        },
+        created(){
+            const dom = document.getElementById('app-init-data-holder');
+            this.banner.schoolId = dom.dataset.school;
+            this.positions = JSON.parse(dom.dataset.positions);
+            this.types = JSON.parse(dom.dataset.types);
+        },
+        methods: {
+            loadBanner: function(id){
+                this.isLoading = true;
+                axios.post(
+                    '/school_manager/banner/load',
+                    {id: id}
+                ).then(res => {
+                    if(Util.isAjaxResOk(res)){
+                        this.banner = res.data.data.banner;
+                    }
+                    else{
+                        this.$message.error(res.data.message);
+                    }
+                    this.isLoading = false;
+                })
+            },
+            onSubmit: function(){
+                this.isLoading = true;
+                axios.post(
+                    '/school_manager/banner/save',
+                    {banner: this.banner}
+                ).then(res => {
+                    if(Util.isAjaxResOk(res)){
+                        window.location.reload();
+                    }
+                    else{
+                        this.$message.error(res.data.message);
+                    }
+                    this.isLoading = false;
+                })
+            },
+            pickFileHandler: function(payload){
+                this.showFileManagerFlag = false;
+                this.banner.image_url = payload.file.url;
+            },
+            newBanner: function(){
+                this.banner.id = '';
+                this.banner.title = '';
+                this.banner.posit = 0;
+                this.banner.type = 0;
+                this.banner.content = '';
+                this.banner.external = '';
+                this.banner.public = true;
+                this.banner.status = false;
+                this.banner.image_url = '';
+                this.banner.sort = 1;
+            },
+            deleteBanner: function(id){
+                this.$confirm('此操作将永久删除该资源, 是否继续?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    window.location.href = '/school_manager/banner/delete?id=' + id;
+                }).catch(() => {
+                    this.$message({
+                        type: 'info',
+                        message: '已取消删除'
+                    });
+                });
+            }
+        }
+    })
+}
 
 /**
  * Open一个流程
@@ -152,6 +259,7 @@ if(document.getElementById('pipeline-flow-view-history-app')){
                     {id: Constants.FLOW_ACTION_RESULT.PASSED, label: Constants.FLOW_ACTION_RESULT.PASSED_TXT},
                     {id: Constants.FLOW_ACTION_RESULT.REJECTED, label: Constants.FLOW_ACTION_RESULT.REJECTED_TXT},
                 ],
+                userFlow:{}, // 服务器端返回的
             }
         },
         created(){
@@ -160,15 +268,22 @@ if(document.getElementById('pipeline-flow-view-history-app')){
             this.actionId = dom.dataset.actionid;
             this.userUuid = dom.dataset.useruuid;
             this.userFlowId = dom.dataset.flowid;
-            this.loadLastAction();
+            this.action = JSON.parse(dom.dataset.theaction);
+            if(this.action.node.next_node === 0){
+                this.results.push({
+                    id: Constants.FLOW_ACTION_RESULT.TERMINATED,
+                    label: Constants.FLOW_ACTION_RESULT.TERMINATED_TXT
+                });
+            }
+            this.loadWholeFlow();
         },
         methods: {
-            loadLastAction: function(){
+            loadWholeFlow: function(){
                 this.isLoading = true;
                 viewApplicationByAction(this.actionId, this.userFlowId).then(res => {
                     if(Util.isAjaxResOk(res)){
-                        this.history = res.data.data.actions;
-                        this.action = this.history[this.history.length - 1];
+                        this.userFlow = res.data.data.flow.userFlow;
+                        this.history = res.data.data.flow.nodes;
                     }
                     else{
                         this.$message.error(res.data.message);
@@ -213,39 +328,23 @@ if(document.getElementById('pipeline-flow-view-history-app')){
                 };
                 this.action.attachments.push(attachment);
             },
-            resultText: function(result){
-                let txt = Constants.FLOW_ACTION_RESULT.PENDING_TXT;
-                switch (result){
-                    case Constants.FLOW_ACTION_RESULT.PASSED:
-                        txt = Constants.FLOW_ACTION_RESULT.PASSED_TXT;
-                        break;
-                    case Constants.FLOW_ACTION_RESULT.NOTICED:
-                        txt = Constants.FLOW_ACTION_RESULT.NOTICED_TXT;
-                        break;
-                    case Constants.FLOW_ACTION_RESULT.REJECTED:
-                        txt = Constants.FLOW_ACTION_RESULT.REJECTED_TXT;
-                        break;
-                    default:
-                        break;
+            getDotColor: function(node, currentNodeId, done){
+                let color = '#0bbd87';
+                if(done === Constants.FLOW_FINAL_RESULT.PENDING){
+                    if(node.id !== currentNodeId){
+                        if(node.actions.length === 0){
+                            color = '#F2F6FC';
+                        }
+                    }
+                    else{
+                        color = '#409EFF';
+                    }
+                    return color;
                 }
-                return txt;
-            },
-            resultTextClass: function(result){
-                let txt = Constants.FLOW_ACTION_RESULT.PENDING_CLASS;
-                switch (result){
-                    case Constants.FLOW_ACTION_RESULT.PASSED:
-                        txt = Constants.FLOW_ACTION_RESULT.PASSED_CLASS;
-                        break;
-                    case Constants.FLOW_ACTION_RESULT.NOTICED:
-                        txt = Constants.FLOW_ACTION_RESULT.NOTICED_CLASS;
-                        break;
-                    case Constants.FLOW_ACTION_RESULT.REJECTED:
-                        txt = Constants.FLOW_ACTION_RESULT.REJECTED_CLASS;
-                        break;
-                    default:
-                        break;
+                else if(done === Constants.FLOW_FINAL_RESULT.REJECTED){
+                    color = '#F56C6C';
                 }
-                return txt;
+                return color;
             }
         }
     });

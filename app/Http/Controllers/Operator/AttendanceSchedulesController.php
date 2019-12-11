@@ -204,6 +204,7 @@ class AttendanceSchedulesController extends Controller
                 $tmp['userName'] = $tmpUser->name;
                 $tmp['department'] = $tmpUser->department()->first()->name;
                 $tmp['major'] = $tmpUser->major()->first()->name;
+                $tmp['mobile'] = $tmpUser->user()->first()->mobile;
             }
             $week = $schedule->week==0?7:$schedule->week;
             $data[$week][$schedule->time_slot_id][] = $tmp;

@@ -311,13 +311,11 @@ Route::prefix('school_manager')->group(function () {
     Route::get('banner/list','BannerController@index')->name('school_manager.banner.list');
 
     // banner 添加页面展示
-    Route::get('banner/add','BannerController@add')->name('school_manager.banner.add');
-
-    // banner 修改页面展示
-    Route::get('banner/edit','BannerController@edit')->name('school_manager.banner.edit');
+    Route::get('banner/delete','BannerController@delete')->name('school_manager.banner.delete');
 
     // banner 保存数据
     Route::post('banner/save','BannerController@save')->name('school_manager.banner.save');
+    Route::post('banner/load','BannerController@load')->name('school_manager.banner.load');
 
    // 通知管理
     Route::prefix('notice')->group(function (){

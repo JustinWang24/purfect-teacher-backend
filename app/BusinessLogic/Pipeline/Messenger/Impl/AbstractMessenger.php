@@ -17,7 +17,7 @@ use App\Utils\Pipeline\IFlow;
 abstract class AbstractMessenger implements IMessenger, INextAction
 {
     /**
-     * @var INode
+     * @var INode: 永远是当前的被执行的步骤节点
      */
     protected $node;
 

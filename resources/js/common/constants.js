@@ -206,6 +206,9 @@ export const Constants = {
         REJECTED: 4,
         REJECTED_TXT: '退回',
         REJECTED_CLASS: 'text-danger',
+        TERMINATED: 5,
+        TERMINATED_TXT: '驳回, 流程终止',
+        TERMINATED_CLASS: 'text-danger',
     },
     FLOW_FINAL_RESULT: {
         PENDING: 0,
