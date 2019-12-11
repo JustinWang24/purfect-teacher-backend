@@ -83,6 +83,10 @@ Route::prefix('school')->middleware('auth:api')->group(function () {
     // 快速定位用户的搜索
     Route::any('/quick-search-users','Api\School\UsersController@quick_search_users')
         ->name('api.school.quick.search.users');
+
+    // APP 应用接口
+    Route::any('/calendar','Api\School\IndexController@calendar')
+        ->name('api.school.calendar');
 });
 
 Route::prefix('enquiry')->middleware('auth:api')->group(function () {
