@@ -37,7 +37,8 @@ class SystemNotificationDao
     {
 
         return SystemNotification::where('school_id', $schoolId)->
-                    whereIn('to', [0,$userId])->simplePaginate($pageSize);
+
+                    whereIn('to', [0,$userId])->orderBy('id','DESC')->simplePaginate($pageSize);
     }
 
 

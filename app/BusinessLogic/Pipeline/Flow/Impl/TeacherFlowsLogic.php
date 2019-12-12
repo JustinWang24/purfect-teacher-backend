@@ -22,13 +22,14 @@ class TeacherFlowsLogic extends GeneralFlowsLogic
 
     /**
      * 获取教师的专用流程
+     * @param $forApp
      * @return IFlow[]|array
      */
-    public function getMyFlows()
+    public function getMyFlows($forApp = false)
     {
         $dao = new FlowDao();
         return $dao->getGroupedFlows(
-            $this->user->getSchoolId(),Teacher::FlowTypes()
+            $this->user->getSchoolId(),Teacher::FlowTypes(), $forApp
         );
     }
 }

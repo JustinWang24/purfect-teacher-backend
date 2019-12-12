@@ -179,8 +179,8 @@ export const Util = {
     // 返回系统图标所在的数组
     icons: function () {
         const a = [];
-        for(let i=1;i<16;i++){
-            a.push('/assets/img/pipeline/node-'+i+'.png');
+        for(let i=1;i<14;i++){
+            a.push('/assets/img/pipeline/icon'+i+'.png');
         }
         return a;
     },

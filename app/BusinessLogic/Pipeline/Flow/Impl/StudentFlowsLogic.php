@@ -19,11 +19,11 @@ class StudentFlowsLogic extends GeneralFlowsLogic
         parent::__construct($user);
     }
 
-    public function getMyFlows()
+    public function getMyFlows($forApp = false)
     {
         $dao = new FlowDao();
         return $dao->getGroupedFlows(
-            $this->user->getSchoolId(), [IFlow::TYPE_STUDENT_ONLY]
+            $this->user->getSchoolId(), [IFlow::TYPE_STUDENT_ONLY], $forApp
         );
     }
 }
