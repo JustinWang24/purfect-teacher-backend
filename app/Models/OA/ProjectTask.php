@@ -11,6 +11,8 @@ class ProjectTask extends Model
     const STATUS_CLOSED = 2;
     protected $table = 'oa_project_tasks';
 
+    public $fillable = ['project_id', 'user_id', 'title', 'content'];
+
     /**
      * 任务的讨论
      * @return \Illuminate\Database\Eloquent\Relations\HasMany

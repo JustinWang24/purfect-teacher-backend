@@ -10,9 +10,13 @@ namespace App\Dao\OA;
 
 
 use App\Models\OA\Project;
+use App\Models\OA\ProjectMember;
 use App\Models\OA\ProjectTask;
+use App\Utils\JsonBuilder;
 use App\Utils\Misc\ConfigurationTool;
+use App\Utils\ReturnData\MessageBag;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
 
 class ProjectDao
 {
@@ -60,6 +64,92 @@ class ProjectDao
         }else{
             return ProjectTask::orderBy('id','desc')
                 ->paginate(ConfigurationTool::DEFAULT_PAGE_SIZE);
+        }
+    }
+
+    /**
+     * 通过title查询项目
+     * @param $title
+     * @param $schoolId
+     * @return mixed
+     */
+    public function getProjectByTitle($title, $schoolId) {
+        $map = ['title'=>$title, 'school_id'=>$schoolId];
+        return Project::where($map)->first();
+    }
+
+
+    /**
+     * 通过title和projectId查询任务
+     * @param $title
+     * @param $projectId
+     * @return mixed
+     */
+    public function getTaskByTitleAndProjectId($title, $projectId) {
+        $map = ['title'=>$title, 'project_id'=>$projectId];
+        return ProjectTask::where($map)->first();
+    }
+
+
+    /**
+     * 创建项目
+     * @param array $project
+     * @param null $member
+     * @return MessageBag
+     */
+    public function createProject($project, $member=null) {
+        $messageBag = new MessageBag(JsonBuilder::CODE_ERROR);
+        $re = $this->getProjectByTitle($project['title'], $project['school_id']);
+        if(!is_null($re)) {
+            $messageBag->setMessage('该项目已存在,请重新更换');
+            return $messageBag;
+        }
+        DB::beginTransaction();
+        try{
+            $s1 = Project::create($project);
+            if(!empty($member)) {
+                foreach ($member as $key => $val) {
+                    $user = [
+                        'user_id'    => $val,
+                        'project_id' => $s1->id
+                    ];
+                    ProjectMember::create($user);
+                }
+            }
+            DB::commit();
+            $messageBag->setData(['id'=>$s1->id]);
+            $messageBag->setCode(JsonBuilder::CODE_SUCCESS);
+        }catch (\Exception $e) {
+            DB::rollBack();
+            $msg = $e->getMessage();
+            $messageBag->setMessage($msg);
+        }
+        return $messageBag;
+    }
+
+
+
+    /**
+     * 添加任务
+     * @param $task
+     * @return MessageBag
+     */
+    public function createTask($task) {
+
+        $messageBag = new MessageBag(JsonBuilder::CODE_ERROR);
+        $re = $this->getTaskByTitleAndProjectId($task['title'], $task['project_id']);
+        if(!is_null($re)) {
+            $messageBag->setMessage('该任务已存在,请重新更换');
+            return $messageBag;
+        }
+        $result = ProjectTask::create($task);
+        if($result) {
+            $data = ['id'=>$result->id];
+            $messageBag->setData($data);
+            return $messageBag;
+        } else {
+            $messageBag->setMessage('任务创建失败');
+            return $messageBag;
         }
     }
 }

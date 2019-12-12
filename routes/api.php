@@ -507,3 +507,15 @@ Route::prefix('conferences')->middleware('auth:api')->group(function () {
     Route::post('/conference-info','Api\Conferences\ConferenceController@conferenceInfo')
         ->name('api.conferences.conferenceInfo');
 });
+
+
+// 项目管理
+Route::prefix('oa')->middleware('auth:api')->group(function () {
+    // 创建项目
+    Route::post('/create-project','Api\OA\ProjectsController@createProject')
+        ->name('api.oa.create-project');
+
+    // 创建任务
+    Route::post('/create-task','Api\OA\ProjectsController@createTask')
+        ->name('api.oa.create-task');
+});
