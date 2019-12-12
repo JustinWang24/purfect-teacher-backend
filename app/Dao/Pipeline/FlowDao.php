@@ -24,9 +24,10 @@ class FlowDao
      * 获取分类的流程集合
      * @param $schoolId
      * @param array $types
+     * @param boolean $forApp
      * @return array
      */
-    public function getGroupedFlows($schoolId, $types = []){
+    public function getGroupedFlows($schoolId, $types = [], $forApp = false){
         $flows = Flow::select(['id','name','icon','type'])
             ->where('school_id',$schoolId)
             ->orderBy('type','asc')->get();
@@ -41,6 +42,9 @@ class FlowDao
 
         foreach ($flows as $flow) {
             if(in_array($flow->type, $types)){
+                if($forApp){
+                    $flow->icon = str_replace('.png','',$flow->icon);
+                }
                 $data[$flow->type][] = $flow;
             }
         }
