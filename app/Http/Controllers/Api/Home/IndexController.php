@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\Home;
 
 use App\Dao\Banners\BannerDao;
 use App\Dao\Calendar\CalendarDao;
+use App\Dao\Misc\SystemNotificationDao;
 use App\Dao\Schools\SchoolDao;
 use App\Dao\Students\StudentProfileDao;
 use App\Dao\Users\UserDao;
@@ -15,9 +16,11 @@ use App\Dao\Schools\NewsDao;
 use App\Http\Requests\MyStandardRequest;
 use App\Http\Requests\SendSms\SendSmeRequest;
 use App\Models\Students\StudentProfile;
+use App\Models\Misc\SystemNotification;
 use App\Models\Users\UserVerification;
 use App\User;
 use App\Utils\JsonBuilder;
+use App\Utils\Time\CalendarWeek;
 
 class IndexController extends Controller
 {
@@ -51,6 +54,31 @@ class IndexController extends Controller
         $data['is_show_account'] = false; // 是否展示账户
         $data['school_name'] = $school->name;
         $data['school_logo'] = $school->logo;
+
+        //首页消息获取
+        $user = $request->user();
+        $systemNotificationDao = new SystemNotificationDao();
+        $systemNotifications = $systemNotificationDao->getNotificationByUserId($school->id, $user->id, 2);
+        $json_array = [];
+        foreach($systemNotifications as $key=>$value) {
+            $json_array[$key]['ticeid']= $value->id;
+            $json_array[$key]['create_at']= $value->create_id;
+            $json_array[$key]['tice_title']= $value->title;
+            $json_array[$key]['tice_content']= $value->content;
+            $json_array[$key]['tice_money']= $value->money;
+            $json_array[$key]['webview_url']= $value->next_move;
+            $json_array[$key]['type']= $value->type;
+            $json_array[$key]['priority']= $value->priority;
+            if (isset(SystemNotification::CATEGORY[$value->category])){
+                $json_array[$key]['tice_header']= SystemNotification::CATEGORY[$value->category];
+            } else {
+                $json_array[$key]['tice_header'] = '消息';
+            }
+        }
+        $data['notifications'] = $json_array;
+
+
+
         return JsonBuilder::Success($data);
     }
 
@@ -78,6 +106,49 @@ class IndexController extends Controller
      * @return string
      */
     public function calendar(MyStandardRequest $request){
+        $school = $this->_getSchoolFromRequest($request);
+        if(!$school){
+            return JsonBuilder::Error('找不到学校的信息');
+        }
+        else{
+            $dao = new CalendarDao();
+            return JsonBuilder::Success($dao->getCalendar($school->configuration));
+        }
+    }
+
+    public function all_events(MyStandardRequest $request){
+        $school = $this->_getSchoolFromRequest($request);
+
+        if(!$school){
+            return JsonBuilder::Error('找不到学校的信息');
+        }else{
+            $dao = new CalendarDao();
+            $events = $dao->getCalendarEvent($school->id);
+            $weeks = $school->configuration->getAllWeeksOfTerm();
+
+            foreach ($events as $event) {
+                foreach ($weeks as $week) {
+                    /**
+                     * @var CalendarWeek $week
+                     */
+                    if($week->includes($event->event_time)){
+                        $event->week_idx = $week->getName();
+                        break;
+                    }
+                }
+            }
+
+            return JsonBuilder::Success([
+                'events'=>$dao->getCalendarEvent($school->id)
+            ]);
+        }
+    }
+
+    /**
+     * @param MyStandardRequest $request
+     * @return \App\Models\School
+     */
+    private function _getSchoolFromRequest(MyStandardRequest $request){
         $schoolIdOrName = $request->get('school', null);
         $dao = new SchoolDao();
         if($schoolIdOrName){
@@ -90,15 +161,7 @@ class IndexController extends Controller
             $school = $dao->getSchoolById($request->user()->getSchoolId());
         }
 
-        if(!$school){
-            return JsonBuilder::Error('找不到学校的信息');
-        }
-        else{
-            $dao = new CalendarDao();
-            return JsonBuilder::Success([
-                'calendar'=>$dao->getCalendar($school->configuration)
-            ]);
-        }
+        return $school;
     }
 
     /**

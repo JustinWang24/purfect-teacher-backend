@@ -36,7 +36,7 @@ abstract class GeneralFlowsLogic implements IFlowLogic
         $this->user = $user;
     }
 
-    public abstract function getMyFlows();
+    public abstract function getMyFlows($forApp = false);
 
     /**
      * 获取所有等待用户处理的操作

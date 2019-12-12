@@ -17,9 +17,10 @@ use App\Utils\ReturnData\IMessageBag;
 interface IFlowLogic
 {
     /**
+     * @param $forApp
      * @return IFlow[]
      */
-    public function getMyFlows();
+    public function getMyFlows($forApp = false);
 
     /**
      * 返回用户发起的流程的第一个动作(发起)的集合

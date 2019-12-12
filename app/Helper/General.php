@@ -31,6 +31,7 @@ if(!function_exists('pageReturn')){
      * @param $page
      * @return array
      */
+
     function pageReturn($result, $total = null , $page = 1){
         if($total){
             $data = [

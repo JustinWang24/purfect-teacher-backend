@@ -162,11 +162,20 @@ class ConferenceDao
      * @return mixed
      */
     public function unfinishedConference(User $user) {
-        $field = ['conference_id', 'status', 'begin', 'end'];
+        $field = ['conferences_users.status', 'begin', 'end', 'conference_id'];
         $now = Carbon::now()->toDateTimeString();
-        $map = [['user_id','=',$user->id], ['to','>',$now]];
-        $list = ConferencesUser::where($map)->select($field)
-            ->orderBy('from','desc')
+        $map = [
+            ['conferences_users.user_id','=',$user->id],
+            ['conferences.to','>',$now],
+            ['conferences.status','=',Conference::STATUS_CHECK]
+        ];
+
+        $list = ConferencesUser::
+            join('conferences', function($join) use ($map){
+                $join->on('conferences.id','=','conferences_users.conference_id')
+                    ->where($map);
+            })
+            ->select($field)
             ->paginate(ConfigurationTool::DEFAULT_PAGE_SIZE);
         $list = $this->dataDispose($list);
 
@@ -181,13 +190,21 @@ class ConferenceDao
      */
     public function accomplishConference(User $user) {
         $now = Carbon::now()->toDateTimeString();
-        $field = ['conference_id', 'status', 'begin', 'end'];
-        $map = [['user_id','=',$user->id], ['to','<',$now]];
-        $list = ConferencesUser::where($map)->select($field)
-            ->orderBy('from','desc')
+        $field = ['conferences_users.status', 'begin', 'end', 'conference_id'];
+        $map = [
+            ['conferences_users.user_id','=',$user->id],
+            ['conferences.to','<',$now],
+            ['conferences.status','=',Conference::STATUS_CHECK]
+        ];
+        $list = ConferencesUser::
+            join('conferences', function($join) use ($map){
+                $join->on('conferences.id','=','conferences_users.conference_id')
+                    ->where($map);
+            })
+            ->select($field)
             ->paginate(ConfigurationTool::DEFAULT_PAGE_SIZE);
-        $list = $this->dataDispose($list);
 
+        $list = $this->dataDispose($list);
         return $list;
     }
 
@@ -210,6 +227,7 @@ class ConferenceDao
             }
 
             $conference = $val->conference;
+//            dd($conference);
             $parse = Carbon::parse($conference->from);
             $val['date'] = $parse->format('Y-m-d');
             $conference['from'] = $parse->format('H:i');

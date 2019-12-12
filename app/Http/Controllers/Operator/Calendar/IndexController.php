@@ -75,7 +75,6 @@ class IndexController extends Controller
 
         $this->dataForView['school'] = $school;
         $this->dataForView['config'] = $school->configuration;
-
         return view('school_manager.calendar.index', $this->dataForView);
     }
 
@@ -87,13 +86,8 @@ class IndexController extends Controller
     public function getEventDetails(CalendarRequest $request)
     {
         $id = $request->get('id');
-
         $dao = new CalendarDao;
-
         $data = $dao->getEventById($id);
-
         return JsonBuilder::Success($data, '获取校历事件详情');
     }
-
-
 }

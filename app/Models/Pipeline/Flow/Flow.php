@@ -22,10 +22,6 @@ class Flow extends Model implements IFlow
         'school_id','name','type','icon'
     ];
 
-    public function getIconUrl(){
-        return $this->icon ?? asset('assets/img/node-icon.png');
-    }
-
     /**
      * 流程的所有分类
      */
@@ -117,5 +113,9 @@ class Flow extends Model implements IFlow
     public function getName()
     {
         return $this->name;
+    }
+
+    public function getIconAttribute($value){
+        return $value ? asset($value) : asset('assets/img/node-icon.png');
     }
 }

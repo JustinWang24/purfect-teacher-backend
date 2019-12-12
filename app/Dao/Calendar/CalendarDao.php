@@ -5,7 +5,9 @@ namespace App\Dao\Calendar;
 
 use App\Models\Schools\SchoolCalendar;
 use App\Models\Schools\SchoolConfiguration;
+use App\Utils\Time\CalendarDay;
 use App\Utils\Time\CalendarWeek;
+use Carbon\Carbon;
 use Illuminate\Support\Collection;
 
 class CalendarDao
@@ -44,7 +46,7 @@ class CalendarDao
      */
     public function getCalendarEvent($schoolId)
     {
-        return SchoolCalendar::where('school_id', $schoolId)->select('id' ,'tag', 'content', 'event_time')->get();
+        return SchoolCalendar::where('school_id', $schoolId)->select('id' ,'tag', 'content', 'event_time')->orderBy('event_time')->get();
     }
 
     /**
@@ -71,21 +73,57 @@ class CalendarDao
 
     /**
      * @param SchoolConfiguration $configuration
+     * @param null $year
+     * @param null $month
      * @param null $term
-     * @return Collection
+     * @return array
      */
-    public function getCalendar(SchoolConfiguration $configuration, $term = null){
+    public function getCalendar(SchoolConfiguration $configuration, $year = null, $month = null, $term = null){
         $weeks = $configuration->getAllWeeksOfTerm($term);
-        $that = $this;
-        $weeks->each(function ($week, $key) use ($that, $configuration) {
-            /**
-             * @var CalendarWeek $week
-             */
-            $events = $that->getBetween($week->getStart(), $week->getEnd(), $configuration->getSchoolId());
-            if(count($events) > 0)
-                $week->setEvents($events);
-        });
 
-        return $weeks;
+        // 根据给定的年和月, 获取所需要的天数
+        $days = [];
+        $firstDayOfMonth = null;
+        $lastDayOfMonth = null;
+        if($year && $month){
+            $firstDayOfMonth = Carbon::create($year, $month, 1);
+            $lastDayOfMonth = Carbon::create($year,$month,$firstDayOfMonth->lastOfMonth()->day);
+        }
+        else{
+            $firstDayOfMonth = Carbon::now()->firstOfMonth();
+            $lastDayOfMonth = Carbon::now()->lastOfMonth();
+        }
+
+        $firstDay = CalendarDay::GetFirstDayOfTheWeek($firstDayOfMonth);
+        $firstDayText = $firstDay->format('Y-m-d');
+        $firstDay->subDay();
+
+        $lastDay = CalendarDay::GetLastDayOfTheWeek($lastDayOfMonth);
+
+        $diff = $firstDay->diffInDays($lastDay);
+
+        foreach (range(1, $diff) as $num) {
+            $key = $firstDay->addDay()->format('Y-m-d');
+            $days[$key] = new CalendarDay(
+                Carbon::createFromFormat('Y-m-d',$key),
+                $weeks
+            );
+        }
+
+        $events = (new CalendarDao())->getBetween($firstDayText, $lastDay, $configuration->getSchoolId());
+
+
+        $daysFinal = [];
+        foreach ($events as $event) {
+            $key = $event->event_time->format('Y-m-d');
+            $days[$key]->addEvent($event);
+        }
+        foreach ($days as $day) {
+            $daysFinal[] = $day;
+        }
+        return [
+            'days' =>$daysFinal,
+            'weeks'=>$weeks,
+        ];
     }
 }

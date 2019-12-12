@@ -42,6 +42,15 @@ class CalendarWeek implements Arrayable
     }
 
     /**
+     * 是否给定日期是本周的某一天
+     * @param Carbon $date
+     * @return bool
+     */
+    public function includes(Carbon $date){
+        return $date->between($this->start, $this->end);
+    }
+
+    /**
      * @return string
      */
     public function getName()
@@ -86,7 +95,7 @@ class CalendarWeek implements Arrayable
             'name'=>$this->name,
             'start'=>$this->start->format('Y-m-d'),
             'end'=>$this->end->format('Y-m-d'),
-            'events'=>$this->events,
+//            'events'=>$this->events,
         ];
     }
 }

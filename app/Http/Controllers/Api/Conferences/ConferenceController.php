@@ -25,7 +25,6 @@ class ConferenceController extends Controller
         // 查询当前用户受邀未结束的会议
         $dao = new ConferenceDao();
         $result = $dao->unfinishedConference($user);
-
         $data = pageReturn($result);
         return JsonBuilder::Success($data);
     }

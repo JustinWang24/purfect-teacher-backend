@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\BusinessLogic\HomePage\Factory;
 use App\User;
+use App\Utils\JsonBuilder;
 use Illuminate\Http\Request;
 use App\BusinessLogic\DocumentsWorkflows\Factory as DocumentFactory;
 
@@ -33,6 +34,7 @@ class HomeController extends Controller
         $user = $request->user();
         $logic = Factory::GetLogic($request);
         $data = $logic ? $logic->getDataForView() : [];
+        dd($data['groupedFlows']);
         return view($user->getDefaultView(), array_merge($this->dataForView, $data));
     }
 
