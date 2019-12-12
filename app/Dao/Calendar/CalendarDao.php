@@ -46,7 +46,7 @@ class CalendarDao
      */
     public function getCalendarEvent($schoolId)
     {
-        return SchoolCalendar::where('school_id', $schoolId)->select('id' ,'tag', 'content', 'event_time')->get();
+        return SchoolCalendar::where('school_id', $schoolId)->select('id' ,'tag', 'content', 'event_time')->orderBy('event_time')->get();
     }
 
     /**
