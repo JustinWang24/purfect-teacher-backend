@@ -8,20 +8,20 @@
         <div class="col-sm-12 col-md-6 col-lg-6 col-xl-6">
             <div class="card">
                 <div class="card-body">
-                    @foreach($groupedFlows as $type=>$flows)
+                    @foreach($groupedFlows as $item)
                     <div class="row mb-4">
                         <div class="col-12">
                             <h4 class="text-primary">
-                                <b>{{ \App\Models\Pipeline\Flow\Flow::Types()[$type] }}</b>
-                                <el-button type="primary" size="mini" @click="createNewFlow({{ $type }})" icon="el-icon-plus" class="pull-right">
+                                <b>{{ $item['name'] }}</b>
+                                <el-button type="primary" size="mini" @click="createNewFlow({{ $item['key'] }})" icon="el-icon-plus" class="pull-right">
                                     新流程
                                 </el-button>
                             </h4>
                             <el-divider></el-divider>
                             <div class="row">
-                                @foreach($flows as $flow)
+                                @foreach($item['flows'] as $flow)
                                 <div class="col-4 mb-4 flow-box" v-on:click="loadFlowNodes({{ $flow->id }},'{{ $flow->name }}')">
-                                    <img src="{{ $flow->getIconUrl() }}" width="50">
+                                    <img src="{{ $flow->icon }}" width="50">
 
                                     @if($lastNewFlow && intval($lastNewFlow) === $flow->id)
                                         <el-badge value="新" class="item">
@@ -106,7 +106,7 @@
 
                                     <h5><b>负责审核</b></h5>
                                     <p class="pl-4" v-if="node.handler.notice_to.length === 0">
-                                        <span class="text-danger">无需审核</span>
+                                        <span class="text-danger">无需下一步审核</span>
                                     </p>
                                     <p class="pl-4" v-if="node.handler.notice_to.length > 0">
                                         <span class="text-primary"><b>角色: </b></span>
