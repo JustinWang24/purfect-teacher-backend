@@ -36,7 +36,7 @@ class SystemNotificationDao
     public function getNotificationByUserId($schoolId, $userId)
     {
         return SystemNotification::where('school_id', $schoolId)->
-                    whereIn('to', [0,$userId])->simplePaginate(ConfigurationTool::DEFAULT_PAGE_SIZE);
+                    whereIn('to', [0,$userId])->orderBy('id','DESC')->simplePaginate(ConfigurationTool::DEFAULT_PAGE_SIZE);
     }
 
 
