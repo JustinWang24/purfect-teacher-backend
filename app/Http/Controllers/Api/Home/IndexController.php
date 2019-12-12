@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\Home;
 
 use App\Dao\Banners\BannerDao;
 use App\Dao\Calendar\CalendarDao;
+use App\Dao\Misc\SystemNotificationDao;
 use App\Dao\Schools\SchoolDao;
 use App\Dao\Users\UserDao;
 use App\Events\User\ForgetPasswordEvent;
@@ -13,6 +14,7 @@ use App\Http\Requests\Home\HomeRequest;
 use App\Dao\Schools\NewsDao;
 use App\Http\Requests\MyStandardRequest;
 use App\Http\Requests\SendSms\SendSmeRequest;
+use App\Models\Misc\SystemNotification;
 use App\Models\Users\UserVerification;
 use App\Utils\JsonBuilder;
 use App\Utils\Time\CalendarWeek;
@@ -48,6 +50,31 @@ class IndexController extends Controller
         $data = pageReturn($data);
         $data['school_name'] = $school->name;
         $data['school_logo'] = $school->logo;
+
+        //首页消息获取
+        $user = $request->user();
+        $systemNotificationDao = new SystemNotificationDao();
+        $systemNotifications = $systemNotificationDao->getNotificationByUserId($school->id, $user->id, 2);
+        $json_array = [];
+        foreach($systemNotifications as $key=>$value) {
+            $json_array[$key]['ticeid']= $value->id;
+            $json_array[$key]['create_at']= $value->create_id;
+            $json_array[$key]['tice_title']= $value->title;
+            $json_array[$key]['tice_content']= $value->content;
+            $json_array[$key]['tice_money']= $value->money;
+            $json_array[$key]['webview_url']= $value->next_move;
+            $json_array[$key]['type']= $value->type;
+            $json_array[$key]['priority']= $value->priority;
+            if (isset(SystemNotification::CATEGORY[$value->category])){
+                $json_array[$key]['tice_header']= SystemNotification::CATEGORY[$value->category];
+            } else {
+                $json_array[$key]['tice_header'] = '消息';
+            }
+        }
+        $data['notifications'] = $json_array;
+
+
+
         return JsonBuilder::Success($data);
     }
 
