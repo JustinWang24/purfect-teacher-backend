@@ -15,7 +15,6 @@
                 @yield('content')
             </div>
         </div>
-        @include('layouts/desktop/sidebar_chat')
     </div>
     @include('layouts/desktop/footer')
 </div>

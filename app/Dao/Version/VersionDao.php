@@ -80,7 +80,7 @@ class VersionDao
      */
     public function getVersions($field="*")
     {
-        return Version::all();
+        return Version::orderBy('code','desc')->get();
     }
 
     /**
