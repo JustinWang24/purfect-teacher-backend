@@ -36,6 +36,10 @@ class Flow extends Model implements IFlow
         ];
     }
 
+    public function nodes(){
+        return $this->hasMany(Node::class);
+    }
+
     /**
      * 获取简单的流程的按顺序排列的步骤集合
      *

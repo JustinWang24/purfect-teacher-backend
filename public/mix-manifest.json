@@ -1,8 +1,8 @@
 {
     "/js/app.js": "/js/app.js",
-    "/css/h5/student_registration_app.css": "/css/h5/student_registration_app.css",
+    "/css/h5/user.css": "/css/h5/user.css",
     "/css/app.css": "/css/app.css",
-    "/js/h5/student_registration_app.js": "/js/h5/student_registration_app.js",
+    "/js/h5/student.js": "/js/h5/student.js",
     "/css/extra_page.css": "/css/extra_page.css",
     "/js/extra_page.js": "/js/extra_page.js"
 }

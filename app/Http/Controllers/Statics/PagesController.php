@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Statics;
 use App\Dao\Schools\SchoolDao;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 
 class PagesController extends Controller
 {
@@ -21,6 +22,7 @@ class PagesController extends Controller
         $this->dataForView['school'] = $school;
 
         $this->dataForView['appName'] = 'student_registration_app';
+        $this->dataForView['api_token'] = Auth::user()->api_token ?? null;
 
         return view('h5_apps.student.registration_app', $this->dataForView);
     }

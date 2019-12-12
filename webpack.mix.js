@@ -1,8 +1,8 @@
 const mix = require('laravel-mix');
 
 mix.js('resources/js/app.js', 'public/js')
-    .js('resources/js/h5_apps/student_registration_app.js', 'public/js/h5')
-    .sass('resources/sass/h5_apps/student_registration_app.scss', 'public/css/h5')
+    .js('resources/js/h5_apps/student.js', 'public/js/h5')
+    .sass('resources/sass/h5_apps/user.scss', 'public/css/h5')
     .sass('resources/sass/app.scss', 'public/css');
 
 // mix.js('resources/js/smart/smart_basic.js', 'public/js')

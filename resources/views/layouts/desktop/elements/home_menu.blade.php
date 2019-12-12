@@ -17,7 +17,7 @@
         </li>
         <li class="nav-item">
             <a href="{{ route('verified_student.contacts.list') }}" class="nav-link">
-                <span class="title">通讯录</span>
+                <span class="title">通讯录管理</span>
             </a>
         </li>
         <li class="nav-item">
@@ -27,7 +27,7 @@
         </li>
         <li class="nav-item">
             <a href="{{ route('school_manger.school.calendar.index',['uuid'=>session('school.uuid')]) }}" class="nav-link ">
-                <span class="title">校历</span>
+                <span class="title">校历管理</span>
             </a>
         </li>
         <li class="nav-item">
