@@ -34,7 +34,7 @@ if(!function_exists('pageReturn')){
             'currentPage' => $result->currentPage(),
             'lastPage'    => $result->lastPage(),
             'total'       => $result->total(),
-            'list'        =>$result->getCollection()
+            'list'        => $result->getCollection()
         ];
 
         return $data;

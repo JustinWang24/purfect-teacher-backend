@@ -20,7 +20,8 @@ class Conference extends Model
     const STATUS_REFUSE_TEXT  = '拒绝';
 
     protected  $fillable=[
-        'title','school_id','user_id','room_id','sign_out','to','from','video','remark',
+        'title', 'school_id', 'user_id', 'room_id', 'sign_out', 'to', 'from',
+        'video', 'remark', 'status',
     ];
 
     protected $hidden=['updated_at'];
