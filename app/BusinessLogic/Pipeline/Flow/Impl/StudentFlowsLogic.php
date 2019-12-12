@@ -23,7 +23,7 @@ class StudentFlowsLogic extends GeneralFlowsLogic
     {
         $dao = new FlowDao();
         return $dao->getGroupedFlows(
-            $this->user->getSchoolId(), [IFlow::TYPE_STUDENT_ONLY], $forApp
+            $this->user->getSchoolId(), [IFlow::TYPE_STUDENT_ONLY, IFlow::TYPE_FINANCE], $forApp
         );
     }
 }

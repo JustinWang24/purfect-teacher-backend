@@ -34,7 +34,6 @@ class HomeController extends Controller
         $user = $request->user();
         $logic = Factory::GetLogic($request);
         $data = $logic ? $logic->getDataForView() : [];
-        dd($data['groupedFlows']);
         return view($user->getDefaultView(), array_merge($this->dataForView, $data));
     }
 
