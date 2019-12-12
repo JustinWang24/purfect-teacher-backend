@@ -34,8 +34,8 @@ class FlowsController extends Controller
                 'url'=>[
                     'base'=>env('APP_URL'),
                     'extra'=>'',
-                    'start_flow'=>'/flow/user/start',
-                    'view_flows_in_progress'=>'/flow/user/in-progress',
+                    'start_flow'=>'/h5/flow/user/start',
+                    'view_flows_in_progress'=>'/h5/flow/user/in-progress',
                 ],
             ]
         );

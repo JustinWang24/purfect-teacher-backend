@@ -29,6 +29,16 @@ Route::prefix('network-disk')->group(function () {
         ->name('file.manager.media.upload');
 });
 
+// APP嵌入的 H5 页面的集合
+Route::prefix('h5')->group(function () {
+    // 用户启动流程
+    Route::any('/flow/user/start','H5\Pipeline\FlowsController@start')
+        ->name('h5.flow.user.start');
+    // 用户查看自己的流程
+    Route::any('/flow/user/in-progress','H5\Pipeline\FlowsController@in_progress')
+        ->name('h5.flow.user.in-progress');
+});
+
 // 分享
 Route::get('/share-file','Api\NetworkDisk\MediaController@shareFile')->name('shareFile');
 

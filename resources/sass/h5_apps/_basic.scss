@@ -1,1 +1,24 @@
 @import "~normalize.css";
+
+$borderColor: #F6F6F6;
+$txtColor: #333333;
+$defaultPadding: 15px;
+
+p{
+  line-height: 1.5;
+}
+
+.p-15{
+  padding: $defaultPadding;
+}
+.nb{
+  border: none !important;
+}
+
+.full-width{
+  width: 100%;
+}
+
+p, h1, h2, h3, h4, h5, h6, li{
+  font-family: "Helvetica Neue",Helvetica,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","微软雅黑",Arial,sans-serif;
+}
