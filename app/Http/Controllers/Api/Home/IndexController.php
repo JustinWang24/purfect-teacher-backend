@@ -42,6 +42,7 @@ class IndexController extends Controller
         }
 
         $data = pageReturn($data);
+        $data['is_show_account'] = false; // 是否展示账户
         $data['school_name'] = $school->name;
         $data['school_logo'] = $school->logo;
         return JsonBuilder::Success($data);
