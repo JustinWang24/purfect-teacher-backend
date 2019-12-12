@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\Home;
 use App\Dao\Banners\BannerDao;
 use App\Dao\Calendar\CalendarDao;
 use App\Dao\Schools\SchoolDao;
+use App\Dao\Students\StudentProfileDao;
 use App\Dao\Users\UserDao;
 use App\Events\User\ForgetPasswordEvent;
 use App\Http\Controllers\Controller;
@@ -13,7 +14,9 @@ use App\Http\Requests\Home\HomeRequest;
 use App\Dao\Schools\NewsDao;
 use App\Http\Requests\MyStandardRequest;
 use App\Http\Requests\SendSms\SendSmeRequest;
+use App\Models\Students\StudentProfile;
 use App\Models\Users\UserVerification;
+use App\User;
 use App\Utils\JsonBuilder;
 
 class IndexController extends Controller
@@ -96,6 +99,60 @@ class IndexController extends Controller
             ]);
         }
     }
+
+    /**
+     * 获取用户信息
+     * @param HomeRequest $request
+     * @return string
+     */
+    public function getUserInfo(HomeRequest $request)
+    {
+        $user = $request->user();
+
+        $profile = $user->profile;
+
+        $gradeUser = $user->gradeUser;
+        $grade     = $user->gradeUser->grade;
+
+        $data = [
+            'name'        => $user->name,
+            'gender'      => $profile->gender,
+            'birthday'    => $profile->birthday,
+            'state'       => $profile->state,
+            'city'        => $profile->city,
+            'area'        => $profile->area,
+            'school_name' => $gradeUser->school->name,
+            'institute'   => $gradeUser->institute->name,
+            'department'  => $gradeUser->department->name,
+            'major'       => $gradeUser->major->name,
+            'year'        => $grade->year,
+            'grade_name'  => $grade->name
+        ];
+
+        return  JsonBuilder::Success($data);
+    }
+
+    /**
+     * 修改用户信息
+     * @param HomeRequest $request
+     * @return string
+     */
+    public function updateUserInfo(HomeRequest $request)
+    {
+        $user = $request->user();
+
+        $dao = new StudentProfileDao;
+
+        $result = $dao->updateStudentProfile($user->id, $request->get('data'));
+
+        if ($result) {
+            return  JsonBuilder::Success('修改成功');
+        } else {
+            return  JsonBuilder::Success('修改失败');
+        }
+    }
+
+
 
     /**
      * 发送短信

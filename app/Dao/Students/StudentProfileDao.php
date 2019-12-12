@@ -33,6 +33,18 @@ class StudentProfileDao
     }
 
     /**
+     * 更改用户信息
+     * @param $userId
+     * @param $profile
+     * @return mixed
+     */
+    public function updateStudentProfile($userId, $profile)
+    {
+        return StudentProfile::where('user_id',$userId)->update($profile);
+    }
+
+
+    /**
      * 根据身份证或者手机号, 获取用户的 ID
      * @param $idNumber
      * @param $mobile
