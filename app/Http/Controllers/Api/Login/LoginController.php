@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\Login;
 
+use App\BusinessLogic\forgetPasswordAndUpdateMoile\Factory;
 use App\Dao\Users\UserDao;
 use App\Dao\Users\UserDeviceDao;
 use App\Dao\Users\UserVerificationDao;
@@ -114,39 +115,30 @@ class LoginController extends Controller
      */
     public function forgetPassword(LoginRequest $request)
     {
-
-        $mobile   = $request->getMobile();
-        $password = $request->getPassword();
-        $code     = $request->get('code');
-
-        $dao = new UserVerificationDao;
-        $userDao = new UserDao;
-
-        $user = $userDao->getUserByMobile($mobile);
-
-        if (empty($user)) {
-            return JsonBuilder::Error('用户不存在');
-        }
-
-        $verification = $dao->getVerificationByMobileAdnCode($mobile, $code, UserVerification::PURPOSE_2);
-
-        if (empty($verification)) {
-            return JsonBuilder::Error('验证码错误');
-        }
-
-        if (Carbon::now()->timestamp - strtotime($verification->created_at) > 60) {
-            return JsonBuilder::Error('验证码已过期');
-        }
-
-        $result = $userDao->updateUser($user->id, null, $password);
-        if ($result) {
-            $userDao->updateApiToken($user->id, null);
-            return JsonBuilder::Success('密码修改成功,请重新登录');
+        $logic = Factory::GetLogic($request);
+        $result = $logic->Logic();
+        if ($result->isSuccess()) {
+            return  JsonBuilder::Success($result->getMessage());
         } else {
-            return JsonBuilder::Error('系统错误,请稍后再试~');
+            return JsonBuilder::Error($result->getMessage());
         }
+    }
 
 
+    /**
+     * 修改手机号
+     * @param LoginRequest $request
+     * @return string
+     */
+    public function updateUserMobileInfo(LoginRequest $request)
+    {
+        $logic = Factory::GetLogic($request);
+        $result = $logic->Logic();
+        if ($result->isSuccess()) {
+            return  JsonBuilder::Success($result->getMessage());
+        } else {
+            return JsonBuilder::Error($result->getMessage());
+        }
     }
 
 

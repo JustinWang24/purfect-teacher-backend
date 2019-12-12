@@ -458,6 +458,19 @@ Route::prefix('user')->group(function () {
     // 忘记密码
     Route::post('/findUserPasswordInfo', 'Api\Login\LoginController@forgetPassword')
         ->name('api.user.edit.password');
+
+    // 用户资料
+    Route::post('/getUserInfo', 'Api\Home\IndexController@getUserInfo')
+        ->middleware('auth:api')->name('api.get.user.info');
+
+    // 修改资料
+    Route::post('/updateUserInfo', 'Api\Home\IndexController@updateUserInfo')
+        ->middleware('auth:api')->name('api.update.user.info');
+
+    // 修改用户手机号
+    Route::post('/updateUserMobileInfo', 'Api\Login\LoginController@updateUserMobileInfo')
+        ->middleware('auth:api')->name('api.update.user.mobile');
+
 });
 
 
