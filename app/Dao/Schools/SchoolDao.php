@@ -184,7 +184,7 @@ class SchoolDao
     /**
      * 根据名字查询学校
      * @param $schoolName
-     * @return
+     * @return School
      */
     public function getSchoolByName($schoolName)
     {

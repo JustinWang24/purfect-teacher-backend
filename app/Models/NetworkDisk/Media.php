@@ -6,6 +6,7 @@ use App\Dao\NetworkDisk\CategoryDao;
 use App\User;
 use App\Utils\Time\GradeAndYearUtil;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Teachers\ConferencesMedia;
 
 /**
  * @property integer $id
@@ -71,7 +72,7 @@ class Media extends Model
      */
     public function conferencesMedias()
     {
-        return $this->hasMany('App\Models\NetworkDisk\ConferencesMedia');
+        return $this->hasMany(ConferencesMedia::class);
     }
 
     /**
@@ -115,6 +116,7 @@ class Media extends Model
                 break;
             case self::TYPE_TXT:
                 $text = 'txt文档';
+                break;
             default:
                 break;
         }
@@ -127,7 +129,7 @@ class Media extends Model
      * @return bool
      */
     public function isOwnedByUser(User $user){
-        return $this->user_id === $user->id;
+        return $this->user_id === $user->getId();
     }
 
     /**
@@ -141,6 +143,7 @@ class Media extends Model
         if(env('NETWORK_DISK_DRIVER', self::DRIVER_LOCAL) === self::DRIVER_LOCAL) {
             return str_replace(self::DEFAULT_UPLOAD_PATH_PREFIX, self::DEFAULT_URL_PATH_PREFIX, $uploadPath);
         }
+        return '';
     }
 
     /**
@@ -154,6 +157,7 @@ class Media extends Model
         if(env('NETWORK_DISK_DRIVER', self::DRIVER_LOCAL) === self::DRIVER_LOCAL) {
             return str_replace(self::DEFAULT_URL_PATH_PREFIX,self::DEFAULT_UPLOAD_PATH_PREFIX, $url);
         }
+        return '';
     }
 
     /**

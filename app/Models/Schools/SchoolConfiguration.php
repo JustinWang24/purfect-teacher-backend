@@ -2,9 +2,11 @@
 
 namespace App\Models\Schools;
 
+use App\Utils\Time\CalendarWeek;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use App\Utils\Misc\ConfigurationTool;
+use Illuminate\Support\Collection;
 
 class SchoolConfiguration extends Model
 {
@@ -63,7 +65,37 @@ class SchoolConfiguration extends Model
         return $this->$fieldName->setYear($now->year);
     }
 
+    /**
+     * @param null $term
+     * @return Collection
+     */
+    public function getAllWeeksOfTerm($term = null){
+        $termStartDate = $this->getTermStartDate($term);
+        $fieldOfWeeksPerTerm = ConfigurationTool::KEY_STUDY_WEEKS_PER_TERM;
+        $weeksNumber = $this->$fieldOfWeeksPerTerm;
 
+        // 预备周, 是开始日期的前一周
+        $weeks = new Collection();
+
+        $weeks->push(
+            new CalendarWeek(
+                '预备周',
+                $termStartDate->subWeek()->format('Y-m-d'),
+                $termStartDate->addDays(6)->format('Y-m-d')
+            )
+        );
+
+        // 工作周
+        for ($i = 0; $i < $weeksNumber; $i++){
+            $weeks->push(
+                new CalendarWeek('第' . ($i+1) . '周',
+                    $termStartDate->addDay()->format('Y-m-d'),
+                    $termStartDate->addDays(6)->format('Y-m-d')
+                )
+            );
+        }
+        return $weeks;
+    }
 
     /**
      * 获取指定的起始日期. 注意, 返回的 Carbon 对象, 只能使用月份和日期, 不能使用年
@@ -93,5 +125,13 @@ class SchoolConfiguration extends Model
      */
     public static function CreateMockEcDate($ec,$type){
         return Carbon::createFromFormat('Y-m-d',self::FAKE_YEAR.'-'.$ec[$type]['month'].'-'.$ec[$type]['day']);
+    }
+
+    /**
+     * 获取学校 ID
+     * @return int
+     */
+    public function getSchoolId(){
+        return $this->school_id;
     }
 }

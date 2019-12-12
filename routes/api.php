@@ -83,6 +83,10 @@ Route::prefix('school')->middleware('auth:api')->group(function () {
     // 快速定位用户的搜索
     Route::any('/quick-search-users','Api\School\UsersController@quick_search_users')
         ->name('api.school.quick.search.users');
+
+    // APP 应用接口
+    Route::any('/calendar','Api\Home\IndexController@calendar')
+        ->name('api.school.calendar');
 });
 
 Route::prefix('enquiry')->middleware('auth:api')->group(function () {
@@ -360,7 +364,6 @@ Route::prefix('notice')->middleware('auth:api')->group(function () {
 
     Route::post('/notice-info', 'Api\Notice\NoticeController@noticeInfo')
     ->name('api.notice.info');
-
 });
 
 // APP banner 接口
@@ -453,6 +456,19 @@ Route::prefix('user')->group(function () {
     // 忘记密码
     Route::post('/findUserPasswordInfo', 'Api\Login\LoginController@forgetPassword')
         ->name('api.user.edit.password');
+
+    // 用户资料
+    Route::post('/getUserInfo', 'Api\Home\IndexController@getUserInfo')
+        ->middleware('auth:api')->name('api.get.user.info');
+
+    // 修改资料
+    Route::post('/updateUserInfo', 'Api\Home\IndexController@updateUserInfo')
+        ->middleware('auth:api')->name('api.update.user.info');
+
+    // 修改用户手机号
+    Route::post('/updateUserMobileInfo', 'Api\Login\LoginController@updateUserMobileInfo')
+        ->middleware('auth:api')->name('api.update.user.mobile');
+
 });
 
 

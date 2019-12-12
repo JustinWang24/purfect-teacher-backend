@@ -10,6 +10,7 @@ namespace App\Utils;
 
 
 use Carbon\Carbon;
+use Illuminate\Contracts\Support\Arrayable;
 
 class JsonBuilder
 {
@@ -102,7 +103,7 @@ class JsonBuilder
      * @throws \Exception
      */
     public static function TransformNullToEmptyStringForObject($obj ){
-        if( $obj instanceof \ArrayAccess || is_callable($obj, 'toArray')){
+        if( $obj instanceof Arrayable || is_callable($obj, 'toArray')){
             // 具备转换成数组的条件
             $arr = $obj->toArray();
             return self::TransformNullToEmptyString($arr);

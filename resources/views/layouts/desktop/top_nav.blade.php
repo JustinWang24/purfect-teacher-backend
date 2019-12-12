@@ -103,8 +103,6 @@
                         </li>
                     </ul>
                 </li>
-                <!-- end notification dropdown -->
-                <!-- start manage user dropdown -->
                 <li class="dropdown dropdown-user">
                     <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown"
                        data-close-others="true">
