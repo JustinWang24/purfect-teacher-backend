@@ -75,6 +75,7 @@ class IndexController extends Controller
 
         $this->dataForView['school'] = $school;
         $this->dataForView['config'] = $school->configuration;
+
         return view('school_manager.calendar.index', $this->dataForView);
     }
 

@@ -25,10 +25,8 @@ class NoticeDao
 
     public function getNoticeById($id)
     {
-        return Notice::where('id', $id)->first();
+        return Notice::where('id', $id)->with('attachments')->first();
     }
-
-
 
     /**
      * 添加
@@ -39,15 +37,14 @@ class NoticeDao
     {
         DB::beginTransaction();
         try{
-
-            $mediaId = $data['media_id'];
-            unset($data['media_id']);
             $result = Notice::create($data);
-            foreach ($mediaId as $key => $val) {
+            foreach ($data['attachments'] as $key => $val) {
                 $insert = [
                     'notice_id' => $result->id,
-                    'media_id'  => $val,
-                    ];
+                    'media_id'  => $val['id'],
+                    'file_name' => $val['file_name'],
+                    'url'       => $val['url'],
+                ];
                 NoticeMedia::create($insert);
             }
             DB::commit();
@@ -67,15 +64,22 @@ class NoticeDao
     {
         DB::beginTransaction();
         try{
-            $mediaId = $data['media_id'];
-            unset($data['media_id']);
-            $result = Notice::where('id', $data['id'])->update($data);
-            foreach ($mediaId as $key => $val) {
-                $insert = [
-                    'notice_id' => $data['id'],
-                    'media_id'  => $val,
+            $attachments = $data['attachments'];
+            unset($data['attachments']);
+            Notice::where('id', $data['id'])->update($data);
+            foreach ($attachments as $key => $val) {
+                $found = NoticeMedia::where('notice_id',$data['id'])
+                    ->where('media_id',$val['id'])
+                    ->first();
+                if(!$found){
+                    $insert = [
+                        'notice_id' => $data['id'],
+                        'media_id'  => $val['id'],
+                        'file_name' => $val['file_name'],
+                        'url'       => $val['url'],
                     ];
-                NoticeMedia::where('notice_id', $data['id'])->update($insert);
+                    NoticeMedia::create($insert);
+                }
             }
             DB::commit();
             return new MessageBag(JsonBuilder::CODE_SUCCESS,'创建成功');
@@ -89,30 +93,29 @@ class NoticeDao
     /**
      * @param $type
      * @param $schoolId
-     * @return mixed
+     * @param $pageNumber
+     * @param $pageSize
+     * @return array
      */
-    public function getNotice($type, $schoolId) {
-        $field = ['id', 'title', 'type', 'created_at', 'inspect_id', 'image'];
+    public function getNotice($type, $schoolId, $pageNumber = 0, $pageSize = ConfigurationTool::DEFAULT_PAGE_SIZE) {
+        $field = ['id', 'title', 'type', 'created_at', 'inspect_id', 'image','status'];
         $map = ['type'=>$type, 'school_id'=>$schoolId, 'status'=>Notice::STATUS_PUBLISH];
-        $notice = Notice::where($map)->select($field)
-            ->paginate(ConfigurationTool::DEFAULT_PAGE_SIZE);
-        foreach ($notice as $key => $val) {
-
-            // 公告封面图
-            if($type == Notice::TYPE_NOTICE) {
-                $val->image_media;
-            }
-            // 检查标签
-            if($type == Notice::TYPE_INSPECTION) {
-                $val->inspect->name;
-            }
-            unset($val['image']);
-            unset($val['inspect_id']);
-        }
-        return $notice;
+        $notices = Notice::where('type',$type)->select($field)->with('attachments')
+            ->skip($pageSize * $pageNumber)
+            ->take($pageSize)
+            ->get();
+        $total = Notice::where($map)->count();
+        return [
+            'notices'=>$notices,
+            'total'=>$total
+        ];
     }
 
+    public function deleteNoticeMedia($id){
+        return NoticeMedia::where('id',$id)->delete();
+    }
 
-
-
+    public function delete($id){
+        return Notice::where('id',$id)->delete();
+    }
 }

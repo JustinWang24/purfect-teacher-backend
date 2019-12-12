@@ -26,8 +26,7 @@ class ConferenceController extends Controller
         $dao = new ConferenceDao();
         $result = $dao->unfinishedConference($user);
         $data = pageReturn($result);
-//        dd($data);
-        return JsonBuilder::Success($data['list']);
+        return JsonBuilder::Success($data);
     }
 
 
@@ -45,7 +44,6 @@ class ConferenceController extends Controller
         $result = $dao->accomplishConference($user);
 
         $data = pageReturn($result);
-        dd($data);
         return JsonBuilder::Success($data);
     }
 

@@ -4,6 +4,9 @@
 namespace App\Dao\Calendar;
 
 use App\Models\Schools\SchoolCalendar;
+use App\Models\Schools\SchoolConfiguration;
+use App\Utils\Time\CalendarWeek;
+use Illuminate\Support\Collection;
 
 class CalendarDao
 {
@@ -52,4 +55,37 @@ class CalendarDao
         return SchoolCalendar::find($id);
     }
 
+    /**
+     * @param $start
+     * @param $end
+     * @param $schoolId
+     * @return Collection
+     */
+    public function getBetween($start, $end, $schoolId){
+        return SchoolCalendar::where('school_id', $schoolId)
+            ->where('event_time','>=',$start)
+            ->where('event_time','<=',$end)
+            ->select('id' ,'tag', 'content', 'event_time')
+            ->get();
+    }
+
+    /**
+     * @param SchoolConfiguration $configuration
+     * @param null $term
+     * @return Collection
+     */
+    public function getCalendar(SchoolConfiguration $configuration, $term = null){
+        $weeks = $configuration->getAllWeeksOfTerm($term);
+        $that = $this;
+        $weeks->each(function ($week, $key) use ($that, $configuration) {
+            /**
+             * @var CalendarWeek $week
+             */
+            $events = $that->getBetween($week->getStart(), $week->getEnd(), $configuration->getSchoolId());
+            if(count($events) > 0)
+                $week->setEvents($events);
+        });
+
+        return $weeks;
+    }
 }

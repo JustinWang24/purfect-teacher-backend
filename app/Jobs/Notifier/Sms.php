@@ -9,19 +9,22 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
+use Illuminate\Support\Facades\Log;
+use App\Utils\Misc\SmsFactory;
 
 class Sms implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+
     protected $receivers;
     protected $contentHolder;
     protected $template;
 
     /**
      * Sms constructor.
-     * @param HasMobilePhone[] $receivers
-     * @param ContentHolder $contentHolder: 应该是需要插入到模板中的内容
-     * @param string|int $template: 应该是需要发送的模板的 ID
+     * @param $receivers
+     * @param $contentHolder
+     * @param $template
      */
     public function __construct($receivers, $contentHolder, $template)
     {
@@ -37,8 +40,11 @@ class Sms implements ShouldQueue
      */
     public function handle()
     {
+        $sms = SmsFactory::GetInstance();
+
         if(count($this->receivers) === 1){
-            // Todo 点对点的短信发送
+            $result = $sms->send($this->receivers, $this->template, $this->contentHolder);
+            Log::warning('队列发送短信了');
         }
         elseif(count($this->receivers) > 1){
             // Todo 群发短信

@@ -78,4 +78,13 @@ class School extends Model
     public function teacherPerformanceConfigs(){
         return $this->hasMany(TeacherPerformanceConfig::class);
     }
+
+    /**
+     * Logo 的变形, 返回全 URL 网址
+     * @param $value
+     * @return string
+     */
+    public function getLogoAttribute($value){
+        return asset($value);
+    }
 }

@@ -311,13 +311,11 @@ Route::prefix('school_manager')->group(function () {
     Route::get('banner/list','BannerController@index')->name('school_manager.banner.list');
 
     // banner 添加页面展示
-    Route::get('banner/add','BannerController@add')->name('school_manager.banner.add');
-
-    // banner 修改页面展示
-    Route::get('banner/edit','BannerController@edit')->name('school_manager.banner.edit');
+    Route::get('banner/delete','BannerController@delete')->name('school_manager.banner.delete');
 
     // banner 保存数据
     Route::post('banner/save','BannerController@save')->name('school_manager.banner.save');
+    Route::post('banner/load','BannerController@load')->name('school_manager.banner.load');
 
    // 通知管理
     Route::prefix('notice')->group(function (){
@@ -333,16 +331,20 @@ Route::prefix('school_manager')->group(function () {
         Route::get('details-notice', 'NoticeController@details')
             ->name('school_manager.notice.details');
 
-        // 修改
-        Route::get('edit-notice', 'NoticeController@edit')
-            ->name('school_manager.notice.edit');
-
         // 保存数据
         Route::post('save-notice', 'NoticeController@save')
             ->name('school_manager.notice.save');
+
+        // 加载数据
+        Route::post('load', 'NoticeController@load')
+            ->name('school_manager.notice.load');
+
+        // 删除数据
+        Route::get('delete', 'NoticeController@delete')->name('school_manager.notice.delete');
+
+        Route::post('delete-media', 'NoticeController@delete_media')
+            ->name('school_manager.notice.delete-media');
     });
-
-
 
     //值周功能
     Route::get('attendance/add', 'AttendanceSchedulesController@add')->name('school_manager.attendance.add');                        // 添加校区

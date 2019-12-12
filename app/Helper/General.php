@@ -27,16 +27,28 @@ if(!function_exists('pageReturn')){
     /**
      * 分页api统一返回方法
      * @param $result
+     * @param $total
+     * @param $page
      * @return array
      */
-    function pageReturn($result){
-        $data = [
-            'currentPage' => $result->currentPage(),
-            'lastPage'    => $result->lastPage(),
-            'total'       => $result->total(),
-            'list'        => $result->getCollection()
-        ];
 
+    function pageReturn($result, $total = null , $page = 1){
+        if($total){
+            $data = [
+                'currentPage' => $page,
+                'lastPage'    => null,
+                'total'       => $total,
+                'list'        => $result
+            ];
+        }
+        else{
+            $data = [
+                'currentPage' => $result->currentPage(),
+                'lastPage'    => $result->lastPage(),
+                'total'       => $result->total(),
+                'list'        => $result->getCollection()
+            ];
+        }
         return $data;
     }
 }

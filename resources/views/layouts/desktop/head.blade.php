@@ -5,7 +5,7 @@
     <meta name="api-token" content="{{ Auth::user()->api_token ?? null }}">
     <meta name="school" content="{{ session('school.uuid') }}">
     <meta content="width=device-width, initial-scale=1" name="viewport" />
-    <title>{{ ($pageTitle??'') . config('app.name', 'Laravel') }}</title>
+    <title>{{ ($pageTitle??'')}}-{{ config('app.name', 'Laravel') }}</title>
 
     <link href="{{ asset('assets/fonts/simple-line-icons/simple-line-icons.min.css') }}" rel="stylesheet" type="text/css" />
     <link href="{{ asset('assets/fonts/font-awesome/css/font-awesome.min.css') }}" rel="stylesheet" type="text/css" />

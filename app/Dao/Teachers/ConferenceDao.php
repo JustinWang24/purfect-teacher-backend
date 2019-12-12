@@ -162,22 +162,19 @@ class ConferenceDao
      * @return mixed
      */
     public function unfinishedConference(User $user) {
-        $field = ['conferences_users.status', 'begin', 'end', 'conferences.*'
-            ];
+        $field = ['conferences_users.status', 'begin', 'end', 'conference_id'];
         $now = Carbon::now()->toDateTimeString();
         $map = [
             ['conferences_users.user_id','=',$user->id],
             ['conferences.to','>',$now],
-//            ['conferences.status','=',Conference::STATUS_CHECK]
+            ['conferences.status','=',Conference::STATUS_CHECK]
         ];
-//        dd($map);
-//        $list = ConferencesUser::where($map)->select($field)
-//            ->orderBy('from','desc')
-//            ->paginate(ConfigurationTool::DEFAULT_PAGE_SIZE);
 
-        $list = DB::table('conferences_users')
-            ->leftJoin('conferences','conferences.id','=','conferences_users.conference_id')
-            ->where($map)
+        $list = ConferencesUser::
+            join('conferences', function($join) use ($map){
+                $join->on('conferences.id','=','conferences_users.conference_id')
+                    ->where($map);
+            })
             ->select($field)
             ->paginate(ConfigurationTool::DEFAULT_PAGE_SIZE);
         $list = $this->dataDispose($list);
@@ -193,13 +190,21 @@ class ConferenceDao
      */
     public function accomplishConference(User $user) {
         $now = Carbon::now()->toDateTimeString();
-        $field = ['conference_id', 'status', 'begin', 'end'];
-        $map = [['user_id','=',$user->id], ['to','<',$now]];
-        $list = ConferencesUser::where($map)->select($field)
-            ->orderBy('from','desc')
+        $field = ['conferences_users.status', 'begin', 'end', 'conference_id'];
+        $map = [
+            ['conferences_users.user_id','=',$user->id],
+            ['conferences.to','<',$now],
+            ['conferences.status','=',Conference::STATUS_CHECK]
+        ];
+        $list = ConferencesUser::
+            join('conferences', function($join) use ($map){
+                $join->on('conferences.id','=','conferences_users.conference_id')
+                    ->where($map);
+            })
+            ->select($field)
             ->paginate(ConfigurationTool::DEFAULT_PAGE_SIZE);
-        $list = $this->dataDispose($list);
 
+        $list = $this->dataDispose($list);
         return $list;
     }
 
@@ -211,28 +216,29 @@ class ConferenceDao
      */
     public function dataDispose($list) {
         foreach ($list as $key => $val) {
-            if($val->status == ConferencesUser::SIGN_IN) {
-                $val->begin = Carbon::parse($val->begin)->format('H:i');
+
+            if($val['status'] == ConferencesUser::SIGN_IN) {
+                $val['begin'] = Carbon::parse($val->begin)->format('H:i');
             }
-            if($val->status == ConferencesUser::SIGN_OUT) {
-                $val->begin = Carbon::parse($val->begin)->format('H:i');
-                $val->end   = Carbon::parse($val->end)->format('H:i');
+
+            if($val['status'] == ConferencesUser::SIGN_OUT) {
+                $val['begin'] = Carbon::parse($val->begin)->format('H:i');
+                $val['end'] = Carbon::parse($val->end)->format('H:i');
             }
-            $parse = Carbon::parse($val->from);
-            $val->date = $parse->format('Y-m-d');
-            $val->from = $parse->format('H:i');
-            $val->to = Carbon::parse($val->to)->format('H:i');
-            $room = DB::table('rooms')->where('id',$val->room_id)->select('name')->first();
-            $val->room_name = $room->name;
-            $user = DB::table('users')->where('id',$val->user_id)->select('name')->first();
-//            $val->user;
-//            $list[$key]['id'] = $val['conference_id'];
-            $val->user_name = $user->name;
-            unset($val->user_id);
-            unset($val->school_id);
-            unset($val->room_id);
-            unset($val->created_at);
-            unset($val->updated_at);
+
+            $conference = $val->conference;
+//            dd($conference);
+            $parse = Carbon::parse($conference->from);
+            $val['date'] = $parse->format('Y-m-d');
+            $conference['from'] = $parse->format('H:i');
+            $conference['to'] = Carbon::parse($conference->to)->format('H:i');
+            $conference->room;
+            $conference->user_field = ['name'];
+            $conference->user;
+            $list[$key]['id'] = $val['conference_id'];
+            unset($val['conference_id']);
+            unset($conference['user_id']);
+            unset($conference['room_id']);
         }
 
         return $list;
