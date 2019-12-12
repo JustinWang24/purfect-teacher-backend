@@ -27,7 +27,7 @@ class FlowsController extends Controller
      */
     public function my(FlowRequest $request){
         $logic = FlowLogicFactory::GetInstance($request->user());
-        return JsonBuilder::Success(['flows'=>$logic->getMyFlows()]);
+        return JsonBuilder::Success(['types'=>$logic->getMyFlows()]);
     }
 
     /**

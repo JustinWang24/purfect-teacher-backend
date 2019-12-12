@@ -27,7 +27,9 @@ class FlowDao
      * @return array
      */
     public function getGroupedFlows($schoolId, $types = []){
-        $flows = Flow::where('school_id',$schoolId)->orderBy('type','asc')->get();
+        $flows = Flow::select(['id','name','icon','type'])
+            ->where('school_id',$schoolId)
+            ->orderBy('type','asc')->get();
         $data = [];
         if(empty($types)){
             $types = array_keys(Flow::Types());
@@ -42,7 +44,18 @@ class FlowDao
                 $data[$flow->type][] = $flow;
             }
         }
-        return $data;
+
+        $groups = [];
+
+        foreach ($data as $key=>$items) {
+            $groups[] = [
+                'name'=>Flow::Types()[$key],
+                'key'=>$key,
+                'flows'=>$items
+            ];
+        }
+
+        return $groups;
     }
 
     /**

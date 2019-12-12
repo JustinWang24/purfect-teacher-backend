@@ -56,17 +56,17 @@
         <div class="col-lg-4 col-md-4 col-sm-12">
             <div class="card">
                 <div class="card-body">
-                    @foreach($groupedFlows as $type=>$flows)
+                    @foreach($groupedFlows as $item)
                         <div class="row mb-4">
                             <div class="col-12">
                                 <h4 class="text-primary">
-                                    <b>{{ \App\Models\Pipeline\Flow\Flow::Types()[$type] }}</b>
+                                    <b>{{ $item['name'] }}</b>
                                 </h4>
                                 <el-divider></el-divider>
                                 <div class="row">
-                                    @foreach($flows as $flow)
+                                    @foreach($item['flows'] as $flow)
                                         <div class="col-4 mb-4 flow-box" v-on:click="startFlow({{ $flow->id }})">
-                                            <img src="{{ $flow->getIconUrl() }}" width="50">
+                                            <img src="{{ $flow->icon }}" width="50">
                                             <span>{{ $flow->name }}</span>
                                         </div>
                                     @endforeach
