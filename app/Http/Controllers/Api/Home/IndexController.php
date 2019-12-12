@@ -15,6 +15,7 @@ use App\Http\Requests\MyStandardRequest;
 use App\Http\Requests\SendSms\SendSmeRequest;
 use App\Models\Users\UserVerification;
 use App\Utils\JsonBuilder;
+use App\Utils\Time\CalendarWeek;
 
 class IndexController extends Controller
 {
@@ -74,6 +75,49 @@ class IndexController extends Controller
      * @return string
      */
     public function calendar(MyStandardRequest $request){
+        $school = $this->_getSchoolFromRequest($request);
+        if(!$school){
+            return JsonBuilder::Error('找不到学校的信息');
+        }
+        else{
+            $dao = new CalendarDao();
+            return JsonBuilder::Success($dao->getCalendar($school->configuration));
+        }
+    }
+
+    public function all_events(MyStandardRequest $request){
+        $school = $this->_getSchoolFromRequest($request);
+
+        if(!$school){
+            return JsonBuilder::Error('找不到学校的信息');
+        }else{
+            $dao = new CalendarDao();
+            $events = $dao->getCalendarEvent($school->id);
+            $weeks = $school->configuration->getAllWeeksOfTerm();
+
+            foreach ($events as $event) {
+                foreach ($weeks as $week) {
+                    /**
+                     * @var CalendarWeek $week
+                     */
+                    if($week->includes($event->event_time)){
+                        $event->week_idx = $week->getName();
+                        break;
+                    }
+                }
+            }
+
+            return JsonBuilder::Success([
+                'events'=>$dao->getCalendarEvent($school->id)
+            ]);
+        }
+    }
+
+    /**
+     * @param MyStandardRequest $request
+     * @return \App\Models\School
+     */
+    private function _getSchoolFromRequest(MyStandardRequest $request){
         $schoolIdOrName = $request->get('school', null);
         $dao = new SchoolDao();
         if($schoolIdOrName){
@@ -86,15 +130,7 @@ class IndexController extends Controller
             $school = $dao->getSchoolById($request->user()->getSchoolId());
         }
 
-        if(!$school){
-            return JsonBuilder::Error('找不到学校的信息');
-        }
-        else{
-            $dao = new CalendarDao();
-            return JsonBuilder::Success([
-                'calendar'=>$dao->getCalendar($school->configuration)
-            ]);
-        }
+        return $school;
     }
 
     /**
