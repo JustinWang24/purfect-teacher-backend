@@ -10,10 +10,5 @@
                 <span class="title">版本号管理</span>
             </a>
         </li>
-        <li class="nav-item">
-            <a href="" class="nav-link ">
-                <span class="title">学校管理员账号</span>
-            </a>
-        </li>
     </ul>
 </li>

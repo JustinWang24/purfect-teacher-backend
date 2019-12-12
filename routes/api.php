@@ -85,7 +85,7 @@ Route::prefix('school')->middleware('auth:api')->group(function () {
         ->name('api.school.quick.search.users');
 
     // APP 应用接口
-    Route::any('/calendar','Api\School\IndexController@calendar')
+    Route::any('/calendar','Api\Home\IndexController@calendar')
         ->name('api.school.calendar');
 });
 
