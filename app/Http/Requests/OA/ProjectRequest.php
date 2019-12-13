@@ -35,7 +35,11 @@ class ProjectRequest extends MyStandardRequest
      * @return mixed
      */
     public function getTask() {
-        return $this->get('task');
+        $data = $this->get('task');
+        if(empty($data['user_id'])) {
+            $data['user_id'] = $this->user()->id;
+        }
+        return $data;
     }
 
 
@@ -44,7 +48,9 @@ class ProjectRequest extends MyStandardRequest
      * @return mixed
      */
     public function getDiscussion() {
-        return $this->get('discussion');
+        $data = $this->get('discussion');
+        $data['user_id'] = $this->user()->id;
+        return $data;
     }
 
 

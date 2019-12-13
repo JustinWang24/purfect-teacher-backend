@@ -147,6 +147,7 @@ class ProjectDao
         if($result) {
             $data = ['id'=>$result->id];
             $messageBag->setData($data);
+            $messageBag->setCode(JsonBuilder::CODE_SUCCESS);
             return $messageBag;
         } else {
             $messageBag->setMessage('任务创建失败');
