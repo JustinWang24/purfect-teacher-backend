@@ -1,20 +1,5 @@
 <template>
     <div class="file-manager-wrapper">
-        <div class="top-bar">
-            <div class="file-search-bar-wrapper">
-                <el-autocomplete
-                        prefix-icon="el-icon-search"
-                        v-model="query"
-                        :fetch-suggestions="querySearchFilesAsync"
-                        placeholder="搜索我的文件/目录 ..."
-                        @select="handleReturnedFileSelect"
-                        value-key="name"
-                        :clearable="true"
-                        style="width: 64%;margin-left: 19%;"
-                ></el-autocomplete>
-            </div>
-        </div>
-
         <div class="manager-body">
             <div class="files-list-wrapper">
                 <div class="the-wrapper main-title">
@@ -440,10 +425,7 @@
         display: flex;
         flex-direction: column;
         height: 100%;
-        .top-bar{
-            margin-top: -64px;
-            width: 85%;
-        }
+        margin-top:-31px;
         .manager-body{
             display: flex;
             flex-direction: column;
