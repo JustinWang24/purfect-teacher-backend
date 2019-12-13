@@ -33,6 +33,7 @@ class Flow extends Model implements IFlow
             IFlow::TYPE_2=>IFlow::TYPE_2_TXT,
             IFlow::TYPE_3=>IFlow::TYPE_3_TXT,
             IFlow::TYPE_4=>IFlow::TYPE_4_TXT,
+            IFlow::TYPE_FINANCE=>IFlow::TYPE_FINANCE_TXT,
         ];
     }
 

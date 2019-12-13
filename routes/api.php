@@ -386,7 +386,7 @@ Route::prefix('pipeline')->middleware('auth:api')->group(function (){
     /**
      * 用户调取可用的流程集合的接口
      */
-    Route::post('/flows/my', 'Api\Pipeline\FlowsController@my')
+    Route::any('/flows/my', 'Api\Pipeline\FlowsController@my')
         ->name('api.pipeline.flows.my');
 
     /**

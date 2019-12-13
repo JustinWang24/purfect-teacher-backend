@@ -21,6 +21,7 @@ if(document.getElementById('pipeline-flow-open-app')){
                 showFileManagerFlag: false,
                 isLoading: false,
                 done: false,
+                appRequest: undefined,
             }
         },
         created(){
@@ -28,6 +29,7 @@ if(document.getElementById('pipeline-flow-open-app')){
             this.schoolId = dom.dataset.school;
             this.action.node_id = dom.dataset.nodeid;
             this.action.flow_id = dom.dataset.flowid;
+            this.appRequest = !Util.isEmpty(dom.dataset.apprequest);
         },
         methods:{
             closeWindow: function(){
@@ -37,11 +39,16 @@ if(document.getElementById('pipeline-flow-open-app')){
             },
             onStartActionSubmit: function () {
                 this.isLoading = true;
-                start(this.action).then(res => {
+                start(this.action, this.appRequest).then(res => {
                     if(Util.isAjaxResOk(res)){
                         this.action.id = res.data.data.id;
                         this.$message({type:'success',message: '提交成功'});
-                        window.location.href = '/home';
+                        if(!this.appRequest){
+                            window.location.href = '/home'; // Web 应用
+                        }
+                        else{
+                            window.location.href = res.data.data.url; // 前端 APP 调用, 应该跳转到学生的申请列表
+                        }
                     }
                     else{
                         this.$message.error(res.data.message);
