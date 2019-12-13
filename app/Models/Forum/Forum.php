@@ -3,6 +3,8 @@
 
 namespace App\Models\Forum;
 
+use App\Dao\Forum\ForumType;
+use App\Models\Students\StudentProfile;
 use App\Models\School;
 use App\User;
 use Illuminate\Database\Eloquent\Model;
@@ -21,7 +23,12 @@ class Forum extends Model
     const DEFAULT_UPLOAD_PATH_PREFIX = 'public/forum/';    // 存放用户文件路径
     const DEFAULT_URL_PATH_PREFIX = '/storage/forum/';     // 对外的
 
+    const STATUS_0 = 0; // 待审核
+    const STATUS_1 = 1; // 未通过
+    const STATUS_2 = 2; // 已通过
 
+    const IS_UP_0 = false; // 不推荐
+    const IS_UP_1 = true;  // 推荐
 
      /**
      * 转换上传路径到 url 路径
@@ -51,4 +58,35 @@ class Forum extends Model
     }
 
 
+    /**
+     * 帖子类型表
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function forumType()
+    {
+        return $this->hasOne(ForumType::class,'id','type_id');
+    }
+
+    public function studentProfile()
+    {
+        return $this->belongsTo(StudentProfile::class,'user_id','user_id');
+    }
+
+    /**
+     * 帖子评论
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function forumComment()
+    {
+        return $this->hasMany(ForumComment::class);
+    }
+
+    /**
+     * 帖子点赞
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function forumLike()
+    {
+        return $this->hasMany(ForumLike::class);
+    }
 }

@@ -428,7 +428,7 @@ Route::prefix('pipeline')->middleware('auth:api')->group(function (){
 
 Route::prefix('notification')->middleware('auth:api')->group(function () {
     // 消息中心
-    Route::post('/list','Api\Notice\SystemNotificationController@index')
+    Route::any('/list','Api\Notice\SystemNotificationController@index')
         ->name('api.notification.list');
 });
 
@@ -437,9 +437,6 @@ Route::prefix('attendance')->middleware('auth:api')->group(function () {
     Route::post('/list','Api\AttendanceSchedule\AttendanceScheduleController@display')
         ->name('api.attendance.list');
 });
-
-
-
 
 Route::prefix('user')->group(function () {
 
@@ -548,7 +545,14 @@ Route::prefix('forum')->middleware('auth:api')->group(function () {
         ->name('api.forum.comments/addlike');
     Route::get('/comments/dellike/{id}','Api\Forum\ForumCommentController@delLike')
         ->name('api.forum.comments/dellike');
+
     // 发帖
     Route::post('/posted','Api\Forum\ForumController@index')
-        ->name('api.add.posted');
+        ->name('api.add.posted.forum');
+    // 列表
+    Route::post('/list','Api\Forum\ForumController@list')
+        ->name('api.list.forum');
+    // 详情
+    Route::post('/details','Api\Forum\ForumController@details')
+        ->name('api.details.forum');
 });

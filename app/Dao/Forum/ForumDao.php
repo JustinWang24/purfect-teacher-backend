@@ -4,6 +4,8 @@ namespace App\Dao\Forum;
 
 use App\Models\Forum\Forum;
 use App\Models\Forum\ForumImage;
+use App\User;
+use App\Utils\Misc\ConfigurationTool;
 use App\Utils\Misc\ConfigurationTool;
 use Illuminate\Support\Facades\DB;
 
@@ -44,6 +46,28 @@ class ForumDao
         return Forum::where('school_id', $schoolId)
             ->orderBy('created_at','desc')
             ->paginate(ConfigurationTool::DEFAULT_PAGE_SIZE);
+    }
+
+    /**
+     * @param User $user
+     * @return Forum
+     */
+    public function select($user)
+    {
+        return Forum::where(['school_id'=> $user->getSchoolId(), 'status' => Forum::STATUS_2])
+            ->select('id', 'content', 'see_num', 'type_id', 'created_at', 'user_id')
+            ->orderBy('is_up', 'desc')
+            ->orderBy('created_at', 'desc')
+            ->paginate(ConfigurationTool::DEFAULT_PAGE_SIZE);
+    }
+
+    /**
+     * @param $id
+     * @return mixed
+     */
+    public function find($id)
+    {
+        return Forum::find($id);
     }
 
 }
