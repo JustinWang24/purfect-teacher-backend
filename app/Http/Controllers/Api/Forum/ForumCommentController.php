@@ -5,8 +5,11 @@ namespace App\Http\Controllers\Api\Forum;
 
 
 use App\Dao\Forum\ForumCommentDao;
+use App\Dao\Students\StudentProfileDao;
+use App\Dao\Users\UserDao;
 use App\Http\Controllers\Controller;
 use App\Models\Forum\ForumComment;
+use App\Models\Students\StudentProfile;
 use App\Utils\JsonBuilder;
 use Illuminate\Http\Request;
 
@@ -133,12 +136,25 @@ class ForumCommentController extends Controller
      */
     public function getComments(Request $request, $forumId) {
         $dao = new ForumCommentDao();
+        $userDao = new UserDao();
+        $studentDao = new StudentProfileDao();
         $comments = $dao->getCommentForForum($forumId);
         $result = [];
         foreach ($comments as$key => $comment) {
             $replys = $comment->reply()->get();
-            $result[$key]['comment'] = $comment->toArray();
-            $result[$key]['reply'] = $replys->toArray();
+            $commentArr = $comment->toArray();
+            $commentArr['user_name'] =  $userDao->getUserById($commentArr['user_id'])->first()->name;
+            $commentArr['user_avatar'] =  $studentDao->getStudentInfoByUserId($commentArr['user_id'])->avatar;
+            $result[$key]['comment'] = $commentArr;
+            $replyArr = $replys->toArray();
+            foreach ($replyArr as $k => $reply) {
+                $replyArr[$k]['to_user_name'] = $userDao->getUserById($reply['to_user_id'])->first()->name;
+                $replyArr[$k]['to_user_avatar'] =  $studentDao->getStudentInfoByUserId($reply['to_user_id'])->avatar;
+                $replyArr[$k]['from_user_name'] = $userDao->getUserById($reply['user_id'])->first()->name;
+                $replyArr[$k]['from_user_avatar'] =  $studentDao->getStudentInfoByUserId($reply['user_id'])->avatar;
+            }
+
+            $result[$key]['reply'] = $replyArr;
         }
         return JsonBuilder::Success($result);
     }
