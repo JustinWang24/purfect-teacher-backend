@@ -548,7 +548,14 @@ Route::prefix('forum')->middleware('auth:api')->group(function () {
         ->name('api.forum.comments/addlike');
     Route::get('/comments/dellike/{id}','Api\Forum\ForumCommentController@delLike')
         ->name('api.forum.comments/dellike');
+
     // 发帖
     Route::post('/posted','Api\Forum\ForumController@index')
-        ->name('api.add.posted');
+        ->name('api.add.posted.forum');
+    // 列表
+    Route::post('/list','Api\Forum\ForumController@list')
+        ->name('api.list.forum');
+    // 详情
+    Route::post('/details','Api\Forum\ForumController@details')
+        ->name('api.details.forum');
 });
