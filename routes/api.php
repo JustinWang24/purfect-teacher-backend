@@ -508,12 +508,19 @@ Route::prefix('conferences')->middleware('auth:api')->group(function () {
         ->name('api.conferences.conferenceInfo');
 });
 
-
-// 论坛
+//社区管理
 Route::prefix('forum')->middleware('auth:api')->group(function () {
-
+    Route::get('/comments/{id}','Api\Forum\ForumCommentController@getComments')
+        ->name('api.forum.comments');
+    Route::get('/comments/addcomment/{id}','Api\Forum\ForumCommentController@addComment')
+        ->name('api.forum.comments/addcomment');
+    Route::get('/comments/addreply/{id}','Api\Forum\ForumCommentController@addCommentReply')
+        ->name('api.forum.comments/addreply');
+    Route::get('/comments/addlike/{id}','Api\Forum\ForumCommentController@addLike')
+        ->name('api.forum.comments/addlike');
+    Route::get('/comments/dellike/{id}','Api\Forum\ForumCommentController@delLike')
+        ->name('api.forum.comments/dellike');
     // 发帖
     Route::post('/posted','Api\Forum\ForumController@index')
         ->name('api.add.posted');
-
 });
