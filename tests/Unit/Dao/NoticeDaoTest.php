@@ -17,7 +17,7 @@ class NoticeDaoTest extends BasicPageTestCase
             'user_id'         =>  1,
             'title'           => 'xxxx', // 标题
             'content'         => 'xxxx', // 内容
-            'media_id'        => [1, 2], // 附件ID
+            'attachments'        => [['id'=>1,'file_name'=>'','url'=>'']], // 附件ID
             'organization_id' => 1 // 可见范围 部门ID
         ];
 
@@ -65,8 +65,8 @@ class NoticeDaoTest extends BasicPageTestCase
         $data['image'] = 1;
 
         $dao = new  NoticeDao;
-
         $result = $dao->add($data);
+        dd($result);
         $this->assertTrue($result->getCode() == 1000 );
     }
 }
