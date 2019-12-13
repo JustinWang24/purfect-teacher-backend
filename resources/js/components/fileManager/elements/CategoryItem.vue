@@ -2,7 +2,7 @@
     <div class="file-item-row" v-on:click="itemClicked" :class="highlight ? 'highlight' : ''">
         <div class="icon-box">
             <i class="el-icon-check" v-show="highlight"></i>
-            <i class="el-icon-folder"></i>&nbsp;
+            <i class="el-icon-folder" style="padding-top: 2px;"></i>&nbsp;
             <span class="file-name-box">
                 <el-button type="text" v-on:click.stop="changeCategory">
                     {{ file.name }}

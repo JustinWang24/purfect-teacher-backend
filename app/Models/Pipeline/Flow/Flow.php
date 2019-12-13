@@ -105,7 +105,7 @@ class Flow extends Model implements IFlow
         // Todo: 对于一个流程是否可以被一个用户启动的功能, 需要实现
         $node = null;
         if($user->isStudent()){
-            if($this->type === IFlow::TYPE_STUDENT_ONLY){
+            if(in_array($this->type, User::StudentFlowTypes())){
                 $node = $this->getHeadNode();
             }
         }
@@ -114,7 +114,6 @@ class Flow extends Model implements IFlow
                 $node = $this->getHeadNode();
             }
         }
-
         return $node;
     }
 

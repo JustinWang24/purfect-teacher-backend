@@ -1,7 +1,6 @@
 /**
  * 顶部的消息通知应用
  */
-import {Constants} from '../../../common/constants';
 import { loadMessages } from '../../../common/notifications';
 import {Util} from "../../../common/utils";
 if(document.getElementById('header_notification_bar')){

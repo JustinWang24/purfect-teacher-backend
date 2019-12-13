@@ -14,6 +14,7 @@ use App\Models\Students\StudentTextbook;
 use App\Models\Teachers\TeacherProfile;
 use App\Models\Users\GradeUser;
 use App\Models\Users\UserDevice;
+use App\Utils\Pipeline\IFlow;
 use App\Utils\Pipeline\IUser;
 use Illuminate\Notifications\Notifiable;
 //use Illuminate\Contracts\Auth\MustVerifyEmail;
@@ -321,7 +322,6 @@ class User extends Authenticatable implements HasMobilePhone, HasDeviceId, IUser
         return $this->hasMany(UserDevice::class);
     }
 
-
     /**
      * 获取学生当年领取最后一本教材
      * @param $year
@@ -352,5 +352,15 @@ class User extends Authenticatable implements HasMobilePhone, HasDeviceId, IUser
     public function getType(): int
     {
         return $this->type;
+    }
+
+    /**
+     * 返回学生可用的流程类型
+     * @return array
+     */
+    public static function StudentFlowTypes(){
+        return [
+           IFlow::TYPE_STUDENT_ONLY, IFlow::TYPE_FINANCE, IFlow::TYPE_STUDENT_COMMON
+        ];
     }
 }
