@@ -28,6 +28,7 @@ class ForumCommentController extends Controller
     public function  addComment(Request $request, $forumId)
     {
         $user = $request->user();
+        $schoolId = $user->getSchoolId();
         $forumId = intval($forumId);
         //TODO 需要判断帖子是否存在，不存在不能发表评论
         $content = strip_tags($request->get('content'));
@@ -36,7 +37,8 @@ class ForumCommentController extends Controller
             $data = [
                 'user_id'  => $user->id,
                 'forum_id' => $forumId,
-                'content'  => $content
+                'content'  => $content,
+                'school_id'  => $schoolId,
             ];
             $result = $dao->createComment($data);
             return JsonBuilder::Success($result->getMessage());
@@ -66,6 +68,7 @@ class ForumCommentController extends Controller
     public function  addCommentReply(Request $request, $commentId)
     {
         $user = $request->user();
+        $schoolId = $user->getSchoolId();
         $commentId = intval($commentId);
         $dao = new ForumCommentDao();
         $commentObj = $dao->getComment($commentId);
@@ -80,7 +83,8 @@ class ForumCommentController extends Controller
                 'to_user_id'=> $commentObj->user_id,
                 'forum_id'  => $commentObj->forum_id,
                 'comment_id'=> $commentId,
-                'reply'     => $reply
+                'reply'     => $reply,
+                'school_id'  => $schoolId,
             ];
             $result = $dao->createCommentReply($data);
             return JsonBuilder::Success($result->getMessage());
