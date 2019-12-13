@@ -28,6 +28,13 @@ class Forum extends Model
     const IS_UP_0 = false; // 不推荐
     const IS_UP_1 = true;  // 推荐
 
+
+    public $image_field = ['*'];
+
+    public $type_field = ['*'];
+
+    public $profile_field = ['*'];
+
      /**
      * 转换上传路径到 url 路径
      * @param $uploadPath
@@ -48,12 +55,15 @@ class Forum extends Model
      */
     public function forumType()
     {
-        return $this->hasOne(ForumType::class,'id','type_id');
+        return $this->hasOne(ForumType::class,'id','type_id')->select($this->type_field);
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
     public function studentProfile()
     {
-        return $this->belongsTo(StudentProfile::class,'user_id','user_id');
+        return $this->belongsTo(StudentProfile::class,'user_id','user_id')->select($this->profile_field);
     }
 
     /**
@@ -62,7 +72,7 @@ class Forum extends Model
      */
     public function forumComment()
     {
-        return $this->hasMany(ForumComment::class);
+        return $this->hasMany(ForumComment::class)->select($this->image_field);
     }
 
     /**
@@ -71,11 +81,25 @@ class Forum extends Model
      */
     public function forumLike()
     {
-        return $this->hasMany(ForumLike::class);
+        return $this->hasMany(ForumLike::class)->select($this->image_field);
     }
 
+    /**
+     * 图片
+     */
+    public function image()
+    {
+        return $this->hasMany(ForumImage::class,'forum_id', 'id')->select($this->image_field);
+    }
+
+
+    /**
+     * 转换图片网络路径
+     * @param $value
+     * @return string
+     */
     public static function getImageUrl($value)
     {
-        return $value ? asset($value) : "";
+        return $value ? asset($value) : '';
     }
 }

@@ -70,12 +70,21 @@ class ForumController extends Controller
 
         $lists = $dao->select($user);
 
-        foreach ($lists as $key => $list) {
-            $lists[$key]['type']        = $list->forumType->title;
-            $lists[$key]['comment_num'] = $list->forumComment->count();
-            $lists[$key]['like_num']    = $list->forumLike->count();
-            $lists[$key]['avatar']      = Forum::getImageUrl($list->studentProfile->avatar);
-            $lists[$key]['user_name']   = $list->studentProfile->user->name;
+        foreach ($lists as $key => $val) {
+
+            $lists[$key]['type']        = $val->forumType->title;
+            $lists[$key]['comment_num'] = $val->forumComment->count();
+            $lists[$key]['like_num']    = $val->forumLike->count();
+            $lists[$key]['avatar']      = Forum::getImageUrl($val->studentProfile->avatar);
+            $lists[$key]['user_name']   = $val->studentProfile->user->name;
+
+            $val->image_field = ['image', 'video', 'cover'];
+            $image = $val->image;
+            foreach ($image as $k => $item) {
+                $item->image = Forum::getImageUrl($item->image);
+                $item->video = Forum::getImageUrl($item->video);
+                $item->cover = Forum::getImageUrl($item->cover);
+            }
             unset($lists[$key]['forumType']);
             unset($lists[$key]['type_id']);
             unset($lists[$key]['forumComment']);
@@ -102,6 +111,12 @@ class ForumController extends Controller
         $data['user_name'] = $data->studentProfile->user->name;
         $data['type']      = $data->forumType->title;
         $data['like_num']  = $data->forumLike->count();
+        $data->image_field = ['image', 'video', 'cover'];
+        foreach ($data->image as $k => $item) {
+                $item->image = Forum::getImageUrl($item->image);
+                $item->video = Forum::getImageUrl($item->video);
+                $item->cover = Forum::getImageUrl($item->cover);
+            }
         unset($data['studentProfile']);
         unset($data['forumType']);
         unset($data['forumLike']);
