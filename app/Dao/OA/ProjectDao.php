@@ -185,4 +185,37 @@ class ProjectDao
     public function getDiscussionByTaskId($taskId) {
         return ProjectTaskDiscussion::where('project_task_id',$taskId)->get();
     }
+
+
+    /**
+     * 编辑项目
+     * @param $projectId
+     * @param $project
+     * @return MessageBag
+     */
+    public function updateProject($projectId, $project) {
+        $messageBag = new MessageBag(JsonBuilder::CODE_ERROR);
+        $map = [
+            ['id','<>',$projectId],
+            ['title','=',$project['title']],
+            ['school_id', '=', $project['school_id']]
+        ];
+        $re = Project::where($map)->first();
+        if(!empty($re)) {
+            $messageBag->setMessage('该项目标题已存在,请重新更换');
+            return $messageBag;
+        }
+
+        $result = Project::where('id',$projectId)->update($project);
+        if($result) {
+            $messageBag->setCode(JsonBuilder::CODE_SUCCESS);
+            $messageBag->setMessage('编辑成功');
+            return $messageBag;
+        } else {
+            $messageBag->setMessage('编辑失败');
+            return $messageBag;
+        }
+    }
+
+
 }

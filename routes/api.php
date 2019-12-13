@@ -532,4 +532,7 @@ Route::prefix('oa')->middleware('auth:api')->group(function () {
     // 项目详情
     Route::get('/project-info','Api\OA\ProjectsController@projectInfo')
         ->name('api.oa.project-info');
+    // 项目详情修改
+    Route::post('/update-project','Api\OA\ProjectsController@updateProject')
+        ->name('api.oa.update-project');
 });

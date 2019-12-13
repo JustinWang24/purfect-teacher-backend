@@ -142,4 +142,27 @@ class ProjectsController extends Controller
         return JsonBuilder::Success($data);
     }
 
+
+
+    /**
+     * 项目详情的修改
+     * @param ProjectRequest $request
+     * @return string
+     */
+    public function updateProject(ProjectRequest $request) {
+        $project = $request->getProject();
+        if(empty($project['id'])) {
+            return JsonBuilder::Error('项目ID不能为空');
+        }
+        $projectId = $project['id'];
+        unset($project['id']);
+        $dao = new ProjectDao();
+        $result = $dao->updateProject($projectId, $project);
+        if($result->isSuccess()) {
+            return JsonBuilder::Success($result->getMessage());
+        } else {
+            return JsonBuilder::Error($result->getMessage());
+        }
+    }
+
 }
