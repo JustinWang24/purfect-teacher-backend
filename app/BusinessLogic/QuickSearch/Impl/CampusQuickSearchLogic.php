@@ -19,8 +19,9 @@ class CampusQuickSearchLogic extends AbstractQuickSearchLogic
 
     public function getFacilities()
     {
-        $dao = new CampusDao();
-        return $dao->searchByName($this->queryString, $this->schoolId);
+//        $dao = new CampusDao();
+//        return $dao->searchByName($this->queryString, $this->schoolId);
+        return [];
     }
 
     public function getNextAction($facility)

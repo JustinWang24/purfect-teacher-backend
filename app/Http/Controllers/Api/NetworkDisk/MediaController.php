@@ -8,6 +8,7 @@ use App\Utils\JsonBuilder;
 use App\Dao\NetworkDisk\MediaDao;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\NetworkDisk\MediaRequest;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Psy\Util\Json;
 
@@ -218,10 +219,10 @@ class MediaController extends Controller
 
     /**
      * 获取分享内容
-     * @param MediaRequest $request
+     * @param Request $request
      * @return \Symfony\Component\HttpFoundation\BinaryFileResponse
      */
-    public function shareFile(MediaRequest $request) {
+    public function shareFile(Request $request) {
         $f = $request->get('f');
         $mediaDao = new MediaDao();
         $media = $mediaDao->getMediaByUuid($f);

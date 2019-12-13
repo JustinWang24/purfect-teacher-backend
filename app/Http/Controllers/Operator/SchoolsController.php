@@ -72,42 +72,49 @@ class SchoolsController extends Controller
     public function institutes(SchoolRequest $request){
         $instituteDao = new InstituteDao($request->user());
         $this->dataForView['institutes'] = $instituteDao->getBySchool(session('school.id'));
+        $this->dataForView['pageTitle'] = '学院管理';
         return view('school_manager.school.institutes', $this->dataForView);
     }
 
     public function departments(SchoolRequest $request){
         $dao = new DepartmentDao($request->user());
         $this->dataForView['departments'] = $dao->getBySchool(session('school.id'));
+        $this->dataForView['pageTitle'] = '院系管理';
         return view('school_manager.school.departments', $this->dataForView);
     }
 
     public function majors(SchoolRequest $request){
         $dao = new MajorDao($request->user());
         $this->dataForView['majors'] = $dao->getBySchool(session('school.id'));
+        $this->dataForView['pageTitle'] = '专业管理';
         return view('school_manager.school.majors', $this->dataForView);
     }
 
     public function grades(SchoolRequest $request){
         $dao = new GradeDao($request->user());
         $this->dataForView['grades'] = $dao->getBySchool(session('school.id'));
+        $this->dataForView['pageTitle'] = '班级管理';
         return view('school_manager.school.grades', $this->dataForView);
     }
 
     public function teachers(SchoolRequest $request){
         $dao = new GradeUserDao($request->user());
         $this->dataForView['employees'] = $dao->getBySchool(session('school.id'), Role::GetTeacherUserTypes());
+        $this->dataForView['pageTitle'] = '教职工管理';
         return view('teacher.users.teachers', $this->dataForView);
     }
 
     public function students(SchoolRequest $request){
         $dao = new GradeUserDao($request->user());
         $this->dataForView['students'] = $dao->getBySchool(session('school.id'),Role::GetStudentUserTypes());
+        $this->dataForView['pageTitle'] = '学生管理';
         return view('teacher.users.students', $this->dataForView);
     }
 
     public function rooms(SchoolRequest $request){
         $dao = new RoomDao($request->user());
         $this->dataForView['rooms'] = $dao->getRoomsPaginate([['school_id','=',session('school.id')]]);
+        $this->dataForView['pageTitle'] = '物业管理';
         return view('school_manager.school.rooms', $this->dataForView);
     }
 

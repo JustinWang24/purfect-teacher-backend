@@ -48,6 +48,15 @@ if(document.getElementById('school-calendar-app')){
                 this.$message('正在编辑 ' + this.currentDate.format('YYYY-MM-DD') + ' 的校历');
             },
             onSubmit: function(){
+                if(Util.isEmpty(this.form.event_time)){
+                    this.$message.error('请填写活动日期');
+                    return;
+                }
+                if(Util.isEmpty(this.form.content)){
+                    this.$message.error('请填写活动内容');
+                    return;
+                }
+
                 axios.post(
                     Constants.API.CALENDAR.SAVE,
                     {event: this.form}

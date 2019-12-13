@@ -86,6 +86,7 @@ class UsersController extends Controller
                                 'value'=>$gradeUser->name . ' - ' . $gradeUser->grade->name . ' ' . $gradeUser->major->name,
                                 'scope'=>'user',
                                 'uuid'=>$gradeUser->user->uuid,
+                                'nextAction'=>route('verified_student.profile.edit',['uuid'=>$gradeUser->user->uuid]),
                             ];
                         }
                         else{
@@ -94,6 +95,7 @@ class UsersController extends Controller
                                 'value'=>$gradeUser->name,
                                 'scope'=>'user',
                                 'uuid'=>$gradeUser->user->uuid,
+                                'nextAction'=>route('school_manager.teachers.edit-profile',['uuid'=>$gradeUser->user->uuid]),
                             ];
                         }
                     }
@@ -107,10 +109,12 @@ class UsersController extends Controller
                             'value'=>$gradeUser->name. ': '.$gradeUser->getStatusText().', '.$gradeUser->plan->year.'年 '.$gradeUser->plan->title,
                             'scope'=>'registration',
                         ];
+
+                        if(!empty($nextAction)){
+                            $item['nextAction'] = $nextAction;
+                        }
                     }
-                    if(!empty($nextAction)){
-                        $item['nextAction'] = $nextAction;
-                    }
+
                     $data[] = $item;
                 }
             }

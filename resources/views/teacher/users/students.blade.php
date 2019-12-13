@@ -9,15 +9,17 @@ use App\User;
         <div class="col-sm-12 col-md-12 col-xl-12">
             <div class="card-box">
                 <div class="card-head">
-                    <header>{{ $parent->name??session('school.name') }}(学生总数: {{ $students->total() }})</header>
+                    <header class="full-width">
+                        {{ $parent->name??session('school.name') }}(学生总数: {{ $students->total() }})
+                        <a href="{{ route('school_manager.student.add') }}" class="btn btn-primary pull-right">
+                            添加新学生 <i class="fa fa-plus"></i>
+                        </a>
+                    </header>
                 </div>
 
                 <div class="card-body">
                     <div class="row">
-                        <div class="table-padding col-12">
-                            <a href="{{ route('school_manager.student.add') }}" class="btn btn-primary">
-                                添加新学生 <i class="fa fa-plus"></i>
-                            </a>
+                        <div class="table-padding col-12 pt-0">
                             @include('school_manager.school.reusable.nav',['highlight'=>'student'])
                         </div>
 
