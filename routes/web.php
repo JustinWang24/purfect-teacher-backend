@@ -68,3 +68,9 @@ Route::prefix('pipeline')->group(function () {
     Route::get('/flow/student/open','Teacher\Pipeline\FlowsController@open')
         ->name('student.pipeline.flow-open');
 });
+
+Route::prefix('community')->group(function () {
+    // 动态列表
+    Route::get('/dynamic','Teacher\Community\DynamicController@index')
+        ->name('teacher.community.dynamic');
+});

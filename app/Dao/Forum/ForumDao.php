@@ -4,6 +4,7 @@ namespace App\Dao\Forum;
 
 use App\Models\Forum\Forum;
 use App\Models\Forum\ForumImage;
+use App\Utils\Misc\ConfigurationTool;
 use Illuminate\Support\Facades\DB;
 
 class ForumDao
@@ -31,6 +32,18 @@ class ForumDao
         }
 
         return $result;
+    }
+
+
+    /**
+     * 通过学校ID查询论坛
+     * @param $schoolId
+     * @return mixed
+     */
+    public function getForumBySchoolId($schoolId) {
+        return Forum::where('school_id', $schoolId)
+            ->orderBy('created_at','desc')
+            ->paginate(ConfigurationTool::DEFAULT_PAGE_SIZE);
     }
 
 }

@@ -3,6 +3,8 @@
 
 namespace App\Models\Forum;
 
+use App\Models\School;
+use App\User;
 use Illuminate\Database\Eloquent\Model;
 
 class Forum extends Model
@@ -34,5 +36,19 @@ class Forum extends Model
         }
         return '';
     }
+
+    public function user() {
+        return $this->belongsTo(User::class);
+    }
+
+
+    public function school() {
+        return $this->belongsTo(School::class);
+    }
+
+    public function countLikeNum() {
+        return $this->hasMany(ForumLike::class)->count();
+    }
+
 
 }
