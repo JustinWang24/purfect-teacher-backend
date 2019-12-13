@@ -76,10 +76,18 @@ class CalendarDay implements Arrayable
 
     public function toArray()
     {
+        $events = [];
+
+        foreach ($this->events as $event) {
+            $event->name = $this->day->format('Y-m-d');
+            $event->week_idx = $this->weekIdx;
+            $events[] = $event;
+        }
+
         return [
             'name'=>$this->day->format('m-d'),
             'week_idx' => $this->weekIdx,
-            'events'=>$this->events
+            'events'=>$events
         ];
     }
 

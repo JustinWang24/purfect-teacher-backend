@@ -112,7 +112,9 @@ class IndexController extends Controller
         }
         else{
             $dao = new CalendarDao();
-            return JsonBuilder::Success($dao->getCalendar($school->configuration));
+            return JsonBuilder::Success(
+                $dao->getCalendar($school->configuration, $request->get('year'), $request->get('month'))
+            );
         }
     }
 
