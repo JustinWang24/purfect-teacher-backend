@@ -30,20 +30,24 @@ if(document.getElementById('pipeline-flow-view-history-app')){
                     {id: Constants.FLOW_ACTION_RESULT.REJECTED, label: Constants.FLOW_ACTION_RESULT.REJECTED_TXT},
                 ],
                 userFlow:{}, // 服务器端返回的
+                appRequest: false,  // 是否 App 嵌入的
             }
         },
         created(){
             const dom = document.getElementById('app-init-data-holder');
             this.schoolId = dom.dataset.school;
+            this.appRequest = !Util.isEmpty(dom.dataset.apprequest);
             this.actionId = dom.dataset.actionid;
             this.userUuid = dom.dataset.useruuid;
             this.userFlowId = dom.dataset.flowid;
-            this.action = JSON.parse(dom.dataset.theaction);
-            if(this.action.node.next_node === 0){
-                this.results.push({
-                    id: Constants.FLOW_ACTION_RESULT.TERMINATED,
-                    label: Constants.FLOW_ACTION_RESULT.TERMINATED_TXT
-                });
+            if(this.actionId){
+                this.action = JSON.parse(dom.dataset.theaction);
+                if(this.action.node.next_node === 0){
+                    this.results.push({
+                        id: Constants.FLOW_ACTION_RESULT.TERMINATED,
+                        label: Constants.FLOW_ACTION_RESULT.TERMINATED_TXT
+                    });
+                }
             }
             this.loadWholeFlow();
         },

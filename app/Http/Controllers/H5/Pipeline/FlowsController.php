@@ -12,6 +12,9 @@ use App\Http\Controllers\Controller;
 use App\User;
 use Illuminate\Http\Request;
 use App\BusinessLogic\Pipeline\Flow\FlowLogicFactory;
+use App\Dao\Pipeline\ActionDao;
+use App\Dao\Pipeline\UserFlowDao;
+use App\Utils\Pipeline\IAction;
 
 class FlowsController extends Controller
 {
@@ -52,15 +55,55 @@ class FlowsController extends Controller
          */
         $user = $request->user('api');
 
-        $logic = FlowLogicFactory::GetInstance($user);
-
-        if($logic){
+        if($user){
+            $logic = FlowLogicFactory::GetInstance($user);
             $flows = $logic->startedByMe();
             $this->dataForView['user'] = $user;
             $this->dataForView['flows'] = $flows;
             $this->dataForView['api_token'] = $user->api_token;
             $this->dataForView['appName'] = 'pipeline-flows-in-progress';
             return view('h5_apps.pipeline.flow_in_progress',$this->dataForView);
+        }
+        else{
+            return '您无权使用本功能';
+        }
+    }
+
+    /**
+     * 用户查看流程历史记录
+     * @param Request $request
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View|string
+     */
+    public function view_history(Request $request){
+        /**
+         * @var User $user
+         */
+        $user = $request->user('api');
+        $actionId = $request->get('action_id',null);
+        $userFlowId = $request->get('user_flow_id', null);
+
+        if($user && $userFlowId){
+            $dao = new ActionDao();
+            if($userFlowId){
+                $action = $dao->getLastActionByUserFlow($userFlowId);
+                $this->dataForView['showActionEditForm'] = false;
+            }else{
+                $action = $dao->getByActionIdAndUserId($actionId, $user->id);
+                $this->dataForView['showActionEditForm'] =
+                    $action->result === IAction::RESULT_PENDING && $action->user_id === $actionId->id;
+            }
+
+            $this->dataForView['node'] = $action->node;
+            $this->dataForView['action'] = $action;
+            $this->dataForView['userFlow'] = $action->userFlow;
+            $this->dataForView['actionId'] = $actionId;
+            $this->dataForView['userFlowId'] = $userFlowId;
+            $this->dataForView['user'] = $user;
+            $this->dataForView['api_token'] = $user->api_token;
+            $this->dataForView['appName'] = 'pipeline-flow-view-history';
+            $this->dataForView['pageTitle'] = $action->getFlow()->getName();
+
+            return view('h5_apps.pipeline.flow_view_history',$this->dataForView);
         }
         else{
             return '您无权使用本功能';

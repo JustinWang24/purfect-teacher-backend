@@ -114,4 +114,21 @@ class Handler extends Model implements INodeHandler
             Title::SCHOOL_COORDINATOR,
         ];
     }
+
+    /**
+     * 获取所有可以参与审核的角色
+     * @return array
+     */
+    public static function HigherLevelsArray(){
+        return [
+            Title::CLASS_ADVISER_ID => Title::CLASS_ADVISER,
+            Title::GRADE_ADVISER_ID => Title::GRADE_ADVISER,
+            Title::ORGANIZATION_DEPUTY_ID => Title::ORGANIZATION_DEPUTY,
+            Title::ORGANIZATION_LEADER_ID => Title::ORGANIZATION_LEADER,
+            Title::DEPARTMENT_LEADER_ID => Title::DEPARTMENT_LEADER,
+            Title::SCHOOL_DEPUTY_ID => Title::SCHOOL_DEPUTY,
+            Title::SCHOOL_PRINCIPAL_ID => Title::SCHOOL_PRINCIPAL,
+            Title::SCHOOL_COORDINATOR_ID => Title::SCHOOL_COORDINATOR,
+        ];
+    }
 }

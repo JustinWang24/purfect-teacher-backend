@@ -123,7 +123,7 @@
                                         <el-form-item label="职务"  label-width="70px">
                                             <el-select v-model="currentMember.title_id" placeholder=""  style="width: 90%;">
                                                 @foreach(\App\Models\Pipeline\Flow\Handler::HigherLevels() as $role)
-                                                <el-option label="{{ $role }}" :value="{{ $role }}"></el-option>
+                                                <el-option label="{{ $role }}" value="{{ $role }}"></el-option>
                                                 @endforeach
                                             </el-select>
                                         </el-form-item>
