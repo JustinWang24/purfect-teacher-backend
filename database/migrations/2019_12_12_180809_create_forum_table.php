@@ -60,7 +60,7 @@ class CreateForumTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('forum');
+        Schema::dropIfExists('forums');
         Schema::dropIfExists('forum_images');
         Schema::dropIfExists('forum_types');
         Schema::dropIfExists('forum_comments');

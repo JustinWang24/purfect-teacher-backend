@@ -507,3 +507,13 @@ Route::prefix('conferences')->middleware('auth:api')->group(function () {
     Route::post('/conference-info','Api\Conferences\ConferenceController@conferenceInfo')
         ->name('api.conferences.conferenceInfo');
 });
+
+
+// 论坛
+Route::prefix('forum')->middleware('auth:api')->group(function () {
+
+    // 发帖
+    Route::post('/posted','Api\Forum\ForumController@index')
+        ->name('api.add.posted');
+
+});
