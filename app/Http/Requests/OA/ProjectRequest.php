@@ -47,4 +47,22 @@ class ProjectRequest extends MyStandardRequest
         return $this->get('discussion');
     }
 
+
+    /**
+     * 获取项目ID
+     * @return mixed
+     */
+    public function getProjectId() {
+        return $this->get('project_id', null);
+    }
+
+
+    /**
+     * 获取任务ID
+     * @return mixed
+     */
+    public function getTaskId() {
+        return $this->get('task_id', null);
+    }
+
 }

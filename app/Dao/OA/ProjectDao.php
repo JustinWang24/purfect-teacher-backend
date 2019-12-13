@@ -175,4 +175,14 @@ class ProjectDao
             ->orderBy('created_at', 'desc')
             ->paginate(ConfigurationTool::DEFAULT_PAGE_SIZE);
     }
+
+
+    /**
+     * 通过任务ID获取评论
+     * @param $taskId
+     * @return mixed
+     */
+    public function getDiscussionByTaskId($taskId) {
+        return ProjectTaskDiscussion::where('project_task_id',$taskId)->get();
+    }
 }

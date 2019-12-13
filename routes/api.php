@@ -523,4 +523,10 @@ Route::prefix('oa')->middleware('auth:api')->group(function () {
     // 项目列表
     Route::get('/project-list','Api\OA\ProjectsController@projectList')
         ->name('api.oa.project-list');
+    // 项目下的任务列表
+    Route::get('/task-list','Api\OA\ProjectsController@taskList')
+        ->name('api.oa.task-list');
+    // 任务下的评论列表 discussionList
+    Route::get('/discussion-list','Api\OA\ProjectsController@discussionList')
+        ->name('api.oa.discussion-list');
 });
