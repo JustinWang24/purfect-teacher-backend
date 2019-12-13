@@ -54,7 +54,7 @@
         <el-button class="full-width" type="primary" @click="onStartActionSubmit">发起</el-button>
     </div>
     @include(
-        'reusable_elements.section.file_manager_component',
+        'reusable_elements.section.file_manager_component_mobile',
         ['pickFileHandler'=>'pickFileHandler']
     )
 </div>
