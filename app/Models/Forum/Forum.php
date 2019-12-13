@@ -56,4 +56,21 @@ class Forum extends Model
         return $this->belongsTo(StudentProfile::class,'user_id','user_id');
     }
 
+    /**
+     * 帖子评论
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function forumComment()
+    {
+        return $this->hasMany(ForumComment::class);
+    }
+
+    /**
+     * 帖子点赞
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function forumLike()
+    {
+        return $this->hasMany(ForumLike::class);
+    }
 }

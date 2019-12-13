@@ -72,12 +72,15 @@ class ForumController extends Controller
 
         foreach ($lists as $key => $list) {
             $lists[$key]['type'] = $list->forumType->title;
+            $lists[$key]['comment_num'] = $list->forumComment->count();
+            $lists[$key]['like_num'] = $list->forumLike->count();
             unset($lists[$key]['forumType']);
             unset($lists[$key]['type_id']);
+            unset($lists[$key]['forumComment']);
+            unset($lists[$key]['forumLike']);
         }
 
         $data = pageReturn($lists);
-
         return JsonBuilder::Success($data, '帖子列表');
     }
 
