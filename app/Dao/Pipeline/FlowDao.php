@@ -13,7 +13,6 @@ use App\Models\Pipeline\Flow\UserFlow;
 use App\User;
 use App\Utils\JsonBuilder;
 use App\Utils\Pipeline\IAction;
-use App\Utils\Pipeline\IFlow;
 use App\Utils\ReturnData\IMessageBag;
 use App\Utils\ReturnData\MessageBag;
 use Illuminate\Support\Facades\DB;
@@ -28,13 +27,15 @@ class FlowDao
      * @return array
      */
     public function getGroupedFlows($schoolId, $types = [], $forApp = false){
-        $flows = Flow::select(['id','name','icon','type'])
-            ->where('school_id',$schoolId)
-            ->orderBy('type','asc')->get();
         $data = [];
         if(empty($types)){
             $types = array_keys(Flow::Types());
         }
+
+        $flows = Flow::select(['id','name','icon','type'])
+            ->where('school_id',$schoolId)
+            ->whereIn('type',$types)
+            ->orderBy('type','asc')->get();
 
         foreach ($types as $key){
             $data[$key] = [];
@@ -43,7 +44,7 @@ class FlowDao
         foreach ($flows as $flow) {
             if(in_array($flow->type, $types)){
                 if($forApp){
-                    $flow->icon = str_replace('.png','',$flow->icon);
+                    $flow->icon = str_replace('.png','@2x.png',$flow->icon);
                 }
                 $data[$flow->type][] = $flow;
             }

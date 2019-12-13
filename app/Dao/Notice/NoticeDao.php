@@ -98,7 +98,7 @@ class NoticeDao
      * @return array
      */
     public function getNotice($type, $schoolId, $pageNumber = 0, $pageSize = ConfigurationTool::DEFAULT_PAGE_SIZE) {
-        $field = ['id', 'title', 'type', 'created_at', 'inspect_id', 'image','status'];
+        $field = ['id', 'title', 'content', 'type', 'created_at', 'inspect_id', 'image','status'];
         $map = ['type'=>$type, 'school_id'=>$schoolId, 'status'=>Notice::STATUS_PUBLISH];
         $notices = Notice::where('type',$type)->select($field)->with('attachments')
             ->skip($pageSize * $pageNumber)

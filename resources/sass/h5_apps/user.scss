@@ -1,0 +1,48 @@
+@import "basic";
+
+@import "student_registration_app";
+
+// Pipeline
+.pipeline-user-flow-box{
+  margin-bottom: 15px;
+}
+.user-view-flow-history-steps{
+  ul{
+    padding-left:0;
+  }
+}
+// Pipeline end
+
+
+.showMoreButton{
+  background:-webkit-linear-gradient(to right, #66D9FF, #4EA5FE) !important;
+  background:linear-gradient(to right,#66D9FF,#4EA5FE) !important;
+  border: none !important;
+  padding: 8px 60px !important;
+}
+
+.el-form-item__label{
+  text-align: left !important;
+  font-size: 13px !important;
+}
+.el-input--mini .el-input__inner{
+  border:none !important;
+  text-align: right !important;
+}
+.el-form-item{
+  margin-bottom: 0 !important;
+  border-bottom: solid 1px $borderColor;
+}
+.no-border-bottom{
+  border-bottom: none;
+}
+.el-drawer.ltr, .el-drawer.rtl, .el-drawer__container {
+  overflow: scroll;
+}
+.for-mobile-alert{
+  max-width: 360px !important;
+}
+
+.el-form-item__error{
+  z-index: 199;
+}

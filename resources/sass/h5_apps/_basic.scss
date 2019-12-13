@@ -1,1 +1,54 @@
 @import "~normalize.css";
+
+$borderColor: #F6F6F6;
+$txtColor: #333333;
+$defaultPadding: 15px;
+$colorSuccess: #28a745;
+$colorWarning: #ffc107;
+$colorPrimary: #007bff;
+$colorDanger: #dc3545;
+$colorLight: #e8e8e8;
+
+p{
+  line-height: 1.5;
+}
+
+.p-15{
+  padding: $defaultPadding;
+}
+.nb{
+  border: none !important;
+}
+
+.full-width{
+  width: 100%;
+}
+.pull-left{
+  float: left;
+}
+.pull-right{
+  float: right;
+}
+.text-center{
+  text-align: center;
+}
+
+
+p, h1, h2, h3, h4, h5, h6, li{
+  font-family: "Helvetica Neue",Helvetica,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","微软雅黑",Arial,sans-serif;
+}
+.text-success{
+  color: $colorSuccess !important
+}
+.text-warning{
+  color: $colorWarning !important
+}
+.text-primary{
+  color: $colorPrimary !important
+}
+.text-danger{
+  color: $colorDanger !important
+}
+.text-grey{
+  color: $colorLight !important;
+}
