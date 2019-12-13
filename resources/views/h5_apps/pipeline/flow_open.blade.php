@@ -42,7 +42,7 @@
 
         <h5>审批流程</h5>
 
-        <el-timeline :reverse="reverse">
+        <el-timeline>
             @foreach($flow->nodes as $key=>$n)
             <el-timeline-item
                     key="{{ $key }}">
