@@ -386,7 +386,7 @@ Route::prefix('pipeline')->middleware('auth:api')->group(function (){
     /**
      * 用户调取可用的流程集合的接口
      */
-    Route::post('/flows/my', 'Api\Pipeline\FlowsController@my')
+    Route::any('/flows/my', 'Api\Pipeline\FlowsController@my')
         ->name('api.pipeline.flows.my');
 
     /**
@@ -520,5 +520,7 @@ Route::prefix('forum')->middleware('auth:api')->group(function () {
         ->name('api.forum.comments/addlike');
     Route::get('/comments/dellike/{id}','Api\Forum\ForumCommentController@delLike')
         ->name('api.forum.comments/dellike');
-
+    // 发帖
+    Route::post('/posted','Api\Forum\ForumController@index')
+        ->name('api.add.posted');
 });

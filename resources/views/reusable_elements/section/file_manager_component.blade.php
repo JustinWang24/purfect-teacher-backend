@@ -13,7 +13,7 @@
         size="100%"
         custom-class="e-yun-pan">
     <file-manager
-            user-uuid="{{ \Illuminate\Support\Facades\Auth::user()->uuid }}"
+            user-uuid="{{ \Illuminate\Support\Facades\Auth::user() ? \Illuminate\Support\Facades\Auth::user()->uuid : ($user->uuid ?? null) }}"
             :allowed-file-types="[{!! isset($allowedFileTypes) ? $allowedFileTypes : null !!}]"
             :pick-file="{{ isset($pickFileHandler) ? 'true':'false' }}"
             {!! isset($pickFileHandler) ? 'v-on:pick-this-file="'.$pickFileHandler.'"' : null !!}

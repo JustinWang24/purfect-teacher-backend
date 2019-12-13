@@ -112,10 +112,17 @@ class IndexController extends Controller
         }
         else{
             $dao = new CalendarDao();
-            return JsonBuilder::Success($dao->getCalendar($school->configuration));
+            return JsonBuilder::Success(
+                $dao->getCalendar($school->configuration, $request->get('year'), $request->get('month'))
+            );
         }
     }
 
+    /**
+     * 下发所有 校历 events 的接口
+     * @param MyStandardRequest $request
+     * @return string
+     */
     public function all_events(MyStandardRequest $request){
         $school = $this->_getSchoolFromRequest($request);
 
@@ -123,8 +130,10 @@ class IndexController extends Controller
             return JsonBuilder::Error('找不到学校的信息');
         }else{
             $dao = new CalendarDao();
-            $events = $dao->getCalendarEvent($school->id);
+            $events = $dao->getCalendarEvent($school->id, date('Y'));
             $weeks = $school->configuration->getAllWeeksOfTerm();
+
+            $data = [];
 
             foreach ($events as $event) {
                 foreach ($weeks as $week) {
@@ -133,13 +142,15 @@ class IndexController extends Controller
                      */
                     if($week->includes($event->event_time)){
                         $event->week_idx = $week->getName();
+                        $event->name = $event->event_time;
+                        $data[] = $event;
                         break;
                     }
                 }
             }
 
             return JsonBuilder::Success([
-                'events'=>$dao->getCalendarEvent($school->id)
+                'events'=>$data
             ]);
         }
     }

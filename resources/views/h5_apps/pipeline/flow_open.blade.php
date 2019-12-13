@@ -1,6 +1,6 @@
 @extends('layouts.h5_app')
 @section('content')
-<div id="app-init-data-holder" data-flowid="{{ $flow->id }}" data-nodeid="{{ $node->id }}" data-school="{{ $user->getSchoolId() }}"></div>
+<div id="app-init-data-holder" data-flowid="{{ $flow->id }}" data-nodeid="{{ $node->id }}" data-school="{{ $user->getSchoolId() }}" data-apprequest="1"></div>
 <div id="{{ $appName }}" class="school-intro-container">
     <div class="header">
         <h2 class="title">{{ $flow->name }} <i class="el-icon-loading" v-if="isLoading"></i></h2>
@@ -42,7 +42,7 @@
 
         <h5>审批流程</h5>
 
-        <el-timeline :reverse="reverse">
+        <el-timeline>
             @foreach($flow->nodes as $key=>$n)
             <el-timeline-item
                     key="{{ $key }}">

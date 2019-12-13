@@ -38,14 +38,14 @@ export function saveNode(flow, node, prevNodeId, affix) {
     );
 }
 
-export function start(action, affix) {
+export function start(action, isAppRequest, affix) {
     const url = Util.buildUrl(Constants.API.FLOW.START);
     if(Util.isDevEnv()){
         return axios.get(url, affix);
     }
     return axios.post(
         url,
-        {action: action, version:Constants.VERSION}
+        {action: action, is_app: isAppRequest, version:Constants.VERSION}
     );
 }
 

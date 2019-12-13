@@ -46,4 +46,8 @@ class FlowRequest extends MyStandardRequest
     public function getActionId(){
         return $this->get('action_id', null);
     }
+
+    public function isAppRequest(){
+        return $this->get('is_app',false);
+    }
 }
