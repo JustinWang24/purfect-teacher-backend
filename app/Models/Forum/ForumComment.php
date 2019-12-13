@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class ForumComment extends Model
 {
     protected $fillable = [
-        'user_id', 'content', 'forum_id'
+        'user_id', 'content', 'forum_id','school_id','status'
     ];
 
     public  function reply()
