@@ -11,11 +11,13 @@ class ProjectMember extends Model
     public $timestamps = false;
     protected $fillable = ['user_id', 'project_id'];
 
+    public $user_field = ['*'];
+
     public function project(){
         return $this->belongsTo(Project::class);
     }
 
     public function user(){
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class)->select($this->user_field);
     }
 }

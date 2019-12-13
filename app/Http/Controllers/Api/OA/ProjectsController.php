@@ -120,4 +120,26 @@ class ProjectsController extends Controller
         return JsonBuilder::Success($data);
     }
 
+
+    /**
+     * 项目详情
+     * @param ProjectRequest $request
+     * @return string
+     */
+    public function projectInfo(ProjectRequest $request) {
+        $projectId = $request->getProjectId();
+        if(is_null($projectId)) {
+            return JsonBuilder::Error('项目ID不能为空');
+        }
+        $dao = new ProjectDao();
+        $info = $dao->getProjectById($projectId);
+        $members = $info->members;
+        foreach ($members as $key => $val) {
+            $val->user_field = ['name'];
+            $members[$key]=$val->user;
+        }
+        $data = ['project'=>$info];
+        return JsonBuilder::Success($data);
+    }
+
 }
