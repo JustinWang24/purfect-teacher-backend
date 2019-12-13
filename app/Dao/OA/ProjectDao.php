@@ -12,6 +12,7 @@ namespace App\Dao\OA;
 use App\Models\OA\Project;
 use App\Models\OA\ProjectMember;
 use App\Models\OA\ProjectTask;
+use App\Models\OA\ProjectTaskDiscussion;
 use App\Utils\JsonBuilder;
 use App\Utils\Misc\ConfigurationTool;
 use App\Utils\ReturnData\MessageBag;
@@ -151,5 +152,15 @@ class ProjectDao
             $messageBag->setMessage('任务创建失败');
             return $messageBag;
         }
+    }
+
+
+    /**
+     * 创建任务评论
+     * @param $data
+     * @return mixed
+     */
+    public function createDiscussion($data) {
+        return ProjectTaskDiscussion::create($data);
     }
 }

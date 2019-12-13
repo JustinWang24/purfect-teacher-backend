@@ -514,8 +514,10 @@ Route::prefix('oa')->middleware('auth:api')->group(function () {
     // 创建项目
     Route::post('/create-project','Api\OA\ProjectsController@createProject')
         ->name('api.oa.create-project');
-
     // 创建任务
     Route::post('/create-task','Api\OA\ProjectsController@createTask')
         ->name('api.oa.create-task');
+    // 创建任务讨论
+    Route::post('/create-discussion','Api\OA\ProjectsController@createDiscussion')
+        ->name('api.oa.create-discussion');
 });

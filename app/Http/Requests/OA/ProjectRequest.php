@@ -38,4 +38,13 @@ class ProjectRequest extends MyStandardRequest
         return $this->get('task');
     }
 
+
+    /**
+     * 获取讨论数据
+     * @return mixed
+     */
+    public function getDiscussion() {
+        return $this->get('discussion');
+    }
+
 }

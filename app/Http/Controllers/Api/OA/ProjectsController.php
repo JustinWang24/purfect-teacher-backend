@@ -46,4 +46,21 @@ class ProjectsController extends Controller
             return JsonBuilder::Error($result->getMessage());
         }
     }
+
+
+    /**
+     * 创建任务评论
+     * @param ProjectRequest $request
+     * @return string
+     */
+    public function createDiscussion(ProjectRequest $request) {
+        $data = $request->getDiscussion();
+        $dao = new ProjectDao();
+        $result = $dao->createDiscussion($data);
+        if($result) {
+            return JsonBuilder::Success(['id'=>$result->id]);
+        } else {
+            return JsonBuilder::Error('创建失败');
+        }
+    }
 }
