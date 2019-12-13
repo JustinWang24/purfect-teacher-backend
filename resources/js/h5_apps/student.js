@@ -32,3 +32,4 @@ require('../includes/frontend/student_registration_app');// 学生报名页面�
 
 // 学生启动申请流程
 require('../includes/pipeline/flow_open_app');
+require('../includes/backend/student_homepage_app');

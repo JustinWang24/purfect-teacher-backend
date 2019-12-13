@@ -118,6 +118,11 @@ class IndexController extends Controller
         }
     }
 
+    /**
+     * 下发所有 校历 events 的接口
+     * @param MyStandardRequest $request
+     * @return string
+     */
     public function all_events(MyStandardRequest $request){
         $school = $this->_getSchoolFromRequest($request);
 

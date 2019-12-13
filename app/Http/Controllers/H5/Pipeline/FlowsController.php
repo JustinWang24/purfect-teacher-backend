@@ -56,7 +56,11 @@ class FlowsController extends Controller
 
         if($logic){
             $flows = $logic->startedByMe();
-            dump($flows);
+            $this->dataForView['user'] = $user;
+            $this->dataForView['flows'] = $flows;
+            $this->dataForView['api_token'] = $user->api_token;
+            $this->dataForView['appName'] = 'pipeline-flows-in-progress';
+            return view('h5_apps.pipeline.flow_in_progress',$this->dataForView);
         }
         else{
             return '您无权使用本功能';
