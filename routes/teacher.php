@@ -100,4 +100,13 @@ Route::prefix('teacher')->group(function () {
         ->name('teacher.elective-course.create');
     Route::get('elective-course/edit', 'ElectiveCoursesController@edit')
         ->name('teacher.elective-course.edit');
+
+    // 社区管理
+    // 动态列表
+    Route::get('/dynamic','Community\DynamicController@index')
+        ->name('teacher.community.dynamic');
+    // 动态详情
+    Route::get('/dynamic-info','Community\DynamicController@info')
+        ->name('teacher.community.dynamic-info');
+
 });

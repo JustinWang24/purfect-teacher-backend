@@ -2,12 +2,11 @@
 
 namespace App\Dao\Forum;
 
+use App\User;
 use App\Models\Forum\Forum;
 use App\Models\Forum\ForumImage;
-use App\User;
-use App\Utils\Misc\ConfigurationTool;
-use App\Utils\Misc\ConfigurationTool;
 use Illuminate\Support\Facades\DB;
+use App\Utils\Misc\ConfigurationTool;
 
 class ForumDao
 {
@@ -54,7 +53,7 @@ class ForumDao
      */
     public function select($user)
     {
-        return Forum::where(['school_id'=> $user->getSchoolId(), 'status' => Forum::STATUS_2])
+        return Forum::where(['school_id'=> $user->getSchoolId(), 'status' => Forum::STATUS_PASS])
             ->select('id', 'content', 'see_num', 'type_id', 'created_at', 'user_id')
             ->orderBy('is_up', 'desc')
             ->orderBy('created_at', 'desc')

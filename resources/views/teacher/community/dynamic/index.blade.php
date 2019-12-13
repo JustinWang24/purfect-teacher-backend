@@ -1,7 +1,4 @@
-<?php
-use App\Utils\UI\Anchor;
-use App\Utils\UI\Button;
-?>
+
 @extends('layouts.app')
 @section('content')
     <div class="row">
@@ -34,8 +31,11 @@ use App\Utils\UI\Button;
                                         <td>{{ $val->countLikeNum() }}</td>
                                         <td>{{ $val->created_at }}</td>
                                         <td></td>
-                                        <td></td>
-                                        <td></td>
+                                        <td>{{ $val->statusText() }}</td>
+                                        <td class="text-center">
+                                            {{ \App\Utils\UI\Anchor::Print(['text'=>'查看','class'=>'btn-edit-forum','href'=>route('school_manager.facility.edit',['id'=>$val->id])], \App\Utils\UI\Button::TYPE_DEFAULT,'edit') }}
+                                            {{ \App\Utils\UI\Anchor::Print(['text'=>'删除','class'=>'btn-delete-forum btn-need-confirm','href'=>route('school_manager.facility.delete',['id'=>$val['id']])], \App\Utils\UI\Button::TYPE_DANGER,'trash') }}
+                                        </td>
                                     </tbody>
                                 @endforeach
                             </table>
