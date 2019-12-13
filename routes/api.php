@@ -507,3 +507,14 @@ Route::prefix('conferences')->middleware('auth:api')->group(function () {
     Route::post('/conference-info','Api\Conferences\ConferenceController@conferenceInfo')
         ->name('api.conferences.conferenceInfo');
 });
+
+//社区管理
+Route::prefix('forum')->middleware('auth:api')->group(function () {
+    Route::get('/comments/{id}','Api\Forum\ForumCommentController@getComments')
+        ->name('api.forum.comments');
+    Route::get('/comments/addcomment/{id}','Api\Forum\ForumCommentController@addComment')
+        ->name('api.forum.comments/addcomment');
+    Route::get('/comments/addreply/{id}','Api\Forum\ForumCommentController@addCommentReply')
+        ->name('api.forum.comments/addreply');
+
+});

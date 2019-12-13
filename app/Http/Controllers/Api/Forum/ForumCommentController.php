@@ -17,6 +17,11 @@ class ForumCommentController extends Controller
         $this->middleware('auth');
     }
 
+    /**
+     * @param Request $request
+     * @param $forumId
+     * @return string
+     */
     public function  addComment(Request $request, $forumId)
     {
         $user = $request->user();
@@ -36,6 +41,11 @@ class ForumCommentController extends Controller
         }
     }
 
+    /**
+     * @param Request $request
+     * @param $commentId
+     * @return string
+     */
     public function  delComment(Request $request, $commentId)
     {
         $user = $request->user();
@@ -44,7 +54,11 @@ class ForumCommentController extends Controller
         return JsonBuilder::Success($result->getMessage());
     }
 
-
+    /**
+     * @param Request $request
+     * @param $commentId
+     * @return string
+     */
     public function  addCommentReply(Request $request, $commentId)
     {
         $user = $request->user();
@@ -67,6 +81,12 @@ class ForumCommentController extends Controller
             return JsonBuilder::Success('内容不合法请重试');
         }
     }
+
+    /**
+     * @param Request $request
+     * @param $replyId
+     * @return string
+     */
     public function  delCommentReply(Request $request, $replyId)
     {
         $user = $request->user();
@@ -76,6 +96,11 @@ class ForumCommentController extends Controller
         return JsonBuilder::Success($result->getMessage());
     }
 
+    /**
+     * @param Request $request
+     * @param $forumId
+     * @return string
+     */
     public function  addLike(Request $request, $forumId)
     {
         $user = $request->user();
@@ -85,6 +110,12 @@ class ForumCommentController extends Controller
         return JsonBuilder::Success($result->getMessage());
 
     }
+
+    /**
+     * @param Request $request
+     * @param $forumId
+     * @return string
+     */
     public function  delLike(Request $request, $forumId)
     {
         $user = $request->user();
@@ -95,14 +126,20 @@ class ForumCommentController extends Controller
 
     }
 
-
+    /**
+     * @param Request $request
+     * @param $forumId
+     * @return string
+     */
     public function getComments(Request $request, $forumId) {
         $dao = new ForumCommentDao();
         $comments = $dao->getCommentForForum($forumId);
         $result = [];
         foreach ($comments as$key => $comment) {
             $replys = $comment->reply()->get();
-
+            $result[$key]['comment'] = $comment->toArray();
+            $result[$key]['reply'] = $replys->toArray();
         }
+        return JsonBuilder::Success($result);
     }
 }
