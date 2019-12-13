@@ -98,8 +98,10 @@ class ForumController extends Controller
         $data['avatar']    = $data->studentProfile->avatar;
         $data['user_name'] = $data->studentProfile->user->name;
         $data['type']      = $data->forumType->title;
+        $data['like_num']  = $data->forumLike->count();
         unset($data['studentProfile']);
         unset($data['forumType']);
+        unset($data['forumLike']);
         return JsonBuilder::Success($data, '帖子详情');
 
     }
