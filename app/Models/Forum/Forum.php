@@ -73,4 +73,9 @@ class Forum extends Model
     {
         return $this->hasMany(ForumLike::class);
     }
+
+    public static function getImageUrl($value)
+    {
+        return $value ? asset($value) : "";
+    }
 }

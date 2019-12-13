@@ -71,13 +71,16 @@ class ForumController extends Controller
         $lists = $dao->select($user);
 
         foreach ($lists as $key => $list) {
-            $lists[$key]['type'] = $list->forumType->title;
+            $lists[$key]['type']        = $list->forumType->title;
             $lists[$key]['comment_num'] = $list->forumComment->count();
-            $lists[$key]['like_num'] = $list->forumLike->count();
+            $lists[$key]['like_num']    = $list->forumLike->count();
+            $lists[$key]['avatar']      = Forum::getImageUrl($list->studentProfile->avatar);
+            $lists[$key]['user_name']   = $list->studentProfile->user->name;
             unset($lists[$key]['forumType']);
             unset($lists[$key]['type_id']);
             unset($lists[$key]['forumComment']);
             unset($lists[$key]['forumLike']);
+            unset($lists[$key]['studentProfile']);
         }
 
         $data = pageReturn($lists);
@@ -95,7 +98,7 @@ class ForumController extends Controller
         $dao  = new ForumDao;
         $data = $dao->find($id);
 
-        $data['avatar']    = $data->studentProfile->avatar;
+        $data['avatar']    = Forum::getImageUrl($data->studentProfile->avatar);
         $data['user_name'] = $data->studentProfile->user->name;
         $data['type']      = $data->forumType->title;
         $data['like_num']  = $data->forumLike->count();
