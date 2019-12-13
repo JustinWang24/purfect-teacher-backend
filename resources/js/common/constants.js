@@ -147,6 +147,9 @@ export const Constants = {
             WATCH: '/api/pipeline/flow/watch', // 查看一个流程的最新状态
             CANCEL_ACTION: '/api/pipeline/flow/cancel-action', // 取消一个流程中的 action
             VIEW_ACTION: '/api/pipeline/flow/view-action', // 查看一个流程中的 action
+        },
+        MESSAGE: {
+            LOAD: '/api/'
         }
     },
     YEARS: ['N.A','一年级','二年级','三年级','四年级','五年级','六年级'],
