@@ -40,69 +40,30 @@
                 </li>
 
                 <!-- start notification dropdown -->
-                <li class="dropdown dropdown-extended dropdown-notification" id="header_notification_bar">
-                    <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown"
-                       data-close-others="true">
-                        <i class="fa fa-bell-o"></i>
-                        <span class="badge headerBadgeColor1"> 6 </span>
-                    </a>
-                    <ul class="dropdown-menu">
-                        <li class="external">
-                            <h3><span class="bold">通知消息</span></h3>
-                            <span class="notification-label purple-bgcolor">最近6条</span>
-                        </li>
-                        <li>
-                            <ul class="dropdown-menu-list small-slimscroll-style" data-handle-color="#637283">
-                                <li>
-                                    <a href="javascript:;">
-                                        <span class="time">刚刚</span>
-                                        <span class="details">
-													<span class="notification-icon circle deepPink-bgcolor"><i
-                                                                class="fa fa-check"></i></span>
-													新消息 1. </span>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="javascript:;">
-                                        <span class="time">7分钟前</span>
-                                        <span class="details">
-													<span class="notification-icon circle blue-bgcolor"><i
-                                                                class="fa fa-comments-o"></i></span>
-													<b>张老师 </b>发给你一笑消息 </span>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="javascript:;">
-                                        <span class="time">12分钟前</span>
-                                        <span class="details">
-													<span class="notification-icon circle pink"><i
-                                                                class="fa fa-heart"></i></span>
-													<b>学生李四 </b>刚刚提交了请假申请. </span>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="javascript:;">
-                                        <span class="time">15分钟前</span>
-                                        <span class="details">
-													<span class="notification-icon circle yellow"><i
-                                                                class="fa fa-warning"></i></span> 系统公告! </span>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="javascript:;">
-                                        <span class="time">10小时前</span>
-                                        <span class="details">
-													<span class="notification-icon circle red"><i
-                                                                class="fa fa-times"></i></span> 学生赵六提交了数学作业. </span>
-                                    </a>
-                                </li>
-                            </ul>
-                            <div class="dropdown-menu-footer">
-                                <a href="javascript:void(0)"> 所有消息 </a>
-                            </div>
-                        </li>
-                    </ul>
+                <li class="dropdown dropdown-extended dropdown-notification" id="notification-app-data-top" data-schoolid="{{ session('school.id') }}">
+                    <div id="header_notification_bar" style="padding-top: 13px;">
+                        <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown"
+                           data-close-others="true">
+                            <i class="fa fa-bell-o"></i>
+                            <span style="margin-top: -4px;" class="badge headerBadgeColor1" v-if="hasNew"> 新 </span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li class="external">
+                                <h3><span class="bold">通知消息</span></h3>
+                                <span class="notification-label purple-bgcolor">最近@{{ pageSize > total ? total : pageSize }}条</span>
+                            </li>
+                            <li>
+                                <ul class="dropdown-menu-list small-slimscroll-style" data-handle-color="#637283">
+                                    <notification-item v-for="(msg, idx) in messages" :key="idx" :message="msg"></notification-item>
+                                </ul>
+                                <div class="dropdown-menu-footer">
+                                    <a href="#"> 所有消息 </a>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
                 </li>
+
                 <li class="dropdown dropdown-user">
                     <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown"
                        data-close-others="true">

@@ -428,7 +428,7 @@ Route::prefix('pipeline')->middleware('auth:api')->group(function (){
 
 Route::prefix('notification')->middleware('auth:api')->group(function () {
     // 消息中心
-    Route::post('/list','Api\Notice\SystemNotificationController@index')
+    Route::any('/list','Api\Notice\SystemNotificationController@index')
         ->name('api.notification.list');
 });
 
@@ -437,9 +437,6 @@ Route::prefix('attendance')->middleware('auth:api')->group(function () {
     Route::post('/list','Api\AttendanceSchedule\AttendanceScheduleController@display')
         ->name('api.attendance.list');
 });
-
-
-
 
 Route::prefix('user')->group(function () {
 

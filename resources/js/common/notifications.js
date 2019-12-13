@@ -8,7 +8,7 @@ import {Util} from "./utils";
  * @returns Promise
  */
 export function loadMessages(schoolId, affix) {
-    const url = Util.buildUrl(Constants.API.NEWS.SAVE);
+    const url = Util.buildUrl(Constants.API.MESSAGE.LOAD);
     if(Util.isDevEnv()){
         return axios.get(url, affix);
     }

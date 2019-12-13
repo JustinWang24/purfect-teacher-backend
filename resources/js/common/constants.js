@@ -149,7 +149,7 @@ export const Constants = {
             VIEW_ACTION: '/api/pipeline/flow/view-action', // 查看一个流程中的 action
         },
         MESSAGE: {
-            LOAD: '/api/'
+            LOAD: '/api/notification/list'
         }
     },
     YEARS: ['N.A','一年级','二年级','三年级','四年级','五年级','六年级'],
