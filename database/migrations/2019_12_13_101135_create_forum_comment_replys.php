@@ -29,6 +29,7 @@ class CreateForumCommentReplys extends Migration
             $table->unsignedBigInteger('forum_id')->comment('帖子ID');
             $table->unsignedBigInteger('user_id')->comment('用户ID');
             $table->index('forum_id', 'idx_forum_id');
+            $table->unique(['user_id','forum_id'], 'idx_user_forum');
             $table->timestamps();
         });
     }
@@ -41,5 +42,6 @@ class CreateForumCommentReplys extends Migration
     public function down()
     {
         Schema::dropIfExists('forum_comment_replys');
+        Schema::dropIfExists('forum_like');
     }
 }

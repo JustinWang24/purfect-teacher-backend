@@ -109,7 +109,15 @@ class ForumCommentController extends Controller
         $user = $request->user();
         $forumId = intval($forumId);
         $dao = new ForumCommentDao();
-        $result = $dao->addForumLike($forumId,$user->id);
+        $count = $dao->getForumLike($forumId,$user->id);
+        if ($count>0)
+        {
+            $result = $dao->deleteForumLike($forumId,$user->id);
+        } else {
+            $result = $dao->addForumLike($forumId,$user->id);
+        }
+
+
         return JsonBuilder::Success($result->getMessage());
 
     }
@@ -140,12 +148,20 @@ class ForumCommentController extends Controller
         $studentDao = new StudentProfileDao();
         $comments = $dao->getCommentForForum($forumId);
         $result = [];
+        //获得评论数
+        $result['info']['comment_count'] = $dao->getCountComment($forumId);
+        $result['info']['comment_reply_count'] = $dao->getCountReply($forumId);
+        $result['info']['comment_total'] = $result['info']['comment_count'] + $result['info']['comment_reply_count'];
+        $result['info']['like_count'] =  $dao->getCountLikeForForum($forumId);
+
         foreach ($comments as$key => $comment) {
             $replys = $comment->reply()->get();
             $commentArr = $comment->toArray();
             $commentArr['user_name'] =  $userDao->getUserById($commentArr['user_id'])->first()->name;
             $commentArr['user_avatar'] =  $studentDao->getStudentInfoByUserId($commentArr['user_id'])->avatar;
-            $result[$key]['comment'] = $commentArr;
+            $commentArr['reply_count'] =  $dao->getCountReplyForComment($commentArr['id']);
+
+            $result['comments'][$key]['comment'] = $commentArr;
             $replyArr = $replys->toArray();
             foreach ($replyArr as $k => $reply) {
                 $replyArr[$k]['to_user_name'] = $userDao->getUserById($reply['to_user_id'])->first()->name;
@@ -154,7 +170,7 @@ class ForumCommentController extends Controller
                 $replyArr[$k]['from_user_avatar'] =  $studentDao->getStudentInfoByUserId($reply['user_id'])->avatar;
             }
 
-            $result[$key]['reply'] = $replyArr;
+            $result['comments'][$key]['reply'] = $replyArr;
         }
         return JsonBuilder::Success($result);
     }

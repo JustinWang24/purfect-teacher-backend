@@ -516,5 +516,9 @@ Route::prefix('forum')->middleware('auth:api')->group(function () {
         ->name('api.forum.comments/addcomment');
     Route::get('/comments/addreply/{id}','Api\Forum\ForumCommentController@addCommentReply')
         ->name('api.forum.comments/addreply');
+    Route::get('/comments/addlike/{id}','Api\Forum\ForumCommentController@addLike')
+        ->name('api.forum.comments/addlike');
+    Route::get('/comments/dellike/{id}','Api\Forum\ForumCommentController@delLike')
+        ->name('api.forum.comments/dellike');
 
 });
