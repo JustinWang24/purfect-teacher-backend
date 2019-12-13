@@ -386,7 +386,7 @@ Route::prefix('pipeline')->middleware('auth:api')->group(function (){
     /**
      * 用户调取可用的流程集合的接口
      */
-    Route::post('/flows/my', 'Api\Pipeline\FlowsController@my')
+    Route::any('/flows/my', 'Api\Pipeline\FlowsController@my')
         ->name('api.pipeline.flows.my');
 
     /**
@@ -508,9 +508,46 @@ Route::prefix('conferences')->middleware('auth:api')->group(function () {
         ->name('api.conferences.conferenceInfo');
 });
 
+// 项目管理
+Route::prefix('oa')->middleware('auth:api')->group(function () {
+    // 创建项目
+    Route::post('/create-project','Api\OA\ProjectsController@createProject')
+        ->name('api.oa.create-project');
+    // 创建任务
+    Route::post('/create-task','Api\OA\ProjectsController@createTask')
+        ->name('api.oa.create-task');
+    // 创建任务讨论
+    Route::post('/create-discussion','Api\OA\ProjectsController@createDiscussion')
+        ->name('api.oa.create-discussion');
+    // 项目列表
+    Route::get('/project-list','Api\OA\ProjectsController@projectList')
+        ->name('api.oa.project-list');
+    // 项目下的任务列表
+    Route::get('/task-list','Api\OA\ProjectsController@taskList')
+        ->name('api.oa.task-list');
+    // 任务下的评论列表
+    Route::get('/discussion-list','Api\OA\ProjectsController@discussionList')
+        ->name('api.oa.discussion-list');
+    // 项目详情
+    Route::get('/project-info','Api\OA\ProjectsController@projectInfo')
+        ->name('api.oa.project-info');
+    // 项目详情修改
+    Route::post('/update-project','Api\OA\ProjectsController@updateProject')
+        ->name('api.oa.update-project');
+});
 
-// 论坛
+// 社区
 Route::prefix('forum')->middleware('auth:api')->group(function () {
+    Route::get('/comments/{id}','Api\Forum\ForumCommentController@getComments')
+        ->name('api.forum.comments');
+    Route::get('/comments/addcomment/{id}','Api\Forum\ForumCommentController@addComment')
+        ->name('api.forum.comments/addcomment');
+    Route::get('/comments/addreply/{id}','Api\Forum\ForumCommentController@addCommentReply')
+        ->name('api.forum.comments/addreply');
+    Route::get('/comments/addlike/{id}','Api\Forum\ForumCommentController@addLike')
+        ->name('api.forum.comments/addlike');
+    Route::get('/comments/dellike/{id}','Api\Forum\ForumCommentController@delLike')
+        ->name('api.forum.comments/dellike');
 
     // 发帖
     Route::post('/posted','Api\Forum\ForumController@index')

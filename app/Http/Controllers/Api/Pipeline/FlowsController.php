@@ -113,7 +113,12 @@ class FlowsController extends Controller
 
             // 发布流程启动成功事件
             event(new FlowStarted($request->user(),$action, $flow, $node));
-            return JsonBuilder::Success(['id'=>$action->id]);
+            return JsonBuilder::Success(
+                [
+                    'id'=>$action->id,
+                    'url'=>$request->isAppRequest()?route('h5.flow.user.in-progress',['api_token'=>$request->user()->api_token]):null
+                ]
+            );
         }
         else{
             return JsonBuilder::Error($bag->getMessage());

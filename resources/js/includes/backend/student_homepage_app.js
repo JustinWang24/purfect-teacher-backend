@@ -3,7 +3,7 @@
  */
 import {Constants} from "../../common/constants";
 import {Util} from "../../common/utils";
-import {startedByMe} from "../../common/flow";
+import { startedByMe, cancelApplicationByUser } from "../../common/flow";
 
 if(document.getElementById('student-homepage-app')){
     new Vue({
@@ -13,10 +13,11 @@ if(document.getElementById('student-homepage-app')){
                 schoolId: null,
                 userUuid: null,
                 url:{
-                    flowOpen: ''
+                    flowOpen: '',
                 },
                 isLoading: false,
                 flowsStartedByMe:[],
+                apiToken: null,
             }
         },
         created(){
@@ -24,6 +25,7 @@ if(document.getElementById('student-homepage-app')){
             this.schoolId = dom.dataset.school;
             this.userUuid = dom.dataset.useruuid;
             this.url.flowOpen = dom.dataset.flowopen;
+            this.apiToken = dom.dataset.apitoken;
             this.loadFlowsStartedByMe();
         },
         methods:{
@@ -44,7 +46,8 @@ if(document.getElementById('student-homepage-app')){
                 this.$confirm('您确认撤销此申请吗?', '提示', {
                     confirmButtonText: '确定',
                     cancelButtonText: '取消',
-                    type: 'warning'
+                    type: 'warning',
+                    center: true
                 }).then(() => {
                     cancelApplicationByUser(userFlow.id).then(res => {
                         if(Util.isAjaxResOk(res)){
@@ -64,7 +67,11 @@ if(document.getElementById('student-homepage-app')){
             },
             // 学生查看自己的申请详情
             viewMyApplication: function(userFlow){
-                window.location.href = '/pipeline/flow/view-history?user_flow_id=' + userFlow.id;
+                let url = '/pipeline/flow/view-history?user_flow_id=' + userFlow.id;
+                if(!Util.isEmpty(this.apiToken)){
+                    url = '/h5/flow/user/view-history?user_flow_id=' + userFlow.id + '&api_token=' + this.apiToken;
+                }
+                window.location.href = url;
             },
             reloadThisPage: function(){
                 Util.reloadCurrentPage(this);
