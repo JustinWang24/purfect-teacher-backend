@@ -3,6 +3,7 @@
  */
 import { Constants } from './constants';
 import Lockr from 'lockr';
+import moment from 'moment';
 
 export const Util = {
     /**
@@ -187,5 +188,19 @@ export const Util = {
     reloadCurrentPage: function(vm){
         vm.$message({type:'success',message:'正在刷新 ... '});
         window.location.reload();
+    },
+    /**
+     * 比较两个给定日期的间隔描述
+     * @param t1
+     * @param t2
+     */
+    diffInSecond: function(t1, t2){
+        const earlier = moment(t1);
+        if(this.isEmpty(t2)){
+            return moment().diff(earlier,"hours");
+        }
+        else{
+            return moment(t2).diff(earlier,'hours');
+        }
     }
 };
