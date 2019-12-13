@@ -29,6 +29,7 @@ class ForumCommentController extends Controller
     {
         $user = $request->user();
         $forumId = intval($forumId);
+        //TODO 需要判断帖子是否存在，不存在不能发表评论
         $content = strip_tags($request->get('content'));
         if (!empty($content) && mb_strlen($content,"utf8")<200) {
             $dao = new ForumCommentDao();
@@ -68,6 +69,9 @@ class ForumCommentController extends Controller
         $commentId = intval($commentId);
         $dao = new ForumCommentDao();
         $commentObj = $dao->getComment($commentId);
+        if (empty($commentObj)) {
+            return JsonBuilder::Success('操作不合法请重试');
+        }
         $reply = strip_tags($request->get('reply'));
         if (!empty($reply) && mb_strlen($reply,"utf8")<200) {
 
