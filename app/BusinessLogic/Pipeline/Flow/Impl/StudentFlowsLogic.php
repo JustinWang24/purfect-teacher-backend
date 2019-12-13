@@ -22,8 +22,48 @@ class StudentFlowsLogic extends GeneralFlowsLogic
     public function getMyFlows($forApp = false)
     {
         $dao = new FlowDao();
-        return $dao->getGroupedFlows(
-            $this->user->getSchoolId(), [IFlow::TYPE_STUDENT_ONLY, IFlow::TYPE_FINANCE], $forApp
+
+        $types[] = [
+            'name'=>IFlow::TYPE_STUDENT_ONLY_TXT,
+            'key'=>1000,
+            'flows'=>[
+                [
+                    'id'=>-1,
+                    'name'=>'招生',
+                    'icon'=>asset('assets/img/pipeline/icon1')
+                ],
+                [
+                    'id'=>-2,
+                    'name'=>'迎新',
+                    'icon'=>asset('assets/img/pipeline/icon2')
+                ],
+                [
+                    'id'=>-3,
+                    'name'=>'离校',
+                    'icon'=>asset('assets/img/pipeline/icon3')
+                ]
+            ]
+        ];
+
+        $result =  $dao->getGroupedFlows(
+            $this->user->getSchoolId(), [IFlow::TYPE_FINANCE, IFlow::TYPE_STUDENT_COMMON], $forApp
         );
+
+        $types = array_merge($types, $result);
+
+        // 校园助手: 这个是特殊的
+        $types[] = [
+            'name'=>'校园助手',
+            'key'=>1000,
+            'flows'=>[
+                [
+                    'id'=>-4,
+                    'name'=>'通讯录',
+                    'icon'=>asset('assets/img/pipeline/icon13')
+                ]
+            ]
+        ];
+
+        return $types;
     }
 }

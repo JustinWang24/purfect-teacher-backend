@@ -13,7 +13,6 @@ use App\User;
 use Illuminate\Http\Request;
 use App\BusinessLogic\Pipeline\Flow\FlowLogicFactory;
 use App\Dao\Pipeline\ActionDao;
-use App\Dao\Pipeline\UserFlowDao;
 use App\Utils\Pipeline\IAction;
 
 class FlowsController extends Controller
