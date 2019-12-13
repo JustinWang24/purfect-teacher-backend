@@ -135,13 +135,14 @@ class IndexController extends Controller
                      */
                     if($week->includes($event->event_time)){
                         $event->week_idx = $week->getName();
+                        $event->name = $event->event_time;
                         break;
                     }
                 }
             }
 
             return JsonBuilder::Success([
-                'events'=>$dao->getCalendarEvent($school->id)
+                'events'=>$events
             ]);
         }
     }

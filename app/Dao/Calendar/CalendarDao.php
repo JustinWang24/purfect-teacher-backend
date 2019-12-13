@@ -87,7 +87,8 @@ class CalendarDao
         $lastDayOfMonth = null;
         if($year && $month){
             $firstDayOfMonth = Carbon::create($year, $month, 1);
-            $lastDayOfMonth = Carbon::create($year,$month,$firstDayOfMonth->lastOfMonth()->day);
+            $firstDayOfMonth1 = Carbon::create($year, $month, 1);
+            $lastDayOfMonth = Carbon::create($year,$month,$firstDayOfMonth1->lastOfMonth()->day);
         }
         else{
             $firstDayOfMonth = Carbon::now()->firstOfMonth();
