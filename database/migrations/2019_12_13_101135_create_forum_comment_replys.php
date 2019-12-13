@@ -41,5 +41,6 @@ class CreateForumCommentReplys extends Migration
     public function down()
     {
         Schema::dropIfExists('forum_comment_replys');
+        Schema::dropIfExists('forum_like');
     }
 }
