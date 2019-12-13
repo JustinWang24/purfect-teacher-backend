@@ -30,17 +30,17 @@ class StudentFlowsLogic extends GeneralFlowsLogic
                 [
                     'id'=>-1,
                     'name'=>'招生',
-                    'icon'=>asset('assets/img/pipeline/icon1.png')
+                    'icon'=>asset('assets/img/pipeline/icon1@2x.png')
                 ],
                 [
                     'id'=>-2,
                     'name'=>'迎新',
-                    'icon'=>asset('assets/img/pipeline/icon2.png')
+                    'icon'=>asset('assets/img/pipeline/icon2@2x.png')
                 ],
                 [
                     'id'=>-3,
                     'name'=>'离校',
-                    'icon'=>asset('assets/img/pipeline/icon3.png')
+                    'icon'=>asset('assets/img/pipeline/icon3@2x.png')
                 ]
             ]
         ];
@@ -59,7 +59,7 @@ class StudentFlowsLogic extends GeneralFlowsLogic
                 [
                     'id'=>-4,
                     'name'=>'通讯录',
-                    'icon'=>asset('assets/img/pipeline/icon13')
+                    'icon'=>asset('assets/img/pipeline/icon13@2x.png')
                 ]
             ]
         ];
