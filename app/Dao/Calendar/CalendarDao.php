@@ -42,11 +42,19 @@ class CalendarDao
     /**
      * 获取校历的事件
      * @param $schoolId
-     * @return mixed
+     * @param $date
+     * @return Collection
      */
-    public function getCalendarEvent($schoolId)
+    public function getCalendarEvent($schoolId, $date = null)
     {
-        return SchoolCalendar::where('school_id', $schoolId)->select('id' ,'tag', 'content', 'event_time')->orderBy('event_time')->get();
+        $where = [
+            ['school_id','=',$schoolId]
+        ];
+        if($date){
+            $where[] = ['event_time','>=',$date];
+        }
+        return SchoolCalendar::where($where)
+            ->select('id' ,'tag', 'content', 'event_time')->orderBy('event_time')->get();
     }
 
     /**
