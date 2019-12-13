@@ -63,4 +63,19 @@ class ProjectsController extends Controller
             return JsonBuilder::Error('创建失败');
         }
     }
+
+
+    /**
+     * 查看项目列表
+     * @param ProjectRequest $request
+     * @return string
+     */
+    public function projectList(ProjectRequest $request) {
+        $userId = $request->user()->id;
+        $dao = new ProjectDao();
+        $list = $dao->getProjectByUserId($userId);
+        $data = pageReturn($list);
+        return JsonBuilder::Success($data);
+    }
+
 }

@@ -163,4 +163,16 @@ class ProjectDao
     public function createDiscussion($data) {
         return ProjectTaskDiscussion::create($data);
     }
+
+
+    /**
+     * 项目列表
+     * @param $userId
+     * @return mixed
+     */
+    public function getProjectByUserId($userId) {
+        return Project::where('user_id', $userId)
+            ->orderBy('created_at', 'desc')
+            ->paginate(ConfigurationTool::DEFAULT_PAGE_SIZE);
+    }
 }

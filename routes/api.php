@@ -520,4 +520,7 @@ Route::prefix('oa')->middleware('auth:api')->group(function () {
     // 创建任务讨论
     Route::post('/create-discussion','Api\OA\ProjectsController@createDiscussion')
         ->name('api.oa.create-discussion');
+    // 项目列表
+    Route::get('/project-list','Api\OA\ProjectsController@projectList')
+        ->name('api.oa.project-list');
 });

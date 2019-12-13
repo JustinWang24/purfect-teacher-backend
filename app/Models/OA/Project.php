@@ -13,6 +13,8 @@ class Project extends Model
 
     protected $table = 'oa_projects';
 
+    protected $hidden = ['updated_at'];
+
     public $casts = [
         'created_at'=>'date'
     ];
