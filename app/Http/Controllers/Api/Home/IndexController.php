@@ -125,8 +125,10 @@ class IndexController extends Controller
             return JsonBuilder::Error('找不到学校的信息');
         }else{
             $dao = new CalendarDao();
-            $events = $dao->getCalendarEvent($school->id);
+            $events = $dao->getCalendarEvent($school->id, date('Y'));
             $weeks = $school->configuration->getAllWeeksOfTerm();
+
+            $data = [];
 
             foreach ($events as $event) {
                 foreach ($weeks as $week) {
@@ -136,13 +138,14 @@ class IndexController extends Controller
                     if($week->includes($event->event_time)){
                         $event->week_idx = $week->getName();
                         $event->name = $event->event_time;
+                        $data[] = $event;
                         break;
                     }
                 }
             }
 
             return JsonBuilder::Success([
-                'events'=>$events
+                'events'=>$data
             ]);
         }
     }
