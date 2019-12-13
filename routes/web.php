@@ -34,9 +34,12 @@ Route::prefix('h5')->group(function () {
     // 用户启动流程
     Route::any('/flow/user/start','H5\Pipeline\FlowsController@start')
         ->name('h5.flow.user.start');
-    // 用户查看自己的流程
+    // 用户查看自己的流程列表
     Route::any('/flow/user/in-progress','H5\Pipeline\FlowsController@in_progress')
         ->name('h5.flow.user.in-progress');
+    // 用户查看自己的流程历史详情
+    Route::any('/flow/user/view-history','H5\Pipeline\FlowsController@view_history')
+        ->name('h5.flow.user.view-history');
 });
 
 // 分享

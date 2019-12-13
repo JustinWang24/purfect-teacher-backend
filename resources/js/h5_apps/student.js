@@ -1,3 +1,4 @@
+window._ = require('lodash');
 window.axios = require('axios');
 
 const token = document.head.querySelector('meta[name="csrf-token"]');
@@ -27,9 +28,11 @@ Vue.use(ElementUI);
 Vue.component('major-cards', require('../components/statics/MajorCards.vue').default);
 Vue.component('major-registration-form', require('../components/statics/MajorRegistrationForm.vue').default);
 Vue.component('file-manager', require('../components/fileManager/FileManager.vue').default);
+Vue.component('node-mobile', require('../components/pipeline/NodeMobile.vue').default);
 
 require('../includes/frontend/student_registration_app');// 学生报名页面程序
 
 // 学生启动申请流程
 require('../includes/pipeline/flow_open_app');
 require('../includes/backend/student_homepage_app');
+require('../includes/pipeline/flow_view_history_app');
