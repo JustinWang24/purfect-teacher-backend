@@ -76,7 +76,6 @@
                                 :file-list="newFiles"
                                 :auto-upload="false">
 
-                            <p>
                                 <el-button slot="trigger" size="mini" class="btn-theme" icon="el-icon-plus">
                                     文件
                                 </el-button>
@@ -84,7 +83,6 @@
                                     上传
                                 </el-button>
                                 <span slot="tip" class="el-upload__tip">{{ currentUploadFileSizeText }}</span>
-                            </p>
 
                         </el-upload>
                         <el-form ref="form" :model="uploadFormData" label-width="80px">

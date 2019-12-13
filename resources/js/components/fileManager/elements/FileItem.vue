@@ -95,6 +95,7 @@
             color: $themeColor;
             font-size: 15px;
             width: 300px;
+            text-align: left;
             .file-name-box{
                 font-weight: bold;
                 line-height:17px;
