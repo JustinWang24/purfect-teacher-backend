@@ -34,6 +34,7 @@ class HomeController extends Controller
         $user = $request->user();
         $logic = Factory::GetLogic($request);
         $data = $logic ? $logic->getDataForView() : [];
+        $this->dataForView['pageTitle'] = '首页';
         return view($user->getDefaultView(), array_merge($this->dataForView, $data));
     }
 

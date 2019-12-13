@@ -153,7 +153,12 @@ if(document.getElementById('school-news-list-app')){
                 })
             },
             saveNews: function(){
-                // Todo 保存新闻
+                // 新闻必须有标题
+                if(Util.isEmpty(this.newsForm.title)){
+                    this.$message.error('标题为必填项');
+                    return;
+                }
+
                 saveNews(this.schoolId, this.newsForm).then(res => {
                     if(Util.isAjaxResOk(res)){
                         this.newsFormFlag = false;

@@ -14,12 +14,6 @@ use App\User;
 
                 <div class="card-body">
                     <div class="row">
-                        <div class="row table-padding">
-                            <div class="col-12">
-
-                            </div>
-                        </div>
-
                         <div class="table-padding col-12">
                             @if(isset($parent))
                                 <a href="{{ route('school_manager.department.majors',['uuid'=>$parent->department->id,'by'=>'department']) }}" class="btn btn-default">

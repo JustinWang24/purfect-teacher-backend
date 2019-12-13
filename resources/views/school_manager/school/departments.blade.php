@@ -12,25 +12,25 @@ use App\User;
         <div class="col-sm-12 col-md-12 col-xl-12">
             <div class="card-box">
                 <div class="card-head">
-                    <header>{{ session('school.name') }} {{ $parent->name??'' }}</header>
+                    <header class="full-width">
+                        {{ session('school.name') }} {{ $parent->name??'' }}
+                        @if(isset($parent))
+                            <a href="{{ route('school_manager.campus.institutes',['uuid'=>$parent->campus_id, 'by'=>'campus']) }}" class="btn btn-default pull-right">
+                                返回 <i class="fa fa-arrow-circle-left"></i>
+                            </a>&nbsp;
+                            <a href="{{ route('school_manager.department.add',['uuid'=>$parent->id]) }}" class="btn btn-primary pull-right" id="btn-create-department-from-institute">
+                                创建新系 <i class="fa fa-plus"></i>
+                            </a>
+                        @else
+                            <a href="{{ route('school_manager.school.view') }}" class="btn btn-default pull-right">
+                                返回 <i class="fa fa-arrow-circle-left"></i>
+                            </a>&nbsp;
+                        @endif
+                    </header>
                 </div>
-
                 <div class="card-body">
                     <div class="row">
-                        <div class="table-padding col-12">
-
-                            @if(isset($parent))
-                                <a href="{{ route('school_manager.campus.institutes',['uuid'=>$parent->campus_id, 'by'=>'campus']) }}" class="btn btn-default">
-                                返回 <i class="fa fa-arrow-circle-left"></i>
-                                </a>&nbsp;
-                                <a href="{{ route('school_manager.department.add',['uuid'=>$parent->id]) }}" class="btn btn-primary" id="btn-create-department-from-institute">
-                                    创建新系 <i class="fa fa-plus"></i>
-                                </a>
-                            @else
-                                <a href="{{ route('school_manager.school.view') }}" class="btn btn-default">
-                                返回 <i class="fa fa-arrow-circle-left"></i>
-                                </a>&nbsp;
-                            @endif
+                        <div class="table-padding col-12 pt-0">
                             @include('school_manager.school.reusable.nav',['highlight'=>'department'])
                         </div>
 

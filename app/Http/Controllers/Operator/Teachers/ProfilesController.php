@@ -19,7 +19,7 @@ class ProfilesController extends Controller
         /**
          * @var Teacher $teacher
          */
-        $teacher = $dao->getTeacherById($id);
+        $teacher = $dao->getUserByIdOrUuid($id);
         $this->dataForView['teacher'] = $teacher;
         $this->dataForView['profile'] = $teacher->profile;
 
@@ -27,7 +27,7 @@ class ProfilesController extends Controller
         $schoolDao = new SchoolDao();
         $school = $schoolDao->getSchoolById(session('school.id'));
         $this->dataForView['configs'] = $school->teacherPerformanceConfigs;
-        $this->dataForView['history'] = $teacher->performances;
+        $this->dataForView['history'] = $teacher->performances ?? [];
         return view('teacher.profile.edit', $this->dataForView);
     }
 
