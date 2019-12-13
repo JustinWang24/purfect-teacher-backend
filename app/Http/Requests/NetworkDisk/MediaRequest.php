@@ -99,6 +99,7 @@ class MediaRequest extends MyStandardRequest
         }
         try{
             $uuid = Uuid::uuid4()->toString();
+            // 这里一定要使用 storeAs, 因为 Symfony 的 Mime type guesser 似乎有 bug, 一些文件总是得到 zip 的类型
             $url = $file->storeAs($path, $uuid.'.'.$file->getClientOriginalExtension()); // 上传并返回路径
             $data = [
                 'category_id' => $category->id,
