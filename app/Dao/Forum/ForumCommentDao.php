@@ -10,7 +10,6 @@ use App\Models\Forum\ForumLike;
 use App\Utils\JsonBuilder;
 use App\Utils\Misc\ConfigurationTool;
 use App\Utils\ReturnData\MessageBag;
-use mysql_xdevapi\Exception;
 
 class ForumCommentDao
 {

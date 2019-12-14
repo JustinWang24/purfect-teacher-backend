@@ -523,4 +523,6 @@ Route::prefix('forum')->middleware('auth:api')->group(function () {
     // 发帖
     Route::post('/posted','Api\Forum\ForumController@index')
         ->name('api.add.posted');
+    Route::post('/community/approve','Api\Forum\CommunityController@optPic')
+        ->name('api.forum.community.approve');
 });

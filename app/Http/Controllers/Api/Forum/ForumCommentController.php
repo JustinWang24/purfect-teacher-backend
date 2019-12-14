@@ -13,13 +13,13 @@ use App\Models\Students\StudentProfile;
 use App\Utils\JsonBuilder;
 use Illuminate\Http\Request;
 
-class ForumCommentController extends Controller
+class ForumCommentController
+extends Controller
 {
     public function __construct()
     {
         $this->middleware('auth');
     }
-
     /**
      * @param Request $request
      * @param $forumId
@@ -43,7 +43,7 @@ class ForumCommentController extends Controller
             $result = $dao->createComment($data);
             return JsonBuilder::Success($result->getMessage());
         } else {
-            return JsonBuilder::Success('内容不合法请重试');
+            return JsonBuilder::Error('内容不合法请重试');
         }
     }
 
@@ -73,7 +73,7 @@ class ForumCommentController extends Controller
         $dao = new ForumCommentDao();
         $commentObj = $dao->getComment($commentId);
         if (empty($commentObj)) {
-            return JsonBuilder::Success('操作不合法请重试');
+            return JsonBuilder::Error('操作不合法请重试');
         }
         $reply = strip_tags($request->get('reply'));
         if (!empty($reply) && mb_strlen($reply,"utf8")<200) {
@@ -89,7 +89,7 @@ class ForumCommentController extends Controller
             $result = $dao->createCommentReply($data);
             return JsonBuilder::Success($result->getMessage());
         } else {
-            return JsonBuilder::Success('内容不合法请重试');
+            return JsonBuilder::Error('内容不合法请重试');
         }
     }
 
