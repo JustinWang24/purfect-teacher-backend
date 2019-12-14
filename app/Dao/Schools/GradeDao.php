@@ -1,17 +1,11 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: justinwang
- * Date: 21/10/19
- * Time: 2:53 PM
- */
-
 namespace App\Dao\Schools;
+use App\Models\Schools\GradeManager;
 use App\User;
-use App\Models\Users\GradeUser;
 use App\Models\Schools\Grade;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\DB;
+use App\Utils\ReturnData\MessageBag;
+use App\Utils\JsonBuilder;
 
 class GradeDao
 {
@@ -112,5 +106,29 @@ class GradeDao
     public function getByName($name, $schoolId, $majorId, $year){
         return Grade::where('school_id',$schoolId)->where('major_id',$majorId)->
                       where('year',$year)->where('name',$name)->first();
+    }
+
+    /**
+     * 设置班主任
+     * @param $data
+     * @return MessageBag
+     */
+    public function setAdviser($data){
+        $bag = new MessageBag(JsonBuilder::CODE_ERROR);
+
+        try{
+            if(empty($data['id'])){
+                // 创建
+                GradeManager::create($data);
+            }
+            else{
+                GradeManager::where('id',$data['id'])->update($data);
+            }
+            $bag->setCode(JsonBuilder::CODE_SUCCESS);
+        }
+        catch (\Exception $exception){
+            $bag->setMessage($exception->getMessage());
+        }
+        return $bag;
     }
 }

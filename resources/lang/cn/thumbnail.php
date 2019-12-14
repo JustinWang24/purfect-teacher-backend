@@ -115,6 +115,11 @@ return [
     'flows-manager'=>'流程管理',
     'flow-open'=>'发起',
     'flow-view-history'=>'查看流程详情',
+    // 系主任, 班主任, 班长
+    'set'=>'设置',
+    'adviser'=>'主任',
+    'set-adviser'=>'设置班主任',
+    'set-monitor'=>'设置班长',
 
     // 社区管理
     'community' => '社区管理',

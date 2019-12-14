@@ -42,4 +42,12 @@ class Department extends Model
     public function studentsCount(){
         return GradeUser::where('department_id', $this->id)->where('user_type',Role::GetStudentUserTypes())->count();
     }
+
+    /**
+     * 系主任
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function adviser(){
+        return $this->hasOne(DepartmentAdviser::class);
+    }
 }

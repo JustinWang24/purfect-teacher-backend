@@ -62,6 +62,7 @@ Route::prefix('school_manager')->group(function () {
     Route::get('department/edit', 'DepartmentsController@edit')->name('school_manager.department.edit');              // 编辑系
     Route::post('department/update', 'DepartmentsController@update')->name('school_manager.department.update');      // 保存系
     Route::get('department/majors', 'DepartmentsController@majors')->name('school_manager.department.majors');     // 系的专业列表
+    Route::any('department/set-adviser', 'DepartmentsController@set_adviser')->name('school_manager.department.set.adviser');     // 设置系主任
 
     // 专业管理
     Route::get('major/add', 'MajorsController@add')->name('school_manager.major.add');           // 添加专业
@@ -75,6 +76,7 @@ Route::prefix('school_manager')->group(function () {
     Route::get('grade/edit', 'GradesController@edit')->name('school_manager.grade.edit');        // 编辑班级
     Route::post('grade/update', 'GradesController@update')->name('school_manager.grade.update');        // 编辑班级
     Route::get('grade/users', 'GradesController@users')->name('school_manager.grade.users');     // 班级的学生列表
+    Route::any('grade/set-adviser', 'GradesController@set_adviser')->name('school_manager.grade.set-adviser');     // 设置班主任
 
     // 学生管理: 只有 学校管理员以上级别的角色才可以添加,编辑,学生school_manager.scenery.edit
     Route::get('student/add', 'StudentsController@add')->name('school_manager.student.add');                // 添加学生
