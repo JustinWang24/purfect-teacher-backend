@@ -14,20 +14,22 @@ class PutATestRecordInGradeManagers extends Migration
     public function up()
     {
         Schema::table('grade_managers', function (Blueprint $table) {
-            $table->string('adviser_name',30)->change();
-            $table->string('monitor_name',30)->change();
+            $table->string('adviser_name',30)->nullable()->change();
+            $table->string('monitor_name',30)->nullable()->change();
             $table->dropColumn('school');
             $table->unsignedBigInteger('school_id');
         });
 
-        \App\Models\Schools\GradeManager::create([
-            'school_id'=>1,
-            'grade_id'=>1,
-            'adviser_id'=>10,
-            'adviser_name'=>\App\User::find(10)->name,
-            'monitor_id'=>6,
-            'monitor_name'=>\App\User::find(6)->name,
-        ]);
+        if (env('APP_DEBUG', false)){
+            \App\Models\Schools\GradeManager::create([
+                'school_id'=>1,
+                'grade_id'=>1,
+                'adviser_id'=>10,
+                'adviser_name'=>\App\User::find(10)->name,
+                'monitor_id'=>6,
+                'monitor_name'=>\App\User::find(6)->name,
+            ]);
+        }
     }
 
     /**
