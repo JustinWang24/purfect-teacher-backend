@@ -13,13 +13,13 @@ use App\Models\Students\StudentProfile;
 use App\Utils\JsonBuilder;
 use Illuminate\Http\Request;
 
-class ForumCommentController extends Controller
+class ForumCommentController
+extends Controller
 {
     public function __construct()
     {
         $this->middleware('auth');
     }
-
     /**
      * @param Request $request
      * @param $forumId
@@ -28,6 +28,7 @@ class ForumCommentController extends Controller
     public function  addComment(Request $request, $forumId)
     {
         $user = $request->user();
+        $schoolId = $user->getSchoolId();
         $forumId = intval($forumId);
         //TODO 需要判断帖子是否存在，不存在不能发表评论
         $content = strip_tags($request->get('content'));
@@ -36,12 +37,13 @@ class ForumCommentController extends Controller
             $data = [
                 'user_id'  => $user->id,
                 'forum_id' => $forumId,
-                'content'  => $content
+                'content'  => $content,
+                'school_id'  => $schoolId,
             ];
             $result = $dao->createComment($data);
             return JsonBuilder::Success($result->getMessage());
         } else {
-            return JsonBuilder::Success('内容不合法请重试');
+            return JsonBuilder::Error('内容不合法请重试');
         }
     }
 
@@ -66,11 +68,12 @@ class ForumCommentController extends Controller
     public function  addCommentReply(Request $request, $commentId)
     {
         $user = $request->user();
+        $schoolId = $user->getSchoolId();
         $commentId = intval($commentId);
         $dao = new ForumCommentDao();
         $commentObj = $dao->getComment($commentId);
         if (empty($commentObj)) {
-            return JsonBuilder::Success('操作不合法请重试');
+            return JsonBuilder::Error('操作不合法请重试');
         }
         $reply = strip_tags($request->get('reply'));
         if (!empty($reply) && mb_strlen($reply,"utf8")<200) {
@@ -80,12 +83,13 @@ class ForumCommentController extends Controller
                 'to_user_id'=> $commentObj->user_id,
                 'forum_id'  => $commentObj->forum_id,
                 'comment_id'=> $commentId,
-                'reply'     => $reply
+                'reply'     => $reply,
+                'school_id'  => $schoolId,
             ];
             $result = $dao->createCommentReply($data);
             return JsonBuilder::Success($result->getMessage());
         } else {
-            return JsonBuilder::Success('内容不合法请重试');
+            return JsonBuilder::Error('内容不合法请重试');
         }
     }
 

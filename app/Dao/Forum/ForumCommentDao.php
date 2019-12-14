@@ -10,7 +10,6 @@ use App\Models\Forum\ForumLike;
 use App\Utils\JsonBuilder;
 use App\Utils\Misc\ConfigurationTool;
 use App\Utils\ReturnData\MessageBag;
-use mysql_xdevapi\Exception;
 
 class ForumCommentDao
 {
@@ -121,7 +120,7 @@ class ForumCommentDao
      */
     public function getCommentForForum($forumId, $pageSize=ConfigurationTool::DEFAULT_PAGE_SIZE)
     {
-        return ForumComment::where('forum_id', $forumId)->orderBy('id','DESC')->simplePaginate($pageSize);
+        return ForumComment::where('forum_id', $forumId)->where('status', 1)->orderBy('id','DESC')->simplePaginate($pageSize);
     }
 
     /**
@@ -130,7 +129,7 @@ class ForumCommentDao
      */
     public function getCountComment($forumId)
     {
-        return ForumComment::where('forum_id', $forumId)->count();
+        return ForumComment::where('forum_id', $forumId)->where('status', 1)->count();
     }
 
     /**
@@ -139,7 +138,7 @@ class ForumCommentDao
      */
     public function getCountReply($forumId)
     {
-        return ForumCommentReply::where('forum_id', $forumId)->count();
+        return ForumCommentReply::where('forum_id', $forumId)->where('status', 1)->count();
     }
 
     /**
@@ -148,7 +147,7 @@ class ForumCommentDao
      */
     public function getCountReplyForComment($commentId)
     {
-        return ForumCommentReply::where('comment_id', $commentId)->count();
+        return ForumCommentReply::where('comment_id', $commentId)->where('status', 1)->count();
     }
 
     public function getCountLikeForForum($forumId)

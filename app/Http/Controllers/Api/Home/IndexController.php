@@ -42,8 +42,8 @@ class IndexController extends Controller
             $data[$key]['time'] = $val['created_at'];
             $data[$key]['image'] = "";
             foreach ($val->sections as $new) {
-                if (!empty($new->meia)) {
-                    $data[$key]['image'] = $new->media->url;
+                if (!empty($new->media)) {
+                    $data[$key]['image'] = asset($new->media->url);
                 }
             }
             unset($data[$key]['sections']);
@@ -275,6 +275,16 @@ class IndexController extends Controller
         $schoolId = $request->user()->gradeUser->school_id;
         $dao = new NewsDao();
         $list = $dao->getNewBySchoolId($schoolId);
+        foreach ($list as $key => $val) {
+            $list[$key]['image'] = '';
+            $sections = $val->sections;
+            foreach ($sections as $k => $v) {
+                if (!empty($v->media)) {
+                    $list[$key]['image'] = asset($v->media->url);
+                }
+            }
+            unset($list[$key]['sections']);
+        }
         $data = pageReturn($list);
         return JsonBuilder::Success($data);
     }

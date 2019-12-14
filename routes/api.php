@@ -564,4 +564,6 @@ Route::prefix('forum')->middleware('auth:api')->group(function () {
     // 详情
     Route::post('/details','Api\Forum\ForumController@details')
         ->name('api.details.forum');
+    Route::post('/community/approve','Api\Forum\CommunityController@approve')
+        ->name('api.forum.community.approve');
 });
