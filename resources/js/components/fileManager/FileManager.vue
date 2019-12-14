@@ -271,6 +271,8 @@
             },
             onFileUploadFailed: function(err, file, fileList){
                 this.$message.error('不支持此种格式的文件上传到云盘或者文件尺寸太大');
+                this.$message.error(err);
+                console.log(err);
                 this.uploadFormData.keywords = '';
                 this.uploadFormData.description = '';
                 this.currentUploadFileSize = 0;
