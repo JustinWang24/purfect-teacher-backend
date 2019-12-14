@@ -72,7 +72,7 @@ export const Constants = {
             CREATE_CATEGORY: '/api/network-disk/categories/create',
             EDIT_CATEGORY: '/api/network-disk/categories/edit',
             DELETE_CATEGORY: '/api/network-disk/categories/delete',
-            FILE_UPLOAD: '/network-disk/media/upload',
+            FILE_UPLOAD: '/api/network-disk/media/upload',
             FILE_MOVE: '/api/network-disk/media/move',
             FILE_DELETE: '/api/network-disk/media/delete',
             FILE_SEARCH: '/api/network-disk/media/search',

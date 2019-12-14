@@ -254,6 +254,9 @@ Route::prefix('network-disk')->middleware('auth:api')->group(function () {
     Route::post('/categories/delete','Api\NetworkDisk\CategoriesController@delete')
         ->name('api.categories.delete');
 
+    Route::post('/media/upload','Api\NetworkDisk\MediaController@upload')
+        ->name('api.media.file.upload');
+
     // 文件详情
     Route::post('/media/getMediaInfo','Api\NetworkDisk\MediaController@getMediaInfo')
         ->name('api.media.getMediaInfo');
