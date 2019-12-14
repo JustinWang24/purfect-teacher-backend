@@ -12,26 +12,50 @@ use App\Utils\UI\Button;
                     <header>修改</header>
                 </div>
                 <div class="card-body">
-                    <form action="{{ route('teacher.dynamic.edit') }}" method="post"  id="add-building-form">
+                    <form action="{{ route('teacher.dynamic.edit') }}" method="post"  id="add-forum-form">
                         @csrf
                         <input type="hidden" id="forum_id" name="forum[id]" value="{{$forum->id}}">
-
-                        @include('school_manager.forum._from')
                         <div class="form-group">
-                            <label for="building-addr-radio">状态</label>&nbsp&nbsp&nbsp&nbsp
-                            <input type="radio" class="form-control-radio" id="facility-status-radio-close" value="0"  name="facility[status]"
-                                   @if($facility['status'] == 0) checked @endif> 关闭  &nbsp&nbsp&nbsp&nbsp
-                            <input type="radio" class="form-control-radio" id="facility-status-radio-open"  value="1"  name="facility[status]"
-                                   @if($facility['status'] == 1) checked @endif> 开启
+                            <label for="forum-content">内容</label>
+                            <textarea class="form-control" disabled   cols="30" rows="10">{{ $forum->content }}</textarea>
+                        </div>
 
+                        <div class="form-group">
+                            <div class="form-group">
+                                <label for="forum-status">状态</label>
+                                <div>
+                                    @if($forum->status == \App\Models\Forum\Forum::STATUS_UNCHECKED)
+
+                                    <input type="radio" class="forum-control-radio" id="forum-status-radio-close" value="1"  name="forum[status]">拒绝&nbsp;&nbsp;&nbsp;
+                                    <input type="radio" class="forum-control-radio" id="forum-status-radio-close" value="2"  name="forum[status]" checked>通过
+                                    @else
+                                    {{ $forum->statusText() }}
+                                    @endif
+                                </div>
+
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="forum-status">推荐</label>
+                            <div>
+                                <label class="switchToggle">
+                                <input type="checkbox"
+                                       @if($forum->is_up == \App\Models\Forum\Forum::OPEN )
+                                       checked
+                                       @endif
+                                       name="forum[is_up]">
+                                <span class="slider green round"></span>
+                            </label>
+                            </div>
 
                         </div>
 
-                        <?php
-                        Button::Print(['id'=>'btn-edit-dynamic','text'=>trans('general.submit')], Button::TYPE_PRIMARY);
+                         <?php
+                        Button::Print(['id'=>'btn-edit-forum','text'=>trans('general.submit')], Button::TYPE_PRIMARY);
                         ?>&nbsp;
                         <?php
-                        Anchor::Print(['text'=>trans('general.return'),'href'=>url()->previous(),'class'=>'pull-right link-return'], Button::TYPE_SUCCESS,'arrow-circle-o-right')
+                        Anchor::Print(['text'=>trans('general.return'),'href'=>route('teacher.community.dynamic'),'class'=>'pull-right link-return'], Button::TYPE_SUCCESS,'arrow-circle-o-right')
                         ?>
                     </form>
                 </div>

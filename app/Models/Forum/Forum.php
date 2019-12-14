@@ -32,8 +32,8 @@ class Forum extends Model
     const STATUS_REFUSE_TEXT    = '未通过';
     const STATUS_PASS_TEXT      = '已通过';
 
-    const IS_UP_0 = false; // 不推荐
-    const IS_UP_1 = true;  // 推荐
+    const CLOSE = false; // 不推荐
+    const OPEN = true;  // 推荐
 
      /**
      * 转换上传路径到 url 路径

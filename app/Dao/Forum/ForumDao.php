@@ -69,4 +69,15 @@ class ForumDao
         return Forum::find($id);
     }
 
+
+    /**
+     * 编辑论坛
+     * @param $id
+     * @param $data
+     * @return mixed
+     */
+    public function updateForum($id, $data) {
+        return Forum::where('id', $id)->update($data);
+    }
+
 }
