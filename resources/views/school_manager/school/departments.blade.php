@@ -12,25 +12,25 @@ use App\User;
         <div class="col-sm-12 col-md-12 col-xl-12">
             <div class="card-box">
                 <div class="card-head">
-                    <header>{{ session('school.name') }} {{ $parent->name??'' }}</header>
+                    <header class="full-width">
+                        {{ session('school.name') }} {{ $parent->name??'' }}
+                        @if(isset($parent))
+                            <a href="{{ route('school_manager.campus.institutes',['uuid'=>$parent->campus_id, 'by'=>'campus']) }}" class="btn btn-default pull-right">
+                                返回 <i class="fa fa-arrow-circle-left"></i>
+                            </a>&nbsp;
+                            <a href="{{ route('school_manager.department.add',['uuid'=>$parent->id]) }}" class="btn btn-primary pull-right" id="btn-create-department-from-institute">
+                                创建新系 <i class="fa fa-plus"></i>
+                            </a>
+                        @else
+                            <a href="{{ route('school_manager.school.view') }}" class="btn btn-default pull-right">
+                                返回 <i class="fa fa-arrow-circle-left"></i>
+                            </a>&nbsp;
+                        @endif
+                    </header>
                 </div>
-
                 <div class="card-body">
                     <div class="row">
-                        <div class="table-padding col-12">
-
-                            @if(isset($parent))
-                                <a href="{{ route('school_manager.campus.institutes',['uuid'=>$parent->campus_id, 'by'=>'campus']) }}" class="btn btn-default">
-                                返回 <i class="fa fa-arrow-circle-left"></i>
-                                </a>&nbsp;
-                                <a href="{{ route('school_manager.department.add',['uuid'=>$parent->id]) }}" class="btn btn-primary" id="btn-create-department-from-institute">
-                                    创建新系 <i class="fa fa-plus"></i>
-                                </a>
-                            @else
-                                <a href="{{ route('school_manager.school.view') }}" class="btn btn-default">
-                                返回 <i class="fa fa-arrow-circle-left"></i>
-                                </a>&nbsp;
-                            @endif
+                        <div class="table-padding col-12 pt-0">
                             @include('school_manager.school.reusable.nav',['highlight'=>'department'])
                         </div>
 
@@ -38,8 +38,8 @@ use App\User;
                             <table class="table table-striped table-bordered table-hover table-checkable order-column valign-middle">
                                 <thead>
                                 <tr>
-                                    <th>#</th>
                                     <th>系名称</th>
+                                    <th>系主任</th>
                                     <th style="width: 300px;">教学相关配置</th>
                                     <th>专业数</th>
                                     <th>教职工数</th>
@@ -50,9 +50,20 @@ use App\User;
                                 <tbody>
                                 @foreach($departments as $index=>$department)
                                     <tr>
-                                        <td>{{ $index+1 }}</td>
                                         <td>
                                             {{ $department->name }}
+                                        </td>
+                                        <td>
+                                            @if($department->adviser)
+                                                {{ $department->adviser->user_name }} &nbsp;
+                                                @if(\Illuminate\Support\Facades\Auth::user()->isSchoolAdminOrAbove())
+                                                    <a href="{{ route('school_manager.department.set.adviser',['department'=>$department->id]) }}">(编辑)</a>
+                                                @endif
+                                            @else
+                                                @if(\Illuminate\Support\Facades\Auth::user()->isSchoolAdminOrAbove())
+                                                <a href="{{ route('school_manager.department.set.adviser',['department'=>$department->id]) }}">设置系主任</a>
+                                                @endif
+                                            @endif
                                         </td>
                                         <td>
                                             <p>上自习课是否需要签到: <span class="text-primary">{{ $department->isSelfStudyNeedRegistration() ? '是': '否' }}</span></p>

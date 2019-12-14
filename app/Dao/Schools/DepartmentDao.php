@@ -7,8 +7,11 @@
  */
 
 namespace App\Dao\Schools;
+use App\Models\Schools\DepartmentAdviser;
 use App\User;
 use App\Models\Schools\Department;
+use App\Utils\JsonBuilder;
+use App\Utils\ReturnData\MessageBag;
 use Illuminate\Database\Eloquent\Collection;
 
 class DepartmentDao
@@ -103,5 +106,28 @@ class DepartmentDao
     public function getByName($name, $schoolId, $campusId, $instituteId){
         return Department::where('school_id',$schoolId)->where('campus_id',$campusId)->
                            where('institute_id',$instituteId)->where('name', $name)->first();
+    }
+
+    /**
+     * @param $data
+     * @return MessageBag
+     */
+    public function setAdviser($data){
+        $bag = new MessageBag(JsonBuilder::CODE_ERROR);
+
+        try{
+            if(empty($data['id'])){
+                // 创建
+                DepartmentAdviser::create($data);
+            }
+            else{
+                DepartmentAdviser::where('id',$data['id'])->update($data);
+            }
+            $bag->setCode(JsonBuilder::CODE_SUCCESS);
+        }
+        catch (\Exception $exception){
+            $bag->setMessage($exception->getMessage());
+        }
+        return $bag;
     }
 }

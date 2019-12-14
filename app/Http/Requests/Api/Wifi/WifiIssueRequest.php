@@ -16,8 +16,6 @@ class WifiIssueRequest extends \App\Http\Requests\ApiRequest
    public $rules = [];
 
    protected $messages = [
-      'uuid.required' => '参数不能为空' ,
-
       // 添加报修
       'typeone_id.required' => '请选择一级分类' ,
       'typeone_id.integer' => '请选择一级分类' ,
@@ -61,17 +59,10 @@ class WifiIssueRequest extends \App\Http\Requests\ApiRequest
       $rules = $this->rules;
       $getActionName = request()->route()->getActionName();
 
-      // 报修类型
-      if(stripos($getActionName,'list_category_info'))
-      {
-         $rules[ 'uuid' ] = 'required'; // uuid
-      }
-
       // 添加报修
       if(stripos($getActionName,'add_issue_info'))
       {
-         $rules[ 'uuid' ]         = 'required'; // uuid
-         $rules[ 'typeone_id' ]   = 'required|integer'; // 一级分类ID
+      /*   $rules[ 'typeone_id' ]   = 'required|integer'; // 一级分类ID
          $rules[ 'typeone_name' ] = 'required'; // 一级分类名称
          $rules[ 'typetwo_id' ]   = 'required|integer'; // 二级分类ID
          $rules[ 'typetwo_name' ] = 'required'; // 二级分类名称
@@ -79,28 +70,25 @@ class WifiIssueRequest extends \App\Http\Requests\ApiRequest
          $rules[ 'issue_mobile' ] = 'required'; // 联系人电话
          $rules[ 'addressoneid' ] = 'required|integer'; // 一级地址ID
          $rules[ 'addresstwoid' ] = 'required|integer'; // 二级地址ID
-         $rules[ 'addr_detail' ]  = 'required'; // 地址详情
+         $rules[ 'addr_detail' ]  = 'required'; // 地址详情*/
          // $rules[ 'issue_desc' ]   = 'required'; // 备注说明
       }
 
       // 我的报修列表
       if(stripos($getActionName,'list_my_issue_info'))
       {
-         $rules[ 'uuid' ] = 'required'; // uuid
-         $rules[ 'page' ] = 'required|integer'; // 分页id
+         //$rules[ 'page' ] = 'required|integer'; // 分页id
       }
 
       // 报修详情
       if(stripos($getActionName,'get_my_issue_info'))
       {
-         $rules[ 'uuid' ] = 'required'; // uuid
-         $rules[ 'issueid' ] = 'required|integer'; // 报修id
+         //$rules[ 'issueid' ] = 'required|integer'; // 报修id
       }
 
       // 评价单个报修信息
       if(stripos($getActionName,'add_issue_comment_info'))
       {
-         $rules[ 'uuid' ] = 'required'; // uuid
          $rules[ 'issueid' ] = 'required|integer'; // 报修id
          $rules[ 'comment_service' ] = 'required|integer|between:1,5'; // 服务态度
          $rules[ 'comment_worders' ] = 'required|integer|between:1,5'; // 工作效率

@@ -72,6 +72,9 @@ class Notice extends Model
     }
 
     public function getImageAttribute($value){
-        return asset($value);
+        if(!empty($value)){
+            return asset($value);
+        }
+        return null;
     }
 }

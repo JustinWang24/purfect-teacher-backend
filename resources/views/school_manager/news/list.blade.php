@@ -21,7 +21,7 @@
                                 <el-button type="text" @click="loadNews(scope.row.id)">
                                     @{{ scope.row.title }}
                                 </el-button>
-                                <p>状态: @{{ scope.row.publish ? '已发布':'等待发布' }}</p>
+                                <p :class="scope.row.publish ? 'text-success' : 'text-danger'">状态: @{{ scope.row.publish ? '已发布':'等待发布' }}</p>
                             </template>
                         </el-table-column>
                         <el-table-column label="操作" width="80">
@@ -34,7 +34,6 @@
                             </template>
                         </el-table-column>
                     </el-table>
-
                     {{ $newsList->links() }}
                 </div>
             </div>
@@ -55,7 +54,7 @@
                     <div class="news-form-wrap" v-show="newsFormFlag">
                         <el-form :model="newsForm">
                             <el-form-item label="标题" :label-width="formLabelWidth">
-                                <el-input v-model="newsForm.title" autocomplete="off"></el-input>
+                                <el-input v-model="newsForm.title" autocomplete="off" placeholder="必填: 请输入动态的标题"></el-input>
                             </el-form-item>
                             <el-form-item>
                                 <el-button type="primary" @click="saveNews">开始编辑内容</el-button>
@@ -64,8 +63,8 @@
                         </el-form>
                     </div>
                     <div class="news-form-wrap" v-show="sectionsFormFlag">
-                        <p v-show="!mediaContentWrapFlag && !textContentWrapFlag">
-                            <el-button class="pull-left" icon="el-icon-document" type="primary" @click="addNewTextSection">添加文本内容</el-button>
+                        <p v-show="!mediaContentWrapFlag && !textContentWrapFlag && !newsFormFlag">
+                            <el-button class="pull-left" icon="el-icon-document" type="primary" @click="addNewTextSection">添加文字段落</el-button>
                             <el-button class="pull-right" icon="el-icon-picture" type="primary" @click="addNewMediaSection">添加多媒体内容</el-button>
                         </p>
                         <div class="clearfix"></div>
@@ -79,18 +78,18 @@
                                 </el-form-item>
                                 <el-form-item>
                                     <el-button type="primary" @click="pushNewSection">保存</el-button>
-                                    <el-button @click="cancelNewSection(2)">切换类型</el-button>
+                                    <el-button @click="cancelNewSection(2)">切换到文字</el-button>
                                 </el-form-item>
                             </el-form>
                         </div>
                         <div class="text-content-wrap mt-4" v-show="textContentWrapFlag">
                             <el-form :model="mediaForm">
                                 <el-form-item label="内容">
-                                    <el-input type="textarea" :rows="10" v-model="mediaForm.content"></el-input>
+                                    <el-input placeholder="必填: 文字内容" type="textarea" :rows="10" v-model="mediaForm.content"></el-input>
                                 </el-form-item>
                                 <el-form-item>
                                     <el-button type="primary" @click="pushNewSection">保存</el-button>
-                                    <el-button @click="cancelNewSection(1)">切换类型</el-button>
+                                    <el-button @click="cancelNewSection(1)">切换到多媒体类型</el-button>
                                 </el-form-item>
                             </el-form>
                         </div>
@@ -99,11 +98,12 @@
                     <div class="existed-section-wrapper">
                         <el-card class="box-card mt-4" v-for="(section, idx) in sections" :key="idx">
                             <div slot="header" class="clearfix">
-                                <el-button v-on:click="moveUp(section)" v-if="idx > 0" style="float: left; padding: 3px 0" type="text">
-                                    向上 <i class="el-icon-top"></i>
+                                <span style="float: left;">段落@{{ idx + 1 }}</span>
+                                <el-button v-on:click="moveUp(section)" v-if="idx > 0" style="float: right; padding: 3px 0" type="text">
+                                    <i class="el-icon-top"></i> 向上
                                 </el-button>
-                                <el-button v-on:click="moveDown(section)" v-if="idx < sections.length - 1" style="float: left; padding: 3px 0" type="text">
-                                    向下 <i class="el-icon-bottom"></i>
+                                <el-button v-on:click="moveDown(section)" v-if="idx < sections.length - 1" style="float: right; padding: 3px 0" type="text">
+                                    <i class="el-icon-bottom"></i> 向下
                                 </el-button>
                                 <el-button icon="el-icon-edit" v-on:click="editSection(section)" style="float: right; padding: 3px 0;" type="text">编辑</el-button>
                                 <el-button icon="el-icon-delete" v-on:click="deleteSection(section)" style="float: right; padding: 3px 0;color: red;" type="text">删除</el-button>

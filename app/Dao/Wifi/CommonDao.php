@@ -55,11 +55,11 @@ class CommonDao
     * @param $id 地址id
     *            return array
     */
-   public static function getSchoolAddressOneInfo ( $id = null )
+   public static function getRoomOneInfo ( $id = null )
    {
       if ( !intval ( $id ) ) return [];
 
-      return DB::table ( 'school_address' )->where ( 'id' , $id )->first ();
+      return DB::table ( 'rooms' )->where ( 'id' , $id )->first ();
    }
 
    //---------------------------------------manger定义的静态属性------------------------------------

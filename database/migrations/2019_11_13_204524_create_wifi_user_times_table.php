@@ -20,6 +20,7 @@ class CreateWifiUserTimesTable extends Migration
 				$table->unsignedMediumInteger('user_id')->comment('用户id');
 				$table->unsignedMediumInteger('school_id')->index()->default(0)->comment('学校id');
 				$table->unsignedMediumInteger('campus_id')->index()->default(0)->comment('校区id');	
+				$table->string('wif_psessionid',100)->nullable()->comment('已连接wifi的回话ID');
 				$table->dateTime('user_wifi_time')->nullable(true)->comment('wifi到期时间');
 				$table->string('user_wifi_name',50)->nullable()->comment('wifi账号');
 				$table->string('user_wifi_password',50)->nullable()->comment('wifi密码');

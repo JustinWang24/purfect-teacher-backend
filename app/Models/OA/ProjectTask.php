@@ -7,9 +7,14 @@ use Illuminate\Database\Eloquent\Model;
 
 class ProjectTask extends Model
 {
-    const STATUS_IN_PROGRESS = 1;
-    const STATUS_CLOSED = 2;
+    const STATUS_IN_PROGRESS = 1;   // 正在进行
+    const STATUS_CLOSED = 2;   // 已结束
     protected $table = 'oa_project_tasks';
+
+    protected $hidden = ['updated_at'];
+    public $fillable = ['project_id', 'user_id', 'title', 'content'];
+
+    public $user_field = ['*'];
 
     /**
      * 任务的讨论
@@ -24,7 +29,7 @@ class ProjectTask extends Model
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function user(){
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class)->select($this->user_field);
     }
 
     /**

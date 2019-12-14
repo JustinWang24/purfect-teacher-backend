@@ -36,7 +36,9 @@ class CampusDao
      */
     public function searchByName($name, $schoolId){
         return Campus::select(['id','name'])
-            ->where('school_id',$schoolId)->where('name','like',$name.'%')->get();
+            ->where('school_id',$schoolId)
+            ->where('name','like',$name.'%')
+            ->get();
     }
 
     /**

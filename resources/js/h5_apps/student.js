@@ -1,3 +1,4 @@
+require('babel-polyfill');
 window._ = require('lodash');
 window.axios = require('axios');
 
@@ -15,9 +16,9 @@ if (token) {
     console.error('CSRF token not found: https://laravel.com/docs/csrf#csrf-x-csrf-token');
 }
 
-import { Constants } from '../common/constants';
-import { Util } from '../common/utils';
-import { queryStudentProfile, loadMajorDetail } from '../common/registration_form';
+// import { Constants } from '../common/constants';
+// import { Util } from '../common/utils';
+// import { queryStudentProfile, loadMajorDetail } from '../common/registration_form';
 
 window.Vue = require('vue');
 // 引入 Element UI 库
@@ -27,7 +28,7 @@ Vue.use(ElementUI);
 
 Vue.component('major-cards', require('../components/statics/MajorCards.vue').default);
 Vue.component('major-registration-form', require('../components/statics/MajorRegistrationForm.vue').default);
-Vue.component('file-manager', require('../components/fileManager/FileManager.vue').default);
+Vue.component('file-manager-mobile', require('../components/fileManager/FileManagerMobile.vue').default);
 Vue.component('node-mobile', require('../components/pipeline/NodeMobile.vue').default);
 
 require('../includes/frontend/student_registration_app');// 学生报名页面程序

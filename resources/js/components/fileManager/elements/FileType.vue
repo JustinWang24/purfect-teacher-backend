@@ -4,12 +4,25 @@
       <img class="img" v-if="isGeneral(fileDic.type)" src="/assets/img/mega-img1.jpg" alt="图片">
       <img class="img" v-if="isImage(fileDic.type)" :src="fileDic.url" alt="图片加载失败">
       <div class="el-card-content" v-if="isOffice(fileDic.type)">
-          <p class="message">{{fileDic.file_name}}</p>
+          <p class="message">
+              <i v-if="isExcel(fileDic.type)" class="fa fa-file-excel-o"></i>
+              <i v-if="isPpt(fileDic.type)" class="fa fa-file-powerpoint-o"></i>
+              <i v-if="isWord(fileDic.type)" class="fa fa-file-word-o"></i>
+              {{fileDic.file_name}}
+          </p>
           <p class="message-desc">{{fileDic.created_at}}&nbsp;{{ fileSize(fileDic.size) }}</p>
           <p class="message-desc">简介: {{fileDic.description}}</p>
       </div>
+        <div class="el-card-content" v-if="isTxt(fileDic.type)">
+            <p class="message">
+                <i class="fa fa-file-text-o"></i>&nbsp;
+                {{fileDic.file_name}}
+            </p>
+            <p class="message-desc">{{fileDic.created_at}}&nbsp;{{ fileSize(fileDic.size) }}</p>
+            <p class="message-desc">简介: {{fileDic.description}}</p>
+        </div>
       <div class="el-card-content" v-if="isPdf(fileDic.type)">
-        <a class="message" :href="fileDic.url">文件名: {{fileDic.file_name}}</a>
+        <a class="message" :href="fileDic.url" target="_blank"><i v-if="isPdf(fileDic.type)" class="fa fa-file-pdf-o"></i> {{fileDic.file_name}}</a>
         <p class="message">创建时间: {{fileDic.created_at}}</p>
         <p class="message">大小: {{ fileSize(fileDic.size) }}</p>
         <p class="message">简介: {{fileDic.description}}</p>
@@ -36,13 +49,28 @@
     },
     methods: {
         isImage: function(type){
-            return Util.isImage(type) || Constants.FILE_TYPE.IMAGE === this.defaultType;
+            return Util.isImage(type);
         },
         isGeneral: function(type){
             return Util.isGeneralDoc(type);
         },
         isOffice: function(type){
             return Util.isWordDoc(type) || Util.isExcelDoc(type) || Util.isPowerPointDoc(type) || Util.isTxtDoc();
+        },
+        isWord: function(type){
+            return Util.isWordDoc(type);
+        },
+        isExcel: function(type){
+            return Util.isExcelDoc(type);
+        },
+        isPpt: function(type){
+            return Util.isPowerPointDoc(type);
+        },
+        isTxt: function(type){
+            return Util.isTxtDoc(type);
+        },
+        isZip: function(type){
+            return false;
         },
         isPdf: function(type){
             return Util.isPdfDoc(type);

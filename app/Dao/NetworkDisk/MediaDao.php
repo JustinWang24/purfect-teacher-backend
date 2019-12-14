@@ -133,7 +133,7 @@ class MediaDao {
             }
             $where[] = ['user_id','=',$user];
         }
-        $where[] = ['file_name','like',$keywords.'%'];
+        $where[] = ['file_name','like','%'.$keywords.'%'];
 
         $files = Media::select('file_name', 'uuid', 'url','type')
             ->where($where)

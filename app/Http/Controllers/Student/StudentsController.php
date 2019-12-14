@@ -16,6 +16,7 @@ class StudentsController extends Controller
     public function edit(StudentRequest $request){
         $dao = new UserDao();
         $this->dataForView['student'] = $dao->getUserByUuid($request->uuid());
+        $this->dataForView['pageTitle'] = '档案管理';
         return view('student.edit', $this->dataForView);
     }
 
