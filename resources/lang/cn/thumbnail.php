@@ -117,5 +117,7 @@ return [
     'flow-view-history'=>'查看流程详情',
     'set'=>'设置',
     'adviser'=>'主任',
+    'set-adviser'=>'设置班主任',
+    'set-monitor'=>'设置班长',
 ];
 

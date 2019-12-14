@@ -5,12 +5,12 @@
             <div class="card">
                 <div class="card-head">
                     <header>
-                        系名称: {{ $department->name }}
+                        班级名称: {{ $grade->name }}
                     </header>
                 </div>
                 <div class="card-body">
                     <search-bar
-                            init-query="{{ $adviser->user_name }}"
+                            init-query="{{ $gradeManager->adviser_name }}"
                             school-id="{{ session('school.id') }}"
                             scope="employee"
                             full-tip="输入姓名进行搜索"
@@ -24,9 +24,9 @@
 
     <div id="app-init-data-holder"
          data-school="{{ session('school.id') }}"
-         data-adviser="{{ $adviser }}"
-         data-url="{{ route('school_manager.department.set.adviser') }}"
-         data-redirect="{{ route('school_manager.school.departments') }}"
-         data-type="1"
+         data-adviser="{{ $gradeManager }}"
+         data-url="{{ route('school_manager.grade.set-adviser') }}"
+         data-redirect="{{ route('school_manager.school.grades') }}"
+         data-type="2"
     ></div>
 @endsection

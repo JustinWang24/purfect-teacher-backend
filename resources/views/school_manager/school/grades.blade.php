@@ -33,7 +33,8 @@ use App\User;
                                     <th>#</th>
                                     <th>入学年份</th>
                                     <th>班级名称</th>
-                                    <th style="width: 500px;">简介</th>
+                                    <th>班主任</th>
+                                    <th>班长</th>
                                     <th class="text-center">学生数</th>
                                     <th>操作</th>
                                 </tr>
@@ -47,7 +48,28 @@ use App\User;
                                             {{ $grade->name }}
                                         </td>
                                         <td>
-                                            {{ $grade->description }}
+                                            @if($grade->gradeManager)
+                                                {{ $grade->gradeManager->adviser_name }}
+                                                @if(\Illuminate\Support\Facades\Auth::user()->isSchoolAdminOrAbove())
+                                                    <a href="{{ route('school_manager.grade.set-adviser',['grade'=>$grade->id]) }}">(编辑)</a>
+                                                @endif
+                                            @else
+                                                @if(\Illuminate\Support\Facades\Auth::user()->isSchoolAdminOrAbove())
+                                                    <a href="{{ route('school_manager.grade.set-adviser',['grade'=>$grade->id]) }}">设置班主任</a>
+                                                @endif
+                                            @endif
+                                        </td>
+                                        <td>
+                                            @if($grade->gradeManager)
+                                                {{ $grade->gradeManager->monitor_name }}
+                                                @if(\Illuminate\Support\Facades\Auth::user()->isSchoolAdminOrAbove() || \Illuminate\Support\Facades\Auth::user()->isTeacher())
+                                                    <a href="{{ route('teacher.grade.set-monitor',['grade'=>$grade->id]) }}">(编辑)</a>
+                                                @endif
+                                            @else
+                                                @if(\Illuminate\Support\Facades\Auth::user()->isSchoolAdminOrAbove() || \Illuminate\Support\Facades\Auth::user()->isTeacher())
+                                                    <a href="{{ route('teacher.grade.set-monitor',['grade'=>$grade->id]) }}">设置班长</a>
+                                                @endif
+                                            @endif
                                         </td>
                                         <td class="text-center">
                                             <a class="students-counter" href="{{ route('school_manager.grade.users',['type'=>User::TYPE_STUDENT,'by'=>'grade','uuid'=>$grade->id]) }}">{{ $grade->studentsCount() }}</a>

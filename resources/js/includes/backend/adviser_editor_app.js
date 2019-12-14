@@ -50,8 +50,23 @@ if(document.getElementById('adviser-editor-app')){
                 }
             },
             adviserUpdated: function(payload){
-                this.adviser.user_id = payload.item.id;
-                this.adviser.user_name = payload.item.value;
+                switch (this.type){
+                    case Constants.ADVISER.DEPARTMENT:
+                        this.adviser.user_id = payload.item.id;
+                        this.adviser.user_name = payload.item.value;
+                        break;
+                    case Constants.ADVISER.GRADE:
+                        this.adviser.adviser_id = payload.item.id;
+                        this.adviser.adviser_name = payload.item.value;
+                        break;
+                    case Constants.ADVISER.STUDENTS:
+                        this.adviser.monitor_id = payload.item.id;
+                        this.adviser.monitor_name = payload.item.value;
+                        break;
+                    default:
+                        break;
+                }
+
             }
         }
     });

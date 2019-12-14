@@ -55,7 +55,7 @@ use App\User;
                                         </td>
                                         <td>
                                             @if($department->adviser)
-                                                {{ $department->adviser->user->name }} &nbsp;
+                                                {{ $department->adviser->user_name }} &nbsp;
                                                 @if(\Illuminate\Support\Facades\Auth::user()->isSchoolAdminOrAbove())
                                                     <a href="{{ route('school_manager.department.set.adviser',['department'=>$department->id]) }}">(编辑)</a>
                                                 @endif
