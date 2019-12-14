@@ -48,31 +48,26 @@
          $getActionName = request()->route()->getActionName();
 
          // 已开通有线
-         if(stripos($getActionName,'index_cable'))
+        /* if(stripos($getActionName,'index_cable'))
          {
             $rules[ 'uuid' ] = 'required';
-         }
+         }*/
 
          // 宿舍楼地址列表
-         if(stripos($getActionName,'list_category_info'))
+       /*  if(stripos($getActionName,'list_category_info'))
          {
             $rules[ 'uuid' ] = 'required';
-         }
+         }*/
 
          // 开通有线
-         if ( stripos ( $getActionName , 'add_cable_info' ) )
+         /*if ( stripos ( $getActionName , 'add_cable_info' ) )
          {
-            $rules[ 'uuid' ]                = 'required';
-            $rules[ 'wifiid' ]              = 'required|integer'; // wifiid
-            $rules[ 'addressoneid' ]        = 'required|integer'; // 有线(宿舍楼id)
-            $rules[ 'addressoneid_name' ]   = 'required'; // 有线(宿舍楼名称)
-            $rules[ 'addresstwoid' ]        = 'required|integer'; // 有线(楼层id)
-            $rules[ 'addresstwoid_name' ]   = 'required'; // 有线(楼层名称)
-            $rules[ 'addressthreeid' ]      = 'required|integer'; // 有线(房间id)
-            $rules[ 'addressthreeid_name' ] = 'required'; // 有线(房间名称)
-            $rules[ 'addressfourid' ]       = 'required|integer'; // 有线(端口id)
-            $rules[ 'addressfourid_name' ]  = 'required'; // 	有线(端口名称)
-         }
+            $rules[ 'address_port' ]       = 'required|integer'; // 端口
+            $rules[ 'addressoneid' ]        = 'required|integer'; // 宿舍楼id
+            $rules[ 'addressoneid_name' ]   = 'required'; // 宿舍楼名称
+            $rules[ 'addresstwoid' ]        = 'required|integer'; // 房间id
+            $rules[ 'addresstwoid_name' ]   = 'required'; // 房间名称
+         }*/
 
          return $rules;
       }

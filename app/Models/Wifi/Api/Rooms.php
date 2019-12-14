@@ -10,33 +10,33 @@ namespace App\Models\Wifi\Api;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Model;
 
-class WifiConfigs extends Model
+class Rooms extends Model
 {
    public function __construct(){}
 
    /**
     * Func:  添加或更新数据
     * @Param Array  数组  $data
-    * @Param Int    主键  $configid
+    * @Param Int    主键  $id
     * return 主键ID|false
     */
-   public static function addOrUpdateWifiConfigsInfo( $data = [] , $configid = null )
+   public static function addOrUpdateRoomsInfo( $data = [] , $id = null )
    {
       if ( empty( $data ) && ! is_array ( $data ) ) return false;
-      if ( intval ( $configid ) )
+      if ( intval ( $id ) )
       {
          $data = array_merge ( $data , [ 'updated_at' => date ( 'Y-m-d H:i:s' ) ] );
-         if ( WifiConfigs::where( 'configid' , '=' , $configid )->update ( $data ) )
+         if ( Rooms::where( 'id' , '=' , $id )->update ( $data ) )
          {
-            return $configid;
+            return $id;
          } else {
             return false;
          }
       }else{
          $data = array_merge ( $data , [ 'created_at' => date ( 'Y-m-d H:i:s' ) ] );
-         if ( $configid = WifiConfigs::insertGetId ( $data ) )
+         if ( $id = Rooms::insertGetId ( $data ) )
          {
-            return $configid;
+            return $id;
          } else {
             return false;
          }
@@ -49,14 +49,14 @@ class WifiConfigs extends Model
     * @Param $saveFieldData array   逻辑更新
     * return true|false
     */
-   public static function delWifiConfigsInfo( $condition = [] , $saveFieldData = [] , $isDelete = false )
+   public static function delRoomsInfo( $condition = [] , $saveFieldData = [] , $isDelete = false )
    {
       // 条件为空，不做处理
       if( !$condition ) return false;
       // 物理删除数据
       if( true == $isDelete )
       {
-         $isStatus = WifiConfigs::where($condition)->delete();
+         $isStatus = Rooms::where($condition)->delete();
          return $isStatus ? true : false;
       }
       // 逻辑删除数据
@@ -64,7 +64,7 @@ class WifiConfigs extends Model
       if( false == $isDelete )
       {
          $saveData = array_merge ( $saveFieldData , [ 'updated_at' => date ( 'Y-m-d H:i:s' ) ] );
-         if ( WifiConfigs::where ( $condition )->update ( $saveData ) )
+         if ( Rooms::where ( $condition )->update ( $saveData ) )
          {
             return true;
          } else {
@@ -81,25 +81,25 @@ class WifiConfigs extends Model
     * @Param $joinArr array 需要连接json的数据表
     * return array
     */
-   public static function getWifiConfigsOneInfo ( $condition = [] , $orderArr = [] , $fieldsArr = [] , $joinArr = [] )
+   public static function getRoomsOneInfo ( $condition = [] , $orderArr = [] , $fieldsArr = [] , $joinArr = [] )
    {
       $joinCount = count($joinArr);
       if($joinCount == 1) // 一张表
       {
-         return WifiConfigs::where ( $condition )
+         return Rooms::where ( $condition )
                  ->orderBy ( $orderArr[0],$orderArr[1] )
                  ->join($joinArr[0][0],$joinArr[0][1],$joinArr[0][2],$joinArr[0][3],isset($joinArr[0][4])?$joinArr[0][4]:'inner')
                  ->first ( $fieldsArr );;
       }
       if($joinCount == 2) // 二张表
       {
-         return WifiConfigs::where ( $condition )
+         return Rooms::where ( $condition )
                   ->orderBy ( $orderArr[0],$orderArr[1] )
                   ->join($joinArr[0][0],$joinArr[0][1],$joinArr[0][2],$joinArr[0][3],isset($joinArr[0][4])?$joinArr[0][4]:'inner')
                   ->join($joinArr[1][0],$joinArr[1][1],$joinArr[1][2],$joinArr[1][3],isset($joinArr[1][4])?$joinArr[1][4]:'inner')
                   ->first ( $fieldsArr );;
       }
-      return WifiConfigs::where ( $condition )->orderBy ( $orderArr[0],$orderArr[1] )->first ( $fieldsArr );
+      return Rooms::where ( $condition )->orderBy ( $orderArr[0],$orderArr[1] )->first ( $fieldsArr );
    }
 
    /**
@@ -111,28 +111,27 @@ class WifiConfigs extends Model
     * @Param $joinArr  array 需要连接的数据表
     * return array
     */
-   public static function getWifiConfigsListInfo( $condition = [] , $orderArr = [] , $pageArr = [] , $fieldsArr = [] , $joinArr = [] )
+   public static function getRoomsListInfo( $condition = [] , $orderArr = [] , $pageArr = [] , $fieldsArr = [] , $joinArr = [] )
    {
       $joinCount = count($joinArr);
       if($joinCount == 1) // 一张表
       {
-         return WifiConfigs::where ( $condition )
+         return Rooms::where ( $condition )
                   ->join($joinArr[0][0],$joinArr[0][1],$joinArr[0][2],$joinArr[0][3],isset($joinArr[0][4])?$joinArr[0][4]:'inner')
                   ->orderBy ( $orderArr[0],$orderArr[1] )
                   ->paginate ( $pageArr[ 'limit' ] , $fieldsArr , 'page' , $pageArr[ 'page' ] );
       }
       if($joinCount == 2) // 二张表
       {
-         return WifiConfigs::where ( $condition )
+         return Rooms::where ( $condition )
                  ->join($joinArr[0][0],$joinArr[0][1],$joinArr[0][2],$joinArr[0][3],isset($joinArr[0][4])?$joinArr[0][4]:'inner')
                  ->join($joinArr[1][0],$joinArr[1][1],$joinArr[1][2],$joinArr[1][3],isset($joinArr[1][4])?$joinArr[1][4]:'inner')
                  ->orderBy ( $orderArr[0],$orderArr[1] )
                  ->paginate ( $pageArr[ 'limit' ] , $fieldsArr , 'page' , $pageArr[ 'page' ] );
       }
-      return WifiConfigs::where ( $condition )->orderBy ( $orderArr[0],$orderArr[1] )
+      return Rooms::where ( $condition )->orderBy ( $orderArr[0],$orderArr[1] )
               ->paginate ( $pageArr[ 'limit' ] , $fieldsArr , 'page' , $pageArr[ 'page' ] );
    }
-
 
    /**
     * Func:  统计数据
@@ -140,18 +139,18 @@ class WifiConfigs extends Model
     * @Param $field string 获取的字段值
     * return Int
     */
-   public static function getWifiConfigsStatistics ( $condition = [] , $mode = 'count' , $field = null )
+   public static function getRoomsStatistics ( $condition = [] , $mode = 'count' , $field = null )
    {
       // 条件/ 排序必须唯一,必传参数
       if ( ! $condition ) return 0;
-	  
-      if ( in_array ( $mode , [ 'max' , 'min' , 'avg' , 'sum' ] ) && ! $field ) return 0;
       
-	  if ( $mode == 'count' ) return WifiConfigs::where ( $condition )->count ();
-      if ( $mode == 'max' ) return WifiConfigs::where ( $condition )->max ( $field );
-      if ( $mode == 'min' ) return WifiConfigs::where ( $condition )->min ( $field );
-      if ( $mode == 'avg' ) return (float)WifiConfigs::where ( $condition )->avg ( $field );
-      if ( $mode == 'sum' ) return (float)WifiConfigs::where ( $condition )->sum ( $field );
+	  if ( in_array ( $mode , [ 'max' , 'min' , 'avg' , 'sum' ] ) && ! $field ) return 0;
+
+      if ( $mode == 'count' ) return Rooms::where ( $condition )->count ();
+      if ( $mode == 'max' ) return Rooms::where ( $condition )->max ( $field );
+      if ( $mode == 'min' ) return Rooms::where ( $condition )->min ( $field );
+      if ( $mode == 'avg' ) return (float)Rooms::where ( $condition )->avg ( $field );
+      if ( $mode == 'sum' ) return (float)Rooms::where ( $condition )->sum ( $field );
       return 0;
    }
 }
