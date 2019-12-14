@@ -68,3 +68,5 @@ Route::prefix('pipeline')->group(function () {
     Route::get('/flow/student/open','Teacher\Pipeline\FlowsController@open')
         ->name('student.pipeline.flow-open');
 });
+
+
