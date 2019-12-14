@@ -115,5 +115,7 @@ return [
     'flows-manager'=>'流程管理',
     'flow-open'=>'发起',
     'flow-view-history'=>'查看流程详情',
+    'set'=>'设置',
+    'adviser'=>'主任',
 ];
 

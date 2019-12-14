@@ -223,5 +223,11 @@ export const Constants = {
         REJECTED: 2,
         REJECTED_TXT: '驳回',
         REJECTED_CLASS: 'text-danger',
+    },
+    ADVISER: {
+        DEPARTMENT: 1, // 系主任
+        GRADE: 2, // 班主任
+        STUDY_GROUP: 3, // 教研组长
+        STUDENTS: 4, // 班长
     }
 };

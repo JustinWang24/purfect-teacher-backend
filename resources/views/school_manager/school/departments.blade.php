@@ -38,8 +38,8 @@ use App\User;
                             <table class="table table-striped table-bordered table-hover table-checkable order-column valign-middle">
                                 <thead>
                                 <tr>
-                                    <th>#</th>
                                     <th>系名称</th>
+                                    <th>系主任</th>
                                     <th style="width: 300px;">教学相关配置</th>
                                     <th>专业数</th>
                                     <th>教职工数</th>
@@ -50,9 +50,20 @@ use App\User;
                                 <tbody>
                                 @foreach($departments as $index=>$department)
                                     <tr>
-                                        <td>{{ $index+1 }}</td>
                                         <td>
                                             {{ $department->name }}
+                                        </td>
+                                        <td>
+                                            @if($department->adviser)
+                                                {{ $department->adviser->user->name }} &nbsp;
+                                                @if(\Illuminate\Support\Facades\Auth::user()->isSchoolAdminOrAbove())
+                                                    <a href="{{ route('school_manager.department.set.adviser',['department'=>$department->id]) }}">(编辑)</a>
+                                                @endif
+                                            @else
+                                                @if(\Illuminate\Support\Facades\Auth::user()->isSchoolAdminOrAbove())
+                                                <a href="{{ route('school_manager.department.set.adviser',['department'=>$department->id]) }}">设置系主任</a>
+                                                @endif
+                                            @endif
                                         </td>
                                         <td>
                                             <p>上自习课是否需要签到: <span class="text-primary">{{ $department->isSelfStudyNeedRegistration() ? '是': '否' }}</span></p>
