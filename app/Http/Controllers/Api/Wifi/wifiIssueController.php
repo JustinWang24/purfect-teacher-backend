@@ -27,9 +27,6 @@ class wifiIssueController extends Controller
     */
    public function list_category_info ( WifiIssueRequest $request )
    {
-      $param        = $request->only ( [ 'uuid' ] );
-      $authUserInfo = self::authUserInfo ( $param[ 'uuid' ] );
-
       // 获取状态
       $condition[] = [ 'purpose' , '=' , 1 ]; // 用途（1:客户选择故障类型,2:维修人员类型选择故障)
       $condition[] = [ 'status' , '=' , 1 ]; // 状态(0:不显示,1:显示)
@@ -39,11 +36,11 @@ class wifiIssueController extends Controller
 
       $infos = WifiIssueTypesDao::getWifiIssueTypesListInfo (
 
-         $condition , [ [ 'typeid' , 'asc' ] ] , [ 'page' => 1 , 'limit' => 500 ] , $fieldArr
+         $condition , [ 'typeid' , 'asc' ] , [ 'page' => 1 , 'limit' => 500 ] , $fieldArr
 
       )->toArray()['data'];
 
-      $infos = WifiIssueTypesDao::cateTree( $infos , 'typeid' , 'type_pid' );
+      if(!empty($infos)) $infos = WifiIssueTypesDao::cateTree( $infos , 'typeid' , 'type_pid' );
 
       return JsonBuilder::Success ( $infos ,'报修类型列表');
 
@@ -56,14 +53,14 @@ class wifiIssueController extends Controller
     */
    public function add_issue_info( WifiIssueRequest $request )
    {
+      $user = $request->user ();
       $param = $request->only (
          [
-            'uuid' , 'typeone_id' , 'typeone_name' , 'typetwo_id' , 'typetwo_name' ,
-            'issue_name' , 'issue_mobile' , 'issue_desc' , 'addressoneid' , 'addresstwoid' ,
-            'addressthreeid' , 'addr_detail' ,
+            'typeone_id' , 'typeone_name' , 'typetwo_id' , 'typetwo_name' ,
+            'issue_name' , 'issue_mobile' ,'addressoneid' , 'addresstwoid' ,
+            'addr_detail' , 'issue_desc'
          ]
       );
-      $authUserInfo = self::authUserInfo ( $param[ 'uuid' ] );
 
       // 表单要插入的字段信息
       $param1 = self::getPostParamInfo ( $param , [
@@ -74,18 +71,21 @@ class wifiIssueController extends Controller
       );
 
       // 更新的数据
+      $param2[ 'user_id' ]   = $user->id; // 用户id
       $param2[ 'trade_sn' ]  = date ( 'YmdHis' ); // 编号
-      $param2[ 'user_id' ]   = $authUserInfo[ 'user_id' ]; // 用户id
-      $param2[ 'school_id' ] = $authUserInfo[ 'school_id' ]; // 学校
-      $param2[ 'campus_id' ] = $authUserInfo[ 'campus_id' ]; // 校区
+      $param2[ 'school_id' ] = $user->gradeUser->school_id; // 学校
+      $param2[ 'campus_id' ] = $user->gradeUser->campus_id; // 校区
 
       // 获取详细地址
-      $getSchoolAddressOneInfo1 = WifiIssueTypesDao::getSchoolAddressOneInfo ( $param1[ 'addressoneid' ] );
-      $getSchoolAddressOneInfo2 = WifiIssueTypesDao::getSchoolAddressOneInfo ( $param1[ 'addresstwoid' ] );
-      $param2[ 'addr_detail' ]  = $getSchoolAddressOneInfo1[ 'name' ] . $getSchoolAddressOneInfo2[ 'name' ] . $param1[ 'addr_detail' ];
+      $getRoomOneInfo1 = WifiIssueTypesDao::getRoomOneInfo ( $param1[ 'addressoneid' ] );
+      $getRoomOneInfo2 = WifiIssueTypesDao::getRoomOneInfo ( $param1[ 'addresstwoid' ] );
+      $address = '';
+      if(isset($getRoomOneInfo1)) $address .= $getRoomOneInfo1->name;
+      if(isset($getRoomOneInfo2)) $address .= $getRoomOneInfo2->name;
+      $param2[ 'addr_detail' ]  = $address.$param1[ 'addr_detail' ];
 
       // 验证数据是否重复提交
-      $dataSign = sha1 ( $authUserInfo[ 'user_id' ] . 'addApiWifiIssueInfo' );
+      $dataSign = sha1 ( $user->id . 'add_issue_info' );
 
       if ( Cache::has ( $dataSign ) ) return JsonBuilder::Error ( '您提交太快了，先歇息一下。' );
 
@@ -94,9 +94,7 @@ class wifiIssueController extends Controller
          // 生成重复提交签名
          Cache::put ( $dataSign , $dataSign , 10 );
 
-         // TODO..... 是否发送短信和消息待定。。。。。
-
-         return JsonBuilder::Success ( '申请成功,等待反馈。' );
+         return JsonBuilder::Success ( '申请成功,等待反馈' );
 
       } else {
 
@@ -111,13 +109,14 @@ class wifiIssueController extends Controller
     */
    public function list_my_issue_info(WifiIssueRequest $request)
    {
+      $user = $request->user ();
+
       // 获取参数
-      $param        = $request->only ( [ 'uuid' , 'page' ] );
-      $authUserInfo = self::authUserInfo ( $param[ 'uuid' ] );
+      $param = $request->only ( [ 'page' ] );
 
       // 查询数据
       $condition[] = ['status','>',0];
-      $condition[] = ['user_id','=',$authUserInfo['user_id']];
+      $condition[] = ['user_id','=',$user->id];
       
 	  // 获取的字段信息
       $fieldsArr = [
@@ -129,7 +128,7 @@ class wifiIssueController extends Controller
       
 	  // 获取报修数据
       $infos = WifiIssuesDao::getWifiIssuesListInfo (
-         $condition,[['issueid','desc']],['page'=>$param['page'],'limit'=>10],$fieldsArr
+         $condition,['issueid','desc'],['page'=>$param['page'],'limit'=>10],$fieldsArr
       )->toArray()['data'];
 
       // 处理数据
@@ -155,17 +154,18 @@ class wifiIssueController extends Controller
     */
    public function get_my_issue_info(WifiIssueRequest $request)
    {
+      $user = $request->user ();
       // 获取参数
-      $param = $request->only ( [ 'uuid' , 'issueid'] );
-      $authUserInfo = self::authUserInfo ( $param[ 'uuid' ] );
+      $param = $request->only ( [ 'issueid'] );
 
       // 查询数据
       $condition[] = [ 'issueid' , '=' , $param[ 'issueid' ] ];
-      $condition[] = [ 'user_id' , '=' , $authUserInfo[ 'user_id' ] ];
+      $condition[] = [ 'user_id' , '=' , $user->id ];
 
       // 获取数据
-      $infos = WifiIssuesDao::getWifiIssuesOneInfo ( $condition,[['issueid','desc']],['*']);
-      $infos = $infos != null ? $infos->toArray() : null;
+      $getWifiIssuesOneInfo = WifiIssuesDao::getWifiIssuesOneInfo ( $condition,['issueid','desc'],['*']);
+
+      $infos = $getWifiIssuesOneInfo != null ? $getWifiIssuesOneInfo->toArray() : null;
 
       if ( $infos )
       {
@@ -182,9 +182,13 @@ class wifiIssueController extends Controller
             ['order_title'=>'接单时间','order_time'=>$infos['jiedan_time']],
             ['order_title'=>'修复时间','order_time'=>$infos['chulis_time']],
          ];
+         foreach ( $data as $key => $val )
+         {
+            if ( strtotime ($val[ 'order_time' ]) <= 0 ) unset( $data[ $key ] );
+         }
          $infos[ 'timeArr' ] = (array)array_values( $data );
       }
-      return JsonBuilder::Success ( '单个报修详情' , $infos );
+      return JsonBuilder::Success (  $infos , '单个报修详情' );
    }
 
    /**
@@ -194,19 +198,19 @@ class wifiIssueController extends Controller
     */
    public function add_issue_comment_info(WifiIssueRequest $request)
    {
+      $user = $request->user ();
       // 获取参数
       $param = $request->only (
          [
-            'uuid','issueid','comment_service','comment_worders',
+            'issueid','comment_service','comment_worders',
             'comment_efficiency','comment_content',
          ]
       );
-      $authUserInfo = self::authUserInfo ( $param[ 'uuid' ] );
 
       // 验证我是否有权限操作
-      $condition[] = [ 'user_id' , '=' , $authUserInfo[ 'user_id' ] ];
+      $condition[] = [ 'user_id' , '=' , $user->id ];
       $condition[] = [ 'issueid' , '=' , $param[ 'issueid' ] ];
-      $getWifiIssuesOneInfo = WifiIssuesDao::getWifiIssuesOneInfo ( $condition , [ [ 'issueid' , 'desc' ] ] , [ '*' ] );
+      $getWifiIssuesOneInfo = WifiIssuesDao::getWifiIssuesOneInfo ( $condition , [ 'issueid' , 'desc' ] , [ '*' ] );
       if ( !$getWifiIssuesOneInfo ) return JsonBuilder::Error ( '您没有权限评论此信息' );
       if ( $getWifiIssuesOneInfo['is_comment'] == 2 ) return JsonBuilder::Error ( '您已评价' );
 
@@ -218,12 +222,12 @@ class wifiIssueController extends Controller
       );
 
       // 更新的数据
-      $param2[ 'user_id' ]   = $authUserInfo[ 'user_id' ]; // 用户id
-      $param2[ 'school_id' ] = $authUserInfo[ 'school_id' ]; // 学校
-      $param2[ 'campus_id' ] = $authUserInfo[ 'campus_id' ]; // 校区
+      $param2[ 'user_id' ]   = $user->id; // 用户id
+      $param2[ 'school_id' ] = $user->gradeUser->school_id; // 学校
+      $param2[ 'campus_id' ] = $user->gradeUser->campus_id; // 校区
 
       // 验证数据是否重复提交
-      $dataSign = sha1 ( $authUserInfo[ 'user_id' ] . 'addApiWifiIssueCommentInfo' );
+      $dataSign = sha1 ( $user->id . 'addApiWifiIssueCommentInfo' );
 
       if ( Cache::has ( $dataSign ) ) return JsonBuilder::Error ( '您提交太快了，先歇息一下。' );
 

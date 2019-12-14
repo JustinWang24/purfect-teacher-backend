@@ -43,8 +43,8 @@ class WifiRequest extends \App\Http\Requests\ApiRequest
       // 修改运营商信息
       if(stripos($getActionName,'edit_operator_info'))
       {
-         $rules[ 'user_mobile_source' ] = 'required|integer|between:1,4'; // 运营商(1:移动,2:联通,3:电信,4:其他)
-         $rules[ 'user_mobile_password' ] = 'required'; // 手机卡密码
+         // $rules[ 'user_mobile_source' ] = 'required|integer|between:1,4'; // 运营商(1:移动,2:联通,3:电信,4:其他)
+         // $rules[ 'user_mobile_password' ] = 'required'; // 手机卡密码
       }
 
       return $rules;

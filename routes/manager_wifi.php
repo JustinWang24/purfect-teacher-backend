@@ -1,6 +1,7 @@
 <?php
 
-Route::prefix('manager_wifi')->group(function () {
+Route::prefix('manager_wifi')->group(function ()
+{
     // wifi产品
     Route::any('wifi/list', 'WifiController@list')->name('manager_wifi.wifi.list'); // wifi列表
     Route::any('wifi/add', 'WifiController@add')->name('manager_wifi.wifi.add'); // 添加wifi产品
