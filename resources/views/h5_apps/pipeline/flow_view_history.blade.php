@@ -12,9 +12,6 @@
          data-theaction="{{ $action }}"
          data-apprequest="1"></div>
     <div id="pipeline-flow-view-history-app" class="school-intro-container">
-        <div class="header">
-            <h2 class="title">{{ $pageTitle }} </h2>
-        </div>
         <div class="main" v-if="isLoading">
             <p class="text-center text-grey">
                 <i class="el-icon-loading"></i>&nbsp;数据加载中 ...
