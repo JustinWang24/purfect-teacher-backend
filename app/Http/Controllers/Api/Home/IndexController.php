@@ -264,4 +264,18 @@ class IndexController extends Controller
 
         return JsonBuilder::Success('发送成功');
     }
+
+
+    /**
+     * 校园动态分页
+     * @param HomeRequest $request
+     * @return string
+     */
+    public function newsPage(HomeRequest $request) {
+        $schoolId = $request->user()->gradeUser->school_id;
+        $dao = new NewsDao();
+        $list = $dao->getNewBySchoolId($schoolId);
+        $data = pageReturn($list);
+        return JsonBuilder::Success($data);
+    }
 }
