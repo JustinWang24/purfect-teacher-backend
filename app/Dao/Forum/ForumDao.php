@@ -3,10 +3,15 @@
 namespace App\Dao\Forum;
 
 use App\User;
+use App\Utils\JsonBuilder;
 use App\Models\Forum\Forum;
+use App\Models\Forum\ForumLike;
 use App\Models\Forum\ForumImage;
+use App\Models\Forum\ForumComment;
 use Illuminate\Support\Facades\DB;
+use App\Utils\ReturnData\MessageBag;
 use App\Utils\Misc\ConfigurationTool;
+use App\Models\Forum\ForumCommentReply;
 
 class ForumDao
 {
@@ -78,6 +83,39 @@ class ForumDao
      */
     public function updateForum($id, $data) {
         return Forum::where('id', $id)->update($data);
+    }
+
+
+    /**
+     * 删除论坛
+     * @param $forumId
+     * @return MessageBag
+     */
+    public function deleteForum($forumId) {
+        $messageBag = new MessageBag(JsonBuilder::CODE_ERROR);
+        DB::beginTransaction();
+        try{
+            // 论坛表
+            Forum::where('id', $forumId)->delete();
+            // 论坛点赞表
+            ForumLike::where('forum_id', $forumId)->delete();
+            // 论坛资源表  todo 删除视频图片资源
+            ForumImage::where('forum_id', $forumId)->delete();
+            // 删除评论表
+            ForumComment::where('forum_id', $forumId)->delete();
+            // 删除回复表
+            ForumCommentReply::where('forum_id', $forumId)->delete();
+
+            DB::commit();
+            $messageBag->setCode(JsonBuilder::CODE_SUCCESS);
+
+        }
+        catch (\Exception $e) {
+            DB::rollBack();
+            $msg = $e->getMessage();
+            $messageBag->setMessage('删除失败'.$msg);
+        }
+        return $messageBag;
     }
 
 }

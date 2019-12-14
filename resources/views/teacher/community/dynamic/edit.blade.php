@@ -15,6 +15,12 @@ use App\Utils\UI\Button;
                     <form action="{{ route('teacher.dynamic.edit') }}" method="post"  id="add-forum-form">
                         @csrf
                         <input type="hidden" id="forum_id" name="forum[id]" value="{{$forum->id}}">
+
+                        <div class="form-group">
+                            <label for="forum-content">姓名</label>
+                            <input type="text" disabled class="form-control" value="{{ $forum->user->name }}">
+                        </div>
+
                         <div class="form-group">
                             <label for="forum-content">内容</label>
                             <textarea class="form-control" disabled   cols="30" rows="10">{{ $forum->content }}</textarea>
@@ -35,6 +41,21 @@ use App\Utils\UI\Button;
 
                             </div>
                         </div>
+
+                        <div class="form-group">
+                            <label for="forum-type">类别</label>
+                            <select required type="select" class="form-control" id="forum-type-select" value="" placeholder="类型" name="forum[type_id]">
+                                @foreach($forum_type as $key => $val)
+                                <option value="{{ $val->id }}"
+                                        @if($forum->type_id == $val->id)
+                                            selected
+                                            @endif
+                                >{{ $val->title }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+
+
 
                         <div class="form-group">
                             <label for="forum-status">推荐</label>

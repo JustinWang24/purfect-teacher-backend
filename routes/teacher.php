@@ -108,8 +108,8 @@ Route::prefix('teacher')->group(function () {
     // 动态详情
     Route::any('/edit','Community\DynamicController@edit')
         ->name('teacher.dynamic.edit');
-
-    Route::get('/delete','Community\DynamicController@edit')
+    // 删除
+    Route::get('/delete','Community\DynamicController@delete')
         ->name('teacher.dynamic.delete');
 
 });

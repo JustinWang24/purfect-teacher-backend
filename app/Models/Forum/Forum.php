@@ -3,10 +3,9 @@
 
 namespace App\Models\Forum;
 
-use App\Dao\Forum\ForumType;
-use App\Models\Students\StudentProfile;
-use App\Models\School;
 use App\User;
+use App\Models\School;
+use App\Models\Students\StudentProfile;
 use Illuminate\Database\Eloquent\Model;
 
 class Forum extends Model

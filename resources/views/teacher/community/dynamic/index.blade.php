@@ -30,7 +30,11 @@
                                         <td> 0 </td>
                                         <td>{{ $val->countLikeNum() }}</td>
                                         <td>{{ $val->created_at }}</td>
-                                        <td></td>
+                                        <td>@if($val['is_up'] == 1)
+                                            <span class="label label-sm label-success"> 推荐 </span>
+                                                @else
+                                            <span class="label label-sm label-danger"> 关闭 </span>
+                                            @endif</td>
                                         <td>{{ $val->statusText() }}</td>
                                         <td class="text-center">
                                             {{ \App\Utils\UI\Anchor::Print(['text'=>'查看','class'=>'btn-edit-forum','href'=>route('teacher.dynamic.edit',['id'=>$val->id])], \App\Utils\UI\Button::TYPE_DEFAULT,'edit') }}
