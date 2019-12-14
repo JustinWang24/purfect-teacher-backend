@@ -6,9 +6,9 @@
 namespace App\Utils\Pipeline;
 
 
-interface IActionOption
+interface IActionOption extends IPersistent
 {
     public function getAction(): IAction;
-
+    public function getNodeOption(): INodeOption;
     public function getValue(): string;
 }

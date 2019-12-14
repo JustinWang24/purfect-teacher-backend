@@ -6,7 +6,7 @@
 namespace App\Utils\Pipeline;
 
 
-interface INodeOption
+interface INodeOption extends IPersistent
 {
     const TYPE_TEXT = '文本';
     const TYPE_DATE = '日期';
