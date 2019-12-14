@@ -8,6 +8,6 @@ class ForumCommentReply extends Model
 {
     protected $table = 'forum_comment_replys';
     protected $fillable = [
-        'comment_id', 'user_id', 'to_user_id', 'forum_id', 'reply'
+        'comment_id', 'user_id', 'to_user_id', 'forum_id', 'reply','school_id','status'
     ];
 }

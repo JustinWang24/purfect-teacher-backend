@@ -70,6 +70,13 @@ return [
             'url' => env('APP_URL').'/storage/app/apk',
             'visibility' => 'public',
         ],
+        //社群的图片存储路径
+        'community' => [
+            'driver' => 'local',
+            'root' => storage_path('app/community'),
+            'url' => env('APP_URL').'/storage/app/community',
+            'visibility' => 'public',
+        ],
 
     ],
 
