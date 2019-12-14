@@ -25,7 +25,8 @@ use App\Dao\Wifi\Api\WifiUserAgreementsDao; // wifi协议
 
 use App\BusinessLogic\WifiInterface\Factory;
 
-use Pay;
+use Yansongda\Pay\Pay;
+use Yansongda\Pay\Log;
 
 class WifiPayController extends Controller
 {
@@ -93,15 +94,7 @@ class WifiPayController extends Controller
     */
    public function pay_recharge_info(WifiPayRequest $request)
    {
-/*      $order = [
-         'out_trade_no' => time(),
-         'body' => 'subject-测试',
-         'total_fee'      => '1',
-      ];
-      $result = Pay::wechat()->app($order);
-      var_dump($result);exit;*/
       $user = $request->user ();
-
       $param = $request->only ( [ 'paymentid' ,'wifiid','number'] );
 
       // 验证wifi产品
@@ -135,11 +128,35 @@ class WifiPayController extends Controller
 
       if ( WifiOrders::addOrUpdateWifiOrdersInfo ($param1) )
       {
+         // 微信支付
+         if($param['paymentid'] == 1)
+         {
+            $order = [
+               'out_trade_no' => $param1[ 'trade_sn' ],
+               'total_fee' => $param1[ 'order_totalprice' ] * 100,
+               'body' => '购买无线wifi['.$param1[ 'wifi_name' ].']',
+            ];
+            $configArr = config ( 'pay.wechat' );
+            $configArr[ 'notify_url' ] = url ()->previous () . $configArr[ 'notify_url' ];
+            $resultObj = Pay::wechat ( $configArr )->app ( $order );
+            $infos = json_decode ( $resultObj->getContent () , true );
+            if ( !empty($infos) && count ($infos) > 0 )
+            {
+               // TODO...事物提交....
+            } else {
+               // TODO....事物回滚...
+            }
+         }
+
+         // 支付宝支付
+         if($param['paymentid'] == 2)
+         {
+            // TODO....
+         }
+
          // 生成重复提交签名
          Cache::put ( $dataSign , $dataSign , 10 );
 
-         // TODO....生成订单信息..
-         $infos = ['info'=>'待开发中....'];
          return JsonBuilder::Success ( $infos ,'购买无线wifi');
       } else {
          return JsonBuilder::Error ( '购买失败,请稍后重试' );
