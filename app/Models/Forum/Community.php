@@ -10,4 +10,8 @@ class Community extends Model
     protected $fillable = [
         'school_id', 'name', 'detail', 'logo', 'pic1', 'pic2', 'pic3', 'user_id', 'status'
     ];
+    public function member()
+    {
+        return $this->hasMany(Community_member::class, 'community_id', 'id');
+    }
 }

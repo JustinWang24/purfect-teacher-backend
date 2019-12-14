@@ -10,4 +10,6 @@ class Community_member extends Model
     protected $fillable = [
         'school_id', 'community_id', 'user_name', 'reason', 'user_id', 'status'
     ];
+    const ACCEPT = 1;
+    const REJECT = 2;
 }
