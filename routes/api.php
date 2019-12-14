@@ -356,7 +356,13 @@ Route::prefix('version')->group(function () {
 
 // APP 首页接口
 Route::prefix('home')->middleware('auth:api')->group(function () {
-    Route::post('/getHomePageInfo', 'Api\Home\IndexController@index')->name('api.home.index');
+
+    Route::post('/getHomePageInfo', 'Api\Home\IndexController@index')
+        ->name('api.home.index');
+    // 校园动态
+    Route::get('/newsPage', 'Api\Home\IndexController@newsPage')
+        ->name('api.home.newsPage');
+
 });
 
 // 消息通知
