@@ -275,6 +275,16 @@ class IndexController extends Controller
         $schoolId = $request->user()->gradeUser->school_id;
         $dao = new NewsDao();
         $list = $dao->getNewBySchoolId($schoolId);
+        foreach ($list as $key => $val) {
+            $list[$key]['image'] = '';
+            $sections = $val->sections;
+            foreach ($sections as $k => $v) {
+                if (!empty($v->meia)) {
+                    $data[$key]['image'] = $v->media->url;
+                }
+            }
+            unset($list[$key]['sections']);
+        }
         $data = pageReturn($list);
         return JsonBuilder::Success($data);
     }
