@@ -106,7 +106,10 @@ Route::prefix('teacher')->group(function () {
     Route::get('/dynamic','Community\DynamicController@index')
         ->name('teacher.community.dynamic');
     // 动态详情
-    Route::get('/dynamic-info','Community\DynamicController@info')
-        ->name('teacher.community.dynamic-info');
+    Route::any('/edit','Community\DynamicController@edit')
+        ->name('teacher.dynamic.edit');
+
+    Route::get('/delete','Community\DynamicController@edit')
+        ->name('teacher.dynamic.delete');
 
 });

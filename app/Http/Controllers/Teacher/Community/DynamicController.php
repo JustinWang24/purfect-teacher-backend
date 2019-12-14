@@ -20,4 +20,18 @@ class DynamicController extends Controller
         return view('teacher.community.dynamic.index', $this->dataForView);
     }
 
+
+    public function edit(ForumRequest $request) {
+        $forumId = $request->get('id');
+        $dao = new ForumDao();
+        $info = $dao->find($forumId);
+        $this->dataForView['forum'] = $info;
+        return view('teacher.community.dynamic.edit', $this->dataForView);
+    }
+
+
+    public function delete() {
+
+    }
+
 }

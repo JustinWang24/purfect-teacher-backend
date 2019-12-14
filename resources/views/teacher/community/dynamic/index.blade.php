@@ -33,8 +33,8 @@
                                         <td></td>
                                         <td>{{ $val->statusText() }}</td>
                                         <td class="text-center">
-                                            {{ \App\Utils\UI\Anchor::Print(['text'=>'查看','class'=>'btn-edit-forum','href'=>route('school_manager.facility.edit',['id'=>$val->id])], \App\Utils\UI\Button::TYPE_DEFAULT,'edit') }}
-                                            {{ \App\Utils\UI\Anchor::Print(['text'=>'删除','class'=>'btn-delete-forum btn-need-confirm','href'=>route('school_manager.facility.delete',['id'=>$val['id']])], \App\Utils\UI\Button::TYPE_DANGER,'trash') }}
+                                            {{ \App\Utils\UI\Anchor::Print(['text'=>'查看','class'=>'btn-edit-forum','href'=>route('teacher.dynamic.edit',['id'=>$val->id])], \App\Utils\UI\Button::TYPE_DEFAULT,'edit') }}
+                                            {{ \App\Utils\UI\Anchor::Print(['text'=>'删除','class'=>'btn-delete-forum btn-need-confirm','href'=>route('teacher.dynamic.delete',['id'=>$val['id']])], \App\Utils\UI\Button::TYPE_DANGER,'trash') }}
                                         </td>
                                     </tbody>
                                 @endforeach
