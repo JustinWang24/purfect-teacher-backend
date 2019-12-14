@@ -33,17 +33,10 @@
 
          $getActionName = request()->route()->getActionName();
 
-         // 充值上网
-         if(stripos($getActionName,'index_recharge'))
-         {
-            $rules[ 'uuid' ] = 'required';
-         }
-
          // 充值记录
          if(stripos($getActionName,'list_recharge_info'))
          {
-            $rules[ 'uuid' ] = 'required';
-            $rules[ 'page' ] = 'required|integer';
+            // $rules[ 'page' ] = 'required|integer';
          }
          return $rules;
       }

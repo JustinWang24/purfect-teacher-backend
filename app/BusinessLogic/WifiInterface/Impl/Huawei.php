@@ -250,7 +250,7 @@ class Huawei implements WifiInterface
                     ->withData ( json_encode ( $param ) )
                     ->post ();
       $resultArr = json_decode ( $result , true );
-      if ( $resultArr[ 'errcode' ] == '0' && $resultArr[ 'data' ][ 'psessionid' ] != '' )
+      if ( isset($resultArr[ 'errcode' ]) && $resultArr[ 'errcode' ] == '0' && $resultArr[ 'data' ][ 'psessionid' ] != '' )
       {
          return [ 'status' => true , 'message' => '上线成功' , 'data' => [ 'psessionid' => $resultArr[ 'data' ][ 'psessionid' ] ] ];
       } else {
@@ -277,7 +277,7 @@ class Huawei implements WifiInterface
                     ->withData ( json_encode ( $param ) )
                     ->post ();
       $resultArr = json_decode ( $result , true );
-      if ( $resultArr[ 'errcode' ] == '0' )
+      if ( isset($resultArr[ 'errcode' ]) && $resultArr[ 'errcode' ] == '0' )
       {
          return [ 'status' => true , 'message' => '下线成功' ];
       } else {
@@ -302,9 +302,9 @@ class Huawei implements WifiInterface
                     ->withHeaders ( [ 'Content-Type: application/json','X-ACCESS-TOKEN:'] )
                     ->get ();
       $resultArr = json_decode ($result,true);
-      if($resultArr['errcode'] == '0' && $resultArr['data']['online'] == true )
+      if(isset($resultArr['errcode']) && $resultArr['errcode'] == '0' && $resultArr['data']['online'] == true )
       {
-         return [ 'status' => true , 'message' => '' ];
+         return [ 'status' => true , 'message' => '在线' ];
       } else {
          return [ 'status' => false , 'message' => '用户不在线' ];
       }
