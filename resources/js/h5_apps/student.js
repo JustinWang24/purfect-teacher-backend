@@ -1,3 +1,4 @@
+require('babel-polyfill');
 window._ = require('lodash');
 window.axios = require('axios');
 
@@ -15,9 +16,9 @@ if (token) {
     console.error('CSRF token not found: https://laravel.com/docs/csrf#csrf-x-csrf-token');
 }
 
-import { Constants } from '../common/constants';
-import { Util } from '../common/utils';
-import { queryStudentProfile, loadMajorDetail } from '../common/registration_form';
+// import { Constants } from '../common/constants';
+// import { Util } from '../common/utils';
+// import { queryStudentProfile, loadMajorDetail } from '../common/registration_form';
 
 window.Vue = require('vue');
 // 引入 Element UI 库

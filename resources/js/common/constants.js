@@ -169,7 +169,7 @@ export const Constants = {
     STUDENT_PROFILE: 'purfect.profile',
     TYPE_FILE: 'file',  // 文件类型
     TYPE_CATEGORY: 'category', // 目录类型
-    MAX_UPLOAD_FILE_SIZE: 10 * 1024 * 1024, // 最大 10 兆文件上传
+    MAX_UPLOAD_FILE_SIZE: 20 * 1024 * 1024, // 最大 10 兆文件上传
     FILE_TYPE:{
         GENERAL: 1,
         IMAGE: 2,
