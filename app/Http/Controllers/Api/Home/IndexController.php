@@ -276,6 +276,7 @@ class IndexController extends Controller
         $dao = new NewsDao();
         $list = $dao->getNewBySchoolId($schoolId);
         foreach ($list as $key => $val) {
+            $list[$key]['image'] = '';
             $sections = $val->sections;
             foreach ($sections as $k => $v) {
                 if (!empty($v->media)) {
