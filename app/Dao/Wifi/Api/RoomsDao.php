@@ -10,6 +10,7 @@ namespace App\Dao\Wifi\Api;
 use App\Models\Wifi\Api\Rooms;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Collection;
+use App\Models\Schools\Building;
 
 class RoomsDao extends \App\Dao\Wifi\CommonDao
 {
@@ -56,5 +57,26 @@ class RoomsDao extends \App\Dao\Wifi\CommonDao
    public static function getRoomsStatistics ( $condition = [] , $field = null )
    {
       return Rooms::getRoomsStatistics ( $condition , $field );
+   }
+
+   /**
+    * Func:  获取宿舍楼地址列表
+    * @Param $campus_id Int 校区
+    * @Param $type Int 1:宿舍楼
+    * return Array
+    */
+   /**
+    * Func:  获取宿舍楼地址列表
+    * @Param $campus_id Int 校区
+    * @Param $type Int 1:宿舍楼
+    * return Array
+    */
+   public static function getRoomsListMoreInfo( $campus_id = 0 )
+   {
+      if ( ! intval ( $campus_id ) ) return [];
+      return Building::where('type',Building::TYPE_STUDENT_HOSTEL_BUILDING)
+                      ->where('campus_id',$campus_id)
+                      ->with('rooms')
+                      ->get();
    }
 }
