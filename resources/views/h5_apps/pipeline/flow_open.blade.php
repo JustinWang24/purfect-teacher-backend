@@ -1,11 +1,29 @@
 @extends('layouts.h5_app')
 @section('content')
-<div id="app-init-data-holder" data-flowid="{{ $flow->id }}" data-nodeid="{{ $node->id }}" data-school="{{ $user->getSchoolId() }}" data-apprequest="1"></div>
+<div id="app-init-data-holder" data-flowid="{{ $flow->id }}" data-nodeid="{{ $node->id }}" data-school="{{ $user->getSchoolId() }}" data-nodeoptions="{{ $node->options }}" data-apprequest="1"></div>
 <div id="{{ $appName }}" class="school-intro-container">
     <div class="main p-15">
         <h5>申请人: {{ $user->name }}</h5>
         <el-form v-if="!done" ref="startActionForm" :model="action" label-width="80px">
-            <el-form-item label="原因说明" class="nb">
+
+            @foreach($node->options as $key => $nodeOption)
+                @if($nodeOption->getType() === \App\Utils\Pipeline\INodeOption::TYPE_TEXT)
+                    <el-form-item label="{{ $nodeOption->name }}" class="nb mt-10">
+                        <el-input type="textarea" placeholder="必填: 请写明{{ $nodeOption->name }}" rows="2" v-model="action.options[{{ $key }}].value"></el-input>
+                    </el-form-item>
+                @elseif($nodeOption->getType() === \App\Utils\Pipeline\INodeOption::TYPE_DATE)
+                    <el-form-item label="{{ $nodeOption->name }}" class="nb mt-10">
+                        <el-date-picker
+                                v-model="action.options[{{ $key }}].value"
+                                type="date"
+                                value-format="yyyy-MM-dd"
+                                placeholder="{{ $nodeOption->name }}">
+                        </el-date-picker>
+                    </el-form-item>
+                @endif
+            @endforeach
+
+            <el-form-item label="原因说明" class="nb mt-10">
                 <el-input type="textarea" placeholder="必填: 请写明原因" rows="6" v-model="action.content"></el-input>
             </el-form-item>
             <el-form-item label="申请加急" class="nb">

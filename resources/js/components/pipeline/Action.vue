@@ -7,10 +7,15 @@
             <el-col :span="22">
                 <p :class="highlight ? 'text-white' : null">
                     {{ act.personal.name }}: <span :class="resultTextClass(act.result)">{{ resultText(act.result) }}</span>
-                    <span class="text-grey"><i class="el-icon-alarm-clock pr-2 pl-2"></i>{{ clockText }}</span>
+                    <span v-if="showClock" class="text-grey"><i class="el-icon-alarm-clock pr-2 pl-2"></i>{{ clockText }}</span>
 
                     <el-tag v-if="act.urgent" type="danger">申请加急</el-tag>
                 </p>
+                <ul v-if="act.options.length > 0" style="list-style:none;padding-left:0;">
+                    <li v-for="ao in act.options" :key="ao.id">
+                        {{ getOptionNameText(ao) }}: <span class="text-primary">{{ ao.value }}</span>
+                    </li>
+                </ul>
                 <p  :class="highlight ? 'text-white' : null">{{ quoteText2 }}:</p>
                 <p  :class="highlight ? 'text-white' : null">{{ description }}</p>
             </el-col>
@@ -41,6 +46,12 @@
             highlight: {
                 required: true,
                 type: Boolean,
+            },
+            // 步骤所要求的必填项
+            nodeOptions: {
+                type: Array,
+                required: false,
+                default:[]
             }
         },
         data(){
@@ -49,7 +60,10 @@
         },
         computed:{
             'clockText': function(){
-                return this.act.updated_at.substring(0, 16);
+                return this.showClock ? this.act.updated_at.substring(0, 16) : '';
+            },
+            'showClock': function(){
+                return this.act.result !== Constants.FLOW_ACTION_RESULT.PENDING
             },
             'quoteText1': function(){
                 if(!Util.isEmpty(this.initResult)){
@@ -119,6 +133,13 @@
                         break;
                 }
                 return txt;
+            },
+            getOptionNameText: function(ao){
+                const idx = Util.GetItemIndexById(ao.option_id, this.nodeOptions);
+                if(!Util.isEmpty(idx)){
+                    return this.nodeOptions[idx].name;
+                }
+                return '';
             }
         }
     }
@@ -128,6 +149,9 @@
 .pipeline-action-component-wrap{
     .text-grey{
         color: #e0e0e0;
+    }
+    .text-primary{
+        color: #409EFF;
     }
 }
 </style>

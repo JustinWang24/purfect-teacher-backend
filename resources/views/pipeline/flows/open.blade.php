@@ -1,7 +1,4 @@
 @php
-    use App\Utils\UI\Anchor;
-    use App\Utils\UI\Button;
-    use App\User;
     /**
      * @var \App\Models\Pipeline\Flow\Node $node
      */
@@ -16,12 +13,30 @@
                 </div>
                 <div class="card-body">
                     <el-form v-if="!done" ref="startActionForm" :model="action" label-width="120px" style="padding: 10px;">
+                        @foreach($node->options as $key => $nodeOption)
+                            @if($nodeOption->getType() === \App\Utils\Pipeline\INodeOption::TYPE_TEXT)
+                                <el-form-item label="{{ $nodeOption->name }}">
+                                    <el-input type="textarea" placeholder="必填: 请写明{{ $nodeOption->name }}" rows="2" v-model="action.options[{{ $key }}].value"></el-input>
+                                </el-form-item>
+                            @elseif($nodeOption->getType() === \App\Utils\Pipeline\INodeOption::TYPE_DATE)
+                                <el-form-item label="{{ $nodeOption->name }}">
+                                    <el-date-picker
+                                            v-model="action.options[{{ $key }}].value"
+                                            type="date"
+                                            value-format="yyyy-MM-dd"
+                                            placeholder="{{ $nodeOption->name }}">
+                                    </el-date-picker>
+                                </el-form-item>
+                            @endif
+                        @endforeach
+
                         <el-form-item label="原因说明">
                             <el-input type="textarea" placeholder="必填: 请写明原因" rows="6" v-model="action.content"></el-input>
                         </el-form-item>
                         <el-form-item label="申请加急">
                             <el-switch v-model="action.urgent"></el-switch>
                         </el-form-item>
+
                         <el-form-item label="选择附件">
                             <el-button type="primary" icon="el-icon-document" v-on:click="showFileManagerFlag=true">选择附件</el-button>
                             <ul style="padding-left: 0;">
@@ -32,9 +47,8 @@
                                 </li>
                             </ul>
                         </el-form-item>
-
                         <el-form-item>
-                            <el-button type="primary" @click="onStartActionSubmit">发起</el-button>
+                            <el-button type="primary" @click="onStartActionSubmit">提交</el-button>
                             <el-button @click="flowFormFlag = false">取消</el-button>
                         </el-form-item>
                     </el-form>
@@ -78,5 +92,6 @@
          data-school="{{ session('school.id') }}"
          data-nodeid="{{ $node->id }}"
          data-flowid="{{ $flow->id }}"
+         data-nodeoptions="{{ $node->options }}"
     ></div>
 @endsection
