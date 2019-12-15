@@ -26,11 +26,6 @@
             </a>
         </li>
         <li class="nav-item">
-            <a href="{{ route('school_manager.oa.tasks-manager',['uuid'=>session('school.uuid')]) }}" class="nav-link ">
-                <span class="title">任务管理</span>
-            </a>
-        </li>
-        <li class="nav-item">
             <a href="{{ route('school_manager.oa.visitors-manager') }}" class="nav-link ">
                 <span class="title">来访管理</span>
             </a>
@@ -42,7 +37,7 @@
         </li>
         <li class="nav-item">
             <a href="{{ route('school_manager.oa.approval-manager',['uuid'=>session('school.uuid')]) }}" class="nav-link">
-                <span class="title">审批管理</span>
+                <span class="title">选修课程审批</span>
             </a>
         </li>
         <li class="nav-item">

@@ -123,6 +123,9 @@ return [
 
     // 社区管理
     'community' => '社区管理',
-    'dynamic'   => '动态列表'
+    'dynamic'   => '动态列表',
+
+    'attendances-manager'   => '选修课程审批',
+    'project-view'   => '查看项目',
 ];
 
