@@ -1,7 +1,3 @@
-@php
-    use App\Utils\UI\Anchor;
-    use App\Utils\UI\Button;
-@endphp
 @extends('layouts.app')
 @section('content')
     <div class="row" id="pipeline-flows-manager-app">
@@ -73,10 +69,13 @@
                                     v-for="(node, index) in flowNodes"
                                     :key="index"
                                     :timestamp="timelineItemTitle(index, node)" placement="top" color="green">
-                                <el-card>
+                                <el-card shadow="hover">
                                     <p class="pull-right">
-                                        <el-button icon="el-icon-edit" size="mini" type="primary" @click="editNode(node)"></el-button>
-                                        <el-button v-if="index > 0" icon="el-icon-delete" size="mini" type="danger" @click="deleteNode(index, node)"></el-button>
+                                        <el-button-group>
+                                            <el-button icon="el-icon-plus" size="mini" @click="editNodeOptions(node)">必填项目</el-button>
+                                            <el-button icon="el-icon-edit" size="mini" @click="editNode(node)">编辑</el-button>
+                                            <el-button v-if="index > 0" icon="el-icon-delete" size="mini" type="danger" @click="deleteNode(index, node)"></el-button>
+                                        </el-button-group>
                                     </p>
                                     <h5><b>负责发起: </b></h5>
                                     <p class="pl-4" v-if="node.handler.organizations.length > 0">
@@ -104,7 +103,7 @@
                                         </span>
                                     </p>
 
-                                    <h5><b>负责审核</b></h5>
+                                    <h5><b>负责审核:</b></h5>
                                     <p class="pl-4" v-if="node.handler.notice_to.length === 0">
                                         <span class="text-danger">无需下一步审核</span>
                                     </p>
@@ -117,6 +116,15 @@
                                         </span>
                                     </p>
 <el-divider></el-divider>
+                                    <p v-if="node.options.length > 0" style="margin-bottom: 0;">
+                                        <span><b>必填信息: </b></span>
+                                        <el-button
+                                                :key="idx"
+                                                v-for="(op, idx) in node.options"
+                                                type="text" @click="editNodeOptions(node, op)"
+                                        ><b>@{{ op.name }}</b>;</el-button>
+                                    </p>
+
                                     <p v-if="node.attachments.length > 0" style="margin-bottom: 0;">
                                         <span class="text-primary"><b>关联的附件: </b></span>
                                     </p>
@@ -224,6 +232,44 @@
                     <el-button type="primary" @click="onNodeFormSubmit">保存</el-button>
                     <el-button @click="nodeFormFlag = false">取消</el-button>
                 </el-form-item>
+            </el-form>
+        </el-drawer>
+
+        <el-drawer
+                title="流程步骤必填项管理"
+                size="50%"
+                :visible.sync="nodeOptionsFormFlag">
+            <el-form ref="currentNodeOptionForm" :model="nodeOption" label-width="120px" style="padding: 10px;">
+                <el-form-item label="名称">
+                    <el-input v-model="nodeOption.name" placeholder="必填: 例如出差目的地" style="width: 90%;"></el-input>
+                </el-form-item>
+                <el-form-item label="类型">
+                    <el-select v-model="nodeOption.type" placeholder="必填: 请选择数据类型" style="width: 90%;">
+                        <el-option
+                                v-for="(ot, idx) in nodeOptionTypes"
+                                :label="ot" :value="ot" :key="idx">
+                        </el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item>
+                    <el-button type="primary" @click="onNodeOptionFormSubmit">保存</el-button>
+                    <el-button @click="nodeOptionsFormFlag = false">取消</el-button>
+                </el-form-item>
+                <el-divider></el-divider>
+                <el-row>
+                    <el-col :span="24">
+                        <h5 class="text-info" v-if="node.options.length===0">还没有添加此步骤必填项</h5>
+                        <h4 class="text-primary" v-if="node.options.length>0">已有的必填项</h4>
+                        <ol>
+                            <li v-for="(existOption, idx) in node.options" :key="idx">
+                                <span class="text-primary">名称:</span> @{{ existOption.name }}; <span class="text-primary">类型:</span> @{{ existOption.type }}
+                                &nbsp;|
+                                <el-button type="text" class="text-primary" v-on:click="editNodeOption(existOption)">修改</el-button>
+                                <el-button type="text" class="text-danger" v-on:click="removeNodeOption(existOption, idx)">删除</el-button>
+                            </li>
+                        </ol>
+                    </el-col>
+                </el-row>
             </el-form>
         </el-drawer>
 

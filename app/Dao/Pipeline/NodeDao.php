@@ -11,6 +11,7 @@ namespace App\Dao\Pipeline;
 use App\Models\Pipeline\Flow\Flow;
 use App\Models\Pipeline\Flow\Node;
 use App\Models\Pipeline\Flow\NodeAttachment;
+use App\Models\Pipeline\Flow\NodeOption;
 use App\Utils\Pipeline\NodeHandlersDescriptor;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
@@ -206,7 +207,7 @@ class NodeDao
      * @return Node
      */
     public function getById($id){
-        return Node::where('id',$id)->with('handler')->first();
+        return Node::where('id',$id)->with('handler')->with('options')->first();
     }
 
     /**
@@ -219,7 +220,11 @@ class NodeDao
         if(is_object($flow)){
             $flowId = $flow->id;
         }
-        return Node::where('flow_id',$flowId)->where('prev_node',0)->first();
+        return Node::where('flow_id',$flowId)
+            ->where('prev_node',0)
+            ->with('handler')
+            ->with('options')
+            ->first();
     }
 
     /**
@@ -240,6 +245,7 @@ class NodeDao
             try{
                 $prev->save();
                 Node::where('id',$id)->delete();
+                NodeOption::where('node_id',$id)->delete(); // 删除选项
                 DB::commit();
                 $result = true;
             }
@@ -257,6 +263,41 @@ class NodeDao
      * @return Collection
      */
     public function getNodesByFlowId($flowId){
-        return Node::where('flow_id',$flowId)->get();
+        return Node::where('flow_id',$flowId)
+            ->with('handler')
+            ->with('options')
+            ->get();
+    }
+
+    /**
+     * 删除步骤关联的必填项数据
+     * @param $id
+     * @return mixed
+     */
+    public function deleteOption($id){
+        return NodeOption::where('id',$id)->delete();
+    }
+
+    /**
+     * 保存步骤关联的必填项数据
+     * @param $nodeOptionData
+     * @return NodeOption|null
+     */
+    public function saveNodeOption($nodeOptionData){
+        if(isset($nodeOptionData['id']) && !empty($nodeOptionData['id'])){
+            $option = NodeOption::find($nodeOptionData['id']);
+            if($option){
+                $option->name = $nodeOptionData['name'];
+                $option->type = $nodeOptionData['type'];
+                $option->save();
+                return $option;
+            }
+            else{
+                return null;
+            }
+        }
+        else{
+            return NodeOption::create($nodeOptionData);
+        }
     }
 }

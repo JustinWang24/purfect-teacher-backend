@@ -92,7 +92,10 @@ class ActionDao
             $userId = $user;
         }
         $where[] = ['user_id','=',$userId];
-        return Action::where($where)->first();
+        return Action::where($where)
+            ->with('options')
+            ->with('attachments')
+            ->first();
     }
 
     /**
@@ -210,6 +213,8 @@ class ActionDao
     public function getLastActionByUserFlow($userFlowId){
         return Action::where('transaction_id',$userFlowId)
             ->with('node')
+            ->with('options')
+            ->with('attachments')
             ->orderBy('id','desc')
             ->first();
     }
@@ -222,6 +227,8 @@ class ActionDao
     public function getFirstActionByUserFlow($userFlowId){
         return Action::where('transaction_id',$userFlowId)
             ->with('node')
+            ->with('options')
+            ->with('attachments')
             ->orderBy('id','asc')
             ->first();
     }
@@ -232,7 +239,11 @@ class ActionDao
      * @return Action
      */
     public function getByActionIdAndUserId($actionId, $userId){
-        return Action::where('id',$actionId)->where('user_id',$userId)->first();
+        return Action::where('id',$actionId)
+            ->where('user_id',$userId)
+            ->with('options')
+            ->with('attachments')
+            ->first();
     }
 
     /**
@@ -240,6 +251,9 @@ class ActionDao
      * @return Action
      */
     public function getByActionId($actionId){
-        return Action::find($actionId);
+        return Action::where('id',$actionId)
+            ->with('options')
+            ->with('attachments')
+            ->first();
     }
 }
