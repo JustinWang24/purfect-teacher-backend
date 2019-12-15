@@ -17,6 +17,7 @@ if(document.getElementById('pipeline-flow-open-app')){
                     content:'',
                     attachments:[],
                     urgent: false,
+                    options:[]
                 },
                 showFileManagerFlag: false,
                 isLoading: false,
@@ -30,6 +31,8 @@ if(document.getElementById('pipeline-flow-open-app')){
             this.action.node_id = dom.dataset.nodeid;
             this.action.flow_id = dom.dataset.flowid;
             this.appRequest = !Util.isEmpty(dom.dataset.apprequest);
+
+            this.action.options = JSON.parse(dom.dataset.nodeoptions);
         },
         methods:{
             closeWindow: function(){
@@ -38,7 +41,29 @@ if(document.getElementById('pipeline-flow-open-app')){
                 window.close();
             },
             onStartActionSubmit: function () {
+                // 验证
+                let missingOption = false;
+
+                for(let i=0;i<this.action.options.length;i++){
+                    if(Util.isEmpty(this.action.options[i].value)){
+                        missingOption = '请填写' + this.action.options[i].name;
+                        break;
+                    }
+                }
+
+
+                if(missingOption){
+                    this.$message.error(missingOption);
+                    return;
+                }
+
+                if(Util.isEmpty(this.action.content)){
+                    this.$message.error('请填写原因说明文字');
+                    return;
+                }
+
                 this.isLoading = true;
+
                 start(this.action, this.appRequest).then(res => {
                     if(Util.isAjaxResOk(res)){
                         this.action.id = res.data.data.id;

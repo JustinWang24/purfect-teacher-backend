@@ -61,4 +61,10 @@ interface INode extends IPersistent
      * @return INodeHandler
      */
     public function getHandler(): INodeHandler;
+
+    /**
+     * 获取步骤所要求的可能的所有必填项
+     * @return array
+     */
+    public function getOptions();
 }

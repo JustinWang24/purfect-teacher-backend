@@ -1,7 +1,7 @@
 /**
  * 工作流程管理
  */
-import {deleteFlow, deleteNode, loadNodes, saveFlow, saveNode, updateNode} from "../../common/flow";
+import { deleteFlow, deleteNode, loadNodes, saveFlow, saveNode, updateNode, saveNodeOption, deleteNodeOption } from "../../common/flow";
 import {Constants} from "../../common/constants";
 import {Util} from "../../common/utils";
 
@@ -22,12 +22,21 @@ if(document.getElementById('pipeline-flows-manager-app')){
                 schoolId: '',
                 flowFormFlag: false,
                 nodeFormFlag: false,    // 步骤编辑表单显示
+                nodeOptionsFormFlag: false,    // 步骤必填项表单显示
+                nodeOption:{ // 步骤必填项表单
+                    id:null,
+                    name:'',
+                    type:'',
+                    node_id: null,
+                },
+                nodeOptionTypes:[Constants.NODE_OPTION.TEXT, Constants.NODE_OPTION.DATE], // 步骤必填项的数据类型
                 showFileManagerFlag: false,
                 iconSelectorShowFlag: false, // 控制图标选择器的显示
                 node: {
                     id: null,
                     name: '', // 步骤名称
                     description: '', // 创建新流程时, 发起流程的第一步的说明
+                    options: [], // node 流程步骤的必填项集合
                     handlers: [], // node 流程步骤的处理人
                     organizations: [], // node 流程步骤针对的部门
                     attachments: [], // node 流程步骤关联的附件
@@ -73,6 +82,78 @@ if(document.getElementById('pipeline-flows-manager-app')){
             }
         },
         methods:{
+            // 步骤所需要的必填项的管理
+            editNodeOptions: function(node, theOption){
+                this.nodeOptionsFormFlag = true;
+                this._setEditingNode(node);
+                if(!Util.isEmpty(theOption)){
+                    this.editNodeOption(theOption);
+                }
+            },
+            editNodeOption: function(theOption){
+                this.nodeOption.id = theOption.id;
+                this.nodeOption.name = theOption.name;
+                this.nodeOption.type = theOption.type;
+                this.nodeOption.node_id = theOption.node_id;
+            },
+            removeNodeOption: function(option, index){
+                const result = confirm('此操作将彻底删除必填项目: ' + option.name + ', 是否继续?');
+                if(result === true){
+                    deleteNodeOption(option.id).then(res => {
+                        if(Util.isAjaxResOk(res)){
+                            this.node.options.splice(index, 1);
+                            this.$message({
+                                type:'success',
+                                message: '删除成功'
+                            });
+                        }
+                        else{
+                            this.$message.error(res.data.message);
+                        }
+                    })
+
+                }
+            },
+            onNodeOptionFormSubmit: function(){
+                // 准备数据
+                if(Util.isEmpty(this.nodeOption.name)){
+                    this.$message.error('选项的名称为必填项');
+                    return;
+                }
+                if(Util.isEmpty(this.nodeOption.type)){
+                    this.$message.error('请选择选项的数据类型');
+                    return;
+                }
+                this.nodeOption.node_id = this.node.id;
+                saveNodeOption(this.nodeOption).then(res => {
+                    if(Util.isAjaxResOk(res)){
+                        // 保存成功
+                        if(this.nodeOption.id !== res.data.data.id){
+                            // 新建 option 的返回结果
+                            this.node.options.push({
+                                id: res.data.data.id,
+                                name: this.nodeOption.name,
+                                type: this.nodeOption.type,
+                                node_id: this.nodeOption.node_id
+                            });
+                        }
+                        else{
+                            const idx = Util.GetItemIndexById(res.data.data.id, this.node.options);
+                            this.node.options[idx].name = this.nodeOption.name;
+                            this.node.options[idx].type = this.nodeOption.type;
+                        }
+                        this.nodeOption.id = null;
+                        this.nodeOption.name = '';
+                        this.nodeOption.type = '';
+                        this.nodeOption.node_id = null;
+                        this.$message({type:'success',message:'保存成功'});
+                    }
+                    else {
+                        this.$message.error(res.data.message);
+                    }
+                });
+            },
+            // 步骤所需要的必填项的管理 结束
             loadFlowNodes: function(flowId, flowName){
                 this.currentFlow.name = flowName;
                 this.currentFlow.id = flowId;
@@ -199,6 +280,9 @@ if(document.getElementById('pipeline-flows-manager-app')){
             },
             editNode: function(node){
                 this.nodeFormFlag = true;
+                this._setEditingNode(node);
+            },
+            _setEditingNode: function(node){
                 this.prevNodeId = node.prev_node;
                 this.node.id = node.id;
                 this.node.description = node.description;
@@ -207,6 +291,7 @@ if(document.getElementById('pipeline-flows-manager-app')){
                 this.organizationsTabArrayWhenEdit = node.handler.organizations === '' ? [] : this.splitHelper(node.handler.organizations);
                 this.node.titles = node.handler.titles === '' ? [] : this.splitHelper(node.handler.titles);
                 this.node.notice_to = node.handler.notice_to === '' ? [] : this.splitHelper(node.handler.notice_to);
+                this.node.options = node.options;
             },
             splitHelper: function(str){
                 return str.substring(0,str.length -1).split(';')

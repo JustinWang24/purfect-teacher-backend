@@ -34,6 +34,14 @@ class Node extends Model implements INode
     }
 
     /**
+     * 关联的必填选项
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function options(){
+        return $this->hasMany(NodeOption::class);
+    }
+
+    /**
      * 获取前一个节点
      * @return \Illuminate\Database\Eloquent\Relations\HasOne|null
      */
@@ -91,5 +99,13 @@ class Node extends Model implements INode
     public function getHandler(): INodeHandler
     {
         return $this->handler;
+    }
+
+    /**
+     * @return array
+     */
+    public function getOptions()
+    {
+        return $this->options;
     }
 }

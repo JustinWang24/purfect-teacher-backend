@@ -2,7 +2,12 @@
     <div class="pipeline-node-component-wrap">
         <el-card :shadow="shadow" :class="highlight ? 'border-blue' : null">
             <div v-for="(act, idx) in node.actions" :key="idx">
-                <action :act="act" :init-result="starter&&idx===0 ? '发起' : null" :highlight="highlight"></action>
+                <action
+                        :act="act"
+                        :node-options="node.options"
+                        :init-result="starter&&idx===0 ? '发起' : null"
+                        :highlight="highlight">
+                </action>
             </div>
             <div v-if="node.actions.length === 0">
                 <pending-node-actions></pending-node-actions>

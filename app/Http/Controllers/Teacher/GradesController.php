@@ -1,11 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: justinwang
- * Date: 14/12/19
- * Time: 5:33 PM
- */
-
 namespace App\Http\Controllers\Teacher;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\School\GradeRequest;
