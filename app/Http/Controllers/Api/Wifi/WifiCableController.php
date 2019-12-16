@@ -104,17 +104,30 @@ class WifiCableController extends Controller
       {
          return JsonBuilder::Error ( '参数错误' );
       }
-
       // 查询条件
-      $condition[] = [ 'addresstwoid' , '=' , $param[ 'addressid' ] ];
-      $condition[] = [ 'status' , '=' , 1 ]; // 状态(0:未开通,1:已开通)
-
-      // 获取的字段信息
-      $getWifiOrdersLocationsListInfo = WifiOrdersLocationsDao::getWifiOrdersLocationsListInfo (
-         $condition , [ 'address_port' , 'asc' ] , [ 'page' => 1 , 'limit' => 10 ] , [ 'address_port' ]
+      $condition[]           = [ 'campus_id' , '=' , $user->gradeUser->campus_id ];
+      $condition[]           = [ 'status' , '=' , 1 ];
+      $getWifiConfigsOneInfo = WifiConfigsDao::getWifiConfigsOneInfo (
+         $condition , [ 'configid' , 'desc' ] , [ 'configid' , 'config_port_count' ]
       );
-      $infos = $getWifiOrdersLocationsListInfo ? $getWifiOrdersLocationsListInfo->toArray ()[ 'data' ] : [];
+      if ( empty( $getWifiConfigsOneInfo ) && $getWifiConfigsOneInfo[ 'config_port_count' ] <= 0 )
+      {
+         return JsonBuilder::Error ( '学校端口未配置' );
+      }
 
+      // 返回数据
+      $infos = [];
+      for ($i=1;$i<=$getWifiConfigsOneInfo[ 'config_port_count' ];$i++)
+      {
+         // 查询条件
+         $condition1   = [];
+         $condition1[] = [ 'addresstwoid' , '=' , $param[ 'addressid' ] ];
+         $condition1[] = [ 'address_port' , '=' , $i ];
+         $condition1[] = [ 'status' , '=' , 1 ]; // 状态(0:未开通,1:已开通)
+         $getWifiOrdersLocationsStatistics = WifiOrdersLocationsDao::getWifiOrdersLocationsStatistics ( $condition1 , 'count' );
+
+         $infos[] = [ 'address_port' => $i , 'status' => (Int)$getWifiOrdersLocationsStatistics ];
+      }
       return JsonBuilder::Success ( $infos ,'已开通的端口');
    }
 
