@@ -4,11 +4,17 @@
 namespace App\Http\Controllers\Api\Cloud;
 
 use App\Dao\FacilityManage\FacilityDao;
+use App\Dao\Students\StudentProfileDao;
+use App\Dao\Timetable\TimeSlotDao;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Cloud\CloudRequest;
 use App\Models\School;
+use App\Models\Schools\Facility;
+use App\Models\Schools\Room;
+use App\Models\Students\StudentProfile;
 use App\Utils\JsonBuilder;
 use Endroid\QrCode\QrCode;
+use Illuminate\Support\Arr;
 
 class CloudController extends Controller
 {
@@ -28,7 +34,7 @@ class CloudController extends Controller
             return JsonBuilder::Error('设备码错误,或设备已关闭',1401);
         }
         /**
-         * @var $school School
+         * @var Facility $facility
          */
         $school = $facility->school;
         $data = [
@@ -66,10 +72,33 @@ class CloudController extends Controller
             return JsonBuilder::Error('设备码错误,或设备已关闭',1401);
         }
 
+        /**
+         * @var  Facility $facility
+         */
+        $room = $facility->room;
+
+        $timeSlotDao = new TimeSlotDao;
+
+        $item = $timeSlotDao->getItemByRoomForNow($room);
+        if (empty($item)) {
+            return JsonBuilder::Error('未找到班级',1402);
+        }
+
+        $manager = $item->grade->gradeManager;
+        $gradeUser = $item->grade->gradeUser;
+        $userIds = $gradeUser->pluck('user_id');
+        $studentProfileDao = new  StudentProfileDao;
+        $man = $studentProfileDao->getStudentGenderTotalByUserId($userIds, StudentProfile::GENDER_MAN);
+        $woman = $studentProfileDao->getStudentGenderTotalByUserId($userIds, StudentProfile::GENDER_WOMAN);
+
         $data = [
-            'class_name' => '',
-            'class_teacher' => '',
-            'class_number' => '',
+            'class_name' => $item->grade->name,
+            'class_teacher' => $manager->name,
+            'class_number' => [
+                'total' => $man + $woman,
+                'man' => $man,
+                'woman' => $woman
+            ],
             'class_img' => [
                 'class_img' => ''
             ]
@@ -97,14 +126,14 @@ class CloudController extends Controller
     public function getQrCode(CloudRequest $request)
     {
         // 二维码生成规则学校ID, 班级ID, 课程ID
-        $codeStr = 'cloud'. ',' .$timeTable->schools_id. ',' .$timeTable->grade_id. ',' .$timeTable->id;
-        $qrCode = new QrCode($codeStr);
-        $qrCode->setSize(200);
-        $qrCode->setLogoPath(public_path('assets/img/logo.png'));
-        $qrCode->setLogoSize(30, 30);
-        $code = 'data:image/png;base64,' . base64_encode($qrCode->writeString());
+//        $codeStr = 'cloud'. ',' .$timeTable->schools_id. ',' .$timeTable->grade_id. ',' .$timeTable->id;
+//        $qrCode = new QrCode($codeStr);
+//        $qrCode->setSize(200);
+//        $qrCode->setLogoPath(public_path('assets/img/logo.png'));
+//        $qrCode->setLogoSize(30, 30);
+//        $code = 'data:image/png;base64,' . base64_encode($qrCode->writeString());
 
-        return JsonBuilder::Success($code,'生成二维码');
+//        return JsonBuilder::Success($code,'生成二维码');
     }
 
 
