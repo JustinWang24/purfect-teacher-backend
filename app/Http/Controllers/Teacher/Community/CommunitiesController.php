@@ -82,7 +82,7 @@ class CommunitiesController extends Controller
     }
 
 
-    public function member(ForumRequest $request) {
+    public function members(ForumRequest $request) {
         $communityId = $request->get('id');
         $schoolId = $request->getSchoolId();
         $dao = new ForumCommunityDao();

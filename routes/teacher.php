@@ -132,6 +132,6 @@ Route::prefix('teacher')->group(function () {
     Route::get('/communities-delete','Community\CommunitiesController@delete')
         ->name('teacher.communities.delete');
     // 社团成员
-    Route::get('/communities-member','Community\CommunitiesController@member')
-        ->name('teacher.communities.member');
+    Route::get('/communities-members','Community\CommunitiesController@members')
+        ->name('teacher.communities.members');
 });
