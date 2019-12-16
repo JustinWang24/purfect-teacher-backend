@@ -98,11 +98,13 @@ class MediaRequest extends MyStandardRequest
             return new MessageBag(JsonBuilder::CODE_ERROR,'非用户本人,不能上传');
         }
         try{
-            $url = $file->store($path); // 上传并返回路径
+            $uuid = Uuid::uuid4()->toString();
+            // 这里一定要使用 storeAs, 因为 Symfony 的 Mime type guesser 似乎有 bug, 一些文件总是得到 zip 的类型
+            $url = $file->storeAs($path, $uuid.'.'.$file->getClientOriginalExtension()); // 上传并返回路径
             $data = [
                 'category_id' => $category->id,
-                'uuid'        => Uuid::uuid4()->toString(),
-                'user_id'     => $category->owner_id, // 文件和目录的所有着, 应该一直保持一致
+                'uuid'        => $uuid,
+                'user_id'     => $this->user()->id, // 文件和目录的所有着, 应该一直保持一致
                 'keywords'    => $this->getKeywords(),
                 'description' => $this->getDescription(),
                 'file_name'   => $file->getClientOriginalName(),

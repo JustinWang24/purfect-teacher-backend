@@ -7,7 +7,7 @@ use App\Utils\UI\Button;
 @section('content')
     <div class="row">
         <div class="col-sm-12 col-md-6 col-xl-6">
-            <div class="card-box">
+            <div class="card">
                 <div class="card-head">
                     <header>
                         在学校 (<a class="text-primary" href="{{ url('/school_manager/school/view') }}">{{ session('school.name') }}</a>) 的

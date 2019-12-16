@@ -17,6 +17,9 @@ class NoticeMedia extends Model
     }
 
     public function getUrlAttribute($value){
-        return asset($value);
+        if(!empty($value)){
+            return asset($value);
+        }
+        return null;
     }
 }

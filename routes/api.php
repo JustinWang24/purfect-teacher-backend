@@ -254,6 +254,9 @@ Route::prefix('network-disk')->middleware('auth:api')->group(function () {
     Route::post('/categories/delete','Api\NetworkDisk\CategoriesController@delete')
         ->name('api.categories.delete');
 
+    Route::post('/media/upload','Api\NetworkDisk\MediaController@upload')
+        ->name('api.media.file.upload');
+
     // 文件详情
     Route::post('/media/getMediaInfo','Api\NetworkDisk\MediaController@getMediaInfo')
         ->name('api.media.getMediaInfo');
@@ -356,7 +359,13 @@ Route::prefix('version')->group(function () {
 
 // APP 首页接口
 Route::prefix('home')->middleware('auth:api')->group(function () {
-    Route::post('/getHomePageInfo', 'Api\Home\IndexController@index')->name('api.home.index');
+
+    Route::post('/getHomePageInfo', 'Api\Home\IndexController@index')
+        ->name('api.home.index');
+    // 校园动态
+    Route::get('/newsPage', 'Api\Home\IndexController@newsPage')
+        ->name('api.home.newsPage');
+
 });
 
 // 消息通知
@@ -428,7 +437,7 @@ Route::prefix('pipeline')->middleware('auth:api')->group(function (){
 
 Route::prefix('notification')->middleware('auth:api')->group(function () {
     // 消息中心
-    Route::post('/list','Api\Notice\SystemNotificationController@index')
+    Route::any('/list','Api\Notice\SystemNotificationController@index')
         ->name('api.notification.list');
 });
 
@@ -437,9 +446,6 @@ Route::prefix('attendance')->middleware('auth:api')->group(function () {
     Route::post('/list','Api\AttendanceSchedule\AttendanceScheduleController@display')
         ->name('api.attendance.list');
 });
-
-
-
 
 Route::prefix('user')->group(function () {
 
@@ -508,7 +514,35 @@ Route::prefix('conferences')->middleware('auth:api')->group(function () {
         ->name('api.conferences.conferenceInfo');
 });
 
-//社区管理
+// 项目管理
+Route::prefix('oa')->middleware('auth:api')->group(function () {
+    // 创建项目
+    Route::post('/create-project','Api\OA\ProjectsController@createProject')
+        ->name('api.oa.create-project');
+    // 创建任务
+    Route::post('/create-task','Api\OA\ProjectsController@createTask')
+        ->name('api.oa.create-task');
+    // 创建任务讨论
+    Route::post('/create-discussion','Api\OA\ProjectsController@createDiscussion')
+        ->name('api.oa.create-discussion');
+    // 项目列表
+    Route::get('/project-list','Api\OA\ProjectsController@projectList')
+        ->name('api.oa.project-list');
+    // 项目下的任务列表
+    Route::get('/task-list','Api\OA\ProjectsController@taskList')
+        ->name('api.oa.task-list');
+    // 任务下的评论列表
+    Route::get('/discussion-list','Api\OA\ProjectsController@discussionList')
+        ->name('api.oa.discussion-list');
+    // 项目详情
+    Route::get('/project-info','Api\OA\ProjectsController@projectInfo')
+        ->name('api.oa.project-info');
+    // 项目详情修改
+    Route::post('/update-project','Api\OA\ProjectsController@updateProject')
+        ->name('api.oa.update-project');
+});
+
+// 社区
 Route::prefix('forum')->middleware('auth:api')->group(function () {
     Route::get('/comments/{id}','Api\Forum\ForumCommentController@getComments')
         ->name('api.forum.comments');
@@ -520,9 +554,16 @@ Route::prefix('forum')->middleware('auth:api')->group(function () {
         ->name('api.forum.comments/addlike');
     Route::get('/comments/dellike/{id}','Api\Forum\ForumCommentController@delLike')
         ->name('api.forum.comments/dellike');
+
     // 发帖
     Route::post('/posted','Api\Forum\ForumController@index')
-        ->name('api.add.posted');
-    Route::post('/community/approve','Api\Forum\CommunityController@optPic')
+        ->name('api.add.posted.forum');
+    // 列表
+    Route::post('/list','Api\Forum\ForumController@list')
+        ->name('api.list.forum');
+    // 详情
+    Route::post('/details','Api\Forum\ForumController@details')
+        ->name('api.details.forum');
+    Route::post('/community/approve','Api\Forum\CommunityController@approve')
         ->name('api.forum.community.approve');
 });

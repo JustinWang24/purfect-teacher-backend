@@ -2,9 +2,6 @@
 @section('content')
 <div id="app-init-data-holder" data-flowid="{{ $flow->id }}" data-nodeid="{{ $node->id }}" data-school="{{ $user->getSchoolId() }}" data-apprequest="1"></div>
 <div id="{{ $appName }}" class="school-intro-container">
-    <div class="header">
-        <h2 class="title">{{ $flow->name }} <i class="el-icon-loading" v-if="isLoading"></i></h2>
-    </div>
     <div class="main p-15">
         <h5>申请人: {{ $user->name }}</h5>
         <el-form v-if="!done" ref="startActionForm" :model="action" label-width="80px">
@@ -54,7 +51,7 @@
         <el-button class="full-width" type="primary" @click="onStartActionSubmit">发起</el-button>
     </div>
     @include(
-        'reusable_elements.section.file_manager_component',
+        'reusable_elements.section.file_manager_component_mobile',
         ['pickFileHandler'=>'pickFileHandler']
     )
 </div>

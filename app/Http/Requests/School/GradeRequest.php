@@ -14,4 +14,7 @@ class GradeRequest extends MyStandardRequest
     public function getFormData(){
         return $this->get('grade');
     }
+    public function getAdviserForm(){
+        return $this->get('adviser');
+    }
 }

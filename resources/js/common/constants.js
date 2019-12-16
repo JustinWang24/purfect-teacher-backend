@@ -72,7 +72,7 @@ export const Constants = {
             CREATE_CATEGORY: '/api/network-disk/categories/create',
             EDIT_CATEGORY: '/api/network-disk/categories/edit',
             DELETE_CATEGORY: '/api/network-disk/categories/delete',
-            FILE_UPLOAD: '/network-disk/media/upload',
+            FILE_UPLOAD: '/api/network-disk/media/upload',
             FILE_MOVE: '/api/network-disk/media/move',
             FILE_DELETE: '/api/network-disk/media/delete',
             FILE_SEARCH: '/api/network-disk/media/search',
@@ -147,6 +147,9 @@ export const Constants = {
             WATCH: '/api/pipeline/flow/watch', // 查看一个流程的最新状态
             CANCEL_ACTION: '/api/pipeline/flow/cancel-action', // 取消一个流程中的 action
             VIEW_ACTION: '/api/pipeline/flow/view-action', // 查看一个流程中的 action
+        },
+        MESSAGE: {
+            LOAD: '/api/notification/list'
         }
     },
     YEARS: ['N.A','一年级','二年级','三年级','四年级','五年级','六年级'],
@@ -166,7 +169,7 @@ export const Constants = {
     STUDENT_PROFILE: 'purfect.profile',
     TYPE_FILE: 'file',  // 文件类型
     TYPE_CATEGORY: 'category', // 目录类型
-    MAX_UPLOAD_FILE_SIZE: 10 * 1024 * 1024, // 最大 10 兆文件上传
+    MAX_UPLOAD_FILE_SIZE: 20 * 1024 * 1024, // 最大 10 兆文件上传
     FILE_TYPE:{
         GENERAL: 1,
         IMAGE: 2,
@@ -220,5 +223,11 @@ export const Constants = {
         REJECTED: 2,
         REJECTED_TXT: '驳回',
         REJECTED_CLASS: 'text-danger',
+    },
+    ADVISER: {
+        DEPARTMENT: 1, // 系主任
+        GRADE: 2, // 班主任
+        STUDY_GROUP: 3, // 教研组长
+        STUDENTS: 4, // 班长
     }
 };
