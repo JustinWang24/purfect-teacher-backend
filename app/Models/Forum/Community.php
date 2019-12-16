@@ -10,7 +10,8 @@ class Community extends Model
 {
     protected $table = 'communities';
     protected $fillable = [
-        'school_id', 'name', 'detail', 'logo', 'pic1', 'pic2', 'pic3', 'user_id', 'status'
+        'school_id', 'name', 'detail', 'logo', 'pic1', 'pic2', 'pic3',
+        'user_id', 'status', 'forum_type_id'
     ];
 
     const STATUS_UNCHECKED = 0;
@@ -19,7 +20,7 @@ class Community extends Model
 
     const STATUS_UNCHECKED_TEXT = '未审核';
     const STATUS_CHECK_TEXT = '已审核';
-    const STATUS_CLOSE_TEXT = '已关闭';
+    const STATUS_CLOSE_TEXT = '已拒绝';
 
 
     public function allStatus() {

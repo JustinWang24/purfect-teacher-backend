@@ -46,7 +46,7 @@ class ForumCommunityDao
     {
         return Community_member::where('school_id', $schoolId)
             ->where('community_id', $communityId)
-            ->all();
+            ->get();
     }
 
     public function joinCommunity($data)
@@ -115,11 +115,11 @@ class ForumCommunityDao
         try{
             DB::beginTransaction();
             // forum_type_id为空的，创建类型
-            if(is_null($data['forum_type_id'])) {
+            if(is_null($data['forum_type_id']) && $data['status'] == Community::STATUS_CHECK) {
                 $type = [
                     'school_id' => $data['school_id'],
                     'title'     => $data['name'],
-//                    'type'      => ForumType::
+                    'type'      => ForumType::TYPE_TEAM
                 ];
                 $re = ForumType::create($type);
                 $data['forum_type_id'] = $re->id;
@@ -139,19 +139,21 @@ class ForumCommunityDao
 
     /**
      * 删除社团
-     * @param $communityId
+     * @param Community
      * @return MessageBag
      */
-    public function deleteCommunity($communityId){
+    public function deleteCommunity($community){
 
         $messageBag = new MessageBag(JsonBuilder::CODE_ERROR);
         try{
             DB::beginTransaction();
             // 删除社团表
-            Community::where('id', $communityId)->delete();
+            Community::where('id', $community->id)->delete();
             // 删除社团成员表
-            Community_member::where('community_id', $communityId)->delete();
-            // todo 删除社团的分类  forum_type
+            Community_member::where('community_id', $community->id)->delete();
+            // 删除社团的分类
+            ForumType::where('id', $community->forum_type_id)->delete();
+            // todo 删除图片资源
             DB::commit();
             $messageBag->setCode(JsonBuilder::CODE_SUCCESS);
         } catch (\Exception $e) {

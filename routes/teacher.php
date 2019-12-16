@@ -131,4 +131,7 @@ Route::prefix('teacher')->group(function () {
     // 删除社团
     Route::get('/communities-delete','Community\CommunitiesController@delete')
         ->name('teacher.communities.delete');
+    // 社团成员
+    Route::get('/communities-member','Community\CommunitiesController@member')
+        ->name('teacher.communities.member');
 });

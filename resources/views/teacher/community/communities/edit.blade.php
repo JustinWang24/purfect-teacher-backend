@@ -43,11 +43,6 @@ use App\Utils\UI\Button;
                             </div>
                         </div>
 
-                        <div class="form-group">
-                            <label for="forum-type">logo</label>
-
-                        </div>
-
 
                          <?php
                         Button::Print(['id'=>'btn-edit-forum','text'=>trans('general.submit')], Button::TYPE_PRIMARY);

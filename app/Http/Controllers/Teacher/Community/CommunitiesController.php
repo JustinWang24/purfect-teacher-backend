@@ -60,11 +60,18 @@ class CommunitiesController extends Controller
     }
 
 
-
+    /**
+     * 删除社团
+     * @param ForumRequest $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function delete(ForumRequest $request) {
         $communityId = $request->get('id');
+        $schoolId = $request->getSchoolId();
         $dao = new ForumCommunityDao();
-        $result = $dao->deleteCommunity($communityId);
+        $community = $dao->getCommunity($schoolId,$communityId,false);
+
+        $result = $dao->deleteCommunity($community);
         if($result->isSuccess()) {
              FlashMessageBuilder::Push($request, FlashMessageBuilder::SUCCESS,'删除成功');
         } else {
@@ -72,5 +79,18 @@ class CommunitiesController extends Controller
             FlashMessageBuilder::Push($request, FlashMessageBuilder::DANGER,'删除失败'.$msg);
         }
         return redirect()->route('teacher.community.communities');
+    }
+
+
+    public function member(ForumRequest $request) {
+        $communityId = $request->get('id');
+        $schoolId = $request->getSchoolId();
+        $dao = new ForumCommunityDao();
+        $members = $dao->getCommunityMembers($schoolId, $communityId);
+
+        $this->dataForView['pageTitle'] = '社团成员';
+        $this->dataForView['members'] = $members;
+
+        return view('teacher.community.communities.members', $this->dataForView);
     }
 }
