@@ -566,6 +566,14 @@ Route::prefix('forum')->middleware('auth:api')->group(function () {
         ->name('api.details.forum');
     Route::post('/community/approve','Api\Forum\CommunityController@approve')
         ->name('api.forum.community.approve');
+    Route::get('/community/joinlist','Api\Forum\CommunityController@joinCommunityList')
+        ->name('api.forum.community.joinlist');//团长可以看自己的社团申请列表
+    Route::get('/community/join','Api\Forum\CommunityController@joinCommunity')
+        ->name('api.forum.community.join');//申请加入一个社群
+    Route::get('/community/reject','Api\Forum\CommunityController@rejectCommunity')
+        ->name('api.forum.community.reject');//团长拒绝用户加入
+    Route::get('/community/accept','Api\Forum\CommunityController@acceptCommunity')
+        ->name('api.forum.community.accept');//团长同意用户加入
     Route::get('/community/communities','Api\Forum\CommunityController@getCommunities')
         ->name('api.forum.community.communities');
     Route::get('/community/community/{id}','Api\Forum\CommunityController@getCommunity')
@@ -575,4 +583,10 @@ Route::prefix('forum')->middleware('auth:api')->group(function () {
 Route::prefix('social')->middleware('auth:api')->group(function () {
     Route::get('/follow','Api\Forum\CommunityController@followUser')
         ->name('api.social.follow');
+    Route::get('/unfollow','Api\Forum\CommunityController@unFollowUser')
+        ->name('api.social.unfollow');
+    Route::get('/like','Api\Forum\CommunityController@like')
+        ->name('api.social.like');
+    Route::get('/unlike','Api\Forum\CommunityController@unlike')
+        ->name('api.social.unlike');
 });
