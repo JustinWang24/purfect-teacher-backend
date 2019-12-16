@@ -117,5 +117,22 @@ class ForumDao
         }
         return $messageBag;
     }
+    /**
+     * 团长发表的帖子成为公告，群成员发的帖子成为动态
+     *
+     * @param $typeId
+     * @param $userId
+     * @return mixed
+     */
+    public function selectByTypeIdAndUser($typeId,$userId,$flag='=')
+    {
+        return Forum::where('type_id', $typeId)
+            ->where('status', Forum::STATUS_PASS)
+            ->where('user_id',$flag, $userId)
+            ->select('id', 'content', 'see_num', 'type_id', 'created_at', 'user_id')
+            ->orderBy('is_up', 'desc')
+            ->orderBy('created_at', 'desc')
+            ->paginate(ConfigurationTool::DEFAULT_PAGE_SIZE);
 
+    }
 }

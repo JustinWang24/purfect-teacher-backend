@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\Forum;
 
 
 use App\Dao\Forum\ForumCommunityDao;
+use App\Dao\Forum\ForumDao;
 use App\Dao\Social\SocialDao;
 use App\Dao\Students\StudentProfileDao;
 use App\Dao\Users\UserDao;
@@ -128,6 +129,13 @@ class CommunityController extends Controller
             $members[$k]['user_avatar']= asset($studentDao->getStudentInfoByUserId($member['user_id'])->avatar);
         }
         $data['members'] =  $members;
+
+        $forumDao = new ForumDao();
+        //公告获取
+        $forumFirst = $forumDao->selectByTypeIdAndUser($communityArr['type'],$communityArr['user_id']);
+        $forumSecand = $forumDao->selectByTypeIdAndUser($communityArr['type'],$communityArr['user_id'],'<>');
+        $data['announcement'] = $forumFirst;
+        $data['news'] = $forumSecand;
 
         return JsonBuilder::Success($data);
     }
