@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Api\Timetable;
 
 use App\BusinessLogic\TimetableLogic\SpecialItemsLoadLogic;
-use App\BusinessLogic\TimetableLogic\TimetableBuilderLogic;
 use App\BusinessLogic\TimetableLogic\TimetableItemBeforeCreate;
 use App\BusinessLogic\TimetableLogic\TimetableItemBeforeUpdate;
 use App\BusinessLogic\TimetableViewLogic\Factory;

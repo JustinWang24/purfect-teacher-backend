@@ -155,6 +155,11 @@ Route::prefix('timetable')->middleware('auth:api')->group(function () {
     // 尝试加载课程表的特定调课项: 查询条件是 ids, 即调课项的 id 集合
     Route::post('/load-special-cases','Api\Timetable\TimetableItemsController@load_special_cases')
         ->name('api.timetable.load.special.cases');
+
+    // 给 APP 和前端页面使用的 API
+    // 1: 根据学生的 api token, 获取今天的课表
+    Route::any('/load-by-student','Api\Timetable\FrontendController@load_by_student')
+        ->name('api.timetable.load-by-student');
 });
 
 // 招生API
@@ -330,7 +335,6 @@ Route::prefix('enrolment-step')->group(function () {
 });
 
 Route::prefix('students')->middleware('auth:api')->group(function () {
-
     // 创建申请
     Route::post('applications-create','Api\Application\ApplicationController@create')
             ->name('api.students.applications-create');
@@ -480,9 +484,9 @@ Route::prefix('user')->group(function () {
 });
 
 
-    // 发送短信
-    Route::post('/index/sms', 'Api\Home\IndexController@sendSms')
-        ->name('api.user.edit.password');
+// 发送短信
+Route::post('/index/sms', 'Api\Home\IndexController@sendSms')
+    ->name('api.user.edit.password');
 
 
 // 地区列表

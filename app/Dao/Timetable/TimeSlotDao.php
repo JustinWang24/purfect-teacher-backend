@@ -9,6 +9,7 @@
 namespace App\Dao\Timetable;
 use App\Models\School;
 use App\Models\Timetable\TimeSlot;
+use App\Utils\Time\GradeAndYearUtil;
 use Illuminate\Support\Collection;
 
 class TimeSlotDao
@@ -63,7 +64,12 @@ class TimeSlotDao
             ->get();
 
         if(!$simple){
-            return $slots;
+            $data = [];
+            foreach ($slots as $slot) {
+                $slot->current = $this->isCurrent($slot);
+                $data[] = $slot;
+            }
+            return $data;
         }
         $result = [];
 
@@ -74,10 +80,18 @@ class TimeSlotDao
             }
             $result[] = [
                 'id'=>$slot->id,
-                'name'=>$name
+                'name'=>$name,
+                'from'=>$slot->from,
+                'to'=>$slot->to,
+                'type'=>$slot->type,
+                'current'=>$this->isCurrent($slot),
             ];
         }
-
         return $result;
+    }
+
+    protected function isCurrent($timeSlot){
+        $time = now(GradeAndYearUtil::TIMEZONE_CN)->format('H:i:s');
+        return $timeSlot->from <= $time && $time < $timeSlot->to;
     }
 }

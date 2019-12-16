@@ -13,6 +13,7 @@ use App\BusinessLogic\TimetableViewLogic\Contracts\ITimetableBuilder;
 use App\BusinessLogic\TimetableViewLogic\Impl\FromCourseView;
 use App\BusinessLogic\TimetableViewLogic\Impl\FromGradePoint;
 use App\BusinessLogic\TimetableViewLogic\Impl\FromRoomPoint;
+use App\BusinessLogic\TimetableViewLogic\Impl\FromStudentPoint;
 use App\BusinessLogic\TimetableViewLogic\Impl\FromTeacherPoint;
 use Illuminate\Http\Request;
 
@@ -36,6 +37,9 @@ class Factory
         }
         elseif ($request->has('room')){
             $instance = new FromRoomPoint($request);
+        }
+        elseif ($request->has('student')){
+            $instance = new FromStudentPoint($request);
         }
         return $instance;
     }
