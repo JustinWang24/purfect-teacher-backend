@@ -144,4 +144,14 @@ class StudentProfileDao
 
         }
     }
+
+    /**
+     * @param array $userId
+     * @param $gender
+     * @return int
+     */
+    public function getStudentGenderTotalByUserId($userId = [], $gender)
+    {
+        return StudentProfile::whereIn('user_id', $userId)->where('gender', $gender)->count();
+    }
 }

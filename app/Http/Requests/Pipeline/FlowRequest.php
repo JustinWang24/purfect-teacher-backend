@@ -23,6 +23,10 @@ class FlowRequest extends MyStandardRequest
         return $this->get('action',null);
     }
 
+    public function getNodeOptionFormData(){
+        return $this->get('node_option',false);
+    }
+
     /**
      * 启动一个流程时, 获取提交的流程 ID
      * @return mixed

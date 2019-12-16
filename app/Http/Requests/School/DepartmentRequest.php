@@ -14,4 +14,8 @@ class DepartmentRequest extends MyStandardRequest
     public function getFormData(){
         return $this->get('department');
     }
+
+    public function getAdviserForm(){
+        return $this->get('adviser');
+    }
 }

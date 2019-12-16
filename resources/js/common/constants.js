@@ -72,7 +72,7 @@ export const Constants = {
             CREATE_CATEGORY: '/api/network-disk/categories/create',
             EDIT_CATEGORY: '/api/network-disk/categories/edit',
             DELETE_CATEGORY: '/api/network-disk/categories/delete',
-            FILE_UPLOAD: '/network-disk/media/upload',
+            FILE_UPLOAD: '/api/network-disk/media/upload',
             FILE_MOVE: '/api/network-disk/media/move',
             FILE_DELETE: '/api/network-disk/media/delete',
             FILE_SEARCH: '/api/network-disk/media/search',
@@ -132,10 +132,12 @@ export const Constants = {
         FLOW: {
             SAVE: '/school_manager/pipeline/flows/save-flow',
             SAVE_NODE: '/school_manager/pipeline/flows/save-node',
+            SAVE_NODE_OPTION: '/school_manager/pipeline/flows/save-node-option',
             UPDATE_NODE: '/school_manager/pipeline/flows/update-node',
             LOAD_FLOW_NODES: '/school_manager/pipeline/flows/load-nodes',
             DELETE_FLOW: '/school_manager/pipeline/flows/delete-flow',
             DELETE_NODE: '/school_manager/pipeline/flows/delete-node',
+            DELETE_NODE_OPTION: '/school_manager/pipeline/flows/delete-node-option',
             DELETE_NODE_ATTACHMENT: '/school_manager/pipeline/flows/delete-node-attachment',
             // Action相关
             OPEN: '/api/pipeline/flow/open', // 打开流程
@@ -169,7 +171,7 @@ export const Constants = {
     STUDENT_PROFILE: 'purfect.profile',
     TYPE_FILE: 'file',  // 文件类型
     TYPE_CATEGORY: 'category', // 目录类型
-    MAX_UPLOAD_FILE_SIZE: 10 * 1024 * 1024, // 最大 10 兆文件上传
+    MAX_UPLOAD_FILE_SIZE: 20 * 1024 * 1024, // 最大 10 兆文件上传
     FILE_TYPE:{
         GENERAL: 1,
         IMAGE: 2,
@@ -223,5 +225,16 @@ export const Constants = {
         REJECTED: 2,
         REJECTED_TXT: '驳回',
         REJECTED_CLASS: 'text-danger',
+    },
+    NODE_OPTION: {
+        TEXT:'文本',
+        DATE:'日期',
+        TIME:'时间'
+    },
+    ADVISER: {
+        DEPARTMENT: 1, // 系主任
+        GRADE: 2, // 班主任
+        STUDY_GROUP: 3, // 教研组长
+        STUDENTS: 4, // 班长
     }
 };

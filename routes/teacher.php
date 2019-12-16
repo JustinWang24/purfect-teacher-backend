@@ -21,6 +21,7 @@ Route::prefix('teacher')->group(function () {
     Route::post('add/step_user', 'OfficialDocumentController@addStepUser')->name('teacher.add.step.user');                  // 添加流程中的步骤负责人
     Route::post('update/step_user', 'OfficialDocumentController@updateStepUser')->name('teacher.update.step.user');         // 修改流程中的步骤负责人
 
+    Route::any('grade/set-monitor', 'GradesController@set_monitor')->name('teacher.grade.set-monitor');     // 设置班长
 
     //考试管理
     Route::get('exam/index', 'ExamController@index')->name('teacher.exam.index');     // 列表
@@ -100,4 +101,37 @@ Route::prefix('teacher')->group(function () {
         ->name('teacher.elective-course.create');
     Route::get('elective-course/edit', 'ElectiveCoursesController@edit')
         ->name('teacher.elective-course.edit');
+
+    // 社区管理
+    // 动态列表
+    Route::get('/dynamic','Community\DynamicController@index')
+        ->name('teacher.community.dynamic');
+    // 动态详情
+    Route::any('/dynamic-edit','Community\DynamicController@edit')
+        ->name('teacher.dynamic.edit');
+    // 删除
+    Route::get('/delete','Community\DynamicController@delete')
+        ->name('teacher.dynamic.delete');
+
+    // 社区分类列表
+    Route::get('/dynamic-type','Community\TypeController@index')
+        ->name('teacher.community.dynamic.type');
+    // 社区分类添加页面
+    Route::any('/dynamic-type-add','Community\TypeController@add')
+        ->name('teacher.community.dynamic.type.add');
+    // 社区分类保存
+    Route::any('/dynamic-type-save','Community\TypeController@save')
+        ->name('teacher.community.dynamic.type.save');
+    // 社团列表
+    Route::get('/communities-list','Community\CommunitiesController@list')
+        ->name('teacher.community.communities');
+    // 社团详情
+    Route::any('/communities-edit','Community\CommunitiesController@edit')
+        ->name('teacher.communities.edit');
+    // 删除社团
+    Route::get('/communities-delete','Community\CommunitiesController@delete')
+        ->name('teacher.communities.delete');
+    // 社团成员
+    Route::get('/communities-members','Community\CommunitiesController@members')
+        ->name('teacher.communities.members');
 });

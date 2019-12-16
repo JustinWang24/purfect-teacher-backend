@@ -152,6 +152,37 @@ class FlowsController extends Controller
     }
 
     /**
+     * @param FlowRequest $request
+     * @return string
+     */
+    public function save_node_option(FlowRequest $request){
+        $nodeOptionFormData = $request->getNodeOptionFormData();
+
+        if($nodeOptionFormData){
+            $dao = new NodeDao();
+            try{
+                $option = $dao->saveNodeOption($nodeOptionFormData);
+                return $option ? JsonBuilder::Success(['id'=>$option->id]) : JsonBuilder::Error('找不到指定的选项数据');
+            }
+            catch (\Exception $exception){
+                return JsonBuilder::Error($exception->getMessage());
+            }
+        }
+        return JsonBuilder::Error('找不到提交的表单信息');
+    }
+
+    /**
+     * @param FlowRequest $request
+     * @return string
+     */
+    public function delete_node_option(FlowRequest $request){
+        $nodeOptionId = $request->get('node_option_id');
+        $dao = new NodeDao();
+        $result = $dao->deleteOption($nodeOptionId);
+        return $result ? JsonBuilder::Success() : JsonBuilder::Error('找不到指定的选项数据');
+    }
+
+    /**
      * 删除流程
      * @param FlowRequest $request
      * @return string

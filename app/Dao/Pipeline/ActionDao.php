@@ -10,6 +10,7 @@ namespace App\Dao\Pipeline;
 use App\Dao\NetworkDisk\MediaDao;
 use App\Models\Pipeline\Flow\Action;
 use App\Models\Pipeline\Flow\ActionAttachment;
+use App\Models\Pipeline\Flow\ActionOption;
 use App\Models\Pipeline\Flow\UserFlow;
 use App\User;
 use App\Utils\JsonBuilder;
@@ -92,7 +93,10 @@ class ActionDao
             $userId = $user;
         }
         $where[] = ['user_id','=',$userId];
-        return Action::where($where)->first();
+        return Action::where($where)
+            ->with('options')
+            ->with('attachments')
+            ->first();
     }
 
     /**
@@ -129,6 +133,17 @@ class ActionDao
                     }
                 }
             }
+            // 保存申请人提交的必选项
+            if(isset($data['options'])){
+                foreach ($data['options'] as $option) {
+                    $actionOptionData = [
+                        'action_id' => $action->id,
+                        'option_id' => $option['id'],
+                        'value' => $option['value'],
+                    ];
+                    ActionOption::create($actionOptionData);
+                }
+            }
 
             DB::commit();
             return $action;
@@ -150,6 +165,7 @@ class ActionDao
         try{
             Action::where('id',$id)->delete();
             ActionAttachment::where('action_id',$id)->delete();
+            ActionOption::where('action_id',$id)->delete();
             DB::commit();
             return true;
         }catch (\Exception $exception){
@@ -193,11 +209,13 @@ class ActionDao
     public function getHistoryByUserFlow($userFlowId, $actionsOnly = false){
         if($actionsOnly){
             return Action::where('transaction_id',$userFlowId)
+                ->with('options')
                 ->orderBy('id','asc')
                 ->get();
         }
         return Action::where('transaction_id',$userFlowId)
             ->with('node')
+            ->with('options')
             ->orderBy('id','asc')
             ->get();
     }
@@ -210,6 +228,8 @@ class ActionDao
     public function getLastActionByUserFlow($userFlowId){
         return Action::where('transaction_id',$userFlowId)
             ->with('node')
+            ->with('options')
+            ->with('attachments')
             ->orderBy('id','desc')
             ->first();
     }
@@ -222,6 +242,8 @@ class ActionDao
     public function getFirstActionByUserFlow($userFlowId){
         return Action::where('transaction_id',$userFlowId)
             ->with('node')
+            ->with('options')
+            ->with('attachments')
             ->orderBy('id','asc')
             ->first();
     }
@@ -232,7 +254,11 @@ class ActionDao
      * @return Action
      */
     public function getByActionIdAndUserId($actionId, $userId){
-        return Action::where('id',$actionId)->where('user_id',$userId)->first();
+        return Action::where('id',$actionId)
+            ->where('user_id',$userId)
+            ->with('options')
+            ->with('attachments')
+            ->first();
     }
 
     /**
@@ -240,6 +266,9 @@ class ActionDao
      * @return Action
      */
     public function getByActionId($actionId){
-        return Action::find($actionId);
+        return Action::where('id',$actionId)
+            ->with('options')
+            ->with('attachments')
+            ->first();
     }
 }

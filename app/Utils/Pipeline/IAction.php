@@ -63,4 +63,10 @@ interface IAction extends IPipelineMessageBag, IPersistent
     public function getTransactionId(): string;
 
     public function getUserFlow(): IUserFlow;
+
+    /**
+     * 获取执行时所包含的步骤要求的必填项的值
+     * @return array
+     */
+    public function getOptions();
 }

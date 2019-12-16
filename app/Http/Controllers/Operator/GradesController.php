@@ -8,7 +8,9 @@ use App\BusinessLogic\UsersListPage\Factory;
 use App\Dao\Schools\MajorDao;
 use App\Models\Schools\Grade;
 use App\Dao\Schools\GradeDao;
+use App\Models\Schools\GradeManager;
 use App\Utils\FlashMessageBuilder;
+use App\Utils\JsonBuilder;
 
 class GradesController extends Controller
 {
@@ -71,7 +73,36 @@ class GradesController extends Controller
         $this->dataForView['parent'] = $logic->getParentModel();
         $this->dataForView['appendedParams'] = $logic->getAppendedParams();
         $this->dataForView['returnPath'] = $logic->getReturnPath();
-
         return view($logic->getViewPath(),array_merge($this->dataForView, $logic->getUsers()));
+    }
+
+    public function set_adviser(GradeRequest $request){
+        if($request->isMethod('POST')){
+            $adviserData = $request->getAdviserForm();
+            $result = (new GradeDao())->setAdviser($adviserData);
+
+            return $result->isSuccess() ? JsonBuilder::Success():JsonBuilder::Error($result->getMessage());
+        }
+        elseif ($request->isMethod('GET')){
+            $this->dataForView['pageTitle'] = '设置班主任';
+            $grade = (new GradeDao())->getGradeById($request->get('grade'));
+            $this->dataForView['grade'] = $grade;
+
+            if($grade->gradeManager){
+                $gradeManager = $grade->gradeManager;
+            }
+            else{
+                // 如果系主任记录还不存在, 那么构造一个新的
+                $gradeManager = new GradeManager();
+                $gradeManager->grade_id = $grade->id;
+                $gradeManager->school_id = $request->session()->get('school.id');
+                $gradeManager->adviser_id = 0;
+                $gradeManager->adviser_name = '';
+                $gradeManager->monitor_id = 0;
+                $gradeManager->monitor_name = '';
+            }
+            $this->dataForView['gradeManager'] = $gradeManager;
+            return view('school_manager.grade.set_adviser',$this->dataForView);
+        }
     }
 }

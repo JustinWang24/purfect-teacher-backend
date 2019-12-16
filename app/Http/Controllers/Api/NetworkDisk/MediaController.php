@@ -10,7 +10,9 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\NetworkDisk\MediaRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
-use Psy\Util\Json;
+use App\Utils\ReturnData\MessageBag;
+use App\User;
+use Ramsey\Uuid\Uuid;
 
 class MediaController extends Controller
 {
@@ -21,7 +23,43 @@ class MediaController extends Controller
      * @throws \Exception
      */
     public function upload(MediaRequest $request) {
-        $msgBag = $request->getUpload();
+        $file = $request->getFile();
+        /**
+         * @var User $user
+         */
+        $user = $request->user();
+
+        $path = Media::DEFAULT_UPLOAD_PATH_PREFIX.$user->id; // 上传路径
+        $categoryDao = new CategoryDao();
+        $category = $categoryDao->getCateInfoByUuId($request->getCategory());
+
+        $auth = $category->isOwnedByUser($user);
+        if(!$auth && !$user->isSchoolAdminOrAbove()) {
+            $msgBag =  new MessageBag(JsonBuilder::CODE_ERROR,'非用户本人,不能上传');
+        }else{
+            try{
+                $uuid = Uuid::uuid4()->toString();
+                // 这里一定要使用 storeAs, 因为 Symfony 的 Mime type guesser 似乎有 bug, 一些文件总是得到 zip 的类型
+                $url = $file->storeAs($path, $uuid.'.'.$file->getClientOriginalExtension()); // 上传并返回路径
+                $data = [
+                    'category_id' => $category->id,
+                    'uuid'        => $uuid,
+                    'user_id'     => $user->id, // 文件和目录的所有着, 应该一直保持一致
+                    'keywords'    => $request->getKeywords(),
+                    'description' => $request->getDescription(),
+                    'file_name'   => $file->getClientOriginalName(),
+                    'size'        => $file->getSize(),
+                    'url'         => Media::ConvertUploadPathToUrl($url),
+                    'type'        => Media::ParseFileType($file->getClientOriginalExtension()),
+                    'driver'      => Media::DRIVER_LOCAL,
+                ];
+                $msgBag = new MessageBag(JsonBuilder::CODE_SUCCESS);
+                $msgBag->setData($data);
+            }catch (\Exception $exception){
+                $msgBag = new MessageBag(JsonBuilder::CODE_ERROR, $exception->getMessage());
+            }
+        }
+
         if($msgBag->isSuccess()) {
             $mediaDao = new MediaDao();
             $result = [

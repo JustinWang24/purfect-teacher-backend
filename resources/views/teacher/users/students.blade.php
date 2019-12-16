@@ -7,7 +7,7 @@ use App\User;
 @section('content')
     <div class="row">
         <div class="col-sm-12 col-md-12 col-xl-12">
-            <div class="card-box">
+            <div class="card">
                 <div class="card-head">
                     <header class="full-width">
                         {{ $parent->name??session('school.name') }}(学生总数: {{ $students->total() }})
@@ -27,9 +27,10 @@ use App\User;
                             <table class="table table-striped table-bordered table-hover table-checkable order-column valign-middle">
                                 <thead>
                                 <tr>
-                                    <th>#</th>
+                                    <th>学号</th>
+                                    <th>头像</th>
                                     <th>姓名</th>
-                                    <th>状态</th>
+                                    <th>联系电话</th>
                                     <th>所在班级</th>
                                     <th>待办的申请</th>
                                     <th>操作</th>
@@ -41,11 +42,17 @@ use App\User;
                                         /** @var \App\Models\Users\GradeUser $gradeUser */
                                     @endphp
                                     <tr>
-                                        <td>{{ $gradeUser->user->id }}</td>
+                                        <td>{{ $gradeUser->user->profile->serial_number }}</td>
+                                        <td>
+                                            <img src="{{ $gradeUser->user->profile->avatar }}" width="60" alt="">
+                                        </td>
                                         <td>
                                             {{ $gradeUser->user->name ?? 'n.a' }}
                                         </td>
-                                        <td>{{ $gradeUser->user->getStatusText() }}</td>
+                                        <td>
+                                            {{ $gradeUser->user->mobile }}
+                                            {{ $gradeUser->user->getStatusText() }}
+                                        </td>
                                         <td>{{ $gradeUser->studyAt() }}</td>
                                         <td>{{ count($gradeUser->enquiries) }}</td>
                                         <td class="text-center">

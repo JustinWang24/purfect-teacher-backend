@@ -11,6 +11,7 @@ use App\Models\Schools\Grade;
 use App\Models\Schools\GradeManager;
 use App\Models\Schools\Institute;
 use App\Models\Schools\Major;
+use App\Models\Students\StudentProfile;
 use App\User;
 use Illuminate\Database\Eloquent\Model;
 

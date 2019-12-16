@@ -8,7 +8,9 @@ use App\Http\Requests\School\DepartmentRequest;
 use App\Http\Controllers\Controller;
 use App\BusinessLogic\CampusListPage\Factory;
 use App\Models\Schools\Department;
+use App\Models\Schools\DepartmentAdviser;
 use App\Utils\FlashMessageBuilder;
+use App\Utils\JsonBuilder;
 
 class DepartmentsController extends Controller
 {
@@ -79,5 +81,32 @@ class DepartmentsController extends Controller
             }
         }
         return redirect()->route('school_manager.institute.departments',['uuid'=>$uuid,'by'=>'institute']);
+    }
+
+    public function set_adviser(DepartmentRequest $request){
+        if($request->isMethod('POST')){
+            $adviserData = $request->getAdviserForm();
+            $result = (new DepartmentDao())->setAdviser($adviserData);
+
+            return $result->isSuccess() ? JsonBuilder::Success():JsonBuilder::Error($result->getMessage());
+        }
+        elseif ($request->isMethod('GET')){
+            $this->dataForView['pageTitle'] = '设置系主任';
+            $department = (new DepartmentDao())->getDepartmentById($request->get('department'));
+            $this->dataForView['department'] = $department;
+
+            if($department->adviser){
+                $adviser = $department->adviser;
+            }
+            else{
+                // 如果系主任记录还不存在, 那么构造一个新的
+                $adviser = new DepartmentAdviser();
+                $adviser->department_id = $department->id;
+                $adviser->department_name = $department->name;
+                $adviser->school_id = $request->session()->get('school.id');
+            }
+            $this->dataForView['adviser'] = $adviser;
+            return view('school_manager.department.set_adviser',$this->dataForView);
+        }
     }
 }

@@ -39,6 +39,10 @@ class Action extends Model implements IAction
         return $this->belongsTo(UserFlow::class, 'transaction_id');
     }
 
+    public function options(){
+        return $this->hasMany(ActionOption::class);
+    }
+
     public function getNode(): INode
     {
         return $this->node;
@@ -112,5 +116,10 @@ class Action extends Model implements IAction
     public function getUserFlow(): IUserFlow
     {
         return $this->userFlow;
+    }
+
+    public function getOptions()
+    {
+        return $this->options;
     }
 }

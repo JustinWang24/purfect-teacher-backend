@@ -53,14 +53,14 @@
         },
         data() {
             return {
-                query: '',
+                query: this.initQuery,
             }
         },
-        watch:{
-            'initQuery': function(newValue, oldValue){
-                this.query = newValue;
-            }
-        },
+        // watch:{
+        //     'initQuery': function(newValue){
+        //         this.query = newValue;
+        //     }
+        // },
         created() {
         },
         methods:{

@@ -6,9 +6,6 @@
          data-apitoken="{{ $user->api_token }}"
          data-apprequest="1"></div>
     <div id="student-homepage-app" class="school-intro-container">
-        <div class="header">
-            <h2 class="title">我的申请</h2>
-        </div>
         <div class="main" v-if="isLoading">
             <p class="text-center text-grey">
                 <i class="el-icon-loading"></i>&nbsp;数据加载中 ...

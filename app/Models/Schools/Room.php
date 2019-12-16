@@ -2,6 +2,7 @@
 
 namespace App\Models\Schools;
 
+use App\Models\School;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -31,6 +32,14 @@ class Room extends Model
      */
     public function building(){
         return $this->belongsTo(Building::class);
+    }
+
+    /**
+     * 关联的学校
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function school(){
+        return $this->belongsTo(School::class);
     }
 
     public static function AllTypes(){
