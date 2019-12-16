@@ -99,6 +99,10 @@ class CommunityController extends Controller
         $dao = new ForumCommunityDao();
         $data = [];
         $data['community'] = $dao->getCommunity($schoolId, $id);
+        $socialDao = new SocialDao();
+        $data['socialFollow'] = $socialDao->getFollow($data['community']->user_id);
+        $data['socialFollowed'] = $socialDao->getFollowed($data['community']->user_id);
+        $data['like'] = $socialDao->getLike($data['community']->user_id);
         $data['member'] = $dao->getCommunityMembers($schoolId, $id);
         return JsonBuilder::Success($data);
     }
@@ -166,7 +170,11 @@ class CommunityController extends Controller
         }
     }
 
-
+    /**
+     * 关注用户
+     * @param Request $request
+     * @return \App\Utils\ReturnData\MessageBag
+     */
     public function followUser(Request $request)
     {
         $user = $request->user();
@@ -175,6 +183,13 @@ class CommunityController extends Controller
         $result  = $dao->follow($user->id, $toUser);
         return $result;
     }
+
+    /**
+     * 取消关注
+     * @param Request $request
+     * @return \App\Utils\ReturnData\MessageBag
+     *
+     */
     public function unFollowUser(Request $request)
     {
         $user = $request->user();
@@ -184,6 +199,11 @@ class CommunityController extends Controller
         return $result;
     }
 
+    /**
+     * 点赞
+     * @param Request $request
+     * @return mixed
+     */
     public function like(Request $request)
     {
         $user = $request->user();
@@ -192,6 +212,12 @@ class CommunityController extends Controller
         $result  = $dao->like($user->id, $toUser);
         return $result;
     }
+
+    /**
+     * 取消点赞
+     * @param Request $request
+     * @return mixed
+     */
     public function unlike(Request $request)
     {
         $user = $request->user();
