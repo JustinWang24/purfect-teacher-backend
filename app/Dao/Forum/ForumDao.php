@@ -54,24 +54,31 @@ class ForumDao
 
     /**
      * @param User $user
-     * @param $typeId
      * @return Forum
      */
-    public function select($user = null, $typeId = null)
+    public function select($user)
     {
-        if ($user) {
-            $where = [['school_id'=> $user->getSchoolId(), 'status' => Forum::STATUS_PASS]];
-        }
-
-        if ($typeId) {
-            $where = [['type_id'=> $typeId, 'status' => Forum::STATUS_PASS]];
-        }
-        
-        return Forum::where($where)
+        return Forum::where(['school_id'=> $user->getSchoolId(), 'status' => Forum::STATUS_PASS])
             ->select('id', 'content', 'see_num', 'type_id', 'created_at', 'user_id')
             ->orderBy('is_up', 'desc')
             ->orderBy('created_at', 'desc')
             ->paginate(ConfigurationTool::DEFAULT_PAGE_SIZE);
+    }
+
+    /**
+     * 根据typeId 来查询
+     * @param $typeId
+     * @return
+     */
+    public function selectByTypeId($typeId)
+    {
+        return Forum::where('type_id', $typeId)
+            ->where('status', Forum::STATUS_PASS)
+            ->select('id', 'content', 'see_num', 'type_id', 'created_at', 'user_id')
+            ->orderBy('is_up', 'desc')
+            ->orderBy('created_at', 'desc')
+            ->paginate(ConfigurationTool::DEFAULT_PAGE_SIZE);
+
     }
 
     /**
