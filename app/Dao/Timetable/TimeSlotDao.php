@@ -156,7 +156,7 @@ class TimeSlotDao
      * @param null $date
      * @return TimetableItem|null
      */
-    public function getGradeByRoomForNow(Room $room, $date = null){
+    public function getItemByRoomForNow(Room $room, $date = null){
         if(!$date){
             $date = Carbon::now();
         }
@@ -173,6 +173,7 @@ class TimeSlotDao
         $term = $schoolConfiguration->guessTerm($date->month);
 
         $timeSlots = $this->getAllStudyTimeSlots($room->school_id);
+
         $currentTimeSlot = null;
         foreach ($timeSlots as $timeSlot) {
             /**
@@ -182,12 +183,12 @@ class TimeSlotDao
                 $currentTimeSlot = $timeSlot;
             }
         }
-
+    //$currentTimeSlot->id
         return TimetableItem::where('room_id',$room->id)
             ->where('year', $year)
             ->where('term', $term)
-            ->where('weekday_index',$date->weekday()+1)
-            ->where('time_slot_id',$currentTimeSlot->id)
+            ->where('weekday_index',$date->weekday())
+            ->where('time_slot_id',20)
             ->with('timeslot')
             ->first();
     }

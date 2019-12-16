@@ -2,6 +2,7 @@
 
 namespace App\Models\Schools;
 
+use App\Models\School;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 /**
@@ -45,7 +46,11 @@ class Facility extends Model
     const TYPE_CLASS_SIGN  = 3;
     const TYPE_CLASS_CLASSROOM  = 4;
 
+    const STATUS_OPEN  = 1;
+    const STATUS_CLOSE = 0;
 
+    const STATUS_OPEN_TEXT  = '开启';
+    const STATUS_CLOSE_TEXT = '关闭';
 
     const TYPE_MONITORING_TEXT  = '监控设备';
     const TYPE_ENTRANCE_GUARD_TEXT  = '门禁设备';
@@ -66,6 +71,11 @@ class Facility extends Model
 
     public function building() {
         return $this->belongsTo(Building::class, 'building_id', 'id');
+    }
+
+    public function school()
+    {
+        return $this->belongsTo(School::class, 'school_id', 'id');
     }
 
 
