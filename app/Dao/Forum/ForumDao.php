@@ -54,11 +54,20 @@ class ForumDao
 
     /**
      * @param User $user
+     * @param $typeId
      * @return Forum
      */
-    public function select($user)
+    public function select($user = null, $typeId = null)
     {
-        return Forum::where(['school_id'=> $user->getSchoolId(), 'status' => Forum::STATUS_PASS])
+        if ($user) {
+            $where = [['school_id'=> $user->getSchoolId(), 'status' => Forum::STATUS_PASS]];
+        }
+
+        if ($typeId) {
+            $where = [['type_id'=> $typeId, 'status' => Forum::STATUS_PASS]];
+        }
+        
+        return Forum::where($where)
             ->select('id', 'content', 'see_num', 'type_id', 'created_at', 'user_id')
             ->orderBy('is_up', 'desc')
             ->orderBy('created_at', 'desc')
