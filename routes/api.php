@@ -566,4 +566,13 @@ Route::prefix('forum')->middleware('auth:api')->group(function () {
         ->name('api.details.forum');
     Route::post('/community/approve','Api\Forum\CommunityController@approve')
         ->name('api.forum.community.approve');
+    Route::get('/community/communities','Api\Forum\CommunityController@getCommunities')
+        ->name('api.forum.community.communities');
+    Route::get('/community/community/{id}','Api\Forum\CommunityController@getCommunity')
+        ->name('api.forum.community.community');
+});
+// 社区
+Route::prefix('social')->middleware('auth:api')->group(function () {
+    Route::get('/follow','Api\Forum\CommunityController@followUser')
+        ->name('api.social.follow');
 });
