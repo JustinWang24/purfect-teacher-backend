@@ -60,13 +60,12 @@ class CommunityController extends Controller
             $realFileName = $file->store($path,'community');
             $ext = pathinfo($realFileName,PATHINFO_EXTENSION);
             if (in_array($ext, ['png','jpg','jpeg','bmp'])) {
-                $data[$name] = $fileConfig['root'].DIRECTORY_SEPARATOR.$realFileName;
+//                $data[$name] = $fileConfig['root'].DIRECTORY_SEPARATOR.$realFileName;
                 $data[$name] = $realFileName;
             }else{
                 Storage::delete($fileConfig['root'].DIRECTORY_SEPARATOR.$realFileName);
             }
         }
-        dd($data);
         return $data;
     }
 
