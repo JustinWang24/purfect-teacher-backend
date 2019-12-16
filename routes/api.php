@@ -567,3 +567,28 @@ Route::prefix('forum')->middleware('auth:api')->group(function () {
     Route::post('/community/approve','Api\Forum\CommunityController@approve')
         ->name('api.forum.community.approve');
 });
+
+
+Route::prefix('cloud')->group(function () {
+
+    // 获取学校信息
+    Route::post('/getSchoolInfo','Api\Cloud\CloudController@getSchoolInfo')
+        ->name('api.cloud.school');
+    // 获取班级信息
+    Route::post('/getGradesInfo','Api\Cloud\CloudController@getGradesInfo')
+        ->name('api.cloud.grade');
+    // 获取课程信息
+    Route::post('/getCourseInfo','Api\Cloud\CloudController@getCourseInfo')
+        ->name('api.cloud.course');
+    // 签到二维码
+    Route::post('/getQrCode','Api\Cloud\CloudController@getQrCode')
+        ->name('api.cloud.qr.code');
+    // 考勤统计
+    Route::post('/getAttendanceStatistic','Api\Cloud\CloudController@getAttendanceStatistic')
+        ->name('api.cloud.attendance.statistic');
+
+    // 接收华三考勤数据
+    Route::post('/attendanceData','Api\Cloud\CloudController@attendanceData')
+        ->name('api.cloud.attendance.data');
+
+});

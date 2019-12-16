@@ -93,4 +93,17 @@ class FacilityDao
             ['id'=> Facility::TYPE_CLASS_CLASSROOM, 'val'=> Facility::TYPE_CLASS_CLASSROOM_TEXT],
         ];
     }
+
+    /**
+     * 根据设备编号获取
+     * @param $number
+     * @return Facility
+     */
+    public function getFacilityByNumber($number)
+    {
+        return Facility::where('facility_number', $number)
+            ->where('status', Facility::STATUS_OPEN)
+            ->first();
+    }
+
 }

@@ -84,7 +84,18 @@ class School extends Model
      * @param $value
      * @return string
      */
-    public function getLogoAttribute($value){
-        return asset($value);
+    public function getLogoAttribute($value)
+    {
+        return $value ? asset($value) : '';
+    }
+
+    /**
+     * video 的变形, 返回全 URL 网址
+     * @param $value
+     * @return string
+     */
+    public function getVideoAttribute($value)
+    {
+        return $value ? asset($value) : '';
     }
 }
