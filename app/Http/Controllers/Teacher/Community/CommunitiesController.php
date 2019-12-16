@@ -1,0 +1,72 @@
+<?php
+
+
+namespace App\Http\Controllers\Teacher\Community;
+
+
+use App\Dao\Forum\ForumCommunityDao;
+use App\Http\Controllers\Controller;
+use App\Http\Requests\Forum\ForumRequest;
+use App\Utils\FlashMessageBuilder;
+
+class CommunitiesController extends Controller
+{
+
+    /**
+     * @param ForumRequest $request
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function list(ForumRequest $request) {
+        $dao = new ForumCommunityDao();
+        $schoolId = $request->getSchoolId();
+        $list = $dao->getCommunityBySchoolId($schoolId);
+        $this->dataForView['pageTitle'] = '社团列表';
+        $this->dataForView['list'] = $list;
+        return view('teacher.community.communities.list', $this->dataForView);
+    }
+
+
+    /**
+     * @param ForumRequest $request
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Http\RedirectResponse|\Illuminate\View\View
+     */
+    public function edit(ForumRequest $request) {
+        $dao = new ForumCommunityDao();
+
+        if($request->isMethod('post')) {
+            $data = $request->getCommunitiesData();
+            $id = $data['id'];
+            unset($data['id']);
+            $result = $dao->updateCommunityById($id, $data);
+            if($result) {
+                 FlashMessageBuilder::Push($request, FlashMessageBuilder::SUCCESS,'编辑成功');
+            } else {
+                FlashMessageBuilder::Push($request, FlashMessageBuilder::DANGER,'编辑失败');
+            }
+            return redirect()->route('teacher.community.communities');
+
+        }
+        $schoolId = $request->getSchoolId();
+        $communityId = $request->get('id');
+        $info = $dao->getCommunity($schoolId, $communityId, false);
+        $this->dataForView['pageTitle'] = '社团详情';
+        $this->dataForView['communities'] = $info;
+
+        return view('teacher.community.communities.edit', $this->dataForView);
+    }
+
+
+
+    public function delete(ForumRequest $request) {
+        $communityId = $request->get('id');
+        $dao = new ForumCommunityDao();
+        $result = $dao->deleteCommunity($communityId);
+        if($result->isSuccess()) {
+             FlashMessageBuilder::Push($request, FlashMessageBuilder::SUCCESS,'删除成功');
+        } else {
+            $msg = $result->getMessage();
+            FlashMessageBuilder::Push($request, FlashMessageBuilder::DANGER,'删除失败'.$msg);
+        }
+        return redirect()->route('teacher.community.communities');
+    }
+}

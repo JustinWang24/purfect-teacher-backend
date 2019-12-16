@@ -123,6 +123,7 @@ return [
 
     // 社区管理
     'community' => '社区管理',
-    'dynamic'   => '动态列表'
+    'dynamic'   => '动态列表',
+    'communities' => '社团列表',
 ];
 

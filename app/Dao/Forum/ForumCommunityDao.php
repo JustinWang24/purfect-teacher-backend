@@ -9,6 +9,7 @@ use App\Models\Forum\Community_member;
 use App\Utils\JsonBuilder;
 use App\Utils\Misc\ConfigurationTool;
 use App\Utils\ReturnData\MessageBag;
+use Illuminate\Support\Facades\DB;
 
 class ForumCommunityDao
 {
@@ -31,14 +32,13 @@ class ForumCommunityDao
             ->orderBy('id','DESC')
             ->simplePaginate($pageSize);
     }
-    public function getCommunity($schoolId,$communityId)
+    public function getCommunity($schoolId,$communityId,$isShow= true)
     {
-        return Community::select('school_id', 'name', 'detail', 'logo', 'pic1', 'pic2', 'pic3', 'user_id')
-            ->where('school_id', $schoolId)
-            ->where('id', $communityId)
-            ->where('status', 1)
-            ->orderBy('id','DESC')
-            ->first();
+        $map = ['school_id'=>$schoolId, 'id'=>$communityId];
+        if($isShow) {
+            $map['school_id'] = Community::STATUS_CHECK;
+        }
+        return Community::where($map)->first();
     }
 
     public function getCommunityMembers($schoolId,$communityId)
@@ -89,5 +89,53 @@ class ForumCommunityDao
         return false;
     }
 
+
+    /**
+     * @param $schoolId
+     * @return mixed
+     */
+    public function getCommunityBySchoolId($schoolId) {
+        return Community::where('school_id', $schoolId)
+            ->orderBy('created_at', 'desc')
+            ->paginate(ConfigurationTool::DEFAULT_PAGE_SIZE);
+    }
+
+
+    /**
+     * 编辑
+     * @param $id
+     * @param $data
+     * @return mixed
+     */
+    public function updateCommunityById($id, $data) {
+        return Community::where('id',$id)->update($data);
+    }
+
+
+    /**
+     * 删除社团
+     * @param $communityId
+     * @return MessageBag
+     */
+    public function deleteCommunity($communityId){
+
+        $messageBag = new MessageBag(JsonBuilder::CODE_ERROR);
+        try{
+            DB::beginTransaction();
+            // 删除社团表
+            Community::where('id', $communityId)->delete();
+            // 删除社团成员表
+            Community_member::where('community_id', $communityId)->delete();
+            // todo 删除社团的分类  forum_type
+            DB::commit();
+            $messageBag->setCode(JsonBuilder::CODE_SUCCESS);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            $msg = $e->getMessage();
+            $messageBag->setMessage($msg);
+        }
+
+        return $messageBag;
+    }
 
 }
