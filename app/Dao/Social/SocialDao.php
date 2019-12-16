@@ -4,6 +4,8 @@
 namespace App\Dao\Social;
 
 
+use App\Dao\Students\StudentProfileDao;
+use App\Dao\Users\UserDao;
 use App\Models\Social\SocialFollow;
 use App\Models\Social\SocialFollowed;
 use App\Models\Social\SocialLike;
@@ -71,9 +73,31 @@ class SocialDao
      */
     public function getFollow($userId)
     {
-        return SocialFollow::where('user_id',$userId)->all();
+        return SocialFollow::where('user_id',$userId)->get();
     }
 
+    public function getUserDetail($userId){
+        $userDao = new UserDao();
+        $studentDao = new StudentProfileDao();
+        $userObj = $userDao->getUserById($userId);
+        return ['user_id' => $userId,
+                'user_name'=> $userObj->name,
+                'user_avatar' =>asset($studentDao->getStudentInfoByUserId($userId)->avatar)];
+    }
+
+    public function getUserList($userId, $column='to_user_id')
+    {
+        $data = [];
+        if ($column == 'to_user_id') {
+            $collections = $this->getFollow($userId);
+        } else {
+            $collections = $this->getFollowed($userId);
+        }
+        foreach ($collections as $collection) {
+            $data[] = $this->getUserDetail($collection->$column);
+        }
+        return $data;
+    }
     /**
      * 获得所有的粉丝数量
      * @param $userId
@@ -90,7 +114,7 @@ class SocialDao
      * @return mixed
      */
     public function getFollowed($userId) {
-        return SocialFollowed::where('user_id', $userId)->all();
+        return SocialFollowed::where('user_id', $userId)->get();
     }
 
     public function unFollow($userId, $toUserId)
@@ -122,4 +146,5 @@ class SocialDao
         return SocialLike::where('user_id', $userId)
                 ->where('to_user_id', $toUserId)->delete();
     }
+
 }

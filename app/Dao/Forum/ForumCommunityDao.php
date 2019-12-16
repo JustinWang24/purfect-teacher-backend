@@ -45,7 +45,7 @@ class ForumCommunityDao
     {
         return Community_member::where('school_id', $schoolId)
             ->where('community_id', $communityId)
-            ->all();
+            ->get();
     }
 
     public function joinCommunity($data)
