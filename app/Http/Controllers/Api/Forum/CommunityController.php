@@ -6,6 +6,7 @@ namespace App\Http\Controllers\Api\Forum;
 
 use App\Dao\Forum\ForumCommunityDao;
 use App\Dao\Social\SocialDao;
+use App\Dao\Students\StudentProfileDao;
 use App\Http\Controllers\Controller;
 use App\Utils\JsonBuilder;
 use Illuminate\Http\Request;
@@ -60,10 +61,13 @@ class CommunityController extends Controller
             $ext = pathinfo($realFileName,PATHINFO_EXTENSION);
             if (in_array($ext, ['png','jpg','jpeg','bmp'])) {
                 $data[$name] = $fileConfig['root'].DIRECTORY_SEPARATOR.$realFileName;
+                $data[$name] = $realFileName;
             }else{
                 Storage::delete($fileConfig['root'].DIRECTORY_SEPARATOR.$realFileName);
             }
         }
+        dd($data);
+        return $data;
     }
 
     /**
@@ -103,7 +107,14 @@ class CommunityController extends Controller
         $data['socialFollow'] = $socialDao->getFollow($data['community']->user_id);
         $data['socialFollowed'] = $socialDao->getFollowed($data['community']->user_id);
         $data['like'] = $socialDao->getLike($data['community']->user_id);
-        $data['member'] = $dao->getCommunityMembers($schoolId, $id);
+        $members = $dao->getCommunityMembers($schoolId, $id)->toArray();
+        $studentDao = new StudentProfileDao();
+        foreach($members as$k => $member)
+        {
+            $members[$k]['user_avatar']= $studentDao->getStudentInfoByUserId($member['user_id'])->avatar;
+        }
+        $data['members'] =  $members;
+
         return JsonBuilder::Success($data);
     }
 
