@@ -47,8 +47,24 @@ class ForumCommunityDao
             ->where('community_id', $communityId)
             ->get();
     }
+    public function getCommunityMembersByStatus($schoolId,$communityId,$status=0)
+    {
+        return Community_member::where('school_id', $schoolId)
+            ->where('community_id', $communityId)
+            ->where('status', $status)
+            ->get();
+    }
 
     public function joinCommunity($data)
+    {
+        $re =  Community_member::create($data);
+        if($re){
+            return new MessageBag(JsonBuilder::CODE_SUCCESS,'添加成功');
+        } else {
+            return new MessageBag(JsonBuilder::CODE_ERROR,'添加失败');
+        }
+    }
+    public function joinCommunityList($data)
     {
         $re =  Community_member::create($data);
         if($re){

@@ -155,22 +155,39 @@ class CommunityController extends Controller
     {
         $user = $request->user();
         $schoolId = $user->getSchoolId();
+        $communityId = intval($request->get('community_id'));
         $reason = strip_tags($request->get('reason'));
         $name = strip_tags($request->get('name'));
         $data['school_id'] = $schoolId;
         $data['user_id'] = $user->id;
+        $data['user_name'] = $user->name;
         $data['reason'] = $reason;
+        $data['community_id'] = $communityId;
 
-        if (empty($data['school_id']) || empty($data['reason']))
+        if (empty($data['school_id']) || empty($data['reason']) || empty($data['community_id']))
         {
             return JsonBuilder::Error('内容不合法请重试');
         }
         $dao = new ForumCommunityDao();
         $result = $dao->joinCommunity($data);
-        return JsonBuilder::Success($result);
+        return JsonBuilder::Success($result->getMessage());
 
     }
 
+    /**
+     * 团长查看申请列表
+     * @param Request $request
+     * @return string
+     */
+    public function joinCommunityList(Request $request)
+    {
+        $user = $request->user();
+        $schoolId = $user->getSchoolId();
+        $communityId = intval($request->get('community_id'));
+        $dao = new ForumCommunityDao();
+        $memberList = $dao->getCommunityMembersByStatus($schoolId,$communityId,0);
+        return JsonBuilder::Success($memberList);
+    }
     /**
      * 团长接受成员加入
      * @param Request $request
@@ -220,7 +237,7 @@ class CommunityController extends Controller
         $dao = new SocialDao();
         $toUser  = intval($request->get('to_user'));
         $result  = $dao->follow($user->id, $toUser);
-        return JsonBuilder::Success($result->getMessage());
+        return $result;
     }
 
     /**

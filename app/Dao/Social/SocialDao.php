@@ -26,19 +26,16 @@ class SocialDao
                     'to_user_id' => $toUserId
                 ]
             );
-            if ($follow) {
-                $followed = SocialFollowed::create([
-                        'user_id' => $toUserId,
-                        'from_user_id' => $userId
-                    ]
-                );
 
-                DB::commit();
-                $messageBag->setCode(JsonBuilder::CODE_SUCCESS);
-            } else {
-                DB::rollBack();
-                $messageBag->setMessage('关系创建失败');
-            }
+            $followed = SocialFollowed::create([
+                    'user_id' => $toUserId,
+                    'from_user_id' => $userId
+                ]
+            );
+
+            DB::commit();
+            $messageBag->setCode(JsonBuilder::CODE_SUCCESS);
+
         } catch (\Exception $exception) {
             DB::rollBack();
             $messageBag->setMessage($exception->getMessage());
