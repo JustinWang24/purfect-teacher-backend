@@ -33,7 +33,7 @@ class ForumCommunityDao
     }
     public function getCommunity($schoolId,$communityId)
     {
-        return Community::select('school_id', 'name', 'detail', 'logo', 'pic1', 'pic2', 'pic3', 'user_id')
+        return Community::select('school_id', 'name', 'detail', 'logo', 'pic1', 'pic2', 'pic3', 'user_id','forum_type_id')
             ->where('school_id', $schoolId)
             ->where('id', $communityId)
             ->where('status', 1)
