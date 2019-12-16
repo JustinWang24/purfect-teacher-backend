@@ -10,6 +10,7 @@ interface INodeOption extends IPersistent
 {
     const TYPE_TEXT = '文本';
     const TYPE_DATE = '日期';
+    const TYPE_TIME = '时间';
 
     public function getNode(): INode;
 

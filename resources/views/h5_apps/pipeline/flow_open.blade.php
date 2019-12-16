@@ -20,6 +20,15 @@
                                 placeholder="{{ $nodeOption->name }}">
                         </el-date-picker>
                     </el-form-item>
+                @elseif($nodeOption->getType() === \App\Utils\Pipeline\INodeOption::TYPE_TIME)
+                    <el-form-item label="{{ $nodeOption->name }}" class="nb mt-10">
+                        <el-time-picker
+                                v-model="action.options[{{ $key }}].value"
+                                :picker-options="{
+                                  selectableRange: '07:30:00 - 20:30:00'
+                                }"
+                                placeholder="选择时间"></el-time-picker>
+                    </el-form-item>
                 @endif
             @endforeach
 
