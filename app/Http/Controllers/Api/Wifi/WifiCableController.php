@@ -21,8 +21,6 @@ use App\Dao\Wifi\Api\WifiUserTimesDao; // 用户wifi和套餐时长
 use App\Dao\Wifi\Api\WifiOrdersDao; // wifi订单
 use App\Dao\Wifi\Api\WifiOrdersLocationsDao; // 用户有线开通记录表
 
-
-
 class WifiCableController extends Controller
 {
    /**
@@ -86,21 +84,9 @@ class WifiCableController extends Controller
    public function list_category_info ( WifiCableRequest $request )
    {
       $user = $request->user ();
-      // TODO......获取地址有问题........
-      // 查询条件
-      $condition[] = [ 'campus_id' , '=' , $user->gradeUser->campus_id];
-      $condition[] = [ 'type' , '=' , 5 ]; // 类型 1教室，2:智慧教室,3:会议室,4:教师办公室,5:学生宿舍
 
-      // 获取的字段信息
-      $fieldArr = [ 'id as addresstwoid' , 'building_id as addressoneid' , 'name' ];
-      $getRoomsListInfo = RoomsDao::getRoomsListInfo (
-         $condition , [ 'id' , 'asc' ] , [ 'page' => 1 , 'limit' => 800 ] , $fieldArr
-      );
+      $infos = RoomsDao::getRoomsListMoreInfo ( $user->gradeUser->campus_id )->toArray();
 
-      $infos = $getRoomsListInfo ? $getRoomsListInfo->toArray ()[ 'data' ] : [];
-
-      $infos1 = RoomsDao::cateTree( $infos , 'addresstwoid' , 'addressoneid' );
-;
       return JsonBuilder::Success ( $infos ,'宿舍楼地址列表');
    }
 

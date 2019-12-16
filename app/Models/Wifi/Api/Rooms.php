@@ -153,4 +153,5 @@ class Rooms extends Model
       if ( $mode == 'sum' ) return (float)Rooms::where ( $condition )->sum ( $field );
       return 0;
    }
+
 }
