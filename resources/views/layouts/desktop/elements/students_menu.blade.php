@@ -7,7 +7,7 @@
     <ul class="sub-menu">
         <li class="nav-item">
             <a href="{{ route('school_manager.school.students') }}" class="nav-link ">
-                <span class="title">本校学生信息</span>
+                <span class="title">学生档案</span>
             </a>
         </li>
         <li class="nav-item">

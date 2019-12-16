@@ -2,9 +2,9 @@
 @extends('layouts.app')
 @section('content')
         <div class="col-sm-12 col-md-12 col-xl-12">
-            <div class="card-box">
+            <div class="card">
                 <div class="card-head">
-                    <header>监控列表</header>
+                    <header>设备列表</header>
                 </div>
 
                 <div class="card-body">
