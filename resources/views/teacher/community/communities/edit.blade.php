@@ -15,10 +15,13 @@ use App\Utils\UI\Button;
                     <form action="{{ route('teacher.communities.edit') }}" method="post"  id="add-forum-form">
                         @csrf
                         <input type="hidden" id="communities_id" name="communities[id]" value="{{$communities->id}}">
+                        <input type="hidden" id="forum_type_id" name="communities[forum_type_id]" value="{{$communities->forum_type_id}}">
+                        <input type="hidden" id="communities_school_id" name="communities[school_id]" value="{{$communities->school_id}}">
+                        <input type="hidden" id="communities_name" name="communities[name]" value="{{$communities->name}}">
 
                         <div class="form-group">
                             <label for="forum-content">名称</label>
-                            <input type="text" disabled class="form-control" value="{{ $communities->name }}">
+                            <input type="text" disabled class="form-control"  value="{{ $communities->name }}">
                         </div>
 
                         <div class="form-group">

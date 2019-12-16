@@ -6,6 +6,7 @@ namespace App\Dao\Forum;
 
 use App\Models\Forum\Community;
 use App\Models\Forum\Community_member;
+use App\Models\Forum\ForumType;
 use App\Utils\JsonBuilder;
 use App\Utils\Misc\ConfigurationTool;
 use App\Utils\ReturnData\MessageBag;
@@ -105,10 +106,34 @@ class ForumCommunityDao
      * 编辑
      * @param $id
      * @param $data
-     * @return mixed
+     * @return MessageBag
      */
     public function updateCommunityById($id, $data) {
-        return Community::where('id',$id)->update($data);
+
+        $messageBag = new MessageBag(JsonBuilder::CODE_ERROR);
+
+        try{
+            DB::beginTransaction();
+            // forum_type_id为空的，创建类型
+            if(is_null($data['forum_type_id'])) {
+                $type = [
+                    'school_id' => $data['school_id'],
+                    'title'     => $data['name'],
+//                    'type'      => ForumType::
+                ];
+                $re = ForumType::create($type);
+                $data['forum_type_id'] = $re->id;
+            }
+            Community::where('id',$id)->update($data);
+            DB::commit();
+            $messageBag->setCode(JsonBuilder::CODE_SUCCESS);
+
+        } catch (\Exception $e) {
+            $msg = $e->getMessage();
+            $messageBag->setMessage($msg);
+        }
+        return $messageBag;
+
     }
 
 

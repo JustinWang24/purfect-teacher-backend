@@ -35,13 +35,17 @@ class CommunitiesController extends Controller
 
         if($request->isMethod('post')) {
             $data = $request->getCommunitiesData();
+            if(empty($data['status'])) {
+                FlashMessageBuilder::Push($request, FlashMessageBuilder::DANGER,'状态不能为空');
+                return redirect()->route('teacher.communities.edit',['id'=>$data['id']]);
+            }
             $id = $data['id'];
             unset($data['id']);
             $result = $dao->updateCommunityById($id, $data);
-            if($result) {
+            if($result->isSuccess()) {
                  FlashMessageBuilder::Push($request, FlashMessageBuilder::SUCCESS,'编辑成功');
             } else {
-                FlashMessageBuilder::Push($request, FlashMessageBuilder::DANGER,'编辑失败');
+                FlashMessageBuilder::Push($request, FlashMessageBuilder::DANGER,$result->getMessage());
             }
             return redirect()->route('teacher.community.communities');
 
