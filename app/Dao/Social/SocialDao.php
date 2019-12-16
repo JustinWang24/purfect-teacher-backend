@@ -18,7 +18,6 @@ class SocialDao
 
     public function follow($userId, $toUserId)
     {
-        $messageBag = new MessageBag(JsonBuilder::CODE_ERROR);
         DB::beginTransaction();
         try {
             $follow = SocialFollow::create([
@@ -34,23 +33,30 @@ class SocialDao
             );
 
             DB::commit();
-            $messageBag->setCode(JsonBuilder::CODE_SUCCESS);
+            return true;
 
         } catch (\Exception $exception) {
             DB::rollBack();
-            $messageBag->setMessage($exception->getMessage());
+            return false;
         }
-        return $messageBag;
     }
 
 
     public function like($userId, $toUserId)
     {
-        return SocialLike::create([
-                'user_id' => $userId,
-                'to_user_id' => $toUserId
-            ]
-        );
+        try {
+            SocialLike::create([
+                    'user_id' => $userId,
+                    'to_user_id' => $toUserId
+                ]
+            );
+            DB::commit();
+            return true;
+
+        } catch (\Exception $exception) {
+            DB::rollBack();
+            return false;
+        }
     }
 
     /**
@@ -116,7 +122,6 @@ class SocialDao
 
     public function unFollow($userId, $toUserId)
     {
-        $messageBag = new MessageBag(JsonBuilder::CODE_ERROR);
         DB::beginTransaction();
         try {
             $follow = SocialFollow::where('user_id', $userId)
@@ -126,22 +131,29 @@ class SocialDao
                         ->where('from_user_id', $userId)->delete();
 
                 DB::commit();
-                $messageBag->setCode(JsonBuilder::CODE_SUCCESS);
+                return true;
             } else {
                 DB::rollBack();
-                $messageBag->setMessage('关系删除失败');
+                return false;
             }
         } catch (\Exception $exception) {
             DB::rollBack();
-            $messageBag->setMessage($exception->getMessage());
+            return false;
         }
-        return $messageBag;
     }
 
     public function unLike($userId, $toUserId)
     {
-        return SocialLike::where('user_id', $userId)
+        try {
+            SocialLike::where('user_id', $userId)
                 ->where('to_user_id', $toUserId)->delete();
+            DB::commit();
+            return true;
+
+        } catch (\Exception $exception) {
+            DB::rollBack();
+            return false;
+        }
     }
 
 }

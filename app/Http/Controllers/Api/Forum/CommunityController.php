@@ -164,11 +164,18 @@ class CommunityController extends Controller
         $data['reason'] = $reason;
         $data['community_id'] = $communityId;
 
+
+
         if (empty($data['school_id']) || empty($data['reason']) || empty($data['community_id']))
         {
             return JsonBuilder::Error('内容不合法请重试');
         }
         $dao = new ForumCommunityDao();
+
+        $community = $dao->getCommunity($schoolId,$communityId);
+        if ($community->user_id == $user->id )
+            return JsonBuilder::Error('不能加入自己的社群');
+
         $result = $dao->joinCommunity($data);
         return JsonBuilder::Success($result->getMessage());
 
@@ -229,7 +236,7 @@ class CommunityController extends Controller
     /**
      * 关注用户
      * @param Request $request
-     * @return \App\Utils\ReturnData\MessageBag
+     * @return string
      */
     public function followUser(Request $request)
     {
@@ -237,14 +244,17 @@ class CommunityController extends Controller
         $dao = new SocialDao();
         $toUser  = intval($request->get('to_user'));
         $result  = $dao->follow($user->id, $toUser);
-        return $result;
+        if ($result) {
+            return JsonBuilder::Success('操作成功');
+        } else {
+            return JsonBuilder::Error('操作失败');
+        }
     }
 
     /**
      * 取消关注
      * @param Request $request
-     * @return \App\Utils\ReturnData\MessageBag
-     *
+     * @return string
      */
     public function unFollowUser(Request $request)
     {
@@ -252,7 +262,12 @@ class CommunityController extends Controller
         $dao = new SocialDao();
         $toUser  = intval($request->get('to_user'));
         $result  = $dao->unfollow($user->id, $toUser);
-        return JsonBuilder::Success($result->getMessage());
+        if ($result) {
+            return JsonBuilder::Success('操作成功');
+        } else {
+            return JsonBuilder::Error('操作失败');
+        }
+
     }
 
     /**
@@ -266,7 +281,11 @@ class CommunityController extends Controller
         $dao = new SocialDao();
         $toUser  = intval($request->get('to_user'));
         $result  = $dao->like($user->id, $toUser);
-        return JsonBuilder::Success($result->getMessage());
+        if ($result) {
+            return JsonBuilder::Success('操作成功');
+        } else {
+            return JsonBuilder::Error('操作失败');
+        }
     }
 
     /**
@@ -280,7 +299,11 @@ class CommunityController extends Controller
         $dao = new SocialDao();
         $toUser  = intval($request->get('to_user'));
         $result  = $dao->unlike($user->id, $toUser);
-        return JsonBuilder::Success($result->getMessage());
+        if ($result) {
+            return JsonBuilder::Success('操作成功');
+        } else {
+            return JsonBuilder::Error('操作失败');
+        }
     }
 
 }
