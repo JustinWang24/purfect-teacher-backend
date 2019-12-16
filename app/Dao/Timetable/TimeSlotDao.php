@@ -107,7 +107,7 @@ class TimeSlotDao
     /**
      * 为云班牌提供当前教室的课程列表的方法.
      *
-     * 提供当前上课的教师, 返回 返回 Timetable Item 集合
+     * 提供当前上课的教室, 返回 Timetable Item 集合
      *
      * @param Room $room: 教室对象
      * @param Carbon|null $date: 日期, 默认为今天
