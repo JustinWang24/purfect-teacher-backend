@@ -1,3 +1,8 @@
+<?php
+use App\Utils\UI\Anchor;
+use App\Utils\UI\Button;
+
+?>
 @extends('layouts.app')
 @section('content')
 
@@ -25,10 +30,12 @@
                                         <td>{{ $val->user->name }}</td>
                                         <td>{{ $val->reason }}</td>
                                         <td>{{ $val->statusText() }}</td>
-
                                     </tbody>
                                 @endforeach
                             </table>
+                            <?php
+                            Anchor::Print(['text'=>trans('general.return'),'href'=>route('teacher.community.communities'),'class'=>'pull-right link-return'], Button::TYPE_SUCCESS,'arrow-circle-o-right')
+                            ?>
                         </div>
                     </div>
                 </div>
