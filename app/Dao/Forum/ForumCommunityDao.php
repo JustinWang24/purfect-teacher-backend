@@ -37,7 +37,7 @@ class ForumCommunityDao
     {
         $map = ['school_id'=>$schoolId, 'id'=>$communityId];
         if($isShow) {
-            $map['school_id'] = Community::STATUS_CHECK;
+            $map['status'] = Community::STATUS_CHECK;
         }
         return Community::where($map)->first();
     }
