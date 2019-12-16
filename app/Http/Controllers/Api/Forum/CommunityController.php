@@ -132,8 +132,8 @@ class CommunityController extends Controller
 
         $forumDao = new ForumDao();
         //公告获取
-        $forumFirst = $forumDao->selectByTypeIdAndUser($communityArr['type'],$communityArr['user_id']);
-        $forumSecand = $forumDao->selectByTypeIdAndUser($communityArr['type'],$communityArr['user_id'],'<>');
+        $forumFirst = $forumDao->selectByTypeIdAndUser($communityArr['forum_type_id'],$communityArr['user_id']);
+        $forumSecand = $forumDao->selectByTypeIdAndUser($communityArr['forum_type_id'],$communityArr['user_id'],'<>');
         $data['announcement'] = $forumFirst;
         $data['news'] = $forumSecand;
 
