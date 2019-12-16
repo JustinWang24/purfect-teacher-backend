@@ -8,7 +8,12 @@ use App\Http\Requests\MyStandardRequest;
 class ForumRequest extends MyStandardRequest
 {
 
-    public function getFormData(){
+    public function getForumData(){
         return $this->get('forum');
+    }
+
+
+    public function getCommunitiesData() {
+        return $this->get('communities');
     }
 }

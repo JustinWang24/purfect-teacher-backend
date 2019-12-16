@@ -107,7 +107,7 @@ Route::prefix('teacher')->group(function () {
     Route::get('/dynamic','Community\DynamicController@index')
         ->name('teacher.community.dynamic');
     // 动态详情
-    Route::any('/edit','Community\DynamicController@edit')
+    Route::any('/dynamic-edit','Community\DynamicController@edit')
         ->name('teacher.dynamic.edit');
     // 删除
     Route::get('/delete','Community\DynamicController@delete')
@@ -122,4 +122,16 @@ Route::prefix('teacher')->group(function () {
     // 社区分类保存
     Route::any('/dynamic-type-save','Community\TypeController@save')
         ->name('teacher.community.dynamic.type.save');
+    // 社团列表
+    Route::get('/communities-list','Community\CommunitiesController@list')
+        ->name('teacher.community.communities');
+    // 社团详情
+    Route::any('/communities-edit','Community\CommunitiesController@edit')
+        ->name('teacher.communities.edit');
+    // 删除社团
+    Route::get('/communities-delete','Community\CommunitiesController@delete')
+        ->name('teacher.communities.delete');
+    // 社团成员
+    Route::get('/communities-members','Community\CommunitiesController@members')
+        ->name('teacher.communities.members');
 });
