@@ -15,7 +15,6 @@ use App\Models\Schools\SchoolConfiguration;
 use App\Models\Timetable\TimeSlot;
 use App\Models\Users\GradeUser;
 use App\User;
-use App\Utils\ReturnData\IMessageBag;
 use App\Utils\Time\CalendarWeek;
 use App\Utils\Time\GradeAndYearUtil;
 use Carbon\Carbon;
@@ -75,7 +74,7 @@ class FromStudentPoint implements ITimetableBuilder
         $this->schoolConfiguration = $this->school->configuration;
 
         // 根据当前时间, 获取所在的学期, 年, 单双周, 第几节课
-        $now = now();
+        $now = now(GradeAndYearUtil::TIMEZONE_CN);
         $startDate = $this->schoolConfiguration->getTermStartDate();
         $this->year = $startDate->year;
         $this->term = $this->schoolConfiguration->guessTerm($now->month);
@@ -93,7 +92,7 @@ class FromStudentPoint implements ITimetableBuilder
             $this->requestedDate = Carbon::createFromFormat('Y-m-d',$request->get('day'));
         }
         else{
-            $this->requestedDate = now();
+            $this->requestedDate = now(GradeAndYearUtil::TIMEZONE_CN);
         }
 
         $this->setUp($this->requestedDate);
