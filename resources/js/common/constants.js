@@ -132,10 +132,12 @@ export const Constants = {
         FLOW: {
             SAVE: '/school_manager/pipeline/flows/save-flow',
             SAVE_NODE: '/school_manager/pipeline/flows/save-node',
+            SAVE_NODE_OPTION: '/school_manager/pipeline/flows/save-node-option',
             UPDATE_NODE: '/school_manager/pipeline/flows/update-node',
             LOAD_FLOW_NODES: '/school_manager/pipeline/flows/load-nodes',
             DELETE_FLOW: '/school_manager/pipeline/flows/delete-flow',
             DELETE_NODE: '/school_manager/pipeline/flows/delete-node',
+            DELETE_NODE_OPTION: '/school_manager/pipeline/flows/delete-node-option',
             DELETE_NODE_ATTACHMENT: '/school_manager/pipeline/flows/delete-node-attachment',
             // Action相关
             OPEN: '/api/pipeline/flow/open', // 打开流程
@@ -223,6 +225,11 @@ export const Constants = {
         REJECTED: 2,
         REJECTED_TXT: '驳回',
         REJECTED_CLASS: 'text-danger',
+    },
+    NODE_OPTION: {
+        TEXT:'文本',
+        DATE:'日期',
+        TIME:'时间'
     },
     ADVISER: {
         DEPARTMENT: 1, // 系主任

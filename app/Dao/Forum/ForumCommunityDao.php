@@ -6,9 +6,11 @@ namespace App\Dao\Forum;
 
 use App\Models\Forum\Community;
 use App\Models\Forum\Community_member;
+use App\Models\Forum\ForumType;
 use App\Utils\JsonBuilder;
 use App\Utils\Misc\ConfigurationTool;
 use App\Utils\ReturnData\MessageBag;
+use Illuminate\Support\Facades\DB;
 
 class ForumCommunityDao
 {
@@ -31,14 +33,13 @@ class ForumCommunityDao
             ->orderBy('id','DESC')
             ->simplePaginate($pageSize);
     }
-    public function getCommunity($schoolId,$communityId)
+    public function getCommunity($schoolId,$communityId,$isShow= true)
     {
-        return Community::select('school_id', 'name', 'detail', 'logo', 'pic1', 'pic2', 'pic3', 'user_id','forum_type_id')
-            ->where('school_id', $schoolId)
-            ->where('id', $communityId)
-            ->where('status', 1)
-            ->orderBy('id','DESC')
-            ->first();
+        $map = ['school_id'=>$schoolId, 'id'=>$communityId];
+        if($isShow) {
+            $map['status'] = Community::STATUS_CHECK;
+        }
+        return Community::where($map)->first();
     }
 
     public function getCommunityMembers($schoolId,$communityId)
@@ -105,5 +106,79 @@ class ForumCommunityDao
         return false;
     }
 
+
+    /**
+     * @param $schoolId
+     * @return mixed
+     */
+    public function getCommunityBySchoolId($schoolId) {
+        return Community::where('school_id', $schoolId)
+            ->orderBy('created_at', 'desc')
+            ->paginate(ConfigurationTool::DEFAULT_PAGE_SIZE);
+    }
+
+
+    /**
+     * 编辑
+     * @param $id
+     * @param $data
+     * @return MessageBag
+     */
+    public function updateCommunityById($id, $data) {
+
+        $messageBag = new MessageBag(JsonBuilder::CODE_ERROR);
+
+        try{
+            DB::beginTransaction();
+            // forum_type_id为空的，创建类型
+            if(is_null($data['forum_type_id']) && $data['status'] == Community::STATUS_CHECK) {
+                $type = [
+                    'school_id' => $data['school_id'],
+                    'title'     => $data['name'],
+                    'type'      => ForumType::TYPE_TEAM
+                ];
+                $re = ForumType::create($type);
+                $data['forum_type_id'] = $re->id;
+            }
+            Community::where('id',$id)->update($data);
+            DB::commit();
+            $messageBag->setCode(JsonBuilder::CODE_SUCCESS);
+
+        } catch (\Exception $e) {
+            $msg = $e->getMessage();
+            $messageBag->setMessage($msg);
+        }
+        return $messageBag;
+
+    }
+
+
+    /**
+     * 删除社团
+     * @param Community
+     * @return MessageBag
+     */
+    public function deleteCommunity($community){
+
+        $messageBag = new MessageBag(JsonBuilder::CODE_ERROR);
+        try{
+            DB::beginTransaction();
+            // 删除社团表
+            Community::where('id', $community->id)->delete();
+            // 删除社团成员表
+            Community_member::where('community_id', $community->id)->delete();
+            // 删除社团的分类
+            ForumType::where('id', $community->forum_type_id)->delete();
+            // todo 删除图片资源
+            DB::commit();
+            $messageBag->setCode(JsonBuilder::CODE_SUCCESS);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            $msg = $e->getMessage();
+            $messageBag->setMessage($msg);
+        }
+
+        return $messageBag;
+    }
 
 }

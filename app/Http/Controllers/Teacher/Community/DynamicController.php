@@ -26,7 +26,7 @@ class DynamicController extends Controller
     public function edit(ForumRequest $request) {
         $dao = new ForumDao();
         if($request->isMethod('post')) {
-            $data = $request->getFormData();
+            $data = $request->getForumData();
             if(isset($data['is_up']) && $data['is_up'] == 'on') {
                 $data['is_up'] = 1;
             } else {

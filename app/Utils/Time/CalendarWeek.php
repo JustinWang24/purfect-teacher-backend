@@ -47,7 +47,10 @@ class CalendarWeek implements Arrayable
      * @return bool
      */
     public function includes(Carbon $date){
-        return $date->between($this->start, $this->end);
+        $included =  $date->format('Y-m-d')===$this->start->format('Y-m-d') ||
+            $date->between($this->start, $this->end) ||
+            $date->format('Y-m-d') === $this->end->format('Y-m-d');
+        return $included;
     }
 
     /**

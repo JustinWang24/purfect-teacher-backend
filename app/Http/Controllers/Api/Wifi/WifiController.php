@@ -32,7 +32,8 @@ class WifiController extends Controller
     */
    public function index_wifi(WifiRequest $request)
    {
-      $user      = $request->user ();
+      $user = $request->user ();
+
       $user_id   = $user->id;
       $campus_id = $user->gradeUser->campus_id;
 

@@ -38,6 +38,40 @@ export function saveNode(flow, node, prevNodeId, affix) {
     );
 }
 
+/**
+ * 保存步骤的选项
+ * @param nodeOption
+ * @param affix
+ * @returns {*}
+ */
+export function saveNodeOption(nodeOption, affix) {
+    const url = Util.buildUrl(Constants.API.FLOW.SAVE_NODE_OPTION);
+    if(Util.isDevEnv()){
+        return axios.get(url, affix);
+    }
+    return axios.post(
+        url,
+        {node_option: nodeOption, version:Constants.VERSION}
+    );
+}
+
+/**
+ * 删除步骤的选项
+ * @param nodeOptionId
+ * @param affix
+ * @returns {*}
+ */
+export function deleteNodeOption(nodeOptionId, affix) {
+    const url = Util.buildUrl(Constants.API.FLOW.DELETE_NODE_OPTION);
+    if(Util.isDevEnv()){
+        return axios.get(url, affix);
+    }
+    return axios.post(
+        url,
+        {node_option_id: nodeOptionId, version:Constants.VERSION}
+    );
+}
+
 export function start(action, isAppRequest, affix) {
     const url = Util.buildUrl(Constants.API.FLOW.START);
     if(Util.isDevEnv()){

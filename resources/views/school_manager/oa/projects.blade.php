@@ -21,7 +21,7 @@ use App\User;
                                     <th>学校</th>
                                     <th>发起人</th>
                                     <th>参与者</th>
-                                    <th>任务</th>
+                                    <th>已包含任务</th>
                                     <th>标题</th>
                                     <th>状态</th>
                                     <th></th>
@@ -38,10 +38,12 @@ use App\User;
                                             {{ $project->user->name }}
                                         </td>
                                         <td>
-                                            {{ count($project->members) }}人
+                                            @foreach($project->members as $member)
+<span class="text-primary">{{ $member->user->name }}&nbsp;</span>
+                                            @endforeach
                                         </td>
                                         <td>
-                                            <a href="{{ route('school_manager.oa.tasks-manager',['project_id'=>$project->id]) }}">
+                                            <a class="text-primary" href="{{ route('school_manager.oa.tasks-manager',['project_id'=>$project->id]) }}">
                                                 {{ count($project->tasks) }}
                                             </a>
                                         </td>

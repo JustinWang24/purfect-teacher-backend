@@ -122,7 +122,11 @@ return [
     'set-monitor'=>'设置班长',
 
     // 社区管理
-    'community' => '社区管理',
-    'dynamic'   => '动态列表'
+    'community'   => '社区管理',
+    'dynamic'     => '动态列表',
+    'communities' => '社团列表',
+    'members'     => '社团成员',
+    'attendances-manager' => '选修课程审批',
+    'project-view'=> '查看项目',
 ];
 

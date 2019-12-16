@@ -229,6 +229,12 @@ class TimetableItemDao
         }
         return $result;
     }
+
+    public function getItemsByWeekDayIndexForApp($weekDayIndex, $year, $term, $weekType, $gradeId){
+        $result = $this->getItemsByWeekDayIndex($weekDayIndex, $year, $term, $weekType,$gradeId);
+        return array_values($result);
+    }
+
     /**
      * 根据给定的条件加载某个课程的课程表项列表
      * @param $weekDayIndex
