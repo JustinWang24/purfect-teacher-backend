@@ -228,7 +228,8 @@ export const Constants = {
     },
     NODE_OPTION: {
         TEXT:'文本',
-        DATE:'日期'
+        DATE:'日期',
+        TIME:'时间'
     },
     ADVISER: {
         DEPARTMENT: 1, // 系主任

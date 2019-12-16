@@ -155,6 +155,11 @@ Route::prefix('timetable')->middleware('auth:api')->group(function () {
     // 尝试加载课程表的特定调课项: 查询条件是 ids, 即调课项的 id 集合
     Route::post('/load-special-cases','Api\Timetable\TimetableItemsController@load_special_cases')
         ->name('api.timetable.load.special.cases');
+
+    // 给 APP 和前端页面使用的 API
+    // 1: 根据学生的 api token, 获取今天的课表
+    Route::any('/load-by-student','Api\Timetable\FrontendController@load_by_student')
+        ->name('api.timetable.load-by-student');
 });
 
 // 招生API
@@ -330,7 +335,6 @@ Route::prefix('enrolment-step')->group(function () {
 });
 
 Route::prefix('students')->middleware('auth:api')->group(function () {
-
     // 创建申请
     Route::post('applications-create','Api\Application\ApplicationController@create')
             ->name('api.students.applications-create');
@@ -480,9 +484,9 @@ Route::prefix('user')->group(function () {
 });
 
 
-    // 发送短信
-    Route::post('/index/sms', 'Api\Home\IndexController@sendSms')
-        ->name('api.user.edit.password');
+// 发送短信
+Route::post('/index/sms', 'Api\Home\IndexController@sendSms')
+    ->name('api.user.edit.password');
 
 
 // 地区列表
@@ -566,6 +570,29 @@ Route::prefix('forum')->middleware('auth:api')->group(function () {
         ->name('api.details.forum');
     Route::post('/community/approve','Api\Forum\CommunityController@approve')
         ->name('api.forum.community.approve');
+    Route::get('/community/joinlist','Api\Forum\CommunityController@joinCommunityList')
+        ->name('api.forum.community.joinlist');//团长可以看自己的社团申请列表
+    Route::get('/community/join','Api\Forum\CommunityController@joinCommunity')
+        ->name('api.forum.community.join');//申请加入一个社群
+    Route::get('/community/reject','Api\Forum\CommunityController@rejectCommunity')
+        ->name('api.forum.community.reject');//团长拒绝用户加入
+    Route::get('/community/accept','Api\Forum\CommunityController@acceptCommunity')
+        ->name('api.forum.community.accept');//团长同意用户加入
+    Route::get('/community/communities','Api\Forum\CommunityController@getCommunities')
+        ->name('api.forum.community.communities');
+    Route::get('/community/community/{id}','Api\Forum\CommunityController@getCommunity')
+        ->name('api.forum.community.community');
+});
+// 社区
+Route::prefix('social')->middleware('auth:api')->group(function () {
+    Route::get('/follow','Api\Forum\CommunityController@followUser')
+        ->name('api.social.follow');
+    Route::get('/unfollow','Api\Forum\CommunityController@unFollowUser')
+        ->name('api.social.unfollow');
+    Route::get('/like','Api\Forum\CommunityController@like')
+        ->name('api.social.like');
+    Route::get('/unlike','Api\Forum\CommunityController@unlike')
+        ->name('api.social.unlike');
 });
 
 

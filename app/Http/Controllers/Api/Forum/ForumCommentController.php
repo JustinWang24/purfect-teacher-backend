@@ -166,16 +166,16 @@ extends Controller
             $replys = $comment->reply()->get();
             $commentArr = $comment->toArray();
             $commentArr['user_name'] =  $userDao->getUserById($commentArr['user_id'])->first()->name;
-            $commentArr['user_avatar'] =  $studentDao->getStudentInfoByUserId($commentArr['user_id'])->avatar;
+            $commentArr['user_avatar'] =  asset($studentDao->getStudentInfoByUserId($commentArr['user_id'])->avatar);
             $commentArr['reply_count'] =  $dao->getCountReplyForComment($commentArr['id']);
 
             $result['comments'][$key]['comment'] = $commentArr;
             $replyArr = $replys->toArray();
             foreach ($replyArr as $k => $reply) {
                 $replyArr[$k]['to_user_name'] = $userDao->getUserById($reply['to_user_id'])->first()->name;
-                $replyArr[$k]['to_user_avatar'] =  $studentDao->getStudentInfoByUserId($reply['to_user_id'])->avatar;
+                $replyArr[$k]['to_user_avatar'] =  asset($studentDao->getStudentInfoByUserId($reply['to_user_id'])->avatar);
                 $replyArr[$k]['from_user_name'] = $userDao->getUserById($reply['user_id'])->first()->name;
-                $replyArr[$k]['from_user_avatar'] =  $studentDao->getStudentInfoByUserId($reply['user_id'])->avatar;
+                $replyArr[$k]['from_user_avatar'] =  asset($studentDao->getStudentInfoByUserId($reply['user_id'])->avatar);
             }
 
             $result['comments'][$key]['reply'] = $replyArr;

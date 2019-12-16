@@ -45,7 +45,7 @@ class StudentHomePageLogic implements IHomePageLogic
         // Todo: 加载学生可用的申请
         $flowDao = new FlowDao();
         $this->data['groupedFlows'] = $flowDao->getGroupedFlows(
-            $this->request->session()->get('school.id'), [IFlow::TYPE_STUDENT_ONLY]);
+            $this->request->session()->get('school.id'), User::StudentFlowTypes());
 
         return $this->data;
     }

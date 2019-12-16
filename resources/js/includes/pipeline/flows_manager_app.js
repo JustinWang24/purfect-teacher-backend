@@ -29,7 +29,7 @@ if(document.getElementById('pipeline-flows-manager-app')){
                     type:'',
                     node_id: null,
                 },
-                nodeOptionTypes:[Constants.NODE_OPTION.TEXT, Constants.NODE_OPTION.DATE], // 步骤必填项的数据类型
+                nodeOptionTypes:[Constants.NODE_OPTION.TEXT, Constants.NODE_OPTION.DATE, Constants.NODE_OPTION.TIME], // 步骤必填项的数据类型
                 showFileManagerFlag: false,
                 iconSelectorShowFlag: false, // 控制图标选择器的显示
                 node: {

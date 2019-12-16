@@ -70,4 +70,8 @@ class TimetableItem extends Model
     public function itemEnquiries(){
         return $this->hasMany(TimetableItemEnquiry::class);
     }
+
+    public function timeSlot(){
+        return $this->belongsTo(TimeSlot::class);
+    }
 }

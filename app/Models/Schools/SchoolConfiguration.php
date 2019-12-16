@@ -12,6 +12,8 @@ class SchoolConfiguration extends Model
 {
     use HasConfigurations;
     const FAKE_YEAR = 1980;
+    const FIRST_TERM_START_MONTH = 9; // 第一学期开学日期在 9 月份
+    const SECOND_TERM_START_MONTH = 2; // 第二学期开学日期在 2 月份
 
     protected $fillable = [
         ConfigurationTool::KEY_STUDY_WEEKS_PER_TERM,
@@ -59,10 +61,19 @@ class SchoolConfiguration extends Model
     public function getTermStartDate($term = null){
         $now = now();
         if(!$term){
-            $term = $now->month > 6 ? 2 : 1;
+            $term = $this->guessTerm($now->month);
         }
         $fieldName = 'first_day_term_'.$term;
         return $this->$fieldName->setYear($now->year);
+    }
+
+    /**
+     * 根据指定的月份猜测在第几个学期
+     * @param $month
+     * @return int
+     */
+    public function guessTerm($month){
+        return ($month >= self::FIRST_TERM_START_MONTH || $month < self::SECOND_TERM_START_MONTH) ? 1 : 2;
     }
 
     /**
