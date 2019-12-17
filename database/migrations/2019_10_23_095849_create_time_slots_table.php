@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 use App\Dao\Timetable\TimeSlotDao;
+use App\Models\Timetable\TimeSlot;
 
 class CreateTimeSlotsTable extends Migration
 {
@@ -25,14 +26,23 @@ class CreateTimeSlotsTable extends Migration
             $table->softDeletes();
         });
 
-        $dao = new TimeSlotDao();
-
-        $frames = $dao->getDefaultTimeFrame()['frames'];
-
-        foreach ($frames as $frame) {
-            $frame['school_id'] = 1;
-            $dao->createTimeSlot($frame);
-        }
+//        $dao = new TimeSlotDao();
+//
+//        $frames = $dao->getDefaultTimeFrame(TimeSlot::SEASONS_WINTER_AND_SPRINT)['frames'];
+//
+//        foreach ($frames as $frame) {
+//            $frame['school_id'] = 1;
+//            $frame['season'] = TimeSlot::SEASONS_WINTER_AND_SPRINT;
+//            $dao->createTimeSlot($frame);
+//        }
+//
+//        $frames = $dao->getDefaultTimeFrame(TimeSlot::SEASONS_SUMMER_AND_AUTUMN)['frames'];
+//
+//        foreach ($frames as $frame) {
+//            $frame['school_id'] = 1;
+//            $frame['season'] = TimeSlot::SEASONS_SUMMER_AND_AUTUMN;
+//            $dao->createTimeSlot($frame);
+//        }
     }
 
     /**

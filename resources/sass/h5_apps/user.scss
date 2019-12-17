@@ -13,6 +13,27 @@
 }
 // Pipeline end
 
+// 课程表
+.tools-wrap{
+  list-style: none;
+  .tool-item{
+    p{
+      a{
+        color: #0c0c0c;
+        text-decoration: none;
+      }
+    }
+  }
+}
+.the-avatar-big{
+  border-radius: 50%;
+  width: 80px;
+}
+.lesson-summary{
+
+}
+// 课程表 结束
+
 
 .showMoreButton{
   background:-webkit-linear-gradient(to right, #66D9FF, #4EA5FE) !important;

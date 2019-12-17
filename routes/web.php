@@ -40,6 +40,11 @@ Route::prefix('h5')->group(function () {
     // 用户查看自己的流程历史详情
     Route::any('/flow/user/view-history','H5\Pipeline\FlowsController@view_history')
         ->name('h5.flow.user.view-history');
+    // 学生查看自己今天的课表
+    Route::any('/timetable/student/view','H5\Timetable\StudentController@view')
+        ->name('h5.timetable.student.view');
+    Route::any('/timetable/student/detail','H5\Timetable\StudentController@detail')
+        ->name('h5.timetable.student.detail');
 });
 
 // 分享

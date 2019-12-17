@@ -132,9 +132,11 @@ class SchoolDao
      * @param array $ec1
      * @param array $ec2
      * @param array $termStartDates
+     * @param array $summer
+     * @param array $winter
      * @return mixed
      */
-    public function updateConfiguration( $school, $configuration, $ec1 = null, $ec2 = null, $termStartDates){
+    public function updateConfiguration( $school, $configuration, $ec1 = null, $ec2 = null, $termStartDates, $summer = null, $winter = null){
         if($ec1 && $ec2){
             $configuration['apply_elective_course_from_1'] = SchoolConfiguration::CreateMockEcDate($ec1,'from');
             $configuration['apply_elective_course_to_1'] = SchoolConfiguration::CreateMockEcDate($ec1,'to');
@@ -145,6 +147,10 @@ class SchoolDao
         if($termStartDates){
             $configuration['first_day_term_1'] = SchoolConfiguration::CreateMockEcDate($termStartDates,'term1');
             $configuration['first_day_term_2'] = SchoolConfiguration::CreateMockEcDate($termStartDates,'term2');
+        }
+        if($summer && $winter){
+            $configuration['summer_start_date'] = SchoolConfiguration::CreateMockDate($summer['month'],$summer['day']);
+            $configuration['winter_start_date'] = SchoolConfiguration::CreateMockDate($winter['month'],$winter['day']);
         }
 
         if(isset($school->configuration->id)){

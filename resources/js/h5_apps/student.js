@@ -37,3 +37,5 @@ require('../includes/frontend/student_registration_app');// 学生报名页面�
 require('../includes/pipeline/flow_open_app');
 require('../includes/backend/student_homepage_app');
 require('../includes/pipeline/flow_view_history_app');
+require('../includes/timetable/student_view');   // 课表页
+require('../includes/timetable/student_detail'); // 课堂详情页

@@ -20,8 +20,10 @@ class CreateTextbookImagesTable extends Migration
             $table->unsignedSmallInteger('position')->comment('显示的顺序');
         });
 
+
+
         Schema::table('textbooks', function (Blueprint $table) {
-            $table->dropColumn('course_id');
+            $table->unsignedBigInteger('course_id');
         });
     }
 
@@ -34,7 +36,7 @@ class CreateTextbookImagesTable extends Migration
     {
         Schema::dropIfExists('textbook_images');
         Schema::table('textbooks', function (Blueprint $table) {
-            $table->unsignedBigInteger('course_id');
+            $table->dropColumn('course_id');
         });
     }
 }
