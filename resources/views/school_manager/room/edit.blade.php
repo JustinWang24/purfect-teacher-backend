@@ -24,7 +24,9 @@ use App\Utils\UI\Button;
                                     <label>房间类型</label>
                                     <select class="form-control" id="room-type-input" name="room[type]">
                                         @foreach(\App\Models\Schools\Room::AllTypes() as $type=>$text)
-                                            <option value="{{ $type }}">{{ $text }}</option>
+                                            <option value="{{ $type }}"
+                                                @if($room->type == $type) selected @endif
+                                            >{{ $text }}</option>
                                         @endforeach
                                     </select>
                                 </div>
