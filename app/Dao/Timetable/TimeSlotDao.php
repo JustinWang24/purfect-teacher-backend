@@ -146,6 +146,7 @@ class TimeSlotDao
             ->where('time_slot_id','>=',$currentTimeSlot->id)
             ->with('timeslot')
             ->orderBy('time_slot_id','asc')
+            ->limit(2)
             ->get();
         return $timeSlots;
     }
@@ -176,6 +177,7 @@ class TimeSlotDao
 
         $currentTimeSlot = null;
         foreach ($timeSlots as $timeSlot) {
+
             /**
              * @var TimeSlot $timeSlot
              */
@@ -183,12 +185,12 @@ class TimeSlotDao
                 $currentTimeSlot = $timeSlot;
             }
         }
-    //$currentTimeSlot->id
+
         return TimetableItem::where('room_id',$room->id)
             ->where('year', $year)
             ->where('term', $term)
             ->where('weekday_index',$date->weekday())
-            ->where('time_slot_id',20)
+            ->where('time_slot_id', $currentTimeSlot->id)
             ->with('timeslot')
             ->first();
     }
