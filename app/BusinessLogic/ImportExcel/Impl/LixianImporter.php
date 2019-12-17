@@ -92,7 +92,7 @@ class LixianImporter extends AbstractImporter
                                 $importUser = $this->getUser($rowData['mobile'], $rowData['userName'], $passwordInPlainText,$row);
                                 if ($importUser) {
                                     $gradeUser = $this->getGradeUser($importUser, $rowData,$schoolObj->id, $institute, $department, $major, $grade, $row);
-                                    $studentUser = $this->saveStudent($user, $rowData,$row);
+                                    $studentUser = $this->saveStudent($importUser, $rowData,$row);
                                 }else{
                                     echo "\033[102m班级用户《".$rowData['userName']."》创建失败跳过\033[0m\n";
                                 }
