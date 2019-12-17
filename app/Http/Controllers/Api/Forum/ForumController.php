@@ -78,13 +78,15 @@ class ForumController extends Controller
             $lists[$key]['avatar']      = Forum::getImageUrl($val->studentProfile->avatar);
             $lists[$key]['user_name']   = $val->studentProfile->user->name;
 
-            $val->image_field = ['image', 'video', 'cover'];
+
+            $val->image_field = ['image'];
             $image = $val->image;
             foreach ($image as $k => $item) {
                 $item->image = Forum::getImageUrl($item->image);
-                $item->video = Forum::getImageUrl($item->video);
-                $item->cover = Forum::getImageUrl($item->cover);
+                $lists[$key]['video'] = Forum::getImageUrl($item->video);
+                $lists[$key]['cover'] = Forum::getImageUrl($item->cover);
             }
+
             unset($lists[$key]['forumType']);
             unset($lists[$key]['type_id']);
             unset($lists[$key]['forumComment']);
