@@ -27,8 +27,6 @@ class StudentController extends Controller
 
         $this->dataForView['user'] = $user;
 
-        $item = (new TimetableItemDao())->getCurrentItemByUser($user);
-
         $logic = Factory::GetInstance($request);
         $this->dataForView['today'] = $logic->build();
 
