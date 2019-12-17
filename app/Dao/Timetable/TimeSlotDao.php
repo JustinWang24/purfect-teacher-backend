@@ -130,6 +130,7 @@ class TimeSlotDao
         $term = $schoolConfiguration->guessTerm($date->month);
 
         $timeSlots = $this->getAllStudyTimeSlots($room->school_id);
+
         $currentTimeSlot = null;
         foreach ($timeSlots as $timeSlot) {
             /**
@@ -139,6 +140,7 @@ class TimeSlotDao
                 $currentTimeSlot = $timeSlot;
             }
         }
+
         $timeSlots = TimetableItem::where('room_id',$room->id)
             ->where('year', $year)
             ->where('term', $term)
@@ -146,7 +148,6 @@ class TimeSlotDao
             ->where('time_slot_id','>=',$currentTimeSlot->id)
             ->with('timeslot')
             ->orderBy('time_slot_id','asc')
-            ->limit(2)
             ->get();
         return $timeSlots;
     }
@@ -184,6 +185,10 @@ class TimeSlotDao
             if($timeSlot->current){
                 $currentTimeSlot = $timeSlot;
             }
+        }
+
+        if (empty($currentTimeSlot->id)) {
+            return null;
         }
 
         return TimetableItem::where('room_id',$room->id)
