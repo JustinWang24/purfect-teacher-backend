@@ -11,10 +11,13 @@ use App\Dao\Schools\GradeDao;
 use App\Dao\Schools\InstituteDao;
 use App\Dao\Schools\MajorDao;
 use App\Dao\Schools\SchoolDao;
+use App\Dao\Students\StudentProfileDao;
 use App\Dao\Users\GradeUserDao;
 use App\Dao\Users\UserDao;
+use App\Models\Students\StudentProfile;
 use League\Flysystem\Config;
 use PhpOffice\PhpSpreadsheet\IOFactory;
+use Ramsey\Uuid\Uuid;
 
 abstract class AbstractImporter implements IImportExcel
 {
@@ -552,4 +555,57 @@ abstract class AbstractImporter implements IImportExcel
         ]);
     }
 
+
+    public function saveStudent($user, $rowData,$row)
+    {
+        $student = new StudentProfile();
+        $student->user_id = $user->id;
+        $student->uuid = Uuid::uuid4()->toString();;
+        $student->year = $rowData['year'];
+        $student->serial_number = "-";
+        if ($rowData['gender'] == '男'){
+            $gender = 1;
+        }else {
+            $gender = 2;
+        }
+        $student->gender = $gender;
+        $student->country = $rowData['country'];
+        $student->state = $rowData['state'];
+        $student->city = $rowData['city'];
+        $student->postcode = $rowData['postCode'];
+        $student->area = $rowData['area'];
+        $student->address_line = $rowData['addressLine'];
+        $student->id_number = $rowData['idNumber'];
+        $student->birthday = strtotime(substr($rowData['idNumber'],6,8));
+        $student->political_code = $rowData['politicalName'];
+        $student->nation_name = $rowData['nation'];
+        $student->parent_name = "-";
+        $student->parent_mobile = "-";
+        $student->avatar = "";
+        $result = $student->save();
+        if ($result) {
+            $studentDao = new StudentProfileDao();
+            $student = $studentDao->getStudentInfoByUserId($user->id);
+            $this->importDao->writeLog([
+                'type' => 1,
+                'source' => json_encode($row),
+                'table_name' => 'users',
+                'result' => json_encode($student),
+                'task_id' => $this->config['task_id'],
+                'task_status' => 1,
+            ]);
+
+            return $student;
+        } else {
+            $this->importDao->writeLog([
+                'type' => 1,
+                'source' => json_encode($row),
+                'table_name' => 'users',
+                'task_id' => $this->config['task_id'],
+                'task_status' => 2,
+            ]);
+            return false;
+        }
+
+    }
 }
