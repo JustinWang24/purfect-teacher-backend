@@ -3,7 +3,10 @@
 
 namespace App\Http\Controllers\Api\Forum;
 
+use App\Dao\Forum\ForumCommunityDao;
 use App\Dao\Forum\ForumDao;
+use App\Dao\Students\StudentProfileDao;
+use App\Dao\Users\UserDao;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Forum\ForumRequest;
 use App\Models\Forum\Forum;
@@ -101,6 +104,27 @@ class ForumController extends Controller
         }
 
         $data = pageReturn($lists);
+
+        //获取社群列表
+        $schoolId = $user->getSchoolId();
+        $communityDao = new ForumCommunityDao();
+        $userDao = new UserDao();
+        $studentDao = new StudentProfileDao();
+        $result = $communityDao->getCommunities($schoolId,2);
+
+        $communityData = [];
+        foreach ($result as $key => $community) {
+            $communityArr = $community->toArray();
+            $communityArr = $communityDao->getPicUrl($communityArr);
+            $communityArr['user_name'] = $userDao->getUserById($communityArr['user_id'])->name;
+            $communityArr['user_avatar'] = asset($studentDao->getStudentInfoByUserId($communityArr['user_id'])->avatar);
+            $communityData[$key] = $communityArr;
+            $communityData[$key]['member'] = $community->member()->count();
+
+        }
+
+        $data['communities'] = $communityData;
+
         return JsonBuilder::Success($data, '帖子列表');
     }
 
