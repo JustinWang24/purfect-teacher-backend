@@ -37,7 +37,7 @@ class CalendarWeek implements Arrayable
         $this->start = Carbon::createFromFormat('Y-m-d',$start);
         $this->end = Carbon::createFromFormat('Y-m-d',$end);
         $this->events = $events ?? new Collection();
-        $now = Carbon::now();
+        $now = Carbon::now(GradeAndYearUtil::TIMEZONE_CN);
         $this->current = $now->between($this->start, $this->end);
     }
 

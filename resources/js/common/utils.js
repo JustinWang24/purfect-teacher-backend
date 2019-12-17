@@ -202,5 +202,13 @@ export const Util = {
         else{
             return moment(t2).diff(earlier,'hours');
         }
+    },
+    buildQuery: function(url, params, tail){
+        let query = '?';
+        const keys = Object.keys(params);
+        keys.forEach(function(key){
+            query += key + '=' + params[key] + '&';
+        });
+        return url + query + tail + '=1';
     }
 };

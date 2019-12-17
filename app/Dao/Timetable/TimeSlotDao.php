@@ -9,6 +9,7 @@
 namespace App\Dao\Timetable;
 use App\Models\School;
 use App\Models\Schools\Room;
+use App\Models\Schools\SchoolConfiguration;
 use App\Models\Timetable\TimeSlot;
 use App\Models\Timetable\TimetableItem;
 use App\Utils\Time\CalendarWeek;
@@ -37,11 +38,12 @@ class TimeSlotDao
 
     /**
      * 获取系统设置的默认时间段
+     * @param int $seasonType
      * @param bool $asJsonObject
      * @return array
      */
-    public function getDefaultTimeFrame($asJsonObject = false){
-        $txt = file_get_contents(__DIR__.'/default_time_frames.json');
+    public function getDefaultTimeFrame($seasonType = TimeSlot::SEASONS_SUMMER_AND_AUTUMN, $asJsonObject = false){
+        $txt = file_get_contents(__DIR__.($seasonType === TimeSlot::SEASONS_SUMMER_AND_AUTUMN ? '/default_time_frames.json' : '/default_time_frames_summer.json'));
         return $asJsonObject ? $txt : json_decode($txt, true);
     }
 
@@ -62,7 +64,11 @@ class TimeSlotDao
      * @return array|Collection
      */
     public function getAllStudyTimeSlots($schoolId, $simple = false, $noTime = false){
+        $config = SchoolConfiguration::where('school_id',$schoolId)->first();
+        $seasonType = GradeAndYearUtil::GetCurrentSeason($config);
+
         $slots = TimeSlot::where('school_id',$schoolId)
+            ->where('season',$seasonType)
             ->whereIn('type',[TimeSlot::TYPE_STUDYING, TimeSlot::TYPE_PRACTICE, TimeSlot::TYPE_FREE_TIME])
             ->orderBy('from','asc')
             ->get();
@@ -107,7 +113,7 @@ class TimeSlotDao
     /**
      * 为云班牌提供当前教室的课程列表的方法.
      *
-     * 提供当前上课的教师, 返回 返回 Timetable Item 集合
+     * 提供当前上课的教室, 返回 Timetable Item 集合
      *
      * @param Room $room: 教室对象
      * @param Carbon|null $date: 日期, 默认为今天

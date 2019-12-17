@@ -55,7 +55,9 @@ class SchoolsController extends Controller
                 $request->getConfiguration(),
                 $request->getElectiveCourseAvailableTerm(1),
                 $request->getElectiveCourseAvailableTerm(2),
-                $request->getTermStart()
+                $request->getTermStart(),
+                $request->getSummerStart(),
+                $request->getWinterStart()
             );
             FlashMessageBuilder::Push($request, 'success','配置已更新');
         }

@@ -68,6 +68,11 @@ class FromStudentPoint implements ITimetableBuilder
     public function __construct(Request $request)
     {
         $this->student = $request->user();
+
+        if(!$this->student){
+            $this->student = $request->user('api');
+        }
+
         $this->gradeUser = $this->student->gradeUser;
 
         $this->school = $this->gradeUser->school;

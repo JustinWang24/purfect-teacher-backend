@@ -26,6 +26,8 @@ class SchoolConfiguration extends Model
         'apply_elective_course_to_2',
         'first_day_term_1',
         'first_day_term_2',
+        'summer_start_date',
+        'winter_start_date',
     ];
 
     public $casts = [
@@ -36,6 +38,8 @@ class SchoolConfiguration extends Model
         'apply_elective_course_to_2'=>'datetime',
         'first_day_term_1'=>'datetime',
         'first_day_term_2'=>'datetime',
+        'summer_start_date'=>'datetime',
+        'winter_start_date'=>'datetime',
     ];
 
     /**
@@ -136,6 +140,10 @@ class SchoolConfiguration extends Model
      */
     public static function CreateMockEcDate($ec,$type){
         return Carbon::createFromFormat('Y-m-d',self::FAKE_YEAR.'-'.$ec[$type]['month'].'-'.$ec[$type]['day']);
+    }
+
+    public static function CreateMockDate($month,$day){
+        return Carbon::createFromFormat('Y-m-d',self::FAKE_YEAR.'-'.$month.'-'.$day);
     }
 
     /**
