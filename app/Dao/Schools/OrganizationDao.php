@@ -20,9 +20,13 @@ class OrganizationDao
 
     /**
      * @param $schoolId
+     * @param $idNameValuePair
      * @return Collection
      */
-    public function getBySchoolId($schoolId){
+    public function getBySchoolId($schoolId, $idNameValuePair=false){
+        if($idNameValuePair){
+            return Organization::select(['id','name'])->where('school_id',$schoolId)->where('level','>',1)->orderBy('level','asc')->get();
+        }
         return Organization::where('school_id',$schoolId)->orderBy('level','asc')->get();
     }
 

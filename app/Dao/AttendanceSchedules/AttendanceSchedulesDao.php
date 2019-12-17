@@ -10,7 +10,9 @@ use App\Models\AttendanceSchedules\AttendanceSchedule;
 use App\Models\AttendanceSchedules\AttendanceSchedulePerson;
 use App\Models\AttendanceSchedules\AttendanceTask;
 use App\Models\AttendanceSchedules\AttendanceTimeSlot;
+use App\Models\AttendanceSchedules\SpecialAttendance;
 use App\Utils\JsonBuilder;
+use App\Utils\Misc\ConfigurationTool;
 use App\Utils\ReturnData\MessageBag;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
@@ -21,6 +23,34 @@ class AttendanceSchedulesDao
     public function __construct()
     {
     }
+
+    // 以下的方法是对礼县的值周的特殊处理
+    public function getSpecialAttendances($schoolId){
+        return SpecialAttendance::where('school_id', $schoolId)
+            ->orderBy('start_date', 'desc')
+            ->paginate(ConfigurationTool::DEFAULT_PAGE_SIZE);
+    }
+    public function saveSpecial($data){
+        $sd = Carbon::createFromFormat('Y-m-d',$data['start_date']);
+        $data['end_date'] = $sd->addDays(6)->format('Y-m-d');
+        return SpecialAttendance::create($data);
+    }
+    public function updateSpecial($data){
+        $sd = Carbon::createFromFormat('Y-m-d',$data['start_date']);
+        $data['end_date'] = $sd->addDays(6)->format('Y-m-d');
+        $special = SpecialAttendance::find($data['id']);
+        foreach ($data as $key => $datum) {
+            $special->$key = $datum;
+        }
+        return $special->save();
+    }
+    public function getSpecial($id){
+        return SpecialAttendance::find($id);
+    }
+    public function deleteSpecial($id){
+        return SpecialAttendance::where('id',$id)->delete();
+    }
+    // 对礼县的值周的特殊处理 结束
 
     /**
      * @param $data

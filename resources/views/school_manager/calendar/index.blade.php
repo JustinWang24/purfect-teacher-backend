@@ -1,13 +1,48 @@
-@php
-use App\Utils\UI\Anchor;
-use App\Utils\UI\Button;
-@endphp
-
 @extends('layouts.app')
 @section('content')
     <div class="row" id="school-calendar-app">
         <div class="col-sm-12 col-md-3 col-lg-3 col-xl-3">
             <div class="card">
+                <div class="card-head">
+                    <header>
+                        值班安排 <i class="el-icon-loading" v-if="isLoading"></i>
+                    </header>
+                </div>
+                <div class="card-body">
+                    <p class="text-grey" v-if="specialAttendance === null">
+                        还没有安排值周,
+                        @if(\Illuminate\Support\Facades\Auth::user()->isSchoolAdminOrAbove())
+                        <a href="{{ route('school_manager.attendance.add') }}">添加值周</a>
+                        @endif
+                    </p>
+                    <ul v-if="specialAttendance" style="list-style: none;padding-left: 10px;">
+                        <li>
+                            <p>值班校领导: <span class="text-primary">@{{ specialAttendance.high_level }}</span></p>
+                        </li>
+                        <li>
+                            <p>值班领导: <span class="text-primary">@{{ specialAttendance.middle_level }}</span></p>
+                        </li>
+                        <li>
+                            <p>值班教师: <span class="text-primary">@{{ specialAttendance.teacher_level }}</span></p>
+                        </li>
+                        <li>
+                            <p>组织单位: <span class="text-primary" :key="idx" v-for="(org, idx) in specialAttendance.related_organizations">@{{ org }} </span></p>
+                        </li>
+                        <li>
+                            <p>班级: <span class="text-primary">@{{ specialAttendance.grade.name }} </span></p>
+                        </li>
+                        <li>
+                            <p>备注: <span>@{{ specialAttendance.description }} </span></p>
+                        </li>
+                        @if(\Illuminate\Support\Facades\Auth::user()->isSchoolAdminOrAbove())
+                            <li>
+                                <el-button @click="editSpecial" icon="el-icon-edit" class="pull-right" type="primary">修改</el-button>
+                            </li>
+                        @endif
+                    </ul>
+                </div>
+            </div>
+            <div class="card" style="{{ \Illuminate\Support\Facades\Auth::user()->isSchoolAdminOrAbove() ? null : 'display:none' }}">
                 <div class="card-head">
                     <header>
                         添加校历事件
@@ -37,9 +72,9 @@ use App\Utils\UI\Button;
                         </el-select>
                         <br>
                         <br>
-                        <label>事件说明</label>
+                        <label>活动安排</label>
                         <br>
-                        <el-input rows="5" placeholder="必填: 关于事件的简要说明" type="textarea" v-model="form.content"></el-input>
+                        <el-input rows="5" placeholder="必填: 活动安排的简要说明" type="textarea" v-model="form.content"></el-input>
                         <br>
                         <br>
                         <el-form-item>
@@ -49,6 +84,7 @@ use App\Utils\UI\Button;
                     </el-form>
                 </div>
             </div>
+
         </div>
 
         <div class="col-12 col-md-9 col-lg-9 col-xl-9">

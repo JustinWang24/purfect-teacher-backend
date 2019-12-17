@@ -80,4 +80,30 @@ class AttendanceScheduleController extends Controller
         $schoolId = $user->getSchoolId();
         $dao = new AttendanceSchedulesDao();
     }
+
+    /**
+     * 获取给定日期的值周安排
+     * @param Request $request
+     */
+    public function load_special(Request $request){
+        $dao = new AttendanceSchedulesDao();
+
+        $schoolId = $request->get('school_id', null);
+        if($schoolId){
+            $schoolId = $request->user('api')->getSchoolId();
+        }
+
+        $specials = $dao->getSpecialAttendances($schoolId);
+
+        $sp = null;
+
+        foreach ($specials as $special) {
+            if($special->start_date->format('Y-m-d') <= $request->get('date') && $request->get('date') <= $special->end_date->format('Y-m-d')){
+                $special->grade;
+                $sp = $special;
+                break;
+            }
+        }
+        return JsonBuilder::Success(['special'=>$sp]);
+    }
 }
