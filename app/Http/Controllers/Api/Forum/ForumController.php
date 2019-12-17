@@ -30,9 +30,10 @@ class ForumController extends Controller
 
         $resources = [];
         if ($type == Forum::TYPE_IMAGE) {
-            foreach ($images as $image) {
+            foreach ($images as $key => $image) {
                 $imagePath            = $image->store('public/forum');
                 $resources[]['image'] = Forum::ForumConvertUploadPathToUrl($imagePath);
+                $resources[$key]['type'] = Forum::TYPE_IMAGE;
             }
         } elseif ($type == Forum::TYPE_VIDEO) {
             $video = $request->file('video')->store('public/forum');
@@ -40,12 +41,13 @@ class ForumController extends Controller
             // 只有一个视频
             $resources[0]['video'] = Forum::ForumConvertUploadPathToUrl($video);
             $resources[0]['cover'] = Forum::ForumConvertUploadPathToUrl($cover);
+            $resources[0]['type']  = Forum::TYPE_VIDEO;
         }
         $data = [
             'school_id' => $user->getSchoolId(),
             'user_id'   => $user->getId(),
             'content'   => $content,
-            'type_id'   => 1,
+            'type_id'   => $type,
         ];
 
         $dao    = new  ForumDao;
@@ -75,18 +77,22 @@ class ForumController extends Controller
             $lists[$key]['type']        = $val->forumType->title;
             $lists[$key]['comment_num'] = $val->forumComment->count();
             $lists[$key]['like_num']    = $val->forumLike->count();
-            $lists[$key]['avatar']      = Forum::getImageUrl($val->studentProfile->avatar);
+            $lists[$key]['avatar']      = $val->studentProfile->avatar;
             $lists[$key]['user_name']   = $val->studentProfile->user->name;
 
 
             $val->image_field = ['image'];
             $image = $val->image;
             foreach ($image as $k => $item) {
-                $item->image = Forum::getImageUrl($item->image);
-                $lists[$key]['video'] = Forum::getImageUrl($item->video);
-                $lists[$key]['cover'] = Forum::getImageUrl($item->cover);
+                $item->image;
             }
 
+            $val->image_field = ['video', 'cover'];
+            $video = $val->video;
+            $lists[$key]['video_path'] = $video['video'];
+            $lists[$key]['cover'] = $video['cover'];
+
+            unset($lists[$key]['video']);
             unset($lists[$key]['forumType']);
             unset($lists[$key]['type_id']);
             unset($lists[$key]['forumComment']);
