@@ -349,6 +349,7 @@ Route::prefix('school_manager')->group(function () {
     });
 
     //值周功能
+    Route::get('attendance/delete', 'AttendanceSchedulesController@delete')->name('school_manager.attendance.delete');                        // 添加校区
     Route::get('attendance/add', 'AttendanceSchedulesController@add')->name('school_manager.attendance.add');                        // 添加校区
     Route::get('attendance/edit/{id}', 'AttendanceSchedulesController@edit')->name('school_manager.attendance.edit');                     // 编辑校区
     Route::post('attendance/update', 'AttendanceSchedulesController@update')->name('school_manager.attendance.update');              // 保存校区
