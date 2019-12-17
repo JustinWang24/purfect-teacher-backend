@@ -460,6 +460,7 @@ abstract class AbstractImporter implements IImportExcel
             $campus = $schoolObj->campuses()->first();
             $gradeUser = $gradeUserDao->addGradUser([
                 'user_id' => $user->id,
+                'user_type' => $user->type,
                 'name' => $rowData['userName'],
                 'school_id' => $schoolId,
                 'campus_id' => $campus->id,
