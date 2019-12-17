@@ -36,4 +36,20 @@ class SchoolRequest extends MyStandardRequest
     public function getTermStart(){
         return $this->get('term_start',null);
     }
+
+    /**
+     * 获取夏季作息的起始日期
+     * @return array
+     */
+    public function getSummerStart(){
+        return $this->get('summer_start_date',null);
+    }
+
+    /**
+     * 获取冬季作息的起始日期
+     * @return array
+     */
+    public function getWinterStart(){
+        return $this->get('winter_start_date',null);
+    }
 }

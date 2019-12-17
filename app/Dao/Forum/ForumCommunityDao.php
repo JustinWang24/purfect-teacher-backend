@@ -37,7 +37,7 @@ class ForumCommunityDao
     {
         $map = ['school_id'=>$schoolId, 'id'=>$communityId];
         if($isShow) {
-            $map['school_id'] = Community::STATUS_CHECK;
+            $map['status'] = Community::STATUS_CHECK;
         }
         return Community::where($map)->first();
     }
@@ -181,4 +181,17 @@ class ForumCommunityDao
         return $messageBag;
     }
 
+    public function getPicUrl($communityArr)
+    {
+        $fileConfig = config('filesystems.disks.community');
+        $communityArr['logo'] = $fileConfig['url'].DIRECTORY_SEPARATOR.$communityArr['logo'];
+        if (isset($communityArr['pic1']))
+            $communityArr['pic1'] = $fileConfig['url'].DIRECTORY_SEPARATOR.$communityArr['pic1'];
+        if (isset($communityArr['pic2']))
+            $communityArr['pic2'] = $fileConfig['url'].DIRECTORY_SEPARATOR.$communityArr['pic2'];
+        if (isset($communityArr['pic3']))
+            $communityArr['pic3'] = $fileConfig['url'].DIRECTORY_SEPARATOR.$communityArr['pic3'];
+
+        return $communityArr;
+    }
 }

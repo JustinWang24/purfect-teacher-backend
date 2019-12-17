@@ -12,6 +12,8 @@
     $ecTo2= $config->getElectiveCourseAvailableTo(2); // 第2学期选修课结束选课的时间
     $term1Start= $config->getTermStartDate(1); // 第1学期的开学时间
     $term2Start= $config->getTermStartDate(2); // 第2学期开学时间
+    $summerStart= $config->summer_start_date ?? \Carbon\Carbon::now(); // 第2学期开学时间
+    $winterStart= $config->winter_start_date ?? \Carbon\Carbon::now(); // 第2学期开学时间
 @endphp
 
 <div class="row" id="school-time-slots-manager">
@@ -110,6 +112,40 @@
                         <select class="form-control pull-left" name="term_start[term2][day]" style="width: 20%;">
                             @foreach($days as $day)
                                 <option value="{{ $day }}" {{ $term2Start->day === $day ? 'selected':null }}>{{ $day }}日</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="clearfix"></div>
+                    <hr>
+
+                    <div class="form-group mt-4">
+                        <label>夏季/秋季作息时间开始日期</label>
+                        <div class="clearfix"></div>
+                        <select class="form-control pull-left mr-2" name="summer_start_date[month]" style="width: 20%;">
+                            @foreach($months as $month)
+                                <option value="{{ $month }}" {{ $month===$summerStart->month ? 'selected':null }}>{{ $month }}月</option>
+                            @endforeach
+                        </select>
+                        <select class="form-control pull-left" name="summer_start_date[day]" style="width: 20%;">
+                            @foreach($days as $day)
+                                <option value="{{ $day }}" {{ $summerStart->day === $day ? 'selected':null }}>{{ $day }}日</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="clearfix"></div>
+                    <hr>
+
+                    <div class="form-group mt-4">
+                        <label>冬季/春季作息时间开始日期</label>
+                        <div class="clearfix"></div>
+                        <select class="form-control pull-left mr-2" name="winter_start_date[month]" style="width: 20%;">
+                            @foreach($months as $month)
+                                <option value="{{ $month }}" {{ $month===$winterStart->month ? 'selected':null }}>{{ $month }}月</option>
+                            @endforeach
+                        </select>
+                        <select class="form-control pull-left" name="winter_start_date[day]" style="width: 20%;">
+                            @foreach($days as $day)
+                                <option value="{{ $day }}" {{ $winterStart->day === $day ? 'selected':null }}>{{ $day }}日</option>
                             @endforeach
                         </select>
                     </div>

@@ -2,11 +2,14 @@
 
 namespace App\Models;
 
+use App\Dao\Timetable\TimeSlotDao;
 use App\Models\Acl\Role;
 use App\Models\Schools\SchoolConfiguration;
 use App\Models\Teachers\Performance\TeacherPerformanceConfig;
 use App\Models\Users\GradeUser;
 use App\User;
+use App\Utils\Time\GradeAndYearUtil;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Models\Schools\Campus;
@@ -45,8 +48,40 @@ class School extends Model
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
     public function timeFrame(){
-        return $this->hasMany(TimeSlot::class)->select(['id','name','type','from','to'])
+        return $this->hasMany(TimeSlot::class)->select(['id','name','type','from','to','season'])
             ->orderBy('from','asc');
+    }
+
+
+    public function getCurrentTimeFrame(){
+        /**
+         * @var SchoolConfiguration $config
+         */
+        $config = $this->configuration;
+        $seasonType = GradeAndYearUtil::GetCurrentSeason($config);
+        $slots = TimeSlot::select(['id','name','type','from','to','season'])
+            ->where('season',$seasonType)
+            ->orderBy('from','asc')->get();
+
+        if(count($slots)===0){
+            // 还没有创建
+            $dao = new TimeSlotDao();
+            $frames = $dao->getDefaultTimeFrame(TimeSlot::SEASONS_WINTER_AND_SPRINT)['frames'];
+            foreach ($frames as $frame) {
+                $frame['school_id'] = 1;
+                $frame['season'] = TimeSlot::SEASONS_WINTER_AND_SPRINT;
+                $dao->createTimeSlot($frame);
+            }
+            $frames = $dao->getDefaultTimeFrame(TimeSlot::SEASONS_SUMMER_AND_AUTUMN)['frames'];
+            foreach ($frames as $frame) {
+                $frame['school_id'] = 1;
+                $frame['season'] = TimeSlot::SEASONS_SUMMER_AND_AUTUMN;
+                $dao->createTimeSlot($frame);
+            }
+            $slots = TimeSlot::select(['id','name','type','from','to','season'])->where('season',$seasonType)->orderBy('from','asc')->get();
+        }
+
+        return $slots;
     }
 
     /**
