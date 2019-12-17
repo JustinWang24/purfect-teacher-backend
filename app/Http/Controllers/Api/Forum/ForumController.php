@@ -47,7 +47,7 @@ class ForumController extends Controller
             'school_id' => $user->getSchoolId(),
             'user_id'   => $user->getId(),
             'content'   => $content,
-            'type_id'   => $type,
+            'type_id'   => 2, // 校园互动类型
         ];
 
         $dao    = new  ForumDao;
