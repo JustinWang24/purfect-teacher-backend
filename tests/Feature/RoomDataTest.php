@@ -66,7 +66,7 @@ class RoomDataTest extends BasicPageTestCase
                             $data = [
                                 'school_id' => 1,
                                 'campus_id' => 1,
-                                'building_id' => 1,
+                                'building_id' => $val,
                                 'name' => '厨师宿舍'.$name,
                                 'type' => Room::TYPE_STUDENT_HOSTEL,
                                 'seats' => '10',
@@ -77,7 +77,7 @@ class RoomDataTest extends BasicPageTestCase
                             $data = [
                                 'school_id' => 1,
                                 'campus_id' => 1,
-                                'building_id' => 1,
+                                'building_id' => $val,
                                 'name' => $name,
                                 'type' => Room::TYPE_STUDENT_HOSTEL,
                                 'seats' => '10',
