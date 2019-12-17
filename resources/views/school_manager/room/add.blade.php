@@ -42,13 +42,13 @@ use App\Utils\UI\Button;
                         </div>
 
                         <div class="form-group">
-                            <label for="room-name-input">房间名称</label>
-                            <input required type="text" class="form-control" id="room-name-input" value="{{ $room->name }}" placeholder="房间名称" name="room[name]">
+                            <label for="room-name-input">房间编号</label>
+                            <input required type="text" class="form-control" id="room-name-input" value="{{ $room->name }}" placeholder="房间编号" name="room[name]">
                         </div>
 
                         <div class="form-group">
-                            <label for="room-desc-input">简介</label>
-                            <textarea required class="form-control" name="room[description]" id="room-desc-input" cols="30" rows="10" placeholder="房间简介">{{ $room->description }}</textarea>
+                            <label for="room-desc-input">房间名称</label>
+                            <input required class="form-control" name="room[description]" id="room-desc-input" value="{{ $room->description }}" cols="30" rows="10" placeholder="房间名称">
                         </div>
                         <?php
                         Button::Print(['id'=>'btn-create-room','text'=>trans('general.submit')], Button::TYPE_PRIMARY);
@@ -78,5 +78,6 @@ use App\Utils\UI\Button;
             </div>
 
         </div>
+    </div>
     </div>
 @endsection

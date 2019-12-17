@@ -31,9 +31,9 @@ use App\User;
                                 <thead>
                                 <tr>
                                     <th>#</th>
-                                    <th>房间名称</th>
+                                    <th>房间编号</th>
                                     <th>类型</th>
-                                    <th style="width: 300px;">房间简介</th>
+                                    <th style="width: 300px;">房间名称</th>
                                     <th></th>
                                 </tr>
                                 </thead>
