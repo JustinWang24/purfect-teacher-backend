@@ -14,9 +14,12 @@ use App\Utils\UI\Button;
                 <div class="card-body">
                     <div class="row">
                         <div class="table-padding col-12">
-                                <a href="{{ route('school_manager.attendance.add') }}" class="btn btn-primary " id="btn-create-attendance-from">
-                                    创建新值周任务 <i class="fa fa-plus"></i>
-                                </a>
+                            <a href="{{ route('school_manager.attendance.add') }}" class="btn btn-primary " id="btn-create-attendance-from">
+                                创建新值周任务 <i class="fa fa-plus"></i>
+                            </a>
+                            <a href="{{ route('school_manger.school.calendar.index') }}" class="btn btn-primary">
+                                查看校历
+                            </a>
                         </div>
                         <div class="table-responsive">
                             <table class="table table-striped table-bordered table-hover table-checkable order-column valign-middle">

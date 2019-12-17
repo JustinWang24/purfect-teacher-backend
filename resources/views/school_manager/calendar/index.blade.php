@@ -92,6 +92,9 @@
                 <div class="card-head">
                     <header>
 本学期共: <span class="text-primary">{{ $config->study_weeks_per_term }}周</span>, 开学日期: <span class="text-primary">{{ _printDate($config->getTermStartDate()) }}</span>
+                        <a href="{{ route('school_manager.attendance.list') }}" class="btn btn-primary">
+                            值周管理
+                        </a>
                     </header>
                 </div>
                 <div class="card-body">
