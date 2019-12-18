@@ -23,7 +23,7 @@ abstract class AbstractImporter implements IImportExcel
 {
     protected $config;
     protected $data;
-    protected $header;
+    protected $header=[];
     protected $school;
     protected $importDao;
     protected $skipColoumn = ['startRow', 'dataRow'];
@@ -182,6 +182,7 @@ abstract class AbstractImporter implements IImportExcel
     public function getDefaultValue($name, $header, $sheetId)
     {
         $config = $this->config['school']['sheet'][$sheetId][$name];
+
         if ($config['isEmpty']=='false')
         {
             return $config['defaultValue'];
@@ -197,6 +198,8 @@ abstract class AbstractImporter implements IImportExcel
      */
     public function getIndex($name, $array)
     {
+        if (empty($name))
+            return 0;
         foreach ($array as $key=>$value){
             if ($name == $value)
                 return $key;
@@ -209,7 +212,7 @@ abstract class AbstractImporter implements IImportExcel
      */
     public function getHeader($sheetId)
     {
-        $header = $this->header;
+        $header = isset($this->header[$sheetId])?$this->header[$sheetId]:'';
         if (empty($header)) {
             $data = $this->getSheetData($sheetId);
             $sheetConfig = $this->config['school']['sheet'][$sheetId];
@@ -217,7 +220,7 @@ abstract class AbstractImporter implements IImportExcel
             if (empty($header)) {
                 exit('文件头获取失败，请检查配置');
             }
-            $this->setHeader($header);
+            $this->setHeader($header,$sheetId);
             return $header;
         } else {
             return $header;
@@ -227,9 +230,9 @@ abstract class AbstractImporter implements IImportExcel
     /**
      * @param $header
      */
-    public function setHeader($header)
+    public function setHeader($header,$sheetId)
     {
-        $this->header = $header;
+        $this->header[$sheetId] = $header;
     }
 
     /**
@@ -559,7 +562,12 @@ abstract class AbstractImporter implements IImportExcel
 
     public function saveStudent($user, $rowData,$row)
     {
-        $student = new StudentProfile();
+        //$student = new StudentProfile();
+        $studentDao = new StudentProfileDao();
+        $student = $studentDao->getStudentInfoByUserId($user->id);
+        if (empty($student)) {
+            $student = new StudentProfile();
+        }
         $student->user_id = $user->id;
         $student->uuid = Uuid::uuid4()->toString();;
         $student->year = $rowData['year'];
@@ -578,7 +586,7 @@ abstract class AbstractImporter implements IImportExcel
         $student->address_line = $rowData['addressLine'];
         $student->id_number = $rowData['idNumber'];
         $student->birthday = strtotime(substr($rowData['idNumber'],6,8));
-        $student->political_code = $rowData['politicalName'];
+        $student->political_code = isset($rowData['politicalName'])?$rowData['politicalName']:'';
         $student->nation_name = $rowData['nation'];
         $student->parent_name = "-";
         $student->parent_mobile = "-";
