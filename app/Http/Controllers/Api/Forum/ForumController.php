@@ -139,7 +139,7 @@ class ForumController extends Controller
         $id   = $request->get('id');
         $dao  = new ForumDao;
         $data = $dao->find($id);
-
+/*
         $data['avatar']    = Forum::getImageUrl($data->studentProfile->avatar);
         $data['user_name'] = $data->studentProfile->user->name;
         $data['type']      = $data->forumType->title;
@@ -152,7 +152,7 @@ class ForumController extends Controller
             }
         unset($data['studentProfile']);
         unset($data['forumType']);
-        unset($data['forumLike']);
+        unset($data['forumLike']);*/
         //帖子中加入评论
 
         $user = $request->user();
@@ -160,6 +160,7 @@ class ForumController extends Controller
         $userDao = new UserDao();
         $studentDao = new StudentProfileDao();
         $comments = $formCommentDao->getCommentForForum($id);
+
         $result = [];
         //获得评论数
         $result['info']['comment_count'] = $formCommentDao->getCountComment($id);
@@ -185,9 +186,9 @@ class ForumController extends Controller
             $result['comments'][$key]['comment'] = $commentArr;
             $replyArr = $replys->toArray();
             foreach ($replyArr as $k => $reply) {
-                $replyArr[$k]['commentid'] = $reply->id;
-                $replyArr[$k]['comment_pid'] = $comment->id;
-                $replyArr[$k]['comment_levid'] = $comment->id;
+                $replyArr[$k]['commentid'] = $reply['id'];
+                $replyArr[$k]['comment_pid'] = $commentArr['id'];
+                $replyArr[$k]['comment_levid'] = $commentArr['id'];
                 $replyArr[$k]['userid'] = $reply['user_id'];
                 $replyArr[$k]['user_pics'] = asset($studentDao->getStudentInfoByUserId($reply['user_id'])->avatar);
                 $replyArr[$k]['user_nickname'] = $userDao->getUserById($reply['user_id'])->first()->name;
@@ -197,7 +198,7 @@ class ForumController extends Controller
                 $replyArr[$k]['icheid'] =  $commentArr['forum_id'];
                 $replyArr[$k]['com_content'] =  $reply['reply'];
                 $replyArr[$k]['comment_praise'] =  $commentArr['comment_praise'];
-                $replyArr[$k]['create_time'] =  $reply['create_at'];
+                $replyArr[$k]['create_time'] =  $reply['created_at'];
             }
 
             $result['comments'][$key]['replyList'] = $replyArr;
