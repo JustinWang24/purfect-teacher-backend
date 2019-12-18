@@ -7,6 +7,7 @@
  */
 
 namespace App\Utils\Time;
+use App\Models\Schools\SchoolConfiguration;
 use App\Models\Timetable\TimeSlot;
 use App\Utils\JsonBuilder;
 use App\Utils\ReturnData\IMessageBag;
@@ -32,20 +33,21 @@ class GradeAndYearUtil
      * @return int
      */
     public static function GetGradeIndexByYear($year){
-        return Carbon::now()->year - intval($year) + 1;
+        return Carbon::now(self::TIMEZONE_CN)->year - intval($year) + 1;
     }
 
     /**
-     * 获取当前的额 timesole 对象
+     * 获取当前的额 timeslot 对象
      *
      * @param null $time
+     * @param null $schoolId
      * @return TimeSlot|null
      */
-    public static function GetTimeSlot($time = null){
+    public static function GetTimeSlot($time = null, $schoolId = null){
         $dao = new TimeSlotDao();
-        $timeSlots = $dao->getAllStudyTimeSlots(session('school.id'));
+        $timeSlots = $dao->getAllStudyTimeSlots($schoolId ?? session('school.id'));
         if(is_null($time)){
-            $time = Carbon::now();
+            $time = Carbon::now(self::TIMEZONE_CN);
         }
 
         $slot = null;
@@ -56,6 +58,21 @@ class GradeAndYearUtil
             }
         }
         return $slot;
+    }
+
+    /**
+     * 获取当前的季节类型
+     * @param SchoolConfiguration $config
+     * @return int
+     */
+    public static function GetCurrentSeason(SchoolConfiguration $config){
+        $now = Carbon::now(GradeAndYearUtil::TIMEZONE_CN);
+        $mockDate = Carbon::createFromFormat('Y-m-d',SchoolConfiguration::FAKE_YEAR.'-'.$now->month.'-'.$now->day)->format('Y-m-d');
+        $seasonType = TimeSlot::SEASONS_WINTER_AND_SPRINT;
+        if($config->summer_start_date->format('Y-m-d') <= $mockDate && $mockDate < $config->winter_start_date->format('Y-m-d')){
+            $seasonType = TimeSlot::SEASONS_SUMMER_AND_AUTUMN;
+        }
+        return $seasonType;
     }
 
     /**

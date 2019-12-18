@@ -14,7 +14,7 @@ class AddFieldToMediasTable extends Migration
     public function up()
     {
         Schema::table('medias', function (Blueprint $table) {
-            $table->unsignedSmallInteger('asterisk')->default(0)->comment('是否有星标 0:无 1:是');
+//            $table->unsignedSmallInteger('asterisk')->default(0)->comment('是否有星标 0:无 1:是');
             $table->dateTime('updated_at');
             $table->unsignedSmallInteger('click')->default(0)->comment('点击次数');
         });
@@ -28,7 +28,7 @@ class AddFieldToMediasTable extends Migration
     public function down()
     {
         Schema::table('medias', function (Blueprint $table) {
-            $table->dropColumn('asterisk');
+//            $table->dropColumn('asterisk');
             $table->dropColumn('updated_at');
             $table->dropColumn('click');
         });

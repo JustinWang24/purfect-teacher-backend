@@ -26,6 +26,8 @@ class SchoolConfiguration extends Model
         'apply_elective_course_to_2',
         'first_day_term_1',
         'first_day_term_2',
+        'summer_start_date',
+        'winter_start_date',
     ];
 
     public $casts = [
@@ -36,6 +38,8 @@ class SchoolConfiguration extends Model
         'apply_elective_course_to_2'=>'datetime',
         'first_day_term_1'=>'datetime',
         'first_day_term_2'=>'datetime',
+        'summer_start_date'=>'datetime',
+        'winter_start_date'=>'datetime',
     ];
 
     /**
@@ -138,11 +142,38 @@ class SchoolConfiguration extends Model
         return Carbon::createFromFormat('Y-m-d',self::FAKE_YEAR.'-'.$ec[$type]['month'].'-'.$ec[$type]['day']);
     }
 
+    public static function CreateMockDate($month,$day){
+        return Carbon::createFromFormat('Y-m-d',self::FAKE_YEAR.'-'.$month.'-'.$day);
+    }
+
     /**
      * 获取学校 ID
      * @return int
      */
     public function getSchoolId(){
         return $this->school_id;
+    }
+
+    /**
+     * @param $date
+     * @param $weeks
+     * @return CalendarWeek|null
+     */
+    public function getScheduleWeek($date, $weeks = null){
+        $w = null;
+
+        if(!$weeks){
+            $weeks = $this->getAllWeeksOfTerm();
+        }
+        foreach ($weeks as $week) {
+            /**
+             * @var CalendarWeek $week
+             */
+            if($week->includes($date)){
+                $w = $week;
+                break;
+            }
+        }
+        return $w;
     }
 }

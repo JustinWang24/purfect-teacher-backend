@@ -449,10 +449,11 @@ Route::prefix('attendance')->middleware('auth:api')->group(function () {
     // 消息中心
     Route::post('/list','Api\AttendanceSchedule\AttendanceScheduleController@display')
         ->name('api.attendance.list');
+    Route::post('/load-special','Api\AttendanceSchedule\AttendanceScheduleController@load_special')
+        ->name('api.attendance.load-special');
 });
 
 Route::prefix('user')->group(function () {
-
     // 登录
     Route::post('/login', 'Api\Login\LoginController@index')
         ->name('api.user.login');
@@ -595,6 +596,12 @@ Route::prefix('social')->middleware('auth:api')->group(function () {
         ->name('api.social.unlike');
 });
 
+// 个人评价模块的接口
+Route::prefix('evaluate')->middleware('auth:api')->group(function () {
+    // 学生评价老师的接口
+    Route::any('/student/rate-lesson','Api\Evaluate\RatingController@rate_lesson')
+        ->name('api.evaluate.student.rate-lesson');
+});
 
 Route::prefix('cloud')->group(function () {
 
@@ -613,9 +620,11 @@ Route::prefix('cloud')->group(function () {
     // 考勤统计
     Route::post('/getAttendanceStatistic','Api\Cloud\CloudController@getAttendanceStatistic')
         ->name('api.cloud.attendance.statistic');
-
     // 接收华三考勤数据
-    Route::post('/attendanceData','Api\Cloud\CloudController@attendanceData')
-        ->name('api.cloud.attendance.data');
+    Route::post('/distinguish','Api\Cloud\CloudController@distinguish')
+        ->name('api.cloud.distinguish.data');
+     // 华三人脸识别图片上传
+    Route::post('/uploadFaceImage','Api\Cloud\CloudController@uploadFaceImage')
+        ->name('api.cloud.upload.face.image')->middleware('auth:api');
 
 });

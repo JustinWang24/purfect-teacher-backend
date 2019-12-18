@@ -37,7 +37,7 @@ class CalendarWeek implements Arrayable
         $this->start = Carbon::createFromFormat('Y-m-d',$start);
         $this->end = Carbon::createFromFormat('Y-m-d',$end);
         $this->events = $events ?? new Collection();
-        $now = Carbon::now();
+        $now = Carbon::now(GradeAndYearUtil::TIMEZONE_CN);
         $this->current = $now->between($this->start, $this->end);
     }
 
@@ -51,6 +51,15 @@ class CalendarWeek implements Arrayable
             $date->between($this->start, $this->end) ||
             $date->format('Y-m-d') === $this->end->format('Y-m-d');
         return $included;
+    }
+
+    /**
+     * @return int
+     */
+    public function getScheduleWeekIndex(){
+        $str =  str_replace('第','', $this->getName());
+        $str =  str_replace('周','', $str);
+        return intval($str);
     }
 
     /**

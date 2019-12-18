@@ -24,6 +24,7 @@ class Banner extends Model
     const POSIT_10  = 10;
     const POSIT_11  = 11;
     const POSIT_12  = 12;
+    const POSIT_13  = 13;
 
     const POSIT_HOME_TEXT = '首页';
     const POSIT_TEXT_1 = '招生资源位';
@@ -38,6 +39,7 @@ class Banner extends Model
     const POSIT_TEXT_10 = '品牌闪购资源位';
     const POSIT_TEXT_11 = '就业资源位';
     const POSIT_TEXT_12 = '教师首页';
+    const POSIT_TEXT_13 = '生活资源位';
 
 
     // 展示类型
@@ -74,6 +76,7 @@ class Banner extends Model
             self::POSIT_10 => self::POSIT_TEXT_10,
             self::POSIT_11 => self::POSIT_TEXT_11,
             self::POSIT_12 => self::POSIT_TEXT_12,
+            self::POSIT_13 => self::POSIT_TEXT_13,
         ];
     }
 

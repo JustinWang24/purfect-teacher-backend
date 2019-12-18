@@ -7,9 +7,11 @@
  */
 
 namespace App\Dao\Timetable;
+use App\Dao\Schools\SchoolDao;
 use App\Models\Timetable\TimetableItem;
 use App\User;
 use App\Utils\Time\GradeAndYearUtil;
+use Carbon\Carbon;
 use Illuminate\Support\Collection;
 
 class TimetableItemDao
@@ -25,9 +27,17 @@ class TimetableItemDao
 
     /**
      * @param $id
+     * @param $withRelations
      * @return TimetableItem
      */
-    public function getItemById($id){
+    public function getItemById($id, $withRelations = false){
+        if($withRelations){
+            return TimetableItem::where('id',$id)
+                ->with('building')
+                ->with('room')
+                ->with('timeSlot')
+                ->first();
+        }
         return TimetableItem::find($id);
     }
 
@@ -529,5 +539,36 @@ class TimetableItemDao
      */
     public function getItemsByIdArray($ids){
         return TimetableItem::whereIn('id',$ids)->get();
+    }
+
+    /**
+     * 根据给定的用户获取 当前时间的 课程表项
+     * @param User $user
+     * @return null
+     */
+    public function getCurrentItemByUser(User $user){
+        $now = Carbon::now(GradeAndYearUtil::TIMEZONE_CN);
+
+        $school = (new SchoolDao())->getSchoolById($user->getSchoolId());
+
+        $currentTimeSlot = GradeAndYearUtil::GetTimeSlot($now, $school->id);
+
+        if($currentTimeSlot && $school){
+            $weekdayIndex = $now->weekday();
+            $year = $now->year; // Todo: 根据用户获取当前的课程表项时, 年不是当前, 而是当前学年
+
+            $term = $school->configuration->guessTerm($now->month);
+
+            $where = [
+                ['school_id','=',$school->id],
+                ['year','=',$year],
+                ['term','=',$term],
+                ['time_slot_id','=',$currentTimeSlot->id],
+                ['grade_id','=',$user->gradeUser->grade_id],
+                ['weekday_index','=',$weekdayIndex],
+            ];
+            return TimetableItem::where($where)->first();
+        }
+        return null;
     }
 }

@@ -21,14 +21,14 @@ class PutATestRecordInGradeManagers extends Migration
         });
 
         if (env('APP_DEBUG', false)){
-            \App\Models\Schools\GradeManager::create([
-                'school_id'=>1,
-                'grade_id'=>1,
-                'adviser_id'=>10,
-                'adviser_name'=>\App\User::find(10)->name,
-                'monitor_id'=>6,
-                'monitor_name'=>\App\User::find(6)->name,
-            ]);
+//            \App\Models\Schools\GradeManager::create([
+//                'school_id'=>1,
+//                'grade_id'=>1,
+//                'adviser_id'=>10,
+//                'adviser_name'=>\App\User::find(10)->name,
+//                'monitor_id'=>6,
+//                'monitor_name'=>\App\User::find(6)->name,
+//            ]);
         }
     }
 
