@@ -12,10 +12,17 @@ class AttendancesDao
      * @param $id
      * @return mixed
      */
-    public function getAttendanceById($id)
+    public function getAttendanceByTimeTableId($id)
     {
-        return Attendance::find($id);
+        return Attendance::where('timetable_id', $id)->first();
     }
 
+    /**
+     * 签到
+     */
+    public function arrive()
+    {
+
+    }
 
 }

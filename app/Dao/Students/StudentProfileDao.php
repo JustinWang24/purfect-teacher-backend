@@ -154,4 +154,14 @@ class StudentProfileDao
     {
         return StudentProfile::whereIn('user_id', $userId)->where('gender', $gender)->count();
     }
+
+    /**
+     * 根据faceCode 获取学生信息
+     * @param $faceCode
+     * @return mixed
+     */
+    public function getStudentInfoByUserFaceCode($faceCode)
+    {
+        return StudentProfile::where('face_code', $faceCode)->first();
+    }
 }

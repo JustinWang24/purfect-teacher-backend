@@ -615,9 +615,11 @@ Route::prefix('cloud')->group(function () {
     // 考勤统计
     Route::post('/getAttendanceStatistic','Api\Cloud\CloudController@getAttendanceStatistic')
         ->name('api.cloud.attendance.statistic');
-
     // 接收华三考勤数据
-    Route::post('/attendanceData','Api\Cloud\CloudController@attendanceData')
-        ->name('api.cloud.attendance.data');
+    Route::post('/distinguish','Api\Cloud\CloudController@distinguish')
+        ->name('api.cloud.distinguish.data');
+     // 华三人脸识别图片上传
+    Route::post('/uploadFaceImage','Api\Cloud\CloudController@uploadFaceImage')
+        ->name('api.cloud.upload.face.image')->middleware('auth:api');
 
 });
