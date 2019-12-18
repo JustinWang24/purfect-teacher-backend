@@ -282,8 +282,8 @@ class UserDao
             'api_token'=>Uuid::uuid4()->toString(),
             'uuid'=>Uuid::uuid4()->toString(),
             'password'=>Hash::make($passwordInPlainText),
-            'status'=>User::STATUS_WAITING_FOR_MOBILE_TO_BE_VERIFIED,
-            'type'=>Role::REGISTERED_USER,
+            'status'=>User::STATUS_VERIFIED,
+            'type'=>Role::VERIFIED_USER_STUDENT,
         ];
         return $user = User::create($data);
     }

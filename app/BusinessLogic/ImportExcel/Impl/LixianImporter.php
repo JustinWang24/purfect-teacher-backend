@@ -39,7 +39,8 @@ class LixianImporter extends AbstractImporter
                     continue;
 
                 $rowData = $this->getRowData($sheetIndex, $row);
-                //echo '获取到一行资料'.json_encode($rowData,JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT|JSON_UNESCAPED_SLASHES).'\n';
+                echo '获取到一行资料'.json_encode($rowData,JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT|JSON_UNESCAPED_SLASHES).'\n';
+                echo '获取到一行资料'.json_encode($this->getHeader($sheetIndex),JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT|JSON_UNESCAPED_SLASHES).'\n';
                 //手机号不能为空
                 if (empty($rowData['mobile']) || strlen($rowData['mobile'])!=11) {
                     $this->writeLog($row,'手机号格式错误');
@@ -48,7 +49,7 @@ class LixianImporter extends AbstractImporter
                 }
                 if (empty($rowData['idNumber']) || strlen($rowData['idNumber'])!=18) {
                     $this->writeLog($row,'身份证号格式错误');
-                    echo "\033[38;39;1;101m".$rowData['idNumber']."身份证号为空或者位数不对跳过\033[0m\n";
+                    echo "\033[38;39;1;101m".$rowData['idNumber']."||".$sheetIndex."身份证号为空或者位数不对跳过\033[0m\n";
                     continue;
                 }
 
@@ -88,7 +89,7 @@ class LixianImporter extends AbstractImporter
                             $rowData['year'] = substr($rowData['year'],0,4);
                             $grade = $this->getGrade($user, $rowData['grade'], $schoolObj->id, $major, $rowData['year']);
                             if ($grade) {
-                                $passwordInPlainText = substr($rowData['idNumber'],-4);
+                                $passwordInPlainText = substr($rowData['idNumber'],-6);
                                 $importUser = $this->getUser($rowData['mobile'], $rowData['userName'], $passwordInPlainText,$row);
                                 if ($importUser) {
                                     $gradeUser = $this->getGradeUser($importUser, $rowData,$schoolObj->id, $institute, $department, $major, $grade, $row);

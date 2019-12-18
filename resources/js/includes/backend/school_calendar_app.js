@@ -19,6 +19,8 @@ if(document.getElementById('school-calendar-app')){
                 },
                 events: [],
                 schoolId: null,
+                specialAttendance: null,
+                isLoading: false,
             }
         },
         watch: {
@@ -36,8 +38,25 @@ if(document.getElementById('school-calendar-app')){
             this.schoolId = dom.dataset.school;
             this.events = JSON.parse(dom.dataset.events);// 校历内容
             this.tags = JSON.parse(dom.dataset.tags);// 校历内容
+            this.loadSpecialAttendance();
         },
         methods:{
+            loadSpecialAttendance: function(){
+                this.specialAttendance = null;
+                this.isLoading = true;
+                axios.post(
+                    '/api/attendance/load-special',
+                    {date: this.currentDate.format('YYYY-MM-DD'), school_id: this.schoolId}
+                ).then(res => {
+                    if(Util.isAjaxResOk(res)){
+                        this.specialAttendance = Util.isEmpty(res.data.data.special) ? null : res.data.data.special;
+                    }
+                    this.isLoading = false;
+                })
+            },
+            editSpecial: function(){
+                window.location.href = '/school_manager/attendance/edit/' + this.specialAttendance.id;
+            },
             // 点击的时候, 会把点击的日期发过来, 如果是月份, 会发来第一天
             dateClicked: function(payload){
                 this.currentDate = moment(payload);
@@ -46,6 +65,7 @@ if(document.getElementById('school-calendar-app')){
                     this.form = ev;
                 }
                 this.$message('正在编辑 ' + this.currentDate.format('YYYY-MM-DD') + ' 的校历');
+                this.loadSpecialAttendance();
             },
             onSubmit: function(){
                 if(Util.isEmpty(this.form.event_time)){

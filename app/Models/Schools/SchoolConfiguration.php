@@ -153,4 +153,23 @@ class SchoolConfiguration extends Model
     public function getSchoolId(){
         return $this->school_id;
     }
+
+    /**
+     * @param $date
+     * @param $weeks
+     * @return CalendarWeek|null
+     */
+    public function getScheduleWeek($date, $weeks){
+        $w = null;
+        foreach ($weeks as $week) {
+            /**
+             * @var CalendarWeek $week
+             */
+            if($week->includes($date)){
+                $w = $week;
+                break;
+            }
+        }
+        return $w;
+    }
 }
