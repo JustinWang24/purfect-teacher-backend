@@ -602,3 +602,29 @@ Route::prefix('evaluate')->middleware('auth:api')->group(function () {
     Route::any('/student/rate-lesson','Api\Evaluate\RatingController@rate_lesson')
         ->name('api.evaluate.student.rate-lesson');
 });
+
+Route::prefix('cloud')->group(function () {
+
+    // 获取学校信息
+    Route::post('/getSchoolInfo','Api\Cloud\CloudController@getSchoolInfo')
+        ->name('api.cloud.school');
+    // 获取班级信息
+    Route::post('/getGradesInfo','Api\Cloud\CloudController@getGradesInfo')
+        ->name('api.cloud.grade');
+    // 获取课程信息
+    Route::post('/getCourseInfo','Api\Cloud\CloudController@getCourseInfo')
+        ->name('api.cloud.course');
+    // 签到二维码
+    Route::post('/getQrCode','Api\Cloud\CloudController@getQrCode')
+        ->name('api.cloud.qr.code');
+    // 考勤统计
+    Route::post('/getAttendanceStatistic','Api\Cloud\CloudController@getAttendanceStatistic')
+        ->name('api.cloud.attendance.statistic');
+    // 接收华三考勤数据
+    Route::post('/distinguish','Api\Cloud\CloudController@distinguish')
+        ->name('api.cloud.distinguish.data');
+     // 华三人脸识别图片上传
+    Route::post('/uploadFaceImage','Api\Cloud\CloudController@uploadFaceImage')
+        ->name('api.cloud.upload.face.image')->middleware('auth:api');
+
+});

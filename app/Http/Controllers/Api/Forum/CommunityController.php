@@ -88,7 +88,7 @@ class CommunityController extends Controller
         $data = [];
         foreach ($result as $key => $community) {
             $communityArr = $community->toArray();
-            $communityArr = $this->getPicUrl($communityArr);
+            $communityArr = $dao->getPicUrl($communityArr);
             $communityArr['user_name'] = $userDao->getUserById($communityArr['user_id'])->name;
             $communityArr['user_avatar'] = asset($studentDao->getStudentInfoByUserId($communityArr['user_id'])->avatar);
             $data[$key] = $communityArr;
