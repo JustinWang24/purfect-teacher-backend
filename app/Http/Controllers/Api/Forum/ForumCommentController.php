@@ -41,6 +41,22 @@ extends Controller
                 'school_id'  => $schoolId,
             ];
             $result = $dao->createComment($data);
+            if ($result->getCode()==1000) {
+                $userDao = new UserDao();
+                $studentDao = new StudentProfileDao();
+                $commentArr = $result->toArray();
+                $commentArr['commentid'] =  $commentArr['id'];
+                $commentArr['comment_pid'] =  0;
+                $commentArr['comment_levid'] =  0;
+                $commentArr['icheid'] =  $forumId;
+                $commentArr['com_content'] =  $commentArr['content'];
+                $commentArr['create_time'] =  $commentArr['created_at'];
+                $commentArr['userid'] =  $commentArr['user_id'];
+                $commentArr['user_nickname'] =  $userDao->getUserById($commentArr['user_id'])->first()->name;
+                $commentArr['user_pics'] =  asset($studentDao->getStudentInfoByUserId($commentArr['user_id'])->avatar);
+                $commentArr['comment_praise'] =  0;
+                return JsonBuilder::Success($commentArr);
+            }
             return JsonBuilder::Success($result->getMessage());
         } else {
             return JsonBuilder::Error('内容不合法请重试');
@@ -87,6 +103,22 @@ extends Controller
                 'school_id'  => $schoolId,
             ];
             $result = $dao->createCommentReply($data);
+            if ($result->getCode()==1000) {
+                $userDao = new UserDao();
+                $studentDao = new StudentProfileDao();
+                $replyArr = $result->toArray();
+                $replyArr['commentid'] =  $replyArr['id'];
+                $replyArr['comment_pid'] =  $commentId;
+                $replyArr['comment_levid'] =  $commentId;
+                $replyArr['icheid'] =  $replyArr['forum_id'];
+                $replyArr['com_content'] =  $replyArr['reply'];
+                $replyArr['create_time'] =  $replyArr['created_at'];
+                $replyArr['userid'] =  $replyArr['user_id'];
+                $replyArr['user_nickname'] =  $userDao->getUserById($replyArr['user_id'])->first()->name;
+                $replyArr['user_pics'] =  asset($studentDao->getStudentInfoByUserId($replyArr['user_id'])->avatar);
+                $replyArr['comment_praise'] =  0;
+                return JsonBuilder::Success($replyArr);
+            }
             return JsonBuilder::Success($result->getMessage());
         } else {
             return JsonBuilder::Error('内容不合法请重试');
@@ -151,34 +183,52 @@ extends Controller
      * @return string
      */
     public function getComments(Request $request, $forumId) {
-        $dao = new ForumCommentDao();
+        $user = $request->user();
+        $formCommentDao = new ForumCommentDao();
         $userDao = new UserDao();
         $studentDao = new StudentProfileDao();
-        $comments = $dao->getCommentForForum($forumId);
+        $comments = $formCommentDao->getCommentForForum($forumId);
         $result = [];
         //获得评论数
-        $result['info']['comment_count'] = $dao->getCountComment($forumId);
-        $result['info']['comment_reply_count'] = $dao->getCountReply($forumId);
+        $result['info']['comment_count'] = $formCommentDao->getCountComment($forumId);
+        $result['info']['comment_reply_count'] = $formCommentDao->getCountReply($forumId);
         $result['info']['comment_total'] = $result['info']['comment_count'] + $result['info']['comment_reply_count'];
-        $result['info']['like_count'] =  $dao->getCountLikeForForum($forumId);
+        $result['info']['like_count'] =  $formCommentDao->getCountLikeForForum($forumId);
 
         foreach ($comments as$key => $comment) {
             $replys = $comment->reply()->get();
             $commentArr = $comment->toArray();
-            $commentArr['user_name'] =  $userDao->getUserById($commentArr['user_id'])->first()->name;
-            $commentArr['user_avatar'] =  asset($studentDao->getStudentInfoByUserId($commentArr['user_id'])->avatar);
-            $commentArr['reply_count'] =  $dao->getCountReplyForComment($commentArr['id']);
-
+            $commentArr['commentid'] =  $commentArr['id'];
+            $commentArr['comment_pid'] =  0;
+            $commentArr['comment_levid'] =  0;
+            $commentArr['icheid'] =  $forumId;
+            $commentArr['com_content'] =  $commentArr['content'];
+            $commentArr['create_time'] =  $commentArr['created_at'];
+            $commentArr['userid'] =  $commentArr['user_id'];
+            $commentArr['user_nickname'] =  $userDao->getUserById($commentArr['user_id'])->first()->name;
+            $commentArr['user_pics'] =  asset($studentDao->getStudentInfoByUserId($commentArr['user_id'])->avatar);
+            $commentArr['reply_count'] =  $formCommentDao->getCountReplyForComment($commentArr['id']);
+            $commentArr['ispraise'] =  $formCommentDao->getCommentLike($commentArr['id'],$user->id);
+            $commentArr['comment_praise'] =  $formCommentDao->getCountLikeForForum($forumId);
             $result['comments'][$key]['comment'] = $commentArr;
             $replyArr = $replys->toArray();
             foreach ($replyArr as $k => $reply) {
-                $replyArr[$k]['to_user_name'] = $userDao->getUserById($reply['to_user_id'])->first()->name;
-                $replyArr[$k]['to_user_avatar'] =  asset($studentDao->getStudentInfoByUserId($reply['to_user_id'])->avatar);
-                $replyArr[$k]['from_user_name'] = $userDao->getUserById($reply['user_id'])->first()->name;
-                $replyArr[$k]['from_user_avatar'] =  asset($studentDao->getStudentInfoByUserId($reply['user_id'])->avatar);
+                $replyArr[$k]['commentid'] = $reply->id;
+                $replyArr[$k]['comment_pid'] = $commentArr['id'];
+                $replyArr[$k]['comment_levid'] = $commentArr['id'];
+                $replyArr[$k]['userid'] = $reply['user_id'];
+                $replyArr[$k]['user_pics'] = asset($studentDao->getStudentInfoByUserId($reply['user_id'])->avatar);
+                $replyArr[$k]['user_nickname'] = $userDao->getUserById($reply['user_id'])->first()->name;
+                $replyArr[$k]['touserid'] = $reply['to_user_id'];
+                $replyArr[$k]['touser_pics'] =  asset($studentDao->getStudentInfoByUserId($reply['to_user_id'])->avatar);
+                $replyArr[$k]['touser_nickname'] =  $userDao->getUserById($reply['to_user_id'])->first()->name;
+                $replyArr[$k]['icheid'] =  $forumId;
+                $replyArr[$k]['com_content'] =  $reply['reply'];
+                $replyArr[$k]['comment_praise'] =  $commentArr['comment_praise'];
+                $replyArr[$k]['create_time'] =  $reply['create_at'];
             }
 
-            $result['comments'][$key]['reply'] = $replyArr;
+            $result['comments'][$key]['replyList'] = $replyArr;
         }
         return JsonBuilder::Success($result);
     }
