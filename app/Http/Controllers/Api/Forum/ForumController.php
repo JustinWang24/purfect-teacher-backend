@@ -3,6 +3,7 @@
 
 namespace App\Http\Controllers\Api\Forum;
 
+use App\Dao\Forum\ForumCommentDao;
 use App\Dao\Forum\ForumCommunityDao;
 use App\Dao\Forum\ForumDao;
 use App\Dao\Students\StudentProfileDao;
@@ -152,6 +153,58 @@ class ForumController extends Controller
         unset($data['studentProfile']);
         unset($data['forumType']);
         unset($data['forumLike']);
+        //帖子中加入评论
+
+        $user = $request->user();
+        $formCommentDao = new ForumCommentDao();
+        $userDao = new UserDao();
+        $studentDao = new StudentProfileDao();
+        $comments = $formCommentDao->getCommentForForum($id);
+        $result = [];
+        //获得评论数
+        $result['info']['comment_count'] = $formCommentDao->getCountComment($id);
+        $result['info']['comment_reply_count'] = $formCommentDao->getCountReply($id);
+        $result['info']['comment_total'] = $result['info']['comment_count'] + $result['info']['comment_reply_count'];
+        $result['info']['like_count'] =  $formCommentDao->getCountLikeForForum($id);
+
+        foreach ($comments as$key => $comment) {
+            $replys = $comment->reply()->get();
+            $commentArr = $comment->toArray();
+            $commentArr['commentid'] =  $commentArr['id'];
+            $commentArr['comment_pid'] =  0;
+            $commentArr['comment_levid'] =  0;
+            $commentArr['icheid'] =  $commentArr['forum_id'];
+            $commentArr['com_content'] =  $commentArr['content'];
+            $commentArr['create_time'] =  $commentArr['created_at'];
+            $commentArr['userid'] =  $commentArr['user_id'];
+            $commentArr['user_nickname'] =  $userDao->getUserById($commentArr['user_id'])->first()->name;
+            $commentArr['user_pics'] =  asset($studentDao->getStudentInfoByUserId($commentArr['user_id'])->avatar);
+            $commentArr['reply_count'] =  $formCommentDao->getCountReplyForComment($commentArr['id']);
+            $commentArr['ispraise'] =  $formCommentDao->getCommentLike($comment->id,$user->id);
+            $commentArr['comment_praise'] =  $formCommentDao->getCountLikeForForum($commentArr['forum_id']);
+            $result['comments'][$key]['comment'] = $commentArr;
+            $replyArr = $replys->toArray();
+            foreach ($replyArr as $k => $reply) {
+                $replyArr[$k]['commentid'] = $reply->id;
+                $replyArr[$k]['comment_pid'] = $comment->id;
+                $replyArr[$k]['comment_levid'] = $comment->id;
+                $replyArr[$k]['userid'] = $reply['user_id'];
+                $replyArr[$k]['user_pics'] = asset($studentDao->getStudentInfoByUserId($reply['user_id'])->avatar);
+                $replyArr[$k]['user_nickname'] = $userDao->getUserById($reply['user_id'])->first()->name;
+                $replyArr[$k]['touserid'] = $reply['to_user_id'];
+                $replyArr[$k]['touser_pics'] =  asset($studentDao->getStudentInfoByUserId($reply['to_user_id'])->avatar);
+                $replyArr[$k]['touser_nickname'] =  $userDao->getUserById($reply['to_user_id'])->first()->name;
+                $replyArr[$k]['icheid'] =  $commentArr['forum_id'];
+                $replyArr[$k]['com_content'] =  $reply['reply'];
+                $replyArr[$k]['comment_praise'] =  $commentArr['comment_praise'];
+                $replyArr[$k]['create_time'] =  $reply['create_at'];
+            }
+
+            $result['comments'][$key]['replyList'] = $replyArr;
+        }
+
+        $data['commentList'] = $result['comments'];
+
         return JsonBuilder::Success($data, '帖子详情');
 
     }
