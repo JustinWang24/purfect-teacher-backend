@@ -78,13 +78,13 @@ class WifiPayController extends Controller
          $condition2 , [ 'timesid' , 'desc' ] , [ 'user_wifi_time' ]
       );
 
-      $infos[ 'user_wifi_time' ] = 0;
-      if ( $getWifiUserTimesOneInfo && $getWifiUserTimesOneInfo->user_wifi_time )
-      {
-         $infos[ 'user_wifi_time' ] = strtotime ($getWifiUserTimesOneInfo->user_wifi_time);
-      }
-
-      return JsonBuilder::Success ( $infos ,'wifi无线产品列表');
+      // Wifi 时长
+      $user_wifi_time  = isset( $getWifiUserTimesOneInfo->user_wifi_time ) ? strtotime ( $getWifiUserTimesOneInfo->user_wifi_time ) : 0;
+      $getUserWifiInfo = WifisDao::getUserWifiInfo ( $user_wifi_time );
+      $infos[ 'wifi_date' ]      = $getUserWifiInfo[ 'wifi_date' ];
+      $infos[ 'wifi_days' ]      = $getUserWifiInfo[ 'wifi_days' ];
+      $infos[ 'user_wifi_time' ] = $getUserWifiInfo[ 'wifi_time' ];
+      return JsonBuilder::Success ( $infos , 'wifi无线产品列表' );
    }
 
    /**

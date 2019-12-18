@@ -165,7 +165,6 @@ class SchoolConfiguration extends Model
         if(!$weeks){
             $weeks = $this->getAllWeeksOfTerm();
         }
-
         foreach ($weeks as $week) {
             /**
              * @var CalendarWeek $week

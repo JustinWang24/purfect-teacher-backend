@@ -57,4 +57,34 @@ class WifisDao extends \App\Dao\Wifi\CommonDao
    {
       return Wifis::getWifisStatistics ( $condition , $field );
    }
+   
+
+	 /**
+	  * Func 计算wifi天数
+	  *
+	  * @param $user_wifi_time 时间戳
+	  *
+	  * @return array
+	  *
+	  */
+	 public static function getUserWifiInfo( $user_wifi_time = 0 )
+	 {
+		$tips = '天';
+		$infos[ 'wifi_date' ] = '';
+		$infos[ 'wifi_days' ] = '0' . $tips;
+		$infos[ 'wifi_time' ] =  $user_wifi_time >  0 ? $user_wifi_time : 0;
+
+		if ( $user_wifi_time > 0 )
+		{
+		    $infos[ 'wifi_date' ] = date( 'Y-m-d' , $user_wifi_time );
+		    $days = round( ( $user_wifi_time - time() ) / 86400 );
+		    if ( $days <= 0 )
+		    {
+			   $infos[ 'wifi_days' ] = '0' . $tips;
+		    } else {
+			   $infos[ 'wifi_days' ] = $days . $tips;
+		    }
+		}
+		return (Array)$infos;
+	 }
 }

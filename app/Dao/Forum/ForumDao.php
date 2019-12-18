@@ -59,7 +59,7 @@ class ForumDao
     public function select($user)
     {
         return Forum::where(['school_id'=> $user->getSchoolId(), 'status' => Forum::STATUS_PASS])
-            ->select('id', 'content', 'see_num', 'type_id', 'created_at', 'user_id')
+            ->select('id', 'content', 'see_num', 'type_id', 'created_at', 'user_id', 'is_up')
             ->orderBy('is_up', 'desc')
             ->orderBy('created_at', 'desc')
             ->paginate(ConfigurationTool::DEFAULT_PAGE_SIZE);

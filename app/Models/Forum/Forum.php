@@ -127,17 +127,17 @@ class Forum extends Model
      */
     public function image()
     {
-        return $this->hasMany(ForumImage::class,'forum_id', 'id')->select($this->image_field);
+        return $this->hasMany(ForumImage::class,'forum_id', 'id')->where('type',1)->select($this->image_field);
     }
-
 
     /**
-     * 转换图片网络路径
-     * @param $value
-     * @return string
+     * 视频
      */
-    public static function getImageUrl($value)
+    public function video()
     {
-        return $value ? asset($value) : '';
+        return $this->hasOne(ForumImage::class,'forum_id', 'id')->where('type',2)->select($this->image_field);
     }
+
+
+
 }

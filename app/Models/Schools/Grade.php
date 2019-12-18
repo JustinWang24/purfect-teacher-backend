@@ -26,6 +26,11 @@ class Grade extends Model
         return GradeUser::where('grade_id', $this->id)->where('user_type',Role::GetStudentUserTypes())->count();
     }
 
+    public function gradeUser()
+    {
+        return $this->hasMany(GradeUser::class);
+    }
+
     /**
      * 班级管理员, 包括班主任和班长
      * @return \Illuminate\Database\Eloquent\Relations\HasOne
