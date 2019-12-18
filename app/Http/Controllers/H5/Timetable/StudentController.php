@@ -9,6 +9,7 @@
 namespace App\Http\Controllers\H5\Timetable;
 use App\BusinessLogic\TimetableViewLogic\Factory;
 use App\Dao\Evaluation\RateTeacherDao;
+use App\Dao\Students\LearningNoteDao;
 use App\Dao\Timetable\TimetableItemDao;
 use App\Http\Controllers\Controller;
 use App\Utils\Time\GradeAndYearUtil;
@@ -39,6 +40,11 @@ class StudentController extends Controller
         return view('h5_apps.timetable.student_view', $this->dataForView);
     }
 
+    /**
+     * 课程详情页
+     * @param Request $request
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function detail(Request $request){
         $user = $request->user('api');
         $dao = new TimetableItemDao();
@@ -59,6 +65,8 @@ class StudentController extends Controller
         // 获取教师的总体评价
         $this->dataForView['rateSummary'] = $rateDao->getSummaryByTeacher($timeSlotItem->teacher->id);
 
+        // 学生的笔记
+        $this->dataForView['notes'] = (new LearningNoteDao())->getByStudentAndTimetableItem($user, $timeSlotItem);
         return view('h5_apps.timetable.student_detail', $this->dataForView);
     }
 }

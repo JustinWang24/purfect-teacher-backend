@@ -601,6 +601,9 @@ Route::prefix('evaluate')->middleware('auth:api')->group(function () {
     // 学生评价老师的接口
     Route::any('/student/rate-lesson','Api\Evaluate\RatingController@rate_lesson')
         ->name('api.evaluate.student.rate-lesson');
+    // 学生写课堂笔记
+    Route::any('/student/save-note','Api\Evaluate\RatingController@save_note')
+        ->name('api.evaluate.student.save-note');
 });
 
 Route::prefix('cloud')->group(function () {
