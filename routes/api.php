@@ -454,7 +454,6 @@ Route::prefix('attendance')->middleware('auth:api')->group(function () {
 });
 
 Route::prefix('user')->group(function () {
-
     // 登录
     Route::post('/login', 'Api\Login\LoginController@index')
         ->name('api.user.login');
@@ -597,6 +596,12 @@ Route::prefix('social')->middleware('auth:api')->group(function () {
         ->name('api.social.unlike');
 });
 
+// 个人评价模块的接口
+Route::prefix('evaluate')->middleware('auth:api')->group(function () {
+    // 学生评价老师的接口
+    Route::any('/student/rate-lesson','Api\Evaluate\RatingController@rate_lesson')
+        ->name('api.evaluate.student.rate-lesson');
+});
 
 Route::prefix('cloud')->group(function () {
 

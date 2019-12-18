@@ -11,24 +11,36 @@
          data-materials="{{ json_encode($materials) }}"
          data-teacher="{{ json_encode($timeSlotItem->teacher) }}"
          data-profile="{{ json_encode($timeSlotItem->teacher->profile) }}"
+         data-rate="{{ json_encode($rate) }}"
+         data-ratesummary="{{ json_encode($rateSummary) }}"
          data-apprequest="1">
     </div>
     <div id="{{ $appName }}" class="school-intro-container">
         <div class="main p-15">
             <p class="text-center">
-                <span class="text-primary">{{ $timeSlotItem->course->name }}</span>
+                <el-button style="color: #0c0c0c;" class="pull-left" @click="back" type="text" size="mini" icon="el-icon-arrow-left"></el-button>
+                <span class="text-primary">课程: {{ $timeSlotItem->course->name }}</span>
                 <el-button style="color: #0c0c0c;" class="pull-right" @click="showMore" type="text" size="mini" icon="el-icon-more"></el-button>
             </p>
             <el-divider></el-divider>
             <el-row>
                 <el-col :span="10">
-                    <img class="the-avatar-big" :src="teacherProfile.avatar" alt="">
+                    <img class="the-avatar-big" :src="teacherProfile.avatar">
                 </el-col>
                 <el-col :span="14">
                     <p style="font-size: 13px;">授课老师: <span class="text-primary">@{{ teacher.name }}</span></p>
                     <p style="font-size: 13px;">联系电话: <span class="text-primary">@{{ teacher.mobile }}</span></p>
                 </el-col>
             </el-row>
+            <el-divider v-if="rateSummary"></el-divider>
+            <p v-if="rateSummary" style="text-align: center;">
+                综合评价
+                <el-rate
+                        v-model="rateSummary.average_points"
+                        disabled
+                        text-color="#ff9900">
+                </el-rate>
+            </p>
             <el-divider></el-divider>
             <p>
                 <i class="el-icon-map-location"></i>&nbsp; 上课地点: <span class="text-primary">@{{ item.building.name }} @{{ item.room.name }}</span>
@@ -87,6 +99,42 @@
                     </p>
                 </li>
             </ul>
+        </el-drawer>
+        <el-drawer
+                size="80%"
+                :with-header="false"
+                :visible.sync="showTeacherEvaluateTeacherFlag"
+                direction="btt">
+            <div class="rate-box">
+                <h4 class="text-center">@{{ rateTitle }}</h4>
+
+                <p class="demonstration">课前准备情况</p>
+                <el-rate class="mt-10" :texts="rateTexts" :disabled="myRate.id" show-text v-model="myRate.prepare"></el-rate>
+
+                <p class="demonstration mt-10">老师课上讲义</p>
+                <el-rate class="mt-10" :texts="rateTexts" :disabled="myRate.id" show-text v-model="myRate.material"></el-rate>
+
+                <p class="demonstration mt-10">准时上课</p>
+                <el-rate class="mt-10" :texts="rateTexts" :disabled="myRate.id" show-text v-model="myRate.on_time"></el-rate>
+
+                <p class="demonstration mt-10">趣味性</p>
+                <el-rate class="mt-10" :texts="rateTexts" :disabled="myRate.id" show-text v-model="myRate.positive"></el-rate>
+
+                <p class="demonstration mt-10">综合结果</p>
+                <el-rate class="mt-10" :texts="rateTexts" :disabled="myRate.id" show-text v-model="myRate.result"></el-rate>
+                <br>
+                <el-input
+                        v-if="!myRate.id"
+                        style="padding: 10px;"
+                        type="textarea"
+                        :rows="2"
+                        placeholder="选填: 我的留言"
+                        v-model="myRate.comment">
+                </el-input>
+                <p v-if="myRate.id">我的留言: @{{ myRate.comment }}</p>
+                <br>
+                <el-button class="mt-10" v-if="!myRate.id" type="primary" icon="el-icon-check" @click="submitRate">提交我的评价</el-button>
+            </div>
         </el-drawer>
     </div>
 @endsection
