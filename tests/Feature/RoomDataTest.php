@@ -59,7 +59,7 @@ class RoomDataTest extends BasicPageTestCase
                         if($key == 1 && $i == 1) {
 
                             $description = '厨师宿舍';
-                            if($name == 07) {
+                            if($name == 107) {
                                 $description = '宿舍值班室';
                             }
 

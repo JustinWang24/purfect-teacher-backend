@@ -25,7 +25,7 @@ class CreateAttendancesTable extends Migration
             $table->mediumInteger('year')->comment('那一年');
             $table->mediumInteger('term')->comment('学期');
             $table->unsignedBigInteger('grade_id')->comment('班级ID');
-            $table->unsignedBigInteger('teacher')->comment('教师ID');
+            $table->unsignedBigInteger('teacher_id')->comment('教师ID');
             $table->mediumInteger('week')->comment('当前学期的第几周');
             $table->timestamps();
         });
