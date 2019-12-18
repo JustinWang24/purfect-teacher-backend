@@ -5,9 +5,8 @@ namespace App\Dao\AttendanceSchedules;
 
 use App\Dao\Schools\SchoolDao;
 use App\Models\AttendanceSchedules\Attendance;
-use App\Models\Students\StudentProfile;
 use App\Models\Timetable\TimetableItem;
-use App\Utils\Time\CalendarWeek;
+use App\User;
 use App\Utils\Time\GradeAndYearUtil;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
@@ -27,10 +26,11 @@ class AttendancesDao
     /**
      * 签到
      * @param $item TimetableItem
-     * @param $student StudentProfile
+     * @param $user User
+     * @param $type
      * @return bool
      */
-    public function arrive($item, $student)
+    public function arrive($item, $user, $type)
     {
 
         $attendance = Attendance::where('timetable_id', $item->id)->first();
@@ -43,9 +43,7 @@ class AttendancesDao
             $now = Carbon::now(GradeAndYearUtil::TIMEZONE_CN);
             $schoolDao = new SchoolDao;
             $school = $schoolDao->getSchoolById($item->school_id);
-            $week = $school->configuration->getScheduleWeek($now);
-
-//            $config = new CalendarWeek(1,$week);
+            $week = $school->configuration->getScheduleWeek($now)->getScheduleWeekIndex();
 
             $attendanceData = [
                 'timetable_id'   => $item->id,
@@ -58,7 +56,7 @@ class AttendancesDao
                 'term'           => $item->term,
                 'grade_id'       => $item->grade_id,
                 'teacher_id'     => $item->teacher_id,
-                'week'           => 1
+                'week'           => $week,
             ];
             Attendance::create($attendanceData);
         }
@@ -67,7 +65,7 @@ class AttendancesDao
         try{
             $data = [
                 'attendance_id' => $attendance->id,
-                'student_id'    => $student->user_id,
+                'student_id'    => $user->id,
                 'timetable_id'  => $item->id,
                 'course_id'     => $item->course_id,
             ];
@@ -80,7 +78,6 @@ class AttendancesDao
             $result = true;
         }catch (\Exception $e) {
             DB::rollBack();
-            dd($e);
             $result = false;
         }
 

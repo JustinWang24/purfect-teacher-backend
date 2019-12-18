@@ -11,6 +11,7 @@ use App\Dao\Timetable\TimeSlotDao;
 use App\Dao\Timetable\TimetableItemDao;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Cloud\CloudRequest;
+use App\Models\AttendanceSchedules\AttendancesDetail;
 use App\Models\Schools\Facility;
 use App\Models\Students\StudentProfile;
 use App\ThirdParty\CloudOpenApi;
@@ -251,8 +252,8 @@ class CloudController extends Controller
         if (empty($item)) {
             return JsonBuilder::Error('未找到该同学目前上的课程');
         }
-        if ($student->user->gradeUser->grade_id) {
-            return JsonBuilder::Error('该学生应该上这个课程');
+        if ($item->grade_id != $student->user->gradeUser->grade_id) {
+            return JsonBuilder::Error('该学生不应该上这个课程');
         }
 
         $attendancesDetailsDao = new AttendancesDetailsDao;
@@ -262,7 +263,7 @@ class CloudController extends Controller
         }
 
         $dao = new AttendancesDao;
-        $attendanceInfo = $dao->arrive($item, $student);
+        $attendanceInfo = $dao->arrive($item, $student->user, AttendancesDetail::TYPE_INTELLIGENCE);
         if($attendanceInfo) {
             return  JsonBuilder::Success('签到成功');
         } else {
