@@ -140,16 +140,13 @@ class ForumController extends Controller
         $dao  = new ForumDao;
         $data = $dao->find($id);
 
-        $data['avatar']    = Forum::getImageUrl($data->studentProfile->avatar);
-
         $data['avatar']    = $data->studentProfile->avatar;
-
         $data['user_name'] = $data->studentProfile->user->name;
         $data['type']      = $data->forumType->title;
         $data['like_num']  = $data->forumLike->count();
         $data->image_field = ['image'];
         foreach ($data->image as $k => $item) {
-            $item->image = $item->image;
+             $item->image = $item->image;
         }
 
         $data->image_field = ['video', 'cover'];
@@ -160,6 +157,7 @@ class ForumController extends Controller
         unset($data['studentProfile']);
         unset($data['forumType']);
         unset($data['forumLike']);
+
         unset($data['video']);
 
         //帖子中加入评论
