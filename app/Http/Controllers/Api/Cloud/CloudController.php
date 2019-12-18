@@ -3,11 +3,12 @@
 
 namespace App\Http\Controllers\Api\Cloud;
 
-use App\Dao\AttendanceSchedules\AttendanceSchedulesDao;
 use App\Dao\AttendanceSchedules\AttendancesDao;
+use App\Dao\AttendanceSchedules\AttendancesDetailsDao;
 use App\Dao\FacilityManage\FacilityDao;
 use App\Dao\Students\StudentProfileDao;
 use App\Dao\Timetable\TimeSlotDao;
+use App\Dao\Timetable\TimetableItemDao;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Cloud\CloudRequest;
 use App\Models\Schools\Facility;
@@ -245,14 +246,21 @@ class CloudController extends Controller
             return JsonBuilder::Error('未找到学生');
         }
 
-        $timeSlotDao = new TimeSlotDao;
-        $item = $timeSlotDao->XXXX($student->user);
+        $timetableItemDao = new TimetableItemDao;
+        $item = $timetableItemDao->getCurrentItemByUser($student->user);
         if (empty($item)) {
             return JsonBuilder::Error('未找到该同学目前上的课程');
         }
 
+        $attendancesDetailsDao = new AttendancesDetailsDao;
+
+        $attendancesDetail = $attendancesDetailsDao->getDetailByTimeTableIdAndStudentId($item->id, $student->user_id);
+        if ($attendancesDetail) {
+            return JsonBuilder::Error('学生已经签到了');
+        }
+
         $dao = new AttendancesDao;
-        $attendanceInfo = $dao->arrive($item->id, $student);
+        $attendanceInfo = $dao->arrive($item, $student);
 
 
     }

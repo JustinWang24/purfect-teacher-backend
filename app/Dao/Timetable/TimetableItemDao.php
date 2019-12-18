@@ -566,7 +566,7 @@ class TimetableItemDao
                 ['grade_id','=',$user->gradeUser->grade_id],
                 ['weekday_index','=',$weekdayIndex],
             ];
-
+           
             return TimetableItem::where($where)->first();
         }
         return null;
