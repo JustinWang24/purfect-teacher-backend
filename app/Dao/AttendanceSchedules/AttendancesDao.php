@@ -25,19 +25,24 @@ class AttendancesDao
      */
     public function arrive($item, $student)
     {
+
         $attendance = Attendance::where('timetable_id', $item->id)->first();
 
         if (empty($attendance)) {
 
             $gradeUser = $item->grade->gradeUser;
             $userIds   = $gradeUser->pluck('user_id');
-
             $attendanceData = [
                 'timetable_id'   => $item->id,
                 'actual_number'  => 0,
                 'leave_number'   => 0, // todo :: 请假总人数 创建请假表
                 'missing_number' => count($userIds),
                 'total_number'   => count($userIds),
+                'year'           => $item->year,
+                'term'           => $item->term,
+                'grade_id'       => $item->grade_id,
+                'teacher_id'     => $item->teacher_id,
+                'week'           =>
             ];
             Attendance::create($attendanceData);
         } else {

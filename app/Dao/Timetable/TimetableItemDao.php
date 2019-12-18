@@ -548,6 +548,7 @@ class TimetableItemDao
      */
     public function getCurrentItemByUser(User $user){
         $now = Carbon::now(GradeAndYearUtil::TIMEZONE_CN);
+
         $school = (new SchoolDao())->getSchoolById($user->getSchoolId());
 
         $currentTimeSlot = GradeAndYearUtil::GetTimeSlot($now, $school->id);
@@ -566,7 +567,6 @@ class TimetableItemDao
                 ['grade_id','=',$user->gradeUser->grade_id],
                 ['weekday_index','=',$weekdayIndex],
             ];
-           
             return TimetableItem::where($where)->first();
         }
         return null;

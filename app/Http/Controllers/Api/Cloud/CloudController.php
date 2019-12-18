@@ -261,7 +261,7 @@ class CloudController extends Controller
 
         $dao = new AttendancesDao;
         $attendanceInfo = $dao->arrive($item, $student);
-
+        
 
     }
 

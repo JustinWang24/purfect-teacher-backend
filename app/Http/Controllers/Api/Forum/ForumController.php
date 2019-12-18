@@ -140,19 +140,26 @@ class ForumController extends Controller
         $dao  = new ForumDao;
         $data = $dao->find($id);
 
-        $data['avatar']    = Forum::getImageUrl($data->studentProfile->avatar);
+        $data['avatar']    = $data->studentProfile->avatar;
         $data['user_name'] = $data->studentProfile->user->name;
         $data['type']      = $data->forumType->title;
         $data['like_num']  = $data->forumLike->count();
-        $data->image_field = ['image', 'video', 'cover'];
+        $data->image_field = ['image'];
         foreach ($data->image as $k => $item) {
-                $item->image = Forum::getImageUrl($item->image);
-                $item->video = Forum::getImageUrl($item->video);
-                $item->cover = Forum::getImageUrl($item->cover);
-            }
+            $item->image = $item->image;
+        }
+
+        $data->image_field = ['video', 'cover'];
+        $video = $data->video;
+        $data['video_path'] = $video['video'];
+        $data['cover']     = $video['cover'];
+
         unset($data['studentProfile']);
         unset($data['forumType']);
         unset($data['forumLike']);
+
+        unset($data['video']);
+
         //帖子中加入评论
 
         $user = $request->user();
@@ -204,6 +211,7 @@ class ForumController extends Controller
         }
 
         $data['commentList'] = $result['comments'];
+
 
         return JsonBuilder::Success($data, '帖子详情');
 
