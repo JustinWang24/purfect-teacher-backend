@@ -174,7 +174,7 @@ class ForumController extends Controller
         $result['info']['comment_total'] = $result['info']['comment_count'] + $result['info']['comment_reply_count'];
         $result['info']['like_count'] =  $formCommentDao->getCountLikeForForum($id);
 
-        foreach ($comments as$key => $comment) {
+        foreach ($comments->items() as $key => $comment) {
             $replys = $comment->reply()->get();
             $commentArr = $comment->toArray();
             $commentArr['commentid'] =  $commentArr['id'];
