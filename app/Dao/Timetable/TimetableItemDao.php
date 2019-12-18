@@ -552,7 +552,6 @@ class TimetableItemDao
         $school = (new SchoolDao())->getSchoolById($user->getSchoolId());
 
         $currentTimeSlot = GradeAndYearUtil::GetTimeSlot($now, $school->id);
-
         if($currentTimeSlot && $school){
             $weekdayIndex = $now->weekday();
             $year = $now->year; // Todo: 根据用户获取当前的课程表项时, 年不是当前, 而是当前学年
