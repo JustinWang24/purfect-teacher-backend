@@ -32,7 +32,7 @@ class StudentController extends Controller
         $this->dataForView['today'] = $logic->build();
 
         $this->dataForView['pageTitle'] = '我的课程表';
-        $this->dataForView['type'] = 'daily';
+        $this->dataForView['type'] = $request->get('type','daily');
         $this->dataForView['day'] = $request->get('day',Carbon::now(GradeAndYearUtil::TIMEZONE_CN)->format('Y-m-d'));
         $this->dataForView['api_token'] = $request->get('api_token');
         $this->dataForView['appName'] = 'timetable-student-view';
