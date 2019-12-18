@@ -54,6 +54,15 @@ class CalendarWeek implements Arrayable
     }
 
     /**
+     * @return int
+     */
+    public function getScheduleWeekIndex(){
+        $str =  str_replace('第','', $this->getName());
+        $str =  str_replace('周','', $str);
+        return intval($str);
+    }
+
+    /**
      * @return string
      */
     public function getName()
