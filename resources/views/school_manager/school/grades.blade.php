@@ -9,9 +9,17 @@ use App\User;
         <div class="col-sm-12 col-md-12 col-xl-12">
             <div class="card">
                 <div class="card-head">
-                    <header>{{ session('school.name') }} - {{ $parent->name??'' }}</header>
+                    <header>
+                        {{ session('school.name') }} - {{ $parent->name??'' }} {{ isset($year) ? $year.'级' : null }}
+                        @if(isset($yearManager))
+                            <a href="{{ route('school_manager.school.set-year-manager',['year'=>$year]) }}">{{ $yearManager->user->name ?? '设置年级组长' }}</a>
+                        @else
+                            @if(isset($year))
+                            <a href="{{ route('school_manager.school.set-year-manager',['year'=>$year]) }}">设置年级组长</a>
+                            @endif
+                        @endif
+                    </header>
                 </div>
-
                 <div class="card-body">
                     <div class="row">
                         <div class="table-padding col-12">
@@ -23,7 +31,7 @@ use App\User;
                                     创建班级 <i class="fa fa-plus"></i>
                                 </a>
                             @endif
-                            @include('school_manager.school.reusable.nav',['highlight'=>'grade'])
+                            @include('school_manager.school.reusable.nav',['highlight'=>isset($year)? 'years':'grade'])
                         </div>
 
                         <div class="table-responsive">

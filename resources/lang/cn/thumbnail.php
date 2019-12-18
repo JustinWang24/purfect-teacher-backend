@@ -128,5 +128,7 @@ return [
     'members'     => '社团成员',
     'attendances-manager' => '选修课程审批',
     'project-view'=> '查看项目',
+    'set-year-manager'=> '设置年级组长',
+    'years'=> '年级管理',
 ];
 
