@@ -23,15 +23,20 @@ class AttendancesDetailsDao
 
     /**
      * 获取签到详情
-     * @param $timeTableId
-     * @param $studentId
+     * @param $item
+     * @param $user
      * @return AttendancesDetail
      */
-    public function getDetailByTimeTableIdAndStudentId($timeTableId, $studentId)
+    public function getDetailByTimeTableIdAndStudentId($item, $user)
     {
-        return AttendancesDetail::where('timetable_id', $timeTableId)
-                ->where('student_id', $studentId)
-                ->first();
+        $where = [
+            ['timetable_id','=',$item->id],
+            ['year','=', $item->year],
+            ['term','=',$item->term],
+            ['weekday_index','=',$item->week],
+            ['student_id','=',$user->id],
+        ];
+        return AttendancesDetail::where($where)->first();
     }
 
 

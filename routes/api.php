@@ -389,6 +389,7 @@ Route::prefix('banner')->middleware('auth:api')->group(function () {
 // APP 生成二维码 接口
 Route::prefix('QrCode')->middleware('auth:api')->group(function () {
     Route::post('/getQrCode', 'Api\QrCode\IndexController@generate')->name('api.generate.qr.code');
+    Route::post('/courseQrCode', 'Api\QrCode\IndexController@courseQrCode')->name('api.course.qr.code');
 });
 
 Route::prefix('account')->middleware('auth:api')->group(function () {
@@ -611,7 +612,6 @@ Route::prefix('evaluate')->middleware('auth:api')->group(function () {
 });
 
 Route::prefix('cloud')->group(function () {
-
     // 获取学校信息
     Route::post('/getSchoolInfo','Api\Cloud\CloudController@getSchoolInfo')
         ->name('api.cloud.school');
@@ -633,5 +633,4 @@ Route::prefix('cloud')->group(function () {
      // 华三人脸识别图片上传
     Route::post('/uploadFaceImage','Api\Cloud\CloudController@uploadFaceImage')
         ->name('api.cloud.upload.face.image')->middleware('auth:api');
-
 });
