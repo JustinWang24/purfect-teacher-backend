@@ -67,7 +67,11 @@ class AttendancesDao
                 'student_id'    => $user->id,
                 'timetable_id'  => $item->id,
                 'course_id'     => $item->course_id,
+                'type'          => $type,
+                'year'          => $item->year,
+                'term'          => $item->term
             ];
+
             $detailsDao = new  AttendancesDetailsDao;
             $detailsDao->add($data);
 
