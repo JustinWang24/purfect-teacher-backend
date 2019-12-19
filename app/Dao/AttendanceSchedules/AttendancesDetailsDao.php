@@ -21,7 +21,7 @@ class AttendancesDetailsDao
         return AttendancesDetail::where($map)->count();
     }
 
-
+    /**
      * 获取签到详情
      * @param $timeTableId
      * @param $studentId
