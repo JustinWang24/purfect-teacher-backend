@@ -202,4 +202,5 @@ class ForumCommentDao
     {
         return ForumLike::where('comment_id', $commentId)->count();
     }
+
 }
