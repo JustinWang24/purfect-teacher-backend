@@ -89,6 +89,14 @@ return [
             'driver' => 'errorlog',
             'level' => 'debug',
         ],
+
+        // 短信发送日志
+        'smslog' => [
+            'driver' => 'daily',
+            'path' => storage_path('logs/sms/sms.log'),
+            'level' => 'debug',
+            'days' => 14,
+        ],
     ],
 
 ];
