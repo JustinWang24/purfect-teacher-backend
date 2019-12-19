@@ -549,7 +549,7 @@ Route::prefix('oa')->middleware('auth:api')->group(function () {
 
 // 社区
 Route::prefix('forum')->middleware('auth:api')->group(function () {
-    Route::get('/comments/{id}','Api\Forum\ForumCommentController@getComments')
+    Route::post('/comments','Api\Forum\ForumCommentController@getComments')
         ->name('api.forum.comments');
     Route::post('/comments/addcomment','Api\Forum\ForumCommentController@addComment')
         ->name('api.forum.comments/addcomment');
