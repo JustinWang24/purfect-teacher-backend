@@ -1,23 +1,28 @@
-@extends('layouts.h5_app')
+@extends('layouts.h5_teacher_app')
 @section('content')
-    <div id="current-school-id" data-id="{{ $school->id }}" data-type="{{ $typeId }}"></div>
-    <div id="{{ $appName }}" class="school-intro-container">
+    <div id="app-init-data-holder" data-school="{{ $school->id }}" data-type="{{ $typeId }}"></div>
+    <div id="school-teacher-news-list-app" class="school-intro-container">
         <div class="header">
             <h2 class="title">{{ $pageTitle }}</h2>
+            <div v-for="(item, idx) in news.data">
+                <news-item :news="item" v-on:news-clicked="showDetail"></news-item>
+            </div>
         </div>
         <div class="main">
-
-
             <el-drawer
-                    title="专业介绍"
+                    title="{{ $pageTitle }}"
                     size="100%"
-                    :visible.sync="showAllMajorsFlag"
-                    direction="ltr">
-                <major-cards
-                        :majors="majors"
-                        v-on:apply-major="applyMajorHandler"
-                        v-on:show-major-detail="showMajorDetailHandler"
-                ></major-cards>
+                    :visible.sync="showDetailFlag"
+                    direction="rtl">
+                <div style="padding: 16px;">
+                    <h1>@{{ detail.title }}</h1>
+                    <p v-for="(p, idx) in detail.sections" :key="idx">
+                    <span v-if="p.media_id === ''">
+                        @{{ p.content }}
+                    </span>
+                        <img v-if="p.media_id" :src="p.content" alt="">
+                    </p>
+                </div>
             </el-drawer>
         </div>
     </div>

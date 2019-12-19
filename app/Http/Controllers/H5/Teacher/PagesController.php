@@ -66,6 +66,7 @@ class PagesController extends Controller
                 break;
             default:
                 $this->dataForView['items'] = [];
+                $this->dataForView['typeId'] = $this->getTypeId($type);
                 break;
         }
 
@@ -107,9 +108,6 @@ class PagesController extends Controller
         }
         elseif ($txt === '动态管理'){
             return News::TYPE_NEWS;
-        }
-        elseif ($txt === '校园风采'){
-            return News::TYPE_CAMPUS;
         }
     }
 }

@@ -374,6 +374,8 @@ Route::prefix('home')->middleware('auth:api')->group(function () {
     Route::any('/newsPage', 'Api\Home\IndexController@newsPage')
         ->name('api.home.newsPage');
 
+    Route::any('/load-news', 'Api\Home\IndexController@loadNews')
+        ->name('api.home.load-news');
 });
 
 // 消息通知

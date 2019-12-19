@@ -1,6 +1,7 @@
 /**
  * 校历应用
  */
+import {Util} from "../../common/utils";
 
 if(document.getElementById('school-teacher-news-list-app')){
     new Vue({
@@ -8,8 +9,10 @@ if(document.getElementById('school-teacher-news-list-app')){
         data(){
             return {
                 schoolId: null,
-                news: [],
+                news: {},
                 type: null,
+                showDetailFlag: false,
+                detail: {},
             }
         },
         created(){
@@ -20,7 +23,19 @@ if(document.getElementById('school-teacher-news-list-app')){
         },
         methods:{
             loadNews: function(){
-
+                axios.post(
+                    '/api/home/load-news',
+                    {school: this.schoolId, type: this.type}
+                ).then(res => {
+                    if(Util.isAjaxResOk(res)){
+                        this.news = res.data.data;
+                    }
+                });
+            },
+            showDetail: function (payload) {
+                this.showDetailFlag = true;
+                this.detail = Util.GetItemById(payload.item, this.news.data);
+                console.log(this.detail);
             }
         }
     });

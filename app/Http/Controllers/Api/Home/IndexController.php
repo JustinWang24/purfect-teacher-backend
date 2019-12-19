@@ -15,12 +15,11 @@ use App\Http\Requests\Home\HomeRequest;
 use App\Dao\Schools\NewsDao;
 use App\Http\Requests\MyStandardRequest;
 use App\Http\Requests\SendSms\SendSmeRequest;
-use App\Models\Students\StudentProfile;
 use App\Models\Misc\SystemNotification;
 use App\Models\Users\UserVerification;
-use App\User;
 use App\Utils\JsonBuilder;
 use App\Utils\Time\CalendarWeek;
+use Illuminate\Http\Request;
 
 class IndexController extends Controller
 {
@@ -287,5 +286,19 @@ class IndexController extends Controller
         }
         $data = pageReturn($list);
         return JsonBuilder::Success($data);
+    }
+
+    /**
+     * 为 APP 端 加载各种新闻的接口
+     * @param Request $request
+     * @return string
+     */
+    public function loadNews(Request $request){
+        $dao = new NewsDao();
+        $newsList = $dao->paginateByType(
+            $request->get('type'),
+            $request->get('school')
+        );
+        return JsonBuilder::Success($newsList);
     }
 }
