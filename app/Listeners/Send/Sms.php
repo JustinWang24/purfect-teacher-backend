@@ -32,11 +32,11 @@ class Sms
     {
 
         PushSms::dispatchNow(
-            [$event->getMobileNumber()],
+            $event->getMobileNumber(),
             $event->getSmsContent(),
             $event->getSmsTemplateId()
         );
 
-        Log::warning('发送短信进入队列了');
+        Log::channel('smslog')->alert('发送短信进入队列了');
     }
 }
