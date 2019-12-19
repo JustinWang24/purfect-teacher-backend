@@ -1,6 +1,6 @@
 @extends('layouts.h5_app')
 @section('content')
-    <div id="current-school-id" data-id="{{ $school->uuid }}"></div>
+    <div id="current-school-id" data-id="{{ $school->id }}" data-type="{{ $typeId }}"></div>
     <div id="{{ $appName }}" class="school-intro-container">
         <div class="header">
             <h2 class="title">{{ $pageTitle }}</h2>

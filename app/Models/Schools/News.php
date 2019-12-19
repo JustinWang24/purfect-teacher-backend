@@ -9,7 +9,7 @@ class News extends Model
     const TYPE_NEWS     = 1; // 类型为动态, 未来可以移植为科研 等其他类型
     const TYPE_SCIENCE  = 2; // 科技文章
     const TYPE_ARTICLE  = 3; // 简介
-    const TYPE_CAMPUS   = 4; // 简介
+    const TYPE_CAMPUS   = 4; // 校园风采
     const PUBLISH_NO    = 0; // 未发布
     const PUBLISH_YES   = 1; // 已发布
 

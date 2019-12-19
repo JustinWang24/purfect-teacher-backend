@@ -13,8 +13,11 @@ use App\Dao\AttendanceSchedules\AttendanceSchedulesDao;
 use App\Dao\Calendar\CalendarDao;
 use App\Dao\Schools\SchoolDao;
 use App\Http\Controllers\Controller;
+use App\Models\Schools\News;
 use App\Models\Schools\SchoolConfiguration;
 use App\User;
+use App\Utils\Misc\ConfigurationTool;
+use App\Utils\Time\GradeAndYearUtil;
 use Illuminate\Http\Request;
 
 class PagesController extends Controller
@@ -39,6 +42,14 @@ class PagesController extends Controller
         $viewPath = 'h5_apps.teacher.news';
 
         switch ($type){
+            case '作息时间':
+                $viewPath = 'h5_apps.teacher.time_slots';
+                $now = now(GradeAndYearUtil::TIMEZONE_CN);
+                $this->dataForView['season'] = $now->between(
+                    $school->configuration->summer_start_date,
+                    $school->configuration->winter_start_date
+                ) ? '夏季/秋季' : '冬季/春季';
+                break;
             case '通讯录':
                 $viewPath = 'h5_apps.teacher.contact';
                 break;
@@ -85,5 +96,20 @@ class PagesController extends Controller
             'events'=>$data,
             'tags'=>$tags,
         ];
+    }
+
+    private function getTypeId($txt){
+        if($txt === '科技成果'){
+            return News::TYPE_SCIENCE;
+        }
+        elseif ($txt === '校园风采'){
+            return News::TYPE_CAMPUS;
+        }
+        elseif ($txt === '动态管理'){
+            return News::TYPE_NEWS;
+        }
+        elseif ($txt === '校园风采'){
+            return News::TYPE_CAMPUS;
+        }
     }
 }
