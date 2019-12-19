@@ -30,6 +30,15 @@ class AttendanceSchedulesDao
             ->orderBy('start_date', 'desc')
             ->paginate(ConfigurationTool::DEFAULT_PAGE_SIZE);
     }
+    // 为前端加载值周数据
+    public function getSpecialAttendancesForApp($schoolId, $startDate){
+        return SpecialAttendance::where('school_id', $schoolId)
+            ->where('start_date','>=',$startDate)
+            ->with('grade')
+            ->orderBy('start_date', 'asc')
+            ->get();
+    }
+
     public function saveSpecial($data){
         $sd = Carbon::createFromFormat('Y-m-d',$data['start_date']);
         $data['end_date'] = $sd->addDays(6)->format('Y-m-d');

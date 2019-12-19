@@ -9,6 +9,7 @@
 namespace App\Http\Controllers\H5\Teacher;
 
 
+use App\Dao\AttendanceSchedules\AttendanceSchedulesDao;
 use App\Dao\Calendar\CalendarDao;
 use App\Dao\Schools\SchoolDao;
 use App\Http\Controllers\Controller;
@@ -47,7 +48,9 @@ class PagesController extends Controller
                 $this->dataForView['events'] = $data['events'];
                 $this->dataForView['tags'] = $data['tags'];
                 break;
-            case '值班':
+            case '值周':
+                $data = $this->loadAttendances($school->id, $school->configuration);
+                $this->dataForView['attendances'] = $data;
                 $viewPath = 'h5_apps.teacher.attendance';
                 break;
             default:
@@ -58,6 +61,17 @@ class PagesController extends Controller
         return view($viewPath, $this->dataForView);
     }
 
+    private function loadAttendances($schoolId, SchoolConfiguration $configuration){
+        $dao = new AttendanceSchedulesDao();
+        return $dao->getSpecialAttendancesForApp($schoolId, $configuration->getTermStartDate());
+    }
+
+    /**
+     * 加载校历事件
+     * @param $schoolId
+     * @param SchoolConfiguration $configuration
+     * @return array
+     */
     private function loadEvents($schoolId, SchoolConfiguration $configuration){
         $dao = new CalendarDao();
         $data = $dao->getCalendarEvent($schoolId);

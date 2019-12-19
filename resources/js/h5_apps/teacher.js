@@ -24,3 +24,4 @@ Vue.use(ElementUI);
 
 require('../includes/backend/contacts_list_manager');
 require('../includes/teacher/school_calendar_app');
+require('../includes/teacher/school_attendances_app');
