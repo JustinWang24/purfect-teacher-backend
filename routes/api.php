@@ -553,7 +553,7 @@ Route::prefix('forum')->middleware('auth:api')->group(function () {
         ->name('api.forum.comments');
     Route::post('/comments/addcomment','Api\Forum\ForumCommentController@addComment')
         ->name('api.forum.comments/addcomment');
-    Route::post('/comments/addreply/{id}','Api\Forum\ForumCommentController@addCommentReply')
+    Route::post('/comments/addreply','Api\Forum\ForumCommentController@addCommentReply')
         ->name('api.forum.comments/addreply');
     Route::get('/comments/addlike/{id}','Api\Forum\ForumCommentController@addLike')
         ->name('api.forum.comments/addlike');
