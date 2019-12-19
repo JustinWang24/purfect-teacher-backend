@@ -21,5 +21,23 @@ class AttendancesDetailsDao
         return AttendancesDetail::where($map)->count();
     }
 
-    // 查询总共的课时
+
+     * 获取签到详情
+     * @param $timeTableId
+     * @param $studentId
+     * @return AttendancesDetail
+     */
+    public function getDetailByTimeTableIdAndStudentId($timeTableId, $studentId)
+    {
+        return AttendancesDetail::where('timetable_id', $timeTableId)
+                ->where('student_id', $studentId)
+                ->first();
+    }
+
+
+    public function add($data)
+    {
+        return AttendancesDetail::create($data);
+    }
+
 }

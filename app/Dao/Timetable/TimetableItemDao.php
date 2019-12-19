@@ -548,10 +548,10 @@ class TimetableItemDao
      */
     public function getCurrentItemByUser(User $user){
         $now = Carbon::now(GradeAndYearUtil::TIMEZONE_CN);
+
         $school = (new SchoolDao())->getSchoolById($user->getSchoolId());
 
         $currentTimeSlot = GradeAndYearUtil::GetTimeSlot($now, $school->id);
-
         if($currentTimeSlot && $school){
             $weekdayIndex = $now->weekday();
             $year = $now->year; // Todo: 根据用户获取当前的课程表项时, 年不是当前, 而是当前学年
@@ -566,11 +566,11 @@ class TimetableItemDao
                 ['grade_id','=',$user->gradeUser->grade_id],
                 ['weekday_index','=',$weekdayIndex],
             ];
-
             return TimetableItem::where($where)->first();
         }
         return null;
     }
+
 
     // 查询学期课程的总结束包含调课
     public function getCourseCountByCourseId($gradeId, $courseId, $year, $term, $weeks) {
@@ -626,4 +626,5 @@ class TimetableItemDao
         }
         die;
     }
+
 }

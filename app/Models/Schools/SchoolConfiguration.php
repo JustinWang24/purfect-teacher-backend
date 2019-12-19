@@ -159,8 +159,12 @@ class SchoolConfiguration extends Model
      * @param $weeks
      * @return CalendarWeek|null
      */
-    public function getScheduleWeek($date, $weeks){
+    public function getScheduleWeek($date, $weeks = null){
         $w = null;
+
+        if(!$weeks){
+            $weeks = $this->getAllWeeksOfTerm();
+        }
         foreach ($weeks as $week) {
             /**
              * @var CalendarWeek $week
