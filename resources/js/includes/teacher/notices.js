@@ -3,14 +3,13 @@
  */
 import {Util} from "../../common/utils";
 
-if(document.getElementById('school-teacher-news-list-app')){
+if(document.getElementById('school-teacher-notices-list-app')){
     new Vue({
-        el:'#school-teacher-news-list-app',
+        el:'#school-teacher-notices-list-app',
         data(){
             return {
                 schoolId: null,
-                news: {},
-                type: null,
+                notices: {},
                 showDetailFlag: false,
                 detail: {},
             }
@@ -18,23 +17,22 @@ if(document.getElementById('school-teacher-news-list-app')){
         created(){
             const dom = document.getElementById('app-init-data-holder');
             this.schoolId = dom.dataset.school;
-            this.type = dom.dataset.type;
-            this.loadNews();
+            this.loadNotices();
         },
         methods:{
-            loadNews: function(){
+            loadNotices: function(){
                 axios.post(
-                    '/api/home/load-news',
-                    {school: this.schoolId, type: this.type}
+                    '/api/home/load-notices',
+                    {school: this.schoolId}
                 ).then(res => {
                     if(Util.isAjaxResOk(res)){
-                        this.news = res.data.data;
+                        this.notices = res.data.data;
                     }
                 });
             },
             showDetail: function (payload) {
                 this.showDetailFlag = true;
-                this.detail = Util.GetItemById(payload.item, this.news.data);
+                this.detail = Util.GetItemById(payload.item, this.notices.data);
             }
         }
     });

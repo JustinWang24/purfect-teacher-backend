@@ -9,6 +9,7 @@
 namespace App\BusinessLogic\Pipeline\Flow\Impl;
 
 use App\Dao\Pipeline\FlowDao;
+use App\Models\Schools\News;
 use App\Models\Teachers\Teacher;
 use App\User;
 use App\Utils\Pipeline\IFlow;
@@ -57,18 +58,18 @@ class TeacherFlowsLogic extends GeneralFlowsLogic
             'key'=>1010,
             'flows'=>[
                 [
-                    'id'=>-1,
-                    'name'=>'科技成果',
+                    'id'=>News::TYPE_SCIENCE,
+                    'name'=>News::TYPE_SCIENCE_TXT,
                     'icon'=>asset('assets/img/pipeline/icon1@2x.png')
                 ],
                 [
-                    'id'=>-2,
-                    'name'=>'校园风采',
+                    'id'=>News::TYPE_CAMPUS,
+                    'name'=>News::TYPE_CAMPUS_TXT,
                     'icon'=>asset('assets/img/pipeline/icon2@2x.png')
                 ],
                 [
-                    'id'=>-3,
-                    'name'=>'动态管理',
+                    'id'=>News::TYPE_NEWS,
+                    'name'=>News::TYPE_NEWS_TXT,
                     'icon'=>asset('assets/img/pipeline/icon3@2x.png')
                 ],
                 [

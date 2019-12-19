@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\Home;
 use App\Dao\Banners\BannerDao;
 use App\Dao\Calendar\CalendarDao;
 use App\Dao\Misc\SystemNotificationDao;
+use App\Dao\Notice\NoticeDao;
 use App\Dao\Schools\SchoolDao;
 use App\Dao\Students\StudentProfileDao;
 use App\Dao\Users\UserDao;
@@ -299,6 +300,17 @@ class IndexController extends Controller
             $request->get('type'),
             $request->get('school')
         );
+        return JsonBuilder::Success($newsList);
+    }
+
+    /**
+     * 为 APP 获取通知公告
+     * @param Request $request
+     * @return string
+     */
+    public function loadNotices(Request $request){
+        $dao = new NoticeDao();
+        $newsList = $dao->getNoticeBySchoolId(['school_id'=>$request->get('school')]);
         return JsonBuilder::Success($newsList);
     }
 }

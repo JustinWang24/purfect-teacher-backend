@@ -23,9 +23,11 @@ import 'element-ui/lib/theme-chalk/index.css';
 Vue.use(ElementUI);
 
 Vue.component('news-item', require('../components/content/NewsItem.vue').default);
+Vue.component('notice-item', require('../components/content/NoticeItem.vue').default);
 
 require('../includes/backend/contacts_list_manager');
 require('../includes/teacher/school_calendar_app');
 require('../includes/teacher/school_attendances_app');
 require('../includes/teacher/time_slots');
 require('../includes/teacher/news');
+require('../includes/teacher/notices');

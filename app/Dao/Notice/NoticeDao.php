@@ -19,9 +19,8 @@ class NoticeDao
      */
     public function getNoticeBySchoolId($where)
     {
-        return Notice::where($where)->paginate(ConfigurationTool::DEFAULT_PAGE_SIZE);
+        return Notice::where($where)->with('attachments')->paginate(ConfigurationTool::DEFAULT_PAGE_SIZE);
     }
-
 
     public function getNoticeById($id)
     {

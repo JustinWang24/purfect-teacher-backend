@@ -14,13 +14,13 @@
                     size="100%"
                     :visible.sync="showDetailFlag"
                     direction="rtl">
-                <div style="padding: 16px;">
-                    <h1>@{{ detail.title }}</h1>
+                <div style="padding-left: 16px;padding-right;">
+                    <h1 style="margin-top:0;">@{{ detail.title }}</h1>
                     <p v-for="(p, idx) in detail.sections" :key="idx">
                     <span v-if="p.media_id === ''">
                         @{{ p.content }}
                     </span>
-                        <img v-if="p.media_id" :src="p.content" alt="">
+                        <img v-if="p.media_id" :src="p.content" style="width: 100%;">
                     </p>
                 </div>
             </el-drawer>

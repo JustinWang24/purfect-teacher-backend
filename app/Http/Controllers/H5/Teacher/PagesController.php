@@ -11,6 +11,7 @@ namespace App\Http\Controllers\H5\Teacher;
 
 use App\Dao\AttendanceSchedules\AttendanceSchedulesDao;
 use App\Dao\Calendar\CalendarDao;
+use App\Dao\Notice\NoticeDao;
 use App\Dao\Schools\SchoolDao;
 use App\Http\Controllers\Controller;
 use App\Models\Schools\News;
@@ -52,6 +53,9 @@ class PagesController extends Controller
                 break;
             case '通讯录':
                 $viewPath = 'h5_apps.teacher.contact';
+                break;
+            case '通知公告':
+                $viewPath = 'h5_apps.teacher.notice';
                 break;
             case '校历':
                 $viewPath = 'h5_apps.teacher.calendar';
