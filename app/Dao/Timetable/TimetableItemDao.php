@@ -557,15 +557,28 @@ class TimetableItemDao
             $year = $now->year; // Todo: 根据用户获取当前的课程表项时, 年不是当前, 而是当前学年
 
             $term = $school->configuration->guessTerm($now->month);
+            if ($user->isStudent()) {
+                $where = [
+                    ['school_id','=',$school->id],
+                    ['year','=',$year],
+                    ['term','=',$term],
+                    ['time_slot_id','=',$currentTimeSlot->id],
+                    ['grade_id','=',$user->gradeUser->grade_id],
+                    ['weekday_index','=',$weekdayIndex],
+                ];
+            } elseif ($user->isTeacher()) {
+                $where = [
+                    ['school_id','=',$school->id],
+                    ['year','=',$year],
+                    ['term','=',$term],
+                    ['time_slot_id','=',$currentTimeSlot->id],
+                    ['teacher_id','=',$user->id],
+                    ['weekday_index','=',$weekdayIndex],
+                ];
+            } else  {
+                return  false;
+            }
 
-            $where = [
-                ['school_id','=',$school->id],
-                ['year','=',$year],
-                ['term','=',$term],
-                ['time_slot_id','=',$currentTimeSlot->id],
-                ['grade_id','=',$user->gradeUser->grade_id],
-                ['weekday_index','=',$weekdayIndex],
-            ];
             return TimetableItem::where($where)->first();
         }
         return null;

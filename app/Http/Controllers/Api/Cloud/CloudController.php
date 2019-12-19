@@ -258,7 +258,7 @@ class CloudController extends Controller
         }
 
         $attendancesDetailsDao = new AttendancesDetailsDao;
-        $attendancesDetail = $attendancesDetailsDao->getDetailByTimeTableIdAndStudentId($item->id, $student->user_id);
+        $attendancesDetail = $attendancesDetailsDao->getDetailByTimeTableIdAndStudentId($item, $student->user);
         if ($attendancesDetail) {
             return JsonBuilder::Error('学生已经签到了');
         }
