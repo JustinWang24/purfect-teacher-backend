@@ -239,6 +239,10 @@ Route::prefix('course')->middleware('auth:api')->group(function () {
      // 选课查询报名结果操作
      Route::post('/elective/getresult/{id}','Api\Course\ElectiveController@getEnrollResult')
         ->name('api.course.elective.getresult');
+
+     // 教师端课件
+     Route::post('/getApiCourseDownloadListInfo','Api\Course\CourseWareController@index')
+        ->name('api.teacher.course.ware');
 });
 
 // 网盘
@@ -634,3 +638,6 @@ Route::prefix('cloud')->group(function () {
     Route::post('/uploadFaceImage','Api\Cloud\CloudController@uploadFaceImage')
         ->name('api.cloud.upload.face.image')->middleware('auth:api');
 });
+
+
+
