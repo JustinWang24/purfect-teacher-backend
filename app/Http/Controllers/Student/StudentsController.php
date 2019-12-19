@@ -49,7 +49,6 @@ class StudentsController extends Controller
     public function contacts_list(StudentRequest $request){
         $this->dataForView['pageTitle'] = '通讯录';
         $this->dataForView['schoolId'] = $request->getSchoolId();
-
         return view('student.contacts.list',$this->dataForView);
     }
 }

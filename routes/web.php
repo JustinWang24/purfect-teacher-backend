@@ -45,6 +45,10 @@ Route::prefix('h5')->group(function () {
         ->name('h5.timetable.student.view');
     Route::any('/timetable/student/detail','H5\Timetable\StudentController@detail')
         ->name('h5.timetable.student.detail');
+
+    // 教师端, 查看新闻等信息
+    Route::any('/teacher/pages/view','H5\Teacher\PagesController@view')
+        ->name('h5.teacher.pages.view');
 });
 
 // 分享

@@ -78,14 +78,24 @@ class TeacherFlowsLogic extends GeneralFlowsLogic
                 ],
                 [
                     'id'=>-5,
-                    'name'=>'校历值班',
+                    'name'=>'校历',
                     'icon'=>asset('assets/img/pipeline/icon3@2x.png')
                 ],
                 [
                     'id'=>-6,
                     'name'=>'通讯录',
                     'icon'=>asset('assets/img/pipeline/icon3@2x.png')
-                ]
+                ],
+                [
+                    'id'=>-7,
+                    'name'=>'作息时间',
+                    'icon'=>asset('assets/img/pipeline/icon3@2x.png')
+                ],
+                [
+                    'id'=>-8,
+                    'name'=>'值班',
+                    'icon'=>asset('assets/img/pipeline/icon3@2x.png')
+                ],
             ]
         ];
 
