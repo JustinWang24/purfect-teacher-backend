@@ -3,6 +3,7 @@
 
 namespace App\Http\Controllers\Api\QrCode;
 
+use App\Dao\Timetable\TimetableItemDao;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\QrCode\QrCodeRequest;
 use App\Utils\JsonBuilder;
@@ -37,5 +38,21 @@ class IndexController extends Controller
 
         return JsonBuilder::Success(['code' => $code],'生成二维码');
     }
+
+    /**
+     * 生成上课补签二维码
+     * @param QrCodeRequest $request
+     */
+    public function courseQrCode(QrCodeRequest $request)
+    {
+        $user = $request->user();
+        $timeTableDao = new  TimetableItemDao;
+
+        $data = $timeTableDao->getCurrentItemByUser($user);
+        
+        dd($data);
+    }
+
+
 
 }

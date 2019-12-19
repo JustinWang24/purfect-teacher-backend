@@ -35,17 +35,16 @@ class AttendancesDao
 
         $attendance = Attendance::where('timetable_id', $item->id)->first();
 
+        $now = Carbon::now(GradeAndYearUtil::TIMEZONE_CN);
+        $schoolDao = new SchoolDao;
+        $school = $schoolDao->getSchoolById($item->school_id);
+        $week = $school->configuration->getScheduleWeek($now)->getScheduleWeekIndex();
+
         DB::beginTransaction();
         try{
             if(empty($attendance)) {
                 $gradeUser = $item->grade->gradeUser;
                 $userIds   = $gradeUser->pluck('user_id');
-
-                $now = Carbon::now(GradeAndYearUtil::TIMEZONE_CN);
-                $schoolDao = new SchoolDao;
-                $school = $schoolDao->getSchoolById($item->school_id);
-                $week = $school->configuration->getScheduleWeek($now)->getScheduleWeekIndex();
-
                 $attendanceData = [
                     'timetable_id'   => $item->id,
                     'course_id'      => $item->course_id,
@@ -69,7 +68,8 @@ class AttendancesDao
                 'course_id'     => $item->course_id,
                 'type'          => $type,
                 'year'          => $item->year,
-                'term'          => $item->term
+                'term'          => $item->term,
+                'week'          => $week,
             ];
 
             $detailsDao = new  AttendancesDetailsDao;
