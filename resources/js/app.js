@@ -65,6 +65,7 @@ require('./includes/backend/application_type_app'); // 申请类型管理
 require('./includes/backend/welcome_students'); // 申请类型管理
 require('./includes/backend/adviser_editor_app'); // 系主任, 班主任, 教研组长, 班长等管理程序
 require('./includes/backend/new_attendance_app'); // 新建值周管理 app
+require('./includes/backend/year_manager_app'); // 年级组长管理 app
 
 require('./includes/backend/timetable/preview_manager'); // 课程表管理程序
 require('./includes/backend/timetable/course_view'); // 课程表管理程序

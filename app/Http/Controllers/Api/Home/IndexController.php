@@ -272,7 +272,7 @@ class IndexController extends Controller
      * @return string
      */
     public function newsPage(HomeRequest $request) {
-        $schoolId = $request->user()->gradeUser->school_id;
+        $schoolId = $request->user()->getSchoolId();
         $dao = new NewsDao();
         $list = $dao->getNewBySchoolId($schoolId);
         foreach ($list as $key => $val) {

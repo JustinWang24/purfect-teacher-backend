@@ -108,8 +108,11 @@ class GradeUser extends Model
      * @return string
      */
     public function workAt(){
-        return $this->institute->name . ' / ' . $this->department->name . ' / '
-            . $this->major->name . ' / ' . $this->grade->name;
+        $instituteStr =  $this->institute->name . ' / ';
+        $deptStr = $this->department_id > 0 ? $this->department->name . ' / ' : '';
+        $majorStr = $this->major_id > 0 ? $this->major->name . ' / ' : '';
+        $gradeStr = $this->grade_id > 0 ? $this->grade->name . ' / ' : '';
+        return $instituteStr.$deptStr.$majorStr.$gradeStr;
     }
 
     /**
@@ -117,7 +120,10 @@ class GradeUser extends Model
      * @return string
      */
     public function studyAt(){
-        return $this->institute->name . ' / ' . $this->department->name . ' / '
-            . $this->major->name . ' / ' . $this->grade->name;
+        $instituteStr =  $this->institute->name . ' / ';
+        $deptStr = $this->department_id > 0 ? $this->department->name . ' / ' : '';
+        $majorStr = $this->major_id > 0 ? $this->major->name . ' / ' : '';
+        $gradeStr = $this->grade_id > 0 ? $this->grade->name . ' / ' : '';
+        return $instituteStr.$deptStr.$majorStr.$gradeStr;
     }
 }

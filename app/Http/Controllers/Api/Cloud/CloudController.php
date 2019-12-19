@@ -252,12 +252,13 @@ class CloudController extends Controller
         if (empty($item)) {
             return JsonBuilder::Error('未找到该同学目前上的课程');
         }
+
         if ($item->grade_id != $student->user->gradeUser->grade_id) {
             return JsonBuilder::Error('该学生不应该上这个课程');
         }
 
         $attendancesDetailsDao = new AttendancesDetailsDao;
-        $attendancesDetail = $attendancesDetailsDao->getDetailByTimeTableIdAndStudentId($item->id, $student->user_id);
+        $attendancesDetail = $attendancesDetailsDao->getDetailByTimeTableIdAndStudentId($item, $student->user);
         if ($attendancesDetail) {
             return JsonBuilder::Error('学生已经签到了');
         }

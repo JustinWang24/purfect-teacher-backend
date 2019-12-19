@@ -8,9 +8,11 @@ use Illuminate\Database\Eloquent\Model;
 use App\Models\Users\GradeUser;
 use App\User;
 use App\Models\Courses\CourseMajor;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Major extends Model
 {
+    use SoftDeletes;
     const TYPE_GENERAL_FULL_DAY     = 1; // 普通全日制
     const TYPE_GENERAL_NOT_FULL_DAY = 2; // 普通非全日制
     const TYPE_UNION_FULL_DAY       = 3; // 校企联合办学全日制

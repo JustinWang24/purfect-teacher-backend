@@ -239,6 +239,10 @@ Route::prefix('course')->middleware('auth:api')->group(function () {
      // 选课查询报名结果操作
      Route::post('/elective/getresult/{id}','Api\Course\ElectiveController@getEnrollResult')
         ->name('api.course.elective.getresult');
+
+     // 教师端课件
+     Route::post('/getApiCourseDownloadListInfo','Api\Course\CourseWareController@index')
+        ->name('api.teacher.course.ware');
 });
 
 // 网盘
@@ -364,10 +368,10 @@ Route::prefix('version')->group(function () {
 // APP 首页接口
 Route::prefix('home')->middleware('auth:api')->group(function () {
 
-    Route::post('/getHomePageInfo', 'Api\Home\IndexController@index')
+    Route::any('/getHomePageInfo', 'Api\Home\IndexController@index')
         ->name('api.home.index');
     // 校园动态
-    Route::get('/newsPage', 'Api\Home\IndexController@newsPage')
+    Route::any('/newsPage', 'Api\Home\IndexController@newsPage')
         ->name('api.home.newsPage');
 
 });
@@ -389,6 +393,7 @@ Route::prefix('banner')->middleware('auth:api')->group(function () {
 // APP 生成二维码 接口
 Route::prefix('QrCode')->middleware('auth:api')->group(function () {
     Route::post('/getQrCode', 'Api\QrCode\IndexController@generate')->name('api.generate.qr.code');
+    Route::post('/courseQrCode', 'Api\QrCode\IndexController@courseQrCode')->name('api.course.qr.code');
 });
 
 Route::prefix('account')->middleware('auth:api')->group(function () {
@@ -553,11 +558,11 @@ Route::prefix('oa')->middleware('auth:api')->group(function () {
 
 // 社区
 Route::prefix('forum')->middleware('auth:api')->group(function () {
-    Route::get('/comments/{id}','Api\Forum\ForumCommentController@getComments')
+    Route::post('/comments','Api\Forum\ForumCommentController@getComments')
         ->name('api.forum.comments');
     Route::post('/comments/addcomment','Api\Forum\ForumCommentController@addComment')
         ->name('api.forum.comments/addcomment');
-    Route::post('/comments/addreply/{id}','Api\Forum\ForumCommentController@addCommentReply')
+    Route::post('/comments/addreply','Api\Forum\ForumCommentController@addCommentReply')
         ->name('api.forum.comments/addreply');
     Route::get('/comments/addlike/{id}','Api\Forum\ForumCommentController@addLike')
         ->name('api.forum.comments/addlike');
@@ -611,7 +616,6 @@ Route::prefix('evaluate')->middleware('auth:api')->group(function () {
 });
 
 Route::prefix('cloud')->group(function () {
-
     // 获取学校信息
     Route::post('/getSchoolInfo','Api\Cloud\CloudController@getSchoolInfo')
         ->name('api.cloud.school');
@@ -633,5 +637,17 @@ Route::prefix('cloud')->group(function () {
      // 华三人脸识别图片上传
     Route::post('/uploadFaceImage','Api\Cloud\CloudController@uploadFaceImage')
         ->name('api.cloud.upload.face.image')->middleware('auth:api');
+});
 
+
+Route::prefix('Oa')->middleware('auth:api')->group(function(){
+    // 党员活动
+    Route::post('/activity/getCpcActivityListInfo','Api\OA\IndexController@activity')
+        ->name('api.cloud.school');
+    // 党员学习
+    Route::post('/study/getCpcStudyListInfo','Api\OA\IndexController@study')
+        ->name('api.cloud.grade');
+    // 党员风采
+    Route::post('/zone/getCpcZoneListInfo','Api\OA\IndexController@zone')
+        ->name('api.cloud.course');
 });

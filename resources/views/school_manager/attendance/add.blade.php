@@ -67,6 +67,6 @@ use App\Utils\UI\Button;
     </div>
     <div id="app-init-data-holder"
          data-attendance="{{ json_encode($attendance??'') }}"
-         data-school="{{ session('school.id') }}"
+         data-school="{{ session('school.id') }}">
     </div>
 @endsection

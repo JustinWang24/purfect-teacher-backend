@@ -17,6 +17,9 @@
                     </p>
                     <ul v-if="specialAttendance" style="list-style: none;padding-left: 10px;">
                         <li>
+                            <p>周次: <span class="text-primary">@{{ specialAttendance.week_name }}</span></p>
+                        </li>
+                        <li>
                             <p>值班校领导: <span class="text-primary">@{{ specialAttendance.high_level }}</span></p>
                         </li>
                         <li>

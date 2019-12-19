@@ -7,6 +7,7 @@ use App\Dao\Schools\GradeDao;
 use App\Dao\Schools\MajorDao;
 use App\Dao\Schools\OrganizationDao;
 use App\Dao\Schools\RoomDao;
+use App\Dao\Schools\YearManagerDao;
 use App\Dao\Users\GradeUserDao;
 use App\Dao\Users\UserDao;
 use App\Dao\Users\UserOrganizationDao;
@@ -97,6 +98,36 @@ class SchoolsController extends Controller
         $this->dataForView['grades'] = $dao->getBySchool(session('school.id'));
         $this->dataForView['pageTitle'] = '班级管理';
         return view('school_manager.school.grades', $this->dataForView);
+    }
+
+    /**
+     * 按年级显示
+     * @param SchoolRequest $request
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function years(SchoolRequest $request){
+        $dao = new GradeDao($request->user());
+        $year = $request->get('year',date('Y'));
+        $this->dataForView['grades'] = $dao->getBySchoolAndYear(session('school.id'), $year);
+        $this->dataForView['year'] = $year;
+        $this->dataForView['pageTitle'] = '年级管理';
+        $this->dataForView['yearManager'] = (new YearManagerDao())->get(session('school.id'), $year);
+        return view('school_manager.school.grades', $this->dataForView);
+    }
+
+    public function set_year_manager(SchoolRequest $request){
+        if($request->method() === 'GET'){
+            $this->dataForView['pageTitle'] = '年级组长管理';
+            $this->dataForView['year'] = $request->get('year');
+            $this->dataForView['yearManager'] = (new YearManagerDao())->get(session('school.id'), $request->get('year'));
+            $this->dataForView['teachers'] = (new UserDao())->getTeachersBySchool(session('school.id'),true);
+            $this->dataForView['managers'] = (new YearManagerDao())->getBySchool(session('school.id'));
+            return view('school_manager.school.grade_manager', $this->dataForView);
+        }
+        else{
+            $saved = (new YearManagerDao())->save($request->get('manager'));
+            return $saved ? JsonBuilder::Success(): JsonBuilder::Error();
+        }
     }
 
     public function teachers(SchoolRequest $request){
