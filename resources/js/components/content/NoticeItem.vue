@@ -2,7 +2,11 @@
     <div class="notice-item" @click="onItemClicked">
         <el-row>
             <el-col :span="16">
-                <h3>{{ notice.title }}</h3>
+                <h3>
+                    <el-tag v-if="notice.type == 1" size="mini">通知</el-tag>
+                    <el-tag type="success" v-if="notice.type == 2" size="mini">公告</el-tag>
+                    {{ notice.title }}
+                </h3>
                 <p><i class="el-icon-alarm-clock"></i>&nbsp;<span>发布时间: {{ notice.release_time }}</span></p>
             </el-col>
             <el-col :span="8">
