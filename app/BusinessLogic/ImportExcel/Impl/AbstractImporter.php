@@ -460,6 +460,8 @@ abstract class AbstractImporter implements IImportExcel
         $gradeUserDao = new GradeUserDao();
         $gradeUserObj =  $gradeUserDao->getUserInfoByUserId($user->id);
         if ($gradeUserObj) {
+            $gradeUserObj->user_type = $user->type;
+            $gradeUserObj->save();
             return $gradeUserObj;
         } else {
             $schoolObj = $this->getSchool($schoolId);
