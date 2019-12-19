@@ -551,7 +551,7 @@ Route::prefix('oa')->middleware('auth:api')->group(function () {
 Route::prefix('forum')->middleware('auth:api')->group(function () {
     Route::get('/comments/{id}','Api\Forum\ForumCommentController@getComments')
         ->name('api.forum.comments');
-    Route::post('/comments/addcomment/{id}','Api\Forum\ForumCommentController@addComment')
+    Route::post('/comments/addcomment','Api\Forum\ForumCommentController@addComment')
         ->name('api.forum.comments/addcomment');
     Route::post('/comments/addreply/{id}','Api\Forum\ForumCommentController@addCommentReply')
         ->name('api.forum.comments/addreply');

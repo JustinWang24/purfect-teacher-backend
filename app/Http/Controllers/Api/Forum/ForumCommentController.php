@@ -25,8 +25,9 @@ extends Controller
      * @param $forumId
      * @return string
      */
-    public function  addComment(Request $request, $forumId)
+    public function  addComment(Request $request)
     {
+        $forumId = $request->get('id');
         $user = $request->user();
         $schoolId = $user->getSchoolId();
         $forumId = intval($forumId);
@@ -81,8 +82,9 @@ extends Controller
      * @param $commentId
      * @return string
      */
-    public function  addCommentReply(Request $request, $commentId)
+    public function  addCommentReply(Request $request)
     {
+        $commentId = $request->get('id');
         $user = $request->user();
         $schoolId = $user->getSchoolId();
         $commentId = intval($commentId);
@@ -182,7 +184,8 @@ extends Controller
      * @param $forumId
      * @return string
      */
-    public function getComments(Request $request, $forumId) {
+    public function getComments(Request $request) {
+        $forumId = $request->get('id');
         $user = $request->user();
         $formCommentDao = new ForumCommentDao();
         $userDao = new UserDao();
