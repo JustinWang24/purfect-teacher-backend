@@ -185,7 +185,7 @@ class ForumController extends Controller
             $commentArr['com_content'] =  $commentArr['content'];
             $commentArr['create_time'] =  $commentArr['created_at'];
             $commentArr['userid'] =  $commentArr['user_id'];
-            $commentArr['user_nickname'] =  $userDao->getUserById($commentArr['user_id'])->first()->name;
+            $commentArr['user_nickname'] =  $userDao->getUserById($commentArr['user_id'])->name;
             $commentArr['user_pics'] =  asset($studentDao->getStudentInfoByUserId($commentArr['user_id'])->avatar);
             $commentArr['reply_count'] =  $formCommentDao->getCountReplyForComment($commentArr['id']);
             $commentArr['ispraise'] =  $formCommentDao->getCommentLike($comment->id,$user->id);
@@ -198,10 +198,10 @@ class ForumController extends Controller
                 $replyArr[$k]['comment_levid'] = $commentArr['id'];
                 $replyArr[$k]['userid'] = $reply['user_id'];
                 $replyArr[$k]['user_pics'] = asset($studentDao->getStudentInfoByUserId($reply['user_id'])->avatar);
-                $replyArr[$k]['user_nickname'] = $userDao->getUserById($reply['user_id'])->first()->name;
+                $replyArr[$k]['user_nickname'] = $userDao->getUserById($reply['user_id'])->name;
                 $replyArr[$k]['touserid'] = $reply['to_user_id'];
                 $replyArr[$k]['touser_pics'] =  asset($studentDao->getStudentInfoByUserId($reply['to_user_id'])->avatar);
-                $replyArr[$k]['touser_nickname'] =  $userDao->getUserById($reply['to_user_id'])->first()->name;
+                $replyArr[$k]['touser_nickname'] =  $userDao->getUserById($reply['to_user_id'])->name;
                 $replyArr[$k]['icheid'] =  $commentArr['forum_id'];
                 $replyArr[$k]['com_content'] =  $reply['reply'];
                 $replyArr[$k]['comment_praise'] =  $commentArr['comment_praise'];
