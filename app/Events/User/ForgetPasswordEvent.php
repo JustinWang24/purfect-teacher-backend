@@ -35,14 +35,13 @@ class ForgetPasswordEvent implements CanReachByMobilePhone
 
     public function getSmsTemplateId(): string
     {
-        return  "123";
-        // todo :: 忘记密码模板ID
+        return  "189903"; // 短信模板ID
     }
 
     public function getSmsContent(): array
     {
-        return  ['忘记密码'];
-        // todo :: 忘记密码短信内容
+        return  [rand(10000, 99999), '' , '' , '' , '' , '' , '' , '' , '' , 1];
+        // 5位随机数 1分钟过期  不知道为啥要 ,'' ,'' ,'' ,'' 这样写
     }
 
     public function getUser(): User
