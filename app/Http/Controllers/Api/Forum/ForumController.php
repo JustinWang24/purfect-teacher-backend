@@ -161,7 +161,6 @@ class ForumController extends Controller
         unset($data['video']);
 
         //帖子中加入评论
-
         $user = $request->user();
         $formCommentDao = new ForumCommentDao();
         $userDao = new UserDao();
@@ -169,11 +168,6 @@ class ForumController extends Controller
         $comments = $formCommentDao->getCommentForForum($id);
 
         $result = [];
-        //获得评论数
-        $result['info']['comment_count'] = $formCommentDao->getCountComment($id);
-        $result['info']['comment_reply_count'] = $formCommentDao->getCountReply($id);
-        $result['info']['comment_total'] = $result['info']['comment_count'] + $result['info']['comment_reply_count'];
-        $result['info']['like_count'] =  $formCommentDao->getCountLikeForForum($id);
         $result['comments'] = [];
         foreach ($comments->items() as $key => $comment) {
             $replys = $comment->reply()->get();
@@ -210,10 +204,7 @@ class ForumController extends Controller
 
             $result['comments'][$key]['replyList'] = $replyArr;
         }
-
         $data['commentList'] = $result['comments'];
-
-
         return JsonBuilder::Success($data, '帖子详情');
 
     }

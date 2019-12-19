@@ -553,11 +553,11 @@ Route::prefix('oa')->middleware('auth:api')->group(function () {
 
 // 社区
 Route::prefix('forum')->middleware('auth:api')->group(function () {
-    Route::get('/comments/{id}','Api\Forum\ForumCommentController@getComments')
+    Route::post('/comments','Api\Forum\ForumCommentController@getComments')
         ->name('api.forum.comments');
     Route::post('/comments/addcomment','Api\Forum\ForumCommentController@addComment')
         ->name('api.forum.comments/addcomment');
-    Route::post('/comments/addreply/{id}','Api\Forum\ForumCommentController@addCommentReply')
+    Route::post('/comments/addreply','Api\Forum\ForumCommentController@addCommentReply')
         ->name('api.forum.comments/addreply');
     Route::get('/comments/addlike/{id}','Api\Forum\ForumCommentController@addLike')
         ->name('api.forum.comments/addlike');
