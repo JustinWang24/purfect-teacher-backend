@@ -451,6 +451,10 @@ Route::prefix('attendance')->middleware('auth:api')->group(function () {
         ->name('api.attendance.list');
     Route::post('/load-special','Api\AttendanceSchedule\AttendanceScheduleController@load_special')
         ->name('api.attendance.load-special');
+    // 学生签到
+    Route::get('/sign-in-record','Api\AttendanceSchedule\AttendanceController@signInRecord')
+        ->name('api.attendance.sign-in-record');
+
 });
 
 Route::prefix('user')->group(function () {
