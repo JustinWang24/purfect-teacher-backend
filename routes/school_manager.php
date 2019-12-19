@@ -6,6 +6,7 @@ Route::prefix('school_manager')->group(function () {
     Route::get('school/institutes', 'SchoolsController@institutes')->name('school_manager.school.institutes'); // 显示学校的所有学院
     Route::get('school/departments', 'SchoolsController@departments')->name('school_manager.school.departments'); // 显示学校的所有系
     Route::get('school/majors', 'SchoolsController@majors')->name('school_manager.school.majors'); // 显示学校的所有专业
+    Route::get('school/years', 'SchoolsController@years')->name('school_manager.school.years'); // 显示学校的所有年级
     Route::get('school/grades', 'SchoolsController@grades')->name('school_manager.school.grades'); // 显示学校的所有班级
     Route::get('school/teachers', 'SchoolsController@teachers')->name('school_manager.school.teachers'); // 显示学校的所有老师
     Route::get('school/students', 'SchoolsController@students')->name('school_manager.school.students'); // 显示学校的所有学生
@@ -28,6 +29,8 @@ Route::prefix('school_manager')->group(function () {
         ->name('school_manager.organizations.add-member'); // 给机构添加成员
     Route::post('organizations/remove-member', 'SchoolsController@remove_member')
         ->name('school_manager.organizations.remove-member'); // 删除
+
+    Route::any('school/set-year-manager', 'SchoolsController@set_year_manager')->name('school_manager.school.set-year-manager'); // 显示学校的所有年级
 
     // 校区的管理
     Route::get('campus/add', 'CampusController@add')->name('school_manager.campus.add');                        // 添加校区

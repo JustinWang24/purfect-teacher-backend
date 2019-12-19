@@ -570,4 +570,61 @@ class TimetableItemDao
         }
         return null;
     }
+
+
+    // 查询学期课程的总结束包含调课
+    public function getCourseCountByCourseId($gradeId, $courseId, $year, $term, $weeks) {
+        $week = $weeks->count();
+        $map = ['grade_id'=>$gradeId, 'course_id'=>$courseId, 'year'=>$year, 'term'=>$term];
+        $list = TimetableItem::where($map)->get();
+        $num = [];
+        foreach ($list as $key => $val) {
+            // 判断正常课程
+            if(empty($val->at_special_datetime) && empty($val->to_special_datetime)) {
+                $num[$key] = $this->getCourseCountByRepeatUnit($val->repeat_unit, $week);
+            } else{
+                $this->getAddCourseCount($val->at_special_datetime, $val->to_special_datetime, $weeks);
+                $num[$key] = 0;
+            }
+        }
+
+        dd($num);
+
+        // 查询增加调课
+        return $list;
+    }
+
+
+    /**
+     * 根据单双周获取上课的次数
+     * @param $repeatUnit
+     * @param $week
+     * @return float|int
+     */
+    public function getCourseCountByRepeatUnit($repeatUnit, $week) {
+        switch ($repeatUnit) {
+            case GradeAndYearUtil::TYPE_EVERY_WEEK :  // 每周都有课
+                return $week; break;
+            case GradeAndYearUtil::TYPE_EVERY_ODD_WEEK : // 表示每单周都有课
+                return ceil($week/2); break;
+            case GradeAndYearUtil::TYPE_EVERY_EVEN_WEEK: // 表示每双周都有课
+                return floor($week/2); break;
+            default:return 0;
+        }
+    }
+
+    // 获取增加课程的次数
+    public function getAddCourseCount($atSpecialDatetime, $toSpecialDatetime, $weeks) {
+//        dd($atSpecialDatetime);
+        foreach ($weeks as $key => $val) {
+//            dump($val);
+//            $date = Carbon::createFromFormat('Y-m-d',$atSpecialDatetime->toDateString());
+//            dd($date);
+            if($val->includes($atSpecialDatetime)){
+                dump($atSpecialDatetime->weekday());die;
+            }
+        }
+        die;
+    }
+
 }

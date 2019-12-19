@@ -451,6 +451,10 @@ Route::prefix('attendance')->middleware('auth:api')->group(function () {
         ->name('api.attendance.list');
     Route::post('/load-special','Api\AttendanceSchedule\AttendanceScheduleController@load_special')
         ->name('api.attendance.load-special');
+    // 学生签到
+    Route::get('/sign-in-record','Api\AttendanceSchedule\AttendanceController@signInRecord')
+        ->name('api.attendance.sign-in-record');
+
 });
 
 Route::prefix('user')->group(function () {
@@ -549,11 +553,11 @@ Route::prefix('oa')->middleware('auth:api')->group(function () {
 
 // 社区
 Route::prefix('forum')->middleware('auth:api')->group(function () {
-    Route::get('/comments/{id}','Api\Forum\ForumCommentController@getComments')
+    Route::post('/comments','Api\Forum\ForumCommentController@getComments')
         ->name('api.forum.comments');
-    Route::get('/comments/addcomment/{id}','Api\Forum\ForumCommentController@addComment')
+    Route::post('/comments/addcomment','Api\Forum\ForumCommentController@addComment')
         ->name('api.forum.comments/addcomment');
-    Route::get('/comments/addreply/{id}','Api\Forum\ForumCommentController@addCommentReply')
+    Route::post('/comments/addreply','Api\Forum\ForumCommentController@addCommentReply')
         ->name('api.forum.comments/addreply');
     Route::get('/comments/addlike/{id}','Api\Forum\ForumCommentController@addLike')
         ->name('api.forum.comments/addlike');
@@ -601,6 +605,9 @@ Route::prefix('evaluate')->middleware('auth:api')->group(function () {
     // 学生评价老师的接口
     Route::any('/student/rate-lesson','Api\Evaluate\RatingController@rate_lesson')
         ->name('api.evaluate.student.rate-lesson');
+    // 学生写课堂笔记
+    Route::any('/student/save-note','Api\Evaluate\RatingController@save_note')
+        ->name('api.evaluate.student.save-note');
 });
 
 Route::prefix('cloud')->group(function () {

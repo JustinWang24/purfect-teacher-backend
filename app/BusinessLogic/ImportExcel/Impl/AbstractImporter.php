@@ -14,7 +14,10 @@ use App\Dao\Schools\SchoolDao;
 use App\Dao\Students\StudentProfileDao;
 use App\Dao\Users\GradeUserDao;
 use App\Dao\Users\UserDao;
+use App\Models\Acl\Role;
 use App\Models\Students\StudentProfile;
+use App\User;
+use Illuminate\Support\Facades\Hash;
 use League\Flysystem\Config;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use Ramsey\Uuid\Uuid;
@@ -457,6 +460,8 @@ abstract class AbstractImporter implements IImportExcel
         $gradeUserDao = new GradeUserDao();
         $gradeUserObj =  $gradeUserDao->getUserInfoByUserId($user->id);
         if ($gradeUserObj) {
+            $gradeUserObj->user_type = $user->type;
+            $gradeUserObj->save();
             return $gradeUserObj;
         } else {
             $schoolObj = $this->getSchool($schoolId);
@@ -511,6 +516,7 @@ abstract class AbstractImporter implements IImportExcel
         $userDao = new UserDao();
         $importUser =  $userDao->getUserByMobile($mobile);
         if ($importUser) {
+            $this->modifytUser($importUser, $passwdTxt);
             return $importUser;
         } else {
             $importUser = $userDao->importUser($mobile,$name,$passwdTxt);
@@ -616,5 +622,12 @@ abstract class AbstractImporter implements IImportExcel
             return false;
         }
 
+    }
+    public function modifytUser($user, $passwordInPlainText)
+    {
+        $user->password = Hash::make($passwordInPlainText);
+        $user->status = User::STATUS_VERIFIED;
+        $user->type = Role::VERIFIED_USER_STUDENT;
+        return $user->save();
     }
 }
