@@ -640,4 +640,14 @@ Route::prefix('cloud')->group(function () {
 });
 
 
-
+Route::prefix('Oa')->middleware('auth:api')->group(function(){
+    // 党员活动
+    Route::post('/activity/getCpcActivityListInfo','Api\OA\IndexController@activity')
+        ->name('api.cloud.school');
+    // 党员学习
+    Route::post('/study/getCpcStudyListInfo','Api\OA\IndexController@study')
+        ->name('api.cloud.grade');
+    // 党员风采
+    Route::post('/zone/getCpcZoneListInfo','Api\OA\IndexController@zone')
+        ->name('api.cloud.course');
+});
