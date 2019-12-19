@@ -19,6 +19,7 @@ class ForumCommentDao
      * @return MessageBag
      */
     public function createComment($data) {
+        $data['status'] = 1;
         $re =  ForumComment::create($data);
         if($re){
             $result = new MessageBag(JsonBuilder::CODE_SUCCESS,'添加成功');
@@ -57,6 +58,7 @@ class ForumCommentDao
      * @return MessageBag
      */
     public function createCommentReply($data) {
+        $data['status'] = 1;
         $re =  ForumCommentReply::create($data);
         if($re){
             $result = new MessageBag(JsonBuilder::CODE_SUCCESS,'添加成功');
