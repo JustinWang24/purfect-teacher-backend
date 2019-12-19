@@ -4,6 +4,7 @@
 namespace App\Http\Controllers\Api\AttendanceSchedule;
 
 
+use App\Dao\Timetable\TimetableItemDao;
 use Carbon\Carbon;
 use App\Dao\Courses\CourseMajorDao;
 use App\Http\Controllers\Controller;
@@ -27,14 +28,19 @@ class AttendanceController extends Controller
         $configuration = $school->configuration;
         // 学期
         $term = $configuration->guessTerm($month);
+        $weeks = $configuration->getAllWeeksOfTerm($term);
+//        dd($weeks);
 
         $courseMajorDao = new CourseMajorDao();
         $courseList = $courseMajorDao->getCoursesByMajorAndYear($grade->major_id, $grade->gradeYear());
         $attendancesDetailsDao = new AttendancesDetailsDao();
         $attendancesLeavesDao = new AttendancesLeavesDao();
+        $timetableDao = new TimetableItemDao();
         foreach ($courseList as $key => $val) {
             $signNum = $attendancesDetailsDao->getDetailsCountByUser($user->id, $val['id'], $year,$term);
             $leavesNum = $attendancesLeavesDao->getLeavesCountByUser($user->id, $val['id'], $year, $term);
+            $courseNum = $timetableDao->getCourseCountByCourseId($grade->id, $val['id'], $year, $term, $weeks);
+            dd($courseNum->toArray());
             $courseList[$key]['sign_num'] = $signNum;
             $courseList[$key]['leaves_num'] = $leavesNum;
         }
