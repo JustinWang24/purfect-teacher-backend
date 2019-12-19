@@ -35,34 +35,33 @@ class AttendancesDao
 
         $attendance = Attendance::where('timetable_id', $item->id)->first();
 
-        if (empty($attendance)) {
-
-            $gradeUser = $item->grade->gradeUser;
-            $userIds   = $gradeUser->pluck('user_id');
-
-            $now = Carbon::now(GradeAndYearUtil::TIMEZONE_CN);
-            $schoolDao = new SchoolDao;
-            $school = $schoolDao->getSchoolById($item->school_id);
-            $week = $school->configuration->getScheduleWeek($now)->getScheduleWeekIndex();
-
-            $attendanceData = [
-                'timetable_id'   => $item->id,
-                'course_id'      => $item->course_id,
-                'actual_number'  => 0,
-                'leave_number'   => 0, // todo :: 请假总人数 创建请假表
-                'missing_number' => count($userIds),
-                'total_number'   => count($userIds),
-                'year'           => $item->year,
-                'term'           => $item->term,
-                'grade_id'       => $item->grade_id,
-                'teacher_id'     => $item->teacher_id,
-                'week'           => $week,
-            ];
-            Attendance::create($attendanceData);
-        }
-
         DB::beginTransaction();
         try{
+            if(empty($attendance)) {
+                $gradeUser = $item->grade->gradeUser;
+                $userIds   = $gradeUser->pluck('user_id');
+
+                $now = Carbon::now(GradeAndYearUtil::TIMEZONE_CN);
+                $schoolDao = new SchoolDao;
+                $school = $schoolDao->getSchoolById($item->school_id);
+                $week = $school->configuration->getScheduleWeek($now)->getScheduleWeekIndex();
+
+                $attendanceData = [
+                    'timetable_id'   => $item->id,
+                    'course_id'      => $item->course_id,
+                    'actual_number'  => 0,
+                    'leave_number'   => 0, // todo :: 请假总人数 创建请假表
+                    'missing_number' => count($userIds),
+                    'total_number'   => count($userIds),
+                    'year'           => $item->year,
+                    'term'           => $item->term,
+                    'grade_id'       => $item->grade_id,
+                    'teacher_id'     => $item->teacher_id,
+                    'week'           => $week,
+                ];
+                $attendance = Attendance::create($attendanceData);
+            }
+
             $data = [
                 'attendance_id' => $attendance->id,
                 'student_id'    => $user->id,
