@@ -40,14 +40,8 @@ class Sms implements ShouldQueue
      */
     public function handle()
     {
-        $sms = SmsFactory::GetInstance();
-
-        if(count($this->receivers) === 1){
-            $result = $sms->send($this->receivers, $this->template, $this->contentHolder);
-            Log::warning('队列发送短信了');
-        }
-        elseif(count($this->receivers) > 1){
-            // Todo 群发短信
-        }
+         $sms = SmsFactory::GetInstance();
+         $result = $sms->send($this->receivers, $this->template, $this->contentHolder);
+         Log::channel('smslog')->alert('队列发送短信了');
     }
 }
