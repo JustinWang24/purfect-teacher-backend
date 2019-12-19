@@ -44,7 +44,7 @@ extends Controller
             if ($result->getCode()==1000) {
                 $userDao = new UserDao();
                 $studentDao = new StudentProfileDao();
-                $commentArr = $result->toArray();
+                $commentArr = $result->getData()->toArray();
                 $commentArr['commentid'] =  $commentArr['id'];
                 $commentArr['comment_pid'] =  0;
                 $commentArr['comment_levid'] =  0;
@@ -52,7 +52,7 @@ extends Controller
                 $commentArr['com_content'] =  $commentArr['content'];
                 $commentArr['create_time'] =  $commentArr['created_at'];
                 $commentArr['userid'] =  $commentArr['user_id'];
-                $commentArr['user_nickname'] =  $userDao->getUserById($commentArr['user_id'])->first()->name;
+                $commentArr['user_nickname'] =  $userDao->getUserById($commentArr['user_id'])->name;
                 $commentArr['user_pics'] =  asset($studentDao->getStudentInfoByUserId($commentArr['user_id'])->avatar);
                 $commentArr['comment_praise'] =  0;
                 return JsonBuilder::Success($commentArr);
@@ -106,7 +106,7 @@ extends Controller
             if ($result->getCode()==1000) {
                 $userDao = new UserDao();
                 $studentDao = new StudentProfileDao();
-                $replyArr = $result->toArray();
+                $replyArr = $result->getData()->toArray();
                 $replyArr['commentid'] =  $replyArr['id'];
                 $replyArr['comment_pid'] =  $commentId;
                 $replyArr['comment_levid'] =  $commentId;
@@ -114,7 +114,7 @@ extends Controller
                 $replyArr['com_content'] =  $replyArr['reply'];
                 $replyArr['create_time'] =  $replyArr['created_at'];
                 $replyArr['userid'] =  $replyArr['user_id'];
-                $replyArr['user_nickname'] =  $userDao->getUserById($replyArr['user_id'])->first()->name;
+                $replyArr['user_nickname'] =  $userDao->getUserById($replyArr['user_id'])->name;
                 $replyArr['user_pics'] =  asset($studentDao->getStudentInfoByUserId($replyArr['user_id'])->avatar);
                 $replyArr['comment_praise'] =  0;
                 return JsonBuilder::Success($replyArr);
@@ -205,7 +205,7 @@ extends Controller
             $commentArr['com_content'] =  $commentArr['content'];
             $commentArr['create_time'] =  $commentArr['created_at'];
             $commentArr['userid'] =  $commentArr['user_id'];
-            $commentArr['user_nickname'] =  $userDao->getUserById($commentArr['user_id'])->first()->name;
+            $commentArr['user_nickname'] =  $userDao->getUserById($commentArr['user_id'])->name;
             $commentArr['user_pics'] =  asset($studentDao->getStudentInfoByUserId($commentArr['user_id'])->avatar);
             $commentArr['reply_count'] =  $formCommentDao->getCountReplyForComment($commentArr['id']);
             $commentArr['ispraise'] =  $formCommentDao->getCommentLike($commentArr['id'],$user->id);
@@ -218,10 +218,10 @@ extends Controller
                 $replyArr[$k]['comment_levid'] = $commentArr['id'];
                 $replyArr[$k]['userid'] = $reply['user_id'];
                 $replyArr[$k]['user_pics'] = asset($studentDao->getStudentInfoByUserId($reply['user_id'])->avatar);
-                $replyArr[$k]['user_nickname'] = $userDao->getUserById($reply['user_id'])->first()->name;
+                $replyArr[$k]['user_nickname'] = $userDao->getUserById($reply['user_id'])->name;
                 $replyArr[$k]['touserid'] = $reply['to_user_id'];
                 $replyArr[$k]['touser_pics'] =  asset($studentDao->getStudentInfoByUserId($reply['to_user_id'])->avatar);
-                $replyArr[$k]['touser_nickname'] =  $userDao->getUserById($reply['to_user_id'])->first()->name;
+                $replyArr[$k]['touser_nickname'] =  $userDao->getUserById($reply['to_user_id'])->name;
                 $replyArr[$k]['icheid'] =  $forumId;
                 $replyArr[$k]['com_content'] =  $reply['reply'];
                 $replyArr[$k]['comment_praise'] =  $commentArr['comment_praise'];
