@@ -67,7 +67,7 @@ class YunLianSmsLogic implements ISmsSender
                  return  new MessageBag(JsonBuilder::CODE_SUCCESS, '发送成功');
              }
         } else {
-            Log::channel('smslog')->alert('短信接口请求成功了:'. 'mobile:'. json_encode($mobile). ',templateId:'. $templateId. ',data:'. json_encode($data));
+            Log::channel('smslog')->alert('短信接口请求成功了:'. 'mobile:'. $mobile . ',templateId:'. $templateId. ',data:'. var_export($data,true));
             return new  MessageBag(JsonBuilder::CODE_SUCCESS, '短信接口请求成功');
         }
 
