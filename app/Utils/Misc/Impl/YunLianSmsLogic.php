@@ -48,7 +48,7 @@ class YunLianSmsLogic implements ISmsSender
      */
     public function send($mobile, $templateId, $data): IMessageBag
     {
-        if (env('YUN_LIAN_APP_ID') != 'TEST') {
+        if (env('YUN_LIAN') != 'TEST') {
 
              $rest = new Rest($this->serverIP, $this->serverPort, $this->softVersion);
              $rest->setAccount($this->accountSid, $this->accountToken);
