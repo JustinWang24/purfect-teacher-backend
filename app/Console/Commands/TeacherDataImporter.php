@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use App\Models\Acl\Role;
 use App\Models\Teachers\TeacherProfile;
+use App\Models\Users\GradeUser;
 use App\Utils\Time\GradeAndYearUtil;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
@@ -128,6 +129,22 @@ class TeacherDataImporter extends Command
         $u = User::where('mobile',substr($data[2],10))->first();
         if($u){
             echo $u->name .' 账户已存在'.PHP_EOL;
+
+            $gu = GradeUser::where('user_id',$u->id)->first();
+            if(!$gu){
+                $gu = new GradeUser();
+                $gu->user_id = $u->id;
+                $gu->name = $u->name;
+                $gu->user_type = Role::TEACHER;
+                $gu->school_id = 1;
+                $gu->campus_id = 1;
+                $gu->institute_id = 508;
+                $gu->department_id = 0;
+                $gu->grade_id = 0;
+                $gu->last_updated_by = 1;
+                $gu->save();
+                echo 'GU added'.PHP_EOL;
+            }
             return;
         }
 

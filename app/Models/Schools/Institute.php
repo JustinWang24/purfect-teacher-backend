@@ -7,9 +7,11 @@ use Illuminate\Database\Eloquent\Model;
 use App\Models\Users\GradeUser;
 use App\User;
 use App\Models\School;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Institute extends Model
 {
+    use SoftDeletes;
     protected $fillable = [
         'school_id', 'campus_id', 'name', 'description','last_updated_by',
         'category_code', // 学院代码: 01
