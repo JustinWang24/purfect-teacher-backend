@@ -28,8 +28,33 @@ class TeacherFlowsLogic extends GeneralFlowsLogic
     public function getMyFlows($forApp = false)
     {
         $dao = new FlowDao();
-        return $dao->getGroupedFlows(
-            $this->user->getSchoolId(),Teacher::FlowTypes(), $forApp
+        $types[] = [
+            'name'=>IFlow::TYPE_STUDENT_ONLY_TXT,
+            'key'=>1000,
+            'flows'=>[
+                [
+                    'id'=>-1,
+                    'name'=>'签到',
+                    'icon'=>asset('assets/img/pipeline/icon1@2x.png')
+                ],
+                [
+                    'id'=>-2,
+                    'name'=>'项目',
+                    'icon'=>asset('assets/img/pipeline/icon2@2x.png')
+                ],
+                [
+                    'id'=>-3,
+                    'name'=>'发布任务',
+                    'icon'=>asset('assets/img/pipeline/icon3@2x.png')
+                ]
+            ]
+        ];
+
+        $result =  $dao->getGroupedFlows(
+            $this->user->getSchoolId(), Teacher::FlowTypes(), $forApp
         );
+
+        $types = array_merge($types, $result);
+        return $types;
     }
 }
