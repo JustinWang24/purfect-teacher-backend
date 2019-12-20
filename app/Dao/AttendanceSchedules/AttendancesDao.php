@@ -16,12 +16,16 @@ class AttendancesDao
 {
 
     /**
-     * @param $id
+     * @param $year
+     * @param $timetableId
+     * @param $term
+     * @param $week
      * @return mixed
      */
-    public function getAttendanceByTimeTableId($id)
+    public function getAttendanceByTimeTableId($year, $timetableId, $term, $week)
     {
-        return Attendance::where('timetable_id', $id)->first();
+        $map = ['year'=>$year, 'timetable_id'=>$timetableId, 'term'=>$term, 'week'=>$week];
+        return Attendance::where($map)->first();
     }
 
     /**
@@ -71,6 +75,7 @@ class AttendancesDao
                 'week'          => $week,
                 'weekday_index' => $item->weekday_index,
                 'mold'          => AttendancesDetail::MOLD_SIGN_IN,
+                'date'          => Carbon::now()
             ];
 
             $detailsDao = new  AttendancesDetailsDao;
@@ -81,7 +86,6 @@ class AttendancesDao
             DB::commit();
             $result = true;
         }catch (\Exception $e) {
-            dd($e->getMessage());
             DB::rollBack();
             $result = false;
         }

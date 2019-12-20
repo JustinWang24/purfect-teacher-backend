@@ -467,6 +467,9 @@ Route::prefix('attendance')->middleware('auth:api')->group(function () {
     // 签到详情
     Route::post('/sign-in-details','Api\AttendanceSchedule\AttendanceController@signInDetails')
         ->name('api.attendance.sign-in-details');
+    // 添加旷课记录
+    Route::post('/add-truant-record','Api\AttendanceSchedule\AttendanceController@addTruantRecord')
+        ->name('api.attendance.add-truant-record');
 
 });
 
