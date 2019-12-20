@@ -33,7 +33,7 @@ class IndexController extends Controller
     public function index(HomeRequest $request)
     {
         $school = $request->getAppSchool();
-        $pageNum = $request->get('pageNum');
+        $pageNum = $request->get('pageNum',5);
         $dao = new NewsDao;
 
         $data = $dao->getNewBySchoolId($school->id, $pageNum);
