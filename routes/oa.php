@@ -12,8 +12,8 @@ Route::prefix('project')->middleware('auth:api')->group(function () {
         ->name('oa.project.getOaProjectListInfo');
 
     // 项目详情
-    Route::post('/project-info','Api\OA\ProjectsController@projectInfo')
-        ->name('oa.project.project-info');
+    Route::post('/getOaProjectInfo/projectid/{project_id}','Api\OA\ProjectsController@projectInfo')
+        ->name('oa.project.getOaProjectInfo');
     // 创建项目
     Route::post('/addOaProjectInfo','Api\OA\ProjectsController@createProject')
         ->name('oa.project.addOaProjectInfo');
@@ -40,7 +40,7 @@ Route::prefix('task')->middleware('auth:api')->group(function () {
         ->name('oa.task.addOaTaskInfo');
     Route::post('/getOaTaskInfo/taskid/{taskid}','Api\OA\ProjectsController@taskInfo')
         ->name('oa.task.getOaTaskInfo');
-    Route::post('/finishOaTaskInfo','Api\OA\ProjectsController@finishTask')
+    Route::any('/finishOaTaskInfo','Api\OA\ProjectsController@finishTask')
         ->name('oa.task.finishOaTaskInfo');
     Route::post('/addOaTaskForum','Api\OA\ProjectsController@addOaTaskForum')
         ->name('oa.task.addOaTaskForum');

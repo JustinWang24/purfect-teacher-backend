@@ -219,16 +219,24 @@ class ProjectDao
             return $messageBag;
         }
     }
-    public function getTasks($userId)
+    public function getTasks($userId,$type)
     {
+        if($type == 2) {
+            $where = ['status'=>1];
+        } elseif ($type ==3) {
+            $where = ['status'=>2];
+        } elseif ($type ==4) {
+            $where = ['create_user'=>$userId];
+        }
         return ProjectTask::where('user_id', $userId)
+            ->where($where)
             ->orderBy('id', 'desc')
             ->paginate(ConfigurationTool::DEFAULT_PAGE_SIZE);
 
     }
-    public function finishTask($taskId)
+    public function finishTask($taskId, $remark='')
     {
-        return ProjectTask::where('id', $taskId)->update(['status'=>ProjectTask::STATUS_CLOSED]);
+        return ProjectTask::where('id', $taskId)->update(['status'=>ProjectTask::STATUS_CLOSED,'remark'=>$remark]);
     }
 
 
