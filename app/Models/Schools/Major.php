@@ -84,4 +84,8 @@ class Major extends Model
     public function studentsCount(){
         return GradeUser::where('major_id', $this->id)->where('user_type',Role::GetStudentUserTypes())->count();
     }
+
+    public function courseCount() {
+        return CourseMajor::where('major_id', $this->id)->count();
+    }
 }
