@@ -659,3 +659,6 @@ Route::prefix('Oa')->middleware('auth:api')->group(function(){
     Route::post('/zone/getCpcZoneListInfo','Api\OA\IndexController@zone')
         ->name('api.cloud.course');
 });
+
+Route::post('/manual/attendances','Api\Cloud\CloudController@manual')
+        ->middleware('auth:api')->name('api.manual.attendances');

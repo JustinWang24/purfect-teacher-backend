@@ -5,6 +5,7 @@ namespace App\Dao\AttendanceSchedules;
 
 use App\Dao\Schools\SchoolDao;
 use App\Models\AttendanceSchedules\Attendance;
+use App\Models\AttendanceSchedules\AttendancesDetail;
 use App\Models\Timetable\TimetableItem;
 use App\User;
 use App\Utils\Time\GradeAndYearUtil;
@@ -39,7 +40,6 @@ class AttendancesDao
         $schoolDao = new SchoolDao;
         $school = $schoolDao->getSchoolById($item->school_id);
         $week = $school->configuration->getScheduleWeek($now)->getScheduleWeekIndex();
-
         DB::beginTransaction();
         try{
             if(empty($attendance)) {
@@ -60,7 +60,6 @@ class AttendancesDao
                 ];
                 $attendance = Attendance::create($attendanceData);
             }
-
             $data = [
                 'attendance_id' => $attendance->id,
                 'student_id'    => $user->id,
@@ -70,6 +69,8 @@ class AttendancesDao
                 'year'          => $item->year,
                 'term'          => $item->term,
                 'week'          => $week,
+                'weekday_index' => $item->weekday_index,
+                'mold'          => AttendancesDetail::MOLD_SIGN_IN,
             ];
 
             $detailsDao = new  AttendancesDetailsDao;
@@ -80,6 +81,7 @@ class AttendancesDao
             DB::commit();
             $result = true;
         }catch (\Exception $e) {
+            dd($e->getMessage());
             DB::rollBack();
             $result = false;
         }
