@@ -1,7 +1,7 @@
 @extends('layouts.h5_teacher_app')
 @section('content')
     <div class="school-intro-container">
-        <div class="main">
+        <div class="main" style="padding: 15px;">
             <h4>{{ $news->title }}</h4>
             @foreach($news->sections as $section)
                 @if($section->media_id)
