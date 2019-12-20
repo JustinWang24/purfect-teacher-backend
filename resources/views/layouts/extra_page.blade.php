@@ -10,7 +10,6 @@
     <link rel="stylesheet" href="{{ asset('css/smart_basic.css') }}">
     <link rel="stylesheet" href="{{ asset('css/extra_page.css') }}">
 </head>
-
 <body>
 @yield('content')
 <script src="{{ asset('js/smart_basic.js') }}"></script>

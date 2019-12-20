@@ -84,5 +84,19 @@
 
     });
 
-
+    if(jQuery('.page-background')){
+        var imagesIndex = [1,2,3,4];
+        var startIndex = 1;
+        window.setInterval(function(){
+            startIndex += 1;
+            if(startIndex > 3){
+                startIndex = 0;
+            }
+            var theIdx = imagesIndex[startIndex];
+            var theUrl = '/assets/img/bg-0' + theIdx + '.jpg';
+            jQuery('.page-background').animate({opacity: 0}, 'slow', function () {
+                $(this).css('background-image','url('+theUrl+')').animate({opacity: 1},'slow')
+            });
+        },20000);
+    }
 })(jQuery);
