@@ -130,5 +130,9 @@ return [
     'project-view'=> '查看项目',
     'set-year-manager'=> '设置年级组长',
     'years'=> '年级管理',
+    'organizations'=> '组织机构管理',
+    'teaching-and-research-group-edit'=> '教研组管理',
+    'teaching-and-research-group'=> '教研组',
+    'teaching-and-research-group-members'=> '教研组成员管理',
 ];
 

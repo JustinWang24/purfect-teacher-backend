@@ -15,7 +15,7 @@ class Teacher extends User
      * @return array
      */
     public static function FlowTypes(){
-        return [IFlow::TYPE_OFFICE,IFlow::TYPE_TEACHER_ONLY];
+        return [IFlow::TYPE_OFFICE];
     }
 
     public function performances(){
