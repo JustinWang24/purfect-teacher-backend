@@ -8,6 +8,8 @@ use Carbon\Carbon;
 use App\Utils\JsonBuilder;
 use App\Dao\Courses\CourseMajorDao;
 use App\Http\Controllers\Controller;
+use App\Dao\Timetable\TimetableItemDao;
+use App\Dao\AttendanceSchedules\AttendancesDao;
 use App\Models\AttendanceSchedules\AttendancesDetail;
 use App\Dao\AttendanceSchedules\AttendancesDetailsDao;
 use App\Http\Requests\AttendanceSchedule\AttendanceRequest;
@@ -76,8 +78,8 @@ class AttendanceController extends Controller
         foreach ($signInList as $key => $val) {
             $signInList[$key]['time_slots'] = $val->timetable->timeSlot->name;
             $signInList[$key]['weekday_index'] = $val->timetable->weekday_index;
-            $signInList[$key]['data'] = Carbon::parse($val->created_at)->format('Y-m-d');
-            $signInList[$key]['time'] = Carbon::parse($val->created_at)->format('H:i');
+            $signInList[$key]['time'] = Carbon::parse($val->date)->format('H:i');
+            $signInList[$key]['date'] = Carbon::parse($val->date)->format('Y-m-d');
 
             // 判断请假的
             if($val['mold'] == AttendancesDetail::MOLD_LEAVE) {
@@ -88,10 +90,50 @@ class AttendanceController extends Controller
             unset($val->status);
             unset($val->timetable);
             unset($val->timetable_id);
-            unset($val->created_at);
         }
         $data = array_merge($signInList->toArray());
         return JsonBuilder::Success($data);
+    }
+
+
+
+    /**
+     * 添加旷课记录
+     * @param AttendanceRequest $request
+     * @return string
+     */
+    public function addTruantRecord(AttendanceRequest $request) {
+
+        $truant = $request->getTruantData();
+        $timeTableDao = new TimetableItemDao();
+        $item = $timeTableDao->getItemById($truant['timetable_id']);
+        $data = Carbon::parse($truant['date']);
+        $week = $item->school->configuration->getScheduleWeek($data)->getScheduleWeekIndex();
+
+        $attendanceDao = new AttendancesDao();
+        $attendanceInfo = $attendanceDao->getAttendanceByTimeTableId($item->year,$item->id, $item->term, $week);
+        if(is_null($attendanceInfo)) {
+            return JsonBuilder::Error('该课程还没上');
+        }
+        $truant['attendance_id'] = $attendanceInfo->id;
+        $truant['course_id']     = $item->course_id;
+        $truant['year']          = $item->year;
+        $truant['term']          = $item->term;
+        $truant['week']          = $week;
+        $truant['mold']          = AttendancesDetail::MOLD_TRUANT;
+        $truant['weekday_index'] = $item->weekday_index;
+        $truant['date']          = $data;
+        $re = $dao = new AttendancesDetailsDao();
+        if(!empty($re)) {
+            return JsonBuilder::Success('旷课已添加');
+        }
+        $dao->getTruantDetailByUserId($truant['student_id'],$data,$item->id);
+        $result = $dao->add($truant);
+        if($result) {
+            return JsonBuilder::Success('旷课添加成功');
+        } else {
+            return JsonBuilder::Error('旷课添加失败');
+        }
     }
 
 }

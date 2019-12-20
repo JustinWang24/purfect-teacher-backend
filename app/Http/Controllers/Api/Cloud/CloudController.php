@@ -16,6 +16,8 @@ use App\Models\Schools\Facility;
 use App\Models\Students\StudentProfile;
 use App\ThirdParty\CloudOpenApi;
 use App\Utils\JsonBuilder;
+use App\Utils\Time\GradeAndYearUtil;
+use Carbon\Carbon;
 use Endroid\QrCode\QrCode;
 use Illuminate\Http\Request;
 
@@ -216,9 +218,11 @@ class CloudController extends Controller
         if (empty($item)) {
             return JsonBuilder::Success('暂无课程');
         }
+        $now = Carbon::now(GradeAndYearUtil::TIMEZONE_CN);
+        $week = $item->school->configuration->getScheduleWeek($now)->getScheduleWeekIndex();
 
         $dao = new AttendancesDao;
-        $attendanceInfo = $dao->getAttendanceByTimeTableId($item->id);
+        $attendanceInfo = $dao->getAttendanceByTimeTableId($item->year,$item->id, $item->term, $week);
         if (empty($attendanceInfo)) {
             return  JsonBuilder::Error('未找到签到数据');
         }

@@ -217,6 +217,16 @@ class ProjectDao
             return $messageBag;
         }
     }
+    public function getTasks($userId)
+    {
+        return ProjectTask::where('user_id', $userId)
+            ->orderBy('id', 'desc')
+            ->paginate(ConfigurationTool::DEFAULT_PAGE_SIZE);
 
+    }
+    public function finishTask($taskId)
+    {
+        return ProjectTask::where('id', $taskId)->update('status',ProjectTask::STATUS_CLOSED);
+    }
 
 }

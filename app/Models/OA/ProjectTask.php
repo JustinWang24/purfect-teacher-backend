@@ -15,7 +15,12 @@ class ProjectTask extends Model
     public $fillable = ['project_id', 'user_id', 'title', 'content'];
 
     public $user_field = ['*'];
-
+    const MAP_ARR = [
+        'id'=>'taskid',
+        'title'=>'task_title',
+        'content'=>'project_content',
+        'status'=>'doing_status',
+    ];
     /**
      * 任务的讨论
      * @return \Illuminate\Database\Eloquent\Relations\HasMany

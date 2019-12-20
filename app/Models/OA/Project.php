@@ -10,6 +10,15 @@ class Project extends Model
 {
     const STATUS_IN_PROGRESS = 1;  // 正在进行
     const STATUS_CLOSED = 2;       // 已结束
+    const MAP_ARR = [
+        'id'=>'projectid',
+        'title'=>'project_title',
+        'content'=>'project_content',
+        'created_at'=>'create_time',
+        'user_id'=>'leader_userid',
+        'status'=>'doing_status',
+        '_todo' => ['member_count'=>'memberCount']
+    ];
 
     protected $table = 'oa_projects';
 
@@ -37,5 +46,9 @@ class Project extends Model
 
     public function tasks(){
         return $this->hasMany(ProjectTask::class)->orderBy('id','desc');
+    }
+    public function memberCount()
+    {
+        return $this->members()->count();
     }
 }
