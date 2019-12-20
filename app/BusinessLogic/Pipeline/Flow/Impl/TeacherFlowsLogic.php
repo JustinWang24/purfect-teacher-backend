@@ -60,42 +60,42 @@ class TeacherFlowsLogic extends GeneralFlowsLogic
                 [
                     'id'=>News::TYPE_SCIENCE,
                     'name'=>News::TYPE_SCIENCE_TXT,
-                    'icon'=>asset('assets/img/pipeline/icon1@2x.png')
+                    'icon'=>asset('assets/img/pipeline/t10@2x.png')
                 ],
                 [
                     'id'=>News::TYPE_CAMPUS,
                     'name'=>News::TYPE_CAMPUS_TXT,
-                    'icon'=>asset('assets/img/pipeline/icon2@2x.png')
+                    'icon'=>asset('assets/img/pipeline/t8@2x.png')
                 ],
                 [
                     'id'=>News::TYPE_NEWS,
                     'name'=>News::TYPE_NEWS_TXT,
-                    'icon'=>asset('assets/img/pipeline/icon3@2x.png')
+                    'icon'=>asset('assets/img/pipeline/t6@2x.png')
                 ],
                 [
                     'id'=>-4,
                     'name'=>'通知公告',
-                    'icon'=>asset('assets/img/pipeline/icon3@2x.png')
+                    'icon'=>asset('assets/img/pipeline/t15@2x.png')
                 ],
                 [
                     'id'=>-5,
                     'name'=>'校历',
-                    'icon'=>asset('assets/img/pipeline/icon3@2x.png')
+                    'icon'=>asset('assets/img/pipeline/t7@2x.png')
                 ],
                 [
                     'id'=>-6,
                     'name'=>'通讯录',
-                    'icon'=>asset('assets/img/pipeline/icon3@2x.png')
+                    'icon'=>asset('assets/img/pipeline/t16@2x.png')
                 ],
                 [
                     'id'=>-7,
                     'name'=>'作息时间',
-                    'icon'=>asset('assets/img/pipeline/icon3@2x.png')
+                    'icon'=>asset('assets/img/pipeline/t2@2x.png')
                 ],
                 [
                     'id'=>-8,
                     'name'=>'值班',
-                    'icon'=>asset('assets/img/pipeline/icon3@2x.png')
+                    'icon'=>asset('assets/img/pipeline/t3@2x.png')
                 ],
             ]
         ];
