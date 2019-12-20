@@ -29,7 +29,7 @@ class Project extends Model
     ];
 
     protected $fillable = [
-        'user_id','school_id','title','content','status'
+        'user_id','school_id','title','content','status', 'create_user', 'is_open'
     ];
 
     public function members(){
