@@ -39,15 +39,17 @@ class IndexController extends Controller
         $data = $dao->getNewBySchoolId($school->id, $pageNum);
 
         foreach ($data as $key => $val ) {
-            $data[$key]['time'] = $val['created_at'];
+            $data[$key]['time'] = $val['updated_at'];
             $data[$key]['image'] = "";
             foreach ($val->sections as $new) {
                 if (!empty($new->media)) {
                     $data[$key]['image'] = asset($new->media->url);
+                    break;
                 }
             }
             unset($data[$key]['sections']);
             unset($data[$key]['created_at']);
+            unset($data[$key]['updated_at']);
         }
 
         $data = pageReturn($data);
