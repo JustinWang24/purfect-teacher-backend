@@ -459,6 +459,9 @@ Route::prefix('attendance')->middleware('auth:api')->group(function () {
     // 学生签到
     Route::get('/sign-in-record','Api\AttendanceSchedule\AttendanceController@signInRecord')
         ->name('api.attendance.sign-in-record');
+    // 签到详情
+    Route::post('/sign-in-details','Api\AttendanceSchedule\AttendanceController@signInDetails')
+        ->name('api.attendance.sign-in-details');
 
 });
 
