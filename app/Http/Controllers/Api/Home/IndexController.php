@@ -278,7 +278,7 @@ class IndexController extends Controller
         $dao = new NewsDao();
         $list = $dao->getNewBySchoolId($schoolId);
         foreach ($list as $key => $val) {
-            $data[$key]['webview_url'] = route('h5.teacher.news.view',['id'=>$val['id']]);
+            $list[$key]['webview_url'] = route('h5.teacher.news.view',['id'=>$val['id']]);
             $list[$key]['image'] = '';
             $sections = $val->sections;
             foreach ($sections as $k => $v) {
