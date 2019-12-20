@@ -39,7 +39,6 @@ class IndexController extends Controller
         $data = $dao->getNewBySchoolId($school->id, $pageNum);
 
         foreach ($data as $key => $val ) {
-            $data[$key]['created_at'] = $val['created_at'];
             $data[$key]['image'] = "";
             foreach ($val->sections as $new) {
                 if (!empty($new->media)) {
@@ -47,7 +46,6 @@ class IndexController extends Controller
                 }
             }
             unset($data[$key]['sections']);
-            unset($data[$key]['created_at']);
         }
 
         $data = pageReturn($data);
