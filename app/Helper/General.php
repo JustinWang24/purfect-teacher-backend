@@ -1,4 +1,7 @@
 <?php
+
+use Illuminate\Contracts\Support\Arrayable;
+
 if(!function_exists('_printDate')){
     /**
      * 通用的打印日期的方法, 可以方便的修改日期输出的格式, 进行统一管理
@@ -50,5 +53,55 @@ if(!function_exists('pageReturn')){
             ];
         }
         return $data;
+    }
+}
+if(!function_exists('outputTranslate')){
+
+
+    function outputTranslate($data=[],$map=[]){
+        if( is_array($data) ){
+            try{
+                $newData = [];
+                foreach ($data as $key=>$value)
+                {
+                    if (is_array($value) || is_object($value))
+                    {
+                        $newData[$key] = outputTranslate($value,$map);
+                    } else {
+                        if (isset($map[$key]))
+                        {
+                            $newData[$map[$key]] = $value;
+                        } else {
+                            $newData[$key] = $value;
+                        }
+                    }
+                }
+                return $newData;
+            }catch (\Exception $exception){
+                return $data;
+            }
+        }elseif (is_object($data)){
+            if ($data instanceof Arrayable || is_callable($data, 'toArray')) {
+                // 具备转换成数组的条件
+                $arr = $data->toArray();
+                if (($data instanceof App\Models\OA\Project ||
+                        $data instanceof App\Models\OA\ProjectTask ||
+                        $data instanceof App\Models\OA\ProjectMember ||
+                        $data instanceof App\Models\OA\ProjectTaskDiscussion
+                    )&& isset($map['_todo'])) {
+
+                    foreach ($map['_todo'] as $key=>$value) {
+                        $arr[$key] = $data->$value();
+                    }
+                }
+                return outputTranslate($arr,$map);
+            } else {
+                // 表明传入的对象, 既没有实现 ArrayAccess, 也没提供 toArray 方法
+                throw new \Exception('数据无法正确转换');
+            }
+        }
+        else{
+            return $data;
+        }
     }
 }

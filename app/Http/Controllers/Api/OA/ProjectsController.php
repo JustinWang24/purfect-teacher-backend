@@ -4,10 +4,13 @@
 namespace App\Http\Controllers\Api\OA;
 
 
+use App\Models\OA\Project;
+use App\Models\OA\ProjectTask;
 use App\Utils\JsonBuilder;
 use App\Dao\OA\ProjectDao;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\OA\ProjectRequest;
+use Illuminate\Http\Request;
 
 class ProjectsController extends Controller
 {
@@ -18,10 +21,14 @@ class ProjectsController extends Controller
      * @return string
      */
     public function createProject(ProjectRequest $request) {
-        $project = $request->getProject();
-        $member  = $request->getMembers();
+        $user = $request->user();
+        $data['school_id'] = $user->getSchoolId();
+        $data['title'] = strip_tags($request->get('project_title'));
+        $data['content'] = strip_tags($request->get('project_content'));
+        $data['user_id'] = strip_tags($request->get('leader_userid'));
+        $member = explode(',',$request->get('member_userids'));
         $dao = new ProjectDao();
-        $result = $dao->createProject($project, $member);
+        $result = $dao->createProject($data, $member);
         if($result->isSuccess()){
             $data = $result->getData();
             return JsonBuilder::Success($data);
@@ -74,8 +81,7 @@ class ProjectsController extends Controller
         $userId = $request->user()->id;
         $dao = new ProjectDao();
         $list = $dao->getProjectByUserId($userId);
-        $data = pageReturn($list);
-        return JsonBuilder::Success($data);
+        return JsonBuilder::Success(outputTranslate($list->items(),Project::MAP_ARR));
     }
 
 
@@ -84,7 +90,7 @@ class ProjectsController extends Controller
      * @param ProjectRequest $request
      * @return string
      */
-    public function taskList(ProjectRequest $request) {
+/*    public function taskList(ProjectRequest $request) {
         $projectId = $request->getProjectId();
         if(is_null($projectId)) {
             return JsonBuilder::Error('项目ID不能为空');
@@ -97,7 +103,7 @@ class ProjectsController extends Controller
         }
         $data = pageReturn($list);
         return JsonBuilder::Success($data);
-    }
+    }*/
 
 
     /**
@@ -133,13 +139,27 @@ class ProjectsController extends Controller
         }
         $dao = new ProjectDao();
         $info = $dao->getProjectById($projectId);
+        $output = outputTranslate($info->toArray(),Project::MAP_ARR);
+        $output['leader_name'] = $info->user->name;
+        $output['create_userid'] = '';
+        $output['create_name'] = '';
+        $output['is_open'] = 1;
         $members = $info->members;
+        $tasks = $info->tasks;
         foreach ($members as $key => $val) {
-            $val->user_field = ['name'];
-            $members[$key]=$val->user;
+            $members[$key]['userid']=$val->user->id;
+            $members[$key]['username']=$val->user->name;
+            $members[$key]['user_pics']=$val->user->profile->avatar;
+            unset($val->user);
         }
-        $data = ['project'=>$info];
-        return JsonBuilder::Success($data);
+        foreach($tasks as $k =>$value) {
+            $tasks[$k] = outputTranslate($value,ProjectTask::MAP_ARR);
+        }
+        $output['member_count'] = count($members);
+        $output['member_list'] = $members;
+        $output['task_list'] = $tasks;
+//        $data = ['project'=>$info];
+        return JsonBuilder::Success($output);
     }
 
 
@@ -164,5 +184,88 @@ class ProjectsController extends Controller
             return JsonBuilder::Error($result->getMessage());
         }
     }
+
+    public function taskList(ProjectRequest $request) {
+        $user = $request->user();
+        $data['school_id'] = $user->getSchoolId();
+
+        $dao = new ProjectDao();
+        $list = $dao->getTasks($user->id);
+        $output = [];
+        foreach ($list as $key => $val) {
+            $output[$key]['taskid'] = $val->id;
+            $output[$key]['create_userid'] = 1;
+            $output[$key]['create_name'] = "管理员";
+            $output[$key]['task_title'] = $val->title;
+            $output[$key]['create_time'] = $val->created_at;
+            $output[$key]['end_time'] = '';
+            $output[$key]['leader_userid'] = $val->user_id;
+            $output[$key]['leader_name'] = $val->user->name;
+            $output[$key]['status'] = $val->status;
+        }
+        return JsonBuilder::Success($output);
+    }
+
+    public function taskInfo(Request $request,$taskid)
+    {
+        $user = $request->user();
+        $data['school_id'] = $user->getSchoolId();
+        $dao = new ProjectDao();
+        $task = $dao->getProjectTaskById($taskid);
+        $output = [];
+        $output['create_userid'] = 1;
+        $output['create_name'] = '管理员';
+        $output['task_title'] = $task->title;
+        $output['task_content'] = $task->content;
+        $output['create_time'] = $task->created_at;
+        $output['ent_time'] = '';
+        $output['projectid'] = $task->project_id;
+        $output['project_title'] = $task->project->title;
+        $output['leader_userid'] = $task->user_id;
+        $output['leader_name'] = $task->user->name;
+        $output['report_btn'] = 1;
+        $members = [];
+        foreach ($task->project->members as $key => $val) {
+            $members[$key]['userid']=$val->user->id;
+            $members[$key]['username']=$val->user->name;
+            $members[$key]['user_pics']=$val->user->profile->avatar;
+
+        }
+        $output['member_list'] = $members;
+        $output['log_list'] = [];
+        $forum = [];
+        foreach ($task->discussions as $key => $val) {
+            $forum[$key]['forumid']=$val->id;
+            $forum[$key]['userid']=$val->user_id;
+            $forum[$key]['username']=$val->user->name;
+            $forum[$key]['user_pics']=$val->user->profile->avatar;
+            $forum[$key]['forum_content']=$val->content;
+            $forum[$key]['create_time']=$val->created_at;
+
+        }
+        $output['forum_list'] = $forum;
+        return JsonBuilder::Success($output);
+
+    }
+
+    public function finishTask(Request $request)
+    {
+        $user = $request->user();
+        $data['school_id'] = $user->getSchoolId();
+        $dao = new ProjectDao();
+        $taskId = $request->get('taskid');
+        $taskremark = strip_tags($request->get('remark'));
+        $taskObj = $dao->getProjectTaskById($taskId);
+        $result = $taskObj->finishTask($taskId);
+        if ($result)
+        {
+            return JsonBuilder::Success('添加成功');
+        } else {
+            return JsonBuilder::Success('添加失败');
+        }
+
+
+    }
+
 
 }
