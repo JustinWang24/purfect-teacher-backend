@@ -4,6 +4,10 @@
 namespace App\Http\Controllers\Api\AttendanceSchedule;
 
 
+use App\Dao\AttendanceSchedules\AttendancesDao;
+use App\Dao\Schools\SchoolDao;
+use App\Dao\Timetable\TimetableItemDao;
+use App\Utils\Time\GradeAndYearUtil;
 use Carbon\Carbon;
 use App\Utils\JsonBuilder;
 use App\Dao\Courses\CourseMajorDao;
@@ -92,6 +96,26 @@ class AttendanceController extends Controller
         }
         $data = array_merge($signInList->toArray());
         return JsonBuilder::Success($data);
+    }
+
+
+    // 添加旷课记录
+    public function addTruantRecord(AttendanceRequest $request) {
+
+        $truant = $request->getTruantData();
+//        dd($truant);
+        $timeTableDao = new TimetableItemDao();
+        $timetableInfo = $timeTableDao->getItemById($truant['timetable_id']);
+        $schoolDao = new SchoolDao();
+        $school = $schoolDao->getSchoolById($timetableInfo->school_id);
+        $data = Carbon::parse($truant['date']);
+        $week = $school->configuration->getScheduleWeek($data)->getScheduleWeekIndex();;
+        $attendanceDao = new AttendancesDao();
+//        $attendanceInfo = $attendanceDao->getAttendanceByTimeTableId()
+        dd($week);
+        $truant['course_id'] = $timetableInfo->course_id;
+        $truant['school_id'] = $timetableInfo->school_id;
+
     }
 
 }
