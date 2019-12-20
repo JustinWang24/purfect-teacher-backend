@@ -9,10 +9,12 @@
 namespace App\Dao\OA;
 
 
+use App\Models\Acl\Role;
 use App\Models\OA\Project;
 use App\Models\OA\ProjectMember;
 use App\Models\OA\ProjectTask;
 use App\Models\OA\ProjectTaskDiscussion;
+use App\Models\Users\GradeUser;
 use App\Utils\JsonBuilder;
 use App\Utils\Misc\ConfigurationTool;
 use App\Utils\ReturnData\MessageBag;
@@ -226,7 +228,40 @@ class ProjectDao
     }
     public function finishTask($taskId)
     {
-        return ProjectTask::where('id', $taskId)->update('status',ProjectTask::STATUS_CLOSED);
+        return ProjectTask::where('id', $taskId)->update(['status'=>ProjectTask::STATUS_CLOSED]);
     }
 
+
+    public function  updateMembers($projectId, $member)
+    {
+        $messageBag = new MessageBag(JsonBuilder::CODE_ERROR);
+        $s1 = $this->getProjectById($projectId);
+        DB::beginTransaction();
+        try{
+            if(!empty($member)) {
+                foreach ($member as $key => $val) {
+                    $user = [
+                        'user_id'    => $val,
+                        'project_id' => $s1->id
+                    ];
+                    ProjectMember::create($user);
+                }
+            }
+            DB::commit();
+            $messageBag->setData(['id'=>$s1->id]);
+            $messageBag->setCode(JsonBuilder::CODE_SUCCESS);
+        }catch (\Exception $e) {
+            DB::rollBack();
+            $msg = $e->getMessage();
+            $messageBag->setMessage($msg);
+        }
+    }
+
+    public function getTeachers($name, $schoolId)
+    {
+        return GradeUser::select(DB::raw('user_id, name'))
+            ->whereIn('user_type',[Role::TEACHER,Role::EMPLOYEE])
+            ->where('school_id',$schoolId)
+            ->where('name','like',$name.'%')->get();
+    }
 }
