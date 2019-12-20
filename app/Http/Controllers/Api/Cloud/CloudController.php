@@ -260,7 +260,7 @@ class CloudController extends Controller
         $attendancesDetailsDao = new AttendancesDetailsDao;
         $attendancesDetail = $attendancesDetailsDao->getDetailByTimeTableIdAndStudentId($item, $student->user);
         if ($attendancesDetail) {
-            return JsonBuilder::Error('学生已经签到了');
+            return JsonBuilder::Error('学生已经'. $attendancesDetail->typeText() .'了');
         }
 
         $dao = new AttendancesDao;
@@ -298,8 +298,40 @@ class CloudController extends Controller
         } else {
             return  JsonBuilder::Success('上传失败');
         }
-
     }
 
+
+    /**
+     * 手动签到
+     * @param Request $request
+     * @return string
+     */
+    public function manual(Request $request)
+    {
+        $user = $request->user();
+        $timetableItemDao = new TimetableItemDao;
+        $item = $timetableItemDao->getCurrentItemByUser($user);
+        if (empty($item)) {
+            return JsonBuilder::Error('未找到该同学目前上的课程');
+        }
+
+        if ($item->grade_id != $user->gradeUser->grade_id) {
+            return JsonBuilder::Error('该学生不应该上这个课程');
+        }
+
+        $attendancesDetailsDao = new AttendancesDetailsDao;
+        $attendancesDetail = $attendancesDetailsDao->getDetailByTimeTableIdAndStudentId($item, $user);
+        if ($attendancesDetail) {
+            return JsonBuilder::Error('学生已经'. $attendancesDetail->typeText() .'了');
+        }
+
+        $dao = new AttendancesDao;
+        $attendanceInfo = $dao->arrive($item, $user, AttendancesDetail::TYPE_MANUAL);
+        if($attendanceInfo) {
+            return  JsonBuilder::Success('签到成功');
+        } else {
+            return  JsonBuilder::Success('服务器错误, 签到失败');
+        }
+    }
 
 }

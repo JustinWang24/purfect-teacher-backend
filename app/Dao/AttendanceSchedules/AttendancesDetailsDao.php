@@ -3,11 +3,13 @@
 namespace App\Dao\AttendanceSchedules;
 
 
+use App\Dao\Schools\SchoolDao;
 use App\Models\AttendanceSchedules\AttendancesDetail;
+use App\Utils\Time\GradeAndYearUtil;
+use Carbon\Carbon;
 
 class AttendancesDetailsDao
 {
-
     /**
      * 统计签到次数
      * @param $userId
@@ -59,17 +61,27 @@ class AttendancesDetailsDao
      */
     public function getDetailByTimeTableIdAndStudentId($item, $user)
     {
+        $schoolDao = new SchoolDao;
+        $school = $schoolDao->getSchoolById($item->school_id);
+        $now = Carbon::now(GradeAndYearUtil::TIMEZONE_CN);
+        $week = $school->configuration->getScheduleWeek($now)->getScheduleWeekIndex();
         $where = [
             ['timetable_id','=',$item->id],
             ['year','=', $item->year],
             ['term','=',$item->term],
-            ['weekday_index','=',$item->week],
             ['student_id','=',$user->id],
+            ['weekday_index','=', $item->weekday_index],
+            ['week' ,'=', $week],
+            ['mold', '=', AttendancesDetail::MOLD_SIGN_IN]
         ];
         return AttendancesDetail::where($where)->first();
     }
 
-
+    /**
+     * 签到详情添加
+     * @param $data
+     * @return mixed
+     */
     public function add($data)
     {
         return AttendancesDetail::create($data);
