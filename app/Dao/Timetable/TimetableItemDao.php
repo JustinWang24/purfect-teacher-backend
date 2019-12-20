@@ -10,6 +10,7 @@ namespace App\Dao\Timetable;
 use App\Dao\Schools\SchoolDao;
 use App\Models\Timetable\TimetableItem;
 use App\User;
+use App\Utils\Time\CalendarWeek;
 use App\Utils\Time\GradeAndYearUtil;
 use Carbon\Carbon;
 use Illuminate\Support\Collection;
@@ -585,26 +586,44 @@ class TimetableItemDao
     }
 
 
-    // 查询学期课程的总结束包含调课
+
+    /**
+     * 查询学期课程的总结束包含调课
+     * @param int $gradeId 班级ID
+     * @param int $courseId 课程ID
+     * @param int $year 学年
+     * @param int $term 学期
+     * @param CalendarWeek $weeks 学期周
+     * @return float|int
+     */
     public function getCourseCountByCourseId($gradeId, $courseId, $year, $term, $weeks) {
         $week = $weeks->count();
         $map = ['grade_id'=>$gradeId, 'course_id'=>$courseId, 'year'=>$year, 'term'=>$term];
         $list = TimetableItem::where($map)->get();
         $num = [];
+        $minusNum = [];
         foreach ($list as $key => $val) {
             // 判断正常课程
             if(empty($val->at_special_datetime) && empty($val->to_special_datetime)) {
                 $num[$key] = $this->getCourseCountByRepeatUnit($val->repeat_unit, $week);
+                // 减去调课
+                $where = ['grade_id'=>$gradeId, 'time_slot_id'=>$val->time_slot_id, 'year'=>$year, 'term'=>$term];
+                $minusList = TimetableItem::where($where)->whereNotNull(['at_special_datetime', 'to_special_datetime'])->get();
+                if(count($minusList) >0) {
+                    foreach ($minusList as $k => $v) {
+                        $minusCount[$k] = $this->getAdjustCourseCount($v->at_special_datetime, $v->to_special_datetime, $weeks, $v->weekday_index);
+                    }
+                    $minusNum[$key] = array_sum($minusCount);
+                }
             } else{
-                $this->getAddCourseCount($val->at_special_datetime, $val->to_special_datetime, $weeks);
-                $num[$key] = 0;
+                // 增加的调课
+                $count = $this->getAdjustCourseCount($val->at_special_datetime, $val->to_special_datetime, $weeks, $val->weekday_index);
+                $num[$key] = $count;
             }
         }
 
-        dd($num);
+        return array_sum($num) - array_sum($minusNum);
 
-        // 查询增加调课
-        return $list;
     }
 
 
@@ -626,18 +645,42 @@ class TimetableItemDao
         }
     }
 
-    // 获取增加课程的次数
-    public function getAddCourseCount($atSpecialDatetime, $toSpecialDatetime, $weeks) {
-//        dd($atSpecialDatetime);
+
+    /**
+     * 获取调节课程的次数
+     * @param Carbon $atSpecialDatetime  调课的开始时间
+     * @param Carbon $toSpecialDatetime  调课的结束时间
+     * @param CalendarWeek $weeks 学期周
+     * @param int $weekDayIndex  课程当周第几天
+     * @return int
+     */
+    public function getAdjustCourseCount($atSpecialDatetime, $toSpecialDatetime, $weeks, $weekDayIndex) {
         foreach ($weeks as $key => $val) {
-//            dump($val);
-//            $date = Carbon::createFromFormat('Y-m-d',$atSpecialDatetime->toDateString());
-//            dd($date);
-            if($val->includes($atSpecialDatetime)){
-                dump($atSpecialDatetime->weekday());die;
+            if($val->includes($atSpecialDatetime)) {
+                /**
+                 *  @var CalendarWeek $val
+                 */
+                // 学期第多少周
+                $startWeekIndex = $val->getScheduleWeekIndex();
+                // 当前周的第几天
+                $startWeekday = $atSpecialDatetime->weekday();
+                // 判断这周开始时间的天大于该课的当周天
+                if($startWeekday > $weekDayIndex) {
+                    $startWeekIndex = $startWeekIndex + 1;
+                }
+            }
+            if($val->includes($toSpecialDatetime)) {
+                $endWeekIndex = $val->getScheduleWeekIndex();
+                $endWeekDay = $toSpecialDatetime->weekday();
+                // 判断这周结束时间的天小于该课的当周天
+                if($endWeekDay < $weekDayIndex) {
+                    $endWeekIndex = $endWeekIndex - 1;
+                }
             }
         }
-        die;
+
+        return $endWeekIndex - $startWeekIndex + 1;
     }
+
 
 }
