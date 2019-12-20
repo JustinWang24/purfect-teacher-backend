@@ -39,7 +39,7 @@ class IndexController extends Controller
         $data = $dao->getNewBySchoolId($school->id, $pageNum);
 
         foreach ($data as $key => $val ) {
-            $data[$key]['time'] = $val['updated_at'];
+            $data[$key]['created_at'] = $val['updated_at'];
             $data[$key]['webview_url'] = route('h5.teacher.news.view',['id'=>$val['id']]);
             $data[$key]['image'] = "";
             foreach ($val->sections as $new) {
@@ -49,7 +49,6 @@ class IndexController extends Controller
                 }
             }
             unset($data[$key]['sections']);
-            unset($data[$key]['created_at']);
             unset($data[$key]['updated_at']);
         }
 
