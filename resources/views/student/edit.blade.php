@@ -26,9 +26,17 @@ use App\Utils\UI\Button;
                     <header>补充已注册学生的额外信息</header>
                 </div>
                 <div class="card-body " id="bar-parent">
-                    <p>课程情况</p>
-                    <p>提交的申请</p>
+                    <ul class="list-group list-group-unbordered">
+                    @if($gradeManager)
+                        <li class="list-group-item"><b>{{$student->gradeUser->grade->name}}的班长</b></li>
+                    @else
+                        <li class="list-group-item"><b>{{$student->gradeUser->grade->name}}的学生</b></li>
+                    @endif
+                    @foreach($student->community as $community)
+                        <li class="list-group-item"><b>{{$community->name}}社团的团长</b></li>
+                        @endforeach
                     <p>...</p>
+                    </ul>
                 </div>
             </div>
         </div>

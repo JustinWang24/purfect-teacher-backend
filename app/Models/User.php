@@ -6,6 +6,7 @@ use App\Models\Acl\Role;
 use App\Models\Contract\HasDeviceId;
 use App\Models\Contract\HasMobilePhone;
 use App\Models\Courses\CourseTeacher;
+use App\Models\Forum\Community;
 use App\Models\Misc\Enquiry;
 use App\Models\NetworkDisk\Category;
 use App\Models\Schools\RecruitmentPlan;
@@ -362,5 +363,10 @@ class User extends Authenticatable implements HasMobilePhone, HasDeviceId, IUser
         return [
            IFlow::TYPE_STUDENT_ONLY, IFlow::TYPE_FINANCE, IFlow::TYPE_STUDENT_COMMON
         ];
+    }
+
+    public function community()
+    {
+        return $this->hasMany(Community::class, 'user_id', 'id');
     }
 }

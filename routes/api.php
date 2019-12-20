@@ -374,6 +374,11 @@ Route::prefix('home')->middleware('auth:api')->group(function () {
     Route::any('/newsPage', 'Api\Home\IndexController@newsPage')
         ->name('api.home.newsPage');
 
+    Route::any('/load-news', 'Api\Home\IndexController@loadNews')
+        ->name('api.home.load-news');
+
+    Route::any('/load-notices', 'Api\Home\IndexController@loadNotices')
+        ->name('api.home.load-notices');
 });
 
 // 消息通知
@@ -657,3 +662,6 @@ Route::prefix('Oa')->middleware('auth:api')->group(function(){
     Route::post('/zone/getCpcZoneListInfo','Api\OA\IndexController@zone')
         ->name('api.cloud.course');
 });
+
+Route::post('/manual/attendances','Api\Cloud\CloudController@manual')
+        ->middleware('auth:api')->name('api.manual.attendances');

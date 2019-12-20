@@ -2,6 +2,7 @@
 
 namespace App\Models\Teachers;
 use App\Models\Teachers\Performance\TeacherPerformance;
+use App\Models\Users\UserOrganization;
 use App\User;
 use App\Utils\Pipeline\IFlow;
 
@@ -19,5 +20,9 @@ class Teacher extends User
 
     public function performances(){
         return $this->hasMany(TeacherPerformance::class, 'user_id')->orderBy('year','desc');
+    }
+
+    public function userOrganization(){
+        return $this->hasOne(UserOrganization::class);
     }
 }

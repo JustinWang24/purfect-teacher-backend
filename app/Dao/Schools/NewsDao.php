@@ -94,6 +94,7 @@ class NewsDao
     public function paginateByType($type, $schoolId){
         return News::where('type',$type)
             ->where('school_id',$schoolId)
+            ->with('sections')
             ->orderBy('id','desc')
             ->paginate(ConfigurationTool::DEFAULT_PAGE_SIZE);
     }
