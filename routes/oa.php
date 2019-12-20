@@ -36,9 +36,15 @@ Route::prefix('task')->middleware('auth:api')->group(function () {
     // 项目下的任务列表
     Route::post('/getOaTaskListInfo/page/{page}/type/{type}','Api\OA\ProjectsController@taskList')
         ->name('oa.task.getOaTaskListInfo');
+    Route::post('/addOaTaskInfo','Api\OA\ProjectsController@createTask')
+        ->name('oa.task.addOaTaskInfo');
     Route::post('/getOaTaskInfo/taskid/{taskid}','Api\OA\ProjectsController@taskInfo')
         ->name('oa.task.getOaTaskInfo');
     Route::post('/finishOaTaskInfo','Api\OA\ProjectsController@finishTask')
         ->name('oa.task.finishOaTaskInfo');
+    Route::post('/addOaTaskForum','Api\OA\ProjectsController@addOaTaskForum')
+        ->name('oa.task.addOaTaskForum');
+    Route::post('/getOaTaskUserListInfo','Api\OA\ProjectsController@getOaTaskUserListInfo')
+        ->name('oa.task.getOaTaskUserListInfo');
 
 });

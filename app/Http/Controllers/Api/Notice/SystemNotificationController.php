@@ -37,6 +37,6 @@ class SystemNotificationController extends Controller
 //                $json_array[$key]['tice_header'] = '消息';
 //            }
 //        }
-        return JsonBuilder::Success(['messages'=>$data]);
+        return JsonBuilder::Success(['messages'=>$data->items()]);
     }
 }

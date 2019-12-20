@@ -4,6 +4,7 @@
 namespace App\Http\Controllers\Api\OA;
 
 
+use App\Dao\Teachers\TeacherProfileDao;
 use App\Models\OA\Project;
 use App\Models\OA\ProjectTask;
 use App\Utils\JsonBuilder;
@@ -44,14 +45,29 @@ class ProjectsController extends Controller
      * @return string
      */
     public function createTask(ProjectRequest $request) {
-        $task = $request->getTask();
+        $user = $request->user();
+        $data['school_id'] = $user->getSchoolId();
         $dao = new ProjectDao();
-        $result = $dao->createTask($task);
+        $task_title = strip_tags($request->get('task_title'));
+        $task_content = strip_tags($request->get('task_content'));
+        $leader_userid = strip_tags($request->get('leader_userid'));
+        $member_userids = explode(',',strip_tags($request->get('member_userids')));
+        $end_time = strtotime($request->get('end_time'));
+        $projectid = intval($request->get('projectid'));
+        $data = [
+            'project_id'=>$projectid,
+            'user_id' =>$leader_userid,
+            'title' =>$task_title,
+            'content' =>$task_content,
+        ];
+        $result = $dao->createTask($data);
         if($result->isSuccess()) {
+            $dao->updateMembers($projectid, $member_userids);
             return JsonBuilder::Success($result->getData());
         } else {
             return JsonBuilder::Error($result->getMessage());
         }
+
     }
 
 
@@ -255,8 +271,30 @@ class ProjectsController extends Controller
         $dao = new ProjectDao();
         $taskId = $request->get('taskid');
         $taskremark = strip_tags($request->get('remark'));
-        $taskObj = $dao->getProjectTaskById($taskId);
-        $result = $taskObj->finishTask($taskId);
+
+        $result = $dao->finishTask($taskId);
+        if ($result)
+        {
+            return JsonBuilder::Success('添加成功');
+        } else {
+            return JsonBuilder::Success('添加失败');
+        }
+    }
+
+    public function addOaTaskForum(Request $request)
+    {
+        $user = $request->user();
+        $data['school_id'] = $user->getSchoolId();
+        $dao = new ProjectDao();
+        $taskid = intval($request->get('taskid'));
+        $forum_content = strip_tags($request->get('forum_content'));
+        $userid = intval($request->get('userid'));
+        $data = [
+            'project_task_id' => $taskid,
+            'user_id' => $user->id,
+            'content' => $forum_content,
+        ];
+        $result = $dao->createDiscussion($data);
         if ($result)
         {
             return JsonBuilder::Success('添加成功');
@@ -264,8 +302,27 @@ class ProjectsController extends Controller
             return JsonBuilder::Success('添加失败');
         }
 
-
     }
 
+    public function getOaTaskUserListInfo(Request $request)
+    {
+        $user = $request->user();
+        $schoolId = $user->getSchoolId();
+        $keyword = strip_tags($request->get('keyword'));
+        $dao = new ProjectDao();
+
+        $teachers = $dao->getTeachers($keyword, $schoolId);
+
+        $output = [];
+        foreach ($teachers as $key=>$value)
+        {
+            $output[$key]['userid'] = $value->id;
+            $output[$key]['username'] = $value->name;
+            $output[$key]['user_pics'] = $value->user->profile->avatar;
+            $output[$key]['duties'] = $value->user->profile->group_name;
+        }
+        return JsonBuilder::Success($output);
+
+    }
 
 }
