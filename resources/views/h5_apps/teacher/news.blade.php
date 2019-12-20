@@ -3,7 +3,6 @@
     <div id="app-init-data-holder" data-school="{{ $school->id }}" data-type="{{ $typeId }}"></div>
     <div id="school-teacher-news-list-app" class="school-intro-container">
         <div class="header">
-            <h2 class="title">{{ $pageTitle }}</h2>
             <div v-for="(item, idx) in news.data">
                 <news-item :news="item" v-on:news-clicked="showDetail"></news-item>
             </div>

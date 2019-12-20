@@ -7,9 +7,6 @@
     ></div>
     <div id="school-calendar-teacher-app" class="school-intro-container">
         <div class="main p-15">
-            <h2 class="title">
-                {{ $pageTitle }}
-            </h2>
             <el-timeline style="padding-left: 10px;">
                 <el-timeline-item v-for="(ev, idx) in events" :key="idx" :timestamp="ev.event_time" placement="top">
                     <el-card>

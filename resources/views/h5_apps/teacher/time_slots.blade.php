@@ -5,8 +5,8 @@
     ></div>
     <div id="school-time-slots-teacher-app" class="school-intro-container">
         <div class="main p-15">
-            <h2 class="title">
-                {{ $pageTitle }}: {{ $season }}
+            <h2 class="title" style="text-align: center;">
+                {{ $season }}
             </h2>
             <el-timeline class="frame-wrap">
                 <el-timeline-item

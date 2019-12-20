@@ -3,9 +3,6 @@
     <div id="app-init-data-holder" data-school="{{ $school->uuid }}" data-id="{{ $school->id }}"></div>
     <div id="school-contacts-list-app" class="school-intro-container">
         <div class="main p-15">
-            <h2 class="title">
-                {{ $pageTitle }}
-            </h2>
             <el-table
                     :data="contacts"
                     empty-text="数据加载中 ..."
