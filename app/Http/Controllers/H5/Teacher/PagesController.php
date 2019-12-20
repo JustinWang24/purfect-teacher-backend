@@ -12,6 +12,7 @@ namespace App\Http\Controllers\H5\Teacher;
 use App\Dao\AttendanceSchedules\AttendanceSchedulesDao;
 use App\Dao\Calendar\CalendarDao;
 use App\Dao\Notice\NoticeDao;
+use App\Dao\Schools\NewsDao;
 use App\Dao\Schools\SchoolDao;
 use App\Http\Controllers\Controller;
 use App\Models\Schools\News;
@@ -113,5 +114,14 @@ class PagesController extends Controller
         elseif ($txt === '动态管理'){
             return News::TYPE_NEWS;
         }
+    }
+
+    public function view_news(Request $request){
+        $news = (new NewsDao())->getById($request->get('id'));
+
+        $this->dataForView['news'] = $news;
+        $this->dataForView['api_token'] = null;
+
+        return view('h5_apps.teacher.view_news', $this->dataForView);
     }
 }
