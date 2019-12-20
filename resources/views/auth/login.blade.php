@@ -6,7 +6,7 @@
         <div class="container-login100 page-background">
 
         </div>
-        <div class="wrap-login100" style="position: absolute; z-index: 9999; top: 10%; left: 36%;">
+        <div class="wrap-login100" style="position: absolute; z-index: 9999; top: 20%; left: 36%;">
             <form class="login100-form validate-form" method="POST" action="{{ route('login') }}">
                 @csrf
                 <span class="login100-form-logo">
