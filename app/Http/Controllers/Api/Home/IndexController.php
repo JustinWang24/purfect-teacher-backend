@@ -39,7 +39,6 @@ class IndexController extends Controller
         $data = $dao->getNewBySchoolId($school->id, $pageNum);
 
         foreach ($data as $key => $val ) {
-            $data[$key]['time'] = $val['created_at'];
             $data[$key]['image'] = "";
             foreach ($val->sections as $new) {
                 if (!empty($new->media)) {
