@@ -579,7 +579,6 @@ class TimetableItemDao
             } else  {
                 return  false;
             }
-
             return TimetableItem::where($where)->first();
         }
         return null;
