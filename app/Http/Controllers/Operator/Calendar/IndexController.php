@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Calendar\CalendarRequest;
 use App\Utils\FlashMessageBuilder;
 use App\Utils\JsonBuilder;
+use Psy\Util\Json;
 
 class IndexController extends Controller
 {
@@ -46,6 +47,17 @@ class IndexController extends Controller
 
             return redirect()->route('school_manger.school.calendar.index');
         }
+    }
+
+    /**
+     * 删除校历事件
+     * @param CalendarRequest $request
+     * @return string
+     */
+    public function delete(CalendarRequest $request){
+        $eventId = $request->get('event_id');
+        $dao = new CalendarDao();
+        return $dao->deleteEvent($eventId) ? JsonBuilder::Success() : JsonBuilder::Error();
     }
 
     /**

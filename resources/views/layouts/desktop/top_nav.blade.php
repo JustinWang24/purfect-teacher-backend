@@ -40,8 +40,8 @@
                 </li>
 
                 <!-- start notification dropdown -->
-                <li class="dropdown dropdown-extended dropdown-notification" id="{{ !env('APP_DEBUG', true) ? 'notification-app-data-top' : null  }}" data-schoolid="{{ session('school.id') }}">
-                    <div id="header_notification_bar" style="padding-top: 13px;">
+                <li class="dropdown dropdown-extended dropdown-notification" id="notification-app-data-top" data-schoolid="{{ session('school.id') }}">
+                    <div id="{{ env('APP_DEBUG', true) ? null : 'header_notification_bar' }}" style="padding-top: 13px;">
                         <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown"
                            data-close-others="true">
                             <i class="fa fa-bell-o"></i>

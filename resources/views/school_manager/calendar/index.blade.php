@@ -2,6 +2,50 @@
 @section('content')
     <div class="row" id="school-calendar-app">
         <div class="col-sm-12 col-md-3 col-lg-3 col-xl-3">
+            <div class="card" style="{{ \Illuminate\Support\Facades\Auth::user()->isSchoolAdminOrAbove() ? null : 'display:none' }}">
+                <div class="card-head">
+                    <header>
+                        校历事件数据表
+                        <el-tag size="mini" v-if="!showEventDeleteBtn">新</el-tag>
+                    </header>
+                </div>
+                <div class="card-body">
+                    <el-form ref="form" :model="form" label-width="80px">
+                        <label for="">活动日期</label>
+                        <el-input v-model="form.event_time"></el-input>
+                        <br>
+                        <br>
+                        <label for="">事件标签</label><br>
+                        <el-select
+                                v-model="form.tag"
+                                style="width: 100%;"
+                                multiple
+                                filterable
+                                allow-create
+                                default-first-option
+                                placeholder="请选择文章标签">
+                            <el-option
+                                    v-for="(item, id) in tags"
+                                    :key="id"
+                                    :label="item"
+                                    :value="item">
+                            </el-option>
+                        </el-select>
+                        <br>
+                        <br>
+                        <label>活动安排</label>
+                        <br>
+                        <el-input rows="5" placeholder="必填: 活动安排的简要说明" type="textarea" v-model="form.content"></el-input>
+                        <br>
+                        <br>
+                        <p class="text-center">
+                            <el-button type="primary" @click="onSubmit">保 存</el-button>
+                            <el-button v-if="!showEventDeleteBtn">取 消</el-button>
+                            <el-button type="danger" v-if="showEventDeleteBtn" @click="deleteEvent">删除</el-button>
+                        </p>
+                    </el-form>
+                </div>
+            </div>
             <div class="card">
                 <div class="card-head">
                     <header>
@@ -45,48 +89,7 @@
                     </ul>
                 </div>
             </div>
-            <div class="card" style="{{ \Illuminate\Support\Facades\Auth::user()->isSchoolAdminOrAbove() ? null : 'display:none' }}">
-                <div class="card-head">
-                    <header>
-                        添加校历事件
-                    </header>
-                </div>
-                <div class="card-body">
-                    <el-form ref="form" :model="form" label-width="80px">
-                        <label for="">活动日期</label>
-                        <el-input v-model="form.event_time"></el-input>
-                        <br>
-                        <br>
-                        <label for="">事件标签</label><br>
-                        <el-select
-                                v-model="form.tag"
-                                style="width: 100%;"
-                                multiple
-                                filterable
-                                allow-create
-                                default-first-option
-                                placeholder="请选择文章标签">
-                            <el-option
-                                    v-for="(item, id) in tags"
-                                    :key="id"
-                                    :label="item"
-                                    :value="item">
-                            </el-option>
-                        </el-select>
-                        <br>
-                        <br>
-                        <label>活动安排</label>
-                        <br>
-                        <el-input rows="5" placeholder="必填: 活动安排的简要说明" type="textarea" v-model="form.content"></el-input>
-                        <br>
-                        <br>
-                        <el-form-item>
-                            <el-button type="primary" @click="onSubmit">保 存</el-button>
-                            <el-button >取 消</el-button>
-                        </el-form-item>
-                    </el-form>
-                </div>
-            </div>
+
 
         </div>
 

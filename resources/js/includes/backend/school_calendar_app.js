@@ -3,6 +3,7 @@
  */
 import {Constants} from "../../common/constants";
 import {Util} from "../../common/utils";
+import moment from 'moment';
 
 if(document.getElementById('school-calendar-app')){
     new Vue({
@@ -21,6 +22,11 @@ if(document.getElementById('school-calendar-app')){
                 schoolId: null,
                 specialAttendance: null,
                 isLoading: false,
+            }
+        },
+        computed: {
+            'showEventDeleteBtn': function(){
+                return !Util.isEmpty(this.form.id);
             }
         },
         watch: {
@@ -59,6 +65,7 @@ if(document.getElementById('school-calendar-app')){
             },
             // 点击的时候, 会把点击的日期发过来, 如果是月份, 会发来第一天
             dateClicked: function(payload){
+                this._resetEventForm();
                 this.currentDate = moment(payload);
                 const ev = this._locateEvent(this.currentDate.format('YYYY-MM-DD'));
                 if(!Util.isEmpty(ev)){
@@ -66,6 +73,12 @@ if(document.getElementById('school-calendar-app')){
                 }
                 this.$message('正在编辑 ' + this.currentDate.format('YYYY-MM-DD') + ' 的校历');
                 this.loadSpecialAttendance();
+            },
+            _resetEventForm: function(){
+                this.form.event_time = '';
+                this.form.tag = '';
+                this.form.content = '';
+                this.form.id = '';
             },
             onSubmit: function(){
                 if(Util.isEmpty(this.form.event_time)){
@@ -83,15 +96,26 @@ if(document.getElementById('school-calendar-app')){
                 ).then(res => {
                     if(Util.isAjaxResOk(res)){
                         this.$message({
-                            message: '校历保存成功, 正在从新加载 ...',
+                            message: '校历保存成功',
                             type: 'success'
                         });
-                        window.location.reload();
+                        Util.reloadCurrentPage(this);
                     }
                 })
             },
-            loadEvents: function(){
-
+            deleteEvent: function(){
+                axios.post(
+                    Constants.API.CALENDAR.DELETE,
+                    {event_id: this.form.id}
+                ).then(res => {
+                    if(Util.isAjaxResOk(res)){
+                        this.$message({
+                            message: '已经成功删除, 正在从新加载 ...',
+                            type: 'success'
+                        });
+                        Util.reloadCurrentPage(this);
+                    }
+                })
             },
             /**
              *

@@ -184,6 +184,8 @@ Route::prefix('school_manager')->group(function () {
 
     // 校历事件添加
     Route::any('calendar/save', 'Calendar\IndexController@save')->name('school_manger.school.calendar.save');
+    // 校历事件的删除
+    Route::any('calendar/delete', 'Calendar\IndexController@delete')->name('school_manger.school.calendar.delete');
 
     // 校历展示
     Route::any('calendar/index', 'Calendar\IndexController@index')->name('school_manger.school.calendar.index');
