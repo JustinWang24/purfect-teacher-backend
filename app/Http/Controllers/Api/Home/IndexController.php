@@ -222,14 +222,11 @@ class IndexController extends Controller
         $profile = $user->profile;
 
         $gradeUser = $user->gradeUser;
-        foreach ($gradeUser as $val) {
 
-        dd($val);
-            $schoolName[] = $val->school->name;
-            $institute[]  = $val->institute->name;
-            $department[] = $val->department->name;
-            $major[]      = $val->major->name;
-        }
+        $schoolId = $user->getSchoolId();
+        $dao = new SchoolDao;
+        $schoolName = $dao->getSchoolById($schoolId);
+        
         $data = [
             'name'        => $user->name,
             'avatar'      => $profile->avatar,
@@ -239,9 +236,10 @@ class IndexController extends Controller
             'city'        => $profile->city,
             'area'        => $profile->area,
             'school_name' => $schoolName,
-            'institute'   => $institute,
-            'department'  => $department,
-            'major'       => $major
+            'institute'   => '',
+            'department'  => '',
+            'major'       => ''
+
         ];
         return  JsonBuilder::Success($data);
     }

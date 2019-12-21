@@ -27,7 +27,7 @@ class Teacher extends User
     }
 
     public static function myUserOrganization($userId){
-        return UserOrganization::where('user_id',$userId)->first();
+        return UserOrganization::where('user_id', $userId)->first();
     }
 
     /**
@@ -37,7 +37,7 @@ class Teacher extends User
      */
     public static function myGradeManger($userId)
     {
-        return GradeManager::where('user_id',$userId)->first();
+        return GradeManager::where('adviser_id', $userId)->first();
     }
 
     /**
@@ -47,7 +47,7 @@ class Teacher extends User
      */
     public static function myYearManger($userId)
     {
-        return YearManager::where('user_id',$userId)->first();
+        return YearManager::where('user_id', $userId)->first();
     }
 
 
@@ -77,4 +77,16 @@ class Teacher extends User
         }
         return $data;
     }
+
+    /**
+     * 获取老师所有职务
+     * @param $userId
+     */
+    public static function getTeacherAllDuties($userId)
+    {
+        
+    }
+
+
+
 }
