@@ -155,7 +155,7 @@ class RouteServiceProvider extends ServiceProvider
      */
     protected function mapOaRoutes()
     {
-        Route::prefix('oa')
+        Route::prefix('Oa')
             ->middleware('api')
             ->namespace($this->namespace)
             ->group(base_path('routes/oa.php'));
