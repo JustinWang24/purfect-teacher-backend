@@ -235,7 +235,7 @@ class IndexController extends Controller
         }
 
         if ($allDuties['organization']) {
-            $organization = $allDuties['organization']->name;
+            $organization = $allDuties['organization']->title;
         } else {
             $organization = '';
         }
