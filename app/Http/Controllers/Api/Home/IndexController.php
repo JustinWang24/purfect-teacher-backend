@@ -174,7 +174,7 @@ class IndexController extends Controller
     }
 
     /**
-     * 获取用户信息
+     * 获取学生用户信息
      * @param HomeRequest $request
      * @return string
      */
@@ -202,7 +202,43 @@ class IndexController extends Controller
             'year'        => $grade->year,
             'grade_name'  => $grade->name
         ];
+        return  JsonBuilder::Success($data);
+    }
 
+
+    /**
+     * 获取教师用户信息
+     * @param HomeRequest $request
+     * @return string
+     */
+    public function getTeacherInfo(HomeRequest $request)
+    {
+        $user = $request->user();
+
+        $profile = $user->profile;
+
+        $gradeUser = $user->gradeUser;
+        foreach ($gradeUser as $val) {
+
+        dd($val);
+            $schoolName[] = $val->school->name;
+            $institute[]  = $val->institute->name;
+            $department[] = $val->department->name;
+            $major[]      = $val->major->name;
+        }
+        $data = [
+            'name'        => $user->name,
+            'avatar'      => $profile->avatar,
+            'gender'      => $profile->gender,
+            'birthday'    => $profile->birthday,
+            'state'       => $profile->state,
+            'city'        => $profile->city,
+            'area'        => $profile->area,
+            'school_name' => $schoolName,
+            'institute'   => $institute,
+            'department'  => $department,
+            'major'       => $major
+        ];
         return  JsonBuilder::Success($data);
     }
 
