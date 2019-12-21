@@ -89,18 +89,24 @@
                     </ul>
                 </div>
             </div>
-
-
         </div>
 
         <div class="col-12 col-md-9 col-lg-9 col-xl-9">
             <div class="card">
                 <div class="card-head">
-                    <header>
+                    <header class="full-width">
 本学期共: <span class="text-primary">{{ $config->study_weeks_per_term }}周</span>, 开学日期: <span class="text-primary">{{ _printDate($config->getTermStartDate()) }}</span>
                         <a href="{{ route('school_manager.attendance.list') }}" class="btn btn-primary">
                             值周管理
                         </a>
+                        <el-button
+                                icon="el-icon-notebook-2"
+                                type="primary"
+                                size="small"
+                                class="pull-right"
+                                v-if="events.length > 0"
+                                @click="showAllEvents = true"
+                        >查看本学期校历汇总</el-button>
                     </header>
                 </div>
                 <div class="card-body">
@@ -126,6 +132,40 @@
                 </div>
             </div>
         </div>
+
+        <el-dialog title="" :visible.sync="showAllEvents">
+            <el-dialog
+                    width="30%"
+                    title="内层 Dialog"
+                    :visible.sync="innerVisible"
+                    append-to-body>
+            </el-dialog>
+            <div slot="footer" class="dialog-footer">
+                <el-button @click="outerVisible = false">取 消</el-button>
+                <el-button type="primary" @click="innerVisible = true">打开内层 Dialog</el-button>
+            </div>
+        </el-dialog>
+
+        <el-dialog title="本学期校历汇总" :visible.sync="showAllEvents" :fullscreen="true">
+            <el-table :data="events">
+                <el-table-column property="event_time" label="日期"></el-table-column>
+                <el-table-column label="活动安排">
+                    <template slot-scope="scope">
+                        <span v-for="(tg,idx) in scope.row.tag" :key="idx" class="mr-2">
+                            <el-tag>@{{ tg }}</el-tag>
+                        </span>
+                    </template>
+                </el-table-column>
+                <el-table-column property="content" label="活动安排描述"></el-table-column>
+                <el-table-column label="操作">
+                    <template slot-scope="scope">
+                        <el-button @click="dateClicked(scope.row.event_time)" type="primary" size="mini" icon="el-icon-edit"></el-button>
+                        <el-button @click="deleteEvent(scope.row)" type="danger" size="mini" icon="el-icon-delete"></el-button>
+                    </template>
+                </el-table-column>
+            </el-table>
+        </el-dialog>
+
     </div>
     <div id="app-init-data-holder"
          data-school="{{ session('school.id') }}"

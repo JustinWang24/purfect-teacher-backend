@@ -23,6 +23,7 @@ if(document.getElementById('school-calendar-app')){
                 schoolId: null,
                 specialAttendance: null,
                 isLoading: false,
+                showAllEvents: false,
             }
         },
         computed: {
@@ -76,6 +77,7 @@ if(document.getElementById('school-calendar-app')){
             },
             // 点击的时候, 会把点击的日期发过来, 如果是月份, 会发来第一天
             dateClicked: function(payload){
+                this.showAllEvents = false;
                 this._resetEventForm();
                 this.currentDate = moment(payload);
                 const ev = this._locateEvent(this.currentDate.format('YYYY-MM-DD'));
@@ -117,19 +119,39 @@ if(document.getElementById('school-calendar-app')){
                     }
                 })
             },
-            deleteEvent: function(){
-                axios.post(
-                    Constants.API.CALENDAR.DELETE,
-                    {event_id: this.form.id}
-                ).then(res => {
-                    if(Util.isAjaxResOk(res)){
-                        this.$message({
-                            message: '已经成功删除, 正在从新加载 ...',
-                            type: 'success'
-                        });
-                        this._reloadCurrentPage();
-                    }
-                })
+            // 删除事件
+            deleteEvent: function(event){
+                let eventId = this.form.id;
+                let eventTime = this.form.event_time;
+                if(!Util.isEmpty(event)){
+                    eventId = event.id;
+                    eventTime = event.event_time;
+                }
+
+                this.$confirm('此操作将永久删除在 '+eventTime+'日所安排的事件, 是否继续?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+
+                    axios.post(
+                        Constants.API.CALENDAR.DELETE,
+                        {event_id: eventId}
+                    ).then(res => {
+                        if(Util.isAjaxResOk(res)){
+                            this.$message({
+                                message: '已经成功删除, 正在从新加载 ...',
+                                type: 'success'
+                            });
+                            this._reloadCurrentPage();
+                        }
+                    })
+                }).catch(() => {
+                    this.$message({
+                        type: 'info',
+                        message: '已取消删除'
+                    });
+                });
             },
             _reloadCurrentPage: function(){
                 window.location.href = '/school_manager/calendar/index?cd=' + this.currentDate.format('YYYY-MM-DD');
