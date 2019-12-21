@@ -17,6 +17,9 @@ Route::prefix('project')->middleware('auth:api')->group(function () {
     // 创建项目
     Route::post('/addOaProjectInfo','Api\OA\ProjectsController@createProject')
         ->name('oa.project.addOaProjectInfo');
+    // 人员列表-项目
+    Route::post('/getOaProjectUserListInfo','Api\OA\ProjectsController@getOaTaskUserListInfo')
+        ->name('oa.project.getOaProjectUserListInfo');
 //    // 创建任务
 //    Route::post('/create-task','Api\OA\ProjectsController@createTask')
 //        ->name('api.oa.create-task');
