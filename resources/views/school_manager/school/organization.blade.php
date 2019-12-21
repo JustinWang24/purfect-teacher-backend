@@ -130,7 +130,7 @@
                                         </el-form-item>
                                     </el-col>
                                     <el-col :span="12">
-                                        <el-form-item label="头衔" class="mr-4" label-width="70px">
+                                        <el-form-item label="职称" class="mr-4" label-width="70px">
                                             <el-input v-model="currentMember.title" placeholder="必填"></el-input>
                                         </el-form-item>
                                     </el-col>

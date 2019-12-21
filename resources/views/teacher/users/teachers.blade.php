@@ -22,29 +22,45 @@ use App\User;
                         <div class="table-padding col-12">
                             @include('school_manager.school.reusable.nav',['highlight'=>'teacher'])
                         </div>
-
                         <div class="table-responsive">
                             <table class="table table-striped table-bordered table-hover table-checkable order-column valign-middle">
                                 <thead>
                                 <tr>
                                     <th>#</th>
                                     <th>姓名</th>
-                                    <th>职务</th>
-                                    <th>教学机构</th>
+                                    <th>行政职务</th>
+                                    <th>教学职务</th>
                                     <th></th>
                                 </tr>
                                 </thead>
                                 <tbody>
                                 @foreach($employees as $index=>$gradeUser)
                                     @php
-/** @var \App\Models\Users\GradeUser $gradeUser */
+                                    $duties = \App\Models\Teachers\Teacher::getTeacherAllDuties($gradeUser->user_id);
                                     @endphp
                                     <tr>
                                         <td>{{ $index+1 }}</td>
                                         <td>
-                                            {{ $gradeUser->user->name }}
+                                            {{ $gradeUser->name }}
                                         </td>
-                                        <td>{{ $gradeUser->workAt() }}</td>
+                                        <td>
+                                            @if($duties['organization'])
+                                            <span class="text-primary">{{ $duties['organization']->title }}</span>
+                                            @endif
+                                        </td>
+                                        <td>
+                                            @if($duties['myYearManger'])
+                                                <span class="text-primary">{{ $duties['myYearManger']->year }}届年级组长</span>
+                                            @endif
+                                            @if($duties['gradeManger'])
+                                                &nbsp;<span class="text-primary">{{ $duties['gradeManger']->grade->name }}班主任</span>
+                                            @endif
+                                            @if($duties['myTeachingAndResearchGroup'])
+                                                @foreach($duties['myTeachingAndResearchGroup'] as $group)
+                                                &nbsp;<span class="text-primary">{{ $group->type }}-{{$group->name}}{{ $group->isLeader?'组长':null }}</span>
+                                                @endforeach
+                                            @endif
+                                        </td>
                                         <td class="text-center">
                                             {{ Anchor::Print(['text'=>'档案管理','href'=>route('school_manager.teachers.edit-profile',['uuid'=>$gradeUser->user_id])], Button::TYPE_DEFAULT,'edit') }}
                                         </td>
@@ -52,7 +68,6 @@ use App\User;
                                 @endforeach
                                 </tbody>
                             </table>
-
                             {{ $employees->links() }}
                         </div>
                     </div>
