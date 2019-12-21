@@ -113,7 +113,7 @@ class ProjectDao
             if(!empty($member)) {
                 foreach ($member as $key => $val) {
                     $user = [
-                        'user_id'    => $val,
+                        'user_id'    => intval($val),
                         'project_id' => $s1->id
                     ];
                     ProjectMember::create($user);
