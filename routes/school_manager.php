@@ -402,8 +402,12 @@ Route::prefix('school_manager')->group(function () {
 
     // 教师档案管理
     Route::prefix('teachers')->group(function(){
+        Route::get('add-new','Teachers\ProfilesController@add_new')
+            ->name('school_manager.teachers.add-new');
         Route::get('edit-profile','Teachers\ProfilesController@edit')
             ->name('school_manager.teachers.edit-profile');
+        Route::post('save-profile','Teachers\ProfilesController@save')
+            ->name('school_manager.teachers.save-profile');
         Route::get('manage-performance','Teachers\ProfilesController@manage_performance')
             ->name('school_manager.teachers.manage-performance');
         Route::post('manage-performance-save','Teachers\ProfilesController@manage_performance_save')

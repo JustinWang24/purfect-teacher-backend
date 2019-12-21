@@ -153,8 +153,8 @@ class TeacherDataImporter extends Command
             $user = new User();
             $user->name = $data[0];
             $user->uuid = Uuid::uuid4()->toString();
-            $user->mobile = substr($data[2],10); // 身份证号后 8 位作为手机号
-            $user->password = Hash::make(substr($data[2],12)); // 身份证号后 6 位作为密码
+            $user->mobile = substr($data[2],-8); // 身份证号后 8 位作为手机号
+            $user->password = Hash::make(substr($data[2],-6)); // 身份证号后 6 位作为密码
             $user->api_token = Uuid::uuid4()->toString();
             $user->type = Role::TEACHER;
             $user->status = User::STATUS_VERIFIED;

@@ -12,6 +12,7 @@ use App\Models\Schools\GradeManager;
 use App\Models\Schools\Institute;
 use App\Models\Schools\Major;
 use App\Models\Students\StudentProfile;
+use App\Models\Teachers\TeacherProfile;
 use App\User;
 use Illuminate\Database\Eloquent\Model;
 
@@ -19,6 +20,8 @@ class GradeUser extends Model
 {
     protected $fillable = [
         'user_id',
+        'user_type',
+        'name',
         'school_id',
         'campus_id',
         'institute_id',
@@ -97,6 +100,10 @@ class GradeUser extends Model
      */
     public function user(){
         return $this->belongsTo(User::class);
+    }
+
+    public function teacherProfile(){
+        return $this->hasOne(TeacherProfile::class,'user_id','user_id');
     }
 
     public function enquiries(){

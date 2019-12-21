@@ -22,6 +22,10 @@ class GradeUserDao
         $this->currentUser = $user;
     }
 
+    public function create($data){
+        return GradeUser::create($data);
+    }
+
     /**
      * 模糊查找用户的信息
      * @param $name

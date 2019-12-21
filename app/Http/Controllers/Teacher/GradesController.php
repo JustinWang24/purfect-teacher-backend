@@ -1,11 +1,15 @@
 <?php
 namespace App\Http\Controllers\Teacher;
+use App\Dao\Users\UserDao;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\School\GradeRequest;
 use App\Dao\Schools\GradeDao;
 use App\Models\Schools\GradeManager;
+use App\Utils\FlashMessageBuilder;
 use App\Utils\JsonBuilder;
 use App\BusinessLogic\UsersListPage\Factory;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 
 class GradesController extends Controller
 {
@@ -45,6 +49,35 @@ class GradesController extends Controller
             $this->dataForView['gradeManager'] = $gradeManager;
             return view('teacher.grade.set_monitor',$this->dataForView);
         }
+    }
+
+    public function update_password(GradeRequest $request){
+        if($request->method() === 'GET'){
+            if(Auth::user()->isSchoolAdminOrAbove() || Auth::user()->id === $request->get('uuid')){
+                // 有修改密码的权限
+                $this->dataForView['user_id'] = $request->get('uuid');
+                return view('teacher.profile.update_password',$this->dataForView);
+            }
+        }
+        elseif ($request->method() === 'POST'){
+            if(Auth::user()->isSchoolAdminOrAbove() || Auth::user()->id === $request->get('uuid')){
+                // 有修改密码的权限
+                $userData = $request->get('user');
+                $user = (new UserDao())->getTeacherByIdOrUuid($userData['id']);
+                if($user){
+                    $user->password = Hash::make($userData['password']);
+                    $user->save();
+                    FlashMessageBuilder::Push($request,'success',$user->name.'的密码更新成功');
+                }
+                else{
+                    FlashMessageBuilder::Push($request,'error','系统繁忙, 请稍候再试');
+                }
+                return Auth::user()->isSchoolAdminOrAbove() ? redirect()->route('school_manager.school.teachers')
+                    : route('home');
+            }
+        }
+
+        return '你无权进行此操作';
     }
 
     /**

@@ -34,9 +34,6 @@
             <li class="list-group-item">
                 <b>学位</b> <a class="pull-right">{{ $profile->degree }}</a>
             </li>
-            <li class="list-group-item">
-                <b>所在部门</b> <a class="pull-right">{{ $profile->group_name }}</a>
-            </li>
         </ul>
     </div>
 </div>

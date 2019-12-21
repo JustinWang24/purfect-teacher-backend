@@ -11,7 +11,7 @@ use App\User;
                 <div class="card-head">
                     <header class="full-width">
                         <span class="pull-left pt-2">{{ $parent->name??session('school.name') }} 教职工列表: (总数: {{ $employees->total() }})</span>
-                        <a href="#" class="btn btn-primary pull-right">
+                        <a href="{{ route('school_manager.teachers.add-new') }}" class="btn btn-primary pull-right">
                             添加新教职工 <i class="fa fa-plus"></i>
                         </a>
                     </header>
@@ -26,7 +26,7 @@ use App\User;
                             <table class="table table-striped table-bordered table-hover table-checkable order-column valign-middle">
                                 <thead>
                                 <tr>
-                                    <th>#</th>
+                                    <th>是否聘用</th>
                                     <th>姓名</th>
                                     <th>行政职务</th>
                                     <th>教学职务</th>
@@ -39,7 +39,7 @@ use App\User;
                                     $duties = \App\Models\Teachers\Teacher::getTeacherAllDuties($gradeUser->user_id);
                                     @endphp
                                     <tr>
-                                        <td>{{ $index+1 }}</td>
+                                        <td>{{ $gradeUser->teacherProfile->hired ? '聘用' : '解聘' }}</td>
                                         <td>
                                             {{ $gradeUser->name }}
                                         </td>
@@ -63,6 +63,7 @@ use App\User;
                                         </td>
                                         <td class="text-center">
                                             {{ Anchor::Print(['text'=>'档案管理','href'=>route('school_manager.teachers.edit-profile',['uuid'=>$gradeUser->user_id])], Button::TYPE_DEFAULT,'edit') }}
+                                            {{ Anchor::Print(['text'=>'修改密码','href'=>route('teacher.profile.update-password',['uuid'=>$gradeUser->user_id])], Button::TYPE_DEFAULT,'key') }}
                                         </td>
                                     </tr>
                                 @endforeach

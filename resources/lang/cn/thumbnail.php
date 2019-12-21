@@ -134,5 +134,6 @@ return [
     'teaching-and-research-group-edit'=> '教研组管理',
     'teaching-and-research-group'=> '教研组',
     'teaching-and-research-group-members'=> '教研组成员管理',
+    'add-new'=> '添加',
 ];
 

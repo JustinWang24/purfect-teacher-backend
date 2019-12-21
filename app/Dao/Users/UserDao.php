@@ -23,6 +23,10 @@ class UserDao
 {
     private $protectedRoles = [Role::SUPER_ADMIN, Role::OPERATOR];
 
+    public function createUser($data){
+        return User::create($data);
+    }
+
     /**
      * 根据用户的电话号码获取用户
      * @param string $mobile
