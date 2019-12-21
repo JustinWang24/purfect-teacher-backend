@@ -7,7 +7,7 @@ use App\User;
 @section('content')
     <div class="row">
         <div class="col-sm-12 col-md-12 col-xl-12">
-            <div class="card-box">
+            <div class="card">
                 <div class="card-head">
                     <header class="full-width">
                         <span class="pull-left pt-2">{{ $parent->name??session('school.name') }} 教职工列表: (总数: {{ $employees->total() }})</span>

@@ -30,6 +30,23 @@ Route::prefix('school_manager')->group(function () {
     Route::post('organizations/remove-member', 'SchoolsController@remove_member')
         ->name('school_manager.organizations.remove-member'); // 删除
 
+    Route::get('organizations/teaching-and-research-group', 'SchoolsController@teaching_and_research_group')
+        ->name('school_manager.organizations.teaching-and-research-group'); // 加载教研组
+    Route::get('organizations/teaching-and-research-group/members', 'SchoolsController@teaching_and_research_group_members')
+        ->name('school_manager.organizations.teaching-and-research-group-members'); // 添加教研组
+    Route::get('organizations/teaching-and-research-group/add', 'SchoolsController@teaching_and_research_group_add')
+        ->name('school_manager.organizations.teaching-and-research-group-add'); // 添加教研组
+    Route::get('organizations/teaching-and-research-group/edit', 'SchoolsController@teaching_and_research_group_edit')
+        ->name('school_manager.organizations.teaching-and-research-group-edit'); // 修改教研组
+    Route::get('organizations/teaching-and-research-group/delete', 'SchoolsController@teaching_and_research_group_delete')
+        ->name('school_manager.organizations.teaching-and-research-group-delete'); // 删除教研组
+    Route::post('organizations/teaching-and-research-group/delete-member', 'SchoolsController@teaching_and_research_group_delete_member')
+        ->name('school_manager.organizations.teaching-and-research-group-delete-member'); // 删除教研组
+    Route::post('organizations/teaching-and-research-group/save', 'SchoolsController@teaching_and_research_group_save')
+        ->name('school_manager.organizations.teaching-and-research-group-save'); // 保存教研组
+    Route::post('organizations/teaching-and-research-group/save-members', 'SchoolsController@teaching_and_research_group_save_members')
+        ->name('school_manager.organizations.teaching-and-research-group-save-members'); // 保存教研组
+
     Route::any('school/set-year-manager', 'SchoolsController@set_year_manager')->name('school_manager.school.set-year-manager'); // 显示学校的所有年级
 
     // 校区的管理

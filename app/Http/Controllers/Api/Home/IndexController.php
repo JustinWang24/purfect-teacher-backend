@@ -33,19 +33,23 @@ class IndexController extends Controller
     public function index(HomeRequest $request)
     {
         $school = $request->getAppSchool();
-        $pageNum = $request->get('pageNum');
+        $pageNum = $request->get('pageNum',5);
         $dao = new NewsDao;
 
         $data = $dao->getNewBySchoolId($school->id, $pageNum);
 
         foreach ($data as $key => $val ) {
+            $data[$key]['created_at'] = $val['updated_at'];
+            $data[$key]['webview_url'] = route('h5.teacher.news.view',['id'=>$val['id']]);
             $data[$key]['image'] = "";
             foreach ($val->sections as $new) {
                 if (!empty($new->media)) {
                     $data[$key]['image'] = asset($new->media->url);
+                    break;
                 }
             }
             unset($data[$key]['sections']);
+            unset($data[$key]['updated_at']);
         }
 
         $data = pageReturn($data);
@@ -311,14 +315,17 @@ class IndexController extends Controller
         $dao = new NewsDao();
         $list = $dao->getNewBySchoolId($schoolId);
         foreach ($list as $key => $val) {
+            $list[$key]['webview_url'] = route('h5.teacher.news.view',['id'=>$val['id']]);
             $list[$key]['image'] = '';
             $sections = $val->sections;
             foreach ($sections as $k => $v) {
                 if (!empty($v->media)) {
                     $list[$key]['image'] = asset($v->media->url);
+                    break;
                 }
             }
             unset($list[$key]['sections']);
+            unset($list[$key]['updated_at']);
         }
         $data = pageReturn($list);
         return JsonBuilder::Success($data);

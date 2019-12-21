@@ -7,6 +7,7 @@ use App\Dao\Schools\GradeDao;
 use App\Dao\Schools\MajorDao;
 use App\Dao\Schools\OrganizationDao;
 use App\Dao\Schools\RoomDao;
+use App\Dao\Schools\TeachingAndResearchGroupDao;
 use App\Dao\Schools\YearManagerDao;
 use App\Dao\Users\GradeUserDao;
 use App\Dao\Users\UserDao;
@@ -16,6 +17,7 @@ use App\Http\Controllers\Controller;
 use App\Dao\Schools\SchoolDao;
 use App\Models\Acl\Role;
 use App\Models\School;
+use App\Models\Schools\TeachingAndResearchGroup;
 use App\Utils\FlashMessageBuilder;
 use App\Dao\Schools\InstituteDao;
 use App\Utils\JsonBuilder;
@@ -26,6 +28,64 @@ class SchoolsController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
+    }
+
+    public function teaching_and_research_group(SchoolRequest $request){
+        $this->dataForView['pageTitle'] = '教研组管理';
+        $this->dataForView['groups'] = (new TeachingAndResearchGroupDao())->getAllBySchool($request->session()->get('school.id'));
+        return view(
+            'school_manager.school.teaching_and_research_groups', $this->dataForView
+        );
+    }
+
+    public function teaching_and_research_group_add(SchoolRequest $request){
+        $this->dataForView['pageTitle'] = '创建教研组';
+        $this->dataForView['group'] = [];
+        return view(
+            'school_manager.school.teaching_and_research_group_add', $this->dataForView
+        );
+    }
+
+    public function teaching_and_research_group_edit(SchoolRequest $request){
+        $this->dataForView['pageTitle'] = '修改教研组';
+        $this->dataForView['group'] = (new TeachingAndResearchGroupDao())->getById($request->uuid());
+        return view(
+            'school_manager.school.teaching_and_research_group_add', $this->dataForView
+        );
+    }
+
+    public function teaching_and_research_group_delete(SchoolRequest $request){
+        $done = (new TeachingAndResearchGroupDao())->delete($request->uuid());
+        if($done){
+            FlashMessageBuilder::Push($request,'success','删除成功');
+        }
+        else{
+            FlashMessageBuilder::Push($request,'error','删除失败');
+        }
+        return redirect()->route('school_manager.organizations.teaching-and-research-group');
+    }
+
+    public function teaching_and_research_group_save(SchoolRequest $request){
+        $saved = (new TeachingAndResearchGroupDao())->save($request->get('group'));
+        return $saved ? JsonBuilder::Success(): JsonBuilder::Error();
+    }
+
+    public function teaching_and_research_group_members(SchoolRequest $request){
+        $this->dataForView['pageTitle'] = '管理组员';
+        $this->dataForView['group'] = (new TeachingAndResearchGroupDao())->getById($request->uuid());
+        return view(
+            'school_manager.school.teaching_and_research_group_members', $this->dataForView
+        );
+    }
+
+    public function teaching_and_research_group_save_members(SchoolRequest $request){
+        $saved = (new TeachingAndResearchGroupDao())->saveMembers($request->get('members'));
+        return $saved ? JsonBuilder::Success(): JsonBuilder::Error();
+    }
+
+    public function teaching_and_research_group_delete_member(SchoolRequest $request){
+        return (new TeachingAndResearchGroupDao())->deleteMember($request->get('member_id')) ?
+            JsonBuilder::Success() : JsonBuilder::Error();
     }
 
     /**

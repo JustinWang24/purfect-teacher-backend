@@ -49,6 +49,14 @@ Route::prefix('h5')->group(function () {
     // 教师端, 查看新闻等信息
     Route::any('/teacher/pages/view','H5\Teacher\PagesController@view')
         ->name('h5.teacher.pages.view');
+
+    // APP 首页的动态新闻等的访问 URL
+    Route::any('/teacher/news/view','H5\Teacher\PagesController@view_news')
+        ->name('h5.teacher.news.view');
+
+    // 教师端, 管理界面
+    Route::any('/teacher/management/view','H5\Teacher\PagesController@management')
+        ->name('h5.teacher.management.view');
 });
 
 // 分享

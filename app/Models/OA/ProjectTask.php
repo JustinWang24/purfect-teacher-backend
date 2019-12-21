@@ -12,10 +12,15 @@ class ProjectTask extends Model
     protected $table = 'oa_project_tasks';
 
     protected $hidden = ['updated_at'];
-    public $fillable = ['project_id', 'user_id', 'title', 'content'];
+    public $fillable = ['project_id', 'user_id', 'title', 'content', 'is_open', 'end_time', 'create_user', 'remark'];
 
     public $user_field = ['*'];
-
+    const MAP_ARR = [
+        'id'=>'taskid',
+        'title'=>'task_title',
+        'content'=>'project_content',
+        'status'=>'doing_status',
+    ];
     /**
      * 任务的讨论
      * @return \Illuminate\Database\Eloquent\Relations\HasMany

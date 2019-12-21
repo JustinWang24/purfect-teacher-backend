@@ -3,6 +3,7 @@
 namespace App\Models\Timetable;
 
 use App\Models\Course;
+use App\Models\School;
 use App\Models\Schools\Building;
 use App\Models\Schools\Grade;
 use App\Models\Schools\Room;
@@ -73,5 +74,9 @@ class TimetableItem extends Model
 
     public function timeSlot(){
         return $this->belongsTo(TimeSlot::class);
+    }
+
+     public function school(){
+        return $this->belongsTo(School::class);
     }
 }

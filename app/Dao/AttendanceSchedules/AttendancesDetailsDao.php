@@ -97,12 +97,24 @@ class AttendancesDetailsDao
      * @return mixed
      */
     public function signInList($year, $userId, $courseId, $term) {
-        $field = ['timetable_id', 'created_at', 'mold', 'status'];
+        $field = ['timetable_id', 'date', 'mold', 'status'];
         $map = ['year'=>$year, 'student_id'=>$userId, 'course_id'=>$courseId, 'term'=>$term];
         return AttendancesDetail::where($map)
             ->orderBy('created_at')
             ->select($field)
             ->get();
+    }
+
+    /**
+     * 查寻旷课
+     * @param $userId
+     * @param $date
+     * @param $timetableId
+     * @return mixed
+     */
+    public function getTruantDetailByUserId($userId,$date,$timetableId) {
+        $map = ['student_id'=>$userId, 'date'=>$date, 'timetable_id'=>$timetableId];
+        return AttendancesDetail::where($map)->first();
     }
 
 

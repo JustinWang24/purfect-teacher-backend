@@ -3,29 +3,41 @@
 namespace App\Http\Controllers\Operator\Teachers;
 
 use App\Dao\Performance\TeacherPerformanceDao;
+use App\Dao\Schools\OrganizationDao;
 use App\Dao\Schools\SchoolDao;
 use App\Dao\Users\UserDao;
 use App\Http\Requests\MyStandardRequest;
 use App\Http\Controllers\Controller;
+use App\Models\Schools\Organization;
 use App\Models\Teachers\Teacher;
+use App\Models\Users\UserOrganization;
 use App\Utils\FlashMessageBuilder;
 
 class ProfilesController extends Controller
 {
     public function edit(MyStandardRequest $request){
         $this->dataForView['pageTitle'] = '教师档案管理';
+        $schoolId = session('school.id');
         $id = $request->uuid();
         $dao = new UserDao();
         /**
          * @var Teacher $teacher
          */
-        $teacher = $dao->getUserByIdOrUuid($id);
+        $teacher = $dao->getTeacherByUuid($id);
         $this->dataForView['teacher'] = $teacher;
+        $this->dataForView['userOrganization'] = $teacher->userOrganization;
         $this->dataForView['profile'] = $teacher->profile;
+
+        $this->dataForView['organizations'] = (new OrganizationDao())->getBySchoolId($schoolId);
+        $this->dataForView['titles'] = Organization::AllTitles();
+
+        /**
+         *
+         */
 
         // 该教师历年的考核记录
         $schoolDao = new SchoolDao();
-        $school = $schoolDao->getSchoolById(session('school.id'));
+        $school = $schoolDao->getSchoolById($schoolId);
         $this->dataForView['configs'] = $school->teacherPerformanceConfigs;
         $this->dataForView['history'] = $teacher->performances ?? [];
         return view('teacher.profile.edit', $this->dataForView);

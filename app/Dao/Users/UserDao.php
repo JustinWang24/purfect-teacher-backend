@@ -48,6 +48,20 @@ class UserDao
     }
 
     /**
+     * @param $idOrUuid
+     * @return Teacher|null
+     */
+    public function getTeacherByIdOrUuid($idOrUuid){
+        if(is_string($idOrUuid) && strlen($idOrUuid) > 10){
+            return Teacher::where('uuid',$idOrUuid)->first();
+        }
+        elseif ($idOrUuid){
+            return Teacher::find($idOrUuid);
+        }
+        return null;
+    }
+
+    /**
      * @param $uuid
      * @return User|null
      */

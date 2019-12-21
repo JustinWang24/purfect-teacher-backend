@@ -7,6 +7,7 @@
                     <header>
                         {{ session('school.name') }} 组织机构
                         <button v-on:click="showForm" class="btn btn-sm btn-primary">添加新机构</button>
+                        <a href="{{ route('school_manager.organizations.teaching-and-research-group') }}" class="btn btn-success btn-sm">教研组管理</a>
                     </header>
                 </div>
                 <div class="card-body">

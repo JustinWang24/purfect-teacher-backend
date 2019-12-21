@@ -27,7 +27,7 @@
             <span class="fa {{ $highlight==='grade' ? 'fa-check-square' : null }}"></span> 班级管理
         </a>
         <a href="{{ route('school_manager.school.teachers') }}" class="btn btn-{{ $highlight==='teacher' ? 'primary' : 'default' }}">
-            <span class="fa {{ $highlight==='teacher' ? 'fa-check-square' : null }}"></span> 教师管理
+            <span class="fa {{ $highlight==='teacher' ? 'fa-check-square' : null }}"></span> 教职工管理
         </a>
         <a href="{{ route('school_manager.school.students') }}" class="btn btn-{{ $highlight==='student' ? 'primary' : 'default' }}">
             <span class="fa {{ $highlight==='student' ? 'fa-check-square' : null }}"></span> 学生管理

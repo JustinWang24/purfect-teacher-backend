@@ -37,13 +37,14 @@ class RouteServiceProvider extends ServiceProvider
     {
         $this->mapApiRoutes();
         $this->mapApiWifiRoutes();	// api wifi interface
-		$this->mapManagerWifiRoutes(); // manage wifi interface 
+		$this->mapManagerWifiRoutes(); // manage wifi interface
         $this->mapWebRoutes();
         $this->mapAdminRoutes();
         $this->mapOperatorRoutes();
         $this->mapSchoolManagerRoutes();
         $this->mapTeacherRoutes();
         $this->mapStudentRoutes();
+        $this->mapOaRoutes();
     }
 
     /**
@@ -124,7 +125,7 @@ class RouteServiceProvider extends ServiceProvider
             ->namespace($this->namespace. '\Operator')
             ->group(base_path('routes/manager_wifi.php'));
     }
-	
+
     /**
      * Teacher
      */
@@ -143,5 +144,20 @@ class RouteServiceProvider extends ServiceProvider
         Route::middleware('web')
             ->namespace($this->namespace. '\Student')
             ->group(base_path('routes/verified_student.php'));
+    }
+
+    /**
+     * Define the "oa" routes for the application.
+     *
+     * These routes are typically stateless.
+     *
+     * @return void
+     */
+    protected function mapOaRoutes()
+    {
+        Route::prefix('Oa')
+            ->middleware('api')
+            ->namespace($this->namespace)
+            ->group(base_path('routes/oa.php'));
     }
 }

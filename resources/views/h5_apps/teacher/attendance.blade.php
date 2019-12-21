@@ -3,10 +3,6 @@
     <div id="app-init-data-holder" data-school="{{ $school->uuid }}" data-attendances="{{ json_encode($attendances) }}"></div>
     <div id="school-attendances-list-app" class="school-intro-container">
         <div class="main p-15">
-            <h2 class="title">
-                {{ $pageTitle }}
-            </h2>
-
             <el-timeline style="padding-left: 10px;">
                 <el-timeline-item v-for="(ev, idx) in attendances" :key="idx" :timestamp="ev.start_date + ' - ' + ev.end_date" placement="top">
                     <el-card>
