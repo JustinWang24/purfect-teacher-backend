@@ -1,8 +1,10 @@
 <?php
 
 namespace App\Models\Teachers;
+use App\Models\Schools\GradeManager;
 use App\Models\Schools\TeachingAndResearchGroup;
 use App\Models\Schools\TeachingAndResearchGroupMember;
+use App\Models\Schools\YearManager;
 use App\Models\Teachers\Performance\TeacherPerformance;
 use App\Models\Users\UserOrganization;
 use App\User;
@@ -24,9 +26,20 @@ class Teacher extends User
         return $this->hasMany(TeacherPerformance::class, 'user_id')->orderBy('year','desc');
     }
 
-    public function userOrganization(){
-        return $this->hasOne(UserOrganization::class);
+    public static function myUserOrganization($userId){
+        return UserOrganization::where('user_id',$userId)->first();
     }
+
+    public static function myGradeManger($userId)
+    {
+        return GradeManager::where('user_id',$userId)->first();
+    }
+
+    public static function myYearManger($userId)
+    {
+        return YearManager::where('user_id',$userId)->first();
+    }
+
 
     /**
      * 获取老师所在的教研组集合
@@ -35,9 +48,9 @@ class Teacher extends User
      *
      * @return TeachingAndResearchGroup[]
      */
-    public function myTeachingAndResearchGroup(){
+    public static function myTeachingAndResearchGroup($userId){
         $data = [];
-        $groupMembers = TeachingAndResearchGroupMember::where('user_id',$this->id)->with('group')->get();
+        $groupMembers = TeachingAndResearchGroupMember::where('user_id',$userId)->with('group')->get();
         if($groupMembers){
             // 表示为教研组的成员, 不是教研组的组长
             foreach ($groupMembers as $groupMember) {
@@ -46,7 +59,7 @@ class Teacher extends User
             }
         }
         else{
-            $groups = TeachingAndResearchGroup::where('user_id',$this->id)->get();
+            $groups = TeachingAndResearchGroup::where('user_id',$userId)->get();
             foreach ($groups as $group){
                 $group->isLeader = true;
                 $data[] = $group;
