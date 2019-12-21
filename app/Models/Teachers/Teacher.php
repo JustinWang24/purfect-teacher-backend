@@ -30,11 +30,21 @@ class Teacher extends User
         return UserOrganization::where('user_id',$userId)->first();
     }
 
+    /**
+     * 班主任
+     * @param $userId
+     * @return GradeManager|null
+     */
     public static function myGradeManger($userId)
     {
         return GradeManager::where('user_id',$userId)->first();
     }
 
+    /**
+     * 年级组长
+     * @param $userId
+     * @return YearManager|null
+     */
     public static function myYearManger($userId)
     {
         return YearManager::where('user_id',$userId)->first();

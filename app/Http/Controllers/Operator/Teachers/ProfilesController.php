@@ -23,18 +23,19 @@ class ProfilesController extends Controller
         /**
          * @var Teacher $teacher
          */
-        $teacher = $dao->getTeacherByUuid($id);
+        $teacher = $dao->getTeacherByIdOrUuid($id);
         $this->dataForView['teacher'] = $teacher;
-        $this->dataForView['userOrganization'] = $teacher->userOrganization;
+        $this->dataForView['userOrganization'] = Teacher::myUserOrganization($teacher->id);
         $this->dataForView['profile'] = $teacher->profile;
         // 行政方面的职务
         $this->dataForView['organizations'] = (new OrganizationDao())->getBySchoolId($schoolId);
         $this->dataForView['titles'] = Organization::AllTitles();
 
-        // 教学方面的职务: 是否隶属于任何的年级组
+        // 教学方面的职务: 是否隶属于任何的教研组
         $this->dataForView['groups'] = [];
-        // 教学方面的职务: 是否隶属于任何的年级组
-        $this->dataForView['groups'] = [];
+        // 学生管理方面的职务: 是否班主任
+        $this->dataForView['gradeManager'] = Teacher::myGradeManger($teacher->id);
+        $this->dataForView['yearManager'] = Teacher::myYearManger($teacher->id);
 
         // 该教师历年的考核记录
         $schoolDao = new SchoolDao();
