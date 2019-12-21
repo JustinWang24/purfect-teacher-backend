@@ -29,7 +29,8 @@ use App\User;
                                 <tr>
                                     <th>#</th>
                                     <th>姓名</th>
-                                    <th>所在单位</th>
+                                    <th>职务</th>
+                                    <th>教学机构</th>
                                     <th></th>
                                 </tr>
                                 </thead>
