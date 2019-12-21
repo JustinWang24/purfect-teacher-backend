@@ -27,13 +27,14 @@ class ProfilesController extends Controller
         $this->dataForView['teacher'] = $teacher;
         $this->dataForView['userOrganization'] = $teacher->userOrganization;
         $this->dataForView['profile'] = $teacher->profile;
-
+        // 行政方面的职务
         $this->dataForView['organizations'] = (new OrganizationDao())->getBySchoolId($schoolId);
         $this->dataForView['titles'] = Organization::AllTitles();
 
-        /**
-         *
-         */
+        // 教学方面的职务: 是否隶属于任何的年级组
+        $this->dataForView['groups'] = [];
+        // 教学方面的职务: 是否隶属于任何的年级组
+        $this->dataForView['groups'] = [];
 
         // 该教师历年的考核记录
         $schoolDao = new SchoolDao();
