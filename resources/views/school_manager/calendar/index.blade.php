@@ -105,7 +105,7 @@
                 </div>
                 <div class="card-body">
                     <div class="row">
-                        <el-calendar v-on:input="dateClicked">
+                        <el-calendar v-on:input="dateClicked" :first-day-of-week="7" v-model="calendarDefaultDate">
                             <!-- 这里使用的是 2.5 slot 语法，对于新项目请使用 2.6 slot 语法-->
                             <template
                                     slot="dateCell"
@@ -131,5 +131,6 @@
          data-school="{{ session('school.id') }}"
          data-events='{!! $events->toJson() !!}'
          data-tags='{!! json_encode($tags) !!}'
+         data-current='{!! $currentDate !!}'
     ></div>
 @endsection

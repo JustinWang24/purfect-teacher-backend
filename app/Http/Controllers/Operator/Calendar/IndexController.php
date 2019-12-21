@@ -84,6 +84,7 @@ class IndexController extends Controller
 
         $this->dataForView['events'] = $data;
         $this->dataForView['tags'] = $tags;
+        $this->dataForView['currentDate'] = $request->get('cd', now()->format('Y-m-d'));
 
         $this->dataForView['school'] = $school;
         $this->dataForView['config'] = $school->configuration;

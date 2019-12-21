@@ -188,7 +188,7 @@ export const Util = {
         }
         return a;
     },
-    reloadCurrentPage: function(vm){
+    reloadCurrentPage: function(vm, param){
         vm.$message({type:'success',message:'正在刷新 ... '});
         window.location.reload();
     },

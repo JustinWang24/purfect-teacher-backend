@@ -11,6 +11,7 @@ if(document.getElementById('school-calendar-app')){
         data(){
             return {
                 currentDate: null,
+                calendarDefaultDate:'',
                 tags: [],
                 form:{
                     event_time:'',
@@ -39,11 +40,21 @@ if(document.getElementById('school-calendar-app')){
             }
         },
         created(){
-            this.currentDate = moment();
             const dom = document.getElementById('app-init-data-holder');
             this.schoolId = dom.dataset.school;
             this.events = JSON.parse(dom.dataset.events);// 校历内容
             this.tags = JSON.parse(dom.dataset.tags);// 校历内容
+
+            let cd = dom.dataset.current;
+            if(Util.isEmpty(cd)){
+                cd = moment();
+            }
+            else{
+                cd = moment(cd);
+            }
+            this.currentDate = cd;
+            this.calendarDefaultDate = cd.format('YYYY-MM-DD');
+
             this.loadSpecialAttendance();
         },
         methods:{
@@ -69,7 +80,10 @@ if(document.getElementById('school-calendar-app')){
                 this.currentDate = moment(payload);
                 const ev = this._locateEvent(this.currentDate.format('YYYY-MM-DD'));
                 if(!Util.isEmpty(ev)){
-                    this.form = ev;
+                    const keys = Object.keys(ev);
+                    keys.forEach(key => {
+                        this.form[key] = ev[key];
+                    });
                 }
                 this.$message('正在编辑 ' + this.currentDate.format('YYYY-MM-DD') + ' 的校历');
                 this.loadSpecialAttendance();
@@ -99,7 +113,7 @@ if(document.getElementById('school-calendar-app')){
                             message: '校历保存成功',
                             type: 'success'
                         });
-                        Util.reloadCurrentPage(this);
+                        this._reloadCurrentPage();
                     }
                 })
             },
@@ -113,9 +127,12 @@ if(document.getElementById('school-calendar-app')){
                             message: '已经成功删除, 正在从新加载 ...',
                             type: 'success'
                         });
-                        Util.reloadCurrentPage(this);
+                        this._reloadCurrentPage();
                     }
                 })
+            },
+            _reloadCurrentPage: function(){
+                window.location.href = '/school_manager/calendar/index?cd=' + this.currentDate.format('YYYY-MM-DD');
             },
             /**
              *
