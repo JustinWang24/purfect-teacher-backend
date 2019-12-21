@@ -490,9 +490,13 @@ Route::prefix('user')->group(function () {
     Route::post('/findUserPasswordInfo', 'Api\Login\LoginController@forgetPassword')
         ->name('api.user.edit.password');
 
-    // 用户资料
+    // 学生用户资料
     Route::post('/getUserInfo', 'Api\Home\IndexController@getUserInfo')
         ->middleware('auth:api')->name('api.get.user.info');
+
+    // 教师用户资料
+    Route::post('/getTeacherInfo', 'Api\Home\IndexController@getTeacherInfo')
+        ->middleware('auth:api')->name('api.get.teacher.info');
 
     // 修改资料
     Route::post('/updateUserInfo', 'Api\Home\IndexController@updateUserInfo')
