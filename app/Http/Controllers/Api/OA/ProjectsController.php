@@ -26,7 +26,7 @@ class ProjectsController extends Controller
         $data['school_id'] = $user->getSchoolId();
         $data['title'] = strip_tags($request->get('project_title'));
         $data['content'] = strip_tags($request->get('project_content'));
-        $data['user_id'] = strip_tags($request->get('leader_userid'));
+        $data['user_id'] = intval($request->get('leader_userid'));
         $data['is_open'] = intval($request->get('is_open'));
         $data['create_user'] = $user->id;
         $member = explode(',',$request->get('member_userids'));
