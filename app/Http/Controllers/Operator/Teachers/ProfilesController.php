@@ -32,7 +32,7 @@ class ProfilesController extends Controller
         $this->dataForView['titles'] = Organization::AllTitles();
 
         // 教学方面的职务: 是否隶属于任何的教研组
-        $this->dataForView['groups'] = [];
+        $this->dataForView['groups'] = Teacher::myTeachingAndResearchGroup($teacher->id);
         // 学生管理方面的职务: 是否班主任
         $this->dataForView['gradeManager'] = Teacher::myGradeManger($teacher->id);
         $this->dataForView['yearManager'] = Teacher::myYearManger($teacher->id);

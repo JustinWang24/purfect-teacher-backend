@@ -95,7 +95,7 @@ Route::prefix('school_manager')->group(function () {
     Route::get('grade/add', 'GradesController@add')->name('school_manager.grade.add');           // 添加班级
     Route::get('grade/edit', 'GradesController@edit')->name('school_manager.grade.edit');        // 编辑班级
     Route::post('grade/update', 'GradesController@update')->name('school_manager.grade.update');        // 编辑班级
-    Route::get('grade/users', 'GradesController@users')->name('school_manager.grade.users');     // 班级的学生列表
+
     Route::any('grade/set-adviser', 'GradesController@set_adviser')->name('school_manager.grade.set-adviser');     // 设置班主任
 
     // 学生管理: 只有 学校管理员以上级别的角色才可以添加,编辑,学生school_manager.scenery.edit

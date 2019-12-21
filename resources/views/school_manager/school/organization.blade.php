@@ -112,7 +112,7 @@
                                 <el-divider></el-divider>
                                 <search-bar
                                         :school-id="{{ session('school.id') }}"
-                                        full-tip="输入名字, 添加成员"
+                                        full-tip="输入教职工名字"
                                         scope="employee"
                                         class="ml-4"
                                         :init-query="currentMember.name"
@@ -123,8 +123,8 @@
                                     <el-col :span="12">
                                         <el-form-item label="职务"  label-width="70px">
                                             <el-select v-model="currentMember.title_id" placeholder=""  style="width: 90%;">
-                                                @foreach(\App\Models\Pipeline\Flow\Handler::HigherLevels() as $role)
-                                                <el-option label="{{ $role }}" value="{{ $role }}"></el-option>
+                                                @foreach(\App\Models\Pipeline\Flow\Handler::OrganizationLevels() as $role => $roleName)
+                                                <el-option label="{{ $roleName }}" value="{{ $role }}"></el-option>
                                                 @endforeach
                                             </el-select>
                                         </el-form-item>

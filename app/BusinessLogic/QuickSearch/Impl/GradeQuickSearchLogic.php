@@ -29,6 +29,6 @@ class GradeQuickSearchLogic extends AbstractQuickSearchLogic
 
     public function getNextAction($facility)
     {
-        return route('school_manager.grade.users',['by'=>'grade','uuid'=>$facility->id,'type'=>User::TYPE_STUDENT]);
+        return route('teacher.grade.users',['by'=>'grade','uuid'=>$facility->id,'type'=>User::TYPE_STUDENT]);
     }
 }

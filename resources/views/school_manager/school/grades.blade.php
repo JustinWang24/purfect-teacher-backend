@@ -80,7 +80,7 @@ use App\User;
                                             @endif
                                         </td>
                                         <td class="text-center">
-                                            <a class="students-counter" href="{{ route('school_manager.grade.users',['type'=>User::TYPE_STUDENT,'by'=>'grade','uuid'=>$grade->id]) }}">{{ $grade->studentsCount() }}</a>
+                                            <a class="students-counter" href="{{ route('teacher.grade.users',['type'=>User::TYPE_STUDENT,'by'=>'grade','uuid'=>$grade->id]) }}">{{ $grade->studentsCount() }}</a>
                                         </td>
                                         <td class="text-center">
                                             <a target="_blank" href="{{ route('school_manager.textbook.grade',['type'=>User::TYPE_STUDENT,'by'=>'grade','uuid'=>$grade->id]) }}" class="btn btn-round btn-primary btn-view-timetable">

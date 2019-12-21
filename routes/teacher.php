@@ -23,6 +23,8 @@ Route::prefix('teacher')->group(function () {
 
     Route::any('grade/set-monitor', 'GradesController@set_monitor')->name('teacher.grade.set-monitor');     // 设置班长
 
+    Route::get('grade/users', 'GradesController@users')->name('teacher.grade.users');     // 班级的学生列表
+
     //考试管理
     Route::get('exam/index', 'ExamController@index')->name('teacher.exam.index');     // 列表
     Route::get('exam/create', 'ExamController@create')->name('teacher.exam.create');  // 创建考试

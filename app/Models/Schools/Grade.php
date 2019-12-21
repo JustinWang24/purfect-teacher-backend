@@ -40,7 +40,6 @@ class Grade extends Model
         return $this->hasOne(GradeManager::class,'grade_id','id');
     }
 
-
     /**
      * 班级年级
      * @return int|mixed

@@ -11,6 +11,29 @@ use App\User;
                 <div class="card-head">
                     <header class="full-width">
                         {{ $parent->name??session('school.name') }}(学生总数: {{ $students->total() }})
+
+                        @if(get_class($parent) === 'App\Models\Schools\Grade')
+                            @if($parent->gradeManager)
+                                <a href="{{ route('school_manager.grade.set-adviser',['grade'=>$parent->id]) }}">
+                                @if($parent->gradeManager->adviser_id)
+                                    班主任: {{ $parent->gradeManager->adviser_name }}
+                                @else
+                                    设置班主任
+                                @endif
+                                </a>
+
+                                <a href="{{ route('teacher.grade.set-monitor',['grade'=>$parent->id]) }}">
+                                    @if($parent->gradeManager->monitor_id)
+                                        班长: {{ $parent->gradeManager->monitor_name }}
+                                    @else
+                                        设置班长
+                                    @endif
+                                </a>
+                            @else
+
+                            @endif
+                        @endif
+
                         <a href="{{ route('school_manager.student.add') }}" class="btn btn-primary pull-right">
                             添加新学生 <i class="fa fa-plus"></i>
                         </a>
@@ -21,6 +44,12 @@ use App\User;
                     <div class="row">
                         <div class="table-padding col-12 pt-0">
                             @include('school_manager.school.reusable.nav',['highlight'=>'student'])
+                        </div>
+
+                        <div class="row">
+                            <div class="col-12">
+                                {{ isset($appendedParams) ? $students->appends($appendedParams)->links() : $students->links() }}
+                            </div>
                         </div>
 
                         <div class="table-responsive">
@@ -48,6 +77,11 @@ use App\User;
                                         </td>
                                         <td>
                                             {{ $gradeUser->user->name ?? 'n.a' }}
+                                            @if(get_class($parent) === 'App\Models\Schools\Grade')
+                                                @if($parent->gradeManager->monitor_id === $gradeUser->user_id)
+                                                    <span class="text-primary">(班长)</span>
+                                                @endif
+                                            @endif
                                         </td>
                                         <td>
                                             {{ $gradeUser->user->mobile }}

@@ -12,6 +12,6 @@ class TeachingAndResearchGroupMember extends Model
     ];
 
     public function teachingAndResearchGroup(){
-        return $this->belongsTo(TeachingAndResearchGroup::class, 'group_id');
+        return $this->belongsTo(TeachingAndResearchGroup::class, 'group_id','id');
     }
 }
