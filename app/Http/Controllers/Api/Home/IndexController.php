@@ -189,6 +189,7 @@ class IndexController extends Controller
 
         $data = [
             'name'        => $user->name,
+            'avatar'      => $profile->avatar,
             'gender'      => $profile->gender,
             'birthday'    => $profile->birthday,
             'state'       => $profile->state,
