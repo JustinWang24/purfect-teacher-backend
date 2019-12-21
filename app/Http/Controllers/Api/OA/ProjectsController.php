@@ -338,7 +338,7 @@ class ProjectsController extends Controller
         $output = [];
         foreach ($teachers as $key=>$value)
         {
-            $output[$key]['userid'] = $value->id;
+            $output[$key]['userid'] = $value->user_id;
             $output[$key]['username'] = $value->name;
             $output[$key]['user_pics'] = $value->user->profile->avatar;
             $output[$key]['duties'] = $value->user->profile->group_name;
