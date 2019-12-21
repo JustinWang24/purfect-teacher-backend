@@ -23,13 +23,17 @@ class ProfilesController extends Controller
         /**
          * @var Teacher $teacher
          */
-        $teacher = $dao->getUserByIdOrUuid($id);
+        $teacher = $dao->getTeacherByUuid($id);
         $this->dataForView['teacher'] = $teacher;
         $this->dataForView['userOrganization'] = $teacher->userOrganization;
         $this->dataForView['profile'] = $teacher->profile;
 
         $this->dataForView['organizations'] = (new OrganizationDao())->getBySchoolId($schoolId);
         $this->dataForView['titles'] = Organization::AllTitles();
+
+        /**
+         *
+         */
 
         // 该教师历年的考核记录
         $schoolDao = new SchoolDao();

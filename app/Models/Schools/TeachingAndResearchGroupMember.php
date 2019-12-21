@@ -11,5 +11,7 @@ class TeachingAndResearchGroupMember extends Model
         'group_id','user_id','user_name'
     ];
 
-
+    public function teachingAndResearchGroup(){
+        return $this->belongsTo(TeachingAndResearchGroup::class, 'group_id');
+    }
 }
