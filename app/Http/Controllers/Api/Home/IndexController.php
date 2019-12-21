@@ -17,6 +17,7 @@ use App\Dao\Schools\NewsDao;
 use App\Http\Requests\MyStandardRequest;
 use App\Http\Requests\SendSms\SendSmeRequest;
 use App\Models\Misc\SystemNotification;
+use App\Models\Teachers\Teacher;
 use App\Models\Users\UserVerification;
 use App\Utils\JsonBuilder;
 use App\Utils\Time\CalendarWeek;
@@ -32,16 +33,16 @@ class IndexController extends Controller
      */
     public function index(HomeRequest $request)
     {
-        $school = $request->getAppSchool();
-        $pageNum = $request->get('pageNum',5);
-        $dao = new NewsDao;
+        $school  = $request->getAppSchool();
+        $pageNum = $request->get('pageNum', 5);
+        $dao     = new NewsDao;
 
         $data = $dao->getNewBySchoolId($school->id, $pageNum);
 
-        foreach ($data as $key => $val ) {
-            $data[$key]['created_at'] = $val['updated_at'];
-            $data[$key]['webview_url'] = route('h5.teacher.news.view',['id'=>$val['id']]);
-            $data[$key]['image'] = "";
+        foreach ($data as $key => $val) {
+            $data[$key]['created_at']  = $val['updated_at'];
+            $data[$key]['webview_url'] = route('h5.teacher.news.view', ['id' => $val['id']]);
+            $data[$key]['image']       = "";
             foreach ($val->sections as $new) {
                 if (!empty($new->media)) {
                     $data[$key]['image'] = asset($new->media->url);
@@ -52,33 +53,32 @@ class IndexController extends Controller
             unset($data[$key]['updated_at']);
         }
 
-        $data = pageReturn($data);
+        $data                    = pageReturn($data);
         $data['is_show_account'] = false; // 是否展示账户
-        $data['school_name'] = $school->name;
-        $data['school_logo'] = $school->logo;
+        $data['school_name']     = $school->name;
+        $data['school_logo']     = $school->logo;
 
         //首页消息获取
-        $user = $request->user();
+        $user                  = $request->user();
         $systemNotificationDao = new SystemNotificationDao();
-        $systemNotifications = $systemNotificationDao->getNotificationByUserId($school->id, $user->id, 2);
-        $json_array = [];
-        foreach($systemNotifications as $key=>$value) {
-            $json_array[$key]['ticeid']= $value->id;
-            $json_array[$key]['create_at']= $value->create_id;
-            $json_array[$key]['tice_title']= $value->title;
-            $json_array[$key]['tice_content']= $value->content;
-            $json_array[$key]['tice_money']= $value->money;
-            $json_array[$key]['webview_url']= $value->next_move;
-            $json_array[$key]['type']= $value->type;
-            $json_array[$key]['priority']= $value->priority;
-            if (isset(SystemNotification::CATEGORY[$value->category])){
-                $json_array[$key]['tice_header']= SystemNotification::CATEGORY[$value->category];
+        $systemNotifications   = $systemNotificationDao->getNotificationByUserId($school->id, $user->id, 2);
+        $json_array            = [];
+        foreach ($systemNotifications as $key => $value) {
+            $json_array[$key]['ticeid']       = $value->id;
+            $json_array[$key]['create_at']    = $value->create_id;
+            $json_array[$key]['tice_title']   = $value->title;
+            $json_array[$key]['tice_content'] = $value->content;
+            $json_array[$key]['tice_money']   = $value->money;
+            $json_array[$key]['webview_url']  = $value->next_move;
+            $json_array[$key]['type']         = $value->type;
+            $json_array[$key]['priority']     = $value->priority;
+            if (isset(SystemNotification::CATEGORY[$value->category])) {
+                $json_array[$key]['tice_header'] = SystemNotification::CATEGORY[$value->category];
             } else {
                 $json_array[$key]['tice_header'] = '消息';
             }
         }
         $data['notifications'] = $json_array;
-
 
 
         return JsonBuilder::Success($data);
@@ -92,10 +92,10 @@ class IndexController extends Controller
      */
     public function banner(BannerRequest $request)
     {
-        $posit = $request->get('posit');
-        $publicOnly = $request->has('public') && intval($request->get('public',0)) === 1;
-        $dao = new BannerDao;
-        $data = $dao->getBannerBySchoolIdAndPosit($request->user()->getSchoolId(), $posit, $publicOnly);
+        $posit      = $request->get('posit');
+        $publicOnly = $request->has('public') && intval($request->get('public', 0)) === 1;
+        $dao        = new BannerDao;
+        $data       = $dao->getBannerBySchoolIdAndPosit($request->user()->getSchoolId(), $posit, $publicOnly);
         return JsonBuilder::Success($data);
     }
 
@@ -107,12 +107,12 @@ class IndexController extends Controller
      * @param MyStandardRequest $request
      * @return string
      */
-    public function calendar(MyStandardRequest $request){
+    public function calendar(MyStandardRequest $request)
+    {
         $school = $this->_getSchoolFromRequest($request);
-        if(!$school){
+        if (!$school) {
             return JsonBuilder::Error('找不到学校的信息');
-        }
-        else{
+        } else {
             $dao = new CalendarDao();
             return JsonBuilder::Success(
                 $dao->getCalendar($school->configuration, $request->get('year'), $request->get('month'))
@@ -125,15 +125,16 @@ class IndexController extends Controller
      * @param MyStandardRequest $request
      * @return string
      */
-    public function all_events(MyStandardRequest $request){
+    public function all_events(MyStandardRequest $request)
+    {
         $school = $this->_getSchoolFromRequest($request);
 
-        if(!$school){
+        if (!$school) {
             return JsonBuilder::Error('找不到学校的信息');
-        }else{
-            $dao = new CalendarDao();
+        } else {
+            $dao    = new CalendarDao();
             $events = $dao->getCalendarEvent($school->id, date('Y'));
-            $weeks = $school->configuration->getAllWeeksOfTerm();
+            $weeks  = $school->configuration->getAllWeeksOfTerm();
 
             $data = [];
 
@@ -142,17 +143,17 @@ class IndexController extends Controller
                     /**
                      * @var CalendarWeek $week
                      */
-                    if($week->includes($event->event_time)){
+                    if ($week->includes($event->event_time)) {
                         $event->week_idx = $week->getName();
-                        $event->name = $event->event_time;
-                        $data[] = $event;
+                        $event->name     = $event->event_time;
+                        $data[]          = $event;
                         break;
                     }
                 }
             }
 
             return JsonBuilder::Success([
-                'events'=>$data
+                'events' => $data
             ]);
         }
     }
@@ -161,16 +162,16 @@ class IndexController extends Controller
      * @param MyStandardRequest $request
      * @return \App\Models\School
      */
-    private function _getSchoolFromRequest(MyStandardRequest $request){
+    private function _getSchoolFromRequest(MyStandardRequest $request)
+    {
         $schoolIdOrName = $request->get('school', null);
-        $dao = new SchoolDao();
-        if($schoolIdOrName){
+        $dao            = new SchoolDao();
+        if ($schoolIdOrName) {
             $school = $dao->getSchoolById($schoolIdOrName);
-            if(!$school){
+            if (!$school) {
                 $school = $dao->getSchoolByName($schoolIdOrName);
             }
-        }
-        else{
+        } else {
             $school = $dao->getSchoolById($request->user()->getSchoolId());
         }
 
@@ -206,7 +207,7 @@ class IndexController extends Controller
             'year'        => $grade->year,
             'grade_name'  => $grade->name
         ];
-        return  JsonBuilder::Success($data);
+        return JsonBuilder::Success($data);
     }
 
 
@@ -221,27 +222,58 @@ class IndexController extends Controller
 
         $profile = $user->profile;
 
-        $gradeUser = $user->gradeUser;
-
-        $schoolId = $user->getSchoolId();
-        $dao = new SchoolDao;
+        $schoolId   = $user->getSchoolId();
+        $dao        = new SchoolDao;
         $schoolName = $dao->getSchoolById($schoolId);
-        
+
+        $allDuties = Teacher::getTeacherAllDuties($user->id);
+
+        if ($allDuties['gradeManger']) {
+            $gradeManger = $allDuties['gradeManger']->grade->name;
+        } else {
+            $gradeManger = '';
+        }
+
+        if ($allDuties['organization']) {
+            $organization = $allDuties['organization']->name;
+        } else {
+            $organization = '';
+        }
+
+        if ($allDuties['myYearManger']) {
+            $yearManger = $allDuties['myYearManger']->year . '年级组长';
+        } else {
+            $yearManger = '';
+        }
+
+        if ($allDuties['myTeachingAndResearchGroup']) {
+            foreach ($allDuties['myTeachingAndResearchGroup'] as $key => $group) {
+                $myGroup[$key]['name']     = $group->name;
+                $myGroup[$key]['isLeader'] = $group->isLeader;
+            }
+        } else {
+            $myGroup = [];
+        }
+
         $data = [
-            'name'        => $user->name,
-            'avatar'      => $profile->avatar,
-            'gender'      => $profile->gender,
-            'birthday'    => $profile->birthday,
-            'state'       => $profile->state,
-            'city'        => $profile->city,
-            'area'        => $profile->area,
-            'school_name' => $schoolName,
-            'institute'   => '',
-            'department'  => '',
-            'major'       => ''
+            'name'         => $user->name,
+            'avatar'       => $profile->avatar,
+            'gender'       => $profile->gender,
+            'birthday'     => $profile->birthday,
+            'state'        => $profile->state,
+            'city'         => $profile->city,
+            'area'         => $profile->area,
+            'school_name'  => $schoolName->name,
+            'organization' => $organization,
+            'gradeManger'  => $gradeManger,
+            'yearManger'   => $yearManger,
+            'myGroup'      => $myGroup,
+            'institute'    => '',
+            'department'   => '',
+            'major'        => '',
 
         ];
-        return  JsonBuilder::Success($data);
+        return JsonBuilder::Success($data);
     }
 
     /**
@@ -258,12 +290,11 @@ class IndexController extends Controller
         $result = $dao->updateStudentProfile($user->id, $request->get('data'));
 
         if ($result) {
-            return  JsonBuilder::Success('修改成功');
+            return JsonBuilder::Success('修改成功');
         } else {
-            return  JsonBuilder::Success('修改失败');
+            return JsonBuilder::Success('修改失败');
         }
     }
-
 
 
     /**
@@ -295,8 +326,8 @@ class IndexController extends Controller
             case UserVerification::PURPOSE_2:
                 event(new ForgetPasswordEvent($user));
                 break;
-        default:
-            break;
+            default:
+                break;
         }
 
         return JsonBuilder::Success('发送成功');
@@ -308,14 +339,15 @@ class IndexController extends Controller
      * @param HomeRequest $request
      * @return string
      */
-    public function newsPage(HomeRequest $request) {
+    public function newsPage(HomeRequest $request)
+    {
         $schoolId = $request->user()->getSchoolId();
-        $dao = new NewsDao();
-        $list = $dao->getNewBySchoolId($schoolId);
+        $dao      = new NewsDao();
+        $list     = $dao->getNewBySchoolId($schoolId);
         foreach ($list as $key => $val) {
-            $list[$key]['webview_url'] = route('h5.teacher.news.view',['id'=>$val['id']]);
-            $list[$key]['image'] = '';
-            $sections = $val->sections;
+            $list[$key]['webview_url'] = route('h5.teacher.news.view', ['id' => $val['id']]);
+            $list[$key]['image']       = '';
+            $sections                  = $val->sections;
             foreach ($sections as $k => $v) {
                 if (!empty($v->media)) {
                     $list[$key]['image'] = asset($v->media->url);
@@ -334,8 +366,9 @@ class IndexController extends Controller
      * @param Request $request
      * @return string
      */
-    public function loadNews(Request $request){
-        $dao = new NewsDao();
+    public function loadNews(Request $request)
+    {
+        $dao      = new NewsDao();
         $newsList = $dao->paginateByType(
             $request->get('type'),
             $request->get('school')
@@ -348,9 +381,10 @@ class IndexController extends Controller
      * @param Request $request
      * @return string
      */
-    public function loadNotices(Request $request){
-        $dao = new NoticeDao();
-        $newsList = $dao->getNoticeBySchoolId(['school_id'=>$request->get('school')]);
+    public function loadNotices(Request $request)
+    {
+        $dao      = new NoticeDao();
+        $newsList = $dao->getNoticeBySchoolId(['school_id' => $request->get('school')]);
         return JsonBuilder::Success($newsList);
     }
 }
