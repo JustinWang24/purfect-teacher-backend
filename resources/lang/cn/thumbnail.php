@@ -23,7 +23,7 @@ return [
     'students'  => '学生列表',
     'teachers'  => '教师列表',
     'teacher'  => '教师',
-    'profile'  => '学生资料',
+    'profile'  => '用户资料',
     'preview'  => '预览工具',
     'list'   => '列表',
     'add'    => '添加数据',

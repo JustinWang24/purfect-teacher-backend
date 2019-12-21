@@ -83,39 +83,35 @@ class TeacherDataImporter extends Command
         $endColumn = $sheet->getHighestColumn();
 
         $this->cols = [
-            'B',
-            'C',
-            'D',
-            'E',
-            'F',
-            'G',
-            'H',
-            'I',
-            'J',
-            'K',
-            'L',
-            'M',
-            'N',
-            'O',
-            'P',
-            'Q',
-            'R',
-            'S',
+            'B',// 0
+            'C',// 1
+            'D',// 2
+            'E',// 3
+            'F',// 4
+            'G',// 5
+            'H',// 6
+            'I',// 7
+            'J',// 8
+            'K',// 9
+            'L',// 10
+            'M',// 11
+            'N',// 12
+            'O',// 13
+            'P',// 14
+            'Q',// 15
+            'R',// 16
+            'S',// 17
         ];
 
         $startRow = 2;
         $endRow = $sheet->getHighestDataRow();
-
         $iter = $sheet->getRowIterator($startRow, $endRow);
-
         foreach (range($startRow, $endRow) as $rowIndex) {
-//            $rowData = $iter->current();
             $dataToSave = [];
             foreach ($this->cols as $colIndex) {
                 $cell = $sheet->getCell($colIndex.$rowIndex);
                 $dataToSave[] = $cell->getValue();
             }
-
             $this->save($dataToSave);
             $iter->next();
         }
@@ -129,7 +125,6 @@ class TeacherDataImporter extends Command
         $u = User::where('mobile',substr($data[2],10))->first();
         if($u){
             echo $u->name .' 账户已存在'.PHP_EOL;
-
             $gu = GradeUser::where('user_id',$u->id)->first();
             if(!$gu){
                 $gu = new GradeUser();
@@ -145,21 +140,26 @@ class TeacherDataImporter extends Command
                 $gu->save();
                 echo 'GU added'.PHP_EOL;
             }
-            return;
         }
 
         DB::beginTransaction();
         try{
             $user = new User();
-            $user->name = $data[0];
-            $user->uuid = Uuid::uuid4()->toString();
-            $user->mobile = substr($data[2],-8); // 身份证号后 8 位作为手机号
-            $user->password = Hash::make(substr($data[2],-6)); // 身份证号后 6 位作为密码
-            $user->api_token = Uuid::uuid4()->toString();
-            $user->type = Role::TEACHER;
-            $user->status = User::STATUS_VERIFIED;
+            if(!$u){
+                $user->uuid = Uuid::uuid4()->toString();
+                $user->password = Hash::make(substr($data[2],-6)); // 身份证号后 6 位作为密码
+                $user->api_token = Uuid::uuid4()->toString();
+                $user->name = $data[0];
+                $user->mobile = substr($data[2],-8); // 身份证号后 8 位作为手机号
+                $user->type = Role::TEACHER;
+                $user->status = User::STATUS_VERIFIED;
+                $user->save();
+            }
+            else{
+                $user = $u;
+            }
 
-            if($user->save()){
+            if(true){
                 $joinAt = null;
                 if(!empty(trim($data[14]))){
                     $str = str_replace('中二','',$data[14]);
@@ -167,19 +167,35 @@ class TeacherDataImporter extends Command
                     $arr = explode('.',$str);
                     $joinAt = Carbon::createFromFormat('Y-m-d',$arr[0].'-'.$arr[1].'-01');
                 }
-                $profile = new TeacherProfile();
+
+                $profile = TeacherProfile::where('user_id',$user->id)->first();
+                if(!$profile){
+                    $profile = new TeacherProfile();
+                    $profile->uuid = Uuid::uuid4()->toString();
+                    $profile->school_id = 1;
+                }
+
                 $profile->user_id = $user->id;
-                $profile->uuid = Uuid::uuid4()->toString();
-                $profile->school_id = 1;
                 $profile->serial_number = substr($data[2],10);
                 $profile->group_name = $data[8]??'n.a';
-                $profile->education = $data[9]??'n.a';
+                $profile->education = $data[7]??null;
                 $profile->joined_at = $joinAt ? $joinAt->format('Y-m-d'):null;
-                $profile->title = $data[11]??'n.a';
+                $profile->title = $data[11]??null;
                 $profile->gender = $data[1] === '男' ? 1 : 2;
                 $profile->id_number = $data[2];
                 $profile->birthday = GradeAndYearUtil::IdNumberToBirthday($data[2])->getData();
                 $profile->avatar = User::DEFAULT_USER_AVATAR;
+
+                $profile->work_start_at = $data[5]??null;
+                $profile->major = $data[8]??null;
+                $profile->final_education = $data[9]??null;
+                $profile->final_major = $data[10]??null;
+                $profile->title_start_at = $data[12]??null;
+                $profile->title1_at = $data[15]??null;
+                $profile->title1_hired_at = $data[16]??null;
+                $profile->hired_at = $data[14]??null;
+                $profile->hired = $data[13]=='是'?true:false;
+                $profile->notes = $data[17]??null;
                 $profile->save();
             }
             DB::commit();
@@ -187,6 +203,7 @@ class TeacherDataImporter extends Command
         }
         catch (\Exception $exception){
             DB::rollBack();
+            dd($exception->getMessage());
         }
         return;
     }

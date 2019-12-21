@@ -1,5 +1,6 @@
 <?php
 namespace App\Http\Controllers\Teacher;
+use App\Dao\Teachers\TeacherProfileDao;
 use App\Dao\Users\UserDao;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\School\GradeRequest;
@@ -51,6 +52,40 @@ class GradesController extends Controller
         }
     }
 
+    public function edit(GradeRequest $request){
+        $profileDao = new TeacherProfileDao();
+
+        if($request->method()==='GET'){
+            $profile = $profileDao->getTeacherProfileByTeacherIdOrUuid($request->uuid());
+            $this->dataForView['profile'] = $profile;
+            $this->dataForView['pageTitle'] = '编辑用户档案';
+            return view('teacher.profile.edit_profile', $this->dataForView);
+        }
+        elseif ($request->method()==='POST'){
+            $profileData = $request->get('profile');
+            $teacherData = $request->get('teacher');
+
+            $profile = $profileDao->getTeacherProfileByTeacherIdOrUuid($profileData['uuid']);
+            foreach ($profileData as $field=>$value) {
+                $profile->$field = $value;
+            }
+            $profile->save();
+
+            $user = $profile->user;
+            foreach ($teacherData as $k=>$v) {
+                $user->$k = $v;
+            }
+            $user->save();
+            FlashMessageBuilder::Push($request, 'success',$user->name.'档案数据更新成功');
+            return redirect()->route('teacher.profile.edit',['uuid'=>$profileData['uuid']]);
+        }
+    }
+
+    /**
+     * 更新老师密码的操作
+     * @param GradeRequest $request
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Http\RedirectResponse|\Illuminate\View\View|string
+     */
     public function update_password(GradeRequest $request){
         if($request->method() === 'GET'){
             if(Auth::user()->isSchoolAdminOrAbove() || Auth::user()->id === $request->get('uuid')){
