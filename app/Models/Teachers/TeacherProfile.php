@@ -58,6 +58,6 @@ class TeacherProfile extends Model
     }
 
     public function getAvatarAttribute(){
-        return $this->avatar ?? User::DEFAULT_USER_AVATAR;
+        return asset($this->avatar ?? User::DEFAULT_USER_AVATAR);
     }
 }
