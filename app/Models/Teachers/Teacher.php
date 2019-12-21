@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Models\Teachers;
+use App\Models\Schools\Grade;
 use App\Models\Schools\GradeManager;
 use App\Models\Schools\TeachingAndResearchGroup;
 use App\Models\Schools\TeachingAndResearchGroupMember;
@@ -60,12 +61,12 @@ class Teacher extends User
      */
     public static function myTeachingAndResearchGroup($userId){
         $data = [];
-        $groupMembers = TeachingAndResearchGroupMember::where('user_id',$userId)->with('group')->get();
+        $groupMembers = TeachingAndResearchGroupMember::where('user_id',$userId)->with('teachingAndResearchGroup')->get();
         if($groupMembers){
             // 表示为教研组的成员, 不是教研组的组长
             foreach ($groupMembers as $groupMember) {
-                $groupMember->group->isLeader = false;
-                $data[] = $groupMember->group;
+                $groupMember->teachingAndResearchGroup->isLeader = false;
+                $data[] = $groupMember->teachingAndResearchGroup;
             }
         }
         else{
@@ -81,11 +82,26 @@ class Teacher extends User
     /**
      * 获取老师所有职务
      * @param $userId
+     * @return array
      */
     public static function getTeacherAllDuties($userId)
     {
-        
+        $organization  = self::myUserOrganization($userId);
+
+        $gradeManger  = self::myGradeManger($userId);
+
+        $myYearManger  = self::myYearManger($userId);
+
+        $myTeachingAndResearchGroup  = self::myTeachingAndResearchGroup($userId);
+
+        return [
+            'organization' => $organization,
+            'gradeManger' =>  $gradeManger,
+            'myYearManger' => $myYearManger,
+            'myTeachingAndResearchGroup' => $myTeachingAndResearchGroup
+        ];
     }
+
 
 
 
