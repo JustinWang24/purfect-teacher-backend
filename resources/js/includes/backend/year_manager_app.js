@@ -12,7 +12,8 @@ if(document.getElementById('year-manager-setting-app')){
         },
         created(){
             const dom = document.getElementById('app-init-data-holder');
-            this.form = JSON.parse(dom.dataset.manager);
+            const mgr = JSON.parse(dom.dataset.manager);
+            this.form = Util.isEmpty(mgr) ? {} : mgr;
             this.form.school_id = dom.dataset.school;
         },
         methods:{
