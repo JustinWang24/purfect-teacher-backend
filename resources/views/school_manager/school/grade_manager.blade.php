@@ -7,7 +7,7 @@
 @extends('layouts.app')
 @section('content')
     <div id="app-init-data-holder"
-         data-manager="{{ json_encode($yearManager??'') }}"
+         data-manager="{{ json_encode($yearManager??null) }}"
          data-school="{{ session('school.id') }}">
     </div>
     <div class="row" id="year-manager-setting-app">
