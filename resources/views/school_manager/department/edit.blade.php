@@ -15,7 +15,7 @@ use App\User;
                 <div class="card-head">
                     <header>
                         修改学校 (<a class="text-primary" href="{{ url('/school_manager/school/view') }}">{{ session('school.name') }}</a>) 的
-                        - <a class="text-primary" href="{{ route('school_manager.institute.departments',['uuid'=>$institute->id,'by'=>'institute']) }}">{{ $institute->name }}</a> - 的 {{ $department->name }}
+                        - <a class="text-primary" href="{{ route('school_manager.institute.departments',['uuid'=>$department->institute_id,'by'=>'institute']) }}">{{ $department->institute->name }}</a> - 的 {{ $department->name }}
                     </header>
                 </div>
                 <div class="card-body">
