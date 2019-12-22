@@ -28,6 +28,7 @@ use App\User;
                                 <tr>
                                     <th>是否聘用</th>
                                     <th>姓名</th>
+                                    <th>头像</th>
                                     <th>行政职务</th>
                                     <th>教学职务</th>
                                     <th></th>
@@ -42,6 +43,9 @@ use App\User;
                                         <td>{{ $gradeUser->teacherProfile->hired ? '聘用' : '解聘' }}</td>
                                         <td>
                                             {{ $gradeUser->name }}
+                                        </td>
+                                        <td>
+                                            <img style="width: 60px;border-radius: 50%;" src="{{ $gradeUser->teacherProfile->avatar }}" alt="">
                                         </td>
                                         <td>
                                             @if($duties['organization'])
@@ -62,6 +66,7 @@ use App\User;
                                             @endif
                                         </td>
                                         <td class="text-center">
+                                            {{ Anchor::Print(['text'=>'照片','href'=>route('school_manager.teachers.edit-avatar',['uuid'=>$gradeUser->user_id])], Button::TYPE_DEFAULT,'picture-o') }}
                                             {{ Anchor::Print(['text'=>'档案管理','href'=>route('school_manager.teachers.edit-profile',['uuid'=>$gradeUser->user_id])], Button::TYPE_DEFAULT,'edit') }}
                                             {{ Anchor::Print(['text'=>'修改密码','href'=>route('teacher.profile.update-password',['uuid'=>$gradeUser->user_id])], Button::TYPE_DEFAULT,'key') }}
                                         </td>

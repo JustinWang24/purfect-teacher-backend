@@ -142,4 +142,8 @@ Route::prefix('teacher')->group(function () {
     // 社团成员
     Route::get('/communities-members','Community\CommunitiesController@members')
         ->name('teacher.communities.members');
+
+    // 老师编辑学生的档案照片
+    Route::any('/student/edit-avatar','StudentsController@edit_avatar')
+        ->name('teacher.student.edit-avatar');
 });

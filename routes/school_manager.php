@@ -408,6 +408,8 @@ Route::prefix('school_manager')->group(function () {
             ->name('school_manager.teachers.add-new');
         Route::get('edit-profile','Teachers\ProfilesController@edit')
             ->name('school_manager.teachers.edit-profile');
+        Route::any('edit-avatar','Teachers\ProfilesController@avatar')
+            ->name('school_manager.teachers.edit-avatar');
         Route::post('save-profile','Teachers\ProfilesController@save')
             ->name('school_manager.teachers.save-profile');
         Route::get('manage-performance','Teachers\ProfilesController@manage_performance')

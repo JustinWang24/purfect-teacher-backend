@@ -106,8 +106,8 @@ class StudentProfile extends Model
         return $this->hasMany(RegistrationInformatics::class,'user_id', 'user_id');
     }
 
-    public function getAvatarAttribute(){
-        return asset($this->avatar ?? User::DEFAULT_USER_AVATAR);
+    public function getAvatarAttribute($value){
+        return asset(empty($value) ? User::DEFAULT_USER_AVATAR : $value);
     }
 
     /**
