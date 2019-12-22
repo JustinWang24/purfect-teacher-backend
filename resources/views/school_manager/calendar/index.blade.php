@@ -133,19 +133,6 @@
             </div>
         </div>
 
-        <el-dialog title="" :visible.sync="showAllEvents">
-            <el-dialog
-                    width="30%"
-                    title="内层 Dialog"
-                    :visible.sync="innerVisible"
-                    append-to-body>
-            </el-dialog>
-            <div slot="footer" class="dialog-footer">
-                <el-button @click="outerVisible = false">取 消</el-button>
-                <el-button type="primary" @click="innerVisible = true">打开内层 Dialog</el-button>
-            </div>
-        </el-dialog>
-
         <el-dialog title="本学期校历汇总" :visible.sync="showAllEvents" :fullscreen="true">
             <el-table :data="events">
                 <el-table-column property="event_time" label="日期"></el-table-column>
@@ -165,7 +152,6 @@
                 </el-table-column>
             </el-table>
         </el-dialog>
-
     </div>
     <div id="app-init-data-holder"
          data-school="{{ session('school.id') }}"
