@@ -29,7 +29,7 @@ if(document.getElementById('header_notification_bar')){
             loadLastSixSystemMessage: function(){
                 if(!Util.isEmpty(this.schoolId)){
                     loadMessages(this.schoolId).then(res => {
-                        if(Util.isAjaxResOk(res)){
+                        if(Util.isAjaxResOk(res) && !Util.isEmpty(res.data.data.messages)){
                             // 检查是不是有新的消息
                             const newMessages = res.data.data.messages.data;
                             if(this.messages.length > 0){
