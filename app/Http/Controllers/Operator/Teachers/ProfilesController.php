@@ -12,15 +12,17 @@ use App\Dao\Users\GradeUserDao;
 use App\Dao\Users\UserDao;
 use App\Http\Requests\MyStandardRequest;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\NetworkDisk\MediaRequest;
 use App\Models\Acl\Role;
+use App\Models\NetworkDisk\Media;
 use App\Models\Schools\Organization;
 use App\Models\Teachers\Teacher;
-use App\Models\Users\UserOrganization;
 use App\User;
 use App\Utils\FlashMessageBuilder;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 use Ramsey\Uuid\Uuid;
 
 class ProfilesController extends Controller
@@ -149,5 +151,29 @@ class ProfilesController extends Controller
             FlashMessageBuilder::Push($request, 'error',$result->getMessage());
         }
         return redirect()->route('school_manager.teachers.edit-profile',['uuid'=>$data['performance']['user_id']]);
+    }
+
+    /**
+     * 教职工的档案照片管理
+     * @param MediaRequest $request
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function avatar(MediaRequest $request){
+        if($request->method() === 'GET'){
+            $this->dataForView['pageTitle'] = '教职工档案照片';
+            $this->dataForView['user'] = (new UserDao())->getTeacherByIdOrUuid($request->uuid());
+            return view('teacher.profile.update_avatar', $this->dataForView);
+        }
+        elseif ($request->method() === 'POST'){
+            $user = (new UserDao())->getTeacherByIdOrUuid($request->get('user')['id']);
+            $file = $request->getFile();
+            $path = Media::DEFAULT_UPLOAD_PATH_PREFIX.$user->id;
+            $url = $file->storeAs($path, Str::random(10).'.'.$file->getClientOriginalExtension()); // 上传并返回路径
+            $profile = $user->profile;
+            $profile->avatar = str_replace('public/','storage/',$url);
+            $profile->save();
+            FlashMessageBuilder::Push($request, 'success','照片已更新');
+            return redirect()->route('school_manager.teachers.edit-avatar',['uuid'=>$user->id]);
+        }
     }
 }
