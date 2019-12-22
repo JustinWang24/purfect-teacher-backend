@@ -71,7 +71,7 @@ class ImportTeacherAvatar extends Command
                     copy($from, $to);
                     $profile = TeacherProfile::where('user_id',$user->id)->first();
                     $profile->avatar = '/storage/users/'.$user->id.'/'.$fileName;
-                    $profile->save();
+                    $profile->save(); //
                 }
             }
         }
