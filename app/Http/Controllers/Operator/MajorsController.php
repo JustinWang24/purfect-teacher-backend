@@ -69,6 +69,7 @@ class MajorsController extends Controller
         $uuid = $majorData['department_id'];
 
         if(isset($majorData['id'])){
+            $major = $dao->getMajorById($majorData['id']);
             // 更新专业的操作
             if($dao->updateMajor($majorData)){
                 FlashMessageBuilder::Push($request, FlashMessageBuilder::SUCCESS, $majorData['name'].'专业已经修改成功');
@@ -77,12 +78,15 @@ class MajorsController extends Controller
             }
         }else{
             // 新增专业的操作
-            if($dao->createMajor($majorData)){
+            $major = $dao->createMajor($majorData);
+            if($major){
                 FlashMessageBuilder::Push($request, FlashMessageBuilder::SUCCESS, $majorData['name'].'专业已经创建成功');
             }else{
                 FlashMessageBuilder::Push($request, FlashMessageBuilder::DANGER, $majorData['name'].'专业创建失败, 请重新试一下');
             }
         }
-        return redirect()->route('school_manager.department.majors',['uuid'=>$uuid,'by'=>'department']);
+
+
+        return redirect()->route('school_manager.department.majors',['uuid'=>$major->department_id,'by'=>'department']);
     }
 }
