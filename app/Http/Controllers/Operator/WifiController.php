@@ -48,7 +48,7 @@
          ];
 
          $wifiList = WifisDao::getWifisListInfo (
-            $condition , [ [ 'wifi_sort' , 'desc' ] ] ,
+            $condition , [ 'wifis.wifi_sort' , 'desc' ] ,
             [ 'page' => $param[ 'page' ] , 'limit' => self::$manger_wifi_page_limit ] ,
             $fieldArr , $joinArr
          );
@@ -133,7 +133,7 @@
 
          // 获取数据信息
          $getWifisOneInfo = WifisDao::getWifisOneInfo (
-            [ [ 'wifiid' , '=' , $param[ 'wifiid' ] ] ] , [ [ 'wifiid' , 'desc' ] ] ,[ '*' ]
+            [ [ 'wifiid' , '=' , $param[ 'wifiid' ] ] ] , [ 'wifiid' , 'desc' ] ,[ '*' ]
          )->toArray();
 
          if ( empty( $getWifisOneInfo ) )
