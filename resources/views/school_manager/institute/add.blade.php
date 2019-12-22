@@ -7,7 +7,7 @@ use App\Utils\UI\Button;
 @section('content')
     <div class="row">
         <div class="col-sm-12 col-md-12 col-xl-12">
-            <div class="card-box">
+            <div class="card">
                 <div class="card-head">
                     <header>在学校 ({{ session('school.name') }}) 的 - {{ $campus->name }} - 添加新学院</header>
                 </div>
