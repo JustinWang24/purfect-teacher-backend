@@ -1,8 +1,9 @@
 <?php
     use App\Utils\UI\Anchor;
     use App\Utils\UI\Button;
-    $year = intval($year);
-    $ago = $year - 3;
+    $years = \App\Utils\Time\GradeAndYearUtil::GetAllYears();
+    $year = $years[count($years)-1];
+    $ago = $years[0];
 ?>
 @extends('layouts.app')
 @section('content')
