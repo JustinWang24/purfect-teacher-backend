@@ -148,7 +148,7 @@ class User extends Authenticatable implements HasMobilePhone, HasDeviceId, IUser
         }
         elseif (in_array($this->type, Role::GetStudentUserTypes())){
             // 已认证学生
-            return $this->hasOne(StudentProfile::class);
+            return $this->hasOne(StudentProfile::class,'user_id');
         }
         else{
             return null;

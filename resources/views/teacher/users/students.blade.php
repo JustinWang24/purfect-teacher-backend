@@ -11,7 +11,6 @@ use App\User;
                 <div class="card-head">
                     <header class="full-width">
                         {{ $parent->name??session('school.name') }}(学生总数: {{ $students->total() }})
-
                         @if(isset($parent) && get_class($parent) === 'App\Models\Schools\Grade')
                             @if($parent->gradeManager)
                                 <a href="{{ route('school_manager.grade.set-adviser',['grade'=>$parent->id]) }}">
@@ -45,13 +44,11 @@ use App\User;
                         <div class="table-padding col-12 pt-0">
                             @include('school_manager.school.reusable.nav',['highlight'=>'student'])
                         </div>
-
                         <div class="row">
                             <div class="col-12">
                                 {{ isset($appendedParams) ? $students->appends($appendedParams)->links() : $students->links() }}
                             </div>
                         </div>
-
                         <div class="table-responsive">
                             <table class="table table-striped table-bordered table-hover table-checkable order-column valign-middle">
                                 <thead>
@@ -71,9 +68,9 @@ use App\User;
                                         /** @var \App\Models\Users\GradeUser $gradeUser */
                                     @endphp
                                     <tr>
-                                        <td>{{ $gradeUser->user->profile->serial_number }}</td>
+                                        <td>{{ $gradeUser->studentProfile->serial_number }}</td>
                                         <td>
-                                            <img src="{{ $gradeUser->user->profile->avatar }}" width="60" alt="">
+                                            <img src="{{ $gradeUser->studentProfile->avatar }}" style="width: 60px;border-radius: 50%;">
                                         </td>
                                         <td>
                                             {{ $gradeUser->user->name ?? 'n.a' }}
@@ -99,8 +96,7 @@ use App\User;
                                                     'text'=>'可执行操作',
                                                     'subs'=>[
                                                         ['url'=>route('verified_student.profile.edit',['uuid'=>$gradeUser->user->uuid]),'text'=>'编辑'],
-                                                        ['url'=>route('school_manager.student.suspend',['uuid'=>$gradeUser->user->uuid]),'text'=>'休学'],
-                                                        ['url'=>route('school_manager.student.stop',['uuid'=>$gradeUser->user->uuid]),'text'=>'停课'],
+                                                        ['url'=>route('teacher.student.edit-avatar',['uuid'=>$gradeUser->user->uuid]),'text'=>'照片'],
                                                         ['url'=>route('school_manager.student.reject',['uuid'=>$gradeUser->user->uuid]),'text'=>'退学'],
                                                     ]
                                                 ],

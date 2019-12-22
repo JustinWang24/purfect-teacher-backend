@@ -106,6 +106,10 @@ class GradeUser extends Model
         return $this->hasOne(TeacherProfile::class,'user_id','user_id');
     }
 
+    public function studentProfile(){
+        return $this->hasOne(StudentProfile::class,'user_id','user_id');
+    }
+
     public function enquiries(){
         return $this->hasMany(Enquiry::class, 'user_id','user_id');
     }

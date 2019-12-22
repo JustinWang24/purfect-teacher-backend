@@ -107,7 +107,7 @@ class StudentProfile extends Model
     }
 
     public function getAvatarAttribute($value){
-        return asset($value ?? User::DEFAULT_USER_AVATAR);
+        return asset(empty($value) ? User::DEFAULT_USER_AVATAR : $value);
     }
 
     /**

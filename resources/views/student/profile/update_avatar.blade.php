@@ -11,13 +11,12 @@ use App\Utils\UI\Button;
                 <div class="card-head">
                     <header class="full-width">
                         {{ $user->name }}照片
-                        <a class="btn btn-primary btn-sm" href="{{ route('school_manager.school.teachers') }}">返回教师管理</a>
                     </header>
                 </div>
                 <div class="card-body">
                     <div class="row">
                         <div class="col-6">
-                            <form action="{{ route('school_manager.teachers.edit-avatar') }}" method="post" enctype="multipart/form-data">
+                            <form action="{{ route('teacher.student.edit-avatar') }}" method="post" enctype="multipart/form-data">
                                 @csrf
                                 <input type="hidden" name="user[id]" value="{{ $user->id }}">
                                 <div class="form-group">
