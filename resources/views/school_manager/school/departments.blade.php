@@ -10,21 +10,14 @@ use App\User;
 @section('content')
     <div class="row">
         <div class="col-sm-12 col-md-12 col-xl-12">
-            <div class="card-box">
+            <div class="card">
                 <div class="card-head">
                     <header class="full-width">
                         {{ session('school.name') }} {{ $parent->name??'' }}
                         @if(isset($parent))
-                            <a href="{{ route('school_manager.campus.institutes',['uuid'=>$parent->campus_id, 'by'=>'campus']) }}" class="btn btn-default pull-right">
-                                返回 <i class="fa fa-arrow-circle-left"></i>
-                            </a>&nbsp;
                             <a href="{{ route('school_manager.department.add',['uuid'=>$parent->id]) }}" class="btn btn-primary pull-right" id="btn-create-department-from-institute">
                                 创建新系 <i class="fa fa-plus"></i>
                             </a>
-                        @else
-                            <a href="{{ route('school_manager.school.view') }}" class="btn btn-default pull-right">
-                                返回 <i class="fa fa-arrow-circle-left"></i>
-                            </a>&nbsp;
                         @endif
                     </header>
                 </div>
