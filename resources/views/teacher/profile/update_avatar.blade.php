@@ -11,6 +11,7 @@ use App\Utils\UI\Button;
                 <div class="card-head">
                     <header class="full-width">
                         {{ $user->name }}照片
+                        <a class="btn btn-primary btn-sm" href="{{ route('school_manager.school.teachers') }}">返回教师管理</a>
                     </header>
                 </div>
                 <div class="card-body">
