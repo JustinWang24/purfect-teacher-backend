@@ -12,7 +12,7 @@ use App\User;
                     <header class="full-width">
                         {{ $parent->name??session('school.name') }}(学生总数: {{ $students->total() }})
 
-                        @if(get_class($parent) === 'App\Models\Schools\Grade')
+                        @if(isset($parent) && get_class($parent) === 'App\Models\Schools\Grade')
                             @if($parent->gradeManager)
                                 <a href="{{ route('school_manager.grade.set-adviser',['grade'=>$parent->id]) }}">
                                 @if($parent->gradeManager->adviser_id)
@@ -77,7 +77,7 @@ use App\User;
                                         </td>
                                         <td>
                                             {{ $gradeUser->user->name ?? 'n.a' }}
-                                            @if(get_class($parent) === 'App\Models\Schools\Grade')
+                                            @if(isset($parent) && get_class($parent) === 'App\Models\Schools\Grade')
                                                 @if($parent->gradeManager->monitor_id === $gradeUser->user_id)
                                                     <span class="text-primary">(班长)</span>
                                                 @endif

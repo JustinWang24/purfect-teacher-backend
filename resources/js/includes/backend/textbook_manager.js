@@ -66,6 +66,10 @@ if(document.getElementById('textbook-manager-app')){
             this.resetForm();
         },
         methods: {
+            // 在表单输入框不能工作的时候, 强制更新
+            updateInput: function(e){
+                this.$forceUpdate()
+            },
             resetForm: function(){
                 this.textbookModel.id = null;
                 this.textbookModel.name = '';
@@ -198,7 +202,6 @@ if(document.getElementById('textbook-manager-app')){
                     {textbook: this.textbookModel}
                 ).then(res => {
                     if(Util.isAjaxResOk(res)){
-                        this.showTextbookFormFlag = false;
                         if(Util.isEmpty(this.textbookModel.id)){
                             // 新增教材的操作
                             this.books.unshift(res.data.data.textbook);
@@ -215,6 +218,7 @@ if(document.getElementById('textbook-manager-app')){
                             message: '教材数据保存成功: ' + res.data.data.textbook.name,
                             type: 'success'
                         });
+                        this.showTextbookFormFlag = false;
                     }else{
                         this.$notify.error({
                             title: '错误',
