@@ -2,6 +2,7 @@
 use App\Utils\UI\Anchor;
 use App\Utils\UI\Button;
 use App\User;
+$years = \App\Utils\Time\GradeAndYearUtil::GetAllYears();
 ?>
 @extends('layouts.app')
 @section('content')
@@ -9,7 +10,7 @@ use App\User;
         <div class="col-sm-12 col-md-12 col-xl-12">
             <div class="card">
                 <div class="card-head">
-                    <header>
+                    <header class="full-width">
                         {{ session('school.name') }} - {{ $parent->name??'' }} {{ isset($year) ? $year.'级' : null }}
                         @if(isset($yearManager))
                             <a href="{{ route('school_manager.school.set-year-manager',['year'=>$year]) }}">{{ $yearManager->user->name ?? '设置年级组长' }}</a>
@@ -18,6 +19,12 @@ use App\User;
                             <a href="{{ route('school_manager.school.set-year-manager',['year'=>$year]) }}">设置年级组长</a>
                             @endif
                         @endif
+
+                        <p class="pull-right">
+                            @foreach($years as $y)
+                                <a class="btn btn-{{ $year == $y ? 'primary' : 'default' }} btn-sm" href="{{ route('school_manager.school.years',['year'=>$y]) }}">{{ $y }}级</a>
+                            @endforeach
+                        </p>
                     </header>
                 </div>
                 <div class="card-body">
