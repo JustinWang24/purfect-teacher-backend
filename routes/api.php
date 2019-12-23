@@ -669,3 +669,11 @@ Route::prefix('Oa')->middleware('auth:api')->group(function(){
 
 Route::post('/manual/attendances','Api\Cloud\CloudController@manual')
         ->middleware('auth:api')->name('api.manual.attendances');
+
+Route::prefix('teacher')->middleware('auth:api')->group(function(){
+    // 教师添加访客
+    Route::post('/add-visitor','Api\OA\TeachersController@add_visitor')
+        ->name('api.teacher.add-visitor');
+    Route::post('/delete-visitor','Api\OA\TeachersController@delete_visitor')
+        ->name('api.teacher.delete-visitor');
+});

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Teacher;
 
+use App\Dao\Pipeline\FlowDao;
 use App\Http\Controllers\Controller;
 use App\Utils\JsonBuilder;
 use App\Http\Requests\OfficialDocument\ProcessRequest;
@@ -9,9 +10,21 @@ use App\Dao\OfficialDocuments\PresetStepDao;
 use App\Dao\OfficialDocuments\ProgressDao;
 use App\Dao\OfficialDocuments\ProgressStepsDao;
 use App\Dao\OfficialDocuments\ProgressStepsUserDao;
+use App\Utils\Pipeline\IFlow;
 
 class OfficialDocumentController extends Controller
 {
+    /**
+     * @param ProcessRequest $request
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function listAll(ProcessRequest $request){
+        $this->dataForView['pageTitle'] = '公文管理';
+        $dao = new FlowDao();
+        $result = $dao->getGroupedFlows($request->getSchoolId(),[IFlow::TYPE_4]);
+        $this->dataForView['list'] = $result[0]['flows'];
+        return view('teacher.documents.list', $this->dataForView);
+    }
 
     /**
      *系统预置步骤
@@ -19,10 +32,8 @@ class OfficialDocumentController extends Controller
     public function presetStep()
     {
         $dao = new PresetStepDao;
-
         $field = ['id', 'name', 'describe', 'level'];
         $data = $dao->getAllStep($field);
-
         return JsonBuilder::Success($data);
     }
 
@@ -108,9 +119,5 @@ class OfficialDocumentController extends Controller
         } else {
             return JsonBuilder::Error('修改步骤负责人失败');
         }
-
     }
-
-
-
 }

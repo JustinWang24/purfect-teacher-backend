@@ -9,7 +9,8 @@ use App\User;
         <div class="col-sm-12 col-md-12 col-xl-12">
             <div class="card">
                 <div class="card-head">
-                    <header>{{ session('school.name') }} 项目管理</header>
+                    <header>
+                        {{ session('school.name') }} 项目管理</header>
                 </div>
                 <div class="card-body">
                     <div class="row">

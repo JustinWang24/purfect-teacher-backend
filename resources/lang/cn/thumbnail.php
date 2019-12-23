@@ -136,5 +136,7 @@ return [
     'teaching-and-research-group-members'=> '教研组成员管理',
     'add-new'=> '添加',
     'edit-avatar'=> '档案照片管理',
+    'official'=> '日常办公',
+    'documents'=> '公文',
 ];
 

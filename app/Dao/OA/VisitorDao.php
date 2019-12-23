@@ -34,8 +34,14 @@ class VisitorDao
             ->orderBy('id','desc')->paginate(ConfigurationTool::DEFAULT_PAGE_SIZE);
     }
 
-    public function getTodayVisitorsBySchoolIdForApp($schoolId){
+    /**
+     * @param $schoolId
+     * @param $date
+     * @return Collection
+     */
+    public function getTodayVisitorsBySchoolIdForApp($schoolId, $date){
         return Visitor::where('school_id',$schoolId)
+            ->whereDate('scheduled_at',$date)
             ->orderBy('id','desc')->get();
     }
 }
