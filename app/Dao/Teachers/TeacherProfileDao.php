@@ -69,4 +69,15 @@ class TeacherProfileDao
         $list = TeacherProfile::where($map)->select($field)->with('user')->get();
         return $list;
     }
+
+    /**
+     * 修改老师信息
+     * @param $userId
+     * @param $profile
+     * @return mixed
+     */
+    public function updateTeacherProfile($userId, $profile)
+    {
+        return TeacherProfile::where('user_id',$userId)->update($profile);
+    }
 }
