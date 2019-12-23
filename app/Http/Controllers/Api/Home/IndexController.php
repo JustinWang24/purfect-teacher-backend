@@ -8,6 +8,7 @@ use App\Dao\Misc\SystemNotificationDao;
 use App\Dao\Notice\NoticeDao;
 use App\Dao\Schools\SchoolDao;
 use App\Dao\Students\StudentProfileDao;
+use App\Dao\Teachers\TeacherProfileDao;
 use App\Dao\Users\UserDao;
 use App\Events\User\ForgetPasswordEvent;
 use App\Http\Controllers\Controller;
@@ -289,10 +290,14 @@ class IndexController extends Controller
         if ($avatar) {
             $data['avatar'] = $avatar->store('public/avatar');
         }
-
+        dd($user);
         $dao = new StudentProfileDao;
-
-        $result = $dao->updateStudentProfile($user->id, $data);
+        $teacherDao  = new TeacherProfileDao;
+        if($user->isStudent()) {
+            $result = $dao->updateStudentProfile($user->id, $data);
+        }elseif ($user->isTeacher()) {
+            $result = $teacherDao->updateTeacherProfile($user->id, $data);
+        }
 
         if ($result) {
             return JsonBuilder::Success('修改成功');
