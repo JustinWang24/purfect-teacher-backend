@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Api\OA;
 
 use App\Dao\AttendanceSchedules\AttendanceSchedulesDao;
 use App\Dao\OA\AttendanceTeacherDao;
+use App\Models\OA\AttendanceTeacher;
+use App\Models\OA\AttendanceTeacherGroup;
 use App\Models\OA\AttendanceTeachersMessage;
 use App\Utils\JsonBuilder;
 use Illuminate\Http\Request;
@@ -54,8 +56,26 @@ class AttendanceTeacherController extends Controller
             return JsonBuilder::Error('您还没有加入一个考勤组，请联系管理员');
         }
         $record = $dao->getRecord($user->id,$schoolId,$day);
-        if (empty($record)) {
-            return JsonBuilder::Error('您还没有打卡记录，请先打卡');
+        if(empty($record)) {
+            $macAddress = $dao->getMacAddress($user->id,$schoolId);
+            $status = $dao->getBtnStatus($user->id, $schoolId);
+            $output = [
+                'wifi_name' => $group->wifi_name,
+                'user_name' => $user->name,
+                'head_img'  => $user->profile->avatar,
+                'group_name'=> $group->name,
+                'date'      => $day,
+                'online_time'=> $group->online_time,
+                'online_mine'=> '',
+                'online_status'=> '',
+                'offline_time' => $group->offline_time,
+                'offline_mine' => '',
+                'offline_status' => '',
+                'button_status'  =>  $status,
+                'mac_address'   => $macAddress->mac_address,
+
+            ];
+            return JsonBuilder::Success($output);
         }
         $status = $dao->getStatus($record);
         $output = [
@@ -295,5 +315,45 @@ class AttendanceTeacherController extends Controller
             'approver_list'  => $approver_list
         ];
         return JsonBuilder::Success($data);
+    }
+
+    public function mac_add(Request $request)
+    {
+        $user = $request->user();
+        $schoolId = $user->getSchoolId();
+        $dao = new AttendanceTeacherDao();
+        $oldMacAddress = $dao->getMacAddress($user->id, $schoolId);
+        if ($oldMacAddress->mac_address) {
+            return JsonBuilder::Success('操作成功');
+        }
+        $mac_address = strip_tags($request->get('mac_address'));
+        if (empty($mac_address)) {
+            return JsonBuilder::Error('数据错误，没有获取到设备标识');
+        }
+        $result = $dao->updateMacAddress($user->id,$mac_address);
+        if($result) {
+            return JsonBuilder::Success('操作成功');
+        } else {
+            return JsonBuilder::Error('操作失败');
+        }
+
+
+    }
+
+
+    public function mac_edit(Request $request)
+    {
+        $user = $request->user();
+        $schoolId = $user->getSchoolId();
+        $dao = new AttendanceTeacherDao();
+        $mac_address = strip_tags($request->get('mac_address'));
+        $content = strip_tags($request->get('content'));
+        $result = $dao->createEditMacAddressApply($user->id, $schoolId, $mac_address, $content);
+        if($result) {
+            return JsonBuilder::Success('操作成功');
+        } else {
+            return JsonBuilder::Error('操作失败');
+        }
+
     }
 }
