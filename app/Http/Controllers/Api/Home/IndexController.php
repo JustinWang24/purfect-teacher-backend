@@ -17,7 +17,9 @@ use App\Http\Requests\Home\HomeRequest;
 use App\Dao\Schools\NewsDao;
 use App\Http\Requests\MyStandardRequest;
 use App\Http\Requests\SendSms\SendSmeRequest;
+use App\Models\Forum\Forum;
 use App\Models\Misc\SystemNotification;
+use App\Models\Students\StudentProfile;
 use App\Models\Teachers\Teacher;
 use App\Models\Users\UserVerification;
 use App\Utils\JsonBuilder;
@@ -288,7 +290,8 @@ class IndexController extends Controller
         $data   = $request->get('data');
         $avatar = $request->file('avatar');
         if ($avatar) {
-            $data['avatar'] = $avatar->store('public/avatar');
+            $avatarImg = $avatar->store('public/avatar');
+            $data['avatar'] =  StudentProfile::avatarUploadPathToUrl($avatarImg);
         }
 
         $dao = new StudentProfileDao;
