@@ -44,11 +44,6 @@ use App\User;
                         <div class="table-padding col-12 pt-0">
                             @include('school_manager.school.reusable.nav',['highlight'=>'student'])
                         </div>
-                        <div class="row">
-                            <div class="col-12">
-                                {{ isset($appendedParams) ? $students->appends($appendedParams)->links() : $students->links() }}
-                            </div>
-                        </div>
                         <div class="table-responsive">
                             <table class="table table-striped table-bordered table-hover table-checkable order-column valign-middle">
                                 <thead>
@@ -75,8 +70,10 @@ use App\User;
                                         <td>
                                             {{ $gradeUser->user->name ?? 'n.a' }}
                                             @if(isset($parent) && get_class($parent) === 'App\Models\Schools\Grade')
-                                                @if($parent->gradeManager->monitor_id === $gradeUser->user_id)
-                                                    <span class="text-primary">(班长)</span>
+                                                @if(isset($parent->gradeManager->monitor_id))
+                                                    @if($parent->gradeManager->monitor_id === $gradeUser->user_id)
+                                                        <span class="text-primary">(班长)</span>
+                                                    @endif
                                                 @endif
                                             @endif
                                         </td>
