@@ -63,5 +63,7 @@ Route::prefix('attendance')->middleware('auth:api')->group(function () {
         ->name('oa.attendance.getJsMonthCount');
     Route::any('/mac_add','Api\OA\AttendanceTeacherController@mac_add')
         ->name('oa.attendance.mac_add');
+    Route::any('/apply_add','Api\OA\AttendanceTeacherController@apply_add')
+        ->name('oa.attendance.apply_add');
 
 });

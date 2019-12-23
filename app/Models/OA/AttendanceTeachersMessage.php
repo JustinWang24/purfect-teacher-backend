@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class AttendanceTeachersMessage extends Model
 {
     protected $fillable = [
-        'user_id', 'manager_user_id', 'attendance_date', 'status', 'school_id','type'
+        'user_id', 'manager_user_id', 'attendance_date', 'status', 'school_id','type','attendance_time','content'
     ];
 
     //status-状态 0-未补卡 1-补卡中 2-已通过 3-未通过 type-online-上班 offline-下班

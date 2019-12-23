@@ -2,6 +2,7 @@
 
 namespace App\Models\OA;
 
+use App\User;
 use Illuminate\Database\Eloquent\Model;
 
 class AttendanceTeachersGroupMember extends Model
@@ -13,5 +14,9 @@ class AttendanceTeachersGroupMember extends Model
     public function group()
     {
         return $this->hasOne(AttendanceTeacherGroup::class, 'id', 'group_id');
+    }
+
+    public function user(){
+        return $this->belongsTo(User::class);
     }
 }
