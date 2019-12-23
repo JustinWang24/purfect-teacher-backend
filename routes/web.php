@@ -57,6 +57,9 @@ Route::prefix('h5')->group(function () {
     // 教师端, 管理界面
     Route::any('/teacher/management/view','H5\Teacher\PagesController@management')
         ->name('h5.teacher.management.view');
+
+    Route::any('/teacher/management/my-students','H5\Teacher\StudentsController@my_students')
+        ->name('h5.teacher.management.my-students');
 });
 
 // 分享

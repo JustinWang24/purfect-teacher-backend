@@ -125,7 +125,15 @@ class PagesController extends Controller
         return view('h5_apps.teacher.view_news', $this->dataForView);
     }
 
+    /**
+     * 教师管理界面
+     * @param Request $request
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function management(Request $request){
-
+        $this->dataForView['teacher'] = $request->user('api');
+        $this->dataForView['api_token'] = $request->get('api_token');
+        $this->dataForView['type'] = $request->get('type','teacher');
+        return view('h5_apps.teacher.management.entry', $this->dataForView);
     }
 }
