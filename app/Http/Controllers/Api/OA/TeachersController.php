@@ -29,4 +29,10 @@ class TeachersController extends Controller
         $visitor = Visitor::create($visitorData);
         return JsonBuilder::Success(['visitor'=>$visitor]);
     }
+
+    public function delete_visitor(Request $request){
+        $id = $request->get('visitor');
+        Visitor::where('id',$id)->delete();
+        return JsonBuilder::Success();
+    }
 }

@@ -91,4 +91,8 @@ class UserFlowDao
         $data['nodes'] = $nodesData;
         return $data;
     }
+
+    public function getByFlowId($flowId){
+        return UserFlow::where('flow_id', $flowId)->get();
+    }
 }

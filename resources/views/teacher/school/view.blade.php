@@ -16,9 +16,11 @@
                 <h3 class="text-white box-title m-4">
                     我的班级
                 </h3>
+                @if($gu->grade)
                 <p class="text-white">
                     {{ $gu->grade->name }} (学生: {{ $gu->grade->studentsCount() }}人)
                 </p>
+                @endif
                 <p class="text-white">
                     @php
 $slot = \App\Utils\Time\GradeAndYearUtil::GetTimeSlot();

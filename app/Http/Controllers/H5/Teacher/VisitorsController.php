@@ -20,13 +20,17 @@ class VisitorsController extends Controller
      */
     public function visitors(Request $request){
         $user = $request->user('api');
+
+        $today = date('Y-m-d');
+        $date = $request->get('date', $today);
+
         $dao = new VisitorDao();
-        $this->dataForView['pageTitle'] = '今日预约';
+        $this->dataForView['pageTitle'] = $date === $today ? '今日预约' : $date.'预约';
         $this->dataForView['api_token'] = $request->get('api_token');
         $this->dataForView['teacher'] = $user;
         $schoolId = $user->getSchoolId();
         $this->dataForView['schoolId'] = $schoolId;
-        $this->dataForView['visitors'] = $dao->getTodayVisitorsBySchoolIdForApp($schoolId);
+        $this->dataForView['visitors'] = $dao->getTodayVisitorsBySchoolIdForApp($schoolId, $date);
         return view('h5_apps.teacher.management.visitors', $this->dataForView);
     }
 }

@@ -674,4 +674,6 @@ Route::prefix('teacher')->middleware('auth:api')->group(function(){
     // 教师添加访客
     Route::post('/add-visitor','Api\OA\TeachersController@add_visitor')
         ->name('api.teacher.add-visitor');
+    Route::post('/delete-visitor','Api\OA\TeachersController@delete_visitor')
+        ->name('api.teacher.delete-visitor');
 });

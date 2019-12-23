@@ -11,7 +11,7 @@
             </a>
         </li>
         <li class="nav-item">
-            <a href="{{ route('school_manager.oa.documents-manager',['uuid'=>session('school.uuid')]) }}" class="nav-link">
+            <a href="{{ route('teacher.list.official.documents',['uuid'=>session('school.uuid')]) }}" class="nav-link">
                 <span class="title">公文管理</span>
             </a>
         </li>

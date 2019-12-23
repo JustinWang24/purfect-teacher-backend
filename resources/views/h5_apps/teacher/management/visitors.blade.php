@@ -1,24 +1,51 @@
+@php
+$nextFewDays = [];
+foreach (range(0,6) as $item) {
+    $nextFewDays[] = \Carbon\Carbon::now()->addDays($item);
+}
+@endphp
+
 @extends('layouts.h5_teacher_app')
 @section('content')
-    <div id="app-init-data-holder" data-school="{{ $schoolId }}" data-visitors="{{ json_encode($visitors) }}"></div>
+    <div id="app-init-data-holder" data-token="{{ $api_token }}" data-school="{{ $schoolId }}" data-visitors="{{ json_encode($visitors) }}"></div>
     <div id="school-teacher-management-visitors-app" class="school-intro-container">
         <div class="main p-15">
-            <h2>{{ $pageTitle }} <el-button class="pull-right" @click="addVisitor" icon="el-icon-plus" size="mini" type="primary">添加访客</el-button></h2>
+            <h3>
+                {{ $pageTitle }}
+                <el-dropdown trigger="click" @command="handleCommand">
+                    <span class="el-dropdown-link text-primary">
+                        近期预约<i class="el-icon-arrow-down el-icon--right"></i>
+                    </span>
+                    <el-dropdown-menu slot="dropdown">
+                        @foreach($nextFewDays as $next)
+                        <el-dropdown-item
+                            icon="el-icon-date"
+                            command="{{ $next->format('Y-m-d') }}"
+                        >{{ $next->format('Y年m月d日') }}</el-dropdown-item>
+                        @endforeach
+                    </el-dropdown-menu>
+                </el-dropdown>
+                <el-button class="pull-right" @click="addVisitor" icon="el-icon-date" size="mini" type="primary">添加</el-button>
+            </h3>
             <el-table
                     :data="visitors"
                     empty-text="今日无访客"
                     stripe
                     style="width: 100%">
-                <el-table-column
-                        label="预约时间">
+                <el-table-column label="预约时间">
                     <template slot-scope="scope">
-                        <el-button @click="showDetail(scope.row)" type="text">@{{ scope.row.scheduled_at }}</el-button>
+                        <el-tag effect="dark" type="danger" v-if="scope.row.isNew" size="mini">新</el-tag>
+                        <el-button @click="showDetail(scope.row)" type="text">@{{ scope.row.scheduled_at.substring(0,16) }}</el-button>
                     </template>
                 </el-table-column>
-                <el-table-column
-                        label="访客姓名">
+                <el-table-column label="访客姓名">
                     <template slot-scope="scope">
-                        @{{ scope.row.name }}(@{{ scope.row.mobile }})
+                        @{{ scope.row.name }}(<a class="no-dec text-primary" :href="'tel:' + scope.row.mobile">@{{ scope.row.mobile }}</a>)
+                    </template>
+                </el-table-column>
+                <el-table-column label="操作" width="70">
+                    <template slot-scope="scope">
+                        <el-button type="danger" size="mini" icon="el-icon-delete" @click="deleteVisitor(scope.row)"></el-button>
                     </template>
                 </el-table-column>
             </el-table>
@@ -67,23 +94,17 @@
             </el-form>
         </el-dialog>
 
-        <el-dialog title="访客详情" :visible.sync="showDetailFlag" fullscreen>
-            <h4 class="title">设备名称: @{{ selectedDevice.facility_name }}</h4>
+        <el-dialog title="预约详情" :visible.sync="showDetailFlag" fullscreen>
+            <h4 class="title">访客: @{{ selectedVisitor.name }}</h4>
             <ul>
                 <li>
-                    <p class="text-dark">设备编号: @{{ selectedDevice.facility_number }}</p>
+                    <p class="text-dark">联系电话: @{{ selectedVisitor.mobile }}</p>
                 </li>
                 <li>
-                    <p class="text-dark">室内位置: @{{ selectedDevice.detail_addr }}</p>
+                    <p class="text-dark">原因: @{{ selectedVisitor.reason }}</p>
                 </li>
                 <li>
-                    <p class="text-dark">建筑: @{{ selectedDevice.building ? selectedDevice.building.name : null }}</p>
-                </li>
-                <li>
-                    <p class="text-dark">房间: @{{ selectedDevice.room ? selectedDevice.room.name : null }}</p>
-                </li>
-                <li>
-                    <p class="text-dark">记录更新: @{{ selectedDevice.updated_at }}</p>
+                    <p class="text-dark">车辆: @{{ selectedVisitor.vehicle_license }}</p>
                 </li>
             </ul>
         </el-dialog>

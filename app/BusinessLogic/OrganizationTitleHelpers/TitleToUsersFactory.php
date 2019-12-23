@@ -11,20 +11,21 @@ namespace App\BusinessLogic\OrganizationTitleHelpers;
 use App\BusinessLogic\OrganizationTitleHelpers\Contracts\TitleToUsers;
 use App\BusinessLogic\OrganizationTitleHelpers\Impl\ClassAdviser;
 use App\BusinessLogic\OrganizationTitleHelpers\Impl\DepartmentManager;
+use App\BusinessLogic\OrganizationTitleHelpers\Impl\GradeAdviser;
 use App\BusinessLogic\OrganizationTitleHelpers\Impl\SchoolCoordinator;
 use App\BusinessLogic\OrganizationTitleHelpers\Impl\SchoolDeputy;
 use App\BusinessLogic\OrganizationTitleHelpers\Impl\SchoolPrincipal;
-use App\User;
 use App\Utils\Misc\Contracts\Title;
+use App\Utils\Pipeline\IUser;
 
 class TitleToUsersFactory
 {
     /**
      * @param $titleId
-     * @param User $user
+     * @param IUser $user
      * @return TitleToUsers
      */
-    public static function GetInstance($titleId, User $user){
+    public static function GetInstance($titleId, IUser $user){
         $instance = null;
         switch ($titleId){
             case Title::SCHOOL_PRINCIPAL: // 校长
@@ -47,6 +48,9 @@ class TitleToUsersFactory
                 break;
             case Title::ORGANIZATION_DEPUTY: // 部门付主管
                 $instance = new DepartmentManager($user);
+                break;
+            case Title::GRADE_ADVISER: // 年级组长
+                $instance = new GradeAdviser($user);
                 break;
             default:
                 break;
