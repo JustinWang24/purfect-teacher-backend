@@ -290,7 +290,7 @@ class IndexController extends Controller
         if ($avatar) {
             $data['avatar'] = $avatar->store('public/avatar');
         }
-        dd($user);
+
         $dao = new StudentProfileDao;
         $teacherDao  = new TeacherProfileDao;
         if($user->isStudent()) {
