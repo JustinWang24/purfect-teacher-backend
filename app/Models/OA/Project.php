@@ -17,7 +17,7 @@ class Project extends Model
         'created_at'=>'create_time',
         'user_id'=>'leader_userid',
         'status'=>'doing_status',
-        '_todo' => ['member_count'=>'memberCount']
+        '_todo' => ['member_count'=>'memberCount','leader_name'=>'username']
     ];
 
     protected $table = 'oa_projects';
@@ -50,5 +50,9 @@ class Project extends Model
     public function memberCount()
     {
         return $this->members()->count();
+    }
+    public function username()
+    {
+        return $this->user->name;
     }
 }
