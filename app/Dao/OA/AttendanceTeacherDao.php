@@ -40,7 +40,12 @@ class AttendanceTeacherDao
         $memberObj = AttendanceTeachersGroupMember::where('user_id', $userId)
             ->where('school_id',$schoolId)
             ->first();
-        return $memberObj->group;
+        if ($memberObj) {
+            return $memberObj->group;
+        } else{
+            return false;
+        }
+
     }
 
 
