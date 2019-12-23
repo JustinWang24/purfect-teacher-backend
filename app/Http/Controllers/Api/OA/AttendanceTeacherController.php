@@ -67,10 +67,10 @@ class AttendanceTeacherController extends Controller
                 'date'      => $day,
                 'online_time'=> $group->online_time,
                 'online_mine'=> '',
-                'online_status'=> '',
+                'online_status'=> AttendanceTeacherGroup::UNCHECKED,
                 'offline_time' => $group->offline_time,
                 'offline_mine' => '',
-                'offline_status' => '',
+                'offline_status' => AttendanceTeacherGroup::UNCHECKED,
                 'button_status'  =>  $status,
                 'mac_address'   => $macAddress->mac_address,
 
