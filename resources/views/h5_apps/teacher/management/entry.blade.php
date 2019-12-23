@@ -195,16 +195,20 @@
                 <h3 class="title">设备管理</h3>
                 <div class="row">
                     <div class="col-4">
+                        <a class="no-dec" href="#">
                         <p class="text-center">
                             <img src="{{ asset('assets/img/teacher/ass17.png') }}" class="icon-image">
                         </p>
                         <p class="text-center text-dark mt-adjust">室内设备</p>
+                        </a>
                     </div>
                     <div class="col-4">
+                        <a class="no-dec" href="#">
                         <p class="text-center">
                             <img src="{{ asset('assets/img/teacher/ass18.png') }}" class="icon-image">
                         </p>
                         <p class="text-center text-dark mt-adjust">室外设备</p>
+                        </a>
                     </div>
                 </div>
                 <div class="clearfix"></div>
@@ -212,10 +216,12 @@
                 <h3 class="title">后勤管理</h3>
                 <div class="row">
                     <div class="col-4">
-                        <p class="text-center">
-                            <img src="{{ asset('assets/img/teacher/ass19.png') }}" class="icon-image">
-                        </p>
-                        <p class="text-center text-dark mt-adjust">食堂</p>
+                        <a class="no-dec" href="#">
+                            <p class="text-center">
+                                <img src="{{ asset('assets/img/teacher/ass19.png') }}" class="icon-image">
+                            </p>
+                            <p class="text-center text-dark mt-adjust">食堂</p>
+                        </a>
                     </div>
                 </div>
             @endif

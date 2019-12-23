@@ -1,5 +1,12 @@
 @csrf
 <div class="form-group">
+    <label for="facility-number-input">布放环境</label>
+    <select name="facility[location]" class="form-control">
+        <option {{ isset($facility['location']) && $facility['location'] === \App\Models\Schools\Facility::LOCATION_INDOOR ? 'selected' : null  }} value="{{ \App\Models\Schools\Facility::LOCATION_INDOOR }}">室内设备</option>
+        <option {{ isset($facility['location']) && $facility['location'] === \App\Models\Schools\Facility::LOCATION_OUTDOOR ? 'selected' : null  }} value="{{ \App\Models\Schools\Facility::LOCATION_OUTDOOR }}">室外设备</option>
+    </select>
+</div>
+<div class="form-group">
     <label for="facility-number-input">设备编号</label>
     <input required type="text" class="form-control" id="facility-number-input" value="{{$facility['facility_number'] ?? old('facility_number')}}" placeholder="设备编号" name="facility[facility_number]">
 </div>
