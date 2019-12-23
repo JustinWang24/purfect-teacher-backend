@@ -446,10 +446,10 @@ Route::prefix('notification')->middleware('auth:api')->group(function () {
 });
 
 Route::prefix('attendance')->middleware('auth:api')->group(function () {
-    // 消息中心
-    Route::post('/list','Api\AttendanceSchedule\AttendanceScheduleController@display')
+    // 值周
+    Route::any('/list','Api\AttendanceSchedule\AttendanceScheduleController@display')
         ->name('api.attendance.list');
-    Route::post('/load-special','Api\AttendanceSchedule\AttendanceScheduleController@load_special')
+    Route::any('/load-special','Api\AttendanceSchedule\AttendanceScheduleController@load_special')
         ->name('api.attendance.load-special');
 });
 
