@@ -77,8 +77,10 @@ class IndexController extends Controller
 
         $tags = [];
         foreach ($data as $datum) {
-            foreach ($datum->tag as $item) {
-                $tags[] = $item;
+            if($datum->tag){
+                foreach ($datum->tag as $item) {
+                    $tags[] = $item;
+                }
             }
         }
 
