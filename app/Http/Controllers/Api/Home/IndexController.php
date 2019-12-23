@@ -284,10 +284,15 @@ class IndexController extends Controller
     public function updateUserInfo(HomeRequest $request)
     {
         $user = $request->user();
+        $data   = $request->get('data');
+        $avatar = $request->file('avatar');
+        if ($avatar) {
+            $data['avatar'] = $avatar->store('public/avatar');
+        }
 
         $dao = new StudentProfileDao;
 
-        $result = $dao->updateStudentProfile($user->id, $request->get('data'));
+        $result = $dao->updateStudentProfile($user->id, $data);
 
         if ($result) {
             return JsonBuilder::Success('修改成功');
