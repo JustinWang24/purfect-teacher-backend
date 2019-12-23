@@ -60,6 +60,10 @@ Route::prefix('h5')->group(function () {
 
     Route::any('/teacher/management/my-students','H5\Teacher\StudentsController@my_students')
         ->name('h5.teacher.management.my-students');
+
+    // 教工助手
+    Route::any('/teacher/management/devices-list','H5\Teacher\DevicesController@devices')
+        ->name('h5.teacher.management.devices-list');
 });
 
 // 分享

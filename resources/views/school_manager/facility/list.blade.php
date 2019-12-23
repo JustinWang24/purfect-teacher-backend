@@ -21,7 +21,7 @@
                                     class="table table-striped table-bordered table-hover table-checkable order-column valign-middle">
                                 <thead>
                                 <tr>
-                                    <th>序号</th>
+                                    <th>布放位置</th>
                                     <th>设备编号</th>
                                     <th>设备名称</th>
                                     <th>校区</th>
@@ -36,7 +36,7 @@
                                 <tbody>
                                 @foreach($facility as $key => $val)
                                     <tr>
-                                        <td>{{ $key + 1 }}</td>
+                                        <td>{{ $val->location === \App\Models\Schools\Facility::LOCATION_INDOOR ? '室内' : '室外' }}</td>
                                         <td>{{ $val['facility_number'] }}</td>
                                         <td>{{ $val['facility_name'] }}</td>
                                         <td>{{$val['campus']['name']}}</td>
