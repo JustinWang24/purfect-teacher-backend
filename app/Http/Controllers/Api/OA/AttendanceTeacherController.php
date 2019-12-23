@@ -50,7 +50,13 @@ class AttendanceTeacherController extends Controller
         $day = date('Y-m-d', strtotime($request->get('day',date('Y-m-d'))));
         $dao = new AttendanceTeacherDao();
         $group = $dao->getGroupInfo($user->id,$schoolId);
+        if (empty($group)) {
+            return JsonBuilder::Error('您还没有加入一个考勤组，请联系管理员');
+        }
         $record = $dao->getRecord($user->id,$schoolId,$day);
+        if (empty($record)) {
+            return JsonBuilder::Error('您还没有打卡记录，请先打卡');
+        }
         $status = $dao->getStatus($record);
         $output = [
             'wifi_name' => $record->wifi,
