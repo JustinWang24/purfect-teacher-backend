@@ -9,6 +9,7 @@ use App\Models\OA\AttendanceTeacherGroup;
 use App\Models\OA\AttendanceTeachersGroupMember;
 use App\Models\OA\AttendanceTeachersMacAddress;
 use App\Models\OA\AttendanceTeachersMessage;
+use App\Utils\Misc\ConfigurationTool;
 use Carbon\Carbon;
 
 class AttendanceTeacherDao
@@ -228,5 +229,16 @@ class AttendanceTeacherDao
             ]);
         }
 
+    }
+    public function getAttendanceGroups($schoolId)
+    {
+        return AttendanceTeacherGroup::where('school_id',$schoolId)->
+            orderBy('created_at','desc')
+            ->paginate(ConfigurationTool::DEFAULT_PAGE_SIZE);
+    }
+
+    public function createMessage($data)
+    {
+        return AttendanceTeachersMessage::create($data);
     }
 }

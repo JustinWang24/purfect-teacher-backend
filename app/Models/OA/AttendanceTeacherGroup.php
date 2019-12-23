@@ -2,6 +2,8 @@
 
 namespace App\Models\OA;
 
+use App\Models\School;
+use App\User;
 use Illuminate\Database\Eloquent\Model;
 
 class AttendanceTeacherGroup extends Model
@@ -27,5 +29,18 @@ class AttendanceTeacherGroup extends Model
     const BTNFINISH_TEXT = '已打完卡';
     const BTNNULL =0;
     const BTNNULL_TEXT = '不在打卡时间';
+
+    protected $fillable = [
+        'name', 'online_time', 'offline_time', 'late_duration', 'serious_late_duration', 'wifi_name', 'school_id'
+    ];
+
+
+    public function school()
+    {
+        return $this->belongsTo(School::class);
+    }
+    public function members(){
+        return $this->hasMany(AttendanceTeachersGroupMember::class, 'group_id', 'id');
+    }
 
 }
