@@ -267,13 +267,16 @@ class AttendanceSchedulesDao
     public function getAllTaskForSchool($schoolId, $cycle='week', $current=0)
     {
         $timeArr = $this->getTimes($current, $cycle);
-        $startTime = $timeArr[0];
-        $endTime   = $timeArr[1];
-        $result = AttendanceTask::where(
-                function ($query) use ($startTime, $endTime) {
-                    $query->where('start_time','>=', $startTime)->orWhere('end_time', '>=', $endTime);
+/*        $result = AttendanceTask::where(
+                function ($query) use ($timeArr) {
+                    $query->orwhereBetween('start_time',$timeArr)
+                          ->orwhereBetween('end_time',$timeArr)
+                          ->orWhere([['start_time', '<=', $timeArr[0]],['end_time', '>=', $timeArr[1]]]);
                 })
-            //->orWhere('end_time', '<=', $endTime)
+            ->where('school_id', $schoolId)
+            ->orderby('id', 'DESC')
+            ->get();*/
+        $result = AttendanceTask::where([['start_time', '<=', $timeArr[0]],['end_time', '>=', $timeArr[1]]])
             ->where('school_id', $schoolId)
             ->orderby('id', 'DESC')
             ->get();
