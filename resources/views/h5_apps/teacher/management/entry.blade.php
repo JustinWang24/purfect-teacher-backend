@@ -195,7 +195,7 @@
                 <h3 class="title">设备管理</h3>
                 <div class="row">
                     <div class="col-4">
-                        <a class="no-dec" href="#">
+                        <a class="no-dec" href="{{ route('h5.teacher.management.devices-list',['location'=>\App\Models\Schools\Facility::LOCATION_INDOOR,'api_token'=>$api_token]) }}">
                         <p class="text-center">
                             <img src="{{ asset('assets/img/teacher/ass17.png') }}" class="icon-image">
                         </p>
@@ -203,7 +203,7 @@
                         </a>
                     </div>
                     <div class="col-4">
-                        <a class="no-dec" href="#">
+                        <a class="no-dec" href="{{ route('h5.teacher.management.devices-list',['location'=>\App\Models\Schools\Facility::LOCATION_OUTDOOR,'api_token'=>$api_token]) }}">
                         <p class="text-center">
                             <img src="{{ asset('assets/img/teacher/ass18.png') }}" class="icon-image">
                         </p>
