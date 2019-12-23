@@ -31,3 +31,4 @@ require('../includes/teacher/school_attendances_app');
 require('../includes/teacher/time_slots');
 require('../includes/teacher/news');
 require('../includes/teacher/notices');
+require('../includes/teacher/managerment/devices_app');

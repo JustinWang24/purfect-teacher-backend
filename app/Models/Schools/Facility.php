@@ -73,7 +73,7 @@ class Facility extends Model
 
 
     public function building() {
-        return $this->belongsTo(Building::class, 'building_id', 'id');
+        return $this->belongsTo(Building::class);
     }
 
     public function school()

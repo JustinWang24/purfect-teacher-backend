@@ -8,7 +8,7 @@
                     <a href="{{ route('h5.teacher.management.view',['api_token'=>$api_token,'type'=>'teacher']) }}" class="no-dec">
                         <p class="text-center text-dark mt-adjust {{ $type=='teacher' ? 'text-blue' : null }}">教师助手</p>
                         @if($type === 'teacher')
-                            <p class="text-center" style="margin-top: -20px;">
+                            <p class="text-center" style="margin-top: -13px;">
                                 <img src="{{ asset('assets/img/angle.png') }}">
                             </p>
                         @endif
@@ -18,7 +18,7 @@
                     <a href="{{ route('h5.teacher.management.view',['api_token'=>$api_token,'type'=>'employee']) }}" class="no-dec">
                         <p class="text-center text-dark mt-adjust {{ $type=='employee' ? 'text-blue' : null }}">教工助手</p>
                         @if($type === 'employee')
-                        <p class="text-center" style="margin-top: -20px;">
+                        <p class="text-center" style="margin-top: -13px;">
                             <img src="{{ asset('assets/img/angle.png') }}">
                         </p>
                         @endif
