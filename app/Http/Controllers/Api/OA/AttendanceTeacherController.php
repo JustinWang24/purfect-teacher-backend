@@ -21,7 +21,8 @@ class AttendanceTeacherController extends Controller
         $row = $dao->getTodayRecord($user->id,$schoolId);
         if ($row) {
             $data = [
-                'check_in_date'=>date('Y-m-d'),
+                'wifi'      => $wifi,
+                'mac_address'=> $mac_address,
                 'offline_mine'=>date('Y-m-d H:i:s'),
             ];
             $result = $dao->updateAttendanceTeacher($user->id,$schoolId,$data);
