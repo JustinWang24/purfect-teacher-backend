@@ -51,3 +51,15 @@ Route::prefix('task')->middleware('auth:api')->group(function () {
         ->name('oa.task.getOaTaskUserListInfo');
 
 });
+Route::prefix('attendance')->middleware('auth:api')->group(function () {
+
+    Route::any('/postTodayInfo','Api\OA\AttendanceTeacherController@postTodayInfo')
+        ->name('oa.attendance.postTodayInfo');
+    Route::any('/getTodayInfo','Api\OA\AttendanceTeacherController@getTodayInfo')
+        ->name('oa.attendance.getTodayInfo');
+    Route::any('/getMissList','Api\OA\AttendanceTeacherController@getMissList')
+        ->name('oa.attendance.getMissList');
+    Route::any('/getJsMonthCount','Api\OA\AttendanceTeacherController@getJsMonthCount')
+        ->name('oa.attendance.getJsMonthCount');
+
+});
