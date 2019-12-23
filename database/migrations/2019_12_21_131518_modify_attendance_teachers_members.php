@@ -14,7 +14,7 @@ class ModifyAttendanceTeachersMembers extends Migration
     public function up()
     {
         Schema::table('attendance_teachers_group_members', function (Blueprint $table) {
-            $table->string('mac_address')->nullable(false)->comment('手机识别码');
+            $table->string('mac_address')->nullable(true)->comment('手机识别码');
         });
     }
 
