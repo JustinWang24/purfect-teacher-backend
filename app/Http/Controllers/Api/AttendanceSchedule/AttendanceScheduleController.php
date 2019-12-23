@@ -39,10 +39,10 @@ class AttendanceScheduleController extends Controller
                 $tmpUsers = $schedule->user()->get();
                 foreach ($tmpUsers as $tmpUser)
                 {
-                    $tmp['userName'] = $tmpUser->name;
-                    $tmp['department'] = $tmpUser->department()->first()->name;
-                    $tmp['major'] = $tmpUser->major()->first()->name;
-                    $tmp['mobile'] = $tmpUser->user()->first()->mobile;
+                    $tmp['userName'] = $schedule->user->name;
+                    $tmp['department'] = $schedule->user->department->name;
+                    $tmp['major'] = $schedule->user->major->name;
+                    $tmp['mobile'] = $schedule->user->mobile;
                 }
                 $week = $schedule->week==0?7:$schedule->week;
                 $data[$week][$schedule->time_slot_id][] = $tmp;
