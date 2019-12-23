@@ -33,3 +33,4 @@ require('../includes/teacher/news');
 require('../includes/teacher/notices');
 require('../includes/teacher/managerment/devices_app'); // 设备管理
 require('../includes/teacher/managerment/rooms_app'); // 房间管理
+require('../includes/teacher/managerment/visitors_app'); // 访客管理

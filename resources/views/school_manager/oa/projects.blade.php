@@ -35,11 +35,11 @@ use App\User;
                                             {{ $project->school->name }}
                                         </td>
                                         <td>
-                                            {{ $project->user->name }}
+                                            {{ $project->user->name??null }}
                                         </td>
                                         <td>
                                             @foreach($project->members as $member)
-<span class="text-primary">{{ $member->user->name }}&nbsp;</span>
+<span class="text-primary">{{ $member->user->name??null }}&nbsp;</span>
                                             @endforeach
                                         </td>
                                         <td>
