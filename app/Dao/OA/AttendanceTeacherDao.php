@@ -7,6 +7,7 @@ namespace App\Dao\OA;
 use App\Models\OA\AttendanceTeacher;
 use App\Models\OA\AttendanceTeacherGroup;
 use App\Models\OA\AttendanceTeachersGroupMember;
+use App\Models\OA\AttendanceTeachersMacAddress;
 use App\Models\OA\AttendanceTeachersMessage;
 use Carbon\Carbon;
 
@@ -64,6 +65,9 @@ class AttendanceTeacherDao
      */
     public function getStatus($record)
     {
+        if (empty($record)) {
+            return ['online_status'=>'','offline_status'=>''];
+        }
         $group = $record->member->group;
         $result = [];
         //上班状态
@@ -166,5 +170,63 @@ class AttendanceTeacherDao
             }
         }
         return $status;
+    }
+    //修改macAddress
+    public function updateMacAddress($userId,$macAddress)
+    {
+        return AttendanceTeachersGroupMember::where('user_id', $userId)->update(['mac_address'=>$macAddress]);
+    }
+    //查询macAddress
+    public function getMacAddress($userId, $schoolId)
+    {
+        return AttendanceTeachersGroupMember::where('user_id', $userId)->where('school_id', $schoolId)->first();
+    }
+
+    public function getBtnStatus($userId, $schoolId)
+    {
+        $group = $this->getGroupInfo($userId, $schoolId);
+        //按钮状态
+        $time = time();
+        if (date('N',$time)>5) {
+            return AttendanceTeacherGroup::BTNNULL;
+        } elseif($time < strtotime($group->online_time)) {
+            return AttendanceTeacherGroup::CHECKED;
+        } elseif($time > strtotime($group->offline_time)) {
+            return AttendanceTeacherGroup::OFFWORK;
+        } elseif($time > strtotime($group->online_time)) {
+            $diff = $time-strtotime($group->online_time);
+            if ($diff > $group->serious_late_duration*60) {
+                return AttendanceTeacherGroup::SERIOUSLATE;
+            } elseif($diff <= $group->late_duration*60) {
+                return AttendanceTeacherGroup::BELATE;
+            }
+        } elseif($time > strtotime($group->online_time)) {
+            if ($time < strtotime($group->offline_time)) {
+                return AttendanceTeacherGroup::BTNLEAVEEARLY;
+            } elseif($time > strtotime($group->offline_time)) {
+                return AttendanceTeacherGroup::OFFWORK;
+            }
+        }
+    }
+    public function createEditMacAddressApply($userId, $schoolId, $macAddress, $content)
+    {
+        //先查询，如果存在就更新，否则创建
+        $row = AttendanceTeachersMacAddress::where('user_id',$userId)->where('status',1)->first();
+        if ($row) {
+            return AttendanceTeachersMacAddress::where('user_id',$userId)->where('status',1)->update([
+                'user_id' => $userId,
+                'mac_address'=>$macAddress,
+                'school_id' => $schoolId,
+                'content' =>$content
+            ]);
+        } else {
+            return AttendanceTeachersMacAddress::create([
+                'user_id' => $userId,
+                'mac_address'=>$macAddress,
+                'school_id' => $schoolId,
+                'content' =>$content
+            ]);
+        }
+
     }
 }
