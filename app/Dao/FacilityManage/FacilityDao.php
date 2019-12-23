@@ -115,8 +115,9 @@ class FacilityDao
      */
     public function getFacilityByLocation($schoolId, $location){
         return Facility::where('location', $location)
-            ->where('status', Facility::STATUS_OPEN)
             ->where('school_id', $schoolId)
+            ->with('building')
+            ->with('room')
             ->get();
     }
 }

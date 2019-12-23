@@ -25,6 +25,7 @@ class DevicesController extends Controller
         $location = $request->get('location', Facility::LOCATION_INDOOR);
         $devices = (new FacilityDao())->getFacilityByLocation($user->getSchoolId(), $location);
         $this->dataForView['devices'] = $devices;
+        $this->dataForView['location'] = $location;
         return view('h5_apps.teacher.management.devices', $this->dataForView);
     }
 }
