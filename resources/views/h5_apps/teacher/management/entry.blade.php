@@ -178,16 +178,20 @@
                 <h3 class="title">室内管理</h3>
                 <div class="row">
                     <div class="col-4">
+                        <a class="no-dec" href="{{ route('h5.teacher.management.rooms-list',['type'=>\App\Models\Schools\Room::TYPE_CLASSROOM,'api_token'=>$api_token]) }}">
                         <p class="text-center">
                             <img src="{{ asset('assets/img/teacher/ass15.png') }}" class="icon-image">
                         </p>
                         <p class="text-center text-dark mt-adjust">教室管理</p>
+                        </a>
                     </div>
                     <div class="col-4">
+                        <a class="no-dec" href="{{ route('h5.teacher.management.rooms-list',['type'=>\App\Models\Schools\Room::TYPE_MEETING_ROOM,'api_token'=>$api_token]) }}">
                         <p class="text-center">
                             <img src="{{ asset('assets/img/teacher/ass16.png') }}" class="icon-image">
                         </p>
                         <p class="text-center text-dark mt-adjust">会议室管理</p>
+                        </a>
                     </div>
                 </div>
                 <div class="clearfix"></div>

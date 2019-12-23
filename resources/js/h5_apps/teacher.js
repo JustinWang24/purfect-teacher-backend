@@ -31,4 +31,5 @@ require('../includes/teacher/school_attendances_app');
 require('../includes/teacher/time_slots');
 require('../includes/teacher/news');
 require('../includes/teacher/notices');
-require('../includes/teacher/managerment/devices_app');
+require('../includes/teacher/managerment/devices_app'); // 设备管理
+require('../includes/teacher/managerment/rooms_app'); // 房间管理

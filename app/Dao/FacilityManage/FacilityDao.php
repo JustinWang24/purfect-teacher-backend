@@ -114,10 +114,11 @@ class FacilityDao
      * @return Collection
      */
     public function getFacilityByLocation($schoolId, $location){
-        return Facility::where('location', $location)
+        return Facility::select(['id','facility_name','facility_number','building_id','room_id','detail_addr','status','updated_at'])
+            ->where('location', $location)
             ->where('school_id', $schoolId)
-            ->with('building')
-            ->with('room')
+            ->with('building:id,name')
+            ->with('room:id,name')
             ->get();
     }
 }
