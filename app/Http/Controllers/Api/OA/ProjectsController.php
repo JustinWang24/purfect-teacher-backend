@@ -153,7 +153,7 @@ class ProjectsController extends Controller
      * @return string
      */
     public function projectInfo(ProjectRequest $request) {
-        $projectId = $request->getProjectId();
+        $projectId = $request->get('projectid');
         if(is_null($projectId)) {
             return JsonBuilder::Error('项目ID不能为空');
         }
