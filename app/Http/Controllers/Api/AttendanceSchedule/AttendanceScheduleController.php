@@ -24,11 +24,18 @@ class AttendanceScheduleController extends Controller
         $schoolId = $user->getSchoolId();
         $dao = new AttendanceSchedulesDao();
 
+        $result = $dao->getSpecialAttendances($schoolId);
+
+        return JsonBuilder::Success($result);
+
+        //以上是对礼县的特殊操作
+
+
+
+
         $current =  $request->input('week', 0);;
         $tasks = $dao->getAllTaskForSchool($schoolId, 'week', $current);
-
         $time       = $dao->getTimes($current);
-        $time1       = $dao->getTimes($current,'month');
         $displayArr = [];
         foreach ($tasks as $key=> $task)
         {
@@ -43,10 +50,8 @@ class AttendanceScheduleController extends Controller
                 $tmpUsers = $schedule->user()->get();
                 foreach ($tmpUsers as $tmpUser)
                 {
-                    $tmp['userName'] = $schedule->user->name;
-                    $tmp['department'] = $schedule->user->department->name;
-                    $tmp['major'] = $schedule->user->major->name;
-                    $tmp['mobile'] = $schedule->user->mobile;
+                    $tmp['userName'] = $tmpUser->name;
+                    $tmp['mobile'] = $tmpUser->user->mobile;
                 }
                 $week = $schedule->week==0?7:$schedule->week;
                 $data[$week][$schedule->time_slot_id][] = $tmp;
@@ -60,8 +65,6 @@ class AttendanceScheduleController extends Controller
                             $arr['end_time']  = date('Y-m-d',strtotime($time[0]) + ($i - 1) * 86400) . ' ' . $slot->end_time;
                             foreach ($data[$i][$slot->id] as $k=>$user) {
                                 $arr['teacher'][$k]['name']= $user['userName'];
-                                $arr['teacher'][$k]['department']=$user['department'];
-                                $arr['teacher'][$k]['major']=$user['major'];
                                 $arr['teacher'][$k]['mobile']=$user['mobile'];
                             }
                             $arr['task'] = $taskObj->title;

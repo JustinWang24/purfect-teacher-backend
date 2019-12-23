@@ -8,6 +8,7 @@ use App\Dao\Misc\SystemNotificationDao;
 use App\Dao\Notice\NoticeDao;
 use App\Dao\Schools\SchoolDao;
 use App\Dao\Students\StudentProfileDao;
+use App\Dao\Teachers\TeacherProfileDao;
 use App\Dao\Users\UserDao;
 use App\Events\User\ForgetPasswordEvent;
 use App\Http\Controllers\Controller;
@@ -16,7 +17,9 @@ use App\Http\Requests\Home\HomeRequest;
 use App\Dao\Schools\NewsDao;
 use App\Http\Requests\MyStandardRequest;
 use App\Http\Requests\SendSms\SendSmeRequest;
+use App\Models\Forum\Forum;
 use App\Models\Misc\SystemNotification;
+use App\Models\Students\StudentProfile;
 use App\Models\Teachers\Teacher;
 use App\Models\Users\UserVerification;
 use App\Utils\JsonBuilder;
@@ -284,10 +287,20 @@ class IndexController extends Controller
     public function updateUserInfo(HomeRequest $request)
     {
         $user = $request->user();
+        $data   = $request->get('data');
+        $avatar = $request->file('avatar');
+        if ($avatar) {
+            $avatarImg = $avatar->store('public/avatar');
+            $data['avatar'] =  StudentProfile::avatarUploadPathToUrl($avatarImg);
+        }
 
         $dao = new StudentProfileDao;
-
-        $result = $dao->updateStudentProfile($user->id, $request->get('data'));
+        $teacherDao  = new TeacherProfileDao;
+        if($user->isStudent()) {
+            $result = $dao->updateStudentProfile($user->id, $data);
+        }elseif ($user->isTeacher()) {
+            $result = $teacherDao->updateTeacherProfile($user->id, $data);
+        }
 
         if ($result) {
             return JsonBuilder::Success('修改成功');
