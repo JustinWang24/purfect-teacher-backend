@@ -35,7 +35,7 @@ class VisitorDao
     }
 
     public function getTodayVisitorsBySchoolIdForApp($schoolId){
-        return Visitor::where('school_id',$schoolId)
+        return Visitor::where('school_id',$schoolId)->with('invitedBy')
             ->orderBy('id','desc')->get();
     }
 }
