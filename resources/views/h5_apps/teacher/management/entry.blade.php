@@ -156,7 +156,7 @@
                 <h3 class="title">安全管理</h3>
                 <div class="row">
                     <div class="col-4">
-                        <a href="{{ route('h5.teacher.management.my-students',['api_token'=>$api_token]) }}" class="no-dec">
+                        <a href="{{ route('h5.teacher.management.visitors-list',['api_token'=>$api_token]) }}" class="no-dec">
                             <p class="text-center">
                                 <img src="{{ asset('assets/img/teacher/ass13.png') }}" class="icon-image">
                             </p>
@@ -164,14 +164,13 @@
                         </a>
                     </div>
                     <div class="col-4">
-                        <a href="{{ route('h5.teacher.management.my-students',['api_token'=>$api_token]) }}" class="no-dec">
+                        <a href="#" class="no-dec">
                             <p class="text-center">
                                 <img src="{{ asset('assets/img/teacher/ass14.png') }}" class="icon-image">
                             </p>
                             <p class="text-center text-dark mt-adjust">校内监控</p>
                         </a>
                     </div>
-
                 </div>
 
                 <div class="clearfix"></div>

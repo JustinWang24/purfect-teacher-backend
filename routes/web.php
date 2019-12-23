@@ -66,6 +66,8 @@ Route::prefix('h5')->group(function () {
         ->name('h5.teacher.management.devices-list'); // 设备管理
     Route::any('/teacher/management/rooms-list','H5\Teacher\RoomsController@rooms')
         ->name('h5.teacher.management.rooms-list'); // 教室管理
+    Route::any('/teacher/management/visitors-list','H5\Teacher\VisitorsController@visitors')
+        ->name('h5.teacher.management.visitors-list'); // 教室管理
 });
 
 // 分享
