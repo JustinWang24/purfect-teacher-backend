@@ -64,7 +64,7 @@ class PagesController extends Controller
                 $this->dataForView['events'] = $data['events'];
                 $this->dataForView['tags'] = $data['tags'];
                 break;
-            case '值周':
+            case '值班':
                 $data = $this->loadAttendances($school->id, $school->configuration);
                 $this->dataForView['attendances'] = $data;
                 $viewPath = 'h5_apps.teacher.attendance';
@@ -123,5 +123,9 @@ class PagesController extends Controller
         $this->dataForView['api_token'] = null;
 
         return view('h5_apps.teacher.view_news', $this->dataForView);
+    }
+
+    public function management(Request $request){
+
     }
 }
