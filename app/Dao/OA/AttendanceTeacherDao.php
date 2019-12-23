@@ -31,6 +31,7 @@ class AttendanceTeacherDao
     public function updateAttendanceTeacher($userId,$schoolId,$data)
     {
         return AttendanceTeacher::where('user_id',$userId)
+            ->where('check_in_date', date('Y-m-d'))
             ->where('school_id', $schoolId)
             ->update($data);
     }
