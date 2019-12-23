@@ -24,6 +24,15 @@ class AttendanceScheduleController extends Controller
         $schoolId = $user->getSchoolId();
         $dao = new AttendanceSchedulesDao();
 
+        $result = $dao->getSpecialAttendances($schoolId);
+
+        return JsonBuilder::Success($result);
+
+        //以上是对礼县的特殊操作
+
+
+
+
         $current =  $request->input('week', 0);;
         $tasks = $dao->getAllTaskForSchool($schoolId, 'week', $current);
         $time       = $dao->getTimes($current);
