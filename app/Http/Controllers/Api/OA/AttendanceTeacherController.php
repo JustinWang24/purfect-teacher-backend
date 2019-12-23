@@ -67,10 +67,10 @@ class AttendanceTeacherController extends Controller
                 'date'      => $day,
                 'online_time'=> $group->online_time,
                 'online_mine'=> '',
-                'online_status'=> '',
+                'online_status'=> AttendanceTeacherGroup::UNCHECKED,
                 'offline_time' => $group->offline_time,
                 'offline_mine' => '',
-                'offline_status' => '',
+                'offline_status' => AttendanceTeacherGroup::UNCHECKED,
                 'button_status'  =>  $status,
                 'mac_address'   => $macAddress->mac_address,
 
@@ -356,4 +356,35 @@ class AttendanceTeacherController extends Controller
         }
 
     }
+
+    public function apply_add(Request $request)
+    {
+        $user = $request->user();
+        $schoolId = $user->getSchoolId();
+        $dao = new AttendanceTeacherDao();
+        $day = date('Y-m-d', strtotime($request->get('day')));
+        $time = date('H:i:s', strtotime($request->get('time')));
+        $type = strip_tags($request->get('type'));
+        $type = $type=='online'?1:2;
+        $content = strip_tags($request->get('content'));
+        $data = [
+            'user_id' => $user->id,
+            'manager_user_id' => 0,
+            'attendance_date' => $day,
+            'attendance_time' => $time,
+            'type' => $type,
+            'school_id'=>$schoolId,
+            'content' => $content,
+            'status'  => 1
+        ];
+        $result = $dao->createMessage($data);
+        if($result) {
+            return JsonBuilder::Success('操作成功');
+        } else {
+            return JsonBuilder::Error('操作失败');
+        }
+
+    }
+
+
 }
