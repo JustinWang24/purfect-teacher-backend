@@ -80,10 +80,16 @@ p, h1, h2, h3, h4, h5, h6, li{
   .col-4{
     float: left;
     width: 33%;
+    p{
+      font-size: 13px;
+    }
   }
   .col-6{
     float: left;
     width:50%;
+    p{
+      font-size: 13px;
+    }
   }
 }
 
@@ -91,7 +97,7 @@ p, h1, h2, h3, h4, h5, h6, li{
   clear:both;
 }
 .icon-image{
-  width: 70px;
+  width: 50px;
 }
 .no-dec{
   text-decoration: none;

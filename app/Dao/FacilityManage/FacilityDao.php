@@ -6,6 +6,7 @@ use App\Dao\Schools\BuildingDao;
 use App\Dao\Schools\CampusDao;
 use App\Dao\Schools\RoomDao;
 use App\Models\Schools\Facility;
+use Illuminate\Support\Collection;
 
 class FacilityDao
 {
@@ -106,4 +107,16 @@ class FacilityDao
             ->first();
     }
 
+    /**
+     * 根据布放位置获取设备列表
+     * @param $schoolId
+     * @param $location
+     * @return Collection
+     */
+    public function getFacilityByLocation($schoolId, $location){
+        return Facility::where('location', $location)
+            ->where('status', Facility::STATUS_OPEN)
+            ->where('school_id', $schoolId)
+            ->get();
+    }
 }
