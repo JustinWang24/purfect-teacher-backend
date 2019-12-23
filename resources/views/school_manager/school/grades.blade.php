@@ -16,15 +16,18 @@ $years = \App\Utils\Time\GradeAndYearUtil::GetAllYears();
                             <a href="{{ route('school_manager.school.set-year-manager',['year'=>$year]) }}">{{ $yearManager->user->name ?? '设置年级组长' }}</a>
                         @else
                             @if(isset($year))
-                            <a href="{{ route('school_manager.school.set-year-manager',['year'=>$year]) }}">设置年级组长</a>
+                                <a href="{{ route('school_manager.school.set-year-manager',['year'=>$year]) }}">设置年级组长</a>
+
+                                <p class="pull-right">
+                                @foreach($years as $y)
+                                    <a class="btn btn-{{ $year == $y ? 'primary' : 'default' }} btn-sm" href="{{ route('school_manager.school.years',['year'=>$y]) }}">{{ $y }}级</a>
+                                @endforeach
+                                </p>
                             @endif
                         @endif
 
-                        <p class="pull-right">
-                            @foreach($years as $y)
-                                <a class="btn btn-{{ $year == $y ? 'primary' : 'default' }} btn-sm" href="{{ route('school_manager.school.years',['year'=>$y]) }}">{{ $y }}级</a>
-                            @endforeach
-                        </p>
+
+
                     </header>
                 </div>
                 <div class="card-body">
