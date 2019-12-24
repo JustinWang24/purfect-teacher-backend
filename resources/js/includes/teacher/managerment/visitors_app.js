@@ -96,6 +96,9 @@ if(document.getElementById('school-teacher-management-visitors-app')){
             },
             handleCommand: function(d){
                 window.location.href = '/h5/teacher/management/visitors-list?api_token=' + this.apiToken + '&date=' + d;
+            },
+            back: function () {
+                window.location.href = '/h5/teacher/management/view?api_token=' + this.apiToken + '&type=employee';
             }
         }
     })

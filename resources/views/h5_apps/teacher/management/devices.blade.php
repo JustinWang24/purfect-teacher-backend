@@ -1,9 +1,12 @@
 @extends('layouts.h5_teacher_app')
 @section('content')
-    <div id="app-init-data-holder" data-school="{{ $teacher->getSchoolId() }}" data-devices="{{ json_encode($devices) }}"></div>
+    <div id="app-init-data-holder" data-school="{{ $teacher->getSchoolId() }}" data-devices="{{ json_encode($devices) }}" data-token="{{ $api_token }}"></div>
     <div id="school-teacher-management-devices-app" class="school-intro-container">
         <div class="main p-15">
-            <h2>{{ intval($location) === \App\Models\Schools\Facility::LOCATION_INDOOR ? '室内设备列表':'室外设备列表' }}</h2>
+            <h2>
+                <el-button type="text" icon="el-icon-arrow-left" class="text-dark" @click="back"></el-button>&nbsp;
+                {{ intval($location) === \App\Models\Schools\Facility::LOCATION_INDOOR ? '室内设备列表':'室外设备列表' }}
+            </h2>
             <el-table
                     :data="devices"
                     empty-text="还没有添加{{ $location === \App\Models\Schools\Facility::LOCATION_INDOOR ? '室内设备':'室外设备' }}"
