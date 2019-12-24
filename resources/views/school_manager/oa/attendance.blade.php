@@ -42,7 +42,7 @@ use App\User;
                                         </td>
                                         <td size="">
                                             @foreach($group->members as $member)
-<span class="text-primary">{{ $member->user->name }}(<a href="{{route('school_manager.oa.attendances-del-member',['id'=>$member->user_id,'group'=>$group->id])}}">删除</a>)&nbsp;</span>
+<span class="text-primary m-2"><a href="{{route('school_manager.oa.attendances-del-member',['id'=>$member->user_id,'group'=>$group->id])}}" class="btn-need-confirm">{{ $member->user->name }} </a></span>
                                             @endforeach
                                         </td>
                                         <td>
