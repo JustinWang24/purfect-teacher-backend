@@ -11,6 +11,7 @@ foreach (range(0,6) as $item) {
     <div id="school-teacher-management-visitors-app" class="school-intro-container">
         <div class="main p-15">
             <h3>
+                <el-button type="text" icon="el-icon-arrow-left" class="text-dark" @click="back"></el-button>
                 {{ $pageTitle }}
                 <el-dropdown trigger="click" @command="handleCommand">
                     <span class="el-dropdown-link text-primary">

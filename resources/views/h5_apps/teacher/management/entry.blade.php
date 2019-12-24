@@ -110,10 +110,12 @@
                 <h3 class="title">班主任助手</h3>
                 <div class="row">
                     <div class="col-4">
+                        <a href="{{ route('h5.teacher.management.grades-list',['api_token'=>$api_token]) }}" class="no-dec">
                         <p class="text-center">
                             <img src="{{ asset('assets/img/teacher/ass10.png') }}" class="icon-image">
                         </p>
                         <p class="text-center text-dark mt-adjust">班级管理</p>
+                        </a>
                     </div>
                     <div class="col-4">
                         <p class="text-center">
@@ -133,10 +135,12 @@
                 <h3 class="title">管理分析助手</h3>
                 <div class="row">
                     <div class="col-4">
-                        <p class="text-center">
-                            <img src="{{ asset('assets/img/teacher/ass20.png') }}" class="icon-image">
-                        </p>
-                        <p class="text-center text-dark mt-adjust">数据分析</p>
+                        <a href="#" class="no-dec">
+                            <p class="text-center">
+                                <img src="{{ asset('assets/img/teacher/ass20.png') }}" class="icon-image">
+                            </p>
+                            <p class="text-center text-dark mt-adjust">数据分析</p>
+                        </a>
                     </div>
                 </div>
                 <div class="clearfix"></div>

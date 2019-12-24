@@ -1,9 +1,11 @@
 @extends('layouts.h5_teacher_app')
 @section('content')
-    <div id="app-init-data-holder" data-school="{{ $teacher->getSchoolId() }}" data-rooms="{{ json_encode($rooms) }}"></div>
+    <div id="app-init-data-holder" data-school="{{ $teacher->getSchoolId() }}" data-rooms="{{ json_encode($rooms) }}" data-token="{{ $api_token }}"></div>
     <div id="school-teacher-management-rooms-app" class="school-intro-container">
         <div class="main p-15">
-            <h2>{{ intval($type) === \App\Models\Schools\Room::TYPE_CLASSROOM ? \App\Models\Schools\Room::TYPE_CLASSROOM_TXT.'列表' : \App\Models\Schools\Room::TYPE_MEETING_ROOM_TXT.'列表' }}</h2>
+            <h2>
+                <el-button type="text" icon="el-icon-arrow-left" class="text-dark" @click="back"></el-button>&nbsp;
+                {{ intval($type) === \App\Models\Schools\Room::TYPE_CLASSROOM ? \App\Models\Schools\Room::TYPE_CLASSROOM_TXT.'列表' : \App\Models\Schools\Room::TYPE_MEETING_ROOM_TXT.'列表' }}</h2>
             <el-table
                     :data="rooms"
                     empty-text="还没有添加{{ $type === \App\Models\Schools\Room::TYPE_CLASSROOM ? '教室':'会议室' }}"

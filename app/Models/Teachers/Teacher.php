@@ -101,8 +101,4 @@ class Teacher extends User
             'myTeachingAndResearchGroup' => $myTeachingAndResearchGroup
         ];
     }
-
-
-
-
 }

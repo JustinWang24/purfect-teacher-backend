@@ -34,3 +34,5 @@ require('../includes/teacher/notices');
 require('../includes/teacher/managerment/devices_app'); // 设备管理
 require('../includes/teacher/managerment/rooms_app'); // 房间管理
 require('../includes/teacher/managerment/visitors_app'); // 访客管理
+require('../includes/teacher/managerment/grades_app'); // 班级管理
+require('../includes/teacher/managerment/students_list'); // 班级管理
