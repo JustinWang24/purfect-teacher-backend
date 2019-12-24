@@ -4,16 +4,22 @@
 namespace App\Dao\OA;
 
 
+use App\Dao\BuildFillableData;
 use App\Models\OA\AttendanceTeacher;
 use App\Models\OA\AttendanceTeacherGroup;
 use App\Models\OA\AttendanceTeachersGroupMember;
 use App\Models\OA\AttendanceTeachersMacAddress;
 use App\Models\OA\AttendanceTeachersMessage;
+use App\Models\Users\GradeUser;
+use App\Utils\JsonBuilder;
 use App\Utils\Misc\ConfigurationTool;
+use App\Utils\ReturnData\MessageBag;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 
 class AttendanceTeacherDao
 {
+    use BuildFillableData;
     public function __construct()
     {
     }
@@ -32,10 +38,17 @@ class AttendanceTeacherDao
     }
     public function updateAttendanceTeacher($userId,$schoolId,$data)
     {
-        return AttendanceTeacher::where('user_id',$userId)
-            ->where('check_in_date', date('Y-m-d'))
-            ->where('school_id', $schoolId)
-            ->update($data);
+        if (!isset($data['check_in_date'])) {
+            return AttendanceTeacher::where('user_id',$userId)
+                ->where('check_in_date', date('Y-m-d'))
+                ->where('school_id', $schoolId)
+                ->update($data);
+        } else {
+            return AttendanceTeacher::where('user_id',$userId)
+                ->where('school_id', $schoolId)
+                ->update($data);
+        }
+
     }
     public function getGroupInfo($userId,$schoolId)
     {
@@ -48,6 +61,10 @@ class AttendanceTeacherDao
             return false;
         }
 
+    }
+    public function getGroupInfoById($groupId)
+    {
+        return AttendanceTeacherGroup::find($groupId);
     }
 
 
@@ -240,5 +257,174 @@ class AttendanceTeacherDao
     public function createMessage($data)
     {
         return AttendanceTeachersMessage::create($data);
+    }
+
+    public function updateGroup($data)
+    {
+        $id = $data['id'];
+        unset($data['id']);
+        $messageBag = new MessageBag(JsonBuilder::CODE_ERROR);
+        DB::beginTransaction();
+        try {
+            $fillableData = $this->getFillableData(new AttendanceTeacherGroup(), $data);
+            $group = AttendanceTeacherGroup::where('id', $id)->update($fillableData);
+            if ($group) {
+                DB::commit();
+                $messageBag->setCode(JsonBuilder::CODE_SUCCESS);
+                $messageBag->setData(AttendanceTeacherGroup::find($id));
+            } else {
+                DB::rollBack();
+                $messageBag->setMessage('更新考勤组失败, 请联系管理员');
+            }
+        } catch (\Exception $exception) {
+            DB::rollBack();
+            $messageBag->setMessage($exception->getMessage());
+        }
+        return $messageBag;
+    }
+    public function getAttendanceMembers($groupId)
+    {
+        return AttendanceTeachersGroupMember::where('group_id',$groupId)
+            ->orderBy('created_at','desc')
+            ->paginate(ConfigurationTool::DEFAULT_PAGE_SIZE);
+    }
+    public function getNotAttendanceMembers($groupId)
+    {
+        $hasMembers = AttendanceTeachersGroupMember::where('group_id',$groupId)->pluck('user_id')->all();
+        return GradeUser::whereNotIn('user_id', $hasMembers)->whereIn('user_type',[9,10])
+            ->orderBy('created_at','desc')
+            ->paginate(ConfigurationTool::DEFAULT_PAGE_SIZE);
+    }
+    public function searchNotAttendanceMembers($name)
+    {
+        return GradeUser::select(['id','user_id','name','user_type','department_id','major_id','grade_id'])
+            ->whereIn('user_type',[9,10])
+            ->where('name','like', $name.'%')
+            ->paginate(ConfigurationTool::DEFAULT_PAGE_SIZE);
+    }
+
+    public function addMember($userId,$groupId,$schoolId, $type=1){
+        $status = $type==2?2:1;
+        $data = [
+            'user_id'=>$userId,
+            'group_id' => $groupId,
+            'status'   => $status,
+            'school_id' => $schoolId,
+        ];
+        $messageBag = new MessageBag(JsonBuilder::CODE_ERROR);
+        DB::beginTransaction();
+        try {
+            $fillableData = $this->getFillableData(new AttendanceTeachersGroupMember(), $data);
+            $member = AttendanceTeachersGroupMember::create($fillableData);
+            if ($member) {
+                DB::commit();
+                $messageBag->setCode(JsonBuilder::CODE_SUCCESS);
+            } else {
+                DB::rollBack();
+                $messageBag->setMessage('添加成员失败, 请联系管理员');
+            }
+        } catch (\Exception $exception) {
+            DB::rollBack();
+            $messageBag->setMessage($exception->getMessage());
+        }
+        return $messageBag;
+    }
+    public function updateMember($userId,$groupId,$schoolId, $type=1){
+        $status = $type==2?2:1;
+        $data = [
+            'user_id'=>$userId,
+            'group_id' => $groupId,
+            'status'   => $status,
+            'school_id' => $schoolId,
+        ];
+        $messageBag = new MessageBag(JsonBuilder::CODE_ERROR);
+        DB::beginTransaction();
+        try {
+            $fillableData = $this->getFillableData(new AttendanceTeachersGroupMember(), $data);
+            $member = AttendanceTeachersGroupMember::where('user_id',$userId)
+                ->where('school_id',$schoolId)
+                ->update($fillableData);
+            if ($member) {
+                DB::commit();
+                $messageBag->setCode(JsonBuilder::CODE_SUCCESS);
+            } else {
+                DB::rollBack();
+                $messageBag->setMessage('更新成员失败, 请联系管理员');
+            }
+        } catch (\Exception $exception) {
+            DB::rollBack();
+            $messageBag->setMessage($exception->getMessage());
+        }
+        return $messageBag;
+    }
+    public function getMember($userId)
+    {
+        return AttendanceTeachersGroupMember::where('user_id',$userId)->first();
+    }
+    public function deleteMember($userId,$groupId,$schoolId) {
+        return AttendanceTeachersGroupMember::where('user_id',$userId)
+            ->where('group_id',$groupId)
+            ->where('school_id',$schoolId)
+            ->delete();
+    }
+    public function getAttendanceMessages($userId)
+    {
+        return AttendanceTeachersMessage::where('user_id',$userId)
+            ->paginate(ConfigurationTool::DEFAULT_PAGE_SIZE);
+    }
+    public function getAttendanceMessagesByGroup($schoolId)
+    {
+        return AttendanceTeachersMessage::where('school_id',$schoolId)
+            ->orderBy('created_at','desc')
+            ->paginate(ConfigurationTool::DEFAULT_PAGE_SIZE);
+    }
+    public function  getMessage($id)
+    {
+        return AttendanceTeachersMessage::find($id);
+    }
+
+    public function messageAccept($message,$user)
+    {
+        $messageBag = new MessageBag(JsonBuilder::CODE_ERROR);
+        DB::beginTransaction();
+        try {
+            $targetUserId = $message->user_id;
+            $group = $this->getGroupInfo($targetUserId,$message->school_id);
+            $record = $this->getRecord($message->user_id,$message->school_id,$message->attendance_date);
+            $data = [];
+            if ($message->type == 1) {
+                $data['online_mine']  = $message->attendance_date. ' ' .$message->attendance_time;
+            }elseif($message->type == 2){
+                $data['offline_mine'] = $message->attendance_date. ' ' .$message->attendance_time;
+            } elseif($message->type == 3){
+                $data['online_mine']  = $message->attendance_date. ' ' .$group->online_time;
+                $data['offline_mine'] = $message->attendance_date. ' ' .$group->offline_time;
+            }
+            $data['wifi']           = $group->wifi_name;
+            $data['mac_address']    = $message->member->mac_address;
+            $data['check_in_date']  = $message->attendance_date;
+            $data['status']         = 2;
+            $data['school_id']      = $message->school_id;
+            $data['user_id']        = $targetUserId;
+            if ($record) {
+                $result = $this->updateAttendanceTeacher($targetUserId,$message->school_id,$data);
+            } else {
+                $result = $this->createAttendanceTeacher($data);
+            }
+            if ($result) {
+                $message->status = 2;
+                $message->manager_user_id = $user->id;
+                $message->save();
+                DB::commit();
+                $messageBag->setCode(JsonBuilder::CODE_SUCCESS);
+            } else {
+                DB::rollBack();
+                $messageBag->setMessage('更新成员失败, 请联系管理员');
+            }
+        } catch (\Exception $exception) {
+            DB::rollBack();
+            $messageBag->setMessage($exception->getMessage());
+        }
+        return $messageBag;
     }
 }
