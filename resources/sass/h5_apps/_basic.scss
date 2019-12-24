@@ -8,6 +8,8 @@ $colorWarning: #ffc107;
 $colorPrimary: #007bff;
 $colorDanger: #dc3545;
 $colorLight: #e8e8e8;
+$colorLightBlue: rgb(86, 153, 249); // 教师端的蓝色色标
+$colorDark: #6F7275; // 教师端的蓝色色标
 
 p{
   line-height: 1.5;
@@ -25,6 +27,15 @@ p{
 .mt-10{
   margin-top: 10px;
 }
+.pt-20{
+  padding-top: 20px;
+}
+.mt-20{
+  margin-top: 20px;
+}
+.mt-adjust{
+  margin-top: -14px;
+}
 
 .full-width{
   width: 100%;
@@ -38,7 +49,12 @@ p{
 .text-center{
   text-align: center;
 }
-
+.text-dark{
+  color: $colorDark;
+}
+.text-blue{
+  color: $colorLightBlue;
+}
 
 p, h1, h2, h3, h4, h5, h6, li{
   font-family: "Helvetica Neue",Helvetica,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","微软雅黑",Arial,sans-serif;
@@ -57,4 +73,40 @@ p, h1, h2, h3, h4, h5, h6, li{
 }
 .text-grey{
   color: $colorLight !important;
+}
+
+.row{
+  width: 100%;
+  .col-4{
+    float: left;
+    width: 33%;
+    p{
+      font-size: 13px;
+    }
+  }
+  .col-6{
+    float: left;
+    width:50%;
+    p{
+      font-size: 13px;
+    }
+  }
+}
+
+.clearfix{
+  clear:both;
+}
+.icon-image{
+  width: 50px;
+}
+.no-dec{
+  text-decoration: none;
+}
+.title{
+  color: $colorDark;
+  padding-left: 15px;
+}
+hr{
+  border: none;
+  border-bottom: solid 1px #eeeeee;
 }

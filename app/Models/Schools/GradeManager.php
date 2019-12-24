@@ -29,4 +29,9 @@ class GradeManager extends Model
     public function adviser(){
         return $this->hasOne(User::class, 'id','adviser_id');
     }
+
+    public function grade()
+    {
+        return $this->hasOne(Grade::class, 'id', 'grade_id');
+    }
 }

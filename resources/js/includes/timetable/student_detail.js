@@ -32,6 +32,10 @@ if (document.getElementById('timetable-student-detail')) {
                     comment: '',   // 授课结果是否有用
                 },
                 rateTexts: ['极差', '失望', '一般', '满意', '惊喜'],
+                // 课堂笔记
+                notes:[],
+                showNotesFlag: false,
+                myNote: '',
             }
         },
         computed:{
@@ -56,6 +60,7 @@ if (document.getElementById('timetable-student-detail')) {
             this.materials = JSON.parse(dom.dataset.materials);
             this.teacherProfile = JSON.parse(dom.dataset.profile);
             this.teacher = JSON.parse(dom.dataset.teacher);
+            this.notes = JSON.parse(dom.dataset.notes);
             const rateSummary = JSON.parse(dom.dataset.ratesummary);
             if(!Util.isEmpty(rateSummary)){
                 this.rateSummary = rateSummary;
@@ -67,7 +72,9 @@ if (document.getElementById('timetable-student-detail')) {
             }
         },
         methods:{
-
+            /**
+             * 返回课程表
+             */
             back: function(){
                 const params = {
                     api_token: this.apiToken,
@@ -101,6 +108,28 @@ if (document.getElementById('timetable-student-detail')) {
                         this.$message({type:'success',message:'评价完成!'});
                         this.showTeacherEvaluateTeacherFlag = false;
                         this.showMore();
+                    }else{
+                        this.$message.error('系统繁忙, 请稍候再试');
+                    }
+                });
+            },
+            writeNote: function(){
+                this.showMoreFlag = false;
+                this.showNotesFlag = true;
+            },
+            submitNote: function(){
+                axios.post(
+                    this.baseUrl + '/api/evaluate/student/save-note',
+                    {
+                        api_token: this.apiToken,
+                        my_note: this.myNote,
+                        timetable_item: this.item.id,
+                    }
+                ).then(res => {
+                    if(Util.isAjaxResOk(res)){
+                        this.myNote = '';
+                        this.$message({type:'success',message:'保存成功!'});
+                        this.notes.unshift(res.data.data.note);
                     }else{
                         this.$message.error('系统繁忙, 请稍候再试');
                     }

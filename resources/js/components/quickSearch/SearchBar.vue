@@ -56,11 +56,6 @@
                 query: this.initQuery,
             }
         },
-        // watch:{
-        //     'initQuery': function(newValue){
-        //         this.query = newValue;
-        //     }
-        // },
         created() {
         },
         methods:{

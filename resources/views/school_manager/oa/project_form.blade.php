@@ -29,14 +29,14 @@ use App\Utils\UI\Button;
                                     发起人:
                                 </p>
                                 <p>
-                                    <button type="button" class="btn btn-round btn-primary">{{ $project->user->name }}</button>
+                                    <button type="button" class="btn btn-round btn-primary">{{ $project->user->name??null }}</button>
                                 </p>
                             </div>
                             <div class="col-10">
                                 <p>成员: </p>
                                 <p>
                                 @foreach($project->members as $member)
-                                    <button type="button" class="btn btn-round btn-default">{{ $member->user->name }}</button>
+                                    <button type="button" class="btn btn-round btn-default">{{ $member->user->name??null }}</button>
                                 @endforeach
                                 </p>
                             </div>

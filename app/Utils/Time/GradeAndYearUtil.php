@@ -37,6 +37,16 @@ class GradeAndYearUtil
     }
 
     /**
+     * 获取所有的年级年份
+     * @param int $num
+     * @return array
+     */
+    public static function GetAllYears($num = 3){
+        $year = intval(date('Y'));
+        return range($year - $num, $year);
+    }
+
+    /**
      * 获取当前的额 timeslot 对象
      *
      * @param null $time

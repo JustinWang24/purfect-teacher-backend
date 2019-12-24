@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Calendar\CalendarRequest;
 use App\Utils\FlashMessageBuilder;
 use App\Utils\JsonBuilder;
+use Psy\Util\Json;
 
 class IndexController extends Controller
 {
@@ -49,6 +50,17 @@ class IndexController extends Controller
     }
 
     /**
+     * 删除校历事件
+     * @param CalendarRequest $request
+     * @return string
+     */
+    public function delete(CalendarRequest $request){
+        $eventId = $request->get('event_id');
+        $dao = new CalendarDao();
+        return $dao->deleteEvent($eventId) ? JsonBuilder::Success() : JsonBuilder::Error();
+    }
+
+    /**
      * 校历展示
      * @param CalendarRequest $request
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
@@ -65,13 +77,16 @@ class IndexController extends Controller
 
         $tags = [];
         foreach ($data as $datum) {
-            foreach ($datum->tag as $item) {
-                $tags[] = $item;
+            if($datum->tag){
+                foreach ($datum->tag as $item) {
+                    $tags[] = $item;
+                }
             }
         }
 
         $this->dataForView['events'] = $data;
         $this->dataForView['tags'] = $tags;
+        $this->dataForView['currentDate'] = $request->get('cd', now()->format('Y-m-d'));
 
         $this->dataForView['school'] = $school;
         $this->dataForView['config'] = $school->configuration;

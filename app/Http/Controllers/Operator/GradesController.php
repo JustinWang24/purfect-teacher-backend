@@ -63,19 +63,6 @@ class GradesController extends Controller
         return redirect()->route('school_manager.major.grades',['uuid'=>$uuid, 'by'=>'major']);
     }
 
-    /**
-     * 从班级的角度, 加载给定班级的学生列表
-     * @param GradeRequest $request
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
-     */
-    public function users(GradeRequest $request){
-        $logic = Factory::GetLogic($request);
-        $this->dataForView['parent'] = $logic->getParentModel();
-        $this->dataForView['appendedParams'] = $logic->getAppendedParams();
-        $this->dataForView['returnPath'] = $logic->getReturnPath();
-        return view($logic->getViewPath(),array_merge($this->dataForView, $logic->getUsers()));
-    }
-
     public function set_adviser(GradeRequest $request){
         if($request->isMethod('POST')){
             $adviserData = $request->getAdviserForm();

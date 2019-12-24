@@ -22,6 +22,10 @@ class GradeUserDao
         $this->currentUser = $user;
     }
 
+    public function create($data){
+        return GradeUser::create($data);
+    }
+
     /**
      * 模糊查找用户的信息
      * @param $name
@@ -145,7 +149,7 @@ class GradeUserDao
      * @param string $direction
      * @return Collection
      */
-    private function _paginateUsersBy($type, $fieldName, $fieldValue, $orderBy = 'updated_at', $direction = 'desc'){
+    private function _paginateUsersBy($type, $fieldName, $fieldValue, $orderBy = 'name', $direction = 'asc'){
         if(is_array($type)){
             return GradeUser::where($fieldName,$fieldValue)
                 ->whereIn('user_type',$type)

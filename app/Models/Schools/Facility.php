@@ -21,6 +21,9 @@ class Facility extends Model
 {
     use SoftDeletes;
 
+    const LOCATION_INDOOR = 1;
+    const LOCATION_OUTDOOR = 2;
+
     /**
      * The table associated with the model.
      *
@@ -38,7 +41,7 @@ class Facility extends Model
     /**
      * @var array
      */
-    protected $fillable = ['facility_number', 'facility_name', 'school_id', 'campus_id', 'building_id', 'room_id', 'detail_addr', 'status', 'type'];
+    protected $fillable = ['facility_number','location', 'facility_name', 'school_id', 'campus_id', 'building_id', 'room_id', 'detail_addr', 'status', 'type'];
 
 
     const TYPE_MONITORING  = 1;
@@ -70,7 +73,7 @@ class Facility extends Model
 
 
     public function building() {
-        return $this->belongsTo(Building::class, 'building_id', 'id');
+        return $this->belongsTo(Building::class);
     }
 
     public function school()

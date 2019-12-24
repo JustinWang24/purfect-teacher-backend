@@ -315,8 +315,8 @@ class CourseDao
      */
     public function getCoursesBySchoolId($schoolId, $pageNumber=0, $pageSize=20){
         $courses = Course::where('school_id',$schoolId)
-            ->skip($pageNumber * $pageSize)
-            ->take($pageSize)
+//            ->skip($pageNumber * $pageSize)
+//            ->take($pageSize)
             ->get();
         $data = [];
         foreach ($courses as $course) {

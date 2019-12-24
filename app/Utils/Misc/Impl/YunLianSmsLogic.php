@@ -48,12 +48,11 @@ class YunLianSmsLogic implements ISmsSender
      */
     public function send($mobile, $templateId, $data): IMessageBag
     {
-        if (env('YUN_LIAN_APP_ID') != 'TEST') {
+        if (env('YUN_LIAN') != 'TEST') {
 
              $rest = new Rest($this->serverIP, $this->serverPort, $this->softVersion);
              $rest->setAccount($this->accountSid, $this->accountToken);
              $rest->setAppId($this->appId);
-
              // 发送模板短信
              $result = $rest->sendTemplateSMS($mobile, $data, $templateId);
              if($result == NULL ) {
@@ -67,10 +66,8 @@ class YunLianSmsLogic implements ISmsSender
                  // 获取返回信息 成功处理逻辑
                  return  new MessageBag(JsonBuilder::CODE_SUCCESS, '发送成功');
              }
-
         } else {
-
-            Log::alert('短信接口请求成功了:'. 'mobile:'. json_encode($mobile). ',templateId:'. $templateId. ',data:'. json_encode($data));
+            Log::channel('smslog')->alert('短信接口请求成功了:'. 'mobile:'. $mobile . ',templateId:'. $templateId. ',data:'. var_export($data,true));
             return new  MessageBag(JsonBuilder::CODE_SUCCESS, '短信接口请求成功');
         }
 

@@ -6,6 +6,7 @@ use App\Models\Acl\Role;
 use App\Models\Contract\HasDeviceId;
 use App\Models\Contract\HasMobilePhone;
 use App\Models\Courses\CourseTeacher;
+use App\Models\Forum\Community;
 use App\Models\Misc\Enquiry;
 use App\Models\NetworkDisk\Category;
 use App\Models\Schools\RecruitmentPlan;
@@ -147,7 +148,7 @@ class User extends Authenticatable implements HasMobilePhone, HasDeviceId, IUser
         }
         elseif (in_array($this->type, Role::GetStudentUserTypes())){
             // 已认证学生
-            return $this->hasOne(StudentProfile::class);
+            return $this->hasOne(StudentProfile::class,'user_id');
         }
         else{
             return null;
@@ -362,5 +363,10 @@ class User extends Authenticatable implements HasMobilePhone, HasDeviceId, IUser
         return [
            IFlow::TYPE_STUDENT_ONLY, IFlow::TYPE_FINANCE, IFlow::TYPE_STUDENT_COMMON
         ];
+    }
+
+    public function community()
+    {
+        return $this->hasMany(Community::class, 'user_id', 'id');
     }
 }

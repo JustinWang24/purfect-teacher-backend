@@ -16,12 +16,21 @@ Route::prefix('teacher')->group(function () {
 
     Route::get('preset/step', 'OfficialDocumentController@presetStep')->name('teacher.get.preset.step');                    // 所有系统预置步骤
     Route::post('production/process', 'OfficialDocumentController@productionProcess')->name('teacher.production.process');  // 生成公文流程
+    Route::get('list/documents', 'OfficialDocumentController@listAll')->name('teacher.list.official.documents');        // 学校公文列表
     Route::get('official/document', 'OfficialDocumentController@getProcess')->name('teacher.get.official.document');        // 学校公文列表
     Route::get('one/process', 'OfficialDocumentController@getProcessDetails')->name('teacher.get.one.process');             // 获取公文流程详情
     Route::post('add/step_user', 'OfficialDocumentController@addStepUser')->name('teacher.add.step.user');                  // 添加流程中的步骤负责人
     Route::post('update/step_user', 'OfficialDocumentController@updateStepUser')->name('teacher.update.step.user');         // 修改流程中的步骤负责人
 
     Route::any('grade/set-monitor', 'GradesController@set_monitor')->name('teacher.grade.set-monitor');     // 设置班长
+
+    Route::get('grade/users', 'GradesController@users')->name('teacher.grade.users');     // 班级的学生列表
+
+    // 更新密码
+    Route::any('profile/update-password', 'GradesController@update_password')
+        ->name('teacher.profile.update-password');
+    Route::any('profile/edit', 'GradesController@edit')
+        ->name('teacher.profile.edit');
 
     //考试管理
     Route::get('exam/index', 'ExamController@index')->name('teacher.exam.index');     // 列表
@@ -134,4 +143,8 @@ Route::prefix('teacher')->group(function () {
     // 社团成员
     Route::get('/communities-members','Community\CommunitiesController@members')
         ->name('teacher.communities.members');
+
+    // 老师编辑学生的档案照片
+    Route::any('/student/edit-avatar','StudentsController@edit_avatar')
+        ->name('teacher.student.edit-avatar');
 });

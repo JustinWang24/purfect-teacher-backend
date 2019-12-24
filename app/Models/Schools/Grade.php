@@ -4,6 +4,7 @@ namespace App\Models\Schools;
 
 use App\Models\Acl\Role;
 use App\Models\School;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Users\GradeUser;
 
@@ -37,5 +38,14 @@ class Grade extends Model
      */
     public function gradeManager(){
         return $this->hasOne(GradeManager::class,'grade_id','id');
+    }
+
+    /**
+     * 班级年级
+     * @return int|mixed
+     */
+    public function gradeYear() {
+        $thisYear = Carbon::now()->year;
+        return $thisYear - $this->year + 1 ;
     }
 }

@@ -45,6 +45,29 @@ Route::prefix('h5')->group(function () {
         ->name('h5.timetable.student.view');
     Route::any('/timetable/student/detail','H5\Timetable\StudentController@detail')
         ->name('h5.timetable.student.detail');
+
+    // 教师端, 查看新闻等信息
+    Route::any('/teacher/pages/view','H5\Teacher\PagesController@view')
+        ->name('h5.teacher.pages.view');
+
+    // APP 首页的动态新闻等的访问 URL
+    Route::any('/teacher/news/view','H5\Teacher\PagesController@view_news')
+        ->name('h5.teacher.news.view');
+
+    // 教师端, 管理界面
+    Route::any('/teacher/management/view','H5\Teacher\PagesController@management')
+        ->name('h5.teacher.management.view');
+
+    Route::any('/teacher/management/my-students','H5\Teacher\StudentsController@my_students')
+        ->name('h5.teacher.management.my-students');
+
+    // 教工助手
+    Route::any('/teacher/management/devices-list','H5\Teacher\DevicesController@devices')
+        ->name('h5.teacher.management.devices-list'); // 设备管理
+    Route::any('/teacher/management/rooms-list','H5\Teacher\RoomsController@rooms')
+        ->name('h5.teacher.management.rooms-list'); // 教室管理
+    Route::any('/teacher/management/visitors-list','H5\Teacher\VisitorsController@visitors')
+        ->name('h5.teacher.management.visitors-list'); // 教室管理
 });
 
 // 分享

@@ -34,9 +34,12 @@
             <li class="list-group-item">
                 <b>学位</b> <a class="pull-right">{{ $profile->degree }}</a>
             </li>
-            <li class="list-group-item">
-                <b>所在部门</b> <a class="pull-right">{{ $profile->group_name }}</a>
-            </li>
         </ul>
+
+        @if(\Illuminate\Support\Facades\Auth::user()->isSchoolAdminOrAbove())
+        <p class="mt-4">
+            <a href="{{ route('teacher.profile.edit',['uuid'=>$profile->uuid]) }}" class="btn btn-primary">修改</a>
+        </p>
+        @endif
     </div>
 </div>

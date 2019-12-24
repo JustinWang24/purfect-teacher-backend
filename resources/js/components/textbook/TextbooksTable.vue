@@ -16,15 +16,15 @@
                             <p class="author">作者: {{ book.author }}</p>
                             <p class="press">出版: {{ book.press }}</p>
                             <p class="price">
-                                价格: ¥{{ book.price }}元
-                                <span class="internal" v-if="asAdmin">{{ book.purchase_price }}</span>
+                                价格: ¥{{ book.price }}
+                                <span class="internal" v-if="asAdmin">(进价: ¥{{ book.purchase_price }})</span>
                             </p>
                             <p class="press">
                                 课程: &nbsp;
                                 <el-tag size="mini" v-for="(c, idx) in book.courses" :key="idx" style="margin-right: 3px;">
                                     {{ getCourseNameText(c.course_id) }}
                                 </el-tag>
-                                <el-tag size="mini" v-if="book.courses.length === 0" type="info">未关联任何课程</el-tag>
+                                <el-tag size="mini" v-if="!book.courses || book.courses.length === 0" type="info">未关联任何课程</el-tag>
                             </p>
                         </div>
                     </div>

@@ -119,6 +119,18 @@ class Handler extends Model implements INodeHandler
      * 获取所有可以参与审核的角色
      * @return array
      */
+    public static function OrganizationLevels(){
+        return [
+            Title::MEMBER => Title::MEMBER_TXT,
+            Title::ORGANIZATION_DEPUTY_ID => Title::ORGANIZATION_DEPUTY,
+            Title::ORGANIZATION_LEADER_ID => Title::ORGANIZATION_LEADER,
+        ];
+    }
+
+    /**
+     * 获取所有可以参与审核的角色
+     * @return array
+     */
     public static function HigherLevelsArray(){
         return [
             Title::CLASS_ADVISER_ID => Title::CLASS_ADVISER,

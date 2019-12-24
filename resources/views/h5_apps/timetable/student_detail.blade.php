@@ -6,6 +6,7 @@
          data-api="{{ $api_token }}"
          data-type="{{ $type }}"
          data-day="{{ $day }}"
+         data-base="{{ url('/') }}"
          data-item="{{ json_encode($timeSlotItem) }}"
          data-course="{{ json_encode($timeSlotItem->course) }}"
          data-materials="{{ json_encode($materials) }}"
@@ -13,6 +14,7 @@
          data-profile="{{ json_encode($timeSlotItem->teacher->profile) }}"
          data-rate="{{ json_encode($rate) }}"
          data-ratesummary="{{ json_encode($rateSummary) }}"
+         data-notes="{{ json_encode($notes) }}"
          data-apprequest="1">
     </div>
     <div id="{{ $appName }}" class="school-intro-container">
@@ -63,6 +65,15 @@
                     <i class="el-icon-document"></i>&nbsp; 复习材料: <span class="text-grey">无</span>
                 </p>
             </el-card>
+            <h5>我的随堂笔记: </h5>
+            <div v-for="(n, idx) in notes" :key="idx" class="mb-10">
+                <el-card shadow="never">
+                    <p style="padding: 0; line-height: 16px;font-size: 12px;"><span class="text-grey"><i class="el-icon-time"></i> @{{ n.created_at }}</span></p>
+                    <p style="padding: 0; line-height: 16px;font-size: 12px;">
+                        @{{ n.note }}
+                    </p>
+                </el-card>
+            </div>
         </div>
         <el-drawer
                 size="30%"
@@ -93,13 +104,14 @@
                 </li>
                 <li class="tool-item">
                     <p>
-                        <a href="#">
+                        <a href="#" @click="writeNote">
                             <i class="el-icon-edit"></i>&nbsp; 随堂笔记
                         </a>
                     </p>
                 </li>
             </ul>
         </el-drawer>
+
         <el-drawer
                 size="80%"
                 :with-header="false"
@@ -134,6 +146,33 @@
                 <p v-if="myRate.id">我的留言: @{{ myRate.comment }}</p>
                 <br>
                 <el-button class="mt-10" v-if="!myRate.id" type="primary" icon="el-icon-check" @click="submitRate">提交我的评价</el-button>
+            </div>
+        </el-drawer>
+
+        <el-drawer
+                size="80%"
+                :visible.sync="showNotesFlag"
+                direction="btt">
+            <el-row>
+                <el-col :span="22">
+                    <el-input
+                            style="padding: 10px;"
+                            type="textarea"
+                            :rows="3"
+                            placeholder="写点儿什么 ...."
+                            v-model="myNote">
+                    </el-input>
+                    <el-button class="mt-10 pull-right" type="primary" size="mini" icon="el-icon-check" @click="submitNote">保存</el-button>
+                </el-col>
+            </el-row>
+
+            <div v-for="(n, idx) in notes" :key="idx" style="padding: 10px;">
+                <el-card shadow="never">
+                    <p style="padding: 0; line-height: 16px;font-size: 12px;"><span class="text-grey"><i class="el-icon-time"></i> @{{ n.created_at }}</span></p>
+                    <p style="padding: 0; line-height: 16px;font-size: 12px;">
+                         @{{ n.note }}
+                    </p>
+                </el-card>
             </div>
         </el-drawer>
     </div>

@@ -70,42 +70,41 @@
             </div>
         </div>
         <div>
-            <el-drawer
+            <el-dialog
                     title="教材"
                     :visible.sync="showTextbookFormFlag"
-                    direction="rtl"
-                    size="50%">
+                    :fullscreen="true">
                 <el-form :model="textbookModel" ref="textbookForm" label-width="100px" class="textbook-form" style="margin-right: 10px;">
 
                     <el-row>
                         <el-col :span="16">
-                            <el-form-item label="教材名称" prop="name">
-                                <el-input v-model="textbookModel.name" placeholder="必填: 教材名称"></el-input>
+                            <el-form-item label="教材名称">
+                                <el-input @input="updateInput" v-model="textbookModel.name" placeholder="必填: 教材名称"></el-input>
                             </el-form-item>
                         </el-col>
                         <el-col :span="8">
-                            <el-form-item label="版本" prop="edition">
-                                <el-input v-model="textbookModel.edition" placeholder="必填: 是第几个版本"></el-input>
+                            <el-form-item label="版本">
+                                <el-input @input="updateInput" v-model="textbookModel.edition" placeholder="必填: 是第几个版本"></el-input>
                             </el-form-item>
                         </el-col>
                     </el-row>
 
                     <el-row>
                         <el-col :span="8">
-                            <el-form-item label="教材作者" prop="author">
-                                <el-input v-model="textbookModel.author" placeholder="必填: 教材作者"></el-input>
+                            <el-form-item label="教材作者">
+                                <el-input @input="updateInput" v-model="textbookModel.author" placeholder="必填: 教材作者"></el-input>
                             </el-form-item>
                         </el-col>
                         <el-col :span="16">
-                            <el-form-item label="出版社" prop="press">
-                                <el-input v-model="textbookModel.press" placeholder="必填: 出版社"></el-input>
+                            <el-form-item label="出版社">
+                                <el-input @input="updateInput" v-model="textbookModel.press" placeholder="必填: 出版社"></el-input>
                             </el-form-item>
                         </el-col>
                     </el-row>
 
                     <el-row>
                         <el-col :span="8">
-                            <el-form-item label="教材类型" prop="year">
+                            <el-form-item label="教材类型">
                                 <el-select v-model="textbookModel.type" placeholder="必填: 教材类型">
                                     <el-option label="专业教材" :value="1"></el-option>
                                     <el-option label="通用教材" :value="2"></el-option>
@@ -116,12 +115,12 @@
                         </el-col>
                         <el-col :span="8">
                             <el-form-item label="课本进价">
-                                <el-input v-model="textbookModel.purchase_price" placeholder="选填: 课本进价"></el-input>
+                                <el-input @input="updateInput" v-model="textbookModel.purchase_price" placeholder="选填: 课本进价"></el-input>
                             </el-form-item>
                         </el-col>
                         <el-col :span="8">
-                            <el-form-item label="课本零售价" prop="price">
-                                <el-input v-model="textbookModel.price" placeholder="必填: 课本零售价"></el-input>
+                            <el-form-item label="课本零售价">
+                                <el-input @input="updateInput" v-model="textbookModel.price" placeholder="必填: 课本零售价"></el-input>
                             </el-form-item>
                         </el-col>
                     </el-row>
@@ -143,18 +142,18 @@
                         </div>
                     </el-form-item>
                     <el-form-item label="课材简介">
-                        <el-input type="textarea" v-model="textbookModel.introduce" placeholder="可选"></el-input>
+                        <el-input @input="updateInput" type="textarea" v-model="textbookModel.introduce" placeholder="可选"></el-input>
                     </el-form-item>
                     <el-form-item>
                         <el-button type="primary" @click="saveTextbook">保 存</el-button>
                         <el-button @click="cancel">取 消</el-button>
                     </el-form-item>
                 </el-form>
-            </el-drawer>
+            </el-dialog>
 
             <el-dialog :title="textbookModel.name" :visible.sync="showConnectedCoursesFlag">
                 <p>采用该教材的所有课程: </p>
-                <el-form :model="textbookModel">
+                <el-form :model="{}">
                     <el-form-item>
                         <el-select v-model="textbookModel.courses" multiple placeholder="请选择" style="width: 100%;">
                             <el-option
@@ -174,7 +173,7 @@
 
             <el-dialog title="专业教材汇总表导出工具" :visible.sync="showExportMajorFlag">
                 <p>请选择需要导出的专业: </p>
-                <el-form :model="textbookModel">
+                <el-form :model="exportModel">
                     <el-form-item>
                         <el-select v-model="exportModel.value" placeholder="请选择" style="width: 100%;">
                             <el-option
@@ -194,7 +193,7 @@
 
             <el-dialog title="校区教材汇总表导出工具" :visible.sync="showExportCampusFlag">
                 <p>请选择需要导出的校区: </p>
-                <el-form :model="textbookModel">
+                <el-form :model="exportModel">
                     <el-form-item>
                         <el-select v-model="exportModel.value" placeholder="请选择" style="width: 100%;">
                             <el-option

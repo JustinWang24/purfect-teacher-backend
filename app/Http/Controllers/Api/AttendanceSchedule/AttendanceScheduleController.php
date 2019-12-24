@@ -3,7 +3,11 @@
 namespace App\Http\Controllers\Api\AttendanceSchedule;
 
 use App\Dao\AttendanceSchedules\AttendanceSchedulesDao;
+use App\Dao\Schools\SchoolDao;
+use App\Models\Schools\SchoolConfiguration;
 use App\Utils\JsonBuilder;
+use App\Utils\Time\CalendarWeek;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
@@ -87,6 +91,7 @@ class AttendanceScheduleController extends Controller
     /**
      * 获取给定日期的值周安排
      * @param Request $request
+     * @return string
      */
     public function load_special(Request $request){
         $dao = new AttendanceSchedulesDao();
@@ -98,11 +103,29 @@ class AttendanceScheduleController extends Controller
 
         $specials = $dao->getSpecialAttendances($schoolId);
 
+        /**
+         * @var SchoolConfiguration $cofig
+         */
+        $config = (new SchoolDao())->getSchoolById($schoolId)->configuration;
+        $weeks = $config->getAllWeeksOfTerm();
         $sp = null;
 
+        $theDate = $request->get('date');
+        $theDateCarbon = Carbon::createFromFormat('Y-m-d',$theDate);
+
         foreach ($specials as $special) {
-            if($special->start_date->format('Y-m-d') <= $request->get('date') && $request->get('date') <= $special->end_date->format('Y-m-d')){
+
+            if($special->start_date->format('Y-m-d') <= $theDate && $theDate <= $special->end_date->format('Y-m-d')){
                 $special->grade;
+                foreach ($weeks as $week) {
+                    /**
+                     * @var CalendarWeek $week
+                     */
+                    if($week->includes($theDateCarbon)){
+                        $special->week_name = $week->getName();
+                        break;
+                    }
+                }
                 $sp = $special;
                 break;
             }

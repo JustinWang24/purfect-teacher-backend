@@ -239,6 +239,10 @@ Route::prefix('course')->middleware('auth:api')->group(function () {
      // 选课查询报名结果操作
      Route::post('/elective/getresult/{id}','Api\Course\ElectiveController@getEnrollResult')
         ->name('api.course.elective.getresult');
+
+     // 教师端课件
+     Route::post('/getApiCourseDownloadListInfo','Api\Course\CourseWareController@index')
+        ->name('api.teacher.course.ware');
 });
 
 // 网盘
@@ -363,13 +367,18 @@ Route::prefix('version')->group(function () {
 
 // APP 首页接口
 Route::prefix('home')->middleware('auth:api')->group(function () {
-
-    Route::post('/getHomePageInfo', 'Api\Home\IndexController@index')
+    //
+    Route::any('/getHomePageInfo', 'Api\Home\IndexController@index')
         ->name('api.home.index');
     // 校园动态
-    Route::get('/newsPage', 'Api\Home\IndexController@newsPage')
+    Route::any('/newsPage', 'Api\Home\IndexController@newsPage')
         ->name('api.home.newsPage');
 
+    Route::any('/load-news', 'Api\Home\IndexController@loadNews')
+        ->name('api.home.load-news');
+
+    Route::any('/load-notices', 'Api\Home\IndexController@loadNotices')
+        ->name('api.home.load-notices');
 });
 
 // 消息通知
@@ -389,6 +398,7 @@ Route::prefix('banner')->middleware('auth:api')->group(function () {
 // APP 生成二维码 接口
 Route::prefix('QrCode')->middleware('auth:api')->group(function () {
     Route::post('/getQrCode', 'Api\QrCode\IndexController@generate')->name('api.generate.qr.code');
+    Route::post('/courseQrCode', 'Api\QrCode\IndexController@courseQrCode')->name('api.course.qr.code');
 });
 
 Route::prefix('account')->middleware('auth:api')->group(function () {
@@ -451,6 +461,16 @@ Route::prefix('attendance')->middleware('auth:api')->group(function () {
         ->name('api.attendance.list');
     Route::any('/load-special','Api\AttendanceSchedule\AttendanceScheduleController@load_special')
         ->name('api.attendance.load-special');
+    // 学生签到
+    Route::get('/sign-in-record','Api\AttendanceSchedule\AttendanceController@signInRecord')
+        ->name('api.attendance.sign-in-record');
+    // 签到详情
+    Route::post('/sign-in-details','Api\AttendanceSchedule\AttendanceController@signInDetails')
+        ->name('api.attendance.sign-in-details');
+    // 添加旷课记录
+    Route::post('/add-truant-record','Api\AttendanceSchedule\AttendanceController@addTruantRecord')
+        ->name('api.attendance.add-truant-record');
+
 });
 
 Route::prefix('user')->group(function () {
@@ -470,9 +490,13 @@ Route::prefix('user')->group(function () {
     Route::post('/findUserPasswordInfo', 'Api\Login\LoginController@forgetPassword')
         ->name('api.user.edit.password');
 
-    // 用户资料
+    // 学生用户资料
     Route::post('/getUserInfo', 'Api\Home\IndexController@getUserInfo')
         ->middleware('auth:api')->name('api.get.user.info');
+
+    // 教师用户资料
+    Route::post('/getTeacherInfo', 'Api\Home\IndexController@getTeacherInfo')
+        ->middleware('auth:api')->name('api.get.teacher.info');
 
     // 修改资料
     Route::post('/updateUserInfo', 'Api\Home\IndexController@updateUserInfo')
@@ -601,10 +625,12 @@ Route::prefix('evaluate')->middleware('auth:api')->group(function () {
     // 学生评价老师的接口
     Route::any('/student/rate-lesson','Api\Evaluate\RatingController@rate_lesson')
         ->name('api.evaluate.student.rate-lesson');
+    // 学生写课堂笔记
+    Route::any('/student/save-note','Api\Evaluate\RatingController@save_note')
+        ->name('api.evaluate.student.save-note');
 });
 
 Route::prefix('cloud')->group(function () {
-
     // 获取学校信息
     Route::post('/getSchoolInfo','Api\Cloud\CloudController@getSchoolInfo')
         ->name('api.cloud.school');
@@ -626,5 +652,28 @@ Route::prefix('cloud')->group(function () {
      // 华三人脸识别图片上传
     Route::post('/uploadFaceImage','Api\Cloud\CloudController@uploadFaceImage')
         ->name('api.cloud.upload.face.image')->middleware('auth:api');
+});
 
+
+Route::prefix('Oa')->middleware('auth:api')->group(function(){
+    // 党员活动
+    Route::post('/activity/getCpcActivityListInfo','Api\OA\IndexController@activity')
+        ->name('api.cloud.school');
+    // 党员学习
+    Route::post('/study/getCpcStudyListInfo','Api\OA\IndexController@study')
+        ->name('api.cloud.grade');
+    // 党员风采
+    Route::post('/zone/getCpcZoneListInfo','Api\OA\IndexController@zone')
+        ->name('api.cloud.course');
+});
+
+Route::post('/manual/attendances','Api\Cloud\CloudController@manual')
+        ->middleware('auth:api')->name('api.manual.attendances');
+
+Route::prefix('teacher')->middleware('auth:api')->group(function(){
+    // 教师添加访客
+    Route::post('/add-visitor','Api\OA\TeachersController@add_visitor')
+        ->name('api.teacher.add-visitor');
+    Route::post('/delete-visitor','Api\OA\TeachersController@delete_visitor')
+        ->name('api.teacher.delete-visitor');
 });

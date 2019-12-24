@@ -181,7 +181,10 @@ export const Util = {
     icons: function () {
         const a = [];
         for(let i=1;i<14;i++){
-            a.push('/assets/img/pipeline/icon'+i+'.png');
+            a.push('/assets/img/pipeline/icon'+i+'@2x.png');
+        }
+        for(let i=1;i<18;i++){
+            a.push('/assets/img/pipeline/t'+i+'@2x.png');
         }
         return a;
     },

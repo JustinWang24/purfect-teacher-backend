@@ -2,6 +2,7 @@
 use App\Utils\UI\Anchor;
 use App\Utils\UI\Button;
 use App\User;
+$years = \App\Utils\Time\GradeAndYearUtil::GetAllYears();
 ?>
 @extends('layouts.app')
 @section('content')
@@ -9,9 +10,26 @@ use App\User;
         <div class="col-sm-12 col-md-12 col-xl-12">
             <div class="card">
                 <div class="card-head">
-                    <header>{{ session('school.name') }} - {{ $parent->name??'' }}</header>
-                </div>
+                    <header class="full-width">
+                        {{ session('school.name') }} - {{ $parent->name??'' }} {{ isset($year) ? $year.'级' : null }}
+                        @if(isset($yearManager))
+                            <a href="{{ route('school_manager.school.set-year-manager',['year'=>$year]) }}">{{ $yearManager->user->name ?? '设置年级组长' }}</a>
+                        @else
+                            @if(isset($year))
+                                <a href="{{ route('school_manager.school.set-year-manager',['year'=>$year]) }}">设置年级组长</a>
 
+                                <p class="pull-right">
+                                @foreach($years as $y)
+                                    <a class="btn btn-{{ $year == $y ? 'primary' : 'default' }} btn-sm" href="{{ route('school_manager.school.years',['year'=>$y]) }}">{{ $y }}级</a>
+                                @endforeach
+                                </p>
+                            @endif
+                        @endif
+
+
+
+                    </header>
+                </div>
                 <div class="card-body">
                     <div class="row">
                         <div class="table-padding col-12">
@@ -23,7 +41,7 @@ use App\User;
                                     创建班级 <i class="fa fa-plus"></i>
                                 </a>
                             @endif
-                            @include('school_manager.school.reusable.nav',['highlight'=>'grade'])
+                            @include('school_manager.school.reusable.nav',['highlight'=>isset($year)? 'years':'grade'])
                         </div>
 
                         <div class="table-responsive">
@@ -72,7 +90,7 @@ use App\User;
                                             @endif
                                         </td>
                                         <td class="text-center">
-                                            <a class="students-counter" href="{{ route('school_manager.grade.users',['type'=>User::TYPE_STUDENT,'by'=>'grade','uuid'=>$grade->id]) }}">{{ $grade->studentsCount() }}</a>
+                                            <a class="students-counter" href="{{ route('teacher.grade.users',['type'=>User::TYPE_STUDENT,'by'=>'grade','uuid'=>$grade->id]) }}">{{ $grade->studentsCount() }}</a>
                                         </td>
                                         <td class="text-center">
                                             <a target="_blank" href="{{ route('school_manager.textbook.grade',['type'=>User::TYPE_STUDENT,'by'=>'grade','uuid'=>$grade->id]) }}" class="btn btn-round btn-primary btn-view-timetable">

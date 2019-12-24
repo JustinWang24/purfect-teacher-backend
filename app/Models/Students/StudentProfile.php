@@ -13,12 +13,17 @@ use Illuminate\Support\Facades\Log;
 
 class StudentProfile extends Model
 {
-
+    const DEFAULT_UPLOAD_PATH_PREFIX = 'public/avatar/';    // 存放用户头像路径
+    const DEFAULT_URL_PATH_PREFIX = '/storage/avatar/';     // 对外的
 
     const GENDER_MAN   = 1;
     const GENDER_WOMAN = 0;
     const GENDER_MAN_TEXT   = '男';
     const GENDER_WOMAN_TEXT = '女';
+
+    const DRIVER_LOCAL    = 1; // 本地
+    const DRIVER_ALI_YUN  = 2;
+    const DRIVER_QI_NIU   = 3;
 
     protected $fillable = [
         'uuid',
@@ -106,8 +111,8 @@ class StudentProfile extends Model
         return $this->hasMany(RegistrationInformatics::class,'user_id', 'user_id');
     }
 
-    public function getAvatarAttribute(){
-        return asset($this->avatar ?? User::DEFAULT_USER_AVATAR);
+    public function getAvatarAttribute($value){
+        return asset(empty($value) ? User::DEFAULT_USER_AVATAR : $value);
     }
 
     /**
@@ -120,5 +125,20 @@ class StudentProfile extends Model
             self::GENDER_WOMAN => self::GENDER_WOMAN_TEXT,
         ];
         return $sex["{$this->gender}"];
+    }
+
+
+    /**
+     * 转换上传路径到 url 路径
+     * @param $uploadPath
+     * @return string
+     */
+    public static function avatarUploadPathToUrl($uploadPath)
+    {
+        // 本地图片服务
+        if(env('NETWORK_DISK_DRIVER', self::DRIVER_LOCAL) === self::DRIVER_LOCAL) {
+            return str_replace(self::DEFAULT_UPLOAD_PATH_PREFIX, self::DEFAULT_URL_PATH_PREFIX, $uploadPath);
+        }
+        return '';
     }
 }

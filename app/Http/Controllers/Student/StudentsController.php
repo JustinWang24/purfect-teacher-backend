@@ -2,6 +2,7 @@
 namespace App\Http\Controllers\Student;
 
 use App\Dao\Users\UserDao;
+use App\Models\Schools\GradeManager;
 use App\Utils\FlashMessageBuilder;
 use App\Http\Controllers\Controller;
 use App\Dao\Students\StudentProfileDao;
@@ -15,7 +16,9 @@ class StudentsController extends Controller
      */
     public function edit(StudentRequest $request){
         $dao = new UserDao();
-        $this->dataForView['student'] = $dao->getUserByUuid($request->uuid());
+        $student = $dao->getUserByUuid($request->uuid());
+        $this->dataForView['gradeManager'] = GradeManager::where('monitor_id',$student->id)->first();
+        $this->dataForView['student'] = $student;
         $this->dataForView['pageTitle'] = '档案管理';
         return view('student.edit', $this->dataForView);
     }
@@ -49,7 +52,6 @@ class StudentsController extends Controller
     public function contacts_list(StudentRequest $request){
         $this->dataForView['pageTitle'] = '通讯录';
         $this->dataForView['schoolId'] = $request->getSchoolId();
-
         return view('student.contacts.list',$this->dataForView);
     }
 }

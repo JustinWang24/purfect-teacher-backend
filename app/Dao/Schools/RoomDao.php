@@ -133,4 +133,22 @@ class RoomDao
         return $result;
     }
 
+    /**
+     * 获取房间列表
+     * @param $schoolId
+     * @param $type
+     * @param null $buildingId
+     * @return Collection
+     */
+    public function getRoomByType($schoolId, $type, $buildingId = null){
+        $where = [
+            ['school_id','=',$schoolId],
+            ['type','=',$type],
+        ];
+        if($buildingId){
+            $where[] = ['building_id','=',$buildingId];
+        }
+        return Room::select(['building_id','name','seats'])->where($where)->with('building:id,name')
+            ->orderBy('building_id','asc')->get();
+    }
 }

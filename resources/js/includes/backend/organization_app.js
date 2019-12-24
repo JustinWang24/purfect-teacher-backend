@@ -170,6 +170,7 @@ if(document.getElementById('organization-app')){
                     this.loading = false;
                 });
                 this.dialogEditFormVisible = true;
+                this._resetCurrentMember();
             },
             remove: function(){
                 this.$confirm('此操作将永久删除该机构以及所属的下级机构, 是否继续?', '提示', {
@@ -212,6 +213,14 @@ if(document.getElementById('organization-app')){
                 keys.forEach(function (key) {
                     that.form[key] = '';
                 });
+            },
+            _resetCurrentMember: function () {
+                this.currentMember.name = '';
+                this.currentMember.user_id = '';
+                this.currentMember.title = '';
+                this.currentMember.title_id = '';
+                this.currentMember.organization_id = '';
+                this.currentMember.id = '';
             }
         }
     });
