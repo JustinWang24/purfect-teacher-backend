@@ -5,6 +5,7 @@ namespace App\Dao\OfficialDocuments;
 
 use App\Models\OfficialDocument\Progress;
 use App\Models\OfficialDocument\ProgressSteps;
+use App\Utils\Misc\ConfigurationTool;
 use Illuminate\Support\Facades\DB;
 
 class ProgressDao
@@ -16,11 +17,15 @@ class ProgressDao
      * @param $field
      * @return mixed
      */
-    public function getProgressBySchoolId($schoolId, $field)
+    public function getProgressBySchoolId($schoolId, $field = '*')
     {
         return Progress::where('school_id', $schoolId)->select($field)->get();
     }
 
+    public function getProgressBySchoolIdPaginate($schoolId, $field = '*')
+    {
+        return Progress::where('school_id', $schoolId)->select($field)->paginate(ConfigurationTool::DEFAULT_PAGE_SIZE);
+    }
 
     /**
      * 添加公文流程

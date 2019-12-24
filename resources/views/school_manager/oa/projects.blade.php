@@ -9,7 +9,8 @@ use App\User;
         <div class="col-sm-12 col-md-12 col-xl-12">
             <div class="card">
                 <div class="card-head">
-                    <header>{{ session('school.name') }} 项目管理</header>
+                    <header>
+                        {{ session('school.name') }} 项目管理</header>
                 </div>
                 <div class="card-body">
                     <div class="row">
@@ -35,11 +36,11 @@ use App\User;
                                             {{ $project->school->name }}
                                         </td>
                                         <td>
-                                            {{ $project->user->name }}
+                                            {{ $project->user->name??null }}
                                         </td>
                                         <td>
                                             @foreach($project->members as $member)
-<span class="text-primary">{{ $member->user->name }}&nbsp;</span>
+<span class="text-primary">{{ $member->user->name??null }}&nbsp;</span>
                                             @endforeach
                                         </td>
                                         <td>

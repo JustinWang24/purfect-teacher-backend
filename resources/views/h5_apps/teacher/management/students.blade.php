@@ -1,63 +1,33 @@
 @extends('layouts.h5_teacher_app')
 @section('content')
-    <div id="app-init-data-holder" data-school="{{ $teacher->getSchoolId() }}"></div>
-    <div id="school-teacher-management-entry" class="school-intro-container">
+    <div id="app-init-data-holder" data-school="{{ $teacher->getSchoolId() }}" data-grade="{{ json_encode($grade) }}"
+         data-students="{{ json_encode($students) }}" data-token="{{ $api_token }}"></div>
+    <div id="school-teacher-management-students-app" class="school-intro-container">
         <div class="main p-15">
-            <h3 class="title">班级管理</h3>
-            <div class="row">
-                <div class="col-4">
-                    <a href="{{ route('h5.teacher.management.my-students') }}" class="no-dec">
-                        <p class="text-center">
-                            <img src="{{ asset('assets/img/pipeline/t3@2x.png') }}" class="icon-image">
-                        </p>
-                        <p class="text-center text-dark mt-adjust">学生信息</p>
-                    </a>
-                </div>
-            </div>
-            <div class="clearfix"></div>
-            <h3 class="title">审批管理</h3>
-            <div class="row">
-                <div class="col-4">
-                    <p class="text-center">
-                        <img src="{{ asset('assets/img/pipeline/t4@2x.png') }}" class="icon-image">
-                    </p>
-                    <p class="text-center text-dark mt-adjust">待审批</p>
-                </div>
-                <div class="col-4">
-                    <p class="text-center">
-                        <img src="{{ asset('assets/img/pipeline/t5@2x.png') }}" class="icon-image">
-                    </p>
-                    <p class="text-center text-dark mt-adjust">已审批</p>
-                </div>
-            </div>
-            <div class="clearfix"></div>
-            <h3 class="title">教学管理</h3>
-            <div class="row">
-                <div class="col-4">
-                    <p class="text-center">
-                        <img src="{{ asset('assets/img/pipeline/t6@2x.png') }}" class="icon-image">
-                    </p>
-                    <p class="text-center text-dark mt-adjust">考勤管理</p>
-                </div>
-                <div class="col-4">
-                    <p class="text-center">
-                        <img src="{{ asset('assets/img/pipeline/t7@2x.png') }}" class="icon-image">
-                    </p>
-                    <p class="text-center text-dark mt-adjust">成绩管理</p>
-                </div>
-            </div>
-            <div class="clearfix"></div>
-            @if($teacher->isSchoolAdminOrAbove())
-                <h3 class="title">管理员</h3>
-                <div class="row">
-                    <div class="col-4">
-                        <p class="text-center">
-                            <img src="{{ asset('assets/img/pipeline/t8@2x.png') }}" class="icon-image">
-                        </p>
-                        <p class="text-center text-dark mt-adjust">管理员</p>
-                    </div>
-                </div>
-            @endif
+            <h4>
+                <el-button type="text" icon="el-icon-arrow-left" class="text-dark" @click="back"></el-button>&nbsp;
+                班级: {{ $grade->name }}
+            </h4>
+            <el-table
+                    :data="students"
+                    empty-text="没有学生记录"
+                    stripe
+                    style="width: 100%">
+
+                <el-table-column label="照片">
+                    <template slot-scope="scope">
+                        <img :src="scope.row.student_profile ? scope.row.student_profile.avatar : null" style="width: 60px; border-radius: 50%;">
+                    </template>
+                </el-table-column>
+
+                <el-table-column
+                        label="学生姓名">
+                    <template slot-scope="scope">
+                        <el-button @click="showDetail(scope.row)" type="text">@{{ scope.row.name }}</el-button>
+                    </template>
+                </el-table-column>
+
+            </el-table>
         </div>
     </div>
 @endsection

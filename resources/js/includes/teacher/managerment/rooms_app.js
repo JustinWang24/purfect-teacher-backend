@@ -1,9 +1,9 @@
-if(document.getElementById('school-teacher-management-devices-app')){
+if(document.getElementById('school-teacher-management-rooms-app')){
     new Vue({
-        el:'#school-teacher-management-devices-app',
+        el:'#school-teacher-management-rooms-app',
         data(){
             return {
-                devices: [],
+                rooms: [],
                 selectedDevice: {
                     building:{},
                     room:{}
@@ -16,14 +16,14 @@ if(document.getElementById('school-teacher-management-devices-app')){
             const dom = document.getElementById('app-init-data-holder');
             this.schoolId = dom.dataset.school;
             this.apiToken = dom.dataset.token;
-            this.devices = JSON.parse(dom.dataset.devices);
+            this.rooms = JSON.parse(dom.dataset.rooms);
         },
         methods: {
             showDetail: function (row) {
                 this.showDetailFlag = true;
                 this.selectedDevice = row;
             },
-            back: function () {
+            back: function(){
                 window.location.href = '/h5/teacher/management/view?api_token=' + this.apiToken + '&type=employee';
             }
         }

@@ -385,6 +385,24 @@ class AttendanceTeacherController extends Controller
         }
 
     }
+    public function apply_list(Request $request)
+    {
+        $user = $request->user();
+        $schoolId = $user->getSchoolId();
+        $dao = new AttendanceTeacherDao();
+        $result = $dao->getAttendanceMessages($user->id);
+        $data = [];
+        foreach ($result->items() as $key => $item){
+            $data[$key]['approvesid'] = $item->id;
+            $data[$key]['day'] = $item->attendance_date;
+            $data[$key]['time'] = $item->attendance_time;
+            $data[$key]['type'] = $item->type==1?'online':'offline';
+            $data[$key]['create_time'] = $item->created_at;
+            $data[$key]['status'] = $item->status;
+            $data[$key]['group_name'] = $item->member->group->name;
+        }
+        return JsonBuilder::Success($data);
+    }
 
 
 }

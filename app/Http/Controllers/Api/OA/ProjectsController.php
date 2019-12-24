@@ -152,8 +152,8 @@ class ProjectsController extends Controller
      * @param ProjectRequest $request
      * @return string
      */
-    public function projectInfo(ProjectRequest $request,$projectId) {
-        //$projectId = $request->getProjectId();
+    public function projectInfo(ProjectRequest $request) {
+        $projectId = $request->get('projectid');
         if(is_null($projectId)) {
             return JsonBuilder::Error('项目ID不能为空');
         }
@@ -234,10 +234,11 @@ class ProjectsController extends Controller
         return JsonBuilder::Success($output);
     }
 
-    public function taskInfo(Request $request,$taskid)
+    public function taskInfo(Request $request)
     {
         $user = $request->user();
         $data['school_id'] = $user->getSchoolId();
+        $taskid = $request->get('taskid');
         $dao = new ProjectDao();
         $task = $dao->getProjectTaskById($taskid);
         if(!$task){

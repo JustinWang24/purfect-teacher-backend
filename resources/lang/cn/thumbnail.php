@@ -126,8 +126,12 @@ return [
     'dynamic'     => '动态列表',
     'communities' => '社团列表',
     'members'     => '社团成员',
-    'attendances-manager' => '选修课程审批',
+    'attendances-manager' => '考勤管理',
     'project-view'=> '查看项目',
+
+    'attendances-group'=> '考勤组编辑',
+    'attendances-members'=> '考勤组成员编辑',
+
     'set-year-manager'=> '设置年级组长',
     'years'=> '年级管理',
     'organizations'=> '组织机构管理',
@@ -136,5 +140,8 @@ return [
     'teaching-and-research-group-members'=> '教研组成员管理',
     'add-new'=> '添加',
     'edit-avatar'=> '档案照片管理',
+    'official'=> '日常办公',
+    'documents'=> '公文',
+
 ];
 
