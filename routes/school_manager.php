@@ -215,8 +215,28 @@ Route::prefix('school_manager')->group(function () {
         Route::get('documents-manager','ElectiveCoursesController@management')
             ->name('school_manager.oa.documents-manager');
         // 考勤管理
-        Route::get('attendances-manager','ElectiveCoursesController@management')
+        Route::get('attendances-manager','OA\AttendanceTeacherController@management')
             ->name('school_manager.oa.attendances-manager');
+        // 编辑考勤组
+        Route::any('attendances-group/{id}','OA\AttendanceTeacherController@view')
+            ->name('school_manager.oa.attendances-group');
+        //保存考勤组
+        Route::any('attendances-save','OA\AttendanceTeacherController@save')
+            ->name('school_manager.oa.attendances-save');
+        //添加成员
+        Route::any('attendances-members/{id}','OA\AttendanceTeacherController@members')
+            ->name('school_manager.oa.attendances-members');
+        Route::any('attendances-add-member','OA\AttendanceTeacherController@addMember')
+            ->name('school_manager.oa.attendances-add-member');
+        Route::any('attendances-del-member','OA\AttendanceTeacherController@delmember')
+            ->name('school_manager.oa.attendances-del-member');
+        //补卡
+        Route::any('attendances-messages','OA\AttendanceTeacherController@messages')
+            ->name('school_manager.oa.attendances-messages');
+        Route::any('attendances-accept-messages','OA\AttendanceTeacherController@messageAccept')
+            ->name('school_manager.oa.attendances-accept-messages');
+        Route::any('attendances-reject-messages','OA\AttendanceTeacherController@messagereject')
+            ->name('school_manager.oa.attendances-reject-messages');
         // 审批管理
         Route::get('approval-manager','ElectiveCoursesController@management')
             ->name('school_manager.oa.approval-manager');

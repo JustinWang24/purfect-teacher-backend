@@ -126,7 +126,9 @@ return [
     'dynamic'     => '动态列表',
     'communities' => '社团列表',
     'members'     => '社团成员',
-    'attendances-manager' => '选修课程审批',
+    'attendances-manager' => '考勤管理',
     'project-view'=> '查看项目',
+    'attendances-group'=> '考勤组编辑',
+    'attendances-members'=> '考勤组成员编辑',
 ];
 
