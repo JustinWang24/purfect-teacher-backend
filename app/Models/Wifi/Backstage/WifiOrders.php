@@ -83,7 +83,23 @@ class WifiOrders extends Model
     */
    public static function getWifiOrdersOneInfo ( $condition = [] , $orderArr = [] , $fieldsArr = [] , $joinArr = [] )
    {
-      return WifiOrders::where ( $condition )->orderByArr ( $orderArr )->joinArr ( $joinArr )->first ( $fieldsArr );
+      $joinCount = count($joinArr);
+      if($joinCount == 1) // 一张表
+      {
+         return WifiOrders::where ( $condition )
+                 ->orderBy ( $orderArr[0],$orderArr[1] )
+                 ->join($joinArr[0][0],$joinArr[0][1],$joinArr[0][2],$joinArr[0][3],isset($joinArr[0][4])?$joinArr[0][4]:'inner')
+                 ->first ( $fieldsArr );;
+      }
+      if($joinCount == 2) // 二张表
+      {
+         return WifiOrders::where ( $condition )
+                  ->orderBy ( $orderArr[0],$orderArr[1] )
+                  ->join($joinArr[0][0],$joinArr[0][1],$joinArr[0][2],$joinArr[0][3],isset($joinArr[0][4])?$joinArr[0][4]:'inner')
+                  ->join($joinArr[1][0],$joinArr[1][1],$joinArr[1][2],$joinArr[1][3],isset($joinArr[1][4])?$joinArr[1][4]:'inner')
+                  ->first ( $fieldsArr );;
+      }
+      return WifiOrders::where ( $condition )->orderBy ( $orderArr[0],$orderArr[1] )->first ( $fieldsArr );
    }
 
    /**
@@ -97,7 +113,23 @@ class WifiOrders extends Model
     */
    public static function getWifiOrdersListInfo( $condition = [] , $orderArr = [] , $pageArr = [] , $fieldsArr = [] , $joinArr = [] )
    {
-      return WifiOrders::where ( $condition )->orderByArr ( $orderArr )->joinArr ( $joinArr )
+      $joinCount = count($joinArr);
+      if($joinCount == 1) // 一张表
+      {
+         return WifiOrders::where ( $condition )
+                  ->join($joinArr[0][0],$joinArr[0][1],$joinArr[0][2],$joinArr[0][3],isset($joinArr[0][4])?$joinArr[0][4]:'inner')
+                  ->orderBy ( $orderArr[0],$orderArr[1] )
+                  ->paginate ( $pageArr[ 'limit' ] , $fieldsArr , 'page' , $pageArr[ 'page' ] );
+      }
+      if($joinCount == 2) // 二张表
+      {
+         return WifiOrders::where ( $condition )
+                 ->join($joinArr[0][0],$joinArr[0][1],$joinArr[0][2],$joinArr[0][3],isset($joinArr[0][4])?$joinArr[0][4]:'inner')
+                 ->join($joinArr[1][0],$joinArr[1][1],$joinArr[1][2],$joinArr[1][3],isset($joinArr[1][4])?$joinArr[1][4]:'inner')
+                 ->orderBy ( $orderArr[0],$orderArr[1] )
+                 ->paginate ( $pageArr[ 'limit' ] , $fieldsArr , 'page' , $pageArr[ 'page' ] );
+      }
+      return WifiOrders::where ( $condition )->orderBy ( $orderArr[0],$orderArr[1] )
               ->paginate ( $pageArr[ 'limit' ] , $fieldsArr , 'page' , $pageArr[ 'page' ] );
    }
 

@@ -8,21 +8,12 @@ use App\Utils\UI\Button;
         <div class="col-sm-10 col-md-12 col-xl-12">
             <div class="card-box">
                 <div class="card-head">
-                    <header>添加</header>
+                    <header>修改</header>
                 </div>
                 <div class="card-body">
                     <form action="" method="post"  id="add-building-form">
                         @csrf
                         <input type="hidden" name="dataOne[contentid]" value="{{$dataOne['contentid']}}" id="building-id-input">
-                        <div class="form-group">
-                            <label for="school-name-input">类型</label>
-                            <select class="form-control" name="infos[typeid]"  required>
-                                <option value="">请选择</option>
-                                @foreach($wifiContentsTypeArr as $key=>$val)
-                                    <option value="{{$key}}">{{$val}}</option>
-                                @endforeach
-                            </select>
-                        </div>
                         <div class="form-group">
                             <label for="building-name-input">内容</label>
                             <textarea required class="form-control" id="building-name-input" name="infos[content]" rows="10">

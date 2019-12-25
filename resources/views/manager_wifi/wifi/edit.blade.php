@@ -15,14 +15,6 @@ use App\Utils\UI\Button;
                         @csrf
                         <input type="hidden" name="infos[wifiid]" value="{{$infos['wifiid']}}" id="building-id-input">
                         <div class="form-group">
-                            <label for="building-name-input">学校</label>
-                            <input required type="text" class="form-control" id="building-name-input" value="{{$infos['school_id']}}" placeholder="例如：1" name="infos[school_id]">
-                        </div>
-                        <div class="form-group">
-                            <label for="building-name-input">分校</label>
-                            <input required type="text" class="form-control" id="building-name-input" value="{{$infos['campus_id']}}" placeholder="例如：1" name="infos[campus_id]">
-                        </div>
-                        <div class="form-group">
                             <!--类型(1:无线,2:有线)-->
                             <label for="school-name-input">模式</label>
                             <select class="form-control" name="infos[mode]"  required>

@@ -63,7 +63,7 @@
 
          // 获取数据
          $dataList = WifiIssueCommentsDao::getWifiIssueCommentsListInfo (
-            $condition , [ [ 'commentid' , 'desc' ] ] ,
+            $condition , [ 'wifi_issue_comments.commentid' , 'desc' ] ,
             [ 'page' => $param[ 'page' ] , 'limit' => self::$manger_wifi_page_limit ] ,
             $fieldArr , $joinArr
          );
@@ -105,7 +105,7 @@
 
          // 获取数据
          $dataOne = WifiIssueCommentsDao::getWifiIssueCommentsOneInfo (
-            $condition , [ [ 'commentid' , 'desc' ] ] ,
+            $condition , [ 'commentid' , 'desc' ] ,
             $fieldArr , $joinArr
          );
 

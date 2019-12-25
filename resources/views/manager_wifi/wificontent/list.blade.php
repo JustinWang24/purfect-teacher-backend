@@ -44,8 +44,8 @@ use App\User;
 										<td>{{$val['created_at']}}</td>
 										<td>{{$val['updated_at']}}</td>
                                         <td class="text-center">
-                                            {{ Anchor::Print(['text'=>'编辑','class'=>'btn-edit-room','href'=>route('manager_wifi.wifiNotice.edit',['noticeid'=>$val->noticeid])], Button::TYPE_DEFAULT,'edit') }}
-                                            {{ Anchor::Print(['text'=>'删除','class'=>'btn-edit-room','href'=>route('manager_wifi.wifiNotice.delete',['noticeid'=>$val->noticeid])], Button::TYPE_DEFAULT,'delete') }}
+                                            {{ Anchor::Print(['text'=>'编辑','class'=>'btn-edit-room','href'=>route('manager_wifi.wifiContent.edit',['contentid'=>$val->contentid])], Button::TYPE_DEFAULT,'edit') }}
+                                            {{ Anchor::Print(['text'=>'删除','class'=>'btn-edit-room', 'href'=>route('manager_wifi.wifiContent.delete',['contentid'=>$val->contentid])], Button::TYPE_DEFAULT,'delete') }}
                                         </td>
                                     </tr>
                                 @endforeach
