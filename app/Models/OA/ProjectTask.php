@@ -16,10 +16,15 @@ class ProjectTask extends Model
 
     public $user_field = ['*'];
     const MAP_ARR = [
-        'id'=>'taskid',
-        'title'=>'task_title',
-        'content'=>'project_content',
-        'status'=>'doing_status',
+        'id'            =>  'taskid',
+        'title'         =>  'task_title',
+        'content'       =>  'task_content',
+        'status'        =>  'doing_status',
+        'create_user'   =>  'create_userid',
+        'user_id'       =>  'leader_userid',
+        'create_time'   =>  'created_at',
+        'project_id'    =>  'projectid',
+        '_todo'         =>  ['create_name'=>'createUserName','project_title'=>'project_title','leader_name'=>'leader_name']
     ];
     /**
      * 任务的讨论
@@ -43,5 +48,21 @@ class ProjectTask extends Model
      */
     public function project(){
         return $this->belongsTo(Project::class);
+    }
+
+    public function createUser(){
+        return $this->belongsTo(User::class,'create_user', 'id');
+    }
+    public function createUserName()
+    {
+        return $this->createUser->name;
+    }
+    public function project_title()
+    {
+        return $this->project->title;
+    }
+    public function leader_name()
+    {
+        return $this->user->name;
     }
 }
