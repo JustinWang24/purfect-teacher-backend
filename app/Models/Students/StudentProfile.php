@@ -55,7 +55,15 @@ class StudentProfile extends Model
         'parent_name', // 家长姓名
         'parent_mobile', // 家长手机号
         'source',// 统招还是自招
-        'qr_code_url' // 统招还是自招
+        'qr_code_url', // 统招还是自招
+        'create_file', //
+        'special_support', //
+        'very_poor', //
+        'disability', //
+        'resident_type', //
+        'resident_suburb', //
+        'resident_village', //
+        'comments', //
     ];
 
     public $dates = ['birthday'];

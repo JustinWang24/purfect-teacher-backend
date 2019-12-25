@@ -287,12 +287,12 @@ class UserDao
      * excel导入用户时使用
      * @param $mobile
      * @param $name
-     * @param $email
      * @param $passwordInPlainText
+     * @param $type
      * @return mixed
      * @throws Exception
      */
-    public function importUser($mobile,$name,$passwordInPlainText)
+    public function importUser($mobile,$name,$passwordInPlainText, $type = Role::VERIFIED_USER_STUDENT)
     {
         $data = [
             'mobile'=>$mobile,
@@ -301,7 +301,7 @@ class UserDao
             'uuid'=>Uuid::uuid4()->toString(),
             'password'=>Hash::make($passwordInPlainText),
             'status'=>User::STATUS_VERIFIED,
-            'type'=>Role::VERIFIED_USER_STUDENT,
+            'type'=>$type,
         ];
         return $user = User::create($data);
     }
@@ -317,4 +317,6 @@ class UserDao
     {
         return User::where('id', $userId)->update(['api_token' => $token]);
     }
+
+
 }
