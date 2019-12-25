@@ -110,10 +110,12 @@
                 <h3 class="title">班主任助手</h3>
                 <div class="row">
                     <div class="col-4">
+                        <a href="{{ route('h5.teacher.management.grades-list',['api_token'=>$api_token]) }}" class="no-dec">
                         <p class="text-center">
                             <img src="{{ asset('assets/img/teacher/ass10.png') }}" class="icon-image">
                         </p>
                         <p class="text-center text-dark mt-adjust">班级管理</p>
+                        </a>
                     </div>
                     <div class="col-4">
                         <p class="text-center">
@@ -133,10 +135,12 @@
                 <h3 class="title">管理分析助手</h3>
                 <div class="row">
                     <div class="col-4">
-                        <p class="text-center">
-                            <img src="{{ asset('assets/img/teacher/ass20.png') }}" class="icon-image">
-                        </p>
-                        <p class="text-center text-dark mt-adjust">数据分析</p>
+                        <a href="#" class="no-dec">
+                            <p class="text-center">
+                                <img src="{{ asset('assets/img/teacher/ass20.png') }}" class="icon-image">
+                            </p>
+                            <p class="text-center text-dark mt-adjust">数据分析</p>
+                        </a>
                     </div>
                 </div>
                 <div class="clearfix"></div>
@@ -156,7 +160,7 @@
                 <h3 class="title">安全管理</h3>
                 <div class="row">
                     <div class="col-4">
-                        <a href="{{ route('h5.teacher.management.my-students',['api_token'=>$api_token]) }}" class="no-dec">
+                        <a href="{{ route('h5.teacher.management.visitors-list',['api_token'=>$api_token]) }}" class="no-dec">
                             <p class="text-center">
                                 <img src="{{ asset('assets/img/teacher/ass13.png') }}" class="icon-image">
                             </p>
@@ -164,30 +168,33 @@
                         </a>
                     </div>
                     <div class="col-4">
-                        <a href="{{ route('h5.teacher.management.my-students',['api_token'=>$api_token]) }}" class="no-dec">
+                        <a href="#" class="no-dec">
                             <p class="text-center">
                                 <img src="{{ asset('assets/img/teacher/ass14.png') }}" class="icon-image">
                             </p>
                             <p class="text-center text-dark mt-adjust">校内监控</p>
                         </a>
                     </div>
-
                 </div>
 
                 <div class="clearfix"></div>
                 <h3 class="title">室内管理</h3>
                 <div class="row">
                     <div class="col-4">
+                        <a class="no-dec" href="{{ route('h5.teacher.management.rooms-list',['type'=>\App\Models\Schools\Room::TYPE_CLASSROOM,'api_token'=>$api_token]) }}">
                         <p class="text-center">
                             <img src="{{ asset('assets/img/teacher/ass15.png') }}" class="icon-image">
                         </p>
                         <p class="text-center text-dark mt-adjust">教室管理</p>
+                        </a>
                     </div>
                     <div class="col-4">
+                        <a class="no-dec" href="{{ route('h5.teacher.management.rooms-list',['type'=>\App\Models\Schools\Room::TYPE_MEETING_ROOM,'api_token'=>$api_token]) }}">
                         <p class="text-center">
                             <img src="{{ asset('assets/img/teacher/ass16.png') }}" class="icon-image">
                         </p>
                         <p class="text-center text-dark mt-adjust">会议室管理</p>
+                        </a>
                     </div>
                 </div>
                 <div class="clearfix"></div>

@@ -2,6 +2,7 @@
 
 namespace App\Models\OA;
 
+use App\User;
 use Illuminate\Database\Eloquent\Model;
 
 class AttendanceTeachersMessage extends Model
@@ -22,5 +23,15 @@ class AttendanceTeachersMessage extends Model
     const CANCLE = 3;
     const CANCLE_TXT = '未通过';
 
+    public function user(){
+        return $this->belongsTo(User::class);
+    }
 
+    public function manager(){
+        return $this->belongsTo(User::class, 'manager_user_id', 'id');
+    }
+
+    public function member(){
+        return $this->belongsTo(AttendanceTeachersGroupMember::class, 'user_id', 'user_id');
+    }
 }

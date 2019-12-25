@@ -37,5 +37,7 @@ Route::prefix('manager_wifi')->group(function ()
    Route::any('wifiContent/edit', 'WifiContentController@edit')->name('manager_wifi.wifiContent.edit'); // 修改
    Route::any('wifiContent/delete', 'WifiContentController@delete')->name('manager_wifi.wifiContent.delete'); // 删除
 
+   //  获取Json
+   Route::any('WifiApi/get-school-campus', 'WifiApiController@get_school_campus')->name('manager_wifi.WifiApi.get_school_campus'); // 删除
 
 });

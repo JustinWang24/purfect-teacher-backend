@@ -63,7 +63,17 @@ Route::prefix('h5')->group(function () {
 
     // 教工助手
     Route::any('/teacher/management/devices-list','H5\Teacher\DevicesController@devices')
-        ->name('h5.teacher.management.devices-list');
+        ->name('h5.teacher.management.devices-list'); // 设备管理
+    Route::any('/teacher/management/rooms-list','H5\Teacher\RoomsController@rooms')
+        ->name('h5.teacher.management.rooms-list'); // 教室管理
+    Route::any('/teacher/management/visitors-list','H5\Teacher\VisitorsController@visitors')
+        ->name('h5.teacher.management.visitors-list'); // 教室管理
+
+    // 教师助手
+    Route::any('/teacher/management/grades-list','H5\Teacher\StudentsController@grades')
+        ->name('h5.teacher.management.grades-list'); // 班级管理
+    Route::any('/teacher/management/students-view','H5\Teacher\StudentsController@students_view')
+        ->name('h5.teacher.management.students-view'); // 学生管理
 });
 
 // 分享

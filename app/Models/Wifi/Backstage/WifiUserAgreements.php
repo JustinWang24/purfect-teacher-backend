@@ -83,7 +83,23 @@ class WifiUserAgreements extends Model
     */
    public static function getWifiUserAgreementsOneInfo ( $condition = [] , $orderArr = [] , $fieldsArr = [] , $joinArr = [] )
    {
-      return WifiUserAgreements::where ( $condition )->orderByArr ( $orderArr )->joinArr ( $joinArr )->first ( $fieldsArr );
+      $joinCount = count($joinArr);
+      if($joinCount == 1) // 一张表
+      {
+         return WifiUserAgreements::where ( $condition )
+                 ->orderBy ( $orderArr[0],$orderArr[1] )
+                 ->join($joinArr[0][0],$joinArr[0][1],$joinArr[0][2],$joinArr[0][3],isset($joinArr[0][4])?$joinArr[0][4]:'inner')
+                 ->first ( $fieldsArr );;
+      }
+      if($joinCount == 2) // 二张表
+      {
+         return WifiUserAgreements::where ( $condition )
+                  ->orderBy ( $orderArr[0],$orderArr[1] )
+                  ->join($joinArr[0][0],$joinArr[0][1],$joinArr[0][2],$joinArr[0][3],isset($joinArr[0][4])?$joinArr[0][4]:'inner')
+                  ->join($joinArr[1][0],$joinArr[1][1],$joinArr[1][2],$joinArr[1][3],isset($joinArr[1][4])?$joinArr[1][4]:'inner')
+                  ->first ( $fieldsArr );;
+      }
+      return WifiUserAgreements::where ( $condition )->orderBy ( $orderArr[0],$orderArr[1] )->first ( $fieldsArr );
    }
 
    /**
@@ -97,7 +113,23 @@ class WifiUserAgreements extends Model
     */
    public static function getWifiUserAgreementsListInfo( $condition = [] , $orderArr = [] , $pageArr = [] , $fieldsArr = [] , $joinArr = [] )
    {
-      return WifiUserAgreements::where ( $condition )->orderByArr ( $orderArr )->joinArr ( $joinArr )
+      $joinCount = count($joinArr);
+      if($joinCount == 1) // 一张表
+      {
+         return WifiUserAgreements::where ( $condition )
+                  ->join($joinArr[0][0],$joinArr[0][1],$joinArr[0][2],$joinArr[0][3],isset($joinArr[0][4])?$joinArr[0][4]:'inner')
+                  ->orderBy ( $orderArr[0],$orderArr[1] )
+                  ->paginate ( $pageArr[ 'limit' ] , $fieldsArr , 'page' , $pageArr[ 'page' ] );
+      }
+      if($joinCount == 2) // 二张表
+      {
+         return WifiUserAgreements::where ( $condition )
+                 ->join($joinArr[0][0],$joinArr[0][1],$joinArr[0][2],$joinArr[0][3],isset($joinArr[0][4])?$joinArr[0][4]:'inner')
+                 ->join($joinArr[1][0],$joinArr[1][1],$joinArr[1][2],$joinArr[1][3],isset($joinArr[1][4])?$joinArr[1][4]:'inner')
+                 ->orderBy ( $orderArr[0],$orderArr[1] )
+                 ->paginate ( $pageArr[ 'limit' ] , $fieldsArr , 'page' , $pageArr[ 'page' ] );
+      }
+      return WifiUserAgreements::where ( $condition )->orderBy ( $orderArr[0],$orderArr[1] )
               ->paginate ( $pageArr[ 'limit' ] , $fieldsArr , 'page' , $pageArr[ 'page' ] );
    }
 

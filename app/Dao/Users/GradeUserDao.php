@@ -77,6 +77,19 @@ class GradeUserDao
     }
 
     /**
+     * 根据学校获取 id
+     * @param $gradeId
+     * @return Collection
+     */
+    public function getByGradeForApp($gradeId){
+        return GradeUser::select(['id','user_id', 'name'])
+            ->where('grade_id',$gradeId)
+            ->where('user_type',Role::VERIFIED_USER_STUDENT)
+            ->with('studentProfile')
+            ->get();
+    }
+
+    /**
      * 根据学校 id 和 用户 id 来检查是否存在
      * @param $schoolId
      * @param $userId

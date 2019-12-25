@@ -52,5 +52,8 @@ Route::prefix('api_wifi')->middleware('auth:api')->group(function () {
     Route::any('/v1/wifi_issue/get-my-issue-info','\App\Http\Controllers\Api\Wifi\wifiIssueController@get_my_issue_info');
 	// 评论单个报修
     Route::any('/v1/wifi_issue/add-issue-comment-info','\App\Http\Controllers\Api\Wifi\wifiIssueController@add_issue_comment_info');
-	
+
+   // 支付异步接口
+   Route::any('/v1/wifi_pay/asyns-notice-info','\App\Http\Controllers\Api\Wifi\WifiPayController@asyns_notice_info');
+
 });

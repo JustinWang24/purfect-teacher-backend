@@ -27,6 +27,19 @@ class TimetableItemDao
     }
 
     /**
+     * @param $teacherId
+     * @param $year
+     * @param $term
+     * @return Collection
+     */
+    public function getItemsByTeacherForApp($teacherId, $year, $term){
+        return TimetableItem::select('grade_id')->where('year',$year)
+            ->where('term',$term)
+            ->where('teacher_id',$teacherId)
+            ->get();
+    }
+
+    /**
      * @param $id
      * @param $withRelations
      * @return TimetableItem

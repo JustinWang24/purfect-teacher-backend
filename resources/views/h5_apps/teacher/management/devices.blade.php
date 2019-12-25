@@ -1,12 +1,15 @@
 @extends('layouts.h5_teacher_app')
 @section('content')
-    <div id="app-init-data-holder" data-school="{{ $teacher->getSchoolId() }}" data-devices="{{ json_encode($devices) }}"></div>
+    <div id="app-init-data-holder" data-school="{{ $teacher->getSchoolId() }}" data-devices="{{ json_encode($devices) }}" data-token="{{ $api_token }}"></div>
     <div id="school-teacher-management-devices-app" class="school-intro-container">
         <div class="main p-15">
-            <h2>{{ $location === \App\Models\Schools\Facility::LOCATION_INDOOR ? '室内设备列表':'室外设备列表' }}</h2>
+            <h2>
+                <el-button type="text" icon="el-icon-arrow-left" class="text-dark" @click="back"></el-button>&nbsp;
+                {{ intval($location) === \App\Models\Schools\Facility::LOCATION_INDOOR ? '室内设备列表':'室外设备列表' }}
+            </h2>
             <el-table
                     :data="devices"
-                    empty-text="还没有{{ $location === \App\Models\Schools\Facility::LOCATION_INDOOR ? '室内设备':'室外设备' }}"
+                    empty-text="还没有添加{{ $location === \App\Models\Schools\Facility::LOCATION_INDOOR ? '室内设备':'室外设备' }}"
                     stripe
                     style="width: 100%">
                 <el-table-column
@@ -18,7 +21,7 @@
                 <el-table-column
                         label="布放地点">
                     <template slot-scope="scope">
-                        @{{ scope.row.building.name }}: @{{ scope.row.room.name }}
+                        @{{ scope.row.building ? scope.row.building.name : null }}: @{{ scope.row.room ? scope.row.room.name : null }}
                     </template>
                 </el-table-column>
                 <el-table-column
@@ -40,13 +43,10 @@
                     <p class="text-dark">室内位置: @{{ selectedDevice.detail_addr }}</p>
                 </li>
                 <li>
-                    <p class="text-dark">建筑: @{{ selectedDevice.building.name }}</p>
+                    <p class="text-dark">建筑: @{{ selectedDevice.building ? selectedDevice.building.name : null }}</p>
                 </li>
                 <li>
-                    <p class="text-dark">房间: @{{ selectedDevice.room.name }}</p>
-                </li>
-                <li>
-                    <p class="text-dark">安装时间: @{{ selectedDevice.created_at }}</p>
+                    <p class="text-dark">房间: @{{ selectedDevice.room ? selectedDevice.room.name : null }}</p>
                 </li>
                 <li>
                     <p class="text-dark">记录更新: @{{ selectedDevice.updated_at }}</p>
