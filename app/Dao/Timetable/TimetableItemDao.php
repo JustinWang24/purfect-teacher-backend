@@ -236,7 +236,7 @@ class TimetableItemDao
         foreach ($rows as $row) {
             // 要判断一下, 是否为调课的记录
             $result[$row->time_slot_id] = [
-                'course' => $row->course->name,
+                'course' => $row->course->name??'未安排课程',
                 'teacher'=> $row->teacher->name,
                 'teacher_id'=> $row->teacher_id,
                 'building'=>$row->building->name,
