@@ -90,36 +90,47 @@ class CourseWareController extends Controller
             ],
             'type_list' => [
                 [
-                    'id'  => '12',
-                    'img' => '',
-                    '哲学',
+                    'id'  => '1',
+                    'img' => 'http://q2zxaeiiu.bkt.clouddn.com/blog/20191225140915.png',
+                    'title' => '哲学',
                 ],
                 [
-                    'id'  => '13',
-                    'img' => '',
-                    '法学'  => 'http://q2zxaeiiu.bkt.clouddn.com/blog/20191224170910.png'
+                    'id'  => '2',
+                    'img' => 'http://q2zxaeiiu.bkt.clouddn.com/blog/20191225140925.png',
+                    'title' => '法学'
                 ],
                 [
-                    'id'  => '12',
-                    'img' => '',
-                    '教育学' => 'http://q2zxaeiiu.bkt.clouddn.com/blog/20191224170908.png',
+                    'id'  => '3',
+                    'img' => 'http://q2zxaeiiu.bkt.clouddn.com/blog/20191225140926.png',
+                    'title' => '教育学',
                 ],
                 [
-                    'id'  => '12',
-                    'img' => '',
-                    '经济学' => 'http://q2zxaeiiu.bkt.clouddn.com/blog/20191224170909.png',
+                    'id'  => '4',
+                    'img' => 'http://q2zxaeiiu.bkt.clouddn.com/blog/20191225140929.png',
+                    'title' => '经济学',
                 ],
                 [
-                    'id'  => '12',
-                    'img' => '',
-                    '历史学' => 'http://q2zxaeiiu.bkt.clouddn.com/blog/20191224170911.png',
+                    'id'  => '5',
+                    'img' => 'http://q2zxaeiiu.bkt.clouddn.com/blog/20191225140928.png',
+                    'title' => '历史学',
+                ],
+
+                [
+                    'id'  => '6',
+                    'img' => 'http://q2zxaeiiu.bkt.clouddn.com/blog/20191225140927.png',
+                    'title' => '文学',
                 ],
                 [
-                    'id'  => '12',
-                    'img' => '',
-                    '文学'  => 'http://q2zxaeiiu.bkt.clouddn.com/blog/20191224170907.png',
+                    'id'  => '7',
+                    'img' => 'http://q2zxaeiiu.bkt.clouddn.com/blog/20191225140934.png',
+                    'title' => '史学',
                 ],
-            ]
+                [
+                    'id'  => '8',
+                    'img' => 'http://q2zxaeiiu.bkt.clouddn.com/blog/20191225140933.png',
+                    'title' => '更多',
+                ]
+            ]   
         ];
 
         return JsonBuilder::Success($data);
