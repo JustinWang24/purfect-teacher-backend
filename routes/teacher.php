@@ -147,4 +147,9 @@ Route::prefix('teacher')->group(function () {
     // 老师编辑学生的档案照片
     Route::any('/student/edit-avatar','StudentsController@edit_avatar')
         ->name('teacher.student.edit-avatar');
+
+    // 一码通
+    // 使用列表
+    Route::get('/code-list','Code\CodeController@list')
+        ->name('teacher.code.list');
 });
