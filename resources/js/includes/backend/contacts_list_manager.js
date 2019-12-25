@@ -48,6 +48,7 @@ if(document.getElementById('school-contacts-list-app')){
                 loadOrgContacts(this.schoolUuid).then(res => {
                     if(Util.isAjaxResOk(res)){
                         this.contacts = res.data.data.department_list;
+                        this.contacts.splice(0,1);
                     }
                 });
             },

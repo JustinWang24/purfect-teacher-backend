@@ -40,6 +40,15 @@ class CalendarDao
     }
 
     /**
+     * 删除校历事件
+     * @param $id
+     * @return mixed
+     */
+    public function deleteEvent($id){
+        return SchoolCalendar::where('id',$id)->delete();
+    }
+
+    /**
      * 获取校历的事件
      * @param $schoolId
      * @param $date

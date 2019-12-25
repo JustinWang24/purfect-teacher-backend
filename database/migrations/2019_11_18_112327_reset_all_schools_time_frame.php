@@ -15,24 +15,24 @@ class ResetAllSchoolsTimeFrame extends Migration
      */
     public function up()
     {
-        $schools = School::all();
-
-        $dao = new \App\Dao\Timetable\TimeSlotDao();
-        $frames = $dao->getDefaultTimeFrame()['frames'];
-
-        foreach ($schools as $school) {
-            foreach ($frames as $frame) {
-                $exist = TimeSlot::where('school_id',$school->id)
-                    ->where('type',$frame['type'])
-                    ->where('from',$frame['from'])
-                    ->where('to',$frame['to'])
-                    ->first();
-                $frame['school_id'] = $school->id;
-                if(!$exist){
-                    $dao->createTimeSlot($frame);
-                }
-            }
-        }
+//        $schools = School::all();
+//
+//        $dao = new \App\Dao\Timetable\TimeSlotDao();
+//        $frames = $dao->getDefaultTimeFrame()['frames'];
+//
+//        foreach ($schools as $school) {
+//            foreach ($frames as $frame) {
+//                $exist = TimeSlot::where('school_id',$school->id)
+//                    ->where('type',$frame['type'])
+//                    ->where('from',$frame['from'])
+//                    ->where('to',$frame['to'])
+//                    ->first();
+//                $frame['school_id'] = $school->id;
+//                if(!$exist){
+//                    $dao->createTimeSlot($frame);
+//                }
+//            }
+//        }
     }
 
     /**

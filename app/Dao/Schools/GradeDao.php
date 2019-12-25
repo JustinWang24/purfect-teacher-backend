@@ -48,6 +48,19 @@ class GradeDao
 
     /**
      * @param $id
+     * @param $year
+     * @return Grade
+     */
+    public function getBySchoolAndYear($id, $year){
+        return Grade::where('school_id',$id)->where('year',$year)->paginate();
+    }
+
+    public function getBySchoolAndYearForApp($id, $year){
+        return Grade::select(['id','name','year'])->where('school_id',$id)->where('year',$year)->get();
+    }
+
+    /**
+     * @param $id
      * @return Collection
      */
     public function getAllBySchool($id){

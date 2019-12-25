@@ -26,6 +26,8 @@ class SchoolConfiguration extends Model
         'apply_elective_course_to_2',
         'first_day_term_1',
         'first_day_term_2',
+        'summer_start_date',
+        'winter_start_date',
     ];
 
     public $casts = [
@@ -36,6 +38,8 @@ class SchoolConfiguration extends Model
         'apply_elective_course_to_2'=>'datetime',
         'first_day_term_1'=>'datetime',
         'first_day_term_2'=>'datetime',
+        'summer_start_date'=>'datetime',
+        'winter_start_date'=>'datetime',
     ];
 
     /**
@@ -76,11 +80,13 @@ class SchoolConfiguration extends Model
         return ($month >= self::FIRST_TERM_START_MONTH || $month < self::SECOND_TERM_START_MONTH) ? 1 : 2;
     }
 
+
     /**
      * @param null $term
+     * @param bool $isReservesWeek
      * @return Collection
      */
-    public function getAllWeeksOfTerm($term = null){
+    public function getAllWeeksOfTerm($term = null, $isReservesWeek = true){
         $termStartDate = $this->getTermStartDate($term);
         $fieldOfWeeksPerTerm = ConfigurationTool::KEY_STUDY_WEEKS_PER_TERM;
         $weeksNumber = $this->$fieldOfWeeksPerTerm;
@@ -88,13 +94,17 @@ class SchoolConfiguration extends Model
         // 预备周, 是开始日期的前一周
         $weeks = new Collection();
 
-        $weeks->push(
+        // 是否需要预备周
+        if($isReservesWeek) {
+            $weeks->push(
             new CalendarWeek(
                 '预备周',
                 $termStartDate->subWeek()->format('Y-m-d'),
                 $termStartDate->addDays(6)->format('Y-m-d')
-            )
-        );
+                )
+            );
+        }
+
 
         // 工作周
         for ($i = 0; $i < $weeksNumber; $i++){
@@ -138,11 +148,38 @@ class SchoolConfiguration extends Model
         return Carbon::createFromFormat('Y-m-d',self::FAKE_YEAR.'-'.$ec[$type]['month'].'-'.$ec[$type]['day']);
     }
 
+    public static function CreateMockDate($month,$day){
+        return Carbon::createFromFormat('Y-m-d',self::FAKE_YEAR.'-'.$month.'-'.$day);
+    }
+
     /**
      * 获取学校 ID
      * @return int
      */
     public function getSchoolId(){
         return $this->school_id;
+    }
+
+    /**
+     * @param $date
+     * @param $weeks
+     * @return CalendarWeek|null
+     */
+    public function getScheduleWeek($date, $weeks = null){
+        $w = null;
+
+        if(!$weeks){
+            $weeks = $this->getAllWeeksOfTerm();
+        }
+        foreach ($weeks as $week) {
+            /**
+             * @var CalendarWeek $week
+             */
+            if($week->includes($date)){
+                $w = $week;
+                break;
+            }
+        }
+        return $w;
     }
 }

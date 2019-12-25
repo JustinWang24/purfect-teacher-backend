@@ -22,6 +22,10 @@ class GradeUserDao
         $this->currentUser = $user;
     }
 
+    public function create($data){
+        return GradeUser::create($data);
+    }
+
     /**
      * 模糊查找用户的信息
      * @param $name
@@ -70,6 +74,19 @@ class GradeUserDao
      */
     public function getBySchool($schoolId,$types){
         return GradeUser::where('school_id',$schoolId)->whereIn('user_type',$types)->paginate();
+    }
+
+    /**
+     * 根据学校获取 id
+     * @param $gradeId
+     * @return Collection
+     */
+    public function getByGradeForApp($gradeId){
+        return GradeUser::select(['id','user_id', 'name'])
+            ->where('grade_id',$gradeId)
+            ->where('user_type',Role::VERIFIED_USER_STUDENT)
+            ->with('studentProfile')
+            ->get();
     }
 
     /**
@@ -145,7 +162,7 @@ class GradeUserDao
      * @param string $direction
      * @return Collection
      */
-    private function _paginateUsersBy($type, $fieldName, $fieldValue, $orderBy = 'updated_at', $direction = 'desc'){
+    private function _paginateUsersBy($type, $fieldName, $fieldValue, $orderBy = 'name', $direction = 'asc'){
         if(is_array($type)){
             return GradeUser::where($fieldName,$fieldValue)
                 ->whereIn('user_type',$type)

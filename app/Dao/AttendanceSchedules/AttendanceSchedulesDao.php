@@ -10,7 +10,9 @@ use App\Models\AttendanceSchedules\AttendanceSchedule;
 use App\Models\AttendanceSchedules\AttendanceSchedulePerson;
 use App\Models\AttendanceSchedules\AttendanceTask;
 use App\Models\AttendanceSchedules\AttendanceTimeSlot;
+use App\Models\AttendanceSchedules\SpecialAttendance;
 use App\Utils\JsonBuilder;
+use App\Utils\Misc\ConfigurationTool;
 use App\Utils\ReturnData\MessageBag;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
@@ -21,6 +23,43 @@ class AttendanceSchedulesDao
     public function __construct()
     {
     }
+
+    // 以下的方法是对礼县的值周的特殊处理
+    public function getSpecialAttendances($schoolId){
+        return SpecialAttendance::where('school_id', $schoolId)
+            ->orderBy('start_date', 'desc')
+            ->paginate(ConfigurationTool::DEFAULT_PAGE_SIZE);
+    }
+    // 为前端加载值周数据
+    public function getSpecialAttendancesForApp($schoolId, $startDate){
+        return SpecialAttendance::where('school_id', $schoolId)
+            ->where('start_date','>=',$startDate)
+            ->with('grade')
+            ->orderBy('start_date', 'asc')
+            ->get();
+    }
+
+    public function saveSpecial($data){
+        $sd = Carbon::createFromFormat('Y-m-d',$data['start_date']);
+        $data['end_date'] = $sd->addDays(6)->format('Y-m-d');
+        return SpecialAttendance::create($data);
+    }
+    public function updateSpecial($data){
+        $sd = Carbon::createFromFormat('Y-m-d',$data['start_date']);
+        $data['end_date'] = $sd->addDays(6)->format('Y-m-d');
+        $special = SpecialAttendance::find($data['id']);
+        foreach ($data as $key => $datum) {
+            $special->$key = $datum;
+        }
+        return $special->save();
+    }
+    public function getSpecial($id){
+        return SpecialAttendance::find($id);
+    }
+    public function deleteSpecial($id){
+        return SpecialAttendance::where('id',$id)->delete();
+    }
+    // 对礼县的值周的特殊处理 结束
 
     /**
      * @param $data
@@ -237,16 +276,19 @@ class AttendanceSchedulesDao
     public function getAllTaskForSchool($schoolId, $cycle='week', $current=0)
     {
         $timeArr = $this->getTimes($current, $cycle);
-        $startTime = $timeArr[0];
-        $endTime   = $timeArr[1];
         $result = AttendanceTask::where(
-                function ($query) use ($startTime, $endTime) {
-                    $query->where('start_time','>=', $startTime)->orWhere('end_time', '>=', $endTime);
+                function ($query) use ($timeArr) {
+                    $query->orwhereBetween('start_time',$timeArr)
+                          ->orwhereBetween('end_time',$timeArr)
+                          ->orWhere([['start_time', '<=', $timeArr[0]],['end_time', '>=', $timeArr[1]]]);
                 })
-            //->orWhere('end_time', '<=', $endTime)
             ->where('school_id', $schoolId)
             ->orderby('id', 'DESC')
             ->get();
+/*        $result = AttendanceTask::where([['start_time', '<=', $timeArr[0]],['end_time', '>=', $timeArr[1]]])
+            ->where('school_id', $schoolId)
+            ->orderby('id', 'DESC')
+            ->get();*/
         return $result;
 
 

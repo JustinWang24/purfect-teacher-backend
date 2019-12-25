@@ -6,6 +6,7 @@ Route::prefix('school_manager')->group(function () {
     Route::get('school/institutes', 'SchoolsController@institutes')->name('school_manager.school.institutes'); // 显示学校的所有学院
     Route::get('school/departments', 'SchoolsController@departments')->name('school_manager.school.departments'); // 显示学校的所有系
     Route::get('school/majors', 'SchoolsController@majors')->name('school_manager.school.majors'); // 显示学校的所有专业
+    Route::get('school/years', 'SchoolsController@years')->name('school_manager.school.years'); // 显示学校的所有年级
     Route::get('school/grades', 'SchoolsController@grades')->name('school_manager.school.grades'); // 显示学校的所有班级
     Route::get('school/teachers', 'SchoolsController@teachers')->name('school_manager.school.teachers'); // 显示学校的所有老师
     Route::get('school/students', 'SchoolsController@students')->name('school_manager.school.students'); // 显示学校的所有学生
@@ -28,6 +29,25 @@ Route::prefix('school_manager')->group(function () {
         ->name('school_manager.organizations.add-member'); // 给机构添加成员
     Route::post('organizations/remove-member', 'SchoolsController@remove_member')
         ->name('school_manager.organizations.remove-member'); // 删除
+
+    Route::get('organizations/teaching-and-research-group', 'SchoolsController@teaching_and_research_group')
+        ->name('school_manager.organizations.teaching-and-research-group'); // 加载教研组
+    Route::get('organizations/teaching-and-research-group/members', 'SchoolsController@teaching_and_research_group_members')
+        ->name('school_manager.organizations.teaching-and-research-group-members'); // 添加教研组
+    Route::get('organizations/teaching-and-research-group/add', 'SchoolsController@teaching_and_research_group_add')
+        ->name('school_manager.organizations.teaching-and-research-group-add'); // 添加教研组
+    Route::get('organizations/teaching-and-research-group/edit', 'SchoolsController@teaching_and_research_group_edit')
+        ->name('school_manager.organizations.teaching-and-research-group-edit'); // 修改教研组
+    Route::get('organizations/teaching-and-research-group/delete', 'SchoolsController@teaching_and_research_group_delete')
+        ->name('school_manager.organizations.teaching-and-research-group-delete'); // 删除教研组
+    Route::post('organizations/teaching-and-research-group/delete-member', 'SchoolsController@teaching_and_research_group_delete_member')
+        ->name('school_manager.organizations.teaching-and-research-group-delete-member'); // 删除教研组
+    Route::post('organizations/teaching-and-research-group/save', 'SchoolsController@teaching_and_research_group_save')
+        ->name('school_manager.organizations.teaching-and-research-group-save'); // 保存教研组
+    Route::post('organizations/teaching-and-research-group/save-members', 'SchoolsController@teaching_and_research_group_save_members')
+        ->name('school_manager.organizations.teaching-and-research-group-save-members'); // 保存教研组
+
+    Route::any('school/set-year-manager', 'SchoolsController@set_year_manager')->name('school_manager.school.set-year-manager'); // 显示学校的所有年级
 
     // 校区的管理
     Route::get('campus/add', 'CampusController@add')->name('school_manager.campus.add');                        // 添加校区
@@ -75,7 +95,7 @@ Route::prefix('school_manager')->group(function () {
     Route::get('grade/add', 'GradesController@add')->name('school_manager.grade.add');           // 添加班级
     Route::get('grade/edit', 'GradesController@edit')->name('school_manager.grade.edit');        // 编辑班级
     Route::post('grade/update', 'GradesController@update')->name('school_manager.grade.update');        // 编辑班级
-    Route::get('grade/users', 'GradesController@users')->name('school_manager.grade.users');     // 班级的学生列表
+
     Route::any('grade/set-adviser', 'GradesController@set_adviser')->name('school_manager.grade.set-adviser');     // 设置班主任
 
     // 学生管理: 只有 学校管理员以上级别的角色才可以添加,编辑,学生school_manager.scenery.edit
@@ -164,6 +184,8 @@ Route::prefix('school_manager')->group(function () {
 
     // 校历事件添加
     Route::any('calendar/save', 'Calendar\IndexController@save')->name('school_manger.school.calendar.save');
+    // 校历事件的删除
+    Route::any('calendar/delete', 'Calendar\IndexController@delete')->name('school_manger.school.calendar.delete');
 
     // 校历展示
     Route::any('calendar/index', 'Calendar\IndexController@index')->name('school_manger.school.calendar.index');
@@ -215,8 +237,28 @@ Route::prefix('school_manager')->group(function () {
         Route::get('documents-manager','ElectiveCoursesController@management')
             ->name('school_manager.oa.documents-manager');
         // 考勤管理
-        Route::get('attendances-manager','ElectiveCoursesController@management')
+        Route::get('attendances-manager','OA\AttendanceTeacherController@management')
             ->name('school_manager.oa.attendances-manager');
+        // 编辑考勤组
+        Route::any('attendances-group/{id}','OA\AttendanceTeacherController@view')
+            ->name('school_manager.oa.attendances-group');
+        //保存考勤组
+        Route::any('attendances-save','OA\AttendanceTeacherController@save')
+            ->name('school_manager.oa.attendances-save');
+        //添加成员
+        Route::any('attendances-members/{id}','OA\AttendanceTeacherController@members')
+            ->name('school_manager.oa.attendances-members');
+        Route::any('attendances-add-member','OA\AttendanceTeacherController@addMember')
+            ->name('school_manager.oa.attendances-add-member');
+        Route::any('attendances-del-member','OA\AttendanceTeacherController@delmember')
+            ->name('school_manager.oa.attendances-del-member');
+        //补卡
+        Route::any('attendances-messages','OA\AttendanceTeacherController@messages')
+            ->name('school_manager.oa.attendances-messages');
+        Route::any('attendances-accept-messages','OA\AttendanceTeacherController@messageAccept')
+            ->name('school_manager.oa.attendances-accept-messages');
+        Route::any('attendances-reject-messages','OA\AttendanceTeacherController@messagereject')
+            ->name('school_manager.oa.attendances-reject-messages');
         // 审批管理
         Route::get('approval-manager','ElectiveCoursesController@management')
             ->name('school_manager.oa.approval-manager');
@@ -349,6 +391,7 @@ Route::prefix('school_manager')->group(function () {
     });
 
     //值周功能
+    Route::get('attendance/delete', 'AttendanceSchedulesController@delete')->name('school_manager.attendance.delete');                        // 添加校区
     Route::get('attendance/add', 'AttendanceSchedulesController@add')->name('school_manager.attendance.add');                        // 添加校区
     Route::get('attendance/edit/{id}', 'AttendanceSchedulesController@edit')->name('school_manager.attendance.edit');                     // 编辑校区
     Route::post('attendance/update', 'AttendanceSchedulesController@update')->name('school_manager.attendance.update');              // 保存校区
@@ -381,8 +424,14 @@ Route::prefix('school_manager')->group(function () {
 
     // 教师档案管理
     Route::prefix('teachers')->group(function(){
+        Route::get('add-new','Teachers\ProfilesController@add_new')
+            ->name('school_manager.teachers.add-new');
         Route::get('edit-profile','Teachers\ProfilesController@edit')
             ->name('school_manager.teachers.edit-profile');
+        Route::any('edit-avatar','Teachers\ProfilesController@avatar')
+            ->name('school_manager.teachers.edit-avatar');
+        Route::post('save-profile','Teachers\ProfilesController@save')
+            ->name('school_manager.teachers.save-profile');
         Route::get('manage-performance','Teachers\ProfilesController@manage_performance')
             ->name('school_manager.teachers.manage-performance');
         Route::post('manage-performance-save','Teachers\ProfilesController@manage_performance_save')

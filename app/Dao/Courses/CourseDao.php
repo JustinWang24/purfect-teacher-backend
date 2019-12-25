@@ -12,6 +12,7 @@ use App\Dao\Users\UserDao;
 use App\Models\Course;
 use App\Models\Courses\CourseArrangement;
 use App\Models\Courses\CourseMajor;
+use App\Models\Courses\CourseMaterial;
 use App\Models\Courses\CourseTeacher;
 use App\Models\ElectiveCourses\CourseElective;
 use App\Utils\JsonBuilder;
@@ -36,6 +37,19 @@ class CourseDao
     public function __construct()
     {
 
+    }
+
+    /**
+     * 根据课程和老师, 获取课件的列表
+     * @param $course
+     * @param $teacher
+     * @return Collection
+     */
+    public function getCourseMaterials($course, $teacher){
+        return CourseMaterial::where('course_id',$course)
+            ->where('teacher_id',$teacher)
+            ->orderBy('index','asc')
+            ->get();
     }
 
     /**
@@ -301,8 +315,8 @@ class CourseDao
      */
     public function getCoursesBySchoolId($schoolId, $pageNumber=0, $pageSize=20){
         $courses = Course::where('school_id',$schoolId)
-            ->skip($pageNumber * $pageSize)
-            ->take($pageSize)
+//            ->skip($pageNumber * $pageSize)
+//            ->take($pageSize)
             ->get();
         $data = [];
         foreach ($courses as $course) {

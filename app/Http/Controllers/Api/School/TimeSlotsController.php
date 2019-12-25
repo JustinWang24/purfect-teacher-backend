@@ -44,7 +44,7 @@ class TimeSlotsController extends Controller
         $school = $schoolDao->getSchoolByIdOrUuid($schoolUuid);
 
         if($school){
-            return JsonBuilder::Success(['time_frame'=>$school->timeFrame]);
+            return JsonBuilder::Success(['time_frame'=>$school->getCurrentTimeFrame()]);
         }
         else{
             return JsonBuilder::Error();

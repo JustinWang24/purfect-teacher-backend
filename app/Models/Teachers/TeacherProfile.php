@@ -27,9 +27,19 @@ class TeacherProfile extends Model
         'joined_at', // 入职日期
         'avatar',
         'famous',
+        'work_start_at',
+        'major',
+        'final_education',
+        'final_major',
+        'title_start_at',
+        'title1_at',
+        'title1_hired_at',
+        'hired_at',
+        'hired',
+        'notes',
     ];
 
-    public $casts = ['famous'=>'boolean'];
+    public $casts = ['famous'=>'boolean','hired'=>'boolean'];
 
     public $dates = ['joined_at'];
 
@@ -53,11 +63,11 @@ class TeacherProfile extends Model
 
 
     public function user() {
-        $field = ['id','name'];
+        $field = ['id','name','mobile'];
         return $this->belongsTo(User::class)->select($field);
     }
 
-    public function getAvatarAttribute(){
-        return $this->avatar ?? User::DEFAULT_USER_AVATAR;
+    public function getAvatarAttribute($value){
+        return asset($value ?? User::DEFAULT_USER_AVATAR);
     }
 }

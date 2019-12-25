@@ -20,11 +20,14 @@
         <a href="{{ route('school_manager.school.majors') }}" class="btn btn-{{ $highlight==='major' ? 'primary' : 'default' }}">
             <span class="fa {{ $highlight==='major' ? 'fa-check-square' : null }}"></span> 专业管理
         </a>
+        <a href="{{ route('school_manager.school.years') }}" class="btn btn-{{ $highlight==='years' ? 'primary' : 'default' }}">
+            <span class="fa {{ $highlight==='years' ? 'fa-check-square' : null }}"></span> 年级管理
+        </a>
         <a href="{{ route('school_manager.school.grades') }}" class="btn btn-{{ $highlight==='grade' ? 'primary' : 'default' }}">
             <span class="fa {{ $highlight==='grade' ? 'fa-check-square' : null }}"></span> 班级管理
         </a>
         <a href="{{ route('school_manager.school.teachers') }}" class="btn btn-{{ $highlight==='teacher' ? 'primary' : 'default' }}">
-            <span class="fa {{ $highlight==='teacher' ? 'fa-check-square' : null }}"></span> 教师管理
+            <span class="fa {{ $highlight==='teacher' ? 'fa-check-square' : null }}"></span> 教职工管理
         </a>
         <a href="{{ route('school_manager.school.students') }}" class="btn btn-{{ $highlight==='student' ? 'primary' : 'default' }}">
             <span class="fa {{ $highlight==='student' ? 'fa-check-square' : null }}"></span> 学生管理

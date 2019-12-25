@@ -7,39 +7,66 @@ use App\Utils\UI\Button;
 @section('content')
     <div class="row">
         <div class="col-sm-12 col-md-12 col-xl-12">
-            <div class="card">
+            <div class="card" id="new-attendance-app">
                 <div class="card-head">
-                    <header>在学校 ({{ session('school.name') }}) 创建新值周表</header>
+                    <header>值周表</header>
                 </div>
                 <div class="card-body">
-                    <form action="{{ route('school_manager.attendance.update') }}" method="post"  id="add-attendance-form">
-                        @csrf
-                        <div class="form-group">
-                            <label for="attendance-title-input">任务名称</label>
-                            <input required type="text" class="form-control" id="attendance-title-input" value="{{ old('task.title') }}" placeholder="任务名称" name="task[title]">
-                        </div>
-                        <div class="form-group">
-                            <label for="task-detail">任务具体内容</label>
-                            <textarea required class="form-control" name="task[content]" id="task-desc-input" cols="30" rows="10" placeholder="任务内容">{{ old('task.content') }}</textarea>
-                        </div>
-                        <div class="form-group">
-                            <label for="attendance-option-input">开始时间</label>
-                            <input required type="date" class="form-control" style="width:200px;" id="attendance-option-input" value="{{ old('task.start_time') }}" placeholder="开始时间" name="task[start_time]">
-                        </div>
-                        <div class="form-group">
-                            <label for="attendance-option-input">结束时间</label>
-                            <input required type="date" class="form-control" style="width:200px;" id="attendance-option-input" value="{{ old('task.end_time') }}" placeholder="结束时间" name="task[end_time]">
-                        </div>
+                    <el-form ref="form" :model="form" label-width="80px">
+                        <el-form-item label="值班周次">
+                            <el-select v-model="form.start_date" placeholder="请选择值班周次" style="width: 100%;">
+                                @foreach($weeks as $week)
+                                    <el-option label="{{ $week->getName().': 从'._printDate($week->getStart()).' 至 '._printDate($week->getEnd()) }}" value="{{ $week->getStart()->format('Y-m-d') }}"></el-option>
+                                @endforeach
+                            </el-select>
+                        </el-form-item>
 
-                        <?php
-                        Button::Print(['id'=>'btn-create-attendance','text'=>trans('general.submit')], Button::TYPE_PRIMARY);
-                        ?>&nbsp;
-                        <?php
-                        Anchor::Print(['text'=>trans('general.return'),'href'=>route('school_manager.attendance.list'),'class'=>'pull-right link-return'], Button::TYPE_SUCCESS,'arrow-circle-o-right')
-                        ?>
-                    </form>
+                        <el-form-item label="校领导">
+                            <el-input v-model="form.high_level" placeholder="必填: 校领导"></el-input>
+                        </el-form-item>
+                        <el-form-item label="中层领导">
+                            <el-input v-model="form.middle_level" placeholder="必填: 中层领导"></el-input>
+                        </el-form-item>
+                        <el-form-item label="责任教师">
+                            <el-input v-model="form.teacher_level" placeholder="必填: 责任教师"></el-input>
+                        </el-form-item>
+                        <el-form-item label="责任班级">
+                            <el-select v-model="form.grade_id" placeholder="请选择责任班级">
+                                @foreach($grades as $grade)
+                                <el-option label="{{ $grade->name }}" value="{{ $grade->id }}"></el-option>
+                                @endforeach
+                            </el-select>
+                        </el-form-item>
+
+                        <el-form-item label="组织单位">
+                            <el-select
+                                    style="width:100%;"
+                                    v-model="form.related_organizations"
+                                    multiple
+                                    filterable
+                                    allow-create
+                                    default-first-option
+                                    placeholder="请选择组织单位">
+                                @foreach($orgs as $org)
+                                    <el-option label="{{ $org->name }}" value="{{ $org->name }}"></el-option>
+                                @endforeach
+                            </el-select>
+                        </el-form-item>
+
+                        <el-form-item label="备注说明">
+                            <el-input type="textarea" v-model="form.description" placeholder="选填: 值周的备注说明"></el-input>
+                        </el-form-item>
+                        <el-form-item>
+                            <el-button type="primary" @click="onSubmit">立即创建</el-button>
+                            <a class="btn btn-default" href="{{ route('school_manager.attendance.list') }}">返回值周管理</a>
+                        </el-form-item>
+                    </el-form>
                 </div>
             </div>
         </div>
+    </div>
+    <div id="app-init-data-holder"
+         data-attendance="{{ json_encode($attendance??'') }}"
+         data-school="{{ session('school.id') }}">
     </div>
 @endsection

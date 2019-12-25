@@ -9,6 +9,7 @@
 namespace App\Http\Requests;
 
 use App\Dao\Schools\SchoolDao;
+use App\Models\School;
 use App\Utils\Misc\ConfigurationTool;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
@@ -143,10 +144,11 @@ class MyStandardRequest extends FormRequest
 
     /**
      * 获取移动端学校信息
-     * @return int
+     * @return School
      */
     public function getAppSchool()
     {
-        return $this->user()->gradeUser->school;
+        $schoolId = $this->user()->getSchoolId();
+        return (new SchoolDao())->getSchoolById($schoolId);
     }
 }

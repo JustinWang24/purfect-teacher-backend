@@ -1,11 +1,16 @@
 <?php
 namespace App\Http\Controllers\Operator;
 use App\Dao\AttendanceSchedules\AttendanceSchedulesDao;
+use App\Dao\Schools\GradeDao;
+use App\Dao\Schools\OrganizationDao;
+use App\Dao\Schools\SchoolDao;
 use App\Dao\Users\GradeUserDao;
 use App\Http\Controllers\Controller;
 use App\Models\Acl\Role;
 use App\Models\AttendanceSchedules\AttendanceSchedule;
+use App\Models\AttendanceSchedules\SpecialAttendance;
 use App\Utils\FlashMessageBuilder;
+use App\Utils\JsonBuilder;
 use Illuminate\Http\Request;
 
 class AttendanceSchedulesController extends Controller
@@ -25,15 +30,51 @@ class AttendanceSchedulesController extends Controller
         $dao = new AttendanceSchedulesDao();
         $taskList = $dao->getAllTaskForSchool($schoolId, 'month');
         $this->dataForView['tasks'] = $taskList;
+        $this->dataForView['attendances'] = $dao->getSpecialAttendances($schoolId);
+
+        $school = (new SchoolDao())->getSchoolById($schoolId);
+        $this->dataForView['configuration'] = $school->configuration;
+        $this->dataForView['weeks'] = $school->configuration->getAllWeeksOfTerm();
+
         return view('school_manager.attendance.list', $this->dataForView);
     }
 
+    /**
+     * @param Request $request
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function add(Request $request){
-        $task = new AttendanceSchedule();
-        $this->dataForView['task'] = $task;
+        $schoolId = $request->session()->get('school.id');
+        $school = (new SchoolDao())->getSchoolById($schoolId);
+        $this->dataForView['configuration'] = $school->configuration;
+        $this->dataForView['weeks'] = $school->configuration->getAllWeeksOfTerm();
+
+        $this->dataForView['grades'] = (new GradeDao())->getAllBySchool(session('school.id'));
+        $this->dataForView['orgs'] = (new OrganizationDao())->getBySchoolId(session('school.id'), true);
+        $this->dataForView['attendance'] = null;
         return view('school_manager.attendance.add', $this->dataForView);
     }
+
     public function edit(Request $request, $id){
+        $schoolId = $request->session()->get('school.id');
+        $school = (new SchoolDao())->getSchoolById($schoolId);
+        $this->dataForView['configuration'] = $school->configuration;
+        $this->dataForView['weeks'] = $school->configuration->getAllWeeksOfTerm();
+
+        $this->dataForView['grades'] = (new GradeDao())->getAllBySchool(session('school.id'));
+        $this->dataForView['orgs'] = (new OrganizationDao())->getBySchoolId(session('school.id'), true);
+        $this->dataForView['attendance'] = (new AttendanceSchedulesDao())->getSpecial($id);
+        return view('school_manager.attendance.add', $this->dataForView);
+    }
+
+    public function delete(Request $request){
+        $id = $request->get('id');
+        (new AttendanceSchedulesDao())->deleteSpecial($id);
+        FlashMessageBuilder::Push($request, 'success','值周记录删除成功');
+        return redirect()->route('school_manager.attendance.list');
+    }
+
+    public function edit_old(Request $request, $id){
         $dao = new AttendanceSchedulesDao();
         $schoolId = $request->session()->get('school.id');
         $task = $dao->getTaskBySchoolId($id, $schoolId);
@@ -45,11 +86,32 @@ class AttendanceSchedulesController extends Controller
         return view('school_manager.attendance.edit', $this->dataForView);
     }
 
+
+    /**
+     * @param Request $request
+     * @return string
+     */
+    public function update(Request $request){
+        $data = $request->get('form');
+        $data['school_id'] = session('school.id');
+
+        $dao = new AttendanceSchedulesDao();
+
+        if(isset($data['id'])){
+            $result = $dao->updateSpecial($data);
+        }
+        else{
+            $result = $dao->saveSpecial($data);
+        }
+
+        return $result ? JsonBuilder::Success() : JsonBuilder::Error();
+    }
+
     /**
      * @param Request $request
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function update(Request $request)
+    public function update_old(Request $request)
     {
         $taskData = $request->get('task');
         $taskData['school_id'] = $request->session()->get('school.id');

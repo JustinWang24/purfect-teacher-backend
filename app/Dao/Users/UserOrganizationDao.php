@@ -24,10 +24,10 @@ class UserOrganizationDao
      * @return MessageBag
      */
     public function create($data){
-        $info = $this->getUserOrganization($data['user_id'], $data['school_id']);
-        if(!is_null($info)) {
-            return new MessageBag(JsonBuilder::CODE_ERROR, '请勿重复添加',$info);
-        }
+//        $info = $this->getUserOrganization($data['user_id'], $data['school_id']);
+//        if(!is_null($info)) {
+//            return new MessageBag(JsonBuilder::CODE_ERROR, '请勿重复添加',$info);
+//        }
         $re = UserOrganization::create($data);
         if($re) {
             return new MessageBag(JsonBuilder::CODE_SUCCESS, '创建成功',$re);

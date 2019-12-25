@@ -2,6 +2,7 @@ const mix = require('laravel-mix');
 
 mix.js('resources/js/app.js', 'public/js')
     .js('resources/js/h5_apps/student.js', 'public/js/h5')
+    .js('resources/js/h5_apps/teacher.js', 'public/js/h5')
     .sass('resources/sass/h5_apps/user.scss', 'public/css/h5')
     .sass('resources/sass/app.scss', 'public/css');
 

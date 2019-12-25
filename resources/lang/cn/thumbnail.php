@@ -23,7 +23,7 @@ return [
     'students'  => '学生列表',
     'teachers'  => '教师列表',
     'teacher'  => '教师',
-    'profile'  => '学生资料',
+    'profile'  => '用户资料',
     'preview'  => '预览工具',
     'list'   => '列表',
     'add'    => '添加数据',
@@ -126,7 +126,22 @@ return [
     'dynamic'     => '动态列表',
     'communities' => '社团列表',
     'members'     => '社团成员',
-    'attendances-manager' => '选修课程审批',
+    'attendances-manager' => '考勤管理',
     'project-view'=> '查看项目',
+
+    'attendances-group'=> '考勤组编辑',
+    'attendances-members'=> '考勤组成员编辑',
+
+    'set-year-manager'=> '设置年级组长',
+    'years'=> '年级管理',
+    'organizations'=> '组织机构管理',
+    'teaching-and-research-group-edit'=> '教研组管理',
+    'teaching-and-research-group'=> '教研组',
+    'teaching-and-research-group-members'=> '教研组成员管理',
+    'add-new'=> '添加',
+    'edit-avatar'=> '档案照片管理',
+    'official'=> '日常办公',
+    'documents'=> '公文',
+
 ];
 

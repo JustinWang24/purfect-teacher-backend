@@ -31,12 +31,12 @@ class Sms
     public function handle(CanReachByMobilePhone $event)
     {
 
-        PushSms::dispatch(
-            [$event->getMobileNumber()],
+        PushSms::dispatchNow(
+            $event->getMobileNumber(),
             $event->getSmsContent(),
             $event->getSmsTemplateId()
-        )->delay(now()->addMinutes(1));
+        );
 
-        Log::warning('发送短信进入队列了');
+        Log::channel('smslog')->alert('发送短信进入队列了');
     }
 }

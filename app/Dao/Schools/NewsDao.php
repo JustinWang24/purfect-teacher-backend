@@ -94,6 +94,7 @@ class NewsDao
     public function paginateByType($type, $schoolId){
         return News::where('type',$type)
             ->where('school_id',$schoolId)
+            ->with('sections')
             ->orderBy('id','desc')
             ->paginate(ConfigurationTool::DEFAULT_PAGE_SIZE);
     }
@@ -108,6 +109,6 @@ class NewsDao
     {
         $where = ['school_id' => $schoolId, 'type' => News::TYPE_NEWS, 'publish' => News::PUBLISH_YES];
         $page = $pageNum ?? ConfigurationTool::DEFAULT_PAGE_SIZE;
-        return News::where($where)->select('id', 'type', 'title', 'tags', 'created_at')->orderBy('created_at', 'desc')->paginate($page);
+        return News::where($where)->select('id', 'type', 'title', 'tags', 'updated_at','created_at')->orderBy('updated_at', 'desc')->paginate($page);
     }
 }

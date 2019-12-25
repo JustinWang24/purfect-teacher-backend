@@ -43,6 +43,9 @@ class Factory
             case 'employee':
                 $instance = new EmployeeQuickSearchLogic($request);
                 break;
+            case 'teacher':
+                $instance = new EmployeeQuickSearchLogic($request);
+                break;
             case 'student':
                 $instance = new StudentQuickSearchLogic($request);
                 break;

@@ -181,7 +181,10 @@ export const Util = {
     icons: function () {
         const a = [];
         for(let i=1;i<14;i++){
-            a.push('/assets/img/pipeline/icon'+i+'.png');
+            a.push('/assets/img/pipeline/icon'+i+'@2x.png');
+        }
+        for(let i=1;i<18;i++){
+            a.push('/assets/img/pipeline/t'+i+'@2x.png');
         }
         return a;
     },
@@ -202,5 +205,13 @@ export const Util = {
         else{
             return moment(t2).diff(earlier,'hours');
         }
+    },
+    buildQuery: function(url, params, tail){
+        let query = '?';
+        const keys = Object.keys(params);
+        keys.forEach(function(key){
+            query += key + '=' + params[key] + '&';
+        });
+        return url + query + tail + '=1';
     }
 };

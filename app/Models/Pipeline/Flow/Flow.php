@@ -28,7 +28,6 @@ class Flow extends Model implements IFlow
     public static function Types(){
         return [
             IFlow::TYPE_TEACHER_ONLY=>IFlow::TYPE_TEACHER_ONLY_TXT,
-            IFlow::TYPE_TEACHER_ONLY=>IFlow::TYPE_TEACHER_ONLY_TXT,
             IFlow::TYPE_OFFICE=>IFlow::TYPE_OFFICE_TXT,
             IFlow::TYPE_2=>IFlow::TYPE_2_TXT,
             IFlow::TYPE_3=>IFlow::TYPE_3_TXT,

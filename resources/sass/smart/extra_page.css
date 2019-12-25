@@ -155,7 +155,7 @@ iframe {
   z-index: 1;
 }
 .page-background{
-  background-image: url('../assets/img/bg-01.jpg');
+  background-image: url('../assets/img/bg-02.jpg');
 }
 .container-login100::before {
   content: "";
@@ -166,7 +166,7 @@ iframe {
   height: 100%;
   top: 0;
   left: 0;
-  background-color: rgba(255,255,255,0.9);
+  background-color: rgba(255,255,255,0.2);
 }
 
 .wrap-login100 {

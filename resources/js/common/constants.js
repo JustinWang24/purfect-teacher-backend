@@ -119,6 +119,7 @@ export const Constants = {
         },
         CALENDAR: {
             SAVE: '/school_manager/calendar/save',
+            DELETE: '/school_manager/calendar/delete',
         },
         ORGANIZATION: {
             LOAD_PARENTS: '/school_manager/organizations/load-parent',

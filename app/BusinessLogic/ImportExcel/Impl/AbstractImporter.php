@@ -11,16 +11,22 @@ use App\Dao\Schools\GradeDao;
 use App\Dao\Schools\InstituteDao;
 use App\Dao\Schools\MajorDao;
 use App\Dao\Schools\SchoolDao;
+use App\Dao\Students\StudentProfileDao;
 use App\Dao\Users\GradeUserDao;
 use App\Dao\Users\UserDao;
+use App\Models\Acl\Role;
+use App\Models\Students\StudentProfile;
+use App\User;
+use Illuminate\Support\Facades\Hash;
 use League\Flysystem\Config;
 use PhpOffice\PhpSpreadsheet\IOFactory;
+use Ramsey\Uuid\Uuid;
 
 abstract class AbstractImporter implements IImportExcel
 {
     protected $config;
     protected $data;
-    protected $header;
+    protected $header=[];
     protected $school;
     protected $importDao;
     protected $skipColoumn = ['startRow', 'dataRow'];
@@ -179,6 +185,7 @@ abstract class AbstractImporter implements IImportExcel
     public function getDefaultValue($name, $header, $sheetId)
     {
         $config = $this->config['school']['sheet'][$sheetId][$name];
+
         if ($config['isEmpty']=='false')
         {
             return $config['defaultValue'];
@@ -194,6 +201,8 @@ abstract class AbstractImporter implements IImportExcel
      */
     public function getIndex($name, $array)
     {
+        if (empty($name))
+            return 0;
         foreach ($array as $key=>$value){
             if ($name == $value)
                 return $key;
@@ -206,7 +215,7 @@ abstract class AbstractImporter implements IImportExcel
      */
     public function getHeader($sheetId)
     {
-        $header = $this->header;
+        $header = isset($this->header[$sheetId])?$this->header[$sheetId]:'';
         if (empty($header)) {
             $data = $this->getSheetData($sheetId);
             $sheetConfig = $this->config['school']['sheet'][$sheetId];
@@ -214,7 +223,7 @@ abstract class AbstractImporter implements IImportExcel
             if (empty($header)) {
                 exit('文件头获取失败，请检查配置');
             }
-            $this->setHeader($header);
+            $this->setHeader($header,$sheetId);
             return $header;
         } else {
             return $header;
@@ -224,9 +233,9 @@ abstract class AbstractImporter implements IImportExcel
     /**
      * @param $header
      */
-    public function setHeader($header)
+    public function setHeader($header,$sheetId)
     {
-        $this->header = $header;
+        $this->header[$sheetId] = $header;
     }
 
     /**
@@ -451,12 +460,15 @@ abstract class AbstractImporter implements IImportExcel
         $gradeUserDao = new GradeUserDao();
         $gradeUserObj =  $gradeUserDao->getUserInfoByUserId($user->id);
         if ($gradeUserObj) {
+            $gradeUserObj->user_type = $user->type;
+            $gradeUserObj->save();
             return $gradeUserObj;
         } else {
             $schoolObj = $this->getSchool($schoolId);
             $campus = $schoolObj->campuses()->first();
             $gradeUser = $gradeUserDao->addGradUser([
                 'user_id' => $user->id,
+                'user_type' => $user->type,
                 'name' => $rowData['userName'],
                 'school_id' => $schoolId,
                 'campus_id' => $campus->id,
@@ -504,6 +516,7 @@ abstract class AbstractImporter implements IImportExcel
         $userDao = new UserDao();
         $importUser =  $userDao->getUserByMobile($mobile);
         if ($importUser) {
+            $this->modifytUser($importUser, $passwdTxt);
             return $importUser;
         } else {
             $importUser = $userDao->importUser($mobile,$name,$passwdTxt);
@@ -552,4 +565,69 @@ abstract class AbstractImporter implements IImportExcel
         ]);
     }
 
+
+    public function saveStudent($user, $rowData,$row)
+    {
+        //$student = new StudentProfile();
+        $studentDao = new StudentProfileDao();
+        $student = $studentDao->getStudentInfoByUserId($user->id);
+        if (empty($student)) {
+            $student = new StudentProfile();
+        }
+        $student->user_id = $user->id;
+        $student->uuid = Uuid::uuid4()->toString();;
+        $student->year = $rowData['year'];
+        $student->serial_number = "-";
+        if ($rowData['gender'] == '男'){
+            $gender = 1;
+        }else {
+            $gender = 2;
+        }
+        $student->gender = $gender;
+        $student->country = $rowData['country'];
+        $student->state = $rowData['state'];
+        $student->city = $rowData['city'];
+        $student->postcode = $rowData['postCode'];
+        $student->area = $rowData['area'];
+        $student->address_line = $rowData['addressLine'];
+        $student->id_number = $rowData['idNumber'];
+        $student->birthday = strtotime(substr($rowData['idNumber'],6,8));
+        $student->political_code = isset($rowData['politicalName'])?$rowData['politicalName']:'';
+        $student->nation_name = $rowData['nation'];
+        $student->parent_name = "-";
+        $student->parent_mobile = "-";
+        $student->avatar = "";
+        $result = $student->save();
+        if ($result) {
+            $studentDao = new StudentProfileDao();
+            $student = $studentDao->getStudentInfoByUserId($user->id);
+            $this->importDao->writeLog([
+                'type' => 1,
+                'source' => json_encode($row),
+                'table_name' => 'users',
+                'result' => json_encode($student),
+                'task_id' => $this->config['task_id'],
+                'task_status' => 1,
+            ]);
+
+            return $student;
+        } else {
+            $this->importDao->writeLog([
+                'type' => 1,
+                'source' => json_encode($row),
+                'table_name' => 'users',
+                'task_id' => $this->config['task_id'],
+                'task_status' => 2,
+            ]);
+            return false;
+        }
+
+    }
+    public function modifytUser($user, $passwordInPlainText)
+    {
+        $user->password = Hash::make($passwordInPlainText);
+        $user->status = User::STATUS_VERIFIED;
+        $user->type = Role::VERIFIED_USER_STUDENT;
+        return $user->save();
+    }
 }

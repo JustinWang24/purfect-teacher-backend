@@ -23,6 +23,10 @@ class UserDao
 {
     private $protectedRoles = [Role::SUPER_ADMIN, Role::OPERATOR];
 
+    public function createUser($data){
+        return User::create($data);
+    }
+
     /**
      * 根据用户的电话号码获取用户
      * @param string $mobile
@@ -43,6 +47,20 @@ class UserDao
         }
         elseif ($idOrUuid){
             return $this->getUserById($idOrUuid);
+        }
+        return null;
+    }
+
+    /**
+     * @param $idOrUuid
+     * @return Teacher|null
+     */
+    public function getTeacherByIdOrUuid($idOrUuid){
+        if(is_string($idOrUuid) && strlen($idOrUuid) > 10){
+            return Teacher::where('uuid',$idOrUuid)->first();
+        }
+        elseif ($idOrUuid){
+            return Teacher::find($idOrUuid);
         }
         return null;
     }
@@ -282,8 +300,8 @@ class UserDao
             'api_token'=>Uuid::uuid4()->toString(),
             'uuid'=>Uuid::uuid4()->toString(),
             'password'=>Hash::make($passwordInPlainText),
-            'status'=>User::STATUS_WAITING_FOR_MOBILE_TO_BE_VERIFIED,
-            'type'=>Role::REGISTERED_USER,
+            'status'=>User::STATUS_VERIFIED,
+            'type'=>Role::VERIFIED_USER_STUDENT,
         ];
         return $user = User::create($data);
     }
