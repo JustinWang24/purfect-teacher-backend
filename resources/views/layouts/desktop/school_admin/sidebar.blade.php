@@ -100,7 +100,7 @@
                 <li class="nav-item">
                     <a href="{{ route('school_manager.scenery.list') }}" class="nav-link nav-toggle">
                         <i class="material-icons">dashboard</i>
-                        <span class="title">校园门户管理<span>
+                        <span class="title">校园门户管理</span>
                         <span class="selected"></span>
                         <span class="arrow open"></span>
                     </a>
