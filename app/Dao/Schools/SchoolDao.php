@@ -1,6 +1,7 @@
 <?php
 namespace App\Dao\Schools;
 
+use App\Models\Schools\Institute;
 use App\Models\Schools\Organization;
 use App\Models\Schools\SchoolConfiguration;
 use App\User;
@@ -33,6 +34,24 @@ class SchoolDao
 
     public function getSchoolManagerDefaultSchool(){
         return School::find($this->currentUser->getSchoolId());
+    }
+
+    /**
+     * 获取学校的第一个校区记录
+     * @param $id
+     * @return Campus
+     */
+    public function getFirstCampusOfSchool($id){
+        return (new CampusDao())->getCampusesBySchool($id)->first();
+    }
+
+    /**
+     * 获取指定校区的第一个学院
+     * @param $id
+     * @return Institute
+     */
+    public function getFirstInstituteOfCampus($id){
+        return (new InstituteDao())->getByCampus($id)->first();
     }
 
     /**

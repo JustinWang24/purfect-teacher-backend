@@ -11,6 +11,13 @@ use App\Models\Students\StudentProfile;
 
 class StudentProfileDao
 {
+    /**
+     * @param $data
+     * @return StudentProfile
+     */
+    public function create($data){
+        return StudentProfile::create($data);
+    }
 
     /**
      * 根据userId 获取学生信息

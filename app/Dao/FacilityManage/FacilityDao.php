@@ -31,13 +31,13 @@ class FacilityDao
 
 
     /**
-     * 获取分页
+     * 获取设备分页
      * @param $map
-     * @return mixed
+     * @return Collection
      */
     public function getFacilityPage($map) {
-        $result = Facility::where($map)->with(['campus','room','building'])->paginate(10);
-        return $result;
+        return Facility::where($map)->with(['campus','room','building'])
+            ->orderBy('updated_at','desc')->paginate(10);
     }
 
     /**
