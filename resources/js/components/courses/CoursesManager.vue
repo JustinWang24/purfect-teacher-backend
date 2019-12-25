@@ -378,6 +378,8 @@
                                 type: 'success',
                                 position: 'bottom-right'
                             });
+                        }else{
+                            this.$message.error(res.data.message);
                         }
                     });
                 }).catch(() => {
