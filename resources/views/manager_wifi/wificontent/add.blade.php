@@ -15,21 +15,11 @@ use App\Utils\UI\Button;
                         @csrf
                         <div class="form-group">
                             <label for="school-name-input">学校</label>
-                            <select class="form-control" name="infos[school_id]"  required>
-                                <option value="">请选择</option>
-                                @foreach($wifiContentsTypeArr as $key=>$val)
-                                    <option value="{{$key}}">{{$val}}</option>
-                                @endforeach
-                            </select>
+                            <select id="cityid" class="form-control" name="infos[school_id]"  required></select>
                         </div>
                         <div class="form-group">
                             <label for="school-name-input">校区</label>
-                            <select class="form-control" name="infos[campus_id]"  required>
-                                <option value="">请选择</option>
-                                @foreach($wifiContentsTypeArr as $key=>$val)
-                                    <option value="{{$key}}">{{$val}}</option>
-                                @endforeach
-                            </select>
+                            <select id="countryid" class="form-control" name="infos[campus_id]"  required></select>
                         </div>
                         <div class="form-group">
                             <label for="school-name-input">类型</label>
@@ -56,4 +46,9 @@ use App\Utils\UI\Button;
             </div>
         </div>
     </div>
+<script>
+window.onload=function() {
+    showLocation();
+}
+</script>
 @endsection

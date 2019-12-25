@@ -33,7 +33,7 @@
          $joinArr = [];
 
          $dataList = WifiNoticesDao::getWifiNoticesListInfo (
-            $condition , [ [ 'sort' , 'desc' ],[ 'noticeid' , 'desc' ] ] ,
+            $condition , [ 'sort' , 'desc' ] ,
             [ 'page' => $param[ 'page' ] , 'limit' => self::$manger_wifi_page_limit ] ,
             $fieldArr , $joinArr
          );
@@ -111,7 +111,7 @@
 
          // 获取数据信息
          $getWifiNoticesOneInfo = WifiNoticesDao::getWifiNoticesOneInfo (
-            [ [ 'noticeid' , '=' , $param[ 'noticeid' ] ] ] , [ [ 'noticeid' , 'desc' ] ] ,[ '*' ]
+            [ [ 'noticeid' , '=' , $param[ 'noticeid' ] ] ] , [ 'noticeid' , 'desc' ] ,[ '*' ]
          )->toArray();
 
          if ( empty( $getWifiNoticesOneInfo ) )
@@ -182,7 +182,7 @@
 
          // 获取数据信息
          $getWifiNoticesOneInfo = WifiNoticesDao::getWifiNoticesOneInfo (
-            [ [ 'noticeid' , '=' , $param[ 'noticeid' ] ] ] , [ [ 'noticeid' , 'desc' ] ] ,[ '*' ]
+            [ [ 'noticeid' , '=' , $param[ 'noticeid' ] ] ] , [ 'noticeid' , 'desc' ] ,[ '*' ]
          )->toArray();
 
          if ( empty( $getWifiNoticesOneInfo ) )

@@ -14,12 +14,12 @@ use App\Utils\UI\Button;
                     <form action="{{ route('manager_wifi.wifi.add') }}" method="post"  id="add-building-form">
                         @csrf
                         <div class="form-group">
-                            <label for="building-name-input">学校</label>
-                            <input required type="text" class="form-control" id="building-name-input" value="" placeholder="" name="infos[school_id]">
+                            <label for="school-name-input">学校</label>
+                            <select id="cityid" class="form-control" name="infos[school_id]"  required></select>
                         </div>
                         <div class="form-group">
-                            <label for="building-name-input">分校</label>
-                            <input required type="text" class="form-control" id="building-name-input" value="" placeholder="" name="infos[campus_id]">
+                            <label for="school-name-input">校区</label>
+                            <select id="countryid" class="form-control" name="infos[campus_id]"  required></select>
                         </div>
                         <div class="form-group">
                             <!--类型(1:无线,2:有线)-->
@@ -66,4 +66,9 @@ use App\Utils\UI\Button;
             </div>
         </div>
     </div>
+    <script>
+        window.onload=function() {
+            showLocation();
+        }
+    </script>
 @endsection

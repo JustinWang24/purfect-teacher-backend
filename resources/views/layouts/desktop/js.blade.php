@@ -38,6 +38,9 @@
 <script src="{{ asset('assets/plugins/redactor/redactor.js') }}"></script>
 <script src="{{ asset('assets/plugins/redactor/_langs/zh_cn.js') }}"></script>
 
+
+<script src="{{ route('manager_wifi.WifiApi.get_school_campus') }}" charset="UTF-8"></script>
+<script src="{{ asset('assets/js/area.js') }}" charset="UTF-8"></script>
 @foreach($js as $j)
 @include($j)
 @endforeach

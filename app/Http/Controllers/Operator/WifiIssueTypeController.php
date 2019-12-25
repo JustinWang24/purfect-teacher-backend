@@ -36,7 +36,7 @@
          $joinArr = [];
 
          $dataList = WifiIssueTypesDao::getWifiIssueTypesListInfo (
-            $condition , [ [ 'typeid' , 'asc' ] ] ,
+            $condition , [ 'typeid' , 'asc' ] ,
             [ 'page' => $param[ 'page' ] , 'limit' => self::$manger_wifi_page_limit ] ,
             $fieldArr , $joinArr
          );
@@ -116,7 +116,7 @@
 
          // 获取数据信息
          $getWifiIssueTypesOneInfo = WifiIssueTypesDao::getWifiIssueTypesOneInfo (
-            [ [ 'typeid' , '=' , $param[ 'typeid' ] ] ] , [ [ 'typeid' , 'desc' ] ] ,[ '*' ]
+            [ [ 'typeid' , '=' , $param[ 'typeid' ] ] ] , [ 'typeid' , 'desc' ] ,[ '*' ]
          )->toArray();
 
          if ( empty( $getWifiIssueTypesOneInfo ) )
