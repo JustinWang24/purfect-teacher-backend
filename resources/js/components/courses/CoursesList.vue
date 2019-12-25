@@ -33,18 +33,18 @@
             </el-table-column>
             <el-table-column
                     label="授课教师"
-                    width="200">
+                    width="300">
                 <template slot-scope="scope">
-                    <p v-for="(t, idx) in scope.row.teachers" :key="idx" style="margin-bottom:3px;">
+                    <span v-for="(t, idx) in scope.row.teachers" :key="idx" style="margin-bottom:3px;">
                     <el-tag size="medium" effect="plain" style="margin:2px;">
                         {{ t.name }}
                     </el-tag>
-                    </p>
+                    </span>
                 </template>
             </el-table-column>
             <el-table-column
                     label="关联专业"
-                    width="200">
+                    width="400">
                 <template slot-scope="scope">
                     <el-tag size="medium" type="info" effect="plain" :key="idx" v-for="(m,idx) in scope.row.majors" style="margin:2px;">
                         {{ m.name }}
