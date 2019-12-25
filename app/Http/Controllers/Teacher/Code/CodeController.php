@@ -7,7 +7,6 @@ namespace App\Http\Controllers\Teacher\Code;
 use App\Dao\Users\UserCodeRecordDao;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\MyStandardRequest;
-use phpDocumentor\Reflection\DocBlock\Description;
 
 class CodeController extends Controller
 {
