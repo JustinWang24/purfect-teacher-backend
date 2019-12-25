@@ -49,37 +49,40 @@
     },
     methods: {
         isImage: function(type){
-            return Util.isImage(type);
+            return Util.isImage(type) || Util.isImage(this.defaultType);
         },
         isGeneral: function(type){
-            return Util.isGeneralDoc(type);
+            return Util.isGeneralDoc(type)  || Util.isGeneralDoc(this.defaultType);
         },
         isOffice: function(type){
+            if(Util.isEmpty(type)){
+                type = this.defaultType;
+            }
             return Util.isWordDoc(type) || Util.isExcelDoc(type) || Util.isPowerPointDoc(type) || Util.isTxtDoc();
         },
         isWord: function(type){
-            return Util.isWordDoc(type);
+            return Util.isWordDoc(type) || Util.isWordDoc(this.defaultType);
         },
         isExcel: function(type){
-            return Util.isExcelDoc(type);
+            return Util.isExcelDoc(type) || Util.isExcelDoc(this.defaultType);
         },
         isPpt: function(type){
-            return Util.isPowerPointDoc(type);
+            return Util.isPowerPointDoc(type) || Util.isPowerPointDoc(this.defaultType);
         },
         isTxt: function(type){
-            return Util.isTxtDoc(type);
+            return Util.isTxtDoc(type) || Util.isTxtDoc(this.defaultType);
         },
         isZip: function(type){
             return false;
         },
         isPdf: function(type){
-            return Util.isPdfDoc(type);
+            return Util.isPdfDoc(type) || Util.isPdfDoc(this.defaultType);
         },
         isVideo: function(type){
-            return Util.isVideoDoc(type);
+            return Util.isVideoDoc(type) || Util.isVideoDoc(this.defaultType);
         },
         isAudio: function(type){
-            return Util.isAudioDoc(type);
+            return Util.isAudioDoc(type) || Util.isAudioDoc(this.defaultType);
         },
         fileSize: function(size){
             return Util.fileSize(size);
