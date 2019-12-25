@@ -57,6 +57,14 @@ class Course extends Model
         return $this->belongsTo(School::class);
     }
 
+    /**
+     * 课程关联的课程表项目
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function timetableItems(){
+        return $this->hasMany(TimetableItem::class);
+    }
+
     public function courseArrangements()
     {
         return $this->hasMany(CourseArrangement::class);

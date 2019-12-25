@@ -40,7 +40,7 @@ class CoursesController extends Controller
         $courseUuid = $request->get('course');
         $dao = new CourseDao();
         $result = $dao->deleteCourseByUuid($courseUuid);
-        return $result ? JsonBuilder::Success() : JsonBuilder::Error();
+        return $result->isSuccess() ? JsonBuilder::Success() : JsonBuilder::Error($result->getMessage());
     }
 
     /**

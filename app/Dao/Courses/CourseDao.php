@@ -84,12 +84,18 @@ class CourseDao
     /**
      * 根据 uuid 删除课程所有数据
      * @param $uuid
-     * @return bool
+     * @return IMessageBag
      */
     public function deleteCourseByUuid($uuid){
-        $result = true;
+        $bag = new MessageBag(JsonBuilder::CODE_ERROR);
         $course = $this->getCourseByUuid($uuid);
         if($course){
+
+            if(count($course->timetableItems)){
+                $bag->setMessage('该课程已经在课程表中安排了课时, 无法删除');
+                return $bag;
+            }
+
             DB::beginTransaction();
             try{
                 $id = $course->id;
@@ -101,12 +107,13 @@ class CourseDao
                 // Todo: 删除课程时, 同时也要删除选修课的申请表
                 $course->delete();
                 DB::commit();
+                $bag->setCode(JsonBuilder::CODE_SUCCESS);
             }catch (\Exception $exception){
                 DB::rollBack();
-                $result = false;
+                $bag->setMessage($exception->getMessage());
             }
         }
-        return $result;
+        return $bag;
     }
 
     /**
