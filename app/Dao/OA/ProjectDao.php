@@ -221,7 +221,7 @@ class ProjectDao
     }
     public function getTasks($userId,$type)
     {
-        if($type == 2) {
+        if($type == 2 || $type == 1) {
             $where = ['status'=>1];
         } elseif ($type ==3) {
             $where = ['status'=>2];
