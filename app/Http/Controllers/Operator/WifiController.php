@@ -48,7 +48,7 @@
          ];
 
          $wifiList = WifisDao::getWifisListInfo (
-            $condition , [ [ 'wifi_sort' , 'desc' ] ] ,
+            $condition , [ 'wifis.wifi_sort' , 'desc' ] ,
             [ 'page' => $param[ 'page' ] , 'limit' => self::$manger_wifi_page_limit ] ,
             $fieldArr , $joinArr
          );
@@ -96,7 +96,6 @@
                FlashMessageBuilder::Push ( $request , FlashMessageBuilder::DANGER , '您提交太快了，先歇息一下');
                return redirect()->route('manager_wifi.wifi.add');
             }
-
             if ( WifisDao::addOrUpdateWifisInfo ( array_merge ( $param1 , $param2 ) ) )
             {
                // 生成重复提交签名
@@ -133,7 +132,7 @@
 
          // 获取数据信息
          $getWifisOneInfo = WifisDao::getWifisOneInfo (
-            [ [ 'wifiid' , '=' , $param[ 'wifiid' ] ] ] , [ [ 'wifiid' , 'desc' ] ] ,[ '*' ]
+            [ [ 'wifiid' , '=' , $param[ 'wifiid' ] ] ] , [ 'wifiid' , 'desc' ] ,[ '*' ]
          )->toArray();
 
          if ( empty( $getWifisOneInfo ) )

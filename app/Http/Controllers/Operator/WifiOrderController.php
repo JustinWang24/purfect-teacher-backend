@@ -69,7 +69,7 @@
 
          // 获取数据
          $dataList = WifiOrdersDao::getWifiOrdersListInfo (
-            $condition , [ [ 'orderid' , 'desc' ] ] ,
+            $condition , [ 'wifi_orders.orderid' , 'desc' ] ,
             [ 'page' => $param[ 'page' ] , 'limit' => self::$manger_wifi_page_limit ] ,
             $fieldArr , $joinArr
          );
@@ -137,7 +137,7 @@
 
          // 获取数据
          $dataList = WifiOrdersDao::getWifiOrdersListInfo (
-            $condition , [ [ 'orderid' , 'desc' ] ] ,
+            $condition , [ 'wifi_orders.orderid' , 'desc' ] ,
             [ 'page' => $param[ 'page' ] , 'limit' => self::$manger_wifi_page_limit ] ,
             $fieldArr , $joinArr
          );

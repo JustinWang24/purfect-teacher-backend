@@ -33,7 +33,7 @@
          $joinArr = [];
 
          $dataList = WifiContentsDao::getWifiContentsListInfo (
-            $condition , [ [ 'contentid' , 'desc' ],[ 'contentid' , 'desc' ] ] ,
+            $condition , [ 'contentid' , 'desc' ] ,
             [ 'page' => $param[ 'page' ] , 'limit' => self::$manger_wifi_page_limit ] ,
             $fieldArr , $joinArr
          );
@@ -112,34 +112,31 @@
        */
       public function edit(WifiContentRequest $request)
       {
-         $param = $request->only ( [ 'noticeid', ] );
+         $param = $request->only ( [ 'contentid', ] );
 
-         if ( !intval ( $param[ 'noticeid' ] ) )
+         if ( !intval ( $param[ 'contentid' ] ) )
          {
             FlashMessageBuilder::Push ( $request , FlashMessageBuilder::DANGER , '参数错误' );
-            return redirect ()->route ( 'manager_wifi.wifiNotice.list' );
+            return redirect ()->route ( 'manager_wifi.wifiContent.list' );
          }
 
          // 获取数据信息
-         $getWifiNoticesOneInfo = WifiNoticesDao::getWifiNoticesOneInfo (
-            [ [ 'noticeid' , '=' , $param[ 'noticeid' ] ] ] , [ [ 'noticeid' , 'desc' ] ] ,[ '*' ]
+         $getWifiContentsOneInfo = WifiContentsDao::getWifiContentsOneInfo (
+            [ [ 'contentid' , '=' , $param[ 'contentid' ] ] ] , [ 'contentid' , 'desc' ] ,[ '*' ]
          )->toArray();
 
-         if ( empty( $getWifiNoticesOneInfo ) )
+         if ( empty( $getWifiContentsOneInfo ) )
          {
             FlashMessageBuilder::Push ( $request , FlashMessageBuilder::DANGER , '参数错误' );
 
-            return redirect ()->route ( 'manager_wifi.wifiNotice.list' );
+            return redirect ()->route ( 'manager_wifi.wifiContent.list' );
          }
 
          // 提交数据保存
          if($request->isMethod('post'))
          {
             // 表单要插入的字段信息
-            $param1 = self::getPostParamInfo ( $request->infos , [
-                  'notice_title' , 'notice_content' ,
-               ]
-            );
+            $param1 = self::getPostParamInfo ( $request->infos , [ 'content'] );
 
             // 附加数据
             $param2 = [];
@@ -151,29 +148,29 @@
             {
                FlashMessageBuilder::Push ( $request , FlashMessageBuilder::DANGER , '您提交太快了，先歇息一下' );
 
-               return redirect ()->route ( 'manager_wifi.wifiNotice.edit' , [ 'noticeid' => $getWifiNoticesOneInfo[ 'noticeid' ] ] );
+               return redirect ()->route ( 'manager_wifi.wifiContent.edit' , [ 'contentid' => $getWifiContentsOneInfo[ 'contentid' ] ] );
 
             }
 
-            if ( WifiNoticesDao::addOrUpdateWifiNoticesInfo ( array_merge ( $param1 , $param2 ) , $getWifiNoticesOneInfo[ 'noticeid' ] ) )
+            if ( WifiContentsDao::addOrUpdateWifiContentsInfo ( array_merge ( $param1 , $param2 ) , $getWifiContentsOneInfo[ 'contentid' ] ) )
             {
                // 生成重复提交签名
                Cache::put ( $dataSign , $dataSign , 10 );
 
                FlashMessageBuilder::Push($request, FlashMessageBuilder::SUCCESS,'数据更新成功');
 
-               return redirect()->route('manager_wifi.wifiNotice.list');
+               return redirect()->route('manager_wifi.wifiContent.list');
 
             } else {
                FlashMessageBuilder::Push($request, FlashMessageBuilder::DANGER,'数据更新失败,请稍后重试');
 
-               return redirect ()->route ( 'manager_wifi.wifiNotice.edit' , [ 'noticeid' => $getWifiNoticesOneInfo[ 'noticeid' ] ] );
+               return redirect ()->route ( 'manager_wifi.wifiContent.edit' , [ 'contentid' => $getWifiContentsOneInfo[ 'contentid' ] ] );
             }
          }
 
-         $this->dataForView[ 'dataOne' ] = $getWifiNoticesOneInfo;
+         $this->dataForView[ 'dataOne' ] = $getWifiContentsOneInfo;
 
-         return view ( 'manager_wifi.wifiNotice.edit' , $this->dataForView );
+         return view ( 'manager_wifi.wifiContent.edit' , $this->dataForView );
       }
 
       /**
@@ -183,34 +180,34 @@
        */
       public function delete(WifiContentRequest $request)
       {
-         $param = $request->only ( [ 'noticeid', ] );
+         $param = $request->only ( [ 'contentid', ] );
 
-         if ( !intval ( $param[ 'noticeid' ] ) )
+         if ( !intval ( $param[ 'contentid' ] ) )
          {
             FlashMessageBuilder::Push ( $request , FlashMessageBuilder::DANGER , '参数错误' );
-            return redirect ()->route ( 'manager_wifi.wifiNotice.list' );
+            return redirect ()->route ( 'manager_wifi.wifiContent.list' );
          }
 
          // 获取数据信息
-         $getWifiNoticesOneInfo = WifiNoticesDao::getWifiNoticesOneInfo (
-            [ [ 'noticeid' , '=' , $param[ 'noticeid' ] ] ] , [ [ 'noticeid' , 'desc' ] ] ,[ '*' ]
+         $getWifiContentsOneInfo = WifiContentsDao::getWifiContentsOneInfo (
+            [ [ 'contentid' , '=' , $param[ 'contentid' ] ] ] , [ 'contentid' , 'desc' ] ,[ '*' ]
          )->toArray();
 
-         if ( empty( $getWifiNoticesOneInfo ) )
+         if ( empty( $getWifiContentsOneInfo ) )
          {
             FlashMessageBuilder::Push ( $request , FlashMessageBuilder::DANGER , '参数错误' );
-            return redirect ()->route ( 'manager_wifi.wifiNotice.list' );
+            return redirect ()->route ( 'manager_wifi.wifiContent.list' );
          }
 
          // 删除条件
-         $condition[] = [ 'noticeid' , '=' , $param['noticeid'] ];
+         $condition[] = [ 'contentid' , '=' , $param['contentid'] ];
 
-         if ( WifiNoticesDao::delWifiNoticesInfo ( $condition , [] , true ) )
+         if ( WifiContentsDao::delWifiContentsInfo ( $condition , [] , true ) )
          {
             FlashMessageBuilder::Push ( $request , FlashMessageBuilder::SUCCESS , '数据删除成功' );
          } else {
             FlashMessageBuilder::Push ( $request , FlashMessageBuilder::DANGER , '数据删除失败,请稍后重试' );
          }
-         return redirect ()->route ( 'manager_wifi.wifiNotice.list' );
+         return redirect ()->route ( 'manager_wifi.wifiContent.list' );
       }
    }

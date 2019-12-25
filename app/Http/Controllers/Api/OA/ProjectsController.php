@@ -212,7 +212,9 @@ class ProjectsController extends Controller
         $user = $request->user();
         $data['school_id'] = $user->getSchoolId();
         $type = intval($request->type);
-
+        if (!in_array($type, [1,2,3,4])) {
+            return JsonBuilder::Error('没有内容');
+        }
         $dao = new ProjectDao();
         $list = $dao->getTasks($user->id,$type);
         if (!$list)
@@ -244,9 +246,8 @@ class ProjectsController extends Controller
         if(!$task){
             return JsonBuilder::Error('没有内容');
         }
-
-        $output = [];
-        $output['create_userid'] = $task->create_user;
+        $output = outputTranslate($task,ProjectTask::MAP_ARR);
+/*        $output['create_userid'] = $task->create_user;
         $output['create_name'] = '管理员';
         $output['task_title'] = $task->title;
         $output['task_content'] = $task->content;
@@ -255,8 +256,8 @@ class ProjectsController extends Controller
         $output['projectid'] = $task->project_id;
         $output['project_title'] = $task->project->title;
         $output['leader_userid'] = $task->user_id;
-        $output['leader_name'] = $task->user->name;
-        $output['report_btn'] = 1;
+        $output['leader_name'] = $task->user->name;*/
+        $output['report_btn'] = 1; //结果按钮 1-显示 0-隐藏
         $members = [];
         foreach ($task->project->members as $key => $val) {
             $members[$key]['userid']=$val->user->id;

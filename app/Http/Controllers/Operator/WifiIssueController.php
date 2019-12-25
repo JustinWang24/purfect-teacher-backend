@@ -57,7 +57,7 @@
 
          // 获取数据
          $dataList = WifiIssuesDao::getWifiIssuesListInfo (
-            $condition , [ [ 'issueid' , 'desc' ] ] ,
+            $condition , [ 'wifi_issues.issueid' , 'desc' ] ,
             [ 'page' => $param[ 'page' ] , 'limit' => self::$manger_wifi_page_limit ] ,
             $fieldArr , $joinArr
          );
@@ -96,7 +96,7 @@
 
          // 获取数据
          $dataOne = WifiIssuesDao::getWifiIssuesOneInfo (
-            $condition , [ [ 'issueid' , 'desc' ] ] , $fieldArr , $joinArr
+            $condition , [ 'issueid' , 'desc' ] , $fieldArr , $joinArr
          );
 
          // 返回数据

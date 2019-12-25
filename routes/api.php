@@ -670,6 +670,26 @@ Route::prefix('Oa')->middleware('auth:api')->group(function(){
 Route::post('/manual/attendances','Api\Cloud\CloudController@manual')
         ->middleware('auth:api')->name('api.manual.attendances');
 
+
+// 课件
+Route::prefix('learn')->middleware('auth:api')->group(function(){
+    // 收藏列表
+    Route::post('/courseWare/getCollectionList','Api\Course\CourseWareController@collectionList')
+        ->name('api.learn.collection.list');
+    // 课件信息
+    Route::post('/courseWare/getCourseInfo','Api\Course\CourseWareController@courseInfo')
+        ->name('api.learn.course.info');
+    // 上课资料列表
+    Route::post('/courseWare/getCourseWareData','Api\Course\CourseWareController@courseWareData')
+        ->name('api.learn.course.ware');
+    // 课件列表
+    Route::post('/courseWare/getCourseWareList','Api\Course\CourseWareController@courseWareList')
+        ->name('api.learn.course.ware.list');
+    //
+    Route::post('/courseWare/getDownloadList','Api\Course\CourseWareController@downloadList')
+        ->name('api.learn.download.list');
+});
+
 Route::prefix('teacher')->middleware('auth:api')->group(function(){
     // 教师添加访客
     Route::post('/add-visitor','Api\OA\TeachersController@add_visitor')
@@ -677,3 +697,14 @@ Route::prefix('teacher')->middleware('auth:api')->group(function(){
     Route::post('/delete-visitor','Api\OA\TeachersController@delete_visitor')
         ->name('api.teacher.delete-visitor');
 });
+
+
+Route::prefix('code')->middleware('auth:api')->group(function(){
+    // 添加二维码记录
+    Route::post('/create-record','Api\QrCode\IndexController@createRecord')
+        ->name('api.code.create-record');
+
+});
+
+
+

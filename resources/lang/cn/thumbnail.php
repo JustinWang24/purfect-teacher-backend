@@ -142,6 +142,7 @@ return [
     'edit-avatar'=> '档案照片管理',
     'official'=> '日常办公',
     'documents'=> '公文',
+    'code' => '二维码',
 
 ];
 
