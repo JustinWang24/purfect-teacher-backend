@@ -84,12 +84,7 @@ if(!function_exists('outputTranslate')){
             if ($data instanceof Arrayable || is_callable($data, 'toArray')) {
                 // 具备转换成数组的条件
                 $arr = $data->toArray();
-                if (($data instanceof App\Models\OA\Project ||
-                        $data instanceof App\Models\OA\ProjectTask ||
-                        $data instanceof App\Models\OA\ProjectMember ||
-                        $data instanceof App\Models\OA\ProjectTaskDiscussion
-                    )&& isset($map['_todo'])) {
-
+                if (($data instanceof Illuminate\Database\Eloquent\model) && isset($map['_todo'])) {
                     foreach ($map['_todo'] as $key=>$value) {
                         $arr[$key] = $data->$value();
                     }
