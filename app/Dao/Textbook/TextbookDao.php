@@ -105,10 +105,10 @@ class TextbookDao
      * @return MessageBag
      */
     public function create($data) {
-        $info = $this->getTextbookByName($data['name']);
-        if(!empty($info)) {
-            return new MessageBag(JsonBuilder::CODE_ERROR,'该教材已添加,请勿重复添加');
-        }
+//        $info = $this->getTextbookByName($data['name']);
+//        if(!empty($info)) {
+//            return new MessageBag(JsonBuilder::CODE_ERROR,'该教材已添加,请勿重复添加');
+//        }
         DB::beginTransaction();
         $book = Textbook::create($data);
         if($book){
