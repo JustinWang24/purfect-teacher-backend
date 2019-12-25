@@ -674,19 +674,19 @@ Route::post('/manual/attendances','Api\Cloud\CloudController@manual')
 // 课件
 Route::prefix('learn')->middleware('auth:api')->group(function(){
     // 收藏列表
-    Route::post('/courseWare/getCollectionList','Api\Course\courseWareController@collectionList')
+    Route::post('/courseWare/getCollectionList','Api\Course\CourseWareController@collectionList')
         ->name('api.learn.collection.list');
     // 课件信息
-    Route::post('/courseWare/getCourseInfo','Api\Course\courseWareController@courseInfo')
+    Route::post('/courseWare/getCourseInfo','Api\Course\CourseWareController@courseInfo')
         ->name('api.learn.course.info');
     // 上课资料列表
-    Route::post('/courseWare/getCourseWareData','Api\Course\courseWareController@courseWareData')
+    Route::post('/courseWare/getCourseWareData','Api\Course\CourseWareController@courseWareData')
         ->name('api.learn.course.ware');
     // 课件列表
-    Route::post('/courseWare/getCourseWareList','Api\Course\courseWareController@courseWareList')
+    Route::post('/courseWare/getCourseWareList','Api\Course\CourseWareController@courseWareList')
         ->name('api.learn.course.ware.list');
     //
-    Route::post('/courseWare/getDownloadList','Api\Course\courseWareController@downloadList')
+    Route::post('/courseWare/getDownloadList','Api\Course\CourseWareController@downloadList')
         ->name('api.learn.download.list');
 });
 
