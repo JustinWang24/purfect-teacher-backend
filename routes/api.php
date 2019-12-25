@@ -698,3 +698,13 @@ Route::prefix('teacher')->middleware('auth:api')->group(function(){
         ->name('api.teacher.delete-visitor');
 });
 
+
+Route::prefix('code')->middleware('auth:api')->group(function(){
+    // 添加二维码记录
+    Route::post('/create-record','Api\QrCode\IndexController@createRecord')
+        ->name('api.code.create-record');
+
+});
+
+
+

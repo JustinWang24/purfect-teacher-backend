@@ -3,12 +3,13 @@
 
 namespace App\Http\Controllers\Api\QrCode;
 
-use App\Dao\Timetable\TimetableItemDao;
-use App\Http\Controllers\Controller;
-use App\Http\Requests\QrCode\QrCodeRequest;
 use App\Utils\JsonBuilder;
-use Endroid\QrCode\Exception\InvalidPathException;
 use Endroid\QrCode\QrCode;
+use App\Http\Controllers\Controller;
+use App\Dao\Users\UserCodeRecordDao;
+use App\Dao\Timetable\TimetableItemDao;
+use App\Http\Requests\QrCode\QrCodeRequest;
+use Endroid\QrCode\Exception\InvalidPathException;
 
 class IndexController extends Controller
 {
@@ -80,6 +81,26 @@ class IndexController extends Controller
             return  false;
         } else {
             return  $code;
+        }
+    }
+
+
+    /**
+     * 创建二维码使用记录
+     * @param QrCodeRequest $request
+     * @return string
+     */
+    public function createRecord(QrCodeRequest $request) {
+        $user = $request->user();
+        $data = $request->get('code');
+        $data['user_id'] = $user->id;
+        $data['school_id'] = $user->getSchoolId();
+        $dao = new UserCodeRecordDao();
+        $result = $dao->create($data);
+        if($result) {
+            return JsonBuilder::Success(['id'=>$result->id],'创建成功');
+        } else {
+            return JsonBuilder::Error('创建失败');
         }
     }
 
