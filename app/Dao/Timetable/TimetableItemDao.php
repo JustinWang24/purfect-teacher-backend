@@ -235,21 +235,23 @@ class TimetableItemDao
 
         foreach ($rows as $row) {
             // 要判断一下, 是否为调课的记录
-            $result[$row->time_slot_id] = [
-                'course' => $row->course->name??'未安排课程',
-                'teacher'=> $row->teacher->name,
-                'teacher_id'=> $row->teacher_id,
-                'building'=>$row->building->name,
-                'room'=>$row->room->name,
-                'room_id'=>$row->room_id,
-                'id'=>$row->id,
-                'published'=>$row->published,
-                'repeat_unit'=>$row->repeat_unit,
-                'optional'=>$row->course->optional,
-                'weekday_index'=>$row->weekday_index,
-                'time_slot_id'=>$row->time_slot_id,
-                'specials'=>'',
-            ];
+            if($row->course && $row->teacher){
+                $result[$row->time_slot_id] = [
+                    'course' => $row->course->name,
+                    'teacher'=> $row->teacher->name,
+                    'teacher_id'=> $row->teacher_id,
+                    'building'=>$row->building->name,
+                    'room'=>$row->room->name,
+                    'room_id'=>$row->room_id,
+                    'id'=>$row->id,
+                    'published'=>$row->published,
+                    'repeat_unit'=>$row->repeat_unit,
+                    'optional'=>$row->course->optional,
+                    'weekday_index'=>$row->weekday_index,
+                    'time_slot_id'=>$row->time_slot_id,
+                    'specials'=>'',
+                ];
+            }
         }
         return $result;
     }
