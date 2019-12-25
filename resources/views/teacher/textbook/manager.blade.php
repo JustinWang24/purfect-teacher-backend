@@ -109,7 +109,7 @@
                                     <el-option label="专业教材" :value="1"></el-option>
                                     <el-option label="通用教材" :value="2"></el-option>
                                     <el-option label="选读教材" :value="3"></el-option>
-                                    <el-option label="选读教材" :value="4"></el-option>
+                                    <el-option label="课外读物" :value="4"></el-option>
                                 </el-select>
                             </el-form-item>
                         </el-col>

@@ -20,4 +20,8 @@ class TextbookImage extends Model
     public function textbook(){
         return $this->belongsTo(Textbook::class);
     }
+
+    public function getUrlAttribute($value){
+        return asset($value);
+    }
 }
