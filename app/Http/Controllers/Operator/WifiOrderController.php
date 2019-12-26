@@ -7,6 +7,7 @@
 
    use App\Http\Requests\Backstage\WifiOrderRequest;
 
+   use App\Dao\Wifi\Backstage\UsersDao; // 用户信息
    use App\Dao\Wifi\Backstage\WifiOrdersDao; // 订单列表
    class WifiOrderController extends Controller
    {
@@ -91,63 +92,39 @@
        */
       public function detail(WifiOrderRequest $request)
       {
-         $param = $request->only ( [ 'orderid' ] );
+         $param = $request->only ( [ 'trade_sn' ] );
 
          // 查询条件
-         $condition[] = [ 'orderid' , '=' , $param['orderid'] ];
-         // 状态
-         if ( isset( $param[ 'status' ] ) && $param[ 'status' ] )
-         {
-            $condition[] = [ 'wifi_orders.school_id' , '=' , $param[ 'status' ] ];
-         }
-         // wifi 类型
-         if ( isset( $param[ 'wifi_type' ] ) && $param[ 'wifi_type' ] )
-         {
-            $condition[] = [ 'wifi_orders.wifi_type' , '=' , $param[ 'wifi_type' ] ];
-         }
-         // 学校id
-         if ( isset( $param[ 'school_id' ] ) && $param[ 'school_id' ] )
-         {
-            $condition[] = [ 'wifi_orders.school_id' , '=' , $param[ 'school_id' ] ];
-         }
-         // 校区id
-         if ( isset( $param[ 'campus_id' ] )  && $param[ 'campus_id' ])
-         {
-            $condition[] = [ 'wifi_orders.campus_id' , '=' , $param[ 'campus_id' ] ];
-         }
-         // 支付方式
-         if ( isset( $param[ 'paymentid' ] )  && $param[ 'paymentid' ])
-         {
-            $condition[] = [ 'wifi_orders.paymentid' , '=' , $param[ 'paymentid' ] ];
-         }
-         // 搜索关键词
-         // TODO.....这里还有按照手机号
-         if ( isset( $param[ 'keywords' ] )  && $param[ 'keywords' ])
-         {
-            $condition[] = [ 'users.name' , 'like' , $param[ 'keywords' ] ];
-         }
+         $condition[] = [ 'trade_sn' , '=' , $param['trade_sn'] ];
 
          // 获取字段
-         $fieldArr = [ 'wifi_orders.*' , 'users.name' , 'users.mobile' ];
+         $fieldArr = [ 'wifi_orders.*' , 'schools.name as school_name' , 'campuses.name as campuses_name' ];
 
          // 获取用户信息
          $joinArr = [
-            [ "users" , 'wifi_orders.user_id' , '=' , 'users.id' ] ,
+            [ "schools" , 'wifi_orders.school_id' , '=' , 'schools.id' ] ,
+            [ "campuses" , 'wifi_orders.campus_id' , '=' , 'campuses.id' ] ,
          ];
 
          // 获取数据
-         $dataList = WifiOrdersDao::getWifiOrdersListInfo (
+         $dataOne['getWifiOrdersOneInfo'] = WifiOrdersDao::getWifiOrdersOneInfo (
             $condition , [ 'wifi_orders.orderid' , 'desc' ] ,
-            [ 'page' => $param[ 'page' ] , 'limit' => self::$manger_wifi_page_limit ] ,
             $fieldArr , $joinArr
          );
 
-         // 返回数据
-         $this->dataForView[ 'dataList' ]            = $dataList;
-         $this->dataForView[ 'paymentidArr' ]        = WifiOrdersDao::$paymentidArr;
-         $this->dataForView[ 'manageWifiStatusArr' ] = WifiOrdersDao::$manageWifiStatusArr;
+         // 获取用户信息
+         if ( ! empty( $dataOne['getWifiOrdersOneInfo'] ) && $dataOne['getWifiOrdersOneInfo']->user_id )
+         {
+            $dataOne['getUsersOneInfo'] = UsersDao::getUsersOneInfo (
+               [ [ 'id' , '=' , $dataOne['getWifiOrdersOneInfo']->user_id ] ] , [ 'id' , 'desc' ] , [ '*' ]
+            );
+         }
+         $dataOne['manageWifiStatusArr'] = WifiOrdersDao::$manageWifiStatusArr;
 
-         return view ( 'manager_wifi.wifiOrder.list' , $this->dataForView );
+         // 返回数据
+         $this->dataForView[ 'dataOne' ] = $dataOne;
+
+         return view ( 'manager_wifi.wifiOrder.detail' , $this->dataForView );
 
       }
    }
