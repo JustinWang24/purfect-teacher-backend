@@ -15,9 +15,6 @@ use App\User;
                     <div class="row">
                         <div class="row table-padding">
                             <div class="col-12">
-                                <a href="{{ url()->previous() }}" class="btn btn-default">
-                                    <i class="fa fa-arrow-circle-left"></i> 返回
-                                </a>&nbsp;
                                 <a href="{{ route('manager_wifi.wifiNotice.add') }}" class="btn btn-primary pull-right" id="btn-create-room-from-building">
                                     添加 <i class="fa fa-plus"></i>
                                 </a>
@@ -27,9 +24,8 @@ use App\User;
                             <table class="table table-striped table-bordered table-hover table-checkable order-column valign-middle text-center">
                                 <thead>
                                 <tr>
-									<th>序号</th>
+                                    <th>排序</th>
 									<th>标题</th>
-									<th>排序</th>
 									<th>添加时间</th>
 									<th>修改时间</th>
 									<th>操作</th>
@@ -38,9 +34,8 @@ use App\User;
                                 <tbody>
                                 @foreach($dataList as $key=>$val)
                                     <tr>
-										<td>{{$val['noticeid']}}</td>
+                                        <td>{{$val['sort']}}</td>
 										<td>{{$val['notice_title']}}</td>
-										<td>{{$val['sort']}}</td>
 										<td>{{$val['created_at']}}</td>
 										<td>{{$val['updated_at']}}</td>
                                         <td class="text-center">
