@@ -15,11 +15,11 @@ use App\Utils\UI\Button;
                         @csrf
                         <div class="form-group">
                             <label for="building-name-input">标题</label>
-                            <input required type="text" class="form-control" id="building-name-input" value="" placeholder="" name="infos[notice_title]">
+                            <input required type="text" class="form-control" id="building-name-input" value="{{ old('infos.notice_title') }}" placeholder="" name="infos[notice_title]">
                         </div>
                         <div class="form-group">
                             <label for="building-name-input">内容</label>
-                            <input required type="text" class="form-control" id="building-name-input" value="" placeholder="" name="infos[notice_content]">
+                            <textarea required class="form-control" name="infos[notice_content]" id="questionnaire-desc-input" cols="30" rows="10" placeholder="">{{ old('infos.notice_content') }}</textarea>
                         </div>
                         <?php
                             Button::Print(['id'=>'btn-create-building','text'=>trans('general.submit')], Button::TYPE_PRIMARY);

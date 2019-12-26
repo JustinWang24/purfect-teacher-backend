@@ -15,9 +15,11 @@ use App\User;
                     <div class="row">
                         <div class="row table-padding">
                             <div class="col-12">
-                                <a href="{{ route('manager_wifi.wifiIssueType.list',['type_pid'=>0]) }}" class="btn btn-default">
-                                    <i class="fa fa-arrow-circle-left"></i> 返回
-                                </a>&nbsp;
+                                @if(Request::get('type_pid') > 0)
+                                    <a href="{{ route('manager_wifi.wifiIssueType.list',['type_pid'=>0]) }}" class="btn btn-default">
+                                        <i class="fa fa-arrow-circle-left"></i> 返回
+                                    </a>&nbsp;&nbsp;
+                                @endif
                                 <a href="{{ route('manager_wifi.wifiIssueType.add',request()->only('typeid','type_pid')) }}" class="btn btn-primary pull-right" id="btn-create-room-from-building">
                                     添加 <i class="fa fa-plus"></i>
                                 </a>
@@ -56,6 +58,7 @@ use App\User;
                                 </tbody>
                             </table>
                         </div>
+                        {{ $dataList->appends(Request::all())->links() }}
                     </div>
                 </div>
             </div>

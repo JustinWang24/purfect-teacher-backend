@@ -5,6 +5,15 @@ use App\Utils\UI\Button;
 @extends('layouts.app')
 @section('content')
     <div class="row">
+	    @if ($errors->any())
+            <div class="alert alert-danger">
+                <ul>
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
         <div class="col-sm-10 col-md-12 col-xl-12">
             <div class="card-box">
                 <div class="card-head">
@@ -26,20 +35,19 @@ use App\Utils\UI\Button;
                             <select class="form-control" name="infos[typeid]"  required>
                                 <option value="">请选择</option>
                                 @foreach($wifiContentsTypeArr as $key=>$val)
-                                    <option value="{{$key}}">{{$val}}</option>
+                                    <option value="{{$key}}" {{ (old('infos.typeid') == $key ? "selected":"") }}>{{$val}}</option>
                                 @endforeach
                             </select>
                         </div>
                         <div class="form-group">
                             <label for="building-name-input">内容</label>
-                            <textarea required class="form-control" id="building-name-input" name="infos[content]" rows="10">
-                            </textarea>
+							<textarea required class="form-control" name="infos[content]" id="questionnaire-desc-input" cols="30" rows="10" placeholder="">{{ old('infos.content') }}</textarea>
                         </div>
                         <?php
                             Button::Print(['id'=>'btn-create-building','text'=>trans('general.submit')], Button::TYPE_PRIMARY);
                         ?>&nbsp;
                         <?php
-                            Anchor::Print(['text'=>trans('general.return'),'href'=>url()->previous(),'class'=>'pull-right link-return'], Button::TYPE_SUCCESS,'arrow-circle-o-right')
+                            Anchor::Print(['text'=>trans('general.return'),'href'=>route('manager_wifi.wifiContent.list'),'class'=>'pull-right link-return'], Button::TYPE_SUCCESS,'arrow-circle-o-right')
                         ?>
                     </form>
                 </div>
@@ -48,7 +56,7 @@ use App\Utils\UI\Button;
     </div>
 <script>
 window.onload=function() {
-    showLocation();
+    showLocation({{ old('infos.school_id')?:0 }},{{ old('infos.campus_id')?:0 }});
 }
 </script>
 @endsection

@@ -15,20 +15,27 @@ use App\User;
 
                 <div class="card-body">
                     <div class="row">
-                        <div class="row table-padding">
-                            <div class="col-12">
-                                <!--a href="{{ url()->previous() }}" class="btn btn-default">
-                                    <i class="fa fa-arrow-circle-left"></i> 返回
-                                </a-->&nbsp;
-                                <a href="{{ route('manager_wifi.wifi.add') }}" class="btn btn-primary pull-right" id="btn-create-room-from-building">
-                                    添加 <i class="fa fa-plus"></i>
-                                </a>
-                            </div>
+                        <div class="col-12 mb-2">
+                            <form action="{{ route('manager_wifi.wifi.list') }}" method="get"  id="add-building-form">
+                                <div class="pull-left col-2">
+                                    <label>学校</label>
+                                    <select id="cityid" class="el-input__inner col-10" name="school_id"></select>
+                                </div>
+                                <div class="pull-left col-2">
+                                    <label>校区</label>
+                                    <select id="countryid" class="el-input__inner col-10" name="campus_id"></select>
+                                </div>
+                                <button class="btn btn-primary">搜索</button>
+                            </form>
+                            <a href="{{ route('manager_wifi.wifi.add') }}" class="btn btn-primary pull-right" id="btn-create-room-from-building">
+                                添加 <i class="fa fa-plus"></i>
+                            </a>
                         </div>
                         <div class="table-responsive">
                             <table class="table table-striped table-bordered table-hover table-checkable order-column valign-middle text-center">
                                 <thead>
                                 <tr>
+                                    <th>排序</th>
                                     <th width="15%">学校</th>
                                     <th width="15%">校区</th>
                                     <th>类型</th>
@@ -44,6 +51,7 @@ use App\User;
                                 <tbody>
                                 @foreach($wifiList as $key=>$val)
                                     <tr>
+                                        <td>{{ $val->wifi_sort }}</td>
                                         <td>{{ $val->schools_name }}</td>
                                         <td>{{ $val->campuses_name }}</td>
                                         <td>{{ $val->wifi_name }}</td>
@@ -60,10 +68,15 @@ use App\User;
                                 </tbody>
                             </table>
                         </div>
-                        {!! $wifiList->fragment('feed')->render() !!}
+                        {{ $wifiList->appends(Request::all())->links() }}
                     </div>
                 </div>
             </div>
         </div>
     </div>
+<script>
+    window.onload=function() {
+        showLocation({{ Request::get('school_id')?:0 }},{{ Request::get('campus_id')?:0 }});
+    }
+</script>
 @endsection

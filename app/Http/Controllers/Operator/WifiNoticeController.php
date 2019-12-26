@@ -57,7 +57,7 @@
          {
             // 表单要插入的字段信息
             $param1 = self::getPostParamInfo (
-               $request->infos , [ 'notice_title' , 'notice_content' ,]
+               $request->infos , [ 'notice_title' , 'notice_content', 'sort']
             );
 
             // 附加数据
@@ -70,7 +70,7 @@
             {
                FlashMessageBuilder::Push ( $request , FlashMessageBuilder::DANGER , '您提交太快了，先歇息一下');
 
-               return redirect()->route('manager_wifi.wifiNotice.add');
+               return redirect()->route('manager_wifi.wifiNotice.add')->withInput();
             }
 
             if ( WifiNoticesDao::addOrUpdateWifiNoticesInfo ( array_merge ( $param1 , $param2 ) ) )
@@ -85,7 +85,7 @@
 
                FlashMessageBuilder::Push ( $request , FlashMessageBuilder::DANGER , '数据添加失败,请稍后重试' );
 
-               return redirect()->route('manager_wifi.wifiNotice.add');
+               return redirect()->route('manager_wifi.wifiNotice.add')->withInput();
             }
          }
          $this->dataForView[ 'infos' ] = []; // 数据信息
@@ -126,28 +126,15 @@
          {
             // 表单要插入的字段信息
             $param1 = self::getPostParamInfo ( $request->infos , [
-                  'notice_title' , 'notice_content' ,
+                  'notice_title' , 'notice_content' , 'sort'
                ]
             );
 
             // 附加数据
             $param2 = [];
 
-            // 验证数据是否重复提交
-            $dataSign = sha1 ( $request->user()->id . 'edit' );
-
-            if ( Cache::has ( $dataSign ) )
-            {
-               FlashMessageBuilder::Push ( $request , FlashMessageBuilder::DANGER , '您提交太快了，先歇息一下' );
-
-               return redirect ()->route ( 'manager_wifi.wifiNotice.edit' , [ 'noticeid' => $getWifiNoticesOneInfo[ 'noticeid' ] ] );
-
-            }
-
             if ( WifiNoticesDao::addOrUpdateWifiNoticesInfo ( array_merge ( $param1 , $param2 ) , $getWifiNoticesOneInfo[ 'noticeid' ] ) )
             {
-               // 生成重复提交签名
-               Cache::put ( $dataSign , $dataSign , 10 );
 
                FlashMessageBuilder::Push($request, FlashMessageBuilder::SUCCESS,'数据更新成功');
 

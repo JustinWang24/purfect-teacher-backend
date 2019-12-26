@@ -21,7 +21,7 @@ use App\Utils\UI\Button;
                         </div>
                         <div class="form-group">
                             <label for="building-name-input">内容</label>
-                            <input required type="text" class="form-control" id="building-name-input" value="{{$dataOne['notice_content']}}" placeholder="" name="infos[notice_content]">
+                            <textarea required class="form-control" name="infos[notice_content]" id="questionnaire-desc-input" cols="30" rows="10" placeholder="">{{$dataOne['notice_content']}}</textarea>
                         </div>
                         <div class="form-group">
                             <label for="building-name-input">排序</label>

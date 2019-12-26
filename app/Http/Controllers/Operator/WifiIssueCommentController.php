@@ -21,27 +21,35 @@
        */
       public function list(WifiIssueCommentRequest $request)
       {
-         $param = $request->only ( [ 'school_id' , 'campus_id' ] );
+         $param = $request->only ( [ 'school_id' , 'campus_id','keywords' ] );
          $param[ 'page' ] = $request->input ( 'page' , 1 );
-
+		
          // 查询条件
          $condition[] = [ 'commentid' , '>' , 0 ];
-         // 状态
-         if ( isset( $param[ 'status' ] ) && $param[ 'status' ] )
-         {
-            $condition[] = [ 'wifi_issue_comments.status' , '=' , $param[ 'status' ] ];
-         }
-         // 学校id
+		 
+		  // 学校
          if ( isset( $param[ 'school_id' ] ) && $param[ 'school_id' ] )
          {
             $condition[] = [ 'wifi_issue_comments.school_id' , '=' , $param[ 'school_id' ] ];
          }
-
-         // 搜索关键词
-		 // TODO.....这里还有按照手机号
-         if ( isset( $param[ 'keywords' ] )  && $param[ 'keywords' ])
+		 
+		  // 校区
+         if ( isset( $param[ 'campus_id' ] ) && $param[ 'campus_id' ] )
          {
-            $condition[] = ['c.trade_sn|c.issue_name|c.issue_mobile|c.issue_desc|c.addr_detail' , 'like' , $param[ 'keywords' ] ];
+            $condition[] = [ 'wifi_issue_comments.campus_id' , '=' , $param[ 'campus_id' ] ];
+         }
+	
+		  // 关键词搜搜
+         if ( isset( $param[ 'keywords' ] ) && $param[ 'keywords' ] )
+         {
+		    // TODO...
+           // $condition[] = [ 'wifi_issues.issue_name|wifi_issues.issue_mobile' , 'like' , '%'.strip_tags($param[ 'keywords' ]).'%' ];
+         } 
+         
+		 // 状态
+         if ( isset( $param[ 'status' ] ) && $param[ 'status' ] )
+         {
+            $condition[] = [ 'wifi_issue_comments.status' , '=' , $param[ 'status' ] ];
          }
 
          // 获取字段
@@ -86,13 +94,13 @@
          $param = $request->only ( [ 'commentid' ] );
 
          // 查询条件
-         $condition[] = [ 'commentid' , '=' , $param['commentid'] ];
+         $condition[] = [ 'wifi_issue_comments.commentid' , '=' , $param['commentid'] ];
 
          // 获取字段
          $fieldArr = [
             'wifi_issue_comments.*' , 'wifi_issues.issue_name' , 'wifi_issues.issue_mobile' ,
             'wifi_issues.issue_desc' , 'wifi_issues.addr_detail' , 'wifi_issues.admin_name' ,
-            'wifi_issues.admin_mobile' , 'wifi_issues.admin_desc' , 'wifi_issues.create_time ccreate_time' ,
+            'wifi_issues.admin_mobile' , 'wifi_issues.admin_desc' , 'wifi_issues.created_at' ,
             'wifi_issues.typeone_name' , 'wifi_issues.typetwo_name' , 'wifi_issues.jiedan_time' ,
             'wifi_issues.chulis_time' , 'wifi_issues.typeone_name' , 'wifi_issues.typetwo_name' ,
             'wifi_issues.addr_detail' , 'wifi_issues.issue_desc' , 'wifi_issues.trade_sn'

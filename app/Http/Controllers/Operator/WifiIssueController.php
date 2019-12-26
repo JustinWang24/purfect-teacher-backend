@@ -26,22 +26,23 @@
 
          // 查询条件
          $condition[] = [ 'issueid' , '>' , 0 ];
+
+         // 学校
+         if ( isset( $param[ 'school_id' ] ) && $param[ 'school_id' ] )
+         {
+            $condition[] = [ 'wifi_issues.school_id' , '=' , $param[ 'school_id' ] ];
+         }
+
+         // 校区
+         if ( isset( $param[ 'campus_id' ] ) && $param[ 'campus_id' ] )
+         {
+            $condition[] = [ 'wifi_issues.campus_id' , '=' , $param[ 'campus_id' ] ];
+         }
+
          // 状态
          if ( isset( $param[ 'status' ] ) && $param[ 'status' ] )
          {
             $condition[] = [ 'wifi_issue.status' , '=' , $param[ 'status' ] ];
-         }
-         // 学校id
-         if ( isset( $param[ 'school_id' ] ) && $param[ 'school_id' ] )
-         {
-            $condition[] = [ 'wifi_issue.school_id' , '=' , $param[ 'school_id' ] ];
-         }
-
-         // 搜索关键词
-		 // TODO.....这里还有按照手机号
-         if ( isset( $param[ 'keywords' ] )  && $param[ 'keywords' ])
-         {
-            $condition[] = ['a.trade_sn|a.issue_name|a.issue_mobile|a.issue_desc|a.addr_detail' , 'like' , $param[ 'keywords' ] ];
          }
 
          // 获取字段
@@ -77,7 +78,7 @@
        * @param WifiOrderRequest $request
        * @return view
        */
-      public function detail(WifiIssueCommentRequest $request)
+      public function detail(WifiIssueRequest $request)
       {
          $param = $request->only ( [ 'issueid' ] );
 

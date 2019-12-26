@@ -22,7 +22,7 @@
        */
       public function list(WifiOrderRequest $request)
       {
-         $param = $request->only ( [ 'school_id' , 'campus_id' , 'page' ] );
+         $param = $request->only ( [ 'school_id' , 'campus_id' , 'page','keywords' ] );
          $param[ 'page' ] = $request->input ( 'page' , 1 );
 
          // 查询条件
@@ -53,18 +53,18 @@
             $condition[] = [ 'wifi_orders.paymentid' , '=' , $param[ 'paymentid' ] ];
          }
          // 搜索关键词
-		 // TODO.....这里还有按照手机号
          if ( isset( $param[ 'keywords' ] )  && $param[ 'keywords' ])
          {
-            $condition[] = [ 'users.name' , 'like' , $param[ 'keywords' ] ];
+            $condition[] = [ 'users.mobile' , 'like' , '%'.strip_tags($param[ 'keywords' ]).'%' ];
          }
 		   
          // 获取字段
-         $fieldArr = [ 'wifi_orders.*' , 'users.name' , 'users.mobile' ];
+         $fieldArr = [ 'wifi_orders.*' , 'users.name' , 'users.mobile' , 'schools.name as school_name' ];
 
          // 获取用户信息
          $joinArr = [
             [ "users" , 'wifi_orders.user_id' , '=' , 'users.id' ] ,
+            [ "schools" , 'wifi_orders.school_id' , '=' , 'schools.id' ] ,
          ];
 
          // 获取数据
