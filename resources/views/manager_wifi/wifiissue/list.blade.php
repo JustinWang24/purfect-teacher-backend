@@ -14,7 +14,7 @@ use App\User;
                 <div class="card-body">
                     <div class="row">
                         <div class="col-12 mb-2">
-                            <form action="{{ route('manager_wifi.wifiIssueComment.list') }}" method="get"  id="add-building-form">
+                            <form action="{{ route('manager_wifi.wifiIssue.list') }}" method="get"  id="add-building-form">
                                 <div class="pull-left col-2">
                                     <label>学校</label>
                                     <select id="cityid" class="el-input__inner col-10" name="school_id"></select>
@@ -27,7 +27,7 @@ use App\User;
 
                                 <div class="pull-left col-3">
                                     <label>关键词</label>
-                                    <input type="text" class="el-input__inner col-10" value="{{ Request::get('keywords') }}" placeholder="联系人/电话" name="keywords">
+                                    <input type="text" class="el-input__inner col-10" value="{{ Request::get('keywords') }}" placeholder="电话" name="keywords">
                                 </div>
                                 <button class="btn btn-primary">搜索</button>
                             </form>
@@ -66,6 +66,9 @@ use App\User;
 										<td>{{$val->created_at}}</td>
 										<td>{{$manageStatusArr[$val['status']]}}</td>
                                         <td class="text-center">
+                                            @if($val['status'] ===1)
+                                            <a href="{{ route('manager_wifi.wifiIssue.edit',['issueid'=>$val->issueid]) }}" onClick="return confirm('你确定接单吗？')" class="btn btn-primary">接单</a>
+                                            @endif
                                             {{ Anchor::Print(['text'=>'查看','class'=>'btn-edit-room','href'=>route('manager_wifi.wifiIssue.detail',['issueid'=>$val->issueid])], Button::TYPE_DEFAULT,'detail') }}
                                         </td>
                                     </tr>
