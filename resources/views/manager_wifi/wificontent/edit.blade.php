@@ -16,15 +16,13 @@ use App\Utils\UI\Button;
                         <input type="hidden" name="dataOne[contentid]" value="{{$dataOne['contentid']}}" id="building-id-input">
                         <div class="form-group">
                             <label for="building-name-input">内容</label>
-                            <textarea required class="form-control" id="building-name-input" name="infos[content]" rows="10">
-                                {{$dataOne['content']}}
-                            </textarea>
+							<textarea required class="form-control" name="infos[content]" id="questionnaire-desc-input" cols="30" rows="10" placeholder="">{{$dataOne['content']}}</textarea>
                         </div>
                        <?php
                        Button::Print(['id'=>'btn-create-building','text'=>trans('general.submit')], Button::TYPE_PRIMARY);
                        ?>&nbsp;
                        <?php
-                       Anchor::Print(['text'=>trans('general.return'),'href'=>url()->previous(),'class'=>'pull-right link-return'], Button::TYPE_SUCCESS,'arrow-circle-o-right')
+                       Anchor::Print(['text'=>trans('general.return'),'href'=>route('manager_wifi.wifiContent.list'),'class'=>'pull-right link-return'], Button::TYPE_SUCCESS,'arrow-circle-o-right')
                        ?>
                     </form>
                 </div>

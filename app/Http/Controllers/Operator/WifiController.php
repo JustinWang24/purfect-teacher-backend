@@ -25,17 +25,17 @@
          $param[ 'page' ] = $request->input ( 'page' , 1 );
 
          // 查询条件
-         $condition[] = [ 'wifiid' , '>' , 0 ];
+         $condition[] = [ 'wifis.wifiid' , '>' , 0 ];
 
          // 学校id
          if ( isset( $param[ 'school_id' ] )  && $param[ 'school_id' ])
          {
-            $condition[] = [ 'school_id' , '=' , $param[ 'school_id' ] ];
+            $condition[] = [ 'wifis.school_id' , '=' , $param[ 'school_id' ] ];
          }
          // 校区id
          if ( isset( $param[ 'campus_id' ] )  && $param[ 'campus_id' ])
          {
-            $condition[] = [ 'campus_id' , '=' , $param[ 'campus_id' ] ];
+            $condition[] = [ 'wifis.campus_id' , '=' , $param[ 'campus_id' ] ];
          }
 
          // 获取字段

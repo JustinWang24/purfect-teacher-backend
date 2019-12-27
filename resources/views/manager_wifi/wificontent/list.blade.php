@@ -13,15 +13,22 @@ use App\User;
                 </div>
                 <div class="card-body">
                     <div class="row">
-                        <div class="row table-padding">
-                            <div class="col-12">
-                                <a href="{{ url()->previous() }}" class="btn btn-default">
-                                    <i class="fa fa-arrow-circle-left"></i> 返回
-                                </a>&nbsp;
+                        <div class="col-12 mb-2">
+                            <form action="{{ route('manager_wifi.wifiContent.list') }}" method="get"  id="add-building-form">
+                                <div class="pull-left col-2">
+                                    <label>学校</label>
+                                    <select id="cityid" class="el-input__inner col-10" name="school_id"></select>
+                                </div>
+
+                                <div class="pull-left col-2">
+                                    <label>校区</label>
+                                    <select id="countryid" class="el-input__inner col-10" name="campus_id"></select>
+                                </div>
+                                <button class="btn btn-primary">搜索</button>
                                 <a href="{{ route('manager_wifi.wifiContent.add') }}" class="btn btn-primary pull-right" id="btn-create-room-from-building">
                                     添加 <i class="fa fa-plus"></i>
                                 </a>
-                            </div>
+                            </form>
                         </div>
                         <div class="table-responsive">
                             <table class="table table-striped table-bordered table-hover table-checkable order-column valign-middle text-center">
@@ -29,6 +36,7 @@ use App\User;
                                 <tr>
 									<th>序号</th>
 									<th>学校</th>
+									<th>校区</th>
 									<th>类型</th>
 									<th>添加时间</th>
 									<th>修改时间</th>
@@ -39,7 +47,8 @@ use App\User;
                                 @foreach($dataList as $key=>$val)
                                     <tr>
 										<td>{{$val['contentid']}}</td>
-										<td>{{$val['contentid']}}</td>
+										<td>{{$val['schools_name']}}</td>
+										<td>{{$val['campuses_name']}}</td>
 										<td>{{$wifiContentsTypeArr[$val['typeid']]}}</td>
 										<td>{{$val['created_at']}}</td>
 										<td>{{$val['updated_at']}}</td>
@@ -52,10 +61,15 @@ use App\User;
                                 </tbody>
                             </table>
                         </div>
-                        {!! $dataList->fragment('feed')->render() !!}
+                        {{ $dataList->appends(Request::all())->links() }}
                     </div>
                 </div>
             </div>
         </div>
     </div>
+<script>
+    window.onload=function() {
+        showLocation({{ Request::get('school_id')?:0 }},{{ Request::get('campus_id')?:0 }});
+    }
+</script>
 @endsection
