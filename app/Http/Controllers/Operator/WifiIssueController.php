@@ -24,7 +24,7 @@
        */
       public function list(WifiIssueRequest $request)
       {
-         $param = $request->only ( [ 'school_id' , 'campus_id' ] );
+         $param = $request->only ( [ 'school_id' , 'campus_id','keywords' ] );
          $param[ 'page' ] = $request->input ( 'page' , 1 );
 
          // 查询条件
@@ -42,12 +42,16 @@
             $condition[] = [ 'wifi_issues.campus_id' , '=' , $param[ 'campus_id' ] ];
          }
 
+         // 搜索关键词
+         if ( isset( $param[ 'keywords' ] )  && $param[ 'keywords' ])
+         {
+            $condition[] = [ 'wifi_issues.issue_mobile' , 'like' , '%'.strip_tags($param[ 'keywords' ]).'%' ];
+         }
          // 状态
          if ( isset( $param[ 'status' ] ) && $param[ 'status' ] )
          {
             $condition[] = [ 'wifi_issue.status' , '=' , $param[ 'status' ] ];
          }
-
          // 获取字段
          $fieldArr = [
             'wifi_issues.*' , 'users.name' , 'users.mobile','schools.name as schools_name'
@@ -74,6 +78,50 @@
          return view ( 'manager_wifi.wifiIssue.list' , $this->dataForView );
 
       }
+      /**
+       * Func 接单
+       * @param WifiOrderRequest $request
+       * @return view
+       */
+      public function edit(WifiIssueRequest $request)
+      {
+         $param = $request->only ( [ 'issueid' ] );
+
+         // 查询条件
+         $condition[] = [ 'issueid' , '=' , $param['issueid'] ];
+
+         // 获取字段
+         $fieldArr = [ 'wifi_issues.*' ];
+
+         // 关联表信息
+         $joinArr = [];
+
+         // 获取数据
+         $getWifiIssuesOneInfo = WifiIssuesDao::getWifiIssuesOneInfo (
+            $condition , [ 'issueid' , 'desc' ] , $fieldArr , $joinArr
+         );
+
+         // 判断数据
+         if ( !empty( $getWifiIssuesOneInfo ) )
+         {
+            FlashMessageBuilder::Push ( $request , FlashMessageBuilder::DANGER , '参数错误');
+         }
+
+         // 处理数据
+         $saveData['status'] = 2;
+         $saveData['adminid'] = 0; // TODO...
+         $saveData['admin_name'] = ''; // TODO.....
+         $saveData['jiedan_time'] = date('Y-m-d H:i:s');
+         if ( WifiIssuesDao::addOrUpdateWifiIssuesInfo ( $saveData , $getWifiIssuesOneInfo->issueid ) )
+         {
+            FlashMessageBuilder::Push ( $request , FlashMessageBuilder::SUCCESS , '操作成功');
+            return redirect()->route('manager_wifi.wifiIssue.list');
+         } else {
+            FlashMessageBuilder::Push ( $request , FlashMessageBuilder::DANGER , '操作失败,请稍后重试');
+            return redirect()->route('manager_wifi.wifiIssue.list');
+         }
+      }
+
 
       /**
        * Func 报修详情
@@ -112,7 +160,7 @@
             );
             // 获取处理信息
             $dataOne['getWifiIssueDisposesOneInfo'] = WifiIssueDisposesDao::getWifiIssueDisposesOneInfo (
-               [ [ 'disposeid' , '=' , $dataOne['getWifiIssuesOneInfo']->issueid ] ] , [ 'disposeid' , 'desc' ] , [ '*' ]
+               [ [ 'issueid' , '=' , $dataOne['getWifiIssuesOneInfo']->issueid ] ] , [ 'disposeid' , 'desc' ] , [ '*' ]
             );
          }
 
@@ -197,7 +245,7 @@
 
             FlashMessageBuilder::Push ( $request , FlashMessageBuilder::SUCCESS , '操作成功');
 
-            return redirect()->route('manager_wifi.wifiIssue.list');
+            return redirect()->route('manager_wifi.wifiIssue.detail',[ 'issueid' =>$getWifiIssuesOneInfo->issueid  ] );
 
          } else {
             FlashMessageBuilder::Push ( $request , FlashMessageBuilder::DANGER , '操作失败,请稍后重试');

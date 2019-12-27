@@ -27,7 +27,7 @@ use App\User;
 									
 									<div class="pull-left col-3">
 										<label>关键词</label>
-										<input type="text" class="el-input__inner col-10" value="{{ Request::get('keywords') }}" placeholder="姓名/电话" name="keywords">
+										<input type="text" class="el-input__inner col-10" value="{{ Request::get('keywords') }}" placeholder="电话" name="keywords">
 									</div>						
 									<button class="btn btn-primary">搜索</button>
 								</form>

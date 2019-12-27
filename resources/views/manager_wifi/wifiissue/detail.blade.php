@@ -123,31 +123,31 @@ use App\Utils\UI\Button;
                             <div class="col-3">
                                 <div class="form-group">
                                     <label for="application-user-name">处理人姓名：</label>
-                                    {{$dataOne['getWifiIssuesOneInfo']->campuses_name}}
+                                    {{$dataOne['getWifiIssuesOneInfo']->admin_name}}
                                 </div>
                             </div>
                             <div class="col-3">
                                 <div class="form-group">
                                     <label for="application-user-name">接单时间：</label>
-                                    getWifiIssueDisposesOneInfo
+                                    {{$dataOne['getWifiIssuesOneInfo']->jiedan_time}}
+                                </div>
+                            </div>
+                            <div class="col-3">
+                                <div class="form-group">
+                                    <label for="application-user-name">处理时间：</label>
+                                    {{$dataOne['getWifiIssueDisposesOneInfo']->created_at}}
                                 </div>
                             </div>
                             <div class="col-3">
                                 <div class="form-group">
                                     <label for="application-user-name">故障分类：</label>
-
-                                </div>
-                            </div>
-                            <div class="col-3">
-                                <div class="form-group">
-                                    <label for="application-user-name">故障子类：</label>
-
+                                    {{$dataOne['getWifiIssueDisposesOneInfo']->typeone_name}}/{{$dataOne['getWifiIssueDisposesOneInfo']->typetwo_name}}
                                 </div>
                             </div>
                             <div class="col-3">
                                 <div class="form-group">
                                     <label for="application-user-name">处理结果：</label>
-
+                                    {{$dataOne['getWifiIssueDisposesOneInfo']->admin_desc}}
                                 </div>
                             </div>
 
@@ -156,7 +156,7 @@ use App\Utils\UI\Button;
                 </div>
             @endif
            <?php
-           Anchor::Print(['text'=>trans('general.return'),'href'=>route('manager_wifi.wifiOrder.list'),'class'=>'pull-right link-return'], Button::TYPE_SUCCESS,'arrow-circle-o-right')
+           Anchor::Print(['text'=>trans('general.return'),'href'=>route('manager_wifi.wifiIssue.list'),'class'=>'pull-right link-return'], Button::TYPE_SUCCESS,'arrow-circle-o-right')
            ?>
         </div>
     </div>
