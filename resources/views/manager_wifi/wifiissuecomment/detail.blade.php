@@ -170,8 +170,6 @@ use App\Utils\UI\Button;
                                 {{$dataOne['getWifiIssueCommentsOneInfo']->comment_content}}
                             </div>
                         </div>
-
-
                     </div>
                 </div>
             </div>

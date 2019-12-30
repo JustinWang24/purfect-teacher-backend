@@ -61,7 +61,7 @@ use App\User;
                                         <td>{{ $val->wifi_sort }}</td>
                                         <td>{{ $val->status }}</td>
                                         <td class="text-center">
-                                            {{ Anchor::Print(['text'=>'编辑','class'=>'btn-edit-room','href'=>route('manager_wifi.wifi.edit',['wifiid'=>$val->wifiid])], Button::TYPE_DEFAULT,'edit') }}
+                                            {{ Anchor::Print(['text'=>'编辑','class'=>'btn-edit-room btn-info','href'=>route('manager_wifi.wifi.edit',['wifiid'=>$val->wifiid])], Button::TYPE_DEFAULT,'edit') }}
                                         </td>
                                     </tr>
                                 @endforeach
