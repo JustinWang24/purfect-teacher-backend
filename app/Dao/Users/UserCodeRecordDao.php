@@ -27,3 +27,4 @@ class UserCodeRecordDao
             ->paginate(ConfigurationTool::DEFAULT_PAGE_SIZE);
     }
 }
+

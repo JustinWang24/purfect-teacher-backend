@@ -143,6 +143,7 @@ return [
     'official'=> '日常办公',
     'documents'=> '公文',
     'code' => '二维码',
+    'content'=>'评教管理',
 
 ];
 

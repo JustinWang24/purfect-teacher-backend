@@ -42,6 +42,7 @@
                     @include('layouts.desktop.elements.code_menu')
                     @include('layouts.desktop.elements.wifi_menu')
                     @include('layouts.desktop.elements.wifirepairs_menu')
+                    @include('layouts.desktop.elements.evaluate')
                 @endif
             </ul>
         </div>
