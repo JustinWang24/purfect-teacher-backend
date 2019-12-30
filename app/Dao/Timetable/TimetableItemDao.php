@@ -696,5 +696,19 @@ class TimetableItemDao
         return $endWeekIndex - $startWeekIndex + 1;
     }
 
-
+    /**
+     * 教师端上课签到需要获得当前班级当前时间的课程id和原计划的授课教师id
+     * 会提交扫描的二维码对应云班牌id和时间戳，以及扫描二维码的用户id
+     *
+     * @param $schoolId
+     * @param $userId
+     * @param $cloudGradeId
+     * @param $time
+     * @return array
+     */
+    public function getCourseIdByCloudGradeId($schoolId,$userId,$cloudGradeId,$time)
+    {
+        //TODO 返回课程id和授课教师id
+        return [];
+    }
 }
