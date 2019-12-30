@@ -3,17 +3,16 @@
 namespace App\Http\Controllers\Api\Login;
 
 use App\BusinessLogic\forgetPasswordAndUpdateMoile\Factory;
+use App\Dao\Students\StudentProfileDao;
 use App\Dao\Users\UserDao;
 use App\Dao\Users\UserDeviceDao;
-use App\Dao\Users\UserVerificationDao;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Login\LoginRequest;
-use App\Models\Users\UserVerification;
+use App\User;
 use Illuminate\Support\Facades\Auth;
 use App\Utils\JsonBuilder;
 use Ramsey\Uuid\Uuid;
 use Illuminate\Support\Facades\Hash;
-use Carbon\Carbon;
 
 class LoginController extends Controller
 {
@@ -26,32 +25,41 @@ class LoginController extends Controller
      */
     public function index(LoginRequest $request)
     {
-        $credentials = $request->only('mobile', 'password');
+        $type = $request->get('type');
+        $dao  = new UserDao;
 
-        if (Auth::attempt($credentials)) {
+        if ($type == User::MOBILE_LOGIN) {
 
-            $dao           = new UserDao;
-            $userDeviceDao = new UserDeviceDao;
-
-            $user = $dao->getUserByMobile($credentials['mobile']);
-
-            if ($user->getType() != $request->getAppType()) {
-                return JsonBuilder::Error('登录APP版本与您的账号不符,请登录对应的APP');
+            $credentials = $request->only('mobile', 'password');
+            if (!Auth::attempt($credentials)) {
+                return JsonBuilder::Error('账号或密码错误,请重新登录');
             } else {
-
-                $userDeviceDao->updateOrCreate($user->getId(), $request->getUserDevice());
-
-                $token  = Uuid::uuid4()->toString();
-                $result = $dao->updateApiToken($user->getId(), $token);
-                if ($result) {
-                    return JsonBuilder::Success(['token' => $token]);
-                } else {
-                    return JsonBuilder::Error('系统错误,请稍后再试~');
-                }
-
+                $user = $dao->getUserByMobile($credentials['mobile']);
             }
+
+        } elseif ($type == User::ID_NUMBER_LOGIN) {
+
+            $idNumber = $request->get('id_number');
+
+            $studentProfile = new StudentProfileDao;
+            $profile = $studentProfile->getStudentInfoByIdNumber($idNumber);
+            if (!$profile) {
+                return JsonBuilder::Error('身份证号输入错误,请重新登录');
+            }
+            $user = $profile->user;
+        }
+        $userDeviceDao = new UserDeviceDao;
+        if ($user->getType() != $request->getAppType()) {
+            return JsonBuilder::Error('登录APP版本与您的账号不符,请登录对应的APP');
         } else {
-            return JsonBuilder::Error('账号或密码错误,请重新登录');
+            $userDeviceDao->updateOrCreate($user->getId(), $request->getUserDevice());
+            $token  = Uuid::uuid4()->toString();
+            $result = $dao->updateApiToken($user->getId(), $token);
+            if ($result) {
+                return JsonBuilder::Success(['token' => $token]);
+            } else {
+                return JsonBuilder::Error('系统错误,请稍后再试~');
+            }
         }
     }
 
@@ -115,10 +123,10 @@ class LoginController extends Controller
      */
     public function forgetPassword(LoginRequest $request)
     {
-        $logic = Factory::GetLogic($request);
+        $logic  = Factory::GetLogic($request);
         $result = $logic->Logic();
         if ($result->isSuccess()) {
-            return  JsonBuilder::Success($result->getMessage());
+            return JsonBuilder::Success($result->getMessage());
         } else {
             return JsonBuilder::Error($result->getMessage());
         }
@@ -132,10 +140,10 @@ class LoginController extends Controller
      */
     public function updateUserMobileInfo(LoginRequest $request)
     {
-        $logic = Factory::GetLogic($request);
+        $logic  = Factory::GetLogic($request);
         $result = $logic->Logic();
         if ($result->isSuccess()) {
-            return  JsonBuilder::Success($result->getMessage());
+            return JsonBuilder::Success($result->getMessage());
         } else {
             return JsonBuilder::Error($result->getMessage());
         }
