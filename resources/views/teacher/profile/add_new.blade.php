@@ -157,6 +157,39 @@ use App\Utils\UI\Button;
                             </div>
                         </div>
 
+
+                        <div class="row">
+                            <div class="col-4">
+                                <div class="form-group">
+                                    <label>授课类别</label>
+                                    <select class="form-control" name="profile[category_teach]">
+                                        <option value=""></option>
+                                        <option value="1">文化课教师</option>
+                                        <option value="2">公共课教师</option>
+                                        <option value="3">专业课教师</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <div class="form-group">
+                                    <label>职业授课类别</label>
+                                    <select class="form-control" name="profile[category_major]">
+                                        <option value=""></option>
+                                        <option value="1">交通运输</option>
+                                        <option value="2">农林牧渔</option>
+                                        <option value="3">旅游服务</option>
+                                        <option value="4">土木水利</option>
+                                        <option value="5">文化教育</option>
+                                        <option value="6">信息技术</option>
+                                        <option value="7">财经商贸</option>
+                                        <option value="8">医药卫生</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+
+
                         <div class="form-group">
                             <label>备注</label>
                             <textarea class="form-control" placeholder="选填: 备注" name="profile[notes]"></textarea>
