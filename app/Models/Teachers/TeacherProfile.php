@@ -37,6 +37,8 @@ class TeacherProfile extends Model
         'hired_at',
         'hired',
         'notes',
+        'category_teach',
+        'category_major',
     ];
 
     public $casts = ['famous'=>'boolean','hired'=>'boolean'];

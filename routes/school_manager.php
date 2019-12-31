@@ -436,6 +436,8 @@ Route::prefix('school_manager')->group(function () {
             ->name('school_manager.teachers.manage-performance');
         Route::post('manage-performance-save','Teachers\ProfilesController@manage_performance_save')
             ->name('school_manager.teachers.manage-performance-save');
+        Route::any('export','Teachers\ProfilesController@export')
+            ->name('school_manager.teachers.export');
     });
 
     // 工作流程管理

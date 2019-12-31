@@ -701,6 +701,22 @@ class TimetableItemDao
     }
 
     /**
+     * 教师端上课签到需要获得当前班级当前时间的课程id和原计划的授课教师id
+     * 会提交扫描的二维码对应云班牌id和时间戳，以及扫描二维码的用户id
+     *
+     * @param $schoolId
+     * @param $userId
+     * @param $cloudGradeId
+     * @param $time
+     * @return array
+     */
+    public function getCourseIdByCloudGradeId($schoolId,$userId,$cloudGradeId,$time)
+    {
+        //TODO 返回课程id和授课教师id
+        return [];
+    }
+  
+    /**
      * 获取教师教的班级
      * @param $teacherId
      * @return mixed
@@ -726,5 +742,12 @@ class TimetableItemDao
             ->get();
     }
 
-
+    /**
+     * 上课3分钟内需要发送没有老师打卡的记录给教务处，需要一个总列表来比对
+     * 获取当前时间应该上的所有课程
+     */
+    public function getCourseListByCurrentTime()
+    {
+        //TODO 返回当前时间所有课程的列表
+    }
 }
