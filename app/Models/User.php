@@ -50,6 +50,11 @@ class User extends Authenticatable implements HasMobilePhone, HasDeviceId, IUser
     const SOURCE_SELF_TEXT    = '自招';
     const SOURCE_AGENT_TEXT   = '中介';
 
+    // 登录类型
+    const MOBILE_LOGIN = 1; // 手机号登录
+    const ID_NUMBER_LOGIN = 2; // 身份证号登录
+
+
     const DEFAULT_USER_AVATAR = '/assets/img/dp.jpg';
 
     /**

@@ -69,7 +69,7 @@ use App\User;
 										<td>{{$paymentidArr[$val['paymentid']]}}</td>
 										<td>{{$manageWifiStatusArr[$val['status']]}}</td>
                                         <td class="text-center">
-                                            {{ Anchor::Print(['text'=>'详情','class'=>'btn-edit-room','href'=>route('manager_wifi.wifiOrder.detail',['trade_sn'=>$val->trade_sn])], Button::TYPE_DEFAULT,'') }}
+                                            {{ Anchor::Print(['text'=>'详情','class'=>'btn btn-primary','href'=>route('manager_wifi.wifiOrder.detail',['trade_sn'=>$val->trade_sn])], Button::TYPE_DEFAULT,'') }}
                                         </td>
                                     </tr>
                                 @endforeach

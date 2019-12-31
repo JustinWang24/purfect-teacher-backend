@@ -68,7 +68,7 @@ use App\User;
 										<td>{{ $val->comment_efficiency }}</td>
 										<td>{{ $val->created_at }}</td>
                                         <td class="text-center">
-                                            {{ Anchor::Print(['text'=>'查看','class'=>'btn-edit-room','href'=>route('manager_wifi.wifiIssueComment.detail',['commentid'=>$val->commentid])], Button::TYPE_DEFAULT,'detail') }}
+                                            {{ Anchor::Print(['text'=>'查看','class'=>'btn btn-primary','href'=>route('manager_wifi.wifiIssueComment.detail',['commentid'=>$val->commentid])], Button::TYPE_DEFAULT,'detail') }}
                                         </td>
                                     </tr>
                                 @endforeach
