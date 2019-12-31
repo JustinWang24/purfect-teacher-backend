@@ -697,4 +697,21 @@ class TimetableItemDao
     }
 
 
+    /**
+     * 根据班级ID查询代课老师
+     * @param $gradeId
+     * @param $year
+     * @param $term
+     * @return mixed
+     */
+    public function getItemByGradeId($gradeId, $year, $term) {
+        return TimetableItem::select('teacher_id')
+            ->where('grade_id',$gradeId)
+            ->where('year',$year)
+            ->where('term',$term)
+            ->distinct('teacher_id')
+            ->get();
+    }
+
+
 }
