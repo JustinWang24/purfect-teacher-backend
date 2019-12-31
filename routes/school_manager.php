@@ -470,5 +470,22 @@ Route::prefix('school_manager')->group(function () {
         Route::post('flows/update-node','Pipeline\FlowsController@update_node')
             ->name('school_manager.pipeline.update-node');
     });
+
+
+    // 评教模块
+    Route::prefix('evaluate')->group(function(){
+        // 列表
+        Route::get('list','Evaluate\EvaluateController@list')
+            ->name('school_manager.content.list');
+        // 创建
+        Route::any('content-create','Evaluate\EvaluateController@create')
+            ->name('school_manager.content.create');
+        // 编辑
+        Route::any('content-edit','Evaluate\EvaluateController@edit')
+            ->name('school_manager.content.edit');
+        // 删除
+        Route::get('delete','Evaluate\EvaluateController@delete')
+            ->name('school_manager.content.delete');
+    });
 });
 
