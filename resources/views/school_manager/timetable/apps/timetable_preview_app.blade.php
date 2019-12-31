@@ -15,6 +15,7 @@
                     :init-time-slot-id="shared.initTimeSlotId"
                     :shared="shared"
                     :time-table-item="timeTableItem"
+                    :total-weeks-per-term="20"
                 ></timetable-item-form>
             </div>
         </div>
