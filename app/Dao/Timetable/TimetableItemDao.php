@@ -696,5 +696,31 @@ class TimetableItemDao
         return $endWeekIndex - $startWeekIndex + 1;
     }
 
+    /**
+     * 获取教师教的班级
+     * @param $teacherId
+     * @return mixed
+     */
+    public function getTeacherTeachingGrade($teacherId)
+    {
+      return  TimetableItem::where('teacher_id', $teacherId)->get();
+    }
+
+    /**
+     * 根据班级ID查询代课老师
+     * @param $gradeId
+     * @param $year
+     * @param $term
+     * @return mixed
+     */
+    public function getItemByGradeId($gradeId, $year, $term) {
+        return TimetableItem::select('teacher_id')
+            ->where('grade_id',$gradeId)
+            ->where('year',$year)
+            ->where('term',$term)
+            ->distinct('teacher_id')
+            ->get();
+    }
+
 
 }

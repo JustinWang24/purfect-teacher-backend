@@ -17,7 +17,7 @@ class StudentProfile extends Model
     const DEFAULT_URL_PATH_PREFIX = '/storage/avatar/';     // 对外的
 
     const GENDER_MAN   = 1;
-    const GENDER_WOMAN = 0;
+    const GENDER_WOMAN = 2;
     const GENDER_MAN_TEXT   = '男';
     const GENDER_WOMAN_TEXT = '女';
 
