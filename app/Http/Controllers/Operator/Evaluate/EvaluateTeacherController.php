@@ -22,6 +22,10 @@ class EvaluateTeacherController extends Controller
 
     public function create(EvaluateTeacherRequest $request) {
         $data = $request->getFormDate();
+        // 请选择学生
+        if(empty($data['user_id'])) {
+            // todo  请选择学生
+        }
         $schoolId = $request->getSchoolId();
         // 查询当前班级的代课老师
         $itemDao = new TimetableItemDao();
