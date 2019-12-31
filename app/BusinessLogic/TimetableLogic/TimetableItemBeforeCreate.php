@@ -63,6 +63,15 @@ class TimetableItemBeforeCreate
         }
 
         $found = $this->itemDao->hasAnyOneTakenThePlace($this->itemData);
+
+        if($found === true){
+            // 表示发生了未知错误
+            // 表示已经被占用了
+            $this->checked = false;
+            $this->errorMessage = '您选择的时间段无效, 请联系系统管理员解决.';
+            return $this;
+        }
+
         if($found){
             // 表示已经被占用了
             $this->checked = false;
