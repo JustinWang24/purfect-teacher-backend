@@ -55,8 +55,13 @@ class LoginController extends Controller
             $userDeviceDao->updateOrCreate($user->getId(), $request->getUserDevice());
             $token  = Uuid::uuid4()->toString();
             $result = $dao->updateApiToken($user->getId(), $token);
+            if ($user->status == User::STATUS_WAITING_FOR_MOBILE_TO_BE_VERIFIED || $user->status == User::STATUS_WAITING_FOR_IDENTITY_TO_BE_VERIFIED) {
+                $userStatus = false;
+            } else {
+                $userStatus = true;
+            }
             if ($result) {
-                return JsonBuilder::Success(['token' => $token]);
+                return JsonBuilder::Success(['token' => $token, 'status' => $userStatus]);
             } else {
                 return JsonBuilder::Error('系统错误,请稍后再试~');
             }
