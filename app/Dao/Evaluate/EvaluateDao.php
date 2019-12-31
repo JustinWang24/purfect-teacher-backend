@@ -51,10 +51,11 @@ class EvaluateDao
     /**
      * 分页查询
      * @param $schoolId
+     * @param $type
      * @return mixed
      */
-    public function pageList($schoolId) {
-        $map = ['school_id'=>$schoolId];
+    public function pageList($schoolId, $type = Evaluate::TYPE_TEACHER) {
+        $map = ['school_id' => $schoolId, 'type' => $type];
         $list = Evaluate::where($map)
             ->orderBy('created_at','desc')
             ->paginate(ConfigurationTool::DEFAULT_PAGE_SIZE);
