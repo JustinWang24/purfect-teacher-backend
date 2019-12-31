@@ -18,6 +18,7 @@ class CreateEvaluatesTable extends Migration
             $table->integer('school_id')->comment('学校ID');
             $table->string('title',200)->comment('评价标题');
             $table->tinyInteger('score')->default(10)->comment('评价分数');
+            $table->tinyInteger('type')->comment('1给老师评价, 2给学生评价');
             $table->timestamps();
         });
         DB::statement(" ALTER TABLE evaluates comment '评价表' ");
