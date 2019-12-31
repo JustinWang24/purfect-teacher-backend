@@ -18,8 +18,9 @@ class CreateEvaluateTeachersTable extends Migration
             $table->integer('school_id')->comment('学校ID');
             $table->integer('user_id')->comment('老师ID');
             $table->date('year')->comment('学年');
-            $table->tinyInteger('type')->default(1)->comment('类型 1:期中 2:期末');
-            $table->tinyInteger('score')->default(10)->comment('评价总分数');
+            $table->tinyInteger('type')->default(1)->comment('学期 1:上学期 2:下学期');
+            $table->integer('group_id')->comment('教研组ID');
+            $table->tinyInteger('score')->default(0)->comment('平均数');
             $table->timestamps();
         });
         DB::statement(" ALTER TABLE evaluate_teachers comment '评价老师总表' ");

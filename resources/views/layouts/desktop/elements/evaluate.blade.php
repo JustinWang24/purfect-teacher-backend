@@ -10,5 +10,10 @@
                 <span class="title">评教内容</span>
             </a>
         </li>
+        <li class="nav-item">
+            <a href="{{ route('school_manager.evaluate-teacher.list',['uuid'=>session('school.uuid')]) }}" class="nav-link">
+                <span class="title">评教老师</span>
+            </a>
+        </li>
     </ul>
 </li>
