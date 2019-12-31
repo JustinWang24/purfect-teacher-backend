@@ -11,7 +11,7 @@
                         <div class="card" style="margin-left:11px;box-shadow:none;padding-right:11px;padding-top:14px;">
                             <el-form-item label="年份">
                                 <el-input v-model="timeTableItem.year" style="width: 100%;"></el-input>
-                                <span class="help-text">请在这里输入课程表的年份, 一般就是今年</span>
+                                <span class="help-text">请在这里输入课程表的适用的年份</span>
                             </el-form-item>
                             <el-form-item label="学期">
                                 <el-select v-model="timeTableItem.term" style="width: 100%;">
@@ -45,6 +45,18 @@
                             <span class="help-text">
                                 说明: 表示这个安排是<span :class="repeatUnitBriefClass">{{ repeatUnitBrief }}</span>都有效</span>
                         </el-form-item>
+
+                        <el-form-item v-show="timeTableItem.repeat_unit === 4" label="时间区间">
+                            <el-select v-model="timeTableItem.available_only" multiple style="width: 100%;">
+                                <el-option :label="aw"
+                                           :value="aw"
+                                           :key="idx"
+                                           v-for="(aw, idx) in availableWeeks"></el-option>
+                            </el-select>
+                            <span class="help-text">
+                            说明: 表示这个安排只在以上时间区间有效</span>
+                        </el-form-item>
+
                         <el-form-item label="哪一天">
                             <el-select v-model="timeTableItem.weekday_index" style="width: 100%;">
                                 <el-option :label="theWeekday"
@@ -58,24 +70,24 @@
                             <el-select v-model="timeTableItem.time_slot_id" style="width: 100%;">
                                 <el-option :label="timeSlot.name" :value="timeSlot.id" :key="timeSlot.id" v-for="timeSlot in timeSlots"></el-option>
                             </el-select>
-                            <span class="help-text">说明: 指定本次安排是针对一天中的那个时段的</span>
+                            <span class="help-text">说明: 指定本次安排是针对一天中的那个作息时段的</span>
                         </el-form-item>
-                        <el-form-item label="课程">
-                            <el-select v-model="timeTableItem.course_id" style="width: 100%;">
-                                <el-option :label="course.name" :value="course.id" :key="course.id" v-for="course in courses"></el-option>
-                            </el-select>
-                            <span class="help-text">
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <div class="card" style="margin-left:11px;box-shadow:none;padding-right:11px;padding-top:14px;">
+                            <el-form-item label="课程">
+                                <el-select v-model="timeTableItem.course_id" style="width: 100%;">
+                                    <el-option :label="course.name" :value="course.id" :key="course.id" v-for="course in courses"></el-option>
+                                </el-select>
+                                <span class="help-text">
                                 说明: 请选择要教授哪门课程
                                 <span v-if="timeTableItem.course_id !== ''">
                                     <a target="_blank" :href="previewByCourseUrl">点击查看({{ courseText }})的已有课程安排</a>
                                 </span>
                             </span>
-                        </el-form-item>
+                            </el-form-item>
 
-                        </div>
-                    </div>
-                    <div class="col-4">
-                        <div class="card" style="margin-left:11px;box-shadow:none;padding-right:11px;padding-top:14px;">
                             <el-form-item label="授课教师">
                                 <el-select v-model="timeTableItem.teacher_id" style="width: 100%;">
                                     <el-option :label="teacher.name" :value="teacher.id" :key="teacher.id" v-for="teacher in teachers"></el-option>
@@ -105,7 +117,7 @@
                             </el-form-item>
                             <el-form-item label="教室/地点">
                                 <el-select v-model="timeTableItem.room_id" style="width: 100%;">
-                                    <el-option :label="room.name" :value="room.id" :key="room.id" v-for="room in rooms"></el-option>
+                                    <el-option :label="room.name + ': ' + room.description + '(可容纳: ' + room.seats +'人)'" :value="room.id" :key="room.id" v-for="room in rooms"></el-option>
                                 </el-select>
                                 <span v-if="timeTableItem.room_id !== ''">
                                     <a target="_blank" :href="previewByRoomUrl">点击查看教室: ({{ locationText }}) 的排课</a>
@@ -124,17 +136,27 @@
                 <p class="item-text">
                     <span class="label-text">有效期:</span> {{ timeTableItem.year }}年{{ termText }}
                 </p>
+
                 <p class="item-text">
-                    <span class="label-text">时间段:</span> {{ timeSlotText }} ({{ repeatUnitText }})
+                    <span class="label-text">时间段:</span> {{ timeSlotText }}
                 </p>
+
+                <p class="item-text">
+                    <span class="label-text">教学周:</span> {{ weeksDescription }}
+                </p>
+
                 <el-divider></el-divider>
                 <p class="item-text">
                     <span class="label-text">地点:</span> {{ locationText }}
                 </p>
                 <el-divider></el-divider>
                 <p class="item-text">
-                    <span class="label-text">班级:</span> {{ gradeInfoText }},
-                    <span class="label-text">课程:</span> {{ courseText }},
+                    <span class="label-text">班级:</span> {{ gradeInfoText }}
+                </p>
+                <p class="item-text">
+                    <span class="label-text">课程:</span> {{ courseText }}
+                </p>
+                <p class="item-text">
                     <span class="label-text">授课老师:</span> {{ teacherText }}
                 </p>
                 <el-divider></el-divider>
@@ -194,6 +216,11 @@
                 type: [Number,String],
                 required: true,
             },
+            totalWeeksPerTerm: {
+                type: Number,
+                required: false,
+                default: 20
+            },
             // 传递来的表单数据
             timeTableItem: {
                 type: Object,
@@ -216,6 +243,9 @@
                 weekdays:[],
                 savingActionInProgress: false,
                 checkingActionInProgress: false,
+                // 对于只在某个选定的时间区间的课程, 从下面的待选项中选取
+                availableWeeks: [],
+                available_only: [], // 被选定的时间区间
             }
         },
         // 监听
@@ -264,6 +294,12 @@
                     this.timeTableItem.teacher_id = ''; // 学期变了, 授课教师 id 值归零
                 }
             },
+            'timeTableItem.repeat_unit': function(newVal, oldVal){
+                if(newVal !== 4){
+                    // 不是指定的时间区间, 那么周数置为空数组
+                    this.timeTableItem.available_only = [];
+                }
+            },
         },
         // 计算属性
         computed: {
@@ -286,6 +322,8 @@
                     brief = '每逢单周';
                 }else if(this.timeTableItem.repeat_unit === 3){
                     brief = '每逢双周';
+                }else if(this.timeTableItem.repeat_unit === 4){
+                    brief = '指定区间';
                 }
                 return brief;
             },
@@ -331,7 +369,7 @@
                     // 获取教室
                     const theRoom = Util.GetItemById(this.timeTableItem.room_id, this.rooms);
                     if(theRoom){
-                        buildingText += ', ' + theRoom.name;
+                        buildingText += ', ' + theRoom.name + '(' + theRoom.description + ', 可容纳' + theRoom.seats + '人)';
                     }
                 }
                 return buildingText;
@@ -368,9 +406,28 @@
                         return teacher.name;
                     }
                 }
+            },
+            // 上课周次的安排
+            'weeksDescription': function(){
+                let brief = '每周';
+                if(this.timeTableItem.repeat_unit === 2){
+                    brief = '每逢单周';
+                }else if(this.timeTableItem.repeat_unit === 3){
+                    brief = '每逢双周';
+                }else if(this.timeTableItem.repeat_unit === 4){
+                    brief = '指定区间: ';
+                    this.timeTableItem.available_only.forEach(t => {
+                        brief += t + '; ';
+                    })
+                }
+                return brief;
             }
         },
         created(){
+            for (let i = 1; i < this.totalWeeksPerTerm; i++) {
+                this.availableWeeks.push('第'+i+'周');
+            }
+
             this._getAllBuildings();
             this._getAllMajors();
             this.timeTableItem.year = (new Date()).getFullYear() + '';

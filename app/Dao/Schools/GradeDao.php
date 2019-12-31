@@ -144,4 +144,14 @@ class GradeDao
         }
         return $bag;
     }
+
+    /**
+     * 获取多个班级
+     * @param $ids
+     * @return Grade
+     */
+    public function getGrades($ids)
+    {
+        return Grade::whereIn('id', $ids)->get();
+    }
 }

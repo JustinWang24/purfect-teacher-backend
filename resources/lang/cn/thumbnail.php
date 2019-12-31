@@ -143,6 +143,8 @@ return [
     'official'=> '日常办公',
     'documents'=> '公文',
     'code' => '二维码',
+    'content'=>'评教内容',
+    'evaluate-teacher'=>'评教老师'
 
 ];
 

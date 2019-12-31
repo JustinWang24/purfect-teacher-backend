@@ -8,6 +8,7 @@
 namespace App\Http\Controllers\Api\Wifi;
 
 use App\Models\Wifi\Backstage\WifiOrders;
+use Illuminate\Support\Facades\DB;
 use Psy\Util\Json;
 use App\Utils\JsonBuilder;
 use Illuminate\Support\Facades\Cache; // 缓存
@@ -151,7 +152,20 @@ class WifiPayController extends Controller
          // 支付宝支付
          if($param['paymentid'] == 2)
          {
-            // TODO....
+            $order = [
+               'out_trade_no' => $param1[ 'trade_sn' ],
+               'total_amount' => $param1[ 'order_totalprice' ],
+               'subject' => '购买无线wifi['.$param1[ 'wifi_name' ].']',
+            ];
+            $configArr = config ( 'pay.alipay' );
+            $configArr[ 'notify_url' ] = url ()->previous () . $configArr[ 'notify_url' ];
+            $infos = Pay::alipay($this->config)->app($order);
+            if ( !empty($infos) && count ($infos) > 0 )
+            {
+               // TODO....事物提交....
+            } else {
+               // TODO....事物回滚...
+            }
          }
 
          // 生成重复提交签名
@@ -301,6 +315,83 @@ class WifiPayController extends Controller
       }
    }
 
+   /**
+    * Func 支付异步
+    * @param Request $request
+    * @return Json
+    */
+   public function asyns_notice_info(WifiPayRequest $request)
+   {
+      // 获取支付类型
+      $type = $request->get ('type');
+
+      // 微信支付
+      if($type == 'weixin')
+      {
+         $pay = Pay::wechat(config ( 'pay.wechat' ));
+
+         try{
+            $data = $pay->verify();
+
+            $data->all();
+            // 状态(0:关闭,1:待支付,2:支付失败,3:支付成功-WIFI充值中,4:支付成功-WIFI充值成功,
+            // 5:支付成功-充值失败,6:支付成功-退款成功)
+            $condition[] = [ 'trade_sn' , 'eq' , $data['out_trade_no'] ];
+            $condition[] = [ 'status' , 'eq' , 1 ];
+
+            // 更新状态
+            $saveData['status'] = 3;
+            $saveData['pay_time'] = date('Y-m-d H:i:s');
+
+            if( DB::table ('wifi_orders')->where( $condition )->update( $saveData ) )
+            {
+               return $pay->success()->send();
+            } else {
+               throw new InvalidSignException('订单支付成功更新失败');
+            }
+         } catch (\Exception $e)
+         {
+            return $e->getMessage();
+         }
+      }
+
+      // 支付宝支付
+      if($type == 'alipay')
+      {
+         $alipay = Pay::alipay(config ( 'pay.alipay' ));
+
+         try{
+            $data = $alipay->verify();
+
+            // 获取数据
+            $data = $data->toArray ();
+
+            if( in_array ( $data['trade_status'] , [ 'TRADE_SUCCESS' , 'TRADE_FINISHED' ] ) )
+            {
+               // 状态(0:关闭,1:待支付,2:支付失败,3:支付成功-WIFI充值中,4:支付成功-WIFI充值成功,
+               // 5:支付成功-充值失败,6:支付成功-退款成功)
+               $condition[] = [ 'trade_sn' , 'eq' , $data['out_trade_no'] ];
+               $condition[] = [ 'status' , 'eq' , 1 ];
+
+               // 更新状态
+               $saveData['status'] = 3;
+               $saveData['pay_time'] = date('Y-m-d H:i:s');
+
+               if( DB::table ('wifi_orders')->where( $condition )->update( $saveData ) )
+               {
+                  return $alipay->success()->send();
+               } else {
+                  throw new InvalidSignException('订单支付成功更新失败');
+               }
+            } else {
+               throw new InvalidSignException('支付订单错误');
+            }
+         } catch (\Exception $e)
+         {
+             $e->getMessage();
+         }
+      }
+   }
 
 
 }

@@ -67,9 +67,9 @@ use App\User;
 										<td>{{$manageStatusArr[$val['status']]}}</td>
                                         <td class="text-center">
                                             @if($val['status'] ===1)
-                                            <a href="{{ route('manager_wifi.wifiIssue.edit',['issueid'=>$val->issueid]) }}" onClick="return confirm('你确定接单吗？')" class="btn btn-primary">接单</a>
+                                            <a href="{{ route('manager_wifi.wifiIssue.edit',['issueid'=>$val->issueid]) }}" onClick="return confirm('你确定接单吗？')" class="btn btn-info">接单</a>
                                             @endif
-                                            {{ Anchor::Print(['text'=>'查看','class'=>'btn-edit-room','href'=>route('manager_wifi.wifiIssue.detail',['issueid'=>$val->issueid])], Button::TYPE_DEFAULT,'detail') }}
+                                            {{ Anchor::Print(['text'=>'查看','class'=>'btn btn-primary','href'=>route('manager_wifi.wifiIssue.detail',['issueid'=>$val->issueid])], Button::TYPE_DEFAULT,'detail') }}
                                         </td>
                                     </tr>
                                 @endforeach
