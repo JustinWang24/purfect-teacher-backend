@@ -711,4 +711,13 @@ class TimetableItemDao
         //TODO 返回课程id和授课教师id
         return [];
     }
+
+    /**
+     * 上课3分钟内需要发送没有老师打卡的记录给教务处，需要一个总列表来比对
+     * 获取当前时间应该上的所有课程
+     */
+    public function getCourseListByCurrentTime()
+    {
+        //TODO 返回当前时间所有课程的列表
+    }
 }
