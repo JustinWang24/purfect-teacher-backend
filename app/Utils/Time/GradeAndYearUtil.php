@@ -26,6 +26,7 @@ class GradeAndYearUtil
     const TYPE_EVERY_WEEK       = 1; // 表示每周都有课
     const TYPE_EVERY_ODD_WEEK   = 2; // 表示每单周都有课
     const TYPE_EVERY_EVEN_WEEK  = 3; // 表示每双周都有课
+    const TYPE_ONLY_AVAILABLE_WEEKS  = 4; // 表示在指定区间内有课
 
     /**
      * 将如果年份转成年级的数字, 根据当前的年份. 比如 2019 届在 2019 年就是 1 年级, 到 2020年就是 2 年级

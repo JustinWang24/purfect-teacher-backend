@@ -14,6 +14,9 @@ use App\User;
                         <a href="{{ route('school_manager.teachers.add-new') }}" class="btn btn-primary pull-right">
                             添加新教职工 <i class="fa fa-plus"></i>
                         </a>
+                        <a href="{{ route('school_manager.teachers.export') }}" class="btn btn-primary pull-right">
+                            导出教职工 <i class="fa fa-plus"></i>
+                        </a>
                     </header>
                 </div>
 

@@ -23,10 +23,11 @@ class TimetableItem extends Model
         'weekday_index','repeat_unit',
         'at_special_datetime','to_special_datetime',
         'to_replace','last_updated_by',
-        'school_id','published'
+        'school_id','published','available_only'
     ];
 
     public $casts = [
+        'available_only' => 'array', // 如果是特定区间的课程, 那么表示在哪些周
         'published' => 'boolean', // 是否本 item 是发布状态
         'at_special_datetime' => 'datetime', // 调课记录的开始事件
         'to_special_datetime' => 'datetime', // 调课记录的结束时间

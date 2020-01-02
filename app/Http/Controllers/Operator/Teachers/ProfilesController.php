@@ -10,6 +10,7 @@ use App\Dao\Schools\SchoolDao;
 use App\Dao\Teachers\TeacherProfileDao;
 use App\Dao\Users\GradeUserDao;
 use App\Dao\Users\UserDao;
+use App\Exports\TeacherExport;
 use App\Http\Requests\MyStandardRequest;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\NetworkDisk\MediaRequest;
@@ -23,6 +24,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
+use Maatwebsite\Excel\Facades\Excel;
 use Ramsey\Uuid\Uuid;
 
 class ProfilesController extends Controller
@@ -175,5 +177,9 @@ class ProfilesController extends Controller
             FlashMessageBuilder::Push($request, 'success','照片已更新');
             return redirect()->route('school_manager.teachers.edit-avatar',['uuid'=>$user->id]);
         }
+    }
+    public function export()
+    {
+        return Excel::download(new TeacherExport, 'teachers.xlsx');
     }
 }

@@ -39,7 +39,7 @@ class EvaluateController extends Controller
             } else {
                 FlashMessageBuilder::Push($request, FlashMessageBuilder::DANGER, $msg);
             }
-            return redirect()->route('school_manager.content.list');
+            return redirect()->route('school_manager.evaluate.content-list');
         }
 
         return view('school_manager.evaluate.content.create', $this->dataForView);
@@ -63,7 +63,7 @@ class EvaluateController extends Controller
             } else {
                 FlashMessageBuilder::Push($request, FlashMessageBuilder::DANGER, '保存失败');
             }
-            return redirect()->route('school_manager.content.list');
+            return redirect()->route('school_manager.evaluate.content-list');
         }
         $id                            = $request->get('id');
         $info                          = $dao->getEvaluateById($id);
@@ -87,7 +87,7 @@ class EvaluateController extends Controller
         } else {
             FlashMessageBuilder::Push($request, FlashMessageBuilder::DANGER, '删除失败');
         }
-        return redirect()->route('school_manager.content.list');
+        return redirect()->route('school_manager.evaluate.content-list');
     }
 
     /**
