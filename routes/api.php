@@ -707,8 +707,15 @@ Route::prefix('code')->middleware('auth:api')->group(function(){
     // 添加二维码记录
     Route::post('/create-record','Api\QrCode\IndexController@createRecord')
         ->name('api.code.create-record');
-
 });
 
-
+// 教师评教
+Route::prefix('teacher/evaluation')->middleware('auth:api')->group(function(){
+    // 教师教过的所有班级
+    Route::post('/grade-list','Api\Evaluate\TeacherEvaluationController@index')
+        ->name('api.teacher.evaluation.grade.list');
+    // 所有学生
+    Route::post('/grade-student','Api\Evaluate\TeacherEvaluationController@student')
+        ->name('api.teacher.evaluation.grade.student');
+});
 
