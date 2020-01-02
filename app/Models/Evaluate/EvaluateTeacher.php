@@ -4,6 +4,8 @@
 namespace App\Models\Evaluate;
 
 
+use App\Models\Schools\TeachingAndResearchGroup;
+use App\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Carbon;
 
@@ -11,7 +13,7 @@ class EvaluateTeacher extends Model
 {
 
     protected $fillable = [
-        'school_id', 'user_id', 'year', 'type', 'score'
+        'school_id', 'user_id', 'year', 'type', 'score', 'group_id'
     ];
 
     const TYPE_LAST_TERM = 1;
@@ -27,7 +29,12 @@ class EvaluateTeacher extends Model
      */
     public function year() {
         $year = Carbon::now()->year;
-        return [$year, $year -1];
+        return [$year, $year -1, $year-2];
+    }
+
+    public function typeText() {
+        $data = $this->allType();
+        return $data[$this->type]??'';
     }
 
     /**
@@ -39,6 +46,16 @@ class EvaluateTeacher extends Model
             self::TYPE_LAST_TERM => self::TYPE_LAST_TERM_TEXT,
             self::TYPE_NEXT_TERM => self::TYPE_NEXT_TERM_TEXT,
         ];
+    }
+
+
+    public function user(){
+        return $this->belongsTo(User::class);
+    }
+
+
+    public function teacherGroup() {
+        return $this->belongsTo(TeachingAndResearchGroup::class,'group_id');
     }
 
 

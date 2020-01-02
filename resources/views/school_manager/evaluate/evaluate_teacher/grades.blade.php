@@ -67,7 +67,7 @@ $years = \App\Utils\Time\GradeAndYearUtil::GetAllYears();
                                             <a class="students-counter" href="{{ route('teacher.grade.users',['type'=>User::TYPE_STUDENT,'by'=>'grade','uuid'=>$grade->id]) }}">{{ $grade->studentsCount() }}</a>
                                         </td>
                                         <td class="text-center">
-                                            <a  href="{{ route('school_manager.evaluate-teacher.student',['grade_id'=>$grade->id]) }}" class="btn btn-round btn-primary btn-view-timetable">
+                                            <a  href="{{ route('school_manager.evaluate.student-list',['grade_id'=>$grade->id]) }}" class="btn btn-round btn-primary btn-view-timetable">
                                                 <i class="fa ">查看学生</i></a>
                                         </td>
                                     </tr>
