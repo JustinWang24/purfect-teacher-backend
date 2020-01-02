@@ -35,16 +35,12 @@ class EvaluateTeacherDao
                 $map = ['user_id'=>$val->teacher_id, 'year'=>$year, 'type'=>$type];
                 $result = EvaluateTeacher::where($map)->first();
                 if(empty($result)) {
-                    /**
-                     * @var Teacher $teacher
-                     */
-                    $re = Teacher::myTeachingAndResearchGroup($val->teacher_id);
+
                     $evaluateTeacher = [
                         'school_id' => $schoolId,
                         'user_id' => $val->teacher_id,
                         'year' => $year,
                         'type' => $type,
-                        'group_id' => $re[0]->id?? 0,
                     ];
                     $result = EvaluateTeacher::create($evaluateTeacher);
                 }
