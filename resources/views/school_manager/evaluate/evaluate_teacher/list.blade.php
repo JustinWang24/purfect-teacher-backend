@@ -22,23 +22,33 @@
                                 <thead>
                                 <tr>
                                     <th></th>
-                                    <th>标题</th>
+                                    <th>教师</th>
+                                    <th>学年</th>
+                                    <th>学期</th>
                                     <th>分值</th>
                                     <th>创建时间</th>
                                     <th>操作</th>
                                 </tr>
                                 </thead>
                                 <tbody>
-
+                                    @foreach($list as $key => $val)
                                         <tr>
+                                            <td>{{ $key +1 }}</td>
+                                            <td>{{ $val->user->name }}</td>
+                                            <td>{{ $val->year }} 学年</td>
+                                            <td>{{ $val->typeText() }}</td>
+                                            <td>{{ $val->score }}</td>
+                                            <td>{{ $val->created_at }}</td>
+                                            <td>
+                                                {{ \App\Utils\UI\Anchor::Print(['text'=>'查看','class'=>'btn-edit-evaluate','href'=>route('school_manager.evaluate.record-list',['id'=>$val->id])], \App\Utils\UI\Button::TYPE_DEFAULT,'edit') }}
 
+                                            </td>
                                         </tr>
+                                    @endforeach
                                 </tbody>
                             </table>
                         </div>
-{{--
                         {{ $list->links() }}
---}}
 
                     </div>
                 </div>

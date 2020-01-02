@@ -12,6 +12,8 @@ class Evaluate extends Model
         'school_id', 'title', 'score'
     ];
 
+    public $hidden = ['updated_at'];
+
     const TYPE_TEACHER = 1; // 给老师评价
     const TYPE_STUDENT = 2; // 给学生评价
 

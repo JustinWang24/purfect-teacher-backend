@@ -12,7 +12,7 @@ use App\Utils\UI\Button;
                     <header>添加</header>
                 </div>
                 <div class="card-body">
-                    <form action="{{ route('school_manager.content.create') }}" method="post"  id="add-content-form">
+                    <form action="{{ route('school_manager.evaluate.content-create') }}" method="post"  id="add-content-form">
 
                         @include('school_manager.evaluate.content._form')
                         <?php
