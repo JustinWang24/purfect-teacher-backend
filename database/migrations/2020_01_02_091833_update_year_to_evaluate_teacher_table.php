@@ -22,6 +22,11 @@ class UpdateYearToEvaluateTeacherTable extends Migration
             //
             $table->integer('grade_id')->comment('班级ID');
         });
+
+        Schema::table('evaluate_teachers', function (Blueprint $table) {
+            //
+            $table->dropColumn('group_id');
+        });
     }
 
     /**
@@ -39,6 +44,11 @@ class UpdateYearToEvaluateTeacherTable extends Migration
         Schema::table('evaluate_students', function (Blueprint $table) {
             //
             $table->dropColumn('grade_id');
+        });
+
+        Schema::table('evaluate_teachers', function (Blueprint $table) {
+            //
+            $table->integer('group_id')->comment('教研组ID');
         });
     }
 }
