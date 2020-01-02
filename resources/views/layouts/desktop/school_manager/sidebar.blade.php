@@ -30,6 +30,8 @@
                     @include('layouts.desktop.elements.content_menu')
                     @include('layouts.desktop.elements.welcome_menu')
                     @include('layouts.desktop.elements.community_menu')
+                    @include('layouts.desktop.elements.evaluate')
+                    @include('layouts.desktop.elements.evaluate_student')
                 @endif
             </ul>
         </div>
