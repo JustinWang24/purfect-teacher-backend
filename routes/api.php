@@ -713,5 +713,11 @@ Route::prefix('teacher/evaluation')->middleware('auth:api')->group(function(){
     // 所有学生
     Route::post('/grade-student','Api\Evaluate\TeacherEvaluationController@student')
         ->name('api.teacher.evaluation.grade.student');
+    // 评学模板
+    Route::post('/template','Api\Evaluate\TeacherEvaluationController@template')
+        ->name('api.teacher.evaluation.template');
+    // 评价学生
+    Route::post('/student','Api\Evaluate\TeacherEvaluationController@students')
+        ->name('api.teacher.evaluation.students');
 });
 
