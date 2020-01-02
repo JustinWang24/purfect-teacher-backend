@@ -5,16 +5,17 @@ namespace App\Http\Controllers\Operator\Evaluate;
 
 
 use App\Dao\Evaluate\EvaluateTeacherRecordDao;
+use App\Http\Controllers\Controller;
 use App\Http\Requests\Evaluate\EvaluateTeacherRecordRequest;
 
-class EvaluateRecordController
+class EvaluateRecordController extends Controller
 {
-    public function list(EvaluateTeacherRecordRequest $request)
-    {
+    public function list(EvaluateTeacherRecordRequest $request){
         $id = $request->get('id');
         $dao = new EvaluateTeacherRecordDao();
         $list = $dao->getRecordByEvalTeacherId($id);
-        dd($list);
+        $this->dataForView['list'] = $list;
+        return view('school_manager.evaluate.record.list',$this->dataForView);
     }
 
 }

@@ -4,6 +4,8 @@
 namespace App\Models\Evaluate;
 
 
+use App\Models\Schools\Grade;
+use App\User;
 use Illuminate\Database\Eloquent\Model;
 
 class EvaluateTeacherRecord extends Model
@@ -14,4 +16,11 @@ class EvaluateTeacherRecord extends Model
     ];
 
 
+    public function user(){
+        return $this->belongsTo(User::class);
+    }
+
+    public function grade() {
+        return $this->belongsTo(Grade::class);
+    }
 }

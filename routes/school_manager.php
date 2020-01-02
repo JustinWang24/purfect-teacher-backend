@@ -478,16 +478,16 @@ Route::prefix('school_manager')->group(function () {
     Route::prefix('evaluate')->group(function(){
         // 列表
         Route::get('content-list','Evaluate\EvaluateController@list')
-            ->name('school_manager.content.list');
+            ->name('school_manager.evaluate.content-list');
         // 创建
         Route::any('content-create','Evaluate\EvaluateController@create')
-            ->name('school_manager.content.create');
+            ->name('school_manager.evaluate.content-create');
         // 编辑
         Route::any('content-edit','Evaluate\EvaluateController@edit')
-            ->name('school_manager.content.edit');
+            ->name('school_manager.evaluate.content-edit');
         // 删除
         Route::get('delete','Evaluate\EvaluateController@delete')
-            ->name('school_manager.content.delete');
+            ->name('school_manager.evaluate.content-delete');
         // 评教列表
         Route::get('evaluate-teacher/list','Evaluate\EvaluateTeacherController@list')
             ->name('school_manager.evaluate.teacher-list');

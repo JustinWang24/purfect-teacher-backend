@@ -143,8 +143,13 @@ return [
     'official'=> '日常办公',
     'documents'=> '公文',
     'code' => '二维码',
-    'content'=>'评教内容',
-    'evaluate'=>'评教老师'
-
+    'evaluate'=>'评教模块',
+    'content-list'=>'列表',
+    'content-create'=>'创建',
+    'content-edit'=>'编辑',
+    'teacher-list'=>'评教列表',
+    'record-list'=>'学生评教列表',
+    'evaluate-teacher'=>'班级列表',
+    'student-list'=>'学生列表',
 ];
 

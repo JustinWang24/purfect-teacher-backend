@@ -23,7 +23,6 @@
                                 <tr>
                                     <th></th>
                                     <th>教师</th>
-                                    <th>教研组</th>
                                     <th>学年</th>
                                     <th>学期</th>
                                     <th>分值</th>
@@ -36,7 +35,6 @@
                                         <tr>
                                             <td>{{ $key +1 }}</td>
                                             <td>{{ $val->user->name }}</td>
-                                            <td>{{ $val->teacherGroup->name??'' }}</td>
                                             <td>{{ $val->year }} 学年</td>
                                             <td>{{ $val->typeText() }}</td>
                                             <td>{{ $val->score }}</td>

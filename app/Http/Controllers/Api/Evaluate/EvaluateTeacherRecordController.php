@@ -4,10 +4,10 @@
 namespace App\Http\Controllers\Api\Evaluate;
 
 
-use App\Dao\Evaluate\EvaluateTeacherRecordDao;
-use App\Http\Controllers\Controller;
-use App\Http\Requests\Evaluate\EvaluateTeacherRecordRequest;
 use App\Utils\JsonBuilder;
+use App\Http\Controllers\Controller;
+use App\Dao\Evaluate\EvaluateTeacherRecordDao;
+use App\Http\Requests\Evaluate\EvaluateTeacherRecordRequest;
 
 class EvaluateTeacherRecordController extends Controller
 {

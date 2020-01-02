@@ -15,6 +15,11 @@ use App\Http\Requests\Evaluate\EvaluateTeacherRequest;
 
 class EvaluateTeacherController extends Controller
 {
+    /**
+     * 评教老师列表
+     * @param EvaluateTeacherRequest $request
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function list(EvaluateTeacherRequest $request) {
         $schoolId = $request->getSchoolId();
         $dao = new EvaluateTeacherDao();
@@ -41,12 +46,13 @@ class EvaluateTeacherController extends Controller
         $teachers = $itemDao->getItemByGradeId($data['grade_id'],$data['year'],$data['term']);
         if(count($teachers) == 0) {
             FlashMessageBuilder::Push($request,FlashMessageBuilder::DANGER,'当前班级没有代课老师');
-            return redirect()->route('school_manager.evaluate.teacher-list');
+            return redirect()->route('school_manager.evaluate-teacher.grade');
         }
 
         $dao = new EvaluateTeacherDao();
         $result = $dao->create($teachers, $data['year'], $data['term'], $schoolId, $data['user_id'], $data['grade_id']);
         $msg = $result->getMessage();
+        // todo 给选中的学生推送评教信息
         if($result->isSuccess()) {
             FlashMessageBuilder::Push($request, FlashMessageBuilder::SUCCESS,$msg);
         } else {
