@@ -24,6 +24,8 @@ class UpdateYearToEvaluateTeacherTable extends Migration
         Schema::table('evaluate_students', function (Blueprint $table) {
             //
             $table->integer('grade_id')->comment('班级ID');
+            $table->smallInteger('year')->comment('学年');
+            $table->tinyInteger('type')->default(1)->comment('学期 1:上学期 2:下学期');
         });
 
         Schema::table('evaluates', function (Blueprint $table) {
@@ -42,14 +44,15 @@ class UpdateYearToEvaluateTeacherTable extends Migration
         Schema::table('evaluate_teachers', function (Blueprint $table) {
             //
             $table->smallInteger('year')->comment('学年')->change();
-            $table->integer('group_id')->comment('教研组ID');
-            $table->tinyInteger('score')->default(0)->comment('平均数');
+            $table->integer('group_id')->default(0)->comment('教研组ID')->nullable();
             $table->dropColumn('num');
         });
 
         Schema::table('evaluate_students', function (Blueprint $table) {
             //
             $table->dropColumn('grade_id');
+            $table->dropColumn('year');
+            $table->dropColumn('type');
         });
 
         Schema::table('evaluates', function (Blueprint $table) {

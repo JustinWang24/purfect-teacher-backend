@@ -632,6 +632,12 @@ Route::prefix('evaluate')->middleware('auth:api')->group(function () {
     // 评教接口
     Route::post('/record/crete','Api\Evaluate\EvaluateTeacherRecordController@create')
         ->name('api.evaluate.record.create');
+    // 评教老师列表
+    Route::post('/record/teacher-list','Api\Evaluate\EvaluateTeacherRecordController@getTeacherList')
+        ->name('api.evaluate.record.teacher-list');
+    // 评教模版
+    Route::get('/record/template','Api\Evaluate\EvaluateTeacherRecordController@template')
+        ->name('api.evaluate.record.template');
 });
 
 Route::prefix('cloud')->group(function () {

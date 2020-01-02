@@ -8,6 +8,10 @@ use Illuminate\Database\Eloquent\Model;
 
 class EvaluateStudent extends Model
 {
-    protected $fillable = ['evaluate_teacher_id', 'user_id', 'grade_id'];
+    protected $fillable = ['evaluate_teacher_id', 'user_id', 'grade_id', 'year', 'type'];
 
+
+    public function evaluateTeacher() {
+        return $this->belongsTo(EvaluateTeacher::class);
+    }
 }

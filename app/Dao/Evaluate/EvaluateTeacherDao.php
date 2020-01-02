@@ -49,6 +49,8 @@ class EvaluateTeacherDao
                         'evaluate_teacher_id' => $result->id,
                         'user_id' => $v,
                         'grade_id'=> $gradeId,
+                        'year'=>$year,
+                        'type'=>$type
                     ];
                     EvaluateStudent::create($student);
                 }
