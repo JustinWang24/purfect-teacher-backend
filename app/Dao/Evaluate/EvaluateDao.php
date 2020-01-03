@@ -57,7 +57,7 @@ class EvaluateDao
     public function pageList($schoolId, $type = Evaluate::TYPE_TEACHER) {
         $map = ['school_id' => $schoolId, 'type' => $type];
         $list = Evaluate::where($map)
-            ->orderBy('created_at','desc')
+//            ->orderBy('created_at','desc')
             ->paginate(ConfigurationTool::DEFAULT_PAGE_SIZE);
         return $list;
     }

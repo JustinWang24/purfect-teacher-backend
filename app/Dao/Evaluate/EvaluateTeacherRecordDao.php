@@ -4,11 +4,11 @@
 namespace App\Dao\Evaluate;
 
 
-use App\Models\Evaluate\EvaluateStudent;
 use App\Utils\JsonBuilder;
 use Illuminate\Support\Facades\DB;
 use App\Utils\ReturnData\MessageBag;
 use App\Models\Evaluate\EvaluateTeacher;
+use App\Models\Evaluate\EvaluateStudent;
 use App\Models\Evaluate\EvaluateTeacherRecord;
 
 class EvaluateTeacherRecordDao
@@ -34,32 +34,39 @@ class EvaluateTeacherRecordDao
         $messageBag = new MessageBag();
         try{
             DB::beginTransaction();
-            foreach ($data['record'] as $key => $val) {
+            $teacher = EvaluateTeacher::where('id',$data['evaluate_teacher_id'])->first();
 
-                // 判断当前学生是否已提交对该老师的评价
-                $map = ['evaluate_teacher_id'=>$data['evaluate_teacher_id'], 'user_id'=>$data['user_id']];
-                $re = EvaluateTeacherRecord::where($map)->first();
-                if(is_null($re)) {
+            // 判断当前学生是否已提交对该老师的评价
+            $map = ['status'=>EvaluateStudent::STATUS_EVALUATE, 'user_id'=>$data['user_id'],
+                'year'=>$teacher['year'], 'type'=>$teacher['type']];
+            $re = EvaluateStudent::where($map)->first();
+            if(is_null($re)) {
+                $score = 0;
+
+                foreach ($data['record'] as $key => $val) {
+                    $score += $val['score'];
                     $record = [
                         'evaluate_id' => $val['evaluate_id'],
                         'evaluate_teacher_id' => $data['evaluate_teacher_id'],
                         'user_id'     => $data['user_id'],
                         'grade_id'    => $data['grade_id'],
                         'score'       => $val['score'],
-                        'desc'        => $data['desc']
                     ];
                     EvaluateTeacherRecord::create($record);
-                    // 更新老师评价主表的分值
-                    $teacher = EvaluateTeacher::where('id',$data['evaluate_teacher_id'])->first();
-                    $num = $teacher['num'] + 1;
-                    $score = round(($teacher['score'] + $val['score'])/$num,2);
-                    $save = ['score'=>$score, 'num'=>$num ];
-                    EvaluateTeacher::where('id', $data['evaluate_teacher_id'])->update($save);
-                    // 修改学生评教状态
-                    $map = ['evaluate_teacher_id'=>$data['evaluate_teacher_id'],'user_id'=>$data['user_id']];
-                    EvaluateStudent::where($map)->update(['status'=>EvaluateStudent::STATUS_EVALUATE]);
                 }
+                // 修改学生评教状态
+                $map = ['evaluate_teacher_id'=>$data['evaluate_teacher_id'],'user_id'=>$data['user_id']];
+                $update = ['status'=>EvaluateStudent::STATUS_EVALUATE, 'score'=>$score, 'desc'=>$data['desc']];
+                EvaluateStudent::where($map)->update($update);
+
+                 // 更新老师评价主表的分值
+                $num = $teacher['num'] + 1;
+                $score = round(($teacher['score'] + $score)/$num,2);
+                $save = ['score'=>$score, 'num'=>$num ];
+                EvaluateTeacher::where('id', $data['evaluate_teacher_id'])->update($save);
+
             }
+
             DB::commit();
             $messageBag->setMessage('评教成功');
             return $messageBag;

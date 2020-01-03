@@ -630,7 +630,7 @@ Route::prefix('evaluate')->middleware('auth:api')->group(function () {
         ->name('api.evaluate.student.save-note');
 
     // 评教接口
-    Route::post('/record/crete','Api\Evaluate\EvaluateTeacherRecordController@create')
+    Route::post('/record/create','Api\Evaluate\EvaluateTeacherRecordController@create')
         ->name('api.evaluate.record.create');
     // 评教老师列表
     Route::post('/record/teacher-list','Api\Evaluate\EvaluateTeacherRecordController@getTeacherList')
