@@ -638,6 +638,9 @@ Route::prefix('evaluate')->middleware('auth:api')->group(function () {
     // 评教模版
     Route::get('/record/template','Api\Evaluate\EvaluateTeacherRecordController@template')
         ->name('api.evaluate.record.template');
+    // 是否开启评教
+    Route::get('/record/isEvaluate','Api\Evaluate\EvaluateTeacherRecordController@isEvaluate')
+        ->name('api.evaluate.record.isEvaluate');
 });
 
 Route::prefix('cloud')->group(function () {

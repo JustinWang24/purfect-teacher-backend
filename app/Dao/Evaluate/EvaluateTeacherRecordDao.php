@@ -4,6 +4,7 @@
 namespace App\Dao\Evaluate;
 
 
+use App\Models\Evaluate\EvaluateStudent;
 use App\Utils\JsonBuilder;
 use Illuminate\Support\Facades\DB;
 use App\Utils\ReturnData\MessageBag;
@@ -54,6 +55,9 @@ class EvaluateTeacherRecordDao
                     $score = round(($teacher['score'] + $val['score'])/$num,2);
                     $save = ['score'=>$score, 'num'=>$num ];
                     EvaluateTeacher::where('id', $data['evaluate_teacher_id'])->update($save);
+                    // 修改学生评教状态
+                    $map = ['evaluate_teacher_id'=>$data['evaluate_teacher_id'],'user_id'=>$data['user_id']];
+                    EvaluateStudent::where($map)->update(['status'=>EvaluateStudent::STATUS_EVALUATE]);
                 }
             }
             DB::commit();
