@@ -24,6 +24,7 @@
                                     <th></th>
                                     <th>标题</th>
                                     <th>分值</th>
+                                    <th>对谁评价</th>
                                     <th>创建时间</th>
                                     <th>操作</th>
                                 </tr>
@@ -34,6 +35,7 @@
                                             <td>{{ $key +1 }}</td>
                                             <td> {{ $val->title }}</td>
                                             <td> {{ $val->score }}</td>
+                                            <td> {{ $val->typeText() }}</td>
                                             <td> {{ $val->created_at }}</td>
                                             <td class="text-center">
                                             {{ \App\Utils\UI\Anchor::Print(['text'=>'编辑','class'=>'btn-edit-evaluate','href'=>route('school_manager.evaluate.content-edit',['id'=>$val->id])], \App\Utils\UI\Button::TYPE_DEFAULT,'edit') }}

@@ -54,8 +54,11 @@ class EvaluateDao
      * @param $type
      * @return mixed
      */
-    public function pageList($schoolId, $type = Evaluate::TYPE_TEACHER) {
-        $map = ['school_id' => $schoolId, 'type' => $type];
+    public function pageList($schoolId, $type = null) {
+        $map = ['school_id' => $schoolId];
+        if (!is_null($type)) {
+            $map['type'] = $type;
+        }
         $list = Evaluate::where($map)
             ->orderBy('created_at','desc')
             ->paginate(ConfigurationTool::DEFAULT_PAGE_SIZE);
