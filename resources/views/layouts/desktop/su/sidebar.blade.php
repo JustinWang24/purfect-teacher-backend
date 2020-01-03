@@ -43,7 +43,6 @@
                     @include('layouts.desktop.elements.wifi_menu')
                     @include('layouts.desktop.elements.wifirepairs_menu')
                     @include('layouts.desktop.elements.evaluate')
-                    @include('layouts.desktop.elements.evaluate_student')
                 @endif
             </ul>
         </div>
