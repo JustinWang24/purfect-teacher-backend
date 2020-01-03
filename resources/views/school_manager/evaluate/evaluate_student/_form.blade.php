@@ -6,10 +6,10 @@
 
 <div class="form-group">
     <label for="evaluate-number-input">状态</label>
-    <select  name="evaluate[status]"  class="form-control" value="evaluate[status]">
+    <select  name="evaluate[status]"  class="form-control" >
         @foreach($status as $key => $val)
              <option value="{{$key}}"
-                     @if(isset($status))
+                     @if(isset($evaluate))
                         @if($key == $evaluate['status']) selected @endif
                     @endif>
             {{$val}}

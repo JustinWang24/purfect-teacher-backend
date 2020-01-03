@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Operator\Evaluate;
 
 use App\Dao\Evaluate\EvaluateDao;
 use App\Dao\Evaluate\EvaluateStudentTitleDao;
+use App\Models\Evaluate\Evaluate;
 use App\Models\Evaluate\EvaluateStudentTitle;
 use App\Utils\FlashMessageBuilder;
 use App\Http\Controllers\Controller;
@@ -15,9 +16,9 @@ class EvaluateController extends Controller
 
     public function list(EvaluateRequest $request)
     {
-        $schoolId                  = $request->getSchoolId();
-        $dao                       = new EvaluateDao();
-        $list                      = $dao->pageList($schoolId);
+        $schoolId = $request->getSchoolId();
+        $dao  = new EvaluateDao();
+        $list = $dao->pageList($schoolId);
         $this->dataForView['list'] = $list;
         return view('school_manager.evaluate.content.list', $this->dataForView);
     }
@@ -42,7 +43,7 @@ class EvaluateController extends Controller
             }
             return redirect()->route('school_manager.evaluate.content-list');
         }
-
+        $this->dataForView['type'] = Evaluate::allType();
         return view('school_manager.evaluate.content.create', $this->dataForView);
 
     }
@@ -69,6 +70,7 @@ class EvaluateController extends Controller
         $id                            = $request->get('id');
         $info                          = $dao->getEvaluateById($id);
         $this->dataForView['evaluate'] = $info;
+        $this->dataForView['type']     = Evaluate::allType();
         return view('school_manager.evaluate.content.edit', $this->dataForView);
     }
 
@@ -149,10 +151,10 @@ class EvaluateController extends Controller
             }
             return redirect()->route('school_manager.evaluate.student.list');
         }
-        $id   = $request->get('id');
-        $info = $dao->getEvaluateTitleById($id);
+        $id                            = $request->get('id');
+        $info                          = $dao->getEvaluateTitleById($id);
         $this->dataForView['evaluate'] = $info;
-        $this->dataForView['status'] = EvaluateStudentTitle::allStatus();
+        $this->dataForView['status']   = EvaluateStudentTitle::allStatus();
         return view('school_manager.evaluate.evaluate_student.edit', $this->dataForView);
     }
 
@@ -174,4 +176,14 @@ class EvaluateController extends Controller
         }
         return redirect()->route('school_manager.evaluate.student.list');
     }
+
+    /**
+     * 评学模板
+     * @param EvaluateRequest $request
+     */
+    public function evaluateStudentTemplate(EvaluateRequest $request)
+    {
+
+    }
+
 }
