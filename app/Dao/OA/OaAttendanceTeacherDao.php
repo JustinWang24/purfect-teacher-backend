@@ -5,12 +5,15 @@ namespace App\Dao\OA;
 
 
 use App\Dao\BuildFillableData;
+use App\Dao\Schools\OrganizationDao;
+use App\Dao\Timetable\TimetableItemDao;
 use App\Models\OA\AttendanceTeacher;
 use App\Models\OA\AttendanceTeacherGroup;
 use App\Models\OA\AttendanceTeachersGroupMember;
 use App\Models\OA\AttendanceTeachersMacAddress;
 use App\Models\OA\AttendanceTeachersMessage;
 use App\Models\OA\OaAttendanceTeacher;
+use App\Models\OA\OaAttendanceTeacherCourses;
 use App\Models\OA\OaAttendanceTeacherGroup;
 use App\Models\OA\OaAttendanceTeachersGroupMember;
 use App\Models\Users\GradeUser;
@@ -32,6 +35,12 @@ class OaAttendanceTeacherDao
         return OaAttendanceTeacher::create($data);
     }
 
+    /**
+     * 获取用户当天的打卡记录
+     * @param $userId
+     * @param $schoolId
+     * @return mixed
+     */
     public function getTodayRecord($userId,$schoolId)
     {
         return OaAttendanceTeacher::where('user_id',$userId)
@@ -474,5 +483,99 @@ class OaAttendanceTeacherDao
             $messageBag->setMessage($exception->getMessage());
         }
         return $messageBag;
+    }
+
+    public function getTodayCourseRecord($userId, $schoolId, $timeTableId)
+    {
+        return OaAttendanceTeacherCourses::where('user_id', $userId)
+            ->where('school_id', $schoolId)
+            ->where('timetable_items_id', $timeTableId)
+            ->where('check_in_date', date('Y-m-d'))
+            ->first();
+    }
+
+    /**
+     * 更新上课打卡记录
+     * @param $userId
+     * @param $schoolId
+     * @param $data
+     * @return mixed
+     */
+    public function updateAttendanceTeacherCourse($userId,$schoolId,$data)
+    {
+        if (!isset($data['check_in_date'])) {
+            return OaAttendanceTeacherCourses::where('user_id',$userId)
+                ->where('check_in_date', date('Y-m-d'))
+                ->where('timetable_items_id', $data['timetable_items_id'])
+                ->where('school_id', $schoolId)
+                ->update($data);
+        } else {
+            return OaAttendanceTeacherCourses::where('user_id',$userId)
+                ->where('timetable_items_id', $data['timetable_items_id'])
+                ->where('school_id', $schoolId)
+                ->update($data);
+        }
+
+    }
+    public function createAttendanceTeacherCourse($data)
+    {
+        return OaAttendanceTeacherCourses::create($data);
+    }
+
+    public function  getAttendanceTeacherCourseListByTimeTabIds($schoolId, $timeTableIds)
+    {
+        return OaAttendanceTeacherCourses::where('check_in_date', date('Y-m-d'))
+            ->whereIn('timetable_items_id', $timeTableIds)
+            ->where('school_id', $schoolId)
+            ->get();
+    }
+
+    //发短信
+    //获取所有课程
+    //获取所有已经打卡记录
+    //获取所有需要收到短信的用户
+    public function getPushlist($schoolId)
+    {
+        $timeTableDao = new TimetableItemDao();
+        $timeTableList = $timeTableDao->getCourseListByCurrentTime($schoolId);
+        $timeTableIds = [];
+        $AttendanceTimeTableIds = [];
+        $noTimeTableIds = [];
+        if(count($timeTableList) == 0) {
+            return [];
+        }
+        foreach ($timeTableList as $timeTableItem)
+        {
+            $timeTableIds[] = $timeTableItem->id;
+        }
+        $attendanceList = $this->getAttendanceTeacherCourseListByTimeTabIds($schoolId,$timeTableIds);
+        if (!empty($attendanceList)) {
+            foreach ($attendanceList as $attendanceItem)
+            {
+                $AttendanceTimeTableIds[] = $attendanceItem->timetable_items_id;
+            }
+        }
+
+        $noTimeTableIds = array_diff($timeTableIds,$AttendanceTimeTableIds);
+        //判断时间是否已经超过三分钟
+        $ids = [];
+        foreach($noTimeTableIds as $timeTableId)
+        {
+            $timeTableObj = $timeTableDao->getItemById($timeTableId, true);
+            $timeSlot = strtotime($timeTableObj->timeSlot->from);
+            $diff = ceil((time() - $timeSlot)/60);
+            if ($diff >3) {
+                $ids[] = $timeTableId;
+            }
+        }
+        return $ids;
+    }
+
+    public function getUserListForReceiveMessage($schoolId){
+        $organizationDao = new OrganizationDao();
+        //TODO 给教务处老师发短信，此处临时实现，应该有个配置来设置哪些老师或者哪个组织来接收
+        $organization = $organizationDao->getByName($schoolId, '教务处');
+        $orgMembers = $organizationDao->getMembers($schoolId, $organization->id);
+        return $orgMembers;
     }
 }

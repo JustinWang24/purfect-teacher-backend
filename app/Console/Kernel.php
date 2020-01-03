@@ -26,6 +26,8 @@ class Kernel extends ConsoleKernel
     {
         // $schedule->command('inspire')
         //          ->hourly();
+        //TODO 上线时打开此设置，会一分钟发一条短信，直到有人扫描了云班牌
+        //$schedule->command('sendMessageForTeacherBeLate 1')->weekdays()->between('7:00', '20:00')->everyMinute();
     }
 
     /**
