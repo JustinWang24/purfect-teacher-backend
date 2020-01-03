@@ -154,6 +154,10 @@ class TimetableItemDao
                 ['repeat_unit','<>',GradeAndYearUtil::TYPE_EVERY_EVEN_WEEK], // 想插入单周, 那么相同时间地点, 不能有单周或者每周的
             ];
         }
+        elseif(intval($data['repeat_unit']) === GradeAndYearUtil::TYPE_ONLY_AVAILABLE_WEEKS){
+            // 只在指定区间有效是最高级别的, 所以可以取代任何其他单双周的
+            return false;
+        }
         else{
             return true; // 错误的数据, 直接 reject
         }
@@ -695,6 +699,33 @@ class TimetableItemDao
         }
 
         return $endWeekIndex - $startWeekIndex + 1;
+    }
+    
+
+    /**
+     * 获取教师教的班级
+     * @param $teacherId
+     * @return mixed
+     */
+    public function getTeacherTeachingGrade($teacherId)
+    {
+      return  TimetableItem::where('teacher_id', $teacherId)->get();
+    }
+
+    /**
+     * 根据班级ID查询代课老师
+     * @param $gradeId
+     * @param $year
+     * @param $term
+     * @return mixed
+     */
+    public function getItemByGradeId($gradeId, $year, $term) {
+        return TimetableItem::select('teacher_id')
+            ->where('grade_id',$gradeId)
+            ->where('year',$year)
+            ->where('term',$term)
+            ->distinct('teacher_id')
+            ->get();
     }
 
     /**
