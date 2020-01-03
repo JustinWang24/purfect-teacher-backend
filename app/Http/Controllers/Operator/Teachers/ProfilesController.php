@@ -178,8 +178,33 @@ class ProfilesController extends Controller
             return redirect()->route('school_manager.teachers.edit-avatar',['uuid'=>$user->id]);
         }
     }
+
     public function export()
     {
         return Excel::download(new TeacherExport, 'teachers.xlsx');
     }
+
+    /**
+     * 评聘添加页面
+     * @param MyStandardRequest $request
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function addQualification(MyStandardRequest $request)
+    {
+        return view('teacher.profile.add_qualification', $this->dataForView);
+    }
+
+    /**
+     * 保存评聘资料
+     * @param MyStandardRequest $request
+     */
+    public function saveQualification(MyStandardRequest $request)
+    {
+        $userId = $request->user()->id;
+        $data = $request->get('qualification');
+        $file = $request->file('file')->store('public/users/'.$userId.'/qualification');
+
+    }
+
+
 }
