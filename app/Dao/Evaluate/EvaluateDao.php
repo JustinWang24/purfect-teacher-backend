@@ -62,6 +62,18 @@ class EvaluateDao
         return $list;
     }
 
+    /**
+     * 获取全部评价模板
+     * @param $schoolId
+     * @param $type
+     * @return mixed
+     */
+    public function getEvaluate($schoolId, $type)
+    {
+        $map = ['school_id' => $schoolId, 'type' => $type];
+        return Evaluate::where($map)->orderBy('created_at', 'desc')->get();
+    }
+
 
     /**
      * @param $id

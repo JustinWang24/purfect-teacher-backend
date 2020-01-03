@@ -112,7 +112,7 @@ class TeacherEvaluationController extends Controller
 
         $dao = new EvaluateDao;
 
-        $evaluate = $dao->pageList($schoolId, Evaluate::TYPE_STUDENT);
+        $evaluate = $dao->getEvaluate($schoolId, Evaluate::TYPE_STUDENT);
 
         $data = [];
 

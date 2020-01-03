@@ -474,7 +474,7 @@ Route::prefix('school_manager')->group(function () {
     });
 
 
-    // 评教模块
+    // 评教 评学 模块
     Route::prefix('evaluate')->group(function(){
         // 列表
         Route::get('content-list','Evaluate\EvaluateController@list')
@@ -503,6 +503,19 @@ Route::prefix('school_manager')->group(function () {
         // 创建
         Route::post('evaluate-teacher/create','Evaluate\EvaluateTeacherController@create')
             ->name('school_manager.evaluate.evaluate-teacher.create');
+
+        // 评学
+        Route::get('/evaluate-student-list','Evaluate\EvaluateController@evaluateStudentList')
+            ->name('school_manager.evaluate.student.list');
+        // 评学添加
+        Route::any('/evaluate-student-add','Evaluate\EvaluateController@evaluateStudentAdd')
+            ->name('school_manager.evaluate.student.add');
+        // 评学编辑
+        Route::any('evaluate-student-edit','Evaluate\EvaluateController@evaluateStudentEdit')
+            ->name('school_manager.evaluate.student.edit');
+        // 评学删除
+        Route::get('evaluate-student-delete','Evaluate\EvaluateController@evaluateStudentDelete')
+            ->name('school_manager.evaluate.student.delete');
     });
 });
 

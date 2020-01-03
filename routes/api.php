@@ -720,15 +720,12 @@ Route::prefix('code')->middleware('auth:api')->group(function(){
 
 // 教师评教
 Route::prefix('teacher/evaluation')->middleware('auth:api')->group(function(){
-
-    //是否开启评学
+    // 是否开启评学
     Route::post('/is-start','Api\Evaluate\TeacherEvaluationController@isEvaluation')
         ->name('api.teacher.evaluation.is.start');
-
     // 教师教过的所有班级
     Route::post('/grade-list','Api\Evaluate\TeacherEvaluationController@index')
         ->name('api.teacher.evaluation.grade.list');
-
     // 所有学生
     Route::post('/grade-student','Api\Evaluate\TeacherEvaluationController@student')
         ->name('api.teacher.evaluation.grade.student');
