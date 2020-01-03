@@ -28,6 +28,9 @@ class EvaluateStudentDao
      */
     public function getStudentByUserAndStatus($userId, $status) {
         $map = ['user_id'=>$userId, 'status'=>$status];
-        return EvaluateStudent::where($map)->select(['year','type'])->get();
+        return EvaluateStudent::where($map)
+            ->select(['year','type'])
+            ->distinct(['year','type'])
+            ->get();
     }
 }
