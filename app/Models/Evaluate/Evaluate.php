@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 class Evaluate extends Model
 {
     protected $fillable = [
-        'school_id', 'title', 'score'
+        'school_id', 'title', 'score', 'type'
     ];
 
     public $hidden = ['updated_at'];
