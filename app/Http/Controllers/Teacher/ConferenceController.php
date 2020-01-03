@@ -3,33 +3,27 @@
 namespace App\Http\Controllers\Teacher;
 
 
+use App\Dao\Users\UserDao;
 use App\Utils\JsonBuilder;
 use App\Dao\Schools\RoomDao;
 use App\Models\Schools\Room;
+use App\Utils\FlashMessageBuilder;
+use App\Models\Teachers\Conference;
 use App\Dao\Teachers\ConferenceDao;
-use App\Dao\Teachers\TeacherProfileDao;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
+use App\Dao\Teachers\TeacherProfileDao;
 use App\Http\Requests\Teacher\ConferenceRequest;
 
 class ConferenceController extends Controller
 {
-    public function index() {
-        return view('teacher.conference.index', $this->dataForView);
-    }
-
-
-    public function data(ConferenceRequest $request) {
-        #判断权限
+    public function index(ConferenceRequest $request) {
         $schoolId = $request->getSchoolId();
-        $user = $request->user();
-        $userId = Auth::id();
+        $userId = $request->user()->id;
         $dao = new ConferenceDao();
-        $map = ['user_id'=>$userId];
-        $list = $dao->getConferenceListByUser($user, $map,$schoolId)->toArray();
-        $result = ['conference'=>$list];
-        return JsonBuilder::Success($result);
-
+        $list = $dao->getConferenceListByUser($userId,$schoolId);
+        $this->dataForView['list'] = $list;
+        return view('teacher.conference.index', $this->dataForView);
     }
 
 
@@ -38,42 +32,35 @@ class ConferenceController extends Controller
      * @param ConferenceRequest $request
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function add(ConferenceRequest $request) {
+    public function create(ConferenceRequest $request) {
+        if($request->isMethod('post')) {
+            $data = $request->getFormData();
+            dd($data);
+            $conferenceDao = new ConferenceDao();
+            $result = $conferenceDao->addConferenceFlow($data);
+            $msg = $result->getMessage();
+            if ($result->isSuccess()) {
+                FlashMessageBuilder::Push($request, FlashMessageBuilder::SUCCESS, $msg);
+            } else {
+                FlashMessageBuilder::Push($request, FlashMessageBuilder::DANGER, $msg);
+            }
+            return redirect()->route('teacher.conference.index');
+
+        }
         $roomDao = new RoomDao($request->user());
         $schoolId = $request->getSchoolId();
-
-        #会议室
+        // 会议室
         $map = ['school_id'=>$schoolId,'type'=>Room::TYPE_MEETING_ROOM];
         $field = ['id', 'school_id', 'name'];
         $room = $roomDao->getRooms($map,$field);
-        #老师
-        $map = ['school_id'=>$schoolId];
-        $teacherDao = new TeacherProfileDao();
-        $field = ['id','teacher_id','name','school_id'];
-        $teacherList = $teacherDao->getTeachers($map, $field);
-
+        // 老师
+        $userDao = new UserDao();
+        $teacherList = $userDao->getTeachersBySchool($schoolId, true);
+        $conference = new Conference();
         $this->dataForView['room'] = $room;
         $this->dataForView['teacher'] = $teacherList;
+        $this->dataForView['type'] = $conference->allType();
         return view('teacher.conference.add', $this->dataForView);
-    }
-
-
-    /**
-     * 插入数据
-     * @param ConferenceRequest $request
-     * @return string
-     */
-    public function create(ConferenceRequest $request) {
-        $conferenceData = $request->all();
-        $conferenceData['school_id'] = $request->getSchoolId();
-        $conferenceDao = new ConferenceDao();
-        $return = $conferenceDao->addConferenceFlow($conferenceData);
-        if($return->isSuccess()) {
-            return JsonBuilder::Success($return->getMessage());
-        } else {
-            return JsonBuilder::Error($return->getMessage());
-        }
-
     }
 
 
@@ -93,8 +80,8 @@ class ConferenceController extends Controller
         $userId = Auth::id();
         $map = [['school_id', '=', $schoolId],['user_id', '!=', $userId]];
         $teacherDao = new TeacherProfileDao();
-        $field = ['id','user_id','school_id'];
-        $teacherList = $teacherDao->getTeachers($map, $field)->toArray();
+//        $field = ['id','user_id','school_id'];
+        $teacherList = $teacherDao->getTeachers($map)->toArray();
 
         #查询老师在当前时间是否有空
         $conferenceDao = new ConferenceDao();

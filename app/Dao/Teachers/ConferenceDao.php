@@ -8,66 +8,29 @@
 namespace App\Dao\Teachers;
 
 use App\User;
-use App\Utils\Misc\ConfigurationTool;
 use Carbon\Carbon;
+use App\Utils\JsonBuilder;
 use Illuminate\Support\Facades\DB;
 use App\Models\Teachers\Conference;
 use App\Utils\ReturnData\MessageBag;
+use App\Utils\Misc\ConfigurationTool;
 use App\Models\Teachers\ConferencesUser;
-use App\Models\Teachers\ConferencesMedia;
 
 class ConferenceDao
 {
 
     /**
-     * @param User $user
-     * @param $map
+     * @param $userId
      * @param string $schoolId
      * @return mixed
      */
-    public function getConferenceListByUser($user, $map,$schoolId='')
+    public function getConferenceListByUser($userId,$schoolId)
     {
-        if($user->isSchoolAdminOrAbove()) {
-            $map['school_id'] = $schoolId;
-        }
-        $model = new Conference();
-        $list = $model->where($map)->with('user')->get();
+        $map = ['user_id'=>$userId, 'school_id'=>$schoolId];
+        $list = Conference::where($map)
+            ->orderBy('to','desc')
+            ->paginate(ConfigurationTool::DEFAULT_PAGE_SIZE);
         return $list;
-    }
-
-
-    /**
-     * 创建会议
-     * @param $data
-     * @return mixed
-     */
-    public function createConference($data)
-    {
-        return Conference::create($data);
-    }
-
-
-    /**
-     * 创建会议媒体信息
-     * @param $data
-     * @return mixed
-     */
-    public function createConferenceMedias($data)
-    {
-        return ConferencesMedia::create($data);
-    }
-
-
-
-    /**
-     * 创建参会人员
-     * @param $data
-     * @return mixed
-     */
-    public function createConferenceUser($data)
-    {
-
-        return ConferencesUser::create($data);
     }
 
 
@@ -86,52 +49,38 @@ class ConferenceDao
     }
 
     /**
-     * 添加会议流程
-     * @param array $conferenceData 会议数据
+     * 创建会议
+     * @param array $data 会议数据
      * @return MessageBag
      */
-    public function addConferenceFlow($conferenceData)
-    {
+    public function addConferenceFlow($data) {
+        $user = explode(',',$data['conference']); // 参会人员
+        unset($data['conference']);
         try{
             DB::beginTransaction();
-            $s1 = $this->createConference($conferenceData);
-            if(!$s1->id) {
-                throw new \Exception('创建会议失败');
-            }
+            $re = Conference::create($data);
 
-            foreach ($conferenceData['participant'] as $key => $val) {
-                $conferenceUserData = [
-                    'conference_id' => $s1->id,
+            foreach ($user as $key => $val) {
+                $userData = [
+                    'conference_id' => $re->id,
                     'user_id'       => $val,
-                    'school_id'     => $conferenceData['school_id'],
-                    'status'        => 0,
-                    'from'          => $conferenceData['from'],
-                    'to'            => $conferenceData['to'],
+                    'school_id'     => $data['school_id'],
                 ];
-                $s2 = $this->createConferenceUser($conferenceUserData);
-                if(!$s2->id)
-                {
-                    throw new \Exception('邀请人添加失败');
-                }
+                ConferencesUser::create($userData);
             }
 
-            $medias = ['conference_id'=>$s1->id,'media_id'=>$conferenceData['media_id']];
-            $s3 = $this->createConferenceMedias($medias);
-            if(!$s3->id)
-            {
-                throw new \Exception('添加会议媒体关联失败');
-            }
+            // 暂时没有会议媒体数据
+
             DB::commit();
 
-            return new MessageBag(1000,'创建成功');
+            return new MessageBag(JsonBuilder::CODE_SUCCESS,'创建成功');
 
         }
         catch (\Exception $e)
         {
             DB::rollBack();
             $msg = $e->getMessage();
-//            return ['code'=>0,'msg'=>$msg];
-            return new MessageBag(999,$msg);
+            return new MessageBag(JsonBuilder::CODE_ERROR,$msg);
         }
     }
 

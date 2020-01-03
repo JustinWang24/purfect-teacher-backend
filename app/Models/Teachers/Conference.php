@@ -3,6 +3,7 @@
 namespace App\Models\Teachers;
 
 use App\Models\School;
+use App\Models\Schools\Room;
 use App\User;
 use Illuminate\Database\Eloquent\Model;
 class Conference extends Model
@@ -19,12 +20,34 @@ class Conference extends Model
     const STATUS_CHECK_TEXT   = '已审核';
     const STATUS_REFUSE_TEXT  = '拒绝';
 
+
+    const TYPE_ADMINISTRATIVE = 1;
+    const TYPE_STAFF          = 2;
+    const TYPE_INTERIOR       = 3;
+
+    const TYPE_ADMINISTRATIVE_TEXT = '行政会议';
+    const TYPE_STAFF_TEXT          = '职工会议';
+    const TYPE_INTERIOR_TEXT       = '部门内部会议';
+
     protected  $fillable=[
-        'title', 'school_id', 'user_id', 'room_id', 'sign_out', 'to', 'from',
-        'video', 'remark', 'status',
+        'title', 'school_id', 'user_id', 'room_id', 'to', 'from', 'remark', 'status', 'type'
     ];
 
     protected $hidden=['updated_at'];
+
+
+    public function allType() {
+        return [
+            self::TYPE_ADMINISTRATIVE => self::TYPE_ADMINISTRATIVE_TEXT,
+            self::TYPE_STAFF    => self::TYPE_STAFF_TEXT,
+            self::TYPE_INTERIOR => self::TYPE_INTERIOR_TEXT,
+        ];
+    }
+
+    public function typeText() {
+        $data = $this->allType();
+        return $data[$this->type] ?? '';
+    }
 
 
     public $room_field = ['name'];
@@ -59,7 +82,7 @@ class Conference extends Model
 
     public function room() {
 
-        return $this->belongsTo(User::class)->select($this->room_field);
+        return $this->belongsTo(Room::class)->select($this->room_field);
     }
 
 
