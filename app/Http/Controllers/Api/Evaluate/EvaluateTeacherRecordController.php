@@ -7,6 +7,7 @@ namespace App\Http\Controllers\Api\Evaluate;
 use App\Dao\Evaluate\EvaluateDao;
 use App\Dao\Evaluate\EvaluateStudentDao;
 use App\Models\Evaluate\Evaluate;
+use App\Models\Evaluate\EvaluateStudent;
 use App\Utils\JsonBuilder;
 use App\Http\Controllers\Controller;
 use App\Dao\Evaluate\EvaluateTeacherRecordDao;
@@ -40,7 +41,7 @@ class EvaluateTeacherRecordController extends Controller
     public function getTeacherList(EvaluateTeacherRecordRequest $request) {
         $data = $request->getStudentData();
         $dao = new EvaluateStudentDao();
-        $list = $dao->getStatusByUserId($data['user_id'], $data['year'], $data['type']);
+        $list = $dao->getStudentByUserId($data['user_id'], $data['year'], $data['type']);
         $teachers = [];
         foreach ($list as $key => $val) {
             $user = $val->evaluateTeacher->user;
@@ -63,4 +64,23 @@ class EvaluateTeacherRecordController extends Controller
         $data = pageReturn($list);
         return JsonBuilder::Success($data);
     }
+
+    /**
+     * 判断是否开启评教
+     * @param EvaluateTeacherRecordRequest $request
+     * @return string
+     */
+    public function isEvaluate(EvaluateTeacherRecordRequest $request) {
+        $userId = $request->user()->id;
+        $dao = new EvaluateStudentDao();
+        $return = $dao->getStudentByUserAndStatus($userId,EvaluateStudent::STATUS_NOT_EVALUATE);
+        if(count($return) == 0) {
+            return JsonBuilder::Success(['status'=>false]);
+        } else {
+            return JsonBuilder::Success(['status'=>true,'list'=>$return]);
+        }
+
+    }
+
+
 }
