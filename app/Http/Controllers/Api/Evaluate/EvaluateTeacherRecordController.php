@@ -74,10 +74,10 @@ class EvaluateTeacherRecordController extends Controller
         $userId = $request->user()->id;
         $dao = new EvaluateStudentDao();
         $return = $dao->getStudentByUserAndStatus($userId,EvaluateStudent::STATUS_NOT_EVALUATE);
-        if(count($return) == 0) {
+        if(is_null($return)) {
             return JsonBuilder::Success(['status'=>false]);
         } else {
-            return JsonBuilder::Success(['status'=>true,'list'=>$return]);
+            return JsonBuilder::Success(['status'=>true,'evaluate'=>$return]);
         }
 
     }

@@ -30,7 +30,8 @@ class EvaluateStudentDao
         $map = ['user_id'=>$userId, 'status'=>$status];
         return EvaluateStudent::where($map)
             ->select(['year','type'])
-            ->distinct(['year','type'])
-            ->get();
+            ->orderBy('created_at', 'desc')
+//            ->distinct(['year','type'])
+            ->first();
     }
 }
