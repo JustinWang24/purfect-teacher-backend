@@ -125,7 +125,7 @@ class EvaluateController extends Controller
             } else {
                 FlashMessageBuilder::Push($request, FlashMessageBuilder::DANGER, $msg);
             }
-            return redirect()->route('school_manager.evaluate.evaluate_student.list');
+            return redirect()->route('school_manager.evaluate.student.list');
         }
 
         $this->dataForView['status'] = EvaluateStudentTitle::allStatus();
@@ -177,13 +177,5 @@ class EvaluateController extends Controller
         return redirect()->route('school_manager.evaluate.student.list');
     }
 
-    /**
-     * 评学模板
-     * @param EvaluateRequest $request
-     */
-    public function evaluateStudentTemplate(EvaluateRequest $request)
-    {
-
-    }
 
 }
