@@ -21,10 +21,9 @@ use App\User;
                                     <th>学校</th>
                                     <th>组名称</th>
                                     <th style="width: 30%">组成员</th>
-                                    <th>上班时间</th>
-                                    <th>下班时间</th>
-                                    <th>迟到时间</th>
-                                    <th>严重迟到时间</th>
+                                    <th>上午上下班时间</th>
+                                    <th>下午上下班时间</th>
+                                    <th>晚上上下班时间</th>
                                     <th>wifi名称</th>
                                     <th>状态</th>
                                     <th></th>
@@ -46,16 +45,16 @@ use App\User;
                                             @endforeach
                                         </td>
                                         <td>
-                                            {{ $group->online_time }}
+                                            上班：{{ $group->morning_online_time }}<br>
+                                            下班：{{ $group->morning_offline_time }}
                                         </td>
                                         <td>
-                                            {{ $group->offline_time }}
+                                            上班：{{ $group->afternoon_online_time }}<br>
+                                            下班：{{ $group->afternoon_offline_time }}
                                         </td>
                                         <td>
-                                            {{ $group->late_duration }}
-                                        </td>
-                                        <td>
-                                            {{ $group->serious_late_duration }}
+                                            上班：{{ $group->night_online_time }}<br>
+                                            下班：{{ $group->night_offline_time }}
                                         </td>
                                         <td>
                                             {{ $group->wifi_name }}
@@ -63,7 +62,8 @@ use App\User;
                                         <td class="text-center">
                                             {{ Anchor::Print(['text'=>'查看','class'=>'btn-edit-major','href'=>route('school_manager.oa.attendances-group',['id'=>$group->id])], Button::TYPE_DEFAULT,'edit') }}
                                             {{ Anchor::Print(['text'=>'添加成员','class'=>'btn-edit-major','href'=>route('school_manager.oa.attendances-members',['id'=>$group->id])], Button::TYPE_DEFAULT,'edit') }}
-                                            {{ Anchor::Print(['text'=>'补卡处理','class'=>'btn-edit-major','href'=>route('school_manager.oa.attendances-messages')], Button::TYPE_DEFAULT,'edit') }}
+                                            <!--{{ Anchor::Print(['text'=>'补卡处理','class'=>'btn-edit-major','href'=>route('school_manager.oa.attendances-messages')], Button::TYPE_DEFAULT,'edit') }}-->
+                                            {{ Anchor::Print(['text'=>'考勤统计','class'=>'btn-edit-major','href'=>route('school_manager.oa.attendances-total')], Button::TYPE_DEFAULT,'edit') }}
                                         </td>
                                     </tr>
                                 @endforeach

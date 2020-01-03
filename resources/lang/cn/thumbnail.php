@@ -144,7 +144,8 @@ return [
     'documents'=> '公文',
     'code' => '二维码',
     'content'=>'评教内容',
-    'evaluate-teacher'=>'评教老师'
+    'evaluate-teacher'=>'评教老师',
+    'attendances-total'=>'课时考勤统计'
 
 ];
 

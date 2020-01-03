@@ -700,7 +700,7 @@ class TimetableItemDao
 
         return $endWeekIndex - $startWeekIndex + 1;
     }
-    
+
 
     /**
      * 获取教师教的班级

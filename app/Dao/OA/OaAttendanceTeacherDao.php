@@ -339,6 +339,27 @@ class OaAttendanceTeacherDao
         }
         return $messageBag;
     }
+    public function createGroup($data)
+    {
+        $messageBag = new MessageBag(JsonBuilder::CODE_ERROR);
+        DB::beginTransaction();
+        try {
+            $fillableData = $this->getFillableData(new OaAttendanceTeacherGroup(), $data);
+            $group = OaAttendanceTeacherGroup::create($fillableData);
+            if ($group) {
+                DB::commit();
+                $messageBag->setCode(JsonBuilder::CODE_SUCCESS);
+                $messageBag->setData($group);
+            } else {
+                DB::rollBack();
+                $messageBag->setMessage('添加考勤组失败, 请联系管理员');
+            }
+        } catch (\Exception $exception) {
+            DB::rollBack();
+            $messageBag->setMessage($exception->getMessage());
+        }
+        return $messageBag;
+    }
     public function getAttendanceMembers($groupId)
     {
         return OaAttendanceTeachersGroupMember::where('group_id',$groupId)
@@ -577,5 +598,23 @@ class OaAttendanceTeacherDao
         $organization = $organizationDao->getByName($schoolId, '教务处');
         $orgMembers = $organizationDao->getMembers($schoolId, $organization->id);
         return $orgMembers;
+    }
+
+    public function getUserList($schoolId, $type='week', $current=0)
+    {
+        $time = getWeekOrMonthSlot($current, 'week');
+        return OaAttendanceTeacherCourses::where('school_id',$schoolId)
+            ->whereBetween('check_in_date', $time)
+            ->distinct('user_id')
+            ->get();
+    }
+
+    public function countCourseNumByUser($schoolId, $userId, $type='week', $current=0)
+    {
+        $time = getWeekOrMonthSlot($current, $type);
+        return OaAttendanceTeacherCourses::where('school_id',$schoolId)
+            ->where('user_id', $userId)
+            ->whereBetween('check_in_date', $time)
+            ->count();
     }
 }
