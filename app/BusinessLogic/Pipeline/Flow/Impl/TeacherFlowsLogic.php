@@ -29,6 +29,8 @@ class TeacherFlowsLogic extends GeneralFlowsLogic
     public function getMyFlows($forApp = false)
     {
         $dao = new FlowDao();
+
+        // 以下是原生开发的
         $types[] = [
             'name'=>IFlow::TYPE_TEACHER_ONLY_TXT,
             'key'=>1000,
@@ -47,6 +49,11 @@ class TeacherFlowsLogic extends GeneralFlowsLogic
                     'id'=>-3,
                     'name'=>'发布任务',
                     'icon'=>asset('assets/img/pipeline/icon3@2x.png')
+                ],
+                [
+                    'id'=>-4,
+                    'name'=>'评学',
+                    'icon'=>asset('assets/img/teacher/ass10.png')
                 ]
             ]
         ];
