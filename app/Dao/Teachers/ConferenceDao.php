@@ -20,40 +20,32 @@ class ConferenceDao
 {
 
     /**
-     * @param $userId
+     * @param $id
+     * @return mixed
+     */
+    public function getConferenceById($id) {
+        return Conference::where('id', $id)->first();
+    }
+
+    /**
      * @param string $schoolId
      * @return mixed
      */
-    public function getConferenceListByUser($userId,$schoolId)
+    public function getConferenceBySchoolId($schoolId)
     {
-        $map = ['user_id'=>$userId, 'school_id'=>$schoolId];
-        $list = Conference::where($map)
+        $map = ['school_id'=>$schoolId];
+        return Conference::where($map)
             ->orderBy('to','desc')
             ->paginate(ConfigurationTool::DEFAULT_PAGE_SIZE);
-        return $list;
     }
 
-
-    /**
-     * 获取参会人员
-     * @param $from
-     * @param $to
-     * @param $schoolId
-     * @return mixed
-     */
-    public function getConferenceUser($from,$to,$schoolId)
-    {
-        $map = [['school_id', '=', $schoolId],['from', '>=', $from]];
-        $map2 = [['school_id', '=', $schoolId],['to', '<=', $to]];
-        return ConferencesUser::where($map)->orwhere($map2)->get()->toArray();
-    }
 
     /**
      * 创建会议
      * @param array $data 会议数据
      * @return MessageBag
      */
-    public function addConferenceFlow($data) {
+    public function addConference($data) {
         $user = explode(',',$data['conference']); // 参会人员
         unset($data['conference']);
         try{
@@ -86,22 +78,62 @@ class ConferenceDao
 
 
     /**
-     * 获取会议列表
-     * @param $map
-     * @param $field
-     * @param $groupBy
-     * @return mixed
+     * 编辑会议
+     * @param array $data
+     * @return MessageBag
      */
-    public function getConference($map,$field,$groupBy='')
-    {
-        $model = new Conference();
-        $list = $model->where($map)->select($field)->get();
-        if(!empty($groupBy))
-        {
-            $list = $list->groupBy($groupBy);
-        }
+    public function updConference($data) {
+        $user = explode(',',$data['conference']); // 参会人员
 
-        return $list;
+        unset($data['conference']);
+        try{
+            DB::beginTransaction();
+            // 修改会议主表
+            Conference::where(['id'=>$data['id']])->update($data);
+            // 删除参会人员
+            ConferencesUser::where(['conference_id'=>$data['id']])->delete();
+            // 创建参会人员
+            foreach ($user as $key => $val) {
+                $userData = [
+                    'conference_id' => $data['id'],
+                    'user_id'       => $val,
+                    'school_id'     => $data['school_id'],
+                ];
+                ConferencesUser::create($userData);
+            }
+
+            DB::commit();
+            return new MessageBag(JsonBuilder::CODE_SUCCESS,'编辑成功');
+
+        }catch (\Exception $e) {
+            DB::rollBack();
+            $msg = $e->getMessage();
+            return new MessageBag(JsonBuilder::CODE_ERROR,$msg);
+        }
+    }
+
+
+    /**
+     * 删除会议
+     * @param $id
+     * @return MessageBag
+     */
+    public function deleteConference($id) {
+        $messageBag = new MessageBag();
+        try {
+            DB::beginTransaction();
+            // 删除参会人员
+            ConferencesUser::where(['conference_id'=>$id])->delete();
+            // 删除会议
+            Conference::where(['id'=>$id])->delete();
+            DB::commit();
+            $messageBag->setMessage('删除成功');
+        }catch (\Exception $e) {
+            DB::rollBack();
+            $messageBag->setMessage($e->getMessage());
+            $messageBag->setCode(JsonBuilder::CODE_ERROR);
+        }
+        return $messageBag;
     }
 
 
@@ -236,15 +268,6 @@ class ConferenceDao
 
         return $list;
 
-    }
-
-
-    /**
-     * @param $id
-     * @return mixed
-     */
-    public function getConferenceById($id) {
-        return Conference::where('id', $id)->first();
     }
 
 

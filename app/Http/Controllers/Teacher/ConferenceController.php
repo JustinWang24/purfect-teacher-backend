@@ -10,6 +10,7 @@ use App\Models\Schools\Room;
 use App\Utils\FlashMessageBuilder;
 use App\Models\Teachers\Conference;
 use App\Dao\Teachers\ConferenceDao;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
 use App\Dao\Teachers\TeacherProfileDao;
@@ -17,11 +18,15 @@ use App\Http\Requests\Teacher\ConferenceRequest;
 
 class ConferenceController extends Controller
 {
+    /**
+     * 会议列表
+     * @param ConferenceRequest $request
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function index(ConferenceRequest $request) {
         $schoolId = $request->getSchoolId();
-        $userId = $request->user()->id;
         $dao = new ConferenceDao();
-        $list = $dao->getConferenceListByUser($userId,$schoolId);
+        $list = $dao->getConferenceBySchoolId($schoolId);
         $this->dataForView['list'] = $list;
         return view('teacher.conference.index', $this->dataForView);
     }
@@ -33,11 +38,16 @@ class ConferenceController extends Controller
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function create(ConferenceRequest $request) {
+        $user = $request->user();
         if($request->isMethod('post')) {
+
             $data = $request->getFormData();
-            dd($data);
+            // 管理员直接通过
+            if($user->isSchoolAdminOrAbove()) {
+                $data['status'] = Conference::STATUS_CHECK;
+            }
             $conferenceDao = new ConferenceDao();
-            $result = $conferenceDao->addConferenceFlow($data);
+            $result = $conferenceDao->addConference($data);
             $msg = $result->getMessage();
             if ($result->isSuccess()) {
                 FlashMessageBuilder::Push($request, FlashMessageBuilder::SUCCESS, $msg);
@@ -47,6 +57,16 @@ class ConferenceController extends Controller
             return redirect()->route('teacher.conference.index');
 
         }
+
+        $conference = new Conference();
+
+        // 权限不同 申请会议类型不同
+        if($user->isSchoolAdminOrAbove()) {
+            $type = $conference->allType();
+        } else {
+            $type = [Conference::TYPE_INTERIOR=>Conference::TYPE_INTERIOR_TEXT];
+        }
+
         $roomDao = new RoomDao($request->user());
         $schoolId = $request->getSchoolId();
         // 会议室
@@ -56,84 +76,81 @@ class ConferenceController extends Controller
         // 老师
         $userDao = new UserDao();
         $teacherList = $userDao->getTeachersBySchool($schoolId, true);
-        $conference = new Conference();
+
         $this->dataForView['room'] = $room;
         $this->dataForView['teacher'] = $teacherList;
-        $this->dataForView['type'] = $conference->allType();
+        $this->dataForView['type'] = $type;
         return view('teacher.conference.add', $this->dataForView);
     }
 
 
-
-
     /**
-     * 获取参会人员  status 0:没有会议  1:有会议
+     * 编辑会议
      * @param ConferenceRequest $request
-     * @return string
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Http\RedirectResponse|\Illuminate\View\View
      */
-    public function getUsers(ConferenceRequest $request) {
-
-        $from = $request->get('from');
-        $to = $request->get('to');
-
-        $schoolId = $request->getSchoolId();
-        $userId = Auth::id();
-        $map = [['school_id', '=', $schoolId],['user_id', '!=', $userId]];
-        $teacherDao = new TeacherProfileDao();
-//        $field = ['id','user_id','school_id'];
-        $teacherList = $teacherDao->getTeachers($map)->toArray();
-
-        #查询老师在当前时间是否有空
-        $conferenceDao = new ConferenceDao();
-        $conferenceUsers = $conferenceDao->getConferenceUser($from, $to, $schoolId);
-
-        $userIdArr = array_column($conferenceUsers,'user_id');
-        foreach ($teacherList as $key => $value) {
-            if(in_array($value['user_id'],$userIdArr)) {
-                $teacherList[$key]['status'] = 1; //有会议
-            } else {
-                $teacherList[$key]['status'] = 0; //没有会议
+    public function edit(ConferenceRequest $request) {
+        $dao = new ConferenceDao();
+        $user = $request->user();
+        if($request->isMethod('post')) {
+            $data = $request->getFormData();
+            // 管理员直接通过
+            if($user->isSchoolAdminOrAbove()) {
+                $data['status'] = Conference::STATUS_CHECK;
             }
+            $result = $dao->updConference($data);
+            $msg = $result->getMessage();
+            if ($result->isSuccess()) {
+                FlashMessageBuilder::Push($request, FlashMessageBuilder::SUCCESS, $msg);
+            } else {
+                FlashMessageBuilder::Push($request, FlashMessageBuilder::DANGER, $msg);
+            }
+            return redirect()->route('teacher.conference.index');
         }
 
-        $result = ['teacher'=>$teacherList];
+        $id = $request->get('id');
+        $conference = $dao->getConferenceById($id);
+        $from = Carbon::parse($conference->from);
+        $to = Carbon::parse($conference->to);
+        $conference->from = $from->format('Y-m-d').'T'.$from->format('H:i:s');
+        $conference->to = $to->format('Y-m-d').'T'.$to->format('H:i:s');
 
-        return JsonBuilder::Success($result);
+        // 权限不同 申请会议类型不同
+        if($user->isSchoolAdminOrAbove()) {
+            $type = $conference->allType();
+        } else {
+            $type = [Conference::TYPE_INTERIOR=>Conference::TYPE_INTERIOR_TEXT];
+        }
 
+        // 会议室
+        $schoolId = $request->getSchoolId();
+        $roomDao = new RoomDao($request->user());
+        $map = ['school_id'=>$schoolId,'type'=>Room::TYPE_MEETING_ROOM];
+        $room = $roomDao->getRooms($map);
+        $this->dataForView['room'] = $room;
+        $this->dataForView['conference'] = $conference;
+        $this->dataForView['type'] = $type;
+        $this->dataForView['user'] = $user;
+        return view('teacher.conference.edit', $this->dataForView);
     }
 
 
-
     /**
-     * 获取会议室 把当前已预约的时间返回
+     * 删除会议
      * @param ConferenceRequest $request
-     * @return string
+     * @return \Illuminate\Http\RedirectResponse
      */
-    public function getRooms(ConferenceRequest $request) {
-        $date = $request->get('date');
-
-        $roomDao = new RoomDao($request->user());
-        $schoolId = $request->getSchoolId();
-        $map = ['school_id'=>$schoolId,'type'=>Room::TYPE_MEETING_ROOM];
-        $field = ['id', 'school_id', 'name'];
-        $list = $roomDao->getRooms($map, $field)->toArray();
-
-        //查询开会的房间的时间
-        $conferenceDao = new ConferenceDao();
-        $map = ['date'=>$date,'school_id'=>$schoolId];
-
-        $field = ['from','to','room_id'];
-        $conferenceList = $conferenceDao->getConference($map,$field,'room_id')->toArray();
-
-        foreach ($list as $key => $val) {
-            if(array_key_exists($val['id'],$conferenceList)) {
-                $list[$key]['time'] = $conferenceList[$val['id']];
-            } else {
-                $list[$key]['time'] = [];
-            }
+    public function delete(ConferenceRequest $request) {
+        $id = $request->get('id');
+        $dao = new ConferenceDao();
+        $result = $dao->deleteConference($id);
+        $msg = $result->getMessage();
+        if ($result->isSuccess()) {
+            FlashMessageBuilder::Push($request, FlashMessageBuilder::SUCCESS, $msg);
+        } else {
+            FlashMessageBuilder::Push($request, FlashMessageBuilder::DANGER, $msg);
         }
-        $result = ['room'=>$list];
-        return JsonBuilder::Success($result);
+        return redirect()->route('teacher.conference.index');
     }
 
 }

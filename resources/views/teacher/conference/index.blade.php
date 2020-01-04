@@ -28,6 +28,8 @@
                                     <th>会议地点</th>
                                     <th>开始时间</th>
                                     <th>结束时间</th>
+                                    <th>状态</th>
+                                    <th>操作</th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -40,6 +42,11 @@
                                             <td>{{ $val->room->name }}</td>
                                             <td>{{ $val->from }}</td>
                                             <td>{{ $val->to }}</td>
+                                            <td>{{ $val->checkStatus() }}</td>
+                                            <td class="text-center">
+                                                {{ \App\Utils\UI\Anchor::Print(['text'=>'编辑','class'=>'btn-edit-conference','href'=>route('teacher.conference.edit',['id'=>$val->id])], \App\Utils\UI\Button::TYPE_DEFAULT,'edit') }}
+                                                {{ \App\Utils\UI\Anchor::Print(['text'=>'删除','class'=>'btn-delete-conference btn-need-confirm','href'=>route('teacher.conference.delete',['id'=>$val->id])], \App\Utils\UI\Button::TYPE_DANGER,'trash') }}
+                                            </td>
                                         </tr>
                                     @endforeach
 

@@ -51,7 +51,7 @@
 
 <div class="form-group">
     <label for="conference-number-input">结束时间</label>
-    <input required type="datetime-local" pattern="[0-9]{2}:[0-9]{2}" class="form-control" id="conference-to-input" value="{{$conference['to'] ?? old('to')}}" placeholder="结束时间" name="conference[to]">
+    <input required type="datetime-local" class="form-control" id="conference-to-input" value="{{$conference['to'] ?? old('to')}}" placeholder="结束时间" name="conference[to]">
 </div>
 
 <div class="form-group">
@@ -60,5 +60,7 @@
         {{$conference['remark'] ?? old('remark')}}
     </textarea>
 </div>
+
+
 
 

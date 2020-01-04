@@ -17,8 +17,8 @@ class Conference extends Model
     const STATUS_FINISHED = 5;    //已结束
 
     const STATUS_UNCHECK_TEXT = '未审核';
-    const STATUS_CHECK_TEXT   = '已审核';
-    const STATUS_REFUSE_TEXT  = '拒绝';
+    const STATUS_CHECK_TEXT   = '已通过';
+    const STATUS_REFUSE_TEXT  = '已拒绝';
 
 
     const TYPE_ADMINISTRATIVE = 1;
@@ -49,6 +49,18 @@ class Conference extends Model
         return $data[$this->type] ?? '';
     }
 
+    public function allCheckStatus() {
+        return [
+            self::STATUS_UNCHECK => self::STATUS_UNCHECK_TEXT,
+            self::STATUS_CHECK   => self::STATUS_CHECK_TEXT,
+            self::STATUS_REFUSE  => self::STATUS_REFUSE_TEXT,
+        ];
+    }
+
+    public function checkStatus() {
+        $data = $this->allCheckStatus();
+        return $data[$this->status] ?? '';
+    }
 
     public $room_field = ['name'];
 
