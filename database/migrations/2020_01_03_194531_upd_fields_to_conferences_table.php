@@ -21,11 +21,8 @@ class UpdFieldsToConferencesTable extends Migration
         });
 
         Schema::table('conferences_users', function (Blueprint $table) {
-            $table->dropColumn('status');
             $table->dropColumn('from');
             $table->dropColumn('to');
-            $table->dropColumn('begin');
-            $table->dropColumn('end');
         });
     }
 
@@ -44,11 +41,8 @@ class UpdFieldsToConferencesTable extends Migration
         });
 
         Schema::table('conferences_users', function (Blueprint $table) {
-            $table->integer('status')->default(0)->comment('状态 0:未签到 1:已签到 2:已签退');
-            $table->dateTime('from')->comment('会议开始时间');
-            $table->dateTime('to')->comment('会议结束时间');
-            $table->timestamp('begin')->comment('开始签到时间')->nullable();
-            $table->timestamp('end')->comment('结束签到时间')->nullable();
+            $table->dateTime('from')->comment('会议开始时间')->nullable();
+            $table->dateTime('to')->comment('会议结束时间')->nullable();
         });
 
 

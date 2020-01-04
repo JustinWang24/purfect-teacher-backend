@@ -138,6 +138,44 @@ class ConferenceDao
 
 
     /**
+     * 签到
+     * @param $id
+     * @param $userId
+     * @param $type
+     * @return MessageBag|void
+     */
+    public function signIn($id, $userId, $type) {
+        $messageBag = new MessageBag(JsonBuilder::CODE_ERROR);
+        $map = ['conference_id'=>$id, 'user_id'=>$userId];
+        $info = ConferencesUser::where($map)->first();
+        if(is_null($info)) {
+            $messageBag->setMessage('该会议不存在');
+            return $messageBag;
+        }
+        if($type == ConferencesUser::SIGN_OUT && $info->status == ConferencesUser::UN_SIGN_IN) {
+            $messageBag->setMessage('您还未签到,请先签到');
+            return $messageBag;
+        }
+        $data = ['status'=>$type];
+        if($type == ConferencesUser::SIGN_IN) {
+            $data['begin'] = Carbon::now()->toDateTimeString();
+        } elseif($type == ConferencesUser::SIGN_OUT) {
+            $data['end'] = Carbon::now()->toDateTimeString();
+        }
+
+        $re = ConferencesUser::where($map)->update($data);
+        if($re) {
+            $messageBag->setCode(JsonBuilder::CODE_SUCCESS);
+            $messageBag->setMessage('签到成功');
+        } else {
+            $messageBag->setMessage('签到失败');
+        }
+        return $messageBag;
+    }
+
+
+
+    /**
      * 待完成会议
      * @param User $user
      * @return mixed
@@ -208,7 +246,6 @@ class ConferenceDao
             }
 
             $conference = $val->conference;
-//            dd($conference);
             $parse = Carbon::parse($conference->from);
             $val['date'] = $parse->format('Y-m-d');
             $conference['from'] = $parse->format('H:i');

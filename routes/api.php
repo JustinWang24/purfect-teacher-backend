@@ -529,6 +529,9 @@ Route::prefix('location')->middleware('auth:api')->group(function () {
 
 // 会议管理
 Route::prefix('conferences')->middleware('auth:api')->group(function () {
+    // 签到
+    Route::get('/sign-in','Api\Conferences\ConferenceController@signIn')
+        ->name('api.conferences.sign-in');
     // 待完成
     Route::get('/unfinished','Api\Conferences\ConferenceController@unfinished')
         ->name('api.conferences.unfinished');
