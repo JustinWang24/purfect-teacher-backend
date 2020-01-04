@@ -77,6 +77,12 @@ return [
             'url' => env('APP_URL').'/storage/app/community',
             'visibility' => 'public',
         ],
+        'import' => [
+            'driver' => 'local',
+            'root' => storage_path('app/import'),
+            'url' => env('APP_URL').'/storage/app/import',
+            'visibility' => 'public',
+        ],
 
     ],
 

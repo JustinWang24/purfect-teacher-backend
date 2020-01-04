@@ -505,5 +505,15 @@ Route::prefix('school_manager')->group(function () {
         Route::post('evaluate-teacher/create','Evaluate\EvaluateTeacherController@create')
             ->name('school_manager.evaluate.evaluate-teacher.create');
     });
+    Route::prefix('importer')->group(function(){
+        Route::any('manager', 'ImporterController@manager')->name('school_manager.importer.manager');
+        Route::any('update', 'ImporterController@update')->name('school_manager.importer.update');
+        Route::any('add', 'ImporterController@add')->name('school_manager.importer.add');
+        Route::any('edit', 'ImporterController@edit')->name('school_manager.importer.edit');
+        Route::any('handle/{id}', 'ImporterController@handle')->name('school_manager.importer.handle');
+        Route::any('result/{id}', 'ImporterController@result')->name('school_manager.importer.result');
+    });
+
+
 });
 
