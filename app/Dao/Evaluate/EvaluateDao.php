@@ -54,12 +54,27 @@ class EvaluateDao
      * @param $type
      * @return mixed
      */
-    public function pageList($schoolId, $type = Evaluate::TYPE_TEACHER) {
-        $map = ['school_id' => $schoolId, 'type' => $type];
+    public function pageList($schoolId, $type = null) {
+        $map = ['school_id' => $schoolId];
+        if (!is_null($type)) {
+            $map['type'] = $type;
+        }
         $list = Evaluate::where($map)
-            ->orderBy('created_at','desc')
+//            ->orderBy('created_at','desc')
             ->paginate(ConfigurationTool::DEFAULT_PAGE_SIZE);
         return $list;
+    }
+
+    /**
+     * 获取全部评价模板
+     * @param $schoolId
+     * @param $type
+     * @return mixed
+     */
+    public function getEvaluate($schoolId, $type)
+    {
+        $map = ['school_id' => $schoolId, 'type' => $type];
+        return Evaluate::where($map)->orderBy('created_at', 'desc')->get();
     }
 
 

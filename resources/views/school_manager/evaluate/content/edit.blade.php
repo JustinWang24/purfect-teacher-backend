@@ -12,7 +12,7 @@ use App\Utils\UI\Button;
                     <header>修改</header>
                 </div>
                 <div class="card-body">
-                    <form action="{{ route('school_manager.content.edit') }}" method="post"  id="edit-evaluate-form">
+                    <form action="{{ route('school_manager.evaluate.content-edit') }}" method="post"  id="edit-evaluate-form">
                         @csrf
                         <input type="hidden" id="evaluate-id" name="evaluate[id]" value="{{$evaluate['id']}}">
 
