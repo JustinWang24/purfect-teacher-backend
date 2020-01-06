@@ -442,6 +442,19 @@ Route::prefix('school_manager')->group(function () {
             ->name('school_manager.teachers.manage-performance-save');
         Route::any('export','Teachers\ProfilesController@export')
             ->name('school_manager.teachers.export');
+
+        // 评聘列表
+        Route::any('list-qualification','Teachers\ProfilesController@listQualification')
+            ->name('school_manager.teachers.list.qualification');
+        // 评聘添加页面
+        Route::any('add-qualification','Teachers\ProfilesController@addQualification')
+            ->name('school_manager.teachers.add.qualification');
+        // 评聘保存
+        Route::any('save-qualification','Teachers\ProfilesController@saveQualification')
+            ->name('school_manager.teachers.save.qualification');
+        // 评聘删除
+        Route::any('del-qualification','Teachers\ProfilesController@delQualification')
+            ->name('school_manager.teachers.del.qualification');
     });
 
     // 工作流程管理

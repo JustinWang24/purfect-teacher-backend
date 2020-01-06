@@ -68,4 +68,13 @@ class TeacherProfileDao
     {
         return TeacherProfile::where('user_id',$userId)->update($profile);
     }
+
+    /**
+     * @param $idNumber
+     * @return mixed
+     */
+    public function getTeacherProfileByIdNumber($idNumber)
+    {
+        return TeacherProfile::where('id_number', $idNumber)->first();
+    }
 }
