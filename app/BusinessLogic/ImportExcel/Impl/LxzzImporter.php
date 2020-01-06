@@ -4,7 +4,6 @@
 namespace App\BusinessLogic\ImportExcel\Impl;
 
 
-use App\BusinessLogic\ImportExcel\Contracts\IImportExcel;
 use App\Dao\Importer\ImporterDao;
 use App\Dao\Students\StudentProfileDao;
 use App\Dao\Users\GradeUserDao;
@@ -15,24 +14,10 @@ use App\Models\Students\StudentProfile;
 use App\User;
 use App\Utils\ReturnData\MessageBag;
 use Exception;
-use Illuminate\Support\Facades\Hash;
-use PhpOffice\PhpSpreadsheet\IOFactory;
 use Ramsey\Uuid\Uuid;
 
 class LxzzImporter extends AbstractImporter
 {
-    public function loadExcelFile()
-    {
-        set_time_limit(0);
-        ini_set('memory_limit', -1);
-        $filePath = config('filesystems.disks.import')['root'].DIRECTORY_SEPARATOR .$this->config['file_path'];
-
-        $objReader = IOFactory::createReader('Xlsx');
-        $objPHPExcel = $objReader->load($filePath);  //$filename可以是上传的表格，或者是指定的表格
-        $worksheet = $objPHPExcel->getAllSheets();
-        $this->data = $worksheet;
-    }
-
     public function handle()
     {
         $this->loadExcelFile();
@@ -42,6 +27,7 @@ class LxzzImporter extends AbstractImporter
         $taskObj = $dao->getTaskById($config['task_id'], $field="*");
         $schoolId = $taskObj->school_id;
         echo '学校《'.$taskObj->school->name.'》资料获取成功\n';
+        $this->info('学校《'.$taskObj->school->name.'》资料获取成功\n');
         $data = $this->getData();
         $sheetIndexArray = $this->getSheetIndexArray();
 
@@ -51,28 +37,33 @@ class LxzzImporter extends AbstractImporter
             $sheetConfig = $config['school']['sheet'][$sheetIndex];
             if (empty($sheetConfig)) {
                 echo "\033[38;33;1;101m配置为空，跳过第".$sheetIndex."个sheet\033[0m\n";
+                $this->info("\033[38;33;1;101m配置为空，跳过第".$sheetIndex."个sheet\033[0m\n");
                 continue;
             }
 
             $sheetData = $this->getSheetData($sheetIndex);
             echo '获取到第'.$sheetIndex.'个sheet数据开始循环<br>';
+            $this->info('获取到第'.$sheetIndex.'个sheet数据开始循环');
             foreach ($sheetData as $key => $row)
             {
                 if ($key<$sheetConfig['dataRow'])
                     continue;
 
                 $rowData = $this->getRowData($sheetIndex, $row);
-                echo '获取到一行资料'.json_encode($rowData,JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT|JSON_UNESCAPED_SLASHES).'\n';
+                //echo '获取到一行资料'.json_encode($rowData,JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT|JSON_UNESCAPED_SLASHES).'\n';
+                $this->info('获取到一行资料'.json_encode($rowData,JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT|JSON_UNESCAPED_SLASHES));
                 //echo '获取到一行资料'.json_encode($this->getHeader($sheetIndex),JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT|JSON_UNESCAPED_SLASHES).'\n';
                 //手机号不能为空
                 if (empty($rowData['mobile']) || strlen($rowData['mobile'])!=11) {
                     $this->log($schoolId, $row,'手机号格式错误','', '', 1, ImoprtLog::FAIL_STATUS);
                     echo "\033[38;39;1;101m".$rowData['mobile']."手机号为空或者位数不对跳过\033[0m\n";
+                    $this->info($rowData['mobile']."手机号为空或者位数不对跳过");
                     continue;
                 }
                 if (empty($rowData['idNumber']) || strlen($rowData['idNumber'])!=18) {
                     $this->log($schoolId, $row,'身份证号格式错误','', '', 1, ImoprtLog::FAIL_STATUS);
                     echo "\033[38;39;1;101m".$rowData['idNumber']."||".$sheetIndex."身份证号为空或者位数不对跳过\033[0m\n";
+                    $this->info($rowData['idNumber']."||".$sheetIndex."身份证号为空或者位数不对跳过");
                     continue;
                 }
                 $rowData['year'] = substr($rowData['year'],0,4);
@@ -84,6 +75,7 @@ class LxzzImporter extends AbstractImporter
                     $this->saveStudentProfile($schoolId, $importUser, $rowData,$row);
                 }else{
                     echo "\033[102m班级用户《".$rowData['userName']."》创建失败跳过\033[0m\n";
+                    $this->info("班级用户《".$rowData['userName']."》创建失败跳过");
                 }
 
             }

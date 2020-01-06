@@ -183,6 +183,7 @@ class ForumController extends Controller
             $commentArr['ispraise'] =  $formCommentDao->getCommentLike($comment->id,$user->id);
             $commentArr['comment_praise'] =  $formCommentDao->getCountLikeForForum($commentArr['forum_id']);
             $result['comments'][$key]['comment'] = $commentArr;
+            $replyArr = [];
             foreach ($replys as $k => $reply) {
                 $replyArr[$k]['commentid'] = $reply->id;
                 $replyArr[$k]['comment_pid'] = $commentArr['id'];

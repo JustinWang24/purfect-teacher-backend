@@ -44,7 +44,7 @@ abstract class AbstractImporter implements IImportExcel
     {
         set_time_limit(0);
         ini_set('memory_limit', -1);
-        $filePath = config('filesystems.disks.apk')['root'].DIRECTORY_SEPARATOR .$this->config['file_path'];
+        $filePath = config('filesystems.disks.import')['root'].DIRECTORY_SEPARATOR .$this->config['file_path'];
 
         $objReader = IOFactory::createReader('Xlsx');
         $objPHPExcel = $objReader->load($filePath);  //$filename可以是上传的表格，或者是指定的表格
