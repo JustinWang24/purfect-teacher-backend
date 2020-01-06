@@ -16,6 +16,7 @@ class CreateOaMeetingsTable extends Migration
     {
         Schema::create('oa_meetings', function (Blueprint $table) {
             $table->increments('id');
+            $table->integer('user_id')->comment('会议创建人');
             $table->integer('school_id')->comment('学校ID');
             $table->string('meet_title',50)->comment('标题');
             $table->text('meet_content')->comment('内容');

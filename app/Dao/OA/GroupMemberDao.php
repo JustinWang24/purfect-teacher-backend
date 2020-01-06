@@ -6,8 +6,8 @@ namespace App\Dao\OA;
 
 use App\Utils\JsonBuilder;
 use App\Models\OA\GroupMember;
-use App\Utils\ReturnData\MessageBag;
 use Illuminate\Support\Facades\DB;
+use App\Utils\ReturnData\MessageBag;
 
 class GroupMemberDao
 {

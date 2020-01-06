@@ -5,10 +5,10 @@ namespace App\Dao\OA;
 
 
 use App\Models\OA\Meeting;
-use App\Models\OA\MeetingUser;
 use App\Utils\JsonBuilder;
-use App\Utils\ReturnData\MessageBag;
+use App\Models\OA\MeetingUser;
 use Illuminate\Support\Facades\DB;
+use App\Utils\ReturnData\MessageBag;
 
 class MeetingDao
 {
@@ -62,6 +62,6 @@ class MeetingDao
      */
     public function getMeetingByTitle($title, $schoolId) {
         $map = ['school_id'=>$schoolId, 'meet_title'=>$title];
-        return Meeting::where($map)->get();
+        return Meeting::where($map)->first();
     }
 }

@@ -4,12 +4,11 @@
 namespace App\Http\Controllers\Api\OA;
 
 
-use App\Dao\OA\GroupMemberDao;
 use App\Dao\OA\MeetingDao;
+use App\Utils\JsonBuilder;
+use App\Dao\OA\GroupMemberDao;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\OA\MeetingRequest;
-use App\Models\OA\GroupMember;
-use App\Utils\JsonBuilder;
 
 class MeetIngController extends Controller
 {
@@ -20,8 +19,8 @@ class MeetIngController extends Controller
      */
     public function addMeeting(MeetingRequest $request) {
         $data = $request->all();
-        $schoolId = $request->user()->getSchoolId();
-        $data['school_id'] = $schoolId;
+        $data['user_id'] = $request->user()->id;
+        $data['school_id'] = $request->user()->getSchoolId();
 
         $userId = [];
         if(!empty($data['useridstr'])) {
