@@ -10,6 +10,7 @@ use App\Models\Importer\ImoprtTask;
 use App\Utils\JsonBuilder;
 use App\Utils\ReturnData\MessageBag;
 use Illuminate\Support\Facades\DB;
+use function Complex\asec;
 
 class ImporterDao
 {
@@ -131,10 +132,20 @@ class ImporterDao
     public function result($id, $schoolId=null)
     {
         if (empty($schoolId)) {
-            return ImoprtLog::where('task_id', $id)->where('task_status',2)->get();
+            return ImoprtLog::where('task_id', $id)->where('task_status',ImoprtLog::ADMIN_FAIL_STATUS)->get();
         } else {
-            return ImoprtLog::where('task_id', $id)->where('school_id', $schoolId)->where('task_status',2)->get();
+            return ImoprtLog::where('task_id', $id)->where('school_id', $schoolId)->where('task_status',ImoprtLog::FAIL_STATUS)->get();
         }
+    }
+
+    /**
+     * 按顺序取出未处理的导入需求，每次只取一条处理，定时任务每小时执行一次，每天导入最多24条任务
+     * @return mixed
+     */
+    public function getTasksForNewPlan()
+    {
+        return ImoprtTask::where('status', 1)->where('school_id', '>', 0)->orderBy('id', 'asc')->first();
+
     }
 
 }

@@ -131,7 +131,7 @@ return [
 
     'attendances-group'=> '考勤组编辑',
     'attendances-members'=> '考勤组成员编辑',
-    'attendances-total'=>'课时考勤统计'
+    'attendances-total'=>'课时考勤统计',
 
     'set-year-manager'=> '设置年级组长',
     'years'=> '年级管理',
@@ -156,6 +156,8 @@ return [
     'evaluate-teacher'=>'班级列表',
     'student-list'=>'学生列表',
     'conference'=>'会议管理',
+    'importer' => '导入管理',
+    'result' => '结果',
 
 ];
 

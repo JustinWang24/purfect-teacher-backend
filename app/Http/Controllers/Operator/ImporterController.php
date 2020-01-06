@@ -104,19 +104,11 @@ class ImporterController extends Controller
     }
 
 
-    public function handle(Request $request, $id)
-    {
-        $user = $request->user();
-        Artisan::call('importer', [
-            'configId' => $id,
-            'userId' => $user->id,
-        ]);
-    }
-
     public function result(Request $request,$id)
     {
+        $schoolId= $request->session()->get('school.id');
         $dao = new ImporterDao();
-        $messages = $dao->result($id);
+        $messages = $dao->result($id,$schoolId);
         $this->dataForView['messages'] = $messages;
         return view('school_manager.importer.result', $this->dataForView);
 
