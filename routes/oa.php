@@ -58,3 +58,15 @@ Route::prefix('attendance')->middleware('auth:api')->group(function () {
         ->name('oa.attendance.apply_list');
 
 });
+
+
+// 会议
+Route::prefix('meeting')->middleware('auth:api')->group(function () {
+    // 创建分组
+    Route::post('/addGroup','Api\OA\GroupController@addGroup')
+        ->name('Oa.meeting.addGroup');
+    // 分组列表
+    Route::post('/groupList','Api\OA\GroupController@groupList')
+        ->name('Oa.meeting.groupList');
+
+});
