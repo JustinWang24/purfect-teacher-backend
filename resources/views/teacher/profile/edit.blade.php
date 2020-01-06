@@ -49,10 +49,18 @@ use App\Utils\UI\Button;
                 <div class="card-head">
                     <header class="full-width">
                         <span class="pull-left pt-2">{{ $teacher->name }} 评聘佐证材料</span>
-                        <a class="btn btn-primary btn-sm pull-right" href="{{ route('school_manager.teachers.add.qualification',['uuid'=>$teacher->uuid]) }}">
-                            添加
+                        <a class="btn btn-primary btn-sm pull-right" href="{{ route('school_manager.teachers.list.qualification',['uuid'=>$teacher->uuid]) }}">
+                            编辑
                         </a>
                     </header>
+                </div>
+                <div class="card-body">
+                    @foreach($qualification as $val)
+                        <p>{{$val->title}}</p>
+                    <div class="performance-block">
+                        <img src="{{$val->path}}">
+                    </div>
+                    @endforeach
                 </div>
             </div>
         </div>

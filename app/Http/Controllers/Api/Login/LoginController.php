@@ -4,10 +4,12 @@ namespace App\Http\Controllers\Api\Login;
 
 use App\BusinessLogic\forgetPasswordAndUpdateMoile\Factory;
 use App\Dao\Students\StudentProfileDao;
+use App\Dao\Teachers\TeacherProfileDao;
 use App\Dao\Users\UserDao;
 use App\Dao\Users\UserDeviceDao;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Login\LoginRequest;
+use App\Models\Acl\Role;
 use App\User;
 use Illuminate\Support\Facades\Auth;
 use App\Utils\JsonBuilder;
@@ -43,14 +45,19 @@ class LoginController extends Controller
             if (!$idNumber) {
                 return JsonBuilder::Error('身份证号输入错误');
             }
-            $studentProfile = new StudentProfileDao;
-            $profile = $studentProfile->getStudentInfoByIdNumber($idNumber);
+
+            if ($request->getAppType() == Role::VERIFIED_USER_STUDENT) { // 学生登录
+                 $studentProfile = new StudentProfileDao;
+                 $profile = $studentProfile->getStudentInfoByIdNumber($idNumber);
+            } else {
+                 $teacherProfile = new TeacherProfileDao;
+                 $profile = $teacherProfile->getTeacherProfileByIdNumber($idNumber);
+            }
             if (!$profile) {
                 return JsonBuilder::Error('身份证号输入错误,请重新登录');
             }
             $user = $profile->user;
         }
-
         $userDeviceDao = new UserDeviceDao;
         if ($user->getType() != $request->getAppType()) {
             return JsonBuilder::Error('登录APP版本与您的账号不符,请登录对应的APP');
