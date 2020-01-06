@@ -40,4 +40,12 @@ class GroupMemberDao
         }
         return $messageBag;
     }
+
+    /**
+     * @param $groupIds
+     * @return mixed
+     */
+    public function getGroupMemberByGroupIds($groupIds) {
+        return GroupMember::whereIn('group_id',$groupIds)->get();
+    }
 }

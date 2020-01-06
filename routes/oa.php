@@ -77,4 +77,7 @@ Route::prefix('meeting')->middleware('auth:api')->group(function () {
     // 删除分组
     Route::post('/delGroup','Api\OA\GroupController@delGroup')
         ->name('Oa.meeting.delGroup');
+    // 创建会议
+    Route::post('/addMeeting','Api\OA\MeetIngController@addMeeting')
+        ->name('Oa.meeting.addMeeting');
 });
