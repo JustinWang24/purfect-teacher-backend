@@ -14,13 +14,30 @@ class ConferenceController extends Controller
 {
 
     /**
+     * 签到
+     * @param ConferenceRequest $request
+     * @return string
+     */
+    public function signIn(ConferenceRequest $request) {
+        $userId = $request->user()->id;
+        $id = $request->get('id');
+        $type = $request->getType();
+        $dao = new ConferenceDao();
+        $result = $dao->signIn($id, $userId, $type);
+        $msg = $result->getMessage();
+        if($result->isSuccess()) {
+            return JsonBuilder::Success($msg);
+        } else {
+            return JsonBuilder::Error($msg);
+        }
+    }
+
+    /**
      * 未完成的会议
      * @param ConferenceRequest $request
      * @return string
      */
     public function unfinished(ConferenceRequest $request) {
-        // todo 判断是否为教师或更高权限
-
         $user = $request->user();
         // 查询当前用户受邀未结束的会议
         $dao = new ConferenceDao();
@@ -37,7 +54,6 @@ class ConferenceController extends Controller
      */
     public function accomplish(ConferenceRequest $request) {
 
-        // todo 判断是否为教师或更高权限
         $user = $request->user();
         // 查询当前用户受邀结束会议
         $dao = new ConferenceDao();

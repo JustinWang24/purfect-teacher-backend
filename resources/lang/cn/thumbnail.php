@@ -155,6 +155,7 @@ return [
     'record-list'=>'学生评教列表',
     'evaluate-teacher'=>'班级列表',
     'student-list'=>'学生列表',
+    'conference'=>'会议管理',
 
 ];
 
