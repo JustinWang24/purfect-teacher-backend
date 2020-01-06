@@ -126,4 +126,17 @@ class OrganizationDao
             $this->output($branch);
         }
     }
+
+    public function getByName($schoolId, $name) {
+        return Organization::where('school_id', $schoolId)
+            ->where('name','like', '%'.$name.'%')
+            ->first();
+    }
+
+    public function getMembers($schoolId, $id) {
+        return UserOrganization::where('school_id', $schoolId)
+            ->where('organization_id', $id)
+            ->with('user')
+            ->get();
+    }
 }

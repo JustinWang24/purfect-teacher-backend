@@ -72,9 +72,13 @@ class ImporterDao
     {
         return ImoprtTask::where('id', $id)->select($field)->first();
     }
-    public function getTasks()
+    public function getTasks($schoolId=null)
     {
-        return ImoprtTask::all();
+        if(empty($schoolId)) {
+            return ImoprtTask::all();
+        } else {
+            return ImoprtTask::where('school_id', $schoolId)->get();
+        }
     }
 
     public function writeLog($data)
@@ -99,8 +103,38 @@ class ImporterDao
         return $messageBag;
     }
 
-    public function result($id)
+    public function updateLog($data)
     {
-        return ImoprtLog::where('task_id', $id)->where('task_status',2)->get();
+        $messageBag = new MessageBag(JsonBuilder::CODE_ERROR);
+        DB::beginTransaction();
+        try {
+            $fillableData = $this->getFillableData(new ImoprtLog(), $data);
+            $importLog = ImoprtLog::where('only_flag',md5($data['only_flag']))->update($fillableData);
+            if ($importLog) {
+                DB::commit();
+                $messageBag->setCode(JsonBuilder::CODE_SUCCESS);
+            } else {
+                DB::rollBack();
+                $messageBag->setMessage('日志更新失败');
+            }
+        } catch (\Exception $exception) {
+            DB::rollBack();
+            $messageBag->setMessage($exception->getMessage());
+        }
+        return $messageBag;
     }
+
+    public function getLog($onlyFlag) {
+        return ImoprtLog::where('only_flag',$onlyFlag)->first();
+    }
+
+    public function result($id, $schoolId=null)
+    {
+        if (empty($schoolId)) {
+            return ImoprtLog::where('task_id', $id)->where('task_status',2)->get();
+        } else {
+            return ImoprtLog::where('task_id', $id)->where('school_id', $schoolId)->where('task_status',2)->get();
+        }
+    }
+
 }

@@ -259,6 +259,10 @@ Route::prefix('school_manager')->group(function () {
             ->name('school_manager.oa.attendances-accept-messages');
         Route::any('attendances-reject-messages','OA\AttendanceTeacherController@messagereject')
             ->name('school_manager.oa.attendances-reject-messages');
+        Route::any('attendances-total-list','OA\AttendanceTeacherController@attendanceCourseList')
+            ->name('school_manager.oa.attendances-total');
+        Route::any('attendances-total-export','OA\AttendanceTeacherController@export')
+            ->name('school_manager.oa.attendances-export');
         // 审批管理
         Route::get('approval-manager','ElectiveCoursesController@management')
             ->name('school_manager.oa.approval-manager');
@@ -517,5 +521,15 @@ Route::prefix('school_manager')->group(function () {
         Route::get('evaluate-student-delete','Evaluate\EvaluateController@evaluateStudentDelete')
             ->name('school_manager.evaluate.student.delete');
     });
+    Route::prefix('importer')->group(function(){
+        Route::any('manager', 'ImporterController@manager')->name('school_manager.importer.manager');
+        Route::any('update', 'ImporterController@update')->name('school_manager.importer.update');
+        Route::any('add', 'ImporterController@add')->name('school_manager.importer.add');
+        Route::any('edit', 'ImporterController@edit')->name('school_manager.importer.edit');
+        Route::any('handle/{id}', 'ImporterController@handle')->name('school_manager.importer.handle');
+        Route::any('result/{id}', 'ImporterController@result')->name('school_manager.importer.result');
+    });
+
+
 });
 

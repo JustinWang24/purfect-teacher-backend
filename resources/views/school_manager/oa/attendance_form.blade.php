@@ -20,20 +20,28 @@ use App\Utils\UI\Button;
                             <input required type="text" class="form-control" id="building-name-input" value="{{ $group->name }}" placeholder="组名称" name="group[name]">
                         </div>
                         <div class="form-group">
-                            <label for="building-desc-input">上班时间</label>
-                            <input required type="text" class="form-control" id="building-name-input" value="{{ $group->online_time }}" placeholder="上班时间" name="group[online_time]">
+                            <label for="building-desc-input">上午上班时间</label>
+                            <input required type="text" class="form-control" id="building-name-input" value="{{ $group->morning_online_time }}" placeholder="上班时间" name="group[morning_online_time]">
                         </div>
                         <div class="form-group">
-                            <label for="building-desc-input">下班时间</label>
-                            <input required type="text" class="form-control" id="building-name-input" value="{{ $group->offline_time }}" placeholder="下班时间" name="group[offline_time]">
+                            <label for="building-desc-input">上午下班时间</label>
+                            <input required type="text" class="form-control" id="building-name-input" value="{{ $group->morning_offline_time }}" placeholder="下班时间" name="group[morning_offline_time]">
                         </div>
                         <div class="form-group">
-                            <label for="building-desc-input">迟到计算时间</label>
-                            <input required type="text" class="form-control" id="building-name-input" value="{{ $group->late_duration }}" placeholder="迟到计算时间" name="group[late_duration]">
+                            <label for="building-desc-input">下午上班时间</label>
+                            <input required type="text" class="form-control" id="building-name-input" value="{{ $group->afternoon_online_time }}" placeholder="上班时间" name="group[afternoon_online_time]">
                         </div>
                         <div class="form-group">
-                            <label for="building-desc-input">严重迟到计算时间</label>
-                            <input required type="text" class="form-control" id="building-name-input" value="{{ $group->serious_late_duration }}" placeholder="严重迟到计算时间" name="group[serious_late_duration]">
+                            <label for="building-desc-input">下午下班时间</label>
+                            <input required type="text" class="form-control" id="building-name-input" value="{{ $group->afternoon_offline_time }}" placeholder="下班时间" name="group[afternoon_offline_time]">
+                        </div>
+                        <div class="form-group">
+                            <label for="building-desc-input">晚上上班时间</label>
+                            <input required type="text" class="form-control" id="building-name-input" value="{{ $group->night_online_time }}" placeholder="上班时间" name="group[night_online_time]">
+                        </div>
+                        <div class="form-group">
+                            <label for="building-desc-input">晚上下班时间</label>
+                            <input required type="text" class="form-control" id="building-name-input" value="{{ $group->night_offline_time }}" placeholder="下班时间" name="group[night_offline_time]">
                         </div>
                         <div class="form-group">
                             <label for="building-desc-input">WIFI名称</label>

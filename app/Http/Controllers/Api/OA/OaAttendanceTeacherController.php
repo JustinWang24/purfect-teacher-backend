@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\OA;
 
 use App\Dao\AttendanceSchedules\AttendanceSchedulesDao;
 use App\Dao\OA\OaAttendanceTeacherDao;
+use App\Dao\Timetable\TimetableItemDao;
 use App\Models\OA\OaAttendanceTeacher;
 use App\Models\OA\OaAttendanceTeacherGroup;
 use App\Utils\JsonBuilder;
@@ -155,6 +156,76 @@ class OaAttendanceTeacherController extends Controller
 
     }
 
+    /**
+     * 上课打卡
+     * @param Request $request
+     * @return string
+     */
+    public function postTodayCourseInfo(Request $request)
+    {
+        $user = $request->user();
+        $schoolId = $user->getSchoolId();
+        $wifi = strip_tags($request->get('wifi'));
+        $mac_address = strip_tags($request->get('mac_address'));
+        $qrData = strip_tags($request->get('qr_data'));
+        $qrStrArr = explode(',',base64_decode($qrData));
+        $grade_id = $qrStrArr[2];
+        $timeTableId = $qrStrArr[3];
 
+        $dao = new OaAttendanceTeacherDao();
+        $timeTableDao = new TimetableItemDao();
+        $timeTableObj = $timeTableDao->getItemById($timeTableId, true);
+        $row = $dao->getTodayCourseRecord($user->id,$schoolId,$timeTableId);
+        $time = time();
+        $sqlTime = date('Y-m-d H:i:s',$time);
+        $data = [];
+        if ($row) {
+            if (empty($row->online_time)) {
+                $data['online_mine'] = $sqlTime;
+            } else {
+                $data['offline_mine'] = $sqlTime;
+            }
+            $data['wifi']           = $wifi;
+            $data['mac_address']    = $mac_address;
+            $data['timetable_items_id']= $timeTableId;
+            $result = $dao->updateAttendanceTeacherCourse($user->id,$schoolId,$data);
+        } else {
+            $data = [
+                'user_id'   => $user->id,
+                'wifi'      => $wifi,
+                'mac_address'=> $mac_address,
+                'check_in_date'=>date('Y-m-d'),
+                'school_id' => $schoolId,
+                'grade_id' => $grade_id,
+                'plan_user_id' => $timeTableObj->teacher_id,
+                'timetable_items_id' => $timeTableId,
+                'course_id' => $timeTableObj->course_id,
+            ];
+            $data['online_mine'] = $sqlTime;
+            $result = $dao->createAttendanceTeacherCourse($data);
+        }
+        if ($result) {
+            return JsonBuilder::Success('操作成功');
+        } else {
+            return JsonBuilder::Error('操作失败');
+        }
+    }
+
+    /**
+     * 根据云班牌信息返回当前时间当前教室的课程情况，教室看到此情况后判断自己是否打卡
+     * @param Request $request
+     * @return string
+     */
+    public function getCoursesIndoByCloudGradeId(Request $request)
+    {
+        $user = $request->user();
+        $schoolId = $user->getSchoolId();
+        $qrData = strip_tags($request->get('qr_data'));
+        $qrStrArr = explode(',',base64_decode($qrData));
+        $timeTableId = $qrStrArr[3];
+        $timeTableDao = new TimetableItemDao();
+        $timeTableObj = $timeTableDao->getItemById($timeTableId, true);
+        return JsonBuilder::Success($timeTableObj);
+    }
 
 }

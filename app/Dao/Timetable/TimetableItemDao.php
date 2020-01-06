@@ -8,6 +8,7 @@
 
 namespace App\Dao\Timetable;
 use App\Dao\Schools\SchoolDao;
+use App\Models\Timetable\TimeSlot;
 use App\Models\Timetable\TimetableItem;
 use App\User;
 use App\Utils\Time\CalendarWeek;
@@ -700,22 +701,7 @@ class TimetableItemDao
         return $endWeekIndex - $startWeekIndex + 1;
     }
 
-    /**
-     * 教师端上课签到需要获得当前班级当前时间的课程id和原计划的授课教师id
-     * 会提交扫描的二维码对应云班牌id和时间戳，以及扫描二维码的用户id
-     *
-     * @param $schoolId
-     * @param $userId
-     * @param $cloudGradeId
-     * @param $time
-     * @return array
-     */
-    public function getCourseIdByCloudGradeId($schoolId,$userId,$cloudGradeId,$time)
-    {
-        //TODO 返回课程id和授课教师id
-        return [];
-    }
-  
+
     /**
      * 获取教师教的班级
      * @param $teacherId
@@ -746,8 +732,43 @@ class TimetableItemDao
      * 上课3分钟内需要发送没有老师打卡的记录给教务处，需要一个总列表来比对
      * 获取当前时间应该上的所有课程
      */
-    public function getCourseListByCurrentTime()
+    public function getCourseListByCurrentTime($schoolId)
     {
-        //TODO 返回当前时间所有课程的列表
+        $date = Carbon::now();
+        $schoolDao = new SchoolDao();
+        $timeSlotDao = new TimeSlotDao();
+        $school = $schoolDao->getSchoolById($schoolId);
+        $schoolConfiguration = $school->configuration;
+        // 根据当前时间, 获取所在的学期, 年, 单双周, 第几节课
+        $startDate = $schoolConfiguration->getTermStartDate();
+        $year = $startDate->year;
+        $term = $schoolConfiguration->guessTerm($date->month);
+
+        $timeSlots = $timeSlotDao->getAllStudyTimeSlots($schoolId);
+
+
+        $currentTimeSlot = null;
+        foreach ($timeSlots as $timeSlot) {
+
+            /**
+             * @var TimeSlot $timeSlot
+             */
+            if($timeSlot->current){
+                $currentTimeSlot = $timeSlot;
+            }
+        }
+
+        if (empty($currentTimeSlot->id)) {
+            return [];
+        }
+
+        return TimetableItem::where('year', $year)
+            ->where('term', $term)
+            ->where('weekday_index',$date->weekday())
+            ->where('time_slot_id', $currentTimeSlot->id)
+            ->where('published', 1)
+            ->with('timeslot')
+            ->get();
     }
+
 }

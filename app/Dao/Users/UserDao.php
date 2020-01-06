@@ -288,11 +288,12 @@ class UserDao
      * @param $mobile
      * @param $name
      * @param $passwordInPlainText
-     * @param $type
+     * @param int $type
+     * @param int $status
      * @return mixed
      * @throws Exception
      */
-    public function importUser($mobile,$name,$passwordInPlainText, $type = Role::VERIFIED_USER_STUDENT)
+    public function importUser($mobile,$name,$passwordInPlainText, $type = Role::VERIFIED_USER_STUDENT, $status=User::STATUS_VERIFIED)
     {
         $data = [
             'mobile'=>$mobile,
@@ -300,10 +301,10 @@ class UserDao
             'api_token'=>Uuid::uuid4()->toString(),
             'uuid'=>Uuid::uuid4()->toString(),
             'password'=>Hash::make($passwordInPlainText),
-            'status'=>User::STATUS_VERIFIED,
+            'status'=>$status,
             'type'=>$type,
         ];
-        return $user = User::create($data);
+        return User::create($data);
     }
 
     /**

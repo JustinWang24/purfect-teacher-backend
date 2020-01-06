@@ -63,6 +63,11 @@ class EventServiceProvider extends ServiceProvider
         'App\Events\User\ForgetPasswordEvent' => [  // 忘记密码
             'App\Listeners\Send\Sms',  // 发送短信
         ],
+
+        //教师迟到时给教务处领导发短信通知
+        'App\Events\User\TeacherBeLateEvent' =>[
+            'App\Listeners\User\Teacher\NotifyTeacherBeLate'
+        ]
     ];
 
     /**
