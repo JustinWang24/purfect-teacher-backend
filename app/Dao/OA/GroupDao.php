@@ -6,6 +6,8 @@ namespace App\Dao\OA;
 
 use App\Models\OA\Group;
 use App\Utils\JsonBuilder;
+use App\Models\OA\GroupMember;
+use Illuminate\Support\Facades\DB;
 use App\Utils\ReturnData\MessageBag;
 
 class GroupDao
@@ -58,7 +60,30 @@ class GroupDao
         $map = ['school_id'=>$schoolId];
         $field = ['id', 'name'];
         return Group::where($map)
-//            ->select($field)
+            ->select($field)
             ->get();
+    }
+
+
+    /**
+     * 删除分组
+     * @param $groupId
+     * @return MessageBag
+     */
+    public function deleteGroup($groupId) {
+        $messageBag = new MessageBag();
+        try{
+            DB::beginTransaction();
+            Group::where(['id'=>$groupId])->delete();
+            GroupMember::where(['group_id'=>$groupId])->delete();
+            DB::commit();
+            $messageBag->setMessage('删除成功');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            $msg = $e->getMessage();
+            $messageBag->setCode(JsonBuilder::CODE_ERROR);
+            $messageBag->setMessage($msg);
+        }
+        return $messageBag;
     }
 }

@@ -68,5 +68,13 @@ Route::prefix('meeting')->middleware('auth:api')->group(function () {
     // 分组列表
     Route::post('/groupList','Api\OA\GroupController@groupList')
         ->name('Oa.meeting.groupList');
-
+    // 教师列表
+    Route::post('/userList','Api\OA\GroupController@userList')
+        ->name('Oa.meeting.userList');
+    // 添加成员
+    Route::post('/addMember','Api\OA\GroupUserController@addMember')
+        ->name('Oa.meeting.addMember');
+    // 删除分组
+    Route::post('/delGroup','Api\OA\GroupController@delGroup')
+        ->name('Oa.meeting.delGroup');
 });

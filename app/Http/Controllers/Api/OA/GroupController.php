@@ -5,9 +5,10 @@ namespace App\Http\Controllers\Api\OA;
 
 
 use App\Dao\OA\GroupDao;
+use App\Utils\JsonBuilder;
+use App\Dao\Users\UserDao;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\OA\GroupRequest;
-use App\Utils\JsonBuilder;
 
 class GroupController extends Controller
 {
@@ -56,5 +57,44 @@ class GroupController extends Controller
 
         return JsonBuilder::Success($data);
 
+    }
+
+
+    /**
+     * 教师列表
+     * @param GroupRequest $request
+     * @return string
+     */
+    public function userList(GroupRequest $request) {
+        $keyword = $request->getKeyWord();
+        $schoolId = $request->user()->getSchoolId();
+        $userDao = new UserDao();
+        $list = $userDao->getTeachersBySchool($schoolId, false, $keyword);
+        $data = [];
+        foreach ($list as $key => $val) {
+            $data[$key]['userid'] = $val->id;
+            $data[$key]['user_username'] = $val->name;
+            $data[$key]['user_pics'] = $val->user->profile->avatar ?? '';
+            $data[$key]['duties'] = $val->user->profile->category_teach ?? '';
+        }
+        return JsonBuilder::Success($data);
+    }
+
+
+    /**
+     * 删除分组
+     * @param GroupRequest $request
+     * @return string
+     */
+    public function delGroup(GroupRequest $request) {
+        $groupId = $request->getGroupId();
+        $groupDao = new GroupDao();
+        $result = $groupDao->deleteGroup($groupId);
+        $msg = $result->getMessage();
+        if($result->isSuccess()) {
+            return JsonBuilder::Success($msg);
+        } else {
+            return JsonBuilder::Error($msg);
+        }
     }
 }

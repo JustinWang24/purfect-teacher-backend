@@ -181,17 +181,21 @@ class UserDao
      * 获取指定学校的所有的教师的列表
      * @param $schoolId
      * @param bool $simple: 简单的返回值 id=>name 的键值对组合
+     * @param string  $keyword 关键词
      * @return Collection
      */
-    public function getTeachersBySchool($schoolId, $simple = false){
+    public function getTeachersBySchool($schoolId, $simple = false, $keyword = null){
         if($simple){
             return GradeUser::select(DB::raw('user_id as id, name'))
                 ->where('school_id',$schoolId)
                 ->where('user_type',Role::TEACHER)
+                ->where('name', 'like', $keyword.'%')
                 ->get();
         }
         return GradeUser::where('school_id',$schoolId)
-            ->where('user_type',Role::TEACHER)->get();
+            ->where('user_type',Role::TEACHER)
+            ->where('name', 'like', $keyword.'%')
+            ->get();
     }
 
     /**
