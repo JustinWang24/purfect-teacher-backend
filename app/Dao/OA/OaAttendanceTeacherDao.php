@@ -16,6 +16,7 @@ use App\Models\OA\OaAttendanceTeacher;
 use App\Models\OA\OaAttendanceTeacherCourses;
 use App\Models\OA\OaAttendanceTeacherGroup;
 use App\Models\OA\OaAttendanceTeachersGroupMember;
+use App\Models\OA\OaAttendanceTeachersMessage;
 use App\Models\Users\GradeUser;
 use App\Utils\JsonBuilder;
 use App\Utils\Misc\ConfigurationTool;
@@ -616,5 +617,10 @@ class OaAttendanceTeacherDao
             ->where('user_id', $userId)
             ->whereBetween('check_in_date', $time)
             ->count();
+    }
+
+    public function getManagerByMembers($schoolId,$groupId)
+    {
+        return OaAttendanceTeachersGroupMember::where('school_id', $schoolId)->where('status',2)->get();
     }
 }
