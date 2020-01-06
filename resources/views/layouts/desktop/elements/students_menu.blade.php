@@ -6,6 +6,11 @@
     </a>
     <ul class="sub-menu">
         <li class="nav-item">
+            <a href="{{ route('school_manager.importer.manager') }}" class="nav-link ">
+                <span class="title">新生导入</span>
+            </a>
+        </li>
+        <li class="nav-item">
             <a href="{{ route('school_manager.school.students') }}" class="nav-link ">
                 <span class="title">学生档案</span>
             </a>

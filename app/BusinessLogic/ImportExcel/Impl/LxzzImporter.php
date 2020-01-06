@@ -16,9 +16,23 @@ use App\User;
 use App\Utils\ReturnData\MessageBag;
 use Exception;
 use Illuminate\Support\Facades\Hash;
+use PhpOffice\PhpSpreadsheet\IOFactory;
+use Ramsey\Uuid\Uuid;
 
 class LxzzImporter extends AbstractImporter
 {
+    public function loadExcelFile()
+    {
+        set_time_limit(0);
+        ini_set('memory_limit', -1);
+        $filePath = config('filesystems.disks.import')['root'].DIRECTORY_SEPARATOR .$this->config['file_path'];
+
+        $objReader = IOFactory::createReader('Xlsx');
+        $objPHPExcel = $objReader->load($filePath);  //$filename可以是上传的表格，或者是指定的表格
+        $worksheet = $objPHPExcel->getAllSheets();
+        $this->data = $worksheet;
+    }
+
     public function handle()
     {
         $this->loadExcelFile();
@@ -52,21 +66,22 @@ class LxzzImporter extends AbstractImporter
                 //echo '获取到一行资料'.json_encode($this->getHeader($sheetIndex),JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT|JSON_UNESCAPED_SLASHES).'\n';
                 //手机号不能为空
                 if (empty($rowData['mobile']) || strlen($rowData['mobile'])!=11) {
-                    $this->writeLog($row,'手机号格式错误','', '', 1, ImoprtLog::FAIL_STATUS);
+                    $this->log($schoolId, $row,'手机号格式错误','', '', 1, ImoprtLog::FAIL_STATUS);
                     echo "\033[38;39;1;101m".$rowData['mobile']."手机号为空或者位数不对跳过\033[0m\n";
                     continue;
                 }
                 if (empty($rowData['idNumber']) || strlen($rowData['idNumber'])!=18) {
-                    $this->writeLog($row,'身份证号格式错误','', '', 1, ImoprtLog::FAIL_STATUS);
+                    $this->log($schoolId, $row,'身份证号格式错误','', '', 1, ImoprtLog::FAIL_STATUS);
                     echo "\033[38;39;1;101m".$rowData['idNumber']."||".$sheetIndex."身份证号为空或者位数不对跳过\033[0m\n";
                     continue;
                 }
+                $rowData['year'] = substr($rowData['year'],0,4);
 
                 $passwordInPlainText = substr($rowData['idNumber'],-6);
                 $importUser = $this->saveUser($schoolId, $rowData['mobile'], $rowData['userName'], $passwordInPlainText,$row);
                 if ($importUser) {
                     $gradeUser = $this->saveGradeUser($importUser, $rowData,$schoolId, $row);
-                    $this->saveStudent($schoolId, $importUser, $rowData,$row);
+                    $this->saveStudentProfile($schoolId, $importUser, $rowData,$row);
                 }else{
                     echo "\033[102m班级用户《".$rowData['userName']."》创建失败跳过\033[0m\n";
                 }
@@ -84,7 +99,7 @@ class LxzzImporter extends AbstractImporter
      * @param int $status
      * @return MessageBag
      */
-    public function writeLog($schoolId, $row, $result='', $tableName='', $target='', $type=3, $status=ImoprtLog::FAIL_STATUS)
+    public function log($schoolId, $row, $result='', $tableName='', $target='', $type=3, $status=ImoprtLog::FAIL_STATUS)
     {
         if (!$this->importDao->getLog(md5(json_encode($row)))) {
             return $this->importDao->writeLog([
@@ -102,7 +117,7 @@ class LxzzImporter extends AbstractImporter
 
     }
 
-    public function saveStudent($schoolId, $user, $rowData,$row)
+    public function saveStudentProfile($schoolId, $user, $rowData,$row)
     {
         //$student = new StudentProfile();
         $studentDao = new StudentProfileDao();
@@ -137,11 +152,11 @@ class LxzzImporter extends AbstractImporter
         if ($result) {
             $studentDao = new StudentProfileDao();
             $student = $studentDao->getStudentInfoByUserId($user->id);
-            $this->writeLog($row, json_encode($student), 'student_profile', '', 1, ImoprtLog::SUCCESS_STATUS);
+            $this->log($schoolId,$row, json_encode($student), 'student_profile', '', 1, ImoprtLog::SUCCESS_STATUS);
 
             return $student;
         } else {
-            $this->writeLog($row, '', 'student_profile', '', 1, ImoprtLog::FAIL_STATUS);
+            $this->log($schoolId, $row, '', 'student_profile', '', 1, ImoprtLog::FAIL_STATUS);
             return false;
         }
 
@@ -158,7 +173,7 @@ class LxzzImporter extends AbstractImporter
         } else {
             $schoolObj = $this->getSchool($schoolId);
             $campus = $schoolObj->campuses()->first();
-            $gradeUser = $gradeUserDao->addGradUser([
+            $gradeUser = $gradeUserDao->create([
                 'user_id' => $user->id,
                 'user_type' => $user->type,
                 'name' => $rowData['userName'],
@@ -172,11 +187,11 @@ class LxzzImporter extends AbstractImporter
             ]);
             if ($gradeUser) {
                 $gradeUser = $gradeUserDao->getUserInfoByUserId($user->id);
-                $this->writeLog($row, $gradeUser, 'grade_users', '', 1, ImoprtLog::SUCCESS_STATUS);
+                $this->log($schoolId, $row, $gradeUser, 'grade_users', '', 1, ImoprtLog::SUCCESS_STATUS);
 
                 return $gradeUser;
             } else {
-                $this->writeLog($row, '', 'grade_users', '', 1, ImoprtLog::FAIL_STATUS);
+                $this->log($schoolId, $row, '', 'grade_users', '', 1, ImoprtLog::FAIL_STATUS);
                 return false;
             }
         }
@@ -203,7 +218,7 @@ class LxzzImporter extends AbstractImporter
             if ($importUser) {
                 return $importUser;
             } else {
-                $this->writeLog($schoolId, $row, '', 'users', '', 1, ImoprtLog::FAIL_STATUS);
+                $this->log($schoolId, $row, '', 'users', '', 1, ImoprtLog::FAIL_STATUS);
                 return false;
             }
         }
