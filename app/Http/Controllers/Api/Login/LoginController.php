@@ -40,7 +40,9 @@ class LoginController extends Controller
         } elseif ($type == User::ID_NUMBER_LOGIN) {
 
             $idNumber = $request->get('id_number');
-
+            if (!$idNumber) {
+                return JsonBuilder::Error('身份证号输入错误');
+            }
             $studentProfile = new StudentProfileDao;
             $profile = $studentProfile->getStudentInfoByIdNumber($idNumber);
             if (!$profile) {
@@ -48,6 +50,7 @@ class LoginController extends Controller
             }
             $user = $profile->user;
         }
+
         $userDeviceDao = new UserDeviceDao;
         if ($user->getType() != $request->getAppType()) {
             return JsonBuilder::Error('登录APP版本与您的账号不符,请登录对应的APP');
