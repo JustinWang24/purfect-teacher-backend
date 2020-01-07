@@ -7,16 +7,6 @@ use App\Utils\ReturnData\MessageBag;
 
 class EnrolmentStepDao
 {
-
-    /**
-     * 获取所有的基础数据
-     * @return mixed
-     */
-    public function getAll(){
-        return EnrolmentStep::all();
-    }
-
-
     /**
      * 创建
      * @param $data
@@ -34,7 +24,6 @@ class EnrolmentStepDao
             return new MessageBag(JsonBuilder::CODE_ERROR,'创建失败');
         }
     }
-
 
     /**
      * @param $name
