@@ -82,6 +82,21 @@ class MeetIngController extends Controller
 
 
     /**
+     * 创建的列表
+     * @param MeetingRequest $request
+     * @return string
+     */
+    public function myList(MeetingRequest $request) {
+        $user = $request->user();
+        $dao = new MeetingDao();
+        $result = $dao->myList($user);
+        $list = $result->getCollection();
+        $data = $this->dataDispose($list, 'my');
+        return JsonBuilder::Success($data);
+    }
+
+
+    /**
      * 待签和已完成数据处理
      * @param $list
      * @param $type
@@ -103,11 +118,11 @@ class MeetIngController extends Controller
             $data[$key]['signin_transtime'] = $signin;
             $data[$key]['meet_transtime'] = $meet;
 
+            $now = Carbon::now()->toDateTimeString();
             // 待签
             if($type == 'todo') {
                 $data[$key]['button_status'] = 'signin';
                 $data[$key]['button_tip'] = 'normal';
-                $now = Carbon::now()->toDateTimeString();
                 if($item->status == MeetingUser::UN_SIGN_IN) {
                     $data[$key]['button_status'] = 'signin';
                     if($now > $item->meet_start) {
@@ -127,11 +142,24 @@ class MeetIngController extends Controller
                     $data[$key]['button_txt'] = '迟到';
                 }
             }
+            // 我的
+            if($type == 'my') {
+                if($item->meet_start > $now) {
+                    $data[$key]['button_txt'] = '未开始';
+                } elseif ($item->meet_start <= $now && $item->meet_end >= $now) {
+                    $data[$key]['button_txt'] = '进行中';
+                } elseif ($item->meet_end < $now) {
+                    $data[$key]['button_txt'] = '已结束';
+                }
+            }
 
 
         }
         return $data;
     }
+
+
+
 
 
     /**
@@ -151,5 +179,8 @@ class MeetIngController extends Controller
             return JsonBuilder::Error($result->getMessage());
         }
     }
+
+
+
 
 }

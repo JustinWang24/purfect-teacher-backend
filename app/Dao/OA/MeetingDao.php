@@ -107,6 +107,16 @@ class MeetingDao
 
     }
 
+    /**
+     * 创建列表
+     * @param User $user
+     * @return mixed
+     */
+    public function myList(User $user) {
+        $map = ['user_id'=>$user->id];
+        return Meeting::where($map)->paginate(ConfigurationTool::DEFAULT_PAGE_SIZE);
+    }
+
 
     /**
      * 签到或签退

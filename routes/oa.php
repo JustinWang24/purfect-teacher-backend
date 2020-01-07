@@ -89,4 +89,7 @@ Route::prefix('meeting')->middleware('auth:api')->group(function () {
     // 已完成列表
     Route::post('/doneList','Api\OA\MeetIngController@doneList')
         ->name('Oa.meeting.doneList');
+    // 创建的列表
+    Route::post('/myList','Api\OA\MeetIngController@myList')
+        ->name('Oa.meeting.myList');
 });

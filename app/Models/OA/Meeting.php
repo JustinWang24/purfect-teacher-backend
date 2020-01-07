@@ -4,6 +4,7 @@
 namespace App\Models\OA;
 
 
+use App\User;
 use Illuminate\Database\Eloquent\Model;
 
 class Meeting extends Model
@@ -17,5 +18,9 @@ class Meeting extends Model
 
     const NOT_SIGN_OUT = 0; // 不需要签退
     const SIGN_OUT = 1; // 需要签退
+
+    public function user() {
+        return $this->belongsTo(User::class);
+    }
 
 }
