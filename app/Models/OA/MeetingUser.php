@@ -12,7 +12,7 @@ class MeetingUser extends Model
     protected $table = 'oa_meeting_users';
 
     protected $fillable = [
-        'school_id', 'meetid', 'user_id', 'signin_start', 'signin_end'
+        'school_id', 'meetid', 'user_id', 'start', 'end'
     ];
 
     const UN_SIGN_IN = 0;

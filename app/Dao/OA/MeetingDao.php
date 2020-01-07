@@ -5,13 +5,13 @@ namespace App\Dao\OA;
 
 
 use App\User;
+use Carbon\Carbon;
 use App\Models\OA\Meeting;
 use App\Utils\JsonBuilder;
 use App\Models\OA\MeetingUser;
-use App\Utils\Misc\ConfigurationTool;
-use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use App\Utils\ReturnData\MessageBag;
+use App\Utils\Misc\ConfigurationTool;
 
 class MeetingDao
 {
@@ -90,6 +90,25 @@ class MeetingDao
 
 
     /**
+     * 已完成列表
+     * @param User $user
+     * @return mixed
+     */
+    public function doneList(User $user) {
+        $now = Carbon::now()->toDateTimeString();
+        $map = [
+            ['oa_meeting_users.user_id', '=', $user->id],
+            ['oa_meetings.meet_end', '<', $now],
+        ];
+
+        return MeetingUser::join('oa_meetings',function ($join) use ($map) {
+            $join->on('oa_meetings.id', '=', 'oa_meeting_users.meetid')->where($map);
+        })->paginate(ConfigurationTool::DEFAULT_PAGE_SIZE);
+
+    }
+
+
+    /**
      * 签到或签退
      * @param $userId
      * @param $meetId
@@ -109,7 +128,7 @@ class MeetingDao
         $data = [];
         if($type == 'signin') {
             $msg = '签到';
-            $data = ['status'=>MeetingUser::SIGN_IN, 'signin_start'=>$now];
+            $data = ['status'=>MeetingUser::SIGN_IN, 'start'=>$now];
         } elseif($type == 'signout') {
             $msg = '签退';
             if($meet->status == MeetingUser::UN_SIGN_IN) {
@@ -117,7 +136,7 @@ class MeetingDao
                 $messageBag->setMessage('您还未签到,请先签到');
                 return $messageBag;
             }
-            $data = ['status'=>MeetingUser::SIGN_OUT, 'signin_end'=>$now];
+            $data = ['status'=>MeetingUser::SIGN_OUT, 'end'=>$now];
 
         }
         $re = MeetingUser::where($map)->update($data);

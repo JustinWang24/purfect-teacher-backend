@@ -4,14 +4,14 @@
 namespace App\Http\Controllers\Api\OA;
 
 
+use Carbon\Carbon;
 use App\Dao\OA\MeetingDao;
 use App\Models\OA\Meeting;
-use App\Models\OA\MeetingUser;
 use App\Utils\JsonBuilder;
+use App\Models\OA\MeetingUser;
 use App\Dao\OA\GroupMemberDao;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\OA\MeetingRequest;
-use Carbon\Carbon;
 
 class MeetIngController extends Controller
 {
@@ -58,6 +58,36 @@ class MeetIngController extends Controller
         $dao = new MeetingDao();
         $result = $dao->todoList($user);
         $list = $result->getCollection();
+
+        $data = $this->dataDispose($list, 'todo');
+
+        return JsonBuilder::Success($data);
+    }
+
+    /**
+     * 已完成列表
+     * @param MeetingRequest $request
+     * @return string
+     */
+    public function doneList(MeetingRequest $request) {
+        $user = $request->user();
+        $dao = new MeetingDao();
+        $result = $dao->doneList($user);
+        $list = $result->getCollection();
+
+        $data = $this->dataDispose($list, 'done');
+
+        return JsonBuilder::Success($data);
+    }
+
+
+    /**
+     * 待签和已完成数据处理
+     * @param $list
+     * @param $type
+     * @return array
+     */
+    public function dataDispose($list, $type) {
         $data = [];
         foreach ($list as $key => $item) {
             $data[$key]['meetid'] = $item->id;
@@ -72,24 +102,35 @@ class MeetIngController extends Controller
             $meet = $meetStart->format('Y-m-d').' '.$meetStart->format('H:i').'-'.$meetEnd;
             $data[$key]['signin_transtime'] = $signin;
             $data[$key]['meet_transtime'] = $meet;
-            $data[$key]['button_status'] = 'signin';
-            $data[$key]['button_tip'] = 'normal';
-            $now = Carbon::now()->toDateTimeString();
-            if($item->status == MeetingUser::UN_SIGN_IN) {
-                $data[$key]['button_status'] = 'signin';
-                if($now > $item->meet_start) {
-                    $data[$key]['button_tip'] = 'late'; // 迟到
-                }
-            } elseif ($item->status == MeetingUser::SIGN_IN) {
-                $data[$key]['button_status'] = 'signout';
-                if($item->signout_status == Meeting::SIGN_OUT && $now < $item->signout_start ) {
-                    $data[$key]['button_tip'] = 'early'; // 早退
 
+            // 待签
+            if($type == 'todo') {
+                $data[$key]['button_status'] = 'signin';
+                $data[$key]['button_tip'] = 'normal';
+                $now = Carbon::now()->toDateTimeString();
+                if($item->status == MeetingUser::UN_SIGN_IN) {
+                    $data[$key]['button_status'] = 'signin';
+                    if($now > $item->meet_start) {
+                        $data[$key]['button_tip'] = 'late'; // 迟到
+                    }
+                } elseif ($item->status == MeetingUser::SIGN_IN) {
+                    $data[$key]['button_status'] = 'signout';
+                    if($item->signout_status == Meeting::SIGN_OUT && $now < $item->signout_start ) {
+                        $data[$key]['button_tip'] = 'early'; // 早退
+                    }
                 }
             }
-        }
+            // 已完成
+            if($type == 'done') {
+                $data[$key]['button_txt'] = '正常';
+                if($item->start > $item->meet_start) {
+                    $data[$key]['button_txt'] = '迟到';
+                }
+            }
 
-        return JsonBuilder::Success($data);
+
+        }
+        return $data;
     }
 
 
