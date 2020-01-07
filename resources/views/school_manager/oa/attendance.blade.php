@@ -41,7 +41,7 @@ use App\User;
                                         </td>
                                         <td size="">
                                             @foreach($group->members as $member)
-<span class="text-primary m-2"><a href="{{route('school_manager.oa.attendances-del-member',['id'=>$member->user_id,'group'=>$group->id])}}" class="btn-need-confirm">{{ $member->user->name }} </a></span>
+<span class="text-primary m-2"><a href="{{route('school_manager.oa.attendances-del-member',['id'=>$member->user_id,'group'=>$group->id])}}" class="btn-need-confirm">{{ $member->user->name }} @if($member->status ==2) [审批] @endif </a></span>
                                             @endforeach
                                         </td>
                                         <td>
