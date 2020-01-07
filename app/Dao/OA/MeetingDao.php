@@ -70,6 +70,16 @@ class MeetingDao
 
 
     /**
+     * 根据ID查询
+     * @param $meetId
+     * @return mixed
+     */
+    public function getMeetIngByMeetId($meetId) {
+        return Meeting::where('id', $meetId)->first();
+    }
+
+
+    /**
      * 待签列表
      * @param User $user
      * @return mixed
@@ -79,13 +89,13 @@ class MeetingDao
         $map = [
             ['oa_meeting_users.user_id', '=', $user->id],
             ['oa_meetings.signin_end', '>', $now],
-            ['oa_meeting_users.my_signin_status', 'neq', MeetingUser::UN_SIGN_IN]
+            ['oa_meeting_users.my_signin_status', 'eq', MeetingUser::UN_SIGN_IN]
         ];
         $where = [
             ['oa_meeting_users.user_id', '=', $user->id],
             ['oa_meetings.signin_end', '>', $now],
-            ['oa_meeting_users.my_signout_status', 'neq', MeetingUser::UN_SIGN_OUT],
-            ['oa_meetings.signout_status', 'neq', Meeting::SIGN_OUT],
+            ['oa_meeting_users.my_signout_status', 'eq', MeetingUser::UN_SIGN_OUT],
+            ['oa_meetings.signout_status', 'eq', Meeting::SIGN_OUT],
         ];
 
         return MeetingUser::join('oa_meetings',function ($join) use ($map,$where) {

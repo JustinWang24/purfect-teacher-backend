@@ -92,4 +92,7 @@ Route::prefix('meeting')->middleware('auth:api')->group(function () {
     // 创建的列表
     Route::post('/myList','Api\OA\MeetIngController@myList')
         ->name('Oa.meeting.myList');
+    // 会议详情-参与者
+    Route::post('/uinfo','Api\OA\MeetIngController@meetingMember')
+        ->name('Oa.meeting.uinfo');
 });
