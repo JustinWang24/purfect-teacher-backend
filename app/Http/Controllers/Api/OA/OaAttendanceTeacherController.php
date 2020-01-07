@@ -5,11 +5,13 @@ namespace App\Http\Controllers\Api\OA;
 use App\Dao\AttendanceSchedules\AttendanceSchedulesDao;
 use App\Dao\OA\OaAttendanceTeacherDao;
 use App\Dao\Timetable\TimetableItemDao;
+use App\Models\OA\OaAttendanceLeaveAndVisits;
 use App\Models\OA\OaAttendanceTeacher;
 use App\Models\OA\OaAttendanceTeacherGroup;
 use App\Utils\JsonBuilder;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Storage;
 
 class OaAttendanceTeacherController extends Controller
 {
@@ -580,4 +582,216 @@ class OaAttendanceTeacherController extends Controller
         return JsonBuilder::Success($data);
     }
 
+
+    public function getGroupList(Request $request)
+    {
+        $user = $request->user();
+        $memberObj = getMember($user->id);
+        if ($memberObj->status!=2) {
+            return JsonBuilder::Error('无权处理');
+        }
+        //TODO 有权限的用户才能访问
+        $schoolId = $user->getSchoolId();
+        $dao = new OaAttendanceTeacherDao();
+        $groups = $dao->getGroupList($schoolId);
+        $output = [];
+        foreach($groups as $k => $group) {
+            $output[$k]['group_name'] = $group->name;
+            $output[$k]['groupid'] = $group->id;
+        }
+        return JsonBuilder::Success($output);
+    }
+
+    /**
+     * 请假申请
+     * @param Request $request
+     * @return string
+     */
+    public function takeLeave(Request $request)
+    {
+        $user = $request->user();
+        $schoolId = $user->getSchoolId();
+        $dao = new OaAttendanceTeacherDao();
+        $data = [];
+        $data['reason'] = strip_tags($request->get('reason', ''));
+        $data['des']    = strip_tags($request->get('des', ''));
+        $data['categoryid'] = intval($request->get('categoryid', 14));//14表示其他分类
+        $data['start_time'] = date('Y-m-d H:is',intval($request->get('start_time')));
+        $data['end_time']   = date('Y-m-d H:is',intval($request->get('end_time')));
+        //处理基础数据
+        $data['user_id']    = $user->id;
+        $data['school_id']  = $schoolId;
+        $data['type']       = OaAttendanceLeaveAndVisits::LEAVE_TYPE;
+        //处理图片
+        $data['files'] = $this->optPic($request);
+        $result = $dao->createLeaveOrVisit($data);
+        if ($result->getCode()==1000){
+            return JsonBuilder::Success($result->getData());
+        } else {
+            return JsonBuilder::Error('请假申请保存失败请重试');
+        }
+
+    }
+
+    /**
+     * 外出申请
+     * @param Request $request
+     * @return string
+     */
+    public function addVisit(Request $request)
+    {
+        $user = $request->user();
+        $schoolId = $user->getSchoolId();
+        $dao = new OaAttendanceTeacherDao();
+        $data = [];
+        $data['reason']     = strip_tags($request->get('reason', ''));
+        $data['des']        = strip_tags($request->get('des', ''));
+        $data['address']    = strip_tags($request->get('address', ''));
+        $data['categoryid'] = intval($request->get('categoryid', 6));//6表示外出
+        $data['start_time'] = date('Y-m-d H:is',intval($request->get('start_time')));
+        $data['end_time']   = date('Y-m-d H:is',intval($request->get('end_time')));
+        //处理基础数据
+        $data['user_id']    = $user->id;
+        $data['school_id']  = $schoolId;
+        $data['type']       = OaAttendanceLeaveAndVisits::VISIT_TYPE;
+        //处理图片
+        $data['files']      = $this->optPic($request);
+        $result             = $dao->createLeaveOrVisit($data);
+        if ($result->getCode()==1000){
+            return JsonBuilder::Success($result->getData());
+        } else {
+            return JsonBuilder::Error('外出申请保存失败请重试');
+        }
+
+    }
+
+    public function optPic($request)
+    {
+        $data = [];
+        $fileConfig = config('filesystems.disks.public');
+        $files = $request->allFiles();
+        foreach ($files as $name => $file) {
+            $path = 'attendance'.DIRECTORY_SEPARATOR.date('Ym');
+            $realFileName = $file->store($path,'public');
+            $ext = pathinfo($realFileName,PATHINFO_EXTENSION);
+            if (in_array($ext, ['png','jpg','jpeg','bmp'])) {
+                $data[$name] = $realFileName;
+            }else{
+                Storage::delete($fileConfig['root'].DIRECTORY_SEPARATOR.$realFileName);
+            }
+        }
+        return $data;
+    }
+
+    /**
+     * 获取外出申请的分类
+     * @param Request $request
+     * @return string
+     */
+    public function get_visit_category(Request $request)
+    {
+        $data = [];
+        $category = OaAttendanceLeaveAndVisits::VISIT_CATEGORY_MAP;
+        $i = 0;
+        foreach ($category as $id=>$name)
+        {
+            $data[$i]['categoryid'] = $id;
+            $data[$i]['category_name'] = $name;
+            $i++;
+        }
+        return JsonBuilder::Success($data);
+    }
+
+    /**
+     * 获取请假申请的分类
+     * @param Request $request
+     * @return string
+     */
+    public function get_leave_category(Request $request)
+    {
+        $data = [];
+        $category = OaAttendanceLeaveAndVisits::LEAVE_CATEGORY_MAP;
+        $i = 0;
+        foreach ($category as $id=>$name)
+        {
+            $data[$i]['categoryid'] = $id;
+            $data[$i]['category_name'] = $name;
+            $i++;
+        }
+        return JsonBuilder::Success($data);
+    }
+    public function my_list(Request $request)
+    {
+        $user = $request->user();
+        $schoolId = $user->getSchoolId();
+        $dao = new OaAttendanceTeacherDao();
+        $status = intval($request->get('status'));
+
+        $result = $dao->getLeaveOrVisitList($user->id,$schoolId,$status);
+        return JsonBuilder::Success($result);
+    }
+    public function wait_list(Request $request)
+    {
+        $user = $request->user();
+        $dao = new OaAttendanceTeacherDao();
+        $memberObj = $dao->getMember($user->id);
+        if ($memberObj->status!=2) {
+            return JsonBuilder::Error('无权处理');
+        }
+        $schoolId = $user->getSchoolId();
+        $dao = new OaAttendanceTeacherDao();
+        $postStatus = intval($request->get('status'));
+        if ($postStatus==2) {
+            $status = OaAttendanceLeaveAndVisits::STATUS_ACCEPT;
+        } elseif($postStatus ==3) {
+            $status = OaAttendanceLeaveAndVisits::STATUS_REJECT;
+        } else {
+            $status = OaAttendanceLeaveAndVisits::STATUS_DOING;
+        }
+
+        $result = $dao->getLeaveOrVisitListForManager($schoolId,$status);
+        return JsonBuilder::Success($result);
+    }
+    public function approver_action(Request $request)
+    {
+        $id = intval($request->get('id'));
+        $reply = strip_tags($request->get('not_pass_des'));
+        $postStatus = intval($request->get('status'));
+        if ($postStatus==2) {
+            $status = OaAttendanceLeaveAndVisits::STATUS_ACCEPT;
+        } elseif($postStatus ==3) {
+            $status = OaAttendanceLeaveAndVisits::STATUS_REJECT;
+        } else {
+            return JsonBuilder::Error('处理失败');
+        }
+        $user = $request->user();
+        $dao = new OaAttendanceTeacherDao();
+        $memberObj = $dao->getMember($user->id);
+        if ($memberObj->status!=2) {
+            return JsonBuilder::Error('无权处理');
+        }
+        $schoolId = $user->getSchoolId();
+
+        $result = $dao->approverAction($id,$schoolId, $user->id,$reply,$status);
+        if ($result>0){
+            return JsonBuilder::Success('处理成功');
+        } else {
+            return JsonBuilder::Error('处理失败');
+        }
+    }
+    public function info(Request $request)
+    {
+        $user = $request->user();
+        $schoolId = $user->getSchoolId();
+        $dao = new OaAttendanceTeacherDao();
+        $approversid = intval($request->get('approversid'));
+        $obj = $dao->info($approversid,$schoolId);
+        if ($obj->user_id != $user->id) {
+            $memberObj = $dao->getMember($user->id);
+            if ($memberObj->status!=2) {
+                return JsonBuilder::Error('无权处理');
+            }
+        }
+        return JsonBuilder::Success($obj);
+    }
 }

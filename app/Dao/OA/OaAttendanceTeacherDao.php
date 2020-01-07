@@ -12,6 +12,8 @@ use App\Models\OA\AttendanceTeacherGroup;
 use App\Models\OA\AttendanceTeachersGroupMember;
 use App\Models\OA\AttendanceTeachersMacAddress;
 use App\Models\OA\AttendanceTeachersMessage;
+use App\Models\OA\OaAttendanceLeaveAndVisitFiles;
+use App\Models\OA\OaAttendanceLeaveAndVisits;
 use App\Models\OA\OaAttendanceTeacher;
 use App\Models\OA\OaAttendanceTeacherCourses;
 use App\Models\OA\OaAttendanceTeacherGroup;
@@ -23,6 +25,7 @@ use App\Utils\Misc\ConfigurationTool;
 use App\Utils\ReturnData\MessageBag;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
+use PhpParser\Node\Stmt\Return_;
 
 class OaAttendanceTeacherDao
 {
@@ -623,4 +626,84 @@ class OaAttendanceTeacherDao
     {
         return OaAttendanceTeachersGroupMember::where('school_id', $schoolId)->where('status',2)->get();
     }
+    public function getGroupList($schoolId)
+    {
+        return OaAttendanceTeacherGroup::where('school_id',$schoolId)->get();
+    }
+
+    public function createLeaveOrVisit($data)
+    {
+        $messageBag = new MessageBag(JsonBuilder::CODE_ERROR);
+        DB::beginTransaction();
+        try {
+            $fillableData = $this->getFillableData(new OaAttendanceLeaveAndVisits(), $data);
+            $obj = OaAttendanceLeaveAndVisits::create($data);
+            if ($obj) {
+
+                if (isset($data['files'])) {
+                    foreach ($data['files'] as $file)
+                    {
+                        OaAttendanceLeaveAndVisitFiles::create([
+                            'parent_id' => $obj->id,
+                            'files'     => $file,
+                        ]);
+                    }
+                }
+                DB::commit();
+                $messageBag->setCode(JsonBuilder::CODE_SUCCESS);
+                $messageBag->setData($obj);
+            } else {
+                DB::rollBack();
+                $messageBag->setMessage('请假记录保存失败');
+            }
+
+        } catch (\Exception $exception) {
+            DB::rollBack();
+            $messageBag->setMessage($exception->getMessage());
+        }
+        return $messageBag;
+    }
+
+    /**
+     * 申请人获取列表
+     * @param $userId
+     * @param $schoolId
+     * @param int $status
+     * @return mixed
+     */
+    public function getLeaveOrVisitList($userId,$schoolId,$status=OaAttendanceLeaveAndVisits::STATUS_DOING)
+    {
+        return OaAttendanceLeaveAndVisits::where('user_id', $userId)
+            ->where('school_id',$schoolId)
+            ->where('status',$status)
+            ->orderBy('start_date', 'desc')
+            ->paginate(ConfigurationTool::DEFAULT_PAGE_SIZE);
+    }
+
+    public function getLeaveOrVisitListForManager($schoolId,$status=OaAttendanceLeaveAndVisits::STATUS_DOING)
+    {
+        return OaAttendanceLeaveAndVisits::where('school_id',$schoolId)
+            ->where('status',$status)
+            ->orderBy('start_date', 'desc')
+            ->paginate(ConfigurationTool::DEFAULT_PAGE_SIZE);
+    }
+    public function approverAction($id,$schoolId, $managerId,$reply,$status=OaAttendanceLeaveAndVisits::STATUS_REJECT)
+    {
+        return OaAttendanceLeaveAndVisits::where('id',$id)
+            ->where('school_id',$schoolId)
+            ->where('status',OaAttendanceLeaveAndVisits::STATUS_DOING)
+            ->update([
+            'status' => $status,
+            'manager_id'=> $managerId,
+            'reply' => $reply,
+        ]);
+    }
+
+    public function info($id,$schoolId)
+    {
+        return OaAttendanceLeaveAndVisits::where('school_id',$schoolId)
+            ->where('id',$id)
+            ->first();
+    }
+
 }
