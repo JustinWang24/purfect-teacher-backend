@@ -449,7 +449,7 @@ Route::prefix('school_manager')->group(function () {
         Route::any('save-qualification','Teachers\ProfilesController@saveQualification')
             ->name('school_manager.teachers.save.qualification');
         // 评聘删除
-        Route::any('del-qualification','Teachers\ProfilesController@delQualification')
+        Route::any('save-qualification','Teachers\ProfilesController@delQualification')
             ->name('school_manager.teachers.del.qualification');
     });
 
