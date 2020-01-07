@@ -48,4 +48,16 @@ class GroupMemberDao
     public function getGroupMemberByGroupIds($groupIds) {
         return GroupMember::whereIn('group_id',$groupIds)->get();
     }
+
+
+    /**
+     * 删除成员
+     * @param $groupId
+     * @param $userId
+     * @return mixed
+     */
+    public function deleteMember($groupId, $userId) {
+        $map = ['group_id'=>$groupId, 'user_id'=>$userId];
+        return GroupMember::where($map)->delete();
+    }
 }

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\OA;
 
 
 use App\Dao\OA\GroupDao;
+use App\Dao\OA\GroupMemberDao;
 use App\Utils\JsonBuilder;
 use App\Dao\Users\UserDao;
 use App\Http\Controllers\Controller;
@@ -95,6 +96,24 @@ class GroupController extends Controller
             return JsonBuilder::Success($msg);
         } else {
             return JsonBuilder::Error($msg);
+        }
+    }
+
+
+    /**
+     * 删除成功
+     * @param GroupRequest $request
+     * @return string
+     */
+    public function delMember(GroupRequest $request) {
+        $groupId = $request->getGroupId();
+        $userId = $request->get('userid');
+        $dao = new GroupMemberDao();
+        $result = $dao->deleteMember($groupId, $userId);
+        if($result) {
+            return JsonBuilder::Success('删除成功');
+        } else {
+            return JsonBuilder::Error('删除失败');
         }
     }
 }
