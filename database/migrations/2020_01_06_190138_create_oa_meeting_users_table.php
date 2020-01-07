@@ -23,6 +23,7 @@ class CreateOaMeetingUsersTable extends Migration
             $table->dateTime('end')->comment('签退时间')->nullable();
             $table->tinyInteger('my_signin_status')->default(0)->comment('签到状态 0:未签到 1:按时 2:迟到');
             $table->tinyInteger('my_signout_status')->default(0)->comment('签退状态 0:未签退 1:按时 2:早退');
+            $table->tinyInteger('is_leave')->default(0)->comment('请假状态 0:未请假 1:请假');
             $table->timestamps();
         });
         DB::statement(" ALTER TABLE oa_meeting_users comment '会议参会人员表' ");

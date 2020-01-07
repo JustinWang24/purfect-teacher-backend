@@ -239,6 +239,42 @@ class MeetIngController extends Controller
     }
 
 
+    /**
+     * 签到记录
+     * @param MeetingRequest $request
+     * @return string
+     */
+    public function signLog(MeetingRequest $request) {
+        $meetId = $request->getMeetId();
+        $dao = new MeetingDao();
+        $meeting = $dao->getMeetIngByMeetId($meetId);
+        if(is_null($meeting)) {
+            return JsonBuilder::Error('该会议不存在');
+        }
+        $members = $meeting->member;
+        $list = [];
+        foreach ($members as $key => $item) {
+            $list[$key]['user_username'] = $item->user->name;
+            $list[$key]['user_pics'] = $item->user->profile->avatar;
+            $list[$key]['signin_status'] = $item->my_signin_status;
+            $list[$key]['signout_status'] = $item->my_signout_status;
+            $list[$key]['is_leave'] = $item->my_signout_status;
+        }
+        $data = [
+            "count_1" => $members->where('my_signin_status',MeetingUser::UN_SIGN_IN)->count(), // ---未签到人数
+            "count_2" => $members->where('my_signin_status',MeetingUser::SIGN_OUT)->count(), // ---按时签到人数
+            "count_3" => $members->where('my_signin_status',MeetingUser::SIGN_IN_LATE)->count(),// ---迟到签到人数
+            "count_4" => $members->where('my_signout_status',MeetingUser::UN_SIGN_OUT)->count(),// ---未签退人数
+            "count_5" => $members->where('my_signout_status',MeetingUser::SIGN_OUT)->count(),// ---按时签退人数
+            "count_6" => $members->where('my_signout_status',MeetingUser::SIGN_OUT_EARLY)->count(),// ---早退签退人数
+            "count_7" => $members->where('is_leave',MeetingUser::LEAVE)->count(),// ---请假人数
+            "list" => $list
+        ];
+
+        return JsonBuilder::Success($data);
+
+    }
+
 
 
 }

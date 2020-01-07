@@ -32,6 +32,9 @@ class MeetingUser extends Model
     const SIGN_OUT_TEXT      = '按时签退';
     const SIGN_OUT_EARLY_TEXT   = '早退';
 
+    const UN_LEAVE = 0; // 未请假
+    const LEAVE =1; // 请假
+
 
     public function user() {
         return $this->belongsTo(User::class);
