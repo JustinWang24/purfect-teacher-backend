@@ -181,6 +181,21 @@ class OaAttendanceTeacherDao
         }
         return $output;
     }
+    public function getAllMonthList($schoolId, $month='')
+    {
+        $timeArr = $this->getStartAndEndArr($month);
+        $start = $timeArr['start'];
+        $end   = $timeArr['end'];
+        $row = OaAttendanceTeacher::where('school_id',$schoolId)
+            ->where('check_in_date','>=',$start)
+            ->where('check_in_date','<',$end)
+            ->get();
+        $output = [];
+        foreach($row as $key=>$value) {
+            $output[$value->user_id][$value->check_in_date] = $value;
+        }
+        return $output;
+    }
     public function getStartAndEndArr($month)
     {
         if(empty($month)) {
@@ -376,6 +391,11 @@ class OaAttendanceTeacherDao
         return GradeUser::whereNotIn('user_id', $hasMembers)->whereIn('user_type',[9,10])
             ->orderBy('created_at','desc')
             ->paginate(ConfigurationTool::DEFAULT_PAGE_SIZE);
+    }
+    public function getAllMembers($groupId)
+    {
+        return OaAttendanceTeachersGroupMember::where('group_id',$groupId)->get();
+
     }
     public function searchNotAttendanceMembers($name)
     {
@@ -676,6 +696,7 @@ class OaAttendanceTeacherDao
         return OaAttendanceLeaveAndVisits::where('user_id', $userId)
             ->where('school_id',$schoolId)
             ->where('status',$status)
+            ->with('files')
             ->orderBy('start_date', 'desc')
             ->paginate(ConfigurationTool::DEFAULT_PAGE_SIZE);
     }
@@ -684,6 +705,7 @@ class OaAttendanceTeacherDao
     {
         return OaAttendanceLeaveAndVisits::where('school_id',$schoolId)
             ->where('status',$status)
+            ->with('files')
             ->orderBy('start_date', 'desc')
             ->paginate(ConfigurationTool::DEFAULT_PAGE_SIZE);
     }
@@ -703,7 +725,19 @@ class OaAttendanceTeacherDao
     {
         return OaAttendanceLeaveAndVisits::where('school_id',$schoolId)
             ->where('id',$id)
+            ->with('files')
             ->first();
     }
 
+    public function getLeaveOrVisitListByTime($schoolId, $type=OaAttendanceLeaveAndVisits::LEAVE_TYPE, $start_time, $end_time)
+    {
+        return OaAttendanceLeaveAndVisits::where('school_id', $schoolId)
+            ->where('type', $type)
+            ->where(
+                function ($query) use ($end_time, $start_time) {
+                    $query->where('start_time', '>', $start_time)
+                        ->orWhere('end_time', '<', $end_time);
+                }
+            )->get();
+    }
 }

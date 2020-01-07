@@ -709,6 +709,7 @@ class OaAttendanceTeacherController extends Controller
      */
     public function get_leave_category(Request $request)
     {
+
         $data = [];
         $category = OaAttendanceLeaveAndVisits::LEAVE_CATEGORY_MAP;
         $i = 0;
@@ -793,5 +794,211 @@ class OaAttendanceTeacherController extends Controller
             }
         }
         return JsonBuilder::Success($obj);
+    }
+
+
+    public function getMonthManage(Request $request)
+    {
+        $user = $request->user();
+        $schoolId = $user->getSchoolId();
+        $month = strip_tags($request->get('month'));
+        $dao = new OaAttendanceTeacherDao();
+        $group = $dao->getGroupInfo($user->id,$schoolId);
+        $allMembers = $dao->getAllMembers($group->id);
+        $result = $dao->getAllMonthList($schoolId,$month);
+        $timeArr = $dao->getStartAndEndArr($month);
+        $start = $timeArr['start'];
+        $end   = $timeArr['end'];
+
+        $restList   = [];
+        $missList   = [];
+        $lateList   = [];
+        $earlyList  = [];
+        $okList     = [];
+        $notList    = [];
+        $daysCount     = 0;
+        $normalCount   = 0;
+        $restCount     = 0;
+        $notCount      = 0;
+        $lateCount     = 0;
+        $earlyCount    = 0;
+        $missCount     = 0;
+        $approverCount = 0;
+
+        foreach ($allMembers as $member)
+        {
+            $uidKey = $member->user_id;
+            $days_count     = 0;
+            $normal_count   = 0;
+            $rest_count     = 0;
+            $not_count      = 0;
+            $late_count     = 0;
+            $early_count    = 0;
+            $miss_count     = 0;
+            $approver_count = 0;
+            $start = $timeArr['start'];
+            $end   = $timeArr['end'];
+            while ($start<$end)
+            {
+                //统计当月天数
+                $days_count++;
+                //统计休息日天数
+                if (date('N',strtotime($start))>5) {
+                    $rest_count++;
+                }
+
+                if (!isset($result[$uidKey][$start]) && date('N',strtotime($start))<=5) {
+                    //旷工日统计
+                    $not_count++;
+                } elseif(isset($result[$start])) {
+                    //出勤日统计
+                    $normal_count++;
+                    //迟到
+                    if(strtotime($result[$uidKey][$start]->morning_online_mine) > strtotime($result[$uidKey][$start]->check_in_date.' '.$group->morning_online_time))
+                    {
+                        $late_count++;
+                    }
+                    if(strtotime($result[$uidKey][$start]->afternoon_online_mine) > strtotime($result[$uidKey][$start]->check_in_date.' '.$group->afternoon_online_time))
+                    {
+                        $late_count++;
+                    }
+                    if(strtotime($result[$uidKey][$start]->night_online_mine) > strtotime($result[$uidKey][$start]->check_in_date.' '.$group->night_online_time))
+                    {
+                        $late_count++;
+                    }
+                    //补卡
+                    if($result[$member][$start]->status == 2) {
+                        $approver_count++;
+                    }
+
+                    //早退
+                    if (strtotime($result[$uidKey][$start]->morning_offline_mine) < strtotime($result[$uidKey][$start]->check_in_date.' '.$group->morning_offline_time))
+                    {
+                        $early_count++;
+                    }
+                    if (strtotime($result[$uidKey][$start]->afternoon_offline_mine) < strtotime($result[$uidKey][$start]->check_in_date.' '.$group->afternoon_offline_time))
+                    {
+                        $early_count++;
+                    }
+                    if (strtotime($result[$uidKey][$start]->night_offline_mine) < strtotime($result[$uidKey][$start]->check_in_date.' '.$group->night_offline_time))
+                    {
+                        $early_count++;
+                    }
+                    //缺卡记录
+                    if (empty($result[$uidKey][$start]->morning_online_mine)) {
+                        $miss_count++;
+                    } elseif(empty($result[$uidKey][$start]->morning_offline_mine)) {
+                        $miss_count++;
+                    }
+                    if (empty($result[$uidKey][$start]->afternoon_online_mine)) {
+                        $miss_count++;
+                    } elseif(empty($result[$uidKey][$start]->afternoon_offline_mine)) {
+                        $miss_count++;
+                    }
+                    if (empty($result[$uidKey][$start]->night_online_mine)) {
+                        $miss_count++;
+                    } elseif(empty($result[$uidKey][$start]->night_offline_mine)) {
+                        $miss_count++;
+                    }
+
+                }
+                $start = date('Y-m-d', strtotime('+1 day', strtotime($start)));
+            }
+            $memberArr = [
+                'userid'        => $member->user_id,
+                'user_pics'     => $member->user->profile->avatar,
+                'user_username' => $member->user->name,
+                //'schooltwo_name'=> $member->user->gradeUser->department->name,//实际上教师不会关联到某个系
+                'count'         => 0,
+                'transTime'     => 1,
+            ];
+            $daysCount     =  $days_count;
+            $normalCount   += $normal_count;
+            $restCount     += $rest_count;
+            $notCount      += $not_count;
+            $lateCount     += $late_count;
+            $earlyCount    += $early_count;
+            $missCount     += $miss_count;
+
+            if ($rest_count > 0)
+            {
+                $memberArr['count'] = $rest_count;
+                $restList[] = $memberArr;
+            }
+            if ($miss_count > 0)
+            {
+                $memberArr['count'] = $miss_count;
+                $missList[] = $memberArr;
+            }
+            if ($late_count > 0)
+            {
+                $memberArr['count'] = $late_count;
+                $lateList[] = $memberArr;
+            }
+            if ($early_count > 0)
+            {
+                $memberArr['count'] = $early_count;
+                $earlyList[] = $memberArr;
+            }
+            if ($normal_count > 0)
+            {
+                $memberArr['count'] = $normal_count;
+                $okList[] = $memberArr;
+            }
+            if ($not_count > 0)
+            {
+                $memberArr['count'] = $not_count;
+                $notList[] = $memberArr;
+            }
+
+
+        }
+
+        $leaveCollect = $dao->getLeaveOrVisitListByTime($schoolId, OaAttendanceLeaveAndVisits::LEAVE_TYPE, $start, $end);
+        $awayCollect  = $dao->getLeaveOrVisitListByTime($schoolId, OaAttendanceLeaveAndVisits::VISIT_TYPE, $start, $end);
+
+
+        $data = [
+            'groupid'   => $group->id,
+            'month'     => $month,
+            'all'       => $daysCount,
+            'leave'     => $leaveCollect->count(),
+            'away'      => $awayCollect->count(),
+            'not'       => $notCount,
+            'late'      => $lateCount,
+            'early'     => $earlyCount,
+            'ok'        => $normalCount,
+            'miss'      => $missCount,
+            'rest'      => $restCount,
+            'leaveList' => $this->_getList($leaveCollect),
+            'awayList'  => $this->_getList($awayCollect),
+            'notList'   => $notList,
+            'lateList'  => $lateList,
+            'earlyList' => $earlyList,
+            'okList'    => $okList,
+            'missList'  => $missList,
+            'restList'  => $restList,
+        ];
+        return JsonBuilder::Success($data);
+    }
+
+    private function _getList($collect)
+    {
+        $list  = [];
+
+        foreach ($collect as $k => $v) {
+            $list[$v->user_id]['userid']        = $v->user_id;
+            $list[$v->user_id]['user_pics']     = $v->user->profile->avatar;
+            $list[$v->user_id]['user_username'] = $v->user->name;
+            $list[$v->user_id]['schooltwo_name']= $v->user->gradeUser->department->name;
+            $list[$v->user_id]['count']         += 1;
+            $list[$v->user_id]['transTime']     = 1;
+        }
+        $output = [];
+        foreach ($list as $value)
+        {
+            $output[] = $value;
+        }
+        return $output;
     }
 }
