@@ -4,9 +4,12 @@
 namespace App\Dao\OA;
 
 
+use App\User;
 use App\Models\OA\Meeting;
 use App\Utils\JsonBuilder;
 use App\Models\OA\MeetingUser;
+use App\Utils\Misc\ConfigurationTool;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use App\Utils\ReturnData\MessageBag;
 
@@ -63,5 +66,25 @@ class MeetingDao
     public function getMeetingByTitle($title, $schoolId) {
         $map = ['school_id'=>$schoolId, 'meet_title'=>$title];
         return Meeting::where($map)->first();
+    }
+
+
+    /**
+     * 待签列表
+     * @param User $user
+     * @return mixed
+     */
+    public function todoList(User $user) {
+        $now = Carbon::now()->toDateTimeString();
+        $map = [
+            ['oa_meeting_users.user_id', '=', $user->id],
+            ['oa_meetings.signin_end', '>', $now],
+            ['oa_meeting_users.status', 'neq', MeetingUser::SIGN_OUT]
+        ];
+
+        return MeetingUser::join('oa_meetings',function ($join) use ($map) {
+            $join->on('oa_meetings.id', '=', 'oa_meeting_users.meetid')->where($map);
+        })->paginate(ConfigurationTool::DEFAULT_PAGE_SIZE);
+
     }
 }

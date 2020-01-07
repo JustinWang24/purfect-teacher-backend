@@ -80,4 +80,7 @@ Route::prefix('meeting')->middleware('auth:api')->group(function () {
     // 创建会议
     Route::post('/addMeeting','Api\OA\MeetIngController@addMeeting')
         ->name('Oa.meeting.addMeeting');
+    // 待签列表
+    Route::post('/todoList','Api\OA\MeetIngController@todoList')
+        ->name('Oa.meeting.todoList');
 });
