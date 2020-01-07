@@ -36,8 +36,8 @@ class IndexController extends Controller
         if (!$code) {
             return  JsonBuilder::Error('生成二维码失败');
         }
-
-        return JsonBuilder::Success(['code' => $code],'生成二维码');
+        return $code;
+//        return JsonBuilder::Success(['code' => $code],'生成二维码');
     }
 
     /**
@@ -76,6 +76,7 @@ class IndexController extends Controller
         $qrCode->setSize(200);
         $qrCode->setLogoPath(public_path('assets/img/logo.png'));
         $qrCode->setLogoSize(30, 30);
+
         $code = 'data:image/png;base64,' . base64_encode($qrCode->writeString());
         if (strlen($code) < 1) {
             return  false;

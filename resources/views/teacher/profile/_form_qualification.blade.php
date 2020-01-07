@@ -12,4 +12,3 @@
     <label for="evaluate-title-input">材料</label>
     <input required type="file" class="form-control"  value="{{$file ?? old('file')}}" placeholder="材料" name="file">
 </div>
-
