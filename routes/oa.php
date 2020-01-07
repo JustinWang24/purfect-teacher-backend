@@ -95,4 +95,7 @@ Route::prefix('meeting')->middleware('auth:api')->group(function () {
     // 会议详情-参与者
     Route::post('/uinfo','Api\OA\MeetIngController@meetingMember')
         ->name('Oa.meeting.uinfo');
+    // 会议详情-创建者
+    Route::post('/minfo','Api\OA\MeetIngController@minfo')
+        ->name('Oa.meeting.minfo');
 });

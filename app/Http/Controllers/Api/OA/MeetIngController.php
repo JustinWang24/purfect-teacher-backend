@@ -198,7 +198,6 @@ class MeetIngController extends Controller
         }
 
         $data = $this->dataDispose($meeting);
-        $data['user_username'] = $meeting->user->name;
 
         $members = $meeting->member;
         $list = [];
@@ -215,6 +214,28 @@ class MeetIngController extends Controller
 
         return JsonBuilder::Success($list);
 
+    }
+
+    /**
+     * 会议详情-创建者
+     * @param MeetingRequest $request
+     * @return string
+     */
+    public function minfo(MeetingRequest $request) {
+        $meetId = $request->getMeetId();
+        $dao = new MeetingDao();
+        $meeting = $dao->getMeetIngByMeetId($meetId);
+        if(is_null($meeting)) {
+            return JsonBuilder::Error('该会议不存在');
+        }
+
+        $data = $this->dataDispose($meeting);
+        $data['user_username'] = $meeting->user->name;
+        $data['signout_transtime'] = $meeting->signout_start;
+        $data['signout_status'] = $meeting->signout_status;
+        $data['signin_qrcode'] = '';
+        $data['self_scan'] = '';
+        return JsonBuilder::Success($data);
     }
 
 
