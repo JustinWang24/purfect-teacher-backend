@@ -397,7 +397,7 @@ Route::prefix('banner')->middleware('auth:api')->group(function () {
 
 // APP 生成二维码 接口
 Route::prefix('QrCode')->middleware('auth:api')->group(function () {
-    Route::post('/getQrCode', 'Api\QrCode\IndexController@generate')->name('api.generate.qr.code');
+    Route::any('/getQrCode', 'Api\QrCode\IndexController@generate')->name('api.generate.qr.code');
     Route::post('/courseQrCode', 'Api\QrCode\IndexController@courseQrCode')->name('api.course.qr.code');
 });
 
