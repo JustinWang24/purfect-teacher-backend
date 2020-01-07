@@ -33,11 +33,11 @@ class IndexController extends Controller
 
         $codeStr = base64_encode(json_encode(['school_id' => $school->id, 'api_token' => $user->api_token, 'time' => time()]));
         $code = $this->generateQrCode($codeStr);
-        echo $code;
-//        if (!$code) {
-//            return  JsonBuilder::Error('生成二维码失败');
-//        }
-//        return JsonBuilder::Success(['code' => $code],'生成二维码');
+        if (!$code) {
+            return  JsonBuilder::Error('生成二维码失败');
+        }
+
+        return JsonBuilder::Success(['code' => $code],'生成二维码');
     }
 
     /**
@@ -57,12 +57,11 @@ class IndexController extends Controller
 
         $codeStr = base64_encode(json_encode(['itme_id' => $item->id, 'year' => $item->year, 'term' => $item->term]));
         $code = $this->generateQrCode($codeStr);
-        echo $code;
-//        if (!$code) {
-//            return  JsonBuilder::Error('生成二维码失败');
-//        }
-//
-//        return JsonBuilder::Success(['code' => $code],'上课补签二维码');
+        if (!$code) {
+            return  JsonBuilder::Error('生成二维码失败');
+        }
+
+        return JsonBuilder::Success(['code' => $code],'上课补签二维码');
     }
 
     /**
@@ -77,9 +76,12 @@ class IndexController extends Controller
         $qrCode->setSize(200);
         $qrCode->setLogoPath(public_path('assets/img/logo.png'));
         $qrCode->setLogoSize(30, 30);
-        Header("Content-type: image/png");
-
-        return  $qrCode->writeString();
+        $code = 'data:image/png;base64,' . base64_encode($qrCode->writeString());
+        if (strlen($code) < 1) {
+            return  false;
+        } else {
+            return  $code;
+        }
     }
 
 
