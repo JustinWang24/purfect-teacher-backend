@@ -79,11 +79,17 @@ class MeetingDao
         $map = [
             ['oa_meeting_users.user_id', '=', $user->id],
             ['oa_meetings.signin_end', '>', $now],
-            ['oa_meeting_users.status', 'neq', MeetingUser::SIGN_OUT]
+            ['oa_meeting_users.my_signin_status', 'neq', MeetingUser::UN_SIGN_IN]
+        ];
+        $where = [
+            ['oa_meeting_users.user_id', '=', $user->id],
+            ['oa_meetings.signin_end', '>', $now],
+            ['oa_meeting_users.my_signout_status', 'neq', MeetingUser::UN_SIGN_OUT],
+            ['oa_meetings.signout_status', 'neq', Meeting::SIGN_OUT],
         ];
 
-        return MeetingUser::join('oa_meetings',function ($join) use ($map) {
-            $join->on('oa_meetings.id', '=', 'oa_meeting_users.meetid')->where($map);
+        return MeetingUser::join('oa_meetings',function ($join) use ($map,$where) {
+            $join->on('oa_meetings.id', '=', 'oa_meeting_users.meetid')->where($map)->orWhere($where);
         })->paginate(ConfigurationTool::DEFAULT_PAGE_SIZE);
 
     }
@@ -138,15 +144,25 @@ class MeetingDao
         $data = [];
         if($type == 'signin') {
             $msg = '签到';
-            $data = ['status'=>MeetingUser::SIGN_IN, 'start'=>$now];
+            $status = MeetingUser::SIGN_IN;
+            // 当前时间大于会议开始时间 迟到
+            if($now > $meet->meeting->meet_start ) {
+                $status = MeetingUser::SIGN_IN_LATE;
+            }
+            $data = ['my_signin_status'=>$status, 'start'=>$now];
         } elseif($type == 'signout') {
             $msg = '签退';
-            if($meet->status == MeetingUser::UN_SIGN_IN) {
+            if($meet->my_signin_status == MeetingUser::UN_SIGN_IN) {
                 $messageBag->setCode(JsonBuilder::CODE_ERROR);
                 $messageBag->setMessage('您还未签到,请先签到');
                 return $messageBag;
             }
-            $data = ['status'=>MeetingUser::SIGN_OUT, 'end'=>$now];
+            $status = MeetingUser::SIGN_OUT;
+            // 当前时间小于最早签退时间 早退
+            if($now < $meet->meeting->signout_start) {
+                $status = MeetingUser::SIGN_OUT_EARLY;
+            }
+            $data = ['my_signout_status'=>$status, 'end'=>$now];
 
         }
         $re = MeetingUser::where($map)->update($data);
