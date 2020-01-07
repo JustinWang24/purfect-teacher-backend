@@ -59,18 +59,6 @@ class TeacherProfileDao
     }
 
     /**
-     * 获取老师列表
-     * @param $map
-     * @param $field
-     * @return Collection
-     */
-    public function getTeachers($map,$field)
-    {
-        $list = TeacherProfile::where($map)->select($field)->with('user')->get();
-        return $list;
-    }
-
-    /**
      * 修改老师信息
      * @param $userId
      * @param $profile
@@ -79,5 +67,14 @@ class TeacherProfileDao
     public function updateTeacherProfile($userId, $profile)
     {
         return TeacherProfile::where('user_id',$userId)->update($profile);
+    }
+
+    /**
+     * @param $idNumber
+     * @return mixed
+     */
+    public function getTeacherProfileByIdNumber($idNumber)
+    {
+        return TeacherProfile::where('id_number', $idNumber)->first();
     }
 }

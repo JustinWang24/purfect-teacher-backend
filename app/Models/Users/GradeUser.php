@@ -131,7 +131,7 @@ class GradeUser extends Model
      * @return string
      */
     public function studyAt(){
-        $instituteStr =  $this->institute->name . ' / ';
+        $instituteStr =  empty($this->institute->name)?'/':$this->institute->name . ' / ';
         $deptStr = $this->department_id > 0 ? $this->department->name . ' / ' : '';
         $majorStr = $this->major_id > 0 ? $this->major->name . ' / ' : '';
         $gradeStr = $this->grade_id > 0 ? $this->grade->name . ' / ' : '';

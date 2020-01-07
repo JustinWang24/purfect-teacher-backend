@@ -15,4 +15,10 @@ class EvaluateRequest extends MyStandardRequest
         return $data;
     }
 
+
+    public function getEvaluateStudentFormDate() {
+        $data = $this->get('evaluate');
+        $data['school_id'] = $this->getSchoolId();
+        return $data;
+    }
 }

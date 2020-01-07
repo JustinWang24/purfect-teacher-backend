@@ -10,6 +10,7 @@ use App\Models\Importer\ImoprtTask;
 use App\Utils\JsonBuilder;
 use App\Utils\ReturnData\MessageBag;
 use Illuminate\Support\Facades\DB;
+use function Complex\asec;
 
 class ImporterDao
 {
@@ -72,9 +73,13 @@ class ImporterDao
     {
         return ImoprtTask::where('id', $id)->select($field)->first();
     }
-    public function getTasks()
+    public function getTasks($schoolId=null)
     {
-        return ImoprtTask::all();
+        if(empty($schoolId)) {
+            return ImoprtTask::all();
+        } else {
+            return ImoprtTask::where('school_id', $schoolId)->get();
+        }
     }
 
     public function writeLog($data)
@@ -99,8 +104,48 @@ class ImporterDao
         return $messageBag;
     }
 
-    public function result($id)
+    public function updateLog($data)
     {
-        return ImoprtLog::where('task_id', $id)->where('task_status',2)->get();
+        $messageBag = new MessageBag(JsonBuilder::CODE_ERROR);
+        DB::beginTransaction();
+        try {
+            $fillableData = $this->getFillableData(new ImoprtLog(), $data);
+            $importLog = ImoprtLog::where('only_flag',md5($data['only_flag']))->update($fillableData);
+            if ($importLog) {
+                DB::commit();
+                $messageBag->setCode(JsonBuilder::CODE_SUCCESS);
+            } else {
+                DB::rollBack();
+                $messageBag->setMessage('日志更新失败');
+            }
+        } catch (\Exception $exception) {
+            DB::rollBack();
+            $messageBag->setMessage($exception->getMessage());
+        }
+        return $messageBag;
     }
+
+    public function getLog($onlyFlag) {
+        return ImoprtLog::where('only_flag',$onlyFlag)->first();
+    }
+
+    public function result($id, $schoolId=null)
+    {
+        if (empty($schoolId)) {
+            return ImoprtLog::where('task_id', $id)->where('task_status',ImoprtLog::ADMIN_FAIL_STATUS)->get();
+        } else {
+            return ImoprtLog::where('task_id', $id)->where('school_id', $schoolId)->where('task_status',ImoprtLog::FAIL_STATUS)->get();
+        }
+    }
+
+    /**
+     * 按顺序取出未处理的导入需求，每次只取一条处理，定时任务每小时执行一次，每天导入最多24条任务
+     * @return mixed
+     */
+    public function getTasksForNewPlan()
+    {
+        return ImoprtTask::where('status', 1)->where('school_id', '>', 0)->orderBy('id', 'asc')->first();
+
+    }
+
 }

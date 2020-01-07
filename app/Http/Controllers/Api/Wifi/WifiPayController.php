@@ -7,6 +7,7 @@
  */
 namespace App\Http\Controllers\Api\Wifi;
 
+use Exception;
 use App\Models\Wifi\Backstage\WifiOrders;
 use Illuminate\Support\Facades\DB;
 use Psy\Util\Json;
@@ -28,6 +29,7 @@ use App\BusinessLogic\WifiInterface\Factory;
 
 use Yansongda\Pay\Pay;
 use Yansongda\Pay\Log;
+use App\Jobs\WifiAsynsPodcast;
 
 class WifiPayController extends Controller
 {
@@ -127,6 +129,8 @@ class WifiPayController extends Controller
 
       if ( Cache::has ( $dataSign ) ) return JsonBuilder::Error ( '您提交太快了，先歇息一下。' );
 
+      DB::beginTransaction();
+
       if ( WifiOrders::addOrUpdateWifiOrdersInfo ($param1) )
       {
          // 微信支付
@@ -137,15 +141,19 @@ class WifiPayController extends Controller
                'total_fee' => $param1[ 'order_totalprice' ] * 100,
                'body' => '购买无线wifi['.$param1[ 'wifi_name' ].']',
             ];
-            $configArr = config ( 'pay.wechat' );
-            $configArr[ 'notify_url' ] = url ()->previous () . $configArr[ 'notify_url' ];
-            $resultObj = Pay::wechat ( $configArr )->app ( $order );
-            $infos = json_decode ( $resultObj->getContent () , true );
-            if ( !empty($infos) && count ($infos) > 0 )
-            {
-               // TODO...事物提交....
-            } else {
-               // TODO....事物回滚...
+            try {
+               $configArr = config ( 'pay.wechat' );
+               $configArr[ 'notify_url' ] = url ()->previous () . $configArr[ 'notify_url' ];
+               $resultObj = Pay::wechat ( $configArr )->app ( $order );
+               $infos = json_decode ( $resultObj->getContent () , true );
+               if ( $resultObj->getStatusCode () == 200) {
+                  DB::commit ();
+               } else {
+                  throw new Exception('订单生成失败,请稍后重试');
+               }
+            } catch (Exception $e) {
+               DB::rollback();
+               return JsonBuilder::Error ( $e->getMessage () );
             }
          }
 
@@ -157,20 +165,24 @@ class WifiPayController extends Controller
                'total_amount' => $param1[ 'order_totalprice' ],
                'subject' => '购买无线wifi['.$param1[ 'wifi_name' ].']',
             ];
-            $configArr = config ( 'pay.alipay' );
-            $configArr[ 'notify_url' ] = url ()->previous () . $configArr[ 'notify_url' ];
-            $infos = Pay::alipay($this->config)->app($order);
-            if ( !empty($infos) && count ($infos) > 0 )
-            {
-               // TODO....事物提交....
-            } else {
-               // TODO....事物回滚...
+            try{
+               $configArr = config ( 'pay.alipay' );
+               $configArr[ 'notify_url' ] = url ()->previous () . $configArr[ 'notify_url' ];
+               $data = Pay::alipay ( $configArr )->app ( $order );
+               if ( $data->getStatusCode () == 200 )
+               {
+                  $infos['pay_info'] = $data->getContent ();
+                  DB::commit();
+               } else {
+                  throw new Exception('订单生成失败,请稍后重试');
+               }
+            } catch (Exception $e) {
+               DB::rollback();
+               return JsonBuilder::Error ( $e->getMessage () );
             }
          }
-
          // 生成重复提交签名
          Cache::put ( $dataSign , $dataSign , 10 );
-
          return JsonBuilder::Success ( $infos ,'购买无线wifi');
       } else {
          return JsonBuilder::Error ( '购买失败,请稍后重试' );
@@ -339,12 +351,20 @@ class WifiPayController extends Controller
             $condition[] = [ 'trade_sn' , 'eq' , $data['out_trade_no'] ];
             $condition[] = [ 'status' , 'eq' , 1 ];
 
+            $orderOneInfo = DB::table ( 'wifi_orders' )->where ( $condition )->first ();
+
+            if ( empty( $orderOneInfo ) )
+            {
+               return false;
+            }
+
             // 更新状态
             $saveData['status'] = 3;
             $saveData['pay_time'] = date('Y-m-d H:i:s');
 
-            if( DB::table ('wifi_orders')->where( $condition )->update( $saveData ) )
+            if( DB::table ( 'wifi_orders' )->where( $condition )->update( $saveData ) )
             {
+               WifiAsynsPodcast::dispatch($orderOneInfo);
                return $pay->success()->send();
             } else {
                throw new InvalidSignException('订单支付成功更新失败');
@@ -373,12 +393,20 @@ class WifiPayController extends Controller
                $condition[] = [ 'trade_sn' , 'eq' , $data['out_trade_no'] ];
                $condition[] = [ 'status' , 'eq' , 1 ];
 
+               $orderOneInfo = DB::table ( 'wifi_orders' )->where ( $condition )->first ();
+
+               if ( empty( $orderOneInfo ) )
+               {
+                  return false;
+               }
+
                // 更新状态
                $saveData['status'] = 3;
                $saveData['pay_time'] = date('Y-m-d H:i:s');
 
                if( DB::table ('wifi_orders')->where( $condition )->update( $saveData ) )
                {
+                  WifiAsynsPodcast::dispatch($orderOneInfo);
                   return $alipay->success()->send();
                } else {
                   throw new InvalidSignException('订单支付成功更新失败');

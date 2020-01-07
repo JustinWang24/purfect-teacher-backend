@@ -5,20 +5,27 @@ namespace App\Dao\OA;
 
 
 use App\Dao\BuildFillableData;
+use App\Dao\Schools\OrganizationDao;
+use App\Dao\Timetable\TimetableItemDao;
 use App\Models\OA\AttendanceTeacher;
 use App\Models\OA\AttendanceTeacherGroup;
 use App\Models\OA\AttendanceTeachersGroupMember;
 use App\Models\OA\AttendanceTeachersMacAddress;
 use App\Models\OA\AttendanceTeachersMessage;
+use App\Models\OA\OaAttendanceLeaveAndVisitFiles;
+use App\Models\OA\OaAttendanceLeaveAndVisits;
 use App\Models\OA\OaAttendanceTeacher;
+use App\Models\OA\OaAttendanceTeacherCourses;
 use App\Models\OA\OaAttendanceTeacherGroup;
 use App\Models\OA\OaAttendanceTeachersGroupMember;
+use App\Models\OA\OaAttendanceTeachersMessage;
 use App\Models\Users\GradeUser;
 use App\Utils\JsonBuilder;
 use App\Utils\Misc\ConfigurationTool;
 use App\Utils\ReturnData\MessageBag;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
+use PhpParser\Node\Stmt\Return_;
 
 class OaAttendanceTeacherDao
 {
@@ -32,6 +39,12 @@ class OaAttendanceTeacherDao
         return OaAttendanceTeacher::create($data);
     }
 
+    /**
+     * 获取用户当天的打卡记录
+     * @param $userId
+     * @param $schoolId
+     * @return mixed
+     */
     public function getTodayRecord($userId,$schoolId)
     {
         return OaAttendanceTeacher::where('user_id',$userId)
@@ -165,6 +178,21 @@ class OaAttendanceTeacherDao
         $output = [];
         foreach($row as $key=>$value) {
             $output[$value->check_in_date] = $value;
+        }
+        return $output;
+    }
+    public function getAllMonthList($schoolId, $month='')
+    {
+        $timeArr = $this->getStartAndEndArr($month);
+        $start = $timeArr['start'];
+        $end   = $timeArr['end'];
+        $row = OaAttendanceTeacher::where('school_id',$schoolId)
+            ->where('check_in_date','>=',$start)
+            ->where('check_in_date','<',$end)
+            ->get();
+        $output = [];
+        foreach($row as $key=>$value) {
+            $output[$value->user_id][$value->check_in_date] = $value;
         }
         return $output;
     }
@@ -330,6 +358,27 @@ class OaAttendanceTeacherDao
         }
         return $messageBag;
     }
+    public function createGroup($data)
+    {
+        $messageBag = new MessageBag(JsonBuilder::CODE_ERROR);
+        DB::beginTransaction();
+        try {
+            $fillableData = $this->getFillableData(new OaAttendanceTeacherGroup(), $data);
+            $group = OaAttendanceTeacherGroup::create($fillableData);
+            if ($group) {
+                DB::commit();
+                $messageBag->setCode(JsonBuilder::CODE_SUCCESS);
+                $messageBag->setData($group);
+            } else {
+                DB::rollBack();
+                $messageBag->setMessage('添加考勤组失败, 请联系管理员');
+            }
+        } catch (\Exception $exception) {
+            DB::rollBack();
+            $messageBag->setMessage($exception->getMessage());
+        }
+        return $messageBag;
+    }
     public function getAttendanceMembers($groupId)
     {
         return OaAttendanceTeachersGroupMember::where('group_id',$groupId)
@@ -342,6 +391,11 @@ class OaAttendanceTeacherDao
         return GradeUser::whereNotIn('user_id', $hasMembers)->whereIn('user_type',[9,10])
             ->orderBy('created_at','desc')
             ->paginate(ConfigurationTool::DEFAULT_PAGE_SIZE);
+    }
+    public function getAllMembers($groupId)
+    {
+        return OaAttendanceTeachersGroupMember::where('group_id',$groupId)->get();
+
     }
     public function searchNotAttendanceMembers($name)
     {
@@ -474,5 +528,216 @@ class OaAttendanceTeacherDao
             $messageBag->setMessage($exception->getMessage());
         }
         return $messageBag;
+    }
+
+    public function getTodayCourseRecord($userId, $schoolId, $timeTableId)
+    {
+        return OaAttendanceTeacherCourses::where('user_id', $userId)
+            ->where('school_id', $schoolId)
+            ->where('timetable_items_id', $timeTableId)
+            ->where('check_in_date', date('Y-m-d'))
+            ->first();
+    }
+
+    /**
+     * 更新上课打卡记录
+     * @param $userId
+     * @param $schoolId
+     * @param $data
+     * @return mixed
+     */
+    public function updateAttendanceTeacherCourse($userId,$schoolId,$data)
+    {
+        if (!isset($data['check_in_date'])) {
+            return OaAttendanceTeacherCourses::where('user_id',$userId)
+                ->where('check_in_date', date('Y-m-d'))
+                ->where('timetable_items_id', $data['timetable_items_id'])
+                ->where('school_id', $schoolId)
+                ->update($data);
+        } else {
+            return OaAttendanceTeacherCourses::where('user_id',$userId)
+                ->where('timetable_items_id', $data['timetable_items_id'])
+                ->where('school_id', $schoolId)
+                ->update($data);
+        }
+
+    }
+    public function createAttendanceTeacherCourse($data)
+    {
+        return OaAttendanceTeacherCourses::create($data);
+    }
+
+    public function  getAttendanceTeacherCourseListByTimeTabIds($schoolId, $timeTableIds)
+    {
+        return OaAttendanceTeacherCourses::where('check_in_date', date('Y-m-d'))
+            ->whereIn('timetable_items_id', $timeTableIds)
+            ->where('school_id', $schoolId)
+            ->get();
+    }
+
+    //发短信
+    //获取所有课程
+    //获取所有已经打卡记录
+    //获取所有需要收到短信的用户
+    public function getPushlist($schoolId)
+    {
+        $timeTableDao = new TimetableItemDao();
+        $timeTableList = $timeTableDao->getCourseListByCurrentTime($schoolId);
+        $timeTableIds = [];
+        $AttendanceTimeTableIds = [];
+        $noTimeTableIds = [];
+        if(count($timeTableList) == 0) {
+            return [];
+        }
+        foreach ($timeTableList as $timeTableItem)
+        {
+            $timeTableIds[] = $timeTableItem->id;
+        }
+        $attendanceList = $this->getAttendanceTeacherCourseListByTimeTabIds($schoolId,$timeTableIds);
+        if (!empty($attendanceList)) {
+            foreach ($attendanceList as $attendanceItem)
+            {
+                $AttendanceTimeTableIds[] = $attendanceItem->timetable_items_id;
+            }
+        }
+
+        $noTimeTableIds = array_diff($timeTableIds,$AttendanceTimeTableIds);
+        //判断时间是否已经超过三分钟
+        $ids = [];
+        foreach($noTimeTableIds as $timeTableId)
+        {
+            $timeTableObj = $timeTableDao->getItemById($timeTableId, true);
+            $timeSlot = strtotime($timeTableObj->timeSlot->from);
+            $diff = ceil((time() - $timeSlot)/60);
+            if ($diff >3) {
+                $ids[] = $timeTableId;
+            }
+        }
+        return $ids;
+    }
+
+    public function getUserListForReceiveMessage($schoolId){
+        $organizationDao = new OrganizationDao();
+        //TODO 给教务处老师发短信，此处临时实现，应该有个配置来设置哪些老师或者哪个组织来接收
+        $organization = $organizationDao->getByName($schoolId, '教务处');
+        $orgMembers = $organizationDao->getMembers($schoolId, $organization->id);
+        return $orgMembers;
+    }
+
+    public function getUserList($schoolId, $type='week', $current=0)
+    {
+        $time = getWeekOrMonthSlot($current, 'week');
+        return OaAttendanceTeacherCourses::where('school_id',$schoolId)
+            ->whereBetween('check_in_date', $time)
+            ->distinct('user_id')
+            ->get();
+    }
+
+    public function countCourseNumByUser($schoolId, $userId, $type='week', $current=0)
+    {
+        $time = getWeekOrMonthSlot($current, $type);
+        return OaAttendanceTeacherCourses::where('school_id',$schoolId)
+            ->where('user_id', $userId)
+            ->whereBetween('check_in_date', $time)
+            ->count();
+    }
+
+    public function getManagerByMembers($schoolId,$groupId)
+    {
+        return OaAttendanceTeachersGroupMember::where('school_id', $schoolId)->where('status',2)->get();
+    }
+    public function getGroupList($schoolId)
+    {
+        return OaAttendanceTeacherGroup::where('school_id',$schoolId)->get();
+    }
+
+    public function createLeaveOrVisit($data)
+    {
+        $messageBag = new MessageBag(JsonBuilder::CODE_ERROR);
+        DB::beginTransaction();
+        try {
+            $fillableData = $this->getFillableData(new OaAttendanceLeaveAndVisits(), $data);
+            $obj = OaAttendanceLeaveAndVisits::create($data);
+            if ($obj) {
+
+                if (isset($data['files'])) {
+                    foreach ($data['files'] as $file)
+                    {
+                        OaAttendanceLeaveAndVisitFiles::create([
+                            'parent_id' => $obj->id,
+                            'files'     => $file,
+                        ]);
+                    }
+                }
+                DB::commit();
+                $messageBag->setCode(JsonBuilder::CODE_SUCCESS);
+                $messageBag->setData($obj);
+            } else {
+                DB::rollBack();
+                $messageBag->setMessage('请假记录保存失败');
+            }
+
+        } catch (\Exception $exception) {
+            DB::rollBack();
+            $messageBag->setMessage($exception->getMessage());
+        }
+        return $messageBag;
+    }
+
+    /**
+     * 申请人获取列表
+     * @param $userId
+     * @param $schoolId
+     * @param int $status
+     * @return mixed
+     */
+    public function getLeaveOrVisitList($userId,$schoolId,$status=OaAttendanceLeaveAndVisits::STATUS_DOING)
+    {
+        return OaAttendanceLeaveAndVisits::where('user_id', $userId)
+            ->where('school_id',$schoolId)
+            ->where('status',$status)
+            ->with('files')
+            ->orderBy('start_date', 'desc')
+            ->paginate(ConfigurationTool::DEFAULT_PAGE_SIZE);
+    }
+
+    public function getLeaveOrVisitListForManager($schoolId,$status=OaAttendanceLeaveAndVisits::STATUS_DOING)
+    {
+        return OaAttendanceLeaveAndVisits::where('school_id',$schoolId)
+            ->where('status',$status)
+            ->with('files')
+            ->orderBy('start_date', 'desc')
+            ->paginate(ConfigurationTool::DEFAULT_PAGE_SIZE);
+    }
+    public function approverAction($id,$schoolId, $managerId,$reply,$status=OaAttendanceLeaveAndVisits::STATUS_REJECT)
+    {
+        return OaAttendanceLeaveAndVisits::where('id',$id)
+            ->where('school_id',$schoolId)
+            ->where('status',OaAttendanceLeaveAndVisits::STATUS_DOING)
+            ->update([
+            'status' => $status,
+            'manager_id'=> $managerId,
+            'reply' => $reply,
+        ]);
+    }
+
+    public function info($id,$schoolId)
+    {
+        return OaAttendanceLeaveAndVisits::where('school_id',$schoolId)
+            ->where('id',$id)
+            ->with('files')
+            ->first();
+    }
+
+    public function getLeaveOrVisitListByTime($schoolId, $type=OaAttendanceLeaveAndVisits::LEAVE_TYPE, $start_time, $end_time)
+    {
+        return OaAttendanceLeaveAndVisits::where('school_id', $schoolId)
+            ->where('type', $type)
+            ->where(
+                function ($query) use ($end_time, $start_time) {
+                    $query->where('start_time', '>', $start_time)
+                        ->orWhere('end_time', '<', $end_time);
+                }
+            )->get();
     }
 }

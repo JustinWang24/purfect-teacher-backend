@@ -259,6 +259,10 @@ Route::prefix('school_manager')->group(function () {
             ->name('school_manager.oa.attendances-accept-messages');
         Route::any('attendances-reject-messages','OA\AttendanceTeacherController@messagereject')
             ->name('school_manager.oa.attendances-reject-messages');
+        Route::any('attendances-total-list','OA\AttendanceTeacherController@attendanceCourseList')
+            ->name('school_manager.oa.attendances-total');
+        Route::any('attendances-total-export','OA\AttendanceTeacherController@export')
+            ->name('school_manager.oa.attendances-export');
         // 审批管理
         Route::get('approval-manager','ElectiveCoursesController@management')
             ->name('school_manager.oa.approval-manager');
@@ -438,6 +442,19 @@ Route::prefix('school_manager')->group(function () {
             ->name('school_manager.teachers.manage-performance-save');
         Route::any('export','Teachers\ProfilesController@export')
             ->name('school_manager.teachers.export');
+
+        // 评聘列表
+        Route::any('list-qualification','Teachers\ProfilesController@listQualification')
+            ->name('school_manager.teachers.list.qualification');
+        // 评聘添加页面
+        Route::any('add-qualification','Teachers\ProfilesController@addQualification')
+            ->name('school_manager.teachers.add.qualification');
+        // 评聘保存
+        Route::any('save-qualification','Teachers\ProfilesController@saveQualification')
+            ->name('school_manager.teachers.save.qualification');
+        // 评聘删除
+        Route::any('save-qualification','Teachers\ProfilesController@delQualification')
+            ->name('school_manager.teachers.del.qualification');
     });
 
     // 工作流程管理
@@ -474,32 +491,58 @@ Route::prefix('school_manager')->group(function () {
     });
 
 
-    // 评教模块
+    // 评教 评学 模块
     Route::prefix('evaluate')->group(function(){
         // 列表
         Route::get('content-list','Evaluate\EvaluateController@list')
-            ->name('school_manager.content.list');
+            ->name('school_manager.evaluate.content-list');
         // 创建
         Route::any('content-create','Evaluate\EvaluateController@create')
-            ->name('school_manager.content.create');
+            ->name('school_manager.evaluate.content-create');
         // 编辑
         Route::any('content-edit','Evaluate\EvaluateController@edit')
-            ->name('school_manager.content.edit');
+            ->name('school_manager.evaluate.content-edit');
         // 删除
         Route::get('delete','Evaluate\EvaluateController@delete')
-            ->name('school_manager.content.delete');
+            ->name('school_manager.evaluate.content-delete');
         // 评教列表
         Route::get('evaluate-teacher/list','Evaluate\EvaluateTeacherController@list')
-            ->name('school_manager.evaluate-teacher.list');
+            ->name('school_manager.evaluate.teacher-list');
+        // 评教详情
+        Route::get('evaluate-record/list','Evaluate\EvaluateRecordController@list')
+            ->name('school_manager.evaluate.record-list');
         // 班级列表
         Route::get('evaluate-teacher/grade','Evaluate\EvaluateTeacherController@grade')
             ->name('school_manager.evaluate-teacher.grade');
         // 学生列表
         Route::get('evaluate-teacher/student','Evaluate\EvaluateTeacherController@student')
-            ->name('school_manager.evaluate-teacher.student');
+            ->name('school_manager.evaluate.student-list');
         // 创建
         Route::post('evaluate-teacher/create','Evaluate\EvaluateTeacherController@create')
             ->name('school_manager.evaluate.evaluate-teacher.create');
+
+        // 评学
+        Route::get('/evaluate-student-list','Evaluate\EvaluateController@evaluateStudentList')
+            ->name('school_manager.evaluate.student.list');
+        // 评学添加
+        Route::any('/evaluate-student-add','Evaluate\EvaluateController@evaluateStudentAdd')
+            ->name('school_manager.evaluate.student.add');
+        // 评学编辑
+        Route::any('evaluate-student-edit','Evaluate\EvaluateController@evaluateStudentEdit')
+            ->name('school_manager.evaluate.student.edit');
+        // 评学删除
+        Route::get('evaluate-student-delete','Evaluate\EvaluateController@evaluateStudentDelete')
+            ->name('school_manager.evaluate.student.delete');
     });
+    Route::prefix('importer')->group(function(){
+        Route::any('manager', 'ImporterController@manager')->name('school_manager.importer.manager');
+        Route::any('update', 'ImporterController@update')->name('school_manager.importer.update');
+        Route::any('add', 'ImporterController@add')->name('school_manager.importer.add');
+        Route::any('edit', 'ImporterController@edit')->name('school_manager.importer.edit');
+        Route::any('handle/{id}', 'ImporterController@handle')->name('school_manager.importer.handle');
+        Route::any('result/{id}', 'ImporterController@result')->name('school_manager.importer.result');
+    });
+
+
 });
 

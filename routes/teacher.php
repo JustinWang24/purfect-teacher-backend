@@ -7,12 +7,10 @@ Route::prefix('teacher')->group(function () {
     Route::get('index', 'SchoolSceneryController@index')->name('teacher.scenery.index');       // 校园风采
     Route::get('profile', 'SchoolSceneryController@profile')->name('teacher.scenery.profile'); // 学校简介
 
-    Route::get('conference/index', 'ConferenceController@index')->name('teacher.conference.index');          // 会议列表
-    Route::get('conference/data', 'ConferenceController@data')->name('teacher.conference.data');             // 数据接口
-    Route::get('conference/add', 'ConferenceController@add')->name('teacher.conference.add');                // 添加页面
-    Route::post('conference/create', 'ConferenceController@create')->name('teacher.conference.create');      // 添加接口
-    Route::get('conference/getUsers', 'ConferenceController@getUsers')->name('teacher.conference.getUsers'); // 获取参会人员接口
-    Route::get('conference/getRooms', 'ConferenceController@getRooms')->name('teacher.conference.getRooms'); // 获取会议室
+    Route::get('conference/index', 'ConferenceController@index')->name('teacher.conference.index');    // 会议列表
+    Route::any('conference/create', 'ConferenceController@create')->name('teacher.conference.create'); // 添加接口
+    Route::any('conference/edit', 'ConferenceController@edit')->name('teacher.conference.edit');       // 添加接口
+    Route::get('conference/delete', 'ConferenceController@delete')->name('teacher.conference.delete'); // 删除会议
 
     Route::get('preset/step', 'OfficialDocumentController@presetStep')->name('teacher.get.preset.step');                    // 所有系统预置步骤
     Route::post('production/process', 'OfficialDocumentController@productionProcess')->name('teacher.production.process');  // 生成公文流程

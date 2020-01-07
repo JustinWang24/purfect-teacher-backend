@@ -529,6 +529,9 @@ Route::prefix('location')->middleware('auth:api')->group(function () {
 
 // 会议管理
 Route::prefix('conferences')->middleware('auth:api')->group(function () {
+    // 签到
+    Route::get('/sign-in','Api\Conferences\ConferenceController@signIn')
+        ->name('api.conferences.sign-in');
     // 待完成
     Route::get('/unfinished','Api\Conferences\ConferenceController@unfinished')
         ->name('api.conferences.unfinished');
@@ -628,6 +631,19 @@ Route::prefix('evaluate')->middleware('auth:api')->group(function () {
     // 学生写课堂笔记
     Route::any('/student/save-note','Api\Evaluate\RatingController@save_note')
         ->name('api.evaluate.student.save-note');
+
+    // 评教接口
+    Route::post('/record/create','Api\Evaluate\EvaluateTeacherRecordController@create')
+        ->name('api.evaluate.record.create');
+    // 评教老师列表
+    Route::post('/record/teacher-list','Api\Evaluate\EvaluateTeacherRecordController@getTeacherList')
+        ->name('api.evaluate.record.teacher-list');
+    // 评教模版
+    Route::get('/record/template','Api\Evaluate\EvaluateTeacherRecordController@template')
+        ->name('api.evaluate.record.template');
+    // 是否开启评教
+    Route::get('/record/isEvaluate','Api\Evaluate\EvaluateTeacherRecordController@isEvaluate')
+        ->name('api.evaluate.record.isEvaluate');
 });
 
 Route::prefix('cloud')->group(function () {
@@ -707,11 +723,20 @@ Route::prefix('code')->middleware('auth:api')->group(function(){
 
 // 教师评教
 Route::prefix('teacher/evaluation')->middleware('auth:api')->group(function(){
+    // 是否开启评学
+    Route::post('/is-start','Api\Evaluate\TeacherEvaluationController@isEvaluation')
+        ->name('api.teacher.evaluation.is.start');
     // 教师教过的所有班级
     Route::post('/grade-list','Api\Evaluate\TeacherEvaluationController@index')
         ->name('api.teacher.evaluation.grade.list');
     // 所有学生
     Route::post('/grade-student','Api\Evaluate\TeacherEvaluationController@student')
         ->name('api.teacher.evaluation.grade.student');
+    // 评学模板
+    Route::post('/template','Api\Evaluate\TeacherEvaluationController@template')
+        ->name('api.teacher.evaluation.template');
+    // 评价学生
+    Route::post('/student','Api\Evaluate\TeacherEvaluationController@students')
+        ->name('api.teacher.evaluation.students');
 });
 

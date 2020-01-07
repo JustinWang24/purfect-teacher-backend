@@ -12,9 +12,8 @@ use App\Utils\UI\Button;
                     <header>添加</header>
                 </div>
                 <div class="card-body">
-                    <form action="{{ route('school_manager.content.create') }}" method="post"  id="add-building-form">
-
-                        @include('school_manager.evaluate.evaluate_teacher._form')
+                    <form action="{{ route('school_manager.evaluate.student.add') }}" method="post"  id="add-content-form">
+                        @include('school_manager.evaluate.evaluate_student._form')
                         <?php
                         Button::Print(['id'=>'btn-create-content','text'=>trans('general.submit')], Button::TYPE_PRIMARY);
                         ?>&nbsp;

@@ -8,152 +8,171 @@
 namespace App\Dao\Teachers;
 
 use App\User;
-use App\Utils\Misc\ConfigurationTool;
 use Carbon\Carbon;
+use App\Utils\JsonBuilder;
 use Illuminate\Support\Facades\DB;
 use App\Models\Teachers\Conference;
 use App\Utils\ReturnData\MessageBag;
+use App\Utils\Misc\ConfigurationTool;
 use App\Models\Teachers\ConferencesUser;
-use App\Models\Teachers\ConferencesMedia;
 
 class ConferenceDao
 {
 
     /**
-     * @param User $user
-     * @param $map
+     * @param $id
+     * @return mixed
+     */
+    public function getConferenceById($id) {
+        return Conference::where('id', $id)->first();
+    }
+
+    /**
      * @param string $schoolId
      * @return mixed
      */
-    public function getConferenceListByUser($user, $map,$schoolId='')
+    public function getConferenceBySchoolId($schoolId)
     {
-        if($user->isSchoolAdminOrAbove()) {
-            $map['school_id'] = $schoolId;
-        }
-        $model = new Conference();
-        $list = $model->where($map)->with('user')->get();
-        return $list;
+        $map = ['school_id'=>$schoolId];
+        return Conference::where($map)
+            ->orderBy('to','desc')
+            ->paginate(ConfigurationTool::DEFAULT_PAGE_SIZE);
     }
 
 
     /**
      * 创建会议
-     * @param $data
-     * @return mixed
-     */
-    public function createConference($data)
-    {
-        return Conference::create($data);
-    }
-
-
-    /**
-     * 创建会议媒体信息
-     * @param $data
-     * @return mixed
-     */
-    public function createConferenceMedias($data)
-    {
-        return ConferencesMedia::create($data);
-    }
-
-
-
-    /**
-     * 创建参会人员
-     * @param $data
-     * @return mixed
-     */
-    public function createConferenceUser($data)
-    {
-
-        return ConferencesUser::create($data);
-    }
-
-
-    /**
-     * 获取参会人员
-     * @param $from
-     * @param $to
-     * @param $schoolId
-     * @return mixed
-     */
-    public function getConferenceUser($from,$to,$schoolId)
-    {
-        $map = [['school_id', '=', $schoolId],['from', '>=', $from]];
-        $map2 = [['school_id', '=', $schoolId],['to', '<=', $to]];
-        return ConferencesUser::where($map)->orwhere($map2)->get()->toArray();
-    }
-
-    /**
-     * 添加会议流程
-     * @param array $conferenceData 会议数据
+     * @param array $data 会议数据
      * @return MessageBag
      */
-    public function addConferenceFlow($conferenceData)
-    {
+    public function addConference($data) {
+        $user = explode(',',$data['conference']); // 参会人员
+        unset($data['conference']);
         try{
             DB::beginTransaction();
-            $s1 = $this->createConference($conferenceData);
-            if(!$s1->id) {
-                throw new \Exception('创建会议失败');
-            }
+            $re = Conference::create($data);
 
-            foreach ($conferenceData['participant'] as $key => $val) {
-                $conferenceUserData = [
-                    'conference_id' => $s1->id,
+            foreach ($user as $key => $val) {
+                $userData = [
+                    'conference_id' => $re->id,
                     'user_id'       => $val,
-                    'school_id'     => $conferenceData['school_id'],
-                    'status'        => 0,
-                    'from'          => $conferenceData['from'],
-                    'to'            => $conferenceData['to'],
+                    'school_id'     => $data['school_id'],
                 ];
-                $s2 = $this->createConferenceUser($conferenceUserData);
-                if(!$s2->id)
-                {
-                    throw new \Exception('邀请人添加失败');
-                }
+                ConferencesUser::create($userData);
             }
 
-            $medias = ['conference_id'=>$s1->id,'media_id'=>$conferenceData['media_id']];
-            $s3 = $this->createConferenceMedias($medias);
-            if(!$s3->id)
-            {
-                throw new \Exception('添加会议媒体关联失败');
-            }
+            // 暂时没有会议媒体数据
+
             DB::commit();
 
-            return new MessageBag(1000,'创建成功');
+            return new MessageBag(JsonBuilder::CODE_SUCCESS,'创建成功');
 
         }
         catch (\Exception $e)
         {
             DB::rollBack();
             $msg = $e->getMessage();
-//            return ['code'=>0,'msg'=>$msg];
-            return new MessageBag(999,$msg);
+            return new MessageBag(JsonBuilder::CODE_ERROR,$msg);
         }
     }
 
 
     /**
-     * 获取会议列表
-     * @param $map
-     * @param $field
-     * @param $groupBy
-     * @return mixed
+     * 编辑会议
+     * @param array $data
+     * @return MessageBag
      */
-    public function getConference($map,$field,$groupBy='')
-    {
-        $model = new Conference();
-        $list = $model->where($map)->select($field)->get();
-        if(!empty($groupBy))
-        {
-            $list = $list->groupBy($groupBy);
+    public function updConference($data) {
+        $user = explode(',',$data['conference']); // 参会人员
+
+        unset($data['conference']);
+        try{
+            DB::beginTransaction();
+            // 修改会议主表
+            Conference::where(['id'=>$data['id']])->update($data);
+            // 删除参会人员
+            ConferencesUser::where(['conference_id'=>$data['id']])->delete();
+            // 创建参会人员
+            foreach ($user as $key => $val) {
+                $userData = [
+                    'conference_id' => $data['id'],
+                    'user_id'       => $val,
+                    'school_id'     => $data['school_id'],
+                ];
+                ConferencesUser::create($userData);
+            }
+
+            DB::commit();
+            return new MessageBag(JsonBuilder::CODE_SUCCESS,'编辑成功');
+
+        }catch (\Exception $e) {
+            DB::rollBack();
+            $msg = $e->getMessage();
+            return new MessageBag(JsonBuilder::CODE_ERROR,$msg);
+        }
+    }
+
+
+    /**
+     * 删除会议
+     * @param $id
+     * @return MessageBag
+     */
+    public function deleteConference($id) {
+        $messageBag = new MessageBag();
+        try {
+            DB::beginTransaction();
+            // 删除参会人员
+            ConferencesUser::where(['conference_id'=>$id])->delete();
+            // 删除会议
+            Conference::where(['id'=>$id])->delete();
+            DB::commit();
+            $messageBag->setMessage('删除成功');
+        }catch (\Exception $e) {
+            DB::rollBack();
+            $messageBag->setMessage($e->getMessage());
+            $messageBag->setCode(JsonBuilder::CODE_ERROR);
+        }
+        return $messageBag;
+    }
+
+
+    /**
+     * 签到
+     * @param $id
+     * @param $userId
+     * @param $type
+     * @return MessageBag|void
+     */
+    public function signIn($id, $userId, $type) {
+        $messageBag = new MessageBag(JsonBuilder::CODE_ERROR);
+        $map = ['conference_id'=>$id, 'user_id'=>$userId];
+        $info = ConferencesUser::where($map)->first();
+        if(is_null($info)) {
+            $messageBag->setMessage('该会议不存在');
+            return $messageBag;
+        }
+        if($type == ConferencesUser::SIGN_OUT && $info->status == ConferencesUser::UN_SIGN_IN) {
+            $messageBag->setMessage('您还未签到,请先签到');
+            return $messageBag;
+        }
+        $data = ['status'=>$type];
+        if($type == ConferencesUser::SIGN_IN) {
+            $data['begin'] = Carbon::now()->toDateTimeString();
+        } elseif($type == ConferencesUser::SIGN_OUT) {
+            $data['end'] = Carbon::now()->toDateTimeString();
         }
 
-        return $list;
+        $re = ConferencesUser::where($map)->update($data);
+        if($re) {
+            $messageBag->setCode(JsonBuilder::CODE_SUCCESS);
+            $messageBag->setMessage('签到成功');
+        } else {
+            $messageBag->setMessage('签到失败');
+        }
+        return $messageBag;
     }
+
 
 
     /**
@@ -227,7 +246,6 @@ class ConferenceDao
             }
 
             $conference = $val->conference;
-//            dd($conference);
             $parse = Carbon::parse($conference->from);
             $val['date'] = $parse->format('Y-m-d');
             $conference['from'] = $parse->format('H:i');
@@ -287,15 +305,6 @@ class ConferenceDao
 
         return $list;
 
-    }
-
-
-    /**
-     * @param $id
-     * @return mixed
-     */
-    public function getConferenceById($id) {
-        return Conference::where('id', $id)->first();
     }
 
 

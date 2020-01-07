@@ -14,17 +14,22 @@ use App\BusinessLogic\WifiInterface\Contracts\WifiInterface;
 
 class Huawei implements WifiInterface
 {
-   private static $huaweiVo = 'huaweiKeyToken'; // 华为key
-   private static $userName = 'yezilu100@purfect.cn'; // 账号
-   private static $password = '@1234567890Aa'; // 密码
-   private static $apiUrl   = 'https://naas.huaweicloud.com:18002'; // 接口地址
+   private static $huaweiVo; // 华为key
+   private static $userName; // 账号
+   private static $password; // 密码
+   private static $apiUrl; // 接口地址
 
-   private static $huaweiIdentify     = 'huaweiIdentify'; // 本地保存token的key
+   private static $huaweiIdentify = 'huaweiIdentify'; // 本地保存token的key
    private static $huaweiIdentifyTime = 8; // 本地保存token 的有效期
    private static $huaweiAccessToken  = null; // 华为接口请求的访问token
 
    public function __construct ()
    {
+      self::$huaweiVo = env ( 'WIFI_HUAWEI_KYE' );
+      self::$userName = env ( 'WIFI_HUAWEI_NAME' );
+      self::$password = env ( 'WIFI_HUAWEI_PASS' );
+      self::$apiUrl   = env ( 'WIFI_HUAWEI_API_URL' );
+
       if ( Cache::has ( self::$huaweiIdentify ) == false )
       {
          $tokenArr = $this->getToken ();
@@ -105,8 +110,8 @@ class Huawei implements WifiInterface
       $param[ 'userGroupId' ]        = $userInfo[ 'userGroupId' ];
       $param[ 'password' ]           = $userInfo[ 'password' ];
       $param[ 'passwordConfirm' ]    = $userInfo[ 'password' ];
-      $param[ 'userName' ]           = $userInfo[ 'mobile' ];
-      $param[ 'vaildPeriod' ]        = $userInfo[ 'vaild_data' ];
+      $param[ 'userName' ]           = $userInfo[ 'userName' ];
+      $param[ 'vaildPeriod' ]        = $userInfo[ 'vaildPeriod' ];
       $param[ 'nextUpdateUserpass' ] = false;
       $result = Curl::to ( self::$apiUrl . "/controller/campus/v1/accountservice/users" )
                     ->withHeaders ( [ 'Content-Type: application/json','X-ACCESS-TOKEN:'.self::$huaweiAccessToken ] )
@@ -329,7 +334,6 @@ class Huawei implements WifiInterface
       }
    }
 
-
    /**
     * Func 创建用户组
     */
@@ -350,59 +354,10 @@ class Huawei implements WifiInterface
     */
    public function findUsergroup ()
    {
-     /* 0 => array:10 [▼
-      "id" => "20326e51-42a3-47e5-bb36-083c276db2e3"
-      "description" => null
-      "fullPathName" => "ROOT"
-      "bsid" => "00000"
-      "parentId" => null
-      "name" => "ROOT"
-      "address" => null
-      "postalCode" => null
-      "adminEmail" => null
-      "orderId" => 0
-    ]
-    1 => array:10 [▼
-      "id" => "7eb97a44-dd27-4a19-ae13-4556d4d56bfd"
-      "description" => null
-      "fullPathName" => "ROOT\Guest"
-      "bsid" => "00000-00000"
-      "parentId" => "20326e51-42a3-47e5-bb36-083c276db2e3"
-      "name" => "Guest"
-      "address" => null
-      "postalCode" => null
-      "adminEmail" => null
-      "orderId" => 0
-    ]
-    2 => array:10 [▼
-      "id" => "2d3f4e1a-660a-4ce3-9f93-fbc4d907febd"
-      "description" => ""
-      "fullPathName" => "ROOT\老师-禁止删除"
-      "bsid" => "00000-00002"
-      "parentId" => "20326e51-42a3-47e5-bb36-083c276db2e3"
-      "name" => "老师-禁止删除"
-      "address" => ""
-      "postalCode" => ""
-      "adminEmail" => ""
-      "orderId" => 2
-    ]
-    3 => array:10 [▼
-      "id" => "40a43aa7-3b16-4474-bce6-10d4fdac84a7"
-      "description" => ""
-      "fullPathName" => "ROOT\学生-禁止删除"
-      "bsid" => "00000-00001"
-      "parentId" => "20326e51-42a3-47e5-bb36-083c276db2e3"
-      "name" => "学生-禁止删除"
-      "address" => ""
-      "postalCode" => ""
-      "adminEmail" => ""
-      "orderId" => 1
-    ]*/
       $result = Curl::to ( self::$apiUrl . "/controller/campus/v1/accountservice/usergroups" )
                     ->withHeaders ( [ 'Content-Type: application/json','X-ACCESS-TOKEN:'.self::$huaweiAccessToken ] )
                     ->get ();
-      $result = json_decode ($result,true);
-      dd($result);
+      return json_decode ($result,true);
    }
 
 
