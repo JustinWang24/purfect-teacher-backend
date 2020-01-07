@@ -87,4 +87,46 @@ class MeetingDao
         })->paginate(ConfigurationTool::DEFAULT_PAGE_SIZE);
 
     }
+
+
+    /**
+     * 签到或签退
+     * @param $userId
+     * @param $meetId
+     * @param $type
+     * @return MessageBag
+     */
+    public function signIn($userId, $meetId, $type) {
+        $messageBag = new MessageBag();
+        $map = ['user_id'=>$userId, 'meetid'=>$meetId];
+        $meet = MeetingUser::where($map)->first();
+        if(is_null($meet)) {
+            $messageBag->setCode(JsonBuilder::CODE_ERROR);
+            $messageBag->setMessage('该会议不存在');
+            return $messageBag;
+        }
+        $now = Carbon::now()->toDateTimeString();
+        $data = [];
+        if($type == 'signin') {
+            $msg = '签到';
+            $data = ['status'=>MeetingUser::SIGN_IN, 'signin_start'=>$now];
+        } elseif($type == 'signout') {
+            $msg = '签退';
+            if($meet->status == MeetingUser::UN_SIGN_IN) {
+                $messageBag->setCode(JsonBuilder::CODE_ERROR);
+                $messageBag->setMessage('您还未签到,请先签到');
+                return $messageBag;
+            }
+            $data = ['status'=>MeetingUser::SIGN_OUT, 'signin_end'=>$now];
+
+        }
+        $re = MeetingUser::where($map)->update($data);
+        if($re) {
+            $messageBag->setMessage($msg.'成功');
+        } else {
+            $messageBag->setCode(JsonBuilder::CODE_ERROR);
+            $messageBag->setMessage($msg.'失败');
+        }
+        return $messageBag;
+    }
 }

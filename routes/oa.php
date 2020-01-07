@@ -83,4 +83,10 @@ Route::prefix('meeting')->middleware('auth:api')->group(function () {
     // 待签列表
     Route::post('/todoList','Api\OA\MeetIngController@todoList')
         ->name('Oa.meeting.todoList');
+    // 签到签退
+    Route::post('/qrcode','Api\OA\MeetIngController@qrcode')
+        ->name('Oa.meeting.qrcode');
+    // 已完成列表
+    Route::post('/doneList','Api\OA\MeetIngController@doneList')
+        ->name('Oa.meeting.doneList');
 });

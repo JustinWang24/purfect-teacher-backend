@@ -92,4 +92,23 @@ class MeetIngController extends Controller
         return JsonBuilder::Success($data);
     }
 
+
+    /**
+     * 签到签退
+     * @param MeetingRequest $request
+     * @return string
+     */
+    public function qrcode(MeetingRequest $request) {
+        $userId = $request->user()->id;
+        $meetId = $request->getMeetId();
+        $type = $request->getType();
+        $dao = new MeetingDao();
+        $result = $dao->signIn($userId, $meetId, $type);
+        if($result->isSuccess()) {
+            return JsonBuilder::Success($result->getMessage());
+        } else {
+            return JsonBuilder::Error($result->getMessage());
+        }
+    }
+
 }
