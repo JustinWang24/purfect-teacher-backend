@@ -23,18 +23,21 @@ class NoticeController extends Controller
         $type = $request->getType();
         $dao = new NoticeDao();
         $schoolId = $request->user()->getSchoolId();
-        $pageNumber = $request->get('page',1);
-        $result = $dao->getNotice($type, $schoolId, $pageNumber - 1);
-
-        foreach ($result['notices'] as $key => $item) {
+        $result = $dao->getNotice($type, $schoolId);
+        foreach ($result as $key => $item) {
+            $item->attachment_field = 'url';
+            $item->attachments;
             $re = $item->readLog($userId);
             if(is_null($re)) {
                 $item->is_read = Notice::UNREAD; // 未读
             } else {
                 $item->is_read = Notice::READ; // 已读
             }
+            if($item->type == Notice::TYPE_INSPECTION) {
+                $item->inspect;
+            }
         }
-        $data = pageReturn($result['notices'], $result['total'], $pageNumber);
+        $data = pageReturn($result);
         return JsonBuilder::Success($data);
     }
 
