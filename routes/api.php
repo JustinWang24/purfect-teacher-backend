@@ -383,9 +383,10 @@ Route::prefix('home')->middleware('auth:api')->group(function () {
 
 // 消息通知
 Route::prefix('notice')->middleware('auth:api')->group(function () {
+    // 通知列表
     Route::post('/notice-list', 'Api\Notice\NoticeController@getNotice')
         ->name('api.notice.list');
-
+    // 通知详情
     Route::post('/notice-info', 'Api\Notice\NoticeController@noticeInfo')
     ->name('api.notice.info');
 });

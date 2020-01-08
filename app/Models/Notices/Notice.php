@@ -25,6 +25,11 @@ class Notice extends Model
     const STATUS_UNPUBLISHED_TEXT = '未发布';
     const STATUS_PUBLISH_TEXT     = '已发布';
 
+
+    // 阅读状态
+    const UNREAD = 0;
+    const READ = 1;
+
     public $hidden = ['updated_at'];
 
     public static function allType()
@@ -32,7 +37,7 @@ class Notice extends Model
         return [
             self::TYPE_NOTIFY     => self::TYPE_NOTIFY_TEXT,
             self::TYPE_NOTICE     => self::TYPE_NOTICE_TEXT,
-//            self::TYPE_INSPECTION => self::TYPE_INSPECTION_TEXT,
+            self::TYPE_INSPECTION => self::TYPE_INSPECTION_TEXT,
         ];
     }
 
@@ -76,5 +81,14 @@ class Notice extends Model
             return asset($value);
         }
         return null;
+    }
+
+    /**
+     * 查看当前用户该通识是否阅读
+     * @param $userId
+     * @return Model|\Illuminate\Database\Eloquent\Relations\HasOne|object|null
+     */
+    public function readLog($userId) {
+        return $this->hasOne(NoticeReadLogs::class)->where('user_id',$userId)->first();
     }
 }
