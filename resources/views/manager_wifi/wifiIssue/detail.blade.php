@@ -160,6 +160,7 @@ use App\Utils\UI\Button;
            ?>
         </div>
     </div>
+	<script src="{{ route('manager_wifi.WifiApi.get_issue_types') }}" charset="UTF-8"></script>
     <script>
         window.onload=function() {
             showLocation({{ old('typeone_id')?:0 }},{{ old('typetwo_id')?:0 }});
