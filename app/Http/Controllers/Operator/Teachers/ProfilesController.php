@@ -7,6 +7,7 @@ use App\Dao\Schools\CampusDao;
 use App\Dao\Schools\InstituteDao;
 use App\Dao\Schools\OrganizationDao;
 use App\Dao\Schools\SchoolDao;
+use App\Dao\Teachers\QualificationDao;
 use App\Dao\Teachers\TeacherProfileDao;
 use App\Dao\Users\GradeUserDao;
 use App\Dao\Users\UserDao;
@@ -18,6 +19,7 @@ use App\Models\Acl\Role;
 use App\Models\NetworkDisk\Media;
 use App\Models\Schools\Organization;
 use App\Models\Teachers\Teacher;
+use App\Models\Teachers\TeacherQualification;
 use App\User;
 use App\Utils\FlashMessageBuilder;
 use Illuminate\Support\Facades\Auth;
@@ -116,6 +118,12 @@ class ProfilesController extends Controller
         $school = $schoolDao->getSchoolById($schoolId);
         $this->dataForView['configs'] = $school->teacherPerformanceConfigs;
         $this->dataForView['history'] = $teacher->performances ?? [];
+
+
+        // 该教师的评聘佐证材料
+        $qualificationDao =  new QualificationDao;
+        $qualification = $qualificationDao->getTeacherQualificationByTeacherId($teacher->id);
+        $this->dataForView['qualification'] = $qualification;
         return view('teacher.profile.edit', $this->dataForView);
     }
 
@@ -178,8 +186,95 @@ class ProfilesController extends Controller
             return redirect()->route('school_manager.teachers.edit-avatar',['uuid'=>$user->id]);
         }
     }
+
     public function export()
     {
         return Excel::download(new TeacherExport, 'teachers.xlsx');
     }
+
+    /**
+     * 佐证材料列表
+     * @param MyStandardRequest $request
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function listQualification(MyStandardRequest $request)
+    {
+
+        $id = $request->uuid();
+        $dao = new UserDao();
+
+        $teacher = $dao->getTeacherByIdOrUuid($id);
+
+        $qualificationDao =  new QualificationDao;
+        $qualification = $qualificationDao->getTeacherQualificationByTeacherId($teacher->id);
+
+        $this->dataForView['uuid'] = $id;
+        $this->dataForView['data'] = $qualification;
+        return view('teacher.profile.list_qualification', $this->dataForView);
+    }
+
+
+
+    /**
+     * 评聘添加页面
+     * @param MyStandardRequest $request
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     *
+     */
+    public function addQualification(MyStandardRequest $request)
+    {
+        $this->dataForView['uuid'] = $request->uuid();
+        return view('teacher.profile.add_qualification', $this->dataForView);
+    }
+
+    /**
+     * 保存评聘资料
+     * @param MyStandardRequest $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function saveQualification(MyStandardRequest $request)
+    {
+
+        $uuid = $request->uuid();
+        $data = $request->get('qualification');
+        $userDao = new UserDao;
+        $user = $userDao->getUserByIdOrUuid($uuid);
+
+        $path = TeacherQualification::DEFAULT_UPLOAD_PATH_PREFIX. $user->id .'/qualification';
+        $file = $request->file('file')->store($path);
+
+        $data['path'] = TeacherQualification::qualificationUploadPathToUrl($file);
+        $data['user_id'] = $user->id;
+        $dao = new  QualificationDao;
+        $result = $dao->create($data);
+
+        if($result->isSuccess()) {
+            FlashMessageBuilder::Push($request, 'success','添加资料成功');
+        } else {
+            FlashMessageBuilder::Push($request, 'error',$result->getMessage());
+        }
+
+        return redirect()->route('school_manager.teachers.edit-profile',['uuid'=> $uuid]);
+    }
+
+    /**
+     * 删除评聘
+     * @param MyStandardRequest $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function delQualification(MyStandardRequest $request)
+    {
+        $id = $request->get('id');
+        $dao = new QualificationDao;
+
+        $result = $dao->del($id);
+        if ($result) {
+            FlashMessageBuilder::Push($request, FlashMessageBuilder::SUCCESS, '删除成功');
+        } else {
+            FlashMessageBuilder::Push($request, FlashMessageBuilder::DANGER, '删除失败');
+        }
+        $this->dataForView['uuid'] = $request->uuid();
+        return redirect()->route('school_manager.teachers.list.qualification', $this->dataForView);
+    }
+
 }
