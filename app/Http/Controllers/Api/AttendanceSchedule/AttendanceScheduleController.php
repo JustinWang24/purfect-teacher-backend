@@ -26,6 +26,10 @@ class AttendanceScheduleController extends Controller
 
         $result = $dao->getSpecialAttendances($schoolId);
 
+        foreach ($result as $v)
+        {
+            $v->grade_name = $v->grade->name;
+        }
         return JsonBuilder::Success($result);
 
         //以上是对礼县的特殊操作
