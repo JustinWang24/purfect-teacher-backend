@@ -8,6 +8,7 @@ use App\Dao\OA\OaAttendanceTeacherDao;
 use App\Exports\AttendanceTotalExport;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\MyStandardRequest;
+use App\Models\OA\OaAttendanceTeacherGroup;
 use App\Utils\FlashMessageBuilder;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
@@ -88,6 +89,12 @@ class AttendanceTeacherController extends Controller
         $this->dataForView['group'] = $dao->getGroupInfoById($id);
         return view('school_manager.oa.attendance_form',$this->dataForView);
     }
+    public function addGroup(MyStandardRequest $request){
+        $dao = new OaAttendanceTeacherDao();
+        $this->dataForView['pageTitle'] = '办公/考勤管理';
+        $this->dataForView['group'] = new OaAttendanceTeacherGroup();
+        return view('school_manager.oa.attendance_form',$this->dataForView);
+    }
     public function  save(Request $request)
     {
         $requestArr = $request->get('group');
@@ -103,7 +110,7 @@ class AttendanceTeacherController extends Controller
         $schoolId= $request->session()->get('school.id');
         $requestArr['school_id'] = $schoolId;
         $dao = new OaAttendanceTeacherDao();
-        if(isset($requestArr['id'])){
+        if(!empty($requestArr['id'])){
             $result = $dao->updateGroup($requestArr);
         }
         else{

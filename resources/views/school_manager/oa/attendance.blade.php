@@ -10,6 +10,9 @@ use App\User;
             <div class="card">
                 <div class="card-head">
                     <header>{{ session('school.name') }} 考勤管理</header>
+                    <a href="{{ route('school_manager.oa.attendances-add-group') }}" class="btn btn-primary pull-right">
+                        添加考勤组 <i class="fa fa-plus"></i>
+                    </a>
                 </div>
                 <div class="card-body">
                     <div class="row">

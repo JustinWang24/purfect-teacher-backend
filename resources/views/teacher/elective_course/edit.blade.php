@@ -44,7 +44,7 @@
             <div class="card">
                 <div class="card-head">
                     <header>
-                        申请开设一门选修课: 申请人({{ $teacher->name }})
+                        申请开设一门选修课: 申请人({{ @$teacher->name }})
                     </header>
                 </div>
                 <div class="card-body">
