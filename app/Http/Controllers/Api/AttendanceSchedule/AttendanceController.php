@@ -4,6 +4,7 @@
 namespace App\Http\Controllers\Api\AttendanceSchedule;
 
 
+use App\Dao\Schools\GradeDao;
 use Carbon\Carbon;
 use App\Utils\JsonBuilder;
 use App\Dao\Courses\CourseMajorDao;
@@ -71,8 +72,6 @@ class AttendanceController extends Controller
         // 学期
         $term = $request->get('term',$configuration->guessTerm(Carbon::now()->month));
 
-
-
         $attendancesDetailsDao = new AttendancesDetailsDao();
         $signInList = $attendancesDetailsDao->signInList($year, $user->id, $courseId, $term);
         foreach ($signInList as $key => $val) {
@@ -135,5 +134,49 @@ class AttendanceController extends Controller
             return JsonBuilder::Error('旷课添加失败');
         }
     }
+
+
+    /**
+     * 教师端 班级签到  -- 教师教的所有班级
+     * @param AttendanceRequest $request
+     * @return string
+     */
+    public function gradeSign(AttendanceRequest $request)
+    {
+        $teacher = $request->user();
+
+        $dao = new TimetableItemDao;
+        $item = $dao->getTeacherTeachingGrade($teacher->id);
+
+        $gradeId = [];
+        foreach ($item as $key => $value) {
+            $gradeId[$key] = $value->grade_id;
+        }
+        $gradeId = array_unique($gradeId);
+
+        $gradeDao = new GradeDao;
+        $grades = $gradeDao->getGrades($gradeId);
+
+        $data = [];
+        foreach ($grades as $k => $v) {
+            $data[$k]['grade_id'] = $v->id;
+            $data[$k]['name'] = $v->name;
+        }
+        return JsonBuilder::Success($data);
+    }
+
+
+    /**
+     * 教师端 班级签到详情
+     * @param AttendanceRequest $request
+     */
+    public function gradeSignDetails(AttendanceRequest $request)
+    {
+        $gradeId = $request->get('grade_id');
+        dd($gradeId);
+
+
+    }
+
 
 }
