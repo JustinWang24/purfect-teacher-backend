@@ -44,4 +44,41 @@
          echo 'var itemall = '.json_encode($list);exit;
       }
 
+      /**
+       * Func 获取分类
+       * @param Request $request
+       * @return Json
+       */
+      public function get_issue_types(Request $request)
+      {
+         $oneCategory = DB::table('wifi_issue_types')
+                          ->where([['type_pid','=',0],['purpose','=',2]])
+                          ->get ( ['typeid as id','type_name as name'])
+                          ->toArray ();
+
+         $list = array();
+         $oneCategoryIds = array();
+         if(!empty($oneCategory) && count ($oneCategory) > 0)
+         {
+            foreach ($oneCategory as $cv)
+            {
+               $oneCategoryIds[] = $cv->id;
+               $list['0'][$cv->id] = $cv->name;
+            }
+         }
+         // 获取二级
+         $twoCategory = DB::table('wifi_issue_types')
+                           ->where([['type_pid','>',0],['purpose','=',2]])
+                           ->get ( ['typeid as id','type_pid','type_name as name'])
+                           ->toArray ();
+         if(!empty($twoCategory) && count ($twoCategory) > 0)
+         {
+            foreach ($twoCategory as $cyv)
+            {
+               $list['0,'.$cyv->type_pid][$cyv->id] = $cyv->name;
+            }
+         }
+         echo 'var itemall = '.json_encode($list);exit;
+      }
+
    }

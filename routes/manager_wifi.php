@@ -40,6 +40,7 @@ Route::prefix('manager_wifi')->group(function ()
    Route::any('wifiContent/delete', 'WifiContentController@delete')->name('manager_wifi.wifiContent.delete'); // 删除
 
    //  获取Json
-   Route::any('WifiApi/get-school-campus', 'WifiApiController@get_school_campus')->name('manager_wifi.WifiApi.get_school_campus'); // 删除
+   Route::any('WifiApi/get-school-campus', 'WifiApiController@get_school_campus')->name('manager_wifi.WifiApi.get_school_campus'); // 获取学校
+   Route::any('WifiApi/get-issue-types', 'WifiApiController@get_issue_types')->name('manager_wifi.WifiApi.get_issue_types'); // 报修分类
 
 });

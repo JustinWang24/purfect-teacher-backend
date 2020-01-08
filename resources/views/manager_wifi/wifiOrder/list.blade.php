@@ -9,72 +9,79 @@ use App\User;
         <div class="col-sm-12 col-md-12 col-xl-12">
             <div class="card-box">
                 <div class="card-head">
-                  
-                    <header></header>
+                    <!--header>titile1- titile2</header-->
                 </div>
 
                 <div class="card-body">
                     <div class="row">
                         <div class="col-12 mb-2">
-                            <form action="{{ route('manager_wifi.wifi.list') }}" method="get"  id="add-building-form">
+                            <form action="{{ route('manager_wifi.wifiOrder.list') }}" method="get"  id="add-building-form">
                                 <div class="pull-left col-2">
                                     <label>学校</label>
                                     <select id="cityid" class="el-input__inner col-10" name="school_id"></select>
                                 </div>
+
                                 <div class="pull-left col-2">
                                     <label>校区</label>
                                     <select id="countryid" class="el-input__inner col-10" name="campus_id"></select>
                                 </div>
+
+                                <div class="pull-left col-3">
+                                    <label>关键词</label>
+                                    <input type="text" class="el-input__inner col-10" value="{{ Request::get('keywords') }}" placeholder="手机号" name="keywords">
+                                </div>
                                 <button class="btn btn-primary">搜索</button>
                             </form>
-                            <a href="{{ route('manager_wifi.wifi.add') }}" class="btn btn-primary pull-right" id="btn-create-room-from-building">
-                                添加 <i class="fa fa-plus"></i>
-                            </a>
                         </div>
                         <div class="table-responsive">
                             <table class="table table-striped table-bordered table-hover table-checkable order-column valign-middle text-center">
                                 <thead>
                                 <tr>
-                                    <th>排序</th>
-                                    <th width="15%">学校</th>
-                                    <th width="15%">校区</th>
-                                    <th>类型</th>
-                                    <th>天数</th>
-                                    <th>原格</th>
-                                    <th>现价</th>
-                                    <th>排序</th>
-                                    <th>状态</th>
+									<th>订单号</th>
+									<th>姓名</th>
+									<th>手机号</th>
+									<th>学校</th>
+									<th>类型</th>
+									<th>数量</th>
+									<th>单价</th>
+									<th>总价</th>
+									<th>添加时间</th>
+									<th>支付时间</th>
+									<th>支付方式</th>
+									<th>支付状态</th>
                                     <th width="10%">操作</th>
                                     <th></th>
                                 </tr>
                                 </thead>
                                 <tbody>
-                                @foreach($wifiList as $key=>$val)
+                                @foreach($dataList as $key=>$val)
                                     <tr>
-                                        <td>{{ $val->wifi_sort }}</td>
-                                        <td>{{ $val->schools_name }}</td>
-                                        <td>{{ $val->campuses_name }}</td>
-                                        <td>{{ $val->wifi_name }}</td>
-                                        <td>{{ $val->wifi_days }}</td>
-                                        <td>{{ $val->wifi_oprice }}</td>
-                                        <td>{{ $val->wifi_price }}</td>
-                                        <td>{{ $val->wifi_sort }}</td>
-                                        <td>{{ $val->status }}</td>
+                                        <td width="10%">{{ $val['trade_sn'] }}</td>
+                                        <td>{{ $val['name']?$val['name']:'---'}}</td>
+                                        <td>{{ $val['mobile'] }}</td>
+                                        <td>{{ $val['school_name'] }}</td>
+                                        <td>{{ $val['wifi_name'] }}</td>
+                                        <td>{{ $val['order_number'] }}</td>
+										<td>{{$val['order_unitprice']}}</td>
+										<td>{{$val['order_totalprice']}}</td>
+										<td>{{$val['created_at']}}</td>
+										<td>{{$val['pay_time']}}</td>
+										<td>{{$paymentidArr[$val['paymentid']]}}</td>
+										<td>{{$manageWifiStatusArr[$val['status']]}}</td>
                                         <td class="text-center">
-                                            {{ Anchor::Print(['text'=>'编辑','class'=>'btn-edit-room btn-info','href'=>route('manager_wifi.wifi.edit',['wifiid'=>$val->wifiid])], Button::TYPE_DEFAULT,'edit') }}
+                                            {{ Anchor::Print(['text'=>'详情','class'=>'btn btn-primary','href'=>route('manager_wifi.wifiOrder.detail',['trade_sn'=>$val->trade_sn])], Button::TYPE_DEFAULT,'') }}
                                         </td>
                                     </tr>
                                 @endforeach
                                 </tbody>
                             </table>
                         </div>
-                        {{ $wifiList->appends(Request::all())->links() }}
+                        {{ $dataList->appends(Request::all())->links() }}
                     </div>
                 </div>
             </div>
         </div>
     </div>
-<script src="{{ route('manager_wifi.WifiApi.get_school_campus') }}" charset="UTF-8"></script>
 <script>
     window.onload=function() {
         showLocation({{ Request::get('school_id')?:0 }},{{ Request::get('campus_id')?:0 }});
