@@ -71,10 +71,24 @@
 
                 @if(session('school.id'))
                     <li class="nav-item">
-                        <a href="{{ route('teacher.conference.index',['uuid'=>session('school.uuid')])  }}" class="nav-link">
+                        {{--<a href="javascript:void(0);" class="nav-link nav-toggle">
                             <i class="material-icons">event_seat</i>
                             <span class="title">会议管理</span>
+                            <span class="selected"></span>
+                            <span class="arrow open"></span>
                         </a>
+                        <ul class="sub-menu">
+                            <li class="nav-item active">
+                                <a href="" class="nav-link ">
+                                    <span class="title">分组列表</span>
+                                    <span class="selected"></span>
+                                </a>
+                            </li>
+                        </ul>--}}
+                        {{--<a href="{{ route('teacher.conference.index',['uuid'=>session('school.uuid')])  }}" class="nav-link">
+                            <i class="material-icons">event_seat</i>
+                            <span class="title">会议管理</span>
+                        </a>--}}
                     </li>
 
                     <li class="nav-item">

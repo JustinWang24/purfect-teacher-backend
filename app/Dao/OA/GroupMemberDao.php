@@ -26,10 +26,15 @@ class GroupMemberDao
         try {
             DB::beginTransaction();
             foreach ($userIdArr as $key => $item) {
-                $data['group_id']  = $groupId;
-                $data['school_id'] = $schoolId;
-                $data['user_id'] = $item;
-                GroupMember::create($data);
+                // 判断该成员是否已存在
+                $re = $this->getGroupMemberByUserIdAndGroup($item,$groupId);
+                if(is_null($re)) {
+                    $data['group_id']  = $groupId;
+                    $data['school_id'] = $schoolId;
+                    $data['user_id'] = $item;
+                    GroupMember::create($data);
+                }
+
             }
             DB::commit();
 
@@ -59,5 +64,16 @@ class GroupMemberDao
     public function deleteMember($groupId, $userId) {
         $map = ['group_id'=>$groupId, 'user_id'=>$userId];
         return GroupMember::where($map)->delete();
+    }
+
+
+    /**
+     * @param $userId
+     * @param $groupId
+     * @return mixed
+     */
+    public function getGroupMemberByUserIdAndGroup($userId, $groupId) {
+        $map = ['user_id'=>$userId, 'group_id'=>$groupId];
+        return GroupMember::where($map)->first();
     }
 }

@@ -73,7 +73,7 @@ class GroupController extends Controller
         $list = $userDao->getTeachersBySchool($schoolId, false, $keyword);
         $data = [];
         foreach ($list as $key => $val) {
-            $data[$key]['userid'] = $val->id;
+            $data[$key]['userid'] = $val->user_id;
             $data[$key]['user_username'] = $val->name;
             $data[$key]['user_pics'] = $val->user->profile->avatar ?? '';
             $data[$key]['duties'] = $val->user->profile->category_teach ?? '';
