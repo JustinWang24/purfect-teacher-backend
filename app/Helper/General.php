@@ -36,7 +36,7 @@ if(!function_exists('pageReturn')){
      */
 
     function pageReturn($result, $total = null , $page = 1){
-        if($total){
+        if(isset($total)){
             $data = [
                 'currentPage' => $page,
                 'lastPage'    => null,
