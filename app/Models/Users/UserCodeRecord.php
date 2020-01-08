@@ -21,6 +21,9 @@ class UserCodeRecord extends Model
     const TYPE_VALIDATION_TEXT = '验证';
     const TYPE_SPENDING_TEXT   = '消费';
 
+    // 二维码识别标识
+    const IDENTIFICATION_APP = 'app'; // 用于生成 学生,教师端二维码
+    const IDENTIFICATION_COURSE = 'course'; // 用于生成 补课二维码
 
     public function user(){
         return $this->belongsTo(User::class);
