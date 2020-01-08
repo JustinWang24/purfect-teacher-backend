@@ -26,7 +26,7 @@ class AttendanceSchedulesDao
 
     // 以下的方法是对礼县的值周的特殊处理
     public function getSpecialAttendances($schoolId){
-        return SpecialAttendance::where('school_id', $schoolId)
+        return SpecialAttendance::where('school_id', $schoolId)->with('grade')
             ->orderBy('start_date', 'desc')
             ->paginate(ConfigurationTool::DEFAULT_PAGE_SIZE);
     }
