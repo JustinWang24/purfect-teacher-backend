@@ -196,6 +196,20 @@ class OaAttendanceTeacherDao
         }
         return $output;
     }
+    public function getAllDayList($schoolId, $day)
+    {
+        if (empty($day)) {
+            $day = date('Y-m-d');
+        }
+        $row = OaAttendanceTeacher::where('school_id',$schoolId)
+            ->where('check_in_date',$day)
+            ->get();
+        $output = [];
+        foreach($row as $key=>$value) {
+            $output[$value->user_id] = $value;
+        }
+        return $output;
+    }
     public function getStartAndEndArr($month)
     {
         if(empty($month)) {
@@ -735,8 +749,8 @@ class OaAttendanceTeacherDao
             ->where('type', $type)
             ->where(
                 function ($query) use ($end_time, $start_time) {
-                    $query->where('start_time', '>', $start_time)
-                        ->orWhere('end_time', '<', $end_time);
+                    $query->where([['start_time', '>=', $start_time],['start_time', '<=', $end_time]])
+                        ->orWhere([['end_time', '<=', $end_time],['end_time', '>=', $start_time]]);
                 }
             )->get();
     }

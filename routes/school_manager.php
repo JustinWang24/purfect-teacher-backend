@@ -242,6 +242,9 @@ Route::prefix('school_manager')->group(function () {
         // 编辑考勤组
         Route::any('attendances-group/{id}','OA\AttendanceTeacherController@view')
             ->name('school_manager.oa.attendances-group');
+        //添加考勤组
+        Route::any('attendances-add-group','OA\AttendanceTeacherController@addGroup')
+            ->name('school_manager.oa.attendances-add-group');
         //保存考勤组
         Route::any('attendances-save','OA\AttendanceTeacherController@save')
             ->name('school_manager.oa.attendances-save');
