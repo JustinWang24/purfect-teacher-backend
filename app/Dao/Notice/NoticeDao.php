@@ -100,16 +100,10 @@ class NoticeDao
     public function getNotice($type, $schoolId, $pageNumber = 0, $pageSize = ConfigurationTool::DEFAULT_PAGE_SIZE) {
         $field = ['id', 'title', 'content', 'type', 'created_at', 'inspect_id', 'image','status'];
         $map = ['type'=>$type, 'school_id'=>$schoolId, 'status'=>Notice::STATUS_PUBLISH];
-        $notices = Notice::where('type',$type)->select($field)->with('attachments')
+        return Notice::where($map)->select($field)
             ->orderBy('created_at', 'desc')
-            ->skip($pageSize * $pageNumber)
-            ->take($pageSize)
-            ->get();
-        $total = Notice::where($map)->count();
-        return [
-            'notices'=>$notices,
-            'total'=>$total
-        ];
+            ->paginate(ConfigurationTool::DEFAULT_PAGE_SIZE);
+
     }
 
     /**
