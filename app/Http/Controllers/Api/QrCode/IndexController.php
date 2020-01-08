@@ -3,6 +3,9 @@
 
 namespace App\Http\Controllers\Api\QrCode;
 
+use App\Dao\Schools\SchoolDao;
+use App\Dao\Users\UserDao;
+use App\Models\Users\UserCodeRecord;
 use App\Utils\JsonBuilder;
 use Endroid\QrCode\QrCode;
 use App\Http\Controllers\Controller;
@@ -15,7 +18,7 @@ class IndexController extends Controller
 {
 
     /**
-     * 生成学生端二维码
+     * 生成学生 教师端 首页 二维码
      * @param QrCodeRequest $request
      * @return string
      * @throws InvalidPathException
@@ -30,8 +33,8 @@ class IndexController extends Controller
         if (empty($user)) {
             return JsonBuilder::Error('未找到用户');
         }
-
-        $codeStr = base64_encode(json_encode(['school_id' => $school->id, 'api_token' => $user->api_token, 'time' => time()]));
+        // 生成规则 : 识别标识+学校ID+用户ID+时间戳
+        $codeStr = base64_encode(json_encode(['app' => UserCodeRecord::IDENTIFICATION_APP, 'school_id' => $school->id, 'user_id' => $user->id, 'time' => time()]));
         $code = $this->generateQrCode($codeStr);
         if (!$code) {
             return  JsonBuilder::Error('生成二维码失败');
@@ -102,6 +105,44 @@ class IndexController extends Controller
         } else {
             return JsonBuilder::Error('创建失败');
         }
+    }
+
+    /**
+     * 扫码获取个人信息
+     * @param QrCodeRequest $request
+     * @return string
+     */
+    public function information(QrCodeRequest $request)
+    {
+        $code = base64_decode($request->get('code'));
+        $data = json_decode($code);
+        if (!$data) {
+            return JsonBuilder::Error('不能识别此二维码');
+        }
+
+        if (!$data->user_id) {
+            return JsonBuilder::Error('二维码错误');
+        }
+
+        $dao = new UserDao;
+        $user = $dao->getUserById($data->user_id);
+        // 头像, 姓名 , 班级
+        if ($user->isTeacher()) {
+            return JsonBuilder::Error('不可以扫老师的二维码');
+        }
+
+        $schoolId = $user->getSchoolId();
+        $schoolDao = new SchoolDao;
+        $school = $schoolDao->getSchoolById($schoolId);
+
+        $data = [
+            'name' => $user->getName(),
+            'avatar' => $user->profile->avatar,
+            'grade_name' => $user->gradeUser->grade->name,
+            'school_name' => $school->name,
+        ];
+        
+        return JsonBuilder::Success($data);
     }
 
 }
