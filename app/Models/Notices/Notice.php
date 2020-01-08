@@ -54,6 +54,8 @@ class Notice extends Model
 
     public $inspect_field = ['name'];
 
+    public $attachment_field = ['*'];
+
     public function getTypeText()
     {
         return self::allType()[$this->type];
@@ -67,13 +69,14 @@ class Notice extends Model
     public function inspect()
     {
         return $this->hasOne(NoticeInspect::class,
-            'id', 'inspect_id')->
-        select($this->inspect_field);
+            'id', 'inspect_id')
+            ->select($this->inspect_field);
     }
 
     public function attachments()
     {
-        return $this->hasMany(NoticeMedia::class);
+        return $this->hasMany(NoticeMedia::class)
+            ->select($this->attachment_field);
     }
 
     public function getImageAttribute($value){
