@@ -4,6 +4,7 @@ namespace App\Dao\Notice;
 
 use App\Models\Notices\Notice;
 use App\Models\Notices\NoticeMedia;
+use App\Models\Notices\NoticeReadLogs;
 use App\Utils\JsonBuilder;
 use App\Utils\Misc\ConfigurationTool;
 use App\Utils\ReturnData\MessageBag;
@@ -100,6 +101,7 @@ class NoticeDao
         $field = ['id', 'title', 'content', 'type', 'created_at', 'inspect_id', 'image','status'];
         $map = ['type'=>$type, 'school_id'=>$schoolId, 'status'=>Notice::STATUS_PUBLISH];
         $notices = Notice::where('type',$type)->select($field)->with('attachments')
+            ->orderBy('created_at', 'desc')
             ->skip($pageSize * $pageNumber)
             ->take($pageSize)
             ->get();
@@ -110,11 +112,29 @@ class NoticeDao
         ];
     }
 
+    /**
+     * @param $id
+     * @return mixed
+     */
     public function deleteNoticeMedia($id){
         return NoticeMedia::where('id',$id)->delete();
     }
 
+    /**
+     * @param $id
+     * @return mixed
+     */
     public function delete($id){
         return Notice::where('id',$id)->delete();
+    }
+
+
+    /**
+     * 添加阅读记录
+     * @param $data
+     * @return mixed
+     */
+    public function addReadLog($data) {
+        return NoticeReadLogs::create($data);
     }
 }
