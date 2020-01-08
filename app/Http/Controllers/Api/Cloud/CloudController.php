@@ -304,7 +304,6 @@ class CloudController extends Controller
         }
     }
 
-
     /**
      * 手动签到
      * @param Request $request

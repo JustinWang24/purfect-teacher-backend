@@ -468,8 +468,15 @@ Route::prefix('attendance')->middleware('auth:api')->group(function () {
     Route::post('/sign-in-details','Api\AttendanceSchedule\AttendanceController@signInDetails')
         ->name('api.attendance.sign-in-details');
     // 添加旷课记录
-    Route::post('/add-truant-record','Api\AttendanceSchedule\AttendanceController@addTruantRecord')
+    Route::post('/add-truant-record','Api\AttendanceSchedule\AttendanceController@addTruangrade-signtRecord')
         ->name('api.attendance.add-truant-record');
+    // 教师端 班级签到--所有班级
+    Route::post('/grade-sign','Api\AttendanceSchedule\AttendanceController@gradeSign')
+        ->name('api.attendance.grade-sign');
+    // 教师端 班级签到--签到详情
+    Route::post('/grade-sign-details','Api\AttendanceSchedule\AttendanceController@gradeSignDetails')
+        ->name('api.attendance.grade-sign-details');
+
 
 });
 

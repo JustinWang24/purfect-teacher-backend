@@ -181,5 +181,6 @@ class SchoolConfiguration extends Model
             }
         }
         return $w;
+
     }
 }
