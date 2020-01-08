@@ -89,3 +89,50 @@ Route::prefix('Approves')->middleware('auth:api')->group(function () {
     Route::any('/info','Api\OA\OaAttendanceTeacherController@info')
         ->name('oa.Approves.info');
 });
+
+
+// 会议
+Route::prefix('meeting')->middleware('auth:api')->group(function () {
+    // 创建分组
+    Route::post('/addGroup','Api\OA\GroupController@addGroup')
+        ->name('Oa.meeting.addGroup');
+    // 分组列表
+    Route::post('/groupList','Api\OA\GroupController@groupList')
+        ->name('Oa.meeting.groupList');
+    // 教师列表
+    Route::post('/userList','Api\OA\GroupController@userList')
+        ->name('Oa.meeting.userList');
+    // 添加成员
+    Route::post('/addMember','Api\OA\GroupUserController@addMember')
+        ->name('Oa.meeting.addMember');
+    // 删除分组
+    Route::post('/delGroup','Api\OA\GroupController@delGroup')
+        ->name('Oa.meeting.delGroup');
+    // 删除成员
+    Route::post('/delMember','Api\OA\GroupController@delMember')
+        ->name('Oa.meeting.delMember');
+    // 创建会议
+    Route::post('/addMeeting','Api\OA\MeetIngController@addMeeting')
+        ->name('Oa.meeting.addMeeting');
+    // 待签列表
+    Route::post('/todoList','Api\OA\MeetIngController@todoList')
+        ->name('Oa.meeting.todoList');
+    // 签到签退
+    Route::post('/qrcode','Api\OA\MeetIngController@qrcode')
+        ->name('Oa.meeting.qrcode');
+    // 已完成列表
+    Route::post('/doneList','Api\OA\MeetIngController@doneList')
+        ->name('Oa.meeting.doneList');
+    // 创建的列表
+    Route::post('/myList','Api\OA\MeetIngController@myList')
+        ->name('Oa.meeting.myList');
+    // 会议详情-参与者
+    Route::post('/uinfo','Api\OA\MeetIngController@meetingMember')
+        ->name('Oa.meeting.uinfo');
+    // 会议详情-创建者
+    Route::post('/minfo','Api\OA\MeetIngController@minfo')
+        ->name('Oa.meeting.minfo');
+    // 签到记录
+    Route::post('/signLog','Api\OA\MeetIngController@signLog')
+        ->name('Oa.meeting.signLog');
+});
