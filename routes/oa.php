@@ -62,6 +62,8 @@ Route::prefix('attendance')->middleware('auth:api')->group(function () {
         ->name('oa.attendance.getGroupList');
     Route::any('/getMonthManage','Api\OA\OaAttendanceTeacherController@getMonthManage')
         ->name('oa.attendance.getMonthManage');
+    Route::any('/getTodayManage','Api\OA\OaAttendanceTeacherController@getTodayManage')
+        ->name('oa.attendance.getTodayManage');
 
 });
 

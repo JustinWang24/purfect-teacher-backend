@@ -850,7 +850,7 @@ class OaAttendanceTeacherController extends Controller
                 if (!isset($result[$uidKey][$start]) && date('N',strtotime($start))<=5) {
                     //旷工日统计
                     $not_count++;
-                } elseif(isset($result[$start])) {
+                } elseif(isset($result[$uidKey][$start])) {
                     //出勤日统计
                     $normal_count++;
                     //迟到
@@ -867,7 +867,7 @@ class OaAttendanceTeacherController extends Controller
                         $late_count++;
                     }
                     //补卡
-                    if($result[$member][$start]->status == 2) {
+                    if($result[$uidKey][$start]->status == 2) {
                         $approver_count++;
                     }
 
@@ -1000,5 +1000,147 @@ class OaAttendanceTeacherController extends Controller
             $output[] = $value;
         }
         return $output;
+    }
+
+
+    public function getTodayManage(Request $request)
+    {
+        $day = strip_tags($request->get('day', date('Y-m-d')));
+        $user = $request->user();
+        $schoolId = $user->getSchoolId();
+        $dao = new OaAttendanceTeacherDao();
+        $group = $dao->getGroupInfo($user->id,$schoolId);
+        $allMembers = $dao->getAllMembers($group->id);
+        $result = $dao->getAllDayList($schoolId,$day);
+        $all = $allMembers->count();
+        $leaveCollect = $dao->getLeaveOrVisitListByTime($schoolId, OaAttendanceLeaveAndVisits::LEAVE_TYPE, $day, $day);
+        $awayCollect  = $dao->getLeaveOrVisitListByTime($schoolId, OaAttendanceLeaveAndVisits::VISIT_TYPE, $day, $day);
+
+        $leave = $leaveCollect->count();
+        $away  = $awayCollect->count();
+
+
+        $missList   = [];
+        $okList     = [];
+
+        $rest_count     = 0;
+        $normal_count   = 0;
+        $not_count      = 0;
+        $late_count     = 0;
+        $early_count    = 0;
+        $miss_count     = 0;
+
+        foreach ($allMembers as $member)
+        {
+            $memberArr = [
+                'userid'        => $member->user_id,
+                'user_pics'     => $member->user->profile->avatar,
+                'user_username' => $member->user->name,
+                //'schooltwo_name'=> $member->user->gradeUser->department->name,//实际上教师不会关联到某个系
+                'count'         => 0,
+                'status'     => [],
+            ];
+
+            $uidKey = $member->user_id;
+            if (date('N',strtotime($day))>5) {
+                $rest_count++;
+            }
+            if (!isset($result[$uidKey]) && date('N', strtotime($day)) <= 5) {
+                //旷工日统计
+                $not_count++;
+
+                $missList[] = $memberArr;
+
+
+            } elseif (isset($result[$uidKey])) {
+
+                //出勤日统计
+                $normal_count++;
+                //迟到
+                if (strtotime($result[$uidKey]->morning_online_mine) > strtotime($result[$uidKey]->check_in_date . ' ' . $group->morning_online_time)) {
+                    $late_count++;
+                    $memberArr['status'] = $this->_addStatus($memberArr['status'], 'late');
+                }
+                if (strtotime($result[$uidKey]->afternoon_online_mine) > strtotime($result[$uidKey]->check_in_date . ' ' . $group->afternoon_online_time)) {
+                    $late_count++;
+                    $memberArr['status'] = $this->_addStatus($memberArr['status'], 'late');
+                }
+                if (strtotime($result[$uidKey]->night_online_mine) > strtotime($result[$uidKey]->check_in_date . ' ' . $group->night_online_time)) {
+                    $late_count++;
+                    $memberArr['status'] = $this->_addStatus($memberArr['status'], 'late');
+                }
+
+                //早退
+                if (strtotime($result[$uidKey]->morning_offline_mine) < strtotime($result[$uidKey]->check_in_date . ' ' . $group->morning_offline_time)) {
+                    $early_count++;
+                    $memberArr['status'] = $this->_addStatus($memberArr['status'], 'early');
+                }
+                if (strtotime($result[$uidKey]->afternoon_offline_mine) < strtotime($result[$uidKey]->check_in_date . ' ' . $group->afternoon_offline_time)) {
+                    $early_count++;
+                    $memberArr['status'] = $this->_addStatus($memberArr['status'], 'early');
+                }
+                if (strtotime($result[$uidKey]->night_offline_mine) < strtotime($result[$uidKey]->check_in_date . ' ' . $group->night_offline_time)) {
+                    $early_count++;
+                    $memberArr['status'] = $this->_addStatus($memberArr['status'], 'early');
+                }
+                //缺卡记录
+                if (empty($result[$uidKey]->morning_online_mine)) {
+                    $miss_count++;
+                    $memberArr['status'] = $this->_addStatus($memberArr['status'], 'miss');
+                } elseif (empty($result[$uidKey]->morning_offline_mine)) {
+                    $miss_count++;
+                    $memberArr['status'] = $this->_addStatus($memberArr['status'], 'miss');
+                }
+                if (empty($result[$uidKey]->afternoon_online_mine)) {
+                    $miss_count++;
+                    $memberArr['status'] = $this->_addStatus($memberArr['status'], 'miss');
+                } elseif (empty($result[$uidKey]->afternoon_offline_mine)) {
+                    $miss_count++;
+                    $memberArr['status'] = $this->_addStatus($memberArr['status'], 'miss');
+                }
+                if (empty($result[$uidKey]->night_online_mine)) {
+                    $miss_count++;
+                    $memberArr['status'] = $this->_addStatus($memberArr['status'], 'miss');
+                } elseif (empty($result[$uidKey]->night_offline_mine)) {
+                    $miss_count++;
+                    $memberArr['status'] = $this->_addStatus($memberArr['status'], 'miss');
+                }
+
+                $okList[] = $memberArr;
+
+            }
+
+        }
+
+        $data = [
+            'groupid'   => $group->id,
+            'day'       => $day,
+            'all'       => $all,
+            'leave'     => $leave,
+            'away'      => $away,
+            'not'       => $not_count,
+            'late'      => $late_count,
+            'early'     => $early_count,
+            'ok'        => $normal_count,
+            'miss'      => $miss_count,
+            'rest'      => $rest_count,
+            'key1'      => count($okList),
+            'key2'      => count($missList),
+            'key1List'  => $okList,
+            'key2List'  => $missList,
+
+        ];
+        return JsonBuilder::Success($data);
+
+
+
+    }
+
+    private function _addStatus($stautsArr, $statusStr)
+    {
+        if (!in_array($statusStr, $stautsArr)) {
+            array_unshift($stautsArr, $statusStr);
+        }
+        return $stautsArr;
     }
 }
