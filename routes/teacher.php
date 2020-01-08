@@ -12,6 +12,11 @@ Route::prefix('teacher')->group(function () {
     Route::any('conference/edit', 'ConferenceController@edit')->name('teacher.conference.edit');       // 添加接口
     Route::get('conference/delete', 'ConferenceController@delete')->name('teacher.conference.delete'); // 删除会议
 
+    //分组
+    Route::get('group/list', 'GroupController@list')->name('teacher.group.list');
+
+
+
     Route::get('preset/step', 'OfficialDocumentController@presetStep')->name('teacher.get.preset.step');                    // 所有系统预置步骤
     Route::post('production/process', 'OfficialDocumentController@productionProcess')->name('teacher.production.process');  // 生成公文流程
     Route::get('list/documents', 'OfficialDocumentController@listAll')->name('teacher.list.official.documents');        // 学校公文列表
