@@ -2,6 +2,7 @@
 
 namespace App\Dao\Teachers;
 
+use App\Models\Acl\Role;
 use App\Models\Users\GradeUser;
 use App\Models\Teachers\TeacherProfile;
 use Illuminate\Database\Eloquent\Collection;
@@ -76,5 +77,16 @@ class TeacherProfileDao
     public function getTeacherProfileByIdNumber($idNumber)
     {
         return TeacherProfile::where('id_number', $idNumber)->first();
+    }
+
+    /**
+     * @param $schoolId
+     * @return mixed
+     */
+    public function getTeacherProfileBySchoolId($schoolId)
+    {
+        return TeacherProfile::where('school_id', $schoolId)->with(['user' => function ($query) {
+                $query->where('type', Role::TEACHER);
+        }])->get();
     }
 }
