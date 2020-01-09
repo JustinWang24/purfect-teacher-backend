@@ -35,6 +35,9 @@ class CalendarDao
             $event->tag = $data['tag'];
             $event->content = $data['content'];
             $event->event_time = $data['event_time'];
+            $event->year = $data['year'];
+            $event->week_idx = $data['week_idx'];
+            $event->term = $data['term'];
             return $event->save();
         }
     }
@@ -49,12 +52,21 @@ class CalendarDao
     }
 
     /**
-     * 获取校历的事件
+     *
      * @param $schoolId
      * @param $date
      * @return Collection
      */
-    public function getCalendarEvent($schoolId, $date = null)
+
+
+    /**
+     * 获取校历的事件
+     * @param $schoolId
+     * @param null $date
+     * @param bool $history
+     * @return mixed
+     */
+    public function getCalendarEvent($schoolId, $date = null ,$history = false)
     {
         $where = [
             ['school_id','=',$schoolId]
@@ -62,8 +74,12 @@ class CalendarDao
         if($date){
             $where[] = ['event_time','>=',$date];
         }
+        if($history) {
+            $now = Carbon::now()->toDateTimeString();
+            $where[] = ['event_time','<',$now];
+        }
         return SchoolCalendar::where($where)
-            ->select('id' ,'tag', 'content', 'event_time')->orderBy('event_time')->get();
+            ->select('id' ,'tag', 'content', 'event_time', 'week_idx')->orderBy('event_time')->get();
     }
 
     /**
