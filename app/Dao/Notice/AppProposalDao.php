@@ -6,6 +6,7 @@ namespace App\Dao\Notice;
 
 use App\Models\Notices\AppProposal;
 use App\Models\Notices\AppProposalImage;
+use App\Utils\Misc\ConfigurationTool;
 use Illuminate\Support\Facades\DB;
 
 class AppProposalDao
@@ -37,6 +38,16 @@ class AppProposalDao
         }
 
         return $result;
+    }
+
+    /**
+     * 根据用户ID 获取反馈
+     * @param $userId
+     * @return mixed
+     */
+    public function getProposalByUserId($userId)
+    {
+        return AppProposal::where('user_id', $userId)->paginate(ConfigurationTool::DEFAULT_PAGE_SIZE);
     }
 
 }
