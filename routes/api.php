@@ -89,6 +89,8 @@ Route::prefix('school')->middleware('auth:api')->group(function () {
         ->name('api.school.calendar');  // 校历接口
     Route::any('/all-events','Api\Home\IndexController@all_events')
         ->name('api.school.all-events'); // 下发所有事件
+    Route::any('/history-events','Api\Home\IndexController@history_events')
+        ->name('api.school.history-events'); // 历史事件
 });
 
 Route::prefix('enquiry')->middleware('auth:api')->group(function () {

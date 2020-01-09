@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Calendar\CalendarRequest;
 use App\Utils\FlashMessageBuilder;
 use App\Utils\JsonBuilder;
+use Carbon\Carbon;
 use Psy\Util\Json;
 
 class IndexController extends Controller
@@ -26,7 +27,24 @@ class IndexController extends Controller
     public function save(CalendarRequest $request)
     {
         $data = $request->get('event');
-        $data['school_id']  = $request->getSchoolId();
+        $schoolId = $request->getSchoolId();
+        $schoolDao = new SchoolDao();
+        $school = $schoolDao->getSchoolById($schoolId);
+        $eventTime = Carbon::parse($data['event_time']);
+        $term = $school->configuration->guessTerm($eventTime->month);
+        $data['school_id']  = $schoolId;
+        $dateTime = $eventTime->toDateString();
+        $weeks = $school->configuration->getAllWeeksOfTerm($term, false, $dateTime);
+
+        $weekIndex = 0;
+        foreach($weeks as $week) {
+            if ($week->includes($eventTime)) {
+                $weekIndex = $week->getScheduleWeekIndex();
+            }
+        }
+        $data['term'] = $term; // 学期
+        $data['week_idx'] = $weekIndex; //学周
+        $data['year'] = $school->configuration->getSchoolYear($dateTime); //学年
         $dao = new  CalendarDao;
         if ($data['id']) {
             $result = $dao->updateCalendarEvent($data);

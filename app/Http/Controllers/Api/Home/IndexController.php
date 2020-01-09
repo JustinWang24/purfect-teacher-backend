@@ -137,31 +137,44 @@ class IndexController extends Controller
 
         if (!$school) {
             return JsonBuilder::Error('找不到学校的信息');
-        } else {
-            $dao    = new CalendarDao();
-            $events = $dao->getCalendarEvent($school->id, date('Y'));
-            $weeks  = $school->configuration->getAllWeeksOfTerm();
-
-            $data = [];
-
-            foreach ($events as $event) {
-                foreach ($weeks as $week) {
-                    /**
-                     * @var CalendarWeek $week
-                     */
-                    if ($week->includes($event->event_time)) {
-                        $event->week_idx = $week->getName();
-                        $event->name     = $event->event_time;
-                        $data[]          = $event;
-                        break;
-                    }
-                }
-            }
-
-            return JsonBuilder::Success([
-                'events' => $data
-            ]);
         }
+
+        $data = $this->events($school);
+
+        return JsonBuilder::Success(['events' => $data]);
+
+    }
+
+    /**
+     * 历史记录
+     * @param MyStandardRequest $request
+     * @return string
+     */
+    public function history_events(MyStandardRequest $request) {
+        $school = $this->_getSchoolFromRequest($request);
+        if (!$school) {
+            return JsonBuilder::Error('找不到学校的信息');
+        }
+        $data = $this->events($school,'history');
+        return JsonBuilder::Success(['events' => $data]);
+    }
+
+
+    public function events($school, $type = 'all') {
+        $dao    = new CalendarDao();
+        if($type == 'all') {
+            $events = $dao->getCalendarEvent($school->id, date('Y'));
+        } elseif($type == 'history') {
+            $events = $dao->getCalendarEvent($school->id, null, true);
+        }
+        $data = [];
+        foreach ($events as $event) {
+            $event->week_idx = '第'. $event->week_idx .'周';
+            $event->name     = $event->event_time;
+            $data[]          = $event;
+            break;
+        }
+        return $data;
     }
 
     /**
