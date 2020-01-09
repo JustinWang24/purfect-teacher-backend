@@ -33,9 +33,10 @@ class NoticeController extends Controller
             } else {
                 $item->is_read = Notice::READ; // 已读
             }
-            if($item->type == Notice::TYPE_INSPECTION) {
-                $item->inspect;
-            }
+
+            $inspect = $item->inspect;
+            unset($item->inspect);
+            $item->inspect = $inspect->name ?? '';
         }
         $data = pageReturn($result);
         return JsonBuilder::Success($data);
