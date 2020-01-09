@@ -148,14 +148,12 @@ class IndexController extends Controller
         } elseif($type == 'history') {
             $events = $dao->getCalendarEvent($school->id, null, true);
         }
-        $data = [];
-        foreach ($events as $event) {
+
+        foreach ($events as $key => $event) {
             $event->week_idx = '第'. $event->week_idx .'周';
-            $event->name     = $event->event_time;
-            $data[]          = $event;
-            break;
+            $event->name = $event->event_time;
         }
-        return $data;
+        return $events;
     }
 
     /**
