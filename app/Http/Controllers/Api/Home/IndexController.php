@@ -422,7 +422,7 @@ class IndexController extends Controller
                 $path[] = AppProposalImage::proposalUploadPathToUrl($image->store(AppProposalImage::DEFAULT_UPLOAD_PATH_PREFIX));
             }
         }
-        
+
         $dao = new AppProposalDao;
         $data = [
             'user_id' => $user->id,
@@ -437,6 +437,22 @@ class IndexController extends Controller
         } else {
             return JsonBuilder::Error('反馈失败');
         }
+    }
+
+    /**
+     * 反馈列表
+     * @param Request $request
+     * @return string
+     */
+    public function proposalList(Request $request)
+    {
+         $user = $request->user();
+         $dao = new AppProposalDao;
+
+         $data = $dao->getProposalByUserId($user->id);
+         $result = pageReturn($data);
+
+         return JsonBuilder::Success($result);
     }
 
 }

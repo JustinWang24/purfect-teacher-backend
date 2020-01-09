@@ -513,6 +513,9 @@ Route::prefix('user')->group(function () {
     // 意见反馈
     Route::post('/proposal', 'Api\Home\IndexController@proposal')
         ->middleware('auth:api')->name('api.user.proposal');
+    // 反馈列表
+    Route::post('/proposal-list', 'Api\Home\IndexController@proposalList')
+        ->middleware('auth:api')->name('api.user.proposal.list');
 
 });
 
