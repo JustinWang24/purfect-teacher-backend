@@ -119,8 +119,7 @@ class AddressBookController extends Controller
                 $result[$key]['tel'] = $val['user']['mobile'];
             }
         }
-        
-        return  JsonBuilder::Success(array_values($result));
+        return  JsonBuilder::Success(['teacher_list' => array_values($result)]);
     }
 
 
