@@ -62,7 +62,6 @@
       {
          $param[ 'typeid' ]   = $request->input ( 'typeid' , 0 );
          $param[ 'type_pid' ] = $request->input ( 'type_pid' , 0 );
-         $param[ 'purpose' ] = $request->input ( 'purpose' , 1 );
 
          // 提交数据保存
          if ( $request->isMethod ( 'post' ) )
@@ -70,11 +69,10 @@
             // 表单要插入的字段信息
             $param1 = self::getPostParamInfo ( $request->infos ,
                [
-                  'type_name'
+                  'type_name','purpose'
                ]
             );
             $param2[ 'type_pid' ] = $param[ 'type_pid' ]; // 分类
-            $param2[ 'purpose' ] = $param[ 'purpose' ];
 
             // 验证数据是否重复提交
             $dataSign = sha1 ( $request->user()->id . 'add' );
@@ -91,12 +89,12 @@
                Cache::put ( $dataSign , $dataSign , 10 );
                FlashMessageBuilder::Push ( $request , FlashMessageBuilder::SUCCESS , '数据添加成功');
 
-               return redirect ()->route ( 'manager_wifi.wifiIssueType.list' , [ 'typeid' => $param[ 'typeid' ],'type_pid'=>$param[ 'type_pid' ] ,'purpose'=>$param[ 'purpose' ] ] );
+               return redirect ()->route ( 'manager_wifi.wifiIssueType.list' , [ 'typeid' => $param[ 'typeid' ],'type_pid'=>$param[ 'type_pid' ] ,'purpose'=>$param1[ 'purpose' ] ] );
 
             }else {
                FlashMessageBuilder::Push ( $request , FlashMessageBuilder::DANGER , '数据添加失败,请稍后重试' );
 
-               return redirect()->route('manager_wifi.wifiIssueType.add', [ 'typeid' => $param[ 'typeid' ],'type_pid'=>$param[ 'type_pid' ] ,'purpose'=>$param[ 'purpose' ] ]);
+               return redirect()->route('manager_wifi.wifiIssueType.add', [ 'typeid' => $param[ 'typeid' ],'type_pid'=>$param[ 'type_pid' ] ,'purpose'=>$param1[ 'purpose' ] ]);
             }
          }
 

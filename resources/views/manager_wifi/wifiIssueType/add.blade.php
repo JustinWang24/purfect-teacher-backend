@@ -23,6 +23,8 @@ use App\Utils\UI\Button;
                                 <option value="2">后台报修类型</option>
                             </select>
                         </div>
+						@else
+							<input required type="hidden" class="form-control" value="{{ Request::get('purpose') }}" name="infos[purpose]">
 						@endif
                         <div class="form-group">
                             <label for="building-name-input">名称</label>
