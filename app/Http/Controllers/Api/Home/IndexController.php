@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\Home;
 use App\Dao\Banners\BannerDao;
 use App\Dao\Calendar\CalendarDao;
 use App\Dao\Misc\SystemNotificationDao;
+use App\Dao\Notice\AppProposalDao;
 use App\Dao\Notice\NoticeDao;
 use App\Dao\Schools\SchoolDao;
 use App\Dao\Students\StudentProfileDao;
@@ -19,6 +20,8 @@ use App\Http\Requests\MyStandardRequest;
 use App\Http\Requests\SendSms\SendSmeRequest;
 use App\Models\Forum\Forum;
 use App\Models\Misc\SystemNotification;
+use App\Models\Notices\AppProposal;
+use App\Models\Notices\AppProposalImage;
 use App\Models\Students\StudentProfile;
 use App\Models\Teachers\Teacher;
 use App\Models\Users\UserVerification;
@@ -286,19 +289,19 @@ class IndexController extends Controller
      */
     public function updateUserInfo(HomeRequest $request)
     {
-        $user = $request->user();
+        $user   = $request->user();
         $data   = $request->get('data');
         $avatar = $request->file('avatar');
         if ($avatar) {
-            $avatarImg = $avatar->store('public/avatar');
-            $data['avatar'] =  StudentProfile::avatarUploadPathToUrl($avatarImg);
+            $avatarImg      = $avatar->store('public/avatar');
+            $data['avatar'] = StudentProfile::avatarUploadPathToUrl($avatarImg);
         }
 
-        $dao = new StudentProfileDao;
-        $teacherDao  = new TeacherProfileDao;
-        if($user->isStudent()) {
+        $dao        = new StudentProfileDao;
+        $teacherDao = new TeacherProfileDao;
+        if ($user->isStudent()) {
             $result = $dao->updateStudentProfile($user->id, $data);
-        }elseif ($user->isTeacher()) {
+        } elseif ($user->isTeacher()) {
             $result = $teacherDao->updateTeacherProfile($user->id, $data);
         }
 
@@ -400,4 +403,56 @@ class IndexController extends Controller
         $newsList = $dao->getNoticeBySchoolId(['school_id' => $request->get('school')]);
         return JsonBuilder::Success($newsList);
     }
+
+    /**
+     * 意见反馈
+     * @param Request $request
+     * @return string
+     */
+    public function proposal(Request $request)
+    {
+        $user    = $request->user();
+        $type    = $request->get('type');
+        $content = $request->get('content');
+        $images  = $request->file('image');
+
+        $path = [];
+        if (!empty($images)) {
+            foreach ($images as $image) {
+                $path[] = AppProposalImage::proposalUploadPathToUrl($image->store(AppProposalImage::DEFAULT_UPLOAD_PATH_PREFIX));
+            }
+        }
+
+        $dao = new AppProposalDao;
+        $data = [
+            'user_id' => $user->id,
+            'type' => $type,
+            'content' => $content,
+        ];
+
+        $result = $dao->add($data, $path);
+
+        if ($result) {
+            return JsonBuilder::Success('反馈成功');
+        } else {
+            return JsonBuilder::Error('反馈失败');
+        }
+    }
+
+    /**
+     * 反馈列表
+     * @param Request $request
+     * @return string
+     */
+    public function proposalList(Request $request)
+    {
+         $user = $request->user();
+         $dao = new AppProposalDao;
+
+         $data = $dao->getProposalByUserId($user->id);
+         $result = pageReturn($data);
+
+         return JsonBuilder::Success($result);
+    }
+
 }
