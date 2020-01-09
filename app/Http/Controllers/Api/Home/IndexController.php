@@ -127,30 +127,11 @@ class IndexController extends Controller
     }
 
     /**
-     * 下发所有 校历 events 的接口
-     * @param MyStandardRequest $request
-     * @return string
-     */
-    public function all_events(MyStandardRequest $request)
-    {
-        $school = $this->_getSchoolFromRequest($request);
-
-        if (!$school) {
-            return JsonBuilder::Error('找不到学校的信息');
-        }
-
-        $data = $this->events($school);
-
-        return JsonBuilder::Success(['events' => $data]);
-
-    }
-
-    /**
      * 历史记录
      * @param MyStandardRequest $request
      * @return string
      */
-    public function history_events(MyStandardRequest $request) {
+    public function all_events(MyStandardRequest $request) {
         $school = $this->_getSchoolFromRequest($request);
         if (!$school) {
             return JsonBuilder::Error('找不到学校的信息');
