@@ -2,6 +2,7 @@
 
 namespace App\Models\Teachers;
 
+use App\Models\Acl\Role;
 use App\User;
 use Illuminate\Database\Eloquent\Model;
 
