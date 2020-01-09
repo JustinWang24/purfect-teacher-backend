@@ -488,34 +488,30 @@ Route::prefix('user')->group(function () {
     // 登录
     Route::post('/login', 'Api\Login\LoginController@index')
         ->name('api.user.login');
-
     // 退出
     Route::post('/logout', 'Api\Login\LoginController@logout')
         ->middleware('auth:api')->name('api.user.logout');
-
     // 修改密码
     Route::post('/editUserPasswordInfo', 'Api\Login\LoginController@editPassword')
         ->middleware('auth:api')->name('api.user.edit.password');
-
     // 忘记密码
     Route::post('/findUserPasswordInfo', 'Api\Login\LoginController@forgetPassword')
         ->name('api.user.edit.password');
-
     // 学生用户资料
     Route::post('/getUserInfo', 'Api\Home\IndexController@getUserInfo')
         ->middleware('auth:api')->name('api.get.user.info');
-
     // 教师用户资料
     Route::post('/getTeacherInfo', 'Api\Home\IndexController@getTeacherInfo')
         ->middleware('auth:api')->name('api.get.teacher.info');
-
     // 修改资料
     Route::post('/updateUserInfo', 'Api\Home\IndexController@updateUserInfo')
         ->middleware('auth:api')->name('api.update.user.info');
-
     // 修改用户手机号
     Route::post('/updateUserMobileInfo', 'Api\Login\LoginController@updateUserMobileInfo')
         ->middleware('auth:api')->name('api.update.user.mobile');
+    // 意见反馈
+    Route::post('/proposal', 'Api\Home\IndexController@proposal')
+        ->middleware('auth:api')->name('api.user.proposal');
 
 });
 
