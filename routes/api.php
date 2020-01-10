@@ -526,7 +526,7 @@ Route::prefix('user')->group(function () {
 
 // 发送短信
 Route::post('/index/sms', 'Api\Home\IndexController@sendSms')
-    ->name('api.user.edit.password');
+    ->name('api.user.send.sms');
 
 
 // 地区列表
