@@ -322,5 +322,15 @@ class UserDao
         return User::where('id', $userId)->update(['api_token' => $token]);
     }
 
+    /**
+     * 获取用户
+     * @param $apiToken
+     * @return mixed
+     */
+    public function getUserByApiToken($apiToken)
+    {
+        return User::where('api_token', $apiToken)->first();
+    }
+
 
 }

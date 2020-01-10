@@ -341,6 +341,11 @@ class IndexController extends Controller
 
         $user = $dao->getUserByMobile($mobile);
 
+        if ($type == UserVerification::PURPOSE_3) {
+            $token = $request->get('api_token');
+            $forgetPwdUser  = $dao->getUserByApiToken($token);
+        }
+
         if ($type == UserVerification::PURPOSE_0 && !empty($user)) {
             return JsonBuilder::Error('该手机号已经注册过了');
         }
@@ -360,7 +365,8 @@ class IndexController extends Controller
                 event(new ForgetPasswordEvent($user));
                 break;
             case UserVerification::PURPOSE_3:
-                event(new UpdateUserMobileEvent($user, $mobile));
+                /** @var TYPE_NAME $forgetPwdUser */
+                event(new UpdateUserMobileEvent($forgetPwdUser, $mobile));
             default:
                 break;
         }

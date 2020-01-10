@@ -19,5 +19,14 @@ class UserVerificationDao
         return UserVerification::where(['mobile' => $mobile, 'code' => $code, 'purpose' => $purpose])->first();
     }
 
+    /**
+     * 添加验证码记录
+     * @param $data
+     * @return mixed
+     */
+    public function create($data)
+    {
+        return UserVerification::create($data);
+    }
 
 }

@@ -30,11 +30,12 @@ class Sms
      */
     public function handle(CanReachByMobilePhone $event)
     {
-
         PushSms::dispatchNow(
             $event->getMobileNumber(),
             $event->getSmsContent(),
-            $event->getSmsTemplateId()
+            $event->getSmsTemplateId(),
+            $event->getUser(),
+            $event->getAction()
         );
 
         Log::channel('smslog')->alert('发送短信进入队列了');
