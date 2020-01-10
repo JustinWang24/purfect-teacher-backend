@@ -34,7 +34,7 @@ class IndexController extends Controller
         $term = $school->configuration->guessTerm($eventTime->month);
         $data['school_id']  = $schoolId;
         $dateTime = $eventTime->toDateString();
-        $weeks = $school->configuration->getAllWeeksOfTerm($term, false, $dateTime);
+        $weeks = $school->configuration->getAllWeeksOfTerm($term, true, $dateTime);
 
         $weekIndex = 0;
         foreach($weeks as $week) {
