@@ -561,6 +561,15 @@ Route::prefix('conferences')->middleware('auth:api')->group(function () {
         ->name('api.conferences.conferenceInfo');
 });
 
+// new会议
+Route::prefix('meeting')->middleware('auth:api')->group(function () {
+    // 会议设置
+    Route::get('/setting','Api\Conferences\MeetingController@setting')
+        ->name('api.meeting.setting');
+});
+
+
+
 // 项目管理
 Route::prefix('oa')->middleware('auth:api')->group(function () {
     // 创建项目
