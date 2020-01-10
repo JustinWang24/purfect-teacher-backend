@@ -11,6 +11,7 @@ use App\Dao\Schools\SchoolDao;
 use App\Dao\Students\StudentProfileDao;
 use App\Dao\Teachers\TeacherProfileDao;
 use App\Dao\Users\UserDao;
+use App\Dao\Wifi\Backstage\UsersDao;
 use App\Events\User\ForgetPasswordEvent;
 use App\Events\User\UpdateUserMobileEvent;
 use App\Http\Controllers\Controller;
@@ -27,6 +28,7 @@ use App\Models\Students\StudentProfile;
 use App\Models\Teachers\Teacher;
 use App\Models\Users\UserVerification;
 use App\Utils\JsonBuilder;
+use App\Utils\Misc\SmsFactory;
 use App\Utils\Time\CalendarWeek;
 use Illuminate\Http\Request;
 
@@ -296,13 +298,17 @@ class IndexController extends Controller
             $avatarImg      = $avatar->store('public/avatar');
             $data['avatar'] = StudentProfile::avatarUploadPathToUrl($avatarImg);
         }
-
-        $dao        = new StudentProfileDao;
-        $teacherDao = new TeacherProfileDao;
-        if ($user->isStudent()) {
-            $result = $dao->updateStudentProfile($user->id, $data);
-        } elseif ($user->isTeacher()) {
-            $result = $teacherDao->updateTeacherProfile($user->id, $data);
+        if ($data['nice_name']) {
+            $userDao = new UserDao;
+            $result = $userDao->updateUser($user->id, null,null,null,null, $data['nice_name']);
+        } else {
+            $dao        = new StudentProfileDao;
+            $teacherDao = new TeacherProfileDao;
+            if ($user->isStudent()) {
+                $result = $dao->updateStudentProfile($user->id, $data);
+            } elseif ($user->isTeacher()) {
+                $result = $teacherDao->updateTeacherProfile($user->id, $data);
+            }
         }
 
         if ($result) {
@@ -320,6 +326,10 @@ class IndexController extends Controller
      */
     public function sendSms(SendSmeRequest $request)
     {
+
+         $sms =  SmsFactory::GetInstance();
+         $res = $sms->send('13261675950', '189903', ['123']);
+         exit();
         $mobile = $request->get('mobile');
         $type   = $request->get('type');
 
@@ -346,7 +356,7 @@ class IndexController extends Controller
                 event(new ForgetPasswordEvent($user));
                 break;
             case UserVerification::PURPOSE_3:
-                event(new UpdateUserMobileEvent($mobile));
+                event(new UpdateUserMobileEvent($user, $mobile));
             default:
                 break;
         }
