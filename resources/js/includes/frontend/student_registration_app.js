@@ -1,5 +1,6 @@
 import {Constants} from "../../common/constants";
 import {Util} from "../../common/utils";
+import {loadMajorDetail} from "../../common/registration_form";
 
 if(document.getElementById('student_registration_app')){
     new Vue({

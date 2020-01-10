@@ -54,7 +54,7 @@
 
         <el-dialog title="添加步骤" :visible.sync="showStepSelectorFlag">
             <el-form :model="welcome">
-                <el-form-item label="活动区域">
+                <el-form-item label="步骤名称">
                     <el-select v-model="welcome.stepToBeAdd" placeholder="请选择">
                         <el-option
                                 v-for="(basic, idx) in basics"

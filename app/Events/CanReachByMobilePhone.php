@@ -34,4 +34,10 @@ interface CanReachByMobilePhone
      * @return User
      */
     public function getUser(): User;
+
+    /**
+     * 动作
+     * @return int
+     */
+    public function getAction(): int;
 }
