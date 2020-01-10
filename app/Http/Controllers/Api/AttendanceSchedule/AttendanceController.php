@@ -144,10 +144,8 @@ class AttendanceController extends Controller
     public function gradeSign(AttendanceRequest $request)
     {
         $teacher = $request->user();
-
         $dao = new TimetableItemDao;
         $item = $dao->getTeacherTeachingGrade($teacher->id);
-
         $gradeId = [];
         foreach ($item as $key => $value) {
             $gradeId[$key] = $value->grade_id;
@@ -169,13 +167,34 @@ class AttendanceController extends Controller
     /**
      * 教师端 班级签到详情
      * @param AttendanceRequest $request
+     * @return string
      */
     public function gradeSignDetails(AttendanceRequest $request)
     {
         $gradeId = $request->get('grade_id');
-        dd($gradeId);
+        $teacherId = $request->user()->id;
+        $date = $request->get('date', Carbon::now()->toDateString());
+        $dao = new AttendancesDao();
+        $return  = $dao->getAttendByDateTimeAndGradeIdAndTeacherId($date, $gradeId, $teacherId);
+        $gradeDao = new GradeDao();
+        $grade = $gradeDao->getGradeById($gradeId);
 
 
+        $list = [];
+        foreach ($return as $key => $item) {
+
+            $list[$key]['id'] = $item->id;
+            $list[$key]['course'] = $item->course->name;
+            $list[$key]['time_slot'] = $item->timeTable->timeSlot->name;
+            $list[$key]['total_number'] = $item->total_number;
+            $list[$key]['actual_number'] = $item->actual_number;
+            $list[$key]['leave_number'] = $item->leave_number;
+            $list[$key]['missing_number'] = $item->missing_number;
+            $list[$key]['status'] = $item->status;
+        }
+        $data = ['grade'=>$grade->name, 'list' => $list];
+
+        return JsonBuilder::Success($data);
     }
 
 
