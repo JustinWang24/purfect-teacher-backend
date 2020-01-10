@@ -41,4 +41,12 @@ class EnrolmentStepDao
     public function getEnrolmentStepAll() {
         return EnrolmentStep::get();
     }
+
+    /**
+     * @param $id
+     * @return EnrolmentStep
+     */
+    public function getById($id){
+        return EnrolmentStep::find($id);
+    }
 }
