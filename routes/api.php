@@ -169,6 +169,10 @@ Route::prefix('student-register')->middleware('auth:api')->group(function () {
      Route::post('/load-open-majors','Api\Recruitment\PlansController@load_plans')
         ->name('api.load.open.majors');
 
+     // 招生咨询接口
+     Route::any('/qa','Api\Recruitment\PlansController@qa')
+        ->name('api.load.plans.qa');
+
      // 专业详情: 前端加载是调用
      Route::post('/load-major-detail','Api\Recruitment\PlansController@get_plan_front')
         ->name('api.load.major.detail');

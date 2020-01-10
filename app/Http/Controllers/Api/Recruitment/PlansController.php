@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\Recruitment;
 
 use App\BusinessLogic\RecruitmentPlan\PlansLoader;
 use App\Dao\RecruitmentPlan\RecruitmentPlanDao;
+use App\Dao\RecruitStudent\ConsultDao;
 use App\Http\Requests\RecruitStudent\PlanRecruitRequest;
 use App\Utils\JsonBuilder;
 use Illuminate\Http\Request;
@@ -72,8 +73,6 @@ class PlansController extends Controller
         return JsonBuilder::Success(['plan'=>$logic->getPlanDetail()]);
     }
 
-
-
     /**
      * @param Request $request
      * @return string
@@ -82,5 +81,17 @@ class PlansController extends Controller
         $dao = new RecruitmentPlanDao(0);
         $done = $dao->deletePlan($request->get('plan'));
         return $done ? JsonBuilder::Success() : JsonBuilder::Error();
+    }
+
+    public function qa(Request $request){
+        $dao = new ConsultDao();
+        $schoolId = 1;
+        try{
+            $schoolId = $request->user('api')->getSchoolId();
+        }catch (\Exception $e){
+
+        }
+        $qa = $dao->getConsultById($schoolId, true);
+        return JsonBuilder::Success(['qa'=>$qa]);
     }
 }
