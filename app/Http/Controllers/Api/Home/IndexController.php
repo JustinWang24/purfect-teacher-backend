@@ -326,10 +326,6 @@ class IndexController extends Controller
      */
     public function sendSms(SendSmeRequest $request)
     {
-
-         $sms =  SmsFactory::GetInstance();
-         $res = $sms->send('13261675950', '189903', ['123']);
-         exit();
         $mobile = $request->get('mobile');
         $type   = $request->get('type');
 
