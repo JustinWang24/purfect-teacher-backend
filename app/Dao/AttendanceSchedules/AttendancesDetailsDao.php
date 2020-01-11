@@ -117,7 +117,13 @@ class AttendancesDetailsDao
         return AttendancesDetail::where($map)->first();
     }
 
-
+    /**
+     * @param $attendanceId
+     * @return mixed
+     */
+    public function getAttendDetailsByAttendanceId($attendanceId) {
+        return AttendancesDetail::where('attendance_id', $attendanceId)->get();
+    }
 
 
 }

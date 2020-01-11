@@ -16,4 +16,9 @@ class AttendanceRequest extends MyStandardRequest
     public function getTruantData() {
         return $this->get('truant');
     }
+
+
+    public function getAttendanceId() {
+        return $this->get('attendance_id');
+    }
 }
