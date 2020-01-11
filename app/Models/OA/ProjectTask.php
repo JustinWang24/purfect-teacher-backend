@@ -7,8 +7,13 @@ use Illuminate\Database\Eloquent\Model;
 
 class ProjectTask extends Model
 {
-    const STATUS_IN_PROGRESS = 1;   // 正在进行
-    const STATUS_CLOSED = 2;   // 已结束
+
+    const STATUS_UN_BEGIN = 1; // 未开始
+    const STATUS_IN_PROGRESS = 2;   // 正在进行
+    const STATUS_CLOSED = 3;   // 已结束
+    const STATUS_OVERTIME = 4; //超时
+    const STATUS_MY_CREATE = 4; // 自己发起的
+
     protected $table = 'oa_project_tasks';
 
     protected $hidden = ['updated_at'];

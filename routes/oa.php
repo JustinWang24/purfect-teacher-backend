@@ -28,6 +28,7 @@ Route::prefix('task')->middleware('auth:api')->group(function () {
     // 项目下的任务列表
     Route::any('/getOaTaskListInfo','Api\OA\ProjectsController@taskList')
         ->name('oa.task.getOaTaskListInfo');
+    // 创建任务
     Route::any('/addOaTaskInfo','Api\OA\ProjectsController@createTask')
         ->name('oa.task.addOaTaskInfo');
     Route::any('/getOaTaskInfo','Api\OA\ProjectsController@taskInfo')

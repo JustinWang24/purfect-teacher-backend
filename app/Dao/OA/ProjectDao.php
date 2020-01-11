@@ -10,16 +10,17 @@ namespace App\Dao\OA;
 
 
 use App\Models\Acl\Role;
-use App\Models\OA\Project;
-use App\Models\OA\ProjectMember;
-use App\Models\OA\ProjectTask;
-use App\Models\OA\ProjectTaskDiscussion;
-use App\Models\Users\GradeUser;
 use App\Utils\JsonBuilder;
-use App\Utils\Misc\ConfigurationTool;
-use App\Utils\ReturnData\MessageBag;
+use App\Models\OA\Project;
+use App\Models\OA\ProjectTask;
+use App\Models\Users\GradeUser;
+use App\Models\OA\ProjectMember;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
+use App\Models\OA\ProjectTaskMember;
+use App\Utils\ReturnData\MessageBag;
+use App\Utils\Misc\ConfigurationTool;
+use App\Models\OA\ProjectTaskDiscussion;
 
 class ProjectDao
 {
@@ -134,27 +135,47 @@ class ProjectDao
 
     /**
      * 添加任务
-     * @param $task
+     * @param array $task
+     * @param array $memberUserIds
      * @return MessageBag
      */
-    public function createTask($task) {
-
+    public function createTask($task, $memberUserIds) {
         $messageBag = new MessageBag(JsonBuilder::CODE_ERROR);
+
         $re = $this->getTaskByTitleAndProjectId($task['title'], $task['project_id']);
         if(!is_null($re)) {
             $messageBag->setMessage('该任务已存在,请重新更换');
             return $messageBag;
         }
-        $result = ProjectTask::create($task);
-        if($result) {
-            $data = ['id'=>$result->id];
-            $messageBag->setData($data);
+
+        try{
+            DB::beginTransaction();
+            // 创建任务
+            $result = ProjectTask::create($task);
+
+            foreach ($memberUserIds as $key => $item) {
+                $user = [
+                    'task_id' => $result->id,
+                    'user_id' => $item
+                ];
+                ProjectTaskMember::create($user);
+            }
+
+            if(!empty($task['project_id'])) {
+                // 修改项目状态
+                Project::where('id', $task['project_id'])
+                    ->update(['status'=>Project::STATUS_IN_PROGRESS]);
+            }
+
+            DB::commit();
             $messageBag->setCode(JsonBuilder::CODE_SUCCESS);
-            return $messageBag;
-        } else {
-            $messageBag->setMessage('任务创建失败');
-            return $messageBag;
+            $messageBag->setData(['id'=>$result->id]);
+        }catch (\Exception $e) {
+            DB::rollBack();
+            $msg = $e->getMessage();
+            $messageBag->setMessage($msg);
         }
+        return $messageBag;
     }
 
 
@@ -219,21 +240,28 @@ class ProjectDao
             return $messageBag;
         }
     }
+
+    /**
+     * 任务列表
+     * @param $userId
+     * @param $type
+     * @return mixed
+     */
     public function getTasks($userId,$type)
     {
-        if($type == 2 || $type == 1) {
-            $where = ['status'=>1];
-        } elseif ($type ==3) {
-            $where = ['status'=>2];
-        } elseif ($type ==4) {
+        if($type == ProjectTask::STATUS_MY_CREATE) {
             $where = ['create_user'=>$userId];
+        } else {
+            $where = ['status'=>$type];
         }
+
         return ProjectTask::where('user_id', $userId)
             ->where($where)
             ->orderBy('id', 'desc')
             ->paginate(ConfigurationTool::DEFAULT_PAGE_SIZE);
-
     }
+
+
     public function finishTask($taskId, $remark='')
     {
         return ProjectTask::where('id', $taskId)->update(['status'=>ProjectTask::STATUS_CLOSED,'remark'=>$remark]);

@@ -53,8 +53,8 @@ class ProjectsController extends Controller
         $task_title = strip_tags($request->get('task_title'));
         $task_content = strip_tags($request->get('task_content'));
         $leader_userid = strip_tags($request->get('leader_userid'));
-        $member_userids = explode(',',strip_tags($request->get('member_userids')));
-        $end_time = strtotime($request->get('end_time'));
+        $memberUserIds = explode(',',strip_tags($request->get('member_userids')));
+        $end_time = $request->get('end_time');
         $projectid = intval($request->get('projectid'));
         $data = [
             'project_id'=>$projectid,
@@ -62,10 +62,11 @@ class ProjectsController extends Controller
             'title' =>$task_title,
             'content' =>$task_content,
             'end_time' =>$end_time,
+            'create_user'=>$user->id,
         ];
-        $result = $dao->createTask($data);
+        $result = $dao->createTask($data, $memberUserIds);
         if($result->isSuccess()) {
-            $dao->updateMembers($projectid, $member_userids);
+//            $dao->updateMembers($projectid, $member_userids);
             return JsonBuilder::Success($result->getData());
         } else {
             return JsonBuilder::Error($result->getMessage());
@@ -208,11 +209,20 @@ class ProjectsController extends Controller
         }
     }
 
+    /**
+     * 项目列表
+     * @param ProjectRequest $request
+     * @return string
+     */
     public function taskList(ProjectRequest $request) {
         $user = $request->user();
         $data['school_id'] = $user->getSchoolId();
         $type = intval($request->type);
-        if (!in_array($type, [1,2,3,4])) {
+
+        $status = [ProjectTask::STATUS_UN_BEGIN, ProjectTask::STATUS_IN_PROGRESS,
+            ProjectTask::STATUS_CLOSED, ProjectTask::STATUS_MY_CREATE,
+        ];
+        if (!in_array($type, $status)) {
             return JsonBuilder::Error('没有内容');
         }
         $dao = new ProjectDao();
