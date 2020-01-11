@@ -269,6 +269,7 @@ class IndexController extends Controller
 
         $data = [
             'name'           => $user->name,
+            'mobile'         => $user->mobile,
             'avatar'         => $profile->avatar,
             'id_number'      => $profile->id_number,
             'serial_number'  => $profile->serial_number,
