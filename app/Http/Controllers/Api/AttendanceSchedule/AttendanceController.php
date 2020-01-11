@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\AttendanceSchedule;
 
 
 use App\Dao\Schools\GradeDao;
+use App\Dao\Users\GradeUserDao;
 use Carbon\Carbon;
 use App\Utils\JsonBuilder;
 use App\Dao\Courses\CourseMajorDao;
@@ -144,10 +145,8 @@ class AttendanceController extends Controller
     public function gradeSign(AttendanceRequest $request)
     {
         $teacher = $request->user();
-
         $dao = new TimetableItemDao;
         $item = $dao->getTeacherTeachingGrade($teacher->id);
-
         $gradeId = [];
         foreach ($item as $key => $value) {
             $gradeId[$key] = $value->grade_id;
@@ -167,16 +166,95 @@ class AttendanceController extends Controller
 
 
     /**
-     * 教师端 班级签到详情
+     * 教师端 班级签到列表
      * @param AttendanceRequest $request
+     * @return string
      */
-    public function gradeSignDetails(AttendanceRequest $request)
+    public function courseSign(AttendanceRequest $request)
     {
         $gradeId = $request->get('grade_id');
-        dd($gradeId);
+        $teacherId = $request->user()->id;
+        $date = $request->get('date', Carbon::now()->toDateString());
+        $dao = new AttendancesDao();
+        $return  = $dao->getAttendByDateTimeAndGradeIdAndTeacherId($date, $gradeId, $teacherId);
+        $gradeDao = new GradeDao();
+        $grade = $gradeDao->getGradeById($gradeId);
 
 
+        $list = [];
+        foreach ($return as $key => $item) {
+            $list[$key]['attendance_id'] = $item->id;
+            $list[$key]['course'] = $item->course->name;
+            $list[$key]['time_slot'] = $item->timeTable->timeSlot->name;
+            $list[$key]['total_number'] = $item->total_number;
+            $list[$key]['actual_number'] = $item->actual_number;
+            $list[$key]['leave_number'] = $item->leave_number;
+            $list[$key]['missing_number'] = $item->missing_number;
+            $list[$key]['status'] = $item->status;
+        }
+        $data = [
+            'grade'=>['id'=>$gradeId,'name'=>$grade->name],
+            'list' => $list
+        ];
+
+        return JsonBuilder::Success($data);
     }
+
+
+    /**
+     * 课程签到详情
+     * @param AttendanceRequest $request
+     * @return string
+     */
+    public function courseSignDetails(AttendanceRequest $request) {
+        $attendanceId = $request->getAttendanceId();
+        $gradeId = $request->get('grade_id');
+        $gradeDao = new GradeUserDao();
+
+        $gradeUser = $gradeDao->getGradeUserByGradeId($gradeId);
+        $total = count($gradeUser);
+
+        $dao = new AttendancesDetailsDao();
+        $list = $dao->getAttendDetailsByAttendanceId($attendanceId);
+        $userIds = $list->pluck('student_id')->toArray();
+        $student = [];
+        $signin = 0;
+        $leave = 0;
+        $score = []; // 评分列表
+        foreach ($gradeUser as $key => $item) {
+            foreach ($list as $k => $v) {
+                $score[$key]['user_id'] = $item->user_id;
+                $score[$key]['name'] = $item->name;
+                $student[$key]['user_id'] = $item->user_id;
+                $student[$key]['name'] = $item->name;
+                if(in_array($item->user_id, $userIds)) {
+                    if($v->mold == AttendancesDetail::MOLD_SIGN_IN) {
+                        $signin += 1;
+                    }
+                    if($v->mold == AttendancesDetail::MOLD_LEAVE) {
+                        $leave += 1;
+                    }
+                    $student[$key]['mold'] = $v->mold;
+                    $score[$key]['score'] = $v->score;
+                } else {
+                    $student[$key]['mold'] = AttendancesDetail::MOLD_TRUANT;
+                    $score[$key]['score'] = 0;
+                }
+            }
+
+        }
+        // 旷课
+        $truant = $total - $signin - $leave;
+
+        $data = [
+            'stat' => ['total'=>$total, 'signin'=>$signin, 'leave'=>$leave, 'truant'=>$truant],
+            'signin' => $student,
+            'score' => $score,
+        ];
+        return JsonBuilder::Success($data);
+    }
+
+
 
 
 }
