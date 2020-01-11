@@ -220,8 +220,11 @@ class AttendanceController extends Controller
         $student = [];
         $signin = 0;
         $leave = 0;
+        $score = []; // 评分列表
         foreach ($gradeUser as $key => $item) {
             foreach ($list as $k => $v) {
+                $score[$key]['user_id'] = $item->user_id;
+                $score[$key]['name'] = $item->name;
                 $student[$key]['user_id'] = $item->user_id;
                 $student[$key]['name'] = $item->name;
                 if(in_array($item->user_id, $userIds)) {
@@ -232,8 +235,10 @@ class AttendanceController extends Controller
                         $leave += 1;
                     }
                     $student[$key]['mold'] = $v->mold;
+                    $score[$key]['score'] = $v->score;
                 } else {
                     $student[$key]['mold'] = AttendancesDetail::MOLD_TRUANT;
+                    $score[$key]['score'] = 0;
                 }
             }
 
@@ -243,10 +248,13 @@ class AttendanceController extends Controller
 
         $data = [
             'stat' => ['total'=>$total, 'signin'=>$signin, 'leave'=>$leave, 'truant'=>$truant],
-            'list' => $student
+            'signin' => $student,
+            'score' => $score,
         ];
         return JsonBuilder::Success($data);
     }
+
+
 
 
 }
