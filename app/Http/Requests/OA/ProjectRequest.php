@@ -5,6 +5,7 @@ namespace App\Http\Requests\OA;
 
 
 use App\Http\Requests\MyStandardRequest;
+use App\Models\OA\ProjectTask;
 
 class ProjectRequest extends MyStandardRequest
 {
@@ -69,6 +70,15 @@ class ProjectRequest extends MyStandardRequest
      */
     public function getTaskId() {
         return $this->get('task_id', null);
+    }
+
+
+    /**
+     * 获取任务类型
+     * @return mixed
+     */
+    public function getTaskType() {
+        return $this->get('type',ProjectTask::STATUS_UN_BEGIN);
     }
 
 }

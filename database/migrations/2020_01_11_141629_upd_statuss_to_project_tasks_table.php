@@ -16,7 +16,8 @@ class UpdStatussToProjectTasksTable extends Migration
     {
         Schema::table('oa_project_tasks', function (Blueprint $table) {
             //
-            $table->smallInteger('status')->default(0)->comment('状态 1:待开始 2:正在进行 3:已结束')->change();
+            $table->smallInteger('status')->default(1)->comment('状态 1:待开始 2:正在进行 3:已结束')->change();
+            $table->integer('user_id')->comment('负责人')->change();
             $table->integer('project_id')->nullable()->change();
             $table->string('remark')->comment('备注')->nullable()->change();
         });

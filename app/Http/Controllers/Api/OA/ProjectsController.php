@@ -66,7 +66,6 @@ class ProjectsController extends Controller
         ];
         $result = $dao->createTask($data, $memberUserIds);
         if($result->isSuccess()) {
-//            $dao->updateMembers($projectid, $member_userids);
             return JsonBuilder::Success($result->getData());
         } else {
             return JsonBuilder::Error($result->getMessage());
@@ -215,9 +214,8 @@ class ProjectsController extends Controller
      * @return string
      */
     public function taskList(ProjectRequest $request) {
-        $user = $request->user();
-        $data['school_id'] = $user->getSchoolId();
-        $type = intval($request->type);
+        $userId = $request->user()->id;
+        $type = intval($request->getTaskType());
 
         $status = [ProjectTask::STATUS_UN_BEGIN, ProjectTask::STATUS_IN_PROGRESS,
             ProjectTask::STATUS_CLOSED, ProjectTask::STATUS_MY_CREATE,
@@ -226,23 +224,41 @@ class ProjectsController extends Controller
             return JsonBuilder::Error('没有内容');
         }
         $dao = new ProjectDao();
-        $list = $dao->getTasks($user->id,$type);
-        if (!$list)
-        {
-            return JsonBuilder::Error('没有内容');
+
+        if($type == ProjectTask::STATUS_MY_CREATE) {
+            $list = $dao->myCreateTasks($userId);
+            $output = [];
+            foreach ($list as $key => $val) {
+                $output[$key]['taskid'] = $val->id;
+                $output[$key]['create_userid'] = $val->create_user;
+                $output[$key]['create_name'] = $val->createUser->name;
+                $output[$key]['task_title'] = $val->title;
+                $output[$key]['create_time'] = $val->created_at;
+                $output[$key]['end_time'] = $val->end_time;
+                $output[$key]['leader_userid'] = $val->user_id;
+                $output[$key]['leader_name'] = $val->user->name;
+                $output[$key]['status'] = $val->status;
+            }
+
+        } else {
+            $list = $dao->attendTasks($userId, $type);
+
+            $output = [];
+            foreach ($list as $key => $val) {
+                $projectTask = $val->projectTask;
+                $output[$key]['taskid'] = $projectTask->id;
+                $output[$key]['create_userid'] = $projectTask->create_user;
+                $output[$key]['create_name'] = $projectTask->createUser->name;
+                $output[$key]['task_title'] = $projectTask->title;
+                $output[$key]['create_time'] = $projectTask->created_at;
+                $output[$key]['end_time'] = $projectTask->end_time;
+                $output[$key]['leader_userid'] = $projectTask->user_id;
+                $output[$key]['leader_name'] = $projectTask->user->name;
+                $output[$key]['status'] = $projectTask->status;
+            }
         }
-        $output = [];
-        foreach ($list as $key => $val) {
-            $output[$key]['taskid'] = $val->id;
-            $output[$key]['create_userid'] = $val->create_user;
-            $output[$key]['create_name'] = "管理员";
-            $output[$key]['task_title'] = $val->title;
-            $output[$key]['create_time'] = $val->created_at;
-            $output[$key]['end_time'] = $val->end_time;
-            $output[$key]['leader_userid'] = $val->user_id;
-            $output[$key]['leader_name'] = $val->user->name;
-            $output[$key]['status'] = $val->status;
-        }
+
+
         return JsonBuilder::Success($output);
     }
 

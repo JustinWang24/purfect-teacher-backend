@@ -242,22 +242,30 @@ class ProjectDao
     }
 
     /**
-     * 任务列表
+     * 我创建的任务列表
+     * @param $userId
+     * @return mixed
+     */
+    public function myCreateTasks($userId)
+    {
+        $where = ['create_user'=>$userId];
+
+        return ProjectTask::where($where)
+            ->orderBy('id', 'desc')
+            ->paginate(ConfigurationTool::DEFAULT_PAGE_SIZE);
+    }
+
+
+    /**
+     * 参加的会议
      * @param $userId
      * @param $type
      * @return mixed
      */
-    public function getTasks($userId,$type)
-    {
-        if($type == ProjectTask::STATUS_MY_CREATE) {
-            $where = ['create_user'=>$userId];
-        } else {
-            $where = ['status'=>$type];
-        }
-
-        return ProjectTask::where('user_id', $userId)
-            ->where($where)
-            ->orderBy('id', 'desc')
+    public function attendTasks($userId, $type) {
+        $map = ['user_id'=>$userId, 'status'=>$type];
+        return ProjectTaskMember::where($map)
+            ->orderBy('created_at', 'desc')
             ->paginate(ConfigurationTool::DEFAULT_PAGE_SIZE);
     }
 
