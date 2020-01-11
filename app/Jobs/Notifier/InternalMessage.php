@@ -23,6 +23,7 @@ class InternalMessage
     protected $priority;
     protected $content;
     protected $nextMove;
+    protected $title;
 
     /**
      * InternalMessage constructor.
@@ -31,6 +32,7 @@ class InternalMessage
      * @param $to
      * @param $type
      * @param $priority
+     * @param $title
      * @param $content
      * @param null $nextMove
      */
@@ -40,6 +42,7 @@ class InternalMessage
         $to,
         $type,
         $priority,
+        $title,
         $content,
         $nextMove = null
     ){
@@ -48,6 +51,7 @@ class InternalMessage
         $this->to = $to;
         $this->type = $type;
         $this->priority = $priority;
+        $this->title = $title;
         $this->content = $content;
         $this->nextMove = $nextMove;
     }
@@ -67,6 +71,7 @@ class InternalMessage
                 'type'=>$this->type,
                 'priority'=>$this->priority,
                 'school_id'=>$this->schoolId,
+                'title'=>$this->title,
                 'content'=>$this->content,
                 'next_move'=>$this->nextMove,
             ]);

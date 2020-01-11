@@ -7,16 +7,6 @@ use App\Utils\ReturnData\MessageBag;
 
 class EnrolmentStepDao
 {
-
-    /**
-     * 获取所有的基础数据
-     * @return mixed
-     */
-    public function getAll(){
-        return EnrolmentStep::all();
-    }
-
-
     /**
      * 创建
      * @param $data
@@ -35,7 +25,6 @@ class EnrolmentStepDao
         }
     }
 
-
     /**
      * @param $name
      * @return mixed
@@ -51,5 +40,13 @@ class EnrolmentStepDao
      */
     public function getEnrolmentStepAll() {
         return EnrolmentStep::get();
+    }
+
+    /**
+     * @param $id
+     * @return EnrolmentStep
+     */
+    public function getById($id){
+        return EnrolmentStep::find($id);
     }
 }

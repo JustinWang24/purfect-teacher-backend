@@ -87,8 +87,9 @@ Route::prefix('school')->middleware('auth:api')->group(function () {
     // APP 应用接口
     Route::any('/calendar','Api\Home\IndexController@calendar')
         ->name('api.school.calendar');  // 校历接口
+
     Route::any('/all-events','Api\Home\IndexController@all_events')
-        ->name('api.school.all-events'); // 下发所有事件
+        ->name('api.school.all-events'); // 历史事件
 });
 
 Route::prefix('enquiry')->middleware('auth:api')->group(function () {
@@ -167,6 +168,10 @@ Route::prefix('student-register')->middleware('auth:api')->group(function () {
      // 获取全部招生计划
      Route::post('/load-open-majors','Api\Recruitment\PlansController@load_plans')
         ->name('api.load.open.majors');
+
+     // 招生咨询接口
+     Route::any('/qa','Api\Recruitment\PlansController@qa')
+        ->name('api.load.plans.qa');
 
      // 专业详情: 前端加载是调用
      Route::post('/load-major-detail','Api\Recruitment\PlansController@get_plan_front')
@@ -386,9 +391,10 @@ Route::prefix('home')->middleware('auth:api')->group(function () {
 
 // 消息通知
 Route::prefix('notice')->middleware('auth:api')->group(function () {
+    // 通知列表
     Route::post('/notice-list', 'Api\Notice\NoticeController@getNotice')
         ->name('api.notice.list');
-
+    // 通知详情
     Route::post('/notice-info', 'Api\Notice\NoticeController@noticeInfo')
     ->name('api.notice.info');
 });

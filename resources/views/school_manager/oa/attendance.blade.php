@@ -10,6 +10,9 @@ use App\User;
             <div class="card">
                 <div class="card-head">
                     <header>{{ session('school.name') }} 考勤管理</header>
+                    <a href="{{ route('school_manager.oa.attendances-add-group') }}" class="btn btn-primary pull-right">
+                        添加考勤组 <i class="fa fa-plus"></i>
+                    </a>
                 </div>
                 <div class="card-body">
                     <div class="row">
@@ -41,7 +44,7 @@ use App\User;
                                         </td>
                                         <td size="">
                                             @foreach($group->members as $member)
-<span class="text-primary m-2"><a href="{{route('school_manager.oa.attendances-del-member',['id'=>$member->user_id,'group'=>$group->id])}}" class="btn-need-confirm">{{ $member->user->name }} </a></span>
+<span class="text-primary m-2"><a href="{{route('school_manager.oa.attendances-del-member',['id'=>$member->user_id,'group'=>$group->id])}}" class="btn-need-confirm">{{ $member->user->name }} @if($member->status ==2) [审批] @endif </a></span>
                                             @endforeach
                                         </td>
                                         <td>

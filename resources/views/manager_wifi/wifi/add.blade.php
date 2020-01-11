@@ -66,6 +66,7 @@ use App\Utils\UI\Button;
             </div>
         </div>
     </div>
+	<script src="{{ route('manager_wifi.WifiApi.get_school_campus') }}" charset="UTF-8"></script>
     <script>
         window.onload=function() {
             showLocation();

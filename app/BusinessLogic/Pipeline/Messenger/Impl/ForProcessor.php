@@ -63,6 +63,7 @@ class ForProcessor extends AbstractMessenger
                 $this->processor->getId(),
                 SystemNotification::TYPE_NONE,
                 SystemNotification::PRIORITY_LOW,
+                '有一个' . $this->flow->getName() .'流程在等待您处理',
                 $content,
                 $nextMove
             );

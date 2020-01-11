@@ -2,6 +2,7 @@
 namespace App\Dao\RecruitStudent;
 
 use App\Models\Schools\Consult;
+use Illuminate\Database\Eloquent\Collection;
 
 class ConsultDao
 {
@@ -41,7 +42,7 @@ class ConsultDao
     /**
      * 获取咨询列表
      * @param $schoolId
-     * @return mixed
+     * @return Collection
      */
     public function getConsultPage($schoolId) {
         return Consult::where('school_id',$schoolId)->paginate(10);
@@ -50,12 +51,28 @@ class ConsultDao
     /**
      * 获取咨询详情
      * @param $id
-     * @return mixed
+     * @param $simple
+     * @return Collection
      */
-    public function getConsultById($id) {
+    public function getConsultById($id, $simple = false) {
+        if($simple){
+            return Consult::select(['question','answer'])->where('school_id',$id)->get();
+        }
         return Consult::where('id',$id)->first();
     }
 
+    /**
+     * 获取咨询详情
+     * @param $id
+     * @param $simple
+     * @return Collection
+     */
+    public function getConsultsBySchool($id, $simple = false) {
+        if($simple){
+            return Consult::select(['question','answer'])->where('school_id',$id)->get();
+        }
+        return Consult::where('school_id',$id)->get();
+    }
 
     /**
      * 软删除

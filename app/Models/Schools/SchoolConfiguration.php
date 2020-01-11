@@ -12,8 +12,11 @@ class SchoolConfiguration extends Model
 {
     use HasConfigurations;
     const FAKE_YEAR = 1980;
-    const FIRST_TERM_START_MONTH = 9; // 第一学期开学日期在 9 月份
+    const FIRST_TERM_START_MONTH = 8; // 第一学期开学日期在 8 月份
     const SECOND_TERM_START_MONTH = 2; // 第二学期开学日期在 2 月份
+    const LAST_TERM = 1;
+    const NEXT_TERM = 2;
+
 
     protected $fillable = [
         ConfigurationTool::KEY_STUDY_WEEKS_PER_TERM,
@@ -60,15 +63,47 @@ class SchoolConfiguration extends Model
     /**
      * 获取指定的学期的当年的起始日期
      * @param int $term
+     * @param date $date
      * @return Carbon
      */
-    public function getTermStartDate($term = null){
-        $now = now();
+    public function getTermStartDate($term = null, $date = null ){
+        // 获取当前时间的学年
+        $date = $this->getSchoolYear($date, true);
+
+        $now = Carbon::parse($date) ?? now() ;
         if(!$term){
             $term = $this->guessTerm($now->month);
         }
         $fieldName = 'first_day_term_'.$term;
-        return $this->$fieldName->setYear($now->year);
+
+        if($term == self::LAST_TERM) {
+            return $this->$fieldName->setYear($now->year);
+        } elseif ($term == self::NEXT_TERM) {
+            return $this->$fieldName->setYear($now->addYear()->year);
+        }
+    }
+
+    /**
+     * 返回当前学年
+     * @param $date
+     * @param bool $format
+     * @return int
+     */
+    public function getSchoolYear($date, $format = false) {
+        $time = $this->first_day_term_1->format('m-d'); // 第一学期的开始日期
+        $year = Carbon::parse($date)->year;
+        $nextSchoolYear = $year.'-'.$time;
+        // 下一学年开学日期大于当前时间
+        if($date < $nextSchoolYear  ) {
+            $year = $year - 1;
+            $date = $year . '-' . $time;
+        }
+
+        if($format) {
+            return $date;
+        }
+        return $year;
+
     }
 
     /**
@@ -80,14 +115,14 @@ class SchoolConfiguration extends Model
         return ($month >= self::FIRST_TERM_START_MONTH || $month < self::SECOND_TERM_START_MONTH) ? 1 : 2;
     }
 
-
     /**
      * @param null $term
      * @param bool $isReservesWeek
+     * @param null $year
      * @return Collection
      */
-    public function getAllWeeksOfTerm($term = null, $isReservesWeek = true){
-        $termStartDate = $this->getTermStartDate($term);
+    public function getAllWeeksOfTerm($term = null, $isReservesWeek = true, $year = null){
+        $termStartDate = $this->getTermStartDate($term, $year);
         $fieldOfWeeksPerTerm = ConfigurationTool::KEY_STUDY_WEEKS_PER_TERM;
         $weeksNumber = $this->$fieldOfWeeksPerTerm;
 

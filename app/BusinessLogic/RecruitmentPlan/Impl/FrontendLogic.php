@@ -31,6 +31,14 @@ class FrontendLogic implements IPlansLoaderLogic
     {
         $this->schoolUuId = $request->getSchoolId();
         $this->schoolId = null;
+
+        if(empty($this->schoolUuId)){
+            $user = $request->user('api');
+            if($user){
+                $this->schoolId = $user->getSchoolId();
+            }
+        }
+
         $this->today = Carbon::today();
         $this->request = $request;
         $this->studentIdNumber = $request->getStudentIdNumber();
@@ -41,6 +49,11 @@ class FrontendLogic implements IPlansLoaderLogic
     {
         $schoolDao = new SchoolDao();
         $school = $schoolDao->getSchoolByUuid($this->schoolUuId);
+
+        if(!$school){
+            $school = $schoolDao->getSchoolById($this->schoolId);
+        }
+
         if(!$school){
             return [];
         }
