@@ -480,9 +480,12 @@ Route::prefix('attendance')->middleware('auth:api')->group(function () {
     // 教师端 班级签到--所有班级
     Route::get('/grade-sign','Api\AttendanceSchedule\AttendanceController@gradeSign')
         ->name('api.attendance.grade-sign');
-    // 教师端 班级签到--签到详情
-    Route::post('/grade-sign-details','Api\AttendanceSchedule\AttendanceController@gradeSignDetails')
-        ->name('api.attendance.grade-sign-details');
+    // 教师端 班级签到--课程列表
+    Route::post('/course-sign','Api\AttendanceSchedule\AttendanceController@courseSign')
+        ->name('api.attendance.course-sign');
+    // 课程签到详情
+    Route::post('/course-sign-details','Api\AttendanceSchedule\AttendanceController@courseSignDetails')
+        ->name('api.attendance.course-sign-details');
 
 
 });

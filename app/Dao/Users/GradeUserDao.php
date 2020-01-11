@@ -66,6 +66,15 @@ class GradeUserDao
         return DB::table('grade_users')->select('school_id')->where('user_id',$userId)->get();
     }
 
+
+    /**
+     * @param $gradeId
+     * @return mixed
+     */
+    public function getGradeUserByGradeId($gradeId) {
+        return GradeUser::where('grade_id', $gradeId)->get();
+    }
+
     /**
      * 根据学校获取 id
      * @param $schoolId
