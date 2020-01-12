@@ -38,6 +38,8 @@ class RouteServiceProvider extends ServiceProvider
         $this->mapApiRoutes();
         $this->mapApiWifiRoutes();	// api wifi interface
 		$this->mapManagerWifiRoutes(); // manage wifi interface
+		$this->mapApiWelcomeRoutes();	// api welcome interface
+		$this->mapManagerWelcomeRoutes(); // manage welcome interface
         $this->mapWebRoutes();
         $this->mapAdminRoutes();
         $this->mapOperatorRoutes();
@@ -87,6 +89,16 @@ class RouteServiceProvider extends ServiceProvider
     }
 
     /**
+     * ApiWelcome
+     */
+    protected function mapApiWelcomeRoutes()
+    {
+        Route::prefix('api')->middleware('api')
+            ->namespace($this->namespace. '\Api')
+            ->group(base_path('routes/api_welcome.php'));
+    }
+
+    /**
      * Admin
      */
     protected function mapAdminRoutes()
@@ -126,6 +138,16 @@ class RouteServiceProvider extends ServiceProvider
             ->group(base_path('routes/manager_wifi.php'));
     }
 
+    /**
+     * Operator
+     */
+    protected function mapManagerWelcomeRoutes()
+    {
+        Route::middleware('web')
+            ->namespace($this->namespace. '\Operator')
+            ->group(base_path('routes/manager_welcome.php'));
+    }
+	
     /**
      * Teacher
      */
