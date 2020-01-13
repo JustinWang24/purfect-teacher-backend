@@ -29,6 +29,7 @@ class InternalMessageController extends Controller
         $isRelay     = $request->get('isRelay');
         $relayId     = $request->get('relayId');
         $files       = $request->file('image');
+        $isFile      = $request->file('isFile');
 
         $fileArr = [];
         foreach ($files as $key => $file) {
@@ -48,6 +49,7 @@ class InternalMessageController extends Controller
             'content'           => $content,
             'type'              => $type,
             'is_relay'          => $isRelay,
+            'is_file'           => $isFile,
         ];
 
         $result = $dao->create($data, $fileArr);
