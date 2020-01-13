@@ -45,7 +45,7 @@ class WelcomeUserReportDao
      */
     public function getWelcomeUserReportOneInfo( $userId , $fieldArr = ['*'] )
     {
-       return  WelcomeUserReport::where('user_id', $userId)
+        return  WelcomeUserReport::where('user_id', $userId)
             ->where('status', '>', 0)->select($fieldArr)->first();
     }
 
@@ -152,7 +152,7 @@ class WelcomeUserReportDao
             return array('status' => 7, 'message' => '未查找到您的信息');
         }
 
-        return array('status' => 2, 'message' => '进入迎新界面');
+        return array('status' => 2, 'message' => '请先完善个人信息');
 
     }
 
@@ -187,6 +187,8 @@ class WelcomeUserReportDao
 
         // 返回用户信息
         $data['user_name'] = !empty($userReportArr) ? (String)$userReportArr['user_name'] : ''; // 姓名
+        // TODO...
+        $data['student_id'] = '201891827'; // 身份证号
         $data['id_number'] = !empty($userReportArr) ? (String)$userReportArr['id_number'] : (String)$getStudentProfilesInfo->id_number; // 身份证号
         $data['gender'] = !empty($userReportArr) ? (String)$userReportArr['gender'] : (String)$getStudentProfilesInfo->gender; // 性别(1:男 2:女 )
         $data['birthday'] = !empty($userReportArr) ? (String)$userReportArr['birthday'] : (String)$getStudentProfilesInfo->birthday; // 出身日期(2020-01-12)
@@ -203,6 +205,8 @@ class WelcomeUserReportDao
         $data['institute_name'] = '国际贸易学院'; // 学院名称
         $data['major_id'] = 1; // 专业id
         $data['major_name'] = '金融'; // 专业名称
+        $data['class_id'] = 1; // 班级id
+        $data['class_name'] = '1班'; // 班级名称
 
         $data['email'] = !empty($userReportArr) ? (String)$userReportArr['email'] : ''; // 邮箱
 
