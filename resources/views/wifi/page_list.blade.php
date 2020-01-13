@@ -35,9 +35,9 @@
     <meta name="x5-page-mode" content="app">
     <!-- windows phone 点击无高光 -->
     <meta name="msapplication-tap-highlight" content="no">
-    <link rel="stylesheet" href="__PUBLIC__/api/css/wifinotice/mescroll.min.css">
-    <link rel="stylesheet" href="__PUBLIC__/api/css/wifinotice/common.css">
-    <link rel="stylesheet" href="__PUBLIC__/api/css/wifinotice/quesList.css">
+	<link href="{{ asset('assets/css/wifinotice/mescroll.min.css') }}" rel="stylesheet">
+	<link href="{{ asset('assets/css/wifinotice/common.css') }}" rel="stylesheet">
+	<link href="{{ asset('assets/css/wifinotice/quesList.css') }}" rel="stylesheet">
 </head>
 
 <body>
@@ -55,8 +55,8 @@
         @endforeach
     </ul>
 </div>
-<script src="__PUBLIC__/api/js/wifinotice/mescroll.min.js" type="text/javascript" charset="utf-8"></script>
-<script src="__PUBLIC__/api/js/wifinotice/jquery.min.js" type="text/javascript" charset="utf-8"></script>
-<script src="__PUBLIC__/api/js/wifinotice/common.js" type="text/javascript" charset="utf-8"></script>
+<script src="{{ asset('assets/js/wifinotice/mescroll.min.js') }}"></script>
+<script src="{{ asset('assets/js/wifinotice/jquery.min.js') }}"></script>
+<script src="{{ asset('assets/js/wifinotice/common.js') }}"></script>
 </body>
 </html>
