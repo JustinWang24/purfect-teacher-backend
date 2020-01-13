@@ -42,4 +42,10 @@ class ProjectTaskPic extends Model
         return '';
     }
 
+
+    public function getUrlAttribute($value)
+    {
+        return $value ? asset($value) : '';
+    }
+
 }

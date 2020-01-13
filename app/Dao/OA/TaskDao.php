@@ -208,4 +208,13 @@ class TaskDao
     public function createDiscussion($data) {
         return ProjectTaskDiscussion::create($data);
     }
+
+
+    /**
+     * @param $taskId
+     * @return mixed
+     */
+    public function getTaskMembersByTaskId($taskId) {
+        return ProjectTaskMember::where('task_id',$taskId)->get();
+    }
 }

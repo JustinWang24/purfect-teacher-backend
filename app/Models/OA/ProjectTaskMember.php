@@ -35,4 +35,13 @@ class ProjectTaskMember extends Model
         return $this->belongsTo(User::class);
     }
 
+    /**
+     * 资源附件
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function pics() {
+        return $this->hasMany(ProjectTaskPic::class, 'task_member_id');
+    }
+
+
 }

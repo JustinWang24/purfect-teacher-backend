@@ -15,6 +15,7 @@ use App\Utils\JsonBuilder;
 use App\Models\OA\ProjectTaskMember;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\OA\ProjectRequest;
+use Carbon\Carbon;
 
 class TaskController extends Controller
 {
@@ -204,6 +205,50 @@ class TaskController extends Controller
         } else {
             return JsonBuilder::Error('添加失败');
         }
+
+    }
+
+
+    public function taskReport(ProjectRequest $request) {
+        $taskId = $request->getTaskId();
+        $dao = new TaskDao();
+        $list = $dao->getTaskMembersByTaskId($taskId);
+        $task = $dao->getProjectTaskById($taskId);
+        $now = Carbon::now()->toDateTimeString();
+        $data = [];
+        foreach ($list as $key => $item) {
+            $attach = $item->pics;
+            $url = $attach->pluck('url')->toArray();
+            $data[$key]['userid'] = $item->user_id;
+            $data[$key]['username'] = $item->user->name;
+            $data[$key]['user_pics'] = $item->user->profile->avatar;
+            $data[$key]['update_time'] = $item->end_time ;
+            $data[$key]['remark'] = $item->remark;
+            $data[$key]['attach'] = implode(',', $url);
+            // 待接收
+            if($item->status == ProjectTaskMember::STATUS_UN_BEGIN) {
+                $data[$key]['status'] = 0; // 待接收
+            }
+            // 已接收
+            if($item->status == ProjectTaskMember::STATUS_IN_PROGRESS) {
+                // 当前时间大于结束时间
+                if($now >= $task->end_time) {
+                    $data[$key]['status'] = 3; // 进行中超时
+                } else {
+                    $data[$key]['status'] = 1; // 进行中按时
+                }
+            }
+            if($item->status == ProjectTaskMember::STATUS_CLOSED) {
+                if($item->end_time >= $task->end_time) {
+                    $data[$key]['status'] = 4; // 已完成超时
+                } else {
+                    $data[$key]['status'] = 2; // 已完成按时
+                }
+            }
+
+        }
+
+        return JsonBuilder::Success($data);
 
     }
 

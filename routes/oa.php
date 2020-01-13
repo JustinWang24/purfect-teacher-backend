@@ -43,6 +43,10 @@ Route::prefix('task')->middleware('auth:api')->group(function () {
     // 发起讨论
     Route::any('/addOaTaskForum','Api\OA\TaskController@addOaTaskForum')
         ->name('Oa.task.addOaTaskForum');
+    // 结果列表
+    Route::any('/getOaTaskReport','Api\OA\TaskController@taskReport')
+        ->name('Oa.task.getOaTaskReport');
+
     Route::any('/getOaTaskUserListInfo','Api\OA\ProjectsController@getOaTaskUserListInfo')
         ->name('Oa.task.getOaTaskUserListInfo');
 
