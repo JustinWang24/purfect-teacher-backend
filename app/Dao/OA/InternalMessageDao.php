@@ -23,14 +23,13 @@ class InternalMessageDao
             $collId = explode(',', $data['collect_user_id']);
             $collData = [];
             foreach ($collId as $key => $value) {
-                $collData[$key]['user_id']           = $data['user_id'];
-                $collData[$key]['collect_user_id']   = $value;
-                $collData[$key]['collect_user_name'] = $data['collect_user_name'];
-                $collData[$key]['title']             = $data['title'];
-                $collData[$key]['content']           = $data['content'];
-                $collData[$key]['type']              = 1;
-                $collData[$key]['is_relay']          = $data['is_relay'];
-                dd($collData);
+                $collData['user_id']           = $data['user_id'];
+                $collData['collect_user_id']   = $value;
+                $collData['collect_user_name'] = $data['collect_user_name'];
+                $collData['title']             = $data['title'];
+                $collData['content']           = $data['content'];
+                $collData['type']              = 1;
+                $collData['is_relay']          = $data['is_relay'];
                 InternalMessage::create($collData);
             }
 

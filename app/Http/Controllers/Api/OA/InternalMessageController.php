@@ -17,6 +17,7 @@ class InternalMessageController extends Controller
     /**
      * 发信
      * @param MyStandardRequest $request
+     * @return string
      */
     public function addMessage(MyStandardRequest $request)
     {
@@ -53,8 +54,11 @@ class InternalMessageController extends Controller
         ];
 
         $result = $dao->create($data, $fileArr);
-
-
+        if ($result) {
+            return JsonBuilder::Success('添加成功');
+        } else {
+            return JsonBuilder::Error('添加失败');
+        }
     }
 
     /**
