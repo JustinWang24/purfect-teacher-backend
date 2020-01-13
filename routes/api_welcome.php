@@ -25,7 +25,7 @@ Route::prefix('api_welcome')->middleware('auth:api')->group(function () {
     Route::any('/v1/welcome/confirm-user-info','\App\Http\Controllers\Api\Welcome\IndexController@confirm_user_info');
     // 报到单
     Route::any('/v1/welcome/report-info','\App\Http\Controllers\Api\Welcome\IndexController@report_info');
-    // 迎新指南
-    Route::any('/v1/welcome/page-info','\App\Http\Controllers\Api\Welcome\IndexController@page_info');
-
 });
+
+// 迎新指南
+Route::get('/welcome/page-info','\App\Http\Controllers\Api\Welcome\IndexController@page_info');
