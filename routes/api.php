@@ -763,4 +763,21 @@ Route::prefix('teacher/evaluation')->middleware('auth:api')->group(function(){
 });
 
 
+// 内部信
+Route::prefix('Oa')->middleware('auth:api')->group(function () {
+    // 发信
+    Route::post('/get-teachers','Api\OA\InternalMessageController@getTeachers')
+        ->name('api.oa.get.teachers');
+    // 发信
+    Route::post('/add-message','Api\OA\InternalMessageController@addMessage')
+        ->name('api.oa.add.message');
+    // 内部信列表
+    Route::post('/message-list','Api\OA\InternalMessageController@messageList')
+        ->name('api.oa.add.message');
+    // 信件详情
+    Route::post('/message-info','Api\OA\InternalMessageController@massageInfo')
+        ->name('api.oa.add.message');
 
+
+
+});
