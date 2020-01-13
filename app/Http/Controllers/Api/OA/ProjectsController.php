@@ -241,31 +241,7 @@ class ProjectsController extends Controller
 
 
 
-    public function addOaTaskForum(Request $request)
-    {
-        $user = $request->user();
-        $data['school_id'] = $user->getSchoolId();
-        $dao = new ProjectDao();
-        $taskid = intval($request->get('taskid'));
-        $task = $dao->getProjectTaskById($taskid);
-        if (!$task)
-            return JsonBuilder::Success('添加失败');
-        $forum_content = strip_tags($request->get('forum_content'));
-        $userid = intval($request->get('userid'));
-        $data = [
-            'project_task_id' => $taskid,
-            'user_id' => $user->id,
-            'content' => $forum_content,
-        ];
-        $result = $dao->createDiscussion($data);
-        if ($result)
-        {
-            return JsonBuilder::Success('添加成功');
-        } else {
-            return JsonBuilder::Success('添加失败');
-        }
 
-    }
 
     public function getOaTaskUserListInfo(Request $request)
     {

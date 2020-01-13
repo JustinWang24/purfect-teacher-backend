@@ -123,20 +123,6 @@ class ProjectDao
     }
 
 
-
-
-
-
-    /**
-     * 创建任务评论
-     * @param $data
-     * @return mixed
-     */
-    public function createDiscussion($data) {
-        return ProjectTaskDiscussion::create($data);
-    }
-
-
     /**
      * 项目列表
      * @param $userId

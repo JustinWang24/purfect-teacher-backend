@@ -10,6 +10,7 @@ namespace App\Dao\OA;
 
 
 use App\Models\OA\Project;
+use App\Models\OA\ProjectTaskDiscussion;
 use App\Models\OA\ProjectTaskPic;
 use App\Utils\JsonBuilder;
 use App\Models\OA\ProjectTask;
@@ -196,5 +197,15 @@ class TaskDao
         }
         return $messageBag;
 
+    }
+
+
+    /**
+     * 创建任务评论
+     * @param $data
+     * @return mixed
+     */
+    public function createDiscussion($data) {
+        return ProjectTaskDiscussion::create($data);
     }
 }

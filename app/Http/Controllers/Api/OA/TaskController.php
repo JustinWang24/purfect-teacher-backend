@@ -62,7 +62,7 @@ class TaskController extends Controller
         $taskId = $request->getTaskId();
         $dao = new TaskDao();
         $task = $dao->getProjectTaskById($taskId);
-        if(!$task){
+        if(is_null($task)){
             return JsonBuilder::Error('没有内容');
         }
 
@@ -119,7 +119,7 @@ class TaskController extends Controller
         $taskId = $request->getTaskId();
         $dao = new TaskDao();
         $task = $dao->getProjectTaskById($taskId);
-        if(!$task){
+        if(is_null($task)){
             return JsonBuilder::Error('没有内容');
         }
 
@@ -144,14 +144,22 @@ class TaskController extends Controller
     }
 
 
+    /**
+     * 结束任务
+     * @param ProjectRequest $request
+     * @return string
+     */
     public function finishTask(ProjectRequest $request) {
         $user = $request->user();
         $schoolId = $user->getSchoolId();
         $dao = new TaskDao();
-        $taskId = $request->get('taskid');
+        $taskId = $request->getTaskId();
         $remark = $request->get('remark');
         $pics = $request->file('pics');
         $task = $dao->getProjectTaskById($taskId);
+        if(is_null($task)){
+            return JsonBuilder::Error('没有内容');
+        }
         $member = $task->taskMembers->where('user_id',$user->id)->first();
         if(is_null($member)) {
             return JsonBuilder::Error('您不属于该任务的成员');
@@ -168,6 +176,35 @@ class TaskController extends Controller
         } else {
             return JsonBuilder::Error($msg);
         }
+    }
+
+
+    /**
+     * 添加讨论
+     * @param ProjectRequest $request
+     * @return string
+     */
+    public function addOaTaskForum(ProjectRequest $request) {
+        $user = $request->user();
+        $dao = new TaskDao();
+        $taskId = $request->getTaskId();
+        $task = $dao->getProjectTaskById($taskId);
+        if(is_null($task)){
+            return JsonBuilder::Error('没有内容');
+        }
+        $forum_content = $request->get('forum_content');
+        $data = [
+            'project_task_id' => $taskId,
+            'user_id' => $user->id,
+            'content' => $forum_content,
+        ];
+        $result = $dao->createDiscussion($data);
+        if ($result) {
+            return JsonBuilder::Success('添加成功');
+        } else {
+            return JsonBuilder::Error('添加失败');
+        }
+
     }
 
 }

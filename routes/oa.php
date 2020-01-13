@@ -40,7 +40,8 @@ Route::prefix('task')->middleware('auth:api')->group(function () {
     // 完成任务
     Route::any('/finishOaTaskInfo','Api\OA\TaskController@finishTask')
         ->name('Oa.task.finishOaTaskInfo');
-    Route::any('/addOaTaskForum','Api\OA\ProjectsController@addOaTaskForum')
+    // 发起讨论
+    Route::any('/addOaTaskForum','Api\OA\TaskController@addOaTaskForum')
         ->name('Oa.task.addOaTaskForum');
     Route::any('/getOaTaskUserListInfo','Api\OA\ProjectsController@getOaTaskUserListInfo')
         ->name('Oa.task.getOaTaskUserListInfo');
