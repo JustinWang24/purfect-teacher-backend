@@ -20,6 +20,8 @@ class UpdStatussToProjectTasksTable extends Migration
             $table->integer('user_id')->comment('负责人')->change();
             $table->integer('project_id')->nullable()->change();
             $table->string('remark')->comment('备注')->nullable()->change();
+            $table->integer('school_id')->comment('学校ID');
+            $table->dropColumn('remark');
         });
         DB::statement(" ALTER TABLE oa_projects comment '项目表' ");
         DB::statement(" ALTER TABLE oa_project_tasks comment '项目任务表' ");
@@ -39,6 +41,8 @@ class UpdStatussToProjectTasksTable extends Migration
             //
             $table->smallInteger('status')->default(0)->comment('状态 1:待开始 2:正在进行 3:已结束')->change();
             $table->integer('project_id')->nullable()->change();
+            $table->dropColumn('school_id');
+            $table->string('remark')->comment('备注')->nullable();
         });
     }
 }

@@ -83,16 +83,7 @@ class ProjectDao
     }
 
 
-    /**
-     * 通过title和projectId查询任务
-     * @param $title
-     * @param $projectId
-     * @return mixed
-     */
-    public function getTaskByTitleAndProjectId($title, $projectId) {
-        $map = ['title'=>$title, 'project_id'=>$projectId];
-        return ProjectTask::where($map)->first();
-    }
+
 
 
     /**
@@ -133,50 +124,7 @@ class ProjectDao
 
 
 
-    /**
-     * 添加任务
-     * @param array $task
-     * @param array $memberUserIds
-     * @return MessageBag
-     */
-    public function createTask($task, $memberUserIds) {
-        $messageBag = new MessageBag(JsonBuilder::CODE_ERROR);
 
-        $re = $this->getTaskByTitleAndProjectId($task['title'], $task['project_id']);
-        if(!is_null($re)) {
-            $messageBag->setMessage('该任务已存在,请重新更换');
-            return $messageBag;
-        }
-
-        try{
-            DB::beginTransaction();
-            // 创建任务
-            $result = ProjectTask::create($task);
-
-            foreach ($memberUserIds as $key => $item) {
-                $user = [
-                    'task_id' => $result->id,
-                    'user_id' => $item
-                ];
-                ProjectTaskMember::create($user);
-            }
-
-            if(!empty($task['project_id'])) {
-                // 修改项目状态
-                Project::where('id', $task['project_id'])
-                    ->update(['status'=>Project::STATUS_IN_PROGRESS]);
-            }
-
-            DB::commit();
-            $messageBag->setCode(JsonBuilder::CODE_SUCCESS);
-            $messageBag->setData(['id'=>$result->id]);
-        }catch (\Exception $e) {
-            DB::rollBack();
-            $msg = $e->getMessage();
-            $messageBag->setMessage($msg);
-        }
-        return $messageBag;
-    }
 
 
     /**
@@ -270,10 +218,7 @@ class ProjectDao
     }
 
 
-    public function finishTask($taskId, $remark='')
-    {
-        return ProjectTask::where('id', $taskId)->update(['status'=>ProjectTask::STATUS_CLOSED,'remark'=>$remark]);
-    }
+
 
 
     public function  updateMembers($projectId, $member)

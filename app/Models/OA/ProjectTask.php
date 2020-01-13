@@ -17,7 +17,8 @@ class ProjectTask extends Model
     protected $table = 'oa_project_tasks';
 
     protected $hidden = ['updated_at'];
-    public $fillable = ['project_id', 'user_id', 'title', 'content', 'is_open', 'end_time', 'create_user', 'remark'];
+    public $fillable = ['project_id', 'user_id', 'title', 'content', 'is_open', 'end_time',
+        'create_user', 'remark', 'school_id'];
 
     public $user_field = ['*'];
     const MAP_ARR = [
@@ -55,19 +56,30 @@ class ProjectTask extends Model
         return $this->belongsTo(Project::class);
     }
 
+
+    /**
+     * 任务项目成员
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function taskMembers() {
+        return $this->hasMany(ProjectTaskMember::class,'task_id');
+    }
+
+
+    /**
+     * 创建人
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
     public function createUser(){
         return $this->belongsTo(User::class,'create_user', 'id');
     }
-    public function createUserName()
-    {
-        return $this->createUser->name;
-    }
-    public function project_title()
-    {
-        return $this->project->title;
-    }
-    public function leader_name()
-    {
-        return $this->user->name;
+
+
+    /**
+     * 项目日志
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function taskLogs() {
+        return $this->hasMany(ProjectTaskLog::class, 'task_id')->orderBy('created_at');
     }
 }

@@ -27,19 +27,23 @@ Route::prefix('project')->middleware('auth:api')->group(function () {
 Route::prefix('task')->middleware('auth:api')->group(function () {
     // 项目下的任务列表
     Route::post('/getOaTaskListInfo','Api\OA\ProjectsController@taskList')
-        ->name('oa.task.getOaTaskListInfo');
+        ->name('Oa.task.getOaTaskListInfo');
     // 创建任务
-    Route::post('/addOaTaskInfo','Api\OA\ProjectsController@createTask')
-        ->name('oa.task.addOaTaskInfo');
+    Route::post('/addOaTaskInfo','Api\OA\TaskController@createTask')
+        ->name('Oa.task.addOaTaskInfo');
     // 任务详情
-    Route::post('/getOaTaskInfo','Api\OA\ProjectsController@taskInfo')
-        ->name('oa.task.getOaTaskInfo');
-    Route::any('/finishOaTaskInfo','Api\OA\ProjectsController@finishTask')
-        ->name('oa.task.finishOaTaskInfo');
+    Route::post('/getOaTaskInfo','Api\OA\TaskController@taskInfo')
+        ->name('Oa.task.getOaTaskInfo');
+    // 接收任务
+    Route::post('/receiveOaTaskInfo','Api\OA\TaskController@receiveTask')
+        ->name('Oa.task.receiveOaTaskInfo');
+    // 完成任务
+    Route::any('/finishOaTaskInfo','Api\OA\TaskController@finishTask')
+        ->name('Oa.task.finishOaTaskInfo');
     Route::any('/addOaTaskForum','Api\OA\ProjectsController@addOaTaskForum')
-        ->name('oa.task.addOaTaskForum');
+        ->name('Oa.task.addOaTaskForum');
     Route::any('/getOaTaskUserListInfo','Api\OA\ProjectsController@getOaTaskUserListInfo')
-        ->name('oa.task.getOaTaskUserListInfo');
+        ->name('Oa.task.getOaTaskUserListInfo');
 
 });
 Route::prefix('attendance')->middleware('auth:api')->group(function () {
