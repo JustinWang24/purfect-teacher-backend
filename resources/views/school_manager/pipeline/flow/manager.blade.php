@@ -239,38 +239,40 @@
                 title="流程步骤必填项管理"
                 size="50%"
                 :visible.sync="nodeOptionsFormFlag">
-            <el-form ref="currentNodeOptionForm" :model="nodeOption" label-width="120px" style="padding: 10px;">
-                <el-form-item label="名称">
-                    <el-input v-model="nodeOption.name" placeholder="必填: 例如出差目的地" style="width: 90%;"></el-input>
-                </el-form-item>
-                <el-form-item label="类型">
-                    <el-select v-model="nodeOption.type" placeholder="必填: 请选择数据类型" style="width: 90%;">
-                        <el-option
-                                v-for="(ot, idx) in nodeOptionTypes"
-                                :label="ot" :value="ot" :key="idx">
-                        </el-option>
-                    </el-select>
-                </el-form-item>
-                <el-form-item>
-                    <el-button type="primary" @click="onNodeOptionFormSubmit">保存</el-button>
-                    <el-button @click="nodeOptionsFormFlag = false">取消</el-button>
-                </el-form-item>
-                <el-divider></el-divider>
-                <el-row>
-                    <el-col :span="24">
-                        <h5 class="text-info" v-if="node.options.length===0">还没有添加此步骤必填项</h5>
-                        <h4 class="text-primary" v-if="node.options.length>0">已有的必填项</h4>
-                        <ol>
-                            <li v-for="(existOption, idx) in node.options" :key="idx">
-                                <span class="text-primary">名称:</span> @{{ existOption.name }}; <span class="text-primary">类型:</span> @{{ existOption.type }}
-                                &nbsp;|
-                                <el-button type="text" class="text-primary" v-on:click="editNodeOption(existOption)">修改</el-button>
-                                <el-button type="text" class="text-danger" v-on:click="removeNodeOption(existOption, idx)">删除</el-button>
-                            </li>
-                        </ol>
-                    </el-col>
-                </el-row>
-            </el-form>
+            <div style="overflow :auto;height: 800px;">
+                <el-form ref="currentNodeOptionForm" :model="nodeOption" label-width="120px" style="padding: 10px;">
+                    <el-form-item label="名称">
+                        <el-input v-model="nodeOption.name" placeholder="必填: 例如出差目的地" style="width: 90%;"></el-input>
+                    </el-form-item>
+                    <el-form-item label="类型">
+                        <el-select v-model="nodeOption.type" placeholder="必填: 请选择数据类型" style="width: 90%;">
+                            <el-option
+                                    v-for="(ot, idx) in nodeOptionTypes"
+                                    :label="ot" :value="ot" :key="idx">
+                            </el-option>
+                        </el-select>
+                    </el-form-item>
+                    <el-form-item>
+                        <el-button type="primary" @click="onNodeOptionFormSubmit">保存</el-button>
+                        <el-button @click="nodeOptionsFormFlag = false">取消</el-button>
+                    </el-form-item>
+                    <el-divider></el-divider>
+                    <el-row>
+                        <el-col :span="24">
+                            <h5 class="text-info" v-if="node.options.length===0">还没有添加此步骤必填项</h5>
+                            <h4 class="text-primary" v-if="node.options.length>0">已有的必填项</h4>
+                            <ol>
+                                <li v-for="(existOption, idx) in node.options" :key="idx">
+                                    <span class="text-primary">名称:</span> @{{ existOption.name }}; <span class="text-primary">类型:</span> @{{ existOption.type }}
+                                    &nbsp;|
+                                    <el-button type="text" class="text-primary" v-on:click="editNodeOption(existOption)">修改</el-button>
+                                    <el-button type="text" class="text-danger" v-on:click="removeNodeOption(existOption, idx)">删除</el-button>
+                                </li>
+                            </ol>
+                        </el-col>
+                    </el-row>
+                </el-form>
+            </div>
         </el-drawer>
 
         @include(
