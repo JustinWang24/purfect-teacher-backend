@@ -30,6 +30,7 @@ class InternalMessageDao
                 $collData[$key]['content']           = $data['content'];
                 $collData[$key]['type']              = 1;
                 $collData[$key]['is_relay']          = $data['is_relay'];
+                dd($collData);
                 InternalMessage::create($collData);
             }
 
