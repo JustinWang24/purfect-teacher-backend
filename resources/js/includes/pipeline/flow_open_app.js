@@ -43,15 +43,12 @@ if(document.getElementById('pipeline-flow-open-app')){
             onStartActionSubmit: function () {
                 // 验证
                 let missingOption = false;
-
                 for(let i=0;i<this.action.options.length;i++){
                     if(Util.isEmpty(this.action.options[i].value)){
                         missingOption = '请填写' + this.action.options[i].name;
                         break;
                     }
                 }
-
-
                 if(missingOption){
                     this.$message.error(missingOption);
                     return;

@@ -16,11 +16,11 @@ class Teacher extends User
     protected $table = 'users';
 
     /**
-     * 老师需要使用的流程的类型集合
+     * 老师需要使用的流程的类型集合: 目前系统内置了一共五种类型的流程组合
      * @return array
      */
     public static function FlowTypes(){
-        return [IFlow::TYPE_OFFICE,IFlow::TYPE_4];
+        return [IFlow::TYPE_OFFICE, IFlow::TYPE_2, IFlow::TYPE_3,IFlow::TYPE_4, IFlow::TYPE_TEACHER_ONLY];
     }
 
     public function performances(){

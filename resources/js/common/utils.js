@@ -94,12 +94,17 @@ export const Util = {
 
         // 是否传入的对象自己有属性
         if(typeof obj === 'object'){
-            let anyProperty = 0;
-            for (let key in obj) {
-                anyProperty++;
-                break;
+            if(obj instanceof Date){
+                // 日期类型, 则肯定不是空的
             }
-            return anyProperty === 0;
+            else{
+                let anyProperty = 0;
+                for (let key in obj) {
+                    anyProperty++;
+                    break;
+                }
+                return anyProperty === 0;
+            }
         }
         return false;
     },
