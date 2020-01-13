@@ -57,3 +57,7 @@ Route::prefix('api_wifi')->middleware('auth:api')->group(function () {
    Route::any('/v1/wifi_pay/asyns-notice-info','\App\Http\Controllers\Api\Wifi\WifiPayController@asyns_notice_info');
 
 });
+
+// 常见问题
+Route::get('/wifi/page-info','\App\Http\Controllers\Api\Wifi\WifiController@page_info');
+Route::get('/wifi/page-view','\App\Http\Controllers\Api\Wifi\WifiController@page_view')->name('api.wifi.page_view');

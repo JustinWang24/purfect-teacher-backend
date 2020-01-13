@@ -19,7 +19,7 @@ use App\Dao\Wifi\Api\WifiConfigsDao; // wifi 配置
 use App\Dao\Wifi\Api\WifiIssuesDao; // 报修单
 use App\Dao\Wifi\Api\WifiUserAgreementsDao; // wifi协议
 use App\Dao\Wifi\Api\WifiUserTimesDao; // 用户wifi时长和电话套餐
-
+use Illuminate\Support\Facades\DB;
 use App\BusinessLogic\WifiInterface\Factory;
 
 class WifiController extends Controller
@@ -148,5 +148,39 @@ class WifiController extends Controller
          return JsonBuilder::Error ( '操作失败,请稍后重试' );
       }
    }
+
+    /**
+     * Func 帮助指南列表
+     * @param Request $request
+     * @return page
+     */
+    public function page_info(\Illuminate\Http\Request $request)
+    {
+        $dataList = DB::table('wifi_notices')->orderBy('sort')->get();
+
+        $this->dataForView['dataList'] = $dataList;
+
+        return view('wifi.page_list', $this->dataForView);
+    }
+
+    /**
+     * Func 帮助指南详情
+     * @param Request $request
+     * @return page
+     */
+    public function page_view(\Illuminate\Http\Request $request)
+    {
+        $noticeid = $request->input('noticeid', 0);
+
+        $dataOne = (object)null;
+        $dataOne->notice_title = '';
+        $dataOne->notice_content = '';
+
+        if($noticeid) $dataOne = DB::table('wifi_notices')->where('noticeid',$noticeid)->first();
+
+        $this->dataForView['dataOne'] = $dataOne;
+
+        return view('wifi.page_view', $this->dataForView);
+    }
 
 }
