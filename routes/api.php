@@ -87,8 +87,9 @@ Route::prefix('school')->middleware('auth:api')->group(function () {
     // APP 应用接口
     Route::any('/calendar','Api\Home\IndexController@calendar')
         ->name('api.school.calendar');  // 校历接口
+
     Route::any('/all-events','Api\Home\IndexController@all_events')
-        ->name('api.school.all-events'); // 下发所有事件
+        ->name('api.school.all-events'); // 历史事件
 });
 
 Route::prefix('enquiry')->middleware('auth:api')->group(function () {
@@ -168,6 +169,10 @@ Route::prefix('student-register')->middleware('auth:api')->group(function () {
      Route::post('/load-open-majors','Api\Recruitment\PlansController@load_plans')
         ->name('api.load.open.majors');
 
+     // 招生咨询接口
+     Route::any('/qa','Api\Recruitment\PlansController@qa')
+        ->name('api.load.plans.qa');
+
      // 专业详情: 前端加载是调用
      Route::post('/load-major-detail','Api\Recruitment\PlansController@get_plan_front')
         ->name('api.load.major.detail');
@@ -220,6 +225,9 @@ Route::prefix('campus')->middleware('auth:api')->group(function () {
      // 学校部门通讯录
      Route::post('/handleAffairs/getAddressBook/official','Api\Address\AddressBookController@official')
         ->name('api.address.book.official');
+     // 教师通讯录
+     Route::post('/handleAffairs/getAddressBook/teacher','Api\Address\AddressBookController@teacherMobile')
+        ->name('api.address.book.teacher.mobile');
      // 加载所有的班级
      Route::post('/all-grades','Api\Address\AddressBookController@all_grades')
         ->name('api.school.all-grades');
@@ -476,11 +484,14 @@ Route::prefix('attendance')->middleware('auth:api')->group(function () {
     Route::post('/add-truant-record','Api\AttendanceSchedule\AttendanceController@addTruangrade-signtRecord')
         ->name('api.attendance.add-truant-record');
     // 教师端 班级签到--所有班级
-    Route::post('/grade-sign','Api\AttendanceSchedule\AttendanceController@gradeSign')
+    Route::get('/grade-sign','Api\AttendanceSchedule\AttendanceController@gradeSign')
         ->name('api.attendance.grade-sign');
-    // 教师端 班级签到--签到详情
-    Route::post('/grade-sign-details','Api\AttendanceSchedule\AttendanceController@gradeSignDetails')
-        ->name('api.attendance.grade-sign-details');
+    // 教师端 班级签到--课程列表
+    Route::post('/course-sign','Api\AttendanceSchedule\AttendanceController@courseSign')
+        ->name('api.attendance.course-sign');
+    // 课程签到详情
+    Route::post('/course-sign-details','Api\AttendanceSchedule\AttendanceController@courseSignDetails')
+        ->name('api.attendance.course-sign-details');
 
 
 });
@@ -522,7 +533,7 @@ Route::prefix('user')->group(function () {
 
 // 发送短信
 Route::post('/index/sms', 'Api\Home\IndexController@sendSms')
-    ->name('api.user.edit.password');
+    ->name('api.user.send.sms');
 
 
 // 地区列表
@@ -752,4 +763,21 @@ Route::prefix('teacher/evaluation')->middleware('auth:api')->group(function(){
 });
 
 
+// 内部信
+Route::prefix('Oa')->middleware('auth:api')->group(function () {
+    // 发信
+    Route::post('/get-teachers','Api\OA\InternalMessageController@getTeachers')
+        ->name('api.oa.get.teachers');
+    // 发信
+    Route::post('/add-message','Api\OA\InternalMessageController@addMessage')
+        ->name('api.oa.add.message');
+    // 内部信列表
+    Route::post('/message-list','Api\OA\InternalMessageController@messageList')
+        ->name('api.oa.add.message');
+    // 信件详情
+    Route::post('/message-info','Api\OA\InternalMessageController@massageInfo')
+        ->name('api.oa.add.message');
 
+
+
+});

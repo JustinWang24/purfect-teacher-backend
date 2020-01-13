@@ -11,7 +11,9 @@ use App\Dao\Schools\SchoolDao;
 use App\Dao\Students\StudentProfileDao;
 use App\Dao\Teachers\TeacherProfileDao;
 use App\Dao\Users\UserDao;
+use App\Dao\Wifi\Backstage\UsersDao;
 use App\Events\User\ForgetPasswordEvent;
+use App\Events\User\UpdateUserMobileEvent;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Banner\BannerRequest;
 use App\Http\Requests\Home\HomeRequest;
@@ -26,6 +28,7 @@ use App\Models\Students\StudentProfile;
 use App\Models\Teachers\Teacher;
 use App\Models\Users\UserVerification;
 use App\Utils\JsonBuilder;
+use App\Utils\Misc\SmsFactory;
 use App\Utils\Time\CalendarWeek;
 use Illuminate\Http\Request;
 
@@ -127,41 +130,33 @@ class IndexController extends Controller
     }
 
     /**
-     * 下发所有 校历 events 的接口
+     * 历史记录
      * @param MyStandardRequest $request
      * @return string
      */
-    public function all_events(MyStandardRequest $request)
-    {
+    public function all_events(MyStandardRequest $request) {
         $school = $this->_getSchoolFromRequest($request);
-
         if (!$school) {
             return JsonBuilder::Error('找不到学校的信息');
-        } else {
-            $dao    = new CalendarDao();
-            $events = $dao->getCalendarEvent($school->id, date('Y'));
-            $weeks  = $school->configuration->getAllWeeksOfTerm();
-
-            $data = [];
-
-            foreach ($events as $event) {
-                foreach ($weeks as $week) {
-                    /**
-                     * @var CalendarWeek $week
-                     */
-                    if ($week->includes($event->event_time)) {
-                        $event->week_idx = $week->getName();
-                        $event->name     = $event->event_time;
-                        $data[]          = $event;
-                        break;
-                    }
-                }
-            }
-
-            return JsonBuilder::Success([
-                'events' => $data
-            ]);
         }
+        $data = $this->events($school,'history');
+        return JsonBuilder::Success(['events' => $data]);
+    }
+
+
+    public function events($school, $type = 'all') {
+        $dao    = new CalendarDao();
+        if($type == 'all') {
+            $events = $dao->getCalendarEvent($school->id, date('Y'));
+        } elseif($type == 'history') {
+            $events = $dao->getCalendarEvent($school->id, null, true);
+        }
+
+        foreach ($events as $key => $event) {
+            $event->week_idx = '第'. $event->week_idx .'周';
+            $event->name = $event->event_time;
+        }
+        return $events;
     }
 
     /**
@@ -199,19 +194,22 @@ class IndexController extends Controller
         $grade     = $user->gradeUser->grade;
 
         $data = [
-            'name'        => $user->name,
-            'avatar'      => $profile->avatar,
-            'gender'      => $profile->gender,
-            'birthday'    => $profile->birthday,
-            'state'       => $profile->state,
-            'city'        => $profile->city,
-            'area'        => $profile->area,
-            'school_name' => $gradeUser->school->name,
-            'institute'   => $gradeUser->institute->name,
-            'department'  => $gradeUser->department->name,
-            'major'       => $gradeUser->major->name,
-            'year'        => $grade->year,
-            'grade_name'  => $grade->name
+            'name'           => $user->name,
+            'nice_name'      => $user->nice_name,
+            'avatar'         => $profile->avatar,
+            'gender'         => $profile->gender,
+            'birthday'       => $profile->birthday,
+            'state'          => $profile->state,
+            'city'           => $profile->city,
+            'area'           => $profile->area,
+            'student_number' => $profile->student_number,
+            'id_number'      => $profile->id_number,
+            'school_name'    => $gradeUser->school->name,
+            'institute'      => $gradeUser->institute->name,
+            'department'     => $gradeUser->department->name,
+            'major'          => $gradeUser->major->name,
+            'year'           => $grade->year,
+            'grade_name'     => $grade->name
         ];
         return JsonBuilder::Success($data);
     }
@@ -262,21 +260,26 @@ class IndexController extends Controller
         }
 
         $data = [
-            'name'         => $user->name,
-            'avatar'       => $profile->avatar,
-            'gender'       => $profile->gender,
-            'birthday'     => $profile->birthday,
-            'state'        => $profile->state,
-            'city'         => $profile->city,
-            'area'         => $profile->area,
-            'school_name'  => $schoolName->name,
-            'organization' => $organization,
-            'gradeManger'  => $gradeManger,
-            'yearManger'   => $yearManger,
-            'myGroup'      => $myGroup,
-            'institute'    => '',
-            'department'   => '',
-            'major'        => '',
+            'name'           => $user->name,
+            'mobile'         => $user->mobile,
+            'avatar'         => $profile->avatar,
+            'id_number'      => $profile->id_number,
+            'serial_number'  => $profile->serial_number,
+            'group_name'     => $profile->group_name,
+            'gender'         => $profile->gender,
+            'birthday'       => $profile->birthday,
+            'education'      => $profile->education,
+            'degree'         => $profile->degree,
+            'political_name' => $profile->political_name,
+            'title'          => $profile->title,
+            'work_start_at'  => $profile->work_start_at,
+            'organization'   => $organization,
+            'gradeManger'    => $gradeManger,
+            'yearManger'     => $yearManger,
+            'myGroup'        => $myGroup,
+            'institute'      => '',
+            'department'     => '',
+            'major'          => '',
 
         ];
         return JsonBuilder::Success($data);
@@ -296,13 +299,17 @@ class IndexController extends Controller
             $avatarImg      = $avatar->store('public/avatar');
             $data['avatar'] = StudentProfile::avatarUploadPathToUrl($avatarImg);
         }
-
-        $dao        = new StudentProfileDao;
-        $teacherDao = new TeacherProfileDao;
-        if ($user->isStudent()) {
-            $result = $dao->updateStudentProfile($user->id, $data);
-        } elseif ($user->isTeacher()) {
-            $result = $teacherDao->updateTeacherProfile($user->id, $data);
+        if ($data['nice_name']) {
+            $userDao = new UserDao;
+            $result = $userDao->updateUser($user->id, null,null,null,null, $data['nice_name']);
+        } else {
+            $dao        = new StudentProfileDao;
+            $teacherDao = new TeacherProfileDao;
+            if ($user->isStudent()) {
+                $result = $dao->updateStudentProfile($user->id, $data);
+            } elseif ($user->isTeacher()) {
+                $result = $teacherDao->updateTeacherProfile($user->id, $data);
+            }
         }
 
         if ($result) {
@@ -327,6 +334,11 @@ class IndexController extends Controller
 
         $user = $dao->getUserByMobile($mobile);
 
+        if ($type == UserVerification::PURPOSE_3) {
+            $token = $request->get('api_token');
+            $forgetPwdUser  = $dao->getUserByApiToken($token);
+        }
+
         if ($type == UserVerification::PURPOSE_0 && !empty($user)) {
             return JsonBuilder::Error('该手机号已经注册过了');
         }
@@ -334,18 +346,23 @@ class IndexController extends Controller
         if ($type == UserVerification::PURPOSE_2 && empty($user)) {
             return JsonBuilder::Error('该手机号还未注册');
         }
+        if ($type == UserVerification::PURPOSE_3 && !empty($user)) {
+            return JsonBuilder::Error('该手机号已经注册过了');
+        }
 
         switch ($type) {
             case UserVerification::PURPOSE_0:
-                // TODO :: 注册发送验证码
+                // TODO :: 注册发送验证码, 目前没注册功能
                 break;
             case UserVerification::PURPOSE_2:
                 event(new ForgetPasswordEvent($user));
                 break;
+            case UserVerification::PURPOSE_3:
+                /** @var TYPE_NAME $forgetPwdUser */
+                event(new UpdateUserMobileEvent($forgetPwdUser, $mobile));
             default:
                 break;
         }
-
         return JsonBuilder::Success('发送成功');
     }
 
@@ -423,10 +440,10 @@ class IndexController extends Controller
             }
         }
 
-        $dao = new AppProposalDao;
+        $dao  = new AppProposalDao;
         $data = [
             'user_id' => $user->id,
-            'type' => $type,
+            'type'    => $type,
             'content' => $content,
         ];
 
@@ -446,13 +463,13 @@ class IndexController extends Controller
      */
     public function proposalList(Request $request)
     {
-         $user = $request->user();
-         $dao = new AppProposalDao;
+        $user = $request->user();
+        $dao  = new AppProposalDao;
 
-         $data = $dao->getProposalByUserId($user->id);
-         $result = pageReturn($data);
+        $data   = $dao->getProposalByUserId($user->id);
+        $result = pageReturn($data);
 
-         return JsonBuilder::Success($result);
+        return JsonBuilder::Success($result);
     }
 
 }

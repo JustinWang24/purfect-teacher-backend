@@ -5,10 +5,12 @@ namespace App\Http\Controllers\Api\Address;
 use App\Dao\Schools\GradeDao;
 use App\Dao\Schools\OrganizationDao;
 use App\Dao\Schools\SchoolDao;
+use App\Dao\Teachers\TeacherProfileDao;
 use App\Dao\Users\GradeUserDao;
 use App\Dao\Users\UserDao;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\AddressBook\AddressBookRequest;
+use App\Models\Acl\Role;
 use App\User;
 use App\Utils\JsonBuilder;
 use Illuminate\Http\Request;
@@ -92,6 +94,35 @@ class AddressBookController extends Controller
         }
         return JsonBuilder::Success(['department_list'=>$department_list], '获取通讯录办公室数据');
     }
+
+
+    /**
+     * 所有教师手机号
+     * @param AddressBookRequest $request
+     * @return string
+     */
+    public function teacherMobile(AddressBookRequest $request)
+    {
+        $user = $request->user();
+        $schoolId = $user->getSchoolId();
+        if(!$schoolId) {
+            return JsonBuilder::Error('未找到学校');
+        }
+
+        $dao = new TeacherProfileDao;
+        $data = $dao->getTeacherProfileBySchoolId($schoolId);
+        $result = [];
+
+        foreach ($data as $key =>  $val) {
+            if ($val['user']) {
+                $result[$key]['name'] = $val['user']['name'];
+                $result[$key]['tel'] = $val['user']['mobile'];
+            }
+        }
+        return  JsonBuilder::Success(['teacher_list' => array_values($result)]);
+    }
+
+
 
     /**
      * @param Request $request

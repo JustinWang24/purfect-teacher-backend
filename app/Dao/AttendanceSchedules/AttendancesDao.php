@@ -4,6 +4,7 @@ namespace App\Dao\AttendanceSchedules;
 
 
 use App\Dao\Schools\SchoolDao;
+use App\Dao\Users\UserDao;
 use App\Models\AttendanceSchedules\Attendance;
 use App\Models\AttendanceSchedules\AttendancesDetail;
 use App\Models\Timetable\TimetableItem;
@@ -92,6 +93,18 @@ class AttendancesDao
 
         return $result;
 
+    }
+
+
+    /**
+     * @param $date
+     * @param $gradeId
+     * @param $teacherId
+     * @return mixed
+     */
+    public function getAttendByDateTimeAndGradeIdAndTeacherId($date, $gradeId, $teacherId) {
+        $map = ['teacher_id'=>$teacherId, 'grade_id'=>$gradeId];
+        return Attendance::where($map)->whereDate('created_at', $date)->get();
     }
 
 }

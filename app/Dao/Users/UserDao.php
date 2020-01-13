@@ -264,9 +264,10 @@ class UserDao
      * @param null $password
      * @param null $name
      * @param null $email
+     * @param null $niceName
      * @return mixed
      */
-    public function updateUser($userId, $mobile=null, $password=null, $name=null, $email = null){
+    public function updateUser($userId, $mobile=null, $password=null, $name=null, $email = null, $niceName=null){
         $data = [];
 
         if($mobile){
@@ -281,7 +282,9 @@ class UserDao
         if($mobile){
             $data['email'] = $email;
         }
-
+        if($niceName) {
+            $data['nice_name'] = $niceName;
+        }
         if(!empty($data)){
             return User::where('id',$userId)->update($data);
         }
@@ -321,6 +324,16 @@ class UserDao
     public function updateApiToken($userId, $token = '')
     {
         return User::where('id', $userId)->update(['api_token' => $token]);
+    }
+
+    /**
+     * 获取用户
+     * @param $apiToken
+     * @return mixed
+     */
+    public function getUserByApiToken($apiToken)
+    {
+        return User::where('api_token', $apiToken)->first();
     }
 
 
