@@ -29,7 +29,7 @@ use App\Utils\UI\Button;
                         <div class="col-3">
                             <div class="form-group">
                                 <label for="application-user-name">学校：</label>
-                                {{$dataOne['getWifiIssuesOneInfo']->schools_name}}
+                                {{$dataOne['getWifiIssuesOneInfo']->school_name}}
                             </div>
                         </div>
                         <div class="col-3">
@@ -160,7 +160,6 @@ use App\Utils\UI\Button;
            ?>
         </div>
     </div>
-	<script src="{{ route('manager_wifi.WifiApi.get_issue_types') }}" charset="UTF-8"></script>
     <script>
         window.onload=function() {
             showLocation({{ old('typeone_id')?:0 }},{{ old('typetwo_id')?:0 }});
