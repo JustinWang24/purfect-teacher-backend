@@ -29,7 +29,7 @@ use App\Utils\UI\Button;
                         <div class="col-3">
                             <div class="form-group">
                                 <label for="application-user-name">学校：</label>
-                                {{$dataOne['getWifiIssueCommentsOneInfo']->schools_name}}
+                                {{$dataOne['getWifiIssueCommentsOneInfo']->school_name}}
                             </div>
                         </div>
                         <div class="col-3">

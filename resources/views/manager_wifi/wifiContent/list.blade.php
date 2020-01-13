@@ -67,7 +67,6 @@ use App\User;
             </div>
         </div>
     </div>
-<script src="{{ route('manager_wifi.WifiApi.get_school_campus') }}" charset="UTF-8"></script>	
 <script>
     window.onload=function() {
         showLocation({{ Request::get('school_id')?:0 }},{{ Request::get('campus_id')?:0 }});
