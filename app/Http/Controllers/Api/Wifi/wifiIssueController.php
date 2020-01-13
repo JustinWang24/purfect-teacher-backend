@@ -66,7 +66,7 @@ class wifiIssueController extends Controller
       $param1 = self::getPostParamInfo ( $param , [
          'typeone_id' , 'typeone_name' , 'typetwo_id' , 'typetwo_name' , 'issue_name' ,
          'issue_mobile' , 'issue_desc' , 'addressoneid' , 'addresstwoid' , 'addressthreeid' ,
-         'addr_detail',
+         'addr_detail', 'created_at'
          ]
       );
 
