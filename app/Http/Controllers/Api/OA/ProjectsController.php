@@ -262,6 +262,13 @@ class ProjectsController extends Controller
         return JsonBuilder::Success($output);
     }
 
+
+    /**
+     * 任务详情
+     * @param Request $request
+     * @return string
+     * @throws \Exception
+     */
     public function taskInfo(Request $request)
     {
         $user = $request->user();

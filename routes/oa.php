@@ -26,12 +26,13 @@ Route::prefix('project')->middleware('auth:api')->group(function () {
 
 Route::prefix('task')->middleware('auth:api')->group(function () {
     // 项目下的任务列表
-    Route::any('/getOaTaskListInfo','Api\OA\ProjectsController@taskList')
+    Route::post('/getOaTaskListInfo','Api\OA\ProjectsController@taskList')
         ->name('oa.task.getOaTaskListInfo');
     // 创建任务
-    Route::any('/addOaTaskInfo','Api\OA\ProjectsController@createTask')
+    Route::post('/addOaTaskInfo','Api\OA\ProjectsController@createTask')
         ->name('oa.task.addOaTaskInfo');
-    Route::any('/getOaTaskInfo','Api\OA\ProjectsController@taskInfo')
+    // 任务详情
+    Route::post('/getOaTaskInfo','Api\OA\ProjectsController@taskInfo')
         ->name('oa.task.getOaTaskInfo');
     Route::any('/finishOaTaskInfo','Api\OA\ProjectsController@finishTask')
         ->name('oa.task.finishOaTaskInfo');
