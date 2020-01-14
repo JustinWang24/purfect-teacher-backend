@@ -10,6 +10,7 @@ use App\Http\Requests\MyStandardRequest;
 use App\Models\OA\InternalMessage;
 use App\Models\OA\InternalMessageFile;
 use App\Utils\JsonBuilder;
+use Carbon\Carbon;
 
 class InternalMessageController extends Controller
 {
@@ -33,11 +34,13 @@ class InternalMessageController extends Controller
         $isFile      = $request->file('isFile');
 
         $fileArr = [];
-        foreach ($files as $key => $file) {
-            $fileArr[$key]['name'] = $file->getClientOriginalName();
-            $fileArr[$key]['type'] = $file->extension();
-            $fileArr[$key]['size'] = getFileSize($file->getSize());
-            $fileArr[$key]['path'] = InternalMessage::internalMessageUploadPathToUrl($file->store(InternalMessage::DEFAULT_UPLOAD_PATH_PREFIX));
+        if ($files) {
+           foreach ($files as $key => $file) {
+                $fileArr[$key]['name'] = $file->getClientOriginalName();
+                $fileArr[$key]['type'] = $file->extension();
+                $fileArr[$key]['size'] = getFileSize($file->getSize());
+                $fileArr[$key]['path'] = InternalMessage::internalMessageUploadPathToUrl($file->store(InternalMessage::DEFAULT_UPLOAD_PATH_PREFIX));
+           }
         }
 
         $dao = new InternalMessageDao;
@@ -50,6 +53,7 @@ class InternalMessageController extends Controller
             'content'           => $content,
             'type'              => $type,
             'is_relay'          => $isRelay,
+            'relay_id'          => $relayId,
             'is_file'           => $isFile,
         ];
 
@@ -64,11 +68,83 @@ class InternalMessageController extends Controller
     /**
      * 信件列表
      * @param MyStandardRequest $request
+     * @return string
      */
     public function messageList(MyStandardRequest $request)
     {
+        $user = $request->user();
+        $type = $request->get('type');
 
+        $dao = new InternalMessageDao;
+
+        $data   = $dao->getInternalMessageByUserId($user->id, $type);
+        $result = [];
+
+        foreach ($data as $key => $val) {
+
+            $profile = $val->teacherProfile;
+            $user    = $val->user;
+
+            $result[$key]['id']                = $val->id;
+            $result[$key]['collect_user_name'] = $val->collect_user_name;
+            $result[$key]['title']             = $val->title;
+            $result[$key]['content']           = $val->content;
+            $result[$key]['is_file']           = $val->is_file;
+            $result[$key]['create_time']       = $val->created_at->format('Y-m-d H:i');
+            $result[$key]['user_username']     = $user->name;
+            $result[$key]['user_pics']         = $profile->avatar;
+        }
+
+        return JsonBuilder::Success($result);
     }
+
+    /**
+     * 信息详情
+     * @param MyStandardRequest $request
+     * @return string
+     */
+    public function massageInfo(MyStandardRequest $request)
+    {
+        $id = $request->get('id');
+
+        $dao  = new InternalMessageDao;
+        $data = $dao->getInternalMessageById($id);
+        $data->file;
+        $data['relay'] = [];
+        if ($data->is_relay == 1) { // 是否有转发内容
+            $data['relay'] = $dao->getForwardMessageByIds(explode(',', $data->message_id));
+            foreach ($data['relay'] as $key => $val) {
+                $data['relay'][$key]['file'] = $val->file;
+            }
+        }
+        return JsonBuilder::Success($data);
+    }
+
+
+    /**
+     * 更新已读 或 删除
+     * @param MyStandardRequest $request
+     * @return string
+     */
+    public function updateOrDelMessage(MyStandardRequest $request)
+    {
+        $type = $request->get('type');
+        $id = $request->get('id');
+        $dao = new InternalMessageDao;
+        if ($type == InternalMessage::DELETE) {
+            $result = $dao->updateMessage($id, ['status' => InternalMessage::STATUS_ERROR]);
+        } else {
+            $result = $dao->updateMessage($id, ['type' => InternalMessage::TYPE_SENT]);
+        }
+
+        if ($result) {
+            return JsonBuilder::Success('更新成功');
+        } else {
+            return JsonBuilder::Error('更新失败');
+        }
+    }
+
+
 
     /**
      * 获取当前学校所有老师
