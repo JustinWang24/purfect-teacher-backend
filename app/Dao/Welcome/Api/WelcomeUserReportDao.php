@@ -189,9 +189,9 @@ class WelcomeUserReportDao
         $data['user_name'] = !empty($userReportArr) ? (String)$userReportArr['user_name'] : ''; // 姓名
         // TODO...
         $data['student_id'] = '201891827'; // 身份证号
-        $data['id_number'] = !empty($userReportArr) ? (String)$userReportArr['id_number'] : (String)$getStudentProfilesInfo->id_number; // 身份证号
-        $data['gender'] = !empty($userReportArr) ? (String)$userReportArr['gender'] : (String)$getStudentProfilesInfo->gender; // 性别(1:男 2:女 )
-        $data['birthday'] = !empty($userReportArr) ? (String)$userReportArr['birthday'] : (String)$getStudentProfilesInfo->birthday; // 出身日期(2020-01-12)
+        $data['id_number'] = !empty($userReportArr) ? (String)$userReportArr['id_number'] : (isset($getStudentProfilesInfo->id_number) ? (String)$getStudentProfilesInfo->id_number : ''); // 身份证号
+        $data['gender'] = !empty($userReportArr) ? (String)$userReportArr['gender'] : (isset($getStudentProfilesInfo->gender) ? (String)$getStudentProfilesInfo->gender : 1); // 性别(1:男 2:女 )
+        $data['birthday'] = !empty($userReportArr) ? (String)$userReportArr['birthday'] : (isset($getStudentProfilesInfo->birthday) ? date('Y-m-d',strtotime($getStudentProfilesInfo->birthday)) : ''); // 出身日期(2020-01-12)
         $data['nation_id'] = !empty($userReportArr) ? (String)$userReportArr['nation_id'] : (String)$getStudentProfilesInfo->nation_code; // 民族代码
         $data['nation_name'] = !empty($userReportArr) ? (String)$userReportArr['nation_name'] : (String)$getStudentProfilesInfo->nation_name; // 民族名称
         $data['political_id'] = !empty($userReportArr) ? (String)$userReportArr['political_id'] : (String)$getStudentProfilesInfo->political_code; // 政治面貌代码
