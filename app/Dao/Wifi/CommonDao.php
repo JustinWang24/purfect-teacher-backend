@@ -5,7 +5,6 @@
  * Date: 21/10/19
  * Time: 9:05 AM
  */
-
 namespace App\Dao\Wifi;
 
 use Illuminate\Support\Facades\DB;
