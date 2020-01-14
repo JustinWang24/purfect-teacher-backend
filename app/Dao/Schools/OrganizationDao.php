@@ -139,4 +139,20 @@ class OrganizationDao
             ->with('user')
             ->get();
     }
+
+
+    /**
+     * @param $schoolId
+     * @param $parentId
+     * @return mixed
+     */
+    public function getByParentId($schoolId, $parentId) {
+        $map = ['school_id'=>$schoolId];
+        if(is_null($parentId)) {
+            $map['level'] = 1;
+        } else {
+            $map['parent_id'] = $parentId;
+        }
+        return Organization::where($map)->get();
+    }
 }
