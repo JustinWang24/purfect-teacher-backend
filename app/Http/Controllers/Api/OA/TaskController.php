@@ -11,6 +11,7 @@ namespace App\Http\Controllers\Api\OA;
 
 use App\Dao\OA\ProjectDao;
 use App\Dao\OA\TaskDao;
+use App\Models\OA\ProjectTask;
 use App\Utils\JsonBuilder;
 use App\Models\OA\ProjectTaskMember;
 use App\Http\Controllers\Controller;
@@ -50,6 +51,61 @@ class TaskController extends Controller
             return JsonBuilder::Error($result->getMessage());
         }
 
+    }
+
+
+    /**
+     * 项目列表
+     * @param ProjectRequest $request
+     * @return string
+     */
+    public function taskList(ProjectRequest $request) {
+        $userId = $request->user()->id;
+        $type = intval($request->getTaskType());
+
+        $status = [ProjectTask::STATUS_UN_BEGIN, ProjectTask::STATUS_IN_PROGRESS,
+            ProjectTask::STATUS_CLOSED, ProjectTask::STATUS_MY_CREATE,
+        ];
+        if (!in_array($type, $status)) {
+            return JsonBuilder::Error('没有内容');
+        }
+        $dao = new ProjectDao();
+
+        if($type == ProjectTask::STATUS_MY_CREATE) {
+            $list = $dao->myCreateTasks($userId);
+            $output = [];
+            foreach ($list as $key => $val) {
+                $output[$key]['taskid'] = $val->id;
+                $output[$key]['create_userid'] = $val->create_user;
+                $output[$key]['create_name'] = $val->createUser->name;
+                $output[$key]['task_title'] = $val->title;
+                $output[$key]['create_time'] = $val->created_at;
+                $output[$key]['end_time'] = $val->end_time;
+                $output[$key]['leader_userid'] = $val->user_id;
+                $output[$key]['leader_name'] = $val->user->name;
+                $output[$key]['status'] = $val->status;
+            }
+
+        } else {
+            $list = $dao->attendTasks($userId, $type);
+
+            $output = [];
+            foreach ($list as $key => $val) {
+                $projectTask = $val->projectTask;
+                $output[$key]['taskid'] = $projectTask->id;
+                $output[$key]['create_userid'] = $projectTask->create_user;
+                $output[$key]['create_name'] = $projectTask->createUser->name;
+                $output[$key]['task_title'] = $projectTask->title;
+                $output[$key]['create_time'] = $projectTask->created_at;
+                $output[$key]['end_time'] = $projectTask->end_time;
+                $output[$key]['leader_userid'] = $projectTask->user_id;
+                $output[$key]['leader_name'] = $projectTask->user->name;
+                $output[$key]['status'] = $projectTask->status;
+            }
+        }
+
+
+        return JsonBuilder::Success($output);
     }
 
 
@@ -100,6 +156,8 @@ class TaskController extends Controller
             $forum[$key]['username']=$val->user->name;
             $forum[$key]['user_pics']=$val->user->profile->avatar;
             $forum[$key]['forum_content']=$val->content;
+            $forum[$key]['reply_user_id'] = $val->reply_user_id;
+            $forum[$key]['reply_username'] = $val->replyUser->name ?? '';
             $forum[$key]['create_time']=$val->created_at->format('Y-m-d H:i');
 
         }
@@ -185,8 +243,9 @@ class TaskController extends Controller
      * @param ProjectRequest $request
      * @return string
      */
-    public function addOaTaskForum(ProjectRequest $request) {
+    public function addTaskForum(ProjectRequest $request) {
         $user = $request->user();
+        $replyUserId = $request->get('userid', 0);
         $dao = new TaskDao();
         $taskId = $request->getTaskId();
         $task = $dao->getProjectTaskById($taskId);
@@ -198,6 +257,7 @@ class TaskController extends Controller
             'project_task_id' => $taskId,
             'user_id' => $user->id,
             'content' => $forum_content,
+            'reply_user_id' => $replyUserId
         ];
         $result = $dao->createDiscussion($data);
         if ($result) {
@@ -209,6 +269,28 @@ class TaskController extends Controller
     }
 
 
+    /**
+     * 删除讨论
+     * @param ProjectRequest $request
+     * @return string
+     */
+    public function delTaskForum(ProjectRequest $request) {
+        $forumId = $request->getForumId();
+        $dao = new TaskDao();
+        $result = $dao->delForum($forumId);
+        if($result) {
+            return JsonBuilder::Success('删除成功');
+        } else {
+            return JsonBuilder::Error('删除失败');
+        }
+    }
+
+
+    /**
+     * 结果列表
+     * @param ProjectRequest $request
+     * @return string
+     */
     public function taskReport(ProjectRequest $request) {
         $taskId = $request->getTaskId();
         $dao = new TaskDao();
@@ -251,5 +333,31 @@ class TaskController extends Controller
         return JsonBuilder::Success($data);
 
     }
+
+
+    /**
+     * 指派他人
+     * @param ProjectRequest $request
+     * @return string
+     */
+    public function addTaskUser(ProjectRequest $request) {
+        $user = $request->user();
+        $schoolId = $user->getSchoolId();
+        $taskId = $request->getTaskId();
+        $assignId = $request->get('userid');
+        $assignId = explode(',', $assignId);
+        $dao = new TaskDao();
+        $result = $dao->assignTask($user->id, $taskId, $assignId, $schoolId);
+
+        $msg = $result->getMessage();
+        if($result->isSuccess()) {
+            return JsonBuilder::Success($msg);
+        } else {
+            return JsonBuilder::Error($msg);
+        }
+    }
+
+
+
 
 }

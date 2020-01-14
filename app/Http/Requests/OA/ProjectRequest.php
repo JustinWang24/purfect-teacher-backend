@@ -81,4 +81,12 @@ class ProjectRequest extends MyStandardRequest
         return $this->get('type',ProjectTask::STATUS_UN_BEGIN);
     }
 
+
+    /**
+     * 获取讨论ID
+     * @return mixed
+     */
+    public function getForumId() {
+        return $this->get('forumid');
+    }
 }

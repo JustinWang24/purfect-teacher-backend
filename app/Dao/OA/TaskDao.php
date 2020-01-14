@@ -9,6 +9,8 @@
 namespace App\Dao\OA;
 
 
+use App\Console\Commands\importer;
+use App\Dao\Users\UserDao;
 use App\Models\OA\Project;
 use App\Models\OA\ProjectTaskDiscussion;
 use App\Models\OA\ProjectTaskPic;
@@ -187,7 +189,7 @@ class TaskDao
             }
 
             DB::commit();
-            $messageBag->setMessage('结束成功');
+            $messageBag->setMessage('完成成功');
 
         } catch (\Exception $e) {
             DB::rollBack();
@@ -211,10 +213,69 @@ class TaskDao
 
 
     /**
+     * 删除讨论
+     * @param $forumId
+     * @return mixed
+     */
+    public function delForum($forumId) {
+        return ProjectTaskDiscussion::where('id', $forumId)->delete();
+    }
+
+
+    /**
      * @param $taskId
      * @return mixed
      */
     public function getTaskMembersByTaskId($taskId) {
         return ProjectTaskMember::where('task_id',$taskId)->get();
+    }
+
+
+    /**
+     * 指派任务
+     * @param $userId
+     * @param $taskId
+     * @param $assignId
+     * @param $schoolId
+     * @return MessageBag
+     */
+    public function assignTask($userId, $taskId, $assignId, $schoolId) {
+        $messageBag = new MessageBag();
+        $userDao = new UserDao();
+        try{
+            DB::beginTransaction();
+            // 添加任务指派人
+            $name = [];
+            foreach ($assignId as $key => $item) {
+                $data = [
+                    'user_id' => $item,
+                    'task_id' => $taskId
+                ];
+                $user = $userDao->getUserById($item);
+                $name[$key] = $user->name;
+                ProjectTaskMember::create($data);
+            }
+            // 当前用户任务结束
+            $map = ['task_id'=>$taskId, 'user_id'=>$userId];
+            $now = Carbon::now()->toDateTimeString();
+            $upd = ['status'=>ProjectTaskMember::STATUS_CLOSED,'end_time'=>$now];
+            ProjectTaskMember::where($map)->update($upd);
+            // 添加日志
+            $name = implode(',', $name);
+            $log = [
+                'school_id' => $schoolId,
+                'user_id' => $userId,
+                'task_id' => $taskId,
+                'desc' => '任务指派给了'.$name
+            ];
+            ProjectTaskLog::create($log);
+            DB::commit();
+            $messageBag->setMessage('指派成功');
+        }catch (\Exception $e) {
+            DB::rollBack();
+            $messageBag->setCode(JsonBuilder::CODE_ERROR);
+            $messageBag->setMessage('指派失败'.$e->getMessage());
+        }
+        return $messageBag;
     }
 }
