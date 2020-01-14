@@ -7,12 +7,18 @@ use Illuminate\Database\Eloquent\Model;
 
 class ProjectTask extends Model
 {
-    const STATUS_IN_PROGRESS = 1;   // 正在进行
-    const STATUS_CLOSED = 2;   // 已结束
+
+    const STATUS_UN_BEGIN = 1; // 未开始
+    const STATUS_IN_PROGRESS = 2;   // 正在进行
+    const STATUS_CLOSED = 3;   // 已结束
+    const STATUS_OVERTIME = 4; //超时
+    const STATUS_MY_CREATE = 4; // 自己发起的
+
     protected $table = 'oa_project_tasks';
 
     protected $hidden = ['updated_at'];
-    public $fillable = ['project_id', 'user_id', 'title', 'content', 'is_open', 'end_time', 'create_user', 'remark'];
+    public $fillable = ['project_id', 'user_id', 'title', 'content', 'is_open', 'end_time',
+        'create_user', 'remark', 'school_id'];
 
     public $user_field = ['*'];
     const MAP_ARR = [
@@ -50,19 +56,30 @@ class ProjectTask extends Model
         return $this->belongsTo(Project::class);
     }
 
+
+    /**
+     * 任务项目成员
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function taskMembers() {
+        return $this->hasMany(ProjectTaskMember::class,'task_id');
+    }
+
+
+    /**
+     * 创建人
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
     public function createUser(){
         return $this->belongsTo(User::class,'create_user', 'id');
     }
-    public function createUserName()
-    {
-        return $this->createUser->name;
-    }
-    public function project_title()
-    {
-        return $this->project->title;
-    }
-    public function leader_name()
-    {
-        return $this->user->name;
+
+
+    /**
+     * 项目日志
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function taskLogs() {
+        return $this->hasMany(ProjectTaskLog::class, 'task_id')->orderBy('created_at');
     }
 }

@@ -26,18 +26,35 @@ Route::prefix('project')->middleware('auth:api')->group(function () {
 
 Route::prefix('task')->middleware('auth:api')->group(function () {
     // 项目下的任务列表
-    Route::any('/getOaTaskListInfo','Api\OA\ProjectsController@taskList')
-        ->name('oa.task.getOaTaskListInfo');
-    Route::any('/addOaTaskInfo','Api\OA\ProjectsController@createTask')
-        ->name('oa.task.addOaTaskInfo');
-    Route::any('/getOaTaskInfo','Api\OA\ProjectsController@taskInfo')
-        ->name('oa.task.getOaTaskInfo');
-    Route::any('/finishOaTaskInfo','Api\OA\ProjectsController@finishTask')
-        ->name('oa.task.finishOaTaskInfo');
-    Route::any('/addOaTaskForum','Api\OA\ProjectsController@addOaTaskForum')
-        ->name('oa.task.addOaTaskForum');
+    Route::post('/getOaTaskListInfo','Api\OA\TaskController@taskList')
+        ->name('Oa.task.getOaTaskListInfo');
+    // 创建任务
+    Route::post('/addOaTaskInfo','Api\OA\TaskController@createTask')
+        ->name('Oa.task.addOaTaskInfo');
+    // 任务详情
+    Route::post('/getOaTaskInfo','Api\OA\TaskController@taskInfo')
+        ->name('Oa.task.getOaTaskInfo');
+    // 接收任务
+    Route::post('/receiveOaTaskInfo','Api\OA\TaskController@receiveTask')
+        ->name('Oa.task.receiveOaTaskInfo');
+    // 完成任务
+    Route::post('/finishOaTaskInfo','Api\OA\TaskController@finishTask')
+        ->name('Oa.task.finishOaTaskInfo');
+    // 发起讨论
+    Route::post('/addOaTaskForum','Api\OA\TaskController@addTaskForum')
+        ->name('Oa.task.addOaTaskForum');
+    // 删除讨论
+    Route::post('/delOaTaskForum','Api\OA\TaskController@delTaskForum')
+        ->name('Oa.task.delOaTaskForum');
+    // 结果列表
+    Route::post('/getOaTaskReport','Api\OA\TaskController@taskReport')
+        ->name('Oa.task.getOaTaskReport');
+    // 指派任务
+    Route::post('/addOaTaskUser','Api\OA\TaskController@addTaskUser')
+        ->name('Oa.task.addOaTaskUser');
+
     Route::any('/getOaTaskUserListInfo','Api\OA\ProjectsController@getOaTaskUserListInfo')
-        ->name('oa.task.getOaTaskUserListInfo');
+        ->name('Oa.task.getOaTaskUserListInfo');
 
 });
 Route::prefix('attendance')->middleware('auth:api')->group(function () {
