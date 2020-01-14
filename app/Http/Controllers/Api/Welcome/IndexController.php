@@ -307,7 +307,55 @@ class IndexController extends Controller
         return JsonBuilder::Success($infos, '个人信息(已确认)');
     }
 
-    //--------------------------------------下面未完成--------------------------------------
+    /**
+     * Func 报到确认
+     * @param Request $request
+     * @return Json
+     */
+    public function confirm_report_info(IndexRequest $request)
+    {
+        $user = $request->user();
+
+        $user_id = $user->id;
+
+        $campus_id = $user->gradeUser->campus_id;
+
+        if (!intval($campus_id) || !intval($user_id)) {
+            return JsonBuilder::Error('参数错误');
+        }
+
+
+        // 获取报到单信息
+        $WelcomeUserReportDao = new WelcomeUserReportDao();
+
+        $data = $WelcomeUserReportDao->getUserReportOrUserProfilesInfo($user_id);
+
+        // 基本信息
+        $infos['uerIno'] = [
+            array(
+                array('title'=>'姓名','value'=>$data['user_name']),
+                array('title'=>'身份证','value'=>$data['id_number']),
+                array('title'=>'学院','value'=>$data['institute_name']),
+                array('title'=>'专业','value'=>$data['major_name']),
+            )
+        ];
+
+        // 二维码
+        //TODO......
+        $infos['qrcode'] = '/assets/img/qrcode/erweim.png';
+
+        // 获取报到时间
+        $infos['complete_date'] = '';
+
+        $getWelcomeUserReportOneInfo = $WelcomeUserReportDao->getWelcomeUserReportOneInfo($user_id,['complete_date']);
+
+        if (!empty($getWelcomeUserReportOneInfo) &&  $getWelcomeUserReportOneInfo->complete_date != '')
+        {
+            $infos['complete_date'] =  $getWelcomeUserReportOneInfo->complete_date;
+        }
+
+        return JsonBuilder::Success($infos, '报到确认');
+    }
 
     /**
      * Func 报到单
