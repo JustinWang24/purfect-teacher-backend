@@ -5,6 +5,13 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
+// 组织架构
+Route::prefix('tissue')->middleware('auth:api')->group(function () {
+    // 获取组织和人员
+    Route::get('/getOrganization','Api\School\OrganizationController@getOrganization')
+        ->name('oa.tissue.getOrganization');
+});
+
 // 项目管理
 Route::prefix('project')->middleware('auth:api')->group(function () {
     // 项目列表
@@ -23,7 +30,7 @@ Route::prefix('project')->middleware('auth:api')->group(function () {
 
 });
 
-
+// 任务管理
 Route::prefix('task')->middleware('auth:api')->group(function () {
     // 项目下的任务列表
     Route::post('/getOaTaskListInfo','Api\OA\TaskController@taskList')
@@ -57,6 +64,8 @@ Route::prefix('task')->middleware('auth:api')->group(function () {
         ->name('Oa.task.getOaTaskUserListInfo');
 
 });
+
+
 Route::prefix('attendance')->middleware('auth:api')->group(function () {
 
     Route::any('/postTodayInfo','Api\OA\OaAttendanceTeacherController@postTodayInfo')
