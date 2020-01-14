@@ -148,7 +148,7 @@ class OrganizationDao
      */
     public function getByParentId($schoolId, $parentId) {
         $map = ['school_id'=>$schoolId];
-        if(is_null($parentId)) {
+        if(empty($parentId)) {
             $map['level'] = 1;
         } else {
             $map['parent_id'] = $parentId;
