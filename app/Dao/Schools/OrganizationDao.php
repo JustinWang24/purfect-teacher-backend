@@ -155,4 +155,15 @@ class OrganizationDao
         }
         return Organization::where($map)->get();
     }
+
+
+    /**
+     * @param $schoolId
+     * @param $name
+     * @return mixed
+     */
+    public function getOrganByName($schoolId, $name) {
+        $map = ['school_id'=>$schoolId, 'name'=>$name];
+        return Organization::where($map)->get();
+    }
 }
