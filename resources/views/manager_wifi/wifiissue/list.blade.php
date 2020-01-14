@@ -62,7 +62,7 @@ use App\User;
                                         <td>{{ $val->issue_mobile }}</td>
                                         <td>{{ $val->typeone_name }}</td>
                                         <td>{{ $val->typetwo_name }}</td>
-                                        <td>{{ $val->issue_desc }}</td>
+                                        <td>{{str_limit($val->issue_desc, 20, '...')}}</td>
 										<td>{{$val->created_at}}</td>
 										<td>{{$manageStatusArr[$val['status']]}}</td>
                                         <td class="text-center">

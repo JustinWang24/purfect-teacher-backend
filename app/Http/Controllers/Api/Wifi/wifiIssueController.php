@@ -66,13 +66,13 @@ class wifiIssueController extends Controller
       $param1 = self::getPostParamInfo ( $param , [
          'typeone_id' , 'typeone_name' , 'typetwo_id' , 'typetwo_name' , 'issue_name' ,
          'issue_mobile' , 'issue_desc' , 'addressoneid' , 'addresstwoid' , 'addressthreeid' ,
-         'addr_detail', 'created_at'
+         'addr_detail'
          ]
       );
 
       // 更新的数据
       $param2[ 'user_id' ]   = $user->id; // 用户id
-      $param2[ 'trade_sn' ]  = date ( 'YmdHis' ); // 编号
+      $param2[ 'trade_sn' ]  = date ( 'Ymd' ).random_int(10000,99999);; // 编号
       $param2[ 'school_id' ] = $user->gradeUser->school_id; // 学校
       $param2[ 'campus_id' ] = $user->gradeUser->campus_id; // 校区
 
@@ -123,7 +123,7 @@ class wifiIssueController extends Controller
          'issueid','trade_sn','typeone_id','typeone_name','typetwo_id',
          'typetwo_name','issue_name','issue_mobile','issue_desc','addressoneid',
          'addresstwoid','addressthreeid','addr_detail','admin_name','admin_mobile',
-         'admin_desc','status','is_comment',
+         'admin_desc','status','is_comment', 'created_at'
       ];
       
 	  // 获取报修数据
