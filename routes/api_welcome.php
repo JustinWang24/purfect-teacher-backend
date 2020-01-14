@@ -23,6 +23,8 @@ Route::prefix('api_welcome')->middleware('auth:api')->group(function () {
     Route::any('/v1/welcome/save-photo-info','\App\Http\Controllers\Api\Welcome\IndexController@save_photo_info');
     // 个人信息(已确认)
     Route::any('/v1/welcome/confirm-user-info','\App\Http\Controllers\Api\Welcome\IndexController@confirm_user_info');
+    // 报到确认
+    Route::any('/v1/welcome/confirm-report-info','\App\Http\Controllers\Api\Welcome\IndexController@confirm_report_info');
     // 报到单
     Route::any('/v1/welcome/report-info','\App\Http\Controllers\Api\Welcome\IndexController@report_info');
 });
