@@ -47,7 +47,7 @@ class AppProposalDao
      */
     public function getProposalByUserId($userId)
     {
-        return AppProposal::where('user_id', $userId)->paginate(ConfigurationTool::DEFAULT_PAGE_SIZE);
+        return AppProposal::where('user_id', $userId)->orderBy('created_at', 'desc')->paginate(ConfigurationTool::DEFAULT_PAGE_SIZE);
     }
 
 }

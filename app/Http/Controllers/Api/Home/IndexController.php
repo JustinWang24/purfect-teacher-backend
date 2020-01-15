@@ -30,6 +30,7 @@ use App\Models\Users\UserVerification;
 use App\Utils\JsonBuilder;
 use App\Utils\Misc\SmsFactory;
 use App\Utils\Time\CalendarWeek;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class IndexController extends Controller
@@ -47,25 +48,27 @@ class IndexController extends Controller
         $dao     = new NewsDao;
 
         $data = $dao->getNewBySchoolId($school->id, $pageNum);
-
+        $result = [];
+        $list = [];
         foreach ($data as $key => $val) {
-            $data[$key]['created_at']  = $val['updated_at'];
-            $data[$key]['webview_url'] = route('h5.teacher.news.view', ['id' => $val['id']]);
-            $data[$key]['image']       = "";
+            $list[$key]['id'] = $val['id'];
+            $list[$key]['title'] = $val['title'];
+            $list[$key]['type'] = $val['type'];
+            $list[$key]['tags'] = $val['tags'];
+            $list[$key]['created_at']  = $val['created_at']->format('Y-m-d');
+            $list[$key]['webview_url'] = route('h5.teacher.news.view', ['id' => $val['id']]);
+            $list[$key]['image']       = "";
             foreach ($val->sections as $new) {
                 if (!empty($new->media)) {
-                    $data[$key]['image'] = asset($new->media->url);
+                    $list[$key]['image'] = asset($new->media->url);
                     break;
                 }
             }
-            unset($data[$key]['sections']);
-            unset($data[$key]['updated_at']);
         }
-
-        $data                    = pageReturn($data);
-        $data['is_show_account'] = false; // 是否展示账户
-        $data['school_name']     = $school->name;
-        $data['school_logo']     = $school->logo;
+        $result['list'] = $list;
+        $result['is_show_account'] = false; // 是否展示账户
+        $result['school_name']     = $school->name;
+        $result['school_logo']     = $school->logo;
 
         //首页消息获取
         $user                  = $request->user();
@@ -87,10 +90,10 @@ class IndexController extends Controller
                 $json_array[$key]['tice_header'] = '消息';
             }
         }
-        $data['notifications'] = $json_array;
+        $result['notifications'] = $json_array;
 
 
-        return JsonBuilder::Success($data);
+        return JsonBuilder::Success($result);
     }
 
 
@@ -377,20 +380,25 @@ class IndexController extends Controller
         $schoolId = $request->user()->getSchoolId();
         $dao      = new NewsDao();
         $list     = $dao->getNewBySchoolId($schoolId);
+        $result  = [];
         foreach ($list as $key => $val) {
-            $list[$key]['webview_url'] = route('h5.teacher.news.view', ['id' => $val['id']]);
-            $list[$key]['image']       = '';
+            $result[$key]['id'] = $val['id'];
+            $result[$key]['type'] = $val['type'];
+            $result[$key]['title'] = $val['title'];
+            $result[$key]['tags'] = $val['tags'];
+            $result[$key]['created_at'] = $val->created_at->format('Y-m-d H:i');
+            $result[$key]['webview_url'] = route('h5.teacher.news.view', ['id' => $val['id']]);
+            $result[$key]['image']       = '';
             $sections                  = $val->sections;
             foreach ($sections as $k => $v) {
                 if (!empty($v->media)) {
-                    $list[$key]['image'] = asset($v->media->url);
+                    $result[$key]['image'] = asset($v->media->url);
                     break;
                 }
             }
-            unset($list[$key]['sections']);
-            unset($list[$key]['updated_at']);
         }
-        $data = pageReturn($list);
+        
+        $data['list'] = $result;
         return JsonBuilder::Success($data);
     }
 
@@ -471,5 +479,6 @@ class IndexController extends Controller
 
         return JsonBuilder::Success($result);
     }
+
 
 }
