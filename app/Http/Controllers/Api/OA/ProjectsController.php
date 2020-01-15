@@ -12,6 +12,7 @@ use App\Utils\JsonBuilder;
 use App\Dao\OA\ProjectDao;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\OA\ProjectRequest;
+use function Couchbase\defaultDecoder;
 use Illuminate\Http\Request;
 
 class ProjectsController extends Controller
@@ -63,16 +64,48 @@ class ProjectsController extends Controller
 
 
     /**
-     * 查看项目列表
+     * 项目列表
      * @param ProjectRequest $request
      * @return string
      */
     public function projectList(ProjectRequest $request) {
-        $userId = $request->user()->id;
         $schoolId = $request->user()->getSchoolId();
         $dao = new ProjectDao();
-        $list = $dao->getProjectsPaginateBySchool($schoolId);
-        return JsonBuilder::Success(outputTranslate($list->items(),Project::MAP_ARR));
+        $keyword = $request->getKeyword();
+        $list = $dao->getProjectsPaginateBySchool($schoolId, $keyword);
+
+        $data = [];
+        foreach ($list as $key => $item) {
+            $tasks = $item->tasks;
+            $re = $tasks->first();
+            $end_time = $re->end_time ?? '';
+            // 项目成员
+            $members = $item->members;
+            $userIds = $members->pluck('user_id')->toArray(); // 项目负责人
+            array_push($userIds,$item->user_id);
+            $userIds = array_unique($userIds);
+            $statusArr = $tasks->pluck('status')->toArray();
+            if(empty($statusArr)) {
+                $status = Project::STATUS_NOT_BEGIN;  // 未开始
+
+            } elseif(in_array(Project::STATUS_IN_PROGRESS,$statusArr)) {
+                $status = Project::STATUS_IN_PROGRESS; // 正在进行
+
+            } else {
+                $status = Project::STATUS_CLOSED; // 已结束
+            }
+            $data[$key]['projectid'] = $item->id;
+            $data[$key]['project_title'] = $item->title;
+            $data[$key]['end_time'] = $end_time;
+            $data[$key]['leader_userid'] = $item->user->id;
+            $data[$key]['leader_name'] = $item->user->name;
+            $data[$key]['member_count'] = count($userIds);
+            $data[$key]['doing_status'] = $status;
+
+
+        }
+
+        return JsonBuilder::Success($data);
     }
 
 

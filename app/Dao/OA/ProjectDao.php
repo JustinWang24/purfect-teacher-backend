@@ -28,22 +28,29 @@ class ProjectDao
     {
     }
 
+
     /**
      * 根据学校的 id 获取项目列表
      * @param $schoolId
-     * @return Collection
+     * @param null $keyword
+     * @return mixed
      */
-    public function getProjectsPaginateBySchool($schoolId){
-        return Project::where('school_id',$schoolId)->
-            orderBy('created_at','desc')
-            ->paginate(ConfigurationTool::DEFAULT_PAGE_SIZE);
+    public function getProjectsPaginateBySchool($schoolId, $keyword = null)
+    {
+
+        $result = Project::where('school_id', $schoolId)->orderBy('created_at', 'desc');
+        if (!empty($keyword)) {
+            $result = $result->where('title', 'like', '%' . $keyword . '%');
+        }
+        return $result->paginate(ConfigurationTool::DEFAULT_PAGE_SIZE);
     }
 
     /**
      * @param $id
      * @return Project
      */
-    public function getProjectById($id){
+    public function getProjectById($id)
+    {
         return Project::find($id);
     }
 
@@ -51,7 +58,8 @@ class ProjectDao
      * @param $taskId
      * @return ProjectTask
      */
-    public function getProjectTaskById($taskId){
+    public function getProjectTaskById($taskId)
+    {
         return ProjectTask::find($taskId);
     }
 
@@ -60,13 +68,14 @@ class ProjectDao
      * @param $projectId
      * @return Collection
      */
-    public function getTasksPaginateByProject($projectId){
-        if($projectId){
-            return ProjectTask::where('project_id',$projectId)
-                ->orderBy('id','desc')
+    public function getTasksPaginateByProject($projectId)
+    {
+        if ($projectId) {
+            return ProjectTask::where('project_id', $projectId)
+                ->orderBy('id', 'desc')
                 ->paginate(ConfigurationTool::DEFAULT_PAGE_SIZE);
-        }else{
-            return ProjectTask::orderBy('id','desc')
+        } else {
+            return ProjectTask::orderBy('id', 'desc')
                 ->paginate(ConfigurationTool::DEFAULT_PAGE_SIZE);
         }
     }
@@ -77,13 +86,11 @@ class ProjectDao
      * @param $schoolId
      * @return mixed
      */
-    public function getProjectByTitle($title, $schoolId) {
-        $map = ['title'=>$title, 'school_id'=>$schoolId];
+    public function getProjectByTitle($title, $schoolId)
+    {
+        $map = ['title' => $title, 'school_id' => $schoolId];
         return Project::where($map)->first();
     }
-
-
-
 
 
     /**
@@ -92,29 +99,30 @@ class ProjectDao
      * @param null $member
      * @return MessageBag
      */
-    public function createProject($project, $member=null) {
+    public function createProject($project, $member = null)
+    {
         $messageBag = new MessageBag(JsonBuilder::CODE_ERROR);
         $re = $this->getProjectByTitle($project['title'], $project['school_id']);
-        if(!is_null($re)) {
+        if (!is_null($re)) {
             $messageBag->setMessage('该项目已存在,请重新更换');
             return $messageBag;
         }
         DB::beginTransaction();
-        try{
+        try {
             $s1 = Project::create($project);
-            if(!empty($member)) {
+            if (!empty($member)) {
                 foreach ($member as $key => $val) {
                     $user = [
-                        'user_id'    => intval($val),
+                        'user_id' => intval($val),
                         'project_id' => $s1->id
                     ];
                     ProjectMember::create($user);
                 }
             }
             DB::commit();
-            $messageBag->setData(['id'=>$s1->id]);
+            $messageBag->setData(['id' => $s1->id]);
             $messageBag->setCode(JsonBuilder::CODE_SUCCESS);
-        }catch (\Exception $e) {
+        } catch (\Exception $e) {
             DB::rollBack();
             $msg = $e->getMessage();
             $messageBag->setMessage($msg);
@@ -128,7 +136,8 @@ class ProjectDao
      * @param $userId
      * @return mixed
      */
-    public function getProjectByUserId($userId) {
+    public function getProjectByUserId($userId)
+    {
         return Project::where('user_id', $userId)
             ->orderBy('created_at', 'desc')
             ->paginate(ConfigurationTool::DEFAULT_PAGE_SIZE);
@@ -140,8 +149,9 @@ class ProjectDao
      * @param $taskId
      * @return mixed
      */
-    public function getDiscussionByTaskId($taskId) {
-        return ProjectTaskDiscussion::where('project_task_id',$taskId)->get();
+    public function getDiscussionByTaskId($taskId)
+    {
+        return ProjectTaskDiscussion::where('project_task_id', $taskId)->get();
     }
 
 
@@ -151,21 +161,22 @@ class ProjectDao
      * @param $project
      * @return MessageBag
      */
-    public function updateProject($projectId, $project) {
+    public function updateProject($projectId, $project)
+    {
         $messageBag = new MessageBag(JsonBuilder::CODE_ERROR);
         $map = [
-            ['id','<>',$projectId],
-            ['title','=',$project['title']],
+            ['id', '<>', $projectId],
+            ['title', '=', $project['title']],
             ['school_id', '=', $project['school_id']]
         ];
         $re = Project::where($map)->first();
-        if(!empty($re)) {
+        if (!empty($re)) {
             $messageBag->setMessage('该项目标题已存在,请重新更换');
             return $messageBag;
         }
 
-        $result = Project::where('id',$projectId)->update($project);
-        if($result) {
+        $result = Project::where('id', $projectId)->update($project);
+        if ($result) {
             $messageBag->setCode(JsonBuilder::CODE_SUCCESS);
             $messageBag->setMessage('编辑成功');
             return $messageBag;
@@ -182,7 +193,7 @@ class ProjectDao
      */
     public function myCreateTasks($userId)
     {
-        $where = ['create_user'=>$userId];
+        $where = ['create_user' => $userId];
 
         return ProjectTask::where($where)
             ->orderBy('id', 'desc')
@@ -196,36 +207,34 @@ class ProjectDao
      * @param $type
      * @return mixed
      */
-    public function attendTasks($userId, $type) {
-        $map = ['user_id'=>$userId, 'status'=>$type];
+    public function attendTasks($userId, $type)
+    {
+        $map = ['user_id' => $userId, 'status' => $type];
         return ProjectTaskMember::where($map)
             ->orderBy('created_at', 'desc')
             ->paginate(ConfigurationTool::DEFAULT_PAGE_SIZE);
     }
 
 
-
-
-
-    public function  updateMembers($projectId, $member)
+    public function updateMembers($projectId, $member)
     {
         $messageBag = new MessageBag(JsonBuilder::CODE_ERROR);
         $s1 = $this->getProjectById($projectId);
         DB::beginTransaction();
-        try{
-            if(!empty($member)) {
+        try {
+            if (!empty($member)) {
                 foreach ($member as $key => $val) {
                     $user = [
-                        'user_id'    => $val,
+                        'user_id' => $val,
                         'project_id' => $s1->id
                     ];
                     ProjectMember::create($user);
                 }
             }
             DB::commit();
-            $messageBag->setData(['id'=>$s1->id]);
+            $messageBag->setData(['id' => $s1->id]);
             $messageBag->setCode(JsonBuilder::CODE_SUCCESS);
-        }catch (\Exception $e) {
+        } catch (\Exception $e) {
             DB::rollBack();
             $msg = $e->getMessage();
             $messageBag->setMessage($msg);
@@ -235,8 +244,8 @@ class ProjectDao
     public function getTeachers($name, $schoolId)
     {
         return GradeUser::select(DB::raw('user_id, name'))
-            ->whereIn('user_type',[Role::TEACHER,Role::EMPLOYEE])
-            ->where('school_id',$schoolId)
-            ->where('name','like',$name.'%')->get();
+            ->whereIn('user_type', [Role::TEACHER, Role::EMPLOYEE])
+            ->where('school_id', $schoolId)
+            ->where('name', 'like', $name . '%')->get();
     }
 }

@@ -89,4 +89,13 @@ class ProjectRequest extends MyStandardRequest
     public function getForumId() {
         return $this->get('forumid');
     }
+
+
+    /**
+     * 获取关键字
+     * @return mixed
+     */
+    public function getKeyword() {
+        return $this->get('keyword');
+    }
 }
