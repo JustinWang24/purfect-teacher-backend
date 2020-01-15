@@ -17,7 +17,7 @@ class PagesController extends Controller
      */
     public function school_majors_list(Request $request){
         $dao = new SchoolDao();
-        $school = $dao->getSchoolById($request->get('school'));
+        $school = $dao->getSchoolById($request->get('school_id'));
         $this->dataForView['pageTitle'] = '招生简章';
         $this->dataForView['school'] = $school;
 
