@@ -14,16 +14,16 @@ Route::prefix('tissue')->middleware('auth:api')->group(function () {
 
 // 项目管理
 Route::prefix('project')->middleware('auth:api')->group(function () {
-    // 项目列表
-    Route::any('/getOaProjectListInfo','Api\OA\ProjectsController@projectList')
-        ->name('oa.project.getOaProjectListInfo');
-
-    // 项目详情
-    Route::any('/getOaProjectInfo','Api\OA\ProjectsController@projectInfo')
-        ->name('oa.project.getOaProjectInfo');
     // 创建项目
-    Route::any('/addOaProjectInfo','Api\OA\ProjectsController@createProject')
-        ->name('oa.project.addOaProjectInfo');
+    Route::post('/addOaProjectInfo','Api\OA\ProjectsController@createProject')
+        ->name('Oa.project.addOaProjectInfo');
+    // 项目列表
+    Route::post('/getOaProjectListInfo','Api\OA\ProjectsController@projectList')
+        ->name('Oa.project.getOaProjectListInfo');
+    // 项目详情
+    Route::post('/getOaProjectInfo','Api\OA\ProjectsController@projectInfo')
+        ->name('Oa.project.getOaProjectInfo');
+
     // 人员列表-项目
     Route::any('/getOaProjectUserListInfo','Api\OA\ProjectsController@getOaTaskUserListInfo')
         ->name('oa.project.getOaProjectUserListInfo');

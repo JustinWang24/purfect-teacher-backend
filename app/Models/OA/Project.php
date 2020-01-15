@@ -33,16 +33,36 @@ class Project extends Model
         'user_id','school_id','title','content','status', 'create_user', 'is_open'
     ];
 
+
+    /**
+     * 成员
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
     public function members(){
         return $this->hasMany(ProjectMember::class);
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
     public function school(){
         return $this->belongsTo(School::class);
     }
 
+    /**
+     * 负责人
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
     public function user(){
         return $this->belongsTo(User::class);
+    }
+
+    /**
+     * 创建人
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function createUser() {
+        return $this->belongsTo(User::class,'create_user');
     }
 
     /**

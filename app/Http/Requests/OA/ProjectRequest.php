@@ -60,7 +60,7 @@ class ProjectRequest extends MyStandardRequest
      * @return mixed
      */
     public function getProjectId() {
-        return $this->get('project_id', null);
+        return $this->get('projectid', null);
     }
 
 

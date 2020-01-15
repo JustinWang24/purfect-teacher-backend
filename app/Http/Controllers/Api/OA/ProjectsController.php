@@ -110,27 +110,6 @@ class ProjectsController extends Controller
 
 
     /**
-     * 查看项目下的任务列表
-     * @param ProjectRequest $request
-     * @return string
-     */
-/*    public function taskList(ProjectRequest $request) {
-        $projectId = $request->getProjectId();
-        if(is_null($projectId)) {
-            return JsonBuilder::Error('项目ID不能为空');
-        }
-        $dao = new ProjectDao();
-        $list = $dao->getTasksPaginateByProject($projectId);
-        foreach ($list as $key => $val) {
-            $val->user_field = ['name'];
-            $val->user;
-        }
-        $data = pageReturn($list);
-        return JsonBuilder::Success($data);
-    }*/
-
-
-    /**
      * 根据任务查看评论
      * @param ProjectRequest $request
      * @return string
@@ -157,35 +136,59 @@ class ProjectsController extends Controller
      * @return string
      */
     public function projectInfo(ProjectRequest $request) {
-        $projectId = $request->get('projectid');
+        $projectId = $request->getProjectId();
         if(is_null($projectId)) {
             return JsonBuilder::Error('项目ID不能为空');
         }
         $dao = new ProjectDao();
         $info = $dao->getProjectById($projectId);
+
         if (!$info){
             return JsonBuilder::Error('没有这个项目');
         }
-        $output = outputTranslate($info->toArray(),Project::MAP_ARR);
+
+        $output['projectid'] = $info->id;
+        $output['project_title'] = $info->title;
+        $output['project_content'] = $info->content;
+        $output['create_time'] = $info->created_at;
+        $output['leader_userid'] = $info->user_id;
         $output['leader_name'] = $info->user->name;
         $output['create_userid'] = $info->create_user;
-        $output['create_name'] = '';
+        $output['create_name'] = $info->createUser->name;
         $output['is_open'] = $info->is_open;
+
         $members = $info->members;
         $tasks = $info->tasks;
+        $memberList = [];
         foreach ($members as $key => $val) {
-            $members[$key]['userid']=$val->user->id;
-            $members[$key]['username']=$val->user->name;
-            $members[$key]['user_pics']=$val->user->profile->avatar;
-            unset($val->user);
+            $memberList[$key]['userid']=$val->user->id;
+            $memberList[$key]['username']=$val->user->name;
+            $memberList[$key]['user_pics']=$val->user->profile->avatar;
         }
-        foreach($tasks as $k =>$value) {
-            $tasks[$k] = outputTranslate($value,ProjectTask::MAP_ARR);
+
+        $taskList = [];
+        foreach ($tasks as $key => $item) {
+            $taskList[$key]['taskid'] = $item->id;
+            $taskList[$key]['task_title'] = $item->title;
+            $status = $item->status;
+            if($item->status == ProjectTask::STATUS_CLOSED) {
+                $taskMembers = $item->taskMembers;
+                foreach ($taskMembers as $k => $v) {
+                    if($v->end_time > $item->end_time) {
+                        $status = ProjectTask::STATUS_OVERTIME;  // 任务超时
+                        break;
+                    }
+                }
+            }
+
+            $taskList[$key]['doing_status'] = $status;
+
+
         }
-        $output['member_count'] = count($members);
-        $output['member_list'] = $members;
-        $output['task_list'] = $tasks;
-//        $data = ['project'=>$info];
+
+        $output['member_count'] = count($memberList);
+        $output['member_list'] = $memberList;
+        $output['task_list'] = $taskList;
         return JsonBuilder::Success($output);
     }
 
