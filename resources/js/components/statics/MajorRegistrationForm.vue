@@ -109,7 +109,6 @@
                 <el-button class="showMoreButton" v-on:click="save" type="primary" round>提交申请</el-button>
             </p>
         </el-form>
-        <el-scrollbar></el-scrollbar>
     </div>
 </template>
 

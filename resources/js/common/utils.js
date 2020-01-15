@@ -9,13 +9,13 @@ export const Util = {
     /**
      * 根据 id 来定位数组中的 item
      * @param id
-     * @param obj
+     * @param obj: Array
      * @returns {*}
      * @constructor
      */
     GetItemById: function (id, obj) {
         let result = null;
-        _.each(obj, item => {
+        obj.forEach((item) => {
             if(id === item.id){
                 result = item;
             }
@@ -31,7 +31,7 @@ export const Util = {
      */
     GetItemIndexById: function (id, obj) {
         let result = null;
-        _.each(obj, (item, idx) => {
+        obj.forEach((item, idx) => {
             if(id === item.id){
                 result = idx;
             }
@@ -60,11 +60,12 @@ export const Util = {
     },
     GetItemIndexByUuid: function (uuid, obj) {
         let result = null;
-        _.each(obj, (item, idx) => {
+        obj.forEach((item, idx) => {
             if(uuid === item.uuid){
                 result = idx;
             }
         });
+
         return result;
     },
     // 输出学期文字的方法
