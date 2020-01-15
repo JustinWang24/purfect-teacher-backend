@@ -1,5 +1,5 @@
-require('babel-polyfill');
-window._ = require('lodash');
+// require('babel-polyfill');
+// window._ = require('lodash');
 window.axios = require('axios');
 
 const token = document.head.querySelector('meta[name="csrf-token"]');
@@ -16,15 +16,40 @@ if (token) {
     console.error('CSRF token not found: https://laravel.com/docs/csrf#csrf-x-csrf-token');
 }
 
-// import { Constants } from '../common/constants';
-// import { Util } from '../common/utils';
-// import { queryStudentProfile, loadMajorDetail } from '../common/registration_form';
-
 window.Vue = require('vue');
 // 引入 Element UI 库
-import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
-Vue.use(ElementUI);
+
+import {
+    Button, Card, Row, Col, Drawer, Image, Badge, Divider, Tag, Form, FormItem, Input,
+    Select, Option, Switch, Alert, Message, MessageBox, DatePicker, Timeline, TimelineItem, TimePicker
+} from 'element-ui';
+
+Vue.component(Button.name, Button);
+Vue.component(Card.name, Card);
+Vue.component(Row.name, Row);
+Vue.component(Col.name, Col);
+Vue.component(Image.name, Image);
+Vue.component(Badge.name, Badge);
+Vue.component(Divider.name, Divider);
+Vue.component(Tag.name, Tag);
+Vue.component(Form.name, Form);
+Vue.component(FormItem.name, FormItem);
+Vue.component(Input.name, Input);
+Vue.component(Select.name, Select);
+Vue.component(Option.name, Option);
+Vue.component(Switch.name, Switch);
+Vue.component(Drawer.name, Drawer);
+Vue.component(Message.name, Message);
+Vue.component(MessageBox.name, MessageBox);
+Vue.component(Alert.name, Alert);
+Vue.component(DatePicker.name, DatePicker);
+Vue.component(Timeline.name, Timeline);
+Vue.component(TimelineItem.name, TimelineItem);
+Vue.component(TimePicker.name, TimePicker);
+
+Vue.prototype.$alert = MessageBox.alert;
+Vue.prototype.$message = Message;
 
 Vue.component('major-cards', require('../components/statics/MajorCards.vue').default);
 Vue.component('major-registration-form', require('../components/statics/MajorRegistrationForm.vue').default);

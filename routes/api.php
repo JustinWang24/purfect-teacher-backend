@@ -537,7 +537,7 @@ Route::post('/index/sms', 'Api\Home\IndexController@sendSms')
 
 
 // 地区列表
-Route::prefix('location')->middleware('auth:api')->group(function () {
+Route::prefix('location')->group(function () {
     // 省份列表
     Route::get('/get-provinces','Api\Location\AreaController@getProvinces')
         ->name('api.location.get-provinces');

@@ -18,7 +18,7 @@ export function cities(provinceId, affix) {
     }
     return axios.post(
         url,
-        {provinceId: provinceId}
+        {parent_id: provinceId}
     );
 }
 // 获取城区
@@ -29,6 +29,6 @@ export function districts(cityId, affix) {
     }
     return axios.post(
         url,
-        {cityId: cityId}
+        {parent_id: cityId}
     );
 }

@@ -22,10 +22,13 @@ class PlansController extends Controller
         if($logic){
             $plans = $logic->getPlans();
         }
+
+        $user = $request->user('api');
+
         return JsonBuilder::Success([
             'plans'=>$plans,
             'banner'=>['image'=>''],
-            'school_id'=>$request->user('api')->getSchoolId()
+            'school_id'=>$user ? $user->getSchoolId() : ''
         ]);
     }
 

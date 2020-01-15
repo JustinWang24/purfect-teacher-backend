@@ -9,6 +9,7 @@ use App\Models\Area;
 use App\Utils\JsonBuilder;
 use App\Dao\Location\AreaDao;
 use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
 
 class AreaController extends Controller
 {
@@ -27,10 +28,10 @@ class AreaController extends Controller
 
     /**
      * 城市列表
-     * @param MyStandardRequest $request
+     * @param Request $request
      * @return string
      */
-    public function getCities(MyStandardRequest $request) {
+    public function getCities(Request $request) {
         $parentId = $request->get('parent_id');
         if(empty($parentId)) {
             return JsonBuilder::Error('parent_id不能为空');
@@ -44,10 +45,10 @@ class AreaController extends Controller
 
     /**
      * 获取区县
-     * @param MyStandardRequest $request
+     * @param Request $request
      * @return string
      */
-    public function getDistricts(MyStandardRequest $request) {
+    public function getDistricts(Request $request) {
         $parentId = $request->get('parent_id');
         if(empty($parentId)) {
             return JsonBuilder::Error('parent_id不能为空');
