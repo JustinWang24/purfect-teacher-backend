@@ -1,6 +1,7 @@
 <?php
    namespace App\Http\Controllers\Operator;
 
+   use App\Events\SystemNotification\WifiIssueEvent;
    use App\Utils\FlashMessageBuilder;
    use App\Http\Controllers\Controller;
    use Illuminate\Support\Facades\Cache;
@@ -112,8 +113,13 @@
          $saveData['adminid'] = 0; // TODO...
          $saveData['admin_name'] = ''; // TODO.....
          $saveData['jiedan_time'] = date('Y-m-d H:i:s');
-         if ( WifiIssuesDao::addOrUpdateWifiIssuesInfo ( $saveData , $getWifiIssuesOneInfo->issueid ) )
+         if (WifiIssuesDao::addOrUpdateWifiIssuesInfo ( $saveData , $getWifiIssuesOneInfo->issueid ) )
          {
+             //发送系统消息
+             event(new WifiIssueEvent(WifiIssuesDao::getWifiIssuesOneInfo (
+                 $condition , [ 'issueid' , 'desc' ] , $fieldArr , $joinArr
+             )));
+
             FlashMessageBuilder::Push ( $request , FlashMessageBuilder::SUCCESS , '操作成功');
             return redirect()->route('manager_wifi.wifiIssue.list');
          } else {
@@ -242,6 +248,11 @@
             $addData1[ 'admin_desc' ] = (String)$saveData[ 'admin_desc' ];
 
             WifiIssueDisposesDao::addOrUpdateWifiIssueDisposesInfo ($addData1);
+
+             //发送系统消息
+             event(new WifiIssueEvent(WifiIssuesDao::getWifiIssuesOneInfo (
+                 $condition , [ 'issueid' , 'desc' ] , $fieldArr , $joinArr
+             )));
 
             FlashMessageBuilder::Push ( $request , FlashMessageBuilder::SUCCESS , '操作成功');
 

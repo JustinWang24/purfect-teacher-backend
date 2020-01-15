@@ -25,7 +25,6 @@ class SystemNotification extends Model
     const STUDENT_CATEGORY_RECRUITMENT = 102;//学生端招生
     const STUDENT_CATEGORY_ENROLMENT = 103;//学生端迎新
     const STUDENT_CATEGORY_PIPELINE = 104;//学生端审批
-    const STUDENT_CATEGORY_WIFI = 105;//学生端校园网
     const STUDENT_CATEGORY_ATTENDANCE = 106;//学生端值周
     const STUDENT_CATEGORY_COURSE = 107;//学生端选课
     const STUDENT_CATEGORY_COURSEWARE = 108;//学生端课件
@@ -53,12 +52,12 @@ class SystemNotification extends Model
     const TEACHER_CATEGORY_COURSE = 212;//教师端选课
     const TEACHER_CATEGORY_APPLY_STUDENT = 213;//教师端学生审批
     const TEACHER_CATEGORY_QRCODE = 214;//教师端一码通
-    const TEACHER_CATEGORY_WIFI = 215;//教师端校园网
     const TEACHER_CATEGORY_MESSAGE = 216;//教师端消息
 
     const COMMON_CATEGORY_NOTICE_NOTIFY = 301;//通知
     const COMMON_CATEGORY_NOTICE_NOTICE = 302;//公告
     const COMMON_CATEGORY_NOTICE_INSPECTION = 303;//检查
+    const COMMON_CATEGORY_WIFI = 304;//校园网
 
 
     protected $fillable = [

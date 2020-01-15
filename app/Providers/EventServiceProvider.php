@@ -74,9 +74,13 @@ class EventServiceProvider extends ServiceProvider
             'App\Listeners\User\Teacher\NotifyTeacherBeLate'
         ],
 
-        //发送通知时发送系统消息
+        //发送通知时发送系统消息通知所有人
         'App\Events\SystemNotification\NoticeSendEvent' => [
             'App\Listeners\SystemNotification\NoticeSend'
+        ],
+        //wifi报修处理时发送系统消息通知报修人
+        'App\Events\SystemNotification\WifiIssueEvent' => [
+            'App\Listeners\SystemNotification\WifiIssue'
         ],
     ];
 
