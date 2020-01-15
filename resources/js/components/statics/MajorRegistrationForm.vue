@@ -200,6 +200,8 @@
                 if(newVal !== oldVal){
                     cities(newVal).then(res => {
                         this.cities = res.data.data.cities;
+                        this.registrationForm.city = '';
+                        this.registrationForm.district = '';
                     })
                 }
             },
@@ -207,6 +209,7 @@
                 if(newVal !== oldVal){
                     districts(newVal).then(res => {
                         this.districts = res.data.data.districts;
+                        this.registrationForm.district = '';
                     })
                 }
             },
