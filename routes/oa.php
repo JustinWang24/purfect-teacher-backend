@@ -8,7 +8,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 // 组织架构
 Route::prefix('tissue')->middleware('auth:api')->group(function () {
     // 获取组织和人员
-    Route::get('/getOrganization','Api\School\OrganizationController@getOrganization')
+    Route::post('/getOrganization','Api\School\OrganizationController@getOrganization')
         ->name('oa.tissue.getOrganization');
 });
 

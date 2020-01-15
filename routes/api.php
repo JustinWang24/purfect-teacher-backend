@@ -765,7 +765,7 @@ Route::prefix('teacher/evaluation')->middleware('auth:api')->group(function(){
 
 // 内部信
 Route::prefix('Oa')->middleware('auth:api')->group(function () {
-    // 发信
+    // 获取所有老师
     Route::post('/get-teachers','Api\OA\InternalMessageController@getTeachers')
         ->name('api.oa.get.teachers');
     // 发信
@@ -777,7 +777,9 @@ Route::prefix('Oa')->middleware('auth:api')->group(function () {
     // 信件详情
     Route::post('/message-info','Api\OA\InternalMessageController@massageInfo')
         ->name('api.oa.add.message');
-
+    // 删除 or 更新已读
+    Route::post('/message-update-or-del','Api\OA\InternalMessageController@updateOrDelMessage')
+        ->name('api.oa.update.or.del.message');
 
 
 });
