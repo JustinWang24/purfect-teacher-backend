@@ -84,6 +84,15 @@ class NoticeController extends Controller
         $data['school_id'] = $schoolId;
         $data['user_id']   = $request->user()->id;
 
+        if($data['type'] == Notice::TYPE_NOTICE && empty($data['image'])) {
+            return JsonBuilder::Error('封面图不能为空');
+        }
+
+        if($data['type'] == Notice::TYPE_INSPECTION && empty($data['inspect_id'])) {
+            return JsonBuilder::Error('检查类型不能为空');
+        }
+
+
         $dao = new  NoticeDao;
         if (isset($data['id'])) {
             $result = $dao->update($data);
