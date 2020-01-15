@@ -4,6 +4,7 @@
  */
 namespace App\Models\Misc;
 
+use App\Models\Notices\Notice;
 use Illuminate\Database\Eloquent\Model;
 
 class SystemNotification extends Model
@@ -19,28 +20,46 @@ class SystemNotification extends Model
 
     const SCHOOL_EMPTY = 0; // 针对哪个学校 0 表示不针对学校
 
-    const CATEGORY = [
-        1=>'易码通',
-        2=>'校园网',
-        3=>'通知',
-        4=>'公告',
-        5=>'检查',
-        6=>'课件',
-        7=>'课程',
-        8=>'考试',
-        9=>'招生',
-        10=>'申请',
-        11=>'订单',
-        12=>'值周',
-        13=>'就业',
-        14=>'选课',
-        15=>'会员',
-        16=>'签到',
-        17=>'优惠券',
-        18=>'绿色通道',
-        19=>'退费',
-        20=>'消息',
-    ];
+    //消息分类 用于客户端展示
+    const STUDENT_CATEGORY_QRCODE = 101;//学生端一码通
+    const STUDENT_CATEGORY_RECRUITMENT = 102;//学生端招生
+    const STUDENT_CATEGORY_ENROLMENT = 103;//学生端迎新
+    const STUDENT_CATEGORY_PIPELINE = 104;//学生端审批
+    const STUDENT_CATEGORY_WIFI = 105;//学生端校园网
+    const STUDENT_CATEGORY_ATTENDANCE = 106;//学生端值周
+    const STUDENT_CATEGORY_COURSE = 107;//学生端选课
+    const STUDENT_CATEGORY_COURSEWARE = 108;//学生端课件
+    const STUDENT_CATEGORY_COURSEINFO = 109;//学生端课程
+    const STUDENT_CATEGORY_EXAM = 110;//学生端考试
+    const STUDENT_CATEGORY_EXAMRESULT = 111;//学生端成绩
+    const STUDENT_CATEGORY_SIGNIN = 112;//学生端签到
+    const STUDENT_CATEGORY_ORDER = 113;//学生端订单
+    const STUDENT_CATEGORY_JOB = 114;//学生端就业
+    const STUDENT_CATEGORY_VIP = 115;//学生端会员
+    const STUDENT_CATEGORY_COUPON = 116;//学生端优惠券
+    const STUDENT_CATEGORY_MESSAGE = 117;//学生端消息
+
+    const TEACHER_CATEGORY_ATTENDANCE = 201;//教师端值周
+    const TEACHER_CATEGORY_OAATTENDANCE = 202;//教师端考勤
+    const TEACHER_CATEGORY_PIPELINE = 203;//教师端审批
+    const TEACHER_CATEGORY_APPLY = 204;//教师端申请
+    const TEACHER_CATEGORY_MEETING = 205;//教师端会议
+    const TEACHER_CATEGORY_PROJECT = 206;//教师端项目
+    const TEACHER_CATEGORY_TASK = 207;//教师端任务
+    const TEACHER_CATEGORY_IMAIL = 208;//教师端内部信
+    const TEACHER_CATEGORY_DOCUMENT = 209;//教师端公文
+    const TEACHER_CATEGORY_COURSEINFO = 210;//教师端课程
+    const TEACHER_CATEGORY_EXAM = 211;//教师端考试
+    const TEACHER_CATEGORY_COURSE = 212;//教师端选课
+    const TEACHER_CATEGORY_APPLY_STUDENT = 213;//教师端学生审批
+    const TEACHER_CATEGORY_QRCODE = 214;//教师端一码通
+    const TEACHER_CATEGORY_WIFI = 215;//教师端校园网
+    const TEACHER_CATEGORY_MESSAGE = 216;//教师端消息
+
+    const COMMON_CATEGORY_NOTICE_NOTIFY = 301;//通知
+    const COMMON_CATEGORY_NOTICE_NOTICE = 302;//公告
+    const COMMON_CATEGORY_NOTICE_INSPECTION = 303;//检查
+
 
     protected $fillable = [
         'sender',
@@ -51,6 +70,16 @@ class SystemNotification extends Model
         'content',
         'next_move',
         'title',
-        'money',
+        'category',
+        'app_extra'
     ];
+
+    public static function getNoticeTypeToCategory()
+    {
+        return [
+            Notice::TYPE_NOTIFY => self::COMMON_CATEGORY_NOTICE_NOTIFY,
+            Notice::TYPE_NOTICE => self::COMMON_CATEGORY_NOTICE_NOTICE,
+            Notice::TYPE_INSPECTION => self::COMMON_CATEGORY_NOTICE_INSPECTION
+        ];
+    }
 }

@@ -72,7 +72,12 @@ class EventServiceProvider extends ServiceProvider
         //教师迟到时给教务处领导发短信通知
         'App\Events\User\TeacherBeLateEvent' =>[
             'App\Listeners\User\Teacher\NotifyTeacherBeLate'
-        ]
+        ],
+
+        //发送通知时发送系统消息
+        'App\Events\SystemNotification\NoticeSendEvent' => [
+            'App\Listeners\SystemNotification\NoticeSend'
+        ],
     ];
 
     /**

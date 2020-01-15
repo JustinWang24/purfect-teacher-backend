@@ -48,7 +48,7 @@ class NoticeDao
                 NoticeMedia::create($insert);
             }
             DB::commit();
-            return new MessageBag(JsonBuilder::CODE_SUCCESS,'创建成功');
+            return new MessageBag(JsonBuilder::CODE_SUCCESS,'创建成功', $result);
         }catch (\Exception $e) {
             DB::rollBack();
             return new MessageBag(JsonBuilder::CODE_ERROR, $e->getMessage());
@@ -82,7 +82,7 @@ class NoticeDao
                 }
             }
             DB::commit();
-            return new MessageBag(JsonBuilder::CODE_SUCCESS,'创建成功');
+            return new MessageBag(JsonBuilder::CODE_SUCCESS,'创建成功', Notice::where('id', $data['id'])->first());//?update 后如何直接返回对象
         }catch (\Exception $e) {
             DB::rollBack();
             return new MessageBag(JsonBuilder::CODE_ERROR, $e->getMessage());
