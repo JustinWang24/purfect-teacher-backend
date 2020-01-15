@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Project extends Model
 {
+    const STATUS_NOT_BEGIN = 0;
     const STATUS_IN_PROGRESS = 1;  // 正在进行
     const STATUS_CLOSED = 2;       // 已结束
     const MAP_ARR = [
@@ -32,27 +33,45 @@ class Project extends Model
         'user_id','school_id','title','content','status', 'create_user', 'is_open'
     ];
 
+
+    /**
+     * 成员
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
     public function members(){
         return $this->hasMany(ProjectMember::class);
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
     public function school(){
         return $this->belongsTo(School::class);
     }
 
+    /**
+     * 负责人
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
     public function user(){
         return $this->belongsTo(User::class);
     }
 
+    /**
+     * 创建人
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function createUser() {
+        return $this->belongsTo(User::class,'create_user');
+    }
+
+    /**
+     * 任务
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
     public function tasks(){
-        return $this->hasMany(ProjectTask::class)->orderBy('id','desc');
+        return $this->hasMany(ProjectTask::class, 'project_id')->orderBy('end_time', 'desc');
     }
-    public function memberCount()
-    {
-        return $this->members()->count();
-    }
-    public function username()
-    {
-        return $this->user->name;
-    }
+
+
 }
