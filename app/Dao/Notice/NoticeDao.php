@@ -93,11 +93,9 @@ class NoticeDao
     /**
      * @param $type
      * @param $schoolId
-     * @param $pageNumber
-     * @param $pageSize
      * @return array
      */
-    public function getNotice($type, $schoolId, $pageNumber = 0, $pageSize = ConfigurationTool::DEFAULT_PAGE_SIZE) {
+    public function getNotice($type, $schoolId) {
         $field = ['id', 'title', 'content', 'type', 'created_at', 'inspect_id', 'image','status'];
         $map = ['type'=>$type, 'school_id'=>$schoolId, 'status'=>Notice::STATUS_PUBLISH];
         return Notice::where($map)->select($field)
