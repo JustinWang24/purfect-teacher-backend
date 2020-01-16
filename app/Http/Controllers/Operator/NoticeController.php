@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Operator;
 
 use App\Dao\Schools\OrganizationDao;
+use App\Events\SystemNotification\NoticeSendEvent;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Notice\NoticeRequest;
 use App\Dao\Notice\NoticeDao;
@@ -98,6 +99,9 @@ class NoticeController extends Controller
             $result = $dao->update($data);
         } else {
             $result = $dao->add($data);
+        }
+        if ($result->isSuccess() && $result->getData()->status) {
+            event(new NoticeSendEvent($result->getData()));
         }
         return $result->isSuccess() ? JsonBuilder::Success() : JsonBuilder::Error($result->getMessage());
     }

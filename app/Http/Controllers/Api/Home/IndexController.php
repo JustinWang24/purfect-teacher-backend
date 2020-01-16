@@ -74,24 +74,10 @@ class IndexController extends Controller
         $user                  = $request->user();
         $systemNotificationDao = new SystemNotificationDao();
         $systemNotifications   = $systemNotificationDao->getNotificationByUserId($school->id, $user->id, 2);
-        $json_array            = [];
-        foreach ($systemNotifications as $key => $value) {
-            $json_array[$key]['ticeid']       = $value->id;
-            $json_array[$key]['create_at']    = $value->create_id;
-            $json_array[$key]['tice_title']   = $value->title;
-            $json_array[$key]['tice_content'] = $value->content;
-            $json_array[$key]['tice_money']   = $value->money;
-            $json_array[$key]['webview_url']  = $value->next_move;
-            $json_array[$key]['type']         = $value->type;
-            $json_array[$key]['priority']     = $value->priority;
-            if (isset(SystemNotification::CATEGORY[$value->category])) {
-                $json_array[$key]['tice_header'] = SystemNotification::CATEGORY[$value->category];
-            } else {
-                $json_array[$key]['tice_header'] = '消息';
-            }
-        }
-        $result['notifications'] = $json_array;
-
+        //获取消息是否已读
+        $systemNotificationHasRead = $systemNotificationDao->checkNotificationHasRead($school->id, $user->id);
+        $data['notifications_list'] = $systemNotifications;
+        $data['notifications_read'] = $systemNotificationHasRead;
 
         return JsonBuilder::Success($result);
     }
@@ -397,7 +383,7 @@ class IndexController extends Controller
                 }
             }
         }
-        
+
         $data['list'] = $result;
         return JsonBuilder::Success($data);
     }
