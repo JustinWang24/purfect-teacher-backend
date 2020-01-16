@@ -13,7 +13,7 @@ class EvaluateTeacher extends Model
 {
 
     protected $fillable = [
-        'school_id', 'user_id', 'year', 'type', 'score'
+        'school_id', 'user_id', 'year', 'type', 'score', 'num', 'week', 'weekday_index', 'time_slot_id'
     ];
 
     const TYPE_LAST_TERM = 1;
