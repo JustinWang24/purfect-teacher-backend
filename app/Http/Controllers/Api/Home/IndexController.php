@@ -76,8 +76,8 @@ class IndexController extends Controller
         $systemNotifications   = $systemNotificationDao->getNotificationByUserId($school->id, $user->id, 2);
         //获取消息是否已读
         $systemNotificationHasRead = $systemNotificationDao->checkNotificationHasRead($school->id, $user->id);
-        $data['notifications_list'] = $systemNotifications;
-        $data['notifications_read'] = $systemNotificationHasRead;
+        $result['notifications_list'] = $systemNotifications;
+        $result['notifications_read'] = $systemNotificationHasRead;
 
         return JsonBuilder::Success($result);
     }
