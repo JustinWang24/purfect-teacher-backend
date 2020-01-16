@@ -239,12 +239,34 @@ class WelcomeUserReportDao
             $userReportArr = json_decode($getWelcomeUserReportOneInfo->steps_1_str,true);
         } else {
             $getStudentProfilesInfo = $this->getStudentProfilesInfo($userId);
+
+            // 获取学生基础信息
+            $fieldArr = [
+                'users.name as user_name', // 姓名
+                'users.mobile as user_mobile', // 手机号
+                'users.email as user_email', // 邮箱
+                'institutes.id as institute_id', // 学院ID
+                'institutes.name as institute_name', // 学院ID
+                'majors.id as major_id', // 专业ID
+                'majors.name as major_name', // 专业ID
+                'grades.id as class_id', // 班级ID
+                'grades.name as class_name', // 专业ID
+                'majors.period as level', // 学制
+                'majors.name as class_name', // 专业ID
+            ];
+            $baseUserInfo = DB::table('grade_users')
+                ->where ('user_id',$userId )
+                ->join('users','grade_users.user_id','=','users.id') // 用户信息
+                ->join('institutes','grade_users.institute_id','=','institutes.id') // 学院信息
+                ->join('majors','grade_users.major_id','=','majors.id') // 专业信息
+                ->join('grades','grade_users.major_id','=','grades.id') // 班级信息
+                ->select($fieldArr)
+                ->first ();
         }
 
         // 返回用户信息
-        $data['user_name'] = !empty($userReportArr) ? (String)$userReportArr['user_name'] : ''; // 姓名
-        // TODO...
-        $data['student_id'] = '201891827'; // 身份证号
+        $data['student_id'] = !empty($userReportArr) ? (String)$userReportArr['serial_number'] : (isset($getStudentProfilesInfo->serial_number) ? (String)$getStudentProfilesInfo->serial_number : '');; // 学号
+        $data['user_name'] = !empty($userReportArr) ? $userReportArr['user_name'] : (String)$baseUserInfo->user_name; // 姓名
         $data['id_number'] = !empty($userReportArr) ? (String)$userReportArr['id_number'] : (isset($getStudentProfilesInfo->id_number) ? (String)$getStudentProfilesInfo->id_number : ''); // 身份证号
         $data['gender'] = !empty($userReportArr) ? (String)$userReportArr['gender'] : (isset($getStudentProfilesInfo->gender) ? (String)$getStudentProfilesInfo->gender : 1); // 性别(1:男 2:女 )
         $data['birthday'] = !empty($userReportArr) ? (String)$userReportArr['birthday'] : (isset($getStudentProfilesInfo->birthday) ? date('Y-m-d',strtotime($getStudentProfilesInfo->birthday)) : ''); // 出身日期(2020-01-12)
@@ -253,18 +275,17 @@ class WelcomeUserReportDao
         $data['political_id'] = !empty($userReportArr) ? (String)$userReportArr['political_id'] : (String)$getStudentProfilesInfo->political_code; // 政治面貌代码
         $data['political_name'] = !empty($userReportArr) ? (String)$userReportArr['political_name'] : (String)$getStudentProfilesInfo->political_name; // 政治面貌代码
 
-        // TODO...下面还不知道在哪里取数据
-        $data['level'] = 3; // 学制
-        $data['education_id'] = 1; // 学历
-        $data['education_name'] = '本科'; // 学历
-        $data['institute_id'] = 1; // 学院id
-        $data['institute_name'] = '国际贸易学院'; // 学院名称
-        $data['major_id'] = 1; // 专业id
-        $data['major_name'] = '金融'; // 专业名称
-        $data['class_id'] = 1; // 班级id
-        $data['class_name'] = '1班'; // 班级名称
 
-        $data['email'] = !empty($userReportArr) ? (String)$userReportArr['email'] : ''; // 邮箱
+        $data['level'] = !empty($userReportArr) ? $userReportArr['level'] : (String)$baseUserInfo->level; // 学制
+        $data['education_id'] = 1; // 学历
+        $data['education_name'] = '中专'; // 学历
+        $data['institute_id'] = !empty($userReportArr) ? $userReportArr['institute_id'] : (String)$baseUserInfo->institute_id;; // 学院id
+        $data['institute_name'] = !empty($userReportArr) ? $userReportArr['institute_name'] : (String)$baseUserInfo->institute_name;; // 学院名称
+        $data['major_id'] = !empty($userReportArr) ? $userReportArr['major_id'] : (String)$baseUserInfo->major_id;; // 专业id
+        $data['major_name'] = !empty($userReportArr) ? $userReportArr['major_name'] : (String)$baseUserInfo->major_name;; // 专业名称
+        $data['class_id'] = !empty($userReportArr) ? $userReportArr['class_id'] : (String)$baseUserInfo->class_id;; // 班级id
+        $data['class_name'] = !empty($userReportArr) ? $userReportArr['class_name'] : (String)$baseUserInfo->class_name;; // 班级名称
+        $data['email'] = !empty($userReportArr) ? $userReportArr['email'] : (String)$baseUserInfo->email;; // 邮箱
 
         // 生源地
         $data['source_province_id'] = !empty($userReportArr) ? (String)$userReportArr['source_province_id'] : ''; // 省id
