@@ -5,6 +5,7 @@ namespace App\Models\Notices;
 
 use App\Models\NetworkDisk\Media;
 use App\User;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
 class Notice extends Model
@@ -93,5 +94,11 @@ class Notice extends Model
      */
     public function readLog($userId) {
         return $this->hasOne(NoticeReadLogs::class)->where('user_id',$userId)->first();
+    }
+
+
+    public function getCreatedAtAttribute($value)
+    {
+        return Carbon::parse($value)->format('Y-m-d H:i');
     }
 }
