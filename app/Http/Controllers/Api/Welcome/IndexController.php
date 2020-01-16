@@ -143,6 +143,19 @@ class IndexController extends Controller
 
         $infos = $WelcomeUserReportDao->getUserReportOrUserProfilesInfo($user_id);
 
+
+        $WelcomeConfigDao = new WelcomeConfigDao();
+
+        $getWelcomeConfigOneInfo = $WelcomeConfigDao->getWelcomeConfigOneInfo( $campus_id , $fieldArr = ['config_content1'] );
+
+        // 报到流程
+        $infos['config_content1'] = '';
+        
+        if(!empty($getWelcomeConfigOneInfo->config_content1))
+        {
+            $infos['config_content1'] = $getWelcomeConfigOneInfo->config_content1;
+        }
+
         return JsonBuilder::Success($infos, '个人信息(编辑页)');
     }
 
@@ -233,7 +246,7 @@ class IndexController extends Controller
         $campus_id = $user->gradeUser->campus_id;
 
         $WelcomeUserReportDao = new WelcomeUserReportDao();
-        
+
         // 验证是否有权限操作迎新
         $checkUserIsWelcomeInfo = $WelcomeUserReportDao->checkUserIsWelcomeInfo( $campus_id, $user_id);
         if($checkUserIsWelcomeInfo['status'] != true)
