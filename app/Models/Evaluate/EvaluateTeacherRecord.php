@@ -12,7 +12,7 @@ class EvaluateTeacherRecord extends Model
 {
 
     protected $fillable = [
-        'evaluate_teacher_id', 'evaluate_id', 'user_id', 'grade_id', 'score',
+        'evaluate_student_id', 'evaluate_id', 'user_id', 'score',
     ];
 
 
@@ -20,7 +20,4 @@ class EvaluateTeacherRecord extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function grade() {
-        return $this->belongsTo(Grade::class);
-    }
 }

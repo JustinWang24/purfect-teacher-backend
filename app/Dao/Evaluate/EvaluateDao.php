@@ -60,7 +60,6 @@ class EvaluateDao
             $map['type'] = $type;
         }
         $list = Evaluate::where($map)
-//            ->orderBy('created_at','desc')
             ->paginate(ConfigurationTool::DEFAULT_PAGE_SIZE);
         return $list;
     }
@@ -69,12 +68,15 @@ class EvaluateDao
      * 获取全部评价模板
      * @param $schoolId
      * @param $type
+     * @param $sort
      * @return mixed
      */
-    public function getEvaluate($schoolId, $type)
+    public function getEvaluate($schoolId, $type, $sort='desc')
     {
         $map = ['school_id' => $schoolId, 'type' => $type];
-        return Evaluate::where($map)->orderBy('created_at', 'desc')->get();
+        return Evaluate::where($map)
+            ->orderBy('created_at', $sort)
+            ->get();
     }
 
 

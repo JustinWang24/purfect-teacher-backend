@@ -12,8 +12,9 @@ class EvaluateTeacherRecordRequest extends MyStandardRequest
     public function getRecordData() {
         $data = $this->get('evaluate');
         $user = $this->user();
-        $data['user_id'] = $user->id;
-        $data['grade_id'] = $this->user()->getSchoolId();
+        $data['school_id'] = $user->getSchoolId();
+        $data['student']['user_id'] = $user->id;
+        $data['student']['grade_id'] = $user->gradeUser->grade_id;
         return $data;
     }
 
