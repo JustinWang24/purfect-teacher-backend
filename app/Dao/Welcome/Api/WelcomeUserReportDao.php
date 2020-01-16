@@ -109,7 +109,7 @@ class WelcomeUserReportDao
     }
 
     /**
-     * Func 验证当前用户是否可以迎新
+     * Func 验证学校迎新配置
      * Desc 验证当前用户是否可以迎新
      *
      * @param $campusId 校区ID
@@ -120,7 +120,7 @@ class WelcomeUserReportDao
     public function checkUserIsWelcomeInfo($campusId = 0, $userId = 0)
     {
         if (!intval($campusId) || !intval($userId)) {
-            return array('status' => 3, 'message' => '参数错误');
+            return array('status' => 0, 'notice' => '','message' => '参数错误');
         }
 
         $fieldArr = ['config_sdata', 'config_edate', 'status'];
@@ -129,31 +129,87 @@ class WelcomeUserReportDao
 
         // 学校还未配置迎新
         if (empty($getWelcomeConfigOneInfo)) {
-            return array('status' => 4, 'message' => '学校未配置迎新');
+            return array('status' => 0, 'notice' => '','message' => '学校未配置迎新');
         }
 
         // 学校已关闭迎新
         if ($getWelcomeConfigOneInfo->status != 1) {
-            return array('status' => 5, 'message' => '学校已关闭迎新');
+            return array('status' => 0, 'notice' => '','message' => '学校已关闭迎新');
         }
 
         // 迎新未开始
         if (time() < strtotime($getWelcomeConfigOneInfo->config_sdata)) {
-            return array('status' => 6, 'message' => '迎新未开始');
+            return array('status' => 0, 'notice' => '','message' => '迎新未开始');
         }
 
         // 迎新已结束
         if (time() > strtotime($getWelcomeConfigOneInfo->config_edate)) {
-            return array('status' => 7, 'message' => '迎新已结束');
+            return array('status' => 0, 'notice' => '','message' => '迎新已结束');
         }
 
         // 获取用户信息是否存在
         if (empty($this->getStudentProfilesInfo($userId))) {
-            return array('status' => 7, 'message' => '未查找到您的信息');
+            return array('status' => 0, 'notice' => '', 'message' => '未查找到您的信息');
         }
 
-        return array('status' => 2, 'message' => '请先完善个人信息');
+        // 学校配置验证通过
+        return array('status' => 1, 'notice' => '', 'message' => '');
+    }
 
+    /**
+     * Func 按照用户节点验证配置
+     *
+     * @param $reportOneInfo 用户迎新内容
+     *
+     * @return true|false
+     */
+    public function checkWelcomeUserReportOneInfo($reportOneInfo = [],$letter = null )
+    {
+        // 个人信息完善
+        if($letter == 'A')
+        {
+            if(empty($reportOneInfo->steps_2_date))
+            {
+                return array('status' => 2 ,'notice' => '', 'message' => '请完善个人信息');
+            } else {
+                return array('status' => 1 ,'notice' => '已完成', 'message' => '');
+            }
+        }
+
+        // 扫码报到
+        if($letter == 'B')
+        {
+            if(empty($reportOneInfo->steps_2_date))
+            {
+                return array('status' => 0 ,'notice' => '', 'message' => '请完善个人信息');
+            }
+
+            // 是否报到
+            if(empty($reportOneInfo->complete_date))
+            {
+                return array('status' => 2, 'notice' => '', 'message' => '');
+            } else {
+                return array('status' => 1, 'notice' => '已完成', 'message' => '');
+            }
+        }
+
+        // 报到单
+        if($letter == 'C')
+        {
+            // 个人信息完善
+            if(empty($reportOneInfo->steps_2_date))
+            {
+                return array('status' => 0, 'notice' => '', 'message' => '请完善个人信息');
+            }
+
+            // 是否报到
+            if(empty($reportOneInfo->complete_date))
+            {
+                return array('status' => 0, 'notice' => '', 'message' => '您还没有报到');
+            }
+        }
+
+        return array('status'=>1, 'notice' => '', 'message'=>'');
     }
 
     /**
