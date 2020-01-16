@@ -13,6 +13,7 @@ use Illuminate\Http\Request;
 |
 */
 
+
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
@@ -21,7 +22,7 @@ Route::prefix('school')->middleware('auth:api')->group(function () {
     // 加载学校的作息时间表
     Route::any('/load-time-slots','Api\School\TimeSlotsController@load_by_school')
         ->name('api.school.load.time.slots');
-
+    
     Route::any('/save-time-slot','Api\School\TimeSlotsController@save_time_slot')
         ->name('api.school.save.time.slot');
 
@@ -781,6 +782,10 @@ Route::prefix('Oa')->middleware('auth:api')->group(function () {
     // 删除 or 更新已读
     Route::post('/message-update-or-del','Api\OA\InternalMessageController@updateOrDelMessage')
         ->name('api.oa.update.or.del.message');
-
+    // 更新信件
+    
+    // 上传附件
+    Route::post('/message-upload-files', 'Api\OA\InternalMessageController@uploadFiles')
+        ->name('api.oa.upload.files');
 
 });
