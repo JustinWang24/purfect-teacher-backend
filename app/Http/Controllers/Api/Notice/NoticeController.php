@@ -24,6 +24,8 @@ class NoticeController extends Controller
         $dao = new NoticeDao();
         $schoolId = $request->user()->getSchoolId();
         $result = $dao->getNotice($type, $schoolId);
+
+
         foreach ($result as $key => $item) {
             $item->attachment_field = 'url';
             $item->attachments;
