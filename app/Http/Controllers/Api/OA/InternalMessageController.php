@@ -110,6 +110,8 @@ class InternalMessageController extends Controller
         $dao  = new InternalMessageDao;
         $data = $dao->getInternalMessageById($id);
         $data->file;
+        $data['user_username'] = $data->user->name;
+        $data['create_time'] = $data->created_at->format('Y-m-d H:i:s');
         $data['relay'] = [];
         if ($data->is_relay == 1) { // 是否有转发内容
             $data['relay'] = $dao->getForwardMessageByIds(explode(',', $data->message_id));
@@ -117,6 +119,7 @@ class InternalMessageController extends Controller
                 $data['relay'][$key]['file'] = $val->file;
             }
         }
+        $data->makeHidden('user');
         return JsonBuilder::Success($data);
     }
 
