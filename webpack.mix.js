@@ -36,3 +36,9 @@ mix.copyDirectory(
 
 mix.copy('resources/sass/smart/extra_page.css','public/css/extra_page.css');
 mix.copy('resources/js/smart/extra_page.js','public/js/extra_page.js');
+
+// 导入所见即所得编辑器 RedActor
+mix.copyDirectory(
+    'resources/redactor',
+    'public/redactor'
+);

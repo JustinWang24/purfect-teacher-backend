@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Statics;
 
 use App\Dao\Schools\SchoolDao;
+use App\Models\RecruitStudent\RecruitNote;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
@@ -35,6 +36,13 @@ class PagesController extends Controller
     public function school_enrolment_notes(Request $request){
         $this->dataForView['pageTitle'] = '报名须知';
         $this->dataForView['api_token'] = Auth::user()->api_token ?? null;
+
+        $this->dataForView['note'] = RecruitNote::where('school_id',1)->first();
+
         return view('h5_apps.student.school_enrolment_notes', $this->dataForView);
+    }
+
+    public function school_enrol_plan(Request $request){
+        dd(1111);
     }
 }
