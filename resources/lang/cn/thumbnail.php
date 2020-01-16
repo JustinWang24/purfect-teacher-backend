@@ -153,11 +153,12 @@ return [
     'content-edit'=>'编辑',
     'teacher-list'=>'评教列表',
     'record-list'=>'学生评教列表',
-    'evaluate-teacher'=>'班级列表',
+    'grade-list'=>'班级列表',
     'student-list'=>'学生列表',
     'conference'=>'会议管理',
     'importer' => '导入管理',
     'result' => '结果',
-
+    'consult' => '招生咨询',
+    'note' => '报名须知',
 ];
 

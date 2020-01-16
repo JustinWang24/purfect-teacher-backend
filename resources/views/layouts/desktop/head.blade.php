@@ -31,6 +31,7 @@
     <link rel="stylesheet" href="{{ asset('assets/plugins/dropzone/dropzone.css') }}">
 
     <!-- redactor -->
-    <link rel="stylesheet" href="{{ asset('assets/plugins/redactor/redactor.min.css') }}">
-
+    @if($redactor)
+    <link rel="stylesheet" href="{{ asset('redactor/redactor.min.css') }}">
+    @endif
 </head>
