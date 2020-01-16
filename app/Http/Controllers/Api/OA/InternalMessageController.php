@@ -139,7 +139,7 @@ class InternalMessageController extends Controller
         if ($type == InternalMessage::DELETE) {
             $result = $dao->updateMessage($id, ['status' => InternalMessage::STATUS_ERROR]);
         } else {
-            $result = $dao->updateMessage($id, ['type' => InternalMessage::TYPE_SENT]);
+            $result = $dao->updateMessage($id, ['type' => InternalMessage::TYPE_READ]);
         }
 
         if ($result) {
