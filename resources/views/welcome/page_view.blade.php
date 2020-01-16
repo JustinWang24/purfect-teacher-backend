@@ -14,7 +14,7 @@
 	}
 </style>
 </head>
-<body style="background: #e8e8e8;font-family: '微软雅黑';font-size: 85%;">
+<body style="margin:10px;font-family: '微软雅黑';font-size: 85%;">
 {{$content}}
 </body>
 <script>

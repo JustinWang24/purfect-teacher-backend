@@ -54,6 +54,7 @@ class wifiIssueController extends Controller
    public function add_issue_info( WifiIssueRequest $request )
    {
       $user = $request->user ();
+
       $param = $request->only (
          [
             'typeone_id' , 'typeone_name' , 'typetwo_id' , 'typetwo_name' ,
