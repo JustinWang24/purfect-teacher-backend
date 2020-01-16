@@ -16,14 +16,14 @@ class InternalMessageDao
         try{
 
             $message = InternalMessage::create($data);
-
+                
             $messageIds = $message->id; // 用于转发
 
             if ($data['is_relay'] == InternalMessage::IS_RELAY) {
                 $relay = $this->getInternalMessageById($data['relay_id']);
                 $messageIds = $message->id.','.$relay['message_id'];
             }
-
+                
             $this->updateMessage($message->id, ['message_id' => $messageIds]); // 修改转发字段 用于转发
 
             // 处理收件人数据
