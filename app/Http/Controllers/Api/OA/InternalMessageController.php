@@ -30,18 +30,8 @@ class InternalMessageController extends Controller
         $type        = $request->get('type');
         $isRelay     = $request->get('isRelay');
         $relayId     = $request->get('relayId');
-        $files       = $request->file('image');
+        $fileArr     = $request->get('image');
         $isFile      = $request->file('isFile');
-
-        $fileArr = [];
-        if ($files) {
-            foreach ($files as $key => $file) {
-                $fileArr[$key]['name'] = $file->getClientOriginalName();
-                $fileArr[$key]['type'] = $file->extension();
-                $fileArr[$key]['size'] = getFileSize($file->getSize());
-                $fileArr[$key]['path'] = InternalMessage::internalMessageUploadPathToUrl($file->store(InternalMessage::DEFAULT_UPLOAD_PATH_PREFIX));
-            }
-        }
 
         $dao = new InternalMessageDao;
 
@@ -147,6 +137,25 @@ class InternalMessageController extends Controller
         } else {
             return JsonBuilder::Error('更新失败');
         }
+    }
+
+    /**
+     * 上传图片
+     */
+    public function uploadFiles(MyStandardRequest $request)
+    {
+        $files   = $request->file('file');
+        $fileArr = [];
+        if ($files) {
+            foreach ($files as $key => $file) {
+                $fileArr[$key]['name'] = $file->getClientOriginalName();
+                $fileArr[$key]['type'] = $file->extension();
+                $fileArr[$key]['size'] = getFileSize($file->getSize());
+                $fileArr[$key]['path'] = InternalMessage::internalMessageUploadPathToUrl($file->store(InternalMessage::DEFAULT_UPLOAD_PATH_PREFIX));
+            }
+        }
+
+        return JsonBuilder::Success($fileArr);
     }
 
 
