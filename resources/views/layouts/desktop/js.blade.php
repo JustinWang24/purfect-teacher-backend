@@ -34,9 +34,21 @@
 <script src="{{ asset('assets/plugins/dropzone/dropzone.js') }}"></script>
 <script src="{{ asset('assets/plugins/dropzone/dropzone-call.js') }}"></script>
 
-<!-- redactor -->
-<script src="{{ asset('assets/plugins/redactor/redactor.js') }}"></script>
-<script src="{{ asset('assets/plugins/redactor/_langs/zh_cn.js') }}"></script>
+@if($redactor) <!-- redactor -->
+<script src="{{ asset('redactor/redactor.min.js') }}"></script>
+<!-- 自动加载 redactor 的所有插件 -->
+@php
+$allPlugins = (new \App\Utils\UI\RedActor())->allPlugIns();
+@endphp
+@foreach($allPlugins as $dirName)
+    <script src="{{ asset('redactor/_plugins/'.$dirName.'/'.$dirName.'.js') }}"></script>
+@endforeach
+<script src="{{ asset('redactor/_langs/zh_cn.js') }}"></script>
+@endif
+
+@if($redactorWithVueJs) <!-- redactor的 vue 组件 -->
+<script src="{{ asset('redactor/vue-redactor.js') }}"></script>
+@endif
 
 <script src="{{ asset('assets/js/area.js') }}" charset="UTF-8"></script>
 @foreach($js as $j)

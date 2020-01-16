@@ -29,7 +29,9 @@ class Controller extends BaseController
         'the_referer'=>null,        // 跟踪客户的referer
         'autoThumbnail'=>true,      // 是否自动生成面包屑部分
         'needChart'=>false,         // 是否前端需要 Chart
-        'js' => []                  // web 需要引入的js
+        'js' => [],                 // web 需要引入的js
+        'redactor'=>false,           // 是否需要引入 redactor 编辑器
+        'redactorWithVueJs'=>false,  // 是否需要引入 redactor 编辑器的 Vuejs 组件
     ];
 
   /**
