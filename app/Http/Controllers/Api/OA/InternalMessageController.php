@@ -35,12 +35,12 @@ class InternalMessageController extends Controller
 
         $fileArr = [];
         if ($files) {
-           foreach ($files as $key => $file) {
+            foreach ($files as $key => $file) {
                 $fileArr[$key]['name'] = $file->getClientOriginalName();
                 $fileArr[$key]['type'] = $file->extension();
                 $fileArr[$key]['size'] = getFileSize($file->getSize());
                 $fileArr[$key]['path'] = InternalMessage::internalMessageUploadPathToUrl($file->store(InternalMessage::DEFAULT_UPLOAD_PATH_PREFIX));
-           }
+            }
         }
 
         $dao = new InternalMessageDao;
@@ -110,13 +110,18 @@ class InternalMessageController extends Controller
         $dao  = new InternalMessageDao;
         $data = $dao->getInternalMessageById($id);
         $data->file;
+        $data['user_username'] = $data->user->name;
+        $data['create_time'] = $data->created_at->format('Y-m-d H:i:s');
         $data['relay'] = [];
         if ($data->is_relay == 1) { // 是否有转发内容
             $data['relay'] = $dao->getForwardMessageByIds(explode(',', $data->message_id));
             foreach ($data['relay'] as $key => $val) {
+                $data['relay'][$key]['user_username'] = $data->user->name;
+                $data['relay'][$key]['create_time'] = $data->created_at->format('Y-m-d H:i:s');
                 $data['relay'][$key]['file'] = $val->file;
             }
         }
+        $data->makeHidden('user');
         return JsonBuilder::Success($data);
     }
 
@@ -134,7 +139,7 @@ class InternalMessageController extends Controller
         if ($type == InternalMessage::DELETE) {
             $result = $dao->updateMessage($id, ['status' => InternalMessage::STATUS_ERROR]);
         } else {
-            $result = $dao->updateMessage($id, ['type' => InternalMessage::TYPE_SENT]);
+            $result = $dao->updateMessage($id, ['type' => InternalMessage::TYPE_READ]);
         }
 
         if ($result) {
@@ -168,5 +173,4 @@ class InternalMessageController extends Controller
 
         return JsonBuilder::Success($data);
     }
-
 }
