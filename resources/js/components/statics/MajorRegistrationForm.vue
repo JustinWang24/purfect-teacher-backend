@@ -109,7 +109,6 @@
                 <el-button class="showMoreButton" v-on:click="save" type="primary" round>提交申请</el-button>
             </p>
         </el-form>
-        <el-scrollbar></el-scrollbar>
     </div>
 </template>
 
@@ -201,6 +200,8 @@
                 if(newVal !== oldVal){
                     cities(newVal).then(res => {
                         this.cities = res.data.data.cities;
+                        this.registrationForm.city = '';
+                        this.registrationForm.district = '';
                     })
                 }
             },
@@ -208,6 +209,7 @@
                 if(newVal !== oldVal){
                     districts(newVal).then(res => {
                         this.districts = res.data.data.districts;
+                        this.registrationForm.district = '';
                     })
                 }
             },

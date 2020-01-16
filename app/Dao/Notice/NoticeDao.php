@@ -48,7 +48,7 @@ class NoticeDao
                 NoticeMedia::create($insert);
             }
             DB::commit();
-            return new MessageBag(JsonBuilder::CODE_SUCCESS,'创建成功');
+            return new MessageBag(JsonBuilder::CODE_SUCCESS,'创建成功', $result);
         }catch (\Exception $e) {
             DB::rollBack();
             return new MessageBag(JsonBuilder::CODE_ERROR, $e->getMessage());
@@ -82,7 +82,7 @@ class NoticeDao
                 }
             }
             DB::commit();
-            return new MessageBag(JsonBuilder::CODE_SUCCESS,'创建成功');
+            return new MessageBag(JsonBuilder::CODE_SUCCESS,'创建成功', Notice::where('id', $data['id'])->first());//?update 后如何直接返回对象
         }catch (\Exception $e) {
             DB::rollBack();
             return new MessageBag(JsonBuilder::CODE_ERROR, $e->getMessage());
@@ -93,11 +93,9 @@ class NoticeDao
     /**
      * @param $type
      * @param $schoolId
-     * @param $pageNumber
-     * @param $pageSize
      * @return array
      */
-    public function getNotice($type, $schoolId, $pageNumber = 0, $pageSize = ConfigurationTool::DEFAULT_PAGE_SIZE) {
+    public function getNotice($type, $schoolId) {
         $field = ['id', 'title', 'content', 'type', 'created_at', 'inspect_id', 'image','status'];
         $map = ['type'=>$type, 'school_id'=>$schoolId, 'status'=>Notice::STATUS_PUBLISH];
         return Notice::where($map)->select($field)

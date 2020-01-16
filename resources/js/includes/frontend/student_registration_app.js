@@ -127,7 +127,6 @@ if(document.getElementById('student_registration_app')){
                         });
                     }
                 }).catch(e => {
-                    console.log(e);
                     this.$alert('服务器忙, 无法加载专业: ' + major.name + '的详情. 请稍候再试!', '加载失败', {
                         confirmButtonText: '确定',
                         type:'error',

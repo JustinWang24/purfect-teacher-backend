@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Operator;
 
 use App\Dao\Schools\OrganizationDao;
+use App\Events\SystemNotification\NoticeSendEvent;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Notice\NoticeRequest;
 use App\Dao\Notice\NoticeDao;
@@ -84,11 +85,23 @@ class NoticeController extends Controller
         $data['school_id'] = $schoolId;
         $data['user_id']   = $request->user()->id;
 
+        if($data['type'] == Notice::TYPE_NOTICE && empty($data['image'])) {
+            return JsonBuilder::Error('封面图不能为空');
+        }
+
+        if($data['type'] == Notice::TYPE_INSPECTION && empty($data['inspect_id'])) {
+            return JsonBuilder::Error('检查类型不能为空');
+        }
+
+
         $dao = new  NoticeDao;
         if (isset($data['id'])) {
             $result = $dao->update($data);
         } else {
             $result = $dao->add($data);
+        }
+        if ($result->isSuccess() && $result->getData()->status) {
+            event(new NoticeSendEvent($result->getData()));
         }
         return $result->isSuccess() ? JsonBuilder::Success() : JsonBuilder::Error($result->getMessage());
     }

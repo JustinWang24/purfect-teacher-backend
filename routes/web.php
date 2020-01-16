@@ -22,6 +22,10 @@ Route::get('/', function () {
 Route::prefix('statics')->group(function () {
     Route::get('/school/majors/list', 'Statics\PagesController@school_majors_list')->name('static.school.majors-list');
 });
+Route::prefix('static')->group(function () {
+    Route::get('/school/enrolment-notes', 'Statics\PagesController@school_enrolment_notes')->name('static.school.enrolment-notes'); // 报名须知页面
+    Route::get('/school/enrol/plan', 'Statics\PagesController@school_enrol_plan')->name('static.school.enrol-plan'); // 报名须知页面
+});
 
 Route::prefix('network-disk')->group(function () {
     // 上传文件
