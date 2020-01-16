@@ -244,7 +244,7 @@ class WelcomeUserReportDao
             $fieldArr = [
                 'users.name as user_name', // 姓名
                 'users.mobile as user_mobile', // 手机号
-                'users.email as user_email', // 邮箱
+                'users.email as email', // 邮箱
                 'institutes.id as institute_id', // 学院ID
                 'institutes.name as institute_name', // 学院ID
                 'majors.id as major_id', // 专业ID
@@ -262,6 +262,7 @@ class WelcomeUserReportDao
                 ->join('grades','grade_users.major_id','=','grades.id') // 班级信息
                 ->select($fieldArr)
                 ->first ();
+
         }
 
         // 返回用户信息
@@ -270,14 +271,14 @@ class WelcomeUserReportDao
         $data['id_number'] = !empty($userReportArr) ? (String)$userReportArr['id_number'] : (isset($getStudentProfilesInfo->id_number) ? (String)$getStudentProfilesInfo->id_number : ''); // 身份证号
         $data['gender'] = !empty($userReportArr) ? (String)$userReportArr['gender'] : (isset($getStudentProfilesInfo->gender) ? (String)$getStudentProfilesInfo->gender : 1); // 性别(1:男 2:女 )
         $data['birthday'] = !empty($userReportArr) ? (String)$userReportArr['birthday'] : (isset($getStudentProfilesInfo->birthday) ? date('Y-m-d',strtotime($getStudentProfilesInfo->birthday)) : ''); // 出身日期(2020-01-12)
-        $data['nation_id'] = !empty($userReportArr) ? (String)$userReportArr['nation_id'] : (String)$getStudentProfilesInfo->nation_code; // 民族代码
+        $data['nation_id'] = !empty($userReportArr) ? (String)$userReportArr['nation_id'] : (isset($getStudentProfilesInfo->nation_code) ? (String)$getStudentProfilesInfo->nation_code : ''); // 民族代码
         $data['nation_name'] = !empty($userReportArr) ? (String)$userReportArr['nation_name'] : (String)$getStudentProfilesInfo->nation_name; // 民族名称
         $data['political_id'] = !empty($userReportArr) ? (String)$userReportArr['political_id'] : (String)$getStudentProfilesInfo->political_code; // 政治面貌代码
         $data['political_name'] = !empty($userReportArr) ? (String)$userReportArr['political_name'] : (String)$getStudentProfilesInfo->political_name; // 政治面貌代码
-        
+
         $data['level'] = !empty($userReportArr) ? $userReportArr['level'] : (String)$baseUserInfo->level; // 学制
         $data['education_id'] = 1; // 学历
-        $data['education_name'] = '中专'; // 学历
+        $data['education_name'] = '中专'; // 学历nation_code
         $data['institute_id'] = !empty($userReportArr) ? $userReportArr['institute_id'] : (String)$baseUserInfo->institute_id;; // 学院id
         $data['institute_name'] = !empty($userReportArr) ? $userReportArr['institute_name'] : (String)$baseUserInfo->institute_name;; // 学院名称
         $data['major_id'] = !empty($userReportArr) ? $userReportArr['major_id'] : (String)$baseUserInfo->major_id;; // 专业id
@@ -286,7 +287,7 @@ class WelcomeUserReportDao
         $data['class_name'] = !empty($userReportArr) ? $userReportArr['class_name'] : (String)$baseUserInfo->class_name;; // 班级名称
         $data['email'] = !empty($userReportArr) ? $userReportArr['email'] : (String)$baseUserInfo->email;; // 邮箱
 
-        // 生源地
+        // 生源地nation_code
         $data['source_province_id'] = !empty($userReportArr) ? (String)$userReportArr['source_province_id'] : ''; // 省id
         $data['source_province_name'] = !empty($userReportArr) ? (String)$userReportArr['source_province_name'] : ''; // 省名称
         $data['source_city_id'] = !empty($userReportArr) ? (String)$userReportArr['source_city_id'] : ''; // 城市id
