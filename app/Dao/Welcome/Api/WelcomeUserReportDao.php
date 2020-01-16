@@ -274,8 +274,7 @@ class WelcomeUserReportDao
         $data['nation_name'] = !empty($userReportArr) ? (String)$userReportArr['nation_name'] : (String)$getStudentProfilesInfo->nation_name; // 民族名称
         $data['political_id'] = !empty($userReportArr) ? (String)$userReportArr['political_id'] : (String)$getStudentProfilesInfo->political_code; // 政治面貌代码
         $data['political_name'] = !empty($userReportArr) ? (String)$userReportArr['political_name'] : (String)$getStudentProfilesInfo->political_name; // 政治面貌代码
-
-
+        
         $data['level'] = !empty($userReportArr) ? $userReportArr['level'] : (String)$baseUserInfo->level; // 学制
         $data['education_id'] = 1; // 学历
         $data['education_name'] = '中专'; // 学历
