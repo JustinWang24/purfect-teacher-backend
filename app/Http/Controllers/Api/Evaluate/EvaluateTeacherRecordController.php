@@ -4,12 +4,11 @@
 namespace App\Http\Controllers\Api\Evaluate;
 
 
-use App\Dao\Evaluate\EvaluateDao;
-use App\Dao\Evaluate\EvaluateStudentDao;
-use App\Models\Evaluate\Evaluate;
-use App\Models\Evaluate\EvaluateStudent;
 use App\Utils\JsonBuilder;
+use App\Dao\Evaluate\EvaluateDao;
+use App\Models\Evaluate\Evaluate;
 use App\Http\Controllers\Controller;
+use App\Dao\Timetable\TimetableItemDao;
 use App\Dao\Evaluate\EvaluateTeacherRecordDao;
 use App\Http\Requests\Evaluate\EvaluateTeacherRecordRequest;
 
@@ -20,35 +19,37 @@ class EvaluateTeacherRecordController extends Controller
      * @param EvaluateTeacherRecordRequest $request
      * @return string
      */
-    public function create(EvaluateTeacherRecordRequest $request) {
+    public function save_evaluate(EvaluateTeacherRecordRequest $request) {
         $data = $request->getRecordData();
+
+        if(empty($data['item_id']) || empty($data['week'])) {
+            return JsonBuilder::Error('缺少参数');
+        }
+
+        $student = $data['student'];
+        $record = $data['record'];
+        $itemId = $data['item_id'];
+        unset($data['record']);
+        unset($data['student']);
+        unset($data['item_id']);
+
+        $itemDao = new TimetableItemDao();
+        $item = $itemDao->getItemById($itemId);
+        $data['year'] = $item->year;
+        $data['type'] = $item->term;
+        $data['weekday_index'] = $item->weekday_index;
+        $data['user_id'] = $item->teacher_id;
+        $data['time_slot_id'] = $item->time_slot_id;
         $dao = new EvaluateTeacherRecordDao();
-        $result = $dao->create($data);
+
+        $result = $dao->create($data, $record, $student);
         $msg = $result->getMessage();
         if($result->isSuccess()) {
-            return JsonBuilder::Success($msg);
+            $data = $result->getData();
+            return JsonBuilder::Success($data, $msg);
         } else {
             return JsonBuilder::Error($msg);
         }
-    }
-
-
-     /**
-     * 评价教师列表
-     * @param EvaluateTeacherRecordRequest $request
-     * @return string
-     */
-    public function getTeacherList(EvaluateTeacherRecordRequest $request) {
-        $data = $request->getStudentData();
-        $dao = new EvaluateStudentDao();
-        $list = $dao->getStudentByUserId($data['user_id'], $data['year'], $data['type']);
-        $teachers = [];
-        foreach ($list as $key => $val) {
-            $user = $val->evaluateTeacher->user;
-            $teachers[$key]['evaluate_teacher_id'] = $val->evaluate_teacher_id;
-            $teachers[$key]['name'] = $user->name;
-        }
-        return JsonBuilder::Success($teachers);
     }
 
 
@@ -60,26 +61,8 @@ class EvaluateTeacherRecordController extends Controller
     public function template(EvaluateTeacherRecordRequest $request) {
         $schoolId = $request->user()->getSchoolId();
         $dao = new EvaluateDao();
-        $list = $dao->pageList($schoolId,Evaluate::TYPE_TEACHER);
-        $data = pageReturn($list);
-        return JsonBuilder::Success($data);
-    }
-
-    /**
-     * 判断是否开启评教
-     * @param EvaluateTeacherRecordRequest $request
-     * @return string
-     */
-    public function isEvaluate(EvaluateTeacherRecordRequest $request) {
-        $userId = $request->user()->id;
-        $dao = new EvaluateStudentDao();
-        $return = $dao->getStudentByUserAndStatus($userId,EvaluateStudent::STATUS_NOT_EVALUATE);
-        if(is_null($return)) {
-            return JsonBuilder::Success(['status'=>false]);
-        } else {
-            return JsonBuilder::Success(['status'=>true,'evaluate'=>$return]);
-        }
-
+        $list = $dao->getEvaluate($schoolId,Evaluate::TYPE_TEACHER, 'asc');
+        return JsonBuilder::Success($list);
     }
 
 

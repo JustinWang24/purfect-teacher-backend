@@ -26,58 +26,74 @@ class EvaluateTeacherRecordDao
 
 
     /**
-     * 创建
-     * @param $data
+     * 保存评教
+     * @param $evaluate
+     * @param $record
+     * @param $student
      * @return MessageBag
      */
-    public function create($data) {
+    public function create($evaluate, $record, $student) {
         $messageBag = new MessageBag();
+        // 判断是否有学生已经提交过评教
+        $map = [
+            'user_id'=>$evaluate['user_id'],'year'=>$evaluate['year'],'type'=>$evaluate['type'],
+            'school_id'=>$evaluate['school_id'],'time_slot_id'=>$evaluate['time_slot_id'],
+            'weekday_index'=>$evaluate['weekday_index'],'week'=>$evaluate['week']
+        ];
+        $info = EvaluateTeacher::where($map)->first();
+
         try{
             DB::beginTransaction();
-            $teacher = EvaluateTeacher::where('id',$data['evaluate_teacher_id'])->first();
-
-            // 判断当前学生是否已提交对该老师的评价
-            $map = ['status'=>EvaluateStudent::STATUS_EVALUATE, 'user_id'=>$data['user_id'],
-                'year'=>$teacher['year'], 'type'=>$teacher['type']];
-            $re = EvaluateStudent::where($map)->first();
-            if(is_null($re)) {
-                $score = 0;
-
-                foreach ($data['record'] as $key => $val) {
-                    $score += $val['score'];
-                    $record = [
-                        'evaluate_id' => $val['evaluate_id'],
-                        'evaluate_teacher_id' => $data['evaluate_teacher_id'],
-                        'user_id'     => $data['user_id'],
-                        'grade_id'    => $data['grade_id'],
-                        'score'       => $val['score'],
-                    ];
-                    EvaluateTeacherRecord::create($record);
+            if(is_null($info)) {
+                // 评教老师主表
+                $info = EvaluateTeacher::create($evaluate);
+            } else {
+                $map = ['evaluate_teacher_id'=>$info->id, 'user_id'=>$student['user_id']];
+                // 查看当前学生是否已经评教
+                $evalStudent = EvaluateStudent::where($map)->first();
+                if(!is_null($evalStudent)) {
+                    $return = ['id'=>$evalStudent->id, 'score'=>$evalStudent->score];
+                    $messageBag->setData($return);
+                    $messageBag->setMessage('评教成功');
+                    DB::commit();
+                    return $messageBag;
                 }
-                // 修改学生评教状态
-                $map = ['evaluate_teacher_id'=>$data['evaluate_teacher_id'],'user_id'=>$data['user_id']];
-                $update = ['status'=>EvaluateStudent::STATUS_EVALUATE, 'score'=>$score, 'desc'=>$data['desc']];
-                EvaluateStudent::where($map)->update($update);
-
-                 // 更新老师评价主表的分值
-                $num = $teacher['num'] + 1;
-                $score = round(($teacher['score'] + $score)/$num,2);
-                $save = ['score'=>$score, 'num'=>$num ];
-                EvaluateTeacher::where('id', $data['evaluate_teacher_id'])->update($save);
 
             }
 
+            // 评教学生主表
+            $score = array_sum(array_column($record, 'score'));
+            $student['evaluate_teacher_id'] = $info->id;
+            $student['score'] = $score;
+            $evalStudent = EvaluateStudent::create($student);
+
+            foreach ($record as $key => $val) {
+                $record = [
+                    'evaluate_id' => $val['evaluate_id'],
+                    'evaluate_student_id' => $evalStudent->id,
+                    'user_id'     => $student['user_id'],
+                    'score'       => $val['score'],
+                ];
+                EvaluateTeacherRecord::create($record);
+            }
+            // 更新老师评价主表的分值
+            $num = $info['num'] + 1;
+            $score = round(($info['score'] + $score)/$num,2);
+            $save = ['score'=>$score, 'num'=>$num ];
+            EvaluateTeacher::where('id', $info->id)->update($save);
+
+
             DB::commit();
             $messageBag->setMessage('评教成功');
-            return $messageBag;
+            $messageBag->setData(['id'=>$evalStudent->id, 'score'=>$evalStudent->score]);
 
         } catch (\Exception $e) {
             DB::rollBack();
             $msg = $e->getMessage();
             $messageBag->setCode(JsonBuilder::CODE_ERROR);
             $messageBag->setMessage('评教失败'.$msg);
-            return$messageBag;
         }
+        return$messageBag;
 
     }
 }

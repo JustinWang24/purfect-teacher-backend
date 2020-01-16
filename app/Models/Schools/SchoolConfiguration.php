@@ -63,7 +63,7 @@ class SchoolConfiguration extends Model
     /**
      * 获取指定的学期的当年的起始日期
      * @param int $term
-     * @param date $date
+     * @param date $date 2020-01-01
      * @return Carbon
      */
     public function getTermStartDate($term = null, $date = null ){
@@ -85,7 +85,7 @@ class SchoolConfiguration extends Model
 
     /**
      * 返回当前学年
-     * @param $date
+     * @param date $date 2020-01-01
      * @param bool $format
      * @return int
      */
