@@ -42,6 +42,11 @@ class OrganizationController extends Controller
             $organ[$key]['id'] =$item->id;
             $organ[$key]['name'] =$item->name;
             $organ[$key]['level'] =$item->level;
+            $branches = $item->branch;
+            $organ[$key]['status'] = true;
+            if(count($branches) == 0) {
+                $organ[$key]['status'] = false;
+            }
         }
         $userOrganDao = new UserOrganizationDao();
         $members = $userOrganDao->getOrganUserByOrganId($schoolId, $parentId);
