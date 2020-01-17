@@ -28,6 +28,6 @@ class CreateRecuitNotesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('recuit_notes');
+        Schema::dropIfExists('recruit_notes');
     }
 }

@@ -7,6 +7,9 @@ use App\Models\NetworkDisk\Category;
 use App\User;
 use App\Utils\Misc\ConfigurationTool;
 use Illuminate\Support\Facades\Storage;
+use Ramsey\Uuid\Uuid;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
+
 class MediaDao {
 
      private $fieldsToLoad;
@@ -196,6 +199,36 @@ class MediaDao {
     public function getUseSize(User $user) {
         $map = ['user_id'=>$user->id];
         return Media::where($map)->sum('size');
+    }
+
+
+    /**
+     * @param User $user
+     * @param UploadedFile $file 上传的文件
+     * @return mixed
+     * @throws \Exception
+     */
+    public function upload($user, $file) {
+        $path = Media::DEFAULT_UPLOAD_PATH_PREFIX.$user->id; // 上传路径
+        $uuid = Uuid::uuid4()->toString();
+        // 这里一定要使用 storeAs, 因为 Symfony 的 Mime type guesser 似乎有 bug, 一些文件总是得到 zip 的类型
+        $url = $file->storeAs($path, $uuid.'.'.$file->getClientOriginalExtension()); // 上传并返回路径
+        $categoryDao = new CategoryDao();
+        $category = $categoryDao->getUserRootCategory($user);
+        $data = [
+            'category_id' => $category->id,
+            'uuid'        => $uuid,
+            'user_id'     => $user->id, // 文件和目录的所有着, 应该一直保持一致
+            'keywords'    => $file->getClientOriginalName(),
+            'description' => $file->getClientOriginalName(),
+            'file_name'   => $file->getClientOriginalName(),
+            'size'        => $file->getSize(),
+            'url'         => Media::ConvertUploadPathToUrl($url),
+            'type'        => Media::ParseFileType($file->getClientOriginalExtension()),
+            'driver'      => Media::DRIVER_LOCAL,
+        ];
+
+        return Media::create($data);
     }
 
 }
