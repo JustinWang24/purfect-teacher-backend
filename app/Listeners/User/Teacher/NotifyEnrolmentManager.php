@@ -27,7 +27,7 @@ class NotifyEnrolmentManager
      */
     public function handle(HasRegistrationForm $event)
     {
-        //
+        //@TODO 消息中心并未提及学生报名的消息通知 暂不修改
         InternalMessage::dispatchNow(
             $event->getForm()->school_id,
             $event->getForm()->lastOperator->id,

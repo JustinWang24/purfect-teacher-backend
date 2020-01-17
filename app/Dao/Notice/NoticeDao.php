@@ -167,15 +167,17 @@ class NoticeDao
                 NoticeOrganization::create($organization);
             }
 
-            foreach ($file as $key => $value) {
-                $media = $mediaDao->upload($user,$value);
-                $attachments = [
-                    'notice_id' => $notice->id,
-                    'media_id' => $media->id,
-                    'file_name' => $media->file_name,
-                    'url' => $media->url,
-                ];
-                NoticeMedia::create($attachments);
+            if(!is_null($file)) {
+                foreach ($file as $key => $value) {
+                    $media = $mediaDao->upload($user,$value);
+                    $attachments = [
+                        'notice_id' => $notice->id,
+                        'media_id' => $media->id,
+                        'file_name' => $media->file_name,
+                        'url' => $media->url,
+                    ];
+                    NoticeMedia::create($attachments);
+                }
             }
 
             DB::commit();

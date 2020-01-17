@@ -89,7 +89,10 @@ class SchoolConfiguration extends Model
      * @param bool $format
      * @return int
      */
-    public function getSchoolYear($date, $format = false) {
+    public function getSchoolYear($date = null , $format = false) {
+        if(is_null($date)) {
+            $date = Carbon::now()->toDateString();
+        }
         $time = $this->first_day_term_1->format('m-d'); // 第一学期的开始日期
         $year = Carbon::parse($date)->year;
         $nextSchoolYear = $year.'-'.$time;
