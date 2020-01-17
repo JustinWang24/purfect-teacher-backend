@@ -24,7 +24,6 @@ class SystemNotification extends Model
     const STUDENT_CATEGORY_QRCODE = 101;//学生端一码通
     const STUDENT_CATEGORY_RECRUITMENT = 102;//学生端招生
     const STUDENT_CATEGORY_ENROLMENT = 103;//学生端迎新
-    const STUDENT_CATEGORY_PIPELINE = 104;//学生端审批
     const STUDENT_CATEGORY_ATTENDANCE = 106;//学生端值周
     const STUDENT_CATEGORY_COURSE = 107;//学生端选课
     const STUDENT_CATEGORY_COURSEWARE = 108;//学生端课件
@@ -40,7 +39,6 @@ class SystemNotification extends Model
 
     const TEACHER_CATEGORY_ATTENDANCE = 201;//教师端值周
     const TEACHER_CATEGORY_OAATTENDANCE = 202;//教师端考勤
-    const TEACHER_CATEGORY_PIPELINE = 203;//教师端审批
     const TEACHER_CATEGORY_APPLY = 204;//教师端申请
     const TEACHER_CATEGORY_MEETING = 205;//教师端会议
     const TEACHER_CATEGORY_PROJECT = 206;//教师端项目
@@ -58,6 +56,7 @@ class SystemNotification extends Model
     const COMMON_CATEGORY_NOTICE_NOTICE = 302;//公告
     const COMMON_CATEGORY_NOTICE_INSPECTION = 303;//检查
     const COMMON_CATEGORY_WIFI = 304;//校园网
+    const COMMON_CATEGORY_PIPELINE = 305;//审批 @TODO 工作流程加入事件监听后会拆分不同类型
 
 
     protected $fillable = [
