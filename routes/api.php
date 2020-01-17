@@ -22,7 +22,7 @@ Route::prefix('school')->middleware('auth:api')->group(function () {
     // 加载学校的作息时间表
     Route::any('/load-time-slots','Api\School\TimeSlotsController@load_by_school')
         ->name('api.school.load.time.slots');
-    
+
     Route::any('/save-time-slot','Api\School\TimeSlotsController@save_time_slot')
         ->name('api.school.save.time.slot');
 
@@ -248,7 +248,6 @@ Route::prefix('course')->middleware('auth:api')->group(function () {
      // 选课查询报名结果操作
      Route::post('/elective/getresult/{id}','Api\Course\ElectiveController@getEnrollResult')
         ->name('api.course.elective.getresult');
-
      // 教师端课件
      Route::post('/getApiCourseDownloadListInfo','Api\Course\CourseWareController@index')
         ->name('api.teacher.course.ware');
@@ -782,9 +781,23 @@ Route::prefix('Oa')->middleware('auth:api')->group(function () {
     Route::post('/message-update-or-del','Api\OA\InternalMessageController@updateOrDelMessage')
         ->name('api.oa.update.or.del.message');
     // 更新信件
-    
+
     // 上传附件
     Route::post('/message-upload-files', 'Api\OA\InternalMessageController@uploadFiles')
         ->name('api.oa.upload.files');
+});
+
+
+// 工作日志
+Route::prefix('Oa')->middleware('auth:api')->group(function () {
+    // 添加
+    Route::post('/add-work-log', 'Api\OA\WorkLogController@index')
+        ->name('api.oa.add.work.log');
+    // 列表
+    Route::post('/list-work-log', 'Api\OA\WorkLogController@workLogList')
+        ->name('api.oa.work.log.list');
+    // 详情
+    Route::post('/work-log-info', 'Api\OA\WorkLogController@workLogInfo')
+        ->name('api.oa.work.log.info');
 
 });
