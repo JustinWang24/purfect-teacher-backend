@@ -4,9 +4,9 @@
 namespace App\Http\Controllers\Api\Notice;
 
 
-use App\Models\Notices\Notice;
 use App\Utils\JsonBuilder;
 use App\Dao\Notice\NoticeDao;
+use App\Models\Notices\Notice;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Notice\NoticeRequest;
 
@@ -62,4 +62,35 @@ class NoticeController extends Controller
         $dao->addReadLog($data);
         return JsonBuilder::Success(['notice'=>$result]);
     }
+
+
+    /**
+     * 发布通知
+     * @param NoticeRequest $request
+     * @return string
+     */
+    public function issueNotice(NoticeRequest $request) {
+        $user = $request->user();
+        $data = $request->all();
+        $data['school_id'] = $user->getSchoolId();
+        $data['user_id'] = $user->id;
+        $data['type'] = Notice::TYPE_NOTIFY;
+        $organizationIds = $data['organization_id'];
+
+        unset($data['attachments']);
+        unset($data['organization_id']);
+        $file = $request->file('attachments');
+        $dao = new NoticeDao();
+        $result = $dao->issueNotice($data, $organizationIds, $file, $user);
+
+        $msg = $result->getMessage();
+        if($result->isSuccess()) {
+            $data = $result->getData();
+            return JsonBuilder::Success($data, $msg);
+        } else {
+            return JsonBuilder::Error($msg);
+        }
+
+    }
+
 }

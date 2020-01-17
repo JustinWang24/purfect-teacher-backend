@@ -2,13 +2,17 @@
 
 namespace App\Dao\Notice;
 
+use App\Dao\NetworkDisk\CategoryDao;
+use App\Dao\NetworkDisk\MediaDao;
 use App\Models\Notices\Notice;
 use App\Models\Notices\NoticeMedia;
+use App\Models\Notices\NoticeOrganization;
 use App\Models\Notices\NoticeReadLogs;
 use App\Utils\JsonBuilder;
 use App\Utils\Misc\ConfigurationTool;
 use App\Utils\ReturnData\MessageBag;
 use Illuminate\Support\Facades\DB;
+use Psy\Util\Json;
 
 class NoticeDao
 {
@@ -87,6 +91,7 @@ class NoticeDao
             DB::rollBack();
             return new MessageBag(JsonBuilder::CODE_ERROR, $e->getMessage());
         }
+        // notice_s
     }
 
 
@@ -128,5 +133,54 @@ class NoticeDao
      */
     public function addReadLog($data) {
         return NoticeReadLogs::create($data);
+    }
+
+
+    /**
+     * 发布通知
+     * @param $data
+     * @param $organizationIds
+     * @param $file
+     * @param $user
+     * @return MessageBag
+     */
+    public function issueNotice($data, $organizationIds, $file, $user) {
+
+        $messageBag = new MessageBag();
+        $mediaDao = new MediaDao();
+        try{
+            DB::beginTransaction();
+            $notice = Notice::create($data);
+
+            foreach ($organizationIds as $key => $item) {
+                $organization = [
+                    'school_id' => $data['school_id'],
+                    'notice_id' => $notice->id,
+                    'organization_id' => $item
+                ];
+                NoticeOrganization::create($organization);
+            }
+
+            foreach ($file as $key => $value) {
+                $media = $mediaDao->upload($user,$value);
+                $attachments = [
+                    'notice_id' => $notice->id,
+                    'media_id' => $media->id,
+                    'file_name' => $media->file_name,
+                    'url' => $media->url,
+                ];
+                NoticeMedia::create($attachments);
+            }
+
+            DB::commit();
+            $messageBag->setMessage('提交成功');
+            $messageBag->setData(['id'=>$notice->id]);
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            $messageBag->setCode(JsonBuilder::CODE_ERROR);
+            $messageBag->setMessage('提交失败.'.$e->getMessage());
+        }
+        return $messageBag;
     }
 }

@@ -398,6 +398,9 @@ Route::prefix('notice')->middleware('auth:api')->group(function () {
     // 通知详情
     Route::post('/notice-info', 'Api\Notice\NoticeController@noticeInfo')
     ->name('api.notice.info');
+    // 发布通知
+    Route::post('/issue-notice', 'Api\Notice\NoticeController@issueNotice')
+        ->name('api.notice.issue-notice');
 });
 
 // APP banner 接口
