@@ -108,7 +108,7 @@ class NoticeDao
             $join->on('notice_organizations.notice_id', '=', 'notices.id')
                 ->where($map)->WhereIn('notice_organizations.organization_id', $organizationId);
         })->select($field)
-            ->orderBy('notices.created_at', 'desc')
+            ->orderBy('created_at', 'desc')
             ->paginate(ConfigurationTool::DEFAULT_PAGE_SIZE);
 
     }
