@@ -17,4 +17,9 @@ class NoticeOrganization extends Model
 
     public $timestamps = false;
 
+
+    public function notice() {
+        return $this->belongsTo(Notice::class);
+    }
+
 }

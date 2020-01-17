@@ -14,28 +14,30 @@ class NoticeController extends Controller
 {
 
     /**
-     * 前端 APP 获取通知列表
+     * 获取通知列表 指定的部门才能看见
      * @param NoticeRequest $request
      * @return string
      */
     public function getNotice(NoticeRequest $request) {
-        $userId = $request->user()->id;
+        $user = $request->user();
+        $organizations = $user->organizations;
+        $organizationId = $organizations->pluck('organization_id')->toArray();
         $type = $request->getType();
         $dao = new NoticeDao();
-        $schoolId = $request->user()->getSchoolId();
-        $result = $dao->getNotice($type, $schoolId);
-
-
+        $schoolId = $user->getSchoolId();
+        $result = $dao->getNotice($type, $schoolId, $organizationId);
         foreach ($result as $key => $item) {
             $item->attachment_field = 'url';
             $item->attachments;
-            $re = $item->readLog($userId);
+            $re = $item->notice->readLog($user->id);
+
             if(is_null($re)) {
                 $item->is_read = Notice::UNREAD; // 未读
             } else {
                 $item->is_read = Notice::READ; // 已读
             }
 
+            unset($item->notice);
             $inspect = $item->inspect;
             unset($item->inspect);
             $item->inspect = $inspect->name ?? '';
