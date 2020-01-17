@@ -55,9 +55,11 @@ require('./includes/backend/news_list_manager'); // 动态新闻的管理
 require('./includes/backend/contacts_list_manager'); // 通讯录
 require('./includes/backend/textbook_manager'); // 教材
 require('./includes/backend/timeslots_manager'); // 作息时间段管理
+
 require('./includes/backend/recruitment_manager'); // 招生
 require('./includes/backend/recruitment_plan_manager'); // 招生计划
 require('./includes/backend/recruitment_enrol_manager'); // 招生录取
+
 require('./includes/backend/file_manager_app'); // 云盘管理
 require('./includes/backend/teacher_apply_new_course'); // 云盘管理
 require('./includes/backend/user_finder_app'); // 快速定位用户

@@ -138,6 +138,7 @@ Route::prefix('school_manager')->group(function () {
 
     // 招生咨询管理
     Route::get('consult/list', 'RecruitStudent\ConsultController@list')->name('school_manager.consult.list');
+    Route::any('consult/note', 'RecruitStudent\ConsultController@note')->name('school_manager.consult.note');
     Route::any('consult/add', 'RecruitStudent\ConsultController@add')->name('school_manager.consult.add');
     Route::any('consult/edit', 'RecruitStudent\ConsultController@edit')->name('school_manager.consult.edit');
     Route::get('consult/delete', 'RecruitStudent\ConsultController@delete')->name('school_manager.consult.delete');

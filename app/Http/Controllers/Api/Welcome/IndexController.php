@@ -47,24 +47,12 @@ class IndexController extends Controller
         // 获取是否已完善信息
         $WelcomeUserReportDao = new  WelcomeUserReportDao();
 
-        $getWelcomeUserReportOneInfoField = ['flow_id', 'status'];
+        $getWelcomeUserReportOneInfoField = ['configid','flow_id','steps_1_date','steps_2_date','complete_date', 'status'];
 
         $getWelcomeUserReportOneInfo = $WelcomeUserReportDao->getWelcomeUserReportOneInfo($user_id,$getWelcomeUserReportOneInfoField);
 
-        if (empty($getWelcomeUserReportOneInfo) || $getWelcomeUserReportOneInfo->status != 1)
-        {
-            // 获取迎新配置信息
-            $checkUserIsWelcomeInfo = $WelcomeUserReportDao->checkUserIsWelcomeInfo($campus_id, $user_id);
-
-            // 迎新已完成
-            $data['status'] = $checkUserIsWelcomeInfo['status'];
-            $data['message'] = $checkUserIsWelcomeInfo['message'];
-
-        } else {
-            // 迎新已完成
-            $data['status'] = 1;
-            $data['message'] = '已完成';
-        }
+        // 获取迎新配置信息
+        $checkUserIsWelcomeInfo = $WelcomeUserReportDao->checkUserIsWelcomeInfo( $campus_id, $user_id);
 
         // 获取配置信息
         $infos = [];
@@ -84,28 +72,44 @@ class IndexController extends Controller
                 {
                     foreach($val['data'] as $k=>&$v)
                     {
-                        // 个人信息(A)
-                        if($v['letter'] == 'A')
+                        // 如果个人已经报到，按照个人报到信息展示
+                        if(!empty($getWelcomeUserReportOneInfo->configid))
                         {
-                            $v['notice'] = $data['status'] == 1 ? '已完成' : '';
-                            $v['status'] = $data['status'] == 1 ? 1: 2;
-                            $v['message'] = '';
-                        }
+                            // 个人信息(A)
+                            if($v['letter'] == 'A')
+                            {
+                                $checkWelcomeUserReportOneInfo = $WelcomeUserReportDao->checkWelcomeUserReportOneInfo($getWelcomeUserReportOneInfo,'A');
 
-                        // 报到扫码(B)
-                        if($v['letter'] == 'B')
-                        {
-                            $v['notice'] = $data['status'] == 1 ? '已完成' : '';
-                            $v['status'] = $data['status'] == 1 ? 1 : 0;
-                            $v['message'] = $data['status'] == 1 ? '' : $data['message'];
-                        }
+                                $v['notice'] = $checkWelcomeUserReportOneInfo['notice'];
+                                $v['status'] = $checkWelcomeUserReportOneInfo['status'];// 0：弹出message，1：表示已完成，2：为未完善信息
+                                $v['message'] = $checkWelcomeUserReportOneInfo['message'];
+                            }
 
-                        // 报到单(C)
-                        if($v['letter'] == 'C')
-                        {
-                            $v['notice'] = '';
-                            $v['status'] = $data['status'] == 1 ? 1 : 0;
-                            $v['message'] = $data['status'] == 1 ? '' : $data['message'];
+                            // 报到扫码(B)
+                            if($v['letter'] == 'B')
+                            {
+                                $checkWelcomeUserReportOneInfo = $WelcomeUserReportDao->checkWelcomeUserReportOneInfo($getWelcomeUserReportOneInfo,'B');
+
+                                $v['notice'] = $checkWelcomeUserReportOneInfo['notice'];
+                                $v['status'] = $checkWelcomeUserReportOneInfo['status'];
+                                $v['message'] = $checkWelcomeUserReportOneInfo['message'];
+                            }
+
+                            // 报到单(C)
+                            if($v['letter'] == 'C')
+                            {
+                                $checkWelcomeUserReportOneInfo = $WelcomeUserReportDao->checkWelcomeUserReportOneInfo($getWelcomeUserReportOneInfo,'C');
+
+                                $v['notice'] = $checkWelcomeUserReportOneInfo['notice'];
+                                $v['status'] = $checkWelcomeUserReportOneInfo['status'];
+                                $v['message'] = $checkWelcomeUserReportOneInfo['message'];
+                            }
+
+                        } else {
+                            // 学校全局配置验收
+                            $v['notice'] = $checkUserIsWelcomeInfo['notice']; // 提示信息
+                            $v['status'] = $checkUserIsWelcomeInfo['status']; // 0：弹出message
+                            $v['message'] = $checkUserIsWelcomeInfo['message'];
                         }
                     }
                 }
@@ -138,6 +142,19 @@ class IndexController extends Controller
         $WelcomeUserReportDao = new WelcomeUserReportDao();
 
         $infos = $WelcomeUserReportDao->getUserReportOrUserProfilesInfo($user_id);
+
+
+        $WelcomeConfigDao = new WelcomeConfigDao();
+
+        $getWelcomeConfigOneInfo = $WelcomeConfigDao->getWelcomeConfigOneInfo( $campus_id , $fieldArr = ['config_content1'] );
+
+        // 报到流程
+        $infos['config_content1'] = '';
+        
+        if(!empty($getWelcomeConfigOneInfo->config_content1))
+        {
+            $infos['config_content1'] = $getWelcomeConfigOneInfo->config_content1;
+        }
 
         return JsonBuilder::Success($infos, '个人信息(编辑页)');
     }
@@ -172,16 +189,26 @@ class IndexController extends Controller
             return JsonBuilder::Error('数据格式错误');
         }
 
+        $WelcomeUserReportDao = new WelcomeUserReportDao();
+
+        // 验证是否有权限操作迎新
+        $checkUserIsWelcomeInfo = $WelcomeUserReportDao->checkUserIsWelcomeInfo( $campus_id, $user_id);
+        if($checkUserIsWelcomeInfo['status'] != true)
+        {
+            return JsonBuilder::Error($checkUserIsWelcomeInfo['message']);
+        }
+
         // 添加或更新数据
-        $data['flow_id'] = 1; //TODO.....
+        $data['flow_id'] = 1;
         $data['user_id'] = $user_id;
         $data['school_id'] = $school_id;
         $data['campus_id'] = $campus_id;
         $data['steps_1_str'] = json_encode($steps_1_Arr);
         $data['steps_1_date'] = date('Y-m-d H:i:s');
+        $data['steps_2_date'] = null;
+        $data['complete_date'] = null;
 
-        // 获取用户基础信息
-        $WelcomeUserReportDao = new WelcomeUserReportDao();
+
 
         $getWelcomeUserReportOneInfo = $WelcomeUserReportDao->getWelcomeUserReportOneInfo($user_id);
 
@@ -218,6 +245,15 @@ class IndexController extends Controller
         $school_id = $user->gradeUser->school_id;
         $campus_id = $user->gradeUser->campus_id;
 
+        $WelcomeUserReportDao = new WelcomeUserReportDao();
+
+        // 验证是否有权限操作迎新
+        $checkUserIsWelcomeInfo = $WelcomeUserReportDao->checkUserIsWelcomeInfo( $campus_id, $user_id);
+        if($checkUserIsWelcomeInfo['status'] != true)
+        {
+            return JsonBuilder::Error($checkUserIsWelcomeInfo['message']);
+        }
+
         if (!intval($user_id) || !intval($school_id) || !intval($campus_id)) {
             return JsonBuilder::Error('参数错误');
         }
@@ -251,13 +287,10 @@ class IndexController extends Controller
         ];
 
         // 添加或更新数据
-        $data['status'] = 1;
         $data['steps_2_str'] = json_encode($picsArr);
         $data['steps_2_date'] = date('Y-m-d H:i:s');
-        $data['complete_date'] = date('Y-m-d H:i:s');
+        $data['complete_date'] = null;
 
-        // 获取用户基础信息
-        $WelcomeUserReportDao = new WelcomeUserReportDao();
         $getWelcomeUserReportOneInfo = $WelcomeUserReportDao->getWelcomeUserReportOneInfo($user_id);
 
         // 验证基础信息是否完善
@@ -395,8 +428,8 @@ class IndexController extends Controller
             // 费用信息
             ['title'=>'费用信息','dataList' => array(
                 array('title'=>'学费','notice'=>'已缴费','value'=>'5000.00'),
-                array('title'=>'书费','notice'=>'已缴费','value'=>'1000.00'),
-                array('title'=>'住宿费','notice'=>'已缴费','value'=>'800.00'),
+                array('title'=>'书费','notice'=>'','value'=>'1000.00'),
+                array('title'=>'住宿费','notice'=>'','value'=>'800.00'),
                 array('title'=>'宿舍','notice'=>'','value'=>'1号楼3层309'),
                 array('title'=>'生活用品','notice'=>'未领取','value'=>'125.00'),
                 array('title'=>'军训用品','notice'=>'未领取','value'=>'100.00'),
