@@ -9,12 +9,14 @@ use App\Models\Courses\CourseTeacher;
 use App\Models\Forum\Community;
 use App\Models\Misc\Enquiry;
 use App\Models\NetworkDisk\Category;
+use App\Models\Schools\Organization;
 use App\Models\Schools\RecruitmentPlan;
 use App\Models\Students\StudentProfile;
 use App\Models\Students\StudentTextbook;
 use App\Models\Teachers\TeacherProfile;
 use App\Models\Users\GradeUser;
 use App\Models\Users\UserDevice;
+use App\Models\Users\UserOrganization;
 use App\Utils\Pipeline\IFlow;
 use App\Utils\Pipeline\IUser;
 use Illuminate\Notifications\Notifiable;
@@ -373,5 +375,14 @@ class User extends Authenticatable implements HasMobilePhone, HasDeviceId, IUser
     public function community()
     {
         return $this->hasMany(Community::class, 'user_id', 'id');
+    }
+
+    /**
+     * 组织架构的部门
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function organizations()
+    {
+        return $this->hasMany(UserOrganization::class);
     }
 }
