@@ -10,6 +10,7 @@ namespace App\Http\Controllers\Api\School;
 
 
 use App\Dao\Schools\OrganizationDao;
+use App\Dao\Teachers\TeacherProfileDao;
 use App\Dao\Users\UserDao;
 use App\Dao\Users\UserOrganizationDao;
 use App\Http\Controllers\Controller;
@@ -55,6 +56,16 @@ class OrganizationController extends Controller
                 $userOrganDao = new UserOrganizationDao();
                 $members = $userOrganDao->getOrganUserByOrganId($schoolId, $parentId);
             }
+        }
+
+        $userIds  = array_column($members->toArray(),'id');
+        $teacherDao = new TeacherProfileDao();
+        $profile = $teacherDao->getTeacherProfileByUserIds($userIds)->toArray();
+        $title = array_column($profile,'title', 'user_id');
+        $avatar = array_column($profile, 'avatar', 'user_id');
+        foreach ($members as $key => $item) {
+            $item->title = $title[$item->id] ?? '';
+            $item->avatar = $avatar[$item->id] ?? '';
         }
 
         $data = [
