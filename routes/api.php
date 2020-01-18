@@ -810,8 +810,8 @@ Route::prefix('Oa')->middleware('auth:api')->group(function () {
 
 
 // 签到评分
-Route::prefix('sign-in-grade')->middleware('auth:api')->group(function () {
-//    Route::get('/class-list', 'Api\OA\WorkLogController@index')
-//        ->name('api.oa.add.work.log');
+Route::prefix('signInGrade')->middleware('auth:api')->group(function () {
+    Route::get('/classList', 'Api\AttendanceSchedule\SignInGradeController@courseClassList')
+        ->name('api.signInGrade.classList');
 
 });

@@ -7,15 +7,16 @@
  */
 
 namespace App\Dao\Timetable;
+use Carbon\Carbon;
 use App\Models\School;
 use App\Models\Schools\Room;
-use App\Models\Schools\SchoolConfiguration;
-use App\Models\Timetable\TimeSlot;
-use App\Models\Timetable\TimetableItem;
+use App\Dao\Schools\SchoolDao;
 use App\Utils\Time\CalendarWeek;
-use App\Utils\Time\GradeAndYearUtil;
-use Carbon\Carbon;
 use Illuminate\Support\Collection;
+use App\Models\Timetable\TimeSlot;
+use App\Utils\Time\GradeAndYearUtil;
+use App\Models\Timetable\TimetableItem;
+use App\Models\Schools\SchoolConfiguration;
 
 class TimeSlotDao
 {
@@ -204,5 +205,36 @@ class TimeSlotDao
             ->where('time_slot_id', $currentTimeSlot->id)
             ->with('timeslot')
             ->first();
+    }
+
+
+    /**
+     * 获取当前时间的第几节课
+     * @param $schoolId
+     * @param $term
+     * @param null $time
+     * @return mixed
+     */
+    public function getTimeSlotByCurrentTime($schoolId, $term = null, $time = null) {
+
+        if(is_null($term)) {
+            $month = Carbon::now()->month;
+            $schoolDao = new SchoolDao();
+            $school = $schoolDao->getSchoolById($schoolId);
+            $configuration = $school->configuration;
+            $term = $configuration->guessTerm($month);
+        }
+
+        if(is_null($time)) {
+            $time = Carbon::now()->toTimeString();
+        }
+
+        $map = [
+            ['school_id', '=', $schoolId],
+            ['from', '<', $time],
+            ['to', '>', $time],
+            ['season', '=', $term]
+        ];
+        return TimeSlot::where($map)->first();
     }
 }

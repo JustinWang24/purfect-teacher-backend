@@ -11,7 +11,9 @@
             data() {
                 return {
                     content: '<h1>Hello and welcome</h1>',
-                    configOptions: {}
+                    configOptions: {
+                        lang:'zh_cn', // 语言使用中文
+                    }
                 }
             }
         });
