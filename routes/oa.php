@@ -68,16 +68,17 @@ Route::prefix('task')->middleware('auth:api')->group(function () {
 
 Route::prefix('attendance')->middleware('auth:api')->group(function () {
 
-    Route::any('/postTodayInfo','Api\OA\OaAttendanceTeacherController@postTodayInfo')
-        ->name('oa.attendance.postTodayInfo');
-    Route::any('/getTodayInfo','Api\OA\OaAttendanceTeacherController@getTodayInfo')
+    Route::any('/getTodayInfo','Api\TeacherAttendance\AttendanceController@getTodayInfo')
         ->name('oa.attendance.getTodayInfo');
+    Route::any('/postTodayInfo','Api\TeacherAttendance\AttendanceController@postTodayInfo')
+        ->name('oa.attendance.postTodayInfo');
+    Route::any('/mac_add','Api\TeacherAttendance\AttendanceController@macAdd')
+        ->name('oa.attendance.mac_add');
+
     Route::any('/getMissList','Api\OA\OaAttendanceTeacherController@getMissList')
         ->name('oa.attendance.getMissList');
     Route::any('/getJsMonthCount','Api\OA\OaAttendanceTeacherController@getJsMonthCount')
         ->name('oa.attendance.getJsMonthCount');
-    Route::any('/mac_add','Api\OA\OaAttendanceTeacherController@mac_add')
-        ->name('oa.attendance.mac_add');
     Route::any('/apply_add','Api\OA\OaAttendanceTeacherController@apply_add')
         ->name('oa.attendance.apply_add');
     Route::any('/apply_list','Api\OA\OaAttendanceTeacherController@apply_list')
