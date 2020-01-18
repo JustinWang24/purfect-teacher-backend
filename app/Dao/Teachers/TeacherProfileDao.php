@@ -89,4 +89,13 @@ class TeacherProfileDao
                 $query->where('type', Role::TEACHER);
         }])->get();
     }
+
+
+    /**
+     * @param $userIds
+     * @return mixed
+     */
+    public function getTeacherProfileByUserIds($userIds) {
+        return TeacherProfile::whereIn('user_id', $userIds)->get();
+    }
 }
