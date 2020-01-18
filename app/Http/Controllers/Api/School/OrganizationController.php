@@ -40,21 +40,21 @@ class OrganizationController extends Controller
             } else {
                 $result = $dao->getByParentId($schoolId, $parentId);
             }
-            foreach ($result as $key => $item) {
-                $organ[$key]['id'] =$item->id;
-                $organ[$key]['name'] =$item->name;
-                $organ[$key]['level'] =$item->level;
-                $branches = $item->branch;
-                $organ[$key]['status'] = true;
-                if(count($branches) == 0) {
-                    $organ[$key]['status'] = false;
-                }
-            }
+            $organ = $this->organDataDispose($result);
             $userOrganDao = new UserOrganizationDao();
             $members = $userOrganDao->getOrganUserByOrganId($schoolId, $parentId);
         } else {
-            $userDao = new UserDao();
-            $members = $userDao->getTeachersBySchool($schoolId, true, $keyword);
+
+            if(!empty($keyword)) {
+                $userDao = new UserDao();
+                $members = $userDao->getTeachersBySchool($schoolId, true, $keyword);
+            } else {
+                $result = $dao->getByParentId($schoolId, $parentId);
+
+                $organ = $this->organDataDispose($result);
+                $userOrganDao = new UserOrganizationDao();
+                $members = $userOrganDao->getOrganUserByOrganId($schoolId, $parentId);
+            }
         }
 
         $data = [
@@ -62,6 +62,28 @@ class OrganizationController extends Controller
             'members' => $members
         ];
         return JsonBuilder::Success($data);
+    }
+
+
+    /**
+     * 数据处理
+     * @param $data
+     * @return array
+     */
+    public function organDataDispose($data) {
+        $organ = [];
+        foreach ($data as $key => $item) {
+            $organ[$key]['id'] =$item->id;
+            $organ[$key]['name'] =$item->name;
+            $organ[$key]['level'] =$item->level;
+            $branches = $item->branch;
+            $organ[$key]['status'] = true;
+            if(count($branches) == 0) {
+                $organ[$key]['status'] = false;
+            }
+        }
+
+        return $organ;
     }
 
 }
