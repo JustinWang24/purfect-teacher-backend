@@ -120,7 +120,7 @@ class UserOrganizationDao
      * @return mixed
      */
     public function getOrganUserByOrganId($schoolId, $organId) {
-        $field = ['user_id', 'title', 'name'];
+        $field = ['user_id as id', 'title', 'name'];
         $map = ['school_id'=>$schoolId, 'organization_id'=>$organId];
         return UserOrganization::where($map)
             ->select($field)->get();
