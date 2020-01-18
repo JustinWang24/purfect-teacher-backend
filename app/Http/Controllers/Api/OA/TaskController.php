@@ -133,7 +133,7 @@ class TaskController extends Controller
         $output['task_title'] = $task->title;
         $output['task_content'] = $task->content;
         $output['create_time'] = $task->created_at;
-        $output['ent_time'] = $task->ent_time;
+        $output['end_time'] = $task->end_time;
         $output['projectid'] = $task->project_id;
         $output['project_title'] = $task->project->title ?? '';
         $output['leader_userid'] = $task->user_id;

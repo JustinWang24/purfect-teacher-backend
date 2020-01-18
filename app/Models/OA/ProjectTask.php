@@ -3,6 +3,7 @@
 namespace App\Models\OA;
 
 use App\User;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
 class ProjectTask extends Model
@@ -81,5 +82,16 @@ class ProjectTask extends Model
      */
     public function taskLogs() {
         return $this->hasMany(ProjectTaskLog::class, 'task_id')->orderBy('created_at');
+    }
+
+
+    public function getCreatedAtAttribute($value)
+    {
+        return Carbon::parse($value)->format('Y-m-d H:i');
+    }
+
+    public function getEndTimeAttribute($value)
+    {
+        return Carbon::parse($value)->format('Y-m-d H:i');
     }
 }
