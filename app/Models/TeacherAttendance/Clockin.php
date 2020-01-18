@@ -15,6 +15,10 @@ class Clockin extends Model
     const STATUS_LATE = 2;//迟到
     const STATUS_LATER = 3;//严重迟到
     const STATUS_EARLY = 4;//早退
+
+    const SOURCE_APP = 1;//客户端打卡
+    const SOURCE_APPLY = 2;//审批补卡
+
     //
     public $table = 'teacher_attendance_clockins';
     protected $fillable = [

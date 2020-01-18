@@ -9,6 +9,11 @@ use App\Utils\ReturnData\MessageBag;
 
 class UserMacDao
 {
+    /**
+     * 创建考勤Mac地址
+     * @param $data
+     * @return MessageBag
+     */
     public function create($data)
     {
         try{

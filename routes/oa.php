@@ -68,55 +68,15 @@ Route::prefix('task')->middleware('auth:api')->group(function () {
 
 Route::prefix('attendance')->middleware('auth:api')->group(function () {
 
-    Route::any('/getTodayInfo','Api\TeacherAttendance\AttendanceController@getTodayInfo')
+    Route::post('/getTodayInfo','Api\TeacherAttendance\AttendanceController@getTodayInfo')
         ->name('oa.attendance.getTodayInfo');
-    Route::any('/postTodayInfo','Api\TeacherAttendance\AttendanceController@postTodayInfo')
+    Route::post('/postTodayInfo','Api\TeacherAttendance\AttendanceController@postTodayInfo')
         ->name('oa.attendance.postTodayInfo');
-    Route::any('/mac_add','Api\TeacherAttendance\AttendanceController@macAdd')
+    Route::post('/mac_add','Api\TeacherAttendance\AttendanceController@macAdd')
         ->name('oa.attendance.mac_add');
+    Route::post('/getMonthCount','Api\TeacherAttendance\AttendanceController@getMonthCount')
+        ->name('oa.attendance.getMonthCount');
 
-    Route::any('/getMissList','Api\OA\OaAttendanceTeacherController@getMissList')
-        ->name('oa.attendance.getMissList');
-    Route::any('/getJsMonthCount','Api\OA\OaAttendanceTeacherController@getJsMonthCount')
-        ->name('oa.attendance.getJsMonthCount');
-    Route::any('/apply_add','Api\OA\OaAttendanceTeacherController@apply_add')
-        ->name('oa.attendance.apply_add');
-    Route::any('/apply_list','Api\OA\OaAttendanceTeacherController@apply_list')
-        ->name('oa.attendance.apply_list');
-    Route::any('/get_relationship','Api\OA\OaAttendanceTeacherController@get_relationship')
-        ->name('oa.attendance.get_relationship');
-    Route::any('/getGroupList','Api\OA\OaAttendanceTeacherController@getGroupList')
-        ->name('oa.attendance.getGroupList');
-    Route::any('/getMonthManage','Api\OA\OaAttendanceTeacherController@getMonthManage')
-        ->name('oa.attendance.getMonthManage');
-    Route::any('/getTodayManage','Api\OA\OaAttendanceTeacherController@getTodayManage')
-        ->name('oa.attendance.getTodayManage');
-
-});
-
-Route::prefix('Leave')->middleware('auth:api')->group(function () {
-    Route::any('/get_relationship','Api\OA\OaAttendanceTeacherController@get_relationship')
-        ->name('oa.Leave.get_relationship');
-    Route::any('/get_category','Api\OA\OaAttendanceTeacherController@get_leave_category')
-        ->name('oa.Leave.get_category');
-    Route::any('/add','Api\OA\OaAttendanceTeacherController@takeLeave')
-        ->name('oa.Leave.add');
-});
-Route::prefix('Away')->middleware('auth:api')->group(function () {
-    Route::any('/get_relationship','Api\OA\OaAttendanceTeacherController@get_relationship')
-        ->name('oa.Away.get_relationship');
-    Route::any('/add','Api\OA\OaAttendanceTeacherController@addVisit')
-        ->name('oa.Away.add');
-    Route::any('/get_category','Api\OA\OaAttendanceTeacherController@get_visit_category')
-        ->name('oa.Away.get_category');
-});
-Route::prefix('Approves')->middleware('auth:api')->group(function () {
-    Route::any('/my_list','Api\OA\OaAttendanceTeacherController@my_list')
-        ->name('oa.Approves.my_list');
-    Route::any('/wait_list','Api\OA\OaAttendanceTeacherController@wait_list')
-        ->name('oa.Approves.wait_list');
-    Route::any('/info','Api\OA\OaAttendanceTeacherController@info')
-        ->name('oa.Approves.info');
 });
 
 

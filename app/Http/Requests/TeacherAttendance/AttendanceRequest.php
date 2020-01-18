@@ -16,4 +16,7 @@ class AttendanceRequest extends MyStandardRequest
     public function getInputWifi() {
         return $this->get('wifi');
     }
+    public function getInputMonth() {
+        return $this->get('month', Carbon::now()->format('Y-m'));
+    }
 }
