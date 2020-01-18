@@ -10,6 +10,7 @@ namespace App\Http\Controllers\Api\School;
 
 
 use App\Dao\Schools\OrganizationDao;
+use App\Dao\Users\UserDao;
 use App\Dao\Users\UserOrganizationDao;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\MyStandardRequest;
@@ -28,28 +29,34 @@ class OrganizationController extends Controller
         $schoolId = $user->getSchoolId();
         $parentId = $request->get('parent_id');
         $keyword = $request->get('keyword');
+        $type = $request->get('type', 1); // type 1:搜索部门 2:搜索人员
         $dao = new OrganizationDao();
-        if(!empty($keyword)) {
-            $result = $dao->getOrganByName($schoolId, $keyword);
-            $parentId = 0;
-        } else {
-            $result = $dao->getByParentId($schoolId, $parentId);
-        }
-
+        // 部门数据
         $organ = [];
-
-        foreach ($result as $key => $item) {
-            $organ[$key]['id'] =$item->id;
-            $organ[$key]['name'] =$item->name;
-            $organ[$key]['level'] =$item->level;
-            $branches = $item->branch;
-            $organ[$key]['status'] = true;
-            if(count($branches) == 0) {
-                $organ[$key]['status'] = false;
+        if($type == 1) {
+            if(!empty($keyword)) {
+                $result = $dao->getOrganByName($schoolId, $keyword);
+                $parentId = 0;
+            } else {
+                $result = $dao->getByParentId($schoolId, $parentId);
             }
+            foreach ($result as $key => $item) {
+                $organ[$key]['id'] =$item->id;
+                $organ[$key]['name'] =$item->name;
+                $organ[$key]['level'] =$item->level;
+                $branches = $item->branch;
+                $organ[$key]['status'] = true;
+                if(count($branches) == 0) {
+                    $organ[$key]['status'] = false;
+                }
+            }
+            $userOrganDao = new UserOrganizationDao();
+            $members = $userOrganDao->getOrganUserByOrganId($schoolId, $parentId);
+        } else {
+            $userDao = new UserDao();
+            $members = $userDao->getTeachersBySchool($schoolId, true, $keyword);
         }
-        $userOrganDao = new UserOrganizationDao();
-        $members = $userOrganDao->getOrganUserByOrganId($schoolId, $parentId);
+
         $data = [
             'organ' => $organ,
             'members' => $members
