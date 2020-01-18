@@ -4,6 +4,7 @@ namespace App\Dao\OA;
 
 use App\Models\OA\WorkLog;
 use App\Utils\Misc\ConfigurationTool;
+use Illuminate\Support\Facades\DB;
 
 class WorkLogDao
 {
@@ -26,17 +27,17 @@ class WorkLogDao
      */
     public function getWorkLogsByTeacherId($teacherId, $type, $keyword = null)
     {
-        $map = [
-            ['user_id' ,'=', $teacherId],
+        $map   = [
+            ['user_id', '=', $teacherId],
             ['type', '=', $type],
             ['status', '=', WorkLog::STATUS_NORMAL]
         ];
         $where = $map;
-        if(!is_null($keyword)) {
-            array_push($map, ['user_name', 'like', "$keyword%"]);
+        if (!is_null($keyword)) {
+            array_push($map, ['send_user_name', 'like', "$keyword%"]);
         }
 
-        if(!is_null($keyword)) {
+        if (!is_null($keyword)) {
             array_push($where, ['title', 'like', "$keyword%"]);
         }
 
@@ -54,4 +55,29 @@ class WorkLogDao
     {
         return WorkLog::find($id);
     }
+
+    /**
+     * 根据ID 发送日志
+     * @param $id
+     * @param $data
+     * @return bool
+     */
+    public function sendLog($id, $data)
+    {
+        DB::beginTransaction();
+        try {
+            WorkLog::where('id', $id)->update($data['update_data']);
+            foreach ($data['install_data'] as $key => $val) {
+                WorkLog::create($val);
+            }
+            DB::commit();
+            $result = true;
+        } catch (\Exception $e) {
+            DB::rollBack();
+            $result = false;
+        }
+        return $result;
+    }
+
+
 }

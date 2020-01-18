@@ -14,7 +14,7 @@ class WorkLog extends Model
     protected $table = 'oa_teacher_work_logs';
 
     protected $fillable = [
-        'user_id', 'collect_user_id', 'title', 'content', 'type', 'status'
+        'user_id', 'collect_user_id', 'title', 'content', 'type', 'status', 'send_user_id', 'send_user_name'
     ];
 
     const TYPE_READ   = 1;  // 已接收
@@ -23,9 +23,6 @@ class WorkLog extends Model
 
     const STATUS_ERROR = 0;  // 不显示
     const STATUS_NORMAL = 1; // 显示
-
-    const DELETE = 1;  // 删除
-    const UPDATE = 2;  // 更新
 
     public function user()
     {
