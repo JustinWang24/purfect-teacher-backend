@@ -32,7 +32,12 @@ class TaskController extends Controller
         $task_title = strip_tags($request->get('task_title'));
         $task_content = strip_tags($request->get('task_content'));
         $leader_userid = strip_tags($request->get('leader_userid'));
-        $memberUserIds = explode(',',strip_tags($request->get('member_userids')));
+        $memberUserIds = $request->get('member_userids');
+        if(empty($memberUserIds)) {
+            return JsonBuilder::Error('成员不能为空');
+        }
+        $memberUserIds = explode(',',$memberUserIds);
+
         $end_time = $request->get('end_time');
         $projectid = intval($request->get('projectid'));
         $data = [
