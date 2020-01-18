@@ -74,13 +74,47 @@ class WorkLogController extends  Controller
 
         $dao = new WorkLogDao;
         $data = $dao->getWorkLogsById($id);
-        $data['send_user_name'] = '';
-        if ($data->type == WorkLog::TYPE_READ) {
-            $data['send_user_name'] = $data->user->name;
-            $data->makeHidden('user');
-        }
-
         return JsonBuilder::Success($data);
     }
+
+    /**
+     * 发送日志
+     * @param MyStandardRequest $request
+     * @return string
+     */
+    public function workLogSend(MyStandardRequest $request)
+    {
+        $id = $request->get('id');
+        $userId = $request->get('user_id'); // 接收人ID
+        $userName = $request->get('user_name'); // 接收人
+
+        $dao = new WorkLogDao;
+        $log = $dao->getWorkLogsById($id);
+
+        $data['update_data']  = [
+            'collect_user_id' => $userId,
+            'collect_user_name' => $userName,
+            'type' => WorkLog::TYPE_SENT
+        ];
+        $data['install_data'] = [];
+        $userIds = explode(',', $userId);
+        foreach ($userIds as $key => $val) {
+            $data['install_data'][$key]['user_id'] = $val;
+            $data['install_data'][$key]['send_user_id'] = $log->user_id;
+            $data['install_data'][$key]['send_user_name'] = $log->user->name;
+            $data['install_data'][$key]['type'] = WorkLog::TYPE_READ;
+            $data['install_data'][$key]['title'] = $log->title;
+            $data['install_data'][$key]['content'] = $log->content;
+        }
+        $result = $dao->sendLog($id, $data);
+        if ($result) {
+            return JsonBuilder::Success('发送成功');
+        } else {
+            return JsonBuilder::Error('发送失败,请稍后再试');
+        }
+    }
+
+
+
 
 }

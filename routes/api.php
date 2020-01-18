@@ -803,5 +803,7 @@ Route::prefix('Oa')->middleware('auth:api')->group(function () {
     // 详情
     Route::post('/work-log-info', 'Api\OA\WorkLogController@workLogInfo')
         ->name('api.oa.work.log.info');
-
+    // 发送
+    Route::post('/work-log-send', 'Api\OA\WorkLogController@workLogSend')
+        ->name('api.oa.work.log.send');
 });
