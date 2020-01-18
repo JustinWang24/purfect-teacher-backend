@@ -142,7 +142,7 @@ class AttendanceController extends Controller
      * @param AttendanceRequest $request
      * @return string
      */
-    public function gradeSign(AttendanceRequest $request)
+    /*public function gradeSign(AttendanceRequest $request)
     {
         $teacher = $request->user();
         $dao = new TimetableItemDao;
@@ -162,7 +162,7 @@ class AttendanceController extends Controller
             $data[$k]['name'] = $v->name;
         }
         return JsonBuilder::Success($data);
-    }
+    }*/
 
 
     /**
@@ -170,7 +170,7 @@ class AttendanceController extends Controller
      * @param AttendanceRequest $request
      * @return string
      */
-    public function courseSign(AttendanceRequest $request)
+    /*public function courseSign(AttendanceRequest $request)
     {
         $gradeId = $request->get('grade_id');
         $teacherId = $request->user()->id;
@@ -198,7 +198,7 @@ class AttendanceController extends Controller
         ];
 
         return JsonBuilder::Success($data);
-    }
+    }*/
 
 
     /**
@@ -206,7 +206,7 @@ class AttendanceController extends Controller
      * @param AttendanceRequest $request
      * @return string
      */
-    public function courseSignDetails(AttendanceRequest $request) {
+    /*public function courseSignDetails(AttendanceRequest $request) {
         $attendanceId = $request->getAttendanceId();
         $gradeId = $request->get('grade_id');
         $gradeDao = new GradeUserDao();
@@ -252,7 +252,8 @@ class AttendanceController extends Controller
             'score' => $score,
         ];
         return JsonBuilder::Success($data);
-    }
+    }*/
+
 
 
 

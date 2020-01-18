@@ -477,6 +477,7 @@ Route::prefix('attendance')->middleware('auth:api')->group(function () {
         ->name('api.attendance.list');
     Route::any('/load-special','Api\AttendanceSchedule\AttendanceScheduleController@load_special')
         ->name('api.attendance.load-special');
+
     // 学生签到
     Route::post('/sign-in-record','Api\AttendanceSchedule\AttendanceController@signInRecord')
         ->name('api.attendance.sign-in-record');
@@ -486,7 +487,8 @@ Route::prefix('attendance')->middleware('auth:api')->group(function () {
     // 添加旷课记录
     Route::post('/add-truant-record','Api\AttendanceSchedule\AttendanceController@addTruangrade-signtRecord')
         ->name('api.attendance.add-truant-record');
-    // 教师端 班级签到--所有班级
+
+   /* // 教师端 班级签到--所有班级
     Route::get('/grade-sign','Api\AttendanceSchedule\AttendanceController@gradeSign')
         ->name('api.attendance.grade-sign');
     // 教师端 班级签到--课程列表
@@ -494,7 +496,7 @@ Route::prefix('attendance')->middleware('auth:api')->group(function () {
         ->name('api.attendance.course-sign');
     // 课程签到详情
     Route::post('/course-sign-details','Api\AttendanceSchedule\AttendanceController@courseSignDetails')
-        ->name('api.attendance.course-sign-details');
+        ->name('api.attendance.course-sign-details');*/
 
 
 });
@@ -803,5 +805,13 @@ Route::prefix('Oa')->middleware('auth:api')->group(function () {
     // 详情
     Route::post('/work-log-info', 'Api\OA\WorkLogController@workLogInfo')
         ->name('api.oa.work.log.info');
+
+});
+
+
+// 签到评分
+Route::prefix('sign-in-grade')->middleware('auth:api')->group(function () {
+//    Route::get('/class-list', 'Api\OA\WorkLogController@index')
+//        ->name('api.oa.add.work.log');
 
 });
