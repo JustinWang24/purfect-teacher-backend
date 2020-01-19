@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateRecuitNotesTable extends Migration
+class CreateTeacherAttendanceExceptionDaysTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,11 @@ class CreateRecuitNotesTable extends Migration
      */
     public function up()
     {
-        Schema::create('recruit_notes', function (Blueprint $table) {
+        Schema::create('teacher_attendance_exception_days', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->unsignedInteger('school_id');
-            $table->unsignedInteger('plan_id')->default(0)->comment('关联的招生简章');
-            $table->text('content')->comment('报名须知的内容');
+            $table->unsignedBigInteger('teacher_attendance_id')->comment('考勤配置 ID');
+            $table->date('day')->comment('例外日期');
+            $table->timestamps();
         });
     }
 
@@ -28,6 +28,6 @@ class CreateRecuitNotesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('recruit_notes');
+        Schema::dropIfExists('teacher_attendance_exception_days');
     }
 }

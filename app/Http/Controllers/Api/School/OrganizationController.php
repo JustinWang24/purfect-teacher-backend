@@ -10,6 +10,8 @@ namespace App\Http\Controllers\Api\School;
 
 
 use App\Dao\Schools\OrganizationDao;
+use App\Dao\Teachers\TeacherProfileDao;
+use App\Dao\Users\UserDao;
 use App\Dao\Users\UserOrganizationDao;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\MyStandardRequest;
@@ -28,28 +30,71 @@ class OrganizationController extends Controller
         $schoolId = $user->getSchoolId();
         $parentId = $request->get('parent_id');
         $keyword = $request->get('keyword');
+        $type = $request->get('type', 1); // type 1:搜索部门 2:搜索人员
         $dao = new OrganizationDao();
-        if(!empty($keyword)) {
-            $result = $dao->getOrganByName($schoolId, $keyword);
-            $parentId = 0;
-        } else {
-            $result = $dao->getByParentId($schoolId, $parentId);
-        }
-
+        // 部门数据
         $organ = [];
+        if($type == 1) {
+            if(!empty($keyword)) {
+                $result = $dao->getOrganByName($schoolId, $keyword);
+                $parentId = 0;
+            } else {
+                $result = $dao->getByParentId($schoolId, $parentId);
+            }
+            $organ = $this->organDataDispose($result);
+            $userOrganDao = new UserOrganizationDao();
+            $members = $userOrganDao->getOrganUserByOrganId($schoolId, $parentId);
+        } else {
 
-        foreach ($result as $key => $item) {
-            $organ[$key]['id'] =$item->id;
-            $organ[$key]['name'] =$item->name;
-            $organ[$key]['level'] =$item->level;
+            if(!empty($keyword)) {
+                $userDao = new UserDao();
+                $members = $userDao->getTeachersBySchool($schoolId, true, $keyword);
+            } else {
+                $result = $dao->getByParentId($schoolId, $parentId);
+
+                $organ = $this->organDataDispose($result);
+                $userOrganDao = new UserOrganizationDao();
+                $members = $userOrganDao->getOrganUserByOrganId($schoolId, $parentId);
+            }
         }
-        $userOrganDao = new UserOrganizationDao();
-        $members = $userOrganDao->getOrganUserByOrganId($schoolId, $parentId);
+
+        $userIds  = array_column($members->toArray(),'id');
+        $teacherDao = new TeacherProfileDao();
+        $profile = $teacherDao->getTeacherProfileByUserIds($userIds)->toArray();
+        $title = array_column($profile,'title', 'user_id');
+        $avatar = array_column($profile, 'avatar', 'user_id');
+        foreach ($members as $key => $item) {
+            $item->title = $title[$item->id] ?? '';
+            $item->avatar = $avatar[$item->id] ?? '';
+        }
+
         $data = [
             'organ' => $organ,
             'members' => $members
         ];
         return JsonBuilder::Success($data);
+    }
+
+
+    /**
+     * 数据处理
+     * @param $data
+     * @return array
+     */
+    public function organDataDispose($data) {
+        $organ = [];
+        foreach ($data as $key => $item) {
+            $organ[$key]['id'] =$item->id;
+            $organ[$key]['name'] =$item->name;
+            $organ[$key]['level'] =$item->level;
+            $branches = $item->branch;
+            $organ[$key]['status'] = true;
+            if(count($branches) == 0) {
+                $organ[$key]['status'] = false;
+            }
+        }
+
+        return $organ;
     }
 
 }

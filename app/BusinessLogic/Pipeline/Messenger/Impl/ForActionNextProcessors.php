@@ -73,9 +73,10 @@ class ForActionNextProcessors extends AbstractMessenger
                         $user->getId(),
                         SystemNotification::TYPE_NONE,
                         SystemNotification::PRIORITY_LOW,
-                        '有一个' . $this->flow->getName() .'流程在等待您处理',
                         $content,
-                        $this->getActionUrl()
+                        $this->getActionUrl(),
+                        '有一个' . $this->flow->getName() .'流程在等待您处理',
+                        SystemNotification::COMMON_CATEGORY_PIPELINE //@TODO 工作流程可以区分特殊流程后会拆分不同类型
                     );
 
                     if(env('APP_DEBUG', false)){

@@ -4,10 +4,10 @@
 namespace App\Http\Controllers\Api\AttendanceSchedule;
 
 
-use App\Dao\Schools\GradeDao;
-use App\Dao\Users\GradeUserDao;
 use Carbon\Carbon;
 use App\Utils\JsonBuilder;
+use App\Dao\Schools\GradeDao;
+use App\Dao\Users\GradeUserDao;
 use App\Dao\Courses\CourseMajorDao;
 use App\Http\Controllers\Controller;
 use App\Dao\Timetable\TimetableItemDao;
@@ -25,12 +25,12 @@ class AttendanceController extends Controller
      */
     public function signInRecord(AttendanceRequest $request) {
 
-        // 学年
-        $year = $request->get('year',Carbon::now()->year);
         $user = $request->user();
         $grade = $user->gradeUser->grade;
         $school = $user->gradeUser->school;
         $configuration = $school->configuration;
+        // 学年
+        $year = $request->get('year',$configuration->getSchoolYear());
         // 学期
         $term = $request->get('term',$configuration->guessTerm(Carbon::now()->month));
 
@@ -69,7 +69,7 @@ class AttendanceController extends Controller
         $user = $request->user();
         $school = $user->gradeUser->school;
         $configuration = $school->configuration;
-        $year = $request->get('year',Carbon::now()->year);
+        $year = $request->get('year',$configuration->getSchoolYear());
         // 学期
         $term = $request->get('term',$configuration->guessTerm(Carbon::now()->month));
 

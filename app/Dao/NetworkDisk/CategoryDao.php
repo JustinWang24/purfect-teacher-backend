@@ -5,6 +5,7 @@ namespace App\Dao\NetworkDisk;
 
 use App\Dao\Schools\SchoolDao;
 use App\Models\NetworkDisk\Category;
+use App\User;
 use Illuminate\Support\Facades\Log;
 use Ramsey\Uuid\Uuid;
 
@@ -186,5 +187,31 @@ class CategoryDao
 
     public function getAllSchoolRootCategory(){
         return Category::where('parent_id',0)->get();
+    }
+
+
+    /**
+     * 获取用户的跟目录 如果不存在就创建
+     * @param User $user
+     * @return mixed
+     * @throws \Exception
+     */
+    public function getUserRootCategory($user) {
+        $category = Category::where('owner_id',$user->id)
+            ->where('type',Category::TYPE_USER_ROOT)
+            ->first();
+        if(!$category){
+            $schoolRoot = $this->getSchoolRootCategory($user->getSchoolId());
+            $category = $this->create([
+                'uuid'=>Uuid::uuid4()->toString(),
+                'name'=>'我的文档',
+                'type'=>Category::TYPE_USER_ROOT,
+                'school_id'=>$user->getSchoolId(),
+                'owner_id'=>$user->id,
+                'parent_id'=>$schoolRoot->id
+            ]);
+        }
+
+        return $category;
     }
 }

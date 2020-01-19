@@ -13,6 +13,7 @@ use Illuminate\Http\Request;
 |
 */
 
+
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
@@ -247,7 +248,6 @@ Route::prefix('course')->middleware('auth:api')->group(function () {
      // 选课查询报名结果操作
      Route::post('/elective/getresult/{id}','Api\Course\ElectiveController@getEnrollResult')
         ->name('api.course.elective.getresult');
-
      // 教师端课件
      Route::post('/getApiCourseDownloadListInfo','Api\Course\CourseWareController@index')
         ->name('api.teacher.course.ware');
@@ -397,6 +397,9 @@ Route::prefix('notice')->middleware('auth:api')->group(function () {
     // 通知详情
     Route::post('/notice-info', 'Api\Notice\NoticeController@noticeInfo')
     ->name('api.notice.info');
+    // 发布通知
+    Route::post('/issue-notice', 'Api\Notice\NoticeController@issueNotice')
+        ->name('api.notice.issue-notice');
 });
 
 // APP banner 接口
@@ -475,7 +478,7 @@ Route::prefix('attendance')->middleware('auth:api')->group(function () {
     Route::any('/load-special','Api\AttendanceSchedule\AttendanceScheduleController@load_special')
         ->name('api.attendance.load-special');
     // 学生签到
-    Route::get('/sign-in-record','Api\AttendanceSchedule\AttendanceController@signInRecord')
+    Route::post('/sign-in-record','Api\AttendanceSchedule\AttendanceController@signInRecord')
         ->name('api.attendance.sign-in-record');
     // 签到详情
     Route::post('/sign-in-details','Api\AttendanceSchedule\AttendanceController@signInDetails')
@@ -654,18 +657,19 @@ Route::prefix('evaluate')->middleware('auth:api')->group(function () {
     Route::any('/student/save-note','Api\Evaluate\RatingController@save_note')
         ->name('api.evaluate.student.save-note');
 
-    // 评教接口
-    Route::post('/record/create','Api\Evaluate\EvaluateTeacherRecordController@create')
-        ->name('api.evaluate.record.create');
-    // 评教老师列表
-    Route::post('/record/teacher-list','Api\Evaluate\EvaluateTeacherRecordController@getTeacherList')
-        ->name('api.evaluate.record.teacher-list');
+
+//    // 评教老师列表
+//    Route::post('/record/teacher-list','Api\Evaluate\EvaluateTeacherRecordController@getTeacherList')
+//        ->name('api.evaluate.record.teacher-list');
     // 评教模版
-    Route::get('/record/template','Api\Evaluate\EvaluateTeacherRecordController@template')
-        ->name('api.evaluate.record.template');
-    // 是否开启评教
-    Route::get('/record/isEvaluate','Api\Evaluate\EvaluateTeacherRecordController@isEvaluate')
-        ->name('api.evaluate.record.isEvaluate');
+    Route::get('/template','Api\Evaluate\EvaluateTeacherRecordController@template')
+        ->name('api.evaluate.template');
+    // 评教接口
+    Route::post('/evaluate-teacher','Api\Evaluate\EvaluateTeacherRecordController@save_evaluate')
+        ->name('api.evaluate.create');
+//    // 是否开启评教
+//    Route::get('/record/isEvaluate','Api\Evaluate\EvaluateTeacherRecordController@isEvaluate')
+//        ->name('api.evaluate.record.isEvaluate');
 });
 
 Route::prefix('cloud')->group(function () {
@@ -780,6 +784,26 @@ Route::prefix('Oa')->middleware('auth:api')->group(function () {
     // 删除 or 更新已读
     Route::post('/message-update-or-del','Api\OA\InternalMessageController@updateOrDelMessage')
         ->name('api.oa.update.or.del.message');
+    // 更新信件
+
+    // 上传附件
+    Route::post('/message-upload-files', 'Api\OA\InternalMessageController@uploadFiles')
+        ->name('api.oa.upload.files');
+});
 
 
+// 工作日志
+Route::prefix('Oa')->middleware('auth:api')->group(function () {
+    // 添加
+    Route::post('/add-work-log', 'Api\OA\WorkLogController@index')
+        ->name('api.oa.add.work.log');
+    // 列表
+    Route::post('/list-work-log', 'Api\OA\WorkLogController@workLogList')
+        ->name('api.oa.work.log.list');
+    // 详情
+    Route::post('/work-log-info', 'Api\OA\WorkLogController@workLogInfo')
+        ->name('api.oa.work.log.info');
+    // 发送
+    Route::post('/work-log-send', 'Api\OA\WorkLogController@workLogSend')
+        ->name('api.oa.work.log.send');
 });

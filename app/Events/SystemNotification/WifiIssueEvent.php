@@ -5,6 +5,7 @@ namespace App\Events\SystemNotification;
 use App\Events\CanSendSystemNotification;
 use App\Models\Misc\SystemNotification;
 use App\Models\Wifi\Backstage\WifiIssues;
+use Carbon\Carbon;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Broadcasting\InteractsWithSockets;
@@ -87,7 +88,7 @@ class WifiIssueEvent implements CanSendSystemNotification
      */
     public function getContent(): string
     {
-        return $this->getStatusText($this->wifiIssue->status) . '时间：' . date('Y-m-d H:i');
+        return $this->getStatusText($this->wifiIssue->status) . '时间：' . Carbon::now()->format('Y-m-d H:i');
     }
 
     /**
