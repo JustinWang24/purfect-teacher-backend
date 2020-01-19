@@ -107,4 +107,16 @@ class AttendancesDao
         return Attendance::where($map)->whereDate('created_at', $date)->get();
     }
 
+
+    /**
+     * 通过课节和周查询签到信息
+     * @param $timeTable
+     * @param $week
+     * @return mixed
+     */
+    public function getAttendByTimeTableIdAndWeek($timeTable, $week) {
+        $map = ['timetable_id'=>$timeTable, 'week'=>$week];
+        return Attendance::where($map)->first();
+    }
+
 }
