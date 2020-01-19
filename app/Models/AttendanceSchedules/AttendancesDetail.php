@@ -9,8 +9,8 @@ use Illuminate\Database\Eloquent\Model;
 class AttendancesDetail extends Model
 {
     protected $fillable = ['attendance_id', 'course_id', 'timetable_id',
-                           'student_id', 'year', 'term', 'type', 'week',
-                           'mold', 'status', 'reason', 'weekday_index','date'
+        'student_id', 'year', 'term', 'type', 'week', 'mold', 'status',
+        'reason', 'weekday_index', 'score', 'remark'
     ];
 
     // 签到类型

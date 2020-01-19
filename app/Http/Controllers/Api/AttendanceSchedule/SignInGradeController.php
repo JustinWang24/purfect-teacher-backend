@@ -99,8 +99,7 @@ class SignInGradeController extends Controller
         $list = $dao->getAttendDetailsByAttendanceId($attendanceId);
         $userIds = $list->pluck('student_id')->toArray();
         $student = [];
-        $signin = 0;
-        $leave = 0;
+
         $score = []; // 评分列表
         foreach ($gradeUser as $key => $item) {
             foreach ($list as $k => $v) {
@@ -109,12 +108,6 @@ class SignInGradeController extends Controller
                 $student[$key]['user_id'] = $item->user_id;
                 $student[$key]['name'] = $item->name;
                 if(in_array($item->user_id, $userIds)) {
-                    if($v->mold == AttendancesDetail::MOLD_SIGN_IN) {
-                        $signin += 1;
-                    }
-                    if($v->mold == AttendancesDetail::MOLD_LEAVE) {
-                        $leave += 1;
-                    }
                     $student[$key]['mold'] = $v->mold;
                     $score[$key]['score'] = $v->score;
                 } else {
@@ -124,9 +117,15 @@ class SignInGradeController extends Controller
             }
 
         }
-        // 未签到
-        $unSign = $total - $signin - $leave;
 
+
+        // 未签到
+        $mold = $list->pluck('mold')->toArray();
+        $count = array_count_values($mold);
+        $signin = $count[AttendancesDetail::MOLD_SIGN_IN] ?? 0;
+
+        $leave = $count[AttendancesDetail::MOLD_LEAVE] ?? 0;
+        $unSign = $total - $signin - $leave;
         $data = [
             'stat' => ['total'=>$total, 'signin'=>$signin, 'leave'=>$leave, 'un_sign'=>$unSign],
             'signin' => $student,
@@ -146,6 +145,25 @@ class SignInGradeController extends Controller
         $attendanceId = $request->getAttendanceId();
         $details = $request->get('details');
         $result = $dao->saveDetails($attendanceId, $details);
+        $msg = $result->getMessage();
+        if($result->isSuccess()) {
+            return JsonBuilder::Success($msg);
+        } else {
+            return JsonBuilder::Error($msg);
+        }
+    }
+
+
+    /**
+     * 保存评分
+     * @param AttendanceRequest $request
+     * @return string
+     */
+    public function saveScore(AttendanceRequest $request) {
+        $dao = new AttendancesDetailsDao();
+        $attendanceId = $request->getAttendanceId();
+        $score = $request->get('score');
+        $result = $dao->saveScore($attendanceId, $score);
         $msg = $result->getMessage();
         if($result->isSuccess()) {
             return JsonBuilder::Success($msg);

@@ -186,4 +186,47 @@ class AttendancesDetailsDao
         return $messageBag;
     }
 
+
+    /**
+     * 保存评分
+     * @param $attendanceId
+     * @param $score
+     * @return MessageBag
+     */
+    public function saveScore($attendanceId, $score) {
+
+        $messageBag = new MessageBag();
+        $info = Attendance::find($attendanceId);
+        try{
+            DB::beginTransaction();
+            foreach ($score as $key => $item) {
+                $map = ['attendance_id'=>$attendanceId, 'student_id'=>$item['user_id']];
+                $re = AttendancesDetail::where($map)->first();
+                if(is_null($re)) {
+                    // 添加
+                    $add = ['attendance_id' => $attendanceId, 'course_id' => $info['course_id'],
+                        'timetable_id' => $info['timetable_id'], 'student_id' => $item['user_id'],
+                        'year' => $info['year'], 'term' => $info['term'], 'type' => AttendancesDetail::TYPE_MANUAL,
+                        'week' => $info['week'], 'mold' => AttendancesDetail::MOLD_TRUANT, 'score'=>$item['score'],
+                        'weekday_index' => $info->timeTable->weekday_index, 'remark'=>$item['remark']
+                    ];
+                    AttendancesDetail::create($add);
+                } else {
+                    $save = ['score'=>$item['score'], 'remark'=>$item['remark']];
+                    AttendancesDetail::where($map)->update($save);
+                }
+            }
+
+            DB::commit();
+
+            $messageBag->setMessage('保存成功');
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            $msg = $e->getMessage();
+            $messageBag->setMessage($msg);
+            $messageBag->setCode(JsonBuilder::CODE_ERROR);
+        }
+        return $messageBag;
+    }
 }
