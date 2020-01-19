@@ -23,5 +23,9 @@ _ide_helper.php
 _ide_helper_models.php
 querylog.txt
 resources/views/manager_wifi/*
+<<<<<<< HEAD
 log.txt
 yarn.lock
+=======
+package-lock.json
+>>>>>>> 87f65c8e948e9d6ba4d7ea452ac0499f1cffb2fd
