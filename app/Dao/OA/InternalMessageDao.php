@@ -12,26 +12,26 @@ class InternalMessageDao
 
     public function create($data, $files)
     {
+
         DB::beginTransaction();
         try{
 
             $message = InternalMessage::create($data);
-                
+
             $messageIds = $message->id; // 用于转发
 
             if ($data['is_relay'] == InternalMessage::IS_RELAY) {
                 $relay = $this->getInternalMessageById($data['relay_id']);
                 $messageIds = $message->id.','.$relay['message_id'];
             }
-                
+
             $this->updateMessage($message->id, ['message_id' => $messageIds]); // 修改转发字段 用于转发
 
             // 处理收件人数据
             $collId = explode(',', $data['collect_user_id']);
             $collData = [];
             foreach ($collId as $key => $value) {
-                $collData['user_id']           = $data['user_id'];
-                $collData['collect_user_id']   = $value;
+                $collData['user_id']           = $value;
                 $collData['collect_user_name'] = $data['collect_user_name'];
                 $collData['title']             = $data['title'];
                 $collData['content']           = $data['content'];
