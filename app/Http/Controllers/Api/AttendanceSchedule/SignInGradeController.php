@@ -136,4 +136,23 @@ class SignInGradeController extends Controller
     }
 
 
+    /**
+     * 编辑课程签到详情
+     * @param AttendanceRequest $request
+     * @return string
+     */
+    public function saveDetails(AttendanceRequest $request) {
+        $dao = new AttendancesDetailsDao();
+        $attendanceId = $request->getAttendanceId();
+        $details = $request->get('details');
+        $result = $dao->saveDetails($attendanceId, $details);
+        $msg = $result->getMessage();
+        if($result->isSuccess()) {
+            return JsonBuilder::Success($msg);
+        } else {
+            return JsonBuilder::Error($msg);
+        }
+    }
+
+
 }

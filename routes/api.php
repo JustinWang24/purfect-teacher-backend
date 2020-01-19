@@ -815,5 +815,7 @@ Route::prefix('signInGrade')->middleware('auth:api')->group(function () {
     // 签到详情
     Route::post('/signDetails','Api\AttendanceSchedule\SignInGradeController@signDetails')
         ->name('api.signInGrade.signDetails');
-
+    // 保存签到详情
+    Route::post('/saveDetails','Api\AttendanceSchedule\SignInGradeController@saveDetails')
+        ->name('api.signInGrade.saveDetails');
 });
