@@ -7,14 +7,15 @@
  */
 
 namespace App\Dao\Timetable;
-use App\Dao\Schools\SchoolDao;
-use App\Models\Timetable\TimeSlot;
-use App\Models\Timetable\TimetableItem;
+
 use App\User;
-use App\Utils\Time\CalendarWeek;
-use App\Utils\Time\GradeAndYearUtil;
 use Carbon\Carbon;
+use App\Dao\Schools\SchoolDao;
+use App\Utils\Time\CalendarWeek;
 use Illuminate\Support\Collection;
+use App\Models\Timetable\TimeSlot;
+use App\Utils\Time\GradeAndYearUtil;
+use App\Models\Timetable\TimetableItem;
 
 class TimetableItemDao
 {
@@ -569,7 +570,7 @@ class TimetableItemDao
      */
     public function getCurrentItemByUser(User $user){
         $now = Carbon::now(GradeAndYearUtil::TIMEZONE_CN);
-//        $now = Carbon::parse('2020-01-18 14:40:00');
+        $now = Carbon::parse('2020-01-18 14:40:00');
         $school = (new SchoolDao())->getSchoolById($user->getSchoolId());
         $currentTimeSlot = GradeAndYearUtil::GetTimeSlot($now, $school->id);
         if($currentTimeSlot && $school){

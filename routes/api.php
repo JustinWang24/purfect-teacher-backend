@@ -493,10 +493,8 @@ Route::prefix('attendance')->middleware('auth:api')->group(function () {
         ->name('api.attendance.grade-sign');
     // 教师端 班级签到--课程列表
     Route::post('/course-sign','Api\AttendanceSchedule\AttendanceController@courseSign')
-        ->name('api.attendance.course-sign');
-    // 课程签到详情
-    Route::post('/course-sign-details','Api\AttendanceSchedule\AttendanceController@courseSignDetails')
-        ->name('api.attendance.course-sign-details');*/
+        ->name('api.attendance.course-sign');*/
+
 
 
 });
@@ -811,7 +809,11 @@ Route::prefix('Oa')->middleware('auth:api')->group(function () {
 
 // 签到评分
 Route::prefix('signInGrade')->middleware('auth:api')->group(function () {
+
     Route::get('/classList', 'Api\AttendanceSchedule\SignInGradeController@courseClassList')
         ->name('api.signInGrade.classList');
+    // 签到详情
+    Route::post('/signDetails','Api\AttendanceSchedule\SignInGradeController@signDetails')
+        ->name('api.signInGrade.signDetails');
 
 });
