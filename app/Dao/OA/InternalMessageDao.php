@@ -12,7 +12,6 @@ class InternalMessageDao
 
     public function create($data, $files)
     {
-
         DB::beginTransaction();
         try{
 
@@ -27,18 +26,21 @@ class InternalMessageDao
 
             $this->updateMessage($message->id, ['message_id' => $messageIds]); // 修改转发字段 用于转发
 
-            // 处理收件人数据
-            $collId = explode(',', $data['collect_user_id']);
-            $collData = [];
-            foreach ($collId as $key => $value) {
-                $collData['user_id']           = $value;
-                $collData['collect_user_name'] = $data['collect_user_name'];
-                $collData['title']             = $data['title'];
-                $collData['content']           = $data['content'];
-                $collData['message_id']        = $messageIds;
-                $collData['type']              = InternalMessage::TYPE_UNREAD;
-                $collData['is_relay']          = $data['is_relay'];
-                InternalMessage::create($collData);
+            if ($data['type'] == InternalMessage::TYPE_SENT) {
+                // 处理收件人数据
+                $collId = explode(',', $data['collect_user_id']);
+                $collData = [];
+                foreach ($collId as $key => $value) {
+                    $collData['user_id']           = $value;
+                    $collData['collect_user_id']   = $data['collect_user_id'];
+                    $collData['collect_user_name'] = $data['collect_user_name'];
+                    $collData['title']             = $data['title'];
+                    $collData['content']           = $data['content'];
+                    $collData['message_id']        = $messageIds;
+                    $collData['type']              = InternalMessage::TYPE_UNREAD;
+                    $collData['is_relay']          = $data['is_relay'];
+                    InternalMessage::create($collData);
+                }
             }
 
             if ($files) {
@@ -50,6 +52,7 @@ class InternalMessageDao
             DB::commit();
             $result = true;
         }catch (\Exception $e) {
+            dd($e);
             DB::rollBack();
             $result = false;
         }
