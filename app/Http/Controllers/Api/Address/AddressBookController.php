@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\Address;
 
 use App\Dao\Schools\GradeDao;
+use App\Dao\Schools\GradeManagerDao;
 use App\Dao\Schools\OrganizationDao;
 use App\Dao\Schools\SchoolDao;
 use App\Dao\Teachers\TeacherProfileDao;
@@ -11,6 +12,7 @@ use App\Dao\Users\UserDao;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\AddressBook\AddressBookRequest;
 use App\Models\Acl\Role;
+use App\Models\Schools\GradeManager;
 use App\User;
 use App\Utils\JsonBuilder;
 use Illuminate\Http\Request;
@@ -47,8 +49,33 @@ class AddressBookController extends Controller
         }
 
         $gradeUserDao = new GradeUserDao;
+        $gradeMangerDao = new GradeManagerDao;
+
         $data = $gradeUserDao->getGradeAddressBook($gradeId);
-        return JsonBuilder::Success($data, '获取通讯录班级数据');
+
+        $gradeManger = $gradeMangerDao->getGradMangerByGradeId($gradeId);
+
+        $result['schoolmate_list'] = [];
+        $result['teacher_list'] = [];
+        foreach ($data as $key => $val) {
+            $result['schoolmate_list'][$key]['name'] = $val->name;
+            $result['schoolmate_list'][$key]['tel'] = $val->user->mobile;
+            $result['schoolmate_list'][$key]['type'] = GradeManager::STUDENT;
+
+            if(!is_null($gradeManger['monitor_id'])) {
+                if($val['user_id'] == $gradeManger['monitor_id']) {
+                    $result['schoolmate_list'][$key]['type'] = GradeManager::MONITOR;
+                }
+            }
+        }
+
+        if (!is_null($gradeManger['adviser_id'])) {
+            $result['teacher_list'][0]['name'] = $gradeManger['adviser_name'];
+            $result['teacher_list'][0]['tel'] = $gradeManger->adviser->mobile;
+            $result['teacher_list'][0]['type'] = GradeManager::ADVISER;
+        }
+
+        return JsonBuilder::Success($result, '获取通讯录班级数据');
     }
 
 

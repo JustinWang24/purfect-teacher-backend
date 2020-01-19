@@ -114,6 +114,11 @@ class GradeUser extends Model
         return $this->hasMany(Enquiry::class, 'user_id','user_id');
     }
 
+    public function gradeManger()
+    {
+        return $this->belongsTo(GradeManager::class, 'grade_id', 'grade_id');
+    }
+
     /**
      * 返回教职工所工作的地方的描述
      * @return string
