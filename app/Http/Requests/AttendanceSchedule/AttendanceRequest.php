@@ -21,4 +21,14 @@ class AttendanceRequest extends MyStandardRequest
     public function getAttendanceId() {
         return $this->get('attendance_id');
     }
+
+
+    public function getYear() {
+        return $this->get('year');
+    }
+
+
+    public function getTerm() {
+        return $this->get('term');
+    }
 }
