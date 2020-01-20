@@ -9,6 +9,7 @@
 namespace App\Http\Controllers\Api\AttendanceSchedule;
 
 
+use App\Dao\Schools\GradeDao;
 use Carbon\Carbon;
 use App\Utils\JsonBuilder;
 use App\Dao\Schools\SchoolDao;
@@ -170,6 +171,39 @@ class SignInGradeController extends Controller
         } else {
             return JsonBuilder::Error($msg);
         }
+    }
+
+
+    /**
+     * 课程班级签到列表
+     * @param AttendanceRequest $request
+     * @return string
+     */
+    public function signInCourses(AttendanceRequest $request) {
+        $userId = $request->user()->id;
+        $year = $request->get('year');
+        $term = $request->get('term');
+        if(empty($year) || empty($term)) {
+            return JsonBuilder::Error('缺少参数');
+        }
+        $dao = new AttendancesDetailsDao();
+        $courses = $dao->getSignInCoursesByYearAndTerm($userId, $year, $term);
+        $result = [];
+        foreach ($courses as $key => $item) {
+            $grades = $dao->getSignInGradesByCourseIdAndYearTerm($userId, $item->course_id, $year, $term);
+            $result[$key]['course_id'] = $item->course->id;
+            $result[$key]['name'] = $item->course->name;
+            foreach ($grades as $k => $val) {
+                $result[$key]['grade'][$k]['grade_id'] = $val->grade->id;
+                $result[$key]['grade'][$k]['name'] = $val->grade->name;
+            }
+        }
+        return JsonBuilder::Success($result);
+    }
+
+
+    public function signInGradeList() {
+
     }
 
 

@@ -818,8 +818,10 @@ Route::prefix('signInGrade')->middleware('auth:api')->group(function () {
     // 保存签到详情
     Route::post('/saveDetails','Api\AttendanceSchedule\SignInGradeController@saveDetails')
         ->name('api.signInGrade.saveDetails');
-
     // 保存评分
     Route::post('/saveScore','Api\AttendanceSchedule\SignInGradeController@saveScore')
         ->name('api.signInGrade.saveScore');
+    // 全部记录的课程列表
+    Route::post('/signInCourses','Api\AttendanceSchedule\SignInGradeController@signInCourses')
+        ->name('api.signInGrade.signInCourses');
 });
