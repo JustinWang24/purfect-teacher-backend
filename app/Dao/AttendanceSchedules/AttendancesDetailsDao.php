@@ -7,6 +7,7 @@ use App\Dao\Schools\SchoolDao;
 use App\Models\AttendanceSchedules\Attendance;
 use App\Models\AttendanceSchedules\AttendancesDetail;
 use App\Utils\JsonBuilder;
+use App\Utils\Misc\ConfigurationTool;
 use App\Utils\ReturnData\MessageBag;
 use App\Utils\Time\GradeAndYearUtil;
 use Carbon\Carbon;
@@ -241,5 +242,21 @@ class AttendancesDetailsDao
     public function getSignInByYearTerm($userId, $year, $term) {
         $map = ['student_id'=>$userId, 'year'=>$year, 'term'=>$term];
         return AttendancesDetail::where($map)->get();
+    }
+
+
+    /**
+     * 获取备注
+     * @param $userId
+     * @param $courseId
+     * @param $year
+     * @param $term
+     * @return mixed
+     */
+    public function getRemarkList($userId, $courseId, $year, $term) {
+        $map = ['student_id'=>$userId, 'year'=>$year, 'term'=>$term, 'course_id'=>$courseId];
+        return AttendancesDetail::where($map)
+            ->whereNotNull('remark')
+            ->paginate(ConfigurationTool::DEFAULT_PAGE_SIZE);
     }
 }

@@ -263,6 +263,44 @@ class SignInGradeController extends Controller
     }
 
 
+    /**
+     * 备注列表
+     * @param AttendanceRequest $request
+     * @return string
+     */
+    public function remarkList(AttendanceRequest $request) {
+        $year = $request->getYear();
+        $term = $request->getTerm();
+        $userId = $request->get('user_id');
+        $courseId = $request->getCourseId();
+        if(empty($year) || empty($term) || empty($userId)) {
+            return JsonBuilder::Error('缺少参数');
+        }
+
+        $dao = new AttendancesDetailsDao();
+        $return = $dao->getRemarkList($userId, $courseId, $year, $term);
+
+        $list = [];
+        foreach ($return as $key => $item) {
+            $list[$key]['time'] = $item->created_at->toDateString();
+            $list[$key]['weekday_index'] = $item->timetable->weekday_index;
+            $list[$key]['timeSlot'] = $item->timetable->timeSlot->name;
+            $list[$key]['remark'] = $item->remark;
+        }
+
+        $data = [
+            'currentPage' => $return->currentPage(),
+            'lastPage'    => $return->lastPage(),
+            'total'       => $return->total(),
+            'list'        => $list
+        ];
+        return JsonBuilder::Success($data);
+    }
+
+
+
+
+
 
 
 

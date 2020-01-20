@@ -827,4 +827,7 @@ Route::prefix('signInGrade')->middleware('auth:api')->group(function () {
     // 班级内学生签到列表
     Route::post('/signInStudentList','Api\AttendanceSchedule\SignInGradeController@signInStudentList')
         ->name('api.signInGrade.signInStudentList');
+    // 备注列表
+    Route::post('/remarkList','Api\AttendanceSchedule\SignInGradeController@remarkList')
+        ->name('api.signInGrade.remarkList');
 });
