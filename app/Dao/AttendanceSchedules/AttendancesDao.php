@@ -119,4 +119,38 @@ class AttendancesDao
         return Attendance::where($map)->first();
     }
 
+
+    /**
+     * 根据学年和学期获取老师待的课程
+     * @param $userId
+     * @param $year
+     * @param $term
+     * @return mixed
+     */
+    public function getSignInCoursesByYearAndTerm($userId, $year, $term){
+        $map = ['teacher_id'=>$userId, 'year'=>$year, 'term'=>$term];
+        return Attendance::where($map)
+            ->select('course_id')
+            ->distinct('course_id')
+            ->get();
+    }
+
+
+
+    /**
+     * 根据课程ID，学年学期获取老师带的班级
+     * @param $userId
+     * @param $courseId
+     * @param $year
+     * @param $term
+     * @return mixed
+     */
+    public function getSignInGradesByCourseIdAndYearTerm($userId, $courseId, $year, $term) {
+        $map = ['teacher_id'=>$userId, 'course_id'=>$courseId, 'year'=>$year, 'term'=>$term];
+        return Attendance::where($map)
+            ->select('grade_id')
+            ->distinct('grade_id')
+            ->get();
+    }
+
 }

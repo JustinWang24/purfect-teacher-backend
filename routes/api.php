@@ -824,4 +824,7 @@ Route::prefix('signInGrade')->middleware('auth:api')->group(function () {
     // 全部记录的课程列表
     Route::post('/signInCourses','Api\AttendanceSchedule\SignInGradeController@signInCourses')
         ->name('api.signInGrade.signInCourses');
+    // 班级内学生签到列表
+    Route::post('/signInStudentList','Api\AttendanceSchedule\SignInGradeController@signInStudentList')
+        ->name('api.signInGrade.signInStudentList');
 });

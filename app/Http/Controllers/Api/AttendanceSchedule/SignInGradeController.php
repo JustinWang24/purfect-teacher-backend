@@ -10,6 +10,7 @@ namespace App\Http\Controllers\Api\AttendanceSchedule;
 
 
 use App\Dao\Schools\GradeDao;
+use App\Models\AttendanceSchedules\Attendance;
 use Carbon\Carbon;
 use App\Utils\JsonBuilder;
 use App\Dao\Schools\SchoolDao;
@@ -181,12 +182,12 @@ class SignInGradeController extends Controller
      */
     public function signInCourses(AttendanceRequest $request) {
         $userId = $request->user()->id;
-        $year = $request->get('year');
-        $term = $request->get('term');
+        $year = $request->getYear();
+        $term = $request->geTerm();
         if(empty($year) || empty($term)) {
             return JsonBuilder::Error('缺少参数');
         }
-        $dao = new AttendancesDetailsDao();
+        $dao = new AttendancesDao();
         $courses = $dao->getSignInCoursesByYearAndTerm($userId, $year, $term);
         $result = [];
         foreach ($courses as $key => $item) {
@@ -202,9 +203,67 @@ class SignInGradeController extends Controller
     }
 
 
-    public function signInGradeList() {
+    /**
+     * @param AttendanceRequest $request
+     * @return string
+     */
+    public function signInStudentList(AttendanceRequest $request) {
+        $courseId = $request->getCourseId();
+        $gradeId = $request->getGradeId();
+        $year = $request->getYear();
+        $term = $request->getTerm();
+        if(empty($courseId) || empty($gradeId) || empty($year) || empty($term)) {
+            return JsonBuilder::Error('缺少参数');
+        }
+        $gradeUserDao = new GradeUserDao();
+        $users = $gradeUserDao->getByGradeForApp($gradeId);
+        $dao = new AttendancesDetailsDao();
 
+        $students = [];
+        foreach ($users as $key => $item) {
+            $detail = $dao->getSignInByYearTerm($item->user_id, $year, $term);
+            $mold = $detail->pluck('mold')->toArray();
+            $scores = $detail->pluck('score')->toArray();
+            if(count($scores) == 0) {
+                $score = 0;
+            } else {
+                $score = round(array_sum($scores) / count($scores), 2);
+            }
+
+            $remarks = $detail->pluck('remark');
+            $status = 0;
+            foreach ($remarks as $k => $val) {
+                if(!is_null($val)) {
+                    $status = 1; break;
+                }
+            }
+
+            $count = array_count_values($mold);
+            $students[$key]['user_id'] = $item->user_id;
+            $students[$key]['name'] = $item->name;
+            $students[$key]['sign_in'] = $count[AttendancesDetail::MOLD_SIGN_IN] ?? 0;
+            $students[$key]['leave'] = $count[AttendancesDetail::MOLD_LEAVE] ?? 0;
+            $students[$key]['truant'] = $count[AttendancesDetail::MOLD_TRUANT] ?? 0;
+            $students[$key]['score'] = $score;
+            $students[$key]['status'] = $status;   // 是否有备注的状态 0:没有备注 1:有备注
+        }
+
+        $gradeDao = new GradeDao();
+        $grade = $gradeDao->getGradeById($gradeId);
+        $courseDao = new CourseDao();
+        $course = $courseDao->getCourseById($courseId);
+
+        $data = [
+            'grade'=>['id'=>$grade->id, 'name'=>$grade->name],
+            'course'=>['id'=>$course->id, 'name'=>$course->name],
+            'students'=>$students
+        ];
+
+        return JsonBuilder::Success($data);
     }
+
+
+
 
 
 }
