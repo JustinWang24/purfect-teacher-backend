@@ -27,7 +27,6 @@ class TaskController extends Controller
      */
     public function createTask(ProjectRequest $request) {
         $user = $request->user();
-        dd($user->id);
         $schoolId = $user->getSchoolId();
         $dao = new TaskDao();
         $task_title = strip_tags($request->get('task_title'));
@@ -69,7 +68,6 @@ class TaskController extends Controller
      */
     public function taskList(ProjectRequest $request) {
         $userId = $request->user()->id;
-//        dd($userId);
         $type = intval($request->getTaskType());
 
         $status = [ProjectTask::STATUS_UN_BEGIN, ProjectTask::STATUS_IN_PROGRESS,
@@ -97,7 +95,6 @@ class TaskController extends Controller
 
         } else {
             $list = $dao->attendTasks($userId, $type);
-//            dd($list);
             $output = [];
             foreach ($list as $key => $val) {
                 $projectTask = $val->projectTask;
