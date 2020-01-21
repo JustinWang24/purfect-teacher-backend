@@ -128,10 +128,10 @@ class TaskDao
             ProjectTaskMember::where($map)->update($status);
             // 添加日志
             $log = ['school_id'=>$schoolId, 'user_id'=>$userId,
-                'task_id'=>$taskId, 'desc'=>'接受了任务'];
+                'task_id'=>$taskId, 'desc'=>'接收了任务'];
             ProjectTaskLog::create($log);
             DB::commit();
-            $messageBag->setMessage('接受成功');
+            $messageBag->setMessage('接收成功');
 
         } catch (\Exception $e) {
             DB::rollBack();
