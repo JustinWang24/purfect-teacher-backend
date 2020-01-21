@@ -45,6 +45,18 @@ class ProjectDao
         return $result->paginate(ConfigurationTool::DEFAULT_PAGE_SIZE);
     }
 
+
+    /**
+     * 获取项目列表
+     * @param $schoolId
+     * @return mixed
+     */
+    public function getProjects($schoolId) {
+        return Project::where('school_id', $schoolId)
+            ->orderBy('created_at', 'desc')
+            ->get();
+    }
+
     /**
      * @param $id
      * @return Project

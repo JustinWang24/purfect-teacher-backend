@@ -3,6 +3,7 @@
 namespace App\Models\AttendanceSchedules;
 
 use App\Models\Course;
+use App\Models\Schools\Grade;
 use App\Models\Timetable\TimetableItem;
 use Illuminate\Database\Eloquent\Model;
 
@@ -22,5 +23,13 @@ class Attendance extends Model
 
     public function timeTable() {
         return $this->belongsTo(TimetableItem::class, 'timetable_id');
+    }
+
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function grade() {
+        return $this->belongsTo(Grade::class);
     }
 }

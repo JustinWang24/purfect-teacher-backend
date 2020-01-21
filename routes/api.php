@@ -477,6 +477,7 @@ Route::prefix('attendance')->middleware('auth:api')->group(function () {
         ->name('api.attendance.list');
     Route::any('/load-special','Api\AttendanceSchedule\AttendanceScheduleController@load_special')
         ->name('api.attendance.load-special');
+
     // 学生签到
     Route::post('/sign-in-record','Api\AttendanceSchedule\AttendanceController@signInRecord')
         ->name('api.attendance.sign-in-record');
@@ -486,15 +487,14 @@ Route::prefix('attendance')->middleware('auth:api')->group(function () {
     // 添加旷课记录
     Route::post('/add-truant-record','Api\AttendanceSchedule\AttendanceController@addTruangrade-signtRecord')
         ->name('api.attendance.add-truant-record');
-    // 教师端 班级签到--所有班级
+
+   /* // 教师端 班级签到--所有班级
     Route::get('/grade-sign','Api\AttendanceSchedule\AttendanceController@gradeSign')
         ->name('api.attendance.grade-sign');
     // 教师端 班级签到--课程列表
     Route::post('/course-sign','Api\AttendanceSchedule\AttendanceController@courseSign')
-        ->name('api.attendance.course-sign');
-    // 课程签到详情
-    Route::post('/course-sign-details','Api\AttendanceSchedule\AttendanceController@courseSignDetails')
-        ->name('api.attendance.course-sign-details');
+        ->name('api.attendance.course-sign');*/
+
 
 
 });
@@ -767,8 +767,11 @@ Route::prefix('teacher/evaluation')->middleware('auth:api')->group(function(){
 });
 
 
-// 内部信
+
 Route::prefix('Oa')->middleware('auth:api')->group(function () {
+    /**
+     * 内部信
+     */
     // 获取所有老师
     Route::post('/get-teachers','Api\OA\InternalMessageController@getTeachers')
         ->name('api.oa.get.teachers');
@@ -789,11 +792,10 @@ Route::prefix('Oa')->middleware('auth:api')->group(function () {
     // 上传附件
     Route::post('/message-upload-files', 'Api\OA\InternalMessageController@uploadFiles')
         ->name('api.oa.upload.files');
-});
 
-
-// 工作日志
-Route::prefix('Oa')->middleware('auth:api')->group(function () {
+    /**
+     * 工作日志
+     */
     // 添加
     Route::post('/add-work-log', 'Api\OA\WorkLogController@index')
         ->name('api.oa.add.work.log');
@@ -806,4 +808,37 @@ Route::prefix('Oa')->middleware('auth:api')->group(function () {
     // 发送
     Route::post('/work-log-send', 'Api\OA\WorkLogController@workLogSend')
         ->name('api.oa.work.log.send');
+
+    /**
+     * 助手页
+     */
+    Route::post('/helper-page', 'Api\OA\IndexController@helperPage')
+        ->name('api.oa.helper.page');
+
+});
+
+
+// 签到评分
+Route::prefix('signInGrade')->middleware('auth:api')->group(function () {
+
+    Route::get('/classList', 'Api\AttendanceSchedule\SignInGradeController@courseClassList')
+        ->name('api.signInGrade.classList');
+    // 签到详情
+    Route::post('/signDetails','Api\AttendanceSchedule\SignInGradeController@signDetails')
+        ->name('api.signInGrade.signDetails');
+    // 保存签到详情
+    Route::post('/saveDetails','Api\AttendanceSchedule\SignInGradeController@saveDetails')
+        ->name('api.signInGrade.saveDetails');
+    // 保存评分
+    Route::post('/saveScore','Api\AttendanceSchedule\SignInGradeController@saveScore')
+        ->name('api.signInGrade.saveScore');
+    // 全部记录的课程列表
+    Route::post('/signInCourses','Api\AttendanceSchedule\SignInGradeController@signInCourses')
+        ->name('api.signInGrade.signInCourses');
+    // 班级内学生签到列表
+    Route::post('/signInStudentList','Api\AttendanceSchedule\SignInGradeController@signInStudentList')
+        ->name('api.signInGrade.signInStudentList');
+    // 备注列表
+    Route::post('/remarkList','Api\AttendanceSchedule\SignInGradeController@remarkList')
+        ->name('api.signInGrade.remarkList');
 });

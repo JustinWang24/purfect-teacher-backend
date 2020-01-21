@@ -37,6 +37,8 @@ class TaskController extends Controller
             return JsonBuilder::Error('成员不能为空');
         }
         $memberUserIds = explode(',',$memberUserIds);
+        array_push($memberUserIds,$leader_userid);
+        $memberUserIds = array_unique($memberUserIds);
 
         $end_time = $request->get('end_time');
         $projectid = intval($request->get('projectid'));
@@ -93,7 +95,6 @@ class TaskController extends Controller
 
         } else {
             $list = $dao->attendTasks($userId, $type);
-
             $output = [];
             foreach ($list as $key => $val) {
                 $projectTask = $val->projectTask;
@@ -150,7 +151,8 @@ class TaskController extends Controller
 
         $logs = [];
         foreach ($task->taskLogs as $key => $item) {
-            $logs[$key]['log_content'] = $item->user->name.$item->desc;
+            $logs[$key]['username'] =$item->user->name;
+            $logs[$key]['log_content'] = $item->desc;
             $logs[$key]['create_time'] = $item->created_at->format('Y-m-d H:i');
         }
         $output['log_list'] = $logs;
@@ -195,7 +197,7 @@ class TaskController extends Controller
             return JsonBuilder::Success('任务已结束');
         }
         if($member->status == ProjectTaskMember::STATUS_IN_PROGRESS) {
-            return JsonBuilder::Success('任务已接受');
+            return JsonBuilder::Success('任务已接收');
         }
 
         $result = $dao->receiveTask($user->id, $taskId, $schoolId);

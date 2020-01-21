@@ -22,4 +22,12 @@ class NoticeOrganization extends Model
         return $this->belongsTo(Notice::class);
     }
 
+
+    public function getImageAttribute($value){
+        if(!empty($value)){
+            return asset($value);
+        }
+        return null;
+    }
+
 }
