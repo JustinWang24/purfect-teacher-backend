@@ -26,3 +26,4 @@ resources/views/manager_wifi/*
 yarn.lock
 composer.lock
 package-lock.json
+/public/redactor/*
