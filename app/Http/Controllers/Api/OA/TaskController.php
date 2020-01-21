@@ -352,8 +352,21 @@ class TaskController extends Controller
         $schoolId = $user->getSchoolId();
         $taskId = $request->getTaskId();
         $assignId = $request->get('userid');
-        $assignId = explode(',', $assignId);
+        if(empty($assignId)) {
+            return JsonBuilder::Error('指派人不能为空');
+        }
+
         $dao = new TaskDao();
+        $assignId = explode(',', $assignId);
+        // 查询指派的人是否已存在
+        foreach ($assignId as $key => $item) {
+            $re = $dao->getTaskMember($taskId, $item);
+            if(!is_null($re)) {
+                $name = $re->user->name;
+                return JsonBuilder::Error($name.'已存在任务成员中,请更换人员');
+            }
+        }
+
         $result = $dao->assignTask($user->id, $taskId, $assignId, $schoolId);
 
         $msg = $result->getMessage();
