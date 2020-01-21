@@ -8,6 +8,10 @@ use Illuminate\Database\Eloquent\Model;
 
 class Project extends Model
 {
+
+    const OPEN = 1;
+    const INTERIOR = 2;
+
     const STATUS_NOT_BEGIN = 0;
     const STATUS_IN_PROGRESS = 1;  // 正在进行
     const STATUS_CLOSED = 2;       // 已结束
