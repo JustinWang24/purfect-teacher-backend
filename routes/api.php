@@ -767,8 +767,11 @@ Route::prefix('teacher/evaluation')->middleware('auth:api')->group(function(){
 });
 
 
-// 内部信
+
 Route::prefix('Oa')->middleware('auth:api')->group(function () {
+    /**
+     * 内部信
+     */
     // 获取所有老师
     Route::post('/get-teachers','Api\OA\InternalMessageController@getTeachers')
         ->name('api.oa.get.teachers');
@@ -789,11 +792,10 @@ Route::prefix('Oa')->middleware('auth:api')->group(function () {
     // 上传附件
     Route::post('/message-upload-files', 'Api\OA\InternalMessageController@uploadFiles')
         ->name('api.oa.upload.files');
-});
 
-
-// 工作日志
-Route::prefix('Oa')->middleware('auth:api')->group(function () {
+    /**
+     * 工作日志
+     */
     // 添加
     Route::post('/add-work-log', 'Api\OA\WorkLogController@index')
         ->name('api.oa.add.work.log');
@@ -806,6 +808,13 @@ Route::prefix('Oa')->middleware('auth:api')->group(function () {
     // 发送
     Route::post('/work-log-send', 'Api\OA\WorkLogController@workLogSend')
         ->name('api.oa.work.log.send');
+
+    /**
+     * 助手页
+     */
+    Route::post('/helper-page', 'Api\OA\IndexController@helperPage')
+        ->name('api.oa.helper.page');
+
 });
 
 
