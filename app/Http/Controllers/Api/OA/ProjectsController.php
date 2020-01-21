@@ -69,21 +69,20 @@ class ProjectsController extends Controller
      * @return string
      */
     public function projectList(ProjectRequest $request) {
+        $userId = $request->user()->id;
         $schoolId = $request->user()->getSchoolId();
         $dao = new ProjectDao();
-        $keyword = $request->getKeyword();
-        $list = $dao->getProjectsPaginateBySchool($schoolId, $keyword);
-
+        $list = $dao->getProjects($schoolId);
         $data = [];
         foreach ($list as $key => $item) {
             $tasks = $item->tasks;
             $re = $tasks->first();
             $end_time = $re->end_time ?? '';
-            // 项目成员
             $members = $item->members;
-            $userIds = $members->pluck('user_id')->toArray(); // 项目负责人
-            array_push($userIds,$item->user_id);
-            $userIds = array_unique($userIds);
+            $memberIds = $members->pluck('user_id')->toArray(); // 项目成员
+            array_push($memberIds,$item->user_id);
+            $memberIds = array_unique($memberIds);   // 项目总成员
+            $userIds = array_merge($memberIds, [$item->create_user]);  // 可见人员 成员、负责人、创建者
             $statusArr = $tasks->pluck('status')->toArray();
             if(empty($statusArr)) {
                 $status = Project::STATUS_NOT_BEGIN;  // 未开始
@@ -94,14 +93,18 @@ class ProjectsController extends Controller
             } else {
                 $status = Project::STATUS_CLOSED; // 已结束
             }
-            $data[$key]['projectid'] = $item->id;
-            $data[$key]['project_title'] = $item->title;
-            $data[$key]['end_time'] = $end_time;
-            $data[$key]['leader_userid'] = $item->user->id;
-            $data[$key]['leader_name'] = $item->user->name;
-            $data[$key]['member_count'] = count($userIds);
-            $data[$key]['doing_status'] = $status;
 
+            if($item->is_open == Project::OPEN || in_array($userId, $userIds)) {
+                $data[] = [
+                    'projectid'=>$item->id,
+                    'project_title' => $item->title,
+                    'end_time' => $end_time,
+                    'leader_userid' => $item->user->id,
+                    'leader_name' => $item->user->name,
+                    'member_count' => count($memberIds),
+                    'doing_status' => $status
+                ];
+            }
 
         }
 
