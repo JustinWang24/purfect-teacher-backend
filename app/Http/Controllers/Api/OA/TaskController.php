@@ -151,7 +151,8 @@ class TaskController extends Controller
 
         $logs = [];
         foreach ($task->taskLogs as $key => $item) {
-            $logs[$key]['log_content'] = $item->user->name.$item->desc;
+            $logs[$key]['username'] =$item->user->name;
+            $logs[$key]['log_content'] = $item->desc;
             $logs[$key]['create_time'] = $item->created_at->format('Y-m-d H:i');
         }
         $output['log_list'] = $logs;
