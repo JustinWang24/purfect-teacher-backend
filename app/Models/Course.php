@@ -36,7 +36,7 @@ class Course extends Model
         'optional',
         'year',
         'term',
-        'desc','school_id'
+        'desc','school_id','duration'
     ];
 
     public $hidden = ['deleted_at'];

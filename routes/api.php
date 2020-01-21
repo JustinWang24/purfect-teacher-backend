@@ -162,6 +162,11 @@ Route::prefix('timetable')->middleware('auth:api')->group(function () {
     // 1: 根据学生的 api token, 获取今天的课表
     Route::any('/load-by-student','Api\Timetable\FrontendController@load_by_student')
         ->name('api.timetable.load-by-student');
+
+    // 给 APP 教师端使用的 API: 课表
+    // 1: 根据教师的 api token, 获取今天的课表
+    Route::any('/load-by-teacher','Api\Timetable\FrontendController@load_by_teacher')
+        ->name('api.timetable.load-by-teacher');
 });
 
 // 招生API

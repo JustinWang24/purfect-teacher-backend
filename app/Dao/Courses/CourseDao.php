@@ -33,6 +33,7 @@ class CourseDao
         'year',
         'term',
         'desc',
+        'duration',
     ];
     public function __construct()
     {
