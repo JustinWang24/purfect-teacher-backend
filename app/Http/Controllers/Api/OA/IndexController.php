@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers\Api\OA;
 
+use App\Dao\OA\HelperPageDao;
+use App\Dao\OA\HelperPageTypeDao;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\MyStandardRequest;
 use App\Http\Requests\OA\PartyMemberRequest;
 use App\Utils\JsonBuilder;
 
@@ -39,4 +42,31 @@ class IndexController extends Controller
     {
         return JsonBuilder::Success();
     }
+
+
+    /**
+     * 教师端 助手页
+     * @param MyStandardRequest $request
+     * @return string
+     */
+    public function helperPage(MyStandardRequest $request)
+    {
+        $user = $request->user();
+        $dao = new HelperPageTypeDao;
+
+        $communal = $dao->getCommunalHelperPageByUser($user);
+        foreach ($communal as $key => $value) {
+                $value->helperPage;
+        }
+
+        $own = $dao->getHelperPageByUser($user);
+        foreach ($own as $key => $val) {
+                $val->helperPage;
+        }
+
+        $data = array_merge($communal->toArray(), $own->toArray());
+        return JsonBuilder::Success($data);
+    }
+
+
 }
