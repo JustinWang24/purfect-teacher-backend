@@ -59,6 +59,7 @@
         "right": "右",
         "center": "居中",
         "undo": "撤销",
-        "redo": "重做"
+        "redo": "重做",
+        "choose":"选择"
     };
 })(Redactor);

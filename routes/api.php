@@ -823,7 +823,18 @@ Route::prefix('Oa')->middleware('auth:api')->group(function () {
 });
 
 
-// 签到评分
+// 所见即所得编辑器的文件和图片上传接口
+Route::prefix('wysiwyg')->group(function () {
+    Route::any('/files/upload', 'Api\Wysiwyg\FilesController@files_upload')
+        ->name('api.wysiwyg.files.upload');
+    Route::any('/files/view', 'Api\Wysiwyg\FilesController@files_view')
+        ->name('api.wysiwyg.files.view');
+    Route::any('/images/upload', 'Api\Wysiwyg\FilesController@images_upload')
+        ->name('api.wysiwyg.images.upload');
+    Route::any('/images/view', 'Api\Wysiwyg\FilesController@images_view')
+        ->name('api.wysiwyg.images.view');
+});
+
 Route::prefix('signInGrade')->middleware('auth:api')->group(function () {
 
     Route::get('/classList', 'Api\AttendanceSchedule\SignInGradeController@courseClassList')
@@ -847,3 +858,5 @@ Route::prefix('signInGrade')->middleware('auth:api')->group(function () {
     Route::post('/remarkList','Api\AttendanceSchedule\SignInGradeController@remarkList')
         ->name('api.signInGrade.remarkList');
 });
+
+//

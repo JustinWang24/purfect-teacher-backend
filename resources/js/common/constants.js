@@ -237,5 +237,22 @@ export const Constants = {
         GRADE: 2, // 班主任
         STUDY_GROUP: 3, // 教研组长
         STUDENTS: 4, // 班长
+    },
+    WysiwygGlobalOptions:{
+        lang:'zh_cn', // 语言使用中文
+        plugins: [    // 所要加载的插件
+            'fontsize',
+            'fontcolor',
+            'alignment',
+            'fontfamily',
+            'table',
+            'specialchars',
+            'imagemanager',
+            'filemanager',
+        ],
+        fileUpload: '/your-upload-script/',  // 文件上传的 Action
+        fileManagerJson: '/your-folder/files.json', // 已存在的文件的资源 URL, 返回为 json 格式
+        imageUpload: '/your-upload-script/', // 图片上传的 Action
+        imageManagerJson: '/your-folder/images.json', // 已存在的图片的资源 URL, 返回为 json 格式
     }
 };
