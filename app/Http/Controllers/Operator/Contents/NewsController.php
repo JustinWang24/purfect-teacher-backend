@@ -2,15 +2,67 @@
 
 namespace App\Http\Controllers\Operator\Contents;
 
+use App\Dao\Contents\AlbumDao;
 use App\Dao\Schools\NewsDao;
 use App\Dao\Schools\NewsSectionDao;
+use App\Dao\Schools\SchoolDao;
 use App\Models\Schools\News;
+use App\Utils\FlashMessageBuilder;
 use App\Utils\JsonBuilder;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
 class NewsController extends Controller
 {
+    /**
+     * 校园相册管理
+     * @param Request $request
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function photo_album(Request $request){
+        $school = (new SchoolDao())->getSchoolByIdOrUuid($request->get('uuid'));
+        $dao = new AlbumDao();
+        $album = $dao->getAllBySchool($school->id);
+        $this->dataForView['pageTitle'] = '校园相册管理';
+        $this->dataForView['album'] = $album;
+        $this->dataForView['school'] = $school;
+        return view('school_manager.news.album',$this->dataForView);
+    }
+
+    /**
+     * 保存相册内容
+     * @param Request $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function create_album(Request $request){
+        $dao = new AlbumDao();
+        $msgBag = $dao->create($request);
+        if($msgBag->isSuccess()){
+            FlashMessageBuilder::Push($request, FlashMessageBuilder::SUCCESS,$msgBag->getMessage());
+        }
+        else{
+            FlashMessageBuilder::Push($request, FlashMessageBuilder::DANGER,$msgBag->getMessage());
+        }
+        return redirect()->route('school_manager.contents.photo-album',['uuid'=>$msgBag->getData()]);
+    }
+
+    /**
+     * 删除相册内容
+     * @param Request $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function delete_album(Request $request){
+        $dao = new AlbumDao();
+        $album = $dao->getById($request->get('id'));
+        if($album){
+            $school = (new SchoolDao())->getSchoolById($album->school_id);
+            $album->delete();
+            FlashMessageBuilder::Push($request, FlashMessageBuilder::SUCCESS,'删除成功');
+            return redirect()->route('school_manager.contents.photo-album',['uuid'=>$school->uuid]);
+        }
+
+    }
+
     public function management(Request $request){
         $this->dataForView['typeText'] = News::TypeText($request->get('type'));
         $this->dataForView['pageTitle'] = $this->dataForView['typeText'].'管理';
