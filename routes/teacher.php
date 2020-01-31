@@ -9,6 +9,7 @@ Route::prefix('teacher')->group(function () {
 
     // 课件管理
     Route::get('course/materials/manager', 'Course\MaterialsController@manager')->name('teacher.course.materials.manager'); //
+    Route::post('course/materials/create', 'Course\MaterialsController@create')->name('teacher.course.materials.create'); // 教师添加课件
 
 
     Route::get('conference/index', 'ConferenceController@index')->name('teacher.conference.index');    // 会议列表

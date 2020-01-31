@@ -238,21 +238,16 @@ export const Constants = {
         STUDY_GROUP: 3, // 教研组长
         STUDENTS: 4, // 班长
     },
-    WysiwygGlobalOptions:{
-        lang:'zh_cn', // 语言使用中文
-        plugins: [    // 所要加载的插件
-            'fontsize',
-            'fontcolor',
-            'alignment',
-            'fontfamily',
-            'table',
-            'specialchars',
-            'imagemanager',
-            'filemanager',
-        ],
-        fileUpload: '/your-upload-script/',  // 文件上传的 Action
-        fileManagerJson: '/your-folder/files.json', // 已存在的文件的资源 URL, 返回为 json 格式
-        imageUpload: '/your-upload-script/', // 图片上传的 Action
-        imageManagerJson: '/your-folder/images.json', // 已存在的图片的资源 URL, 返回为 json 格式
+    COURSE_MATERIAL_TYPES:{
+        TYPE_PRE:1,
+        TYPE_PRE_TXT:'预习材料',
+        TYPE_LECTURE:2,
+        TYPE_LECTURE_TXT:'课堂讲义',
+        TYPE_AFTER:3,
+        TYPE_AFTER_TXT:'课后阅读',
+        TYPE_HOMEWORK:4,
+        TYPE_HOMEWORK_TXT:'随堂作业',
+        TYPE_EXAM: 5,
+        TYPE_EXAM_TXT: '随堂测试'
     }
 };
