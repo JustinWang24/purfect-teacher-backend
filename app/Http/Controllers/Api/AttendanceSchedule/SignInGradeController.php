@@ -60,14 +60,16 @@ class SignInGradeController extends Controller
         foreach ($return as $key => $item) {
             $re = $attendancesDao->getAttendByTimeTableIdAndWeek($item->id, $week);
             if(!is_null($re)) {
-                $list[$key]['attendance_id'] = $re->id;
-                $list[$key]['grade_id'] = $re->grade->id;
-                $list[$key]['grade'] = $re->grade->name;
-                $list[$key]['total_number'] = $re->total_number;
-                $list[$key]['actual_number'] = $re->actual_number;
-                $list[$key]['leave_number'] = $re->leave_number;
-                $list[$key]['missing_number'] = $re->missing_number;
-                $list[$key]['status'] = $re->status;
+                $list[] = [
+                    'attendance_id' => $re->id,
+                    'grade_id' => $re->grade->id,
+                    'grade' => $re->grade->name,
+                    'total_number' => $re->total_number,
+                    'actual_number' => $re->actual_number,
+                    'leave_number' => $re->leave_number,
+                    'missing_number' => $re->missing_number,
+                    'status' => $re->status,
+                ];
             }
 
         }
