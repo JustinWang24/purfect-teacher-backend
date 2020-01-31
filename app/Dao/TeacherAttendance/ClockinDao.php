@@ -5,9 +5,12 @@ namespace App\Dao\TeacherAttendance;
 use App\Models\TeacherAttendance\Attendance;
 use App\Models\TeacherAttendance\Clockin;
 use App\Models\TeacherAttendance\Clockset;
+use App\Models\Users\UserOrganization;
 use App\Utils\JsonBuilder;
+use App\Utils\Misc\Contracts\Title;
 use App\Utils\ReturnData\MessageBag;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 
 class ClockinDao
 {
@@ -24,6 +27,35 @@ class ClockinDao
         }catch (\Exception $e) {
             return new MessageBag(JsonBuilder::CODE_ERROR, $e->getMessage());
         }
+    }
+
+    /**
+     * 管理员获取某日的考勤统计
+     * @param $attendanceIdArr
+     * @param $day
+     * @return array
+     */
+    public function getOneDayList($attendanceIdArr, $day)
+    {
+        $return = [
+            'all' => 0,//全部人数
+            'normal' => 0,//已打卡人数
+            'not' =>0,//未打卡人数 全部-已打卡
+            'late' => 0,//迟到人数
+            'leave' => 0,//请假人数
+        ];
+        foreach ($attendanceIdArr as $attendanceId) {
+            $attendance = Attendance::find($attendanceId);
+            //该考勤组下总成员
+            $return['all'] += UserOrganization::whereIn('organization_id', $attendance->organizations()->pluck('organization_id')->toArray())
+                ->where('title_id', '=', Title::MEMBER)->count();
+            //该考勤组下已打卡人员
+            $return['normal'] += $attendance->clockins()->where('day', '=', $day)->distinct()->count('user_id');
+            $return['late'] += $attendance->clockins()->where('day', '=', $day)->whereIn('status', [Clockin::STATUS_LATE, Clockin::STATUS_LATER])->distinct()->count('user_id');
+        }
+
+        $return['not'] = $return['all'] - $return['normal'];
+        return $return;
     }
 
     public function getList(Attendance $attendance, Carbon $monthStart,Carbon $monthEnd)
@@ -48,12 +80,13 @@ class ClockinDao
         foreach ($clockins as $clockin) {
             if (!isset($clockinList[$clockin->day])) {
                 $clockinList[$clockin->day] = [
-                    'morning' => [],
-                    'afternoon' => [],
-                    'evening' => []
+                    'morning' => ['time' => '', 'status' => Clockin::STATUS_NONE],
+                    'afternoon' => ['time' => '', 'status' => Clockin::STATUS_NONE],
+                    'evening' => ['time' => '', 'status' => Clockin::STATUS_NONE]
                 ];
             }
-            $clockinList[$clockin->day][$clockin->type] = $clockin;
+            $clockinList[$clockin->day][$clockin->type]['time'] = $clockin->time;
+            $clockinList[$clockin->day][$clockin->type]['status'] = $clockin->status;
             if ($clockin->status == Clockin::STATUS_LATE || $clockin->status == Clockin::STATUS_LATER) {
                 $lateList[] = $clockin;
             }
@@ -66,13 +99,13 @@ class ClockinDao
         }
         foreach ($groupDays['week'] as $groupDay) {
             if (isset($clockinList[$groupDay])) {
-                if (empty($clockinList[$groupDay]['morning'])) {
+                if ($clockinList[$groupDay]['morning']['status'] == Clockin::STATUS_NONE) {
                     $missList[] = ['day' => $groupDay, 'type' => 'morning'];
                 }
-                if ($attendance->using_afternoon && empty($clockinList[$groupDay]['afternoon'])) {
+                if ($attendance->using_afternoon && $clockinList[$groupDay]['afternoon']['status'] == Clockin::STATUS_NONE) {
                     $missList[] = ['day' => $groupDay, 'type' => 'afternoon'];
                 }
-                if (empty($clockinList[$groupDay]['evening'])) {
+                if ($clockinList[$groupDay]['evening'] == Clockin::STATUS_NONE) {
                     $missList[] = ['day' => $groupDay, 'type' => 'evening'];
                 }
             }
@@ -126,14 +159,15 @@ class ClockinDao
         $eveningTime = Carbon::parse($day . $clockset->evening)->timestamp;
 
         //下个打卡节点
-        $clockin['morning'] && $return['type'] = $attendance->using_afternoon ? 'afternoon' : 'evening';
-        $clockin['afternoon'] && $return['type'] = 'evening';
-        $clockin['evening'] && $return['type'] = null;
+        $clockin['morning']['status'] && $return['type'] = $attendance->using_afternoon ? 'afternoon' : 'evening';
+        $clockin['afternoon']['status'] && $return['type'] = 'evening';
+        $clockin['evening']['status'] && $return['type'] = null;
 
-
+        //未到上班时间
         if ($startTime > $dateTime) {
             return $return;
         }
+        //已超过结束时间或已打完卡
         if ($endTime < $dateTime || !$return['type']) {
             $return['type'] = null;
             return $return;

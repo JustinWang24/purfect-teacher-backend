@@ -9,6 +9,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\TeacherAttendance\AttendanceRequest;
 use App\Models\TeacherAttendance\Clockin;
 use App\Utils\JsonBuilder;
+use App\Utils\Misc\Contracts\Title;
 use Carbon\Carbon;
 
 class AttendanceController extends Controller
@@ -21,7 +22,7 @@ class AttendanceController extends Controller
         $day = Carbon::parse($request->getInputDay())->format('Y-m-d');
         $enDay = Carbon::parse($request->getInputDay())->englishDayOfWeek;
         //获取用户所在组织
-        $organizationIdArr = $user->organizations->pluck('organization_id')->toArray();
+        $organizationIdArr = $user->organizations->where('title_id', '=', Title::MEMBER)->pluck('organization_id')->toArray();
         $dao = new AttendanceDao();
         //获取考勤配置
         $attendance = $dao->getByOrganizationIdArr($organizationIdArr, $schoolId);
@@ -30,10 +31,6 @@ class AttendanceController extends Controller
         }
         //获取当日配置
         $clockset = $dao->getOnedayClockset($attendance, $enDay);
-        if ($clockset) {
-            //查看是否例外日期
-            $dao->checkIsexceptionDayByDay($attendance, $day) && $clockset = null;
-        }
         //获取当日记录
         $clockin = $dao->getOnedayClockin($attendance, $day, $user->id);
 
@@ -42,7 +39,7 @@ class AttendanceController extends Controller
         $showButton = false;
         $nextType = '';
         //只有今日才可能 存在打卡按钮
-        if ($day == Carbon::now()->format('Y-m-d') && $clockset) {
+        if ($day == Carbon::now()->format('Y-m-d')) {
             $clockinDao = new ClockinDao();
             $check = $clockinDao->checkClockinStatus($attendance, $clockset, $clockin);
             $nextType = $check['type'] ?? '';
@@ -51,9 +48,9 @@ class AttendanceController extends Controller
 
         $return = [
             'attendance' => $attendance,
-            'clockset' => $clockset ?? [],
+            'clockset' => $clockset,
             'clockin' => $clockin,
-            'mac_address' => $mac ?? [],
+            'mac_address' => $mac['mac_address'],
             'date' => $day,
             'show' => $showButton,
             'next' => $nextType
@@ -66,14 +63,14 @@ class AttendanceController extends Controller
     {
         $user = $request->user();
         $schoolId = $user->getSchoolId();
-        $day = Carbon::now()->format('Y-m-d');
-        $enDay = Carbon::now()->englishDayOfWeek;
-        $time = Carbon::now()->format('H:i:s');
-        $wifi = $request->getInputWifi();
-        $useMac = $request->getInputMacAddress();
+        $day = Carbon::now()->format('Y-m-d');//日期
+        $enDay = Carbon::now()->englishDayOfWeek;//英文的周
+        $time = Carbon::now()->format('H:i:s');//时间
+        $wifi = $request->getInputWifi();//wifi
+        $useMac = $request->getInputMacAddress();//mac
 
         //获取用户所在组织
-        $organizationIdArr = $user->organizations->pluck('organization_id')->toArray();
+        $organizationIdArr = $user->organizations->where('title_id', '=', Title::MEMBER)->pluck('organization_id')->toArray();
         $dao = new AttendanceDao();
         //获取考勤配置
         $attendance = $dao->getByOrganizationIdArr($organizationIdArr, $schoolId);
@@ -85,13 +82,6 @@ class AttendanceController extends Controller
         }
         //获取今日配置
         $clockset = $dao->getOnedayClockset($attendance, $enDay);
-        if ($clockset) {
-            //查看是否例外日期
-            $dao->checkIsexceptionDayByDay($attendance, $day) && $clockset = null;
-        }
-        if (empty($clockset)) {
-            return JsonBuilder::Error('今日无需打卡');
-        }
         //获取Mac
         $mac = $dao->getMacAddress($attendance, $user->id);
         if (empty($mac)) {
@@ -135,7 +125,7 @@ class AttendanceController extends Controller
         $schoolId = $user->getSchoolId();
         $dao = new AttendanceDao();
         //获取用户所在组织
-        $organizationIdArr = $user->organizations->pluck('organization_id')->toArray();
+        $organizationIdArr = $user->organizations->where('title_id', '=', Title::MEMBER)->pluck('organization_id')->toArray();
         //获取考勤配置
         $attendance = $dao->getByOrganizationIdArr($organizationIdArr, $schoolId);
         if (empty($attendance)) {
@@ -162,11 +152,57 @@ class AttendanceController extends Controller
         }
     }
 
+    public function getGroupList(AttendanceRequest $request) {
+        $user = $request->user();
+        $schoolId = $user->getSchoolId();
+        //获取用户拥有的管理权限组织
+        $organizationIdArr = $user->organizations->whereIn('title_id', [Title::LEADER, Title::DEPUTY])->pluck('organization_id')->toArray();
+        $dao = new AttendanceDao();
+        $list = $dao->getListByOrganizationIdArr($organizationIdArr, $schoolId);
+        $return = [
+            ['groupid' => 0, 'title' => '全部']
+        ];
+        foreach ($list as $item) {
+            $return[] = ['groupid' => $item->id, 'title' => $item->title];
+        }
+        return JsonBuilder::Success($return);
+    }
+
+    public function getManageDayCount(AttendanceRequest $request) {
+        $user = $request->user();
+        $schoolId = $user->getSchoolId();
+        $day = $request->getInputDay();
+        $groupid = $request->getInputGroupId();
+        //获取用户拥有的管理权限组织
+        $organizationIdArr = $user->organizations->whereIn('title_id', [Title::LEADER, Title::DEPUTY])->pluck('organization_id')->toArray();
+        $dao = new AttendanceDao();
+        $list = $dao->getListByOrganizationIdArr($organizationIdArr, $schoolId);
+        $groupIdList = [];//用户要查询的组ID 验证权限
+        foreach ($list as $item) {
+            //如果只是查询某一分组数据
+            if ($groupid) {
+                if ($item->id == $groupid) {
+                    $groupIdList[] = $groupid;
+                }
+            }else {
+                $groupIdList[] = $item->id;
+            }
+        }
+        if (empty($groupIdList)) {
+            return JsonBuilder::Error('权限不足');
+        }
+        $clockinDao = new ClockinDao();
+        $result = $clockinDao->getOneDayList($groupIdList, $day);
+        $result['groupid'] = (int) $groupid;
+        $result['day'] = $day;
+        return JsonBuilder::Success($result);
+    }
     public function getMonthCount(AttendanceRequest $request) {
         $user = $request->user();
         $schoolId = $user->getSchoolId();
         $dao = new AttendanceDao();
         $monthStart = Carbon::parse($request->getInputMonth())->firstOfMonth();
+        $month = $monthStart->format('Y-m');
         if (Carbon::parse($request->getInputMonth())->isSameMonth(Carbon::today())) {
             //当月只显示到今日
             $monthEnd = Carbon::today();
@@ -174,7 +210,7 @@ class AttendanceController extends Controller
             $monthEnd = Carbon::parse($request->getInputMonth())->lastOfMonth();
         }
         //获取用户所在组织
-        $organizationIdArr = $user->organizations->pluck('organization_id')->toArray();
+        $organizationIdArr = $user->organizations->where('title_id', '=', Title::MEMBER)->pluck('organization_id')->toArray();
         //获取考勤配置
         $attendance = $dao->getByOrganizationIdArr($organizationIdArr, $schoolId);
         if (empty($attendance)) {
@@ -184,8 +220,12 @@ class AttendanceController extends Controller
         $countList = $clockinDao->getList($attendance, $monthStart, $monthEnd);
 
         $return = [
-            'attendance' => $attendance,
-            'month' => $monthStart->format('Y-m'),
+            'attendance' => [
+                'title' => $attendance->title,
+                'wifi_name' => $attendance->wifi_name,
+                'using_afternoon' => $attendance->using_afternoon
+            ],
+            'month' => $month,
         ];
         return array_merge($return, $countList);
     }
