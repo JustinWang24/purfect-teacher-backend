@@ -105,7 +105,7 @@ class TaskDao
      * @param $userId
      * @return mixed
      */
-    public function getTaskStatus($taskId,$userId) {
+    public function getTaskMember($taskId,$userId) {
         $map = ['user_id'=>$userId, 'task_id'=>$taskId];
         return ProjectTaskMember::where($map)->first();
     }
