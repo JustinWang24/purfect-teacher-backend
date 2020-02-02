@@ -18,5 +18,14 @@ class GradeManagerDao
         return GradeManager::where('grade_id', $gradeId)->first();
     }
 
+    /**
+     * 根据班主任ID 获取班级
+     * @param $adviser
+     * @return mixed
+     */
+    public function getAllGradesByAdviserId($adviser)
+    {
+        return GradeManager::where('adviser_id', $adviser)->get();
+    }
 
 }

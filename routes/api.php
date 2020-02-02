@@ -820,6 +820,18 @@ Route::prefix('Oa')->middleware('auth:api')->group(function () {
     Route::post('/helper-page', 'Api\OA\IndexController@helperPage')
         ->name('api.oa.helper.page');
 
+    /**
+     * 班级管理
+     */
+    // 获取班级风采
+    Route::post('/grade-resources', 'Api\OA\GradeManageController@index')
+        ->name('api.oa.grade.resources');
+    // 上传班级风采
+    Route::post('/upload-grade-resources', 'Api\OA\GradeManageController@uploadGradeResource')
+        ->name('api.oa.upload.grade.resources');
+    // 删除班级风采
+    Route::post('/del-grade-resources', 'Api\OA\GradeManageController@delGradeResource')
+        ->name('api.oa.del.grade.resources');
 });
 
 
