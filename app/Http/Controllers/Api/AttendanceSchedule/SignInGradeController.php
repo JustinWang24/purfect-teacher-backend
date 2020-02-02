@@ -183,7 +183,7 @@ class SignInGradeController extends Controller
     public function signInCourses(AttendanceRequest $request) {
         $userId = $request->user()->id;
         $year = $request->getYear();
-        $term = $request->geTerm();
+        $term = $request->getTerm();
         if(empty($year) || empty($term)) {
             return JsonBuilder::Error('缺少参数');
         }
