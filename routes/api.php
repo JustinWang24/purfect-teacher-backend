@@ -859,4 +859,8 @@ Route::prefix('signInGrade')->middleware('auth:api')->group(function () {
         ->name('api.signInGrade.remarkList');
 });
 
-//
+// 校园风光
+Route::prefix('campus')->group(function () {
+    Route::any('/scenery', 'Api\School\CampusController@scenery')
+        ->name('api.campus.scenery');
+});

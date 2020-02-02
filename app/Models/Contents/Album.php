@@ -16,4 +16,12 @@ class Album extends Model
     public function getUrlAttribute($value){
         return asset($value);
     }
+
+    /**
+     * 是否是视频
+     * @return bool
+     */
+    public function isVideo(){
+        return self::TYPE_VIDEO === $this->type;
+    }
 }

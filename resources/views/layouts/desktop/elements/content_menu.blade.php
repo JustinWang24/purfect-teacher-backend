@@ -16,6 +16,11 @@
             </a>
         </li>
         <li class="nav-item">
+            <a href="{{ route('school_manager.contents.campus-intro',['uuid'=>session('school.uuid')]) }}" class="nav-link">
+                <span class="title">校园简介</span>
+            </a>
+        </li>
+        <li class="nav-item">
             <a href="{{ route('school_manager.contents.photo-album',['uuid'=>session('school.uuid')]) }}" class="nav-link">
                 <span class="title">校园相册</span>
             </a>

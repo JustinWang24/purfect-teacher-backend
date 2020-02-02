@@ -108,7 +108,12 @@ class RedActor
      * @return array
      */
     public function loadDir($userUuid, $type){
-        $list = scandir($this->getWysiwygRoot($userUuid, $type));
+        $dir = $this->getWysiwygRoot($userUuid, $type);
+        if(!file_exists($dir)){
+            // 如果指定的目录不存在， 就创建该目录
+            mkdir($dir, 0777, true);
+        }
+        $list = scandir($dir);
         if($type === self::TYPE_IMAGE){
             return $this->_images($list, $userUuid);
         }

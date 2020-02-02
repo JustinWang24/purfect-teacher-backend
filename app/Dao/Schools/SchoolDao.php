@@ -215,4 +215,14 @@ class SchoolDao
     {
         return School::where('name',$schoolName)->first();
     }
+
+    /**
+     * 保存校园简介文本
+     * @param $schoolId
+     * @param $intro
+     * @return SchoolConfiguration
+     */
+    public function saveSchoolIntro($schoolId, $intro){
+        return SchoolConfiguration::where('school_id', $schoolId)->update(['campus_intro'=>$intro]);
+    }
 }
