@@ -106,20 +106,18 @@ class SignInGradeController extends Controller
 
         $score = []; // 评分列表
         foreach ($gradeUser as $key => $item) {
+            $student[$key]['user_id'] = $item->user_id;
+            $student[$key]['name'] = $item->name;
+            $score[$key]['user_id'] = $item->user_id;
+            $score[$key]['name'] = $item->name;
+            $student[$key]['mold'] = 0;  // 未签到
+            $score[$key]['score'] = 0;
             foreach ($list as $k => $v) {
-                $score[$key]['user_id'] = $item->user_id;
-                $score[$key]['name'] = $item->name;
-                $student[$key]['user_id'] = $item->user_id;
-                $student[$key]['name'] = $item->name;
                 if(in_array($item->user_id, $userIds)) {
                     $student[$key]['mold'] = $v->mold;
                     $score[$key]['score'] = $v->score;
-                } else {
-                    $student[$key]['mold'] = 0;  // 未签到
-                    $score[$key]['score'] = 0;
                 }
             }
-
         }
 
 
