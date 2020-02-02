@@ -162,6 +162,11 @@ Route::prefix('timetable')->middleware('auth:api')->group(function () {
     // 1: 根据学生的 api token, 获取今天的课表
     Route::any('/load-by-student','Api\Timetable\FrontendController@load_by_student')
         ->name('api.timetable.load-by-student');
+
+    // 给 APP 教师端使用的 API: 课表
+    // 1: 根据教师的 api token, 获取今天的课表
+    Route::any('/load-by-teacher','Api\Timetable\FrontendController@load_by_teacher')
+        ->name('api.timetable.load-by-teacher');
 });
 
 // 招生API
@@ -818,7 +823,18 @@ Route::prefix('Oa')->middleware('auth:api')->group(function () {
 });
 
 
-// 签到评分
+// 所见即所得编辑器的文件和图片上传接口
+Route::prefix('wysiwyg')->group(function () {
+    Route::any('/files/upload', 'Api\Wysiwyg\FilesController@files_upload')
+        ->name('api.wysiwyg.files.upload');
+    Route::any('/files/view', 'Api\Wysiwyg\FilesController@files_view')
+        ->name('api.wysiwyg.files.view');
+    Route::any('/images/upload', 'Api\Wysiwyg\FilesController@images_upload')
+        ->name('api.wysiwyg.images.upload');
+    Route::any('/images/view', 'Api\Wysiwyg\FilesController@images_view')
+        ->name('api.wysiwyg.images.view');
+});
+
 Route::prefix('signInGrade')->middleware('auth:api')->group(function () {
 
     Route::get('/classList', 'Api\AttendanceSchedule\SignInGradeController@courseClassList')
@@ -841,4 +857,10 @@ Route::prefix('signInGrade')->middleware('auth:api')->group(function () {
     // 备注列表
     Route::post('/remarkList','Api\AttendanceSchedule\SignInGradeController@remarkList')
         ->name('api.signInGrade.remarkList');
+});
+
+// 校园风光
+Route::prefix('campus')->group(function () {
+    Route::any('/scenery', 'Api\School\CampusController@scenery')
+        ->name('api.campus.scenery');
 });

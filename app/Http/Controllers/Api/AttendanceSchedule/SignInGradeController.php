@@ -77,6 +77,7 @@ class SignInGradeController extends Controller
             'date' =>$now->toDateString(),
             'name'=>$course->name,
             'time_slot'=>$return[0]->timeSlot->name,
+            'room'=>$return[0]->room->name
             ];
 
         $data = ['course'=>$course, 'grade_list'=>$list];

@@ -21,6 +21,19 @@ class AttendanceDao
     }
 
     /**
+     * 根据组织获取考勤配置列表
+     * @param $organizationIdArr
+     * @param $school_id
+     * @return mixed
+     */
+    public function getListByOrganizationIdArr($organizationIdArr, $school_id)
+    {
+        return Attendance::whereHas('organizations', function ($query) use ($organizationIdArr) {
+            $query->whereIn('organizations.id', $organizationIdArr);
+        })->where('school_id', $school_id)->get();
+    }
+
+    /**
      * 根据日期获取当日考勤打卡配置
      * @param Attendance $attendance 考勤基本配置
      * @param $enday
@@ -53,17 +66,26 @@ class AttendanceDao
         return $attendance->exceptiondays()->where('day', $day)->exists();
     }
 
+    /**
+     * 获取区间段的工作日和休息日
+     * @param Attendance $attendance
+     * @param Carbon $startDay
+     * @param Carbon $endDay
+     * @return array
+     */
     public function groupDayArray(Attendance $attendance,Carbon $startDay,Carbon $endDay)
     {
         $weekDayList = [];
         $restDayList = [];
         $allDayList = [];
-        $week = $attendance->clocksets()->pluck('week')->toArray();
+        $weekDay = [];
+        foreach ($attendance->clocksets as $clockset) {
+            $weekDay[$clockset->week] = $clockset->is_weekday;
+        }
         $exceptionDay = $attendance->exceptiondays()->pluck('day')->toArray();
-
         while ($startDay->lte($endDay)) {
             $day = $startDay->format('Y-m-d');
-            if (in_array($startDay->englishDayOfWeek, $week) && !in_array($day, $exceptionDay)) {
+            if (!empty($weekDay[$startDay->englishDayOfWeek]) && !in_array($day, $exceptionDay)) {
                 $weekDayList[] = $day;
             }else {
                 $restDayList[] = $day;
@@ -84,16 +106,26 @@ class AttendanceDao
     public function getOnedayClockin(Attendance $attendance, $day, $user_id)
     {
         $retList = [
-            'morning' => [],
-            'afternoon' => [],
-            'evening' => []
+            'morning' => [
+                'time' => '',
+                'status' => 0
+            ],
+            'afternoon' => [
+                'time' => '',
+                'status' => 0
+            ],
+            'evening' => [
+                'time' => '',
+                'status' => 0
+            ]
         ];
         $list = $attendance->clockins()->where([
             ['user_id', '=', $user_id],
             ['day', '=', $day]
         ])->get();
         foreach ($list as $item) {
-            $retList[$item['type']] = $item;
+            $retList[$item->type]['time'] = $item->time;
+            $retList[$item->type]['status'] = $item->status;
         }
         return $retList;
     }

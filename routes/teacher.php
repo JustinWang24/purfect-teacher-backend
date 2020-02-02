@@ -7,6 +7,11 @@ Route::prefix('teacher')->group(function () {
     Route::get('index', 'SchoolSceneryController@index')->name('teacher.scenery.index');       // 校园风采
     Route::get('profile', 'SchoolSceneryController@profile')->name('teacher.scenery.profile'); // 学校简介
 
+    // 课件管理
+    Route::get('course/materials/manager', 'Course\MaterialsController@manager')->name('teacher.course.materials.manager'); //
+    Route::post('course/materials/create', 'Course\MaterialsController@create')->name('teacher.course.materials.create'); // 教师添加课件
+
+
     Route::get('conference/index', 'ConferenceController@index')->name('teacher.conference.index');    // 会议列表
     Route::any('conference/create', 'ConferenceController@create')->name('teacher.conference.create'); // 添加接口
     Route::any('conference/edit', 'ConferenceController@edit')->name('teacher.conference.edit');       // 添加接口

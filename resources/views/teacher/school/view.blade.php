@@ -40,7 +40,7 @@ $slot = \App\Utils\Time\GradeAndYearUtil::GetTimeSlot();
                     <p>
                     @foreach($teacher->myCourses as $tc)
                         @if($tc->course)
-                            <a class="text-white" href="#">{{ $tc->course->name }}.</a>
+                            <a class="text-white" href="{{ route('teacher.course.materials.manager',['course_id'=>$tc->course_id, 'teacher'=>\Illuminate\Support\Facades\Auth::user()->id]) }}">{{ $tc->course->name }}.</a>
                         @else
                             @php
 /* teacher course 记录没有关联任何课程, 说明是脏数据, 需要删除 */

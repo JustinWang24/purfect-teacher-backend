@@ -25,19 +25,24 @@
         >
             <el-form :model="courseModel" :rules="rules" ref="courseModelForm" label-width="100px" class="course-form">
                 <el-row>
-                    <el-col :span="8">
+                    <el-col :span="6">
                         <el-form-item label="课程编号" prop="code">
                             <el-input v-model="courseModel.code" placeholder="必填: 课程编号, 请注意保证课程编号的唯一性"></el-input>
                         </el-form-item>
                     </el-col>
-                    <el-col :span="8">
+                    <el-col :span="6">
                         <el-form-item label="课程名称" prop="name">
                             <el-input v-model="courseModel.name" placeholder="必填: 课程名称"></el-input>
                         </el-form-item>
                     </el-col>
-                    <el-col :span="8">
+                    <el-col :span="6">
                         <el-form-item label="学分" prop="scores">
                             <el-input v-model="courseModel.scores" placeholder="选填: 课程学分"></el-input>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="6">
+                        <el-form-item label="课时数">
+                            <el-input v-model="courseModel.duration" @input="updateInput" placeholder="必填: 请输入本课程一共包括多少课时"></el-input>
                         </el-form-item>
                     </el-col>
                 </el-row>
@@ -213,6 +218,7 @@
                     id: null, // 课程 ID
                     code: '', // 课程编号
                     name: '', // 课程名称
+                    duration: 0, // 课时数
                     teachers: [], // 任课教师, 可以包含多个老师
                     scores: '0', // 学分
                     majors: [], // 所属专业, 一门课可以属于多个专业共享
@@ -277,6 +283,9 @@
             })
         },
         methods: {
+            updateInput: function(e){
+                this.$forceUpdate();
+            },
             courseSavedByAdminHandler: function(){
                 this.showElectiveCourseFormFlag = false;
                 window.location.reload();
@@ -326,6 +335,7 @@
                 this.courseModel.teachers = [];
                 this.courseModel.majors = [];
                 this.courseModel.scores = '0';
+                this.courseModel.duration = 0;
                 this.courseModel.year = '';
                 this.courseModel.term = '';
                 this.courseModel.desc = '';
@@ -333,6 +343,7 @@
                 if(typeof model !== "undefined"){
                     this.courseModel.id = model.id;
                     this.courseModel.code = model.code;
+                    this.courseModel.duration = model.duration;
                     this.courseModel.name = model.name;
                     this.courseModel.scores = model.scores;
                     this.courseModel.year = model.year;
@@ -403,6 +414,10 @@
                 }
                 if(this.courseModel.name.trim() === ''){
                     this.$message.error('请输入本课程的名称');
+                    return;
+                }
+                if(this.courseModel.duration.trim() === ''){
+                    this.$message.error('请输入本课程所需要的课时数');
                     return;
                 }
 
