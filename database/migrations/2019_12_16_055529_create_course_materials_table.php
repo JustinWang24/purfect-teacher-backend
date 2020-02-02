@@ -20,7 +20,7 @@ class CreateCourseMaterialsTable extends Migration
             $table->unsignedSmallInteger('type')->comment('材料类型: 预习, 复习, 课外阅读, 课堂讲义');
             $table->unsignedInteger('index')->comment('第几次课');
             $table->text('description')->nullable()->comment('材料的描述');
-            $table->text('url')->comment('文件或者链接的地址');
+            $table->text('url')->nullable()->comment('文件或者链接的地址');
             $table->timestamps();
             $table->softDeletes();
         });

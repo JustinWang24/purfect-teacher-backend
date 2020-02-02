@@ -36,7 +36,7 @@ $courseTeacher = $course->getCourseTeacher($teacher->id);
             {{ \App\Models\Courses\CourseMaterial::GetTypeText($courseMaterial->type) }}
         </el-tag>
         <span>
-            <a href="{{ $courseMaterial->url }}">
+            <a href="{{ $courseMaterial->url }}" target="_blank">
                 {{ $courseMaterial->description }}
             </a>
         </span>
@@ -58,14 +58,7 @@ $courseTeacher = $course->getCourseTeacher($teacher->id);
         <div class="col-sm-12 col-md-6 col-lg-6 col-xl-6">
             <div class="card">
                 <div class="card-body" v-show="showMaterialForm">
-                    <el-form :model="courseMaterialModel" label-width="80px" class="course-form" style="margin-top: 20px;">
-                        <el-form-item label="课件类型">
-                            <el-select v-model="courseMaterialModel.type" placeholder="请选择课件类型">
-                                @foreach(\App\Models\Courses\CourseMaterial::AllTypes() as $key => $txt)
-                                    <el-option label="{{ $txt }}" :value="{{ $key }}"></el-option>
-                                @endforeach
-                            </el-select>
-                        </el-form-item>
+                    <el-form :model="courseMaterialModel" label-width="120px" class="course-form" style="margin-top: 20px;">
                         <el-form-item label="第几次课">
                             <el-select v-model="courseMaterialModel.index" placeholder="请选择第几次课">
                                 @foreach(range(1, $course->duration) as $index)
@@ -73,25 +66,47 @@ $courseTeacher = $course->getCourseTeacher($teacher->id);
                                 @endforeach
                             </el-select>
                         </el-form-item>
-                        <el-form-item label="课件描述">
-                            <el-upload
-                                    class="upload-demo"
-                                    ref="upload"
-                                    action="useless"
-                                    :before-upload="beforeFileUpload"
-                                    :multiple="false">
-                                <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
-                                <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
-                            </el-upload>
+
+                        <el-form-item label="课件类型">
+                            <el-select v-model="courseMaterialModel.type" placeholder="请选择课件类型">
+                                @foreach(\App\Models\Courses\CourseMaterial::AllTypes() as $key => $txt)
+                                    <el-option label="{{ $txt }}" :value="{{ $key }}"></el-option>
+                                @endforeach
+                            </el-select>
                         </el-form-item>
+
+
                         <el-form-item label="课件描述">
                             <el-input placeholder="选填: 课件的描述" type="textarea" v-model="courseMaterialModel.description"></el-input>
                         </el-form-item>
+
+                        <el-form-item label="外部链接">
+                            <el-input placeholder="选填: 外部引用的URL链接地址" type="textarea" v-model="courseMaterialModel.url"></el-input>
+                        </el-form-item>
+
+                        <el-form-item label="选择课件文件">
+                            <el-button type="primary" size="tiny" icon="el-icon-picture" v-on:click="showFileManagerFlag=true">
+                                从我的云盘添加
+                            </el-button>
+                            <p v-if="selectedFile" class="mt-4">
+                                已选择的文件:
+                                <a :href="selectedFile.url">
+                                    @{{ selectedFile.description }}
+                                </a>
+                                &nbsp;
+                                <el-button type="text" @click="selectedFile = null"><span class="text-danger">放弃</span></el-button>
+                            </p>
+                        </el-form-item>
+                        <p class="text-danger text-right">注意: 课件只能是外部链接或者云盘文件中的一种</p>
                         <el-button style="margin-left: 10px;" size="small" type="success" @click="submitUpload">保存</el-button>
                     </el-form>
                 </div>
             </div>
         </div>
+        @include(
+                'reusable_elements.section.file_manager_component',
+                ['pickFileHandler'=>'pickFileHandler']
+            )
     </div>
     <div id="app-init-data-holder"
          data-school="{{ session('school.id') }}"

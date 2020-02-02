@@ -15,7 +15,6 @@ class AddMediaIdInCourseMaterials extends Migration
     {
         Schema::table('course_materials', function (Blueprint $table) {
             $table->unsignedBigInteger('media_id')->default(0)->comment('关联的文件 ID');
-//            $table->text('url')->nullable()->comment('文件的链接地址');
         });
     }
 
@@ -28,7 +27,6 @@ class AddMediaIdInCourseMaterials extends Migration
     {
         Schema::table('course_materials', function (Blueprint $table) {
             $table->dropColumn('media_id');
-//            $table->dropColumn('url');
         });
     }
 }

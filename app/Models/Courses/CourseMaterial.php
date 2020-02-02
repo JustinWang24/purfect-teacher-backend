@@ -27,6 +27,16 @@ class CourseMaterial extends Model
 
     use SoftDeletes;
 
+    protected $fillable = [
+        'course_id',
+        'description',
+        'index',
+        'teacher_id',
+        'type',
+        'url',
+        'media_id',
+    ];
+
     public $casts = [
         'created_at'=>'datetime'
     ];
@@ -69,5 +79,15 @@ class CourseMaterial extends Model
         ];;
 
         return $types[$type] ?? 'null';
+    }
+
+    public function getUrlAttribute($value){
+        if(strpos($value,'/storage/') === 0){
+            // 表明是本地的文件
+            return asset($value);
+        }
+        else{
+            return strpos($value,'http') === 0 ? $value : 'http://'.$value;
+        }
     }
 }

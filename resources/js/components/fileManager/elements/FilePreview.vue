@@ -1,7 +1,7 @@
 <template>
   <div>
     <el-card shadow="always" v-if="fileDic" class="current-file-box">
-        <file-type :fileDic="fileDic" :default-type="2"></file-type>
+        <file-type :file-dic="fileDic" :default-type="fileDic.type"></file-type>
         <div v-if="hasDeleteButton">
             <el-button
                     class="btn-delete"
@@ -15,19 +15,26 @@
 </template>
 
 <script>
-import FileType from './FileType'
+import FileType from './FileType';
+import {Constants} from "../../../common/constants";
+
 export default {
-  name: 'FilePreview',
-  components: {
-    FileType,
-  },
-  props: {
-    fileDic: Object, hasDeleteButton: Boolean,
-  },
+    name: 'FilePreview',
+    components: {
+      FileType,
+    },
+    props: {
+        fileDic: Object, hasDeleteButton: Boolean,
+    },
+    data(){
+        return {
+            defaultFileType: Constants.FILE_TYPE.GENERAL
+        }
+    },
     methods: {
-      deleteHandler: function(){
-          this.$emit('preview-delete',{file: this.fileDic});
-      }
+        deleteHandler: function(){
+            this.$emit('preview-delete',{file: this.fileDic});
+        }
     }
 }
 </script>

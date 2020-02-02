@@ -55,8 +55,37 @@ class CourseDao
             ->get();
     }
 
+    /**
+     * 保存课件
+     * @param $materialData
+     * @return IMessageBag
+     */
+    public function saveMaterial($materialData){
+        $bag = new MessageBag();
+        try{
+            if(empty($materialData['id'])){
+                $material =  CourseMaterial::create($materialData);
+                $bag->setData($material);
+            }
+            else{
+                CourseMaterial::where('id',$materialData['id'])
+                    ->update($materialData);
+                $material =  CourseMaterial::find($materialData['id']);
+                $bag->setData($material);
+            }
+        }catch (\Exception $exception){
+            $bag->setCode(JsonBuilder::CODE_ERROR);
+            $bag->setMessage($exception->getMessage());
+        }
+        return $bag;
+    }
 
-    public function createMaterial($request){
+    /**
+     * @deprecated 不要调用这个方法
+     * @param $request
+     * @return MessageBag
+     */
+    public function createMaterialOld($request){
         /**
          * @var UploadedFile $file
          */
