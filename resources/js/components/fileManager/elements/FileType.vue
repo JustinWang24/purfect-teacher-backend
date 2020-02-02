@@ -13,14 +13,14 @@
           <p class="message-desc">{{fileDic.created_at}}&nbsp;{{ fileSize(fileDic.size) }}</p>
           <p class="message-desc">简介: {{fileDic.description}}</p>
       </div>
-        <div class="el-card-content" v-if="isTxt(fileDic.type)">
-            <p class="message">
-                <i class="fa fa-file-text-o"></i>&nbsp;
-                {{fileDic.file_name}}
-            </p>
-            <p class="message-desc">{{fileDic.created_at}}&nbsp;{{ fileSize(fileDic.size) }}</p>
-            <p class="message-desc">简介: {{fileDic.description}}</p>
-        </div>
+      <div class="el-card-content" v-if="isTxt(fileDic.type)">
+          <p class="message">
+              <i class="fa fa-file-text-o"></i>&nbsp;
+              {{fileDic.file_name}}
+          </p>
+          <p class="message-desc">{{fileDic.created_at}}&nbsp;{{ fileSize(fileDic.size) }}</p>
+          <p class="message-desc">简介: {{fileDic.description}}</p>
+      </div>
       <div class="el-card-content" v-if="isPdf(fileDic.type)">
         <a class="message" :href="fileDic.url" target="_blank"><i v-if="isPdf(fileDic.type)" class="fa fa-file-pdf-o"></i> {{fileDic.file_name}}</a>
         <p class="message">创建时间: {{fileDic.created_at}}</p>
@@ -41,7 +41,6 @@
 
 <script>
   import {Util} from '../../../common/utils';
-  import {Constants} from '../../../common/constants';
   export default {
     name: 'FileType',
     props: {
