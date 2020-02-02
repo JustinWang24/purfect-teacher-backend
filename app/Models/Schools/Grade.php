@@ -32,6 +32,11 @@ class Grade extends Model
         return $this->hasMany(GradeUser::class);
     }
 
+    public function gradeResource()
+    {
+        return $this->hasMany(GradeResource::class);
+    }
+
     /**
      * 班级管理员, 包括班主任和班长
      * @return \Illuminate\Database\Eloquent\Relations\HasOne
