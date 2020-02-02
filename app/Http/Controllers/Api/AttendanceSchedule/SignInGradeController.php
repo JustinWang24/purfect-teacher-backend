@@ -9,10 +9,9 @@
 namespace App\Http\Controllers\Api\AttendanceSchedule;
 
 
-use App\Dao\Schools\GradeDao;
-use App\Models\AttendanceSchedules\Attendance;
 use Carbon\Carbon;
 use App\Utils\JsonBuilder;
+use App\Dao\Schools\GradeDao;
 use App\Dao\Schools\SchoolDao;
 use App\Dao\Courses\CourseDao;
 use App\Dao\Users\GradeUserDao;
@@ -77,7 +76,7 @@ class SignInGradeController extends Controller
             'date' =>$now->toDateString(),
             'name'=>$course->name,
             'time_slot'=>$return[0]->timeSlot->name,
-            'room'=>$return[0]->room->name
+            'room'=>$return[0]->room->name??""
             ];
 
         $data = ['course'=>$course, 'grade_list'=>$list];
