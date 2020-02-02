@@ -219,5 +219,25 @@ export const Util = {
             query += key + '=' + params[key] + '&';
         });
         return url + query + tail + '=1';
+    },
+    // 富文本编辑器所需的插件和配置
+    getWysiwygGlobalOption: function(teacherUuid){
+        return {
+            lang:'zh_cn', // 语言使用中文
+            plugins: [    // 所要加载的插件
+                'fontsize',
+                'fontcolor',
+                'alignment',
+                'fontfamily',
+                'table',
+                'specialchars',
+                'imagemanager',
+                'filemanager',
+            ],
+            fileUpload: '/api/wysiwyg/files/upload?uuid=' + teacherUuid,  // 文件上传的 Action
+            fileManagerJson: '/api/wysiwyg/files/view?uuid=' + teacherUuid, // 已存在的文件的资源 URL, 返回为 json 格式
+            imageUpload: '/api/wysiwyg/images/upload?uuid=' + teacherUuid, // 图片上传的 Action
+            imageManagerJson: '/api/wysiwyg/images/view?uuid=' + teacherUuid, // 已存在的图片的资源 URL, 返回为 json 格式
+        }
     }
 };

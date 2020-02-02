@@ -333,6 +333,20 @@ Route::prefix('school_manager')->group(function () {
         Route::any('science-delete','Contents\ScienceController@delete')
             ->name('school_manager.contents.science.delete');
 
+        // 相册管理
+        Route::get('photo-album-manager','Contents\NewsController@photo_album')
+            ->name('school_manager.contents.photo-album');
+        Route::get('delete-album','Contents\NewsController@delete_album')
+            ->name('school_manager.contents.delete-album');
+        Route::post('create-album','Contents\NewsController@create_album')
+            ->name('school_manager.contents.create-album');
+
+        // 校园简介
+        Route::get('campus-intro','Contents\NewsController@campus_intro')
+            ->name('school_manager.contents.campus-intro');
+        Route::post('save-campus-intro','Contents\NewsController@save_campus_intro')
+            ->name('school_manager.contents.save-campus-intro');
+
         // 动态管理
         Route::get('news-manager','Contents\NewsController@management')
             ->name('school_manager.contents.news-manager');

@@ -4,7 +4,10 @@
         translations: {
     		en: {
     			"choose": "Choose"
-    		}
+    		},
+            cn: {
+                "choose": "选择文件"
+            },
         },
         init: function(app)
         {

@@ -27,9 +27,13 @@
                 </template>
             </el-table-column>
             <el-table-column
-                    label="学分"
-                    prop="scores"
-                    width="80">
+                    label="学分/课时数"
+                    width="100">
+                <template slot-scope="scope">
+                    <p class="txt-primary">
+                        {{ scope.row.scores }} / {{ scope.row.duration === 0 ? '未设置' : scope.row.duration }}
+                    </p>
+                </template>
             </el-table-column>
             <el-table-column
                     label="授课教师"

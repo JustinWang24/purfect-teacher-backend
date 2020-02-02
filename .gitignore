@@ -23,4 +23,8 @@ _ide_helper.php
 _ide_helper_models.php
 querylog.txt
 resources/views/manager_wifi/*
+yarn.lock
+composer.lock
 package-lock.json
+/public/redactor/*
+.DS_Store

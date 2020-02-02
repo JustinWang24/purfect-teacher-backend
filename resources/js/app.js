@@ -75,6 +75,7 @@ require('./includes/backend/timetable/course_view'); // 课程表管理程序
 require('./includes/backend/timetable/grade_view'); // 课程表管理程序
 require('./includes/backend/timetable/room_view'); // 课程表管理程序
 require('./includes/backend/timetable/teacher_view'); // 课程表管理程序
+require('./includes/backend/course/materials_manager'); // 课件管理程序
 
 require('./includes/backend/course/course_manager'); // 学校的课程管理
 require('./includes/backend/messager/notifications_at_top'); // 顶部的消息通知应用
