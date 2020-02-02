@@ -153,6 +153,9 @@ export const Constants = {
         },
         MESSAGE: {
             LOAD: '/api/notification/list'
+        },
+        COURSE_MATERIAL: {
+            SAVE: '/teacher/course/materials/create'
         }
     },
     YEARS: ['N.A','一年级','二年级','三年级','四年级','五年级','六年级'],

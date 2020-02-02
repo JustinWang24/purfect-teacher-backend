@@ -11,6 +11,7 @@ use App\Dao\Courses\CourseDao;
 use App\Dao\Users\UserDao;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Course\MaterialRequest;
+use App\Utils\JsonBuilder;
 
 class MaterialsController extends Controller
 {
@@ -32,8 +33,13 @@ class MaterialsController extends Controller
         return view('teacher.course.materials.manager', $this->dataForView);
     }
 
+    /**
+     * @param MaterialRequest $request
+     * @return string
+     */
     public function create(MaterialRequest $request){
         $dao = new CourseDao();
-        $dao->createMaterial($request);
+        $msg = $dao->saveMaterial($request->get('material'));
+        return $msg->isSuccess() ? JsonBuilder::Success($msg->getData()->id) : JsonBuilder::Error($msg->getMessage());
     }
 }
