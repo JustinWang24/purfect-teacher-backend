@@ -31,22 +31,35 @@ $courseTeacher = $course->getCourseTeacher($teacher->id);
                             <el-card>
                                 @foreach($materials as $courseMaterial)
                                     @if($idx === $courseMaterial->index)
-    <p>
-        <el-tag size="small" type="{{ \App\Models\Courses\CourseMaterial::GetTypeTagClass($courseMaterial->type) }}">
-            {{ \App\Models\Courses\CourseMaterial::GetTypeText($courseMaterial->type) }}
-        </el-tag>
-        <span>
-            <a href="{{ $courseMaterial->url }}" target="_blank">
-                {{ $courseMaterial->description }}
-            </a>
-        </span>
-        <span class="text-grey">上传于{{ _printDate($courseMaterial->created_at) }}</span>
-    </p>
+                                    <p>
+                                        <el-tag size="small" type="{{ \App\Models\Courses\CourseMaterial::GetTypeTagClass($courseMaterial->type) }}">
+                                            {{ \App\Models\Courses\CourseMaterial::GetTypeText($courseMaterial->type) }}
+                                        </el-tag>
+                                        @if($courseMaterial->media_id === 0)
+                                            <el-tag size="small">
+                                                外部链接
+                                            </el-tag>
+                                        @endif
+                                        <span>
+                                            <a href="{{ $courseMaterial->url }}" target="_blank">
+                                                {{ $courseMaterial->description }}
+                                            </a>
+                                        </span>
+                                    </p>
+                                    <p style="font-size: 10px;color: #cccccc;" class="text-right">
+                                        上传于{{ _printDate($courseMaterial->created_at) }} &nbsp;
+                                        <el-button type="text" @click="deleteMaterial({{ $courseMaterial->id }})">
+                                            <span class="text-danger">删除</span>
+                                        </el-button>
+                                        <el-button type="text" @click="editMaterial({{ $courseMaterial->id }})">
+                                            <span>修改</span>
+                                        </el-button>
+                                    </p>
+                                    <hr style="margin-top: 3px;">
                                     @endif
                                 @endforeach
                                 <p class="text-right">
                                     <el-button size="mini" @click="addMaterial({{ $idx }})">添加课件</el-button>
-                                    <el-button size="mini" type="primary" @click="loadDetail({{ $idx }})">查看详情</el-button>
                                 </p>
                             </el-card>
                         </el-timeline-item>
