@@ -31,7 +31,8 @@ class SchoolConfiguration extends Model
         'first_day_term_2',
         'summer_start_date',
         'winter_start_date',
-        'campus_intro'
+        'campus_intro',
+        'recruitment_intro',
     ];
 
     public $casts = [

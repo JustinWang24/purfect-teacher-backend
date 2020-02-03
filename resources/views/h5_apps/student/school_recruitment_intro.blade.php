@@ -3,7 +3,7 @@
     <div class="school-intro-container">
         <div class="main">
             <div class="intro-content">
-            {!! $note ? $note->content : '还没有添加报名须知' !!}
+                {!! $config ? $config->recruitment_intro : '还没有添加招生简章' !!}
             </div>
         </div>
     </div>

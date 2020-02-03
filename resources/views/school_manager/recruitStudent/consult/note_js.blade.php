@@ -5,23 +5,8 @@
             data() {
                 return {
                     content: '{!! $note->content ?? null !!}',
-                    configOptions: {
-                        lang:'zh_cn',
-                        plugins: [
-                            'fontsize',
-                            'fontcolor',
-                            'alignment',
-                            'fontfamily',
-                            'table',
-                            'specialchars',
-                            'imagemanager',
-                            'filemanager',
-                        ],
-                        fileUpload: '/your-upload-script/',
-                        fileManagerJson: '/your-folder/files.json',
-                        imageUpload: '/your-upload-script/',
-                        imageManagerJson: '/your-folder/images.json'
-                    }
+                    recruitment_intro: '{!! $recruitment_intro ?? null !!}',
+                    @include('reusable_elements.section.redactor_options_config',['uuid'=>$user->id])
                 }
             }
         });

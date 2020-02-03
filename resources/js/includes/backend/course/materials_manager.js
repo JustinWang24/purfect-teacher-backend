@@ -1,7 +1,6 @@
 // 学校的课程管理
-import {Constants} from "../../../common/constants";
 import {Util} from "../../../common/utils";
-import {saveMaterial} from '../../../common/course_material';
+import {saveMaterial, loadMaterial,deleteMaterial} from '../../../common/course_material';
 
 $(document).ready(function(){
     if(document.getElementById('course-materials-manager-app')){
@@ -44,10 +43,40 @@ $(document).ready(function(){
                 showNotesEditor: function(){
                     this.showEditor = !this.showEditor;
                 },
-                loadDetail: function (index) {
-                    console.log(index);
-                    console.log(this.course.id);
-                    console.log(this.teacher.id);
+                editMaterial: function (id) {
+                    loadMaterial(id).then(res => {
+                        if(Util.isAjaxResOk(res)){
+                            this.courseMaterialModel = res.data.data.material;
+                        }
+                        else{
+                            this.$message.error('无法加载课件');
+                        }
+                    })
+                },
+                deleteMaterial: function(id){
+                    this.$confirm('此操作将永久删除该课件, 是否继续?', '提示', {
+                        confirmButtonText: '确定',
+                        cancelButtonText: '取消',
+                        type: 'warning'
+                    }).then(() => {
+                        deleteMaterial(id).then(res => {
+                            if(Util.isAjaxResOk(res)){
+                                this.$message({
+                                    type:'success',
+                                    message:'删除成功'
+                                });
+                                window.location.reload();
+                            }
+                            else {
+                                this.$message.error('删除操作失败');
+                            }
+                        })
+                    }).catch(() => {
+                        this.$message({
+                            type: 'info',
+                            message: '已取消删除'
+                        });
+                    });
                 },
                 addMaterial: function (index) {
                     this.resetMaterialForm(index);
