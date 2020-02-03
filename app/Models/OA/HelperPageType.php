@@ -20,6 +20,6 @@ class HelperPageType extends Model
 
     public function helperPage()
     {
-        return $this->hasMany(HelperPage::class,'type_id','id');
+        return $this->hasMany(HelperPage::class,'type_id','id')->orderBy('sort','asc');
     }
 }

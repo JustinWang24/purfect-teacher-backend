@@ -832,6 +832,16 @@ Route::prefix('Oa')->middleware('auth:api')->group(function () {
     // 删除班级风采
     Route::post('/del-grade-resources', 'Api\OA\GradeManageController@delGradeResource')
         ->name('api.oa.del.grade.resources');
+    // 班级列表
+    Route::post('/grade-list', 'Api\OA\GradeManageController@gradesList')
+        ->name('api.oa.grade.list');
+    // 学生列表
+    Route::post('/student-list', 'Api\OA\GradeManageController@studentList')
+        ->name('api.oa.student.list');
+    // 学生详情
+    Route::post('/student-info', 'Api\OA\GradeManageController@studentInfo')
+        ->name('api.oa.student.info');
+
 });
 
 

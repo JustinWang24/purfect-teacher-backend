@@ -58,7 +58,6 @@ class IndexController extends Controller
         foreach ($communal as $key => $value) {
                 $value->helperPage;
         }
-
         $own = $dao->getHelperPageByUser($user);
         foreach ($own as $key => $val) {
                 $val->helperPage;
