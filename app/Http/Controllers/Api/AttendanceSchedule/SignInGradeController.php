@@ -28,7 +28,12 @@ use App\Http\Requests\AttendanceSchedule\AttendanceRequest;
 class SignInGradeController extends Controller
 {
 
-    // 课程的班级列表
+
+    /**
+     * 课程的班级列表
+     * @param MyStandardRequest $request
+     * @return string
+     */
     public function courseClassList(MyStandardRequest $request) {
 
         $user = $request->user();
@@ -103,22 +108,22 @@ class SignInGradeController extends Controller
 
         $dao = new AttendancesDetailsDao();
         $list = $dao->getAttendDetailsByAttendanceId($attendanceId);
-        $userIds = $list->pluck('student_id')->toArray();
+        $molds = array_column($list->toArray(),'mold','student_id');
+        $scores = array_column($list->toArray(),'score','student_id');
         $student = [];
-
-        $score = []; // 评分列表
+        $score = [];  // 评分列表
         foreach ($gradeUser as $key => $item) {
             $student[$key]['user_id'] = $item->user_id;
             $student[$key]['name'] = $item->name;
             $score[$key]['user_id'] = $item->user_id;
             $score[$key]['name'] = $item->name;
-            $student[$key]['mold'] = 0;  // 未签到
-            $score[$key]['score'] = 0;
-            foreach ($list as $k => $v) {
-                if(in_array($item->user_id, $userIds)) {
-                    $student[$key]['mold'] = $v->mold;
-                    $score[$key]['score'] = $v->score;
-                }
+
+            if(array_key_exists($item->user_id,$molds)) {
+                $student[$key]['mold'] = $molds[$item->user_id];
+                $student[$key]['score'] = $scores[$item->user_id];
+            } else {
+                $student[$key]['mold'] = 0;  // 未签到
+                $score[$key]['score'] = 0;
             }
         }
 
