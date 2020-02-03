@@ -9,6 +9,9 @@
 namespace App\Http\Controllers\Api\AttendanceSchedule;
 
 
+use App\Dao\Schools\GradeManagerDao;
+use App\Dao\TeacherAttendance\AttendanceDao;
+use App\Utils\Time\CalendarDay;
 use Carbon\Carbon;
 use App\Utils\JsonBuilder;
 use App\Dao\Schools\GradeDao;
@@ -297,6 +300,73 @@ class SignInGradeController extends Controller
         return JsonBuilder::Success($data);
     }
 
+
+    /**
+     * 班级签到首页接口
+     * @param AttendanceRequest $request
+     * @return string
+     */
+    public function gradeSignIn(AttendanceRequest $request) {
+        $user = $request->user();
+        $gradeManagerDao = new GradeManagerDao();
+        $grades = $gradeManagerDao->getGradeManagerByAdviserId($user->id);
+
+        if(count($grades) == 0) {
+            return JsonBuilder::Error('该老师不是班主任');
+        }
+
+        $gradeId = $request->getGradeId();
+        if(empty($gradeId)) {
+            $gradeId = $grades[0]->grade_id;
+        }
+        //时间
+        $now = Carbon::now();
+        $date = $now->toDateString();
+        $time = $now->toTimeString();
+        $time = '18:00:00';
+        $month = $now->month;
+        $schoolId = $user->getSchoolId();
+        $schoolDao = new SchoolDao();
+        $school = $schoolDao->getSchoolById($schoolId);
+        $configuration = $school->configuration;
+        $year = $configuration->getSchoolYear($date);
+        $term = $configuration->guessTerm($month);
+        $weekDay = $now->weekday();
+
+        $weeks = $configuration->getScheduleWeek($now, null, $term);
+        if(is_null($weeks)) {
+            return JsonBuilder::Error('当前没有课程');
+        }
+
+        $week = $weeks->getScheduleWeekIndex();
+
+
+        // 查询当前时间这个班上的课
+        $timeTableItemDao = new TimetableItemDao();
+        $return = $timeTableItemDao->getTimetableItemByTime($schoolId, $year, $term, $time, $user->id, $gradeId, $weekDay);
+
+        $weekdayIndex = CalendarDay::GetWeekDayIndex($weekDay);
+
+        $attendancesDao = new AttendancesDao();
+        $list = [];
+        foreach ($return as $key => $item) {
+            $attendance = $attendancesDao->getAttendanceByTimeTableId($item->id, $week);
+            $list[$key]['slot_name'] = $item->name;
+            $list[$key]['attendance_id'] = $attendance->id;
+            $list[$key]['actual_number'] = $attendance->actual_number;
+            $list[$key]['leave_number'] = $attendance->leave_number;
+            $list[$key]['missing_number'] = $attendance->missing_number;
+        }
+        $gradeDao = new GradeDao;
+        $grade = $gradeDao->getGradeById($gradeId);
+        $data = [
+            'date' => $date,
+            'weekday_index' => $weekdayIndex,
+            'grade_name' => $grade->name,
+            'list' => $list
+        ];
+        return JsonBuilder::Success($data);
+    }
 
 
 

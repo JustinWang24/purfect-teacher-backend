@@ -125,4 +125,17 @@ class CalendarDay implements Arrayable
             return $day->addDays(7 - $idx);
         }
     }
+
+
+    /**
+     * 获取星期几
+     * @param $day
+     * @return mixed|string
+     */
+    public static function GetWeekDayIndex($day) {
+        $data = [
+            '星期日','星期一','星期二','星期三','星期四','星期五','星期六'
+        ];
+        return $data[$day]??'';
+    }
 }

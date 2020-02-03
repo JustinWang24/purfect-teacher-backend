@@ -19,4 +19,15 @@ class GradeManagerDao
     }
 
 
+    /**
+     * 根据班主任ID获取带的班级
+     * @param $adviserId
+     * @return mixed
+     */
+    public function getGradeManagerByAdviserId($adviserId) {
+        return GradeManager::where('adviser_id',$adviserId)
+            ->orderBy('created_at','desc')->get();
+    }
+
+
 }

@@ -17,15 +17,13 @@ class AttendancesDao
 {
 
     /**
-     * @param $year
      * @param $timetableId
-     * @param $term
      * @param $week
      * @return mixed
      */
-    public function getAttendanceByTimeTableId($year, $timetableId, $term, $week)
+    public function getAttendanceByTimeTableId($timetableId, $week)
     {
-        $map = ['year'=>$year, 'timetable_id'=>$timetableId, 'term'=>$term, 'week'=>$week];
+        $map = ['timetable_id'=>$timetableId, 'week'=>$week];
         return Attendance::where($map)->first();
     }
 

@@ -202,13 +202,13 @@ class SchoolConfiguration extends Model
     /**
      * @param $date
      * @param $weeks
+     * @param $term
      * @return CalendarWeek|null
      */
-    public function getScheduleWeek($date, $weeks = null){
+    public function getScheduleWeek($date, $weeks = null, $term = self::LAST_TERM){
         $w = null;
-
         if(!$weeks){
-            $weeks = $this->getAllWeeksOfTerm();
+            $weeks = $this->getAllWeeksOfTerm($term);
         }
         foreach ($weeks as $week) {
             /**
