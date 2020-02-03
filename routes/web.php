@@ -24,6 +24,7 @@ Route::prefix('statics')->group(function () {
 });
 Route::prefix('static')->group(function () {
     Route::get('/school/enrolment-notes', 'Statics\PagesController@school_enrolment_notes')->name('static.school.enrolment-notes'); // 报名须知页面
+    Route::get('/school/recruitment-intro', 'Statics\PagesController@school_recruitment_intro')->name('static.school.recruitment-intro'); // 招生简章页面
     Route::get('/school/enrol/plan', 'Statics\PagesController@school_enrol_plan')->name('static.school.enrol-plan'); // 报名须知页面
 });
 
