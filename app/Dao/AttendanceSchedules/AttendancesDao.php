@@ -151,4 +151,10 @@ class AttendancesDao
             ->get();
     }
 
+
+
+    public function getAttendanceById($attendanceId) {
+        return Attendance::find($attendanceId);
+    }
+
 }

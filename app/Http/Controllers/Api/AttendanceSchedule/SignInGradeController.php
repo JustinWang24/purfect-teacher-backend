@@ -9,15 +9,14 @@
 namespace App\Http\Controllers\Api\AttendanceSchedule;
 
 
-use App\Dao\Schools\GradeManagerDao;
-use App\Dao\TeacherAttendance\AttendanceDao;
-use App\Utils\Time\CalendarDay;
 use Carbon\Carbon;
 use App\Utils\JsonBuilder;
 use App\Dao\Schools\GradeDao;
 use App\Dao\Schools\SchoolDao;
 use App\Dao\Courses\CourseDao;
+use App\Utils\Time\CalendarDay;
 use App\Dao\Users\GradeUserDao;
+use App\Dao\Schools\GradeManagerDao;
 use App\Http\Controllers\Controller;
 use App\Dao\Timetable\TimetableItemDao;
 use App\Http\Requests\MyStandardRequest;
@@ -366,6 +365,44 @@ class SignInGradeController extends Controller
             'list' => $list
         ];
         return JsonBuilder::Success($data);
+    }
+
+
+    /**
+     * 班级签到详情
+     * @param AttendanceRequest $request
+     * @return string
+     */
+    public function gradeSignInDetails(AttendanceRequest $request) {
+        $attendanceId = $request->getAttendanceId();
+        $dao = new AttendancesDao();
+        $attendance = $dao->getAttendanceById($attendanceId);
+        $detailsDao = new AttendancesDetailsDao();
+        $details = $detailsDao->getAttendDetailsByAttendanceId($attendanceId);
+        // 签到状态
+        $molds = array_column($details->toArray(), 'mold', 'student_id');
+        $createdAts = array_column($details->toArray(), 'created_at', 'student_id');
+
+        $gradeUserDao = new GradeUserDao();
+        $students = $gradeUserDao->getGradeUserByGradeId($attendance->grade_id);
+        $list = [];
+        foreach ($students as $key => $value) {
+            $list[$key]['user_id'] = $value->user_id;
+            $list[$key]['name'] = $value->name;
+            $list[$key]['mold'] = AttendancesDetail::MOLD_TRUANT;
+            $list[$key]['created_at'] = '';
+
+            if(array_key_exists($value->user_id,$molds)) {
+                $list[$key]['mold'] = $molds[$value->user_id];
+                if($molds[$value->user_id] != AttendancesDetail::MOLD_TRUANT) {
+                    $list[$key]['created_at'] = $createdAts[$value->user_id];
+                }
+            }
+
+
+        }
+
+        return JsonBuilder::Success($list);
     }
 
 
