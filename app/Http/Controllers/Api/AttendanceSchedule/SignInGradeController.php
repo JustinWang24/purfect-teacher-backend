@@ -389,7 +389,9 @@ class SignInGradeController extends Controller
         $createdAts = array_column($details->toArray(), 'created_at', 'student_id');
 
         $gradeUserDao = new GradeUserDao();
-        $students = $gradeUserDao->getGradeUserByGradeId($attendance->grade_id);
+        $return = $gradeUserDao->getGradeUserPageGradeId($attendance->grade_id);
+
+        $students = $return->getCollection();
         $list = [];
         foreach ($students as $key => $value) {
             $list[$key]['user_id'] = $value->user_id;
@@ -404,10 +406,16 @@ class SignInGradeController extends Controller
                 }
             }
 
-
         }
 
-        return JsonBuilder::Success($list);
+        $data = [
+            'currentPage' => $return->currentPage(),
+            'lastPage'    => $return->lastPage(),
+            'total'       => $return->total(),
+            'list'        => $list
+        ];
+
+        return JsonBuilder::Success($data);
     }
 
 
