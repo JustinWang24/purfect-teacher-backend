@@ -84,7 +84,7 @@ class RedActor
             $data[] = [
                 'file'=>[
                     'id'=>1,
-                    'url'=>$paths[0]
+                    'url'=>asset($paths[0])
                 ]
             ];
         }else{
@@ -92,7 +92,7 @@ class RedActor
                 $data[] = [
                     'file-'.($idx+1)=>[
                         'id'=>$idx+1,
-                        'url'=>$path
+                        'url'=>asset($path)
                     ]
                 ];
             }
