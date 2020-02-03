@@ -869,6 +869,13 @@ Route::prefix('signInGrade')->middleware('auth:api')->group(function () {
     // 备注列表
     Route::post('/remarkList','Api\AttendanceSchedule\SignInGradeController@remarkList')
         ->name('api.signInGrade.remarkList');
+
+    // 班级签到
+    Route::post('/gradeSignIn', 'Api\AttendanceSchedule\SignInGradeController@gradeSignIn')
+        ->name('api.signInGrade.gradeSignIn');
+    // 班级签到-详情
+    Route::post('/gradeSignIn-details', 'Api\AttendanceSchedule\SignInGradeController@gradeSignInDetails')
+        ->name('api.signInGrade.gradeSignIn-details');
 });
 
 // 校园风光
