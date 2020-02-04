@@ -901,11 +901,11 @@ Route::prefix('campus')->group(function () {
 // 科研成果
 Route::prefix('campus')->middleware('auth:api')->group(function () {
     Route::get('/scientific', 'Api\School\CampusController@scientific')
-        ->name('api.campus.aa');
+        ->name('api.campus.scientific');
+});
 
 // 可见范围选择器专用
 Route::prefix('organizations')->middleware('auth:api')->group(function(){
     Route::any('/load-by-roles', 'Api\School\OrganizationController@load_by_roles')
         ->name('api.organizations.load-by-roles');
-
 });
