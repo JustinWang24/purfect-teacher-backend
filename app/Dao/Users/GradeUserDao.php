@@ -75,6 +75,17 @@ class GradeUserDao
         return GradeUser::where('grade_id', $gradeId)->get();
     }
 
+
+    /**
+     * 学生分页
+     * @param $gradeId
+     * @return mixed'
+     */
+    public function getGradeUserPageGradeId($gradeId) {
+        return GradeUser::where('grade_id', $gradeId)
+            ->paginate(ConfigurationTool::DEFAULT_PAGE_SIZE);
+    }
+
     /**
      * 根据学校获取 id
      * @param $schoolId

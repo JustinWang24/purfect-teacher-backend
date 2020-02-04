@@ -786,19 +786,22 @@ class TimetableItemDao
      * @param $teacherId  int 老师id
      * @param $gradeId  int 班级ID
      * @param $weekDayIndex int  周几
+     * @param $type int  类型 1:当天 2:历史
      * @return mixed
      */
-    public function getTimetableItemByTime($schoolId, $year, $term, $time, $teacherId, $gradeId, $weekDayIndex) {
+    public function getTimetableItemByTime($schoolId, $year, $term, $time, $teacherId, $gradeId, $weekDayIndex, $type = 1) {
         $field = ['timetable_items.*','time_slots.id as time_slot_id','time_slots.name'];
         $map = [
-            ['time_slots.to', '<=', $time],
-            ['time_slots.school_id', '=', $schoolId],
-            ['year','=', $year],
-            ['term', '=', $term],
-            ['teacher_id', '=', $teacherId],
-            ['grade_id', '=', $gradeId],
-            ['weekday_index', '=', $weekDayIndex]
+                ['time_slots.school_id', '=', $schoolId],
+                ['year','=', $year],
+                ['term', '=', $term],
+                ['teacher_id', '=', $teacherId],
+                ['grade_id', '=', $gradeId],
+                ['weekday_index', '=', $weekDayIndex]
             ];
+        if($type == 1) {
+            array_push($map, ['time_slots.to', '<=', $time]);
+        }
         return TimetableItem::join('time_slots',function ($join) use ($map) {
             $join->on('timetable_items.time_slot_id', '=', 'time_slots.id')
                 ->where($map);
