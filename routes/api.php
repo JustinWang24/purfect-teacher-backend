@@ -900,7 +900,7 @@ Route::prefix('campus')->group(function () {
 
 // 科研成果.
 Route::prefix('campus')->middleware('auth:api')->group(function () {
-    Route::get('/scientific', 'Api\School\CampusController@scientific')
+    Route::post('/scientific', 'Api\School\CampusController@scientific')
         ->name('api.campus.scientific');
 });
 
