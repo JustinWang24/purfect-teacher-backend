@@ -859,7 +859,7 @@ Route::prefix('signInGrade')->middleware('auth:api')->group(function () {
         ->name('api.signInGrade.remarkList');
 
     // 当前班主任-班级列表
-    Route::post('/gradeList', 'Api\AttendanceSchedule\SignInGradeController@gradeList')
+    Route::get('/gradeList', 'Api\AttendanceSchedule\SignInGradeController@gradeList')
         ->name('api.signInGrade.gradeList');
     // 班级签到
     Route::post('/gradeSignIn', 'Api\AttendanceSchedule\SignInGradeController@gradeSignIn')
