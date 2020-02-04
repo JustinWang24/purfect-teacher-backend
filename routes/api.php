@@ -898,7 +898,7 @@ Route::prefix('campus')->group(function () {
         ->name('api.campus.scenery');
 });
 
-// 科研成果
+// 科研成果.
 Route::prefix('campus')->middleware('auth:api')->group(function () {
     Route::get('/scientific', 'Api\School\CampusController@scientific')
         ->name('api.campus.scientific');
