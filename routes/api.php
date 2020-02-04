@@ -858,12 +858,16 @@ Route::prefix('signInGrade')->middleware('auth:api')->group(function () {
     Route::post('/remarkList','Api\AttendanceSchedule\SignInGradeController@remarkList')
         ->name('api.signInGrade.remarkList');
 
+    // 当前班主任-班级列表
+    Route::post('/gradeList', 'Api\AttendanceSchedule\SignInGradeController@gradeList')
+        ->name('api.signInGrade.gradeList');
     // 班级签到
     Route::post('/gradeSignIn', 'Api\AttendanceSchedule\SignInGradeController@gradeSignIn')
         ->name('api.signInGrade.gradeSignIn');
     // 班级签到-详情
     Route::post('/gradeSignIn-details', 'Api\AttendanceSchedule\SignInGradeController@gradeSignInDetails')
         ->name('api.signInGrade.gradeSignIn-details');
+
 });
 
 // 校园风光

@@ -306,6 +306,33 @@ class SignInGradeController extends Controller
 
 
     /**
+     * 班主任的班级列表
+     * @param AttendanceRequest $request
+     * @return string
+     */
+    public function gradeList(AttendanceRequest $request) {
+        $userId = $request->user()->id;
+        $dao = new GradeManagerDao();
+        $return = $dao->getGradeManagerByAdviserId($userId);
+        if(empty($return)) {
+            return JsonBuilder::Error('您不是班主任');
+        }
+        $result = [];
+        foreach ($return as $key => $item) {
+            $result[] = [
+                'grade_id' => $item->grade_id,
+                'grade_name' => $item->grade->name
+            ];
+        }
+
+        return JsonBuilder::Success($result);
+
+    }
+
+
+
+
+    /**
      * 班级签到首页接口
      * @param AttendanceRequest $request
      * @return string
@@ -316,7 +343,7 @@ class SignInGradeController extends Controller
         $grades = $gradeManagerDao->getGradeManagerByAdviserId($user->id);
 
         if(count($grades) == 0) {
-            return JsonBuilder::Error('该老师不是班主任');
+            return JsonBuilder::Error('您不是班主任');
         }
 
         $gradeId = $request->getGradeId();
@@ -325,9 +352,9 @@ class SignInGradeController extends Controller
         }
         //时间
         $now = Carbon::now();
-        $date = $now->toDateString();
+        $date = $request->get('date',$now->toDateString());
+        $type = $request->get('type', 1); // 类型：1当天数据 2:历史数据
         $time = $now->toTimeString();
-        $time = '18:00:00';
         $month = $now->month;
         $schoolId = $user->getSchoolId();
         $schoolDao = new SchoolDao();
@@ -347,7 +374,7 @@ class SignInGradeController extends Controller
 
         // 查询当前时间这个班上的课
         $timeTableItemDao = new TimetableItemDao();
-        $return = $timeTableItemDao->getTimetableItemByTime($schoolId, $year, $term, $time, $user->id, $gradeId, $weekDay);
+        $return = $timeTableItemDao->getTimetableItemByTime($schoolId, $year, $term, $time, $user->id, $gradeId, $weekDay, $type);
 
         $weekdayIndex = CalendarDay::GetWeekDayIndex($weekDay);
 
