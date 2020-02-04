@@ -29,7 +29,7 @@ class PlansController extends Controller
         return JsonBuilder::Success([
             'plans'=>$plans,
             'banner'=>['image'=>''],
-            'school_id'=>$user ? $user->getSchoolId() : ''
+            'school_id'=>$user ? $user->getSchoolId() : $request->getSchoolId()
         ]);
     }
 

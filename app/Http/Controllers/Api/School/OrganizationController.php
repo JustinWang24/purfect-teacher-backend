@@ -15,7 +15,10 @@ use App\Dao\Users\UserDao;
 use App\Dao\Users\UserOrganizationDao;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\MyStandardRequest;
+use App\Models\Teachers\Teacher;
+use App\User;
 use App\Utils\JsonBuilder;
+use Illuminate\Http\Request;
 
 class OrganizationController extends Controller
 {
@@ -97,4 +100,22 @@ class OrganizationController extends Controller
         return $organ;
     }
 
+    public function load_by_roles(Request $request){
+        // 获取上传的用户信息
+        /**
+         * @var User $user
+         */
+        $user = $request->user('api');
+        $schoolId = $request->has('school') ? $request->get('school') : $user->getSchoolId();
+
+        // 获取用户的所有可能的角色
+        if($user->isSchoolManager()){
+
+        }
+        $roles = $request->get('roles');
+        if(empty($roles)){
+            $duties = Teacher::getTeacherAllDuties($user->id);
+            dd($duties);
+        }
+    }
 }

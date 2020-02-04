@@ -129,6 +129,8 @@ export const Constants = {
             DELETE: '/school_manager/organizations/delete',
             ADD_TO_ORG: '/school_manager/organizations/add-member',
             DELETE_FROM_ORG: '/school_manager/organizations/remove-member',
+            // 可见范围选择器专用
+            LOAD_BY_ROLES: '/api/organizations/load-by-roles',
         },
         FLOW: {
             SAVE: '/school_manager/pipeline/flows/save-flow',
