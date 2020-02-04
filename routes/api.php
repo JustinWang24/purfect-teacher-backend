@@ -115,6 +115,10 @@ Route::prefix('recruitment')->group(function () {
     // 加载某个招生计划
     Route::post('/delete-plan','Api\Recruitment\PlansController@delete_plan')
         ->name('api.recruitment.delete.plan');
+
+    // 加载某个学生的已报名专业
+    Route::any('/my-enrolments','Api\Recruitment\PlansController@my_enrolments')
+        ->name('api.recruitment.load.my-enrolments');
 });
 
 Route::prefix('timetable')->middleware('auth:api')->group(function () {
