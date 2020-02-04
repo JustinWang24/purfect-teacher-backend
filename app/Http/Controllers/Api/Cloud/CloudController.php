@@ -222,7 +222,7 @@ class CloudController extends Controller
         $week = $item->school->configuration->getScheduleWeek($now)->getScheduleWeekIndex();
 
         $dao = new AttendancesDao;
-        $attendanceInfo = $dao->getAttendanceByTimeTableId($item->year,$item->id, $item->term, $week);
+        $attendanceInfo = $dao->getAttendanceByTimeTableId($item->id, $week);
         if (empty($attendanceInfo)) {
             return  JsonBuilder::Error('未找到签到数据');
         }

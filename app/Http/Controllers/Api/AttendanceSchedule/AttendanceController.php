@@ -109,7 +109,7 @@ class AttendanceController extends Controller
         $week = $item->school->configuration->getScheduleWeek($data)->getScheduleWeekIndex();
 
         $attendanceDao = new AttendancesDao();
-        $attendanceInfo = $attendanceDao->getAttendanceByTimeTableId($item->year,$item->id, $item->term, $week);
+        $attendanceInfo = $attendanceDao->getAttendanceByTimeTableId($item->id, $week);
         if(is_null($attendanceInfo)) {
             return JsonBuilder::Error('该课程还没上');
         }
