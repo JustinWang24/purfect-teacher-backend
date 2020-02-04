@@ -42,4 +42,24 @@ class MaterialsController extends Controller
         $msg = $dao->saveMaterial($request->get('material'));
         return $msg->isSuccess() ? JsonBuilder::Success($msg->getData()->id) : JsonBuilder::Error($msg->getMessage());
     }
+
+    /**
+     * @param MaterialRequest $request
+     * @return string
+     */
+    public function load(MaterialRequest $request){
+        $dao = new CourseDao();
+        $material = $dao->getCourseMaterial($request->get('id'));
+        return JsonBuilder::Success(['material'=>$material]);
+    }
+
+    /**
+     * @param MaterialRequest $request
+     * @return string
+     */
+    public function delete(MaterialRequest $request){
+        $dao = new CourseDao();
+        $deleted = $dao->deleteCourseMaterial($request->get('id'));
+        return $deleted ? JsonBuilder::Success() : JsonBuilder::Error();
+    }
 }

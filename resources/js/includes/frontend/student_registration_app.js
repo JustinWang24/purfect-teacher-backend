@@ -43,7 +43,10 @@ if(document.getElementById('student_registration_app')){
                     district:'',
                     address:'',
                     postcode:'',
-                }
+                },
+                // 应用于单个报名报的显示
+                planId:'',
+                planName:'',
             }
         },
         created(){
@@ -54,10 +57,16 @@ if(document.getElementById('student_registration_app')){
             if(!Util.isEmpty(this.studentMobile) || !Util.isEmpty(this.studentIdNumber)){
                 this.registrationForm = Util.getObjFromLocalStorage(Constants.STUDENT_PROFILE);
             }
+            this.schoolId = document.getElementById('current-school-id').dataset.id;
+            this.planName = document.getElementById('current-school-id').dataset.planname;
+            this.planId = document.getElementById('current-school-id').dataset.planid;
+
         },
         mounted() {
-            this.schoolId = document.getElementById('current-school-id').dataset.id;
             this.loadAllPlansBySchool();
+            if(!Util.isEmpty(this.planId) && !Util.isEmpty(this.planName)){
+                this.showMajorDetailNewHandler(this.planId, this.planName);
+            }
         },
         methods: {
             formSavedSuccessHandler: function(payload){
@@ -106,6 +115,12 @@ if(document.getElementById('student_registration_app')){
             showAllMajors: function(){
                 this.showAllMajorsFlag = true;
             },
+            applyMajorNewHandler: function (major) {
+                this.showMajorDetailFlag = false;
+                this.showAllMajorsFlag = false;
+                this.showRegistrationFormFlag = true;
+                this.selectedMajor = major;
+            },
             applyMajorHandler: function (major) {
                 this.showMajorDetailFlag = false;
                 this.showAllMajorsFlag = false;
@@ -128,6 +143,30 @@ if(document.getElementById('student_registration_app')){
                     }
                 }).catch(e => {
                     this.$alert('服务器忙, 无法加载专业: ' + major.name + '的详情. 请稍候再试!', '加载失败', {
+                        confirmButtonText: '确定',
+                        type:'error',
+                        customClass: 'for-mobile-alert'
+                    });
+                })
+            },
+            // 新写的方法, 单独传送专业的ID和方法
+            showMajorDetailNewHandler: function(majorId, majorName){
+                loadMajorDetail(majorId).then(res => {
+                    if(Util.isAjaxResOk(res)){
+                        // this.selectedMajor = res.data.data.plan;
+                        // this.showAllMajorsFlag = false;
+                        // this.showMajorDetailFlag = false; // 显示专业详情
+                        this.applyMajorNewHandler(res.data.data.plan);
+                    }
+                    else{
+                        this.$alert('无法加载专业: ' + majorName + '的详情', '加载失败', {
+                            confirmButtonText: '确定',
+                            type:'error',
+                            customClass: 'for-mobile-alert'
+                        });
+                    }
+                }).catch(e => {
+                    this.$alert('服务器忙, 无法加载专业: ' + majorName + '的详情. 请稍候再试!', '加载失败', {
                         confirmButtonText: '确定',
                         type:'error',
                         customClass: 'for-mobile-alert'

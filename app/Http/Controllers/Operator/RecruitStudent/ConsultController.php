@@ -1,6 +1,7 @@
 <?php
 namespace App\Http\Controllers\Operator\RecruitStudent;
 use App\Models\RecruitStudent\RecruitNote;
+use App\Models\Schools\SchoolConfiguration;
 use App\User;
 use App\Utils\FlashMessageBuilder;
 use App\Dao\RecruitStudent\ConsultDao;
@@ -14,13 +15,13 @@ class ConsultController extends Controller
     }
 
     /**
-     * 报名须知管理
+     * 招生简章、报名须知管理
      *
      * @param ConsultRequest $request
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function note(ConsultRequest $request){
-        $this->dataForView['pageTitle'] = '报名须知管理';
+        $this->dataForView['pageTitle'] = '招生简章/报名须知管理';
         $this->dataForView['redactor'] = true;
         $this->dataForView['redactorWithVueJs'] = true;
         $this->dataForView['js'] = [
@@ -32,22 +33,39 @@ class ConsultController extends Controller
          */
         $user = $request->user();
         $note = RecruitNote::where('school_id', $user->getSchoolId())->first();
+        // 招生简章
+        $config = SchoolConfiguration::where('school_id', $user->getSchoolId())->first();
+        $recruitment_intro = $config->recruitment_intro;
 
         // 由于需求太简单, 就不去使用 Dao 了, 而是直接操作 Model. 后期如果需求变复杂, 还是要回归 Dao 的方式
         if($request->isMethod('post')){
-            $noteData = $request->get('note');
-            if(is_null($note)){
-                $note = new RecruitNote();
+            if($request->has('note')){
+                $noteData = $request->get('note');
+                if(is_null($note)){
+                    $note = new RecruitNote();
+                }
+                $note->content = $noteData['content'];
+                $note->school_id = $noteData['school_id'];
+                $note->plan_id = $noteData['school_id'];
+                if($note->save()){
+                    FlashMessageBuilder::Push($request, 'success','报名须知已经成功保存!');
+                }
             }
-            $note->content = $noteData['content'];
-            $note->school_id = $noteData['school_id'];
-            $note->plan_id = $noteData['school_id'];
-            if($note->save()){
-                FlashMessageBuilder::Push($request, 'success','报名须知已经成功保存!');
+
+
+            // 招生简章
+            if($request->has('config')){
+                $configData = $request->get('config');
+                $config->recruitment_intro = $configData['recruitment_intro'];
+                if($config->save()){
+                    FlashMessageBuilder::Push($request, 'success','招生简章已经成功保存!');
+                }
             }
         }
 
         $this->dataForView['note'] = $note;
+        $this->dataForView['recruitment_intro'] = $recruitment_intro;
+        $this->dataForView['user'] = $user;
 
         return view('school_manager.recruitStudent.consult.note', $this->dataForView);
     }

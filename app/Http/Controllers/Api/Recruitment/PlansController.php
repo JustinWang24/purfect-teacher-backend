@@ -5,7 +5,10 @@ namespace App\Http\Controllers\Api\Recruitment;
 use App\BusinessLogic\RecruitmentPlan\PlansLoader;
 use App\Dao\RecruitmentPlan\RecruitmentPlanDao;
 use App\Dao\RecruitStudent\ConsultDao;
+use App\Dao\RecruitStudent\RegistrationInformaticsDao;
+use App\Dao\Schools\OrganizationDao;
 use App\Http\Requests\RecruitStudent\PlanRecruitRequest;
+use App\User;
 use App\Utils\JsonBuilder;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -28,7 +31,7 @@ class PlansController extends Controller
         return JsonBuilder::Success([
             'plans'=>$plans,
             'banner'=>['image'=>''],
-            'school_id'=>$user ? $user->getSchoolId() : ''
+            'school_id'=>$user ? $user->getSchoolId() : $request->getSchoolId()
         ]);
     }
 
@@ -81,6 +84,41 @@ class PlansController extends Controller
     }
 
     /**
+     * 某学生已报名的专业接口
+     * @param Request $request
+     * @return string
+     */
+    public function my_enrolments(Request $request){
+        /**
+         * @var User $user
+         */
+        $user = $request->user('api');
+        $plans = [];
+
+        $dao = new RegistrationInformaticsDao();
+        $info = $dao->getInformaticsByUserId($user->id);
+        foreach ($info as $item) {
+            /**
+             * @var \App\Models\RecruitStudent\RegistrationInformatics $item
+             */
+            $plans[] = [
+                'id'=>$item->id,
+                'name'=>$item->plan->major_name,
+                'fee'=>$item->plan->fee,
+                'period'=>$item->major->period,
+                'seats'=>$item->plan->seats,
+                'enrolled'=>$item->plan->enrolled_count,
+                'applied'=>$item->plan->applied_count,
+                'hot'=>$item->plan->hot,
+                'title'=>$item->plan->title,
+                'tease'=>$item->plan->tease,
+            ];
+        }
+
+        return JsonBuilder::Success(['plans'=>$plans]);
+    }
+
+    /**
      * @param Request $request
      * @return string
      */
@@ -90,6 +128,11 @@ class PlansController extends Controller
         return $done ? JsonBuilder::Success() : JsonBuilder::Error();
     }
 
+    /**
+     * 招生咨询接口
+     * @param Request $request
+     * @return string
+     */
     public function qa(Request $request){
         $dao = new ConsultDao();
         $schoolId = 1;
@@ -99,6 +142,20 @@ class PlansController extends Controller
 
         }
         $qa = $dao->getConsultById($schoolId, true);
-        return JsonBuilder::Success(['qa'=>$qa]);
+
+        // 招生就业办的联系方式
+        $orgDao = new OrganizationDao();
+        $org = $orgDao->getByName($schoolId, '招生');
+        $contact = [
+            'name'=>'',
+            'phone'=>'',
+        ];
+
+        if($org){
+            $contact['name'] = $org->name;
+            $contact['phone'] = $org->phone;
+        }
+
+        return JsonBuilder::Success(['qa'=>$qa, 'contact'=>$contact]);
     }
 }

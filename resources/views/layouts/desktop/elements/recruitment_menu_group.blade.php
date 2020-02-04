@@ -7,7 +7,7 @@
     <ul class="sub-menu">
         <li class="nav-item">
             <a href="{{ route('school_manager.consult.note') }}" class="nav-link ">
-                <span class="title">报名须知管理</span>
+                <span class="title">招生简章/报名须知</span>
                 <span class="selected"></span>
             </a>
         </li>

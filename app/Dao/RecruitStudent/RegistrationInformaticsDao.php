@@ -220,7 +220,7 @@ class RegistrationInformaticsDao
             $userProfile = $data;
             $userProfile['uuid'] = $data['uuid'];
             $userProfile['user_id'] = $user->id;
-            $userProfile['device']  = 0;
+//            $userProfile['device']  = 0;
             $userProfile['year'] = $plan->year; // 这个应该是从招生中的入学年级来
             $userProfile['serial_number'] = 0;  // 学号还无法分配
             $userProfile['avatar'] = '/assets/img/dp.jpg'; // 用户默认的图片

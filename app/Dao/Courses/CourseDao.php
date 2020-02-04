@@ -81,6 +81,24 @@ class CourseDao
     }
 
     /**
+     * 根据id获取课件
+     * @param $id
+     * @return CourseMaterial
+     */
+    public function getCourseMaterial($id){
+        return CourseMaterial::find($id);
+    }
+
+    /**
+     * 根据id 删除课件
+     * @param $id
+     * @return mixed
+     */
+    public function deleteCourseMaterial($id){
+        return CourseMaterial::where('id',$id)->delete();
+    }
+
+    /**
      * @deprecated 不要调用这个方法
      * @param $request
      * @return MessageBag

@@ -115,6 +115,10 @@ Route::prefix('recruitment')->group(function () {
     // 加载某个招生计划
     Route::post('/delete-plan','Api\Recruitment\PlansController@delete_plan')
         ->name('api.recruitment.delete.plan');
+
+    // 加载某个学生的已报名专业
+    Route::any('/my-enrolments','Api\Recruitment\PlansController@my_enrolments')
+        ->name('api.recruitment.load.my-enrolments');
 });
 
 Route::prefix('timetable')->middleware('auth:api')->group(function () {
@@ -879,6 +883,13 @@ Route::prefix('signInGrade')->middleware('auth:api')->group(function () {
     // 备注列表
     Route::post('/remarkList','Api\AttendanceSchedule\SignInGradeController@remarkList')
         ->name('api.signInGrade.remarkList');
+
+    // 班级签到
+    Route::post('/gradeSignIn', 'Api\AttendanceSchedule\SignInGradeController@gradeSignIn')
+        ->name('api.signInGrade.gradeSignIn');
+    // 班级签到-详情
+    Route::post('/gradeSignIn-details', 'Api\AttendanceSchedule\SignInGradeController@gradeSignInDetails')
+        ->name('api.signInGrade.gradeSignIn-details');
 });
 
 // 校园风光
@@ -886,8 +897,15 @@ Route::prefix('campus')->group(function () {
     Route::any('/scenery', 'Api\School\CampusController@scenery')
         ->name('api.campus.scenery');
 });
+
 // 科研成果
 Route::prefix('campus')->middleware('auth:api')->group(function () {
     Route::get('/scientific', 'Api\School\CampusController@scientific')
         ->name('api.campus.aa');
+
+// 可见范围选择器专用
+Route::prefix('organizations')->middleware('auth:api')->group(function(){
+    Route::any('/load-by-roles', 'Api\School\OrganizationController@load_by_roles')
+        ->name('api.organizations.load-by-roles');
+
 });

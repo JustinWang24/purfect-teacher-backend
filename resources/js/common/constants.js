@@ -129,6 +129,8 @@ export const Constants = {
             DELETE: '/school_manager/organizations/delete',
             ADD_TO_ORG: '/school_manager/organizations/add-member',
             DELETE_FROM_ORG: '/school_manager/organizations/remove-member',
+            // 可见范围选择器专用
+            LOAD_BY_ROLES: '/api/organizations/load-by-roles',
         },
         FLOW: {
             SAVE: '/school_manager/pipeline/flows/save-flow',
@@ -155,7 +157,9 @@ export const Constants = {
             LOAD: '/api/notification/list'
         },
         COURSE_MATERIAL: {
-            SAVE: '/teacher/course/materials/create'
+            SAVE: '/teacher/course/materials/create',
+            LOAD: '/teacher/course/materials/load',
+            DELETE: '/teacher/course/materials/delete',
         }
     },
     YEARS: ['N.A','一年级','二年级','三年级','四年级','五年级','六年级'],

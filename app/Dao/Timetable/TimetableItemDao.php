@@ -776,4 +776,33 @@ class TimetableItemDao
             ->get();
     }
 
+
+    /**
+     * 获取当前时间今天已上的课
+     * @param $schoolId
+     * @param $year  int 学年
+     * @param $term  int 学期
+     * @param $time  string 时间
+     * @param $teacherId  int 老师id
+     * @param $gradeId  int 班级ID
+     * @param $weekDayIndex int  周几
+     * @return mixed
+     */
+    public function getTimetableItemByTime($schoolId, $year, $term, $time, $teacherId, $gradeId, $weekDayIndex) {
+        $field = ['timetable_items.*','time_slots.id as time_slot_id','time_slots.name'];
+        $map = [
+            ['time_slots.to', '<=', $time],
+            ['time_slots.school_id', '=', $schoolId],
+            ['year','=', $year],
+            ['term', '=', $term],
+            ['teacher_id', '=', $teacherId],
+            ['grade_id', '=', $gradeId],
+            ['weekday_index', '=', $weekDayIndex]
+            ];
+        return TimetableItem::join('time_slots',function ($join) use ($map) {
+            $join->on('timetable_items.time_slot_id', '=', 'time_slots.id')
+                ->where($map);
+        })->select($field)->get();
+    }
+
 }
