@@ -837,7 +837,7 @@ Route::prefix('Oa')->middleware('auth:api')->group(function () {
     Route::post('/del-grade-resources', 'Api\OA\GradeManageController@delGradeResource')
         ->name('api.oa.del.grade.resources');
     // 班级列表
-    Route::post('/grade-list', 'Api\OA\GradeManageController@gradesList')
+    Route::post('/grade-list', 'Api\OA\GradeManageController@static')
         ->name('api.oa.grade.list');
     // 学生列表
     Route::post('/student-list', 'Api\OA\GradeManageController@studentList')
@@ -898,8 +898,14 @@ Route::prefix('campus')->group(function () {
         ->name('api.campus.scenery');
 });
 
+// 科研成果
+Route::prefix('campus')->middleware('auth:api')->group(function () {
+    Route::get('/scientific', 'Api\School\CampusController@scientific')
+        ->name('api.campus.aa');
+
 // 可见范围选择器专用
 Route::prefix('organizations')->middleware('auth:api')->group(function(){
     Route::any('/load-by-roles', 'Api\School\OrganizationController@load_by_roles')
         ->name('api.organizations.load-by-roles');
+
 });
