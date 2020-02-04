@@ -833,7 +833,7 @@ Route::prefix('Oa')->middleware('auth:api')->group(function () {
     Route::post('/del-grade-resources', 'Api\OA\GradeManageController@delGradeResource')
         ->name('api.oa.del.grade.resources');
     // 班级列表
-    Route::post('/grade-list', 'Api\OA\GradeManageController@gradesList')
+    Route::post('/grade-list', 'Api\OA\GradeManageController@static')
         ->name('api.oa.grade.list');
     // 学生列表
     Route::post('/student-list', 'Api\OA\GradeManageController@studentList')
@@ -885,4 +885,9 @@ Route::prefix('signInGrade')->middleware('auth:api')->group(function () {
 Route::prefix('campus')->group(function () {
     Route::any('/scenery', 'Api\School\CampusController@scenery')
         ->name('api.campus.scenery');
+});
+// 科研成果
+Route::prefix('campus')->middleware('auth:api')->group(function () {
+    Route::get('/scientific', 'Api\School\CampusController@scientific')
+        ->name('api.campus.aa');
 });
