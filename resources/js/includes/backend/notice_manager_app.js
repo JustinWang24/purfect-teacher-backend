@@ -28,6 +28,8 @@ if(document.getElementById('notice-manager-app')){
                 showFileManagerFlag: false,
                 showAttachmentManagerFlag: false,
                 isLoading: false,
+                // 可见范围选择
+                showOrganizationsSelectorFlag: false,
             }
         },
         computed: {
@@ -44,7 +46,6 @@ if(document.getElementById('notice-manager-app')){
         created(){
             const dom = document.getElementById('app-init-data-holder');
             this.notice.schoolId = dom.dataset.school;
-            this.organizations = dom.dataset.organizations;
             this.types = JSON.parse(dom.dataset.types);
         },
         methods: {
@@ -134,6 +135,10 @@ if(document.getElementById('notice-manager-app')){
                     }
                     this.isLoading = false;
                 });
+            },
+            // 可见范围选择器
+            onOrganizationsSelectedHandler: function (payload) {
+                
             }
         }
     })

@@ -69,6 +69,17 @@ use App\Utils\UI\Button;
                         </div>
                     </div>
 
+                    <div>
+                        <el-form-item label="可见范围">
+                            <el-button type="primary" size="mini" icon="el-icon-document" v-on:click="showOrganizationsSelectorFlag=true">选择可见范围</el-button>
+                        </el-form-item>
+                        <div v-if="notice.image">
+                            <p class="text-center mb-4">
+                                <img :src="notice.image" width="200">
+                            </p>
+                        </div>
+                    </div>
+
                     <el-form-item>
                         <el-button type="primary" @click="onSubmit">立即保存</el-button>
                         <el-button>取消</el-button>
@@ -84,6 +95,7 @@ use App\Utils\UI\Button;
             'reusable_elements.section.file_manager_component',
             ['pickFileHandler'=>'pickAttachmentHandler','syncFlag'=>'showAttachmentManagerFlag']
         )
+
     </div>
     <div class="col-sm-12 col-md-8 col-xl-8">
         <div class="card">
@@ -94,6 +106,12 @@ use App\Utils\UI\Button;
                 </header>
             </div>
             <div class="card-body">
+                <div class="row">
+                    @include(
+            'reusable_elements.section.organizations_selector',
+            ['organizationsSelectedHandler'=>'onOrganizationsSelectedHandler','schoolId'=>$schoolId, 'userRoles'=>$userRoles]
+        )
+                </div>
                 <div class="row">
                     <div class="table-responsive">
                         <table class="table table-striped table-bordered table-hover table-checkable order-column valign-middle">
@@ -141,7 +159,6 @@ use App\Utils\UI\Button;
 </div>
 <div id="app-init-data-holder"
      data-school="{{ session('school.id') }}"
-     data-organizations="{{ $organizations }}"
      data-types="{{ json_encode(\App\Models\Notices\Notice::allType()) }}"
 ></div>
 @endsection

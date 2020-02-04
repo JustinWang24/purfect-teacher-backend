@@ -14,10 +14,14 @@ use Illuminate\Support\Facades\DB;
 class RecruitmentPlanDao
 {
     private $schoolId;
-    public function __construct($schoolId){
+    public function __construct($schoolId = null){
         $this->schoolId = $schoolId;
     }
 
+    /**
+     * @param $id
+     * @return RecruitmentPlan
+     */
     public function getPlan($id){
         return RecruitmentPlan::find($id);
     }

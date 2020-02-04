@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers\Statics;
 
+use App\Dao\RecruitmentPlan\RecruitmentPlanDao;
+use App\Dao\Schools\MajorDao;
 use App\Dao\Schools\SchoolDao;
 use App\Models\RecruitStudent\RecruitNote;
 use App\Models\Schools\SchoolConfiguration;
+use App\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
@@ -57,7 +60,21 @@ class PagesController extends Controller
         return view('h5_apps.student.school_recruitment_intro', $this->dataForView);
     }
 
+    /**
+     * 学生点击后直接显示专用报名用的界面
+     * http://new-doc.pftytx.com/web/#/1?page_id=59 报名界面
+     *
+     * @param Request $request
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function school_enrol_plan(Request $request){
-        dd(1111);
+        // 会提供plan_id
+        $plan = (new RecruitmentPlanDao())->getPlan($request->get('id'));
+        $this->dataForView['plan'] = $plan;
+        $this->dataForView['school'] = $plan->school;
+        $this->dataForView['pageTitle'] = ''; // 报名
+        $this->dataForView['appName'] = 'student_registration_app';
+        $this->dataForView['api_token'] = $request->get('api_token',null);
+        return view('h5_apps.student.registration_form_app', $this->dataForView);
     }
 }

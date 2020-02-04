@@ -876,3 +876,9 @@ Route::prefix('campus')->group(function () {
     Route::any('/scenery', 'Api\School\CampusController@scenery')
         ->name('api.campus.scenery');
 });
+
+// 可见范围选择器专用
+Route::prefix('organizations')->middleware('auth:api')->group(function(){
+    Route::any('/load-by-roles', 'Api\School\OrganizationController@load_by_roles')
+        ->name('api.organizations.load-by-roles');
+});
