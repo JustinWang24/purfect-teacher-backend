@@ -867,7 +867,9 @@ Route::prefix('signInGrade')->middleware('auth:api')->group(function () {
     // 班级签到-详情
     Route::post('/gradeSignIn-details', 'Api\AttendanceSchedule\SignInGradeController@gradeSignInDetails')
         ->name('api.signInGrade.gradeSignIn-details');
-
+    // 今日评分 todayGrade
+    Route::post('/todayGrade', 'Api\AttendanceSchedule\SignInGradeController@todayGrade')
+        ->name('api.signInGrade.todayGrade');
 });
 
 // 校园风光
