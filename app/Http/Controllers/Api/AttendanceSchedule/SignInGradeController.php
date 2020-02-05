@@ -352,20 +352,20 @@ class SignInGradeController extends Controller
             $gradeId = $grades[0]->grade_id;
         }
         //时间
-        $now = Carbon::now();
-        $date = $request->get('date',$now->toDateString());
+
+        $date = $request->get('date',Carbon::now()->toDateString());
         $type = $request->get('type', 1); // 类型：1当天数据 2:历史数据
-        $time = $now->toTimeString();
-        $month = $now->month;
+        $time = Carbon::now()->toTimeString();
+        $month = Carbon::parse($date)->month;
         $schoolId = $user->getSchoolId();
         $schoolDao = new SchoolDao();
         $school = $schoolDao->getSchoolById($schoolId);
         $configuration = $school->configuration;
         $year = $configuration->getSchoolYear($date);
         $term = $configuration->guessTerm($month);
-        $weekDay = $now->weekday();
+        $weekDay = Carbon::parse($date)->weekday();
 
-        $weeks = $configuration->getScheduleWeek($now, null, $term);
+        $weeks = $configuration->getScheduleWeek(Carbon::parse($date), null, $term);
         if(is_null($weeks)) {
             return JsonBuilder::Error('当前没有课程');
         }
