@@ -65,7 +65,7 @@ class CampusController extends Controller
             $sections  = $val->sections;
 
             foreach ($sections as $k => $v) {
-                if (!empty($v->content)) {
+                if (!empty($v->content) && empty($v->media_id)) {
                     $result[$key]['content'] = $v->content;
                 }
                 if (!empty($v->media_id)) {
