@@ -177,7 +177,7 @@ class InternalMessageController extends Controller
 
         $data = [];
         foreach ($teachers as $key => $teacher) {
-            $data[$key]['id']     = $teacher->id;
+            $data[$key]['id']     = $teacher->user_id;
             $data[$key]['name']   = $teacher->name;
             $data[$key]['avatar'] = $teacher->user->profile->avatar;
         }
