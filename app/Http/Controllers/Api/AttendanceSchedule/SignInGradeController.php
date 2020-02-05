@@ -9,6 +9,7 @@
 namespace App\Http\Controllers\Api\AttendanceSchedule;
 
 
+use App\Models\AttendanceSchedules\Attendance;
 use Carbon\Carbon;
 use App\Utils\JsonBuilder;
 use App\Dao\Schools\GradeDao;
@@ -511,6 +512,47 @@ class SignInGradeController extends Controller
         ];
 
         return JsonBuilder::Success($data);
+    }
+
+
+    public function gradeDetails(AttendanceRequest $request) {
+        $attendanceId = $request->getAttendanceId();
+        $dao = new AttendancesDao();
+        $attendance = $dao->getAttendanceById($attendanceId);
+        if($attendance->status == Attendance::STATUS_UN_EVALUATE) {
+            return JsonBuilder::Error('该课堂未评价');
+        }
+
+        $gradeUserDao = new GradeUserDao();
+        $return = $gradeUserDao->getGradeUserPageGradeId($attendance->grade_id);
+        $students = $return->getCollection();
+
+        $dao = new AttendancesDetailsDao();
+        $details = $dao->getAttendDetailsByAttendanceId($attendanceId);
+        $scores = array_column($details->toArray(),'score','student_id');
+
+
+        $list = [];
+        foreach ($students as $key => $item) {
+            $list[$key]['username'] = $item->name;
+            if(array_key_exists($item->user_id,$scores)) {
+                $list[$key]['score'] = $scores[$item->user_id];
+            } else {
+                $list[$key]['score'] = 0;
+            }
+        }
+
+        $data = [
+            'currentPage' => $return->currentPage(),
+            'lastPage'    => $return->lastPage(),
+            'total'       => $return->total(),
+            'teacher' => $attendance->teacher->name,
+            'data'        => $list
+        ];
+
+        return JsonBuilder::Success($data);
+
+
     }
 
 

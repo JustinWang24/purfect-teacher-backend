@@ -5,6 +5,7 @@ namespace App\Models\AttendanceSchedules;
 use App\Models\Course;
 use App\Models\Schools\Grade;
 use App\Models\Timetable\TimetableItem;
+use App\User;
 use Illuminate\Database\Eloquent\Model;
 
 class Attendance extends Model
@@ -15,6 +16,11 @@ class Attendance extends Model
     ];
 
     protected $hidden = ['updated_at'];
+
+
+    const STATUS_UN_EVALUATE = 0;  // 未评价
+    const STATUS_EVALUATE = 1;  // 已评价
+
 
     public function course() {
         return $this->belongsTo(Course::class);
@@ -31,5 +37,10 @@ class Attendance extends Model
      */
     public function grade() {
         return $this->belongsTo(Grade::class);
+    }
+
+
+    public function teacher() {
+        return $this->belongsTo(User::class,'teacher_id');
     }
 }
