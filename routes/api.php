@@ -863,6 +863,9 @@ Route::prefix('wysiwyg')->group(function () {
 
 Route::prefix('signInGrade')->middleware('auth:api')->group(function () {
 
+    // 全部记录的筛选
+    Route::get('/timeScreen', 'Api\AttendanceSchedule\SignInGradeController@timeScreen')
+        ->name('api.signInGrade.timeScreen');
     Route::get('/classList', 'Api\AttendanceSchedule\SignInGradeController@courseClassList')
         ->name('api.signInGrade.classList');
     // 签到详情

@@ -10,6 +10,7 @@ namespace App\Http\Controllers\Api\AttendanceSchedule;
 
 
 use App\Models\AttendanceSchedules\Attendance;
+use App\Models\Schools\SchoolConfiguration;
 use Carbon\Carbon;
 use App\Utils\JsonBuilder;
 use App\Dao\Schools\GradeDao;
@@ -28,6 +29,42 @@ use App\Http\Requests\AttendanceSchedule\AttendanceRequest;
 
 class SignInGradeController extends Controller
 {
+
+
+    /**
+     * 全部记录的筛选
+     * @return string
+     */
+    public function timeScreen() {
+        $year = Carbon::now()->year;
+        $lastYear = $year - 1;
+        $data = [
+            [
+                'name'=>$lastYear.'学年第一学期',
+                'year'=>$lastYear,
+                'term'=>SchoolConfiguration::LAST_TERM,
+            ],
+            [
+                'name'=>$lastYear.'学年第二学期',
+                'year'=>$lastYear,
+                'term'=>SchoolConfiguration::NEXT_TERM,
+            ],
+            [
+                'name'=>$year.'学年第一学期',
+                'year'=>$year,
+                'term'=>SchoolConfiguration::LAST_TERM,
+            ],
+            [
+                'name'=>$year.'学年第一学期',
+                'year'=>$year,
+                'term'=>SchoolConfiguration::NEXT_TERM,
+            ],
+        ];
+
+        return JsonBuilder::Success($data);
+    }
+
+
 
 
     /**
