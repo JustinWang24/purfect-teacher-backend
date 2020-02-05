@@ -9,6 +9,7 @@
 namespace App\Http\Controllers\Api\AttendanceSchedule;
 
 
+use App\Models\AttendanceSchedules\Attendance;
 use Carbon\Carbon;
 use App\Utils\JsonBuilder;
 use App\Dao\Schools\GradeDao;
@@ -443,6 +444,115 @@ class SignInGradeController extends Controller
         ];
 
         return JsonBuilder::Success($data);
+    }
+
+
+
+    /**
+     * 今日评分 或查看历史评分
+     * @param AttendanceRequest $request
+     * @return string
+     */
+    public function todayGrade(AttendanceRequest $request) {
+        $user = $request->user();
+        $dao = new GradeManagerDao();
+        $grades = $dao->getGradeManagerByAdviserId($user->id);
+        if(empty($grades)) {
+            return JsonBuilder::Error('您不是班主任');
+        }
+
+        $gradeId = $request->getGradeId();
+        if(empty($gradeId)) {
+            $gradeId = $grades[0]->grade_id;
+        }
+
+        //时间
+        $date = $request->get('date',Carbon::now()->toDateString());
+        $type = $request->get('type', 1); // 类型：1当天数据 2:历史数据
+        $time = Carbon::now()->toTimeString();
+        $month = Carbon::parse($date)->month;
+        $schoolId = $user->getSchoolId();
+        $schoolDao = new SchoolDao();
+        $school = $schoolDao->getSchoolById($schoolId);
+        $configuration = $school->configuration;
+        $year = $configuration->getSchoolYear($date);
+        $term = $configuration->guessTerm($month);
+        $weekDay = Carbon::parse($date)->weekDay();
+        $weeks = $configuration->getScheduleWeek(Carbon::parse($date), null, $term);
+        if(is_null($weeks)) {
+            return JsonBuilder::Error('当前没有课程');
+        }
+
+        $week = $weeks->getScheduleWeekIndex();
+        $weekdayIndex = CalendarDay::GetWeekDayIndex($weekDay);
+
+        // 查询当前时间这个班上的课
+        $timeTableItemDao = new TimetableItemDao();
+        $return = $timeTableItemDao->getTimetableItemByTime($schoolId, $year, $term, $time, $user->id, $gradeId, $weekDay, $type);
+
+        $attendancesDao = new AttendancesDao();
+        $list = [];
+        foreach ($return as $key => $item) {
+            $attendance = $attendancesDao->getAttendanceByTimeTableId($item->id, $week);
+            $list[] = [
+                'slot_name' => $item->name,
+                'course_name' => $item->course->name,
+                'status' => $attendance->status
+            ];
+        }
+
+        $gradeDao = new GradeDao;
+        $grade = $gradeDao->getGradeById($gradeId);
+
+        $data = [
+            'date' => $date,
+            'weekday_index' => $weekdayIndex,
+            'grade_name' => $grade->name,
+            'list' => $list
+        ];
+
+        return JsonBuilder::Success($data);
+    }
+
+
+    public function gradeDetails(AttendanceRequest $request) {
+        $attendanceId = $request->getAttendanceId();
+        $dao = new AttendancesDao();
+        $attendance = $dao->getAttendanceById($attendanceId);
+        if($attendance->status == Attendance::STATUS_UN_EVALUATE) {
+            return JsonBuilder::Error('该课堂未评价');
+        }
+
+        $gradeUserDao = new GradeUserDao();
+        $return = $gradeUserDao->getGradeUserPageGradeId($attendance->grade_id);
+        $students = $return->getCollection();
+
+        $dao = new AttendancesDetailsDao();
+        $details = $dao->getAttendDetailsByAttendanceId($attendanceId);
+        $scores = array_column($details->toArray(),'score','student_id');
+
+
+        $list = [];
+        foreach ($students as $key => $item) {
+            $list[$key]['username'] = $item->name;
+            if(array_key_exists($item->user_id,$scores)) {
+                $list[$key]['score'] = $scores[$item->user_id];
+            } else {
+                $list[$key]['score'] = 0;
+            }
+        }
+
+        $data = [
+            'currentPage' => $return->currentPage(),
+            'lastPage'    => $return->lastPage(),
+            'total'       => $return->total(),
+            'teacher' => $attendance->teacher->name,
+            'data'        => $list
+        ];
+
+        return JsonBuilder::Success($data);
+
+
     }
 
 
