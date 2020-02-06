@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\OA;
 
 use App\Dao\Schools\GradeManagerDao;
 use App\Dao\Schools\GradeResourceDao;
+use App\Dao\Students\StudentProfileDao;
 use App\Dao\Users\GradeUserDao;
 use App\Dao\Users\UserDao;
 use App\Http\Controllers\Controller;
@@ -164,6 +165,25 @@ class GradeManageController extends Controller
         ];
 
         return JsonBuilder::Success($data);
+    }
+
+    /**
+     * 修改学生信息
+     * @param MyStandardRequest $request
+     * @return string
+     */
+    public function updateStudentInfo(MyStandardRequest $request)
+    {
+        $studentId = $request->get('student_id');
+        $data = $request->get('data');
+
+        $dao = new StudentProfileDao;
+        $result =  $dao->updateStudentProfile($studentId, $data);
+        if ($result) {
+            return JsonBuilder::Success('修改成功');
+        } else {
+            return JsonBuilder::Error('修改失败');
+        }
     }
 
 
