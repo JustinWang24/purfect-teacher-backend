@@ -532,6 +532,7 @@ class SignInGradeController extends Controller
         foreach ($return as $key => $item) {
             $attendance = $attendancesDao->getAttendanceByTimeTableId($item->id, $week);
             $list[] = [
+                'attendance_id' => $attendance->id,
                 'slot_name' => $item->name,
                 'course_name' => $item->course->name,
                 'status' => $attendance->status
@@ -552,6 +553,11 @@ class SignInGradeController extends Controller
     }
 
 
+    /**
+     * 评分详情
+     * @param AttendanceRequest $request
+     * @return string
+     */
     public function gradeDetails(AttendanceRequest $request) {
         $attendanceId = $request->getAttendanceId();
         $dao = new AttendancesDao();
