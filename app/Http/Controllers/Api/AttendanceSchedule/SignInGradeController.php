@@ -249,6 +249,7 @@ class SignInGradeController extends Controller
 
 
     /**
+     * 班级内学生签到列表
      * @param AttendanceRequest $request
      * @return string
      */

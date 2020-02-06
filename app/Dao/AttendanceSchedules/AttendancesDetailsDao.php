@@ -18,14 +18,16 @@ class AttendancesDetailsDao
     /**
      * 统计签到次数
      * @param $userId
-     * @param $courseId
      * @param $year
      * @param $term
+     * @param $courseId null
      * @return mixed
      */
-    public function getSignInCountByUser($userId, $courseId, $year, $term) {
-        $map = ['student_id'=>$userId, 'course_id'=>$courseId, 'year'=>$year,
-            'term'=>$term, 'mold'=>AttendancesDetail::MOLD_SIGN_IN];
+    public function getSignInCountByUser($userId, $year, $term, $courseId = null) {
+        $map = ['student_id'=>$userId, 'year'=>$year, 'term'=>$term, 'mold'=>AttendancesDetail::MOLD_SIGN_IN];
+        if(!is_null($courseId)) {
+            $map['course_id'] = $courseId;
+        }
         return AttendancesDetail::where($map)->count();
     }
 
@@ -33,14 +35,18 @@ class AttendancesDetailsDao
     /**
      * 统计请假次数
      * @param $userId
-     * @param $courseId
      * @param $year
      * @param $term
+     * @param $courseId null
      * @return mixed
      */
-    public function getLeaveCountByUser($userId, $courseId, $year, $term) {
-        $map = ['student_id'=>$userId, 'course_id'=>$courseId, 'year'=>$year, 'term'=>$term,
+    public function getLeaveCountByUser($userId, $year, $term, $courseId = null) {
+        $map = ['student_id'=>$userId, 'year'=>$year, 'term'=>$term,
             'mold'=>AttendancesDetail::MOLD_LEAVE, 'status'=>AttendancesDetail::STATUS_CONSENT];
+
+        if(!is_null($courseId)) {
+            $map['course_id'] = $courseId;
+        }
         return AttendancesDetail::where($map)->count();
     }
 
@@ -52,9 +58,12 @@ class AttendancesDetailsDao
      * @param $term
      * @return mixed
      */
-    public function getTruantCountByUser($userId, $courseId, $year, $term) {
-        $map = ['student_id'=>$userId, 'course_id'=>$courseId, 'year'=>$year,
-            'term'=>$term, 'mold'=>AttendancesDetail::MOLD_TRUANT];
+    public function getTruantCountByUser($userId, $year, $term, $courseId = null) {
+        $map = ['student_id'=>$userId, 'year'=>$year, 'term'=>$term,
+            'mold'=>AttendancesDetail::MOLD_TRUANT];
+        if(!is_null($courseId)) {
+            $map['course_id'] = $courseId;
+        }
         return AttendancesDetail::where($map)->count();
     }
 
@@ -111,14 +120,13 @@ class AttendancesDetailsDao
     }
 
     /**
-     * 查寻旷课
+     * 查寻记录
      * @param $userId
-     * @param $date
      * @param $timetableId
      * @return mixed
      */
-    public function getTruantDetailByUserId($userId,$date,$timetableId) {
-        $map = ['student_id'=>$userId, 'date'=>$date, 'timetable_id'=>$timetableId];
+    public function getDetailByUserId($userId,$timetableId) {
+        $map = ['student_id'=>$userId, 'timetable_id'=>$timetableId];
         return AttendancesDetail::where($map)->first();
     }
 
