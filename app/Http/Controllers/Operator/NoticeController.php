@@ -24,10 +24,7 @@ class NoticeController extends Controller
     {
         $schoolId = $request->getSchoolId();
 
-        $orgDao = new OrganizationDao();
-        $this->dataForView['organizations'] = $orgDao->getBySchoolId($schoolId);
         $dao = new NoticeDao;
-
         $search = $request->get('search');
 
         if ($search) {
@@ -72,7 +69,19 @@ class NoticeController extends Controller
     {
         $id  = $request->get('id');
         $dao = new NoticeDao;
-        return JsonBuilder::Success(['notice'=>$dao->getNoticeById($id)]);
+        $notice = $dao->getNoticeById($id);
+        // 按照刘洋完成的 Oa/tissue/getOrganization 接口中定义的数据格式， 进行'可见范围'的改造
+        $selectedOrganizations = [];
+        foreach ($notice->selectedOrganizations as $so) {
+            $selectedOrganizations[] = [
+                'id'=>$so->organization->id,
+                'name'=>$so->organization->name,
+                'level'=>$so->organization->level,
+                'status'=>false,
+            ];
+        }
+        $notice->selectedOrganizations = $selectedOrganizations;
+        return JsonBuilder::Success(['notice'=>$notice]);
     }
 
     /**

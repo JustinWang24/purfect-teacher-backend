@@ -13,6 +13,23 @@ use App\Utils\UI\Button;
             </div>
             <div class="card-body p-3">
                 <el-form ref="noticeForm" :model="notice" label-width="80px">
+                    <div>
+                        <el-form-item label="可见范围" style="margin-bottom: 3px;">
+                            <el-button type="primary" size="mini" icon="el-icon-document" v-on:click="showOrganizationsSelectorFlag=true">管理可见范围</el-button>
+                        </el-form-item>
+                        <el-form-item v-if="notice.selectedOrganizations.length > 0">
+                            <el-tag
+                                    v-for="item in notice.selectedOrganizations"
+                                    :key="item.id"
+                                    type="info"
+                                    effect="plain"
+                                    class="m-2"
+                            >
+                                @{{ item.name }}
+                            </el-tag>
+                        </el-form-item>
+                        <el-divider></el-divider>
+                    </div>
                     <el-form-item label="类型">
                         <el-select v-model="notice.type" placeholder="请选择类型">
                             <el-option v-for="(ty, idx) in types" :label="ty" :value="idx" :key="idx"></el-option>
@@ -69,23 +86,6 @@ use App\Utils\UI\Button;
                         </div>
                     </div>
 
-                    <div>
-                        <el-form-item label="可见范围" style="margin-bottom: 3px;">
-                            <el-button type="primary" size="mini" icon="el-icon-document" v-on:click="showOrganizationsSelectorFlag=true">管理可见范围</el-button>
-                        </el-form-item>
-                        <el-form-item v-if="notice.selectedOrganizations.length > 0">
-                            <el-tag
-                                    v-for="item in notice.selectedOrganizations"
-                                    :key="item.id"
-                                    type="info"
-                                    effect="plain"
-                                    class="m-2"
-                            >
-                                @{{ item.name }}
-                            </el-tag>
-                        </el-form-item>
-                    </div>
-
                     <el-form-item>
                         <el-button type="primary" @click="onSubmit">立即保存</el-button>
                         <el-button>取消</el-button>
@@ -122,7 +122,7 @@ use App\Utils\UI\Button;
                     <div class="table-responsive">
                         <table class="table table-striped table-bordered table-hover table-checkable order-column valign-middle">
                             <tr>
-                                <th>序号</th>
+                                <th>可见范围</th>
                                 <th>标题</th>
                                 <th>类型</th>
                                 <th>封面图片</th>
@@ -134,7 +134,11 @@ use App\Utils\UI\Button;
                             <tbody>
                             @foreach($data as $val)
                                 <tr>
-                                    <td>{{ $val->id }}</td>
+                                    <td>
+                                        @foreach($val->selectedOrganizations as $so)
+{{ $so->organization->name }}
+                                        @endforeach
+                                    </td>
                                     <td>{{ $val->title }}</td>
                                     <td>{{ $val->getTypeText() }}</td>
                                     <td>

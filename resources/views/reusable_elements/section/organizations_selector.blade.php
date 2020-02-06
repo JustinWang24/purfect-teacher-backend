@@ -16,6 +16,7 @@
             user-uuid="{{ \Illuminate\Support\Facades\Auth::user() ? \Illuminate\Support\Facades\Auth::user()->uuid : ($user->uuid ?? null) }}"
             school-id="{{ $schoolId }}"
             roles="{{ $userRoles }}"
+            :existed-organizations="notice.selectedOrganizations"
             {!! isset($organizationsSelectedHandler) ? 'v-on:organizations-selected="'.$organizationsSelectedHandler.'"' : null !!}
     ></organizations-selector>
 </el-drawer>

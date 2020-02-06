@@ -9,6 +9,7 @@
 namespace App\Models\Notices;
 
 
+use App\Models\Schools\Organization;
 use Illuminate\Database\Eloquent\Model;
 
 class NoticeOrganization extends Model
@@ -22,6 +23,9 @@ class NoticeOrganization extends Model
         return $this->belongsTo(Notice::class);
     }
 
+    public function organization(){
+        return $this->belongsTo(Organization::class);
+    }
 
     public function getImageAttribute($value){
         if(!empty($value)){
