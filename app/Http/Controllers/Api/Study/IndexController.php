@@ -9,16 +9,15 @@
 namespace App\Http\Controllers\Api\Study;
 
 
+use Carbon\Carbon;
+use App\Utils\JsonBuilder;
+use App\Dao\Schools\SchoolDao;
+use App\Http\Controllers\Controller;
+use App\Models\Courses\CourseMaterial;
+use App\Dao\Timetable\TimetableItemDao;
+use App\Http\Requests\MyStandardRequest;
 use App\Dao\AttendanceSchedules\AttendancesDao;
 use App\Dao\AttendanceSchedules\AttendancesDetailsDao;
-use App\Dao\Schools\SchoolDao;
-use App\Dao\Timetable\TimeSlotDao;
-use App\Dao\Timetable\TimetableItemDao;
-use App\Http\Controllers\Controller;
-use App\Http\Requests\MyStandardRequest;
-use App\Models\Courses\CourseMaterial;
-use App\Utils\JsonBuilder;
-use Carbon\Carbon;
 
 class IndexController extends Controller
 {
@@ -27,7 +26,7 @@ class IndexController extends Controller
 
         $selectCourse = [
             'status' => 'true', // true 开启 false 关闭
-            'time' => '2020年1月3日-20年1月15日',
+            'time' => '2020年1月3日-2020年1月15日',
             'msg' => '大家选课期间请看好选课程对应的学分',
         ];
 
