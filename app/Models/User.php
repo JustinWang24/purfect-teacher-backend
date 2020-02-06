@@ -9,6 +9,7 @@ use App\Models\Courses\CourseTeacher;
 use App\Models\Forum\Community;
 use App\Models\Misc\Enquiry;
 use App\Models\NetworkDisk\Category;
+use App\Models\Schools\GradeManager;
 use App\Models\Schools\Organization;
 use App\Models\Schools\RecruitmentPlan;
 use App\Models\Students\StudentProfile;
@@ -384,5 +385,10 @@ class User extends Authenticatable implements HasMobilePhone, HasDeviceId, IUser
     public function organizations()
     {
         return $this->hasMany(UserOrganization::class);
+    }
+
+    public function monitor()
+    {
+        return $this->hasOne(GradeManager::class, 'monitor_id', 'id');
     }
 }

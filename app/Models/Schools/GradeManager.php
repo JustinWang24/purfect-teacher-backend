@@ -9,7 +9,8 @@ use Illuminate\Database\Eloquent\Model;
 class GradeManager extends Model
 {
     protected $fillable = [
-        'school_id','grade_id',
+        'school_id',
+        'grade_id',
         'adviser_id',
         'adviser_name',
         'monitor_id',
