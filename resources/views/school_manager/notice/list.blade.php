@@ -136,7 +136,7 @@ use App\Utils\UI\Button;
                                 <tr>
                                     <td>
                                         @foreach($val->selectedOrganizations as $so)
-{{ $so->organization->name }}
+{{ $so->organization->name??null }}
                                         @endforeach
                                     </td>
                                     <td>{{ $val->title }}</td>
