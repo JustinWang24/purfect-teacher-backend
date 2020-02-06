@@ -135,8 +135,9 @@ class GradeManageController extends Controller
         $profile = $user->profile;
         $gradeUser = $user->gradeUser;
         $grade     = $user->gradeUser->grade;
-
+        $monitor   = $user->monitor;
         $data = [
+            'student_id'     => $user->id,
             'name'           => $user->name,  // 姓名
             'id_number'      => $profile->id_number,
             'gender'         => $profile->gender, // 男女
@@ -160,8 +161,8 @@ class GradeManageController extends Controller
             'institute'      => $gradeUser->institute->name,
             'major'          => $gradeUser->major->name,
             'year'           => $grade->year.'级',
-            'monitor'        => false,
-            'group'          => false,
+            'monitor'        => $monitor == null ? false : true, // 班长
+            'group'          => false,  // 团支书
         ];
 
         return JsonBuilder::Success($data);
@@ -176,17 +177,22 @@ class GradeManageController extends Controller
     {
         $studentId = $request->get('student_id');
         $data = $request->get('data');
+        $monitor = $request->get('monitor');
+        $group = $request->get('group');
 
         $dao = new StudentProfileDao;
-        $result =  $dao->updateStudentProfile($studentId, $data);
+        $gradeManagerDao = new GradeManagerDao;
+        if ($monitor || $group) {
+            $result = $gradeManagerDao->updateGradeManger($monitor['grade_id'], $monitor);
+        } else {
+            $result =  $dao->updateStudentProfile($studentId, $data);
+        }
+
         if ($result) {
             return JsonBuilder::Success('修改成功');
         } else {
             return JsonBuilder::Error('修改失败');
         }
     }
-
-
-
 
 }
