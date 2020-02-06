@@ -10,7 +10,6 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\MyStandardRequest;
 use App\Models\Acl\Role;
 use App\Models\Schools\GradeResource;
-use App\User;
 use App\Utils\JsonBuilder;
 
 class GradeManageController extends Controller
