@@ -845,6 +845,9 @@ Route::prefix('Oa')->middleware('auth:api')->group(function () {
     // 学生详情
     Route::post('/student-info', 'Api\OA\GradeManageController@studentInfo')
         ->name('api.oa.student.info');
+    // 修改学生信息
+    Route::post('/update-student-info', 'Api\OA\GradeManageController@updateStudentInfo')
+        ->name('api.oa.update.student.info');
 
 });
 
