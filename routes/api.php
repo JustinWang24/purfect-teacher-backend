@@ -921,3 +921,10 @@ Route::prefix('organizations')->middleware('auth:api')->group(function(){
     Route::any('/load-by-roles', 'Api\School\OrganizationController@load_by_roles')
         ->name('api.organizations.load-by-roles');
 });
+
+
+// 学习
+Route::prefix('study')->middleware('auth:api')->group(function(){
+    Route::any('/home-page', 'Api\Study\IndexController@index')
+        ->name('api.study.home-page');
+});
