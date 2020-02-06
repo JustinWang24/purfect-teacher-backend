@@ -70,14 +70,20 @@ use App\Utils\UI\Button;
                     </div>
 
                     <div>
-                        <el-form-item label="可见范围">
-                            <el-button type="primary" size="mini" icon="el-icon-document" v-on:click="showOrganizationsSelectorFlag=true">选择可见范围</el-button>
+                        <el-form-item label="可见范围" style="margin-bottom: 3px;">
+                            <el-button type="primary" size="mini" icon="el-icon-document" v-on:click="showOrganizationsSelectorFlag=true">管理可见范围</el-button>
                         </el-form-item>
-                        <div v-if="notice.image">
-                            <p class="text-center mb-4">
-                                <img :src="notice.image" width="200">
-                            </p>
-                        </div>
+                        <el-form-item v-if="notice.selectedOrganizations.length > 0">
+                            <el-tag
+                                    v-for="item in notice.selectedOrganizations"
+                                    :key="item.id"
+                                    type="info"
+                                    effect="plain"
+                                    class="m-2"
+                            >
+                                @{{ item.name }}
+                            </el-tag>
+                        </el-form-item>
                     </div>
 
                     <el-form-item>
@@ -95,7 +101,10 @@ use App\Utils\UI\Button;
             'reusable_elements.section.file_manager_component',
             ['pickFileHandler'=>'pickAttachmentHandler','syncFlag'=>'showAttachmentManagerFlag']
         )
-
+        @include(
+            'reusable_elements.section.organizations_selector',
+            ['organizationsSelectedHandler'=>'onOrganizationsSelectedHandler','schoolId'=>$schoolId, 'userRoles'=>$userRoles]
+        )
     </div>
     <div class="col-sm-12 col-md-8 col-xl-8">
         <div class="card">
@@ -107,10 +116,7 @@ use App\Utils\UI\Button;
             </div>
             <div class="card-body">
                 <div class="row">
-                    @include(
-            'reusable_elements.section.organizations_selector',
-            ['organizationsSelectedHandler'=>'onOrganizationsSelectedHandler','schoolId'=>$schoolId, 'userRoles'=>$userRoles]
-        )
+
                 </div>
                 <div class="row">
                     <div class="table-responsive">

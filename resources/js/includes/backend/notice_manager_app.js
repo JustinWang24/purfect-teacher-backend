@@ -11,7 +11,6 @@ if(document.getElementById('notice-manager-app')){
                 notice:{
                     id:'',
                     schoolId:'',
-                    organization_id:0,
                     title:'',
                     content:'',
                     image:'',
@@ -22,6 +21,7 @@ if(document.getElementById('notice-manager-app')){
                     user_id:'',
                     status:false,
                     attachments:[],
+                    selectedOrganizations:[],
                 },
                 types:[],
                 organizations:[],
@@ -91,7 +91,6 @@ if(document.getElementById('notice-manager-app')){
             newNotice: function(){
                 this.notice.id = '';
                 this.notice.title = '';
-                this.notice.organization_id = 0;
                 this.notice.type = '1';
                 this.notice.content = '';
                 this.notice.image = '';
@@ -101,6 +100,7 @@ if(document.getElementById('notice-manager-app')){
                 this.notice.user_id = '';
                 this.notice.status = false;
                 this.notice.attachments = [];
+                this.notice.selectedOrganizations = [];
             },
             deleteNotice: function(id){
                 this.$confirm('此操作将永久删除该通知, 是否继续?', '提示', {
@@ -138,7 +138,8 @@ if(document.getElementById('notice-manager-app')){
             },
             // 可见范围选择器
             onOrganizationsSelectedHandler: function (payload) {
-                
+                this.showOrganizationsSelectorFlag = false;
+                this.notice.selectedOrganizations = payload.data.org;
             }
         }
     })

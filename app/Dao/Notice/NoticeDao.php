@@ -49,6 +49,15 @@ class NoticeDao
                 ];
                 NoticeMedia::create($insert);
             }
+            // 这里假定没有"全部"这个选项， 以后处理
+            foreach ($data['selectedOrganizations'] as $selectedOrganization) {
+                $insert = [
+                    'school_id'=>$data['schoolId'],
+                    'notice_id'=>$result->id,
+                    'organization_id'=>$selectedOrganization['id']
+                ];
+                NoticeOrganization::create($insert);
+            }
             DB::commit();
             return new MessageBag(JsonBuilder::CODE_SUCCESS,'创建成功', $result);
         }catch (\Exception $e) {
