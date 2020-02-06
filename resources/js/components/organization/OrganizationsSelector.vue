@@ -147,7 +147,7 @@
             },
             remove: function(target, item){
                 const idx = Util.GetItemIndexById(item.id, target);
-                if(idx  === null){
+                if(idx !== null){
                     target.splice(idx, 1);
                 }
             },
