@@ -837,7 +837,7 @@ Route::prefix('Oa')->middleware('auth:api')->group(function () {
     Route::post('/del-grade-resources', 'Api\OA\GradeManageController@delGradeResource')
         ->name('api.oa.del.grade.resources');
     // 班级列表
-    Route::post('/grade-list', 'Api\OA\GradeManageController@static')
+    Route::post('/grade-list', 'Api\OA\GradeManageController@gradesList')
         ->name('api.oa.grade.list');
     // 学生列表
     Route::post('/student-list', 'Api\OA\GradeManageController@studentList')
