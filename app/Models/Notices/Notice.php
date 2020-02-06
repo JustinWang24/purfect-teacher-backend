@@ -80,6 +80,10 @@ class Notice extends Model
             ->select($this->attachment_field);
     }
 
+    public function selectedOrganizations(){
+        return $this->hasMany(NoticeOrganization::class);
+    }
+
     public function getImageAttribute($value){
         if(!empty($value)){
             return asset($value);

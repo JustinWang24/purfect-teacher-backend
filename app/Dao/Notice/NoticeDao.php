@@ -22,12 +22,18 @@ class NoticeDao
      */
     public function getNoticeBySchoolId($where)
     {
-        return Notice::where($where)->with('attachments')->paginate(ConfigurationTool::DEFAULT_PAGE_SIZE);
+        return Notice::where($where)
+            ->with('attachments')
+            ->with('selectedOrganizations')
+            ->paginate(ConfigurationTool::DEFAULT_PAGE_SIZE);
     }
 
     public function getNoticeById($id)
     {
-        return Notice::where('id', $id)->with('attachments')->first();
+        return Notice::where('id', $id)
+            ->with('attachments')
+            ->with('selectedOrganizations')
+            ->first();
     }
 
     /**

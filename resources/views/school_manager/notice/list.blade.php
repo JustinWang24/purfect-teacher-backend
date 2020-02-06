@@ -122,7 +122,7 @@ use App\Utils\UI\Button;
                     <div class="table-responsive">
                         <table class="table table-striped table-bordered table-hover table-checkable order-column valign-middle">
                             <tr>
-                                <th>序号</th>
+                                <th>可见范围</th>
                                 <th>标题</th>
                                 <th>类型</th>
                                 <th>封面图片</th>
@@ -134,7 +134,11 @@ use App\Utils\UI\Button;
                             <tbody>
                             @foreach($data as $val)
                                 <tr>
-                                    <td>{{ $val->id }}</td>
+                                    <td>
+                                        @foreach($val->selectedOrganizations as $so)
+{{ $so->organization->name }}
+                                        @endforeach
+                                    </td>
                                     <td>{{ $val->title }}</td>
                                     <td>{{ $val->getTypeText() }}</td>
                                     <td>
