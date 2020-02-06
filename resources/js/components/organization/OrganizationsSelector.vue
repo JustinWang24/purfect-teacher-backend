@@ -36,12 +36,11 @@
 
     export default {
         name: "OrganizationsSelector",
-        props:['userUuid','schoolId','roles'],
+        props:['userUuid','schoolId','roles','existedOrganizations'],
         components:{ClickToSelect, SelectedOrg},
         data(){
             return {
                 theEventName: 'organizations-selected', // 对外发布的事件名称
-                bufferOrganizations:[], // 备选的机构
                 selectedOrganizations:[], // 已经选择的机构
                 // 部门
                 org:[],
@@ -65,9 +64,24 @@
                 loadingOrganizations: false,
             }
         },
+        watch:{
+            'existedOrganizations': function(val){
+                this.selected.org = []; // 清空已有的
+                let that = this;
+                val.forEach(item => {
+                    that.add(that.selected.org, item);
+                })
+            }
+        },
         created: function(){
             // 根据传入的用户，加载其可能的全部组织机构
             this.init();
+        },
+        mounted: function(){
+            let that = this;
+            this.existedOrganizations.forEach(item => {
+                that.add(that.selected.org, item);
+            })
         },
         methods:{
             confirmSelections: function(){
