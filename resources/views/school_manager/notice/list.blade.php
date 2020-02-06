@@ -13,6 +13,23 @@ use App\Utils\UI\Button;
             </div>
             <div class="card-body p-3">
                 <el-form ref="noticeForm" :model="notice" label-width="80px">
+                    <div>
+                        <el-form-item label="可见范围" style="margin-bottom: 3px;">
+                            <el-button type="primary" size="mini" icon="el-icon-document" v-on:click="showOrganizationsSelectorFlag=true">管理可见范围</el-button>
+                        </el-form-item>
+                        <el-form-item v-if="notice.selectedOrganizations.length > 0">
+                            <el-tag
+                                    v-for="item in notice.selectedOrganizations"
+                                    :key="item.id"
+                                    type="info"
+                                    effect="plain"
+                                    class="m-2"
+                            >
+                                @{{ item.name }}
+                            </el-tag>
+                        </el-form-item>
+                        <el-divider></el-divider>
+                    </div>
                     <el-form-item label="类型">
                         <el-select v-model="notice.type" placeholder="请选择类型">
                             <el-option v-for="(ty, idx) in types" :label="ty" :value="idx" :key="idx"></el-option>
@@ -67,23 +84,6 @@ use App\Utils\UI\Button;
                                 <el-button type="text" class="pt-1 text-danger pull-right" @click="deleteNoticeMedia(atta.id)">删除</el-button>
                             </p>
                         </div>
-                    </div>
-
-                    <div>
-                        <el-form-item label="可见范围" style="margin-bottom: 3px;">
-                            <el-button type="primary" size="mini" icon="el-icon-document" v-on:click="showOrganizationsSelectorFlag=true">管理可见范围</el-button>
-                        </el-form-item>
-                        <el-form-item v-if="notice.selectedOrganizations.length > 0">
-                            <el-tag
-                                    v-for="item in notice.selectedOrganizations"
-                                    :key="item.id"
-                                    type="info"
-                                    effect="plain"
-                                    class="m-2"
-                            >
-                                @{{ item.name }}
-                            </el-tag>
-                        </el-form-item>
                     </div>
 
                     <el-form-item>

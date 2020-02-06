@@ -82,7 +82,10 @@ class NoticeDao
         DB::beginTransaction();
         try{
             $attachments = $data['attachments'];
+            $selectedOrganizations = $data['selectedOrganizations'];
             unset($data['attachments']);
+            unset($data['selectedOrganizations']);
+            unset($data['selected_organizations']);
             Notice::where('id', $data['id'])->update($data);
             foreach ($attachments as $key => $val) {
                 $found = NoticeMedia::where('notice_id',$data['id'])
@@ -98,6 +101,19 @@ class NoticeDao
                     NoticeMedia::create($insert);
                 }
             }
+
+            // 重置所有的通知关联的部门机构
+            NoticeOrganization::where('notice_id',$data['id'])->delete();
+            // 这里假定没有"全部"这个选项， 以后处理
+            foreach ($selectedOrganizations as $selectedOrganization) {
+                $insert = [
+                    'school_id'=>$data['school_id'],
+                    'notice_id'=>$data['id'],
+                    'organization_id'=>$selectedOrganization['id']
+                ];
+                NoticeOrganization::create($insert);
+            }
+
             DB::commit();
             return new MessageBag(JsonBuilder::CODE_SUCCESS,'创建成功', Notice::where('id', $data['id'])->first());//?update 后如何直接返回对象
         }catch (\Exception $e) {
@@ -105,7 +121,6 @@ class NoticeDao
             return new MessageBag(JsonBuilder::CODE_ERROR, $e->getMessage());
         }
     }
-
 
     /**
      * @param $type

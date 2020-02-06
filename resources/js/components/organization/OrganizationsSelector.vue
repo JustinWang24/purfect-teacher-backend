@@ -140,14 +140,14 @@
                 }
             },
             add: function(target, item){
-                const idx = target.indexOf(item);
-                if(idx < 0){
+                const idx = Util.GetItemIndexById(item.id, target);
+                if(idx === null){
                     target.push(item);
                 }
             },
             remove: function(target, item){
                 const idx = Util.GetItemIndexById(item.id, target);
-                if(idx > -1){
+                if(idx  === null){
                     target.splice(idx, 1);
                 }
             },
