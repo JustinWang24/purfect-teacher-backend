@@ -10,14 +10,13 @@
         title="可见范围选择器"
         :visible.sync="{{ $syncFlag??'showOrganizationsSelectorFlag' }}"
         direction="rtl"
-        size="100%"
+        size="60%"
         custom-class="drawer-organizations-selector">
-
+    <organizations-selector
+            user-uuid="{{ \Illuminate\Support\Facades\Auth::user() ? \Illuminate\Support\Facades\Auth::user()->uuid : ($user->uuid ?? null) }}"
+            school-id="{{ $schoolId }}"
+            roles="{{ $userRoles }}"
+            {!! isset($organizationsSelectedHandler) ? 'v-on:organizations-selected="'.$organizationsSelectedHandler.'"' : null !!}
+    ></organizations-selector>
 </el-drawer>
 
-<organizations-selector
-        user-uuid="{{ \Illuminate\Support\Facades\Auth::user() ? \Illuminate\Support\Facades\Auth::user()->uuid : ($user->uuid ?? null) }}"
-        school-id="{{ $schoolId }}"
-        roles="{{ $userRoles }}"
-        {!! isset($organizationsSelectedHandler) ? 'v-on:organizations-selected="'.$organizationsSelectedHandler.'"' : null !!}
-></organizations-selector>

@@ -18,6 +18,7 @@ use App\Http\Requests\MyStandardRequest;
 use App\Models\Teachers\Teacher;
 use App\User;
 use App\Utils\JsonBuilder;
+use App\Utils\ReturnData\RelatedGroups;
 use Illuminate\Http\Request;
 
 class OrganizationController extends Controller
@@ -107,15 +108,23 @@ class OrganizationController extends Controller
          */
         $user = $request->user('api');
         $schoolId = $request->has('school') ? $request->get('school') : $user->getSchoolId();
+        $relatedGroups = new RelatedGroups($user, $schoolId);
 
         // 获取用户的所有可能的角色
         if($user->isSchoolManager()){
-
+            // 那就返回所有的: 部门加 年级/班级
+        }
+        elseif($user->isEmployee() || $user->isTeacher()){
+            // 返回权限之内的部门 加 年级班级
+        }
+        elseif($user->isStudent()){
+            // 如果是学生
         }
         $roles = $request->get('roles');
         if(empty($roles)){
-            $duties = Teacher::getTeacherAllDuties($user->id);
-            dd($duties);
+//            $duties = Teacher::getTeacherAllDuties($user->id);
+//            dd($duties);
         }
+        return JsonBuilder::Success($relatedGroups->toArray());
     }
 }

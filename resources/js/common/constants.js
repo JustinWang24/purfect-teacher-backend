@@ -131,6 +131,7 @@ export const Constants = {
             DELETE_FROM_ORG: '/school_manager/organizations/remove-member',
             // 可见范围选择器专用
             LOAD_BY_ROLES: '/api/organizations/load-by-roles',
+            LOAD_BY_PARENT: '/Oa/tissue/getOrganization',
         },
         FLOW: {
             SAVE: '/school_manager/pipeline/flows/save-flow',

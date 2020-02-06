@@ -89,7 +89,7 @@ if(document.getElementById('organization-app')){
                         });
                     }
                     else{
-                        this.$message.error('操作失败, 请稍候再试.')
+                        this.$message.error(res.data.message)
                     }
                 })
             },

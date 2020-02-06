@@ -55,7 +55,10 @@ class GradeDao
         return Grade::where('school_id',$id)->where('year',$year)->paginate();
     }
 
-    public function getBySchoolAndYearForApp($id, $year){
+    public function getBySchoolAndYearForApp($id, $year, $withoutYear = false){
+        if($withoutYear){
+            return Grade::select(['id','name'])->where('school_id',$id)->where('year',$year)->get();
+        }
         return Grade::select(['id','name','year'])->where('school_id',$id)->where('year',$year)->get();
     }
 

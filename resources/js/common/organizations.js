@@ -19,3 +19,14 @@ export function loadOrganizationsByRoles(schoolId, userUuid, roles, affix) {
         {school: schoolId, user: userUuid, roles: roles, version:Constants.VERSION}
     );
 }
+
+export function loadOrganizationsByParent(parentId, keyword, affix) {
+    const url = Util.buildUrl(Constants.API.ORGANIZATION.LOAD_BY_PARENT);
+    if(Util.isDevEnv()){
+        return axios.get(url, affix);
+    }
+    return axios.post(
+        url,
+        {parent_id: parentId, keyword: keyword, type: 1, version:Constants.VERSION}
+    );
+}
