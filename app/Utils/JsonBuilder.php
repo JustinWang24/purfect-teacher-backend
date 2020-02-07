@@ -111,6 +111,9 @@ class JsonBuilder
         elseif ($obj instanceof Carbon){
             return $obj->format('Y-m-d');
         }
+        elseif (is_object($obj)) {
+            return $obj;
+        }
         else{
             // 表明传入的对象, 既没有实现 ArrayAccess, 也没提供 toArray 方法
             throw new \Exception('数据无法正确转换成 json');
