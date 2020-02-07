@@ -193,7 +193,7 @@ class GradeManageController extends Controller
         $studentResult =  $dao->updateStudentProfile($studentId, $data);
         $groupResult = $gradeManagerDao->updateGradeManger($group['grade_id'], $group);
 
-        if ($gradeResult || $studentResult || $groupResult || $userResult) {
+        if ($gradeResult !==false || $studentResult !==false || $groupResult !==false || $userResult !==false ) {
             return JsonBuilder::Success('修改成功');
         } else {
             return JsonBuilder::Error('修改失败');
