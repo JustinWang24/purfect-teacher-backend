@@ -20,6 +20,10 @@ class UpdFieldsToConferencesTable extends Migration
             $table->tinyInteger('type')->default(0)->comment('类型 0：自定义会议 2:申请会议室');
             $table->string('address')->nullable()->comment('会议地址');
             $table->tinyInteger('status')->default(1)->comment('状态 0未审核 1已通过 2已拒绝');
+            $table->dateTime('signin_start')->comment('签到开始时间')->nullable();
+            $table->dateTime('signin_end')->comment('签到结束时间')->nullable();
+            $table->dateTime('signin_end')->comment('签到结束时间')->nullable();
+
         });
     }
 
