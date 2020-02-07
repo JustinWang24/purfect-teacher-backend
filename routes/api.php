@@ -504,6 +504,9 @@ Route::prefix('attendance')->middleware('auth:api')->group(function () {
     Route::post('/course-sign','Api\AttendanceSchedule\AttendanceController@courseSign')
         ->name('api.attendance.course-sign');*/
 
+    // 开启补签
+    Route::post('/start-supplement', 'Api\AttendanceSchedule\AttendanceController@startSupplement')
+        ->name('api.start.supplement');
 
 
 });
