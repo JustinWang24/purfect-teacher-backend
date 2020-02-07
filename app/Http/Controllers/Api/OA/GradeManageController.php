@@ -136,7 +136,9 @@ class GradeManageController extends Controller
         $gradeUser = $user->gradeUser;
         $grade     = $user->gradeUser->grade;
         $monitor   = $user->monitor;
+        $group     = $user->group;
         $data = [
+            'grade_id'       => $grade->id,
             'student_id'     => $user->id,
             'name'           => $user->name,  // 姓名
             'id_number'      => $profile->id_number,
@@ -146,7 +148,7 @@ class GradeManageController extends Controller
             'political_name' => $profile->political_name, // 政治面貌
             'source_place'   => $profile->source_place,  // 生源地
             'country'        => $profile->country, // 籍贯
-            'contact_number' => '', // 联系电话
+            'contact_number' => $profile->contact_number, // 联系电话
             'qq'             => $profile->qq,
             'wx'             => $profile->wx,
             'parent_name'    => $profile->parent_name,  // 家长姓名
@@ -162,7 +164,7 @@ class GradeManageController extends Controller
             'major'          => $gradeUser->major->name,
             'year'           => $grade->year.'级',
             'monitor'        => $monitor == null ? false : true, // 班长
-            'group'          => false,  // 团支书
+            'group'          => $group == null ? false : true,  // 团支书
         ];
 
         return JsonBuilder::Success($data);
@@ -182,13 +184,10 @@ class GradeManageController extends Controller
 
         $dao = new StudentProfileDao;
         $gradeManagerDao = new GradeManagerDao;
-        if ($monitor || $group) {
-            $result = $gradeManagerDao->updateGradeManger($monitor['grade_id'], $monitor);
-        } else {
-            $result =  $dao->updateStudentProfile($studentId, $data);
-        }
-
-        if ($result) {
+        $gradeResult = $gradeManagerDao->updateGradeManger($monitor['grade_id'], $monitor);
+        $studentResult =  $dao->updateStudentProfile($studentId, $data);
+        $groupResult = $gradeManagerDao->updateGradeManger($group['grade_id'], $group);
+        if ($gradeResult && $studentResult && $groupResult) {
             return JsonBuilder::Success('修改成功');
         } else {
             return JsonBuilder::Error('修改失败');
