@@ -171,7 +171,7 @@ class GradeManageController extends Controller
     }
 
     /**
-     * 修改学生信息
+     * 修改学生信息.
      * @param MyStandardRequest $request
      * @return string
      */
