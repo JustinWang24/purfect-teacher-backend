@@ -129,6 +129,9 @@ export const Constants = {
             DELETE: '/school_manager/organizations/delete',
             ADD_TO_ORG: '/school_manager/organizations/add-member',
             DELETE_FROM_ORG: '/school_manager/organizations/remove-member',
+            // 可见范围选择器专用
+            LOAD_BY_ROLES: '/api/organizations/load-by-roles',
+            LOAD_BY_PARENT: '/Oa/tissue/getOrganization',
         },
         FLOW: {
             SAVE: '/school_manager/pipeline/flows/save-flow',
@@ -153,6 +156,11 @@ export const Constants = {
         },
         MESSAGE: {
             LOAD: '/api/notification/list'
+        },
+        COURSE_MATERIAL: {
+            SAVE: '/teacher/course/materials/create',
+            LOAD: '/teacher/course/materials/load',
+            DELETE: '/teacher/course/materials/delete',
         }
     },
     YEARS: ['N.A','一年级','二年级','三年级','四年级','五年级','六年级'],
@@ -237,5 +245,17 @@ export const Constants = {
         GRADE: 2, // 班主任
         STUDY_GROUP: 3, // 教研组长
         STUDENTS: 4, // 班长
+    },
+    COURSE_MATERIAL_TYPES:{
+        TYPE_PRE:1,
+        TYPE_PRE_TXT:'预习材料',
+        TYPE_LECTURE:2,
+        TYPE_LECTURE_TXT:'课堂讲义',
+        TYPE_AFTER:3,
+        TYPE_AFTER_TXT:'课后阅读',
+        TYPE_HOMEWORK:4,
+        TYPE_HOMEWORK_TXT:'随堂作业',
+        TYPE_EXAM: 5,
+        TYPE_EXAM_TXT: '随堂测试'
     }
 };

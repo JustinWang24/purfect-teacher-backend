@@ -18,5 +18,36 @@ class GradeManagerDao
         return GradeManager::where('grade_id', $gradeId)->first();
     }
 
+    /**
+     * 根据班主任ID 获取班级
+     * @param $adviser
+     * @return mixed
+     */
+    public function getAllGradesByAdviserId($adviser)
+    {
+        return GradeManager::where('adviser_id', $adviser)->get();
+    }
+
+    /**
+     * 根据班主任ID获取带的班级
+     * @param $adviserId
+     * @return mixed
+     */
+    public function getGradeManagerByAdviserId($adviserId) {
+        return GradeManager::where('adviser_id',$adviserId)
+            ->orderBy('created_at','desc')->get();
+    }
+
+    /**
+     * 修改职务
+     * @param $gradeId
+     * @param $data
+     * @return mixed
+     */
+    public function updateGradeManger($gradeId, $data)
+    {
+        return GradeManager::where('grade_id', $gradeId)->update($data);
+    }
+
 
 }

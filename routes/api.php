@@ -115,6 +115,10 @@ Route::prefix('recruitment')->group(function () {
     // 加载某个招生计划
     Route::post('/delete-plan','Api\Recruitment\PlansController@delete_plan')
         ->name('api.recruitment.delete.plan');
+
+    // 加载某个学生的已报名专业
+    Route::any('/my-enrolments','Api\Recruitment\PlansController@my_enrolments')
+        ->name('api.recruitment.load.my-enrolments');
 });
 
 Route::prefix('timetable')->middleware('auth:api')->group(function () {
@@ -162,6 +166,11 @@ Route::prefix('timetable')->middleware('auth:api')->group(function () {
     // 1: 根据学生的 api token, 获取今天的课表
     Route::any('/load-by-student','Api\Timetable\FrontendController@load_by_student')
         ->name('api.timetable.load-by-student');
+
+    // 给 APP 教师端使用的 API: 课表
+    // 1: 根据教师的 api token, 获取今天的课表
+    Route::any('/load-by-teacher','Api\Timetable\FrontendController@load_by_teacher')
+        ->name('api.timetable.load-by-teacher');
 });
 
 // 招生API
@@ -495,6 +504,9 @@ Route::prefix('attendance')->middleware('auth:api')->group(function () {
     Route::post('/course-sign','Api\AttendanceSchedule\AttendanceController@courseSign')
         ->name('api.attendance.course-sign');*/
 
+    // 开启补签
+    Route::post('/start-supplement', 'Api\AttendanceSchedule\AttendanceController@startSupplement')
+        ->name('api.start.supplement');
 
 
 });
@@ -815,12 +827,51 @@ Route::prefix('Oa')->middleware('auth:api')->group(function () {
     Route::post('/helper-page', 'Api\OA\IndexController@helperPage')
         ->name('api.oa.helper.page');
 
+    /**
+     * 班级管理
+     */
+    // 获取班级风采
+    Route::post('/grade-resources', 'Api\OA\GradeManageController@index')
+        ->name('api.oa.grade.resources');
+    // 上传班级风采
+    Route::post('/upload-grade-resources', 'Api\OA\GradeManageController@uploadGradeResource')
+        ->name('api.oa.upload.grade.resources');
+    // 删除班级风采
+    Route::post('/del-grade-resources', 'Api\OA\GradeManageController@delGradeResource')
+        ->name('api.oa.del.grade.resources');
+    // 班级列表
+    Route::post('/grade-list', 'Api\OA\GradeManageController@gradesList')
+        ->name('api.oa.grade.list');
+    // 学生列表
+    Route::post('/student-list', 'Api\OA\GradeManageController@studentList')
+        ->name('api.oa.student.list');
+    // 学生详情
+    Route::post('/student-info', 'Api\OA\GradeManageController@studentInfo')
+        ->name('api.oa.student.info');
+    // 修改学生信息
+    Route::post('/update-student-info', 'Api\OA\GradeManageController@updateStudentInfo')
+        ->name('api.oa.update.student.info');
+
 });
 
 
-// 签到评分
+// 所见即所得编辑器的文件和图片上传接口
+Route::prefix('wysiwyg')->group(function () {
+    Route::any('/files/upload', 'Api\Wysiwyg\FilesController@files_upload')
+        ->name('api.wysiwyg.files.upload');
+    Route::any('/files/view', 'Api\Wysiwyg\FilesController@files_view')
+        ->name('api.wysiwyg.files.view');
+    Route::any('/images/upload', 'Api\Wysiwyg\FilesController@images_upload')
+        ->name('api.wysiwyg.images.upload');
+    Route::any('/images/view', 'Api\Wysiwyg\FilesController@images_view')
+        ->name('api.wysiwyg.images.view');
+});
+
 Route::prefix('signInGrade')->middleware('auth:api')->group(function () {
 
+    // 全部记录的筛选
+    Route::get('/timeScreen', 'Api\AttendanceSchedule\SignInGradeController@timeScreen')
+        ->name('api.signInGrade.timeScreen');
     Route::get('/classList', 'Api\AttendanceSchedule\SignInGradeController@courseClassList')
         ->name('api.signInGrade.classList');
     // 签到详情
@@ -841,4 +892,45 @@ Route::prefix('signInGrade')->middleware('auth:api')->group(function () {
     // 备注列表
     Route::post('/remarkList','Api\AttendanceSchedule\SignInGradeController@remarkList')
         ->name('api.signInGrade.remarkList');
+
+    // 当前班主任-班级列表
+    Route::get('/gradeList', 'Api\AttendanceSchedule\SignInGradeController@gradeList')
+        ->name('api.signInGrade.gradeList');
+    // 班级签到
+    Route::post('/gradeSignIn', 'Api\AttendanceSchedule\SignInGradeController@gradeSignIn')
+        ->name('api.signInGrade.gradeSignIn');
+    // 班级签到-详情
+    Route::post('/gradeSignIn-details', 'Api\AttendanceSchedule\SignInGradeController@gradeSignInDetails')
+        ->name('api.signInGrade.gradeSignIn-details');
+    // 今日评分 todayGrade
+    Route::post('/todayGrade', 'Api\AttendanceSchedule\SignInGradeController@todayGrade')
+        ->name('api.signInGrade.todayGrade');
+    // 评分详情
+    Route::post('/gradeDetails', 'Api\AttendanceSchedule\SignInGradeController@gradeDetails')
+        ->name('api.signInGrade.gradeDetails');
+});
+
+// 校园风光
+Route::prefix('campus')->group(function () {
+    Route::any('/scenery', 'Api\School\CampusController@scenery')
+        ->name('api.campus.scenery');
+});
+
+// 科研成果.
+Route::prefix('campus')->middleware('auth:api')->group(function () {
+    Route::post('/scientific', 'Api\School\CampusController@scientific')
+        ->name('api.campus.scientific');
+});
+
+// 可见范围选择器专用
+Route::prefix('organizations')->middleware('auth:api')->group(function(){
+    Route::any('/load-by-roles', 'Api\School\OrganizationController@load_by_roles')
+        ->name('api.organizations.load-by-roles');
+});
+
+
+// 学习
+Route::prefix('study')->middleware('auth:api')->group(function(){
+    Route::any('/home-page', 'Api\Study\IndexController@index')
+        ->name('api.study.home-page');
 });

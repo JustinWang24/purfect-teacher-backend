@@ -9,13 +9,16 @@
 namespace App\Http\Controllers\Api\AttendanceSchedule;
 
 
-use App\Dao\Schools\GradeDao;
 use App\Models\AttendanceSchedules\Attendance;
+use App\Models\Schools\SchoolConfiguration;
 use Carbon\Carbon;
 use App\Utils\JsonBuilder;
+use App\Dao\Schools\GradeDao;
 use App\Dao\Schools\SchoolDao;
 use App\Dao\Courses\CourseDao;
+use App\Utils\Time\CalendarDay;
 use App\Dao\Users\GradeUserDao;
+use App\Dao\Schools\GradeManagerDao;
 use App\Http\Controllers\Controller;
 use App\Dao\Timetable\TimetableItemDao;
 use App\Http\Requests\MyStandardRequest;
@@ -27,7 +30,48 @@ use App\Http\Requests\AttendanceSchedule\AttendanceRequest;
 class SignInGradeController extends Controller
 {
 
-    // 课程的班级列表
+
+    /**
+     * 全部记录的筛选
+     * @return string
+     */
+    public function timeScreen() {
+        $year = Carbon::now()->year;
+        $lastYear = $year - 1;
+        $data = [
+            [
+                'name'=>$lastYear.'学年第一学期',
+                'year'=>$lastYear,
+                'term'=>SchoolConfiguration::LAST_TERM,
+            ],
+            [
+                'name'=>$lastYear.'学年第二学期',
+                'year'=>$lastYear,
+                'term'=>SchoolConfiguration::NEXT_TERM,
+            ],
+            [
+                'name'=>$year.'学年第一学期',
+                'year'=>$year,
+                'term'=>SchoolConfiguration::LAST_TERM,
+            ],
+            [
+                'name'=>$year.'学年第一学期',
+                'year'=>$year,
+                'term'=>SchoolConfiguration::NEXT_TERM,
+            ],
+        ];
+
+        return JsonBuilder::Success($data);
+    }
+
+
+
+
+    /**
+     * 课程的班级列表
+     * @param MyStandardRequest $request
+     * @return string
+     */
     public function courseClassList(MyStandardRequest $request) {
 
         $user = $request->user();
@@ -77,6 +121,7 @@ class SignInGradeController extends Controller
             'date' =>$now->toDateString(),
             'name'=>$course->name,
             'time_slot'=>$return[0]->timeSlot->name,
+            'room'=>$return[0]->room->name??""
             ];
 
         $data = ['course'=>$course, 'grade_list'=>$list];
@@ -101,25 +146,23 @@ class SignInGradeController extends Controller
 
         $dao = new AttendancesDetailsDao();
         $list = $dao->getAttendDetailsByAttendanceId($attendanceId);
-        $userIds = $list->pluck('student_id')->toArray();
+        $molds = array_column($list->toArray(),'mold','student_id');
+        $scores = array_column($list->toArray(),'score','student_id');
         $student = [];
-
-        $score = []; // 评分列表
+        $score = [];  // 评分列表
         foreach ($gradeUser as $key => $item) {
-            foreach ($list as $k => $v) {
-                $score[$key]['user_id'] = $item->user_id;
-                $score[$key]['name'] = $item->name;
-                $student[$key]['user_id'] = $item->user_id;
-                $student[$key]['name'] = $item->name;
-                if(in_array($item->user_id, $userIds)) {
-                    $student[$key]['mold'] = $v->mold;
-                    $score[$key]['score'] = $v->score;
-                } else {
-                    $student[$key]['mold'] = 0;  // 未签到
-                    $score[$key]['score'] = 0;
-                }
-            }
+            $student[$key]['user_id'] = $item->user_id;
+            $student[$key]['name'] = $item->name;
+            $score[$key]['user_id'] = $item->user_id;
+            $score[$key]['name'] = $item->name;
 
+            if(array_key_exists($item->user_id,$molds)) {
+                $student[$key]['mold'] = $molds[$item->user_id];
+                $student[$key]['score'] = $scores[$item->user_id];
+            } else {
+                $student[$key]['mold'] = 0;  // 未签到
+                $score[$key]['score'] = 0;
+            }
         }
 
 
@@ -185,7 +228,7 @@ class SignInGradeController extends Controller
     public function signInCourses(AttendanceRequest $request) {
         $userId = $request->user()->id;
         $year = $request->getYear();
-        $term = $request->geTerm();
+        $term = $request->getTerm();
         if(empty($year) || empty($term)) {
             return JsonBuilder::Error('缺少参数');
         }
@@ -206,6 +249,7 @@ class SignInGradeController extends Controller
 
 
     /**
+     * 班级内学生签到列表
      * @param AttendanceRequest $request
      * @return string
      */
@@ -299,6 +343,261 @@ class SignInGradeController extends Controller
         return JsonBuilder::Success($data);
     }
 
+
+    /**
+     * 班主任的班级列表
+     * @param AttendanceRequest $request
+     * @return string
+     */
+    public function gradeList(AttendanceRequest $request) {
+        $userId = $request->user()->id;
+        $dao = new GradeManagerDao();
+        $return = $dao->getGradeManagerByAdviserId($userId);
+        if(empty($return)) {
+            return JsonBuilder::Error('您不是班主任');
+        }
+        $result = [];
+        foreach ($return as $key => $item) {
+            $result[] = [
+                'grade_id' => $item->grade_id,
+                'grade_name' => $item->grade->name
+            ];
+        }
+
+        return JsonBuilder::Success($result);
+
+    }
+
+
+
+
+    /**
+     * 班级签到首页接口
+     * @param AttendanceRequest $request
+     * @return string
+     */
+    public function gradeSignIn(AttendanceRequest $request) {
+        $user = $request->user();
+        $gradeManagerDao = new GradeManagerDao();
+        $grades = $gradeManagerDao->getGradeManagerByAdviserId($user->id);
+
+        if(count($grades) == 0) {
+            return JsonBuilder::Error('您不是班主任');
+        }
+
+        $gradeId = $request->getGradeId();
+        if(empty($gradeId)) {
+            $gradeId = $grades[0]->grade_id;
+        }
+        //时间
+
+        $date = $request->get('date',Carbon::now()->toDateString());
+        $type = $request->get('type', 1); // 类型：1当天数据 2:历史数据
+        $time = Carbon::now()->toTimeString();
+        $month = Carbon::parse($date)->month;
+        $schoolId = $user->getSchoolId();
+        $schoolDao = new SchoolDao();
+        $school = $schoolDao->getSchoolById($schoolId);
+        $configuration = $school->configuration;
+        $year = $configuration->getSchoolYear($date);
+        $term = $configuration->guessTerm($month);
+        $weekDay = Carbon::parse($date)->weekday();
+
+        $weeks = $configuration->getScheduleWeek(Carbon::parse($date), null, $term);
+        if(is_null($weeks)) {
+            return JsonBuilder::Error('当前没有课程');
+        }
+
+        $week = $weeks->getScheduleWeekIndex();
+
+
+        // 查询当前时间这个班上的课
+        $timeTableItemDao = new TimetableItemDao();
+        $return = $timeTableItemDao->getTimetableItemByTime($schoolId, $year, $term, $time, $user->id, $gradeId, $weekDay, $type);
+
+        $weekdayIndex = CalendarDay::GetWeekDayIndex($weekDay);
+
+        $attendancesDao = new AttendancesDao();
+        $list = [];
+        foreach ($return as $key => $item) {
+            $attendance = $attendancesDao->getAttendanceByTimeTableId($item->id, $week);
+            $list[$key]['slot_name'] = $item->name;
+            $list[$key]['attendance_id'] = $attendance->id;
+            $list[$key]['actual_number'] = $attendance->actual_number;
+            $list[$key]['leave_number'] = $attendance->leave_number;
+            $list[$key]['missing_number'] = $attendance->missing_number;
+        }
+        $gradeDao = new GradeDao;
+        $grade = $gradeDao->getGradeById($gradeId);
+        $data = [
+            'date' => $date,
+            'weekday_index' => $weekdayIndex,
+            'grade_name' => $grade->name,
+            'list' => $list
+        ];
+        return JsonBuilder::Success($data);
+    }
+
+
+    /**
+     * 班级签到详情
+     * @param AttendanceRequest $request
+     * @return string
+     */
+    public function gradeSignInDetails(AttendanceRequest $request) {
+        $attendanceId = $request->getAttendanceId();
+        $dao = new AttendancesDao();
+        $attendance = $dao->getAttendanceById($attendanceId);
+        $detailsDao = new AttendancesDetailsDao();
+        $details = $detailsDao->getAttendDetailsByAttendanceId($attendanceId);
+        // 签到状态
+        $molds = array_column($details->toArray(), 'mold', 'student_id');
+        $createdAts = array_column($details->toArray(), 'created_at', 'student_id');
+
+        $gradeUserDao = new GradeUserDao();
+        $return = $gradeUserDao->getGradeUserPageGradeId($attendance->grade_id);
+
+        $students = $return->getCollection();
+        $list = [];
+        foreach ($students as $key => $value) {
+            $list[$key]['user_id'] = $value->user_id;
+            $list[$key]['name'] = $value->name;
+            $list[$key]['mold'] = AttendancesDetail::MOLD_TRUANT;
+            $list[$key]['created_at'] = '';
+
+            if(array_key_exists($value->user_id,$molds)) {
+                $list[$key]['mold'] = $molds[$value->user_id];
+                if($molds[$value->user_id] != AttendancesDetail::MOLD_TRUANT) {
+                    $list[$key]['created_at'] = $createdAts[$value->user_id];
+                }
+            }
+
+        }
+
+        $data = [
+            'currentPage' => $return->currentPage(),
+            'lastPage'    => $return->lastPage(),
+            'total'       => $return->total(),
+            'list'        => $list
+        ];
+
+        return JsonBuilder::Success($data);
+    }
+
+
+
+    /**
+     * 今日评分 或查看历史评分
+     * @param AttendanceRequest $request
+     * @return string
+     */
+    public function todayGrade(AttendanceRequest $request) {
+        $user = $request->user();
+        $dao = new GradeManagerDao();
+        $grades = $dao->getGradeManagerByAdviserId($user->id);
+        if(empty($grades)) {
+            return JsonBuilder::Error('您不是班主任');
+        }
+
+        $gradeId = $request->getGradeId();
+        if(empty($gradeId)) {
+            $gradeId = $grades[0]->grade_id;
+        }
+
+        //时间
+        $date = $request->get('date',Carbon::now()->toDateString());
+        $type = $request->get('type', 1); // 类型：1当天数据 2:历史数据
+        $time = Carbon::now()->toTimeString();
+        $month = Carbon::parse($date)->month;
+        $schoolId = $user->getSchoolId();
+        $schoolDao = new SchoolDao();
+        $school = $schoolDao->getSchoolById($schoolId);
+        $configuration = $school->configuration;
+        $year = $configuration->getSchoolYear($date);
+        $term = $configuration->guessTerm($month);
+        $weekDay = Carbon::parse($date)->weekDay();
+        $weeks = $configuration->getScheduleWeek(Carbon::parse($date), null, $term);
+        if(is_null($weeks)) {
+            return JsonBuilder::Error('当前没有课程');
+        }
+
+        $week = $weeks->getScheduleWeekIndex();
+        $weekdayIndex = CalendarDay::GetWeekDayIndex($weekDay);
+
+        // 查询当前时间这个班上的课
+        $timeTableItemDao = new TimetableItemDao();
+        $return = $timeTableItemDao->getTimetableItemByTime($schoolId, $year, $term, $time, $user->id, $gradeId, $weekDay, $type);
+
+        $attendancesDao = new AttendancesDao();
+        $list = [];
+        foreach ($return as $key => $item) {
+            $attendance = $attendancesDao->getAttendanceByTimeTableId($item->id, $week);
+            $list[] = [
+                'attendance_id' => $attendance->id,
+                'slot_name' => $item->name,
+                'course_name' => $item->course->name,
+                'status' => $attendance->status
+            ];
+        }
+
+        $gradeDao = new GradeDao;
+        $grade = $gradeDao->getGradeById($gradeId);
+
+        $data = [
+            'date' => $date,
+            'weekday_index' => $weekdayIndex,
+            'grade_name' => $grade->name,
+            'list' => $list
+        ];
+
+        return JsonBuilder::Success($data);
+    }
+
+
+    /**
+     * 评分详情
+     * @param AttendanceRequest $request
+     * @return string
+     */
+    public function gradeDetails(AttendanceRequest $request) {
+        $attendanceId = $request->getAttendanceId();
+        $dao = new AttendancesDao();
+        $attendance = $dao->getAttendanceById($attendanceId);
+        if($attendance->status == Attendance::STATUS_UN_EVALUATE) {
+            return JsonBuilder::Error('该课堂未评价');
+        }
+
+        $gradeUserDao = new GradeUserDao();
+        $return = $gradeUserDao->getGradeUserPageGradeId($attendance->grade_id);
+        $students = $return->getCollection();
+
+        $dao = new AttendancesDetailsDao();
+        $details = $dao->getAttendDetailsByAttendanceId($attendanceId);
+        $scores = array_column($details->toArray(),'score','student_id');
+
+
+        $list = [];
+        foreach ($students as $key => $item) {
+            $list[$key]['username'] = $item->name;
+            if(array_key_exists($item->user_id,$scores)) {
+                $list[$key]['score'] = $scores[$item->user_id];
+            } else {
+                $list[$key]['score'] = 0;
+            }
+        }
+
+        $data = [
+            'currentPage' => $return->currentPage(),
+            'lastPage'    => $return->lastPage(),
+            'total'       => $return->total(),
+            'teacher' => $attendance->teacher->name,
+            'data'        => $list
+        ];
+
+        return JsonBuilder::Success($data);
+
+
+    }
 
 
 

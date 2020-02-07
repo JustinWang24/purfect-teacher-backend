@@ -222,7 +222,7 @@ class CloudController extends Controller
         $week = $item->school->configuration->getScheduleWeek($now)->getScheduleWeekIndex();
 
         $dao = new AttendancesDao;
-        $attendanceInfo = $dao->getAttendanceByTimeTableId($item->year,$item->id, $item->term, $week);
+        $attendanceInfo = $dao->getAttendanceByTimeTableId($item->id, $week);
         if (empty($attendanceInfo)) {
             return  JsonBuilder::Error('未找到签到数据');
         }
@@ -272,7 +272,7 @@ class CloudController extends Controller
         if($attendanceInfo) {
             return  JsonBuilder::Success('签到成功');
         } else {
-            return  JsonBuilder::Success('服务器错误, 签到失败');
+            return  JsonBuilder::Error('服务器错误, 签到失败');
         }
     }
 
@@ -300,7 +300,7 @@ class CloudController extends Controller
         if ($update) {
             return  JsonBuilder::Success('上传成功');
         } else {
-            return  JsonBuilder::Success('上传失败');
+            return  JsonBuilder::Error('上传失败');
         }
     }
 
@@ -333,7 +333,7 @@ class CloudController extends Controller
         if($attendanceInfo) {
             return  JsonBuilder::Success('签到成功');
         } else {
-            return  JsonBuilder::Success('服务器错误, 签到失败');
+            return  JsonBuilder::Error('服务器错误, 签到失败');
         }
     }
 

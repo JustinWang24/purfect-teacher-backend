@@ -19,6 +19,7 @@ use App\Utils\JsonBuilder;
 use App\Utils\ReturnData\IMessageBag;
 use App\Utils\ReturnData\MessageBag;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\DB;
 use Ramsey\Uuid\Uuid;
 use App\Dao\BuildFillableData;
@@ -33,6 +34,7 @@ class CourseDao
         'year',
         'term',
         'desc',
+        'duration',
     ];
     public function __construct()
     {
@@ -49,7 +51,110 @@ class CourseDao
         return CourseMaterial::where('course_id',$course)
             ->where('teacher_id',$teacher)
             ->orderBy('index','asc')
+            ->orderBy('type','asc')
             ->get();
+    }
+
+    /**
+     * 保存课件
+     * @param $materialData
+     * @return IMessageBag
+     */
+    public function saveMaterial($materialData){
+        $bag = new MessageBag();
+        try{
+            if(empty($materialData['id'])){
+                $material =  CourseMaterial::create($materialData);
+                $bag->setData($material);
+            }
+            else{
+                CourseMaterial::where('id',$materialData['id'])
+                    ->update($materialData);
+                $material =  CourseMaterial::find($materialData['id']);
+                $bag->setData($material);
+            }
+        }catch (\Exception $exception){
+            $bag->setCode(JsonBuilder::CODE_ERROR);
+            $bag->setMessage($exception->getMessage());
+        }
+        return $bag;
+    }
+
+    /**
+     * 根据id获取课件
+     * @param $id
+     * @return CourseMaterial
+     */
+    public function getCourseMaterial($id){
+        return CourseMaterial::find($id);
+    }
+
+    /**
+     * 根据id 删除课件
+     * @param $id
+     * @return mixed
+     */
+    public function deleteCourseMaterial($id){
+        return CourseMaterial::where('id',$id)->delete();
+    }
+
+    /**
+     * @deprecated 不要调用这个方法
+     * @param $request
+     * @return MessageBag
+     */
+    public function createMaterialOld($request){
+        /**
+         * @var UploadedFile $file
+         */
+        $file = $request->file('file');
+
+        // 课件使用一个特殊的单独目录进行保存: /storage/course_material/course_id/teacher_id/
+        $base = 'app/public/course_material';
+        $materialData = json_decode($request->get('material'), true);
+        $folderPath = $base.DIRECTORY_SEPARATOR.$materialData['course_id']
+            .DIRECTORY_SEPARATOR.$materialData['teacher_id'];
+        $folderPath = storage_path($folderPath);
+        if(!file_exists($folderPath)){
+            mkdir($folderPath, 0777, true);
+        }
+
+        if($file){
+            $filePath = $file->storeAs(
+                'public/course_material'.DIRECTORY_SEPARATOR.$materialData['course_id']
+            .DIRECTORY_SEPARATOR.$materialData['teacher_id'],
+                $file->getClientOriginalName()
+            );
+            $url = str_replace(
+                'public',
+                'storage',
+                $filePath);
+            $materialData['url'] = $url;
+        }
+
+        $bag = new MessageBag(JsonBuilder::CODE_ERROR);
+        if(empty($materialData['id'])){
+            try{
+                $material = CourseMaterial::create($materialData);
+                $bag->setCode(JsonBuilder::CODE_SUCCESS);
+                $bag->setData($material);
+            }
+            catch (\Exception $exception){
+                $bag->setMessage($exception->getMessage());
+            }
+        }
+        else{
+            try{
+                $material = CourseMaterial::create($materialData);
+                $bag->setCode(JsonBuilder::CODE_SUCCESS);
+                $bag->setData($material);
+            }
+            catch (\Exception $exception){
+                $bag->setMessage($exception->getMessage());
+            }
+        }
+
+        return $bag;
     }
 
     /**

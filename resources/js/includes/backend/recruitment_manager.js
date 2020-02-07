@@ -24,8 +24,14 @@ if(document.getElementById('school-recruitment-manager-app')){
             const el = document.getElementById('plan-manager-school-id');
             this.schoolId = el.dataset.id;
             this.userUuid = el.dataset.uuid;
-
-            this.year = (new Date()).getFullYear() + 1;
+            const theDate = new Date();
+            const month = theDate.getMonth();
+            if(month < 8){
+                this.year = theDate.getFullYear();
+            }
+            else{
+                this.year = theDate.getFullYear() + 1;
+            }
 
             this.years.push(this.year + 1);
             this.years.push(this.year);

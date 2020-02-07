@@ -19,11 +19,13 @@ use Illuminate\Http\Request;
 
 class Factory
 {
+    const TYPE_STUDENT = 'student';
     /**
      * @param Request $request
+     * @param $type
      * @return ITimetableBuilder|null
      */
-    public static function GetInstance(Request $request){
+    public static function GetInstance(Request $request, $type = null){
         $instance = null;
         if($request->has('grade')){
             // 表示从班级的角度来加载课程表
@@ -38,11 +40,9 @@ class Factory
         elseif ($request->has('room')){
             $instance = new FromRoomPoint($request);
         }
-        elseif ($request->has('student')){
+        elseif ($type === self::TYPE_STUDENT || $request->has('student')){
             $instance = new FromStudentPoint($request);
         }
         return $instance;
     }
-
-
 }

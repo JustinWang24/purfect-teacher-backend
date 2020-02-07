@@ -76,6 +76,10 @@ Route::prefix('attendance')->middleware('auth:api')->group(function () {
         ->name('oa.attendance.mac_add');
     Route::post('/getMonthCount','Api\TeacherAttendance\AttendanceController@getMonthCount')
         ->name('oa.attendance.getMonthCount');
+    Route::post('/getGroupList','Api\TeacherAttendance\AttendanceController@getGroupList')
+        ->name('oa.attendance.getGroupList');
+    Route::post('/getManageDayCount','Api\TeacherAttendance\AttendanceController@getManageDayCount')
+        ->name('oa.attendance.getManageDayCount');
 
 });
 

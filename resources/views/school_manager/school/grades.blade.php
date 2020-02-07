@@ -25,9 +25,6 @@ $years = \App\Utils\Time\GradeAndYearUtil::GetAllYears();
                                 </p>
                             @endif
                         @endif
-
-
-
                     </header>
                 </div>
                 <div class="card-body">

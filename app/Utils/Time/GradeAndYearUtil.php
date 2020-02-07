@@ -42,8 +42,13 @@ class GradeAndYearUtil
      * @param int $num
      * @return array
      */
-    public static function GetAllYears($num = 3){
+    public static function GetAllYears($num = 2){
         $year = intval(date('Y'));
+        // 如果已经过了8月份， 则表示新的1年了
+        $month = intval(date('m'));
+        if($month<8){
+            $year = $year - 1;
+        }
         return range($year - $num, $year);
     }
 

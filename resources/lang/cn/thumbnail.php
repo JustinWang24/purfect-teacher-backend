@@ -35,11 +35,12 @@ return [
 
     //风采管理
     'scenery' => '风采管理',
+    'photo-album' => '校园相册',
+    'campus-intro' => '校园简介',
 
     // 课程表相关
     'timetable'=>'课程表',
     'manager'=>'管理',
-
 
     // 招生管理
     'planRecruit'  => '预招管理',
@@ -160,5 +161,8 @@ return [
     'result' => '结果',
     'consult' => '招生咨询',
     'note' => '报名须知',
+
+    // 课件
+    'materials'=>'课件',
 ];
 

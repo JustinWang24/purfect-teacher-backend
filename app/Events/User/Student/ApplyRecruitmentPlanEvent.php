@@ -79,4 +79,8 @@ class ApplyRecruitmentPlanEvent extends AbstractRegistrationEvent
         return '';
     }
 
+    public function getAction(): int
+    {
+        // TODO: Implement getAction() method.
+    }
 }

@@ -43,7 +43,7 @@ class Notice extends Model
     }
 
     protected $fillable = [
-        'school_id', 'title', 'content', 'organization_id',
+        'school_id', 'title', 'content',
         'image', 'release_time', 'note', 'inspect_id', 'type', 'user_id',
         'status'];
 
@@ -78,6 +78,10 @@ class Notice extends Model
     {
         return $this->hasMany(NoticeMedia::class)
             ->select($this->attachment_field);
+    }
+
+    public function selectedOrganizations(){
+        return $this->hasMany(NoticeOrganization::class);
     }
 
     public function getImageAttribute($value){

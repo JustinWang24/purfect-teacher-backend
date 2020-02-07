@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Dao\Schools\SchoolDao;
 use App\Dao\Timetable\TimetableItemDao;
 use App\Models\Courses\CourseArrangement;
+use App\Models\Courses\CourseMaterial;
 use App\Models\Courses\CourseTextbook;
 use App\Models\ElectiveCourses\CourseElective;
 use App\Models\ElectiveCourses\StudentEnrolledOptionalCourse;
@@ -36,7 +37,7 @@ class Course extends Model
         'optional',
         'year',
         'term',
-        'desc','school_id'
+        'desc','school_id','duration'
     ];
 
     public $hidden = ['deleted_at'];
@@ -75,6 +76,24 @@ class Course extends Model
         return $this->hasOne(CourseElective::class);
     }
 
+    /**
+     * 课程关联的教材
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function materials(){
+        return $this->hasMany(CourseMaterial::class)->orderBy('index','asc')->orderBy('type','asc');
+    }
+
+    /**
+     * 获取课程关联的 course major 记录, 根据给定的老师
+     * @param $teacherId
+     * @return CourseTeacher
+     */
+    public function getCourseTeacher($teacherId){
+        return CourseTeacher::where('course_id',$this->id)
+            ->where('teacher_id',$teacherId)
+            ->first();
+    }
 
     /**
      * 本课程的课程安排
@@ -86,8 +105,6 @@ class Course extends Model
             ->orderBy('day_index','asc');
     }
 
-
-
     /**
      * 课程和教材关联
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
@@ -95,7 +112,6 @@ class Course extends Model
     public function courseTextbooks() {
         return $this->hasMany(CourseTextbook::class);
     }
-
 
     /**
      * todo 该方法暂定 后续再完善 求旷课数据
@@ -189,9 +205,6 @@ class Course extends Model
                 }
                 break;
         }
-
         return $data;
-
     }
-
 }

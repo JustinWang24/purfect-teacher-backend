@@ -103,11 +103,12 @@ class NewsDao
      * 根据学校获取新闻动态
      * @param $schoolId
      * @param $pageNum
+     * @param int $type
      * @return mixed
      */
-    public function getNewBySchoolId($schoolId, $pageNum = null)
+    public function getNewBySchoolId($schoolId, $pageNum = null, $type = News::TYPE_NEWS)
     {
-        $where = ['school_id' => $schoolId, 'type' => News::TYPE_NEWS, 'publish' => News::PUBLISH_YES];
+        $where = ['school_id' => $schoolId, 'type' => $type, 'publish' => News::PUBLISH_YES];
         $page = $pageNum ?? ConfigurationTool::DEFAULT_PAGE_SIZE;
         return News::where($where)->select('id', 'type', 'title', 'tags', 'updated_at','created_at')->orderBy('updated_at', 'desc')->paginate($page);
     }

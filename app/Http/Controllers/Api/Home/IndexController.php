@@ -178,7 +178,6 @@ class IndexController extends Controller
         $user = $request->user();
 
         $profile = $user->profile;
-
         $gradeUser = $user->gradeUser;
         $grade     = $user->gradeUser->grade;
 

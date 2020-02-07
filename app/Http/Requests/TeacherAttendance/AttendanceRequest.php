@@ -7,6 +7,9 @@ use Carbon\Carbon;
 
 class AttendanceRequest extends MyStandardRequest
 {
+    public function getInputGroupId() {
+        return $this->get('groupid', 0);
+    }
     public function getInputDay() {
         return $this->get('day', Carbon::now()->format('Y-m-d'));
     }

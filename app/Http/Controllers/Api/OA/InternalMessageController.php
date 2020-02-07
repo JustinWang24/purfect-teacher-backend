@@ -46,7 +46,7 @@ class InternalMessageController extends Controller
             'relay_id'          => $relayId,
             'is_file'           => $isFile,
         ];
-        
+
         $result = $dao->create($data, $fileArr);
         if ($result) {
             return JsonBuilder::Success('添加成功');
@@ -141,6 +141,8 @@ class InternalMessageController extends Controller
 
     /**
      * 上传图片
+     * @param MyStandardRequest $request
+     * @return string
      */
     public function uploadFiles(MyStandardRequest $request)
     {
@@ -175,7 +177,7 @@ class InternalMessageController extends Controller
 
         $data = [];
         foreach ($teachers as $key => $teacher) {
-            $data[$key]['id']     = $teacher->id;
+            $data[$key]['id']     = $teacher->user_id;
             $data[$key]['name']   = $teacher->name;
             $data[$key]['avatar'] = $teacher->user->profile->avatar;
         }
