@@ -157,4 +157,15 @@ class AttendancesDao
         return Attendance::find($attendanceId);
     }
 
+    /**
+     * 修改
+     * @param $id
+     * @param $data
+     * @return mixed
+     */
+    public function update($id, $data)
+    {
+        return Attendance::where('id', $id)->update($data);
+    }
+
 }

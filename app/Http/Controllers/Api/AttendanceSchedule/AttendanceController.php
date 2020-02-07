@@ -4,6 +4,7 @@
 namespace App\Http\Controllers\Api\AttendanceSchedule;
 
 
+use App\Http\Requests\MyStandardRequest;
 use Carbon\Carbon;
 use App\Utils\JsonBuilder;
 use App\Dao\Courses\CourseMajorDao;
@@ -130,6 +131,27 @@ class AttendanceController extends Controller
             return JsonBuilder::Success('旷课添加成功');
         } else {
             return JsonBuilder::Error('旷课添加失败');
+        }
+    }
+
+
+    /**
+     * 开启补签
+     * @param MyStandardRequest $request
+     * @return string
+     */
+    public function startSupplement(MyStandardRequest $request)
+    {
+        $attendanceId = $request->get('attendance_id');
+        $type = $request->get('type');
+
+        $dao = new AttendancesDao;
+
+        $result = $dao->update($attendanceId, ['supplement_sign' => $type]);
+        if ($result) {
+            return JsonBuilder::Success('修改成功');
+        } else {
+            return  JsonBuilder::Error('修改失败');
         }
     }
 
