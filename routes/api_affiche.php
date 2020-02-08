@@ -14,6 +14,8 @@ use Illuminate\Http\Request;
 */
 Route::prefix('api_affiche')->middleware('auth:api')->group(function () {
     // 首页动态接口
+    Route::any('/v1/index/base-info','\App\Http\Controllers\Api\Affiche\IndexController@base_info');
+    // 首页动态接口
     Route::any('/v1/index/index-info','\App\Http\Controllers\Api\Affiche\IndexController@index_info');
     // 添加动态接口
     Route::any('/v1/affiche/add-affiche-info','\App\Http\Controllers\Api\Affiche\AfficheController@add_affiche_info');
