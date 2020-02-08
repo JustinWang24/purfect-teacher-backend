@@ -42,7 +42,7 @@ class IndexController extends Controller
         $timetableItemDao = new TimetableItemDao();
         $item = $timetableItemDao->getCurrentItemByUser($user);
 
-        $timetable = [];
+        $timetable = (object)[];
         $attendancesDetailsDao = new AttendancesDetailsDao();
 
         $signIn = [
