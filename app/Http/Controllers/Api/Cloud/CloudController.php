@@ -183,8 +183,14 @@ class CloudController extends Controller
             return JsonBuilder::Success('暂无课程');
         }
 
-        // 二维码生成规则学校ID, 班级ID, 课时ID
-        $codeStr = 'cloud'. ',' .$item->schools_id. ',' .$item->grade_id. ',' .$item->id;
+        //二维码生成规则 二维码标识, 学校ID, 班级ID, 教师ID
+        $codeStr = base64_encode(json_encode(['app' => 'cloud',
+                                              'school_id' => $item->school_id,
+                                              'grade_id' => $item->grade_id,
+                                              'teacher_id' => $item->teacher_id,
+                                              'timetable_id' => $item->id,
+                                              'course_id' => $item->course_id,
+                                              'time' => time()]));
         $qrCode = new QrCode($codeStr);
         $qrCode->setSize(400);
         $qrCode->setLogoPath(public_path('assets/img/logo.png'));
