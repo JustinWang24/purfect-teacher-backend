@@ -28,6 +28,24 @@ use App\Dao\Affiche\Api\AfficheDao;
 class IndexController extends Controller
 {
     /**
+     * Func 首页基础信息
+     *
+     * @param Request $request
+     * @param['token'] 是  token
+     *
+     * @return Json
+     */
+    public function base_info(IndexRequest $request)
+    {
+        $infos = array(
+            array('tag'=>'A','title'=>'校园互动','pics'=>'/assets/img/affiche/校园互助@3x.png'),
+            array('tag'=>'B','title'=>'社团','pics'=>'/assets/img/affiche/社团@3x.png'),
+            array('tag'=>'C','title'=>'活动','pics'=>'/assets/img/affiche/活动@3x.png'),
+        );
+        return JsonBuilder::Success ( $infos , '首页基础信息' );
+    }
+
+    /**
      * Func 首页推荐列表
      *
      * @param Request $request
