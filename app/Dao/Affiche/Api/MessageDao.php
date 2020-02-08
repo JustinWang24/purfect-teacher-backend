@@ -209,7 +209,7 @@ class MessageDao extends \App\Dao\Affiche\CommonDao
                     $levelArr = [1, 2];
                     // 检索条件
                     $condition[] = ['comment_levid', '=', 0];
-                    $condition[] = ['icheid', '=', $afficheInfo['icheid']];
+                    $condition[] = ['iche_id', '=', $afficheInfo['icheid']];
                     $condition[] = ['commentid', '=', $commentOneInfo['commentid']];
                 }
 
@@ -225,7 +225,7 @@ class MessageDao extends \App\Dao\Affiche\CommonDao
                         if ( $commentTwoInfo[ 'comment_pid' ] == 0 )
                         {
                             $levelArr = [3, 2];
-                            $condition[] = ['icheid', '=', $afficheInfo['icheid']];
+                            $condition[] = ['iche_id', '=', $afficheInfo['icheid']];
                             $condition[] = ['commentid', '', $commentOneInfo['commentid']];
                             $condition[] = ['comment_levid', '', $commentOneInfo['comment_pid']];
                         }
@@ -236,7 +236,8 @@ class MessageDao extends \App\Dao\Affiche\CommonDao
                 // 获取数据信息
                 if ( $condition )
                 {
-                    $returnArr = M ( 'api_affiche_comment' )->where ( $condition )->getField ( 'userid' , true );
+                    $userIdInfo = AfficheComment::where($condition)->select(['user_id'])->get();
+                    $returnArr = empty($userIdInfo->toArray()) ? array_column($userIdInfo->toArray(), 'user_id') : [];
                 }
             }
         }
