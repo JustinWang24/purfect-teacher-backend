@@ -101,7 +101,7 @@ class MessageController extends Controller
            $commentid1[] = ['status', '=', 1];
            $count = $messageobj->getAfficheMessageStatistics($commentid1);
            $afficheobj->editAffichesInfo(['iche_comment_num' => $count, 'updated_at' => date('Y-m-d H:i:s')], $infos['icheid']);
-
+           $user_id = 18882;
            // 增加消息数据,如果一级评论,过滤自己收到消息,如果是二级评论，过滤我自己回复消息
            if ( ( ! $data && $user_id != $infos[ 'user_id' ] ) || ( $data && $data[ 'user_id' ] != $user_id ) )
            {
@@ -110,11 +110,11 @@ class MessageController extends Controller
 
                // 获取动态的图片或者视频封面图
                // 图片信息
-               $picsList[ 0 ][ 'pics_smallurl' ] ='';
-               $picsList = $afficheobj->getAffichePicsListInfo($infos['icheid']);
+               $picsListInfo = $afficheobj->getAffichePicsListInfo($infos['icheid']);
+               $picsList[0]['pics_smallurl'] = !empty($picsList[0]['pics_smallurl']) ? $picsListInfo[0]['pics_smallurl'] : '';
                // 视频信息
-               $videoInfo[ 'cover_url' ] = '';
                $videoInfo = $afficheobj->getAfficheVideoOneInfo($infos['icheid']);
+               $videoInfo['cover_url'] = !empty($videoInfo['cover_url']) ? $videoInfo['cover_url'] : '';
 
                // 添加首页消息记录
                $addMessageData[ 'mess_type1' ]      = 2;
@@ -125,10 +125,10 @@ class MessageController extends Controller
                $addMessageData[ 'mess_type3' ]      = $infos[ 'iche_type' ] != 'video' ? 1 : 2;
                $addMessageData[ 'mess_pics' ]       = $infos[ 'iche_type' ] != 'video' ? (String)$picsList[ 0 ][ 'pics_smallurl' ] : (String)$videoInfo[ 'cover_url' ];
                $addMessageData[ 'mess_commentid' ]  = $commentid;   // 互评id
-               $addMessageData[ 'userid' ]          = (Int)$userInfo1[ 'userid' ];
+               $addMessageData[ 'user_id' ]          = (Int)$userInfo1[ 'user_id' ];
                $addMessageData[ 'user_pics' ]       = (String)$userInfo1[ 'user_pics' ];
                $addMessageData[ 'user_nickname' ]   = (String)$userInfo1[ 'user_nickname' ];
-               $addMessageData[ 'touserid' ]        = (Int)$userInfo2[ 'userid' ];
+               $addMessageData[ 'touser_id' ]        = (Int)$userInfo2[ 'user_id' ];
                $addMessageData[ 'touser_pics' ]     = (String)$userInfo2[ 'user_pics' ];
                $addMessageData[ 'touser_nickname' ] = (String)$userInfo2[ 'user_nickname' ];
                $addMessageData[ 'mess_content2' ]   = (String)strip_tags ( $com_content );
