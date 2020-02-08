@@ -44,7 +44,7 @@ class IndexController extends Controller
     }
 
     /**
-     * 生成上课补签二维码
+     * 生成上课补签二维码.
      * @param QrCodeRequest $request
      * @return string
      * @throws InvalidPathException
