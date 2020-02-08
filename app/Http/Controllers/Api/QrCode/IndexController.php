@@ -54,7 +54,7 @@ class IndexController extends Controller
         $user = $request->user();
         $timeTableDao = new  TimetableItemDao;
         $item = $timeTableDao->getCurrentItemByUser($user);
-        if (empty($item)) {
+        if ($item->isEmpty()) {
             return JsonBuilder::Error('未找到您正在上的课');
         }
 
@@ -141,7 +141,7 @@ class IndexController extends Controller
             'grade_name' => $user->gradeUser->grade->name,
             'school_name' => $school->name,
         ];
-        
+
         return JsonBuilder::Success($data);
     }
 

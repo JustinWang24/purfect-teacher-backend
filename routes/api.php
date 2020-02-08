@@ -424,6 +424,7 @@ Route::prefix('QrCode')->middleware('auth:api')->group(function () {
     Route::post('/courseQrCode', 'Api\QrCode\IndexController@courseQrCode')->name('api.course.qr.code');
     // 扫码 个人信息
     Route::post('/information', 'Api\QrCode\IndexController@information')->name('api.course.qr.information');
+
 });
 
 Route::prefix('account')->middleware('auth:api')->group(function () {
