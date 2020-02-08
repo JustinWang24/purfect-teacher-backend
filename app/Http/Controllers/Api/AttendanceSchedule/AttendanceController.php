@@ -174,8 +174,7 @@ class AttendanceController extends Controller
         }
 
         $courseTeacherDao = new AttendanceCourseTeacherDao;
-        $arrive = $courseTeacherDao->getAttendanceCourseTeacherByUser($user);
-
+//        $arrive = $courseTeacherDao->getAttendanceCourseTeacherByUser($user);
         $data = [];
 
         foreach ($items as $item) {
