@@ -108,6 +108,7 @@ class TimeSlotDao
      */
     protected function isCurrent($timeSlot){
         $time = now(GradeAndYearUtil::TIMEZONE_CN)->format('H:i:s');
+        $time = Carbon::parse('2020-01-08 14:40:00')->format('H:i:s');
         return $timeSlot->from <= $time && $time < $timeSlot->to;
     }
 
@@ -169,7 +170,7 @@ class TimeSlotDao
         if(!$date){
             $date = Carbon::now();
         }
-
+        $date = Carbon::parse('2020-01-08 14:40:00');
         /**
          * @var School $school
          */

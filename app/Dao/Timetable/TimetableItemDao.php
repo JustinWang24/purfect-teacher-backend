@@ -575,7 +575,6 @@ class TimetableItemDao
         $currentTimeSlot = GradeAndYearUtil::GetTimeSlot($now, $school->id);
         if($currentTimeSlot && $school){
             $weekdayIndex = $now->weekday();
-
             // 当前学年
             $year = $school->configuration->getSchoolYear();
 

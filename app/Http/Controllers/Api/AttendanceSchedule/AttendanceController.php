@@ -4,7 +4,9 @@
 namespace App\Http\Controllers\Api\AttendanceSchedule;
 
 
+use App\Dao\AttendanceSchedules\AttendanceCourseTeacherDao;
 use App\Http\Requests\MyStandardRequest;
+use App\Models\AttendanceSchedules\AttendanceCourseTeacher;
 use Carbon\Carbon;
 use App\Utils\JsonBuilder;
 use App\Dao\Courses\CourseMajorDao;
@@ -155,6 +157,58 @@ class AttendanceController extends Controller
         }
     }
 
+    /**
+     * 教师扫码云班牌
+     * @param MyStandardRequest $request
+     * @return string
+     */
+    public function teacherSweepQrCode(MyStandardRequest $request)
+    {
+        $user = $request->user();
+
+        $timeTableDao = new TimetableItemDao;
+
+        $items = $timeTableDao->getCurrentItemByUser($user);
+        if ($items->isEmpty()) {
+            return JsonBuilder::Error('未找到您目前要上的课程');
+        }
+
+        $courseTeacherDao = new AttendanceCourseTeacherDao;
+        $arrive = $courseTeacherDao->getAttendanceCourseTeacherByUser($user);
+
+        $data = [];
+
+        foreach ($items as $item) {
+            $data['timetable_id'] = $item->id;
+            $data['time_slot_name'] = $item->timeSlot->name;
+            $data['course_name'] = $item->course->name;
+            $data['teacher'] = $item->teacher->name;
+            $data['room'] = $item->room->name;
+            $data['is_arrive'] =  false;
+            $data['arrive_time'] = '';
+        }
+
+        return  JsonBuilder::Success($data);
+    }
+
+    /**
+     * 教师上课签到
+     * @param MyStandardRequest $request
+     * @return string
+     */
+    public function teacherSign(MyStandardRequest $request)
+    {
+        $user = $request->user();
+
+        $dao = new AttendanceCourseTeacherDao;
+
+        $result = $dao->create($user);
+        if ($result) {
+            return JsonBuilder::Success('签到成功');
+        } else {
+            return JsonBuilder::Error('签到失败');
+        }
+    }
 
 
 
