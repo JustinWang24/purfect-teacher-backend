@@ -257,5 +257,6 @@ export const Constants = {
         TYPE_HOMEWORK_TXT:'随堂作业',
         TYPE_EXAM: 5,
         TYPE_EXAM_TXT: '随堂测试'
-    }
+    },
+    NOTICE_TYPE_INSPECT: 3
 };
