@@ -14,7 +14,7 @@ class NoticeInspectDao
      */
     public function getInspectsBySchoolId($schoolId)
     {
-        return NoticeInspect::where('school_id', $schoolId)->get();
+        return NoticeInspect::select(['id','name'])->where('school_id', $schoolId)->get();
     }
 
 }
