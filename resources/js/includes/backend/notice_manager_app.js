@@ -80,6 +80,10 @@ if(document.getElementById('notice-manager-app')){
                 })
             },
             onSubmit: function(){
+                if(this.notice.title.trim() === ''){
+                    this.$message.error('标题必须填写');
+                    return false;
+                }
                 if(Constants.NOTICE_TYPE_INSPECT === parseInt(this.notice.type)){
                     if(this.notice.inspect_id === ''){
                         this.$message.error('请指定检查的类型');
