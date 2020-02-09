@@ -38,5 +38,16 @@ class GradeManagerDao
             ->orderBy('created_at','desc')->get();
     }
 
+    /**
+     * 修改职务
+     * @param $gradeId
+     * @param $data
+     * @return mixed
+     */
+    public function updateGradeManger($gradeId, $data)
+    {
+        return GradeManager::where('grade_id', $gradeId)->update($data);
+    }
+
 
 }

@@ -4,6 +4,9 @@
 namespace App\Http\Controllers\Api\AttendanceSchedule;
 
 
+use App\Dao\AttendanceSchedules\AttendanceCourseTeacherDao;
+use App\Http\Requests\MyStandardRequest;
+use App\Models\AttendanceSchedules\AttendanceCourseTeacher;
 use Carbon\Carbon;
 use App\Utils\JsonBuilder;
 use App\Dao\Courses\CourseMajorDao;
@@ -38,11 +41,11 @@ class AttendanceController extends Controller
         foreach ($courseList as $key => $val) {
 
             // 签到次数
-            $signNum = $attendancesDetailsDao->getSignInCountByUser($user->id, $val['id'], $year,$term);
+            $signNum = $attendancesDetailsDao->getSignInCountByUser($user->id, $year,$term, $val['id']);
             // 请假次数
-            $leavesNum = $attendancesDetailsDao->getLeaveCountByUser($user->id, $val['id'], $year, $term);
+            $leavesNum = $attendancesDetailsDao->getLeaveCountByUser($user->id, $year, $term, $val['id']);
             // 旷课次数
-            $truantNum = $attendancesDetailsDao->getTruantCountByUser($user->id, $val['id'], $year, $term);
+            $truantNum = $attendancesDetailsDao->getTruantCountByUser($user->id, $year, $term, $val['id']);
             $courseList[$key]['sign_num'] = $signNum;
             $courseList[$key]['leaves_num'] = $leavesNum;
             $courseList[$key]['truant_num'] = $truantNum;
@@ -120,12 +123,11 @@ class AttendanceController extends Controller
         $truant['week']          = $week;
         $truant['mold']          = AttendancesDetail::MOLD_TRUANT;
         $truant['weekday_index'] = $item->weekday_index;
-        $truant['date']          = $data;
-        $re = $dao = new AttendancesDetailsDao();
+        $dao = new AttendancesDetailsDao();
+        $re = $dao->getDetailByUserId($truant['student_id'],$item->id);
         if(!empty($re)) {
             return JsonBuilder::Success('旷课已添加');
         }
-        $dao->getTruantDetailByUserId($truant['student_id'],$data,$item->id);
         $result = $dao->add($truant);
         if($result) {
             return JsonBuilder::Success('旷课添加成功');
@@ -134,6 +136,78 @@ class AttendanceController extends Controller
         }
     }
 
+
+    /**
+     * 开启补签
+     * @param MyStandardRequest $request
+     * @return string
+     */
+    public function startSupplement(MyStandardRequest $request)
+    {
+        $attendanceId = $request->get('attendance_id');
+        $type = $request->get('type');
+
+        $dao = new AttendancesDao;
+
+        $result = $dao->update($attendanceId, ['supplement_sign' => $type]);
+        if ($result) {
+            return JsonBuilder::Success('修改成功');
+        } else {
+            return  JsonBuilder::Error('修改失败');
+        }
+    }
+
+    /**
+     * 教师扫码云班牌
+     * @param MyStandardRequest $request
+     * @return string
+     */
+    public function teacherSweepQrCode(MyStandardRequest $request)
+    {
+        $user = $request->user();
+
+        $timeTableDao = new TimetableItemDao;
+
+        $items = $timeTableDao->getCurrentItemByUser($user);
+        if ($items->isEmpty()) {
+            return JsonBuilder::Error('未找到您目前要上的课程');
+        }
+
+        $courseTeacherDao = new AttendanceCourseTeacherDao;
+//        $arrive = $courseTeacherDao->getAttendanceCourseTeacherByUser($user);
+        $data = [];
+
+        foreach ($items as $item) {
+            $data['timetable_id'] = $item->id;
+            $data['time_slot_name'] = $item->timeSlot->name;
+            $data['course_name'] = $item->course->name;
+            $data['teacher'] = $item->teacher->name;
+            $data['room'] = $item->room->name;
+            $data['is_arrive'] =  false;
+            $data['arrive_time'] = '';
+        }
+
+        return  JsonBuilder::Success($data);
+    }
+
+    /**
+     * 教师上课签到
+     * @param MyStandardRequest $request
+     * @return string
+     */
+    public function teacherSign(MyStandardRequest $request)
+    {
+        $user = $request->user();
+
+        $dao = new AttendanceCourseTeacherDao;
+
+        $result = $dao->create($user);
+        if ($result) {
+            return JsonBuilder::Success('签到成功');
+        } else {
+            return JsonBuilder::Error('签到失败');
+        }
+    }
 
 
 

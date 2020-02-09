@@ -183,8 +183,14 @@ class CloudController extends Controller
             return JsonBuilder::Success('暂无课程');
         }
 
-        // 二维码生成规则学校ID, 班级ID, 课时ID
-        $codeStr = 'cloud'. ',' .$item->schools_id. ',' .$item->grade_id. ',' .$item->id;
+        //二维码生成规则 二维码标识, 学校ID, 班级ID, 教师ID
+        $codeStr = base64_encode(json_encode(['app' => 'cloud',
+                                              'school_id' => $item->school_id,
+                                              'grade_id' => $item->grade_id,
+                                              'teacher_id' => $item->teacher_id,
+                                              'timetable_id' => $item->id,
+                                              'course_id' => $item->course_id,
+                                              'time' => time()]));
         $qrCode = new QrCode($codeStr);
         $qrCode->setSize(400);
         $qrCode->setLogoPath(public_path('assets/img/logo.png'));
@@ -272,7 +278,7 @@ class CloudController extends Controller
         if($attendanceInfo) {
             return  JsonBuilder::Success('签到成功');
         } else {
-            return  JsonBuilder::Success('服务器错误, 签到失败');
+            return  JsonBuilder::Error('服务器错误, 签到失败');
         }
     }
 
@@ -300,7 +306,7 @@ class CloudController extends Controller
         if ($update) {
             return  JsonBuilder::Success('上传成功');
         } else {
-            return  JsonBuilder::Success('上传失败');
+            return  JsonBuilder::Error('上传失败');
         }
     }
 
@@ -333,7 +339,7 @@ class CloudController extends Controller
         if($attendanceInfo) {
             return  JsonBuilder::Success('签到成功');
         } else {
-            return  JsonBuilder::Success('服务器错误, 签到失败');
+            return  JsonBuilder::Error('服务器错误, 签到失败');
         }
     }
 

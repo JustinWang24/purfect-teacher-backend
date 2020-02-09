@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\OA;
 
 use App\Dao\Schools\GradeManagerDao;
 use App\Dao\Schools\GradeResourceDao;
+use App\Dao\Students\StudentProfileDao;
 use App\Dao\Users\GradeUserDao;
 use App\Dao\Users\UserDao;
 use App\Http\Controllers\Controller;
@@ -134,8 +135,11 @@ class GradeManageController extends Controller
         $profile = $user->profile;
         $gradeUser = $user->gradeUser;
         $grade     = $user->gradeUser->grade;
-
+        $monitor   = $user->monitor;
+        $group     = $user->group;
         $data = [
+            'grade_id'       => $grade->id,
+            'student_id'     => $user->id,
             'name'           => $user->name,  // 姓名
             'id_number'      => $profile->id_number,
             'gender'         => $profile->gender, // 男女
@@ -144,7 +148,7 @@ class GradeManageController extends Controller
             'political_name' => $profile->political_name, // 政治面貌
             'source_place'   => $profile->source_place,  // 生源地
             'country'        => $profile->country, // 籍贯
-            'contact_number' => '', // 联系电话
+            'contact_number' => $profile->contact_number, // 联系电话
             'qq'             => $profile->qq,
             'wx'             => $profile->wx,
             'parent_name'    => $profile->parent_name,  // 家长姓名
@@ -159,14 +163,41 @@ class GradeManageController extends Controller
             'institute'      => $gradeUser->institute->name,
             'major'          => $gradeUser->major->name,
             'year'           => $grade->year.'级',
-            'monitor'        => false,
-            'group'          => false,
+            'monitor'        => $monitor == null ? false : true, // 班长
+            'group'          => $group == null ? false : true,  // 团支书
         ];
 
         return JsonBuilder::Success($data);
     }
 
+    /**
+     * 修改学生信息
+     * @param MyStandardRequest $request
+     * @return string
+     */
+    public function updateStudentInfo(MyStandardRequest $request)
+    {
+        $studentId = $request->get('student_id');
+        $data = $request->get('data');
+        $monitor = $request->get('monitor');
+        $group = $request->get('group');
 
+        $dao = new StudentProfileDao;
+        $gradeManagerDao = new GradeManagerDao;
+        $userDao = new UserDao;
+        $userResult = $userDao->updateUser($studentId, null,null,null,$data['email']);
+        $gradeResult = $gradeManagerDao->updateGradeManger($monitor['grade_id'], $monitor);
+        if ($data['email']) {
+            unset($data['email']);
+        }
+        $studentResult =  $dao->updateStudentProfile($studentId, $data);
+        $groupResult = $gradeManagerDao->updateGradeManger($group['grade_id'], $group);
 
+        if ($gradeResult !==false || $studentResult !==false || $groupResult !==false || $userResult !==false ) {
+            return JsonBuilder::Success('修改成功');
+        } else {
+            return JsonBuilder::Error('修改失败');
+        }
+    }
 
 }

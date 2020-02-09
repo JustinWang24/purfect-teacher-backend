@@ -504,8 +504,17 @@ Route::prefix('attendance')->middleware('auth:api')->group(function () {
     Route::post('/course-sign','Api\AttendanceSchedule\AttendanceController@courseSign')
         ->name('api.attendance.course-sign');*/
 
+    // 开启补签
+    Route::post('/start-supplement', 'Api\AttendanceSchedule\AttendanceController@startSupplement')
+        ->name('api.start.supplement');
 
+    // 教师扫云班牌二维码
+    Route::post('/teacher-sweep-qr-code', 'Api\AttendanceSchedule\AttendanceController@teacherSweepQrCode')
+        ->name('api.teacher.sweep.code');
 
+    // 教师上个课签到
+    Route::post('/teacher-course-sign', 'Api\AttendanceSchedule\AttendanceController@teacherSign')
+        ->name('api.teacher.course-sign');
 });
 
 Route::prefix('user')->group(function () {
@@ -845,6 +854,9 @@ Route::prefix('Oa')->middleware('auth:api')->group(function () {
     // 学生详情
     Route::post('/student-info', 'Api\OA\GradeManageController@studentInfo')
         ->name('api.oa.student.info');
+    // 修改学生信息
+    Route::post('/update-student-info', 'Api\OA\GradeManageController@updateStudentInfo')
+        ->name('api.oa.update.student.info');
 
 });
 
@@ -920,4 +932,11 @@ Route::prefix('campus')->middleware('auth:api')->group(function () {
 Route::prefix('organizations')->middleware('auth:api')->group(function(){
     Route::any('/load-by-roles', 'Api\School\OrganizationController@load_by_roles')
         ->name('api.organizations.load-by-roles');
+});
+
+
+// 学习
+Route::prefix('study')->middleware('auth:api')->group(function(){
+    Route::any('/home-page', 'Api\Study\IndexController@index')
+        ->name('api.study.home-page');
 });
