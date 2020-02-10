@@ -2,10 +2,9 @@
 use App\Utils\UI\Anchor;
 use App\Utils\UI\Button;
 ?>
-
 @extends('layouts.app')
 @section('content')
-    <div class="row">
+    <div class="row" id="teacher-profile-app-wrap">
         <div class="col-md-3">
             @include('teacher.elements.sidebar.avatar',['profile'=>$profile])
         </div>
@@ -14,9 +13,11 @@ use App\Utils\UI\Button;
                 <div class="card-head">
                     <header class="full-width">
                         <span class="pull-left pt-2">{{ $teacher->name }}履历表</span>
+                        @if(\Illuminate\Support\Facades\Auth::user()->isSchoolAdminOrAbove())
                         <a class="btn btn-primary btn-sm pull-right" href="{{ route('school_manager.teachers.manage-performance',['uuid'=>$teacher->uuid]) }}">
                             年终考评表
                         </a>
+                        @endif
                     </header>
                 </div>
 
@@ -49,9 +50,9 @@ use App\Utils\UI\Button;
                 <div class="card-head">
                     <header class="full-width">
                         <span class="pull-left pt-2">{{ $teacher->name }} 评聘佐证材料</span>
-                        <a class="btn btn-primary btn-sm pull-right" href="{{ route('school_manager.teachers.list.qualification',['uuid'=>$teacher->uuid]) }}">
-                            编辑
-                        </a>
+                        @if($school->configuration->open_for_uploading_qualification)
+                        <el-button @click="showForm({{ $teacher->id }})" class="pull-right" size="small" type="primary">添加教学业绩佐证材料</el-button>
+                        @endif
                     </header>
                 </div>
                 <div class="card-body">

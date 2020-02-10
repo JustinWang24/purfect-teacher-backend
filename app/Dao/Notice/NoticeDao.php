@@ -25,6 +25,7 @@ class NoticeDao
         return Notice::where($where)
             ->with('attachments')
             ->with('selectedOrganizations')
+            ->orderBy('id','desc')
             ->paginate(ConfigurationTool::DEFAULT_PAGE_SIZE);
     }
 
