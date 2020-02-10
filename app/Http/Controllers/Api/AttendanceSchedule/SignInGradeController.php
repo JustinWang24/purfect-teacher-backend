@@ -158,7 +158,7 @@ class SignInGradeController extends Controller
 
             if(array_key_exists($item->user_id,$molds)) {
                 $student[$key]['mold'] = $molds[$item->user_id];
-                $student[$key]['score'] = $scores[$item->user_id];
+                $score[$key]['score'] = $scores[$item->user_id];
             } else {
                 $student[$key]['mold'] = 0;  // 未签到
                 $score[$key]['score'] = 0;
