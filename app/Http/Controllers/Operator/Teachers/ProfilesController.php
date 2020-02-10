@@ -116,6 +116,7 @@ class ProfilesController extends Controller
         // 该教师历年的考核记录
         $schoolDao = new SchoolDao();
         $school = $schoolDao->getSchoolById($schoolId);
+        $this->dataForView['school'] = $school;
         $this->dataForView['configs'] = $school->teacherPerformanceConfigs;
         $this->dataForView['history'] = $teacher->performances ?? [];
 

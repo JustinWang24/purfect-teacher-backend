@@ -70,6 +70,7 @@ require('./includes/backend/adviser_editor_app'); // 系主任, 班主任, 教�
 require('./includes/backend/new_attendance_app'); // 新建值周管理 app
 require('./includes/backend/year_manager_app'); // 年级组长管理 app
 require('./includes/backend/teaching_research_group_app'); // 教研组管理 app
+require('./includes/backend/teacher_profile_app'); // 教师档案，评教相关管理 app
 
 require('./includes/backend/timetable/preview_manager'); // 课程表管理程序
 require('./includes/backend/timetable/course_view'); // 课程表管理程序
