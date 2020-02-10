@@ -931,3 +931,10 @@ Route::prefix('study')->middleware('auth:api')->group(function(){
     Route::any('/home-page', 'Api\Study\IndexController@index')
         ->name('api.study.home-page');
 });
+
+
+// 新的会议
+Route::prefix('meeting')->middleware('auth:api')->group(function(){
+    Route::get('/meeting-set', 'Api\OA\NewMeetingController@meetingSet')
+        ->name('api.meeting.meeting-set');
+});
