@@ -206,6 +206,11 @@ class AttendancesDetailsDao
 
         $messageBag = new MessageBag();
         $info = Attendance::find($attendanceId);
+        if(empty($info)) {
+            $messageBag->setCode(JsonBuilder::CODE_ERROR);
+            $messageBag->setMessage('该签到信息不存在');
+            return $messageBag;
+        }
         try{
             DB::beginTransaction();
             foreach ($score as $key => $item) {
