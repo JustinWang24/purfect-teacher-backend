@@ -165,6 +165,11 @@ class AttendanceController extends Controller
     public function teacherSweepQrCode(MyStandardRequest $request)
     {
         $user = $request->user();
+        $code = json_decode($request->get('code'), true);
+
+        if ($code['teacher_id'] !== $user->id) {
+             return JsonBuilder::Error('本节课, 不是您要上的课');
+        }
 
         $timeTableDao = new TimetableItemDao;
 
@@ -173,10 +178,10 @@ class AttendanceController extends Controller
             return JsonBuilder::Error('未找到您目前要上的课程');
         }
 
-        $courseTeacherDao = new AttendanceCourseTeacherDao;
+//        $courseTeacherDao = new AttendanceCourseTeacherDao;
 //        $arrive = $courseTeacherDao->getAttendanceCourseTeacherByUser($user);
-        $data = [];
 
+        $data = [];
         foreach ($items as $item) {
             $data['timetable_id'] = $item->id;
             $data['time_slot_name'] = $item->timeSlot->name;
@@ -208,8 +213,4 @@ class AttendanceController extends Controller
             return JsonBuilder::Error('签到失败');
         }
     }
-
-
-
-
 }

@@ -169,7 +169,7 @@ class CloudController extends Controller
         $dao      = new FacilityDao;
         $facility = $dao->getFacilityByNumber($code);
         if (empty($facility)) {
-            return JsonBuilder::Error('设备码错误,或设备已关闭');
+            return JsonBuilder::Success('设备码错误,或设备已关闭');
         }
         /**
          * @var  Facility $facility
