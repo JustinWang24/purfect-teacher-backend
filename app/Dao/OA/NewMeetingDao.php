@@ -144,5 +144,15 @@ class NewMeetingDao
     }
 
 
+    /**
+     * 会议详情
+     * @param $meetId
+     * @return mixed
+     */
+    public function meetDetails($meetId) {
+        return NewMeeting::where('id', $meetId)->first();
+    }
+
+
 
 }

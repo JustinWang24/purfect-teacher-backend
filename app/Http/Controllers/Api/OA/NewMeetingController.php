@@ -181,4 +181,15 @@ class NewMeetingController extends Controller
         return JsonBuilder::Success($result);
 
     }
+
+
+    public function meetDetails(MeetingRequest $request) {
+        $meetId = $request->getMeetId();
+        $dao = new NewMeetingDao();
+        $info = $dao->meetDetails($meetId);
+        if(is_null($info)) {
+
+        }
+        dd($meetId);
+    }
 }

@@ -964,4 +964,7 @@ Route::prefix('meeting')->middleware('auth:api')->group(function(){
     // 自己创建的
     Route::get('/oneselfCreate','Api\OA\NewMeetingController@oneselfCreate')
         ->name('api.meeting.oneselfCreate');
+    // 会议详情
+    Route::get('/meetDetails','Api\OA\NewMeetingController@meetDetails')
+        ->name('api.meeting.meetDetails');
 });
