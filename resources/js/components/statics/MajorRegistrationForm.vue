@@ -42,7 +42,7 @@
                     <el-input size="mini" v-model="registrationForm.mobile" placeholder="必填: 联系电话"></el-input>
                 </el-form-item>
                 <el-form-item label="QQ号" prop="qq">
-                    <el-input size="mini" v-model="registrationForm.qq" placeholder="选填: QQ号"></el-input>
+                    <el-input size="mini" v-model="registrationForm.qq" placeholder="必填: QQ号"></el-input>
                 </el-form-item>
                 <el-form-item label="微信号" prop="wx">
                     <el-input size="mini" v-model="registrationForm.wx" placeholder="选填: 微信号"></el-input>
