@@ -56,7 +56,13 @@ class GradesController extends Controller
         $profileDao = new TeacherProfileDao();
 
         if($request->method()==='GET'){
-            $profile = $profileDao->getTeacherProfileByTeacherIdOrUuid($request->uuid());
+            if($request->uuid()){
+                $profile = $profileDao->getTeacherProfileByTeacherIdOrUuid($request->uuid());
+            }
+            else{
+                $profile = $request->user()->profile;
+            }
+
             $this->dataForView['profile'] = $profile;
             $this->dataForView['pageTitle'] = '编辑用户档案';
             return view('teacher.profile.edit_profile', $this->dataForView);

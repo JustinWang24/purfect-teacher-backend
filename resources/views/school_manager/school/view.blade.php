@@ -56,6 +56,16 @@ $ecTo2= $config->getElectiveCourseAvailableTo(2); // 第2学期选修课结束�
                                         <option value="0" {{ !$needRegistration ? 'selected':null }}>自习课不需要签到</option>
                                     </select>
                                 </div>
+                                <div class="form-group">
+                                    <label>允许教师提交评教履历佐证材料</label>
+                                    @php
+                                        $openForUploading = $config ? $config->open_for_uploading_qualification : false;
+                                    @endphp
+                                    <select class="form-control" id="open-for-upload" name="config[open_for_uploading_qualification]">
+                                        <option value="1" {{ $openForUploading ? 'selected':null }}>允许</option>
+                                        <option value="0" {{ !$openForUploading ? 'selected':null }}>不允许</option>
+                                    </select>
+                                </div>
                                 <hr>
                                 <?php
                                 Button::Print(['id'=>'btn-save-school-config','text'=>trans('general.submit')], Button::TYPE_PRIMARY);

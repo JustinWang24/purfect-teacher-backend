@@ -121,6 +121,8 @@
                                 position: 'bottom-right'
                             });
                             this.$emit('unit-deleted',{id: this.unit.id});
+                        }else{
+                            this.$message.error('删除失败，请联系系统管理员');
                         }
                     });
                 }).catch(() => {

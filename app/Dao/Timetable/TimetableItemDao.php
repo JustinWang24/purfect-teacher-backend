@@ -246,8 +246,8 @@ class TimetableItemDao
                     'course' => $row->course->name,
                     'teacher'=> $row->teacher->name,
                     'teacher_id'=> $row->teacher_id,
-                    'building'=>$row->building->name,
-                    'room'=>$row->room->name,
+                    'building'=>$row->building->name??null,
+                    'room'=>$row->room->name??null,
                     'room_id'=>$row->room_id,
                     'id'=>$row->id,
                     'published'=>$row->published,
@@ -575,7 +575,6 @@ class TimetableItemDao
         $currentTimeSlot = GradeAndYearUtil::GetTimeSlot($now, $school->id);
         if($currentTimeSlot && $school){
             $weekdayIndex = $now->weekday();
-
             // 当前学年
             $year = $school->configuration->getSchoolYear();
 

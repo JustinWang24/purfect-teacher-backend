@@ -62,6 +62,17 @@ class Notice extends Model
         return self::allType()[$this->type];
     }
 
+    public function getInspectTypeText(){
+        if($this->type === self::TYPE_INSPECTION){
+            return $this->inspectType->name;
+        }
+        return null;
+    }
+
+    public function inspectType(){
+        return $this->belongsTo(NoticeInspect::class, 'inspect_id');
+    }
+
     public function user()
     {
         return $this->belongsTo(User::class);

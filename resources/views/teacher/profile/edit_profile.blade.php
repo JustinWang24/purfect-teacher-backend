@@ -15,7 +15,7 @@ use App\Utils\UI\Button;
                     </header>
                 </div>
                 <div class="card-body">
-                    <form action="{{ route('teacher.profile.edit') }}" method="post">
+                    <form action="{{ route('teacher.profile.modify') }}" method="post">
                         @csrf
                         <input type="hidden" name="profile[uuid]" value="{{ $profile->uuid }}">
                         <div class="row">

@@ -42,7 +42,7 @@ class IndexController extends Controller
         $timetableItemDao = new TimetableItemDao();
         $item = $timetableItemDao->getCurrentItemByUser($user);
 
-        $timetable = [];
+        $timetable = (object)[];
         $attendancesDetailsDao = new AttendancesDetailsDao();
 
         $signIn = [
@@ -54,6 +54,10 @@ class IndexController extends Controller
         ];
         $evaluateTeacher = false;
         if(!is_null($item)) {
+
+            $weeks = $configuration->getScheduleWeek(Carbon::parse($date), null, $term);
+            $week = $weeks->getScheduleWeekIndex();
+
             $course = $item->course;
             $materials = $course->materials;
             $types = array_column($materials->toArray(), 'type');
@@ -68,7 +72,9 @@ class IndexController extends Controller
                 'label' => $label,
                 'course' => $course->name,
                 'room' => $item->room->name,
-                'teacher' => $item->teacher->name
+                'teacher' => $item->teacher->name,
+                'week' => $week,
+                'item_id'=> $item->id,
             ];
 
             $weeks = $configuration->getScheduleWeek(Carbon::parse($date), null, $term);

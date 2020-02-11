@@ -3,11 +3,13 @@
 namespace App\Http\Controllers\Api\Recruitment;
 
 use App\BusinessLogic\RecruitmentPlan\PlansLoader;
+use App\Dao\Banners\BannerDao;
 use App\Dao\RecruitmentPlan\RecruitmentPlanDao;
 use App\Dao\RecruitStudent\ConsultDao;
 use App\Dao\RecruitStudent\RegistrationInformaticsDao;
 use App\Dao\Schools\OrganizationDao;
 use App\Http\Requests\RecruitStudent\PlanRecruitRequest;
+use App\Models\Banner\Banner;
 use App\User;
 use App\Utils\JsonBuilder;
 use Illuminate\Http\Request;
@@ -28,10 +30,19 @@ class PlansController extends Controller
 
         $user = $request->user('api');
 
+        // 添加图片，招生资源位作为查询的依据
+        $schoolId = $user ? $user->getSchoolId() : $request->getSchoolId();
+        $bannerImages = (new BannerDao())->getBannerBySchoolIdAndPosit($schoolId, Banner::POSIT_1);
+        $image = '';
+        if($bannerImages->count() > 0){
+            $banner = $bannerImages[0];
+            $image = $banner->image_url;
+        }
+
         return JsonBuilder::Success([
             'plans'=>$plans,
-            'banner'=>['image'=>''],
-            'school_id'=>$user ? $user->getSchoolId() : $request->getSchoolId()
+            'banner'=>['image'=>$image],
+            'school_id'=>$schoolId
         ]);
     }
 

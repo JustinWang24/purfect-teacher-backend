@@ -39,8 +39,10 @@ Route::prefix('teacher')->group(function () {
     // 更新密码
     Route::any('profile/update-password', 'GradesController@update_password')
         ->name('teacher.profile.update-password');
-    Route::any('profile/edit', 'GradesController@edit')
+    Route::any('profile/edit', 'ProfileController@edit')
         ->name('teacher.profile.edit');
+    Route::any('profile/modify', 'ProfileController@modify')
+        ->name('teacher.profile.modify');
 
     //考试管理
     Route::get('exam/index', 'ExamController@index')->name('teacher.exam.index');     // 列表
