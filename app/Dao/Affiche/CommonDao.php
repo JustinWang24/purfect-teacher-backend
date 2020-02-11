@@ -201,6 +201,24 @@ class CommonDao
         return $str;
     }
 
+    /*计算内容的发送的时间*/
+    function transTime3( $ustime )
+    {
+        $time      = time() - $ustime;
+        if ( $time < 60 * 60 ) {
+            $min = floor( $time / 60 );
+            $str = $min . '分钟前';
+        }
+        else if ( $time < 60 * 60 * 24 ) {
+            $hour = floor( $time / 60 / 60 );
+            $str = $hour . '小时前';
+        }
+        else {
+            $str = date( 'm-d' , $ustime );;
+        }
+        return $str;
+    }
+
 
 
 }

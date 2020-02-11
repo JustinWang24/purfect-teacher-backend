@@ -19,10 +19,10 @@ class SystemNotificationController extends Controller
     {
         $user = $request->user();
         $dao = new SystemNotificationDao();
-        $data = $dao->getNotificationByUserId($user->getSchoolId(), $user->id);
+        $data = $dao->getNotificationByUser($user->getSchoolId(), $user);
 
         //设置消息为已读
-        $dao->setNotificationHasRead($user->getSchoolId(), $user->id);
+        $dao->setNotificationHasRead($user->getSchoolId(), $user);
         return JsonBuilder::Success($data);
     }
 }

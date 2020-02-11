@@ -106,6 +106,12 @@ class WifiIssueEvent implements CanSendSystemNotification
      */
     public function getAppExtra(): string
     {
+        $extra = [
+            'type' => 'wifi-issue-info',
+            'param1' => $this->wifiIssue->id,
+            'param2' => ''
+        ];
+        return json_encode($extra);
         return '';
     }
 
@@ -116,6 +122,15 @@ class WifiIssueEvent implements CanSendSystemNotification
     public function getNextMove(): string
     {
         return '';
+    }
+
+    /**
+     * 必须可以拿到组织id
+     * @return array
+     */
+    public function getOrganizationIdArray(): array
+    {
+        return [];//单人消息 无组织可见范围
     }
 
     private function getStatusText($status)
