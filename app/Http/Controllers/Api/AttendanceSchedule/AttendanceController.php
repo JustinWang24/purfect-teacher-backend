@@ -172,25 +172,24 @@ class AttendanceController extends Controller
         }
 
         $timeTableDao = new TimetableItemDao;
-
+        // 同时上多个课程 只取第一个
         $items = $timeTableDao->getCurrentItemByUser($user);
         if ($items->isEmpty()) {
             return JsonBuilder::Error('未找到您目前要上的课程');
         }
-
-//        $courseTeacherDao = new AttendanceCourseTeacherDao;
-//        $arrive = $courseTeacherDao->getAttendanceCourseTeacherByUser($user);
-
-        $data = [];
-        foreach ($items as $item) {
-            $data['timetable_id'] = $item->id;
-            $data['time_slot_name'] = $item->timeSlot->name;
-            $data['course_name'] = $item->course->name;
-            $data['teacher'] = $item->teacher->name;
-            $data['room'] = $item->room->name;
-            $data['is_arrive'] =  false;
-            $data['arrive_time'] = '';
+        $attendancesDao = new AttendancesDao;
+        $arrive = $attendancesDao->getTeacherIsSignByItem($items[0], $user);
+        $arriveTime = '';
+        if ($arrive) {
+            $arriveTime = $arrive->teacher_sign_time;
         }
+        $data['timetable_id'] = $items[0]->id;
+        $data['time_slot_name'] = $items[0]->timeSlot->name;
+        $data['course_name'] = $items[0]->course->name;
+        $data['teacher'] = $items[0]->teacher->name;
+        $data['room'] = $items[0]->room->name;
+        $data['is_arrive'] =  !empty($arrive) ? 'true': 'false';
+        $data['arrive_time'] = $arriveTime;
 
         return  JsonBuilder::Success($data);
     }
@@ -204,10 +203,18 @@ class AttendanceController extends Controller
     {
         $user = $request->user();
 
-        $dao = new AttendanceCourseTeacherDao;
-
-        $result = $dao->create($user);
-        if ($result) {
+        $timetableItemDao = new TimetableItemDao;
+        $item = $timetableItemDao->getCurrentItemByUser($user);
+        if (empty($item)) {
+            return JsonBuilder::Error('未找到该老师目前上的课程');
+        }
+        $dao = new AttendancesDao;
+        $result = $dao->getTeacherIsSignByItem($item[0], $user);
+        if (is_null($result)) {
+            $result = $dao->createAttendanceData($item[0]);
+        }
+        $data = $dao->updateTeacherSignByItem($result->id);
+        if ($data) {
             return JsonBuilder::Success('签到成功');
         } else {
             return JsonBuilder::Error('签到失败');

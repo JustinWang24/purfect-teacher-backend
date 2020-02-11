@@ -21,6 +21,8 @@ class Attendance extends Model
     const STATUS_UN_EVALUATE = 0;  // 未评价
     const STATUS_EVALUATE = 1;  // 已评价
 
+    const TEACHER_SIGN = 1;
+    const TEACHER_NO_SIGN = 0;
 
     public function course() {
         return $this->belongsTo(Course::class);
