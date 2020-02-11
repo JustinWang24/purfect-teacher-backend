@@ -43,6 +43,11 @@ class NewMeeting extends Model
     }
 
 
+    public function meetUsers() {
+        return $this->hasMany(NewMeetingUser::class, 'meet_id');
+    }
+
+
 
 
     /**
@@ -66,6 +71,22 @@ class NewMeeting extends Model
         $signin_end = Carbon::parse($this->signin_end);
         $time = $signin_start->format('H:i'). '————' .$signin_end->format('H:i');
         return $signin_start->toDateString().' '. $time;
+    }
+
+
+    /**
+     * 签到时间
+     * @return string
+     */
+    public function getSignOutTime() {
+        $signout_start = Carbon::parse($this->signout_start);
+        $signout_end = Carbon::parse($this->signout_end);
+        $time = $signout_start->format('H:i'). '————' .$signout_end->format('H:i');
+        return $signout_start->toDateString().' '. $time;
+    }
+
+    public function files() {
+        return $this->hasMany(NewMeetingFile::class, 'meet_id');
     }
 
 }

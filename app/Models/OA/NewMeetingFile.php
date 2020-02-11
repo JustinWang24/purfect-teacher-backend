@@ -35,4 +35,18 @@ class NewMeetingFile extends Model
         }
         return '';
     }
+
+
+    /**
+     * url 的变形, 返回全 URL 网址
+     * @param $value
+     * @return string
+     */
+    public function getUrlAttribute($value)
+    {
+        return $value ? asset($value) : '';
+    }
+
+
+
 }

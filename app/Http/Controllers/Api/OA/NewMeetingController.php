@@ -179,17 +179,38 @@ class NewMeetingController extends Controller
         }
         $result['list'] = $data;
         return JsonBuilder::Success($result);
-
     }
 
 
+    /**
+     * 会议详情
+     * @param MeetingRequest $request
+     * @return string
+     */
     public function meetDetails(MeetingRequest $request) {
         $meetId = $request->getMeetId();
         $dao = new NewMeetingDao();
         $info = $dao->meetDetails($meetId);
         if(is_null($info)) {
-
+            return JsonBuilder::Error('该会议不存在');
         }
-        dd($meetId);
+
+        $fields = [];
+        foreach ($info->files as $item) {
+            $fields[] = $item->url;
+        }
+
+        $result = [
+            'meet_title' => $info->meet_title,
+            'room' => $info->room_id? $info->room->name : $info->room_text,
+            'meet_time' => $info->getMeetTime(),
+            'approve' => $info->approve->name,
+            'user_num' => $info->meetUsers->count(),
+            'signin_time' => $info->getSignInTime(),
+            'signout_time' => $info->getSignOutTime(),
+            'meet_content' => $info->meet_content,
+            'fields' => $fields
+        ];
+        return JsonBuilder::Success($result);
     }
 }
