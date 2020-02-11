@@ -16,6 +16,9 @@ class NewMeetingUser extends Model
         'signout_time'
     ];
 
+    const unsignin = 0;  // 未签到
+    const normal_signin = 1; // 按时签到
+
 
     /**
      * 会议负责人
