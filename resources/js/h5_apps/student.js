@@ -22,7 +22,7 @@ import 'element-ui/lib/theme-chalk/index.css';
 
 import {
     Button, Card, Row, Col, Drawer, Image, Badge, Divider, Tag, Form, FormItem, Input,
-    Select, Option, Switch, Alert, Message, MessageBox, DatePicker, Timeline, TimelineItem, TimePicker
+    Select, Option, Switch, Alert, Message, MessageBox, DatePicker, Timeline, TimelineItem, TimePicker, Avatar
 } from 'element-ui';
 
 Vue.component(Button.name, Button);
@@ -47,6 +47,7 @@ Vue.component(DatePicker.name, DatePicker);
 Vue.component(Timeline.name, Timeline);
 Vue.component(TimelineItem.name, TimelineItem);
 Vue.component(TimePicker.name, TimePicker);
+Vue.component(Avatar.name, Avatar);
 
 Vue.prototype.$alert = MessageBox.alert;
 Vue.prototype.$confirm = MessageBox.confirm;
