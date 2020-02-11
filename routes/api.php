@@ -944,4 +944,7 @@ Route::prefix('meeting')->middleware('auth:api')->group(function(){
     // 待完成
     Route::get('/unfinished','Api\OA\NewMeetingController@unfinished')
         ->name('api.meeting.unfinished');
+    // 已完成
+    Route::get('/accomplish','Api\OA\NewMeetingController@accomplish')
+        ->name('api.meeting.accomplish');
 });

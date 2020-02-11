@@ -90,7 +90,7 @@ class NewMeetingDao
      * @return mixed
      */
     public function unfinishedMeet($userId) {
-        $now = Carbon::now()->toTimeString();
+        $now = Carbon::now()->toDateTimeString();
         $map = [
             ['new_meeting_users.user_id','=', $userId],
             ['new_meetings.meet_end', '>', $now],
@@ -98,6 +98,29 @@ class NewMeetingDao
 
         $field = ['new_meeting_users.*', 'new_meeting_users.signin_status as status', 'new_meetings.*'];
 
+        $list = NewMeetingUser::join('new_meetings', function ($join) use ($map){
+            $join->on('new_meetings.id', '=', 'new_meeting_users.meet_id')
+                ->where($map)
+                ->orderBy('new_meetings.meet_start');
+        })->select($field)->paginate(ConfigurationTool::DEFAULT_PAGE_SIZE);
+        return $list;
+    }
+
+
+    /**
+     * 已完成会议
+     * @param $userId
+     * @return mixed
+     */
+    public function accomplishMeet($userId) {
+        $now = Carbon::now()->toDateTimeString();
+        $map = [
+            ['new_meeting_users.user_id','=', $userId],
+            ['new_meetings.meet_end', '<=', $now],
+        ];
+
+        $field = ['new_meeting_users.*', 'new_meeting_users.signin_status as signIn_status',
+            'new_meeting_users.signout_status as signOut_status', 'new_meetings.*'];
         $list = NewMeetingUser::join('new_meetings', function ($join) use ($map){
             $join->on('new_meetings.id', '=', 'new_meeting_users.meet_id')
                 ->where($map)

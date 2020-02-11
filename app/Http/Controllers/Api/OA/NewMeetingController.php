@@ -109,4 +109,32 @@ class NewMeetingController extends Controller
         $result['list'] = $data;
         return JsonBuilder::Success($result);
     }
+
+
+    /**
+     * 已完成会议
+     * @param MeetingRequest $request
+     * @return string
+     */
+    public function accomplish(MeetingRequest $request) {
+        $userId = $request->user()->id;
+        $dao = new NewMeetingDao();
+        $return = $dao->accomplishMeet($userId);
+
+        $result = pageReturn($return);
+        $data = [];
+        foreach ($result['list'] as $key => $item) {
+            $data[] = [
+                'meet_title' => $item->meet_title,
+                'approve_user' => $item->approve->name,
+                'room' => $item->room_id ? $item->room->name : $item->room_text,
+                'meet_time' => $item->getMeetTime(),
+                'signin_time' =>$item->getSignInTime(),
+                'signin_status' => $item->signIn_status,
+                'signout_status' => $item->signOut_status
+            ];
+        }
+        $result['list'] = $data;
+        return JsonBuilder::Success($result);
+    }
 }
