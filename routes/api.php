@@ -941,4 +941,7 @@ Route::prefix('meeting')->middleware('auth:api')->group(function(){
     // 创建会议
     Route::post('/addMeeting','Api\OA\NewMeetingController@addMeeting')
         ->name('api.meeting.addMeeting');
+    // 待完成
+    Route::get('/unfinished','Api\OA\NewMeetingController@unfinished')
+        ->name('api.meeting.unfinished');
 });

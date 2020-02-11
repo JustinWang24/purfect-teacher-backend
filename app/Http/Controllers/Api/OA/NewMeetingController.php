@@ -56,6 +56,11 @@ class NewMeetingController extends Controller
     }
 
 
+    /**
+     * 创建会议
+     * @param MeetingRequest $request
+     * @return string
+     */
     public function addMeeting(MeetingRequest $request) {
         $data = $request->all();
         $data['user_id'] = $request->user()->id;
@@ -66,8 +71,42 @@ class NewMeetingController extends Controller
         $file = $request->file('file');
         $dao = new NewMeetingDao();
 
+        array_push($user, $data['approve_userid']);
+        $user = array_unique($user);
+
         $result = $dao->addMeeting($data, $user, $file);
 
-        dd($result);
+        if($result->isSuccess()) {
+            return JsonBuilder::Success($result->getData());
+        } else {
+            return JsonBuilder::Error($result->getMessage());
+        }
+    }
+
+
+    /**
+     * 待完成会议
+     * @param MeetingRequest $request
+     * @return string
+     */
+    public function unfinished(MeetingRequest $request) {
+        $userId = $request->user()->id;
+        $dao = new NewMeetingDao();
+
+        $return = $dao->unfinishedMeet($userId);
+        $result = pageReturn($return);
+        $data = [];
+        foreach ($result['list'] as $key => $item) {
+            $data[] = [
+                'meet_title' => $item->meet_title,
+                'approve_user' => $item->approve->name,
+                'room' => $item->room_id ? $item->room->name : $item->room_text,
+                'meet_time' => $item->getMeetTime(),
+                'signin_time' =>$item->getSignInTime(),
+                'signin_status' => $item->status
+            ];
+        }
+        $result['list'] = $data;
+        return JsonBuilder::Success($result);
     }
 }

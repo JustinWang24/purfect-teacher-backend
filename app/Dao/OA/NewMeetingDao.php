@@ -13,7 +13,9 @@ use App\Models\OA\NewMeeting;
 use App\Models\OA\NewMeetingFile;
 use App\Models\OA\NewMeetingUser;
 use App\Utils\JsonBuilder;
+use App\Utils\Misc\ConfigurationTool;
 use App\Utils\ReturnData\MessageBag;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Ramsey\Uuid\Uuid;
 
@@ -80,6 +82,28 @@ class NewMeetingDao
             $messageBag->setMessage('创建失败'.$msg);
         }
         return  $messageBag;
+    }
+
+
+    /**
+     * @param $userId
+     * @return mixed
+     */
+    public function unfinishedMeet($userId) {
+        $now = Carbon::now()->toTimeString();
+        $map = [
+            ['new_meeting_users.user_id','=', $userId],
+            ['new_meetings.meet_end', '>', $now],
+        ];
+
+        $field = ['new_meeting_users.*', 'new_meeting_users.signin_status as status', 'new_meetings.*'];
+
+        $list = NewMeetingUser::join('new_meetings', function ($join) use ($map){
+            $join->on('new_meetings.id', '=', 'new_meeting_users.meet_id')
+                ->where($map)
+                ->orderBy('new_meetings.meet_start');
+        })->select($field)->paginate(ConfigurationTool::DEFAULT_PAGE_SIZE);
+        return $list;
     }
 
 
