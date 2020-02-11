@@ -49,6 +49,7 @@ Vue.component(TimelineItem.name, TimelineItem);
 Vue.component(TimePicker.name, TimePicker);
 
 Vue.prototype.$alert = MessageBox.alert;
+Vue.prototype.$confirm = MessageBox.confirm;
 Vue.prototype.$message = Message;
 
 Vue.component('major-cards', require('../components/statics/MajorCards.vue').default);
