@@ -13,6 +13,7 @@ use App\Dao\OA\NewMeetingDao;
 use App\Dao\Schools\RoomDao;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\OA\MeetingRequest;
+use App\Models\OA\NewMeeting;
 use App\Models\Schools\Room;
 use App\Utils\JsonBuilder;
 use Carbon\Carbon;
@@ -136,5 +137,48 @@ class NewMeetingController extends Controller
         }
         $result['list'] = $data;
         return JsonBuilder::Success($result);
+    }
+
+
+    /**
+     * 自己创建的
+     * @param MeetingRequest $request
+     * @return string
+     */
+    public function oneselfCreate(MeetingRequest $request) {
+        $userId = $request->user()->id;
+        $dao = new NewMeetingDao();
+        $return = $dao->oneselfCreateMeet($userId);
+
+        $result = pageReturn($return);
+        $data = [];
+        foreach ($result['list'] as $key => $item) {
+
+            $now = Carbon::now()->toDateTimeString();
+            // 通过
+            if($item->status == NewMeeting::STATUS_PASS) {
+                if($now < $item->meet_start) {
+                    $status = NewMeeting::STATUS_WAIT;
+                } elseif ($now > $item->meet_start && $now < $item->meet_end) {
+                    $status = NewMeeting::STATUS_UNDERWAY;
+                } else {
+                    $status = NewMeeting::STATUS_FINISHED;
+                }
+            } else {
+                $status = $item->status;
+            }
+
+            $data[] = [
+                'meet_title' => $item->meet_title,
+                'approve_user' => $item->approve->name,
+                'room' => $item->room_id ? $item->room->name : $item->room_text,
+                'meet_time' => $item->getMeetTime(),
+                'signin_time' =>$item->getSignInTime(),
+                'status' => $status,
+            ];
+        }
+        $result['list'] = $data;
+        return JsonBuilder::Success($result);
+
     }
 }

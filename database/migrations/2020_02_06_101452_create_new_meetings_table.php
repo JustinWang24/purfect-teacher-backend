@@ -30,7 +30,7 @@ class CreateNewMeetingsTable extends Migration
             $table->dateTimeTz('meet_start')->comment('会议开始时间');
             $table->dateTimeTz('meet_end')->comment('会议结束时间');
             $table->tinyInteger('type')->default(1)->comment('0:自定义地点 1:会议室');
-            $table->tinyInteger('status')->default(0)->comment('状态 0:未审核 1:已通过 2:已拒绝');
+            $table->tinyInteger('status')->default(0)->comment('状态 0:未审核 1:已拒绝 2:已通过 ');
             $table->integer('room_id')->comment('会议室')->nullable();
             $table->string('room_text')->comment('自定义地点')->nullable();
             $table->timestamps();

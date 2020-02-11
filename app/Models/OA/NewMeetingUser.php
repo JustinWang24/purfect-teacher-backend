@@ -16,8 +16,13 @@ class NewMeetingUser extends Model
         'signout_time'
     ];
 
-    const unsignin = 0;  // 未签到
-    const normal_signin = 1; // 按时签到
+    const UN_SIGNIN = 0;  // 未签到
+    const NORMAL_SIGNIN = 1; // 按时签到
+    const LATE = 2; // 迟到
+
+    const UN_SIGNOUT = 0; // 未签退
+    const NORMAL_SIGNOUT = 1; // 正常签退
+
 
 
     /**

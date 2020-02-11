@@ -130,5 +130,19 @@ class NewMeetingDao
     }
 
 
+    /**
+     * 自己创建的
+     * @param $userId
+     * @return mixed
+     */
+    public function oneselfCreateMeet($userId) {
+        $map = ['user_id'=>$userId];
+        $list = NewMeeting::where($map)
+            ->orderBy('meet_start','desc')
+            ->paginate(ConfigurationTool::DEFAULT_PAGE_SIZE);
+        return $list;
+    }
+
+
 
 }

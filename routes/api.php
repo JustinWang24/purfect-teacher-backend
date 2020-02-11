@@ -961,4 +961,7 @@ Route::prefix('meeting')->middleware('auth:api')->group(function(){
     // 已完成
     Route::get('/accomplish','Api\OA\NewMeetingController@accomplish')
         ->name('api.meeting.accomplish');
+    // 自己创建的
+    Route::get('/oneselfCreate','Api\OA\NewMeetingController@oneselfCreate')
+        ->name('api.meeting.oneselfCreate');
 });
