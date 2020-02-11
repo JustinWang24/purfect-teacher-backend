@@ -570,7 +570,7 @@ class TimetableItemDao
      */
     public function getCurrentItemByUser(User $user){
         $now = Carbon::now(GradeAndYearUtil::TIMEZONE_CN);
-        $now = Carbon::parse('2020-01-18 14:40:00');
+        $now = Carbon::parse('2020-01-08 14:40:00');
         $school = (new SchoolDao())->getSchoolById($user->getSchoolId());
         $currentTimeSlot = GradeAndYearUtil::GetTimeSlot($now, $school->id);
         if($currentTimeSlot && $school){
