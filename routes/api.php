@@ -782,8 +782,13 @@ Route::prefix('teacher/evaluation')->middleware('auth:api')->group(function(){
     // 评价学生
     Route::post('/student','Api\Evaluate\TeacherEvaluationController@students')
         ->name('api.teacher.evaluation.students');
-});
 
+    // 教师提交自己评教的业绩材料: 王越添加
+    Route::post('/save-qualification','Api\Evaluate\TeacherEvaluationController@save_qualification')
+        ->name('api.teacher.save.qualification'); // 保存业绩材料
+    Route::post('/load-qualifications','Api\Evaluate\TeacherEvaluationController@load_qualifications')
+        ->name('api.teacher.load.qualifications');// 加载业绩材料
+});
 
 
 Route::prefix('Oa')->middleware('auth:api')->group(function () {

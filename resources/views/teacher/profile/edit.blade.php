@@ -51,17 +51,94 @@ use App\Utils\UI\Button;
                     <header class="full-width">
                         <span class="pull-left pt-2">{{ $teacher->name }} 评聘佐证材料</span>
                         @if($school->configuration->open_for_uploading_qualification)
-                        <el-button @click="showForm({{ $teacher->id }})" class="pull-right" size="small" type="primary">添加教学业绩佐证材料</el-button>
+                        <el-button @click="showForm({{ $teacher->id }})" class="pull-right" size="small" type="primary">
+                            添加教学业绩佐证材料
+                        </el-button>
                         @endif
                     </header>
                 </div>
                 <div class="card-body">
-                    @foreach($qualification as $val)
-                        <p>{{$val->title}}</p>
-                    <div class="performance-block">
-                        <img src="{{$val->path}}">
+                    <div v-show="showFormFlag">
+                        <el-form ref="form" :model="qualification" label-width="120px">
+                            <el-form-item label="标题">
+                                <el-input v-model="qualification.title" placeholder="必填: 教学业绩的标题"></el-input>
+                            </el-form-item>
+                            <el-form-item label="分类">
+                                <el-select v-model="qualification.type" placeholder="请选择分类">
+                                    <el-option v-for="(theType, idx) in types" :key="idx" :label="theType" :value="idx"></el-option>
+                                </el-select>
+                            </el-form-item>
+@php
+$theYears = \App\Utils\Time\GradeAndYearUtil::GetAllYears(1);
+@endphp
+                            <el-form-item label="年度">
+                                <el-select v-model="qualification.year" placeholder="请选择年度">
+                                    @foreach($theYears as $year)
+                                    <el-option label="{{ $year.'年' }}" value="{{ $year }}"></el-option>
+                                    @endforeach
+                                </el-select>
+                            </el-form-item>
+
+                            <el-form-item label="业绩描述">
+                                <el-input type="textarea" v-model="qualification.desc" placeholder="必填: 教学业绩的详情描述"></el-input>
+                            </el-form-item>
+
+                            <el-form-item label="佐证材料">
+                                <el-button type="primary" icon="el-icon-picture" v-on:click="showFileManagerFlag=true">
+                                    添加佐证材料
+                                </el-button>
+                                <p v-if="qualification.path">
+                                    佐证材料: <a :href="qualification.path" target="_blank">@{{ qualification.file_name }}</a>
+                                </p>
+                            </el-form-item>
+
+
+                            <el-form-item>
+                                <el-button type="primary" @click="onSubmit">立即创建</el-button>
+                                <el-button @click="showFormFlag = false">取消</el-button>
+                            </el-form-item>
+                        </el-form>
                     </div>
-                    @endforeach
+                    @include(
+                        'reusable_elements.section.file_manager_component',
+                        ['pickFileHandler'=>'pickFileHandler']
+                    )
+                    <div v-show="qualifications.length > 0">
+                        <el-table
+                                :data="qualifications"
+                                style="width: 100%">
+                            <el-table-column
+                                    prop="title"
+                                    label="标题"
+                                    width="180">
+                            </el-table-column>
+                            <el-table-column
+                                    prop="year"
+                                    label="年度"
+                                    width="80">
+                            </el-table-column>
+                            <el-table-column
+                                    label="类型"
+                                    width="180"
+                            >
+                                <template slot-scope="scope">
+@{{ types[scope.row.type] }}
+                                </template>
+                            </el-table-column>
+                            <el-table-column
+                                    label="佐证材料"
+                            >
+                                <template slot-scope="scope">
+                                    <a :href="scope.row.path" target="_blank">@{{ scope.row.file_name }}</a>
+                                </template>
+                            </el-table-column>
+                            <el-table-column
+                                    prop="status"
+                                    label="审核状态"
+                                    width="80">
+                            </el-table-column>
+                        </el-table>
+                    </div>
                 </div>
             </div>
         </div>
@@ -135,4 +212,7 @@ use App\Utils\UI\Button;
             </div>
         </div>
     </div>
+    <div id="app-init-data-holder"
+         data-user="{{ $teacher->id }}"
+    ></div>
 @endsection
