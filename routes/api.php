@@ -935,6 +935,10 @@ Route::prefix('study')->middleware('auth:api')->group(function(){
 
 // 新的会议
 Route::prefix('meeting')->middleware('auth:api')->group(function(){
+    // 会议设置
     Route::get('/meeting-set', 'Api\OA\NewMeetingController@meetingSet')
         ->name('api.meeting.meeting-set');
+    // 创建会议
+    Route::post('/addMeeting','Api\OA\NewMeetingController@addMeeting')
+        ->name('api.meeting.addMeeting');
 });

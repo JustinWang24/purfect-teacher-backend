@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: liuyang
- * Date: 2020/2/10
- * Time: 下午1:06
- */
 
 namespace App\Models\OA;
 

@@ -60,5 +60,14 @@ class NewMeetingController extends Controller
         $data = $request->all();
         $data['user_id'] = $request->user()->id;
         $data['school_id'] = $request->user()->getSchoolId();
+        $user = $data['user'];
+        unset($data['user']);
+        unset($data['file']);
+        $file = $request->file('file');
+        $dao = new NewMeetingDao();
+
+        $result = $dao->addMeeting($data, $user, $file);
+
+        dd($result);
     }
 }

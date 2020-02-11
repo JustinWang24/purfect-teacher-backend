@@ -22,11 +22,11 @@ class CreateNewMeetingsTable extends Migration
             $table->string('meet_title')->comment('标题');
             $table->text('meet_content')->comment('内容');
             $table->tinyInteger('signin_status')->default(0)->comment('签到状态 0:不需要 1:需要');
-            $table->dateTime('signin_start')->comment('签到开始时间')->nullable();
-            $table->dateTime('signin_end')->comment('签到结束时间')->nullable();
+            $table->string('signin_start',50)->comment('签到开始时间')->nullable();
+            $table->string('signin_end', 50)->comment('签到结束时间')->nullable();
             $table->tinyInteger('signout_status')->default(0)->comment('签退状态 0:不需要 1:需要');
-            $table->dateTime('signout_start')->comment('签退开始时间')->nullable();
-            $table->dateTime('signout_end')->comment('签退结束时间')->nullable();
+            $table->string('signout_start', 50)->comment('签退开始时间')->nullable();
+            $table->string('signout_end', 50)->comment('签退结束时间')->nullable();
             $table->dateTime('meet_start')->comment('会议开始时间');
             $table->dateTime('meet_end')->comment('会议结束时间');
             $table->tinyInteger('type')->default(1)->comment('0:自定义地点 1:会议室');
