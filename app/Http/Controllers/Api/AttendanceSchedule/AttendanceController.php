@@ -6,6 +6,7 @@ namespace App\Http\Controllers\Api\AttendanceSchedule;
 
 use App\Dao\AttendanceSchedules\AttendanceCourseTeacherDao;
 use App\Http\Requests\MyStandardRequest;
+use App\Models\AttendanceSchedules\Attendance;
 use App\Models\AttendanceSchedules\AttendanceCourseTeacher;
 use Carbon\Carbon;
 use App\Utils\JsonBuilder;
@@ -179,8 +180,13 @@ class AttendanceController extends Controller
         }
         $attendancesDao = new AttendancesDao;
         $arrive = $attendancesDao->getTeacherIsSignByItem($items[0], $user);
+        if ($arrive->teacher_sign == Attendance::TEACHER_SIGN) {
+            $isArrive = true;
+        } else {
+            $isArrive = false;
+        }
         $arriveTime = '';
-        if ($arrive) {
+        if (!empty($arrive->teacher_sign_time)) {
             $arriveTime = $arrive->teacher_sign_time;
         }
         $data['timetable_id'] = $items[0]->id;
@@ -188,7 +194,7 @@ class AttendanceController extends Controller
         $data['course_name'] = $items[0]->course->name;
         $data['teacher'] = $items[0]->teacher->name;
         $data['room'] = $items[0]->room->name;
-        $data['is_arrive'] =  !empty($arrive) ? 'true': 'false';
+        $data['is_arrive'] =  $isArrive;
         $data['arrive_time'] = $arriveTime;
 
         return  JsonBuilder::Success($data);
