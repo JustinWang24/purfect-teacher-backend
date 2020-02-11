@@ -258,5 +258,9 @@ export const Constants = {
         TYPE_EXAM: 5,
         TYPE_EXAM_TXT: '随堂测试'
     },
-    NOTICE_TYPE_INSPECT: 3
+    NOTICE_TYPE_INSPECT: 3,
+    // 教师评教
+    TEACHER_QUALIFICATION_TYPES:[
+        '论文','课题','荣誉称号','教学','技能大赛'
+    ]
 };

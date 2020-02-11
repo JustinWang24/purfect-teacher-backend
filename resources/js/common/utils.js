@@ -261,5 +261,8 @@ export const Util = {
             imageUpload: '/api/wysiwyg/images/upload?uuid=' + teacherUuid, // 图片上传的 Action
             imageManagerJson: '/api/wysiwyg/images/view?uuid=' + teacherUuid, // 已存在的图片的资源 URL, 返回为 json 格式
         }
+    },
+    getTeacherQualificationTypes: function(){
+        return Constants.TEACHER_QUALIFICATION_TYPES;
     }
 };

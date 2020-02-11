@@ -11,6 +11,8 @@ use App\Dao\Users\GradeUserDao;
 use App\Http\Controllers\Controller;
 use App\Models\Acl\Role;
 use App\Models\Evaluate\Evaluate;
+use App\Models\Teachers\TeacherQualification;
+use App\User;
 use App\Utils\JsonBuilder;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -157,5 +159,57 @@ class TeacherEvaluationController extends Controller
         } else {
             return JsonBuilder::Error('系统错误,请稍后再试');
         }
+    }
+
+    /**
+     * 保存教师上传的教学业绩证明材料
+     * @param Request $request
+     * @return string
+     */
+    public function save_qualification(Request $request){
+        $qualification = $request->get('qualification');
+        /**
+         * @var User $user
+         */
+        $user = $request->user('api');
+        if($user){
+            try{
+                $qualification['uploaded_by'] = $user->id;
+                $qualification['school_id'] = $user->getSchoolId();
+                $id = $qualification['id'];
+                if(empty($id)){
+                    $bean = TeacherQualification::create($qualification);
+                    $id = $bean->id;
+                }else{
+                    TeacherQualification::where('id',$qualification['id'])->update($qualification);
+                }
+
+                return JsonBuilder::Success(['id'=>$id]);
+            }
+            catch (\Exception $exception){
+                return JsonBuilder::Error($exception->getMessage());
+            }
+        }
+    }
+
+    /**
+     * 加载某个用户的业绩材料
+     * @param Request $request
+     * @return string
+     */
+    public function load_qualifications(Request $request){
+        $userId = $request->get('user', null);
+        if(is_null($userId)){
+            $user = $request->user('api');
+            $userId = $user->id ?? null;
+        }
+        if($userId){
+            $qualifications = TeacherQualification::where('user_id',$userId)
+                ->orderBy('year','desc')
+                ->orderBy('id','desc')
+                    ->get();
+            return JsonBuilder::Success(['qualifications'=>$qualifications]);
+        }
+        return JsonBuilder::Error('无法定位用户');
     }
 }
