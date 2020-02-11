@@ -19,8 +19,23 @@ class SystemNotificationController extends Controller
     {
         $user = $request->user();
         $dao = new SystemNotificationDao();
-        $data = $dao->getNotificationByUser($user->getSchoolId(), $user);
-
+        $data = $dao->getNotificationByUser($user->getSchoolId(), $user)->toArray();
+        foreach ($data['data'] as &$systemNotification) {
+            $retExtra = [
+                'type' => '',
+                'param1' => '',
+                'param2' => ''
+            ];
+            if (!empty($systemNotification['app_extra'])) {
+                $extra = json_decode($systemNotification['app_extra'], true);
+                $retExtra = [
+                    'type' => $extra['type'],
+                    'param1' => strval($extra['param1']),
+                    'param2' => strval($extra['param2'])
+                ];
+            }
+            $systemNotification['app_extra'] = $retExtra;
+        }
         //设置消息为已读
         $dao->setNotificationHasRead($user->getSchoolId(), $user);
         return JsonBuilder::Success($data);
