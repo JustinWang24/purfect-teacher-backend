@@ -26,6 +26,7 @@ class InternalMessage
     protected $title;
     protected $category;
     protected $appExtra;
+    protected $organizationIdArray;
 
     /**
      * InternalMessage constructor.
@@ -39,6 +40,7 @@ class InternalMessage
      * @param string $title
      * @param int $category
      * @param string $appExtra
+     * @param array $organizationIdArray
      */
     public function __construct(
         $schoolId,
@@ -50,7 +52,8 @@ class InternalMessage
         $nextMove = null,
         $title = '',
         $category = 0,
-        $appExtra = ''
+        $appExtra = '',
+        $organizationIdArray = []
     ){
         $this->schoolId = $schoolId;
         $this->from = $from;
@@ -62,6 +65,7 @@ class InternalMessage
         $this->title = $title;
         $this->category = $category;
         $this->appExtra = $appExtra;
+        $this->organizationIdArray = $organizationIdArray;
     }
 
     /**
@@ -83,8 +87,8 @@ class InternalMessage
                 'content'=>$this->content,
                 'next_move'=>$this->nextMove,
                 'category' =>$this->category,
-                'app_extra' =>$this->appExtra
-            ]);
+                'app_extra' =>$this->appExtra,
+            ], $this->organizationIdArray);
         }catch (\Exception $exception){
             Log::alert('创建系统消息失败',['msg'=>$exception->getMessage()]);
         }

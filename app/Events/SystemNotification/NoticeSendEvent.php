@@ -5,6 +5,7 @@ namespace App\Events\SystemNotification;
 use App\Events\CanSendSystemNotification;
 use App\Models\Notices\Notice;
 use App\Models\Misc\SystemNotification;
+use App\Models\Notices\NoticeOrganization;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Broadcasting\InteractsWithSockets;
@@ -101,7 +102,12 @@ class NoticeSendEvent implements CanSendSystemNotification
      */
     public function getAppExtra(): string
     {
-        return '';
+        $extra = [
+            'type' => 'notice-info',
+            'param1' => $this->notice->id,
+            'param2' => ''
+        ];
+        return json_encode($extra);
     }
 
     /**
@@ -113,7 +119,14 @@ class NoticeSendEvent implements CanSendSystemNotification
         return '';
     }
 
-
+    /**
+     * 必须可以拿到组织id
+     * @return array
+     */
+    public function getOrganizationIdArray(): array
+    {
+        return NoticeOrganization::where('notice_id', '=', $this->notice->id)->pluck('organization_id')->toArray();
+    }
 
 
 }
