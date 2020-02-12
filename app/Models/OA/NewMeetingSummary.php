@@ -18,6 +18,8 @@ class NewMeetingSummary extends Model
         'meet_id', 'meet_user_id', 'user_id', 'url', 'file_name'
     ];
 
+    public $hidden = ['updated_at'];
+
     const DEFAULT_UPLOAD_PATH_PREFIX = 'public/users/';   // 存放用户文件路径
     const DEFAULT_URL_PATH_PREFIX = '/storage/users/';     // 对外的
 

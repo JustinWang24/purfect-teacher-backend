@@ -205,5 +205,22 @@ class NewMeetingDao
     }
 
 
+    /**
+     * 获取会议纪要
+     * @param $meetId
+     * @param $userId
+     * @param bool $simple 简单数据
+     * @return mixed
+     */
+    public function getMeetSummary($meetId, $userId,$simple = true) {
+        $map = ['meet_id'=>$meetId, 'user_id'=>$userId];
+        $field = '*';
+        if($simple) {
+            $field = ['id', 'url', 'file_name'];
+        }
+        return NewMeetingSummary::where($map)->select($field)->get();
+    }
+
+
 
 }

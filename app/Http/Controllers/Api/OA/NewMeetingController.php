@@ -238,5 +238,19 @@ class NewMeetingController extends Controller
     }
 
 
+    /**
+     * 获取会议纪要
+     * @param MeetingRequest $request
+     * @return string
+     */
+    public function getMeetSummary(MeetingRequest $request) {
+        $meetId = $request->getMeetId();
+        $userId = $request->user()->id;
+        $dao = new NewMeetingDao();
+        $list = $dao->getMeetSummary($meetId, $userId);
+        return JsonBuilder::Success($list);
+    }
+
+
 
 }
