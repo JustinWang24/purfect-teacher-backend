@@ -39,7 +39,7 @@ class EvaluateTeacherRecordController extends Controller
         $data['type'] = $item->term;
         $data['weekday_index'] = $item->weekday_index;
         $data['user_id'] = $item->teacher_id;
-        $data['time_slot_id'] = $item->time_slot_id;
+        $data['time_slot_id'] = $itemId;
         $dao = new EvaluateTeacherRecordDao();
 
         $result = $dao->create($data, $record, $student);
@@ -59,10 +59,44 @@ class EvaluateTeacherRecordController extends Controller
      * @return string
      */
     public function template(EvaluateTeacherRecordRequest $request) {
-        $schoolId = $request->user()->getSchoolId();
+        $userId = $request->user()->id;
+        $timeTableId = $request->getItemId();
+        $week = $request->getWeek();
+
+        if(is_null($timeTableId) || is_null($week)) {
+            return JsonBuilder::Error('缺少参数');
+        }
+
         $dao = new EvaluateDao();
+        $evaluate = $dao->getEvaluateTeacher($timeTableId, $week);
+        $status = 0; //未评教
+        if(!is_null($evaluate)){
+            $records = $evaluate->records->where('user_id',$userId);
+            if(count($records) > 0) {
+                $status = 1; // 已评教
+                $scores = array_column($records->toArray(), 'score', 'evaluate_id');
+            }
+        }
+
+        $schoolId = $request->user()->getSchoolId();
         $list = $dao->getEvaluate($schoolId,Evaluate::TYPE_TEACHER, 'asc');
-        return JsonBuilder::Success($list);
+
+        $return = [];
+        foreach ($list as $key => $item) {
+            $return[$key]['id'] = $item->id;
+            $return[$key]['title'] = $item->title;
+            $return[$key]['score'] = $item->score;
+            $return[$key]['goal'] = 0;
+            if($status == 1) {
+                if (array_key_exists($item->id, $scores)) {
+                    $return[$key]['goal'] = $scores[$item->id];
+                }
+            }
+
+        }
+
+        $data = ['status'=>$status, 'list'=>$return];
+        return JsonBuilder::Success($data);
     }
 
 

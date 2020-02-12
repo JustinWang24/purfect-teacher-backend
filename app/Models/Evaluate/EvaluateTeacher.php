@@ -59,5 +59,14 @@ class EvaluateTeacher extends Model
     }
 
 
+    /**
+     * 评教详情记录
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function records() {
+        return $this->hasMany(EvaluateTeacherRecord::class, 'evaluate_student_id');
+    }
+
+
 
 }
