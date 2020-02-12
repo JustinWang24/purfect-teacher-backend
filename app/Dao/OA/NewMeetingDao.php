@@ -11,12 +11,14 @@ namespace App\Dao\OA;
 
 use App\Models\OA\NewMeeting;
 use App\Models\OA\NewMeetingFile;
+use App\Models\OA\NewMeetingSummary;
 use App\Models\OA\NewMeetingUser;
 use App\Utils\JsonBuilder;
 use App\Utils\Misc\ConfigurationTool;
 use App\Utils\ReturnData\MessageBag;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
+use Psy\Util\Json;
 use Ramsey\Uuid\Uuid;
 
 class NewMeetingDao
@@ -151,6 +153,55 @@ class NewMeetingDao
      */
     public function meetDetails($meetId) {
         return NewMeeting::where('id', $meetId)->first();
+    }
+
+
+    /**
+     * 保存会议纪要
+     * @param $meetId
+     * @param $userId
+     * @param $summaries
+     * @return MessageBag
+     */
+    public function saveMeetSummary($meetId,$userId,$summaries) {
+        $messageBag = new MessageBag(JsonBuilder::CODE_ERROR);
+        $map = ['meet_id'=>$meetId, 'user_id'=>$userId];
+        $meetUser = NewMeetingUser::where($map)->first();
+        if(is_null($meetUser)) {
+            $messageBag->setMessage('您不是该会议的成员');
+            return $messageBag;
+        }
+
+        try {
+            DB::beginTransaction();
+            foreach ($summaries as $item) {
+                $path = NewMeetingSummary::DEFAULT_UPLOAD_PATH_PREFIX.$userId; // 上传路径
+                $uuid = Uuid::uuid4()->toString();
+                $url = $item->storeAs($path, $uuid.'.'.$item->getClientOriginalExtension()); // 上传并返回路径
+                $summary = [
+                    'meet_id' => $meetId,
+                    'meet_user_id' => $meetUser->id,
+                    'user_id' => $userId,
+                    'url'     => NewMeetingSummary::ConvertUploadPathToUrl($url),
+                    'file_name' => $item->getClientOriginalName(),
+                ];
+
+                NewMeetingSummary::create($summary);
+
+            }
+
+            DB::commit();
+            $messageBag->setCode(JsonBuilder::CODE_SUCCESS);
+            $messageBag->setMessage('上传成功');
+
+        } catch (\Exception $e) {
+
+            DB::rollBack();
+            $msg = $e->getMessage();
+            $messageBag->setMessage($msg);
+        }
+
+        return $messageBag;
     }
 
 

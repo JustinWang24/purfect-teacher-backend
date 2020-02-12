@@ -967,4 +967,8 @@ Route::prefix('meeting')->middleware('auth:api')->group(function(){
     // 会议详情
     Route::get('/meetDetails','Api\OA\NewMeetingController@meetDetails')
         ->name('api.meeting.meetDetails');
+    // 保存会议纪要
+    Route::post('/saveMeetSummary','Api\OA\NewMeetingController@saveMeetSummary')
+        ->name('api.meeting.saveMeetSummary');
+
 });

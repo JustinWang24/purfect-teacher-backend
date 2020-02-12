@@ -24,7 +24,7 @@ class CreateNewMeetingUsersTable extends Migration
             $table->dateTime('signout_time')->comment('签退时间')->nullable();
             $table->timestamps();
         });
-        DB::statement(" ALTER TABLE new_meeting_users comment '返回人员表' ");
+        DB::statement(" ALTER TABLE new_meeting_users comment '参会人员表' ");
 
     }
 

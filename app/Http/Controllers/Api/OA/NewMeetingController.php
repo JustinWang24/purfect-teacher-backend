@@ -213,4 +213,30 @@ class NewMeetingController extends Controller
         ];
         return JsonBuilder::Success($result);
     }
+
+
+    /**
+     * 保存会议纪要
+     * @param MeetingRequest $request
+     * @return string
+     */
+    public function saveMeetSummary(MeetingRequest $request) {
+        $meetId = $request->getMeetId();
+        $summaries = $request->file('summary');
+        if(count($summaries) > 7) {
+            return JsonBuilder::Error('最多上传7张');
+        }
+        $userId = $request->user()->id;
+
+        $dao = new NewMeetingDao();
+        $result = $dao->saveMeetSummary($meetId,$userId,$summaries);
+        if($result->isSuccess()) {
+            return JsonBuilder::Success($result->getMessage());
+        } else {
+            return JsonBuilder::Error($result->getMessage());
+        }
+    }
+
+
+
 }
