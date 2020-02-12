@@ -421,7 +421,7 @@ Route::prefix('QrCode')->middleware('auth:api')->group(function () {
     // 生成学生端二维码
     Route::post('/getQrCode', 'Api\QrCode\IndexController@generate')->name('api.generate.qr.code');
     // 上课补签二维码
-    Route::post('/courseQrCode', 'Api\QrCode\IndexController@courseQrCode')->name('api.course.qr.code');
+    Route::post('/courseQrCode', 'Api\QrCode\teacherSign@courseQrCode')->name('api.course.qr.code');
     // 扫码 个人信息
     Route::post('/information', 'Api\QrCode\IndexController@information')->name('api.course.qr.information');
 });
@@ -511,6 +511,10 @@ Route::prefix('attendance')->middleware('auth:api')->group(function () {
     // 教师扫云班牌二维码
     Route::post('/teacher-sweep-qr-code', 'Api\AttendanceSchedule\AttendanceController@teacherSweepQrCode')
         ->name('api.teacher.sweep.code');
+
+     // 学生扫云班牌二维码
+    Route::post('/student-sweep-qr-code', 'Api\AttendanceSchedule\AttendanceController@studentSweepQrCode')
+        ->name('api.student.sweep.code');
 
     // 教师上个课签到
     Route::post('/teacher-course-sign', 'Api\AttendanceSchedule\AttendanceController@teacherSign')

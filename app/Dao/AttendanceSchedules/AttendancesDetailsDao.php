@@ -75,10 +75,16 @@ class AttendancesDetailsDao
      */
     public function getDetailByTimeTableIdAndStudentId($item, $user)
     {
-        $schoolDao = new SchoolDao;
-        $school = $schoolDao->getSchoolById($item->school_id);
         $now = Carbon::now(GradeAndYearUtil::TIMEZONE_CN);
-        $week = $school->configuration->getScheduleWeek($now)->getScheduleWeekIndex();
+        $schoolDao = new SchoolDao;
+        $school = $schoolDao->getSchoolById($user->getSchoolId());
+        $configuration = $school->configuration;
+
+        $date = Carbon::now()->toDateString();
+        $month = Carbon::parse($date)->month;
+        $term = $configuration->guessTerm($month);
+        $weeks = $configuration->getScheduleWeek($now, null, $term);
+        $week = $weeks->getScheduleWeekIndex();
         $where = [
             ['timetable_id','=',$item->id],
             ['year','=', $item->year],
