@@ -252,5 +252,26 @@ class NewMeetingController extends Controller
     }
 
 
+    /**
+     * 已完成-签到记录
+     * @param MeetingRequest $request
+     * @return string
+     */
+    public function signInRecord(MeetingRequest $request) {
+        $meetId = $request->getMeetId();
+        $userId = $request->user()->id;
+        $dao = new NewMeetingDao();
+        $return = $dao->getMeetUser($meetId, $userId);
+        $result = [
+            'signin_status' => $return->signin_status,
+            'signin_time' => $return->signin_time,
+            'signout_status' => $return->signout_status,
+            'signout_time' => $return->signout_time
+        ];
+
+        return JsonBuilder::Success($result);
+    }
+
+
 
 }

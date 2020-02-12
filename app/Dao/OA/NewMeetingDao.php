@@ -222,5 +222,17 @@ class NewMeetingDao
     }
 
 
+    /**
+     *
+     * @param $meetId
+     * @param $userId
+     * @return mixed
+     */
+    public function getMeetUser($meetId, $userId) {
+        $map = ['meet_id'=>$meetId, 'user_id'=>$userId];
+        return NewMeetingUser::where($map)->first();
+    }
+
+
 
 }
