@@ -48,12 +48,16 @@ class EvaluateTeacher extends Model
         ];
     }
 
-
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
     public function user(){
         return $this->belongsTo(User::class);
     }
 
-
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
     public function teacherGroup() {
         return $this->belongsTo(TeachingAndResearchGroup::class,'group_id');
     }

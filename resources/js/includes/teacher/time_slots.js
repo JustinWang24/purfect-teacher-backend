@@ -21,12 +21,13 @@ if(document.getElementById('school-time-slots-teacher-app')){
         },
         methods:{
             load: function () {
+                const that = this;
                 axios.post(
                     Constants.API.LOAD_TIME_SLOTS_BY_SCHOOL,{school: this.schoolId}
                 ).then( res => {
                     if(Util.isAjaxResOk(res)){
-                        _.each(res.data.data.time_frame, (item) => {
-                            this.timeFrame.push({
+                        res.data.data.time_frame.forEach(item => {
+                            that.timeFrame.push({
                                 timestamp: item.from + ' - ' + item.to,
                                 size: this.dotSize,
                                 // color: '#0bbd87',
