@@ -25,16 +25,17 @@ class AttendanceController extends Controller
      * @param AttendanceRequest $request
      * @return string
      */
-    public function signInRecord(AttendanceRequest $request) {
+    public function signInRecord(AttendanceRequest $request)
+    {
 
         $user = $request->user();
         $grade = $user->gradeUser->grade;
         $school = $user->gradeUser->school;
         $configuration = $school->configuration;
         // 学年
-        $year = $request->get('year',$configuration->getSchoolYear());
+        $year = $request->get('year', $configuration->getSchoolYear());
         // 学期
-        $term = $request->get('term',$configuration->guessTerm(Carbon::now()->month));
+        $term = $request->get('term', $configuration->guessTerm(Carbon::now()->month));
 
         $courseMajorDao = new CourseMajorDao();
         $attendancesDetailsDao = new AttendancesDetailsDao();
@@ -42,7 +43,7 @@ class AttendanceController extends Controller
         foreach ($courseList as $key => $val) {
 
             // 签到次数
-            $signNum = $attendancesDetailsDao->getSignInCountByUser($user->id, $year,$term, $val['id']);
+            $signNum = $attendancesDetailsDao->getSignInCountByUser($user->id, $year, $term, $val['id']);
             // 请假次数
             $leavesNum = $attendancesDetailsDao->getLeaveCountByUser($user->id, $year, $term, $val['id']);
             // 旷课次数
@@ -61,19 +62,20 @@ class AttendanceController extends Controller
      * @param AttendanceRequest $request
      * @return string
      */
-    public function signInDetails(AttendanceRequest $request) {
+    public function signInDetails(AttendanceRequest $request)
+    {
 
         $courseId = $request->get('course_id');
-        if(empty($courseId)) {
+        if (empty($courseId)) {
             return JsonBuilder::Error('缺少参数');
         }
 
         $user = $request->user();
         $school = $user->gradeUser->school;
         $configuration = $school->configuration;
-        $year = $request->get('year',$configuration->getSchoolYear());
+        $year = $request->get('year', $configuration->getSchoolYear());
         // 学期
-        $term = $request->get('term',$configuration->guessTerm(Carbon::now()->month));
+        $term = $request->get('term', $configuration->guessTerm(Carbon::now()->month));
 
         $attendancesDetailsDao = new AttendancesDetailsDao();
         $signInList = $attendancesDetailsDao->signInList($year, $user->id, $courseId, $term);
@@ -84,8 +86,8 @@ class AttendanceController extends Controller
             $signInList[$key]['date'] = Carbon::parse($val->date)->format('Y-m-d');
 
             // 判断请假的
-            if($val['mold'] == AttendancesDetail::MOLD_LEAVE) {
-                if($val['status'] !== AttendancesDetail::STATUS_CONSENT) {
+            if ($val['mold'] == AttendancesDetail::MOLD_LEAVE) {
+                if ($val['status'] !== AttendancesDetail::STATUS_CONSENT) {
                     unset($signInList[$key]);
                 }
             }
@@ -98,13 +100,13 @@ class AttendanceController extends Controller
     }
 
 
-
     /**
      * 添加旷课记录
      * @param AttendanceRequest $request
      * @return string
      */
-    public function addTruantRecord(AttendanceRequest $request) {
+    public function addTruantRecord(AttendanceRequest $request)
+    {
 
         $truant = $request->getTruantData();
         $timeTableDao = new TimetableItemDao();
@@ -114,23 +116,23 @@ class AttendanceController extends Controller
 
         $attendanceDao = new AttendancesDao();
         $attendanceInfo = $attendanceDao->getAttendanceByTimeTableId($item->id, $week);
-        if(is_null($attendanceInfo)) {
+        if (is_null($attendanceInfo)) {
             return JsonBuilder::Error('该课程还没上');
         }
         $truant['attendance_id'] = $attendanceInfo->id;
-        $truant['course_id']     = $item->course_id;
-        $truant['year']          = $item->year;
-        $truant['term']          = $item->term;
-        $truant['week']          = $week;
-        $truant['mold']          = AttendancesDetail::MOLD_TRUANT;
+        $truant['course_id'] = $item->course_id;
+        $truant['year'] = $item->year;
+        $truant['term'] = $item->term;
+        $truant['week'] = $week;
+        $truant['mold'] = AttendancesDetail::MOLD_TRUANT;
         $truant['weekday_index'] = $item->weekday_index;
         $dao = new AttendancesDetailsDao();
-        $re = $dao->getDetailByUserId($truant['student_id'],$item->id);
-        if(!empty($re)) {
+        $re = $dao->getDetailByUserId($truant['student_id'], $item->id);
+        if (!empty($re)) {
             return JsonBuilder::Success('旷课已添加');
         }
         $result = $dao->add($truant);
-        if($result) {
+        if ($result) {
             return JsonBuilder::Success('旷课添加成功');
         } else {
             return JsonBuilder::Error('旷课添加失败');
@@ -154,7 +156,7 @@ class AttendanceController extends Controller
         if ($result) {
             return JsonBuilder::Success('修改成功');
         } else {
-            return  JsonBuilder::Error('修改失败');
+            return JsonBuilder::Error('修改失败');
         }
     }
 
@@ -169,7 +171,7 @@ class AttendanceController extends Controller
         $code = json_decode($request->get('code'), true);
 
         if ($code['teacher_id'] !== $user->id) {
-             return JsonBuilder::Error('本节课, 不是您要上的课');
+            return JsonBuilder::Error('本节课, 不是您要上的课');
         }
 
         $timeTableDao = new TimetableItemDao;
@@ -194,10 +196,10 @@ class AttendanceController extends Controller
         $data['course_name'] = $items[0]->course->name;
         $data['teacher'] = $items[0]->teacher->name;
         $data['room'] = $items[0]->room->name;
-        $data['is_arrive'] =  $isArrive;
+        $data['is_arrive'] = $isArrive;
         $data['arrive_time'] = $arriveTime;
 
-        return  JsonBuilder::Success($data);
+        return JsonBuilder::Success($data);
     }
 
     /**
@@ -226,4 +228,44 @@ class AttendanceController extends Controller
             return JsonBuilder::Error('签到失败');
         }
     }
+
+
+    /**
+     * 学生扫码云班牌
+     * @param MyStandardRequest $request
+     * @return string
+     */
+    public function studentSweepQrCode(MyStandardRequest $request)
+    {
+        $code = json_decode($request->get('code'), true);
+
+        $user = $request->user();
+
+        $timetableItemDao = new TimetableItemDao;
+        $item = $timetableItemDao->getCurrentItemByUser($user);
+        if (empty($item)) {
+            return JsonBuilder::Error('未找到当前学生要上的的课程');
+        }
+
+        $attendancesDetailsDao = new AttendancesDetailsDao;
+        $isArrive = $attendancesDetailsDao->getDetailByTimeTableIdAndStudentId($item, $user);
+
+        $data['timetable_id'] = $item->id;
+        $data['time_slot_name'] = $item->timeSlot->name;
+        $data['course_name'] = $item->course->name;
+        $data['room'] = $item->room->name;
+        $data['is_arrive'] = empty($isArrive) ? false: true;
+        $data['arrive_time'] = '';
+        $data['arrive_type'] = '';
+        if(!empty($isArrive)) {
+            $data['arrive_time'] = $isArrive->created_at;
+            $data['arrive_type'] = $isArrive->typeText();
+        }
+
+        return  JsonBuilder::Success($data);
+    }
+
+
+
+
 }

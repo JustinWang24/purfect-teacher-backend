@@ -311,7 +311,7 @@ class CloudController extends Controller
     }
 
     /**
-     * 手动签到
+     * 手动扫云班牌码签到
      * @param Request $request
      * @return string
      */
@@ -335,7 +335,7 @@ class CloudController extends Controller
         }
 
         $dao = new AttendancesDao;
-        $attendanceInfo = $dao->arrive($item, $user, AttendancesDetail::TYPE_MANUAL);
+        $attendanceInfo = $dao->arrive($item, $user, AttendancesDetail::TYPE_SWEEP_CODE);
         if($attendanceInfo) {
             return  JsonBuilder::Success('签到成功');
         } else {
