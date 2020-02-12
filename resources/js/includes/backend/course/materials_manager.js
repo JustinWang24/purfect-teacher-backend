@@ -28,6 +28,10 @@ $(document).ready(function(){
                     // 通过文件管理器来选择文件的功能所需
                     showFileManagerFlag: false,
                     selectedFile:null,
+                    // 导航菜单用
+                    activeIndex: '0',
+                    // 课时选择器
+                    courseIndexerVisible: false,
                 }
             },
             created: function(){
@@ -40,6 +44,22 @@ $(document).ready(function(){
                 this.courseMaterialModel.course_id = this.course.id;
             },
             methods:{
+                // 导航菜单的处理
+                handleMenuSelect: function(key, keyPath){
+                    console.log(key);
+                    console.log(keyPath);
+                    if(key === '1'){
+                        this.courseIndexerVisible = true;
+                    }
+                },
+                // 导航菜单处理结束
+                /**
+                 *
+                 */
+                switchCourseIndex: function(payload){
+                    this.courseIndexerVisible = false;
+                    // 去加载当前课程的第 payload.index 节课的数据
+                },
                 showNotesEditor: function(){
                     this.showEditor = !this.showEditor;
                 },

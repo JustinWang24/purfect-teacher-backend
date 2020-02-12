@@ -6,8 +6,18 @@ $courseTeacher = $course->getCourseTeacher($teacher->id);
 @endphp
 @extends('layouts.app')
 @section('content')
-    <div class="row" id="course-materials-manager-app">
-        <div class="col-sm-12 col-md-6 col-lg-6 col-xl-6">
+    <div id="course-materials-manager-app">
+        <div class="row">
+            <el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal" @select="handleMenuSelect" style="margin: 0 auto;">
+                <el-menu-item index="1">课时选择</el-menu-item>
+                <el-menu-item index="2">{{ $course->name }}课件管理</el-menu-item>
+                <el-menu-item index="3">学生管理</el-menu-item>
+                <el-menu-item index="4"><a href="https://www.baidu.com" target="_blank">查看课表</a></el-menu-item>
+            </el-menu>
+        </div>
+
+        <div class="row">
+            <div class="col-sm-12 col-md-6 col-lg-6 col-xl-6">
             <div class="card">
                 <div class="card-body">
                     <h2>{{ $course->name }} ({{ $course->duration }}课时)</h2>
@@ -68,7 +78,7 @@ $courseTeacher = $course->getCourseTeacher($teacher->id);
                 </div>
             </div>
         </div>
-        <div class="col-sm-12 col-md-6 col-lg-6 col-xl-6">
+            <div class="col-sm-12 col-md-6 col-lg-6 col-xl-6">
             <div class="card">
                 <div class="card-body" v-show="showMaterialForm">
                     <el-form :model="courseMaterialModel" label-width="120px" class="course-form" style="margin-top: 20px;">
@@ -116,10 +126,16 @@ $courseTeacher = $course->getCourseTeacher($teacher->id);
                 </div>
             </div>
         </div>
+        </div>
         @include(
-                'reusable_elements.section.file_manager_component',
-                ['pickFileHandler'=>'pickFileHandler']
-            )
+            'reusable_elements.section.file_manager_component',
+            ['pickFileHandler'=>'pickFileHandler']
+        )
+
+        <el-dialog title="{{ $course->name }} ({{ $course->duration }}课时)" :visible.sync="courseIndexerVisible">
+            <course-indexer :count="{{ $course->duration }}" v-on:index-clicked="switchCourseIndex"></course-indexer>
+        </el-dialog>
+
     </div>
     <div id="app-init-data-holder"
          data-school="{{ session('school.id') }}"
