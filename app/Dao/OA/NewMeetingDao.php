@@ -105,6 +105,7 @@ class NewMeetingDao
         $map = [
             ['new_meeting_users.user_id','=', $userId],
             ['new_meetings.meet_end', '>', $now],
+            ['new_meetings.status', '=', NewMeeting::STATUS_PASS],
         ];
 
         $field = ['new_meeting_users.*', 'new_meeting_users.signin_status as status', 'new_meetings.*'];
@@ -128,6 +129,7 @@ class NewMeetingDao
         $map = [
             ['new_meeting_users.user_id','=', $userId],
             ['new_meetings.meet_end', '<=', $now],
+            ['new_meetings.status', '=', NewMeeting::STATUS_PASS],
         ];
 
         $field = ['new_meeting_users.*', 'new_meeting_users.signin_status as signIn_status',
@@ -147,7 +149,7 @@ class NewMeetingDao
      * @return mixed
      */
     public function oneselfCreateMeet($userId) {
-        $map = ['user_id'=>$userId];
+        $map = ['user_id'=>$userId, 'status'=>NewMeeting::STATUS_PASS];
         $list = NewMeeting::where($map)
             ->orderBy('meet_start','desc')
             ->paginate(ConfigurationTool::DEFAULT_PAGE_SIZE);
