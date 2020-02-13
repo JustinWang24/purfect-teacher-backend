@@ -149,7 +149,7 @@ class NewMeetingDao
      * @return mixed
      */
     public function oneselfCreateMeet($userId) {
-        $map = ['user_id'=>$userId, 'status'=>NewMeeting::STATUS_PASS];
+        $map = ['user_id'=>$userId];
         $list = NewMeeting::where($map)
             ->orderBy('meet_start','desc')
             ->paginate(ConfigurationTool::DEFAULT_PAGE_SIZE);
