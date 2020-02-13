@@ -976,5 +976,6 @@ Route::prefix('meeting')->middleware('auth:api')->group(function(){
     // 已完成-签到记录
     Route::get('/signInRecord','Api\OA\NewMeetingController@signInRecord')
         ->name('api.meeting.signInRecord');
+    //
 
 });

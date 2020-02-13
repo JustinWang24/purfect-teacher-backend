@@ -44,6 +44,7 @@ class NewMeetingController extends Controller
                 'seats' => $item->seats,
                 'start' => '8:00',
                 'end' => '18:00',
+                'time'=>[],
             ];
             foreach ($return as $k => $v) {
                 if($item->id == $v->room_id) {
@@ -270,6 +271,11 @@ class NewMeetingController extends Controller
         ];
 
         return JsonBuilder::Success($result);
+    }
+
+
+    public function signInQrCode(MeetingRequest $request) {
+        $meetId = $request->getMeetId();
     }
 
 

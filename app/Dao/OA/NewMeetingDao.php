@@ -223,7 +223,7 @@ class NewMeetingDao
 
 
     /**
-     *
+     * 获取签到详情
      * @param $meetId
      * @param $userId
      * @return mixed
@@ -232,6 +232,7 @@ class NewMeetingDao
         $map = ['meet_id'=>$meetId, 'user_id'=>$userId];
         return NewMeetingUser::where($map)->first();
     }
+
 
 
 
