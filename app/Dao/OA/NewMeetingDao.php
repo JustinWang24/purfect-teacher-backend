@@ -243,6 +243,15 @@ class NewMeetingDao
     }
 
 
+    /**
+     * @param $meetId
+     * @return mixed
+     */
+    public function getMeetByMeetId($meetId) {
+        return NewMeeting::where('id', $meetId)->first();
+    }
+
+
 
 
 }

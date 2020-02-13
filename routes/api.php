@@ -976,6 +976,8 @@ Route::prefix('meeting')->middleware('auth:api')->group(function(){
     // 已完成-签到记录
     Route::get('/signInRecord','Api\OA\NewMeetingController@signInRecord')
         ->name('api.meeting.signInRecord');
-    //
+    // 签到二维码
+    Route::get('/signInQrCode','Api\OA\NewMeetingController@signInQrCode')
+        ->name('api.meeting.signInQrCode');
 
 });

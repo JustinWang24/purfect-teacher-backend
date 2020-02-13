@@ -9,14 +9,15 @@
 namespace App\Http\Controllers\Api\OA;
 
 
-use App\Dao\OA\NewMeetingDao;
+use Carbon\Carbon;
+use Endroid\QrCode\QrCode;
+use App\Utils\JsonBuilder;
+use App\Models\Schools\Room;
 use App\Dao\Schools\RoomDao;
+use App\Dao\OA\NewMeetingDao;
+use App\Models\OA\NewMeeting;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\OA\MeetingRequest;
-use App\Models\OA\NewMeeting;
-use App\Models\Schools\Room;
-use App\Utils\JsonBuilder;
-use Carbon\Carbon;
 
 class NewMeetingController extends Controller
 {
@@ -275,8 +276,31 @@ class NewMeetingController extends Controller
     }
 
 
+    /**
+     * 签到二维码
+     * @param MeetingRequest $request
+     * @return string
+     * @throws \Endroid\QrCode\Exception\InvalidPathException
+     */
     public function signInQrCode(MeetingRequest $request) {
         $meetId = $request->getMeetId();
+        $dao = new NewMeetingDao();
+        $meet = $dao->getMeetByMeetId($meetId);
+        if(is_null($meet)) {
+            return JsonBuilder::Error('该会议不存在');
+        }
+
+        $codeStr = base64_encode(json_encode(
+            ['meet_id' => $meetId,'type'=>'signIn']));
+
+        $qrCode = new QrCode($codeStr);
+        $qrCode->setSize(400);
+        $qrCode->setLogoPath(public_path('assets/img/logo.png'));
+        $qrCode->setLogoSize(60, 60);
+        $code = 'data:image/png;base64,' . base64_encode($qrCode->writeString());
+
+        $data = ['msg'=>'签到二维码','qrcode'=>$code];
+        return JsonBuilder::Success($data);
     }
 
 
