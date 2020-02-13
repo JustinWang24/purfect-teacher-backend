@@ -46,6 +46,15 @@ class NewMeetingUser extends Model
 
 
     /**
+     * 参会人员
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function user() {
+        return $this->belongsTo(User::class);
+    }
+
+
+    /**
      * 会议时间
      * @return string
      */

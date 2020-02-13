@@ -985,4 +985,7 @@ Route::prefix('meeting')->middleware('auth:api')->group(function(){
     // 我创建的-会议纪要
     Route::get('/myMeetSummary','Api\OA\NewMeetingController@myMeetSummary')
         ->name('api.meeting.myMeetSummary');
+    // 我创建的-签到记录
+    Route::get('/mySignInRecord','Api\OA\NewMeetingController@mySignInRecord')
+        ->name('api.meeting.mySignInRecord');
 });

@@ -16,6 +16,7 @@ use App\Models\Schools\Room;
 use App\Dao\Schools\RoomDao;
 use App\Dao\OA\NewMeetingDao;
 use App\Models\OA\NewMeeting;
+use App\Models\OA\NewMeetingUser;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\OA\MeetingRequest;
 
@@ -366,6 +367,53 @@ class NewMeetingController extends Controller
         }
 
         return JsonBuilder::Success(array_merge($result));
+    }
+
+
+    public function mySignInRecord(MeetingRequest $request) {
+        $meetId = $request->getMeetId();
+        $dao = new NewMeetingDao();
+        $meet = $dao->getMeetByMeetId($meetId);
+        if(is_null($meet)) {
+            return JsonBuilder::Error('该会议不存在');
+        }
+        $unSignIn = $meet->meetUsers->where('signin_status',NewMeetingUser::UN_SIGNIN)->count();
+        $signIn = $meet->meetUsers->where('signin_status',NewMeetingUser::NORMAL_SIGNIN)->count();
+        $late = $meet->meetUsers->where('signin_status',NewMeetingUser::LATE)->count();
+        $unSignOut = $meet->meetUsers->where('signout_status',NewMeetingUser::UN_SIGNOUT)->count();
+        $signOut = $meet->meetUsers->where('signout_status',NewMeetingUser::NORMAL_SIGNOUT)->count();
+
+        $stat = [
+            'un_sign_in'=>$unSignIn, 'sign_in'=>$signIn, 'late'=>$late,
+            'un_sign_out'=>$unSignOut, 'sign_out'=>$signOut
+        ];
+
+
+        $record = $dao->getMeetUserPageByMeetId($meetId);
+
+        $record = pageReturn($record);
+
+        $list = [];
+        foreach ($record['list'] as $key => $item) {
+            $list[] = [
+                'id' => $item->id,
+                'user_id' => $item->user_id,
+                'user_name' => $item->user->name,
+                'avatar' => $item->user->profile->avatar,
+                'signin_status' => $item->signin_status,
+                'signout_status' => $item->signout_status,
+            ];
+        }
+
+        $record['list'] = $list;
+
+        $data = [
+            'stat'=>$stat,
+            'record'=>$record
+        ];
+
+
+        return JsonBuilder::Success($data);
     }
 
 

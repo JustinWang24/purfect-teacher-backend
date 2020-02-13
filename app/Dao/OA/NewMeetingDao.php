@@ -254,6 +254,17 @@ class NewMeetingDao
     }
 
 
+    /**
+     * 获取会议参会人员-分页
+     * @param $meetId
+     * @return mixed
+     */
+    public function getMeetUserPageByMeetId($meetId) {
+        return NewMeetingUser::where('meet_id',$meetId)
+            ->paginate(ConfigurationTool::DEFAULT_PAGE_SIZE);
+    }
+
+
 
 
 }
