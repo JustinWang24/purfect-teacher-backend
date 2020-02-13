@@ -9,6 +9,8 @@
 namespace App\Models\OA;
 
 
+use App\User;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
 class NewMeetingSummary extends Model
@@ -52,5 +54,20 @@ class NewMeetingSummary extends Model
     public function getUrlAttribute($value)
     {
         return $value ? asset($value) : '';
+    }
+
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
+
+    public function getCreatedAtAttribute($value)
+    {
+        return Carbon::parse($value)->format('Y-m-d H:i');
     }
 }

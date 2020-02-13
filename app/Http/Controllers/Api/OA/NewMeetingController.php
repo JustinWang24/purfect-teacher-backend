@@ -335,9 +335,37 @@ class NewMeetingController extends Controller
     }
 
 
-
+    /**
+     * 我创建的 会议纪要
+     * @param MeetingRequest $request
+     * @return string
+     */
     public function myMeetSummary(MeetingRequest $request) {
         $meetId = $request->getMeetId();
+        $dao = new NewMeetingDao();
+        $meet = $dao->getMeetByMeetId($meetId);
+        if(is_null($meet)) {
+            return JsonBuilder::Error('该会议不存在');
+        }
+
+        $summaries = $meet->summaries->groupBy('meet_user_id');
+        $result = [];
+        foreach ($summaries as $key => $item) {
+            foreach ($item as $k => $val) {
+                $result[$key]['meet_id'] = $val->meet_id;
+                $result[$key]['user_id'] = $val->user_id;
+                $result[$key]['user_name'] = $val->user->name;
+                $result[$key]['created_at'] = $val->created_at;
+                $result[$key]['summaries'][] = [
+                    'summary_id' => $val->id,
+                    'url' => $val->url,
+                    'file_name' => $val->file_name,
+                ];
+            }
+
+        }
+
+        return JsonBuilder::Success(array_merge($result));
     }
 
 

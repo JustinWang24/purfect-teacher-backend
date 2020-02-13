@@ -43,6 +43,10 @@ class NewMeeting extends Model
     }
 
 
+    /**
+     * 参会人员
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
     public function meetUsers() {
         return $this->hasMany(NewMeetingUser::class, 'meet_id');
     }
@@ -85,8 +89,22 @@ class NewMeeting extends Model
         return $signout_start->toDateString().' '. $time;
     }
 
+
+    /**
+     * 附件
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
     public function files() {
         return $this->hasMany(NewMeetingFile::class, 'meet_id');
+    }
+
+
+    /**
+     * 会议纪要
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function summaries () {
+        return $this->hasMany(NewMeetingSummary::class, 'meet_id');
     }
 
 }
