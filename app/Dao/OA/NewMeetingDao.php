@@ -48,6 +48,13 @@ class NewMeetingDao
     public function addMeeting($data, $user, $file) {
         $messageBag = new MessageBag();
         try {
+            $room = $data['room'];
+            unset($data['room']);
+            if($data['type'] == NewMeeting::TYPE_MEETING_ROOM) {
+                $data['room_id'] = $room;
+            } else {
+                $data['room_text'] = $room;
+            }
             DB::beginTransaction();
             $meeting = NewMeeting::create($data);
 
