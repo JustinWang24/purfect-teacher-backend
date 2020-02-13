@@ -35,7 +35,7 @@ use App\Utils\UI\Button;
                                         @if($item->type === \App\Models\Contents\Album::TYPE_PHOTO)
                                             <img src="{{ $item->url }}" style="width: 200px;" alt="">
                                         @else
-                                            <video src="{{ $item->url }}" controls>
+                                            <video src="{{ $item->url }}" style="width: 200px;" controls>
                                                 您的浏览器不支持 video 标签。
                                             </video>
                                         @endif

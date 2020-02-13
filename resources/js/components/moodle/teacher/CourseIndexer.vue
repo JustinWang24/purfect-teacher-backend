@@ -27,7 +27,7 @@
             }
         },
         created: function(){
-            console.log('course indexer')
+
         },
         methods:{
             buttonType: function(index){

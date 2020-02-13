@@ -11,6 +11,8 @@ use App\Dao\Courses\CourseDao;
 use App\Dao\Users\UserDao;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Course\MaterialRequest;
+use App\Models\Course;
+use App\Utils\CourseHelpers\IndexerHelper;
 use App\Utils\JsonBuilder;
 
 class MaterialsController extends Controller
@@ -25,11 +27,21 @@ class MaterialsController extends Controller
         $this->dataForView['redactorWithVueJs'] = true; // 让框架帮助你自动插入导入 redactor 的组件的语句
 
         $courseDao = new CourseDao();
+        /**
+         * @var Course $course
+         */
         $course = $courseDao->getCourseById($request->getCourseId());
         $teacher = (new UserDao())->getUserById($request->getTeacherId());
         $this->dataForView['materials'] = $courseDao->getCourseMaterials($course->id, $teacher->id);
         $this->dataForView['course'] = $course;
         $this->dataForView['teacher'] = $teacher;
+
+        $helper = new IndexerHelper($course);
+
+        $items = $helper->getCurrentIndexByTeacher($teacher);
+
+//        dump($items);
+
         return view('teacher.course.materials.manager', $this->dataForView);
     }
 

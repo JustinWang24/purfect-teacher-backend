@@ -733,6 +733,22 @@ class TimetableItemDao
     }
 
     /**
+     * @param $courseId
+     * @param $teacherId
+     * @param $year
+     * @param $term
+     * @return Collection
+     */
+    public function getItemByGradeAndTeacherAndYear($courseId, $teacherId, $year, $term){
+        return TimetableItem::where('year',$year)
+            ->where('teacher_id',$teacherId)
+            ->where('course_id',$courseId)
+            ->where('term',$term)
+            ->distinct('teacher_id')
+            ->get();
+    }
+
+    /**
      * 上课3分钟内需要发送没有老师打卡的记录给教务处，需要一个总列表来比对
      * 获取当前时间应该上的所有课程
      */
