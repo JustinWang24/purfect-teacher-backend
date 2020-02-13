@@ -979,5 +979,7 @@ Route::prefix('meeting')->middleware('auth:api')->group(function(){
     // 签到二维码
     Route::get('/signInQrCode','Api\OA\NewMeetingController@signInQrCode')
         ->name('api.meeting.signInQrCode');
-
+    // 签退二维码
+    Route::get('/signOutQrCode','Api\OA\NewMeetingController@signOutQrCode')
+        ->name('api.meeting.signOutQrCode');
 });
