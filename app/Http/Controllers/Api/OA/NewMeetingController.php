@@ -102,6 +102,7 @@ class NewMeetingController extends Controller
         $data = [];
         foreach ($result['list'] as $key => $item) {
             $data[] = [
+                'meet_id' => $item->meet_id,
                 'meet_title' => $item->meet_title,
                 'approve_user' => $item->approve->name,
                 'room' => $item->room_id ? $item->room->name : $item->room_text,
@@ -129,6 +130,7 @@ class NewMeetingController extends Controller
         $data = [];
         foreach ($result['list'] as $key => $item) {
             $data[] = [
+                'meet_id' => $item->meet_id,
                 'meet_title' => $item->meet_title,
                 'approve_user' => $item->approve->name,
                 'room' => $item->room_id ? $item->room->name : $item->room_text,
@@ -172,6 +174,7 @@ class NewMeetingController extends Controller
             }
 
             $data[] = [
+                'meet_id' => $item->meet_id,
                 'meet_title' => $item->meet_title,
                 'approve_user' => $item->approve->name,
                 'room' => $item->room_id ? $item->room->name : $item->room_text,
@@ -329,6 +332,12 @@ class NewMeetingController extends Controller
 
         $data = ['msg'=>'签退二维码','qrcode'=>$code];
         return JsonBuilder::Success($data);
+    }
+
+
+
+    public function myMeetSummary(MeetingRequest $request) {
+        $meetId = $request->getMeetId();
     }
 
 

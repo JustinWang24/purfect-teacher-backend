@@ -982,4 +982,7 @@ Route::prefix('meeting')->middleware('auth:api')->group(function(){
     // 签退二维码
     Route::get('/signOutQrCode','Api\OA\NewMeetingController@signOutQrCode')
         ->name('api.meeting.signOutQrCode');
+    // 我创建的-会议纪要
+    Route::get('/myMeetSummary','Api\OA\NewMeetingController@myMeetSummary')
+        ->name('api.meeting.myMeetSummary');
 });
