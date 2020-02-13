@@ -44,6 +44,7 @@ class NewMeetingController extends Controller
                 'seats' => $item->seats,
                 'start' => '8:00',
                 'end' => '18:00',
+                'time'=>[],
             ];
             foreach ($return as $k => $v) {
                 if($item->id == $v->room_id) {
@@ -213,4 +214,70 @@ class NewMeetingController extends Controller
         ];
         return JsonBuilder::Success($result);
     }
+
+
+    /**
+     * 保存会议纪要
+     * @param MeetingRequest $request
+     * @return string
+     */
+    public function saveMeetSummary(MeetingRequest $request) {
+        $meetId = $request->getMeetId();
+        $summaries = $request->file('summary');
+        if(count($summaries) > 7) {
+            return JsonBuilder::Error('最多上传7张');
+        }
+        $userId = $request->user()->id;
+
+        $dao = new NewMeetingDao();
+        $result = $dao->saveMeetSummary($meetId,$userId,$summaries);
+        if($result->isSuccess()) {
+            return JsonBuilder::Success($result->getMessage());
+        } else {
+            return JsonBuilder::Error($result->getMessage());
+        }
+    }
+
+
+    /**
+     * 获取会议纪要
+     * @param MeetingRequest $request
+     * @return string
+     */
+    public function getMeetSummary(MeetingRequest $request) {
+        $meetId = $request->getMeetId();
+        $userId = $request->user()->id;
+        $dao = new NewMeetingDao();
+        $list = $dao->getMeetSummary($meetId, $userId);
+        return JsonBuilder::Success($list);
+    }
+
+
+    /**
+     * 已完成-签到记录
+     * @param MeetingRequest $request
+     * @return string
+     */
+    public function signInRecord(MeetingRequest $request) {
+        $meetId = $request->getMeetId();
+        $userId = $request->user()->id;
+        $dao = new NewMeetingDao();
+        $return = $dao->getMeetUser($meetId, $userId);
+        $result = [
+            'signin_status' => $return->signin_status,
+            'signin_time' => $return->signin_time,
+            'signout_status' => $return->signout_status,
+            'signout_time' => $return->signout_time
+        ];
+
+        return JsonBuilder::Success($result);
+    }
+
+
+    public function signInQrCode(MeetingRequest $request) {
+        $meetId = $request->getMeetId();
+    }
+
+
+
 }

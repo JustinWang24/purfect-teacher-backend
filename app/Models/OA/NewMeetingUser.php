@@ -16,6 +16,8 @@ class NewMeetingUser extends Model
         'signout_time'
     ];
 
+    public $hidden = ['updated_at'];
+
     const UN_SIGNIN = 0;  // 未签到
     const NORMAL_SIGNIN = 1; // 按时签到
     const LATE = 2; // 迟到
