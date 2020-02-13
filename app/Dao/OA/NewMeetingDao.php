@@ -46,6 +46,7 @@ class NewMeetingDao
      * @return MessageBag
      */
     public function addMeeting($data, $user, $file) {
+
         $messageBag = new MessageBag();
         try {
             $room = $data['room'];
@@ -66,17 +67,18 @@ class NewMeetingDao
                 NewMeetingUser::create($meetUser);
             }
 
-            $path = NewMeetingFile::DEFAULT_UPLOAD_PATH_PREFIX.$data['user_id']; // 上传路径
-
-            foreach ($file as  $key => $value) {
-                $uuid = Uuid::uuid4()->toString();
-                $url = $value->storeAs($path, $uuid.'.'.$value->getClientOriginalExtension()); // 上传并返回路径
-                $meetFile = [
-                    'meet_id' => $meeting->id,
-                    'file_name'   => $value->getClientOriginalName(),
-                    'url'         => NewMeetingFile::ConvertUploadPathToUrl($url),
-                ];
-                NewMeetingFile::create($meetFile);
+            if(!is_null($file)) {
+                $path = NewMeetingFile::DEFAULT_UPLOAD_PATH_PREFIX.$data['user_id']; // 上传路径
+                foreach ($file as  $key => $value) {
+                    $uuid = Uuid::uuid4()->toString();
+                    $url = $value->storeAs($path, $uuid.'.'.$value->getClientOriginalExtension()); // 上传并返回路径
+                    $meetFile = [
+                        'meet_id' => $meeting->id,
+                        'file_name'   => $value->getClientOriginalName(),
+                        'url'         => NewMeetingFile::ConvertUploadPathToUrl($url),
+                    ];
+                    NewMeetingFile::create($meetFile);
+                }
             }
 
             DB::commit();
