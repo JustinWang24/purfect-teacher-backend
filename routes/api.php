@@ -980,6 +980,13 @@ Route::prefix('meeting')->middleware('auth:api')->group(function(){
     // 已完成-签到记录
     Route::get('/signInRecord','Api\OA\NewMeetingController@signInRecord')
         ->name('api.meeting.signInRecord');
-    //
-
+    // 签到二维码
+    Route::get('/signInQrCode','Api\OA\NewMeetingController@signInQrCode')
+        ->name('api.meeting.signInQrCode');
+    // 签退二维码
+    Route::get('/signOutQrCode','Api\OA\NewMeetingController@signOutQrCode')
+        ->name('api.meeting.signOutQrCode');
+    // 我创建的-会议纪要
+    Route::get('/myMeetSummary','Api\OA\NewMeetingController@myMeetSummary')
+        ->name('api.meeting.myMeetSummary');
 });
