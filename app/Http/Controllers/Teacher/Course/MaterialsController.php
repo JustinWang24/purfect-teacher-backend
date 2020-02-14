@@ -36,12 +36,6 @@ class MaterialsController extends Controller
         $this->dataForView['course'] = $course;
         $this->dataForView['teacher'] = $teacher;
 
-        $helper = new IndexerHelper($course);
-
-        $items = $helper->getCurrentIndexByTeacher($teacher);
-
-//        dump($items);
-
         return view('teacher.course.materials.manager', $this->dataForView);
     }
 

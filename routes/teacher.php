@@ -164,4 +164,39 @@ Route::prefix('teacher')->group(function () {
     // 使用列表
     Route::get('/code-list','Code\CodeController@list')
         ->name('teacher.code.list');
+
+    // 为前端刘杨开发所设定的新路由，配合新的教师PC端需求
+    Route::prefix('ly')->group(function (){
+        Route::prefix('home')->group(function (){
+            // 消息中心
+            Route::get('message-center','LY\HomeController@message_center')
+                ->name('teacher.ly.home.message-center');
+            // 校园新闻
+            Route::get('school-news','LY\HomeController@school_news')
+                ->name('teacher.ly.home.school-news');
+        });
+        Route::prefix('oa')->group(function (){
+            // 通知/公告/检查
+            Route::get('notices-center','LY\OaController@notices_center')
+                ->name('teacher.ly.oa.notices-center');
+            // 日志
+            Route::get('logs','LY\OaController@logs')
+                ->name('teacher.ly.oa.logs');
+            // 内部信
+            Route::get('internal-messages','LY\OaController@internal_messages')
+                ->name('teacher.ly.oa.internal-messages');
+            // 会议
+            Route::get('meetings','LY\OaController@meetings')
+                ->name('teacher.ly.oa.meetings');
+            // 任务
+            Route::get('tasks','LY\OaController@tasks')
+                ->name('teacher.ly.oa.tasks');
+            // 申请
+            Route::get('applications','LY\OaController@applications')
+                ->name('teacher.ly.oa.applications');
+            // 审批
+            Route::get('approvals','LY\OaController@approvals')
+                ->name('teacher.ly.oa.approvals');
+        });
+    });
 });

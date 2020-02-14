@@ -29,17 +29,63 @@
                     <a href="{{ route('home') }}" class="nav-link nav-toggle">
                         <i class="material-icons">home</i>
                         <span class="title">首页</span>
+                        <span class="arrow"></span>
                     </a>
                     <ul class="sub-menu">
                         <li class="nav-item active">
-                            <a href="{{ route('teacher.scenery.index') }}" class="nav-link ">
-                                <span class="title">校园相册</span>
+                            <a href="{{ route('teacher.ly.home.message-center') }}" class="nav-link">
+                                <span class="title">消息中心</span>
                                 <span class="selected"></span>
                             </a>
                         </li>
                         <li class="nav-item ">
-                            <a href="{{ route('teacher.scenery.profile') }}" class="nav-link ">
-                                <span class="title">学校简介</span>
+                            <a href="{{ route('teacher.ly.home.school-news') }}" class="nav-link">
+                                <span class="title">校园新闻</span>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+
+                <li class="nav-item">
+                    <a href="{{ route('home') }}" class="nav-link nav-toggle">
+                        <i class="material-icons">home</i>
+                        <span class="title">办公</span>
+                        <span class="arrow"></span>
+                    </a>
+                    <ul class="sub-menu">
+                        <li class="nav-item">
+                            <a href="{{ route('teacher.ly.oa.notices-center') }}" class="nav-link ">
+                                <span class="title">通知/公告/检查</span>
+                            </a>
+                        </li>
+                        <li class="nav-item ">
+                            <a href="{{ route('teacher.ly.oa.logs') }}" class="nav-link ">
+                                <span class="title">日志</span>
+                            </a>
+                        </li>
+                        <li class="nav-item ">
+                            <a href="{{ route('teacher.ly.oa.internal-messages') }}" class="nav-link ">
+                                <span class="title">内部信</span>
+                            </a>
+                        </li>
+                        <li class="nav-item ">
+                            <a href="{{ route('teacher.ly.oa.meetings') }}" class="nav-link ">
+                                <span class="title">会议</span>
+                            </a>
+                        </li>
+                        <li class="nav-item ">
+                            <a href="{{ route('teacher.ly.oa.tasks') }}" class="nav-link ">
+                                <span class="title">任务</span>
+                            </a>
+                        </li>
+                        <li class="nav-item ">
+                            <a href="{{ route('teacher.ly.oa.applications') }}" class="nav-link ">
+                                <span class="title">申请</span>
+                            </a>
+                        </li>
+                        <li class="nav-item ">
+                            <a href="{{ route('teacher.ly.oa.approvals') }}" class="nav-link ">
+                                <span class="title">审批</span>
                             </a>
                         </li>
                     </ul>
@@ -57,7 +103,7 @@
                         <i class="material-icons">store</i>
                         <span class="title">考试管理</span>
                         <span class="selected"></span>
-                        <span class="arrow open"></span>
+                        <span class="arrow"></span>
                     </a>
                     <ul class="sub-menu">
                         <li class="nav-item active">

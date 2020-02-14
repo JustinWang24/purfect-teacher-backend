@@ -16,7 +16,6 @@ Vue.use(ElementUI);
 
 // 拖拽
 
-
 /**
 
 * The following block of code may be used to automatically register your
