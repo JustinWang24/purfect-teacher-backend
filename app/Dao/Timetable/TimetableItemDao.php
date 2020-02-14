@@ -823,4 +823,33 @@ class TimetableItemDao
         })->select($field)->get();
     }
 
+    /**
+     * 根据给定的时间, 课节 获取当天所有的课程
+     * @param $user
+     * @param $time
+     * @param $timeSlots
+     * @return mixed
+     */
+    public function getTimetableItemByUserOrTime($user, $time, $timeSlots)
+    {
+        $schoolDao = new SchoolDao;
+        $school = $schoolDao->getSchoolById($user->getSchoolId());
+        $configuration = $school->configuration;
+        $date = Carbon::parse($time);
+        // 根据给的时间 获取 学年, 学期,
+        $year = $configuration->getSchoolYear($date);
+        $month = Carbon::parse($date)->month;
+        $term = $configuration->guessTerm($month);
+        $weekDayIndex = Carbon::parse($date)->dayOfWeek;
+        $map = [
+            ['school_id','=', $user->getSchoolId()],
+            ['year', '=', $year],
+            ['term', '=', $term],
+            ['weekday_index', '=', $weekDayIndex],
+            ['published', '=', 1],
+        ];
+
+        return TimetableItem::where($map)->whereIn('time_slot_id', $timeSlots)->groupBy('time_slot_id')->get();
+    }
+
 }
