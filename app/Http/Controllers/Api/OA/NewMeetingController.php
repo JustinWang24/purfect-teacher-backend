@@ -208,6 +208,7 @@ class NewMeetingController extends Controller
         }
 
         $result = [
+            'meet_id' => $info->id,
             'meet_title' => $info->meet_title,
             'room' => $info->room_id? $info->room->name : $info->room_text,
             'meet_time' => $info->getMeetTime(),
@@ -216,7 +217,8 @@ class NewMeetingController extends Controller
             'signin_time' => $info->getSignInTime(),
             'signout_time' => $info->getSignOutTime(),
             'meet_content' => $info->meet_content,
-            'fields' => $fields
+            'fields' => $fields,
+            'cause' => $info->cause,
         ];
         return JsonBuilder::Success($result);
     }
@@ -370,6 +372,11 @@ class NewMeetingController extends Controller
     }
 
 
+    /**
+     * 我创建的-签到记录
+     * @param MeetingRequest $request
+     * @return string
+     */
     public function mySignInRecord(MeetingRequest $request) {
         $meetId = $request->getMeetId();
         $dao = new NewMeetingDao();
