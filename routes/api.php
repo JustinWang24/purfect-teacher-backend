@@ -967,6 +967,9 @@ Route::prefix('meeting')->middleware('auth:api')->group(function(){
     // 会议详情
     Route::get('/meetDetails','Api\OA\NewMeetingController@meetDetails')
         ->name('api.meeting.meetDetails');
+    // 待完成-会议签到
+    Route::get('/meetSignIn','Api\OA\NewMeetingController@meetSignIn')
+        ->name('api.meeting.meetSignIn');
     // 已完成-获取会议纪要
     Route::get('/getMeetSummary','Api\OA\NewMeetingController@getMeetSummary')
         ->name('api.meeting.getMeetSummary');

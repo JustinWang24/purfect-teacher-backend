@@ -225,6 +225,56 @@ class NewMeetingController extends Controller
 
 
     /**
+     * 会议签到签退
+     * @param MeetingRequest $request
+     * @return string
+     */
+    public function meetSignIn(MeetingRequest $request) {
+        $meetId = $request->getMeetId();
+        $type = $request->getType();
+        $dao = new NewMeetingDao();
+        $info = $dao->getMeetByMeetId($meetId);
+        if(is_null($info)) {
+            return JsonBuilder::Error('该会议不存在');
+        }
+        $now = Carbon::now()->toDateTimeString();
+
+        if($type == 'signIn') {
+            $title = '会议签到';
+            if($now < $info->signin_start) {
+                $status = 1; // 待开始
+            } elseif ($now > $info->signin_start && $now < $info->signin_end) {
+                $status = 2; // 进行中
+            } else {
+                $status = 3; // 已结束
+            }
+            $time = $info->getSignInTime();
+        } else {
+            $title = '会议签退';
+            if($now < $info->signout_start) {
+                $status = 1; // 待开始
+            } elseif ($now > $info->signout_start && $now < $info->signout_end) {
+                $status = 2; // 进行中
+            } else {
+                $status = 3; // 已结束
+            }
+            $time = $info->getSignOutTime();
+        }
+
+        $data = [
+            'title' => $title,
+            'meet_title' => $info->meet_title,
+            'meet_time' => $info->getMeetTime(),
+            'signin_time' => $time,
+            'status' => $status,
+        ];
+
+        return JsonBuilder::Success($data);
+    }
+
+
+
+    /**
      * 保存会议纪要
      * @param MeetingRequest $request
      * @return string

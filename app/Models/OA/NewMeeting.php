@@ -79,7 +79,7 @@ class NewMeeting extends Model
 
 
     /**
-     * 签到时间
+     * 签退时间
      * @return string
      */
     public function getSignOutTime() {
