@@ -230,6 +230,7 @@ class NewMeetingController extends Controller
      * @return string
      */
     public function meetSignIn(MeetingRequest $request) {
+        $userId = $request->user()->id;
         $meetId = $request->getMeetId();
         $type = $request->getType();
         $dao = new NewMeetingDao();
@@ -237,6 +238,11 @@ class NewMeetingController extends Controller
         if(is_null($info)) {
             return JsonBuilder::Error('该会议不存在');
         }
+        $meetUser = $info->meetUsers->where('user_id',$userId)->first();
+        if(is_null($meetUser)) {
+            return JsonBuilder::Error('您不是参会人员');
+        }
+
         $now = Carbon::now()->toDateTimeString();
 
         if($type == 'signIn') {
@@ -248,6 +254,12 @@ class NewMeetingController extends Controller
             } else {
                 $status = 3; // 已结束
             }
+            if($meetUser->signin_status == 0) {
+                $signin_status = 0; // 未签到
+            } else {
+                $signin_status = 1; // 已签到
+            }
+
             $time = $info->getSignInTime();
         } else {
             $title = '会议签退';
@@ -258,11 +270,18 @@ class NewMeetingController extends Controller
             } else {
                 $status = 3; // 已结束
             }
+            if($meetUser->signout_status == 0) {
+                $signin_status = 0; // 未签退
+            } else {
+                $signin_status = 1; // 已签退
+            }
+
             $time = $info->getSignOutTime();
         }
 
         $data = [
             'title' => $title,
+            'signin_status' => $signin_status,
             'meet_title' => $info->meet_title,
             'meet_time' => $info->getMeetTime(),
             'signin_time' => $time,
@@ -271,6 +290,36 @@ class NewMeetingController extends Controller
 
         return JsonBuilder::Success($data);
     }
+
+
+    /**
+     * 保存签到
+     * @param MeetingRequest $request
+     * @return string
+     */
+    public function saveSignIn(MeetingRequest $request) {
+        $userId = $request->user()->id;
+        $meetId = $request->getMeetId();
+        $type = $request->getType();
+
+        $dao = new NewMeetingDao();
+        $meet = $dao->getMeetByMeetId($meetId);
+        if(is_null($meet)) {
+            return JsonBuilder::Error('该会议不存在');
+        }
+        $meetUser = $meet->meetUsers->where('user_id',$userId)->first();
+        if(is_null($meetUser)) {
+            return JsonBuilder::Error('您不是参会人员');
+        }
+
+        $result = $dao->saveSignIn($meet, $meetUser->id, $type);
+        if($result) {
+            return JsonBuilder::Success('签到成功');
+        } else {
+            return JsonBuilder::Error('签到失败');
+        }
+    }
+
 
 
 

@@ -265,6 +265,31 @@ class NewMeetingDao
     }
 
 
+    /**
+     * 签到或签退
+     * @param NewMeeting $meet
+     * @param $meetUserId
+     * @param $type
+     * @return mixed
+     */
+    public function saveSignIn(NewMeeting $meet, $meetUserId, $type) {
+        $now = Carbon::now()->toDateTimeString();
+        $map = ['id'=>$meetUserId];
+        if($type == 'signIn') {
+            if($now > $meet->signin_end) {
+                $status = 2; // 迟到
+            } else {
+                $status = 1; // 正常
+            }
+            $save = ['signin_status'=>$status, 'signin_time'=>$now];
+        } else {
+            $save = ['signout_status'=>1, 'signout_time'=>$now];
+        }
+
+        return NewMeetingUser::where($map)->update($save);
+    }
+
+
 
 
 }
