@@ -84,7 +84,7 @@ class FrontendLogic implements IPlansLoaderLogic
                     'fee'=>$row->fee,
                     'period'=>$row->major->period,
                     'seats'=>$row->seats,
-                    'enrolled'=>$row->enrolled_count,
+                    'enrolled'=>$row->applied_count,
                     'applied'=>$applied??false,
                     'hot'=>$row->hot,
                     'title'=>$row->title,

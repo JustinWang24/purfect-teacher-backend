@@ -24,4 +24,22 @@ class EvaluateTeacherRecordRequest extends MyStandardRequest
         $data['user_id'] = $this->user()->id;
         return $data;
     }
+
+
+    /**
+     * 课程表ID
+     * @return mixed
+     */
+    public function getItemId() {
+        return $this->get('item_id');
+    }
+
+
+    /**
+     * 学周
+     * @return mixed
+     */
+    public function getWeek() {
+        return $this->get('week');
+    }
 }

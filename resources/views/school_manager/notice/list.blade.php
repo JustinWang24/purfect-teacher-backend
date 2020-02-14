@@ -146,7 +146,7 @@ use App\Utils\UI\Button;
                                 <tr>
                                     <td>
                                         @foreach($val->selectedOrganizations as $so)
-{{ $so->organization->name??null }}
+{{ $so->organization->name??'全部' }}
                                         @endforeach
                                         @if($val->selectedOrganizations->count()===0)
                                             全部

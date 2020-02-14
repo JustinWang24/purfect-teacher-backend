@@ -35,11 +35,7 @@ class EvaluateTeacherRecordDao
     public function create($evaluate, $record, $student) {
         $messageBag = new MessageBag();
         // 判断是否有学生已经提交过评教
-        $map = [
-            'user_id'=>$evaluate['user_id'],'year'=>$evaluate['year'],'type'=>$evaluate['type'],
-            'school_id'=>$evaluate['school_id'],'time_slot_id'=>$evaluate['time_slot_id'],
-            'weekday_index'=>$evaluate['weekday_index'],'week'=>$evaluate['week']
-        ];
+        $map = ['time_slot_id'=>$evaluate['time_slot_id'], 'week'=>$evaluate['week']];
         $info = EvaluateTeacher::where($map)->first();
 
         try{

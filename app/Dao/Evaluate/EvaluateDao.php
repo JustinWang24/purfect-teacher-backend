@@ -4,6 +4,7 @@
 namespace App\Dao\Evaluate;
 
 
+use App\Models\Evaluate\EvaluateTeacher;
 use App\Utils\JsonBuilder;
 use App\Models\Evaluate\Evaluate;
 use App\Utils\Misc\ConfigurationTool;
@@ -107,5 +108,11 @@ class EvaluateDao
      */
     public function deleteEvaluate($id) {
         return Evaluate::where('id', $id)->delete();
+    }
+
+
+    public function getEvaluateTeacher($timeTable, $week) {
+        $map = ['time_slot_id'=>$timeTable, 'week'=>$week];
+        return EvaluateTeacher::where($map)->first();
     }
 }

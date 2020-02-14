@@ -56,15 +56,28 @@ class NoticeDao
                 ];
                 NoticeMedia::create($insert);
             }
-            // 这里假定没有"全部"这个选项， 以后处理
-            foreach ($data['selectedOrganizations'] as $selectedOrganization) {
+
+            if(isset($data['selectedOrganizations']) && count($data['selectedOrganizations'])>0){
+                // 部分人员可见
+                foreach ($data['selectedOrganizations'] as $selectedOrganization) {
+                    $insert = [
+                        'school_id'=>$data['schoolId'],
+                        'notice_id'=>$result->id,
+                        'organization_id'=>$selectedOrganization['id']
+                    ];
+                    NoticeOrganization::create($insert);
+                }
+            }
+            else{
+                // 全部人员可见
                 $insert = [
                     'school_id'=>$data['schoolId'],
                     'notice_id'=>$result->id,
-                    'organization_id'=>$selectedOrganization['id']
+                    'organization_id'=>0
                 ];
                 NoticeOrganization::create($insert);
             }
+
             DB::commit();
             return new MessageBag(JsonBuilder::CODE_SUCCESS,'创建成功', $result);
         }catch (\Exception $e) {
@@ -105,15 +118,28 @@ class NoticeDao
 
             // 重置所有的通知关联的部门机构
             NoticeOrganization::where('notice_id',$data['id'])->delete();
-            // 这里假定没有"全部"这个选项， 以后处理
-            foreach ($selectedOrganizations as $selectedOrganization) {
+
+            if(count($selectedOrganizations) > 0){
+                // 部分人员可见
+                foreach ($selectedOrganizations as $selectedOrganization) {
+                    $insert = [
+                        'school_id'=>$data['school_id'],
+                        'notice_id'=>$data['id'],
+                        'organization_id'=>$selectedOrganization['id']
+                    ];
+                    NoticeOrganization::create($insert);
+                }
+            }
+            else{
+                // 全部人员可见
                 $insert = [
                     'school_id'=>$data['school_id'],
                     'notice_id'=>$data['id'],
-                    'organization_id'=>$selectedOrganization['id']
+                    'organization_id'=>0
                 ];
                 NoticeOrganization::create($insert);
             }
+
 
             DB::commit();
             return new MessageBag(JsonBuilder::CODE_SUCCESS,'创建成功', Notice::where('id', $data['id'])->first());//?update 后如何直接返回对象

@@ -57,4 +57,30 @@ class TimeToolTest extends TestCase
         $bag = GradeAndYearUtil::IdNumberToBirthday($id);
         $this->assertEquals('身份证号码显示您的年龄只有4岁, 请查证再输入',$bag->getMessage());
     }
+
+    public function testItCanGetRightYearAndTermByAnyGivenDate(){
+        $date1 = Carbon::createFromFormat('Y-m-d', '2019-12-30');
+        $result = GradeAndYearUtil::GetYearAndTerm($date1);
+
+        $this->assertEquals(2019,$result['year']);
+        $this->assertEquals(1,$result['term']);
+
+        $date2 = Carbon::createFromFormat('Y-m-d', '2020-01-30');
+        $result = GradeAndYearUtil::GetYearAndTerm($date2);
+
+        $this->assertEquals(2019,$result['year']);
+        $this->assertEquals(1,$result['term']);
+
+        $date3 = Carbon::createFromFormat('Y-m-d', '2020-05-30');
+        $result = GradeAndYearUtil::GetYearAndTerm($date3);
+
+        $this->assertEquals(2019,$result['year']);
+        $this->assertEquals(2,$result['term']);
+
+        $date3 = Carbon::createFromFormat('Y-m-d', '2020-09-30');
+        $result = GradeAndYearUtil::GetYearAndTerm($date3);
+
+        $this->assertEquals(2020,$result['year']);
+        $this->assertEquals(1,$result['term']);
+    }
 }

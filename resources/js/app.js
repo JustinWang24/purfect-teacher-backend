@@ -46,6 +46,9 @@ Vue.component('node', require('./components/pipeline/Node.vue').default);      /
 Vue.component('notification-item', require('./components/message/NotificationItem.vue').default);      // 教材表单
 Vue.component('organizations-selector', require('./components/organization/OrganizationsSelector').default);      // 可见范围选择器
 
+// 仿 Moodle 的教学管理功能所用的组件
+Vue.component('course-indexer', require('./components/moodle/teacher/CourseIndexer').default);      // 可见范围选择器
+
 require('./includes/backend/school_calendar_app'); // 后台: 校历的管理
 require('./includes/backend/notice_manager_app'); // 后台: Notice 的管理
 require('./includes/backend/banner_manager_app'); // 后台: Banner 的管理

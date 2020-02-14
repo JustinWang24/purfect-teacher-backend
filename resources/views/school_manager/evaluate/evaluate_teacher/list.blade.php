@@ -34,7 +34,7 @@
                                     @foreach($list as $key => $val)
                                         <tr>
                                             <td>{{ $key +1 }}</td>
-                                            <td>{{ $val->user->name }}</td>
+                                            <td>{{ $val->user->name??null }}</td>
                                             <td>{{ $val->year }} 学年</td>
                                             <td>{{ $val->typeText() }}</td>
                                             <td>{{ $val->score }}</td>

@@ -166,7 +166,7 @@ if(document.getElementById('school-calendar-app')){
             },
             _locateEvent: function(day){
                 let result = null;
-                _.each(this.events, item => {
+                this.events.forEach(item => {
                     if(day === item.event_time){
                         result = item;
                     }

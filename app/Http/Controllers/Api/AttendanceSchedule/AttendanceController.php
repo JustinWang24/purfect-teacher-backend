@@ -258,7 +258,7 @@ class AttendanceController extends Controller
         $data['arrive_time'] = '';
         $data['arrive_type'] = '';
         if(!empty($isArrive)) {
-            $data['arrive_time'] = $isArrive->created_at;
+            $data['arrive_time'] = $isArrive->created_at->format('Y-m-d H:i');
             $data['arrive_type'] = $isArrive->typeText();
         }
 

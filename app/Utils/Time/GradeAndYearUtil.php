@@ -38,6 +38,29 @@ class GradeAndYearUtil
     }
 
     /**
+     * 对于任意给定的日期，都可以返回正确的学年与学期
+     * @param Carbon $date
+     * @return array
+     */
+    public static function GetYearAndTerm(Carbon $date){
+        $year = $date->year;
+        $term = 1;
+        if($date->month >= 9){
+            // 不变
+        }
+        elseif ($date->month < 9 && $date->month > 2){
+            $year = $year - 1;
+            $term = 2;
+        }
+        elseif ($date->month <= 2){
+            $year = $year - 1;
+        }
+        return [
+            'year'=>$year,'term'=>$term
+        ];
+    }
+
+    /**
      * 获取所有的年级年份
      * @param int $num
      * @return array
