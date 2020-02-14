@@ -26,10 +26,10 @@
                 </li>
 
                 <li class="nav-item start">
-                    <a href="{{ route('home') }}" class="nav-link nav-toggle">
+                    <a href="{{ route('home') }}" class="nav-link">
                         <i class="material-icons">home</i>
                         <span class="title">首页</span>
-                        <span class="arrow"></span>
+                        <span class="arrow nav-toggle"></span>
                     </a>
                     <ul class="sub-menu">
                         <li class="nav-item active">
@@ -47,10 +47,10 @@
                 </li>
 
                 <li class="nav-item">
-                    <a href="{{ route('home') }}" class="nav-link nav-toggle">
+                    <a href="{{ route('teacher.ly.oa.index') }}" class="nav-link">
                         <i class="material-icons">home</i>
                         <span class="title">办公</span>
-                        <span class="arrow"></span>
+                        <span class="arrow nav-toggle"></span>
                     </a>
                     <ul class="sub-menu">
                         <li class="nav-item">
@@ -86,6 +86,26 @@
                         <li class="nav-item ">
                             <a href="{{ route('teacher.ly.oa.approvals') }}" class="nav-link ">
                                 <span class="title">审批</span>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+
+                <li class="nav-item">
+                    <a href="{{ route('teacher.ly.assistant.index') }}" class="nav-link">
+                        <i class="material-icons">home</i>
+                        <span class="title">助手</span>
+                        <span class="arrow nav-toggle"></span>
+                    </a>
+                    <ul class="sub-menu">
+                        <li class="nav-item">
+                            <a href="{{ route('teacher.ly.assistant.check-in') }}" class="nav-link ">
+                                <span class="title">签到</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{ route('teacher.ly.assistant.evaluation') }}" class="nav-link ">
+                                <span class="title">评分</span>
                             </a>
                         </li>
                     </ul>

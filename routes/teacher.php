@@ -175,7 +175,21 @@ Route::prefix('teacher')->group(function () {
             Route::get('school-news','LY\HomeController@school_news')
                 ->name('teacher.ly.home.school-news');
         });
+        Route::prefix('assistant')->group(function (){
+            // 首页
+            Route::get('index','LY\AssistantController@index')
+                ->name('teacher.ly.assistant.index');
+
+            Route::get('check-in','LY\AssistantController@check_in')
+                ->name('teacher.ly.assistant.check-in');
+
+            Route::get('evaluation','LY\AssistantController@evaluation')
+                ->name('teacher.ly.assistant.evaluation');
+        });
         Route::prefix('oa')->group(function (){
+            // 首页
+            Route::get('index','LY\OaController@index')
+                ->name('teacher.ly.oa.index');
             // 通知/公告/检查
             Route::get('notices-center','LY\OaController@notices_center')
                 ->name('teacher.ly.oa.notices-center');
