@@ -949,3 +949,53 @@ Route::prefix('study')->middleware('auth:api')->group(function(){
     Route::any('/home-page', 'Api\Study\IndexController@index')
         ->name('api.study.home-page');
 });
+
+
+// 新的会议
+Route::prefix('meeting')->middleware('auth:api')->group(function(){
+    // 会议设置
+    Route::get('/meeting-set', 'Api\OA\NewMeetingController@meetingSet')
+        ->name('api.meeting.meeting-set');
+    // 创建会议
+    Route::post('/addMeeting','Api\OA\NewMeetingController@addMeeting')
+        ->name('api.meeting.addMeeting');
+    // 待完成
+    Route::get('/unfinished','Api\OA\NewMeetingController@unfinished')
+        ->name('api.meeting.unfinished');
+    // 已完成
+    Route::get('/accomplish','Api\OA\NewMeetingController@accomplish')
+        ->name('api.meeting.accomplish');
+    // 自己创建的
+    Route::get('/oneselfCreate','Api\OA\NewMeetingController@oneselfCreate')
+        ->name('api.meeting.oneselfCreate');
+    // 会议详情
+    Route::get('/meetDetails','Api\OA\NewMeetingController@meetDetails')
+        ->name('api.meeting.meetDetails');
+    // 待完成-会议签到
+    Route::get('/meetSignIn','Api\OA\NewMeetingController@meetSignIn')
+        ->name('api.meeting.meetSignIn');
+    // 保存签到签退
+    Route::get('/saveSignIn','Api\OA\NewMeetingController@saveSignIn')
+        ->name('api.meeting.saveSignIn');
+    // 已完成-获取会议纪要
+    Route::get('/getMeetSummary','Api\OA\NewMeetingController@getMeetSummary')
+        ->name('api.meeting.getMeetSummary');
+    // 已完成-保存会议纪要
+    Route::post('/saveMeetSummary','Api\OA\NewMeetingController@saveMeetSummary')
+        ->name('api.meeting.saveMeetSummary');
+    // 已完成-签到记录
+    Route::get('/signInRecord','Api\OA\NewMeetingController@signInRecord')
+        ->name('api.meeting.signInRecord');
+    // 签到二维码
+    Route::get('/signInQrCode','Api\OA\NewMeetingController@signInQrCode')
+        ->name('api.meeting.signInQrCode');
+    // 签退二维码
+    Route::get('/signOutQrCode','Api\OA\NewMeetingController@signOutQrCode')
+        ->name('api.meeting.signOutQrCode');
+    // 我创建的-会议纪要
+    Route::get('/myMeetSummary','Api\OA\NewMeetingController@myMeetSummary')
+        ->name('api.meeting.myMeetSummary');
+    // 我创建的-签到记录
+    Route::get('/mySignInRecord','Api\OA\NewMeetingController@mySignInRecord')
+        ->name('api.meeting.mySignInRecord');
+});
