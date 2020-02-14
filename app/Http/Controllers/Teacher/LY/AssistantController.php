@@ -29,4 +29,24 @@ class AssistantController extends Controller
     public function check_in(Request $request){
         return view('teacher.ly.assistant.check_in',$this->dataForView);
     }
+
+    public function electives(Request $request){
+        return view('teacher.ly.assistant.electives',$this->dataForView);
+    }
+
+    public function grades_manager(Request $request){
+        return view('teacher.ly.assistant.grades_manager',$this->dataForView);
+    }
+
+    public function students_manager(Request $request){
+        return view('teacher.ly.assistant.students_manager',$this->dataForView);
+    }
+
+    public function grades_check_in(Request $request){
+        return view('teacher.ly.assistant.grades_check_in',$this->dataForView);
+    }
+
+    public function grades_evaluations(Request $request){
+        return view('teacher.ly.assistant.grades_evaluations',$this->dataForView);
+    }
 }
