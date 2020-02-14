@@ -175,6 +175,7 @@ Route::prefix('teacher')->group(function () {
             Route::get('school-news','LY\HomeController@school_news')
                 ->name('teacher.ly.home.school-news');
         });
+
         Route::prefix('assistant')->group(function (){
             // 首页
             Route::get('index','LY\AssistantController@index')
@@ -185,7 +186,23 @@ Route::prefix('teacher')->group(function () {
 
             Route::get('evaluation','LY\AssistantController@evaluation')
                 ->name('teacher.ly.assistant.evaluation');
+
+            Route::get('grades-manager','LY\AssistantController@grades_manager')
+                ->name('teacher.ly.assistant.grades-manager');
+
+            Route::get('electives','LY\AssistantController@electives')
+                ->name('teacher.ly.assistant.electives');
+
+            Route::get('students-manager','LY\AssistantController@students_manager')
+                ->name('teacher.ly.assistant.students-manager');
+
+            Route::get('grades-check-in','LY\AssistantController@grades_check_in')
+                ->name('teacher.ly.assistant.grades-check-in');
+
+            Route::get('grades-evaluations','LY\AssistantController@grades_evaluations')
+                ->name('teacher.ly.assistant.grades-evaluations');
         });
+
         Route::prefix('oa')->group(function (){
             // 首页
             Route::get('index','LY\OaController@index')
