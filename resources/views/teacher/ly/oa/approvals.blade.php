@@ -1,6 +1,6 @@
 @extends('layouts.app')
 @section('content')
-    <div class="row" id="teacher-home-school-news-app">
+    <div class="row" id="teacher-oa-approvals-app">
         <div class="col-sm-12 col-md-12 col-xl-12">
             <div class="card">
                 <div class="card-head">
