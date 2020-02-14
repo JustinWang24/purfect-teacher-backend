@@ -13,6 +13,14 @@ use Illuminate\Http\Request;
 
 class OaController extends Controller
 {
+    /**
+     * 首页/消息中心 页面
+     * @param Request $request
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function index(Request $request){
+        return view('teacher.ly.oa.index',$this->dataForView);
+    }
 
     public function notices_center(Request $request){
         return view('teacher.ly.oa.notices_center',$this->dataForView);
