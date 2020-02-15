@@ -378,6 +378,16 @@ class TaskController extends Controller
     }
 
 
-
+    /**
+     * 获取任务列表
+     * @param ProjectRequest $request
+     * @return string
+     */
+    public function taskStatus(ProjectRequest $request) {
+        $userId = $request->user()->id;
+        $dao = new TaskDao();
+        $result = $dao->getTaskStatus($userId);
+        return JsonBuilder::Success($result);
+    }
 
 }

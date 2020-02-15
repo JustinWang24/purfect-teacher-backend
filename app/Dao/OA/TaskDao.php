@@ -124,7 +124,7 @@ class TaskDao
             DB::beginTransaction();
             // 修改接受任务
             $map = ['user_id'=>$userId, 'task_id'=>$taskId];
-            $status = ['status'=>ProjectTaskMember::STATUS_IN_PROGRESS];
+            $status = ['status'=>ProjectTaskMember::STATUS_IN_PROGRESS, 'not_begin'=>1];
             ProjectTaskMember::where($map)->update($status);
             // 添加日志
             $log = ['school_id'=>$schoolId, 'user_id'=>$userId,
@@ -277,5 +277,28 @@ class TaskDao
             $messageBag->setMessage('指派失败'.$e->getMessage());
         }
         return $messageBag;
+    }
+
+
+    /**
+     * 获取任务状态未读次数
+     * @param $userId
+     * @return array
+     */
+    public function getTaskStatus($userId) {
+        $notBegunMap = ['status'=>1, 'user_id'=>$userId, 'not_begin'=>0];
+        $notBegin = ProjectTaskMember::where($notBegunMap)->count();
+        $underwayMap = ['status'=>2, 'user_id'=>$userId, 'underway'=>0];
+        $underway = ProjectTaskMember::where($underwayMap)->count();
+//        $finishMap = ['status'=>2, 'user_id'=>$userId, 'underway'=>0];
+//        $finish = ProjectTaskMember::where($finishMap)->count();
+        $taskMap = ['status'=>ProjectTask::STATUS_CLOSED, 'create_user'=>$userId];
+        $myCreate = ProjectTask::where($taskMap)->count();
+        return [
+            'not_begin'=>$notBegin,
+            'underway'=>$underway,
+//            'finish'=>$finish,
+            'my_create'=>$myCreate,
+        ];
     }
 }
