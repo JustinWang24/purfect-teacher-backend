@@ -75,10 +75,16 @@ class AttendancesDetailsDao
      */
     public function getDetailByTimeTableIdAndStudentId($item, $user)
     {
-        $schoolDao = new SchoolDao;
-        $school = $schoolDao->getSchoolById($item->school_id);
         $now = Carbon::now(GradeAndYearUtil::TIMEZONE_CN);
-        $week = $school->configuration->getScheduleWeek($now)->getScheduleWeekIndex();
+        $schoolDao = new SchoolDao;
+        $school = $schoolDao->getSchoolById($user->getSchoolId());
+        $configuration = $school->configuration;
+
+        $date = Carbon::now()->toDateString();
+        $month = Carbon::parse($date)->month;
+        $term = $configuration->guessTerm($month);
+        $weeks = $configuration->getScheduleWeek($now, null, $term);
+        $week = $weeks->getScheduleWeekIndex();
         $where = [
             ['timetable_id','=',$item->id],
             ['year','=', $item->year],
@@ -111,7 +117,7 @@ class AttendancesDetailsDao
      * @return mixed
      */
     public function signInList($year, $userId, $courseId, $term) {
-        $field = ['timetable_id', 'date', 'mold', 'status'];
+        $field = ['timetable_id', 'mold', 'status'];
         $map = ['year'=>$year, 'student_id'=>$userId, 'course_id'=>$courseId, 'term'=>$term];
         return AttendancesDetail::where($map)
             ->orderBy('created_at')
@@ -206,6 +212,11 @@ class AttendancesDetailsDao
 
         $messageBag = new MessageBag();
         $info = Attendance::find($attendanceId);
+        if(empty($info)) {
+            $messageBag->setCode(JsonBuilder::CODE_ERROR);
+            $messageBag->setMessage('该签到信息不存在');
+            return $messageBag;
+        }
         try{
             DB::beginTransaction();
             foreach ($score as $key => $item) {
@@ -217,11 +228,17 @@ class AttendancesDetailsDao
                         'timetable_id' => $info['timetable_id'], 'student_id' => $item['user_id'],
                         'year' => $info['year'], 'term' => $info['term'], 'type' => AttendancesDetail::TYPE_MANUAL,
                         'week' => $info['week'], 'mold' => AttendancesDetail::MOLD_TRUANT, 'score'=>$item['score'],
-                        'weekday_index' => $info->timeTable->weekday_index, 'remark'=>$item['remark']
+                        'weekday_index' => $info->timeTable->weekday_index
                     ];
+                    if(!empty($item['remark'])) {
+                        $add['remark'] = $item['remark'];
+                    }
                     AttendancesDetail::create($add);
                 } else {
-                    $save = ['score'=>$item['score'], 'remark'=>$item['remark']];
+                    $save = ['score'=>$item['score']];
+                    if(!empty($item['remark'])) {
+                        $save['remark'] = $item['remark'];
+                    }
                     AttendancesDetail::where($map)->update($save);
                 }
             }

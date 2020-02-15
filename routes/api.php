@@ -421,10 +421,9 @@ Route::prefix('QrCode')->middleware('auth:api')->group(function () {
     // 生成学生端二维码
     Route::post('/getQrCode', 'Api\QrCode\IndexController@generate')->name('api.generate.qr.code');
     // 上课补签二维码
-    Route::post('/courseQrCode', 'Api\QrCode\IndexController@courseQrCode')->name('api.course.qr.code');
+    Route::post('/courseQrCode', 'Api\QrCode\teacherSign@courseQrCode')->name('api.course.qr.code');
     // 扫码 个人信息
     Route::post('/information', 'Api\QrCode\IndexController@information')->name('api.course.qr.information');
-
 });
 
 Route::prefix('account')->middleware('auth:api')->group(function () {
@@ -509,6 +508,28 @@ Route::prefix('attendance')->middleware('auth:api')->group(function () {
     Route::post('/start-supplement', 'Api\AttendanceSchedule\AttendanceController@startSupplement')
         ->name('api.start.supplement');
 
+    // 教师扫云班牌二维码
+    Route::post('/teacher-sweep-qr-code', 'Api\AttendanceSchedule\AttendanceController@teacherSweepQrCode')
+        ->name('api.teacher.sweep.code');
+
+     // 学生扫云班牌二维码
+    Route::post('/student-sweep-qr-code', 'Api\AttendanceSchedule\AttendanceController@studentSweepQrCode')
+        ->name('api.student.sweep.code');
+
+    // 教师上个课签到
+    Route::post('/teacher-course-sign', 'Api\AttendanceSchedule\AttendanceController@teacherSign')
+        ->name('api.teacher.course.sign');
+
+    /**
+     * 教师考勤
+     */
+    // 获取当天所有课节
+    Route::post('/get-day-course', 'Api\AttendanceSchedule\AttendanceController@getDayCourse')
+        ->name('api.get.day.course');
+
+    // 获取教师签到统计
+    Route::post('/get-teacher-statistics', 'Api\AttendanceSchedule\AttendanceController@getTeacherCourseStatistics')
+        ->name('api.get.teacher.statistics');
 
 });
 
@@ -777,8 +798,13 @@ Route::prefix('teacher/evaluation')->middleware('auth:api')->group(function(){
     // 评价学生
     Route::post('/student','Api\Evaluate\TeacherEvaluationController@students')
         ->name('api.teacher.evaluation.students');
-});
 
+    // 教师提交自己评教的业绩材料: 王越添加
+    Route::post('/save-qualification','Api\Evaluate\TeacherEvaluationController@save_qualification')
+        ->name('api.teacher.save.qualification'); // 保存业绩材料
+    Route::post('/load-qualifications','Api\Evaluate\TeacherEvaluationController@load_qualifications')
+        ->name('api.teacher.load.qualifications');// 加载业绩材料
+});
 
 
 Route::prefix('Oa')->middleware('auth:api')->group(function () {
@@ -934,4 +960,54 @@ Route::prefix('organizations')->middleware('auth:api')->group(function(){
 Route::prefix('study')->middleware('auth:api')->group(function(){
     Route::any('/home-page', 'Api\Study\IndexController@index')
         ->name('api.study.home-page');
+});
+
+
+// 新的会议
+Route::prefix('meeting')->middleware('auth:api')->group(function(){
+    // 会议设置
+    Route::get('/meeting-set', 'Api\OA\NewMeetingController@meetingSet')
+        ->name('api.meeting.meeting-set');
+    // 创建会议
+    Route::post('/addMeeting','Api\OA\NewMeetingController@addMeeting')
+        ->name('api.meeting.addMeeting');
+    // 待完成
+    Route::get('/unfinished','Api\OA\NewMeetingController@unfinished')
+        ->name('api.meeting.unfinished');
+    // 已完成
+    Route::get('/accomplish','Api\OA\NewMeetingController@accomplish')
+        ->name('api.meeting.accomplish');
+    // 自己创建的
+    Route::get('/oneselfCreate','Api\OA\NewMeetingController@oneselfCreate')
+        ->name('api.meeting.oneselfCreate');
+    // 会议详情
+    Route::get('/meetDetails','Api\OA\NewMeetingController@meetDetails')
+        ->name('api.meeting.meetDetails');
+    // 待完成-会议签到
+    Route::get('/meetSignIn','Api\OA\NewMeetingController@meetSignIn')
+        ->name('api.meeting.meetSignIn');
+    // 保存签到签退
+    Route::get('/saveSignIn','Api\OA\NewMeetingController@saveSignIn')
+        ->name('api.meeting.saveSignIn');
+    // 已完成-获取会议纪要
+    Route::get('/getMeetSummary','Api\OA\NewMeetingController@getMeetSummary')
+        ->name('api.meeting.getMeetSummary');
+    // 已完成-保存会议纪要
+    Route::post('/saveMeetSummary','Api\OA\NewMeetingController@saveMeetSummary')
+        ->name('api.meeting.saveMeetSummary');
+    // 已完成-签到记录
+    Route::get('/signInRecord','Api\OA\NewMeetingController@signInRecord')
+        ->name('api.meeting.signInRecord');
+    // 签到二维码
+    Route::get('/signInQrCode','Api\OA\NewMeetingController@signInQrCode')
+        ->name('api.meeting.signInQrCode');
+    // 签退二维码
+    Route::get('/signOutQrCode','Api\OA\NewMeetingController@signOutQrCode')
+        ->name('api.meeting.signOutQrCode');
+    // 我创建的-会议纪要
+    Route::get('/myMeetSummary','Api\OA\NewMeetingController@myMeetSummary')
+        ->name('api.meeting.myMeetSummary');
+    // 我创建的-签到记录
+    Route::get('/mySignInRecord','Api\OA\NewMeetingController@mySignInRecord')
+        ->name('api.meeting.mySignInRecord');
 });

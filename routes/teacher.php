@@ -39,8 +39,10 @@ Route::prefix('teacher')->group(function () {
     // 更新密码
     Route::any('profile/update-password', 'GradesController@update_password')
         ->name('teacher.profile.update-password');
-    Route::any('profile/edit', 'GradesController@edit')
+    Route::any('profile/edit', 'ProfileController@edit')
         ->name('teacher.profile.edit');
+    Route::any('profile/modify', 'ProfileController@modify')
+        ->name('teacher.profile.modify');
 
     //考试管理
     Route::get('exam/index', 'ExamController@index')->name('teacher.exam.index');     // 列表
@@ -162,4 +164,70 @@ Route::prefix('teacher')->group(function () {
     // 使用列表
     Route::get('/code-list','Code\CodeController@list')
         ->name('teacher.code.list');
+
+    // 为前端刘杨开发所设定的新路由，配合新的教师PC端需求
+    Route::prefix('ly')->group(function (){
+        Route::prefix('home')->group(function (){
+            // 消息中心
+            Route::get('message-center','LY\HomeController@message_center')
+                ->name('teacher.ly.home.message-center');
+            // 校园新闻
+            Route::get('school-news','LY\HomeController@school_news')
+                ->name('teacher.ly.home.school-news');
+        });
+
+        Route::prefix('assistant')->group(function (){
+            // 首页
+            Route::get('index','LY\AssistantController@index')
+                ->name('teacher.ly.assistant.index');
+
+            Route::get('check-in','LY\AssistantController@check_in')
+                ->name('teacher.ly.assistant.check-in');
+
+            Route::get('evaluation','LY\AssistantController@evaluation')
+                ->name('teacher.ly.assistant.evaluation');
+
+            Route::get('grades-manager','LY\AssistantController@grades_manager')
+                ->name('teacher.ly.assistant.grades-manager');
+
+            Route::get('electives','LY\AssistantController@electives')
+                ->name('teacher.ly.assistant.electives');
+
+            Route::get('students-manager','LY\AssistantController@students_manager')
+                ->name('teacher.ly.assistant.students-manager');
+
+            Route::get('grades-check-in','LY\AssistantController@grades_check_in')
+                ->name('teacher.ly.assistant.grades-check-in');
+
+            Route::get('grades-evaluations','LY\AssistantController@grades_evaluations')
+                ->name('teacher.ly.assistant.grades-evaluations');
+        });
+
+        Route::prefix('oa')->group(function (){
+            // 首页
+            Route::get('index','LY\OaController@index')
+                ->name('teacher.ly.oa.index');
+            // 通知/公告/检查
+            Route::get('notices-center','LY\OaController@notices_center')
+                ->name('teacher.ly.oa.notices-center');
+            // 日志
+            Route::get('logs','LY\OaController@logs')
+                ->name('teacher.ly.oa.logs');
+            // 内部信
+            Route::get('internal-messages','LY\OaController@internal_messages')
+                ->name('teacher.ly.oa.internal-messages');
+            // 会议
+            Route::get('meetings','LY\OaController@meetings')
+                ->name('teacher.ly.oa.meetings');
+            // 任务
+            Route::get('tasks','LY\OaController@tasks')
+                ->name('teacher.ly.oa.tasks');
+            // 申请
+            Route::get('applications','LY\OaController@applications')
+                ->name('teacher.ly.oa.applications');
+            // 审批
+            Route::get('approvals','LY\OaController@approvals')
+                ->name('teacher.ly.oa.approvals');
+        });
+    });
 });

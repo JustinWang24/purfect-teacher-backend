@@ -15,11 +15,23 @@ export const Util = {
      */
     GetItemById: function (id, obj) {
         let result = null;
-        obj.forEach((item) => {
-            if(id === item.id){
-                result = item;
-            }
-        });
+        if(Array.isArray(obj)){
+            // 传入的是数组
+            obj.forEach((item) => {
+                if(id === item.id){
+                    result = item;
+                }
+            });
+        }
+        else{
+            // 传入的是对象
+            const keys = Object.keys(obj);
+            keys.forEach( key => {
+                if(id === obj[key].id){
+                    result = obj[key];
+                }
+            })
+        }
         return result;
     },
     /**
@@ -31,11 +43,21 @@ export const Util = {
      */
     GetItemIndexById: function (id, obj) {
         let result = null;
-        obj.forEach((item, idx) => {
-            if(id === item.id){
-                result = idx;
-            }
-        });
+        if(Array.isArray(obj)){
+            obj.forEach((item, idx) => {
+                if(id === item.id){
+                    result = idx;
+                }
+            });
+        }
+        else{
+            const keys = Object.keys(obj);
+            keys.forEach( key => {
+                if(id === obj[key].id){
+                    result = key;
+                }
+            })
+        }
         return result;
     },
     /**
@@ -248,5 +270,8 @@ export const Util = {
             imageUpload: '/api/wysiwyg/images/upload?uuid=' + teacherUuid, // 图片上传的 Action
             imageManagerJson: '/api/wysiwyg/images/view?uuid=' + teacherUuid, // 已存在的图片的资源 URL, 返回为 json 格式
         }
+    },
+    getTeacherQualificationTypes: function(){
+        return Constants.TEACHER_QUALIFICATION_TYPES;
     }
 };

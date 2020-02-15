@@ -63,4 +63,9 @@ interface CanSendSystemNotification
      */
     public function getNextMove(): string ;
 
+    /**
+     * 必须可以拿到组织信息
+     */
+    public function getOrganizationIdArray() : array ;
+
 }

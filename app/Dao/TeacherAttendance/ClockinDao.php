@@ -43,6 +43,8 @@ class ClockinDao
             'not' =>0,//未打卡人数 全部-已打卡
             'late' => 0,//迟到人数
             'leave' => 0,//请假人数
+            'normal_list' => [],
+            'not_list' => []
         ];
         foreach ($attendanceIdArr as $attendanceId) {
             $attendance = Attendance::find($attendanceId);
@@ -52,6 +54,31 @@ class ClockinDao
             //该考勤组下已打卡人员
             $return['normal'] += $attendance->clockins()->where('day', '=', $day)->distinct()->count('user_id');
             $return['late'] += $attendance->clockins()->where('day', '=', $day)->whereIn('status', [Clockin::STATUS_LATE, Clockin::STATUS_LATER])->distinct()->count('user_id');
+
+            //总人员列表
+            $userList = UserOrganization::whereIn('organization_id', $attendance->organizations()->pluck('organization_id')->toArray())
+                ->where('title_id', '=', Title::MEMBER)->get();
+            foreach ($userList as $userOrganization) {
+                //今日打卡状态
+                $clockin = $attendance->clockins()->where(['user_id' => $userOrganization->user->id, 'day' => $day])->pluck('status', 'type')->toArray();
+                $userInfo = [
+                    'userid' => $userOrganization->user->id,
+                    'name' => $userOrganization->user->name,
+                    'avatar' => $userOrganization->user->profile->avatar,
+                    'title' => $attendance->title,
+                    'clockin' => [
+                        'using_afternoon' => $attendance->using_afternoon,
+                        'morning' => $clockin['morning'] ?? Clockin::STATUS_NONE,
+                        'afternoon' => $clockin['afternoon'] ?? Clockin::STATUS_NONE,
+                        'evening' => $clockin['evening'] ?? Clockin::STATUS_NONE
+                    ]
+                ];
+                if (empty($clockin)) {
+                    $return['not_list'][] = $userInfo;
+                }else {
+                    $return['normal_list'][] = $userInfo;
+                }
+            }
         }
 
         $return['not'] = $return['all'] - $return['normal'];

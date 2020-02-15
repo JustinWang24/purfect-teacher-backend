@@ -80,4 +80,8 @@ class SystemNotification extends Model
             Notice::TYPE_INSPECTION => self::COMMON_CATEGORY_NOTICE_INSPECTION
         ];
     }
+    public function systemNotificationsOrganizations()
+    {
+        return $this->hasMany(SystemNotificationsOrganization::class, 'system_notifications_id');
+    }
 }

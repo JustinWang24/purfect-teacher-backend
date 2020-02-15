@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\Home;
 
+use App\Dao\Affiche\CommonDao;
 use App\Dao\Banners\BannerDao;
 use App\Dao\Calendar\CalendarDao;
 use App\Dao\Misc\SystemNotificationDao;
@@ -32,6 +33,7 @@ use App\Utils\Misc\SmsFactory;
 use App\Utils\Time\CalendarWeek;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class IndexController extends Controller
 {
@@ -73,9 +75,13 @@ class IndexController extends Controller
         //首页消息获取
         $user                  = $request->user();
         $systemNotificationDao = new SystemNotificationDao();
-        $systemNotifications   = $systemNotificationDao->getNotificationByUserId($school->id, $user->id, 2);
+        $systemNotifications   = $systemNotificationDao->getNotificationByUser($school->id, $user, 2)->toArray();
+        $commonDao = new CommonDao();
+        foreach ($systemNotifications['data'] as &$systemNotification) {
+            $systemNotification['created_at'] = $commonDao->transTime3(strtotime($systemNotification['created_at']));
+        }
         //获取消息是否已读
-        $systemNotificationHasRead = $systemNotificationDao->checkNotificationHasRead($school->id, $user->id);
+        $systemNotificationHasRead = $systemNotificationDao->checkNotificationHasRead($school->id, $user);
         $result['notifications_list'] = $systemNotifications;
         $result['notifications_read'] = $systemNotificationHasRead;
 

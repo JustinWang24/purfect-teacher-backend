@@ -33,10 +33,12 @@ class SchoolConfiguration extends Model
         'winter_start_date',
         'campus_intro',
         'recruitment_intro',
+        'open_for_uploading_qualification',
     ];
 
     public $casts = [
         ConfigurationTool::KEY_SELF_STUDY_NEED_REGISTRATION => 'boolean',
+        'open_for_uploading_qualification'=>'boolean',
         'apply_elective_course_from_1'=>'datetime',
         'apply_elective_course_to_1'=>'datetime',
         'apply_elective_course_from_2'=>'datetime',

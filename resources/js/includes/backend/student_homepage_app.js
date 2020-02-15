@@ -53,6 +53,10 @@ if(document.getElementById('student-homepage-app')){
                         if(Util.isAjaxResOk(res)){
                             const idx = Util.GetItemIndexById(userFlow.id, this.flowsStartedByMe);
                             this.flowsStartedByMe.splice(idx, 1);
+                            this.$message({
+                                type:'success',
+                                message: '撤销申请操作成功!'
+                            })
                         }
                         else{
                             this.$message.error(res.data.message);

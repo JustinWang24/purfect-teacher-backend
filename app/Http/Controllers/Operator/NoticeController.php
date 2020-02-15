@@ -37,6 +37,7 @@ class NoticeController extends Controller
         $this->dataForView['data'] = $data;
         $this->dataForView['schoolId'] = $schoolId;
         $this->dataForView['userRoles'] = null;
+        $this->dataForView['inspect_types'] = (new NoticeInspectDao())->getInspectsBySchoolId($schoolId);
         return view('school_manager.notice.list', $this->dataForView);
     }
 

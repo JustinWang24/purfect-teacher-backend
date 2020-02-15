@@ -32,7 +32,8 @@ class NoticeSend
             $event->getNextMove(),
             $event->getTitle(),
             $event->getCategory(),
-            $event->getAppExtra()
+            $event->getAppExtra(),
+            $event->getOrganizationIdArray()
         );
         Log::channel('systemnotificationlog')->alert('发送系统消息进入队列了');
     }

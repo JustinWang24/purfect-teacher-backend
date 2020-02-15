@@ -36,32 +36,28 @@ class AttendancesDao
      */
     public function arrive($item, $user, $type)
     {
-
-        $attendance = Attendance::where('timetable_id', $item->id)->first();
-
         $now = Carbon::now(GradeAndYearUtil::TIMEZONE_CN);
         $schoolDao = new SchoolDao;
-        $school = $schoolDao->getSchoolById($item->school_id);
-        $week = $school->configuration->getScheduleWeek($now)->getScheduleWeekIndex();
+        $school = $schoolDao->getSchoolById($user->getSchoolId());
+        $configuration = $school->configuration;
+
+        $date = Carbon::now()->toDateString();
+        $month = Carbon::parse($date)->month;
+        $term = $configuration->guessTerm($month);
+        $weeks = $configuration->getScheduleWeek($now, null, $term);
+        $week = $weeks->getScheduleWeekIndex();
+
+        $where = [
+            'timetable_id' => $item->id,
+            'week'  => $week
+        ];
+
+        $attendance = Attendance::where($where)->first();
+
         DB::beginTransaction();
         try{
             if(empty($attendance)) {
-                $gradeUser = $item->grade->gradeUser;
-                $userIds   = $gradeUser->pluck('user_id');
-                $attendanceData = [
-                    'timetable_id'   => $item->id,
-                    'course_id'      => $item->course_id,
-                    'actual_number'  => 0,
-                    'leave_number'   => 0, // todo :: 请假总人数 创建请假表
-                    'missing_number' => count($userIds),
-                    'total_number'   => count($userIds),
-                    'year'           => $item->year,
-                    'term'           => $item->term,
-                    'grade_id'       => $item->grade_id,
-                    'teacher_id'     => $item->teacher_id,
-                    'week'           => $week,
-                ];
-                $attendance = Attendance::create($attendanceData);
+                $attendance = $this->createAttendanceData($item);
             }
             $data = [
                 'attendance_id' => $attendance->id,
@@ -76,7 +72,6 @@ class AttendancesDao
                 'mold'          => AttendancesDetail::MOLD_SIGN_IN,
                 'date'          => Carbon::now()
             ];
-
             $detailsDao = new  AttendancesDetailsDao;
             $detailsDao->add($data);
 
@@ -167,5 +162,81 @@ class AttendancesDao
     {
         return Attendance::where('id', $id)->update($data);
     }
+
+    /**
+     * 查询老师是否签到
+     * @param TimetableItem $item
+     * @param User $user
+     * @return mixed
+     */
+    public function getTeacherIsSignByItem(TimetableItem $item, $user)
+    {
+        $now = Carbon::now(GradeAndYearUtil::TIMEZONE_CN);
+        $schoolDao = new SchoolDao;
+        $school = $schoolDao->getSchoolById($user->getSchoolId());
+        $configuration = $school->configuration;
+
+        $date = Carbon::now()->toDateString();
+        $month = Carbon::parse($date)->month;
+        $term = $configuration->guessTerm($month);
+        $weeks = $configuration->getScheduleWeek($now, null, $term);
+        $week = $weeks->getScheduleWeekIndex();
+
+        $where = [
+           'timetable_id' => $item->id,
+           'week' => $week,
+        ];
+        return Attendance::where($where)->first();
+    }
+
+    /**
+     * 教师签到
+     * @param $id
+     * @return mixed
+     */
+    public function updateTeacherSignByItem($id)
+    {
+        return Attendance::where('id', $id)->update(['teacher_sign' => Attendance::TEACHER_SIGN, 'teacher_sign_time' =>
+            Carbon::now()]);
+    }
+
+    /**
+     * 创建签到总表数据
+     * @param TimetableItem $item
+     * @return mixed
+     */
+    public function createAttendanceData(TimetableItem $item)
+    {
+        $now = Carbon::now(GradeAndYearUtil::TIMEZONE_CN);
+        $schoolDao = new SchoolDao;
+        $school = $schoolDao->getSchoolById($item->school_id);
+        $configuration = $school->configuration;
+
+        $date = Carbon::now()->toDateString();
+        $month = Carbon::parse($date)->month;
+        $term = $configuration->guessTerm($month);
+        $weeks = $configuration->getScheduleWeek($now, null, $term);
+        $week = $weeks->getScheduleWeekIndex();
+
+        $gradeUser = $item->grade->gradeUser;
+        $userIds   = $gradeUser->pluck('user_id');
+        $attendanceData = [
+            'timetable_id'   => $item->id,
+            'course_id'      => $item->course_id,
+            'actual_number'  => 0,
+            'leave_number'   => 0, // todo :: 请假总人数 创建请假表
+            'missing_number' => count($userIds),
+            'total_number'   => count($userIds),
+            'year'           => $item->year,
+            'term'           => $item->term,
+            'grade_id'       => $item->grade_id,
+            'teacher_id'     => $item->teacher_id,
+            'week'           => $week,
+        ];
+
+        return Attendance::create($attendanceData);
+    }
+
+
 
 }

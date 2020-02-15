@@ -119,7 +119,7 @@
                 if(this.timeTableItem.building_id !== '' && this.timeTableItem.room_id !== ''){
                     // 获取建筑物的文本
                     const theBuildingId = this.timeTableItem.building_id;
-                    _.each(this.campuses, item => {
+                    this.campuses.forEach(item => {
                         if(item.buildings){
                             const building = Util.GetItemById(theBuildingId, item.buildings);
                             if(building){

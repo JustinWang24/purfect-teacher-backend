@@ -30,7 +30,7 @@
         <div class="top-menu">
             <ul class="nav navbar-nav pull-right">
                 <!-- start language menu -->
-                <li><a href="javascript:;" class="fullscreen-btn"><i class="fa fa-arrows-alt"></i></a></li>
+                <li style="display: none;"><a href="javascript:;" class="fullscreen-btn"><i class="fa fa-arrows-alt"></i></a></li>
 
                 <li id="file-manager-app">
                     <a class="dropdown-toggle" v-on:click="showFileManager">
@@ -72,10 +72,12 @@
                         <i class="fa fa-angle-down"></i>
                     </a>
                     <ul class="dropdown-menu dropdown-menu-default">
+                        @if(\Illuminate\Support\Facades\Auth::user()->isTeacher() || \Illuminate\Support\Facades\Auth::user()->isEmployee() )
                         <li>
-                            <a href="#">
+                            <a href="{{ route('teacher.profile.edit',['teacher'=>\Illuminate\Support\Facades\Auth::user()->id]) }}">
                                 <i class="icon-user"></i> 我的个人资料 </a>
                         </li>
+                        @endif
                         <li>
                             <a href="#">
                                 <i class="icon-directions"></i> 用户使用手册

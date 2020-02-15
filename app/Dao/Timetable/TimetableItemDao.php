@@ -246,8 +246,8 @@ class TimetableItemDao
                     'course' => $row->course->name,
                     'teacher'=> $row->teacher->name,
                     'teacher_id'=> $row->teacher_id,
-                    'building'=>$row->building->name,
-                    'room'=>$row->room->name,
+                    'building'=>$row->building->name??null,
+                    'room'=>$row->room->name??null,
                     'room_id'=>$row->room_id,
                     'id'=>$row->id,
                     'published'=>$row->published,
@@ -570,12 +570,11 @@ class TimetableItemDao
      */
     public function getCurrentItemByUser(User $user){
         $now = Carbon::now(GradeAndYearUtil::TIMEZONE_CN);
-        $now = Carbon::parse('2020-01-18 14:40:00');
+        $now = Carbon::parse('2020-01-08 14:40:00');
         $school = (new SchoolDao())->getSchoolById($user->getSchoolId());
         $currentTimeSlot = GradeAndYearUtil::GetTimeSlot($now, $school->id);
         if($currentTimeSlot && $school){
             $weekdayIndex = $now->weekday();
-
             // 当前学年
             $year = $school->configuration->getSchoolYear();
 
@@ -734,6 +733,22 @@ class TimetableItemDao
     }
 
     /**
+     * @param $courseId
+     * @param $teacherId
+     * @param $year
+     * @param $term
+     * @return Collection
+     */
+    public function getItemByGradeAndTeacherAndYear($courseId, $teacherId, $year, $term){
+        return TimetableItem::where('year',$year)
+            ->where('teacher_id',$teacherId)
+            ->where('course_id',$courseId)
+            ->where('term',$term)
+            ->distinct('teacher_id')
+            ->get();
+    }
+
+    /**
      * 上课3分钟内需要发送没有老师打卡的记录给教务处，需要一个总列表来比对
      * 获取当前时间应该上的所有课程
      */
@@ -806,6 +821,35 @@ class TimetableItemDao
             $join->on('timetable_items.time_slot_id', '=', 'time_slots.id')
                 ->where($map);
         })->select($field)->get();
+    }
+
+    /**
+     * 根据给定的时间, 课节 获取当天所有的课程
+     * @param $user
+     * @param $time
+     * @param $timeSlots
+     * @return mixed
+     */
+    public function getTimetableItemByUserOrTime($user, $time, $timeSlots)
+    {
+        $schoolDao = new SchoolDao;
+        $school = $schoolDao->getSchoolById($user->getSchoolId());
+        $configuration = $school->configuration;
+        $date = Carbon::parse($time);
+        // 根据给的时间 获取 学年, 学期,
+        $year = $configuration->getSchoolYear($date);
+        $month = Carbon::parse($date)->month;
+        $term = $configuration->guessTerm($month);
+        $weekDayIndex = Carbon::parse($date)->dayOfWeek;
+        $map = [
+            ['school_id','=', $user->getSchoolId()],
+            ['year', '=', $year],
+            ['term', '=', $term],
+            ['weekday_index', '=', $weekDayIndex],
+            ['published', '=', 1],
+        ];
+
+        return TimetableItem::where($map)->whereIn('time_slot_id', $timeSlots)->groupBy('time_slot_id')->get();
     }
 
 }

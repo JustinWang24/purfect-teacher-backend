@@ -227,7 +227,7 @@ class AttendanceController extends Controller
             ],
             'month' => $month,
         ];
-        return array_merge($return, $countList);
+        return JsonBuilder::Success(array_merge($return, $countList));
     }
 
 }

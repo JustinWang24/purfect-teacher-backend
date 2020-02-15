@@ -169,7 +169,7 @@ class CloudController extends Controller
         $dao      = new FacilityDao;
         $facility = $dao->getFacilityByNumber($code);
         if (empty($facility)) {
-            return JsonBuilder::Error('设备码错误,或设备已关闭');
+            return JsonBuilder::Success('设备码错误,或设备已关闭');
         }
         /**
          * @var  Facility $facility
@@ -183,8 +183,14 @@ class CloudController extends Controller
             return JsonBuilder::Success('暂无课程');
         }
 
-        // 二维码生成规则学校ID, 班级ID, 课时ID
-        $codeStr = 'cloud'. ',' .$item->schools_id. ',' .$item->grade_id. ',' .$item->id;
+        //二维码生成规则 二维码标识, 学校ID, 班级ID, 教师ID
+        $codeStr = base64_encode(json_encode(['app' => 'cloud',
+                                              'school_id' => $item->school_id,
+                                              'grade_id' => $item->grade_id,
+                                              'teacher_id' => $item->teacher_id,
+                                              'timetable_id' => $item->id,
+                                              'course_id' => $item->course_id,
+                                              'time' => time()]));
         $qrCode = new QrCode($codeStr);
         $qrCode->setSize(400);
         $qrCode->setLogoPath(public_path('assets/img/logo.png'));
@@ -305,7 +311,7 @@ class CloudController extends Controller
     }
 
     /**
-     * 手动签到
+     * 手动扫云班牌码签到
      * @param Request $request
      * @return string
      */
@@ -329,7 +335,7 @@ class CloudController extends Controller
         }
 
         $dao = new AttendancesDao;
-        $attendanceInfo = $dao->arrive($item, $user, AttendancesDetail::TYPE_MANUAL);
+        $attendanceInfo = $dao->arrive($item, $user, AttendancesDetail::TYPE_SWEEP_CODE);
         if($attendanceInfo) {
             return  JsonBuilder::Success('签到成功');
         } else {

@@ -34,6 +34,16 @@ use App\Utils\UI\Button;
                         <el-select v-model="notice.type" placeholder="请选择类型">
                             <el-option v-for="(ty, idx) in types" :label="ty" :value="idx" :key="idx"></el-option>
                         </el-select>
+                        <el-select v-show="showInspectTypesSelectorFlag"
+                                v-model="notice.inspect_id"
+                                placeholder="请选择检查类型">
+                            <el-option
+                                    v-for="item in inspectTypes"
+                                    :key="item.id"
+                                    :label="item.name"
+                                    :value="item.id">
+                            </el-option>
+                        </el-select>
                     </el-form-item>
 
                     <el-form-item label="标题">
@@ -136,11 +146,17 @@ use App\Utils\UI\Button;
                                 <tr>
                                     <td>
                                         @foreach($val->selectedOrganizations as $so)
-{{ $so->organization->name??null }}
+{{ $so->organization->name??'全部' }}
                                         @endforeach
+                                        @if($val->selectedOrganizations->count()===0)
+                                            全部
+                                        @endif
                                     </td>
                                     <td>{{ $val->title }}</td>
-                                    <td>{{ $val->getTypeText() }}</td>
+                                    <td>
+                                        {{ $val->getTypeText() }}
+                                        {{ $val->getInspectTypeText() }}
+                                    </td>
                                     <td>
                                         <img src="{{ $val->image }}" width="200">
                                     </td>
@@ -149,7 +165,7 @@ use App\Utils\UI\Button;
                                         @if($val['status'] == 1)
                                         <span class="label label-sm label-success"> 已发布 </span>
                                             @else
-                                        <span class="label label-sm label-danger"> 未发布 </span>
+                                        <span class="label label-sm label-danger"> 暂不发布 </span>
                                         @endif
                                     </td>
                                      <td class="text-center">
@@ -170,5 +186,6 @@ use App\Utils\UI\Button;
 <div id="app-init-data-holder"
      data-school="{{ session('school.id') }}"
      data-types="{{ json_encode(\App\Models\Notices\Notice::allType()) }}"
+     data-inspecttypes="{{ json_encode($inspect_types->toArray()) }}"
 ></div>
 @endsection

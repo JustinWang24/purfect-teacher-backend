@@ -219,6 +219,7 @@ class RegistrationInformaticsDao
         if ($user) {
             $userProfile = $data;
             $userProfile['uuid'] = $data['uuid'];
+            $userProfile['api_token'] = $data['uuid'];
             $userProfile['user_id'] = $user->id;
 //            $userProfile['device']  = 0;
             $userProfile['year'] = $plan->year; // 这个应该是从招生中的入学年级来
