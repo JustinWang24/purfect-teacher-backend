@@ -131,6 +131,15 @@ export const Util = {
         }
         return false;
     },
+    // 验证日期格式
+    checkData: function (str) {
+        var a = /^(\d{4})-(\d{2})-(\d{2})$/
+        if (!a.test(str)){
+            return false
+        } else {
+            return true
+        }
+    },
     pageScrollTo: function(pos){
         // 移动到页面顶部
         document.body.scrollTop = document.documentElement.scrollTop = pos;

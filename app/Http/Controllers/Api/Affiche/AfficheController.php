@@ -143,8 +143,8 @@ class AfficheController extends Controller
                 // 视频添加信息
                 $videoData['iche_id'] = $icheid;
                 $videoData['user_id'] = $user_id;
-                $videoData['video_url'] = $iche_cover; // 视频地址
-                $videoData['cover_url'] = $iche_video; // 视频封面图
+                $videoData['video_url'] = $iche_video; // 视频地址
+                $videoData['cover_url'] = $iche_cover; // 视频封面图
                 $afficheVideoObj->addAfficheVideoInfo($videoData);
             }
 
