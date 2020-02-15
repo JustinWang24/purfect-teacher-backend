@@ -102,6 +102,11 @@ class NewMeetingController extends Controller
         $result = pageReturn($return);
         $data = [];
         foreach ($result['list'] as $key => $item) {
+            if($item->status == NewMeetingUser::UN_SIGNIN) {
+                $status = $item->status;
+            } else {
+                $status = NewMeetingUser::NORMAL_SIGNIN;
+            }
             $data[] = [
                 'meet_id' => $item->meet_id,
                 'meet_title' => $item->meet_title,
@@ -109,7 +114,7 @@ class NewMeetingController extends Controller
                 'room' => $item->room_id ? $item->room->name : $item->room_text,
                 'meet_time' => $item->getMeetTime(),
                 'signin_time' =>$item->getSignInTime(),
-                'signin_status' => $item->status
+                'signin_status' => $status,
             ];
         }
         $result['list'] = $data;
