@@ -53,6 +53,7 @@ require('./includes/backend/teacher_homepage_app'); // 后台: 教师的首页
 require('./includes/backend/student_homepage_app'); // 后台: 学生的首页
 require('./includes/backend/organization_app'); // 组织架构管理
 require('./includes/backend/news_list_manager'); // 动态新闻的管理
+require('./includes/backend/welcome_manager'); // 迎新管理
 require('./includes/backend/contacts_list_manager'); // 通讯录
 require('./includes/backend/textbook_manager'); // 教材
 require('./includes/backend/timeslots_manager'); // 作息时间段管理
@@ -80,6 +81,7 @@ require('./includes/backend/course/materials_manager'); // 课件管理程序
 
 require('./includes/backend/course/course_manager'); // 学校的课程管理
 require('./includes/backend/messager/notifications_at_top'); // 顶部的消息通知应用
+
 
 require('./includes/pipeline/flow_open_app'); // 用户启动流程
 require('./includes/pipeline/flow_view_history_app'); // 用户查看流程详情

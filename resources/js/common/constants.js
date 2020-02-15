@@ -117,6 +117,16 @@ export const Constants = {
             MOVE_UP_SECTION: '/school_manager/contents/news/move-up-section',
             MOVE_DOWN_SECTION: '/school_manager/contents/news/move-down-section',
         },
+        WELCOMES: {
+            SAVE_BASE_INFO: '/manager_welcome/welcome-config/save-base-info',
+            SAVE_USER_INFO: '/manager_welcome/welcome-config/save-user-info',
+            SAVE_REPORT_CONFIRM_INFO: '/manager_welcome/welcome-config/save-report-confirm-info',
+            SAVE_REPORT_BILL_INFO: '/manager_welcome/welcome-config/save-report-bill-info',
+            GET_REPORT_LIST_INFO: '/manager_welcome/welcome-config/get-report-list-info',
+            DELETE_REPORT_INFO: '/manager_welcome/welcome-config/delete-report-info',
+            UP_REPORT_INFO: '/manager_welcome/welcome-config/up-report-info',
+            DOWN_REPORT_INFO: '/manager_welcome/welcome-config/down-report-info',
+        },
         CALENDAR: {
             SAVE: '/school_manager/calendar/save',
             DELETE: '/school_manager/calendar/delete',
