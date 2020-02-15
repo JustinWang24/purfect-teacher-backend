@@ -49,3 +49,21 @@ export function deleteMaterial(id, affix) {
         {id: id, version:Constants.VERSION}
     );
 }
+
+/**
+ * 加载课件
+ * @param index
+ * @param teacher
+ * @param course
+ * @param affix
+ */
+export function loadLectureByIndex(index, teacher, course, affix) {
+    const url = Util.buildUrl(Constants.API.COURSE_MATERIAL.LOAD_LECTURE);
+    if(Util.isDevEnv()){
+        return axios.get(url, affix);
+    }
+    return axios.post(
+        url,
+        {index: index, teacher:teacher, course:course, version:Constants.VERSION}
+    );
+}
