@@ -1,6 +1,6 @@
 // 学校的课程管理
 import {Util} from "../../../common/utils";
-import {saveMaterial, loadMaterial,deleteMaterial} from '../../../common/course_material';
+import {saveMaterial, loadMaterial,deleteMaterial, loadLectureByIndex} from '../../../common/course_material';
 
 $(document).ready(function(){
     if(document.getElementById('course-materials-manager-app')){
@@ -12,7 +12,10 @@ $(document).ready(function(){
                     showMaterialForm: true, // 是否显示富文本编辑器
                     course:null,
                     teacher:null,
-                    notes:null,
+                    notes:{
+                        teacher_notes:''
+                    },
+                    logs:[], // 当前课程的教学日志
                     configOptions:{},
                     types:[],
                     courseMaterialModel:{
@@ -25,32 +28,52 @@ $(document).ready(function(){
                         url: null,
                         media_id: 0
                     },
+                    logModel:{
+                        id:null,
+                        title: '',
+                        content: '',
+                    },
+                    // 目前被加载的课件材料
+                    lecture: null,
                     // 通过文件管理器来选择文件的功能所需
                     showFileManagerFlag: false,
+                    // 教学日志表单控制
+                    showLogEditor: false,
                     selectedFile:null,
                     // 导航菜单用
-                    activeIndex: '0',
+                    activeIndex: '1',
                     // 课时选择器
-                    courseIndexerVisible: false,
+                    myCourseVisible: false, // 我的课程
+                    courseIndexerVisible: false, // 选择课件
                 }
             },
             created: function(){
                 const dom = document.getElementById('app-init-data-holder');
                 this.course = JSON.parse(dom.dataset.course);
                 this.teacher = JSON.parse(dom.dataset.teacher);
-                this.notes = JSON.parse(dom.dataset.notes);
                 this.configOptions = Util.getWysiwygGlobalOption(this.teacher.uuid);
                 this.courseMaterialModel.teacher_id = this.teacher.id;
                 this.courseMaterialModel.course_id = this.course.id;
+                // 加载教师的notes
+                axios.post(
+                    '/teacher/course/materials/load-teacher-note',
+                    {teacher: this.teacher.id, course_id: this.course.id}
+                ).then(res => {
+                    if(Util.isAjaxResOk(res)){
+                        this.notes = res.data.data.note;
+                        this.logs = res.data.data.logs;
+                    }
+                });
             },
             methods:{
                 // 导航菜单的处理
                 handleMenuSelect: function(key, keyPath){
                     console.log(key);
                     console.log(keyPath);
-                    if(key === '1'){
+                    if(key === '2'){
                         this.courseIndexerVisible = true;
                     }
+                    this.activeIndex = key;
                 },
                 // 导航菜单处理结束
                 /**
@@ -59,9 +82,71 @@ $(document).ready(function(){
                 switchCourseIndex: function(payload){
                     this.courseIndexerVisible = false;
                     // 去加载当前课程的第 payload.index 节课的数据
+                    loadLectureByIndex(payload.index, this.teacher.id, this.course.id)
+                        .then(res => {
+                            if(Util.isAjaxResOk(res)){
+                                this.lecture = res.data.data.lecture;
+                            }
+                        })
                 },
                 showNotesEditor: function(){
                     this.showEditor = !this.showEditor;
+                },
+                saveNotes: function(){
+                    axios.post(
+                        '/teacher/course/materials/save-teacher-note',
+                        {notes: this.notes}
+                    ).then(res => {
+                        if(Util.isAjaxResOk(res)){
+                            this.showEditor = false;
+                            this.$message({
+                                type:'success',
+                                message:'课程简介保存成功'
+                            })
+                        }
+                    });
+                },
+                showLogEditorHandler: function(log){
+                    if(Util.isEmpty(log)){
+                        // 新增
+                        this.logModel.id = null;
+                        this.logModel.title = '';
+                        this.logModel.content = '';
+                    }else{
+                        this.logModel.id = log.id;
+                        this.logModel.title = log.title;
+                        this.logModel.content = log.content;
+                    }
+                    this.showLogEditor = true;
+                },
+                saveLog: function(){
+                    axios.post(
+                        '/teacher/course/materials/save-log',
+                        {log: this.logModel, teacher: this.teacher.id, course_id: this.course.id}
+                    ).then(res => {
+                        if(Util.isAjaxResOk(res)){
+                            this.showLogEditor = false;
+                            this.$message({
+                                type:'success',
+                                message:'教学日志保存成功'
+                            });
+                            if(Util.isEmpty(this.logModel.id)){
+                                // 新增
+                                this.logs.unshift({
+                                    id: res.data.data.id,
+                                    title: this.logModel.title,
+                                    content: this.logModel.content
+                                })
+                            }else{
+                                const idx = Util.GetItemIndexById(this.logModel.id, this.logs);
+                                this.logs[idx].title = this.log.title;
+                                this.logs[idx].content = this.log.content;
+                            }
+                        }
+                    });
+                },
+                deleteLog: function(log){
+                    console.log(log);
                 },
                 editMaterial: function (id) {
                     loadMaterial(id).then(res => {

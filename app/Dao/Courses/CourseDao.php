@@ -14,6 +14,7 @@ use App\Models\Courses\CourseArrangement;
 use App\Models\Courses\CourseMajor;
 use App\Models\Courses\CourseMaterial;
 use App\Models\Courses\CourseTeacher;
+use App\Models\Courses\TeachingLog;
 use App\Models\ElectiveCourses\CourseElective;
 use App\Utils\JsonBuilder;
 use App\Utils\ReturnData\IMessageBag;
@@ -42,17 +43,54 @@ class CourseDao
     }
 
     /**
+     * 获取教学日志
+     * @param $courseId
+     * @param $teacherId
+     * @param $skip
+     * @return Collection
+     */
+    public function getTeachingLogs($courseId, $teacherId, $skip){
+        return TeachingLog::select(['id','title','content','updated_at'])
+            ->where('course_id',$courseId)
+            ->where('teacher_id',$teacherId)
+            ->orderBy('id','desc')
+            ->skip($skip)
+            ->take(10)
+            ->get();
+    }
+
+    /**
+     * @param $data
+     * @return TeachingLog
+     */
+    public function saveTeachingLog($data){
+        $log = null;
+        if(empty($data['id'])){
+            $log = TeachingLog::create($data);
+        }
+        else{
+            TeachingLog::where('id',$data['id'])->update($data);
+            $log = TeachingLog::find($data['id']);
+        }
+        return $log;
+    }
+
+    /**
      * 根据课程和老师, 获取课件的列表
      * @param $course
      * @param $teacher
+     * @param $index
      * @return Collection
      */
-    public function getCourseMaterials($course, $teacher){
-        return CourseMaterial::where('course_id',$course)
+    public function getCourseMaterials($course, $teacher, $index = null){
+        $query = CourseMaterial::where('course_id',$course)
             ->where('teacher_id',$teacher)
             ->orderBy('index','asc')
-            ->orderBy('type','asc')
-            ->get();
+            ->orderBy('type','asc');
+        if($index){
+            $query->where('index',$index);
+        }
+        return $query->get();
     }
 
     /**
