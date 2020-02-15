@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Api\AttendanceSchedule;
 
 
 use App\Dao\AttendanceSchedules\AttendanceCourseTeacherDao;
+use App\Dao\Schools\SchoolDao;
+use App\Dao\Timetable\TimeSlotDao;
 use App\Http\Requests\MyStandardRequest;
 use App\Models\AttendanceSchedules\Attendance;
 use App\Models\AttendanceSchedules\AttendanceCourseTeacher;
@@ -263,6 +265,78 @@ class AttendanceController extends Controller
         }
 
         return  JsonBuilder::Success($data);
+    }
+
+    /**
+     * 教师考勤 -获取当天所有课节
+     * @param MyStandardRequest $request
+     * @return string
+     */
+    public function getDayCourse(MyStandardRequest $request)
+    {
+        $user = $request->user();
+        $time = $request->get('time');
+
+        $timeSlotDao = new TimeSlotDao;
+        $data =  $timeSlotDao->getAllStudyTimeSlots($user->getSchoolId());
+
+        $result = [];
+        if ($data) {
+            foreach ($data as $key => $val) {
+                $result[$key]['id'] = $val->id;
+                $result[$key]['name'] = $val->name;
+            }
+        }
+        return JsonBuilder::Success($result);
+    }
+
+
+    /**
+     * 教师考勤- 老师上课统计
+     * @param MyStandardRequest $request
+     * @return string
+     */
+    public function getTeacherCourseStatistics(MyStandardRequest $request)
+    {
+        $user = $request->user();
+        $time = $request->get('time');
+        $timeSlot = $request->get('time_slot_id');
+        $timeSlotDao = new TimeSlotDao;
+        $data =  $timeSlotDao->getAllStudyTimeSlots($user->getSchoolId());
+
+        $timeSlots = [$timeSlot];
+        if (!$timeSlot) {
+            foreach ($data as $k => $v) {
+                $timeSlots[$k] = $v->id;
+            }
+        }
+//        $timeTableDao = new TimetableItemDao;
+//        $item = $timeTableDao->getTimetableItemByUserOrTime($user, $time, $timeSlots);
+
+//        $sum = count($item);
+//        foreach ($item as $key => $val) {
+//             $a[$key] = $val->attendance->where('teacher_sign', 1)->count();
+//        }
+
+        $result = [];
+        if ($data) {
+            foreach ($data as $key => $val) {
+                $result[$val->name] = ['no_sign' =>0 , 'sign' => 10, 'late'=> 3];
+            }
+        }
+
+        return JsonBuilder::Success($result);
+    }
+
+    /**
+     * 教师签到详情
+     * @param MyStandardRequest $request
+     */
+    public function teacherSignDetails(MyStandardRequest $request)
+    {
+        $user = $request->user();
+        $time = $request->get('time');
+        $timeSlot = $request->get('time_slot');
     }
 
 

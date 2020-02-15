@@ -518,7 +518,19 @@ Route::prefix('attendance')->middleware('auth:api')->group(function () {
 
     // 教师上个课签到
     Route::post('/teacher-course-sign', 'Api\AttendanceSchedule\AttendanceController@teacherSign')
-        ->name('api.teacher.course-sign');
+        ->name('api.teacher.course.sign');
+
+    /**
+     * 教师考勤
+     */
+    // 获取当天所有课节
+    Route::post('/get-day-course', 'Api\AttendanceSchedule\AttendanceController@getDayCourse')
+        ->name('api.get.day.course');
+
+    // 获取教师签到统计
+    Route::post('/get-teacher-statistics', 'Api\AttendanceSchedule\AttendanceController@getTeacherCourseStatistics')
+        ->name('api.get.teacher.statistics');
+
 });
 
 Route::prefix('user')->group(function () {

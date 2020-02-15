@@ -164,5 +164,9 @@ return [
 
     // 课件
     'materials'=>'课件',
+    'ly'=>'教师PC端',
+    'home'=>'首页',
+    'message-center'=>'消息中心',
+    'school-news'=>'校园新闻',
 ];
 

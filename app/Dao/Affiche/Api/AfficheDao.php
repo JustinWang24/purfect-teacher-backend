@@ -202,6 +202,6 @@ class AfficheDao extends \App\Dao\Affiche\CommonDao
         $fileArr = ['video_url', 'cover_url', 'video_url'];
         $data = AfficheVideo::where($condition)->first($fileArr);
 
-        return !empty($data) ? $data->toArray() : [];
+        return !empty($data) ? $data->toArray() : (object)null;
     }
 }
