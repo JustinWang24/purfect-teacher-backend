@@ -143,6 +143,7 @@ class TaskDao
 
 
     /**
+     * 结束任务
      * @param $userId
      * @param $task
      * @param $taskMemberId
@@ -157,9 +158,9 @@ class TaskDao
             DB::beginTransaction();
             // 修改完成任务
             $map = ['user_id'=>$userId, 'task_id'=>$task->id];
-            $status = ['status'=>ProjectTaskMember::STATUS_CLOSED,
+            $save = ['status'=>ProjectTaskMember::STATUS_CLOSED,'underway'=>1,
                 'remark'=>$remark, 'end_time'=>Carbon::now()->toDateTimeString()];
-            ProjectTaskMember::where($map)->update($status);
+            ProjectTaskMember::where($map)->update($save);
 
             // 添加日志
             $log = ['school_id'=>$schoolId, 'user_id'=>$userId,
