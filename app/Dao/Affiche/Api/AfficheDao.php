@@ -112,6 +112,36 @@ class AfficheDao extends \App\Dao\Affiche\CommonDao
     }
 
     /**
+     * Func 获取用户额动态列表
+     *
+     * @param['user_id']  用户id
+     * @param['page']  分页ID
+     *
+     * @return array
+     */
+    public function getMyAfficheListInfo($user_id = 0, $page = 1)
+    {
+        // 检索条件
+        $condition[] = ['user_id', '=', (Int)$user_id]; // 用户id
+        $condition[] = ['status', '=', 1];
+
+        // 获取的字段
+        $fieldArr = [
+            'icheid', 'user_id', 'school_id' , 'iche_type', 'iche_title',
+            'iche_content', 'iche_view_num', 'iche_share_num',
+            'iche_praise_num', 'iche_comment_num', 'created_at'
+        ];
+
+        $data = Affiche::where($condition)->select($fieldArr)
+            ->orderBy('icheid', 'desc')
+            ->offset($this->offset($page))
+            ->limit(self::$limit)
+            ->get();
+
+        return !empty($data) ? $data->toArray() : [];
+    }
+
+    /**
      * Func 获取动态详情
      *
      * @param['icheid']  动态id
@@ -184,6 +214,7 @@ class AfficheDao extends \App\Dao\Affiche\CommonDao
         return  !empty($data->toArray()) ? $data->toArray() : [];
     }
 
+
     /**
      * Func 获取动态视频详情
      *
@@ -192,6 +223,27 @@ class AfficheDao extends \App\Dao\Affiche\CommonDao
      * @return array
      */
     public function getAfficheVideoOneInfo($iche_id = 0)
+    {
+        if (!intval($iche_id)) return [];
+
+        // 查询条件
+        $condition[] = ['iche_id', '=', $iche_id];
+        $condition[] = ['status', '=', 1];
+
+        $fileArr = ['video_url', 'cover_url', 'video_url'];
+        $data = AfficheVideo::where($condition)->first($fileArr);
+
+        return !empty($data) ? $data->toArray() : [];
+    }
+
+    /**
+     * Func 获取动态视频详情
+     *
+     * @param['iche_id']  动态ID
+     *
+     * @return array
+     */
+    public function getAfficheVideoOneInfo1($iche_id = 0)
     {
         if (!intval($iche_id)) return [];
 

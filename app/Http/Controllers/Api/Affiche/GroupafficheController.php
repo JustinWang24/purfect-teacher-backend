@@ -260,7 +260,7 @@ class GroupafficheController extends Controller
                 // 图片信息
                 $picsList = $afficheobj->getAffichePicsListInfo($val['icheid']);
                 // 视频信息
-                $videoInfo = $afficheobj->getAfficheVideoOneInfo($val['icheid']);
+                $videoInfo = $afficheobj->getAfficheVideoOneInfo1($val['icheid']);
                 // 合并数据
                 $val = array_merge($val, ['isfollow'=>$isfollow,'ispraise'=>$ispraise,'picsList' => $picsList,'videoInfo' => $videoInfo]);
             }

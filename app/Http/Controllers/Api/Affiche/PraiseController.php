@@ -83,8 +83,9 @@ class PraiseController extends Controller
                 }
 
                 // 视频信息
+                $videoInfo['cover_url'] = '';
                 $videoInfo = $afficheobj->getAfficheVideoOneInfo($afficheInfo['icheid']);
-                if (!isset($videoInfo['cover_url'])) {
+                if (is_array($videoInfo)) {
                     $videoInfo['cover_url'] = '';
                 }
 
