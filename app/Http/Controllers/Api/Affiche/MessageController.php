@@ -64,6 +64,8 @@ class MessageController extends Controller
            return JsonBuilder::Error('动态不存在或者已关闭');
        }
 
+		$data = [];
+		
        // 对评论进行回复操作
        $messageobj = new MessageDao();
        if ($commentid)
@@ -101,7 +103,6 @@ class MessageController extends Controller
            $commentid1[] = ['status', '=', 1];
            $count = $messageobj->getAfficheMessageStatistics($commentid1);
            $afficheobj->editAffichesInfo(['iche_comment_num' => $count, 'updated_at' => date('Y-m-d H:i:s')], $infos['icheid']);
-           $user_id = 18882;
            // 增加消息数据,如果一级评论,过滤自己收到消息,如果是二级评论，过滤我自己回复消息
            if ( ( ! $data && $user_id != $infos[ 'user_id' ] ) || ( $data && $data[ 'user_id' ] != $user_id ) )
            {
