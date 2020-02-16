@@ -129,7 +129,7 @@ class AttendanceController extends Controller
         $truant['mold'] = AttendancesDetail::MOLD_TRUANT;
         $truant['weekday_index'] = $item->weekday_index;
         $dao = new AttendancesDetailsDao();
-        $re = $dao->getDetailByUserId($truant['student_id'], $item->id);
+        $re = $dao->getDetailByUserId($truant['student_id'], $attendanceInfo->id);
         if (!empty($re)) {
             return JsonBuilder::Success('旷课已添加');
         }

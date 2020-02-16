@@ -50,8 +50,9 @@ class IndexController extends Controller
             'signIn_num' => $attendancesDetailsDao->getSignInCountByUser($user->id, $year, $term),
             'leave_num' => $attendancesDetailsDao->getLeaveCountByUser($user->id, $year, $term),
             'truant_num' => $attendancesDetailsDao->getTruantCountByUser($user->id, $year, $term),
-
         ];
+
+
         $evaluateTeacher = false;
         if(!is_null($item)) {
 
@@ -88,11 +89,10 @@ class IndexController extends Controller
 
             $detail = $attendancesDetailsDao->getDetailByUserId($user->id, $attendance->id);
 
-
             $signIn['status'] = $detail->mold ?? 0;
             $evaluateTeacher = true;
-
         }
+
         $studyData = '';
         $data = [
             'selectCourse' => $selectCourse, // 选课
