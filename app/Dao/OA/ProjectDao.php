@@ -205,8 +205,12 @@ class ProjectDao
      */
     public function myCreateTasks($userId)
     {
-        $where = ['create_user' => $userId];
+        // 修改阅读状态
+        $map = ['create_user'=>$userId,'status'=>ProjectTask::STATUS_CLOSED];
+        $save = ['read_status'=>ProjectTask::READ];
+        ProjectTask::where($map)->update($save);
 
+        $where = ['create_user' => $userId];
         return ProjectTask::where($where)
             ->orderBy('id', 'desc')
             ->paginate(ConfigurationTool::DEFAULT_PAGE_SIZE);
@@ -222,10 +226,40 @@ class ProjectDao
     public function attendTasks($userId, $type)
     {
         $map = ['user_id' => $userId, 'status' => $type];
+        $this->readTask($userId,$type);
         return ProjectTaskMember::where($map)
             ->orderBy('created_at', 'desc')
             ->paginate(ConfigurationTool::DEFAULT_PAGE_SIZE);
     }
+
+
+    /**
+     * 阅读任务
+     * @param $userId
+     * @param $type
+     * @return mixed
+     */
+    public function readTask($userId, $type) {
+        $map = ['user_id'=>$userId, 'status'=>$type];
+        // 未开始
+        if($type == ProjectTaskMember::STATUS_UN_BEGIN) {
+            $map['not_begin'] = 0;
+            $save = ['not_begin'=>1];
+        }
+        // 进行中
+        if($type == ProjectTaskMember::STATUS_IN_PROGRESS) {
+            $map['underway'] = 0;
+            $save = ['underway'=>1];
+        }
+        // 已结束
+        if($type == ProjectTaskMember::STATUS_CLOSED) {
+            $map['finish'] = 0;
+            $save = ['finish'=>1];
+        }
+
+        return ProjectTaskMember::where($map)->update($save);
+    }
+
 
 
     public function updateMembers($projectId, $member)

@@ -124,7 +124,7 @@ class TaskDao
             DB::beginTransaction();
             // 修改接受任务
             $map = ['user_id'=>$userId, 'task_id'=>$taskId];
-            $status = ['status'=>ProjectTaskMember::STATUS_IN_PROGRESS, 'not_begin'=>1];
+            $status = ['status'=>ProjectTaskMember::STATUS_IN_PROGRESS];
             ProjectTaskMember::where($map)->update($status);
             // 添加日志
             $log = ['school_id'=>$schoolId, 'user_id'=>$userId,
@@ -158,7 +158,7 @@ class TaskDao
             DB::beginTransaction();
             // 修改完成任务
             $map = ['user_id'=>$userId, 'task_id'=>$task->id];
-            $save = ['status'=>ProjectTaskMember::STATUS_CLOSED,'underway'=>1,
+            $save = ['status'=>ProjectTaskMember::STATUS_CLOSED,
                 'remark'=>$remark, 'end_time'=>Carbon::now()->toDateTimeString()];
             ProjectTaskMember::where($map)->update($save);
 
@@ -287,19 +287,23 @@ class TaskDao
      * @return array
      */
     public function getTaskStatus($userId) {
-        $notBegunMap = ['status'=>1, 'user_id'=>$userId, 'not_begin'=>0];
+        $notBegunMap = ['status'=>ProjectTaskMember::STATUS_UN_BEGIN,
+            'user_id'=>$userId, 'not_begin'=>ProjectTaskMember::UN_READ];
         $notBegin = ProjectTaskMember::where($notBegunMap)->count();
-        $underwayMap = ['status'=>2, 'user_id'=>$userId, 'underway'=>0];
+        $underwayMap = ['status'=>ProjectTaskMember::STATUS_IN_PROGRESS,
+            'user_id'=>$userId, 'underway'=>ProjectTaskMember::UN_READ];
         $underway = ProjectTaskMember::where($underwayMap)->count();
-//        $finishMap = ['status'=>2, 'user_id'=>$userId, 'underway'=>0];
+//        $finishMap = ['status'=>ProjectTaskMember::STATUS_CLOSED,
+//            'user_id'=>$userId, 'underway'=>ProjectTaskMember::UN_READ];
 //        $finish = ProjectTaskMember::where($finishMap)->count();
-        $taskMap = ['status'=>ProjectTask::STATUS_CLOSED, 'create_user'=>$userId];
+        $taskMap = ['status'=>ProjectTask::STATUS_CLOSED, 'create_user'=>$userId,
+            'read_status'=>ProjectTask::UN_READ];
         $myCreate = ProjectTask::where($taskMap)->count();
         return [
-            'not_begin'=>$notBegin,
-            'underway'=>$underway,
+            'not_begin'=>$notBegin? true: false,
+            'underway'=>$underway?true:false,
 //            'finish'=>$finish,
-            'my_create'=>$myCreate,
+            'my_create'=>$myCreate?true:false,
         ];
     }
 }
