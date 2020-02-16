@@ -28,6 +28,12 @@ class NewMeeting extends Model
     const STATUS_UNDERWAY = 3; // 进行中
     const STATUS_FINISHED = 4; // 已结束
 
+    const NOT_SINGIN = 0; // 不需要签到
+    const SIGNIN = 1; // 需要签到
+
+    const NOT_SIGNOUT = 0; // 不需要签退
+    const SIGNOUT = 1; // 需要签退
+
 
     public function room() {
         return $this->belongsTo(Room::class);

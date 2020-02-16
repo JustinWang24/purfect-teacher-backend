@@ -56,6 +56,9 @@ Route::prefix('task')->middleware('auth:api')->group(function () {
     // 结果列表
     Route::post('/getOaTaskReport','Api\OA\TaskController@taskReport')
         ->name('Oa.task.getOaTaskReport');
+    // 未读数
+    Route::post('/taskStatus','Api\OA\TaskController@taskStatus')
+        ->name('Oa.task.taskStatus');
     // 指派任务
     Route::post('/addOaTaskUser','Api\OA\TaskController@addTaskUser')
         ->name('Oa.task.addOaTaskUser');

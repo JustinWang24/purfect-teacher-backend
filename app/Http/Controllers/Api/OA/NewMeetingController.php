@@ -102,15 +102,23 @@ class NewMeetingController extends Controller
         $result = pageReturn($return);
         $data = [];
         foreach ($result['list'] as $key => $item) {
+            if($item->status == NewMeetingUser::UN_SIGNIN) {
+                $status = $item->status;
+            } else {
+                $status = NewMeetingUser::NORMAL_SIGNIN;
+            }
             $data[] = [
                 'meet_id' => $item->meet_id,
                 'meet_title' => $item->meet_title,
                 'approve_user' => $item->approve->name,
                 'room' => $item->room_id ? $item->room->name : $item->room_text,
                 'meet_time' => $item->getMeetTime(),
-                'signin_time' =>$item->getSignInTime(),
-                'signin_status' => $item->status
+                'signin_time' =>'',
+                'signin_status' => $status,
             ];
+            if($item->signin_status == NewMeeting::SIGNIN) {
+                $data[$key]['signin_time'] = $item->getSignInTime();
+            }
         }
         $result['list'] = $data;
         return JsonBuilder::Success($result);
@@ -136,10 +144,19 @@ class NewMeetingController extends Controller
                 'approve_user' => $item->approve->name,
                 'room' => $item->room_id ? $item->room->name : $item->room_text,
                 'meet_time' => $item->getMeetTime(),
-                'signin_time' =>$item->getSignInTime(),
-                'signin_status' => $item->signIn_status,
-                'signout_status' => $item->signOut_status
+                'signin_time' => '',
+                'signin_status' => '',
+                'signout_status' => '',
             ];
+            // 判断是否需要签到
+            if($item->signin_status == NewMeeting::SIGNIN) {
+                $data[$key]['signin_time'] = $item->getSignInTime();
+                $data[$key]['signin_status'] = $item->signIn_status;
+            }
+            // 判断是否需要签退
+            if($item->signout_status == NewMeeting::SIGNOUT) {
+                $data[$key]['signout_status'] = $item->signOut_status;
+            }
         }
         $result['list'] = $data;
         return JsonBuilder::Success($result);
@@ -180,9 +197,12 @@ class NewMeetingController extends Controller
                 'approve_user' => $item->approve->name,
                 'room' => $item->room_id ? $item->room->name : $item->room_text,
                 'meet_time' => $item->getMeetTime(),
-                'signin_time' =>$item->getSignInTime(),
+                'signin_time' => '',
                 'status' => $status,
             ];
+            if($item->signin_status == NewMeeting::SIGNIN) {
+                $data[$key]['signin_time'] = $item->getSignInTime();
+            }
         }
         $result['list'] = $data;
         return JsonBuilder::Success($result);
@@ -214,12 +234,21 @@ class NewMeetingController extends Controller
             'meet_time' => $info->getMeetTime(),
             'approve' => $info->approve->name,
             'user_num' => $info->meetUsers->count(),
-            'signin_time' => $info->getSignInTime(),
-            'signout_time' => $info->getSignOutTime(),
+            'signin_time' => '',
+            'signout_time' => '',
             'meet_content' => $info->meet_content,
             'fields' => $fields,
             'cause' => $info->cause,
         ];
+        // 判断是否需要签到
+        if($info['signin_status'] == NewMeeting::SIGNIN) {
+            $result['signin_time'] = $info->getSignInTime();
+        }
+        // 判断是否需要签退
+        if($info['signout_status'] == NewMeeting::SIGNOUT) {
+            $result['signin_time'] = $info->getSignOutTime();
+        }
+
         return JsonBuilder::Success($result);
     }
 
