@@ -54,7 +54,9 @@ class NewMeetingDao
             if($data['type'] == NewMeeting::TYPE_MEETING_ROOM) {
                 $data['room_id'] = $room;
             } else {
+                // 自定义会议 直接通过
                 $data['room_text'] = $room;
+                $data['status'] = NewMeeting::STATUS_PASS;
             }
             DB::beginTransaction();
             $meeting = NewMeeting::create($data);
