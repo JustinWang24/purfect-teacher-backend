@@ -132,7 +132,7 @@ class AttendancesDetailsDao
      * @return mixed
      */
     public function getDetailByUserId($userId,$timetableId) {
-        $map = ['student_id'=>$userId, 'timetable_id'=>$timetableId];
+        $map = ['student_id'=>$userId, 'attendance_id'=>$timetableId];
         return AttendancesDetail::where($map)->first();
     }
 
