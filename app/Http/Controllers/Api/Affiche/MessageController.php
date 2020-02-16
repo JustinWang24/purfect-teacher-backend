@@ -114,7 +114,7 @@ class MessageController extends Controller
                $picsList[0]['pics_smallurl'] = !empty($picsList[0]['pics_smallurl']) ? $picsListInfo[0]['pics_smallurl'] : '';
                // 视频信息
                $videoInfo = $afficheobj->getAfficheVideoOneInfo($infos['icheid']);
-               $videoInfo['cover_url'] = !empty($videoInfo['cover_url']) ? $videoInfo['cover_url'] : '';
+               $videoInfo['cover_url'] = !empty($videoInfo->cover_url) ? $videoInfo['cover_url'] : '';
 
                // 添加首页消息记录
                $addMessageData[ 'mess_type1' ]      = 2;

@@ -91,4 +91,30 @@ class UserFollowDao extends \App\Dao\Affiche\CommonDao
         return [ 'result' => 0 ];
     }
 
+
+    /**
+     * Func 获取我的粉丝
+     *
+     * @param['user_id']  用户id
+     * @param['limit'] 获取条数
+     *
+     * @return array
+     */
+    public function getUserFollowListInfo($user_id = 0, $page = 1 )
+    {
+        if (!intval($user_id)) return [];
+
+        // 查询条件
+        $condition[] = ['user_id', '=', $user_id];
+        $condition[] = ['status', '=', 1];
+
+        $data = UserFollow::where($condition)
+            ->select(['llowid', 'user_id', 'touser_id'])
+            ->orderBy('llowid', 'desc')
+            ->offset($this->offset($page))
+            ->limit(self::$limit)
+            ->get();
+
+        return  !empty($data->toArray()) ? $data->toArray() : [];
+    }
 }

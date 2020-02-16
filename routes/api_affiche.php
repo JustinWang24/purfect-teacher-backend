@@ -13,6 +13,8 @@ use Illuminate\Http\Request;
 |
 */
 Route::prefix('api_affiche')->middleware('auth:api')->group(function () {
+    // 个人主页
+    Route::any('/v1/index/user-index-info','\App\Http\Controllers\Api\Affiche\IndexController@user_index_info');
     // 首页动态接口
     Route::any('/v1/index/base-info','\App\Http\Controllers\Api\Affiche\IndexController@base_info');
     // 首页动态接口
@@ -21,6 +23,8 @@ Route::prefix('api_affiche')->middleware('auth:api')->group(function () {
     Route::any('/v1/affiche/add-affiche-info','\App\Http\Controllers\Api\Affiche\AfficheController@add_affiche_info');
     // 全部和本校动态列表
     Route::any('/v1/affiche/affiche-list-info','\App\Http\Controllers\Api\Affiche\AfficheController@affiche_list_info');
+    // 我的动态列表
+    Route::any('/v1/affiche/my-affiche-list-info','\App\Http\Controllers\Api\Affiche\AfficheController@my_affiche_list_info');
     // 全部和本校动态详情
     Route::any('/v1/affiche/affiche-one-info','\App\Http\Controllers\Api\Affiche\AfficheController@affiche_one_info');
     // 动态评论和评论互评接口
@@ -64,7 +68,7 @@ Route::prefix('api_affiche')->middleware('auth:api')->group(function () {
     // 群组动态列表接口
     Route::any('/v1/groupaffiche/get-groupaffiche-list-info','\App\Http\Controllers\Api\Affiche\GroupafficheController@get_groupaffiche_list_info');
 
-    //-------------------------------------------------(学生会+社团)+公告------------------------------------------------未写完----
+    //-------------------------------------------------(学生会+社团)+公告------------------------------------------------
     // 添加公告接口
     Route::any('/v1/groupnotices/add-groupnotices-info','\App\Http\Controllers\Api\Affiche\GroupnoticesController@add_groupnotices_info');
     // 公告列表接口
@@ -73,4 +77,10 @@ Route::prefix('api_affiche')->middleware('auth:api')->group(function () {
     Route::any('/v1/groupnotices/one-groupnotices-info','\App\Http\Controllers\Api\Affiche\GroupnoticesController@one_groupnotices_info');
     // 公告公告已读和未读接口
     Route::any('/v1/groupnotices/unreadOrread-groupnotices-info','\App\Http\Controllers\Api\Affiche\GroupnoticesController@unreadOrread_groupnotices_info');
+
+    //-------------------------------------------------组织认证接口------------------------------------------------------
+    // 添加组织认证接口
+    Route::any('/v1/tissueauth/add-auth-tissue-info','\App\Http\Controllers\Api\Affiche\TissueauthController@add_auth_tissue_info');
+    // 获取我的组织认证接口
+    Route::any('/v1/tissueauth/one-auth-tissue-info','\App\Http\Controllers\Api\Affiche\TissueauthController@one_auth_tissue_info');
 });

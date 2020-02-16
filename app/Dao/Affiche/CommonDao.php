@@ -109,6 +109,23 @@ class CommonDao
         return $data;
     }
 
+    /**
+     * Func 获取认证信息
+     *
+     * @param $user_id 用户ID
+     *
+     * return array
+     */
+    public function getAuthIno($user_id = 0)
+    {
+        // TODO.... 下面没写完.....
+        $data['user_username'] = '109991';  //编号
+        $data['user_usercode'] = '张三';  //姓名
+        $data['user_cardno'] = '18127192837382893'; //身份证号码
+
+        return $data;
+    }
+
    /**
     * Func 树接口
     *
