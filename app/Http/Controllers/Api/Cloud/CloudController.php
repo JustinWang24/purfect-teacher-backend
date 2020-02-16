@@ -323,7 +323,6 @@ class CloudController extends Controller
         if (empty($item)) {
             return JsonBuilder::Error('未找到该同学目前上的课程');
         }
-
         if ($item->grade_id != $user->gradeUser->grade_id) {
             return JsonBuilder::Error('该学生不应该上这个课程');
         }

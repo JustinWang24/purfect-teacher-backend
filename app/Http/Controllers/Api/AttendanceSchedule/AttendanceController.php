@@ -218,12 +218,22 @@ class AttendanceController extends Controller
         if (empty($item)) {
             return JsonBuilder::Error('未找到该老师目前上的课程');
         }
+
         $dao = new AttendancesDao;
         $result = $dao->getTeacherIsSignByItem($item[0], $user);
         if (is_null($result)) {
             $result = $dao->createAttendanceData($item[0]);
         }
-        $data = $dao->updateTeacherSignByItem($result->id);
+
+        $courseTime = $item[0]->timeSlot->from;
+        $date = Carbon::now()->toTimeString();
+        if($date > $courseTime) {
+            $late = Attendance::TEACHER_LATE;
+        } else {
+            $late = Attendance::TEACHER_NO_LATE;
+        }
+
+        $data = $dao->updateTeacherSignByItem($result->id, $late);
         if ($data) {
             return JsonBuilder::Success('签到成功');
         } else {
@@ -310,21 +320,27 @@ class AttendanceController extends Controller
                 $timeSlots[$k] = $v->id;
             }
         }
-//        $timeTableDao = new TimetableItemDao;
-//        $item = $timeTableDao->getTimetableItemByUserOrTime($user, $time, $timeSlots);
 
-//        $sum = count($item);
-//        foreach ($item as $key => $val) {
-//             $a[$key] = $val->attendance->where('teacher_sign', 1)->count();
-//        }
+        $timeTableDao = new TimetableItemDao;
+        $item = $timeTableDao->getTimetableItemByUserOrTime($user, $time, $timeSlots);
 
-        $result = [];
-        if ($data) {
-            foreach ($data as $key => $val) {
-                $result[$val->name] = ['no_sign' =>0 , 'sign' => 10, 'late'=> 3];
-            }
+        $items = [];
+        foreach ($item as $key => $value) {
+            $items[$value->timeSlot->name][] = $value->toArray();
         }
 
+        $dao = new AttendancesDao;
+        $timetableIds = [];
+        foreach ($items as $key => $val) {
+           $timetableIds[$key][] = array_column($val, 'id');
+        }
+
+        $result = [];
+        foreach ($timetableIds as $k => $v) {
+             $result[$k]['sign'] = $dao->getTeacherSignInStatus($v[0], 5, Attendance::TEACHER_SIGN);
+             $result[$k]['no_sign'] = $dao->getTeacherSignInStatus($v[0], 5, Attendance::TEACHER_NO_SIGN);
+             $result[$k]['late'] = $dao->getTeacherSignInStatus($v[0], 5, Attendance::TEACHER_SIGN, Attendance::TEACHER_LATE);
+        }
         return JsonBuilder::Success($result);
     }
 
@@ -336,7 +352,22 @@ class AttendanceController extends Controller
     {
         $user = $request->user();
         $time = $request->get('time');
-        $timeSlot = $request->get('time_slot');
+        $timeSlot = $request->get('time_slot_id');
+        $type = $request->get('type');
+
+        $timeTableDao = new TimetableItemDao;
+        $item = $timeTableDao->getTimetableItemByUserOrTime($user, $time, [$timeSlot]);
+
+        $itemIds = $item->pluck('id');
+        $week = 5;
+
+        $dao = new AttendancesDao;
+        if ($type == 1) {
+
+        }
+
+//        $dao->getTeacherSignInfo($itemIds, $week, );
+
     }
 
 

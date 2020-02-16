@@ -87,7 +87,7 @@ class IndexController extends Controller
 
 
             $detail = $attendancesDetailsDao->getDetailByUserId($user->id, $attendance->id);
-
+             dd($detail);
 
             $signIn['status'] = $detail->mold ?? 0;
             $evaluateTeacher = true;

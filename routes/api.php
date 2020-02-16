@@ -531,6 +531,9 @@ Route::prefix('attendance')->middleware('auth:api')->group(function () {
     Route::post('/get-teacher-statistics', 'Api\AttendanceSchedule\AttendanceController@getTeacherCourseStatistics')
         ->name('api.get.teacher.statistics');
 
+    // 获取教师签到统计详情
+    Route::post('/get-teacher-sign-details', 'Api\AttendanceSchedule\AttendanceController@teacherSignDetails')
+        ->name('api.get.teacher.statistics.info');
 });
 
 Route::prefix('user')->group(function () {
@@ -958,7 +961,7 @@ Route::prefix('organizations')->middleware('auth:api')->group(function(){
 
 // 学习
 Route::prefix('study')->middleware('auth:api')->group(function(){
-    Route::any('/home-page', 'Api\Study\IndexController@index')
+        Route::any('/home-page', 'Api\Study\IndexController@index')
         ->name('api.study.home-page');
 });
 
