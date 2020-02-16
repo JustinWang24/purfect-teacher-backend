@@ -20,6 +20,10 @@ class ProjectTaskMember extends Model
     const STATUS_OVERTIME = 4; //超时
     const STATUS_MY_CREATE = 4; // 自己发起的
 
+    // 阅读状态
+    const UN_READ = 0; // 未读
+    const READ = 1; // 已读
+
     protected $fillable = ['user_id', 'task_id'];
 
 
