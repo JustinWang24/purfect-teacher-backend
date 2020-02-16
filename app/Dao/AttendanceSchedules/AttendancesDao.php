@@ -42,6 +42,9 @@ class AttendancesDao
         $configuration = $school->configuration;
 
         $date = Carbon::now()->toDateString();
+
+        // todo :: $now 为了方便测试, 上线需要删除
+        $date = Carbon::parse('2020-01-08 14:40:00');
         $month = Carbon::parse($date)->month;
         $term = $configuration->guessTerm($month);
         $weeks = $configuration->getScheduleWeek($now, null, $term);
@@ -192,12 +195,18 @@ class AttendancesDao
     /**
      * 教师签到
      * @param $id
+     * @param $late
      * @return mixed
      */
-    public function updateTeacherSignByItem($id)
+    public function updateTeacherSignByItem($id, $late)
     {
-        return Attendance::where('id', $id)->update(['teacher_sign' => Attendance::TEACHER_SIGN, 'teacher_sign_time' =>
-            Carbon::now()]);
+        $data = [
+            'teacher_sign' => Attendance::TEACHER_SIGN,
+            'teacher_sign_time' => Carbon::now(),
+            'teacher_late' => $late,
+        ];
+
+        return Attendance::where('id', $id)->update($data);
     }
 
     /**
@@ -237,6 +246,47 @@ class AttendancesDao
         return Attendance::create($attendanceData);
     }
 
+
+    /**
+     * 统计老师签到
+     * @param $timetableIds
+     * @param $week
+     * @param $signStatus
+     * @param $late
+     * @return mixed
+     */
+    public function getTeacherSignInStatus($timetableIds, $week, $signStatus, $late = false)
+    {
+        $map = [
+            ['week', '=' ,$week],
+            ['teacher_sign', '=', $signStatus]
+        ];
+        if ($late) {
+           array_push($map, ['teacher_late', '=', $late]);
+        }
+        return Attendance::where($map)->whereIn('timetable_id', $timetableIds)->count();
+    }
+
+
+     /**
+     * 统计老师签到
+     * @param $timetableIds
+     * @param $week
+     * @param $signStatus
+     * @param $late
+     * @return mixed
+     */
+    public function getTeacherSignInfo($timetableIds, $week, $signStatus, $late = false)
+    {
+        $map = [
+            ['week', '=' ,$week],
+            ['teacher_sign', '=', $signStatus]
+        ];
+        if ($late) {
+           array_push($map, ['teacher_late', '=', $late]);
+        }
+        return Attendance::where($map)->whereIn('timetable_id', $timetableIds)->get();
+    }
 
 
 }
