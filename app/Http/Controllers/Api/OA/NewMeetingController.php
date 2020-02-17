@@ -246,7 +246,7 @@ class NewMeetingController extends Controller
         }
         // 判断是否需要签退
         if($info['signout_status'] == NewMeeting::SIGNOUT) {
-            $result['signin_time'] = $info->getSignOutTime();
+            $result['signout_time'] = $info->getSignOutTime();
         }
 
         return JsonBuilder::Success($result);
