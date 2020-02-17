@@ -27,6 +27,9 @@ Route::prefix('teacher')->group(function () {
     Route::post('course/materials/load-lecture-materials', 'Course\MaterialsController@load_lecture_materials')
         ->name('teacher.course.materials.load-lecture-materials'); // 教师加载指定的课节中的所有材料文件
 
+    Route::post('course/materials/load-lecture-homeworks', 'Course\MaterialsController@load_lecture_homeworks')
+        ->name('teacher.course.materials.load-lecture-homeworks'); // 教师加载指定的课节中的所有被学生提交的作业
+
     Route::post('course/materials/save-lecture', 'Course\MaterialsController@save_lecture')
         ->name('teacher.course.materials.save-lecture'); // 教师保存指定的课件
 

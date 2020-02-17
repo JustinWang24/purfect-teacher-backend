@@ -9,6 +9,7 @@
 namespace App\Http\Controllers\Teacher\Course;
 use App\Dao\Courses\CourseDao;
 use App\Dao\Courses\Lectures\LectureDao;
+use App\Dao\Timetable\TimetableItemDao;
 use App\Dao\Users\UserDao;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Course\MaterialRequest;
@@ -38,6 +39,19 @@ class MaterialsController extends Controller
         $teacher = (new UserDao())->getUserById($request->getTeacherId());
         $this->dataForView['course'] = $course;
         $this->dataForView['teacher'] = $teacher;
+
+        // 当前课程的授课班级集合
+        $timetableItemDao = new TimetableItemDao();
+        $items = $timetableItemDao->getGradesByCourseAndTeacher($request->getCourseId(), $request->getTeacherId());
+        $grades = [];
+        foreach ($items as $item) {
+            $grades[] = [
+                'id'=>$item->grade->id,
+                'name'=>$item->grade->name,
+            ];
+        }
+        $this->dataForView['grades'] = $grades;
+
         return view('teacher.course.materials.manager', $this->dataForView);
     }
 
@@ -142,8 +156,25 @@ class MaterialsController extends Controller
         return JsonBuilder::Success();
     }
 
+    /**
+     * 加载某个课节的材料
+     * @param MaterialRequest $request
+     * @return string
+     */
     public function load_lecture_materials(MaterialRequest $request){
         $dao = new LectureDao();
         return JsonBuilder::Success(['materials'=>$dao->getLectureMaterials($request->get('lecture_id'))]);
+    }
+
+    /**
+     * 加载某课节的作业数据
+     * @param MaterialRequest $request
+     * @return string
+     */
+    public function load_lecture_homeworks(MaterialRequest $request){
+        $dao = new LectureDao();
+        return JsonBuilder::Success(
+            ['homeworks'=>$dao->getLectureHomework($request->get('lecture_id'),$request->get('grades'))]
+        );
     }
 }

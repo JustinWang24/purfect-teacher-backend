@@ -5,7 +5,12 @@
             <el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal" @select="handleMenuSelect" style="margin: 0 auto;">
                 <el-menu-item index="1">我的课程</el-menu-item>
                 <el-menu-item index="2">课件管理</el-menu-item>
-                <el-menu-item index="3">学生管理</el-menu-item>
+                <el-submenu index="3">
+                    <template slot="title">学生管理</template>
+                    @foreach($grades as $grade)
+                    <el-menu-item index="2-{{ $grade['id'] }}">{{ $grade['name'] }}</el-menu-item>
+                    @endforeach
+                </el-submenu>
                 <el-menu-item index="4"><a href="https://www.baidu.com" target="_blank">查看课表</a></el-menu-item>
             </el-menu>
         </div>
@@ -70,7 +75,11 @@
         </div>
 
         <div  v-show="activeIndex === '2'">
-            <lecture :lecture="lecture" v-if="lecture" :loading="loadingData" user-uuid="{{ $teacher->uuid }}"></lecture>
+            <lecture :grades="grades" :lecture="lecture" v-if="lecture" :loading="loadingData" user-uuid="{{ $teacher->uuid }}"></lecture>
+        </div>
+
+        <div  v-show="activeIndex === '3'">
+            <p>学生管理</p>
         </div>
 
         <el-dialog title="{{ $course->name }} ({{ $course->duration }}课时)" :visible.sync="courseIndexerVisible">
@@ -82,5 +91,6 @@
          data-school="{{ session('school.id') }}"
          data-course='{!! $course !!}'
          data-teacher='{!! $teacher !!}'
+         data-grades='{!! json_encode($grades) !!}'
     ></div>
 @endsection

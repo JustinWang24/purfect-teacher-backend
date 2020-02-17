@@ -174,6 +174,7 @@ export const Constants = {
             LOAD_LECTURE: '/teacher/course/materials/load-lecture',
             LOAD_LECTURE_MATERIALS: '/teacher/course/materials/load-lecture-materials',
             SAVE_LECTURE: '/teacher/course/materials/save-lecture',
+            LOAD_LECTURE_HOMEWORKS: '/teacher/course/materials/load-lecture-homeworks',
         }
     },
     YEARS: ['N.A','一年级','二年级','三年级','四年级','五年级','六年级'],
