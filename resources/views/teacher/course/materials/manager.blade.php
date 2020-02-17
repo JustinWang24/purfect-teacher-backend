@@ -50,6 +50,7 @@
                                     <el-input placeholder="必填: 日志内容" type="textarea" v-model="logModel.content"></el-input>
                                 </el-form-item>
                                 <el-button style="margin-left: 10px;" size="small" type="success" @click="saveLog">保存</el-button>
+                                <el-button style="margin-left: 10px;" size="small" @click="showLogEditor=false">关闭</el-button>
                             </el-form>
                             <hr>
                         </div>
@@ -69,16 +70,11 @@
         </div>
 
         <div  v-show="activeIndex === '2'">
-            <lecture :lecture="lecture" v-if="lecture"></lecture>
+            <lecture :lecture="lecture" v-if="lecture" :loading="loadingData" user-uuid="{{ $teacher->uuid }}"></lecture>
         </div>
 
-        @include(
-            'reusable_elements.section.file_manager_component',
-            ['pickFileHandler'=>'pickFileHandler']
-        )
-
         <el-dialog title="{{ $course->name }} ({{ $course->duration }}课时)" :visible.sync="courseIndexerVisible">
-            <course-indexer :count="{{ $course->duration }}" v-on:index-clicked="switchCourseIndex"></course-indexer>
+            <course-indexer :count="{{ $course->duration }}" :highlight="highlight" v-on:index-clicked="switchCourseIndex"></course-indexer>
         </el-dialog>
 
     </div>

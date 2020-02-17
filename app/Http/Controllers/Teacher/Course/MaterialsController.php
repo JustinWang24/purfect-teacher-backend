@@ -91,9 +91,9 @@ class MaterialsController extends Controller
      * @return string
      */
     public function create(MaterialRequest $request){
-        $dao = new CourseDao();
-        $msg = $dao->saveMaterial($request->get('material'));
-        return $msg->isSuccess() ? JsonBuilder::Success($msg->getData()->id) : JsonBuilder::Error($msg->getMessage());
+        $dao = new LectureDao();
+        $msg = $dao->saveLectureMaterial($request->get('material'));
+        return $msg->isSuccess() ? JsonBuilder::Success(['material'=>$msg->getData()]) : JsonBuilder::Error($msg->getMessage());
     }
 
     /**
@@ -101,8 +101,8 @@ class MaterialsController extends Controller
      * @return string
      */
     public function load(MaterialRequest $request){
-        $dao = new CourseDao();
-        $material = $dao->getCourseMaterial($request->get('id'));
+        $dao = new LectureDao();
+        $material = $dao->getLectureMaterial($request->get('id'));
         return JsonBuilder::Success(['material'=>$material]);
     }
 
@@ -129,5 +129,21 @@ class MaterialsController extends Controller
             $request->get('index')
         );
         return JsonBuilder::Success(['lecture'=>$materials]);
+    }
+
+    /**
+     * 更新课件的记录，注意这个方法只会更新title和summary这两个字段
+     * @param MaterialRequest $request
+     * @return string
+     */
+    public function save_lecture(MaterialRequest $request){
+        $dao = new LectureDao();
+        $dao->updateLectureSummary($request->get('lecture'));
+        return JsonBuilder::Success();
+    }
+
+    public function load_lecture_materials(MaterialRequest $request){
+        $dao = new LectureDao();
+        return JsonBuilder::Success(['materials'=>$dao->getLectureMaterials($request->get('lecture_id'))]);
     }
 }
