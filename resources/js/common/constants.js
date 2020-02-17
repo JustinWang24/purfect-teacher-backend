@@ -172,6 +172,8 @@ export const Constants = {
             LOAD: '/teacher/course/materials/load',
             DELETE: '/teacher/course/materials/delete',
             LOAD_LECTURE: '/teacher/course/materials/load-lecture',
+            LOAD_LECTURE_MATERIALS: '/teacher/course/materials/load-lecture-materials',
+            SAVE_LECTURE: '/teacher/course/materials/save-lecture',
         }
     },
     YEARS: ['N.A','一年级','二年级','三年级','四年级','五年级','六年级'],
