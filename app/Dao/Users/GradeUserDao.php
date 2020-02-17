@@ -69,12 +69,19 @@ class GradeUserDao
 
     /**
      * @param $gradeId
-     * @return mixed
+     * @return Collection
      */
     public function getGradeUserByGradeId($gradeId) {
         return GradeUser::where('grade_id', $gradeId)->get();
     }
 
+    /**
+     * @param $grades
+     * @return Collection
+     */
+    public function getGradeUserWhereInGrades($grades) {
+        return GradeUser::whereIn('grade_id', $grades)->get();
+    }
 
     /**
      * 学生分页

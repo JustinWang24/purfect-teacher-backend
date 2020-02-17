@@ -15,6 +15,7 @@ use App\Models\Students\StudentProfile;
 use App\Models\Teachers\TeacherProfile;
 use App\User;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Acl\Role;
 
 class GradeUser extends Model
 {
@@ -117,6 +118,16 @@ class GradeUser extends Model
     public function gradeManger()
     {
         return $this->belongsTo(GradeManager::class, 'grade_id', 'grade_id');
+    }
+
+    /**
+     * 当前记录的user是否为学生
+     * @return bool
+     */
+    public function isStudent(){
+        $roleSlug = Role::GetRoleSlugByUserType($this->user_type);
+        return in_array($roleSlug,
+            [Role::VERIFIED_USER_STUDENT_SLUG, Role::VERIFIED_USER_CLASS_LEADER_SLUG, Role::VERIFIED_USER_CLASS_SECRETARY_SLUG]);
     }
 
     /**
