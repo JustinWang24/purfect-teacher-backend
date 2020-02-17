@@ -362,12 +362,23 @@ class AttendanceController extends Controller
         $week = 5;
 
         $dao = new AttendancesDao;
-        if ($type == 1) {
-
+        if ($type == 0) {
+            $signStatus = Attendance::TEACHER_NO_SIGN;
+        } else {
+            $signStatus = Attendance::TEACHER_SIGN;
         }
 
-//        $dao->getTeacherSignInfo($itemIds, $week, );
+        $data = $dao->getTeacherSignInfo($itemIds, $week, $signStatus);
 
+        $result = [];
+        foreach ($data as $key => $val) {
+            $result[$key]['avatar'] = $val->user->profile->avatar;
+            $result[$key]['name']  = $val->teacher->name;
+            $result[$key]['major']  = $val->gradeUser->major->name ?? '';
+            $result[$key]['sign_status'] = $val->teacher_late == Attendance::TEACHER_NO_LATE ? '正常' : '迟到';
+            $result[$key]['sign_time'] = $val->teacher_sign_time;
+        }
+        return JsonBuilder::Success($result);
     }
 
 

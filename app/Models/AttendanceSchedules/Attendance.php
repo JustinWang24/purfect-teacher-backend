@@ -5,7 +5,9 @@ namespace App\Models\AttendanceSchedules;
 use App\Models\Course;
 use App\Models\Schools\Grade;
 use App\Models\Timetable\TimetableItem;
+use App\Models\Users\GradeUser;
 use App\User;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
 class Attendance extends Model
@@ -46,8 +48,21 @@ class Attendance extends Model
         return $this->belongsTo(Grade::class);
     }
 
+    public function gradeUser() {
+        return $this->belongsTo(GradeUser::class, 'teacher_id','user_id');
+    }
 
     public function teacher() {
         return $this->belongsTo(User::class,'teacher_id');
+    }
+
+    public function user() {
+        return $this->belongsTo(User::class, 'teacher_id','id');
+    }
+
+
+    public function getTeacherSignTimeAttribute($value)
+    {
+        return Carbon::parse($value)->format('Y-m-d H:i');
     }
 }
