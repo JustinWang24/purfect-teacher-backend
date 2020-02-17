@@ -145,8 +145,8 @@ class NewMeetingController extends Controller
                 'room' => $item->room_id ? $item->room->name : $item->room_text,
                 'meet_time' => $item->getMeetTime(),
                 'signin_time' => '',
-                'signin_status' => '',
-                'signout_status' => '',
+                'signin_status' =>  NewMeeting::NOT_SINGIN,
+                'signout_status' => NewMeeting::NOT_SIGNOUT,
             ];
             // 判断是否需要签到
             if($item->signin_status == NewMeeting::SIGNIN) {
