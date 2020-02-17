@@ -23,8 +23,8 @@ class Attendance extends Model
     const STATUS_UN_EVALUATE = 0;  // 未评价
     const STATUS_EVALUATE = 1;  // 已评价
 
-    const TEACHER_SIGN = 1;
-    const TEACHER_NO_SIGN = 0;
+    const TEACHER_SIGN = 1;  // 已签到
+    const TEACHER_NO_SIGN = 0; // 未签到
 
     const TEACHER_LATE = 1; // 教师上课迟到
     const TEACHER_NO_LATE = 0; // 教师上课未迟到
