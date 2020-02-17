@@ -143,8 +143,8 @@ class AfficheController extends Controller
                 // 视频添加信息
                 $videoData['iche_id'] = $icheid;
                 $videoData['user_id'] = $user_id;
-                $videoData['video_url'] = $iche_cover; // 视频地址
-                $videoData['cover_url'] = $iche_video; // 视频封面图
+                $videoData['video_url'] = $iche_video; // 视频地址
+                $videoData['cover_url'] = $iche_cover; // 视频封面图
                 $afficheVideoObj->addAfficheVideoInfo($videoData);
             }
 
@@ -222,13 +222,79 @@ class AfficheController extends Controller
                 // 图片信息
                 $picsList = $afficheobj->getAffichePicsListInfo($val['icheid']);
                 // 视频信息
-                $videoInfo = $afficheobj->getAfficheVideoOneInfo($val['icheid']);
+                $videoInfo = $afficheobj->getAfficheVideoOneInfo1($val['icheid']);
                 // 合并数据
                 $val = array_merge($val, ['picsList' => $picsList,'videoInfo' => $videoInfo]);
             }
         }
 
         return JsonBuilder::Success ( $infos , '动态列表' );
+    }
+
+    /**
+     * Func 我的动态列表
+     *
+     * @param Request $request
+     * @param['token'] 是   token
+     * @param['touser_id'] 否   用户id
+     * @param['page']   是   分页id
+     *
+     * @return Json
+     */
+    public function my_affiche_list_info(AfficheRequest $request)
+    {
+        $token = (String)$request->input('token', '');
+        $touser_id = (Int)$request->input('touser_id', 0);
+        $page = (Int)$request->input('page', 1);
+
+        // 参数错误
+        if (!intval($touser_id)) {
+            return JsonBuilder::Error('参数错误');
+        }
+        $user_id = 0;
+        if ($token != '') {
+            $user = $request->user();
+            $user_id = $user->id;
+        }
+
+        // 实例化模型类
+        $afficheobj = new AfficheDao();
+
+        $infos = $afficheobj->getMyAfficheListInfo($touser_id, $page);
+
+        if (!empty($infos) && is_array($infos))
+        {
+            $praiseobj = new PraiseDao();
+
+            foreach ($infos as $key => &$val)
+            {
+                // 格式化时间
+                $val['create_timestr'] = $afficheobj->transTime1(strtotime($val['created_at']));
+
+                // 是否点赞
+                $val['ispraise'] = 0;
+                if ($user_id) {
+                    $val['ispraise'] = (Int)$praiseobj->getAffichePraiseCount(1, $user_id, $val['icheid']);
+                }
+
+                // 用户信息
+                $userInfo = $afficheobj->userInfo($val['user_id']);
+                $val['user_pics'] = (String)$userInfo['user_pics'];
+                $val['user_nickname'] = (String)$userInfo['user_nickname'];
+                $val['school_name'] = (String)$userInfo['school_name'];
+
+                // 用户信息
+                $userInfo = $afficheobj->userInfo($val['user_id']);
+                // 图片信息
+                $picsList = $afficheobj->getAffichePicsListInfo($val['icheid']);
+                // 视频信息
+                $videoInfo = $afficheobj->getAfficheVideoOneInfo1($val['icheid']);
+                // 合并数据
+                $val = array_merge($val, ['picsList' => $picsList,'videoInfo' => $videoInfo]);
+            }
+        }
+
+        return JsonBuilder::Success ( $infos , '我的动态列表' );
     }
 
     /**
@@ -291,7 +357,7 @@ class AfficheController extends Controller
             // 图片信息
             $picsList = $afficheobj->getAffichePicsListInfo($infos['icheid']);
             // 视频信息
-            $videoInfo = $afficheobj->getAfficheVideoOneInfo($infos['icheid']);
+            $videoInfo = $afficheobj->getAfficheVideoOneInfo1($infos['icheid']);
             // 获取动态评论
             $commentList = $messageobj->getAfficheCommentListInfo($user_id, $infos['icheid'], $page);
             // 合并数据

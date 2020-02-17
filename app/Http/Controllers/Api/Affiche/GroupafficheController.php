@@ -150,8 +150,8 @@ class GroupafficheController extends Controller
                 // 视频添加信息
                 $videoData['iche_id'] = $icheid;
                 $videoData['user_id'] = $user_id;
-                $videoData['video_url'] = $iche_cover; // 视频地址
-                $videoData['cover_url'] = $iche_video; // 视频封面图
+                $videoData['video_url'] = $iche_video; // 视频地址
+                $videoData['cover_url'] = $iche_cover; // 视频封面图
                 $afficheVideoObj->addAfficheVideoInfo($videoData);
             }
 
@@ -260,7 +260,7 @@ class GroupafficheController extends Controller
                 // 图片信息
                 $picsList = $afficheobj->getAffichePicsListInfo($val['icheid']);
                 // 视频信息
-                $videoInfo = $afficheobj->getAfficheVideoOneInfo($val['icheid']);
+                $videoInfo = $afficheobj->getAfficheVideoOneInfo1($val['icheid']);
                 // 合并数据
                 $val = array_merge($val, ['isfollow'=>$isfollow,'ispraise'=>$ispraise,'picsList' => $picsList,'videoInfo' => $videoInfo]);
             }

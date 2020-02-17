@@ -108,6 +108,31 @@
                                 <span class="title">评分</span>
                             </a>
                         </li>
+                        <li class="nav-item">
+                            <a href="{{ route('teacher.ly.assistant.electives') }}" class="nav-link ">
+                                <span class="title">选课</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{ route('teacher.ly.assistant.grades-manager') }}" class="nav-link ">
+                                <span class="title">班级管理</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{ route('teacher.ly.assistant.students-manager') }}" class="nav-link ">
+                                <span class="title">学生信息</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{ route('teacher.ly.assistant.grades-check-in') }}" class="nav-link ">
+                                <span class="title">班级签到</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{ route('teacher.ly.assistant.grades-evaluations') }}" class="nav-link ">
+                                <span class="title">班级评分</span>
+                            </a>
+                        </li>
                     </ul>
                 </li>
 

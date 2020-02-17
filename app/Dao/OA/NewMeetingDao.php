@@ -54,7 +54,9 @@ class NewMeetingDao
             if($data['type'] == NewMeeting::TYPE_MEETING_ROOM) {
                 $data['room_id'] = $room;
             } else {
+                // 自定义会议 直接通过
                 $data['room_text'] = $room;
+                $data['status'] = NewMeeting::STATUS_PASS;
             }
             DB::beginTransaction();
             $meeting = NewMeeting::create($data);
@@ -108,7 +110,7 @@ class NewMeetingDao
             ['new_meetings.status', '=', NewMeeting::STATUS_PASS],
         ];
 
-        $field = ['new_meeting_users.*', 'new_meeting_users.signin_status as status', 'new_meetings.*'];
+        $field = ['new_meeting_users.*', 'new_meeting_users.signin_status as signIn_status', 'new_meetings.*'];
 
         $list = NewMeetingUser::join('new_meetings', function ($join) use ($map){
             $join->on('new_meetings.id', '=', 'new_meeting_users.meet_id')

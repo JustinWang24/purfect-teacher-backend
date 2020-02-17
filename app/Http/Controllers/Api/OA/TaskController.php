@@ -91,6 +91,7 @@ class TaskController extends Controller
                 $output[$key]['leader_userid'] = $val->user_id;
                 $output[$key]['leader_name'] = $val->user->name;
                 $output[$key]['status'] = $val->status;
+                $output[$key]['read_status'] = $val->read_status;
             }
 
         } else {
@@ -107,6 +108,10 @@ class TaskController extends Controller
                 $output[$key]['leader_userid'] = $projectTask->user_id;
                 $output[$key]['leader_name'] = $projectTask->user->name;
                 $output[$key]['status'] = $projectTask->status;
+                $output[$key]['member_status'] = $val->status;
+                $output[$key]['not_begin'] = $val->not_begin;
+                $output[$key]['underway'] = $val->underway;
+                $output[$key]['finish'] = $val->finish;
             }
         }
 
@@ -378,6 +383,16 @@ class TaskController extends Controller
     }
 
 
-
+    /**
+     * 获取任务列表
+     * @param ProjectRequest $request
+     * @return string
+     */
+    public function taskStatus(ProjectRequest $request) {
+        $userId = $request->user()->id;
+        $dao = new TaskDao();
+        $result = $dao->getTaskStatus($userId);
+        return JsonBuilder::Success($result);
+    }
 
 }

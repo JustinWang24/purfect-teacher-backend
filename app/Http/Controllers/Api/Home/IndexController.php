@@ -188,6 +188,7 @@ class IndexController extends Controller
         $grade     = $user->gradeUser->grade;
 
         $data = [
+            'student_id'     => $user->id,
             'name'           => $user->name,
             'nice_name'      => $user->nice_name,
             'avatar'         => $profile->avatar,

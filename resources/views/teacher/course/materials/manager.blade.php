@@ -1,139 +1,80 @@
-@php
-/**
-* @var \App\Models\Course $course
-*/
-$courseTeacher = $course->getCourseTeacher($teacher->id);
-@endphp
 @extends('layouts.app')
 @section('content')
     <div id="course-materials-manager-app">
         <div class="row">
             <el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal" @select="handleMenuSelect" style="margin: 0 auto;">
-                <el-menu-item index="1">课时选择</el-menu-item>
-                <el-menu-item index="2">{{ $course->name }}课件管理</el-menu-item>
+                <el-menu-item index="1">我的课程</el-menu-item>
+                <el-menu-item index="2">课件管理</el-menu-item>
                 <el-menu-item index="3">学生管理</el-menu-item>
                 <el-menu-item index="4"><a href="https://www.baidu.com" target="_blank">查看课表</a></el-menu-item>
             </el-menu>
         </div>
 
-        <div class="row">
+        <div class="row" v-show="activeIndex === '1'">
             <div class="col-sm-12 col-md-6 col-lg-6 col-xl-6">
-            <div class="card">
-                <div class="card-body">
-                    <h2>{{ $course->name }} ({{ $course->duration }}课时)</h2>
-                    <hr>
-                    <p>
-                        <el-button type="text" @click="showNotesEditor">
-                            @{{ showEditor ? '关闭说明信息编辑器' : '编辑说明信息' }}
-                        </el-button>
-                    </p>
-                    <div v-show="!showEditor">
-                        {!! $courseTeacher->teacher_notes !!}
-                    </div>
-                    <div v-show="showEditor">
-                        <Redactor v-model="notes.teacher_notes" placeholder="请输入内容" :config="configOptions" />
-                        @{{ notes.teacher_notes }}
-                    </div>
-                    <hr>
-                    <el-timeline>
-                        @foreach(range(1, $course->duration) as $idx)
-                        <el-timeline-item timestamp="第{{ $idx }}课" placement="top">
-                            <el-card>
-                                @foreach($materials as $courseMaterial)
-                                    @if($idx === $courseMaterial->index)
-                                    <p>
-                                        <el-tag size="small" type="{{ \App\Models\Courses\CourseMaterial::GetTypeTagClass($courseMaterial->type) }}">
-                                            {{ \App\Models\Courses\CourseMaterial::GetTypeText($courseMaterial->type) }}
-                                        </el-tag>
-                                        @if($courseMaterial->media_id === 0)
-                                            <el-tag size="small">
-                                                外部链接
-                                            </el-tag>
-                                        @endif
-                                        <span>
-                                            <a href="{{ $courseMaterial->url }}" target="_blank">
-                                                {{ $courseMaterial->description }}
-                                            </a>
-                                        </span>
-                                    </p>
-                                    <p style="font-size: 10px;color: #cccccc;" class="text-right">
-                                        上传于{{ _printDate($courseMaterial->created_at) }} &nbsp;
-                                        <el-button type="text" @click="deleteMaterial({{ $courseMaterial->id }})">
-                                            <span class="text-danger">删除</span>
-                                        </el-button>
-                                        <el-button type="text" @click="editMaterial({{ $courseMaterial->id }})">
-                                            <span>修改</span>
-                                        </el-button>
-                                    </p>
-                                    <hr style="margin-top: 3px;">
-                                    @endif
-                                @endforeach
-                                <p class="text-right">
-                                    <el-button size="mini" @click="addMaterial({{ $idx }})">添加课件</el-button>
-                                </p>
-                            </el-card>
-                        </el-timeline-item>
-                        @endforeach
-                    </el-timeline>
-                </div>
-            </div>
-        </div>
-            <div class="col-sm-12 col-md-6 col-lg-6 col-xl-6">
-            <div class="card">
-                <div class="card-body" v-show="showMaterialForm">
-                    <el-form :model="courseMaterialModel" label-width="120px" class="course-form" style="margin-top: 20px;">
-                        <el-form-item label="第几次课">
-                            <el-select v-model="courseMaterialModel.index" placeholder="请选择第几次课">
-                                @foreach(range(1, $course->duration) as $index)
-                                    <el-option label="第{{ $index }}课" :value="{{ $index }}"></el-option>
-                                @endforeach
-                            </el-select>
-                        </el-form-item>
-
-                        <el-form-item label="课件类型">
-                            <el-select v-model="courseMaterialModel.type" placeholder="请选择课件类型">
-                                @foreach(\App\Models\Courses\CourseMaterial::AllTypes() as $key => $txt)
-                                    <el-option label="{{ $txt }}" :value="{{ $key }}"></el-option>
-                                @endforeach
-                            </el-select>
-                        </el-form-item>
-
-
-                        <el-form-item label="课件描述">
-                            <el-input placeholder="选填: 课件的描述" type="textarea" v-model="courseMaterialModel.description"></el-input>
-                        </el-form-item>
-
-                        <el-form-item label="外部链接">
-                            <el-input placeholder="选填: 外部引用的URL链接地址" type="textarea" v-model="courseMaterialModel.url"></el-input>
-                        </el-form-item>
-
-                        <el-form-item label="选择课件文件">
-                            <el-button type="primary" size="tiny" icon="el-icon-picture" v-on:click="showFileManagerFlag=true">
-                                从我的云盘添加
+                <div class="card">
+                    <div class="card-body">
+                        <h2>{{ $course->name }} (总计{{ $course->duration }}课时)</h2>
+                        <hr>
+                        <h4>课程简介与教学计划:</h4>
+                        <div v-if="notes && !showEditor">
+                            <div v-html="notes.teacher_notes"></div>
+                        </div>
+                        <p class="mt-3">
+                            <el-button type="text" @click="showNotesEditor">
+                                @{{ showEditor ? '' : '编辑课程简介与教学计划' }}
                             </el-button>
-                            <p v-if="selectedFile" class="mt-4">
-                                已选择的文件:
-                                <a :href="selectedFile.url">
-                                    @{{ selectedFile.description }}
-                                </a>
-                                &nbsp;
-                                <el-button type="text" @click="selectedFile = null"><span class="text-danger">放弃</span></el-button>
-                            </p>
-                        </el-form-item>
-                        <p class="text-danger text-right">注意: 课件只能是外部链接或者云盘文件中的一种</p>
-                        <el-button style="margin-left: 10px;" size="small" type="success" @click="submitUpload">保存</el-button>
-                    </el-form>
+                        </p>
+                        <div v-show="notes && showEditor">
+                            <Redactor v-model="notes.teacher_notes" placeholder="请输入内容" :config="configOptions" />
+                            @{{ notes.teacher_notes }}
+                        </div>
+                        <div class="mt-3" v-show="showEditor">
+                            <el-button type="primary" @click="saveNotes">保存/关闭</el-button>
+                        </div>
+                        <hr>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-12 col-md-6 col-lg-6 col-xl-6">
+                <div class="card">
+                    <div class="card-body">
+                        <h2>教学日志 <el-button class="pull-right" type="primary" size="small" icon="el-icon-edit" @click="showLogEditorHandler()">写日志</el-button></h2>
+                        <hr>
+                        <div v-show="showLogEditor">
+                            <el-form :model="logModel" label-width="80px" class="course-form" style="margin-top: 20px;">
+                                <el-form-item label="标题">
+                                    <el-input placeholder="必填: 标题" v-model="logModel.title"></el-input>
+                                </el-form-item>
+                                <el-form-item label="标题">
+                                    <el-input placeholder="必填: 日志内容" type="textarea" v-model="logModel.content"></el-input>
+                                </el-form-item>
+                                <el-button style="margin-left: 10px;" size="small" type="success" @click="saveLog">保存</el-button>
+                                <el-button style="margin-left: 10px;" size="small" @click="showLogEditor=false">关闭</el-button>
+                            </el-form>
+                            <hr>
+                        </div>
+
+                        <el-card class="box-card mb-4" v-for="log in logs" :key="log.id" shadow="hover">
+                            <div class="text item pb-3">
+                                <h4>标题: @{{ log.title }}</h4>
+                                <p style="color: #ccc; font-size: 10px;">最后更新于: @{{ log.updated_at ? log.updated_at : '刚刚' }}</p>
+                                <p>内容: @{{ log.content }}</p>
+                                <el-button style="float: left;" size="mini" type="primary" @click="showLogEditorHandler(log)">编辑</el-button>
+                                <el-button style="float: right;" size="mini" type="danger" @click="deleteLog(log)">删除</el-button>
+                            </div>
+                        </el-card>
+                    </div>
                 </div>
             </div>
         </div>
+
+        <div  v-show="activeIndex === '2'">
+            <lecture :lecture="lecture" v-if="lecture" :loading="loadingData" user-uuid="{{ $teacher->uuid }}"></lecture>
         </div>
-        @include(
-            'reusable_elements.section.file_manager_component',
-            ['pickFileHandler'=>'pickFileHandler']
-        )
 
         <el-dialog title="{{ $course->name }} ({{ $course->duration }}课时)" :visible.sync="courseIndexerVisible">
-            <course-indexer :count="{{ $course->duration }}" v-on:index-clicked="switchCourseIndex"></course-indexer>
+            <course-indexer :count="{{ $course->duration }}" :highlight="highlight" v-on:index-clicked="switchCourseIndex"></course-indexer>
         </el-dialog>
 
     </div>
@@ -141,6 +82,5 @@ $courseTeacher = $course->getCourseTeacher($teacher->id);
          data-school="{{ session('school.id') }}"
          data-course='{!! $course !!}'
          data-teacher='{!! $teacher !!}'
-         data-notes='{!! $courseTeacher !!}'
     ></div>
 @endsection

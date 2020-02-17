@@ -12,6 +12,23 @@ Route::prefix('teacher')->group(function () {
     Route::post('course/materials/create', 'Course\MaterialsController@create')->name('teacher.course.materials.create'); // 教师添加课件
     Route::post('course/materials/load', 'Course\MaterialsController@load')->name('teacher.course.materials.load'); // 教师加载课件
     Route::post('course/materials/delete', 'Course\MaterialsController@delete')->name('teacher.course.materials.delete'); // 教师删除课件
+    Route::post('course/materials/load-teacher-note', 'Course\MaterialsController@load_teacher_note')
+        ->name('teacher.course.materials.load-teacher-note'); // 加载教师对课程的note
+
+    Route::post('course/materials/save-teacher-note', 'Course\MaterialsController@save_teacher_note')
+        ->name('teacher.course.materials.save-teacher-note'); // 保存教师对课程的note
+
+    Route::post('course/materials/save-log', 'Course\MaterialsController@save_log')
+        ->name('teacher.course.materials.save-log'); // 保存教师对课程的日志
+
+    Route::post('course/materials/load-lecture', 'Course\MaterialsController@load_lecture')
+        ->name('teacher.course.materials.load-lecture'); // 教师加载指定的课件
+
+    Route::post('course/materials/load-lecture-materials', 'Course\MaterialsController@load_lecture_materials')
+        ->name('teacher.course.materials.load-lecture-materials'); // 教师加载指定的课节中的所有材料文件
+
+    Route::post('course/materials/save-lecture', 'Course\MaterialsController@save_lecture')
+        ->name('teacher.course.materials.save-lecture'); // 教师保存指定的课件
 
 
     Route::get('conference/index', 'ConferenceController@index')->name('teacher.conference.index');    // 会议列表
@@ -175,6 +192,7 @@ Route::prefix('teacher')->group(function () {
             Route::get('school-news','LY\HomeController@school_news')
                 ->name('teacher.ly.home.school-news');
         });
+
         Route::prefix('assistant')->group(function (){
             // 首页
             Route::get('index','LY\AssistantController@index')
@@ -185,7 +203,23 @@ Route::prefix('teacher')->group(function () {
 
             Route::get('evaluation','LY\AssistantController@evaluation')
                 ->name('teacher.ly.assistant.evaluation');
+
+            Route::get('grades-manager','LY\AssistantController@grades_manager')
+                ->name('teacher.ly.assistant.grades-manager');
+
+            Route::get('electives','LY\AssistantController@electives')
+                ->name('teacher.ly.assistant.electives');
+
+            Route::get('students-manager','LY\AssistantController@students_manager')
+                ->name('teacher.ly.assistant.students-manager');
+
+            Route::get('grades-check-in','LY\AssistantController@grades_check_in')
+                ->name('teacher.ly.assistant.grades-check-in');
+
+            Route::get('grades-evaluations','LY\AssistantController@grades_evaluations')
+                ->name('teacher.ly.assistant.grades-evaluations');
         });
+
         Route::prefix('oa')->group(function (){
             // 首页
             Route::get('index','LY\OaController@index')
