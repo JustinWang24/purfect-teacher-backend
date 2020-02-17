@@ -102,7 +102,7 @@ class NewMeetingController extends Controller
         $result = pageReturn($return);
         $data = [];
         foreach ($result['list'] as $key => $item) {
-            if($item->status == NewMeetingUser::UN_SIGNIN) {
+            if($item->signIn_status == NewMeetingUser::UN_SIGNIN) {
                 $status = $item->status;
             } else {
                 $status = NewMeetingUser::NORMAL_SIGNIN;
