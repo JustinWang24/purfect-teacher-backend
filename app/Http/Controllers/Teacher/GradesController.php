@@ -133,4 +133,17 @@ class GradesController extends Controller
         $this->dataForView['returnPath'] = $logic->getReturnPath();
         return view($logic->getViewPath(),array_merge($this->dataForView, $logic->getUsers()));
     }
+
+    public function load_students(GradeRequest $request){
+        $gradeDao = new GradeDao();
+        $grade = $gradeDao->getGradeById($request->getGradeId());
+
+        // 找到这个班级所有的学生
+        $students = $grade->allStudents();
+
+        return JsonBuilder::Success([
+            'grade'=>$grade,
+            'students'=>$students
+        ]);
+    }
 }

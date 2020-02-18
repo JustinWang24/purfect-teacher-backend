@@ -6,7 +6,6 @@
  */
 
 namespace App\Dao\Courses\Lectures;
-use App\Dao\Schools\GradeDao;
 use App\Dao\Users\GradeUserDao;
 use App\Models\Courses\Homework;
 use App\Models\Courses\Lecture;
