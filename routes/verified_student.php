@@ -9,4 +9,8 @@ Route::prefix('verified_student')->group(function () {
     // 校园通讯录
     Route::get('contacts/list', 'StudentsController@contacts_list')
         ->name('verified_student.contacts.list');
+
+    // 学生的课程管理
+    Route::get('course/manager', 'CourseController@manager')
+        ->name('verified_student.course.manager');
 });

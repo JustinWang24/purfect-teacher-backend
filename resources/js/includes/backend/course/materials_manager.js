@@ -1,6 +1,6 @@
 // 学校的课程管理
 import {Util} from "../../../common/utils";
-import {saveMaterial, loadMaterial,deleteMaterial, loadLectureByIndex} from '../../../common/course_material';
+import {loadMaterial,deleteMaterial, loadLectureByIndex} from '../../../common/course_material';
 
 $(document).ready(function(){
     if(document.getElementById('course-materials-manager-app')){
