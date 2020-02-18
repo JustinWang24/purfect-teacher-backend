@@ -16,6 +16,7 @@ class IndexController extends Controller
         $data = [
             ['name' => '通知公告', 'icon' => asset('assets/img/teacher/ass-icon3.png')],
             ['name' => '日志', 'icon' => asset('assets/img/teacher/ass-icon3.png')],
+            ['name' => '内部信', 'icon' => asset('assets/img/teacher/ass-icon3.png')],
             ['name' => '会议', 'icon' => asset('assets/img/teacher/ass-icon3.png')],
             ['name' => '公文', 'icon' => asset('assets/img/teacher/ass-icon3.png')],
             ['name' => '任务', 'icon' => asset('assets/img/teacher/ass-icon3.png')],
