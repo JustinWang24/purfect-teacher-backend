@@ -14,13 +14,26 @@ use Illuminate\Database\Eloquent\Collection;
 class CommonDao
 {
     public static $limit = 10;
-
+    public static $bcckend_limit = 15;
    //---------------------------------------api定义的静态属性-------------------------------------
    // 状态 状态(0:关闭,1:开启)
    public static $wifiContentsStatusArr = [
       0 => '关闭' ,
       1 => '开启' ,
    ];
+    // 状态 状态(-1:待审核,0:关闭活动,1:审核通过,2:审核未通过)
+    public static $afficheStatusArr = [
+        -1 => '待审核' ,
+        0 => '已关闭' ,
+        1 => '审核通过' ,
+        2 => '审核未通过' ,
+    ];
+    // 类型 'text','video','image'
+    public static $afficheTypeArr = [
+        'text' => '文字' ,
+        'video' => '视频' ,
+        'image' => '图片'
+    ];
     // 评价(1:未评价,2:已评价)
     public static $commentArr = [
         1 => '未评价',
@@ -231,11 +244,9 @@ class CommonDao
             $str = $hour . '小时前';
         }
         else {
-            $str = date( 'm-d' , $ustime );;
+            $str = date( 'm-d' , $ustime );
         }
         return $str;
     }
-
-
 
 }
