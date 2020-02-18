@@ -5,7 +5,7 @@
  * Date: 20/01/11
  * Time: 11:33 AM
  */
-namespace App\Dao\Affiche\Api;
+namespace App\Dao\Affiche\Backstage;
 
 use App\Models\Affiche\Affiche;
 use App\Models\Affiche\AffichePics;
@@ -18,8 +18,7 @@ use Illuminate\Support\Facades\DB;
 
 class AfficheDao extends \App\Dao\Affiche\CommonDao
 {
-    public function __construct()
-    {
+    public function __construct(){
     }
 
     /**
@@ -82,34 +81,59 @@ class AfficheDao extends \App\Dao\Affiche\CommonDao
     /**
      * Func 获取动态列表
      *
-     * @param['school_id']  学校ID,0表示全部
-     * @param['iche_categroypid']  顶级分类ID,0表示全部
-     * @param['page']  分页ID
+     * @param['school_id'] 否 int 学校Iid
+     * @param['keywords'] 是 string 关键词
+     * @param['status'] 是 array 状态(数组)
+     * @param['page']  int 分页ID
      *
      * @return array
      */
-    public function getAfficheListInfo($school_id = 0, $iche_categroypid = 0, $page = 1)
+    public function getAfficheListInfo($param = [], $page = 1)
     {
+        $condition = [];
         // 检索条件
-        if ($school_id) $condition[] = ['school_id', '=', (Int)$school_id]; // 0 表示全校
-        if ($iche_categroypid) $condition[] = ['iche_categroypid', '=', (Int)$iche_categroypid];
-        $condition[] = ['status', '=', 1];
+        if (isset($param['school_id']) && $param['school_id'] > 0) {
+            $condition[] = ['a.school_id', '=', (Int)$param['school_id']];
+        }
+        if (isset($param['campus_id']) && $param['campus_id'] > 0) {
+            $condition[] = ['a.campus_id', '=', (Int)$param['campus_id']];
+        }
 
         // 获取的字段
-        $fieldArr = [
-            'icheid', 'user_id', 'school_id' , 'iche_type', 'iche_title',
-            'iche_content', 'iche_view_num', 'iche_share_num',
-            'iche_praise_num', 'iche_comment_num', 'created_at'
-        ];
+        $fieldArr = ['a.*', 'b.name', 'b.mobile'];
 
-        $data = Affiche::where($condition)->select($fieldArr)
-            ->orderBy('icheid', 'desc')
-            ->offset($this->offset($page))
-            ->limit(self::$limit)
-            ->get();
-
-        return !empty($data) ? $data->toArray() : [];
+        return Affiche::from('affiches as a')
+            ->where($condition)
+            ->whereIn('a.status',(array)$param['status'] )
+            ->where('b.mobile', 'like', '%'.trim($param['keywords']).'%')
+            ->join('users as b', 'a.user_id', '=', 'b.id')
+            ->orderBy('a.icheid', 'desc')
+            ->select($fieldArr)
+            ->paginate(self::$bcckend_limit, $fieldArr, 'page', $page);
     }
+
+    /**
+     * Func 获取动态详情
+     *
+     * @param['icheid']  动态id
+     *
+     * @return array
+     */
+    public function getAfficheOneInfo($icheid = 0)
+    {
+        if (!intval($icheid)) return [];
+
+        // 获取的字段
+        $fieldArr = ['*'];
+
+        return Affiche::where('icheid', '=', $icheid)->first($fieldArr);
+    }
+
+
+
+
+
+
 
     /**
      * Func 获取用户额动态列表
@@ -141,32 +165,6 @@ class AfficheDao extends \App\Dao\Affiche\CommonDao
         return !empty($data) ? $data->toArray() : [];
     }
 
-    /**
-     * Func 获取动态详情
-     *
-     * @param['icheid']  动态id
-     *
-     * @return array
-     */
-    public function getAfficheOneInfo($icheid = 0)
-    {
-        if (!intval($icheid)) return [];
-
-        // 检索条件
-        $condition[] = ['icheid', '=', $icheid];
-        $condition[] = ['status', '=', 1];
-
-        // 获取的字段
-        $fieldArr = [
-            'icheid', 'user_id', 'school_id' , 'iche_type', 'iche_title',
-            'iche_content', 'iche_view_num', 'iche_share_num',
-            'iche_praise_num', 'iche_comment_num', 'created_at'
-        ];
-
-        $data = Affiche::where($condition)->first($fieldArr);
-
-        return !empty($data) ? $data->toArray() : [];
-    }
 
     /**
      * Func 获取动态图片列表
@@ -255,22 +253,5 @@ class AfficheDao extends \App\Dao\Affiche\CommonDao
         $data = AfficheVideo::where($condition)->first($fileArr);
 
         return !empty($data) ? $data->toArray() : (object)null;
-    }
-
-    /**
-     * Func 冬天删除
-     *
-     * @param['iche_id']  动态ID
-     *
-     * @return array
-     */
-    public function delAfficheOneInfo($iche_id = 0)
-    {
-        if (!intval($iche_id)) return [];
-
-        // 查询条件
-        $condition[] = ['icheid', '=', $iche_id];
-
-        return Affiche::where($condition)->update(['status'=>0]);
     }
 }

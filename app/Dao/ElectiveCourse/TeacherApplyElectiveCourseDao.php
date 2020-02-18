@@ -23,6 +23,7 @@ use App\Models\ElectiveCourses\StudentEnrolledOptionalCourse;
 use App\Models\ElectiveCourses\TeacherApplyElectiveCourse;
 use App\Dao\Schools\MajorDao;
 use App\Dao\Users\UserDao;
+use App\Models\Schools\SchoolConfiguration;
 use App\User;
 use App\Utils\JsonBuilder;
 use App\Utils\Misc\ConfigurationTool;
@@ -97,6 +98,162 @@ class TeacherApplyElectiveCourseDao
         return TeacherApplyElectiveCourse::where('school_id',$schoolId)
             ->orderBy('created_at','desc')
             ->paginate(ConfigurationTool::DEFAULT_PAGE_SIZE);
+    }
+
+    public function getApplicationByTeacherById($applyid, $schoolId) {
+        $item = TeacherApplyElectiveCourse::with('course')->where('id', '=', $applyid)->first();
+        $nowDate = Carbon::now()->timestamp;
+        //将周转换成日期
+        $config = (new SchoolDao())->getSchoolById($schoolId)->configuration;
+        $year = $item->start_year . '-' . ($item->term == SchoolConfiguration::LAST_TERM ? SchoolConfiguration::FIRST_TERM_START_MONTH : SchoolConfiguration::SECOND_TERM_START_MONTH) . '-01';
+        $weeks = $config->getAllWeeksOfTerm($item->term, false, $year);
+        $weekList = [];
+        foreach ($weeks as $week) {
+            $weekList[$week->getname()] = $week;
+        }
+        $tmp = [
+            'applyid' => $item->id,
+            'name' => $item->name,
+            'teacher_name' => $item->teacher_name,
+            'scores' => $item->course->scores,
+            'max_num' => $item->course->courseElective->max_num > 0 ? $item->course->courseElective->max_num : $item->course->courseElective->open_num,
+            'desc' => $item->desc,
+            'apply_content' => $item->apply_content,
+            'reply_content' => $item->reply_content,
+            'created_at' => $item->created_at->toDateTimeString(),//?为什么自动转换会变成年-月-日
+            'elective_status' => $item->course->courseElective->status,
+            'elective_enrol_start_at' => Carbon::parse($item->course->courseElective->enrol_start_at),
+            'elective_expired_at' => Carbon::parse($item->course->courseElective->expired_at)
+        ];
+        foreach ($item->course->arrangements as $arrangement) {
+            $tmp['arrangement'][] = [
+                'week' => $arrangement->week,
+                'week_day' => $weekList['第' . $arrangement->week . '周']->getstart(),
+                'day_index' => $arrangement->day_index,
+                'time' => $arrangement->timeslot->name,
+                'building' => $arrangement->building_name,
+                'classroom' => $arrangement->classroom_name,
+            ];
+        }
+        $tmp['min_day'] = reset($tmp['arrangement'])['week_day'];
+        $tmp['max_day'] = end($tmp['arrangement'])['week_day'];
+        if ($tmp['elective_status'] == CourseElective::STATUS_CANCEL) {
+            $tmp['status'] = 1;//已关闭
+            $retList[] = $tmp;
+        }else {
+            if ($nowDate < $tmp['elective_enrol_start_at']->timestamp) {
+                $tmp['status'] = 2;//待选课
+            }elseif ($nowDate < $tmp['elective_expired_at']->timestamp) {
+                $tmp['status'] = 3;//报名中
+            }elseif ($nowDate < $tmp['min_day']->timestamp) {
+                $tmp['status'] = 4;//待开课
+            }elseif ($nowDate > $tmp['max_day']->timestamp) {
+                $tmp['status'] = 5;//已结束
+            }elseif ($nowDate > $tmp['min_day']->timestamp) {
+                $tmp['status'] = 6;//进行中
+            }else {
+                $tmp['status'] = 7;//异常
+            }
+        }
+        $userList = StudentEnrolledOptionalCourse::with('user')->where(['course_id' => $item->course_id,'teacher_id' => $item->teacher_id])->get();
+        $tmp['user_list'] = [];
+        foreach ($userList as $user) {
+            $tmp['user_list'][] = [
+                'name' => $user->user->name,
+                'avatar' => $user->user->profile->avatar,
+                'major' => $user->user->gradeUser->major->name,
+                'created_at' => $user->created_at
+            ];
+        }
+        return $tmp;
+    }
+
+    /**
+     * 根据教师获取分页
+     * @param $teacherId
+     * @param $schoolId
+     * @param $type
+     * @param $page
+     * @return array
+     */
+    public function getApplicationsByTeacher($teacherId, $schoolId, $type, $page){
+        //UI的分类与表结构太不一致,全部拿到内存处理
+        $list = TeacherApplyElectiveCourse::with('course')->where('teacher_id', '=', $teacherId)->where('course_id', '>', 0)->orderBy('id', 'desc')->get();
+        $retList = [];
+        $nowDate = Carbon::now()->timestamp;
+        foreach ($list as $item) {
+
+            //将周转换成日期
+            $config = (new SchoolDao())->getSchoolById($schoolId)->configuration;
+            $year = $item->start_year . '-' . ($item->term == SchoolConfiguration::LAST_TERM ? SchoolConfiguration::FIRST_TERM_START_MONTH : SchoolConfiguration::SECOND_TERM_START_MONTH) . '-01';
+            $weeks = $config->getAllWeeksOfTerm($item->term, false, $year);
+            $weekList = [];
+            foreach ($weeks as $week) {
+                $weekList[$week->getname()] = $week;
+            }
+
+            $tmp = [
+                'applyid' => $item->id,
+                'name' => $item->name,
+                'created_at' => $item->created_at->toDateTimeString(),//?为什么自动转换会变成年-月-日
+                'elective_status' => $item->course->courseElective->status,
+                'elective_enrol_start_at' => Carbon::parse($item->course->courseElective->enrol_start_at),
+                'elective_expired_at' => Carbon::parse($item->course->courseElective->expired_at)
+            ];
+            foreach ($item->course->arrangements as $arrangement) {
+                $tmp['arrangement'][] = [
+                    'week' => $arrangement->week,
+                    'week_day' => $weekList['第' . $arrangement->week . '周']->getstart(),
+                    'day_index' => $arrangement->day_index,
+                    'time' => $arrangement->timeslot->name
+                ];
+            }
+            $tmp['min_day'] = reset($tmp['arrangement'])['week_day'];
+            $tmp['max_day'] = end($tmp['arrangement'])['week_day'];
+            if (empty($type)) {
+                if ($tmp['elective_status'] == CourseElective::STATUS_CANCEL) {
+                    $tmp['status'] = 1;//已关闭
+                    $retList[] = $tmp;
+                }else {
+                    if ($nowDate < $tmp['elective_enrol_start_at']->timestamp) {
+                        $tmp['status'] = 2;//待选课
+                        $retList[] = $tmp;
+                    }elseif ($nowDate < $tmp['elective_expired_at']->timestamp) {
+                        $tmp['status'] = 3;//报名中
+                        $retList[] = $tmp;
+                    }elseif ($nowDate < $tmp['min_day']->timestamp) {
+                        $tmp['status'] = 4;//待开课
+                        $retList[] = $tmp;
+                    }else {
+
+                    }
+                }
+            }else {
+                if ($tmp['elective_status'] != CourseElective::STATUS_CANCEL) {
+                    if ($nowDate > $tmp['max_day']->timestamp) {
+                        $tmp['status'] = 5;//已结束
+                        $retList[] = $tmp;
+                    }elseif ($nowDate > $tmp['min_day']->timestamp) {
+                        $tmp['status'] = 6;//进行中
+                        $retList[] = $tmp;
+                    }
+                }
+            }
+        }
+        $return = [];
+        $i = 0;
+        $start = ($page-1) * ConfigurationTool::DEFAULT_PAGE_SIZE;
+        $end = $start + ConfigurationTool::DEFAULT_PAGE_SIZE;
+        foreach ($retList as $item) {
+            if ($i >= $start) {
+                $return[] = $item;
+            }
+            if ($i >= $end) {
+                break;
+            }
+            $i++;
+        }
+        return $return;
     }
 
     /**
@@ -413,9 +570,10 @@ class TeacherApplyElectiveCourseDao
             //创建课程
             $courseDao = new CourseDao();
             $course = $courseDao->createCourse($data);
-
             //标记申请表为发布状态
             $this->publishedApply($applyId);
+            //记录一下申请和课表对应id
+            TeacherApplyElectiveCourse::where('id', $applyId)->update(['course_id' => $course->getData()->id]);
             DB::commit();
             $messageBag->setCode(JsonBuilder::CODE_SUCCESS);
             $messageBag->setData($course->getData());
