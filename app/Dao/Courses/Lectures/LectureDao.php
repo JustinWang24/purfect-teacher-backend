@@ -4,18 +4,18 @@
  * Author: Justin Wang
  * Email: hi@yue.dev
  */
-
 namespace App\Dao\Courses\Lectures;
-use App\Dao\Schools\GradeDao;
-use App\Dao\Users\GradeUserDao;
-use App\Models\Courses\Homework;
-use App\Models\Courses\Lecture;
-use App\Models\Courses\LectureMaterial;
-use App\Models\Users\GradeUser;
-use App\Utils\ReturnData\MessageBag;
-use App\Utils\JsonBuilder;
-use App\Utils\Time\GradeAndYearUtil;
+
+use App\Models\Courses\LectureMaterialType;
 use Carbon\Carbon;
+use App\Utils\JsonBuilder;
+use App\Dao\Users\GradeUserDao;
+use App\Models\Courses\Lecture;
+use App\Models\Users\GradeUser;
+use App\Models\Courses\Homework;
+use App\Utils\ReturnData\MessageBag;
+use App\Utils\Time\GradeAndYearUtil;
+use App\Models\Courses\LectureMaterial;
 use Illuminate\Database\Eloquent\Collection;
 
 class LectureDao
@@ -119,5 +119,17 @@ class LectureDao
             $bag->setMessage($exception->getMessage());
         }
         return $bag;
+    }
+
+
+    /**
+     * 获取学习资料的类型
+     * @param $schoolId
+     * @return mixed
+     */
+    public function getMaterialType($schoolId) {
+        $map = ['school_id'=>$schoolId];
+        $field = ['id as type_id', 'name'];
+        return LectureMaterialType::where($map)->select($field)->get();
     }
 }

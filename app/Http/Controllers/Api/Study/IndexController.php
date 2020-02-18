@@ -15,6 +15,7 @@ use App\Dao\Schools\SchoolDao;
 use App\Http\Controllers\Controller;
 use App\Models\Courses\CourseMaterial;
 use App\Dao\Timetable\TimetableItemDao;
+use App\Dao\Courses\Lectures\LectureDao;
 use App\Http\Requests\MyStandardRequest;
 use App\Dao\AttendanceSchedules\AttendancesDao;
 use App\Dao\AttendanceSchedules\AttendancesDetailsDao;
@@ -104,6 +105,20 @@ class IndexController extends Controller
             'evaluateTeacher' => $evaluateTeacher // 评教 true false
         ];
         return JsonBuilder::Success($data);
+    }
+
+
+    /**
+     * 课件类型
+     * @param MyStandardRequest $request
+     * @return string
+     */
+    public function materialType(MyStandardRequest $request) {
+        $user = $request->user();
+        $schoolId = $user->getSchoolId();
+        $dao = new LectureDao();
+        $list = $dao->getMaterialType($schoolId);
+        return JsonBuilder::Success($list);
     }
 
 }
