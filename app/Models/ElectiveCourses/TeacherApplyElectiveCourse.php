@@ -2,6 +2,7 @@
 
 namespace App\Models\ElectiveCourses;
 
+use App\Models\Course;
 use App\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
@@ -21,7 +22,7 @@ class TeacherApplyElectiveCourse extends Model
     protected $fillable = [
         'school_id', 'teacher_id', 'teacher_name', 'major_id',
         'code', 'name', 'scores', 'year', 'term', 'desc', 'open_num','max_num',
-        'status', 'reply_content', 'start_year'
+        'status', 'reply_content', 'start_year', 'apply_content', 'course_id'
     ];
 
     /**
@@ -51,6 +52,10 @@ class TeacherApplyElectiveCourse extends Model
     public function TimeSlot(){
         // Todo: **** 删除 ApplyGroup 的关联关系
         return $this->hasMany(ApplyGroup::class, 'apply_id', 'id');
+    }
+
+    public function course(){
+        return $this->belongsTo(Course::class);
     }
 
     /**
