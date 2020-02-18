@@ -3,9 +3,41 @@
         <div class="col-sm-12 col-md-6 col-lg-6 col-xl-6 lecture-detail">
             <div class="card">
                 <div class="card-body">
-                    <h3>第{{ lecture.idx }}节: {{ lecture.title }}</h3>
+                    <h3>
+                        <i v-show="loading || loadingData" class="el-icon-loading"></i>
+                        第{{ lecture.idx }}节: {{ lectureModel.title.length>0 ? lectureModel.title : '未添加标题' }}
+                    </h3>
+                    <hr>
+                    <div v-show="!showLectureForm">
+                        <p>
+                            {{ lectureModel.summary.length > 0 ? lectureModel.summary :'为添加概要' }}
+                        </p>
+                        <el-button type="text" @click="showLectureSummaryEditForm">编辑课程概要</el-button>
+                    </div>
+                    <div v-show="showLectureForm">
+                        <el-form :model="lectureModel" label-width="80px" class="course-form" style="margin-top: 20px;">
+                            <el-form-item label="标题">
+                                <el-input placeholder="必填: 标题" v-model="lectureModel.title"></el-input>
+                            </el-form-item>
+
+                            <el-form-item label="概要">
+                                <el-input placeholder="必填: 概要" type="textarea" v-model="lectureModel.summary"></el-input>
+                            </el-form-item>
+                            <el-button style="margin-left: 10px;" size="small" type="success" @click="saveLecture">保存</el-button>
+                            <el-button style="margin-left: 10px;" size="small" @click="showLectureForm = false">关闭</el-button>
+                        </el-form>
+                    </div>
+                    <hr>
+
                     <el-timeline>
-                        <el-timeline-item v-for="(type, typeIdx) in materialTypes" :key="typeIdx" :timestamp="type" placement="top">
+                        <el-timeline-item
+                                v-for="(type, typeIdx) in materialTypes"
+                                :key="typeIdx"
+                                :timestamp="type"
+                                placement="top"
+                                size="large"
+                                icon="el-icon-folder-opened"
+                        >
                             <el-card>
                                 <div v-for="material in materials" :key="material.id">
                                     <div v-if="isTypeOf(material.type, typeIdx)">
@@ -32,7 +64,7 @@
                                     </div>
                                 </div>
                                 <p class="text-right">
-                                    <el-button size="mini" @click="addMaterial(typeIdx)">添加{{ type }}</el-button>
+                                    <el-button icon="el-icon-upload" size="mini" @click="addMaterial(typeIdx)">添加{{ type }}</el-button>
                                 </p>
                             </el-card>
                         </el-timeline-item>
@@ -41,9 +73,12 @@
             </div>
         </div>
         <div class="col-sm-12 col-md-6 col-lg-6 col-xl-6">
-            <div class="card">
-                <div class="card-body" v-show="showMaterialForm">
+            <div class="card" v-show="showMaterialForm">
+                <div class="card-body">
                     <el-form :model="courseMaterialModel" label-width="120px" class="course-form" style="margin-top: 20px;">
+                        <el-form-item label="当前类型">
+                            <p class="text-primary">{{ currentType }}</p>
+                        </el-form-item>
                         <el-form-item label="课件描述">
                             <el-input placeholder="选填: 课件的描述" type="textarea" v-model="courseMaterialModel.description"></el-input>
                         </el-form-item>
@@ -66,22 +101,72 @@
                             </p>
                         </el-form-item>
                         <p class="text-danger text-right">注意: 课件只能是外部链接或者云盘文件中的一种</p>
-                        <el-button style="margin-left: 10px;" size="small" type="success" @click="submitUpload">保存</el-button>
+                        <el-button icon="el-icon-upload" style="margin-left: 10px;" size="small" type="success" @click="submitUpload">保存</el-button>
+                        <el-button icon="el-icon-close" style="margin-left: 10px;" size="small" @click="showMaterialForm = false">取消</el-button>
                     </el-form>
                 </div>
             </div>
+
+            <div class="card">
+                <div class="card-body">
+                    <h3>
+                        <i v-show="loading || loadingData" class="el-icon-loading"></i>
+                        课后作业
+                        <el-button type="text" icon="el-icon-refresh-right" @click="refreshHomeworkItems">手动刷新</el-button>
+                    </h3>
+                    <hr>
+                    <p>
+                        <el-checkbox-group v-model="selectedGrades" size="medium" @change="onSelectedGradesChangedHandler">
+                            <el-checkbox-button v-for="g in grades" :label="g.id" :key="g.id">{{g.name}}</el-checkbox-button>
+                        </el-checkbox-group>
+                    </p>
+                    <hr>
+                    <homeworks :items="homeworkItems"></homeworks>
+                </div>
+            </div>
         </div>
+        <el-drawer
+                title="我的易云盘"
+                :visible.sync="showFileManagerFlag"
+                direction="rtl"
+                size="100%"
+                custom-class="e-yun-pan">
+            <file-manager
+                    :user-uuid="userUuid"
+                    :allowed-file-types="[]"
+                    :pick-file="true"
+                    v-on:pick-this-file="pickFileHandler"
+            ></file-manager>
+        </el-drawer>
     </div>
 </template>
 
 <script>
     import {Constants} from '../../../common/constants';
     import {Util} from '../../../common/utils';
+    import {saveMaterial, saveLecture, loadLectureMaterials, loadMaterial, loadLectureHomework} from '../../../common/course_material';
+    import FileManger from '../../fileManager/FileManager';
+    import Homeworks from './Homeworks';
 
     export default {
         name: "Lecture",
+        components:{
+            FileManger,Homeworks
+        },
         props:{
             lecture:{
+                required: true
+            },
+            loading:{
+                required:false,
+                default:false
+            },
+            userUuid:{
+                type: String,
+                required: true
+            },
+            grades:{
+                type: Array,
                 required: true
             }
         },
@@ -89,7 +174,25 @@
             'lecture.id': function(val){
                 if(val){
                     this.getLectureMaterials();
+                    this.lectureModel.id = this.lecture.id;
+                    this.lectureModel.title = this.lecture.title;
+                    this.lectureModel.summary = this.lecture.summary;
+                    this.showLectureForm = false;
+                    this.showMaterialForm = false;
+                    this.loading = false;
+
+                    // 设置课节id
+                    this.courseMaterialModel.lecture_id = this.lecture.id;
+                    this.courseMaterialModel.type = null;
+                    // 设置选定的班级的默认id
+                    this.selectedGrades = [];
+                    this.homeworkItems = [];
                 }
+            }
+        },
+        computed:{
+            currentType: function(){
+                return this.materialTypes[this.courseMaterialModel.type-1];
             }
         },
         data(){
@@ -107,10 +210,22 @@
                     index: null,
                     description: null,
                     url: null,
-                    media_id: 0
+                    media_id: 0,
+                    lecture_id: null,
+                },
+                lectureModel: {
+                    id: null,
+                    title: null,
+                    summary: null,
                 },
                 showMaterialForm: false,
+                showLectureForm: false,
+                showFileManagerFlag: false,
                 selectedFile:null,
+                loadingData: false,
+                // 当前选择的班级
+                selectedGrades: [],
+                homeworkItems:[],
             }
         },
         created(){
@@ -121,22 +236,42 @@
                 Constants.COURSE_MATERIAL_TYPES.TYPE_HOMEWORK_TXT,
                 Constants.COURSE_MATERIAL_TYPES.TYPE_EXAM_TXT,
             ];
+            this.lectureModel = this.lecture;
         },
         methods: {
             getLectureMaterials: function(){
-                console.log('Get lecture materials', this.lecture.id);
+                this.loadingData = true;
+                loadLectureMaterials(this.lecture.id).then(res => {
+                    if(Util.isAjaxResOk(res)){
+                        this.materials = res.data.data.materials;
+                    }
+                    else{
+                        this.materials = [];
+                    }
+                    this.loadingData = false;
+                })
             },
             isTypeOf: function(typeId, typeIdx){
                 return typeId === typeIdx+1;
             },
             addMaterial: function(typeIdx){
-
+                // 添加新的课件
+                this.resetMaterialForm(typeIdx+1);
+                this.showMaterialForm = true;
             },
             deleteMaterial: function(material){
 
             },
             editMaterial: function(material){
-
+                loadMaterial(material.id).then(res => {
+                    if(Util.isAjaxResOk(res)){
+                        this.courseMaterialModel = res.data.data.material;
+                        this.showMaterialForm = true;
+                    }
+                    else{
+                        this.$message.error('无法加载课件');
+                    }
+                })
             },
             submitUpload: function(){
                 if(Util.isEmpty(this.courseMaterialModel.index)){
@@ -173,13 +308,15 @@
                     this._startSaving();
                 }
             },
-            resetMaterialForm: function(index){
+            resetMaterialForm: function(type){
                 this.courseMaterialModel.id = null;
-                this.courseMaterialModel.index = index;
-                this.courseMaterialModel.type = null;
+                this.courseMaterialModel.index = this.lecture.idx;
+                this.courseMaterialModel.type = type;
                 this.courseMaterialModel.description = null;
                 this.courseMaterialModel.url = null;
                 this.courseMaterialModel.media_id = 0;
+                this.courseMaterialModel.teacher_id = this.lecture.teacher_id;
+                this.courseMaterialModel.course_id = this.lecture.course_id;
                 this.selectedFile = null;
             },
             _startSaving: function(){
@@ -189,13 +326,56 @@
                             type:'success',
                             message:'保存成功'
                         });
-                        window.location.reload();
+                        // 隐藏表单
+                        this.showMaterialForm = false;
+                        // 从新加载materials
+                        this.getLectureMaterials();
                     }
                     else{
                         this.$message.error('保存失败. ' + res.data.data);
                     }
                 })
             },
+            // 显示编辑可课节的标题，概要的表单
+            showLectureSummaryEditForm: function(){
+                this.showLectureForm = true;
+                this.lectureModel.id = this.lecture.id;
+            },
+            saveLecture: function(){
+                saveLecture(this.lectureModel).then(res => {
+                    if(Util.isAjaxResOk(res)){
+                        this.$message({
+                            type:'success',
+                            message: '保存成功'
+                        })
+                    }
+                    this.showLectureForm = false;
+                })
+            },
+            // 当云盘中的文件被选择
+            pickFileHandler: function(payload){
+                this.selectedFile = payload.file;
+                this.showFileManagerFlag = false;
+            },
+            // 当选择的班级发生变化, 则去更新作业的数据
+            onSelectedGradesChangedHandler: function(updatedGrades){
+                if(updatedGrades.length === 0){
+                    this.homeworkItems = [];
+                }
+                else{
+                    this.refreshHomeworkItems();
+                }
+            },
+            // 刷新作业列表
+            refreshHomeworkItems: function(){
+                this.loadingData = true;
+                loadLectureHomework(this.lecture.id, this.selectedGrades).then(res => {
+                    if(Util.isAjaxResOk(res)){
+                        this.homeworkItems = res.data.data.homeworks;
+                    }
+                    this.loadingData = false;
+                })
+            }
         }
     }
 </script>

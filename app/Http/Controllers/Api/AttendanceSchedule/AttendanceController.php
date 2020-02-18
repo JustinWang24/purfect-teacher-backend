@@ -10,6 +10,7 @@ use App\Dao\Timetable\TimeSlotDao;
 use App\Http\Requests\MyStandardRequest;
 use App\Models\AttendanceSchedules\Attendance;
 use App\Models\AttendanceSchedules\AttendanceCourseTeacher;
+use App\Utils\Time\GradeAndYearUtil;
 use Carbon\Carbon;
 use App\Utils\JsonBuilder;
 use App\Dao\Courses\CourseMajorDao;
@@ -129,7 +130,7 @@ class AttendanceController extends Controller
         $truant['mold'] = AttendancesDetail::MOLD_TRUANT;
         $truant['weekday_index'] = $item->weekday_index;
         $dao = new AttendancesDetailsDao();
-        $re = $dao->getDetailByUserId($truant['student_id'], $item->id);
+        $re = $dao->getDetailByUserId($truant['student_id'], $attendanceInfo->id);
         if (!empty($re)) {
             return JsonBuilder::Success('旷课已添加');
         }
@@ -218,12 +219,22 @@ class AttendanceController extends Controller
         if (empty($item)) {
             return JsonBuilder::Error('未找到该老师目前上的课程');
         }
+
         $dao = new AttendancesDao;
         $result = $dao->getTeacherIsSignByItem($item[0], $user);
         if (is_null($result)) {
             $result = $dao->createAttendanceData($item[0]);
         }
-        $data = $dao->updateTeacherSignByItem($result->id);
+
+        $courseTime = $item[0]->timeSlot->from;
+        $date = Carbon::now()->toTimeString();
+        if($date > $courseTime) {
+            $late = Attendance::TEACHER_LATE;
+        } else {
+            $late = Attendance::TEACHER_NO_LATE;
+        }
+
+        $data = $dao->updateTeacherSignByItem($result->id, $late);
         if ($data) {
             return JsonBuilder::Success('签到成功');
         } else {
@@ -310,33 +321,87 @@ class AttendanceController extends Controller
                 $timeSlots[$k] = $v->id;
             }
         }
-//        $timeTableDao = new TimetableItemDao;
-//        $item = $timeTableDao->getTimetableItemByUserOrTime($user, $time, $timeSlots);
 
-//        $sum = count($item);
-//        foreach ($item as $key => $val) {
-//             $a[$key] = $val->attendance->where('teacher_sign', 1)->count();
-//        }
+        $timeTableDao = new TimetableItemDao;
+        $item = $timeTableDao->getTimetableItemByUserOrTime($user, $time, $timeSlots);
 
-        $result = [];
-        if ($data) {
-            foreach ($data as $key => $val) {
-                $result[$val->name] = ['no_sign' =>0 , 'sign' => 10, 'late'=> 3];
-            }
+        $items = [];
+        foreach ($item as $key => $value) {
+            $items[$value->timeSlot->name][] = $value->toArray();
         }
 
+        $dao = new AttendancesDao;
+        $timetableIds = [];
+        foreach ($items as $key => $val) {
+           $timetableIds[$key][] = array_column($val, 'id');
+        }
+
+        $now = Carbon::now(GradeAndYearUtil::TIMEZONE_CN);
+        $schoolDao = new SchoolDao;
+        $school = $schoolDao->getSchoolById($user->getSchoolId());
+        $configuration = $school->configuration;
+        $date = Carbon::now()->toDateString();
+        $month = Carbon::parse($date)->month;
+        $term = $configuration->guessTerm($month);
+        $weeks = $configuration->getScheduleWeek($now, null, $term);
+        $week = $weeks->getScheduleWeekIndex();
+
+        $result = [];
+        foreach ($timetableIds as $k => $v) {
+             $result[$k]['sign'] = $dao->getTeacherSignInStatus($v[0], $week, Attendance::TEACHER_SIGN);
+             $result[$k]['no_sign'] = $dao->getTeacherSignInStatus($v[0], $week, Attendance::TEACHER_NO_SIGN);
+             $result[$k]['late'] = $dao->getTeacherSignInStatus($v[0], $week, Attendance::TEACHER_SIGN, Attendance::TEACHER_LATE);
+        }
         return JsonBuilder::Success($result);
     }
 
     /**
      * 教师签到详情
      * @param MyStandardRequest $request
+     * @return string
      */
     public function teacherSignDetails(MyStandardRequest $request)
     {
         $user = $request->user();
         $time = $request->get('time');
-        $timeSlot = $request->get('time_slot');
+        $timeSlot = $request->get('time_slot_id');
+        $type = $request->get('type');
+
+        $timeTableDao = new TimetableItemDao;
+        $item = $timeTableDao->getTimetableItemByUserOrTime($user, $time, [$timeSlot]);
+
+        $itemIds = $item->pluck('id');
+
+        $now = Carbon::parse($time);
+
+        $schoolDao = new SchoolDao;
+        $school = $schoolDao->getSchoolById($user->getSchoolId());
+        $configuration = $school->configuration;
+
+        $date = Carbon::now()->toDateString();
+        $month = Carbon::parse($date)->month;
+        $term = $configuration->guessTerm($month);
+        $weeks = $configuration->getScheduleWeek($now, null, $term);
+//        $week = $weeks->getScheduleWeekIndex();
+        $dao = new AttendancesDao;
+        // todo:: 测试数据
+        $week = 5;
+
+        $data = $dao->getTeacherSignInfo($itemIds, $week, $type);
+
+        $result = [];
+        foreach ($data as $key => $val) {
+            $result[$key]['avatar'] = $val->user->profile->avatar;
+            $result[$key]['name']  = $val->teacher->name;
+            $result[$key]['major']  = $val->gradeUser->major->name ?? '';
+            $result[$key]['sign_status'] = '';
+            $result[$key]['sign_time'] = '';
+            if ($type == Attendance::TEACHER_SIGN) {
+                $result[$key]['sign_status'] = $val->teacher_late == Attendance::TEACHER_NO_LATE ? '正常' : '迟到';
+                $result[$key]['sign_time'] = $val->teacher_sign_time;
+            }
+        }
+        return JsonBuilder::Success($result);
     }
 
 

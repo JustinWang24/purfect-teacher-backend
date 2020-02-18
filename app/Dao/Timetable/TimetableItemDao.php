@@ -318,7 +318,7 @@ class TimetableItemDao
      * @param $term
      * @param $teacherId
      * @return array
-*/
+    */
     public function getItemsByWeekDayIndexForTeacherView($weekDayIndex, $year, $term, $weekType, $teacherId){
         $where = $this->_getItemsByWeekDayIndexBy($weekDayIndex, $year, $term, $weekType, ['teacher_id' => $teacherId]);
         /**
@@ -570,6 +570,7 @@ class TimetableItemDao
      */
     public function getCurrentItemByUser(User $user){
         $now = Carbon::now(GradeAndYearUtil::TIMEZONE_CN);
+        // todo :: $now 为了方便测试, 上线需要删除
         $now = Carbon::parse('2020-01-08 14:40:00');
         $school = (new SchoolDao())->getSchoolById($user->getSchoolId());
         $currentTimeSlot = GradeAndYearUtil::GetTimeSlot($now, $school->id);
@@ -828,9 +829,9 @@ class TimetableItemDao
      * @param $user
      * @param $time
      * @param $timeSlots
-     * @return mixed
+     * @return \Illuminate\Database\Eloquent\Collection
      */
-    public function getTimetableItemByUserOrTime($user, $time, $timeSlots)
+    public function getTimetableItemByUserOrTime($user, $time, array $timeSlots)
     {
         $schoolDao = new SchoolDao;
         $school = $schoolDao->getSchoolById($user->getSchoolId());
@@ -848,8 +849,24 @@ class TimetableItemDao
             ['weekday_index', '=', $weekDayIndex],
             ['published', '=', 1],
         ];
-
-        return TimetableItem::where($map)->whereIn('time_slot_id', $timeSlots)->groupBy('time_slot_id')->get();
+        return TimetableItem::where($map)->whereIn('time_slot_id', $timeSlots)->get();
     }
 
+    /**
+     * @param $courseId
+     * @param $teacherId
+     * @param null $date
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
+    public function getGradesByCourseAndTeacher($courseId, $teacherId, $date = null){
+        $yearAndTerm = GradeAndYearUtil::GetYearAndTerm($date ?? Carbon::now());
+        return TimetableItem::select(['grade_id'])
+            ->where('course_id',$courseId)
+            ->where('teacher_id',$teacherId)
+            ->where('year',$yearAndTerm['year'])
+            ->where('term',$yearAndTerm['term'])
+            ->distinct()
+            ->with('grade')
+            ->get();
+    }
 }

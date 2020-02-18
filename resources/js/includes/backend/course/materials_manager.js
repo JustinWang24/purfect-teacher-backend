@@ -34,7 +34,10 @@ $(document).ready(function(){
                         content: '',
                     },
                     // 目前被加载的课件材料
-                    lecture: null,
+                    lecture: {
+                        title:'',
+                        summary:'',
+                    },
                     // 通过文件管理器来选择文件的功能所需
                     showFileManagerFlag: false,
                     // 教学日志表单控制
@@ -43,14 +46,21 @@ $(document).ready(function(){
                     // 导航菜单用
                     activeIndex: '1',
                     // 课时选择器
+                    highlight: 1,
                     myCourseVisible: false, // 我的课程
                     courseIndexerVisible: false, // 选择课件
+                    // 是否在从服务器加载数据中
+                    loadingData: false,
+                    // 所有该教师教授的当前的课程的班级集合
+                    grades:[],
+                    currentGradeId: null, // 当前选中的班级
                 }
             },
             created: function(){
                 const dom = document.getElementById('app-init-data-holder');
                 this.course = JSON.parse(dom.dataset.course);
                 this.teacher = JSON.parse(dom.dataset.teacher);
+                this.grades = JSON.parse(dom.dataset.grades);
                 this.configOptions = Util.getWysiwygGlobalOption(this.teacher.uuid);
                 this.courseMaterialModel.teacher_id = this.teacher.id;
                 this.courseMaterialModel.course_id = this.course.id;
@@ -68,12 +78,14 @@ $(document).ready(function(){
             methods:{
                 // 导航菜单的处理
                 handleMenuSelect: function(key, keyPath){
-                    console.log(key);
-                    console.log(keyPath);
-                    if(key === '2'){
+                    if(keyPath[0] === '2'){
                         this.courseIndexerVisible = true;
+                    }else if(keyPath[0] === '3'){
+                        const arr = keyPath[1].split('-');
+                        this.currentGradeId = arr[1];
+                        console.log('选中班级', this.currentGradeId);
                     }
-                    this.activeIndex = key;
+                    this.activeIndex = keyPath[0];
                 },
                 // 导航菜单处理结束
                 /**
@@ -81,17 +93,21 @@ $(document).ready(function(){
                  */
                 switchCourseIndex: function(payload){
                     this.courseIndexerVisible = false;
+                    this.highlight = payload.index;
+                    this.loadingData = true;
                     // 去加载当前课程的第 payload.index 节课的数据
                     loadLectureByIndex(payload.index, this.teacher.id, this.course.id)
                         .then(res => {
                             if(Util.isAjaxResOk(res)){
                                 this.lecture = res.data.data.lecture;
                             }
+                            this.loadingData = false;
                         })
                 },
                 showNotesEditor: function(){
                     this.showEditor = !this.showEditor;
                 },
+                // 保存教学计划
                 saveNotes: function(){
                     axios.post(
                         '/teacher/course/materials/save-teacher-note',
@@ -119,6 +135,7 @@ $(document).ready(function(){
                     }
                     this.showLogEditor = true;
                 },
+                // 保存教学日志
                 saveLog: function(){
                     axios.post(
                         '/teacher/course/materials/save-log',
@@ -145,6 +162,7 @@ $(document).ready(function(){
                         }
                     });
                 },
+                // 删除教学日志
                 deleteLog: function(log){
                     console.log(log);
                 },
@@ -182,68 +200,6 @@ $(document).ready(function(){
                             message: '已取消删除'
                         });
                     });
-                },
-                addMaterial: function (index) {
-                    this.resetMaterialForm(index);
-                    this.showMaterialForm = true;
-                },
-                submitUpload: function(){
-                    if(Util.isEmpty(this.courseMaterialModel.index)){
-                        this.$message.error('请指定课件将用于第几节课');
-                        return false;
-                    }
-                    if(Util.isEmpty(this.courseMaterialModel.type)){
-                        this.$message.error('请指定课件的类型');
-                        return false;
-                    }
-                    if(Util.isEmpty(this.courseMaterialModel.description)){
-                        this.$message.error('请描述一下本课件的用途');
-                        return false;
-                    }
-                    if(Util.isEmpty(this.selectedFile)){
-                        this.$confirm('本课件没有关联任何文件, 是否继续?', '提示', {
-                            confirmButtonText: '确定. 不需要关联任何文件',
-                            cancelButtonText: '取消',
-                            type: 'warning'
-                        }).then(() => {
-                            // 继续上传即可
-                            this._startSaving();
-                        }).catch(() => {
-                            this.$message({
-                                type: 'info',
-                                message: '已取消保存操作'
-                            });
-                            return false;
-                        });
-                    }
-                    else{
-                        this.courseMaterialModel.url = this.selectedFile.url;
-                        this.courseMaterialModel.media_id = this.selectedFile.id;
-                        this._startSaving();
-                    }
-                },
-                _startSaving: function(){
-                    saveMaterial(this.courseMaterialModel).then(res => {
-                        if(Util.isAjaxResOk(res)){
-                            this.$message({
-                                type:'success',
-                                message:'保存成功'
-                            });
-                            window.location.reload();
-                        }
-                        else{
-                            this.$message.error('保存失败. ' + res.data.data);
-                        }
-                    })
-                },
-                resetMaterialForm: function(index){
-                    this.courseMaterialModel.id = null;
-                    this.courseMaterialModel.index = index;
-                    this.courseMaterialModel.type = null;
-                    this.courseMaterialModel.description = null;
-                    this.courseMaterialModel.url = null;
-                    this.courseMaterialModel.media_id = 0;
-                    this.selectedFile = null;
                 },
                 // 当云盘中的文件被选择
                 pickFileHandler: function(payload){

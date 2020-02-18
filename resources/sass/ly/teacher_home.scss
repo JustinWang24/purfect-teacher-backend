@@ -1,0 +1,178 @@
+#teacher-homepage-app {
+  .el-carousel {
+    width: 100%;
+    .el-carousel__indicators--outside {
+      position: relative;
+      bottom: 25px;
+      left: 0;
+      .el-carousel__indicator--horizontal {
+        width: 14px;
+        height: 13px;
+        border-radius: 50%;
+        background-color: #d7d7d7;
+        padding: 0;
+        margin-left: 14px;
+        .el-carousel__button {
+          display: none;
+        }
+      }
+    }
+    .el-carousel__indicators--outside .is-active {
+      width: 41px;
+      height: 13px;
+      background: rgba(255, 255, 255, 1);
+      border-radius: 7px;
+    }
+    .banner_img {
+      width: 100%;
+      height: 100%;
+    }
+  }
+  .bottom {
+    display: flex;
+    justify-content: space-between;
+    .bottom_title {
+      height: 50px;
+      font-size: 18px;
+      font-weight: bold;
+      line-height: 50px;
+      border-bottom: 1px solid #eaedf2;
+      padding-left: 14px;
+      span {
+        font-size: 16px;
+        font-family: MicrosoftYaHei;
+        color: rgba(138, 147, 161, 1);
+        line-height: 50px;
+      }
+    }
+    .bottom_title_span {
+      display: flex;
+      padding-right: 14px;
+      justify-content: space-between;
+    }
+    .bottom_first {
+      width: 450px;
+      height: 727px;
+      background: rgba(255, 255, 255, 1);
+      border-radius: 4px;
+      .bottom_first_content {
+        height: 135px;
+        border-bottom: 1px solid #eaedf2;
+        display: flex;
+        padding: 20px 0 20px 10px;
+        .bottom_first_content_img {
+          width: 148px;
+          height: 92px;
+          border: 1px solid red;
+        }
+        .bottom_first_content_right {
+          width: 100%;
+          display: flex;
+          flex-direction: column;
+          justify-content: space-between;
+          .bottom_first_content_title {
+            width: 212px;
+            height: 21px;
+            font-size: 16px;
+            font-family: MicrosoftYaHei-Bold, MicrosoftYaHei;
+            font-weight: bold;
+            color: rgba(49, 59, 76, 1);
+            line-height: 21px;
+            letter-spacing: 1px;
+            padding-left: 14px;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+          }
+          .bottom_first_content_detail {
+            width: 250px;
+            padding-left: 14px;
+            font-size: 14px;
+            font-family: MicrosoftYaHei;
+            color: rgba(138, 147, 161, 1);
+            letter-spacing: 1px;
+          }
+          .bottom_first_content_time {
+            text-align: right;
+            font-size: 12px;
+            font-family: MicrosoftYaHei;
+            color: rgba(210, 213, 222, 1);
+            letter-spacing: 1px;
+          }
+        }
+      }
+    }
+    .bottom_second {
+      width: 450px;
+      .bottom_second_calendar {
+        width: 100%;
+        height: 418px;
+        background: rgba(255, 255, 255, 1);
+        border-radius: 4px;
+      }
+      .bottom_second_plan {
+        width: 100%;
+        height: 300px;
+        background: rgba(255, 255, 255, 1);
+        border-radius: 4px;
+        margin-top: 15px;
+        p {
+          height: 40px;
+          padding: 0 20px;
+          font-size: 14px;
+          font-family: MicrosoftYaHei;
+          color: rgba(51, 51, 51, 1);
+          line-height: 40px;
+          border-bottom: 1px solid #eaedf2;
+          overflow: hidden;
+          white-space: nowrap;
+          text-overflow: ellipsis;
+        }
+      }
+    }
+    .bottom_third {
+      width: 400px;
+      height: 740px;
+      background: rgba(255, 255, 255, 1);
+      border-radius: 4px;
+      .attendance_content {
+        .attendance_time {
+          height: 43px;
+          text-align: center;
+          font-size: 14px;
+          font-family: MicrosoftYaHei;
+          color: rgba(49, 59, 76, 1);
+          line-height: 43px;
+          letter-spacing: 1px;
+          border-bottom: 1px solid #eaedf2;
+        }
+        .attendance_detail {
+          padding-left: 17px;
+          p {
+            span:first-child {
+              font-size: 14px;
+              font-family: MicrosoftYaHei;
+              color: rgba(147, 155, 168, 1);
+              letter-spacing: 1px;
+            }
+            span:last-child {
+              font-size: 14px;
+              font-family: MicrosoftYaHei;
+              color: rgba(58, 68, 84, 1);
+              letter-spacing: 1px;
+            }
+          }
+        }
+        .attendance_task {
+          height: 47px;
+          background: rgba(239, 247, 255, 1);
+          padding: 0 14px;
+          display: -webkit-box;
+          overflow: hidden;
+          -webkit-line-clamp: 2;
+          -webkit-box-orient: vertical;
+        }
+      }
+    }
+  }
+}

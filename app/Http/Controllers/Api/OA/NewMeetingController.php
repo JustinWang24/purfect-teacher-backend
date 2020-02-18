@@ -102,8 +102,8 @@ class NewMeetingController extends Controller
         $result = pageReturn($return);
         $data = [];
         foreach ($result['list'] as $key => $item) {
-            if($item->status == NewMeetingUser::UN_SIGNIN) {
-                $status = $item->status;
+            if($item->signIn_status == NewMeetingUser::UN_SIGNIN) {
+                $status = $item->signIn_status;
             } else {
                 $status = NewMeetingUser::NORMAL_SIGNIN;
             }
@@ -145,8 +145,8 @@ class NewMeetingController extends Controller
                 'room' => $item->room_id ? $item->room->name : $item->room_text,
                 'meet_time' => $item->getMeetTime(),
                 'signin_time' => '',
-                'signin_status' => '',
-                'signout_status' => '',
+                'signin_status' =>  NewMeeting::NOT_SINGIN,
+                'signout_status' => NewMeeting::NOT_SIGNOUT,
             ];
             // 判断是否需要签到
             if($item->signin_status == NewMeeting::SIGNIN) {
@@ -246,7 +246,7 @@ class NewMeetingController extends Controller
         }
         // 判断是否需要签退
         if($info['signout_status'] == NewMeeting::SIGNOUT) {
-            $result['signin_time'] = $info->getSignOutTime();
+            $result['signout_time'] = $info->getSignOutTime();
         }
 
         return JsonBuilder::Success($result);

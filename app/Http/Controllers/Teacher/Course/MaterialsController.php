@@ -9,6 +9,7 @@
 namespace App\Http\Controllers\Teacher\Course;
 use App\Dao\Courses\CourseDao;
 use App\Dao\Courses\Lectures\LectureDao;
+use App\Dao\Timetable\TimetableItemDao;
 use App\Dao\Users\UserDao;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Course\MaterialRequest;
@@ -38,6 +39,19 @@ class MaterialsController extends Controller
         $teacher = (new UserDao())->getUserById($request->getTeacherId());
         $this->dataForView['course'] = $course;
         $this->dataForView['teacher'] = $teacher;
+
+        // 当前课程的授课班级集合
+        $timetableItemDao = new TimetableItemDao();
+        $items = $timetableItemDao->getGradesByCourseAndTeacher($request->getCourseId(), $request->getTeacherId());
+        $grades = [];
+        foreach ($items as $item) {
+            $grades[] = [
+                'id'=>$item->grade->id,
+                'name'=>$item->grade->name,
+            ];
+        }
+        $this->dataForView['grades'] = $grades;
+
         return view('teacher.course.materials.manager', $this->dataForView);
     }
 
@@ -91,9 +105,9 @@ class MaterialsController extends Controller
      * @return string
      */
     public function create(MaterialRequest $request){
-        $dao = new CourseDao();
-        $msg = $dao->saveMaterial($request->get('material'));
-        return $msg->isSuccess() ? JsonBuilder::Success($msg->getData()->id) : JsonBuilder::Error($msg->getMessage());
+        $dao = new LectureDao();
+        $msg = $dao->saveLectureMaterial($request->get('material'));
+        return $msg->isSuccess() ? JsonBuilder::Success(['material'=>$msg->getData()]) : JsonBuilder::Error($msg->getMessage());
     }
 
     /**
@@ -101,8 +115,8 @@ class MaterialsController extends Controller
      * @return string
      */
     public function load(MaterialRequest $request){
-        $dao = new CourseDao();
-        $material = $dao->getCourseMaterial($request->get('id'));
+        $dao = new LectureDao();
+        $material = $dao->getLectureMaterial($request->get('id'));
         return JsonBuilder::Success(['material'=>$material]);
     }
 
@@ -129,5 +143,38 @@ class MaterialsController extends Controller
             $request->get('index')
         );
         return JsonBuilder::Success(['lecture'=>$materials]);
+    }
+
+    /**
+     * 更新课件的记录，注意这个方法只会更新title和summary这两个字段
+     * @param MaterialRequest $request
+     * @return string
+     */
+    public function save_lecture(MaterialRequest $request){
+        $dao = new LectureDao();
+        $dao->updateLectureSummary($request->get('lecture'));
+        return JsonBuilder::Success();
+    }
+
+    /**
+     * 加载某个课节的材料
+     * @param MaterialRequest $request
+     * @return string
+     */
+    public function load_lecture_materials(MaterialRequest $request){
+        $dao = new LectureDao();
+        return JsonBuilder::Success(['materials'=>$dao->getLectureMaterials($request->get('lecture_id'))]);
+    }
+
+    /**
+     * 加载某课节的作业数据
+     * @param MaterialRequest $request
+     * @return string
+     */
+    public function load_lecture_homeworks(MaterialRequest $request){
+        $dao = new LectureDao();
+        return JsonBuilder::Success(
+            ['homeworks'=>$dao->getLectureHomework($request->get('lecture_id'),$request->get('grades'))]
+        );
     }
 }

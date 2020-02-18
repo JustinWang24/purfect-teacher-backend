@@ -14,6 +14,7 @@ Route::prefix('teacher')->group(function () {
     Route::post('course/materials/delete', 'Course\MaterialsController@delete')->name('teacher.course.materials.delete'); // 教师删除课件
     Route::post('course/materials/load-teacher-note', 'Course\MaterialsController@load_teacher_note')
         ->name('teacher.course.materials.load-teacher-note'); // 加载教师对课程的note
+
     Route::post('course/materials/save-teacher-note', 'Course\MaterialsController@save_teacher_note')
         ->name('teacher.course.materials.save-teacher-note'); // 保存教师对课程的note
 
@@ -22,6 +23,15 @@ Route::prefix('teacher')->group(function () {
 
     Route::post('course/materials/load-lecture', 'Course\MaterialsController@load_lecture')
         ->name('teacher.course.materials.load-lecture'); // 教师加载指定的课件
+
+    Route::post('course/materials/load-lecture-materials', 'Course\MaterialsController@load_lecture_materials')
+        ->name('teacher.course.materials.load-lecture-materials'); // 教师加载指定的课节中的所有材料文件
+
+    Route::post('course/materials/load-lecture-homeworks', 'Course\MaterialsController@load_lecture_homeworks')
+        ->name('teacher.course.materials.load-lecture-homeworks'); // 教师加载指定的课节中的所有被学生提交的作业
+
+    Route::post('course/materials/save-lecture', 'Course\MaterialsController@save_lecture')
+        ->name('teacher.course.materials.save-lecture'); // 教师保存指定的课件
 
 
     Route::get('conference/index', 'ConferenceController@index')->name('teacher.conference.index');    // 会议列表

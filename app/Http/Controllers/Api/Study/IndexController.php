@@ -35,7 +35,9 @@ class IndexController extends Controller
         $schoolDao = new SchoolDao();
         $school = $schoolDao->getSchoolById($schoolId);
         $configuration = $school->configuration;
+        // todo 时间暂时写死
         $date = Carbon::now()->toDateString();
+        $date = Carbon::parse('2020-01-08 14:40:00');;
         $year = $configuration->getSchoolYear($date);
         $month = Carbon::parse($date)->month;
         $term = $configuration->guessTerm($month);
@@ -50,8 +52,9 @@ class IndexController extends Controller
             'signIn_num' => $attendancesDetailsDao->getSignInCountByUser($user->id, $year, $term),
             'leave_num' => $attendancesDetailsDao->getLeaveCountByUser($user->id, $year, $term),
             'truant_num' => $attendancesDetailsDao->getTruantCountByUser($user->id, $year, $term),
-
         ];
+
+
         $evaluateTeacher = false;
         if(!is_null($item)) {
 
@@ -88,11 +91,10 @@ class IndexController extends Controller
 
             $detail = $attendancesDetailsDao->getDetailByUserId($user->id, $attendance->id);
 
-
             $signIn['status'] = $detail->mold ?? 0;
             $evaluateTeacher = true;
-
         }
+
         $studyData = '';
         $data = [
             'selectCourse' => $selectCourse, // 选课

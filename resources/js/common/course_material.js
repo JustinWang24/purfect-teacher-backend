@@ -18,6 +18,17 @@ export function saveMaterial(materialModel, affix) {
     );
 }
 
+export function saveLecture(lecture, affix) {
+    const url = Util.buildUrl(Constants.API.COURSE_MATERIAL.SAVE_LECTURE);
+    if(Util.isDevEnv()){
+        return axios.get(url, affix);
+    }
+    return axios.post(
+        url,
+        {lecture: lecture, version:Constants.VERSION}
+    );
+}
+
 /**
  * 加载课件
  * @param id
@@ -65,5 +76,38 @@ export function loadLectureByIndex(index, teacher, course, affix) {
     return axios.post(
         url,
         {index: index, teacher:teacher, course:course, version:Constants.VERSION}
+    );
+}
+
+/**
+ * 加载课件的所有材料
+ * @param lectureId
+ * @param affix
+ */
+export function loadLectureMaterials(lectureId, affix) {
+    const url = Util.buildUrl(Constants.API.COURSE_MATERIAL.LOAD_LECTURE_MATERIALS);
+    if(Util.isDevEnv()){
+        return axios.get(url, affix);
+    }
+    return axios.post(
+        url,
+        {lecture_id: lectureId,version:Constants.VERSION}
+    );
+}
+
+/**
+ * 加载课节的学生作业
+ * @param lectureId
+ * @param grades
+ * @param affix
+ */
+export function loadLectureHomework(lectureId, grades, affix) {
+    const url = Util.buildUrl(Constants.API.COURSE_MATERIAL.LOAD_LECTURE_HOMEWORKS);
+    if(Util.isDevEnv()){
+        return axios.get(url, affix);
+    }
+    return axios.post(
+        url,
+        {lecture_id: lectureId, grades: grades,version:Constants.VERSION}
     );
 }
