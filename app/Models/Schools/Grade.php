@@ -4,6 +4,8 @@ namespace App\Models\Schools;
 
 use App\Models\Acl\Role;
 use App\Models\School;
+use App\User;
+use App\Utils\Time\GradeAndYearUtil;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Users\GradeUser;
@@ -24,7 +26,7 @@ class Grade extends Model
     }
 
     public function studentsCount(){
-        return GradeUser::where('grade_id', $this->id)->where('user_type',Role::GetStudentUserTypes())->count();
+        return GradeUser::where('grade_id', $this->id)->whereIn('user_type',Role::GetStudentUserTypes())->count();
     }
 
     public function gradeUser()
@@ -46,11 +48,28 @@ class Grade extends Model
     }
 
     /**
+     * 班级中所有学生
+     * @return User[]
+     */
+    public function allStudents(){
+        $studentsIds = [];
+        foreach ($this->gradeUser as $gu) {
+            /**
+             * @var GradeUser $gu
+             */
+            if($gu->isStudent()){
+                $studentsIds[] = $gu->user_id;
+            }
+        }
+        return User::whereIn('id',$studentsIds)->orderBy('name','asc')->get();
+    }
+
+    /**
      * 班级年级
-     * @return int|mixed
+     * @return int
      */
     public function gradeYear() {
-        $thisYear = Carbon::now()->year;
-        return $thisYear - $this->year + 1 ;
+        $yearAndTerm = GradeAndYearUtil::GetYearAndTerm(Carbon::now());
+        return $yearAndTerm['year'] - $this->year + 1 ;
     }
 }
