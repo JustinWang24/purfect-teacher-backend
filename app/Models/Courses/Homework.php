@@ -13,6 +13,7 @@ class Homework extends Model
         'lecture_id',
         'year',
         'student_id',
+        'student_name',
         'content',
         'media_id',
         'comment',

@@ -6,10 +6,15 @@
  */
 
 namespace App\Dao\Courses\Lectures;
+use App\Dao\Users\GradeUserDao;
+use App\Models\Courses\Homework;
 use App\Models\Courses\Lecture;
 use App\Models\Courses\LectureMaterial;
+use App\Models\Users\GradeUser;
 use App\Utils\ReturnData\MessageBag;
 use App\Utils\JsonBuilder;
+use App\Utils\Time\GradeAndYearUtil;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
 
 class LectureDao
@@ -47,6 +52,34 @@ class LectureDao
         return LectureMaterial::where('lecture_id',$lectureId)
             ->orderBy('type','asc')
             ->get();
+    }
+
+    /**
+     * @param $lectureId
+     * @param $grades
+     * @return Collection
+     */
+    public function getLectureHomework($lectureId, $grades){
+        $result = new Collection();
+        if($grades){
+            $gradeStudents = (new GradeUserDao())->getGradeUserWhereInGrades($grades);
+            $studentsIds = [];
+            foreach ($gradeStudents as $gradeStudent) {
+                /**
+                 * @var GradeUser $gradeStudent
+                 */
+                if($gradeStudent->isStudent()){
+                    $studentsIds[] = $gradeStudent->user_id;
+                }
+            }
+            $yearAndTerm = GradeAndYearUtil::GetYearAndTerm(Carbon::now());
+            $result = Homework::where('year', $yearAndTerm['year'])
+                ->where('lecture_id',$lectureId)
+                ->whereIn('student_id',$studentsIds)
+                ->orderBy('id','desc')
+                ->get();
+        }
+        return $result;
     }
 
     public function getLectureMaterial($materialId){

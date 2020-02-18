@@ -256,4 +256,21 @@ class AfficheDao extends \App\Dao\Affiche\CommonDao
 
         return !empty($data) ? $data->toArray() : (object)null;
     }
+
+    /**
+     * Func 冬天删除
+     *
+     * @param['iche_id']  动态ID
+     *
+     * @return array
+     */
+    public function delAfficheOneInfo($iche_id = 0)
+    {
+        if (!intval($iche_id)) return [];
+
+        // 查询条件
+        $condition[] = ['icheid', '=', $iche_id];
+
+        return Affiche::where($condition)->update(['status'=>0]);
+    }
 }

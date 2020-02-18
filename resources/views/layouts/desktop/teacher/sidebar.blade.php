@@ -32,115 +32,56 @@
                         <span class="arrow nav-toggle"></span>
                     </a>
                     <ul class="sub-menu">
-                        <li class="nav-item active">
-                            <a href="{{ route('teacher.ly.home.message-center') }}" class="nav-link">
-                                <span class="title">消息中心</span>
-                                <span class="selected"></span>
-                            </a>
-                        </li>
-                        <li class="nav-item ">
-                            <a href="{{ route('teacher.ly.home.school-news') }}" class="nav-link">
-                                <span class="title">校园新闻</span>
-                            </a>
-                        </li>
+                        @include('layouts.desktop.elements.submenu_selected',['routeName'=>'teacher.ly.home.message-center','name'=>'消息中心'])
+                        @include('layouts.desktop.elements.submenu_selected',['routeName'=>'teacher.ly.home.school-news','name'=>'校园新闻'])
                     </ul>
                 </li>
 
                 <li class="nav-item">
                     <a href="{{ route('teacher.ly.oa.index') }}" class="nav-link">
-                        <i class="material-icons">home</i>
+                        <i class="material-icons">dvr</i>
                         <span class="title">办公</span>
                         <span class="arrow nav-toggle"></span>
                     </a>
                     <ul class="sub-menu">
-                        <li class="nav-item">
-                            <a href="{{ route('teacher.ly.oa.notices-center') }}" class="nav-link ">
-                                <span class="title">通知/公告/检查</span>
-                            </a>
-                        </li>
-                        <li class="nav-item ">
-                            <a href="{{ route('teacher.ly.oa.logs') }}" class="nav-link ">
-                                <span class="title">日志</span>
-                            </a>
-                        </li>
-                        <li class="nav-item ">
-                            <a href="{{ route('teacher.ly.oa.internal-messages') }}" class="nav-link ">
-                                <span class="title">内部信</span>
-                            </a>
-                        </li>
-                        <li class="nav-item ">
-                            <a href="{{ route('teacher.ly.oa.meetings') }}" class="nav-link ">
-                                <span class="title">会议</span>
-                            </a>
-                        </li>
-                        <li class="nav-item ">
-                            <a href="{{ route('teacher.ly.oa.tasks') }}" class="nav-link ">
-                                <span class="title">任务</span>
-                            </a>
-                        </li>
-                        <li class="nav-item ">
-                            <a href="{{ route('teacher.ly.oa.applications') }}" class="nav-link ">
-                                <span class="title">申请</span>
-                            </a>
-                        </li>
-                        <li class="nav-item ">
-                            <a href="{{ route('teacher.ly.oa.approvals') }}" class="nav-link ">
-                                <span class="title">审批</span>
-                            </a>
-                        </li>
+                        @include('layouts.desktop.elements.submenu_selected',['routeName'=>'teacher.ly.oa.notices-center','name'=>'通知/公告/检查'])
+                        @include('layouts.desktop.elements.submenu_selected',['routeName'=>'teacher.ly.oa.logs','name'=>'日志'])
+                        @include('layouts.desktop.elements.submenu_selected',['routeName'=>'teacher.ly.oa.internal-messages','name'=>'内部信'])
+                        @include('layouts.desktop.elements.submenu_selected',['routeName'=>'teacher.ly.oa.meetings','name'=>'会议'])
+                        @include('layouts.desktop.elements.submenu_selected',['routeName'=>'teacher.ly.oa.tasks','name'=>'任务'])
+                        @include('layouts.desktop.elements.submenu_selected',['routeName'=>'teacher.ly.oa.applications','name'=>'申请'])
+                        @include('layouts.desktop.elements.submenu_selected',['routeName'=>'teacher.ly.oa.approvals','name'=>'审批'])
                     </ul>
                 </li>
 
                 <li class="nav-item">
                     <a href="{{ route('teacher.ly.assistant.index') }}" class="nav-link">
-                        <i class="material-icons">home</i>
+                        <i class="material-icons">local_library</i>
                         <span class="title">助手</span>
                         <span class="arrow nav-toggle"></span>
                     </a>
                     <ul class="sub-menu">
-                        <li class="nav-item">
-                            <a href="{{ route('teacher.ly.assistant.check-in') }}" class="nav-link ">
-                                <span class="title">签到</span>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="{{ route('teacher.ly.assistant.evaluation') }}" class="nav-link ">
-                                <span class="title">评分</span>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="{{ route('teacher.ly.assistant.electives') }}" class="nav-link ">
-                                <span class="title">选课</span>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="{{ route('teacher.ly.assistant.grades-manager') }}" class="nav-link ">
-                                <span class="title">班级管理</span>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="{{ route('teacher.ly.assistant.students-manager') }}" class="nav-link ">
-                                <span class="title">学生信息</span>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="{{ route('teacher.ly.assistant.grades-check-in') }}" class="nav-link ">
-                                <span class="title">班级签到</span>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="{{ route('teacher.ly.assistant.grades-evaluations') }}" class="nav-link ">
-                                <span class="title">班级评分</span>
-                            </a>
-                        </li>
+                        @include('layouts.desktop.elements.submenu_selected',['routeName'=>'teacher.ly.assistant.check-in','name'=>'签到'])
+                        @include('layouts.desktop.elements.submenu_selected',['routeName'=>'teacher.ly.assistant.evaluation','name'=>'评分'])
+                        @include('layouts.desktop.elements.submenu_selected',['routeName'=>'teacher.ly.assistant.electives','name'=>'选课'])
+                        @include('layouts.desktop.elements.submenu_selected',['routeName'=>'teacher.ly.assistant.grades-manager','name'=>'班级管理'])
+                        @include('layouts.desktop.elements.submenu_selected',['routeName'=>'teacher.ly.assistant.students-manager','name'=>'学生信息'])
+                        @include('layouts.desktop.elements.submenu_selected',['routeName'=>'teacher.ly.assistant.grades-check-in','name'=>'班级签到'])
+                        @include('layouts.desktop.elements.submenu_selected',['routeName'=>'teacher.ly.assistant.grades-evaluations','name'=>'班级评分'])
                     </ul>
                 </li>
 
                 <li class="nav-item">
-                    <a href="{{ route('teacher.textbook.manager') }}" class="nav-link">
+                    <a href="#" class="nav-link">
                         <i class="material-icons">map</i>
-                        <span class="title">教材管理</span>
+                        <span class="title">教学管理</span>
+                        <span class="arrow nav-toggle"></span>
                     </a>
+                    <ul class="sub-menu">
+                        @foreach($teacher->myCourses as $uc)
+                        @include('layouts.desktop.elements.submenu_selected',['routeName'=>'teacher.course.materials.manager','routeParams'=>['teacher'=>$teacher->id,'course_id'=>$uc->course->id],'name'=>$uc->course->name])
+                        @endforeach
+                    </ul>
                 </li>
 
                 <li class="nav-item">

@@ -27,6 +27,9 @@ Route::prefix('teacher')->group(function () {
     Route::post('course/materials/load-lecture-materials', 'Course\MaterialsController@load_lecture_materials')
         ->name('teacher.course.materials.load-lecture-materials'); // 教师加载指定的课节中的所有材料文件
 
+    Route::post('course/materials/load-lecture-homeworks', 'Course\MaterialsController@load_lecture_homeworks')
+        ->name('teacher.course.materials.load-lecture-homeworks'); // 教师加载指定的课节中的所有被学生提交的作业
+
     Route::post('course/materials/save-lecture', 'Course\MaterialsController@save_lecture')
         ->name('teacher.course.materials.save-lecture'); // 教师保存指定的课件
 
@@ -50,8 +53,9 @@ Route::prefix('teacher')->group(function () {
     Route::post('update/step_user', 'OfficialDocumentController@updateStepUser')->name('teacher.update.step.user');         // 修改流程中的步骤负责人
 
     Route::any('grade/set-monitor', 'GradesController@set_monitor')->name('teacher.grade.set-monitor');     // 设置班长
-
     Route::get('grade/users', 'GradesController@users')->name('teacher.grade.users');     // 班级的学生列表
+    Route::any('grade/load-students', 'GradesController@load_students')
+        ->name('teacher.grade.load-students');     // 代课老师加载某个班学生的记录
 
     // 更新密码
     Route::any('profile/update-password', 'GradesController@update_password')

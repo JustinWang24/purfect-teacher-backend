@@ -1014,3 +1014,9 @@ Route::prefix('meeting')->middleware('auth:api')->group(function(){
     Route::get('/mySignInRecord','Api\OA\NewMeetingController@mySignInRecord')
         ->name('api.meeting.mySignInRecord');
 });
+
+// PC办公页
+Route::prefix('office')->middleware('auth:api')->group(function(){
+        Route::any('/office-page', 'Admin\IndexController@officeIcon')
+        ->name('api.office.office-page');
+});

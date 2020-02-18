@@ -48,11 +48,13 @@ Vue.component('organizations-selector', require('./components/organization/Organ
 // 仿 Moodle 的教学管理功能所用的组件
 Vue.component('course-indexer', require('./components/moodle/teacher/CourseIndexer').default);      // 可见范围选择器
 Vue.component('lecture', require('./components/moodle/teacher/Lecture').default);      // 课件组件
+Vue.component('grade-table', require('./components/moodle/teacher/GradeTable').default);      // 班级组件
 
 require('./includes/backend/school_calendar_app'); // 后台: 校历的管理
 require('./includes/backend/notice_manager_app'); // 后台: Notice 的管理
 require('./includes/backend/banner_manager_app'); // 后台: Banner 的管理
 require('./includes/backend/teacher_homepage_app'); // 后台: 教师的首页
+require('./includes/backend/teacher-oa-index-app'); // 后台: 教师的办公
 require('./includes/backend/student_homepage_app'); // 后台: 学生的首页
 require('./includes/backend/organization_app'); // 组织架构管理
 require('./includes/backend/news_list_manager'); // 动态新闻的管理
