@@ -138,4 +138,3 @@ export function downConfigStep(schoolId, data) {
         {school: schoolId, data: data, version:Constants.VERSION}
     );
 }
-}
