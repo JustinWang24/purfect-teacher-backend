@@ -7,7 +7,6 @@
  */
 namespace App\Dao\Wifi\Api;
 
-use App\Dao\Wifi\CommonDao;
 use App\Models\Wifi\Api\WifiUserAgreements;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Collection;
