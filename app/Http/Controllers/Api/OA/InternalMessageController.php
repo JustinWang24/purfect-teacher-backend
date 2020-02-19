@@ -30,9 +30,8 @@ class InternalMessageController extends Controller
         $type        = $request->get('type');
         $isRelay     = $request->get('isRelay');
         $relayId     = $request->get('relayId');
-        $fileArr     = $request->get('image');
-        $isFile      = $request->file('isFile');
-
+        $isFile      = $request->get('isFile');
+        $fileArr     = $request->file('image');
         $dao = new InternalMessageDao;
 
         $data = [

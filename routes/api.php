@@ -528,7 +528,7 @@ Route::prefix('attendance')->middleware('auth:api')->group(function () {
         ->name('api.get.day.course');
 
     // 获取教师签到统计
-    Route::post('/get-teacher-statistics', 'Api\AttendanceSchedule\AttendanceController@getTeacherCourseStatistics')
+    Route::post('/get-teacher-statistics', 'Api\AttendanceSchedule\add-messageadd-message@getTeacherCourseStatistics')
         ->name('api.get.teacher.statistics');
 
     // 获取教师签到统计详情

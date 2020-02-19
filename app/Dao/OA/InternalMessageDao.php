@@ -23,7 +23,6 @@ class InternalMessageDao
                 $relay = $this->getInternalMessageById($data['relay_id']);
                 $messageIds = $message->id.','.$relay['message_id'];
             }
-
             $this->updateMessage($message->id, ['message_id' => $messageIds]); // 修改转发字段 用于转发
 
             if ($data['type'] == InternalMessage::TYPE_SENT) {
@@ -43,16 +42,15 @@ class InternalMessageDao
                 }
             }
 
-            if ($files) {
+            if ($data['is_file'] == InternalMessage::IS_FILE) {
                 foreach ($files as $key => $val) {
-                    $val['message_id'] = $message->id;
-                    InternalMessageFile::create($val);
+                    $imageData['message_id'] = $message->id;
+                    InternalMessageFile::create($imageData);
                 }
             }
             DB::commit();
             $result = true;
         }catch (\Exception $e) {
-            dd($e);
             DB::rollBack();
             $result = false;
         }
