@@ -39,7 +39,25 @@ class CommonDao
         1 => '未评价',
         2 => '已评价',
     ];
-   //---------------------------------------manger定义的静态属性----------------------------------
+
+    // 组织认证
+    // 类型(1:学生会,2:社团)
+    public static $groupTypeIdArr = [
+        1 => '学生会',
+        2 => '社团',
+    ];
+    // 状态(-1:待审核,1:审核通过,2:审核驳回)
+    public static $groupStatusArr = [
+        -1 => '待审核',
+        1 => '通过',
+        2 => '未通过',
+    ];
+    public static $GroupJoinTypeidArr = [
+        1 => '<font color="red">团长</font>',
+        4 => '<font color="#6495ed">普通用户</font>'
+    ];
+
+    //---------------------------------------manger定义的静态属性----------------------------------
 
    // 是否评价(1:未评价,2:已评价)
    public static $manageCommentArr = [

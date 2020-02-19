@@ -17,9 +17,7 @@ Route::prefix('manager_affiche')->group(function ()
         ->name('manager_affiche.group.group_pending_list'); // 待审核列表
     Route::any('/affiche/group-adopt-list','Affiche\GroupController@group_adopt_list')
         ->name('manager_affiche.group.group_adopt_list'); // 已通过列表
-    Route::any('/affiche/group-list','Affiche\GroupController@group_list')
-        ->name('manager_affiche.group.group_list'); // 待列表
-    Route::any('/affiche/group-one','Affiche\AfficheController@group_one')
+    Route::any('/affiche/group-one','Affiche\GroupController@group_one')
         ->name('manager_affiche.group.group_one');// 详情
     Route::any('/affiche/group-check-one','Affiche\GroupController@group_check_one')
         ->name('manager_affiche.affiche.group_check_one');// 审核

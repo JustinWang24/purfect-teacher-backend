@@ -101,18 +101,21 @@ class AfficheController extends Controller
      */
     public function affiche_check_one(Request $request)
     {
-        $icheid = $request->input('icheid', 0);
-        $status = $request->input('status', 0);
-        $iche_checkdesc = $request->input('iche_checkdesc', '');
+        $icheid = (Int)$request->input('icheid', 0);
+        $status = (Int)$request->input('status', 0);
+        $iche_checkdesc = (String)$request->input('iche_checkdesc', '');
 
-        if (intval($icheid)) {
+        if (!intval($icheid)) {
             FlashMessageBuilder::Push($request, FlashMessageBuilder::DANGER, '参数错误');
+            return redirect()->route('manager_affiche.affiche.affiche_one',[ 'icheid' => $icheid ]);
         }
-        if (in_array(intval($status),[1,2])) {
+        if (!in_array(intval($status),[1,2])) {
             FlashMessageBuilder::Push($request, FlashMessageBuilder::DANGER, '请选择状态');
+            return redirect()->route('manager_affiche.affiche.affiche_one',[ 'icheid' => $icheid ]);
         }
         if ($status == 2 && !$iche_checkdesc ) {
             FlashMessageBuilder::Push($request, FlashMessageBuilder::DANGER, '请填写审核原因');
+            return redirect()->route('manager_affiche.affiche.affiche_one',[ 'icheid' => $icheid ]);
         }
 
         // 获取数据
@@ -122,17 +125,18 @@ class AfficheController extends Controller
         if(!isset($dataOne->icheid))
         {
             FlashMessageBuilder::Push ( $request , FlashMessageBuilder::DANGER , '参数错误');
+            return redirect()->route('manager_affiche.affiche.affiche_one',[ 'icheid' => $icheid ]);
         }
         if($dataOne->status != -1)
         {
             FlashMessageBuilder::Push ( $request , FlashMessageBuilder::DANGER , '状态已更新，请勿重复操作');
+            return redirect()->route('manager_affiche.affiche.affiche_one',[ 'icheid' => $icheid ]);
         }
 
         // 更新状态值
         $saveData['status'] = $status;
         $saveData['iche_checktime'] = date('Y-m-d H:i:s');
         $saveData['iche_checkdesc'] = trim($iche_checkdesc);
-        // TODO.....
         $saveData['houtai_operateid'] = 1;
         $saveData['houtai_operatename'] = '管理员';
         if($AfficheObj->editAffichesInfo($saveData,$dataOne->icheid))
@@ -144,6 +148,4 @@ class AfficheController extends Controller
             return redirect()->route('manager_affiche.affiche.affiche_pending_list');
         }
     }
-
-
 }
