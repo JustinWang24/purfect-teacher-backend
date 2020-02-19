@@ -25,6 +25,8 @@ class NewMeetingUser extends Model
     const UN_SIGNOUT = 0; // 未签退
     const NORMAL_SIGNOUT = 1; // 正常签退
 
+    const CLOSE = 2; // 关闭
+
 
 
     /**
