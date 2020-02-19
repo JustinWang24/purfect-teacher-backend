@@ -70,7 +70,7 @@ class User extends Authenticatable implements HasMobilePhone, HasDeviceId, IUser
      * @var array
      */
     protected $fillable = [
-        'password','mobile_verified_at','mobile','uuid','status','type','name','email','api_token', 'nice_name'
+        'password','mobile_verified_at','mobile','uuid','status','type','name','email','api_token', 'nice_name', 'user_signture'
     ];
 
     /**

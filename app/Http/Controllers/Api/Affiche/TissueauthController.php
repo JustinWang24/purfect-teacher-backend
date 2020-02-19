@@ -43,12 +43,25 @@ class TissueauthController extends Controller
         if ($token == '') {
             return JsonBuilder::Error('请先登录');
         }
+
+        // 上传图片
+        $images = $request->file('authu_tissuspics');
+        if (empty($images)) {
+            return JsonBuilder::Error('请上传图片');
+        }
+        // logo图片地址
+        $authu_tissuspics = AppProposalImage::proposalUploadPathToUrl(
+            $images->store(AppProposalImage::DEFAULT_UPLOAD_PATH_PREFIX)
+        );
+
         if (!trim($authu_tissusname)) {
             return JsonBuilder::Error('名称不能为空');
         }
         if (!trim($authu_tissusdesc)) {
             return JsonBuilder::Error('介绍不能为空');
         }
+
+
 
         $user = $request->user();
         $authTissueObj = new AuthTissueDao();
@@ -59,6 +72,7 @@ class TissueauthController extends Controller
         $addData['user_id'] = $user->id;
         $addData['school_id'] = $user->gradeUser->school_id;
         $addData['campus_id'] = $user->gradeUser->campus_id;
+        $addData['authu_tissuspics'] = trim($authu_tissuspics);
         $addData['authu_tissusname'] = trim($authu_tissusname);
         $addData['authu_tissusdesc'] = trim($authu_tissusdesc);
         $addData[ 'authu_number' ]     = (String)$getAuthIno[ 'user_username' ]; //编号
