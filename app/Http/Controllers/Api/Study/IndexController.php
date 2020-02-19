@@ -109,7 +109,7 @@ class IndexController extends Controller
 
 
     /**
-     * 课件类型
+     * 课件类型列表
      * @param MyStandardRequest $request
      * @return string
      */
@@ -119,6 +119,38 @@ class IndexController extends Controller
         $dao = new LectureDao();
         $list = $dao->getMaterialType($schoolId);
         return JsonBuilder::Success($list);
+    }
+
+
+    public function materialList(MyStandardRequest $request) {
+        $type = $request->get('type');
+        if(is_null($type)) {
+            return JsonBuilder::Error('缺少参数');
+        }
+        $user = $request->user();
+        $schoolId = $user->getSchoolId();
+        $schoolDao = new SchoolDao();
+        $school = $schoolDao->getSchoolById($schoolId);
+        $configuration = $school->configuration;
+        // todo 时间暂时写死
+        $date = Carbon::now()->toDateString();
+        $date = Carbon::parse('2020-01-08 14:40:00');;
+        $year = $configuration->getSchoolYear($date);
+        $month = Carbon::parse($date)->month;
+        $term = $configuration->guessTerm($month);
+
+        $gradeId = $user->gradeUser->grade_id;
+        $courseMajors = $user->gradeUser->major->courseMajors;
+        if(count($courseMajors) == 0) {
+            return JsonBuilder::Error('您没有课程');
+        }
+        $courseIds = $courseMajors->pluck('course_id')->toArray();
+
+        $itemDao = new TimetableItemDao();
+        $items = $itemDao->getGradeTeachersByCoursesId($courseIds, $gradeId, $year, $term);
+        dd($items->toArray());
+        $dao = new LectureDao();
+        $return = $dao->getMaterialsByType($type);
     }
 
 }

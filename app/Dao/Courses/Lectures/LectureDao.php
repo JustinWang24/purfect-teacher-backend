@@ -132,4 +132,11 @@ class LectureDao
         $field = ['id as type_id', 'name'];
         return LectureMaterialType::where($map)->select($field)->get();
     }
+
+
+    public function getMaterialsByType($type) {
+        $map = [];
+    }
+
+
 }

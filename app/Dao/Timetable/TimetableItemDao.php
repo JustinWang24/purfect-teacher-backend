@@ -869,4 +869,23 @@ class TimetableItemDao
             ->with('grade')
             ->get();
     }
+
+
+    /**
+     * 获取老师
+     * @param array $coursesId
+     * @param int $gradeId
+     * @param int $year
+     * @param int $term
+     * @return mixed
+     */
+    public function getGradeTeachersByCoursesId($coursesId, $gradeId, $year, $term) {
+        return TimetableItem::whereIn('course_id', $coursesId)
+            ->where('grade_id', $gradeId)
+            ->where('year', $year)
+            ->where('term', $term)
+            ->select([ 'teacher_id', 'course_id'])
+            ->distinct('course_id')
+            ->get();
+    }
 }
