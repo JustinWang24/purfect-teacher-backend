@@ -81,21 +81,24 @@ use App\Utils\UI\Button;
                 <form action="{{ route('manager_affiche.affiche.affiche_check_one') }}" method="post"  id="add-building-form">
                     @csrf
                     <div class="form-group">
-                        <label for="school-name-input">故障分类</label>
+                        <label for="school-name-input">状态</label>
                         <select id="status" class="form-control" name="status"  required>
-                            <option value="0">---请选择---</option>
-                            <option value="1" >通过</option>
-                            <option value="2">不通过</option>
+                            <option value="">-请选择-</option>
+                            <option value="1" @if( old('status') == 1 ) selected @endif >通过</option>
+                            <option value="2" @if( old('status') == 2 ) selected @endif >不通过</option>
                         </select>
                     </div>
                     <div class="form-group">
                         <label for="building-name-input">处理结果</label>
-                        <textarea  class="form-control" name="iche_checkdesc" cols="30" rows="10" placeholder=""></textarea>
+                        <textarea  class="form-control" name="iche_checkdesc" cols="30" rows="10" placeholder="">{{ old('iche_checkdesc') }}</textarea>
                     </div>
                     <input type="hidden" name="icheid" value="{{ $dataOne->icheid }}">
                    <?php
                    Button::Print(['id'=>'btn-create-building','text'=>trans('general.submit')], Button::TYPE_PRIMARY);
                    ?>
+                    <?php
+                    Anchor::Print(['text'=>trans('general.return'),'href'=>url()->previous(),'class'=>'pull-right link-return'], Button::TYPE_SUCCESS,'arrow-circle-o-right')
+                    ?>
                 </form>
             @endif
 
@@ -103,7 +106,7 @@ use App\Utils\UI\Button;
             @if(in_array($dataOne->status,[1,2]))
                 <div class="card-box">
                     <div class="card-head">
-                        <header>处理信息</header>
+                        <header>备注信息</header>
                     </div>
                     <div class="card-body">
                         <div class="row">
@@ -129,6 +132,9 @@ use App\Utils\UI\Button;
                         </div>
                     </div>
                 </div>
+                <?php
+                Anchor::Print(['text'=>trans('general.return'),'href'=>url()->previous(),'class'=>'pull-right link-return'], Button::TYPE_SUCCESS,'arrow-circle-o-right')
+                ?>
             @endif
         </div>
     </div>
