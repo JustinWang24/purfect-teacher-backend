@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Http\Requests\MyStandardRequest;
 use App\Utils\JsonBuilder;
 use App\Http\Controllers\Controller;
 
@@ -23,5 +24,15 @@ class IndexController extends Controller
         ];
 
         return JsonBuilder::Success($data);
+    }
+
+    /**
+     * PC 我的审批
+     * @param MyStandardRequest $request
+     */
+    public function index(MyStandardRequest $request)
+    {
+
+
     }
 }
