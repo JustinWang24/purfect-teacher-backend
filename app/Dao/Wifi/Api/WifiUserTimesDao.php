@@ -7,11 +7,12 @@
  */
 namespace App\Dao\Wifi\Api;
 
+use App\Dao\Wifi\CommonDao;
 use App\Models\Wifi\Api\WifiUserTimes;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Collection;
 
-class WifiUserTimesDao extends \App\Dao\Wifi\CommonDao
+class WifiUserTimesDao extends CommonDao
 {
    /**
     * Func:  添加或更新数据
