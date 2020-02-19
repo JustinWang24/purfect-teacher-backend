@@ -7,11 +7,12 @@
  */
 namespace App\Dao\Wifi\Api;
 
+use App\Dao\Wifi\CommonDao;
 use App\Models\Wifi\Api\WifiIssueTypes;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Collection;
 
-class WifiIssueTypesDao extends \App\Dao\Wifi\CommonDao
+class WifiIssueTypesDao extends CommonDao
 {
    /**
     * Func:  添加或更新数据

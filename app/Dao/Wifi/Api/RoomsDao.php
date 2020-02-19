@@ -7,12 +7,13 @@
  */
 namespace App\Dao\Wifi\Api;
 
+use App\Dao\Wifi\CommonDao;
 use App\Models\Wifi\Api\Rooms;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Collection;
 use App\Models\Schools\Building;
 
-class RoomsDao extends \App\Dao\Wifi\CommonDao
+class RoomsDao extends extends CommonDao
 {
    /**
     * Func:  添加或更新数据
