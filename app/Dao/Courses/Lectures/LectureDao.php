@@ -6,7 +6,6 @@
  */
 
 namespace App\Dao\Courses\Lectures;
-use App\Dao\Schools\GradeDao;
 use App\Dao\Users\GradeUserDao;
 use App\Models\Courses\Homework;
 use App\Models\Courses\Lecture;
@@ -42,6 +41,18 @@ class LectureDao
             ]);
         }
         return $lecture;
+    }
+
+    /**
+     * @param $courseId
+     * @param $teacherId
+     * @return Collection
+     */
+    public function getLecturesByCourseAndTeacher($courseId, $teacherId){
+        return Lecture::where('course_id',$courseId)
+            ->where('teacher_id',$teacherId)
+            ->orderBy('idx','asc')
+            ->get();
     }
 
     /**

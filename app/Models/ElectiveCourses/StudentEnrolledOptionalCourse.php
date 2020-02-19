@@ -3,8 +3,8 @@
 namespace App\Models\ElectiveCourses;
 
 use App\Models\Course;
+use App\User;
 use Illuminate\Database\Eloquent\Model;
-use phpDocumentor\Reflection\DocBlock\Tags\Uses;
 
 class StudentEnrolledOptionalCourse extends Model
 {
@@ -14,12 +14,12 @@ class StudentEnrolledOptionalCourse extends Model
 
     public function user()
     {
-        $this->belongsTo(Uses::class, 'id','user_id');
+        return $this->belongsTo(User::class);
     }
 
     public function course()
     {
-        $this->hasOne(Course::class, 'id', 'course_id');
+        return $this->hasOne(Course::class, 'id', 'course_id');
     }
 
 

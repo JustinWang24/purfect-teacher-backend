@@ -2,6 +2,7 @@
 /**
  * @var \App\User $teacher
  */
+$teacher = \Illuminate\Support\Facades\Auth::user();
 ?>
 <div class="sidebar-container">
     <div class="sidemenu-container navbar-collapse collapse fixed-menu">
@@ -72,10 +73,16 @@
                 </li>
 
                 <li class="nav-item">
-                    <a href="{{ route('teacher.textbook.manager') }}" class="nav-link">
+                    <a href="#" class="nav-link">
                         <i class="material-icons">map</i>
-                        <span class="title">教材管理</span>
+                        <span class="title">教学管理</span>
+                        <span class="arrow nav-toggle"></span>
                     </a>
+                    <ul class="sub-menu">
+                        @foreach($teacher->myCourses as $uc)
+                        @include('layouts.desktop.elements.submenu_selected',['routeName'=>'teacher.course.materials.manager','routeParams'=>['teacher'=>$teacher->id,'course_id'=>$uc->course->id],'name'=>$uc->course->name])
+                        @endforeach
+                    </ul>
                 </li>
 
                 <li class="nav-item">

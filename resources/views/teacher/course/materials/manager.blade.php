@@ -79,7 +79,7 @@
         </div>
 
         <div  v-show="activeIndex === '3'">
-            <p>学生管理</p>
+            <grade-table :grade="currentGradeId" teacher="{{ $teacher->id }}" course="{{ $course->id }}"></grade-table>
         </div>
 
         <el-dialog title="{{ $course->name }} ({{ $course->duration }}课时)" :visible.sync="courseIndexerVisible">

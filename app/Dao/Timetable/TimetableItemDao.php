@@ -869,4 +869,23 @@ class TimetableItemDao
             ->with('grade')
             ->get();
     }
+
+    /**
+     * 根据班级和课程的id, 获取老师的信息
+     * @param $courseId
+     * @param $gradeId
+     * @param null $date
+     * @return Collection
+     */
+    public function getItemsByCourseAndGrade($courseId, $gradeId, $date = null){
+        $yearAndTerm = GradeAndYearUtil::GetYearAndTerm($date ?? Carbon::now());
+        return TimetableItem::select(['teacher_id'])
+            ->where('course_id',$courseId)
+            ->where('grade_id',$gradeId)
+            ->where('year',$yearAndTerm['year'])
+            ->where('term',$yearAndTerm['term'])
+            ->distinct()
+            ->with('teacher')
+            ->get();
+    }
 }
