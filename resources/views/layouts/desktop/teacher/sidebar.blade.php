@@ -2,6 +2,7 @@
 /**
  * @var \App\User $teacher
  */
+$teacher = \Illuminate\Support\Facades\Auth::user();
 ?>
 <div class="sidebar-container">
     <div class="sidemenu-container navbar-collapse collapse fixed-menu">
