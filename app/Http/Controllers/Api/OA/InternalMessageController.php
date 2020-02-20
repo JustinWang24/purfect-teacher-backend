@@ -63,10 +63,18 @@ class InternalMessageController extends Controller
     {
         $user = $request->user();
         $type = $request->get('type');
+        if ($type == 1 || $type == 2) {
+            $condition['collect_user_id'] = $user->id;
+            $condition['type']   = $type; # 1未读 2已读
+        }
+
+        if ($type == 3 || $type == 4) {
+            $condition['user_id'] = $user->id;
+            $condition['type']    = $type; # 3已发送 4草稿箱
+        }
 
         $dao = new InternalMessageDao;
-
-        $data   = $dao->getInternalMessageByUserId($user->id, $type);
+        $data   = $dao->getInternalMessageByUserId($user->id, $condition);
         $result = [];
 
         foreach ($data as $key => $val) {

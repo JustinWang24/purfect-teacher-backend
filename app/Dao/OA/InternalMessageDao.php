@@ -30,8 +30,8 @@ class InternalMessageDao
                 $collId = explode(',', $data['collect_user_id']);
                 $collData = [];
                 foreach ($collId as $key => $value) {
-                    $collData['user_id']           = $value;
-                    $collData['collect_user_id']   = $data['collect_user_id'];
+                    $collData['user_id']           = $data['user_id'];
+                    $collData['collect_user_id']   = $value;
                     $collData['collect_user_name'] = $data['collect_user_name'];
                     $collData['title']             = $data['title'];
                     $collData['content']           = $data['content'];
@@ -61,13 +61,12 @@ class InternalMessageDao
     /**
      * 根据用户ID 获取
      * @param $userId
-     * @param $type
+     * @param $where
      * @return mixed
      */
-    public function getInternalMessageByUserId($userId, $type)
+    public function getInternalMessageByUserId($userId, $where)
     {
-        return InternalMessage::where('user_id', $userId)
-            ->where('type', $type)
+        return InternalMessage::where($where)
             ->where('status', InternalMessage::STATUS_NORMAL)
             ->orderBy('created_at', 'desc')
             ->paginate(ConfigurationTool::DEFAULT_PAGE_SIZE);
