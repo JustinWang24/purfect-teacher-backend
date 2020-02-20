@@ -169,7 +169,7 @@ class IndexController extends Controller
         $dao = new LectureDao();
 
         foreach ($timetable as $key => $item) {
-            $list[] = $dao->getMaterialsByType($item->course_id,$gradeId,$item->teacher_id,$type, $keyword);
+            $list[] = $dao->getMaterialsByType($item->course_id,$gradeId,$item->teacher_id,$type);
         }
 
         $data = [];
@@ -187,6 +187,11 @@ class IndexController extends Controller
         }
         $result = array_merge($data);
         return JsonBuilder::Success($result);
+    }
+
+
+    public function getMaterial() {
+
     }
 
 }
