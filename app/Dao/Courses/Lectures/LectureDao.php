@@ -4,17 +4,19 @@
  * Author: Justin Wang
  * Email: hi@yue.dev
  */
-
 namespace App\Dao\Courses\Lectures;
-use App\Dao\Users\GradeUserDao;
-use App\Models\Courses\Homework;
-use App\Models\Courses\Lecture;
-use App\Models\Courses\LectureMaterial;
-use App\Models\Users\GradeUser;
-use App\Utils\ReturnData\MessageBag;
-use App\Utils\JsonBuilder;
-use App\Utils\Time\GradeAndYearUtil;
+
+
 use Carbon\Carbon;
+use App\Utils\JsonBuilder;
+use App\Dao\Users\GradeUserDao;
+use App\Models\Courses\Lecture;
+use App\Models\Users\GradeUser;
+use App\Models\Courses\Homework;
+use App\Utils\ReturnData\MessageBag;
+use App\Utils\Time\GradeAndYearUtil;
+use App\Models\Courses\LectureMaterial;
+use App\Models\Courses\LectureMaterialType;
 use Illuminate\Database\Eloquent\Collection;
 
 class LectureDao
@@ -131,4 +133,49 @@ class LectureDao
         }
         return $bag;
     }
+
+
+    /**
+     * 获取学习资料的类型
+     * @param $schoolId
+     * @return mixed
+     */
+    public function getMaterialType($schoolId) {
+        $map = ['school_id'=>$schoolId];
+        $field = ['id as type_id', 'name'];
+        return LectureMaterialType::where($map)->select($field)->get();
+    }
+
+
+    /**
+     * @param $courseId
+     * @param $gradeId
+     * @param $teacherId
+     * @param $type
+     * @param $keyword
+     * @return mixed
+     */
+    public function getMaterialsByType($courseId, $gradeId, $teacherId, $type, $keyword = null){
+        $map = ['course_id'=>$courseId, 'grade_id'=>$gradeId,
+            'teacher_id'=>$teacherId, 'type'=>$type];
+        $result = LectureMaterial::where($map);
+        if(!is_null($keyword)) {
+            $result->where('description', 'like', $keyword.'%');
+        }
+        return $result->get();
+    }
+
+
+    /**
+     * @param $gradeId
+     * @return mixed
+     */
+    public function getMaterialByGradeId($gradeId) {
+        $map = ['grade_id'=>$gradeId];
+        return LectureMaterial::where($map)
+            ->orderBy('created_at', 'desc')
+            ->first();
+    }
+
+
 }

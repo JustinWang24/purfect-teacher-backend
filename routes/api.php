@@ -961,8 +961,12 @@ Route::prefix('organizations')->middleware('auth:api')->group(function(){
 
 // 学习
 Route::prefix('study')->middleware('auth:api')->group(function(){
-        Route::any('/home-page', 'Api\Study\IndexController@index')
+    Route::any('/home-page', 'Api\Study\IndexController@index')
         ->name('api.study.home-page');
+    Route::any('/type-list', 'Api\Study\IndexController@materialType')
+        ->name('api.study.type-list');
+    Route::any('/material-list', 'Api\Study\IndexController@materialList')
+        ->name('api.study.material-list');
 });
 
 
