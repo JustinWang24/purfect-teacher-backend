@@ -66,7 +66,7 @@ class InternalMessage extends Model
 
     public function file()
     {
-        return $this->hasMany(InternalMessageFile::class, 'message_id', 'id');
+        return $this->hasMany(InternalMessageFile::class, 'message_id', 'message_id');
     }
 
 }
