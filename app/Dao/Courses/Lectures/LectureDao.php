@@ -20,6 +20,14 @@ use Illuminate\Database\Eloquent\Collection;
 class LectureDao
 {
     /**
+     * @param $lectureId
+     * @return Lecture
+     */
+    public function getLectureById($lectureId){
+        return Lecture::find($lectureId);
+    }
+
+    /**
      * @param $courseId
      * @param $teacherId
      * @param $index
@@ -92,6 +100,45 @@ class LectureDao
                 ->get();
         }
         return $result;
+    }
+
+    /**
+     * 学生获取自己某节课的作业
+     * @param $studentId
+     * @param $courseId
+     * @param $idx
+     * @param $year
+     * @return Collection
+     */
+    public function getHomeworkByStudentAndLectureAndYear($studentId, $courseId, $idx, $year){
+        return Homework::where('year', $year)
+            ->where('course_id',$courseId)
+            ->where('idx',$idx)
+            ->where('student_id',$studentId)
+            ->orderBy('id','desc')
+            ->get();
+    }
+
+    /**
+     * @param $data
+     * @return Homework
+     */
+    public function saveHomework($data){
+        return Homework::create($data);
+    }
+
+    /**
+     * @param $id
+     * @return mixed
+     */
+    public function deleteHomework($id){
+        $homework = Homework::find($id);
+        $filePath = $homework->url;
+        if($filePath){
+            $file = str_replace(env('APP_URL').'/storage','',$filePath);
+            unlink(storage_path('app/public').$file);
+        }
+        return $homework->delete();
     }
 
     public function getLectureMaterial($materialId){
