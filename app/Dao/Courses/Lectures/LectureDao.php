@@ -6,7 +6,6 @@
  */
 namespace App\Dao\Courses\Lectures;
 
-use App\Models\Courses\LectureMaterialType;
 use Carbon\Carbon;
 use App\Utils\JsonBuilder;
 use App\Dao\Users\GradeUserDao;
@@ -16,6 +15,7 @@ use App\Models\Courses\Homework;
 use App\Utils\ReturnData\MessageBag;
 use App\Utils\Time\GradeAndYearUtil;
 use App\Models\Courses\LectureMaterial;
+use App\Models\Courses\LectureMaterialType;
 use Illuminate\Database\Eloquent\Collection;
 
 class LectureDao
@@ -134,8 +134,34 @@ class LectureDao
     }
 
 
-    public function getMaterialsByType($type) {
-        $map = [];
+    /**
+     * @param $courseId
+     * @param $gradeId
+     * @param $teacherId
+     * @param $type
+     * @param $keyword
+     * @return mixed
+     */
+    public function getMaterialsByType($courseId, $gradeId, $teacherId, $type, $keyword = null){
+        $map = ['course_id'=>$courseId, 'grade_id'=>$gradeId,
+            'teacher_id'=>$teacherId, 'type'=>$type];
+        $result = LectureMaterial::where($map);
+        if(!is_null($keyword)) {
+            $result->where('description', 'like', $keyword.'%');
+        }
+        return $result->get();
+    }
+
+
+    /**
+     * @param $gradeId
+     * @return mixed
+     */
+    public function getMaterialByGradeId($gradeId) {
+        $map = ['grade_id'=>$gradeId];
+        return LectureMaterial::where($map)
+            ->orderBy('created_at', 'desc')
+            ->first();
     }
 
 
