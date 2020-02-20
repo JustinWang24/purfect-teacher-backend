@@ -44,6 +44,10 @@ class InternalMessageDao
 
             if ($data['is_file'] == InternalMessage::IS_FILE) {
                 foreach ($files as $key => $val) {
+                    $imageData['path']  = $val['path'];
+                    $imageData['name']  = $val['name'];
+                    $imageData['type'] = $val['type'];
+                    $imageData['size'] = $val['size'];
                     $imageData['message_id'] = $message->id;
                     InternalMessageFile::create($imageData);
                 }
@@ -51,6 +55,7 @@ class InternalMessageDao
             DB::commit();
             $result = true;
         }catch (\Exception $e) {
+            dd($e);
             DB::rollBack();
             $result = false;
         }

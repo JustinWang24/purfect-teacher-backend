@@ -31,7 +31,8 @@ class InternalMessageController extends Controller
         $isRelay     = $request->get('isRelay');
         $relayId     = $request->get('relayId');
         $isFile      = $request->get('isFile');
-        $fileArr     = $request->file('image');
+        $fileArr     = $request->get('image');
+
         $dao = new InternalMessageDao;
 
         $data = [
@@ -191,4 +192,16 @@ class InternalMessageController extends Controller
 
         return JsonBuilder::Success($data);
     }
+
+    /**
+     * 更新信件
+     * @param MyStandardRequest $request
+     */
+    public function updateInternal(MyStandardRequest $request)
+    {
+
+
+
+    }
+
 }
