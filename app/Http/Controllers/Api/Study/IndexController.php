@@ -154,17 +154,16 @@ class IndexController extends Controller
         if(count($courseMajors) == 0) {
             return JsonBuilder::Error('您没有课程');
         }
-        if(!is_null($keyword)) {
-            $ids = $courseMajors->pluck('id')->toArray();
-            $courseMajorDao = new CourseMajorDao();
-            $courseMajors = $courseMajorDao->getCourseMajorByIdsAndCourseName($ids, $keyword);
-
-        }
         $courseIds = $courseMajors->pluck('course_id')->toArray();
+        $material = [];
+        if(!is_null($keyword)) {
+            // 根据资料名称搜索
+            $material = $this->getMaterial($courseIds,$keyword, $gradeId, $year, $term, $type);
+            $courseIds = $courseMajors->pluck('course_id')->toArray();
+        }
 
         $itemDao = new TimetableItemDao();
         $timetable = $itemDao->getGradeTeachersByCoursesId($courseIds, $gradeId, $year, $term);
-
         $list = [];
         $dao = new LectureDao();
 
@@ -172,26 +171,76 @@ class IndexController extends Controller
             $list[] = $dao->getMaterialsByType($item->course_id,$gradeId,$item->teacher_id,$type);
         }
 
+        $list = array_merge($list, $material);
+
         $data = [];
         foreach ($list as $key => $item) {
             foreach ($item as $k => $val) {
+
                 $data[$val->course_id]['course'] = $val->course->name;
 
                 $data[$val->course_id]['list'][] = [
+                    'id' => $val->id,
                     'type' => $val->media->getTypeText(),
                     'file_name' => $val->media->file_name,
+                    'keyword' => $val->description,
                     'url' => $val->url,
                     'created_at' => $val->created_at
                 ];
             }
         }
         $result = array_merge($data);
+        foreach ($result as $key => $item) {
+            $result[$key]['list'] = $this->second_array_unique_bykey($item['list'], 'id');
+        }
         return JsonBuilder::Success($result);
     }
 
 
-    public function getMaterial() {
+    /**
+     * 根据资料名称搜索
+     * @param $courseIds
+     * @param $keyword
+     * @param $gradeId
+     * @param $year
+     * @param $term
+     * @param $type
+     * @return array
+     */
+    public function getMaterial($courseIds, $keyword,$gradeId, $year, $term, $type) {
 
+        $itemDao = new TimetableItemDao();
+        $timetable = $itemDao->getGradeTeachersByCoursesId($courseIds, $gradeId, $year, $term);
+        $list = [];
+        $dao = new LectureDao();
+
+        foreach ($timetable as $key => $item) {
+            $list[] = $dao->getMaterialsByType($item->course_id,$gradeId,$item->teacher_id,$type, $keyword);
+        }
+
+        return $list;
+    }
+
+
+    /**
+     * 二维数组去重
+     * @param $arr
+     * @param $key
+     * @return mixed
+     */
+    public function second_array_unique_bykey($arr, $key){
+        $tmp_arr = array();
+        foreach($arr as $k => $v) {
+
+            if(in_array($v[$key], $tmp_arr)) {
+                //搜索$v[$key]是否在$tmp_arr数组中存在，若存在返回true
+                unset($arr[$k]); //销毁一个变量  如果$tmp_arr中已存在相同的值就删除该值
+            }
+            else {
+                $tmp_arr[$k] = $v[$key];  //将不同的值放在该数组中保存
+            }
+        }
+        return $arr;
     }
 
 }

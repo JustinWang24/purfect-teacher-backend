@@ -152,12 +152,17 @@ class LectureDao
      * @param $gradeId
      * @param $teacherId
      * @param $type
+     * @param $keyword
      * @return mixed
      */
-    public function getMaterialsByType($courseId, $gradeId, $teacherId, $type){
+    public function getMaterialsByType($courseId, $gradeId, $teacherId, $type, $keyword=null){
         $map = ['course_id'=>$courseId, 'grade_id'=>$gradeId,
             'teacher_id'=>$teacherId, 'type'=>$type];
-        return LectureMaterial::where($map)->get();
+        $result = LectureMaterial::where($map);
+        if(!is_null($result)) {
+            $result = $result->where('description', 'like', '%'.$keyword.'%');
+        }
+        return $result->get();
     }
 
 
@@ -174,12 +179,14 @@ class LectureDao
 
 
     /**
+     * @param $courseIds
      * @param $keyword
      * @return mixed
      */
-    public function getMaterialByKeyword($keyword) {
-        $map = ['description', 'like', '%'.$keyword.'%'];
-        return LectureMaterial::where($map)->get();
+    public function getMaterialByKeyword($courseIds, $keyword) {
+        return LectureMaterial::where('description', 'like', '%'.$keyword.'%')
+            ->whereIn('course_id', $courseIds)
+            ->get();
     }
 
 
