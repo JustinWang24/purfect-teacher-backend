@@ -12,7 +12,7 @@ class InternalMessage extends Model
 
     protected $fillable = ['user_id', 'collect_user_id', 'collect_user_name',
                            'title', 'content', 'type', 'is_relay', 'message_id',
-                           'status'
+                           'status', 'is_file'
     ];
 
     const DRIVER_LOCAL      = 1;

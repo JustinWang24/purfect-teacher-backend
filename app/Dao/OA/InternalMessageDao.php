@@ -38,8 +38,8 @@ class InternalMessageDao
                     $collData['message_id']        = $messageIds;
                     $collData['type']              = InternalMessage::TYPE_UNREAD;
                     $collData['is_relay']          = $data['is_relay'];
-                    $collData['is_file']           = $data['is_file'];
-                    InternalMessage::create($collData);
+					$collData['is_file']           = $data['is_file'];
+					InternalMessage::create($collData);
                 }
             }
 
