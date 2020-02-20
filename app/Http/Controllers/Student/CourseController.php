@@ -23,7 +23,8 @@ class CourseController extends Controller
      */
     public function manager(MyStandardRequest $request){
         $courseId = $request->getCourseId();
-        $this->dataForView['course'] = (new CourseDao())->getCourseById($courseId);
+        $course = (new CourseDao())->getCourseById($courseId);
+        $this->dataForView['course'] = $course;
         /**
          * @var User $student
          */
@@ -35,7 +36,15 @@ class CourseController extends Controller
 
         if($items->count() > 0){
             $teacher = $items[0]->teacher;
-            $lectures = (new LectureDao())->getLecturesByCourseAndTeacher($courseId, $teacher->id);
+            $existedLectures = (new LectureDao())->getLecturesByCourseAndTeacher($courseId, $teacher->id);
+            $lectures = array_fill(1, $course->duration,null);
+            foreach ($existedLectures as $lecture) {
+                $lectures[$lecture->idx] = [
+                    'id'=>$lecture->id,
+                    'idx'=>$lecture->idx,
+                    'title'=>$lecture->title
+                ];
+            }
             $this->dataForView['lectures'] = $lectures;
             return view('student.courses.manager', $this->dataForView);
         }

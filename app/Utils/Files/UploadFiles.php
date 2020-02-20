@@ -2,6 +2,12 @@
 
 namespace App\Utils\Files;
 
+use App\Dao\NetworkDisk\CategoryDao;
+use App\Models\Course;
+use App\Models\Courses\Lecture;
+use App\User;
+use App\Utils\Time\GradeAndYearUtil;
+use Carbon\Carbon;
 use GuzzleHttp\Client;
 
 class UploadFiles
@@ -14,6 +20,46 @@ class UploadFiles
         $this->baseUrl = 'http://files.test';
     }
 
+    /**
+     * 学生自己的根目录/homework/year/term/course_id/lecture_index/
+     *
+     * @param Course $course
+     * @param Lecture $lecture
+     * @param $lectureIdx
+     * @param User $student
+     * @param $year
+     * @param $term
+     * @return array
+     */
+    public function buildStudentHomeworkPath(Course $course, Lecture $lecture, $lectureIdx, User $student, $year = null, $term = null){
+        if(!$year){
+            $yat = GradeAndYearUtil::GetYearAndTerm(Carbon::now());
+            $year = $yat['year'];
+            $term = $yat['term'];
+        }
+
+        $finalPath = [];
+        try{
+            $custom = $student->uuid . DIRECTORY_SEPARATOR .
+                $year . DIRECTORY_SEPARATOR .
+                $term . DIRECTORY_SEPARATOR .
+                $course->id . DIRECTORY_SEPARATOR .
+                $lecture->id . DIRECTORY_SEPARATOR .
+                $lectureIdx;
+            $realPath = storage_path('app'.DIRECTORY_SEPARATOR.'public'.DIRECTORY_SEPARATOR.'homework'.DIRECTORY_SEPARATOR.$custom);
+
+            $exist = is_dir($realPath);
+            if(!$exist){
+                mkdir($realPath, 0755, true);
+            }
+
+            $finalPath['store_path'] = 'public'.DIRECTORY_SEPARATOR.'homework'.DIRECTORY_SEPARATOR.$custom;
+            $finalPath['url_path'] = DIRECTORY_SEPARATOR.'storage'.DIRECTORY_SEPARATOR.'homework'.DIRECTORY_SEPARATOR.$custom;
+        }catch (\Exception $exception){
+
+        }
+        return $finalPath;
+    }
 
     /**
      * 上传文件
