@@ -52,8 +52,8 @@ use App\User;
                                     <th>人数</th>
                                     <th>申请时间</th>
                                     <th>审核时间</th>
-                                    <th>状态</th>
-                                    <th width="10%">操作</th>
+                                    <!--th>状态</th-->
+                                    <th width="20%">操作</th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -69,9 +69,11 @@ use App\User;
                                         <td>{{ $val->group_number }}人</td>
                                         <td>{{ $val->created_at }}</td>
                                         <td>{{ $val->group_time1 }}</td>
-                                        <td>{{ $groupStatusArr[$val->status] }}</td>
+                                        <!--td>{{ $groupStatusArr[$val->status] }}</td-->
                                         <td class="text-center">
-
+                                            {{ Anchor::Print(['text'=>'公告','class'=>'btn btn-primary','href'=>route('manager_affiche.group.group_notice_list',['groupid'=>$val->groupid])], Button::TYPE_DEFAULT,'') }}
+                                            {{ Anchor::Print(['text'=>'动态','class'=>'btn btn-primary','href'=>route('manager_affiche.group.group_affiche_list',['groupid'=>$val->groupid])], Button::TYPE_DEFAULT,'') }}
+                                            {{ Anchor::Print(['text'=>'成员','class'=>'btn btn-primary','href'=>route('manager_affiche.group.group_member_list',['groupid'=>$val->groupid])], Button::TYPE_DEFAULT,'') }}
                                             {{ Anchor::Print(['text'=>($val->status == -1 ? '审核' : '查看'),'class'=>'btn btn-primary','href'=>route('manager_affiche.group.group_one',['groupid'=>$val->groupid])], Button::TYPE_DEFAULT,'') }}
                                         </td>
                                     </tr>

@@ -40,7 +40,7 @@ use App\Utils\UI\Button;
                             </div>
                         </div>
                     </div>
-					<div class="row">
+                    <div class="row">
                         <div class="col-3">
                             <div class="form-group">
                                 <label for="application-user-name">学院：</label>

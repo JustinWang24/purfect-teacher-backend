@@ -18,9 +18,14 @@ class CommonDao
    //---------------------------------------api定义的静态属性-------------------------------------
    // 状态 状态(0:关闭,1:开启)
    public static $wifiContentsStatusArr = [
-      0 => '关闭' ,
-      1 => '开启' ,
+      0 => '正常' ,
+      1 => '关闭' ,
    ];
+    // 组织公告状态 状态(0:关闭,1:开启)
+    public static $noticeStatusArr = [
+        0 => '关闭' ,
+        1 => '正常' ,
+    ];
     // 状态 状态(-1:待审核,0:关闭活动,1:审核通过,2:审核未通过)
     public static $afficheStatusArr = [
         -1 => '待审核' ,
@@ -53,8 +58,8 @@ class CommonDao
         2 => '未通过',
     ];
     public static $GroupJoinTypeidArr = [
-        1 => '<font color="red">团长</font>',
-        4 => '<font color="#6495ed">普通用户</font>'
+        1 => '团长',
+        4 => '普通用户'
     ];
 
     //---------------------------------------manger定义的静态属性----------------------------------

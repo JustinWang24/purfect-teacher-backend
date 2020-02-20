@@ -9,6 +9,7 @@
    use App\Dao\Affiche\Backstage\CollegeGroupNoticesDao;
    use App\Dao\Affiche\Backstage\CollegeGroupNoticeReaderDao;
 
+   use App\Models\Affiche\CollegeGroupNotice;
    use Illuminate\Http\Request;
    use App\Utils\FlashMessageBuilder;
    use App\Http\Controllers\Controller;
@@ -166,4 +167,124 @@
                return redirect()->route('manager_affiche.group.group_pending_list');
            }
        }
+
+       /**
+        * Func 组织公告列表
+        * @param Request $request
+        * @return view
+        */
+       public function group_notice_list(Request $request)
+       {
+           $page = (Int)$request->input('page', 1);
+           $keywords = (String)$request->input('keywords', '');
+           $group_id = (Int)$request->input('groupid', 0);
+
+           if (!$group_id) {
+               FlashMessageBuilder::Push($request, FlashMessageBuilder::DANGER, '参数错误');
+               return redirect()->route('manager_affiche.group.group_adopt_list');
+           }
+
+           // 关键词查询
+           $param['group_id'] = $group_id;
+           $param['keywords'] = $keywords;
+           $param['status'] = [1];
+
+           $collegeGroupNoticesObj = new CollegeGroupNoticesDao();
+           $dataList = $collegeGroupNoticesObj->getCollegeGroupNoticesListInfo($param, $page);
+
+           // 返回数据
+           $this->dataForView['dataList'] = $dataList;
+           $this->dataForView['noticeStatusArr'] = CollegeGroupNoticesDao::$noticeStatusArr;
+
+           return view('manager_affiche.group.group_notice_list', $this->dataForView);
+       }
+
+       /**
+        * Func 组织成员列表
+        * @param Request $request
+        * @return view
+        */
+       public function group_member_list(Request $request)
+       {
+           $page = (Int)$request->input('page', 1);
+           $keywords = (String)$request->input('keywords', '');
+           $group_id = (Int)$request->input('groupid', 0);
+
+           if (!$group_id) {
+               FlashMessageBuilder::Push($request, FlashMessageBuilder::DANGER, '参数错误');
+               return redirect()->route('manager_affiche.group.group_adopt_list');
+           }
+
+           // 关键词查询
+           $param['group_id'] = $group_id;
+           $param['keywords'] = $keywords;
+           $param['status'] = [-1, 1, 2]; // 状态(-1:待审核,1:审核通过,2:审核驳回)
+
+           $collegeGroupJoinObj = new CollegeGroupJoinDao();
+           $dataList = $collegeGroupJoinObj->getCollegeGroupJoinDaoListInfo($param, $page);
+
+           // 返回数据
+           $this->dataForView['dataList'] = $dataList;
+           $this->dataForView['groupStatusArr'] = CollegeGroupNoticesDao::$groupStatusArr;
+           $this->dataForView['GroupJoinTypeidArr'] = CollegeGroupNoticesDao::$GroupJoinTypeidArr;
+
+           return view('manager_affiche.group.group_member_list', $this->dataForView);
+       }
+
+       /**
+        * Func 组织动态列表
+        * @param Request $request
+        * @return view
+        */
+       public function group_affiche_list(Request $request)
+       {
+           $page = (Int)$request->input('page', 1);
+           $keywords = (String)$request->input('keywords', '');
+           $group_id = (Int)$request->input('groupid', 0);
+
+           if (!$group_id) {
+               FlashMessageBuilder::Push($request, FlashMessageBuilder::DANGER, '参数错误');
+               return redirect()->route('manager_affiche.group.group_adopt_list');
+           }
+
+           // 关键词查询
+           $param['cate_id'] = 2;
+           $param['minx_id'] = $group_id;
+           $param['keywords'] = $keywords;
+           $param['status'] = [1];
+
+           $AfficheObj = new AfficheDao();
+           $dataList = $AfficheObj->getAfficheListInfo($param, $page);
+
+           // 返回数据
+           $this->dataForView['dataList'] = $dataList;
+           $this->dataForView['afficheStatusArr'] = AfficheDao::$afficheStatusArr;
+
+           return view('manager_affiche.group.group_affiche_list', $this->dataForView);
+
+       }
+
+       /**
+        * Func 组织动态详情
+        * @param Request $request
+        * @return view
+        */
+       public function group_affiche_one(Request $request)
+       {
+           $icheid = $request->input('icheid', 0);
+
+           $AfficheObj = new AfficheDao();
+           $dataOne = $AfficheObj->getAfficheOneInfo($icheid);
+
+           // 返回数据
+           $this->dataForView['dataOne'] = $dataOne;
+           $this->dataForView['afficheTypeArr'] = AfficheDao::$afficheTypeArr;
+           $this->dataForView['afficheStatusArr'] = AfficheDao::$afficheStatusArr;
+
+           return view('manager_affiche.group.group_affiche_one', $this->dataForView);
+       }
+
+
+
+
    }

@@ -1,6 +1,7 @@
 <?php
    namespace App\Http\Controllers\Operator\Affiche;
 
+   use App\Dao\Affiche\CommonDao;
    use App\Dao\Schools\SchoolDao;
    use App\Dao\Affiche\Backstage\AfficheDao;
 
@@ -75,7 +76,7 @@ class AfficheController extends Controller
     }
 
     /**
-     * Func
+     * Func 动态详情
      * @param Request $request
      * @return view
      */
@@ -147,5 +148,67 @@ class AfficheController extends Controller
             FlashMessageBuilder::Push ( $request , FlashMessageBuilder::DANGER , '操作失败,请稍后重试');
             return redirect()->route('manager_affiche.affiche.affiche_pending_list');
         }
+    }
+
+    /**
+     * Func 动态评论列表
+     * @param Request $request
+     * @return view
+     */
+    public function affiche_comment_list(Request $request)
+    {
+        $page = (Int)$request->input('page', 1);
+        $keywords = (String)$request->input('keywords', '');
+        $iche_id = (Int)$request->input('icheid', 0);
+
+        if (!$iche_id) {
+            FlashMessageBuilder::Push($request, FlashMessageBuilder::DANGER, '参数错误');
+            return redirect()->route('/');
+        }
+
+        // 关键词查询
+        $param['iche_id'] = $iche_id;
+        $param['keywords'] = $keywords;
+        $param['status'] = [1];
+
+        $afficheObj = new AfficheDao();
+        $dataList = $afficheObj->getAfficheCommentListInfo($param, $page);
+
+        // 返回数据
+        $this->dataForView['dataList'] = $dataList;
+        $this->dataForView['statusArr'] = AfficheDao::$noticeStatusArr;
+
+        return view('manager_affiche.affiche.affiche_comment_list', $this->dataForView);
+    }
+
+    /**
+     * Func 动态点赞列表
+     * @param Request $request
+     * @return view
+     */
+    public function affiche_praise_list(Request $request)
+    {
+        $page = (Int)$request->input('page', 1);
+        $keywords = (String)$request->input('keywords', '');
+        $iche_id = (Int)$request->input('icheid', 0);
+
+        if (!$iche_id) {
+            FlashMessageBuilder::Push($request, FlashMessageBuilder::DANGER, '参数错误');
+            return redirect()->route('/');
+        }
+
+        // 关键词查询
+        $param['typeid'] = 1;
+        $param['minx_id'] = $iche_id;
+        $param['keywords'] = $keywords;
+
+        $afficheObj = new AfficheDao();
+        $dataList = $afficheObj->getAffichePraiseListInfo($param, $page);
+
+        // 返回数据
+        $this->dataForView['dataList'] = $dataList;
+        $this->dataForView['statusArr'] = AfficheDao::$noticeStatusArr;
+
+        return view('manager_affiche.affiche.affiche_praise_list', $this->dataForView);
     }
 }

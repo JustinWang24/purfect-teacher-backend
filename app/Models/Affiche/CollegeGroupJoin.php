@@ -7,6 +7,8 @@
  */
 namespace App\Models\Affiche;
 
+use App\Models\Students\StudentProfile;
+use App\Models\Users\GradeUser;
 use Illuminate\Database\Eloquent\Model;
 
 class CollegeGroupJoin extends Model
@@ -26,4 +28,15 @@ class CollegeGroupJoin extends Model
         'created_at',
         'updated_at',
     ];
+
+    public function studentProfile(){
+        return $this->belongsTo(StudentProfile::class, 'user_id', 'user_id');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function gradeUser() {
+        return $this->belongsTo(GradeUser::class, 'user_id', 'user_id');
+    }
 }
