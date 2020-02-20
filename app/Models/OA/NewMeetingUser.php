@@ -24,6 +24,7 @@ class NewMeetingUser extends Model
 
     const UN_SIGNOUT = 0; // 未签退
     const NORMAL_SIGNOUT = 1; // 正常签退
+    const LEAVE_EARLY = 2; // 早退
 
     const CLOSE = 2; // 关闭
 
@@ -63,7 +64,7 @@ class NewMeetingUser extends Model
     public function getMeetTime() {
         $meet_start = Carbon::parse($this->meet_start);
         $meet_end = Carbon::parse($this->meet_end);
-        $time = $meet_start->format('H:i'). '————' .$meet_end->format('H:i');
+        $time = $meet_start->format('H:i'). '––' .$meet_end->format('H:i');
         return $meet_start->toDateString().' '. $time;
     }
 
@@ -75,7 +76,19 @@ class NewMeetingUser extends Model
     public function getSignInTime() {
         $signin_start = Carbon::parse($this->signin_start);
         $signin_end = Carbon::parse($this->signin_end);
-        $time = $signin_start->format('H:i'). '————' .$signin_end->format('H:i');
+        $time = $signin_start->format('H:i'). '––' .$signin_end->format('H:i');
         return $signin_start->toDateString().' '. $time;
+    }
+
+
+    /**
+     * 签到时间
+     * @return string
+     */
+    public function getSignOutTime() {
+        $signout_start = Carbon::parse($this->signout_start);
+        $signout_end = Carbon::parse($this->signout_end);
+        $time = $signout_start->format('H:i'). '––' .$signout_end->format('H:i');
+        return $signout_start->toDateString().' '. $time;
     }
 }

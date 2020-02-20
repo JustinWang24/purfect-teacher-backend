@@ -5,6 +5,7 @@ namespace App\Models\Courses;
 use App\Models\Course;
 use App\Models\NetworkDisk\Media;
 use App\User;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -35,5 +36,24 @@ class LectureMaterial extends Model
 
     public function media(){
         return $this->belongsTo(Media::class);
+    }
+
+    /**
+     * Url 的变形, 返回全 URL 网址
+     * @param $value
+     * @return string
+     */
+    public function getUrlAttribute($value) {
+        return $value ? asset($value) : '';
+    }
+
+
+    /**
+     * 创建时间
+     * @param $value
+     * @return string
+     */
+    public function getCreatedAtAttribute($value) {
+        return Carbon::parse($value)->format('Y-m-d H:i');
     }
 }
