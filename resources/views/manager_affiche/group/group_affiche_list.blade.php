@@ -41,7 +41,7 @@ use App\User;
                                     <th>评论人数</th>
                                     <!--th>状态</th-->
                                     <th>添加时间</th>
-                                    <th width="10%">操作</th>
+                                    <th width="20%">操作</th>
                                 </tr>
                                 </thead>
                                 <tbody>
