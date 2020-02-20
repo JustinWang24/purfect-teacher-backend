@@ -6,6 +6,7 @@
  */
 namespace App\Dao\Courses\Lectures;
 
+
 use Carbon\Carbon;
 use App\Utils\JsonBuilder;
 use App\Dao\Users\GradeUserDao;
@@ -42,6 +43,18 @@ class LectureDao
             ]);
         }
         return $lecture;
+    }
+
+    /**
+     * @param $courseId
+     * @param $teacherId
+     * @return Collection
+     */
+    public function getLecturesByCourseAndTeacher($courseId, $teacherId){
+        return Lecture::where('course_id',$courseId)
+            ->where('teacher_id',$teacherId)
+            ->orderBy('idx','asc')
+            ->get();
     }
 
     /**

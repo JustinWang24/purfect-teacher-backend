@@ -120,9 +120,10 @@ class MessageDao extends \App\Dao\Affiche\CommonDao
                 // 获取互评信息
                 $condition1 = [];
                 $condition1[] = ['status', '=', 1];
-                $condition1[] = ['comment_levid', '=', $val[ 'commentid' ]];
+                $condition1[] = ['comment_pid', '=', $val[ 'commentid' ]];
 
-                $commentList = AfficheComment::where ( $condition1 )->orderBy('commentid', 'desc')->get();
+                $commentList = AfficheComment::where ( $condition1 )->orderBy('commentid', 'asc')->get();
+
                 $val[ 'replyList' ] = !empty($commentList->toArray()) ? $commentList->toArray() : [];
             }
        }

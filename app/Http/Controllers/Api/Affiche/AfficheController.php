@@ -298,7 +298,7 @@ class AfficheController extends Controller
     }
 
     /**
-     * Func (全部-本校)动态列表
+     * Func (全部-本校)动态详情
      *
      * @param Request $request
      * @param['token']  否   token
@@ -372,4 +372,45 @@ class AfficheController extends Controller
         return JsonBuilder::Success ( $infos , '动态详情' );
     }
 
+
+    /**
+     * Func 删除动态
+     *
+     * @param Request $request
+     * @param['token']  否   token
+     * @param['icheid'] 是   动态id
+     * @param['page']   是   分页id
+     *
+     * @return Json
+     */
+    public function del_affiche_info(AfficheRequest $request)
+    {
+        $token = (String)$request->input('token', '');
+        $icheid = (Int)$request->input('icheid', 0);
+
+        if ($token == '')
+        {
+            return JsonBuilder::Error('请先登录');
+        }
+        if (!$icheid)
+        {
+            return JsonBuilder::Error('参数错误');
+        }
+
+        $user = $request->user();
+        $user_id = $user->id;
+
+        // 实例化模型类
+        $afficheobj = new AfficheDao();
+
+        $infos = $afficheobj->getAfficheOneInfo($icheid);
+        if (empty($infos) || $infos['user_id'] != $user_id) {
+            return JsonBuilder::Error('数据不存在');
+        }
+        if ($afficheobj->delAfficheOneInfo($icheid)) {
+            return JsonBuilder::Success('删除成功');
+        } else {
+            return JsonBuilder::Error('删除失败，请稍后重试');
+        }
+    }
 }

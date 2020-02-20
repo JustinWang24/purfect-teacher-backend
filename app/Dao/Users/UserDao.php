@@ -267,7 +267,7 @@ class UserDao
      * @param null $niceName
      * @return mixed
      */
-    public function updateUser($userId, $mobile=null, $password=null, $name=null, $email = null, $niceName=null){
+    public function updateUser($userId, $mobile=null, $password=null, $name=null, $email = null, $niceName=null, $userSignture=null){
         $data = [];
 
         if($mobile){
@@ -284,6 +284,9 @@ class UserDao
         }
         if($niceName) {
             $data['nice_name'] = $niceName;
+        }
+        if($userSignture) {
+            $data['user_signture'] = $userSignture;
         }
         if(!empty($data)){
             return User::where('id',$userId)->update($data);

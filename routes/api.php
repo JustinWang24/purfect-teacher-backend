@@ -528,7 +528,7 @@ Route::prefix('attendance')->middleware('auth:api')->group(function () {
         ->name('api.get.day.course');
 
     // 获取教师签到统计
-    Route::post('/get-teacher-statistics', 'Api\AttendanceSchedule\AttendanceController@getTeacherCourseStatistics')
+    Route::post('/get-teacher-statistics', 'Api\AttendanceSchedule\add-messageadd-message@getTeacherCourseStatistics')
         ->name('api.get.teacher.statistics');
 
     // 获取教师签到统计详情
@@ -1017,4 +1017,10 @@ Route::prefix('meeting')->middleware('auth:api')->group(function(){
     // 我创建的-签到记录
     Route::get('/mySignInRecord','Api\OA\NewMeetingController@mySignInRecord')
         ->name('api.meeting.mySignInRecord');
+});
+
+// PC办公页
+Route::prefix('office')->middleware('auth:api')->group(function(){
+        Route::any('/office-page', 'Admin\IndexController@officeIcon')
+        ->name('api.office.office-page');
 });

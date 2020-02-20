@@ -7,12 +7,14 @@
  */
 namespace App\Models\Affiche;
 
+use App\User;
+use App\Models\School;
 use Illuminate\Database\Eloquent\Model;
 
 class Affiche extends Model
 {
     protected $table = 'affiches';
-   protected $fillable = [
+    protected $fillable = [
         'user_id',
         'cate_id',
         'minx_id',
@@ -50,4 +52,18 @@ class Affiche extends Model
         'created_at',
         'updated_at'
     ];
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function school() {
+        return $this->belongsTo(School::class);
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function user() {
+        return $this->belongsTo(User::class);
+    }
 }

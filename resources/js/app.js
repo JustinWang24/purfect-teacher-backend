@@ -48,6 +48,7 @@ Vue.component('organizations-selector', require('./components/organization/Organ
 // 仿 Moodle 的教学管理功能所用的组件
 Vue.component('course-indexer', require('./components/moodle/teacher/CourseIndexer').default);      // 可见范围选择器
 Vue.component('lecture', require('./components/moodle/teacher/Lecture').default);      // 课件组件
+Vue.component('grade-table', require('./components/moodle/teacher/GradeTable').default);      // 班级组件
 
 require('./includes/backend/school_calendar_app'); // 后台: 校历的管理
 require('./includes/backend/notice_manager_app'); // 后台: Notice 的管理
@@ -82,7 +83,8 @@ require('./includes/backend/timetable/course_view'); // 课程表管理程序
 require('./includes/backend/timetable/grade_view'); // 课程表管理程序
 require('./includes/backend/timetable/room_view'); // 课程表管理程序
 require('./includes/backend/timetable/teacher_view'); // 课程表管理程序
-require('./includes/backend/course/materials_manager'); // 课件管理程序
+require('./includes/backend/course/materials_manager'); // 课件管理程序 教师用
+require('./includes/backend/course/student_course_manager'); // 课件管理程序 学生用
 
 require('./includes/backend/course/course_manager'); // 学校的课程管理
 require('./includes/backend/messager/notifications_at_top'); // 顶部的消息通知应用
@@ -91,3 +93,7 @@ require('./includes/backend/messager/notifications_at_top'); // 顶部的消息�
 require('./includes/pipeline/flow_open_app'); // 用户启动流程
 require('./includes/pipeline/flow_view_history_app'); // 用户查看流程详情
 require('./includes/pipeline/flows_manager_app'); // 流程管理后台
+
+require('./includes/backend/teacher_check_in'); // 后台,教师签到
+require('./includes/backend/teacher_blade_index'); // 后台,教师助手
+require('./includes/backend/teacher_evaluation'); // 后台,教师评分

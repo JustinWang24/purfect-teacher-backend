@@ -102,11 +102,23 @@ class NewMeetingController extends Controller
         $result = pageReturn($return);
         $data = [];
         foreach ($result['list'] as $key => $item) {
-            if($item->signIn_status == NewMeetingUser::UN_SIGNIN) {
-                $status = $item->signIn_status;
-            } else {
-                $status = NewMeetingUser::NORMAL_SIGNIN;
+            $status =NewMeetingUser::CLOSE; // 关闭
+            // 判断是否需要签到
+            if($item->signin_status == NewMeeting::SIGNIN) {
+                // 判断是否签到
+                if($item->signIn_status == NewMeetingUser::UN_SIGNIN) {
+                    $status = NewMeetingUser::UN_SIGNIN;
+                }
+
             }
+            // 判断是否已签到和是否需要签退
+            if ( $status == NewMeetingUser::CLOSE && $item->signout_status == NewMeeting::SIGNOUT) {
+                // 判断是否签退
+                if($item->signOut_status == NewMeetingUser::UN_SIGNOUT) {
+                    $status = NewMeetingUser::NORMAL_SIGNIN;
+                }
+            }
+
             $data[] = [
                 'meet_id' => $item->meet_id,
                 'meet_title' => $item->meet_title,

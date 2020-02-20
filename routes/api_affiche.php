@@ -27,14 +27,14 @@ Route::prefix('api_affiche')->middleware('auth:api')->group(function () {
     Route::any('/v1/affiche/my-affiche-list-info','\App\Http\Controllers\Api\Affiche\AfficheController@my_affiche_list_info');
     // 全部和本校动态详情
     Route::any('/v1/affiche/affiche-one-info','\App\Http\Controllers\Api\Affiche\AfficheController@affiche_one_info');
+    // 删除我发布的动态
+    Route::any('/v1/affiche/del-affiche-info','\App\Http\Controllers\Api\Affiche\AfficheController@del_affiche_info');
     // 动态评论和评论互评接口
     Route::any('/v1/message/message-add-info','\App\Http\Controllers\Api\Affiche\MessageController@message_add_info');
     // 删除动态评论接口
     Route::any('/v1/message/message-del-info','\App\Http\Controllers\Api\Affiche\MessageController@message_del_info');
     // 动态点赞和互评点赞接口
     Route::any('/v1/praise/praise-add-info','\App\Http\Controllers\Api\Affiche\PraiseController@praise_add_info');
-    // 用户关注和取消关注接口
-    Route::any('/v1/follow/follow-edit-info','\App\Http\Controllers\Api\Affiche\FollowController@follow_edit_info');
     // 我的消息列表接口
     Route::any('/v1/message/message-list-info','\App\Http\Controllers\Api\Affiche\MessageController@message_list_info');
     // 我的消息删除接口
@@ -83,4 +83,14 @@ Route::prefix('api_affiche')->middleware('auth:api')->group(function () {
     Route::any('/v1/tissueauth/add-auth-tissue-info','\App\Http\Controllers\Api\Affiche\TissueauthController@add_auth_tissue_info');
     // 获取我的组织认证接口
     Route::any('/v1/tissueauth/one-auth-tissue-info','\App\Http\Controllers\Api\Affiche\TissueauthController@one_auth_tissue_info');
+
+    //-------------------------------------------------关注和未关注接口--------------------------------------------------
+    // 已关注列表接口
+    Route::any('/v1/follow/follow-adopt-list-info','\App\Http\Controllers\Api\Affiche\FollowController@follow_adopt_list_info');
+    // 未关注列表接口
+    Route::any('/v1/follow/follow-refer-list-info','\App\Http\Controllers\Api\Affiche\FollowController@follow_refer_list_info');
+    // 搜索列表接口
+    Route::any('/v1/follow/follow-search-list-info','\App\Http\Controllers\Api\Affiche\FollowController@follow_search_list_info');
+    // 用户关注和取消关注接口
+    Route::any('/v1/follow/follow-edit-info','\App\Http\Controllers\Api\Affiche\FollowController@follow_edit_info');
 });

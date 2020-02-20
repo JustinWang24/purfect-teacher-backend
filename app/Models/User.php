@@ -5,6 +5,7 @@ namespace App;
 use App\Models\Acl\Role;
 use App\Models\Contract\HasDeviceId;
 use App\Models\Contract\HasMobilePhone;
+use App\Models\Course;
 use App\Models\Courses\CourseTeacher;
 use App\Models\Forum\Community;
 use App\Models\Misc\Enquiry;
@@ -15,11 +16,14 @@ use App\Models\Schools\RecruitmentPlan;
 use App\Models\Students\StudentProfile;
 use App\Models\Students\StudentTextbook;
 use App\Models\Teachers\TeacherProfile;
+use App\Models\Timetable\TimetableItem;
 use App\Models\Users\GradeUser;
 use App\Models\Users\UserDevice;
 use App\Models\Users\UserOrganization;
 use App\Utils\Pipeline\IFlow;
 use App\Utils\Pipeline\IUser;
+use App\Utils\Time\GradeAndYearUtil;
+use Carbon\Carbon;
 use Illuminate\Notifications\Notifiable;
 //use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -66,7 +70,7 @@ class User extends Authenticatable implements HasMobilePhone, HasDeviceId, IUser
      * @var array
      */
     protected $fillable = [
-        'password','mobile_verified_at','mobile','uuid','status','type','name','email','api_token', 'nice_name'
+        'password','mobile_verified_at','mobile','uuid','status','type','name','email','api_token', 'nice_name', 'user_signture'
     ];
 
     /**
@@ -266,7 +270,19 @@ class User extends Authenticatable implements HasMobilePhone, HasDeviceId, IUser
 
     public function myCourses(){
         if($this->isStudent()){
-            return [];
+            // 获取学生所在的班级
+            $gradeId = $this->gradeUser->grade_id;
+            $yat = GradeAndYearUtil::GetYearAndTerm(Carbon::now());
+            $rows = TimetableItem::select(['course_id'])->where('grade_id',$gradeId)
+                ->where('year',$yat['year'])
+                ->where('term',$yat['term'])
+                ->distinct()
+                ->get();
+            $coursesId = [];
+            foreach ($rows as $row) {
+                $coursesId[] = $row->course_id;
+            }
+            return Course::whereIn('id',$coursesId)->get();
         }
         elseif($this->isTeacher()){
             return $this->hasMany(CourseTeacher::class, 'teacher_id');
