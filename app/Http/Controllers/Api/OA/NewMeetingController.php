@@ -146,7 +146,6 @@ class NewMeetingController extends Controller
         $userId = $request->user()->id;
         $dao = new NewMeetingDao();
         $return = $dao->accomplishMeet($userId);
-
         $result = pageReturn($return);
         $data = [];
         foreach ($result['list'] as $key => $item) {
@@ -157,6 +156,9 @@ class NewMeetingController extends Controller
                 'room' => $item->room_id ? $item->room->name : $item->room_text,
                 'meet_time' => $item->getMeetTime(),
                 'signin_time' => '',
+                'signout_time' => '',
+                'is_signin' => 0,
+                'is_signout' => 0,
                 'signin_status' =>  NewMeeting::NOT_SINGIN,
                 'signout_status' => NewMeeting::NOT_SIGNOUT,
             ];
@@ -164,10 +166,13 @@ class NewMeetingController extends Controller
             if($item->signin_status == NewMeeting::SIGNIN) {
                 $data[$key]['signin_time'] = $item->getSignInTime();
                 $data[$key]['signin_status'] = $item->signIn_status;
+                $data[$key]['is_signin'] = NewMeeting::SIGNIN;
             }
             // 判断是否需要签退
             if($item->signout_status == NewMeeting::SIGNOUT) {
+                $data[$key]['signout_time'] = $item->getSignOutTime();
                 $data[$key]['signout_status'] = $item->signOut_status;
+                $data[$key]['is_signout'] = NewMeeting::SIGNOUT;
             }
         }
         $result['list'] = $data;
