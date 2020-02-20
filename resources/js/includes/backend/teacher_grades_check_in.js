@@ -1,12 +1,11 @@
 import {Util} from "../../common/utils";
 
-if (document.getElementById('teacher-assistant-evaluation-app')) {
+if (document.getElementById('teacher-assistant-grades-check-in-app')) {
     new Vue({
-        el: '#teacher-assistant-evaluation-app',
+        el: '#teacher-assistant-grades-check-in-app',
         data(){
             return {
                 schoolId: null,
-
                 filterOptions: [
                     {
                         value: '选项1',
@@ -59,47 +58,60 @@ if (document.getElementById('teacher-assistant-evaluation-app')) {
                 },
                 tableData: [
                     {
-                        stuName: '王小虎',
-                        stuMark: '8',
-                        showNode: true
+                        class: '第一节',
+                        stuNor: 40,
+                        stuHoli: 4,
+                        stuOff: 4
                     }, {
-                        stuName: '张小虎',
-                        stuMark: '9',
-                        showNode: false
+                        class: '第二节',
+                        stuNor: 20,
+                        stuHoli: 4,
+                        stuOff: 4
                     }, {
-                        stuName: '李小虎',
-                        stuMark: '18',
-                        showNode: true
+                        class: '第三节',
+                        stuNor: 20,
+                        stuHoli: 4,
+                        stuOff: 4
                     }, {
-                        stuName: '赵小虎',
-                        stuMark: '28',
-                        showNode: false
-                    }, {
-                        stuName: '朱小虎',
-                        stuMark: '38',
-                        showNode: true
+                        class: '第四节',
+                        stuNor: 20,
+                        stuHoli: 4,
+                        stuOff: 4
                     }
                 ],
-                ifShow: false,
-                ifShowNote: false,
-                stuName: ''
+                studentsStatus: {
+                    1: '已签',
+                    2: '请假',
+                    3: '旷课'
+                },
+                detailData: [
+                    {
+                        stuName: '王小虎',
+                        checkin_date: '1994',
+                        stuStatus: 1,
+                    }, {
+                        stuName: '王小虎',
+                        checkin_date: '1994',
+                        stuStatus: 2,
+                    }, {
+                        stuName: '王小虎',
+                        checkin_date: '1994',
+                        stuStatus: 3,
+                    }
+                ],
+                ifShow: false
             }
         },
         created(){
             const dom = document.getElementById('app-init-data-holder');
             this.schoolId = dom.dataset.school;
-            console.log('评分');
+            console.log('签到');
         },
         methods: {
+
             showDetail: function (data) {
                 this.ifShow = true;
-                this.ifShowNote = false;
                 console.log(data)
-            },
-            showNote: function (stuData) {
-                this.ifShowNote = true;
-                console.log(stuData)
-                this.stuName = stuData.stuName;
             }
         }
     });

@@ -1,8 +1,8 @@
 import {Util} from "../../common/utils";
 
-if (document.getElementById('teacher-assistant-evaluation-app')) {
+if (document.getElementById('teacher-assistant-grades-evaluations-app')) {
     new Vue({
-        el: '#teacher-assistant-evaluation-app',
+        el: '#teacher-assistant-grades-evaluations-app',
         data(){
             return {
                 schoolId: null,
@@ -28,29 +28,21 @@ if (document.getElementById('teacher-assistant-evaluation-app')) {
                 filterValue: '',
                 data: [
                     {
-                        label: '计算机一班',
-                        level: 1,
-                        children: [{
-                            level: 2,
-                            label: '语文'
-                        }, {
-                            level: 2,
-                            label: '语文'
-                        }]
+                        class: '计算机一班',
+                        subject: 1,
+                        evaluation: 1
                     }, {
-                        label: '计算机2班',
-                        level: 1,
-                        children: [{
-                            level: 2,
-                            label: '语文'
-                        }]
+                        class: '计算机一班',
+                        subject: 1,
+                        evaluation: 0
                     }, {
-                        label: '计算机3班',
-                        level: 1,
-                        children: [{
-                            level: 2,
-                            label: '语文'
-                        }]
+                        class: '计算机一班',
+                        subject: 1,
+                        evaluation: 0
+                    }, {
+                        class: '计算机一班',
+                        subject: 1,
+                        evaluation: 1
                     }
                 ],
                 defaultProps: {
@@ -82,13 +74,13 @@ if (document.getElementById('teacher-assistant-evaluation-app')) {
                 ],
                 ifShow: false,
                 ifShowNote: false,
-                stuName: ''
+                teacherName: '评分教师:'
             }
         },
         created(){
             const dom = document.getElementById('app-init-data-holder');
             this.schoolId = dom.dataset.school;
-            console.log('评分');
+            console.log('班级评分');
         },
         methods: {
             showDetail: function (data) {
@@ -99,7 +91,7 @@ if (document.getElementById('teacher-assistant-evaluation-app')) {
             showNote: function (stuData) {
                 this.ifShowNote = true;
                 console.log(stuData)
-                this.stuName = stuData.stuName;
+                // this.stuName = stuData.stuName;
             }
         }
     });
