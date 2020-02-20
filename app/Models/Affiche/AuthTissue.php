@@ -19,6 +19,7 @@ class AuthTissue extends Model
         'authu_number',
         'authu_name',
         'authu_cardno',
+        'authu_tissuspics',
         'authu_tissusname',
         'authu_tissusdesc',
         'authu_refusedesc',

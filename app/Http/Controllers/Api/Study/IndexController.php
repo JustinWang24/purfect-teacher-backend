@@ -12,9 +12,11 @@ namespace App\Http\Controllers\Api\Study;
 use Carbon\Carbon;
 use App\Utils\JsonBuilder;
 use App\Dao\Schools\SchoolDao;
+use App\Dao\Courses\CourseMajorDao;
 use App\Http\Controllers\Controller;
 use App\Models\Courses\CourseMaterial;
 use App\Dao\Timetable\TimetableItemDao;
+use App\Dao\Courses\Lectures\LectureDao;
 use App\Http\Requests\MyStandardRequest;
 use App\Dao\AttendanceSchedules\AttendancesDao;
 use App\Dao\AttendanceSchedules\AttendancesDetailsDao;
@@ -95,7 +97,10 @@ class IndexController extends Controller
             $evaluateTeacher = true;
         }
 
-        $studyData = '';
+        $gradeId = $user->gradeUser->grade_id;
+        $dao = new LectureDao();
+        $material = $dao->getMaterialByGradeId($gradeId);
+        $studyData = $material? $material->url : '';
         $data = [
             'selectCourse' => $selectCourse, // 选课
             'timetable' => $timetable,  // 课程
@@ -104,6 +109,138 @@ class IndexController extends Controller
             'evaluateTeacher' => $evaluateTeacher // 评教 true false
         ];
         return JsonBuilder::Success($data);
+    }
+
+
+    /**
+     * 课件类型列表
+     * @param MyStandardRequest $request
+     * @return string
+     */
+    public function materialType(MyStandardRequest $request) {
+        $user = $request->user();
+        $schoolId = $user->getSchoolId();
+        $dao = new LectureDao();
+        $list = $dao->getMaterialType($schoolId);
+        return JsonBuilder::Success($list);
+    }
+
+
+    /**
+     * 教材资料
+     * @param MyStandardRequest $request
+     * @return string
+     */
+    public function materialList(MyStandardRequest $request) {
+        $type = $request->get('type_id');
+        if(is_null($type)) {
+            return JsonBuilder::Error('缺少参数');
+        }
+        $keyword = $request->get('keyword');
+        $user = $request->user();
+        $schoolId = $user->getSchoolId();
+        $schoolDao = new SchoolDao();
+        $school = $schoolDao->getSchoolById($schoolId);
+        $configuration = $school->configuration;
+        // todo 时间暂时写死
+        $date = Carbon::now()->toDateString();
+        $date = Carbon::parse('2020-01-08 14:40:00');;
+        $year = $configuration->getSchoolYear($date);
+        $month = Carbon::parse($date)->month;
+        $term = $configuration->guessTerm($month);
+
+        $gradeId = $user->gradeUser->grade_id;
+        $courseMajors = $user->gradeUser->major->courseMajors;
+        if(count($courseMajors) == 0) {
+            return JsonBuilder::Error('您没有课程');
+        }
+        $courseIds = $courseMajors->pluck('course_id')->toArray();
+        $material = [];
+        if(!is_null($keyword)) {
+            // 根据资料名称搜索
+            $material = $this->getMaterial($courseIds,$keyword, $gradeId, $year, $term, $type);
+            $courseIds = $courseMajors->pluck('course_id')->toArray();
+        }
+
+        $itemDao = new TimetableItemDao();
+        $timetable = $itemDao->getGradeTeachersByCoursesId($courseIds, $gradeId, $year, $term);
+        $list = [];
+        $dao = new LectureDao();
+
+        foreach ($timetable as $key => $item) {
+            $list[] = $dao->getMaterialsByType($item->course_id,$gradeId,$item->teacher_id,$type);
+        }
+
+        $list = array_merge($list, $material);
+
+        $data = [];
+        foreach ($list as $key => $item) {
+            foreach ($item as $k => $val) {
+
+                $data[$val->course_id]['course'] = $val->course->name;
+
+                $data[$val->course_id]['list'][] = [
+                    'id' => $val->id,
+                    'type' => $val->media->getTypeText(),
+                    'file_name' => $val->media->file_name,
+                    'keyword' => $val->description,
+                    'url' => $val->url,
+                    'created_at' => $val->created_at
+                ];
+            }
+        }
+        $result = array_merge($data);
+        foreach ($result as $key => $item) {
+            $result[$key]['list'] = $this->second_array_unique_bykey($item['list'], 'id');
+        }
+        return JsonBuilder::Success($result);
+    }
+
+
+    /**
+     * 根据资料名称搜索
+     * @param $courseIds
+     * @param $keyword
+     * @param $gradeId
+     * @param $year
+     * @param $term
+     * @param $type
+     * @return array
+     */
+    public function getMaterial($courseIds, $keyword,$gradeId, $year, $term, $type) {
+
+        $itemDao = new TimetableItemDao();
+        $timetable = $itemDao->getGradeTeachersByCoursesId($courseIds, $gradeId, $year, $term);
+        $list = [];
+        $dao = new LectureDao();
+
+        foreach ($timetable as $key => $item) {
+            $list[] = $dao->getMaterialsByType($item->course_id,$gradeId,$item->teacher_id,$type, $keyword);
+        }
+
+        return $list;
+    }
+
+
+    /**
+     * 二维数组去重
+     * @param $arr
+     * @param $key
+     * @return mixed
+     */
+    public function second_array_unique_bykey($arr, $key){
+        $tmp_arr = array();
+        foreach($arr as $k => $v) {
+
+            if(in_array($v[$key], $tmp_arr)) {
+                //搜索$v[$key]是否在$tmp_arr数组中存在，若存在返回true
+                unset($arr[$k]); //销毁一个变量  如果$tmp_arr中已存在相同的值就删除该值
+            }
+            else {
+                $tmp_arr[$k] = $v[$key];  //将不同的值放在该数组中保存
+            }
+        }
+        return $arr;
     }
 
 }

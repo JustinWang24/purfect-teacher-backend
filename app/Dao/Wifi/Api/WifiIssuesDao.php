@@ -11,7 +11,7 @@ use App\Models\Wifi\Api\WifiIssues;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Collection;
 
-class WifiIssuesDao extends \App\Dao\Wifi\CommonDao
+class WifiIssuesDao extends CommonDao
 {
    /**
     * Func:  添加或更新数据

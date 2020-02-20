@@ -7,12 +7,16 @@
  */
 namespace App\Models\Affiche;
 
+use App\Models\Users\GradeUser;
+use App\User;
+use App\Models\School;
 use Illuminate\Database\Eloquent\Model;
 
 class Affiche extends Model
 {
     protected $table = 'affiches';
-   protected $fillable = [
+    protected $fillable = [
+        'icheid',
         'user_id',
         'cate_id',
         'minx_id',
@@ -50,4 +54,39 @@ class Affiche extends Model
         'created_at',
         'updated_at'
     ];
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function user() {
+        return $this->belongsTo(User::class);
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function school() {
+        return $this->belongsTo(School::class);
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function gradeUser() {
+        return $this->belongsTo(GradeUser::class, 'user_id', 'user_id');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function afficheVideo() {
+        return $this->belongsTo(AfficheVideo::class, 'icheid', 'iche_id');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function affichePics() {
+        return $this->hasMany(AffichePics::class, 'iche_id', 'icheid');
+    }
 }

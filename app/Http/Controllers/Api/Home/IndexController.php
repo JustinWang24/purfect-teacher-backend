@@ -188,8 +188,10 @@ class IndexController extends Controller
         $grade     = $user->gradeUser->grade;
 
         $data = [
+            'student_id'     => $user->id,
             'name'           => $user->name,
             'nice_name'      => $user->nice_name,
+            'user_signture'  => $user->user_signture,
             'avatar'         => $profile->avatar,
             'gender'         => $profile->gender,
             'birthday'       => $profile->birthday,
@@ -293,9 +295,9 @@ class IndexController extends Controller
             $avatarImg      = $avatar->store('public/avatar');
             $data['avatar'] = StudentProfile::avatarUploadPathToUrl($avatarImg);
         }
-        if ($data['nice_name']) {
+        if ($data['nice_name'] || trim($data['user_signture']) ) {
             $userDao = new UserDao;
-            $result = $userDao->updateUser($user->id, null,null,null,null, $data['nice_name']);
+            $result = $userDao->updateUser($user->id, null,null,null,null, $data['nice_name'],$data['user_signture']);
         } else {
             $dao        = new StudentProfileDao;
             $teacherDao = new TeacherProfileDao;

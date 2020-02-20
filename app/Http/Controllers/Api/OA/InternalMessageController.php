@@ -30,8 +30,8 @@ class InternalMessageController extends Controller
         $type        = $request->get('type');
         $isRelay     = $request->get('isRelay');
         $relayId     = $request->get('relayId');
+        $isFile      = $request->get('isFile');
         $fileArr     = $request->get('image');
-        $isFile      = $request->file('isFile');
 
         $dao = new InternalMessageDao;
 
@@ -64,10 +64,18 @@ class InternalMessageController extends Controller
     {
         $user = $request->user();
         $type = $request->get('type');
+        if ($type == 1 || $type == 2) {
+            $condition['collect_user_id'] = $user->id;
+            $condition['type']   = $type; # 1未读 2已读
+        }
+
+        if ($type == 3 || $type == 4) {
+            $condition['user_id'] = $user->id;
+            $condition['type']    = $type; # 3已发送 4草稿箱
+        }
 
         $dao = new InternalMessageDao;
-
-        $data   = $dao->getInternalMessageByUserId($user->id, $type);
+        $data   = $dao->getInternalMessageByUserId($user->id, $condition);
         $result = [];
 
         foreach ($data as $key => $val) {
@@ -103,14 +111,20 @@ class InternalMessageController extends Controller
         $data['user_username'] = $data->user->name;
         $data['create_time'] = $data->created_at->format('Y-m-d H:i:s');
         $data['relay'] = [];
-        if ($data->is_relay == 1) { // 是否有转发内容
+        if ($data->is_relay == InternalMessage::IS_RELAY) { // 是否有转发内容
             $data['relay'] = $dao->getForwardMessageByIds(explode(',', $data->message_id));
             foreach ($data['relay'] as $key => $val) {
                 $data['relay'][$key]['user_username'] = $data->user->name;
                 $data['relay'][$key]['create_time'] = $data->created_at->format('Y-m-d H:i:s');
-                $data['relay'][$key]['file'] = $val->file;
+                $data['relay'][$key]['file'] = $val->files;
             }
         }
+        if ($data->is_file == InternalMessage::IS_FILE) {
+            $data->file;
+        }else {
+            $data['file'] = [];
+        }
+
         $data->makeHidden('user');
         return JsonBuilder::Success($data);
     }
@@ -184,4 +198,16 @@ class InternalMessageController extends Controller
 
         return JsonBuilder::Success($data);
     }
+
+    /**
+     * 更新信件
+     * @param MyStandardRequest $request
+     */
+    public function updateInternal(MyStandardRequest $request)
+    {
+
+
+
+    }
+
 }

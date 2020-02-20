@@ -94,3 +94,49 @@ export function loadLectureMaterials(lectureId, affix) {
         {lecture_id: lectureId,version:Constants.VERSION}
     );
 }
+
+/**
+ * 加载课节的学生作业
+ * @param lectureId
+ * @param grades
+ * @param affix
+ */
+export function loadLectureHomework(lectureId, grades, affix) {
+    const url = Util.buildUrl(Constants.API.COURSE_MATERIAL.LOAD_LECTURE_HOMEWORKS);
+    if(Util.isDevEnv()){
+        return axios.get(url, affix);
+    }
+    return axios.post(
+        url,
+        {lecture_id: lectureId, grades: grades,version:Constants.VERSION}
+    );
+}
+
+/**
+ * 加载课节的学生作业
+ * @param courseId
+ * @param idx
+ * @param studentId
+ * @param affix
+ */
+export function loadStudentHomework(courseId, idx, studentId, affix) {
+    const url = Util.buildUrl(Constants.API.COURSE_MATERIAL.LOAD_STUDENT_HOMEWORK);
+    if(Util.isDevEnv()){
+        return axios.get(url, affix);
+    }
+    return axios.post(
+        url,
+        {course_id: courseId,idx: idx, student: studentId,version:Constants.VERSION}
+    );
+}
+
+export function deleteStudentHomework(id,affix) {
+    const url = Util.buildUrl(Constants.API.COURSE_MATERIAL.DELETE_STUDENT_HOMEWORK);
+    if(Util.isDevEnv()){
+        return axios.get(url, affix);
+    }
+    return axios.post(
+        url,
+        {homework_id: id,version:Constants.VERSION}
+    );
+}

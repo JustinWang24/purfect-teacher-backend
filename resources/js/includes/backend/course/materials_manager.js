@@ -1,6 +1,6 @@
 // 学校的课程管理
 import {Util} from "../../../common/utils";
-import {saveMaterial, loadMaterial,deleteMaterial, loadLectureByIndex} from '../../../common/course_material';
+import {loadMaterial,deleteMaterial, loadLectureByIndex} from '../../../common/course_material';
 
 $(document).ready(function(){
     if(document.getElementById('course-materials-manager-app')){
@@ -51,12 +51,16 @@ $(document).ready(function(){
                     courseIndexerVisible: false, // 选择课件
                     // 是否在从服务器加载数据中
                     loadingData: false,
+                    // 所有该教师教授的当前的课程的班级集合
+                    grades:[],
+                    currentGradeId: null, // 当前选中的班级
                 }
             },
             created: function(){
                 const dom = document.getElementById('app-init-data-holder');
                 this.course = JSON.parse(dom.dataset.course);
                 this.teacher = JSON.parse(dom.dataset.teacher);
+                this.grades = JSON.parse(dom.dataset.grades);
                 this.configOptions = Util.getWysiwygGlobalOption(this.teacher.uuid);
                 this.courseMaterialModel.teacher_id = this.teacher.id;
                 this.courseMaterialModel.course_id = this.course.id;
@@ -74,12 +78,14 @@ $(document).ready(function(){
             methods:{
                 // 导航菜单的处理
                 handleMenuSelect: function(key, keyPath){
-                    console.log(key);
-                    console.log(keyPath);
-                    if(key === '2'){
+                    if(keyPath[0] === '2'){
                         this.courseIndexerVisible = true;
+                    }else if(keyPath[0] === '3'){
+                        const arr = keyPath[1].split('-');
+                        this.currentGradeId = arr[1];
+                        console.log('选中班级', this.currentGradeId);
                     }
-                    this.activeIndex = key;
+                    this.activeIndex = keyPath[0];
                 },
                 // 导航菜单处理结束
                 /**

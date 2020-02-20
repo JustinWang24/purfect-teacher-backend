@@ -171,9 +171,16 @@ export const Constants = {
             SAVE: '/teacher/course/materials/create',
             LOAD: '/teacher/course/materials/load',
             DELETE: '/teacher/course/materials/delete',
-            LOAD_LECTURE: '/teacher/course/materials/load-lecture',
-            LOAD_LECTURE_MATERIALS: '/teacher/course/materials/load-lecture-materials',
+            LOAD_LECTURE: '/api/course/teacher/load-lecture',
+            LOAD_LECTURE_MATERIALS: '/api/course/teacher/lecture/load-materials',
+            LOAD_STUDENT_HOMEWORK: '/api/course/student/load-homework',
+            DELETE_STUDENT_HOMEWORK: '/api/course/student/delete-homework',
             SAVE_LECTURE: '/teacher/course/materials/save-lecture',
+            LOAD_LECTURE_HOMEWORKS: '/teacher/course/materials/load-lecture-homeworks',
+            SUBMIT_HOMEWORK: '/api/course/student/save-homework',
+        },
+        GRADE: {
+            LOAD: '/teacher/grade/load-students'
         }
     },
     YEARS: ['N.A','一年级','二年级','三年级','四年级','五年级','六年级'],
@@ -271,6 +278,13 @@ export const Constants = {
         TYPE_EXAM: 5,
         TYPE_EXAM_TXT: '随堂测试'
     },
+    COURSE_MATERIAL_TYPES_TEXT:[
+        '预习材料',
+        '课堂讲义',
+        '课后阅读',
+        '随堂作业',
+        '随堂测试',
+    ],
     NOTICE_TYPE_INSPECT: 3,
     // 教师评教
     TEACHER_QUALIFICATION_TYPES:[

@@ -528,7 +528,7 @@ Route::prefix('attendance')->middleware('auth:api')->group(function () {
         ->name('api.get.day.course');
 
     // 获取教师签到统计
-    Route::post('/get-teacher-statistics', 'Api\AttendanceSchedule\AttendanceController@getTeacherCourseStatistics')
+    Route::post('/get-teacher-statistics', 'Api\AttendanceSchedule\add-messageadd-message@getTeacherCourseStatistics')
         ->name('api.get.teacher.statistics');
 
     // 获取教师签到统计详情
@@ -769,6 +769,25 @@ Route::prefix('learn')->middleware('auth:api')->group(function(){
         ->name('api.learn.download.list');
 });
 
+// 课件: 此课件接口模块的创建者为 Yue Wang, 采用的是 course -> lecture -> lecture's materials 的数据结构，与上面的课件是不同的
+Route::prefix('course')->middleware('auth:api')->group(function(){
+    // 获取某课节的详情
+    Route::post('/teacher/load-lecture','Api\Course\Lecture\LecturesController@load_lecture')
+        ->name('api.course.teacher.load-lecture');
+    // 获取某课节所包含的课件记录集合
+    Route::post('/teacher/lecture/load-materials','Api\Course\Lecture\LecturesController@load_lecture_materials')
+        ->name('api.course.teacher.lecture.load-materials');
+
+    // 学生获取某个课节的作业
+    Route::post('/student/load-homework','Api\Course\Lecture\LecturesController@load_student_homework')
+        ->name('api.course.student.load-homework');
+    // 学生提交作业
+    Route::post('/student/save-homework','Api\Course\Lecture\LecturesController@save_homework')
+        ->name('api.course.student.save-homework');
+    Route::post('/student/delete-homework','Api\Course\Lecture\LecturesController@delete_homework')
+        ->name('api.course.student.delete-homework');
+});
+
 Route::prefix('teacher')->middleware('auth:api')->group(function(){
     // 教师添加访客
     Route::post('/add-visitor','Api\OA\TeachersController@add_visitor')
@@ -961,8 +980,12 @@ Route::prefix('organizations')->middleware('auth:api')->group(function(){
 
 // 学习
 Route::prefix('study')->middleware('auth:api')->group(function(){
-        Route::any('/home-page', 'Api\Study\IndexController@index')
+    Route::any('/home-page', 'Api\Study\IndexController@index')
         ->name('api.study.home-page');
+    Route::any('/type-list', 'Api\Study\IndexController@materialType')
+        ->name('api.study.type-list');
+    Route::any('/material-list', 'Api\Study\IndexController@materialList')
+        ->name('api.study.material-list');
 });
 
 
@@ -1013,4 +1036,10 @@ Route::prefix('meeting')->middleware('auth:api')->group(function(){
     // 我创建的-签到记录
     Route::get('/mySignInRecord','Api\OA\NewMeetingController@mySignInRecord')
         ->name('api.meeting.mySignInRecord');
+});
+
+// PC办公页
+Route::prefix('office')->middleware('auth:api')->group(function(){
+        Route::any('/office-page', 'Admin\IndexController@officeIcon')
+        ->name('api.office.office-page');
 });

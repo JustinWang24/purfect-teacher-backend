@@ -112,8 +112,16 @@
                     <h3>
                         <i v-show="loading || loadingData" class="el-icon-loading"></i>
                         课后作业
+                        <el-button type="text" icon="el-icon-refresh-right" @click="refreshHomeworkItems">手动刷新</el-button>
                     </h3>
                     <hr>
+                    <p>
+                        <el-checkbox-group v-model="selectedGrades" size="medium" @change="onSelectedGradesChangedHandler">
+                            <el-checkbox-button v-for="g in grades" :label="g.id" :key="g.id">{{g.name}}</el-checkbox-button>
+                        </el-checkbox-group>
+                    </p>
+                    <hr>
+                    <homeworks :items="homeworkItems"></homeworks>
                 </div>
             </div>
         </div>
@@ -136,13 +144,14 @@
 <script>
     import {Constants} from '../../../common/constants';
     import {Util} from '../../../common/utils';
-    import {saveMaterial, saveLecture, loadLectureMaterials, loadMaterial} from '../../../common/course_material';
+    import {saveMaterial, saveLecture, loadLectureMaterials, loadMaterial, loadLectureHomework} from '../../../common/course_material';
     import FileManger from '../../fileManager/FileManager';
+    import Homeworks from './Homeworks';
 
     export default {
         name: "Lecture",
         components:{
-            FileManger
+            FileManger,Homeworks
         },
         props:{
             lecture:{
@@ -154,6 +163,10 @@
             },
             userUuid:{
                 type: String,
+                required: true
+            },
+            grades:{
+                type: Array,
                 required: true
             }
         },
@@ -171,6 +184,9 @@
                     // 设置课节id
                     this.courseMaterialModel.lecture_id = this.lecture.id;
                     this.courseMaterialModel.type = null;
+                    // 设置选定的班级的默认id
+                    this.selectedGrades = [];
+                    this.homeworkItems = [];
                 }
             }
         },
@@ -207,16 +223,13 @@
                 showFileManagerFlag: false,
                 selectedFile:null,
                 loadingData: false,
+                // 当前选择的班级
+                selectedGrades: [],
+                homeworkItems:[],
             }
         },
         created(){
-            this.materialTypes = [
-                Constants.COURSE_MATERIAL_TYPES.TYPE_PRE_TXT,
-                Constants.COURSE_MATERIAL_TYPES.TYPE_LECTURE_TXT,
-                Constants.COURSE_MATERIAL_TYPES.TYPE_AFTER_TXT,
-                Constants.COURSE_MATERIAL_TYPES.TYPE_HOMEWORK_TXT,
-                Constants.COURSE_MATERIAL_TYPES.TYPE_EXAM_TXT,
-            ];
+            this.materialTypes = Constants.COURSE_MATERIAL_TYPES_TEXT;
             this.lectureModel = this.lecture;
         },
         methods: {
@@ -337,6 +350,25 @@
             pickFileHandler: function(payload){
                 this.selectedFile = payload.file;
                 this.showFileManagerFlag = false;
+            },
+            // 当选择的班级发生变化, 则去更新作业的数据
+            onSelectedGradesChangedHandler: function(updatedGrades){
+                if(updatedGrades.length === 0){
+                    this.homeworkItems = [];
+                }
+                else{
+                    this.refreshHomeworkItems();
+                }
+            },
+            // 刷新作业列表
+            refreshHomeworkItems: function(){
+                this.loadingData = true;
+                loadLectureHomework(this.lecture.id, this.selectedGrades).then(res => {
+                    if(Util.isAjaxResOk(res)){
+                        this.homeworkItems = res.data.data.homeworks;
+                    }
+                    this.loadingData = false;
+                })
             }
         }
     }

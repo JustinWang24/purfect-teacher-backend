@@ -2,14 +2,37 @@
 
 namespace App\Http\Controllers\Admin;
 
-use Illuminate\Http\Request;
+use App\Http\Requests\MyStandardRequest;
+use App\Utils\JsonBuilder;
 use App\Http\Controllers\Controller;
 
 class IndexController extends Controller
 {
 
-    public function index()
+    /**
+     * PC 办公页面
+     */
+    public function officeIcon()
     {
-        echo '我是后台管理';die;
+        $data = [
+            ['name' => '通知公告', 'icon' => asset('assets/img/teacher/ass-icon3.png')],
+            ['name' => '日志', 'icon' => asset('assets/img/teacher/ass-icon3.png')],
+            ['name' => '内部信', 'icon' => asset('assets/img/teacher/ass-icon3.png')],
+            ['name' => '会议', 'icon' => asset('assets/img/teacher/ass-icon3.png')],
+            ['name' => '公文', 'icon' => asset('assets/img/teacher/ass-icon3.png')],
+            ['name' => '任务', 'icon' => asset('assets/img/teacher/ass-icon3.png')],
+        ];
+
+        return JsonBuilder::Success($data);
+    }
+
+    /**
+     * PC 我的审批
+     * @param MyStandardRequest $request
+     */
+    public function index(MyStandardRequest $request)
+    {
+
+
     }
 }
