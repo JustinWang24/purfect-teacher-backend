@@ -42,9 +42,9 @@ class ElectiveController extends Controller
             $elective     = $course->courseElective()->first();
             $currentTime  = time();
             //报名已满和不在允许的报名时段内不展示
-            if ($elective->status == CourseElective::STATUS_ISFULL ||
-                (!empty($elective->expired_at) && $currentTime > $elective->expired_at) ||
-                (!empty($elective->expired_at) && $currentTime < $elective->enrol_start_at))
+            if (!$elective || $elective->status == CourseElective::STATUS_ISFULL ||
+                (!empty($elective->expired_at) && $currentTime > strtotime($elective->expired_at)) ||
+                (!empty($elective->expired_at) && $currentTime < strtotime($elective->enrol_start_at)))
             {
                 continue;
             }
