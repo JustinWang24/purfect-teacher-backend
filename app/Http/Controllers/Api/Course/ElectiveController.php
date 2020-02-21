@@ -90,8 +90,7 @@ class ElectiveController extends Controller
         if (!$course) {
             return  JsonBuilder::Error('课程不存在');
         }
-
-        $teacher = $course->teachers[0]->teacher->name ?? null;
+        $teacher = $course->teachers[0]->name ?? null;
 
         $elective = $course->courseElective;
 
