@@ -10,12 +10,16 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Course\ElectiveRequest;
 use App\Dao\Users\GradeUserDao;
 use App\Models\ElectiveCourses\CourseElective;
+use App\Models\ElectiveCourses\StudentEnrolledOptionalCourse;
+use App\Models\Schools\SchoolConfiguration;
 use App\Utils\JsonBuilder;
 use App\Utils\ReturnData\MessageBag;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use PHPUnit\Util\Json;
 
+//@TODO ?为什么逻辑代码都在控制器 下面的流程不是理解
 class ElectiveController extends Controller
 {
     //选修课报名结果表前缀
@@ -36,15 +40,14 @@ class ElectiveController extends Controller
         $major = $userInfo->major;
         $item = [];
 
+        $nowTime = Carbon::now()->timestamp;
+
         foreach ($major->courseMajors as $key => $courseMajor) {
             $course       = $courseMajor->course;
 
             $elective     = $course->courseElective()->first();
-            $currentTime  = time();
-            //报名已满和不在允许的报名时段内不展示
-            if (!$elective || $elective->status == CourseElective::STATUS_ISFULL ||
-                (!empty($elective->expired_at) && $currentTime > strtotime($elective->expired_at)) ||
-                (!empty($elective->expired_at) && $currentTime < strtotime($elective->enrol_start_at)))
+            //报名已满或被取消不显示
+            if (!$elective || $elective->status == CourseElective::STATUS_ISFULL || $elective->status == CourseElective::STATUS_CANCEL)
             {
                 continue;
             }
@@ -56,18 +59,62 @@ class ElectiveController extends Controller
 
             $schedules = [];
             foreach ($arrangements as $arrangement) {
-                    $s = ['weeks' => $arrangement->week, 'time' => $arrangement->day_index, 'location' => ''];
+                    $s = ['week' => $arrangement->week, 'day_index' => $arrangement->day_index, 'time' => $arrangement->timeslot->name];
                     $schedules[] = $s;
+            }
+            if ($nowTime < Carbon::parse($elective->enrol_start_at)->timestamp) {
+                $status = 0;//未开始
+            }elseif ($nowTime > Carbon::parse($elective->expired_at)->timestamp) {
+                $status = 2;//已结束
+            }else {
+                $status = 1;//进行中
             }
 
             $item[]= [
                     'course_id'    => $course->id,
                     'course_name'  => $courseMajor->course_name,
                     'course_time'  => $schedules,
-                    'value'        => $course->scores,
-                    'seats'        => $elective->max_num,
+                    'scores'        => $course->scores,
+                    'seats'        => $elective->max_num == 0 ? $elective->open_num : $elective->max_num,
                     'applied'      => $studentCount,
                     'expired_at'   => $elective->expired_at,
+                    'status'       => $status
+            ];
+        }
+
+        return JsonBuilder::Success($item);
+    }
+
+    public function mylist(ElectiveRequest $request)
+    {
+        $userId = $request->user()->id;
+
+        $dao = new GradeUserDao;
+
+        $userInfo = $dao->getUserInfoByUserId($userId);
+
+        $item = [];
+
+        $nowTime = Carbon::now()->timestamp;
+        $myList = StudentEnrolledOptionalCourse::with('course')->where('user_id', '=', $userId)->get();
+
+        foreach ($myList as $key => $enroll) {
+            $course = $enroll->course;
+            $elective     = $course->courseElective()->first();
+            $arrangements = $course->courseArrangements;
+
+            $schedules = [];
+            foreach ($arrangements as $arrangement) {
+                $s = ['week' => $arrangement->week, 'day_index' => $arrangement->day_index, 'time' => $arrangement->timeslot->name];
+                $schedules[] = $s;
+            }
+            $item[]= [
+                'course_id'    => $course->id,
+                'course_name'  => $course->name,
+                'course_time'  => $schedules,
+                'scores'        => $course->scores,
+                'expired_at'   => $elective->expired_at,
+                'status'       => $elective->status == CourseElective::STATUS_CANCEL ? CourseElective::STATUS_CANCEL : $enroll->status
             ];
         }
 
@@ -81,6 +128,7 @@ class ElectiveController extends Controller
      */
     public function details(ElectiveRequest $request)
     {
+        $user = $request->user();
         $courseId = $request->get('course_id');
 
         $courseDao =  new CourseDao;
@@ -90,6 +138,8 @@ class ElectiveController extends Controller
         if (!$course) {
             return  JsonBuilder::Error('课程不存在');
         }
+        $nowTime = Carbon::now()->timestamp;
+
         $teacher = $course->teachers[0]->name ?? null;
 
         $elective = $course->courseElective;
@@ -99,21 +149,87 @@ class ElectiveController extends Controller
         $arrangements = $course->courseArrangements;
 
         $schedules = [];
+        $config = (new SchoolDao())->getSchoolById($course->school_id)->configuration;
+        $year = $elective->start_year . '-' . ($course->term == SchoolConfiguration::LAST_TERM ? SchoolConfiguration::FIRST_TERM_START_MONTH : SchoolConfiguration::SECOND_TERM_START_MONTH) . '-01';
+        $weeks = $config->getAllWeeksOfTerm($course->term, false, $year);
+        $weekList = [];
+        foreach ($weeks as $week) {
+            $weekList[$week->getname()] = $week;
+        }
+        $minDay = ['week' => 99, 'day' => ''];
+        $maxDay = ['week' => 0, 'day' => ''];
         foreach ($arrangements as $arrangement) {
-                $s = ['weeks' => $arrangement->week, 'time' => $arrangement->day_index, 'location' => ''];
+                if ($arrangement->week < $minDay['week']) {
+                    $minDay = ['week' => $arrangement->week, 'day' => $weekList['第' . $arrangement->week . '周']->getstart()];
+                }
+                if ($arrangement->week > $maxDay['week']) {
+                    $maxDay = ['week' => $arrangement->week, 'day' => $weekList['第' . $arrangement->week . '周']->getstart()];
+                }
+                $s = ['week' => $arrangement->week, 'day_index' => $arrangement->day_index, 'time' => $arrangement->timeslot->name, 'building' => $arrangement->building_name, 'classroom' => $arrangement->classroom_name];
                 $schedules[] = $s;
         }
 
+        //报名状态
+        if ($nowTime < Carbon::parse($elective->enrol_start_at)->timestamp) {
+            $enrollStatus = 0;//报名未开始
+        }elseif ($nowTime > Carbon::parse($elective->expired_at)->timestamp) {
+            $enrollStatus = 2;//报名已结束
+        }else {
+            $enrollStatus = 1;//报名进行中
+        }
+
+        //课程状态
+        if($elective->status == CourseElective::STATUS_CANCEL) {
+            $courseStatus = 3;//被取消
+        }else {
+            if ($nowTime < Carbon::parse($minDay['day'])->timestamp) {
+                $courseStatus = 0;//待开课
+            }elseif ($nowTime > Carbon::parse($maxDay['day'])->timestamp) {
+                $courseStatus = 2;//已结束
+            }else {
+                $courseStatus = 1;//进行中
+            }
+        }
+
+        $dao = new TeacherApplyElectiveCourseDao();
+
+        //按钮状态
+        $myenroll = StudentEnrolledOptionalCourse::where(['course_id' => $course->id, 'user_id' => $user->id])->first();
+        if ($myenroll) {
+            if ($myenroll) {
+                $buttonStatus = 1;//已经报名
+            }
+        }else {
+            $tableName = self::STUDENT_ENROLLED_OPTIONAL_COURSES_TABLE_NAME.'_'.$elective->start_year.'_'.$course->term;
+            //先处理名额报满的情况
+            $dao->operateEnrollResult($elective->max_num, $course->id, $tableName);
+            $enrollNum = $dao->getTotalOfEnroll($user, $tableName);
+            //得到用户可以报名的数量
+            $numOfCanBeEnroll = $dao->getNumOfCanBeEnroll($user);
+            //是否可以报名
+            if($dao->quotaIsFull($course->id)) {
+                $buttonStatus = 2;//报名人数已满
+            }elseif ($enrollNum>=$numOfCanBeEnroll) {
+                $buttonStatus = 3;//自己可报课程已满
+            }else {
+                $buttonStatus = 4;//可以报名
+            }
+        }
+
         $result  = [
+            'course_id'    => $course->id,
             'course_name'  => $course->name,
             'teacher_name' => $teacher,
-            'value'        => $course->scores,
-            'seats'        => $elective->open_num,
+            'scores'        => $course->scores,
+            'seats'        => $elective->max_num == 0 ? $elective->open_num : $elective->max_num,
             'applied'      => $studentCount,
-            'schedules'    => $schedules,
+            'course_time'    => $schedules,
             'expired_at'   => $elective->expired_at,
-            'threshold'    => $elective->max_num,
-            'introduction' => $course->desc
+            'threshold'    => $elective->open_num,
+            'desc' => $course->desc,
+            'enroll_status' => $enrollStatus,
+            'course_status' => $courseStatus,
+            'button_status' => $buttonStatus
         ];
 
         return JsonBuilder::Success($result);
@@ -144,6 +260,20 @@ class ElectiveController extends Controller
         $elective = $course->courseElective;
         $start_year = $elective->start_year;
         $term = $course->term;
+
+        $nowTime = Carbon::now()->timestamp;
+        //报名状态
+        if ($nowTime < Carbon::parse($elective->enrol_start_at)->timestamp) {
+            $enrollStatus = 0;//报名未开始
+        }elseif ($nowTime > Carbon::parse($elective->expired_at)->timestamp) {
+            $enrollStatus = 2;//报名已结束
+        }else {
+            $enrollStatus = 1;//报名进行中
+        }
+        if ($enrollStatus != 1) {
+            return JsonBuilder::Error('不在报名时间内');
+        }
+
         $tableName = self::STUDENT_ENROLLED_OPTIONAL_COURSES_TABLE_NAME.'_'.$start_year.'_'.$term;
         $maxNum = $elective->max_num;
         //先处理名额报满的情况
@@ -216,6 +346,5 @@ class ElectiveController extends Controller
         } else {
             return JsonBuilder::Error('课程报名人数已满，您没有报名成功，请选择其它课程报名');
         }
-
     }
 }
