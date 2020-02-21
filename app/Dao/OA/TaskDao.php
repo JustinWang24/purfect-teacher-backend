@@ -187,10 +187,11 @@ class TaskDao
                 ProjectTaskPic::create($data);
             }
 
-            // 判断是否都结束
-            $count = $task->taskMembers->count();
-            $finish = $task->taskMembers->where('status',ProjectTaskMember::STATUS_CLOSED)->count();
-            if($count == $finish) {
+
+            $finish = $task->taskMembers
+                ->where('status',ProjectTaskMember::STATUS_CLOSED)
+                ->where('take_id','<>', $task->id);
+            if(count($finish) == 0) {
                 // 关闭任务
                 ProjectTask::where('id',$task->id)->update(['status'=>ProjectTask::STATUS_CLOSED]);
             }
