@@ -107,11 +107,11 @@ class TaskController extends Controller
                 $output[$key]['end_time'] = $projectTask->end_time;
                 $output[$key]['leader_userid'] = $projectTask->user_id;
                 $output[$key]['leader_name'] = $projectTask->user->name;
-                $output[$key]['status'] = $projectTask->status;
-                $output[$key]['member_status'] = $val->status;
-                $output[$key]['not_begin'] = $val->not_begin;
-                $output[$key]['underway'] = $val->underway;
-                $output[$key]['finish'] = $val->finish;
+                $output[$key]['status'] = $val->status;
+//                $output[$key]['member_status'] = $val->status;
+//                $output[$key]['not_begin'] = $val->not_begin;
+//                $output[$key]['underway'] = $val->underway;
+//                $output[$key]['finish'] = $val->finish;
             }
         }
 
