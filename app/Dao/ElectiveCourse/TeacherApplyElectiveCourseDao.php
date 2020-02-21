@@ -182,7 +182,8 @@ class TeacherApplyElectiveCourseDao
             'created_at' => $item->created_at->toDateTimeString(),//?为什么自动转换会变成年-月-日
             'elective_status' => 0,
             'elective_enrol_start_at' => '',
-            'elective_expired_at' => ''
+            'elective_expired_at' => '',
+            'status' => $item->status == TeacherApplyElectiveCourse::STATUS_WAITING_FOR_VERIFIED ? 8 : 9,
         ];
         foreach ($item->arrangements as $arrangement) {
             $tmp['arrangement'][] = [
@@ -849,7 +850,7 @@ class TeacherApplyElectiveCourseDao
           PRIMARY KEY (`id`),
           KEY `idx_course_id` (`course_id`),
           KEY `idx_school_id` (`school_id`),
-          KEY `idx_user_id` (`user_id`),
+          KEY `idx_user_id` (`user_id`)
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
         ';
         if ( ! Schema::hasTable($tableName)) {
