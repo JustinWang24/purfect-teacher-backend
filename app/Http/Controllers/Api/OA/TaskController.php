@@ -240,7 +240,7 @@ class TaskController extends Controller
             return JsonBuilder::Success('任务已接收');
         }
 
-        $result = $dao->receiveTask($user->id, $taskId, $schoolId);
+        $result = $dao->receiveTask($task,$user->id, $taskId, $schoolId);
         $msg = $result->getMessage();
         if($result->isSuccess()) {
             return JsonBuilder::Success($msg);
