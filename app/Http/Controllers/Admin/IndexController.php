@@ -27,12 +27,33 @@ class IndexController extends Controller
     }
 
     /**
-     * PC 我的审批
+     * PC 助手页
      * @param MyStandardRequest $request
+     * @return string
      */
-    public function index(MyStandardRequest $request)
+    public function helpIcon(MyStandardRequest $request)
     {
+        $data = [
+            ['name' => '教学助手', 'helper_page' =>
+               [
+                    [ 'name'=> '课表', 'icon' => asset('assets/img/teacher/ass-icon3.png') ],
+                    [ 'name'=> '教学资料', 'icon' => asset('assets/img/teacher/ass-icon3.png') ],
+                    [ 'name'=> '签到', 'icon' => asset('assets/img/teacher/ass-icon3.png') ],
+                    [ 'name'=> '评分', 'icon' => asset('assets/img/teacher/ass-icon3.png') ],
+                    [ 'name'=> '选课', 'icon' => asset('assets/img/teacher/ass-icon3.png') ],
+               ]
+            ],
+            ['name' => '班主任助手', 'helper_page' =>
+               [
+                    [ 'name'=> '班级管理', 'icon' => asset('assets/img/teacher/ass-icon3.png') ],
+                    [ 'name'=> '学生信息', 'icon' => asset('assets/img/teacher/ass-icon3.png') ],
+                    [ 'name'=> '班级签到', 'icon' => asset('assets/img/teacher/ass-icon3.png') ],
+                    [ 'name'=> '班级评分', 'icon' => asset('assets/img/teacher/ass-icon3.png') ],
+               ]
+            ]
+        ];
 
+        return JsonBuilder::Success($data);
 
     }
 }

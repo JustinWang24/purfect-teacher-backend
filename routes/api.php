@@ -1044,4 +1044,6 @@ Route::prefix('meeting')->middleware('auth:api')->group(function(){
 Route::prefix('office')->middleware('auth:api')->group(function(){
         Route::any('/office-page', 'Admin\IndexController@officeIcon')
         ->name('api.office.office-page');
+        Route::any('/help-page', 'Admin\IndexController@helpIcon')
+        ->name('api.office.help-page');
 });
