@@ -256,10 +256,10 @@ class AttendanceController extends Controller
 
         $timetableItemDao = new TimetableItemDao;
         $item = $timetableItemDao->getCurrentItemByUser($user);
-        if (empty($item)) {
+        if ($item->isEmpty()) {
             return JsonBuilder::Error('未找到当前学生要上的的课程');
         }
-
+        
         $attendancesDetailsDao = new AttendancesDetailsDao;
         $isArrive = $attendancesDetailsDao->getDetailByTimeTableIdAndStudentId($item, $user);
 
