@@ -51,7 +51,9 @@ class TeacherApplyElectiveCourse extends Model
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
     public function arrangements(){
-        return $this->hasMany(ApplyCourseArrangement::class,'apply_id');
+        return $this->hasMany(ApplyCourseArrangement::class,'apply_id')
+            ->orderBy('week', 'asc')
+            ->orderBy('day_index','asc');
     }
 
     public function TimeSlot(){
