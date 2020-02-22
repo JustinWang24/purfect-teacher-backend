@@ -1,0 +1,233 @@
+#teacher-oa-notices-app {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  .notices-card {
+    flex: 1;
+    height: 100%;
+    background: #ffffff;
+    border-radius: 4px;
+    .notices-card-header {
+      height: 50px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 20px;
+      border-bottom: 1px solid #eaedf2;
+      p:first-child {
+        font-size: 18px;
+        font-family: MicrosoftYaHei-Bold, MicrosoftYaHei;
+        font-weight: bold;
+        color: #313b4c;
+      }
+      .release {
+        width: 60px;
+        height: 35px;
+        color: #fff;
+        text-align: center;
+        line-height: 35px;
+        cursor: pointer;
+        background-color: #4fa5fc;
+      }
+    }
+  }
+  .notices-card:nth-child(2) {
+    margin: 0 15px;
+  }
+  .teacher-oa-notices-app-one {
+    .teacher-oa-notices-app-one-body {
+      cursor: pointer;
+      padding: 15px 15px 5px;
+      border-bottom: 1px solid #eaedf2;
+      .teacher-oa-notices-app-one-body-title {
+        display: flex;
+        justify-content: space-between;
+        p:first-child {
+          flex: 1;
+          font-size: 16px;
+          font-family: MicrosoftYaHei;
+          color: #313b4c;
+          overflow: hidden;
+          white-space: nowrap;
+          text-overflow: ellipsis;
+        }
+        p:last-child {
+          font-size: 12px;
+          font-family: MicrosoftYaHei;
+          color: #4ea5fe;
+        }
+      }
+      .teacher-oa-notices-app-one-body-content {
+        width: 100%;
+        font-size: 14px;
+        font-family: MicrosoftYaHei;
+        color: #8a93a1;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 3;
+        overflow: hidden;
+      }
+      .teacher-oa-notices-app-one-body-time {
+        font-size: 12px;
+        font-family: MicrosoftYaHei;
+        color: #d2d5de;
+        text-align: right;
+      }
+    }
+  }
+  .teacher-oa-notices-app-two {
+    .teacher-oa-notices-app-two-body {
+      display: flex;
+      justify-content: flex-start;
+      cursor: pointer;
+      padding: 15px;
+      border-bottom: 1px solid #eaedf2;
+      img {
+        width: 148px;
+        height: 92px;
+        border: 1px solid red;
+      }
+      .teacher-oa-notices-app-two-body-title {
+        flex: 1;
+        margin-left: 20px;
+        p:first-child {
+          font-size: 12px;
+          font-family: MicrosoftYaHei;
+          color: #4ea5fe;
+          text-align: right;
+        }
+        p:nth-child(2) {
+          height: 55%;
+          font-size: 14px;
+          font-family: MicrosoftYaHei;
+          color: #8a93a1;
+          display: -webkit-box;
+          -webkit-box-orient: vertical;
+          -webkit-line-clamp: 2;
+          overflow: hidden;
+        }
+        p:last-child {
+          font-size: 12px;
+          font-family: MicrosoftYaHei;
+          color: #d2d5de;
+          text-align: right;
+          align-self: flex-end;
+        }
+      }
+    }
+  }
+  .teacher-oa-notices-app-three {
+    .teacher-oa-notices-app-three-body {
+      cursor: pointer;
+      padding: 15px 15px 8px;
+      border-bottom: 1px solid #eaedf2;
+      .teacher-oa-notices-app-three-body-title {
+        display: flex;
+        justify-content: space-between;
+        p:first-child {
+          flex: 1;
+          font-size: 16px;
+          font-family: MicrosoftYaHei;
+          color: #313b4c;
+          overflow: hidden;
+          white-space: nowrap;
+          text-overflow: ellipsis;
+        }
+        p:last-child {
+          font-size: 12px;
+          font-family: MicrosoftYaHei;
+          color: #4ea5fe;
+        }
+      }
+      .teacher-oa-notices-app-three-body-content {
+        font-size: 14px;
+        font-family: MicrosoftYaHei;
+        color: #8a93a1;
+        margin-bottom: 10px;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 3;
+        overflow: hidden;
+      }
+      .teacher-oa-notices-app-three-body-time {
+        p:first-child {
+          font-size: 12px;
+          font-family: MicrosoftYaHei;
+          color: #fff;
+          padding: 0 7px;
+          background-color: yellow;
+        }
+        p:last-child {
+          text-align: right;
+          font-size: 12px;
+          font-family: MicrosoftYaHei;
+          color: #d2d5de;
+        }
+      }
+    }
+  }
+  .el-drawer {
+    .el-drawer__header {
+      height: 50px;
+      padding: 20px;
+      display: flex;
+      justify-content: space-between;
+      font-size: 18px;
+      font-family: MicrosoftYaHei-Bold, MicrosoftYaHei;
+      font-weight: bold;
+      color: #414a5a;
+      margin-bottom: 0;
+      border-bottom: 1px solid #eaedf2;
+    }
+    .el-drawer__body {
+      .demo-drawer__content {
+        p:first-child {
+          font-size: 18px;
+          font-family: MicrosoftYaHei-Bold, MicrosoftYaHei;
+          font-weight: bold;
+          color: #414a5a;
+          padding: 10px 20px 0;
+        }
+        p:nth-child(2) {
+          font-size: 12px;
+          font-family: MicrosoftYaHei;
+          color: #d2d5de;
+          padding: 0 20px;
+        }
+        p:nth-child(3) {
+          font-size: 14px;
+          font-family: MicrosoftYaHei;
+          color: #414a5a;
+          padding: 0 20px 20px;
+        }
+        img {
+          width: 420px;
+          height: 200px;
+          margin: 20px;
+          display: inline-block;
+          border: 1px solid red;
+          border-radius: 4px;
+        }
+        .demo-drawer__content_enclosure {
+          .word {
+            font-size: 16px;
+            font-family: MicrosoftYaHei;
+            color: #414a5a;
+            padding: 15px 20px;
+            border-top: 1px solid #eaedf2;
+          }
+          .enclosure {
+            width: 92%;
+            height: 65px;
+            font-size: 14px;
+            font-family: MicrosoftYaHei;
+            color: #414A5A;
+            line-height: 65px;
+            margin: 0 20px;
+            background-color: #f2f9ff;
+          }
+        }
+      }
+    }
+  }
+}

@@ -53,7 +53,9 @@ require('./includes/backend/school_calendar_app'); // 后台: 校历的管理
 require('./includes/backend/notice_manager_app'); // 后台: Notice 的管理
 require('./includes/backend/banner_manager_app'); // 后台: Banner 的管理
 require('./includes/backend/teacher_homepage_app'); // 后台: 教师的首页
-require('./includes/backend/teacher-oa-index-app'); // 后台: 教师的办公
+require('./includes/backend/teacher_oa_index_app.js'); // 后台: 教师的办公
+require('./includes/backend/teacher_oa_logs_app'); // 后台: 教师的办公的日志
+require('./includes/backend/teacher_oa_notices_app'); // 后台: 教师的办公的通知
 require('./includes/backend/student_homepage_app'); // 后台: 学生的首页
 require('./includes/backend/organization_app'); // 组织架构管理
 require('./includes/backend/news_list_manager'); // 动态新闻的管理
