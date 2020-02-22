@@ -248,6 +248,8 @@ Route::prefix('course')->middleware('auth:api')->group(function () {
      // 选修课列表
      Route::post('/elective/list','Api\Course\ElectiveController@index')
         ->name('api.course.elective.list');
+    Route::post('/elective/mylist','Api\Course\ElectiveController@mylist')
+        ->name('api.course.elective.mylist');
      // 选课详情
      Route::post('/elective/details','Api\Course\ElectiveController@details')
         ->name('api.course.elective.details');
@@ -1042,4 +1044,6 @@ Route::prefix('meeting')->middleware('auth:api')->group(function(){
 Route::prefix('office')->middleware('auth:api')->group(function(){
         Route::any('/office-page', 'Admin\IndexController@officeIcon')
         ->name('api.office.office-page');
+        Route::any('/help-page', 'Admin\IndexController@helpIcon')
+        ->name('api.office.help-page');
 });

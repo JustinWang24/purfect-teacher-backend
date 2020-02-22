@@ -77,7 +77,8 @@ class TaskController extends Controller
             return JsonBuilder::Error('没有内容');
         }
         $dao = new ProjectDao();
-
+        $now = Carbon::now()->format('Y-m-d H:i:s');
+        // 我创建的
         if($type == ProjectTask::STATUS_MY_CREATE) {
             $list = $dao->myCreateTasks($userId);
             $output = [];
@@ -90,14 +91,34 @@ class TaskController extends Controller
                 $output[$key]['end_time'] = $val->end_time;
                 $output[$key]['leader_userid'] = $val->user_id;
                 $output[$key]['leader_name'] = $val->user->name;
-                $output[$key]['status'] = $val->status;
-                $output[$key]['read_status'] = $val->read_status;
+                // 未开始
+                if($val->status == ProjectTaskMember::STATUS_UN_BEGIN) {
+                    $status = 0; // 未开始
+                    // 进行中
+                } elseif ($val->status == ProjectTaskMember::STATUS_IN_PROGRESS) {
+                    if($now < $val->end_time) {
+                        $status = 1; // 正常进行中
+                    } else {
+                        $status = 3; // 进行中超时
+                    }
+                    // 已结束
+                } else  {
+                    if($now < $val->end_time) {
+                        $status = 2; // 按时完成
+                    } else {
+                        $status = 4; // 超时完成
+                    }
+                }
+                $output[$key]['status'] = $status;
+
             }
 
         } else {
+            // 我参与的
             $list = $dao->attendTasks($userId, $type);
             $output = [];
             foreach ($list as $key => $val) {
+
                 $projectTask = $val->projectTask;
                 $output[$key]['taskid'] = $projectTask->id;
                 $output[$key]['create_userid'] = $projectTask->create_user;
@@ -107,11 +128,25 @@ class TaskController extends Controller
                 $output[$key]['end_time'] = $projectTask->end_time;
                 $output[$key]['leader_userid'] = $projectTask->user_id;
                 $output[$key]['leader_name'] = $projectTask->user->name;
-                $output[$key]['status'] = $projectTask->status;
-                $output[$key]['member_status'] = $val->status;
-                $output[$key]['not_begin'] = $val->not_begin;
-                $output[$key]['underway'] = $val->underway;
-                $output[$key]['finish'] = $val->finish;
+                // 未开始
+                if($val->status == ProjectTaskMember::STATUS_UN_BEGIN) {
+                    $status = 0; // 未开始
+                // 进行中
+                } elseif ($val->status == ProjectTaskMember::STATUS_IN_PROGRESS) {
+                    if($now < $projectTask->end_time) {
+                        $status = 1; // 正常进行中
+                    } else {
+                        $status = 3; // 进行中超时
+                    }
+                // 已结束
+                } else  {
+                    if($now < $projectTask->end_time) {
+                        $status = 2; // 按时完成
+                    } else {
+                        $status = 4; // 超时完成
+                    }
+                }
+                $output[$key]['status'] = $status;
             }
         }
 
@@ -205,7 +240,7 @@ class TaskController extends Controller
             return JsonBuilder::Success('任务已接收');
         }
 
-        $result = $dao->receiveTask($user->id, $taskId, $schoolId);
+        $result = $dao->receiveTask($task,$user->id, $taskId, $schoolId);
         $msg = $result->getMessage();
         if($result->isSuccess()) {
             return JsonBuilder::Success($msg);

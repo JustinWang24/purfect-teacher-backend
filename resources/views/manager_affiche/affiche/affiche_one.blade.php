@@ -138,6 +138,14 @@ use App\Utils\UI\Button;
                         </select>
                     </div>
                     <div class="form-group">
+                        <label for="school-name-input">类型</label>
+                        <select id="iche_categroypid" class="form-control" name="iche_categroypid"  required>
+                            <option value="">-请选择-</option>1
+                            <option value="0" @if( old('iche_categroypid') == 0 ) selected @endif >其他</option>
+                            <option value="1" @if( old('iche_categroypid') == 1 ) selected @endif >活动</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
                         <label for="building-name-input">处理结果</label>
                         <textarea  class="form-control" name="iche_checkdesc" cols="30" rows="10" placeholder="">{{ old('iche_checkdesc') }}</textarea>
                     </div>

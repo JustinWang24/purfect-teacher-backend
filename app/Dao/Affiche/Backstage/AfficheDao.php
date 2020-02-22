@@ -12,6 +12,7 @@ use App\Models\Affiche\AfficheComment;
 use App\Models\Affiche\AffichePics;
 use App\Models\Affiche\AffichePraise;
 use App\Models\Affiche\AfficheVideo;
+use App\Models\Affiche\AfficheStick;
 
 use App\Utils\JsonBuilder;
 use Illuminate\Support\Collection;
@@ -196,6 +197,106 @@ class AfficheDao extends \App\Dao\Affiche\CommonDao
             ->orderBy('a.praiid', 'desc')
             ->select($fieldArr)
             ->paginate(self::$bcckend_limit, $fieldArr, 'page', $page);
+    }
+
+    /**
+     * Func 冬天置顶
+     *
+     * @param['iche_id'] 是 int 动态id
+     * @param['keywords'] 是 string 关键词
+     * @param['status'] 是 array 状态(数组)
+     * @param['page']  int 分页ID
+     *
+     * @return array
+     */
+    public function getAfficheStickListInfo($param = [], $page = 1)
+    {
+        $condition[] = ['stickid', '>', 0];
+        // 检索条件
+        if (isset($param['school_id']) && $param['school_id'] != '') {
+            $condition[] = ['school_id', '=', (Int)$param['school_id']];
+        }
+        // 获取的字段
+        $fieldArr = ['*'];
+        return AfficheStick::where($condition)
+            ->where('stick_title', 'like', '%' . trim($param['keywords']) . '%')
+            ->orderBy('stick_order', 'desc')
+            ->paginate(self::$bcckend_limit, $fieldArr, 'page', $page);
+    }
+
+    /**
+     * Func 添加
+     *
+     * @param $data 基础信息
+     *
+     * @return false|id
+     */
+    public function addAfficheStickInfo($data = [])
+    {
+        if (empty($data))
+        {
+            return false;
+        }
+        DB::beginTransaction();
+        try {
+            if ($obj = AfficheStick::create($data)) {
+                DB::commit();
+                return $obj->id;
+            } else {
+                DB::rollBack();
+                return false;
+            }
+        } catch (\Exception $exception) {
+            DB::rollBack();
+            return false;
+        }
+    }
+
+
+    /**
+     * Func 修改
+     *
+     * @param $id 更新Id
+     * @param $data 基础信息
+     *
+     * @return false|id
+     */
+    public function editAfficheStickInfo($data = [], $id = 0)
+    {
+        if (!intval($id) || empty($data))
+        {
+            return false;
+        }
+        DB::beginTransaction();
+        try {
+            if (AfficheStick::where('stickid',$id)->update($data)) {
+                DB::commit();
+                return $id;
+            } else {
+                DB::rollBack();
+                return false;
+            }
+        } catch (\Exception $exception) {
+            DB::rollBack();
+            return false;
+        }
+    }
+
+    /**
+     * Func 删除置顶
+     *
+     * @param['stickid']  动态id
+     *
+     * @return array
+     */
+    public function deleteAfficheStickInfo($stickid = 0)
+    {
+        if (!intval($stickid)) return [];
+
+        // 获取的字段
+        $fieldArr = ['*'];
+
+        return AfficheStick::where('stickid', '=', $stickid)->delete();
     }
 
 }

@@ -113,16 +113,22 @@ class TaskDao
 
     /**
      * 接受任务
+     * @param ProjectTask $task
      * @param $userId
      * @param $taskId
      * @param $schoolId
      * @return MessageBag
      */
-    public function receiveTask($userId, $taskId, $schoolId) {
+    public function receiveTask(ProjectTask $task, $userId, $taskId, $schoolId) {
         $messageBag = new MessageBag();
         try{
             DB::beginTransaction();
-            // 修改接受任务
+            // 任务总表状态
+            if($task->status == ProjectTask::STATUS_UN_BEGIN) {
+                $save = ['status'=>ProjectTask::STATUS_IN_PROGRESS];
+                ProjectTask::where('id', $taskId)->update($save);
+            }
+            // 修改任务详情表状态
             $map = ['user_id'=>$userId, 'task_id'=>$taskId];
             $status = ['status'=>ProjectTaskMember::STATUS_IN_PROGRESS];
             ProjectTaskMember::where($map)->update($status);
@@ -181,10 +187,11 @@ class TaskDao
                 ProjectTaskPic::create($data);
             }
 
-            // 判断是否都结束
-            $count = $task->taskMembers->count();
-            $finish = $task->taskMembers->where('status',ProjectTaskMember::STATUS_CLOSED)->count();
-            if($count == $finish) {
+
+            $finish = $task->taskMembers
+                ->where('status',ProjectTaskMember::STATUS_CLOSED)
+                ->where('take_id','<>', $task->id);
+            if(count($finish) == 0) {
                 // 关闭任务
                 ProjectTask::where('id',$task->id)->update(['status'=>ProjectTask::STATUS_CLOSED]);
             }
