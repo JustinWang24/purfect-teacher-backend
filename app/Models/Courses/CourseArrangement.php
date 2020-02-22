@@ -2,6 +2,7 @@
 
 namespace App\Models\Courses;
 
+use App\Models\Timetable\TimeSlot;
 use Illuminate\Database\Eloquent\Model;
 
 class CourseArrangement extends Model
@@ -11,4 +12,8 @@ class CourseArrangement extends Model
         'building_id', 'building_name', 'classroom_id',
         'classroom_name'
     ];
+
+    public function timeslot() {
+        return $this->belongsTo(TimeSlot::class, 'time_slot_id');
+    }
 }

@@ -251,9 +251,8 @@ class AttendanceController extends Controller
     public function studentSweepQrCode(MyStandardRequest $request)
     {
         $code = json_decode($request->get('code'), true);
-
         $user = $request->user();
-
+        
         $timetableItemDao = new TimetableItemDao;
         $item = $timetableItemDao->getCurrentItemByUser($user);
         if (empty($item)) {
@@ -331,6 +330,7 @@ class AttendanceController extends Controller
         }
 
         $dao = new AttendancesDao;
+        $timeTableDao = new TimetableItemDao;
         $timetableIds = [];
         foreach ($items as $key => $val) {
            $timetableIds[$key][] = array_column($val, 'id');
@@ -347,12 +347,19 @@ class AttendanceController extends Controller
         $week = $weeks->getScheduleWeekIndex();
 
         $result = [];
-        foreach ($timetableIds as $k => $v) {
-             $result[$k]['sign'] = $dao->getTeacherSignInStatus($v[0], $week, Attendance::TEACHER_SIGN);
-             $result[$k]['no_sign'] = $dao->getTeacherSignInStatus($v[0], $week, Attendance::TEACHER_NO_SIGN);
-             $result[$k]['late'] = $dao->getTeacherSignInStatus($v[0], $week, Attendance::TEACHER_SIGN, Attendance::TEACHER_LATE);
+        foreach ($timetableIds as $key => $val) {
+              for ($x=0; $x<=count($result); $x++) {
+              }
+              foreach ($val[0] as $k => $v) {
+                $result[$x]['time_slot_id'] = $timeTableDao->getItemById($v)->time_slot_id;
+              }
+              $result[$x]['course'] = $key;
+              $result[$x]['sign'] = $dao->getTeacherSignInStatus($val[0], $week, Attendance::TEACHER_SIGN);
+              $result[$x]['no_sign'] = $dao->getTeacherSignInStatus($val[0], $week, Attendance::TEACHER_NO_SIGN);
+              $result[$x]['late'] = $dao->getTeacherSignInStatus($val[0], $week, Attendance::TEACHER_SIGN, Attendance::TEACHER_LATE);
         }
-        return JsonBuilder::Success($result);
+
+        return JsonBuilder::Success(array_merge($result));
     }
 
     /**

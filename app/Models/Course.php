@@ -113,6 +113,10 @@ class Course extends Model
         return $this->hasMany(CourseTextbook::class);
     }
 
+    public function studentEnrolledOptionalCourse() {
+        return $this->hasMany(StudentEnrolledOptionalCourse::class);
+    }
+
     /**
      * todo 该方法暂定 后续再完善 求旷课数据
      * 获取当前课程的全部时间

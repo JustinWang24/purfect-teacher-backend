@@ -23,7 +23,6 @@ class InternalMessageDao
                 $relay = $this->getInternalMessageById($data['relay_id']);
                 $messageIds = $message->id.','.$relay['message_id'];
             }
-
             $this->updateMessage($message->id, ['message_id' => $messageIds]); // 修改转发字段 用于转发
 
             if ($data['type'] == InternalMessage::TYPE_SENT) {
@@ -31,22 +30,27 @@ class InternalMessageDao
                 $collId = explode(',', $data['collect_user_id']);
                 $collData = [];
                 foreach ($collId as $key => $value) {
-                    $collData['user_id']           = $value;
-                    $collData['collect_user_id']   = $data['collect_user_id'];
+                    $collData['user_id']           = $data['user_id'];
+                    $collData['collect_user_id']   = $value;
                     $collData['collect_user_name'] = $data['collect_user_name'];
                     $collData['title']             = $data['title'];
                     $collData['content']           = $data['content'];
                     $collData['message_id']        = $messageIds;
                     $collData['type']              = InternalMessage::TYPE_UNREAD;
                     $collData['is_relay']          = $data['is_relay'];
-                    InternalMessage::create($collData);
+					$collData['is_file']           = $data['is_file'];
+					InternalMessage::create($collData);
                 }
             }
 
-            if ($files) {
+            if ($data['is_file'] == InternalMessage::IS_FILE) {
                 foreach ($files as $key => $val) {
-                    $val['message_id'] = $message->id;
-                    InternalMessageFile::create($val);
+                    $imageData['path']  = $val['path'];
+                    $imageData['name']  = $val['name'];
+                    $imageData['type'] = $val['type'];
+                    $imageData['size'] = $val['size'];
+                    $imageData['message_id'] = $message->id;
+                    InternalMessageFile::create($imageData);
                 }
             }
             DB::commit();
@@ -63,13 +67,12 @@ class InternalMessageDao
     /**
      * 根据用户ID 获取
      * @param $userId
-     * @param $type
+     * @param $where
      * @return mixed
      */
-    public function getInternalMessageByUserId($userId, $type)
+    public function getInternalMessageByUserId($userId, $where)
     {
-        return InternalMessage::where('user_id', $userId)
-            ->where('type', $type)
+        return InternalMessage::where($where)
             ->where('status', InternalMessage::STATUS_NORMAL)
             ->orderBy('created_at', 'desc')
             ->paginate(ConfigurationTool::DEFAULT_PAGE_SIZE);

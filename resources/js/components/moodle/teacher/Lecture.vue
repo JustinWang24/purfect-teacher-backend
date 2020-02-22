@@ -229,13 +229,7 @@
             }
         },
         created(){
-            this.materialTypes = [
-                Constants.COURSE_MATERIAL_TYPES.TYPE_PRE_TXT,
-                Constants.COURSE_MATERIAL_TYPES.TYPE_LECTURE_TXT,
-                Constants.COURSE_MATERIAL_TYPES.TYPE_AFTER_TXT,
-                Constants.COURSE_MATERIAL_TYPES.TYPE_HOMEWORK_TXT,
-                Constants.COURSE_MATERIAL_TYPES.TYPE_EXAM_TXT,
-            ];
+            this.materialTypes = Constants.COURSE_MATERIAL_TYPES_TEXT;
             this.lectureModel = this.lecture;
         },
         methods: {

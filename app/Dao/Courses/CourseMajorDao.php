@@ -7,6 +7,7 @@
  */
 
 namespace App\Dao\Courses;
+
 use App\Models\Courses\CourseMajor;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
@@ -127,5 +128,16 @@ class CourseMajorDao
                         $query->count();
                    }
                ])->get();
+    }
+
+
+    /**
+     * @param $ids
+     * @param $keyword
+     * @return mixed
+     */
+    public function getCourseMajorByIdsAndCourseName($ids, $keyword) {
+        return CourseMajor::where('course_name','like',$keyword.'%')
+            ->whereIn('id',$ids)->get();
     }
 }

@@ -1,7 +1,9 @@
 <?php
 /**
- * @var \App\User $teacher
+ * @var \App\User $student
  */
+$student = \Illuminate\Support\Facades\Auth::user();
+$myCourses = $student->myCourses();
 ?>
 <div class="sidebar-container">
     <div class="sidemenu-container navbar-collapse collapse fixed-menu">
@@ -16,11 +18,11 @@
                 <li class="sidebar-user-panel">
                     <div class="user-panel">
                         <div class="pull-left image">
-                            <img src="{{ \Illuminate\Support\Facades\Auth::user()->profile->avatar }}" class="img-circle user-img-circle"
+                            <img src="{{ $student->profile->avatar }}" class="img-circle user-img-circle"
                                  alt="User Image" />
                         </div>
                         <div class="pull-left info">
-                            <p> {{ \Illuminate\Support\Facades\Auth::user()->name }}</p>
+                            <p> {{ $student->name }}</p>
                         </div>
                     </div>
                 </li>
@@ -46,10 +48,16 @@
                 </li>
 
                 <li class="nav-item">
-                    <a href="{{ route('teacher.textbook.manager') }}" class="nav-link">
+                    <a href="#" class="nav-link">
                         <i class="material-icons">map</i>
-                        <span class="title">教材管理</span>
+                        <span class="title">我的课程</span>
+                        <span class="arrow nav-toggle"></span>
                     </a>
+                    <ul class="sub-menu">
+                        @foreach($myCourses as $myCourse)
+                            @include('layouts.desktop.elements.submenu_selected',['routeName'=>'verified_student.course.manager','routeParams'=>['student'=>$student->id,'course_id'=>$myCourse->id],'name'=>$myCourse->name])
+                        @endforeach
+                    </ul>
                 </li>
 
                 <li class="nav-item">

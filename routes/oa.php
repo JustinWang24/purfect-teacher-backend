@@ -85,6 +85,20 @@ Route::prefix('attendance')->middleware('auth:api')->group(function () {
         ->name('oa.attendance.getManageDayCount');
 
 });
+Route::prefix('electivecourse')->middleware('auth:api')->group(function () {
+    Route::post('/apply', 'Api\ElectiveCourse\OaElectiveCourseController@apply')
+        ->name('oa.electivecourse.apply');
+    Route::post('/conf', 'Api\ElectiveCourse\OaElectiveCourseController@conf')
+        ->name('oa.electivecourse.conf');
+    Route::post('lists', 'Api\ElectiveCourse\OaElectiveCourseController@lists')
+        ->name('oa.electivecourse.lists');
+    Route::post('info', 'Api\ElectiveCourse\OaElectiveCourseController@info')
+        ->name('oa.electivecourse.info');
+    Route::post('applylists', 'Api\ElectiveCourse\OaElectiveCourseController@applylists')
+        ->name('oa.electivecourse.applylists');
+    Route::post('applyinfo', 'Api\ElectiveCourse\OaElectiveCourseController@applyinfo')
+        ->name('oa.electivecourse.applyinfo');
+});
 
 
 // 会议

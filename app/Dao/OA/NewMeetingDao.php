@@ -110,7 +110,8 @@ class NewMeetingDao
             ['new_meetings.status', '=', NewMeeting::STATUS_PASS],
         ];
 
-        $field = ['new_meeting_users.*', 'new_meeting_users.signin_status as signIn_status', 'new_meetings.*'];
+        $field = ['new_meeting_users.*', 'new_meeting_users.signin_status as signIn_status',
+            'new_meeting_users.signout_status as signOut_status', 'new_meetings.*'];
 
         $list = NewMeetingUser::join('new_meetings', function ($join) use ($map){
             $join->on('new_meetings.id', '=', 'new_meeting_users.meet_id')
@@ -278,14 +279,21 @@ class NewMeetingDao
         $now = Carbon::now()->toDateTimeString();
         $map = ['id'=>$meetUserId];
         if($type == 'signIn') {
-            if($now > $meet->signin_end) {
+            // 签到时间大于会议开始时间
+            if($now > $meet->meet_start) {
                 $status = 2; // 迟到
             } else {
                 $status = 1; // 正常
             }
             $save = ['signin_status'=>$status, 'signin_time'=>$now];
         } else {
-            $save = ['signout_status'=>1, 'signout_time'=>$now];
+            if($now < $meet->meet_end ) {
+                $status = 2; // 早退
+            } else {
+                $status = 1; // 正常
+            }
+
+            $save = ['signout_status'=>$status, 'signout_time'=>$now];
         }
 
         return NewMeetingUser::where($map)->update($save);

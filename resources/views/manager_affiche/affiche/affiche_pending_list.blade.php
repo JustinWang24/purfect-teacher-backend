@@ -19,10 +19,6 @@ use App\User;
                                     <label>学校</label>
                                     <select id="cityid" class="el-input__inner col-10" name="school_id"></select>
                                 </div>
-                                <div class="pull-left col-2">
-                                    <label>校区</label>
-                                    <select id="countryid" class="el-input__inner col-10" name="campus_id"></select>
-                                </div>
                                 <div class="pull-left col-3">
                                     <label>关键词</label>
                                     <input type="text" class="el-input__inner col-10" value="{{ Request::get('keywords') }}" placeholder="手机号" name="keywords">
@@ -64,7 +60,7 @@ use App\User;
                                         <td>{{ $afficheStatusArr[$val->status] }}</td>
                                         <td>{{ $val->created_at }}</td>
                                         <td class="text-center">
-                                            {{ Anchor::Print(['text'=>'详情','class'=>'btn btn-primary','href'=>route('manager_affiche.affiche.affiche_one',['icheid'=>$val->icheid])], Button::TYPE_DEFAULT,'') }}
+                                            {{ Anchor::Print(['text'=>($val->status == -1 ? '审核' : '查看'),'class'=>'btn btn-primary','href'=>route('manager_affiche.affiche.affiche_one',['icheid'=>$val->icheid])], Button::TYPE_DEFAULT,'') }}
                                         </td>
                                     </tr>
                                 @endforeach

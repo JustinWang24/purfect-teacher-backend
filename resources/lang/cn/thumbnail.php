@@ -168,5 +168,8 @@ return [
     'home'=>'首页',
     'message-center'=>'消息中心',
     'school-news'=>'校园新闻',
+
+    'assistant'=>'助手',
+    'check-in'=>'签到',
 ];
 
