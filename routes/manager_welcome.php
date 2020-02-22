@@ -30,6 +30,8 @@ Route::prefix('manager_welcome')->group(function ()
         ->name('welcome_manager.welcomeReport.completed_list'); // 已完成
     Route::any('/welcome-config/detail','Welcome\WelcomeReportController@detail')
         ->name('welcome_manager.welcomeReport.detail'); // 详情
+    Route::any('/welcome-config/wait-update','Welcome\WelcomeReportController@wait_update')
+        ->name('welcome_manager.welcomeReport.wait_update'); // 待报到提交
 
     // 费用管理
     Route::any('wifi/list', 'WifiController@list')->name('manager_wifi.wifi.list'); // wifi列表
