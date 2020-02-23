@@ -1,3 +1,7 @@
+<?php
+use App\Utils\UI\Anchor;
+use App\Utils\UI\Button;
+?>
 @extends('layouts.app')
 @section('content')
     <div class="row" id="school-welcome-list-app">
@@ -176,7 +180,7 @@
                     </div>
 
                     <!--待报到  状态(0:关闭，2:app个人资料完善中，1:报到中(未交费)，3:已报到(已缴费))-->
-                    @if($dataOne->status == -1)
+                    @if($dataOne['status'] == 2 )
                     <form action="{{ route('welcome_manager.welcomeReport.wait_update') }}" method="post"  id="add-building-form">
                         @csrf
                         <div class="ln-title"><span>提交的资料</span></div>
@@ -191,12 +195,15 @@
                             </div>
                             <p class="notice-1">温馨提示：确认报到后，将不能更改，请谨慎操作！</p>
                         </div>
+                        <input type="hidden" name="uuid" value="{{ $dataOne['uuid']  }}">
+                        <div class="but-foter">
                         <?php
                         Button::Print(['id'=>'btn-create-building','text'=>trans('general.submit')], Button::TYPE_PRIMARY);
                         ?>
                         <?php
                         Anchor::Print(['text'=>trans('general.return'),'href'=>url()->previous(),'class'=>'pull-right link-return'], Button::TYPE_SUCCESS,'arrow-circle-o-right')
                         ?>
+                        </div>
                     </form>
                     @endif
 
@@ -249,5 +256,8 @@
         clear: both;
         color: red;
         font-size: 20px;
+    }
+    .but-foter{
+        margin-top: 88px;
     }
 </style>

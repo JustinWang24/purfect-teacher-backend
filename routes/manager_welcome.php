@@ -34,8 +34,12 @@ Route::prefix('manager_welcome')->group(function ()
         ->name('welcome_manager.welcomeReport.wait_update'); // 待报到提交
 
     // 费用管理
-    Route::any('wifi/list', 'WifiController@list')->name('manager_wifi.wifi.list'); // wifi列表
-
+    Route::any('/welcome-config/tuitionfee-list/{isfee?}','Welcome\WelcomeReportController@tuitionfee_list')
+        ->name('welcome_manager.welcomeReport.tuitionfee_list'); // 学费列表
+    Route::any('/welcome-config/bookfee-list/{isfee?}','Welcome\WelcomeReportController@bookfee_list')
+        ->name('welcome_manager.welcomeReport.bookfee_list'); // 书费列表
+    Route::any('/welcome-config/roomfee-list/{isfee?}','Welcome\WelcomeReportController@roomfee_list')
+        ->name('welcome_manager.welcomeReport.roomfee_list'); // 住宿费
 
 
 });
