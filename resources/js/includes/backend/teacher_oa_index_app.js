@@ -3,6 +3,7 @@
  */
 import { Util } from "../../common/utils";
 import { startedByMe, waitingForMe } from "../../common/flow";
+import Axios from "axios";
 
 if (document.getElementById('teacher-oa-index-app')) {
     new Vue({
@@ -17,7 +18,13 @@ if (document.getElementById('teacher-oa-index-app')) {
                 isLoading: false,
                 flowsStartedByMe: [],
                 flowsWaitingForMe: [],
-                activeName: 'first',
+                nav: [
+                    { tit: "待审批" },
+                    { tit: "已审批" },
+                    { tit: "我发起的" },
+                    { tit: "我抄送的" }
+                ],
+                show: 0
             }
         },
         created() {
@@ -27,8 +34,24 @@ if (document.getElementById('teacher-oa-index-app')) {
             this.url.flowOpen = dom.dataset.flowopen;
             this.loadFlowsStartedByMe();
             this.loadFlowsWaitingForMe();
+
+            this.getofficeIcon();
         },
         methods: {
+            // 获取头部icon
+            getofficeIcon() {
+                axios.post(
+                    '/api/office/office-page',
+                ).then(res => {
+                    if (Util.isAjaxResOk(res)) {
+                        console.log(res)
+                    }
+                })
+            },
+            // tab切换
+            list_click(tab) {
+                this.show = tab;
+            },
             startFlow: function (flowId) {
                 const url = this.url.flowOpen + '?flow=' + flowId + '&uuid=' + this.userUuid;
                 window.open(url, '_blank');
