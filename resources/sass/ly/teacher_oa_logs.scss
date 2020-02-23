@@ -1,0 +1,154 @@
+#teacher-oa-logs-app {
+  width: 100%;
+  background: rgba(255, 255, 255, 1);
+  border-radius: 10px;
+  .teacher-oa-logs-card {
+    .teacher-oa-logs-card_title {
+      height: 60px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid #eaedf2;
+      p:first-child {
+        font-size: 18px;
+        font-family: MicrosoftYaHei-Bold, MicrosoftYaHei;
+        font-weight: bold;
+        color: rgba(65, 74, 90, 1);
+      }
+      p:last-child {
+        width: 62px;
+        height: 37px;
+        text-align: center;
+        line-height: 37px;
+        font-size: 14px;
+        font-family: PingFangSC-Medium, PingFang SC;
+        font-weight: 500;
+        color: rgba(255, 255, 255, 1);
+        cursor: pointer;
+        background-color: #4ea5fe;
+      }
+    }
+    .el-drawer {
+      width: 810px !important;
+      background: rgba(255, 255, 255, 1);
+      border-radius: 10px;
+      .el-drawer__header {
+        padding: 15px 25px !important;
+        font-size: 18px;
+        font-family: MicrosoftYaHei-Bold, MicrosoftYaHei;
+        font-weight: bold;
+        color: rgba(65, 74, 90, 1);
+        border-bottom: 1px solid #eaedf2;
+        margin-bottom: 0;
+      }
+      .el-drawer__body {
+        .demo-drawer__content {
+          .el-form {
+            .el-form-item {
+              padding: 30px 70px 0 30px;
+              margin-bottom: 0;
+              .el-form-item__label {
+                font-size: 14px;
+                font-family: PingFangSC-Medium, PingFang SC;
+                font-weight: 500;
+                color: rgba(71, 91, 109, 1);
+              }
+              .el-form-item__content {
+                .el-input {
+                  width: 665px;
+                }
+                .el-textarea {
+                  width: 665px;
+                  .el-textarea__inner {
+                    height: 223px;
+                  }
+                }
+              }
+            }
+          }
+          .demo-drawer__footer {
+            text-align: center;
+            margin-top: 230px;
+            .el-button {
+              width: 140px;
+              height: 37px;
+            }
+          }
+        }
+      }
+    }
+    .teacher-oa-logs-card_type {
+      margin: 0;
+      padding: 0;
+      height: 45px;
+      display: flex;
+      justify-content: space-around;
+      list-style: none;
+      border-bottom: 1px solid #eaedf2;
+      li {
+        font-size: 16px;
+        font-family: MicrosoftYaHei;
+        color: rgba(66, 75, 91, 1);
+        line-height: 45px;
+        transition: all 0.5s;
+        cursor: pointer;
+      }
+      .bgred {
+        border-bottom: 1px solid #4ea5fe;
+        color: #4ea5fe;
+      }
+    }
+    .teacher-oa-logs-card_search {
+      margin-top: 35px;
+      margin-bottom: 30px;
+    }
+    .teacher-oa-logs-card-list {
+      display: flex;
+      align-items: center;
+      padding: 15px 30px;
+      border-bottom: 1px solid #eaedf2;
+      .el-checkbox {
+        margin-right: 30px;
+      }
+      .teacher-oa-logs-card-list-top {
+        display: flex;
+        margin-top: 15px;
+        img {
+          width: 50px;
+          height: 50px;
+          border-radius: 50%;
+        }
+        .teacher-oa-logs-card-list-top-right {
+          margin-left: 15px;
+          p:first-child {
+            font-size: 16px;
+            font-family: MicrosoftYaHei;
+            color: rgba(49, 59, 76, 1);
+          }
+          p:last-child {
+            font-size: 12px;
+            font-family: MicrosoftYaHei;
+            color: rgba(210, 213, 222, 1);
+          }
+        }
+      }
+      .teacher-oa-logs-card-list-bottom {
+        font-size: 16px;
+        font-family: MicrosoftYaHei;
+        color: #9199a6;
+      }
+    }
+    .teacher-oa-logs-card-button {
+      padding: 32px 0;
+      display: flex;
+      justify-content: center;
+      .el-button {
+        width: 140px;
+        height: 35px;
+      }
+      .el-button:first-child {
+        margin-right: 135px;
+      }
+    }
+  }
+}
