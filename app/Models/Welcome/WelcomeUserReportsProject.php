@@ -9,21 +9,19 @@ namespace App\Models\Welcome;
 
 use Illuminate\Database\Eloquent\Model;
 
-class WelcomeUserReport extends Model
+class WelcomeUserReportsProject extends Model
 {
-    protected $table = 'welcome_user_reports';
+    protected $table = 'welcome_user_reports_projects';
     protected $fillable = [
-        'configid',
+        'projectid',
         'uuid',
+        'typeid',
         'user_id',
-        'flow_id',
         'school_id',
         'campus_id',
-        'steps_1_str',
-        'steps_1_date',
-        'steps_2_str',
-        'steps_2_date',
-        'complete_date',
+        'project_title',
+        'project_desc',
+        'project_desc',
         'status',
         'created_at',
         'updated_at',
