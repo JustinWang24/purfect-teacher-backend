@@ -206,7 +206,8 @@ class LectureDao
         $map = ['course_id'=>$courseId, 'grade_id'=>$gradeId,
             'teacher_id'=>$teacherId, 'type'=>$type];
         $result = LectureMaterial::where($map);
-        if(!is_null($result)) {
+        if(!is_null($keyword)) {
+
             $result = $result->where('description', 'like', '%'.$keyword.'%');
         }
         return $result->get();

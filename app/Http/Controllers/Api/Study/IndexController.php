@@ -20,6 +20,7 @@ use App\Dao\Courses\Lectures\LectureDao;
 use App\Http\Requests\MyStandardRequest;
 use App\Dao\AttendanceSchedules\AttendancesDao;
 use App\Dao\AttendanceSchedules\AttendancesDetailsDao;
+use Illuminate\Support\Facades\DB;
 
 class IndexController extends Controller
 {
@@ -137,6 +138,7 @@ class IndexController extends Controller
             return JsonBuilder::Error('缺少参数');
         }
         $keyword = $request->get('keyword');
+        DB::connection()->enableQueryLog();  // 开启查询日志
         $user = $request->user();
         $schoolId = $user->getSchoolId();
         $schoolDao = new SchoolDao();
@@ -159,7 +161,10 @@ class IndexController extends Controller
         if(!is_null($keyword)) {
             // 根据资料名称搜索
             $material = $this->getMaterial($courseIds,$keyword, $gradeId, $year, $term, $type);
+            $courseMajorDao = new CourseMajorDao();
+            $courseMajors = $courseMajorDao->getCourseMajorByCourseIdsAndCourseName($courseIds, $keyword);
             $courseIds = $courseMajors->pluck('course_id')->toArray();
+
         }
 
         $itemDao = new TimetableItemDao();
@@ -217,7 +222,6 @@ class IndexController extends Controller
         foreach ($timetable as $key => $item) {
             $list[] = $dao->getMaterialsByType($item->course_id,$gradeId,$item->teacher_id,$type, $keyword);
         }
-
         return $list;
     }
 
