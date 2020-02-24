@@ -313,4 +313,18 @@ class TaskDao
             'my_create'=>$myCreate?true:false,
         ];
     }
+
+
+    /**
+     * 获取讨论
+     * @param $taskId
+     * @param $replyUserId
+     * @return mixed
+     */
+    public function getDiscussionByTaskIdAndReplyUserId($taskId, $replyUserId) {
+
+        return ProjectTaskDiscussion::where('project_task_id', $taskId)
+            ->whereIn('reply_user_id', [0, $replyUserId])
+            ->get();
+    }
 }
