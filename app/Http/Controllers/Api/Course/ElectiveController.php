@@ -102,7 +102,8 @@ class ElectiveController extends Controller
             $course = $enroll->course;
             $elective     = $course->courseElective()->first();
             $arrangements = $course->courseArrangements;
-
+            $electiveDao = new TeacherApplyElectiveCourseDao();
+            $studentCount = $electiveDao->getEnrolledTotalForCourses($course->id); // 学生报名数量
             $schedules = [];
             foreach ($arrangements as $arrangement) {
                 $s = ['week' => $arrangement->week, 'day_index' => $arrangement->day_index, 'time' => $arrangement->timeslot->name];
@@ -113,6 +114,8 @@ class ElectiveController extends Controller
                 'course_name'  => $course->name,
                 'course_time'  => $schedules,
                 'scores'        => $course->scores,
+                'seats'        => $elective->max_num == 0 ? $elective->open_num : $elective->max_num,
+                'applied'      => $studentCount,
                 'expired_at'   => $elective->expired_at,
                 'status'       => $elective->status == CourseElective::STATUS_CANCEL ? CourseElective::STATUS_CANCEL : $enroll->status
             ];
