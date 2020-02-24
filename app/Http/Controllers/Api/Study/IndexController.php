@@ -245,4 +245,55 @@ class IndexController extends Controller
         return $arr;
     }
 
+
+    /**
+     * 学习资料课程列表
+     * @param MyStandardRequest $request
+     * @return string
+     */
+    public function courseList(MyStandardRequest $request) {
+        $userId = $request->user()->id;
+        $dao = new LectureDao();
+        $lectures = $dao->getMaterialByTeacherId($userId);
+        $courses = [];
+        foreach ($lectures as $key => $item) {
+            $courses[$key] = [
+                'course_id' => $item->course_id,
+                'course_name' => $item->course->name,
+            ];
+        }
+
+        return JsonBuilder::Success($courses);
+    }
+
+
+    /**
+     * 课程资料列表
+     * @param MyStandardRequest $request
+     * @return string
+     */
+    public function courseMaterialList(MyStandardRequest $request) {
+        $userId = $request->user()->id;
+        $courseId = $request->getCourseId();
+        $type = $request->get('type_id');
+        if(empty($courseId) || empty($type)) {
+            return JsonBuilder::Error('缺少参数');
+        }
+
+        $dao = new LectureDao();
+        $return = $dao->getMaterialByCourseId($courseId, $type, $userId);
+        $result = pageReturn($return);
+
+        foreach ($result['list'] as $key => $item) {
+            $result['list'][$key] = [
+                'id' => $item->id,
+                'type' => $item->media->getTypeText(),
+                'file_name' => $item->media->file_name,
+                'url' => $item->url,
+            ];
+        }
+
+        return JsonBuilder::Success($result);
+    }
+
 }
