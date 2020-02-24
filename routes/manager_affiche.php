@@ -2,6 +2,16 @@
 
 Route::prefix('manager_affiche')->group(function ()
 {
+    // 置顶推荐
+    Route::any('/affiche/top-affiche-list','Affiche\AfficheController@top_affiche_list')
+        ->name('manager_affiche.affiche.top_affiche_list'); // 置顶列表
+    Route::any('/affiche/top-affiche-add','Affiche\AfficheController@top_affiche_add')
+        ->name('manager_affiche.affiche.top_affiche_add'); // 添加置顶
+    Route::any('/affiche/top-affiche-delete','Affiche\AfficheController@top_affiche_delete')
+        ->name('manager_affiche.affiche.top_affiche_delete'); // 置顶删除
+    Route::any('/affiche/top-affiche-sort','Affiche\AfficheController@top_affiche_sort')
+        ->name('manager_affiche.affiche.top_affiche_sort'); // 置顶排序
+
     // 社区
     Route::any('/affiche/affiche-pending-list','Affiche\AfficheController@affiche_pending_list')
         ->name('manager_affiche.affiche.affiche_pending_list'); // 待审核列表

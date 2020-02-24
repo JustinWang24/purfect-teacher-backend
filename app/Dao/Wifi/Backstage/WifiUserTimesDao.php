@@ -11,7 +11,7 @@ use App\Models\Wifi\Backstage\WifiUserTimes;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Collection;
 
-class WifiUserTimesDao extends \App\Dao\Wifi\CommonDao
+class WifiUserTimesDao extends CommonDao
 {
    /**
     * Func:  添加或更新数据

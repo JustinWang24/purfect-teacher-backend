@@ -1,3 +1,7 @@
+<?php
+use App\Utils\UI\Anchor;
+use App\Utils\UI\Button;
+?>
 @extends('layouts.app')
 @section('content')
     <div class="row" id="school-welcome-list-app">
@@ -164,29 +168,48 @@
                             </el-row>
                         </el-form>
                     </div>
+
                     <div class="ln-title"><span>照片信息</span></div>
-                    <div>
-                        <el-form label-width="100px">
-                            <div class="image">
-                                @foreach($dataOne['info2'] as $key=>$val)
-                                    <div class="pics-block">
-                                        <a href="{{ $val }}" target="_blank"><img src="{{ $val }}"></a>
-                                        <span class="title">{{ $reportPicsArr[$key] }}</span>
-                                    </div>
-                                @endforeach
+                    <div class="pics">
+                        @foreach($dataOne['info2'] as $key=>$val)
+                            <div class="pics-1">
+                                <a href="{{ $val }}" target="_blank"><img src="{{ $val }}"></a>
+                                <span class="title">{{ $reportPicsArr[$key] }}</span>
                             </div>
-                        </el-form>
+                        @endforeach
                     </div>
 
-                    <div class="card-head" style="margin-top: 10px;">
-                        <header class="full-width">
-                            <span>照片信息</span>
-                        </header>
-                    </div>
+                    <!--待报到  状态(0:关闭，2:app个人资料完善中，1:报到中(未交费)，3:已报到(已缴费))-->
+                    @if($dataOne['status'] == 2 )
+                    <form action="{{ route('welcome_manager.welcomeReport.wait_update') }}" method="post"  id="add-building-form">
+                        @csrf
+                        <div class="ln-title"><span>提交的资料</span></div>
+                        <div>
+                            <div class="checkbox-1">
+                                @foreach($reportProjectArr as $key=>$val)
+                                    <p>
+                                    <input name="typeid[]" type="checkbox" value="{{ $key }}" id="checkbox_{{ $key }}"/>
+                                    <label for="checkbox_{{ $key }}">{{ $val }}</label>
+                                    </p>
+                                @endforeach
+                            </div>
+                            <p class="notice-1">温馨提示：确认报到后，将不能更改，请谨慎操作！</p>
+                        </div>
+                        <input type="hidden" name="uuid" value="{{ $dataOne['uuid']  }}">
+                        <div class="but-foter">
+                        <?php
+                        Button::Print(['id'=>'btn-create-building','text'=>trans('general.submit')], Button::TYPE_PRIMARY);
+                        ?>
+                        <?php
+                        Anchor::Print(['text'=>trans('general.return'),'href'=>url()->previous(),'class'=>'pull-right link-return'], Button::TYPE_SUCCESS,'arrow-circle-o-right')
+                        ?>
+                        </div>
+                    </form>
+                    @endif
+
                 </div>
             </div>
         </div>
-    </div>
 @endsection
 <style>
     *{
@@ -208,16 +231,33 @@
         font-size: 18px;
         font-weight: bold;
     }
-    .pics-block{
+    .pics{
+        height: 120px;
+        margin-bottom: 30px;
+    }
+    .pics-1{
         float: left;
         width: 170px;
         height: 110px;
         margin: 10px;
         text-align: center;
     }
-    .pics-block img{
+    .pics-1 img{
         width: 100%;
         height: 100%;
     }
-    .
+    .checkbox-1 p{
+        width: 150px;
+        height: 35px;
+        float: left;
+        font-size: 20px;
+    }
+    .notice-1 {
+        clear: both;
+        color: red;
+        font-size: 20px;
+    }
+    .but-foter{
+        margin-top: 88px;
+    }
 </style>

@@ -3,6 +3,7 @@
 namespace App\Models\ElectiveCourses;
 
 use App\Models\Course;
+use App\Models\Schools\Campus;
 use App\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
@@ -22,7 +23,7 @@ class TeacherApplyElectiveCourse extends Model
     protected $fillable = [
         'school_id', 'teacher_id', 'teacher_name', 'major_id',
         'code', 'name', 'scores', 'year', 'term', 'desc', 'open_num','max_num',
-        'status', 'reply_content', 'start_year', 'apply_content', 'course_id'
+        'status', 'reply_content', 'start_year', 'apply_content', 'course_id','campus_id'
     ];
 
     /**
@@ -31,6 +32,10 @@ class TeacherApplyElectiveCourse extends Model
      */
     public function teacher(){
         return $this->belongsTo(User::class, 'teacher_id');
+    }
+
+    public function campuse() {
+        return $this->belongsTo(Campus::class, 'campus_id');
     }
 
     /**
@@ -46,7 +51,9 @@ class TeacherApplyElectiveCourse extends Model
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
     public function arrangements(){
-        return $this->hasMany(ApplyCourseArrangement::class,'apply_id');
+        return $this->hasMany(ApplyCourseArrangement::class,'apply_id')
+            ->orderBy('week', 'asc')
+            ->orderBy('day_index','asc');
     }
 
     public function TimeSlot(){

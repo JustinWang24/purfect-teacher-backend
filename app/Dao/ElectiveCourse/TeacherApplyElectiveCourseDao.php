@@ -168,6 +168,39 @@ class TeacherApplyElectiveCourseDao
         return $tmp;
     }
 
+    public function getApplication2ByTeacherById($applyid) {
+        $item = TeacherApplyElectiveCourse::where('id', '=', $applyid)->first();
+        $tmp = [
+            'applyid' => $item->id,
+            'name' => $item->name,
+            'teacher_name' => $item->teacher_name,
+            'scores' => 0,
+            'max_num' => $item->max_num > 0 ? $item->max_num : $item->open_num,
+            'desc' => $item->desc,
+            'apply_content' => $item->apply_content,
+            'reply_content' => $item->reply_content,
+            'created_at' => $item->created_at->toDateTimeString(),//?为什么自动转换会变成年-月-日
+            'elective_status' => 0,
+            'elective_enrol_start_at' => '',
+            'elective_expired_at' => '',
+            'status' => $item->status == TeacherApplyElectiveCourse::STATUS_WAITING_FOR_VERIFIED ? 8 : 9,
+        ];
+        foreach ($item->arrangements as $arrangement) {
+            $tmp['arrangement'][] = [
+                'week' => $arrangement->week,
+                'week_day' => '',
+                'day_index' => $arrangement->day_index,
+                'time' => $arrangement->timeslot->name,
+                'building' => $arrangement->building_name,
+                'classroom' => $arrangement->classroom_name,
+            ];
+        }
+        $tmp['min_day'] = '';
+        $tmp['max_day'] = '';
+        $tmp['user_list'] = [];
+        return $tmp;
+    }
+
     /**
      * 根据教师获取分页
      * @param $teacherId
@@ -254,6 +287,43 @@ class TeacherApplyElectiveCourseDao
             $i++;
         }
         return $return;
+    }
+
+    /**
+     * 根据教师获取分页-未通过审核时 无course数据
+     * @param $teacherId
+     * @param $schoolId
+     * @return array
+     */
+    public function getApplications2ByTeacher($teacherId, $schoolId){
+        $list = TeacherApplyElectiveCourse::where('teacher_id', '=', $teacherId)
+            ->whereIn('status', [TeacherApplyElectiveCourse::STATUS_WAITING_FOR_VERIFIED, TeacherApplyElectiveCourse::STATUS_WAITING_FOR_REJECTED])
+            ->orderBy('id','desc')
+            ->paginate(ConfigurationTool::DEFAULT_PAGE_SIZE);
+        $retList = [];
+        foreach ($list as $item) {
+            $tmp = [
+                'applyid' => $item->id,
+                'name' => $item->name,
+                'created_at' => $item->created_at->toDateTimeString(),//?为什么自动转换会变成年-月-日
+                'elective_status' => 0,
+                'elective_enrol_start_at' => '',
+                'elective_expired_at' => '',
+                'min_day' => '',
+                'max_day' => '',
+                'status' => $item->status == TeacherApplyElectiveCourse::STATUS_WAITING_FOR_VERIFIED ? 8 : 9,
+            ];
+            foreach ($item->arrangements as $arrangement) {
+                $tmp['arrangement'][] = [
+                    'week' => $arrangement->week,
+                    'week_day' => '',
+                    'day_index' => $arrangement->day_index,
+                    'time' => ''
+                ];
+            }
+            $retList[] = $tmp;
+        }
+        return $retList;
     }
 
     /**
@@ -780,7 +850,7 @@ class TeacherApplyElectiveCourseDao
           PRIMARY KEY (`id`),
           KEY `idx_course_id` (`course_id`),
           KEY `idx_school_id` (`school_id`),
-          KEY `idx_user_id` (`user_id`),
+          KEY `idx_user_id` (`user_id`)
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
         ';
         if ( ! Schema::hasTable($tableName)) {

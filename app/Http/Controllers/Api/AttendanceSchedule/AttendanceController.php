@@ -251,9 +251,8 @@ class AttendanceController extends Controller
     public function studentSweepQrCode(MyStandardRequest $request)
     {
         $code = json_decode($request->get('code'), true);
-
         $user = $request->user();
-
+        
         $timetableItemDao = new TimetableItemDao;
         $item = $timetableItemDao->getCurrentItemByUser($user);
         if (empty($item)) {

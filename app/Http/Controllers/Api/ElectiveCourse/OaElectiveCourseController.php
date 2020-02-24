@@ -32,11 +32,18 @@ class OaElectiveCourseController extends Controller
         $majorDao = new MajorDao($user);
         $majors = $majorDao->getMajorsBySchool($schoolId);
         $schoolDao = new SchoolDao();
-        $weeks = $schoolDao->getSchoolById($schoolId)->configuration->study_weeks_per_term;
-
+        $school = $schoolDao->getSchoolById($schoolId);
+        $weeks = $school->configuration->study_weeks_per_term;
+        $campuses = [];
+        foreach ($school->campuses as $item) {
+            $campuses[] = [
+                'id' => $item->id,
+                'name' => $item->name
+            ];
+        }
         $timeSlotDao = new TimeSlotDao();
         $times = $timeSlotDao->getAllStudyTimeSlots($schoolId, true);
-        return JsonBuilder::Success(['majors' => $majors, 'weeks' => $weeks, 'times' => $times]);
+        return JsonBuilder::Success(['majors' => $majors, 'weeks' => $weeks, 'times' => $times, 'campuses' => $campuses]);
     }
 
     /**
@@ -80,12 +87,30 @@ class OaElectiveCourseController extends Controller
         return JsonBuilder::Success($result);
     }
 
+    public function applylists(OaElectiveCourseRequest $request)
+    {
+        $user = $request->user();
+        $schoolId = $user->getSchoolId();
+        $dao = new TeacherApplyElectiveCourseDao();
+        $result = $dao->getApplications2ByTeacher($user->id, $schoolId);
+        return JsonBuilder::Success($result);
+    }
+
     public function info(OaElectiveCourseRequest $request)
     {
         $user = $request->user();
         $schoolId = $user->getSchoolId();
         $applyDao = new TeacherApplyElectiveCourseDao();
         $app  = $applyDao->getApplicationByTeacherById($request->getInputApplyid(), $schoolId);
+        return $app ?
+            JsonBuilder::Success($app)
+            : JsonBuilder::Error();
+    }
+
+    public function applyinfo(OaElectiveCourseRequest $request)
+    {
+        $applyDao = new TeacherApplyElectiveCourseDao();
+        $app  = $applyDao->getApplication2ByTeacherById($request->getInputApplyid());
         return $app ?
             JsonBuilder::Success($app)
             : JsonBuilder::Error();

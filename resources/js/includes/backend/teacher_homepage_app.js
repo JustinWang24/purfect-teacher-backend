@@ -19,8 +19,13 @@ if (document.getElementById('teacher-homepage-app')) {
                 flowsWaitingForMe: [],
                 bannerList: [], // 获取首页banner
                 newsList: [], // 获取首页校园新闻
-                schoolalleventsList: [], // 获取首页校园安排
-                attendanceList: [] // 获取首页值周内容
+                schooleventsList: [], // 获取首页校园安排
+                schoolalleventsList: [], // 获取首页历史安排
+                attendanceList: [], // 获取首页值周内容
+                dataLength: 0,
+                num: 4,
+                loading: false,
+                drawer: false // 全部历史安排
             }
         },
         created() {
@@ -55,7 +60,7 @@ if (document.getElementById('teacher-homepage-app')) {
                     { page: 1 }
                 ).then(res => {
                     if (Util.isAjaxResOk(res)) {
-                        this.newsList = res.data.data.list.slice(0, 5)
+                        this.newsList = res.data.data.list;
                     }
                 })
             },
@@ -65,7 +70,7 @@ if (document.getElementById('teacher-homepage-app')) {
                     '/api/school/calendar'
                 ).then(res => {
                     if (Util.isAjaxResOk(res)) {
-                        console.log(res)
+                        // console.log(res)
                         // this.schoolalleventsList = res.data.data.events.slice(0,5)
                     }
                 })
@@ -76,20 +81,41 @@ if (document.getElementById('teacher-homepage-app')) {
                     '/api/school/all-events'
                 ).then(res => {
                     if (Util.isAjaxResOk(res)) {
-                        this.schoolalleventsList = res.data.data.events.slice(0, 6)
+                        this.schooleventsList = res.data.data.events.slice(0, 6)
+                        this.schoolalleventsList = res.data.data.events
                     }
                 })
+            },
+            // 全部历史安排关不按钮
+            handleClose(done) {
+                done()
             },
             // 获取首页值周内容
-            getAttendanceList() {
+            getAttendanceList(page = 1) {
+                // alert(page)
                 axios.post(
-                    '/api/attendance/list'
+                    '/api/attendance/list',
+                    { page: page }
                 ).then(res => {
                     if (Util.isAjaxResOk(res)) {
-                        this.attendanceList = res.data.data.data.slice(0, 4)
+                        console.log(res.data.data.data)
+                        // this.attendanceList2 = res.data.data.data.slice(0, 4)
+                        this.attendanceList = res.data.data.data;
+                        // this.dataLength = res.data.data.data.length;
+                        // alert(this.dataLength)/
                     }
                 })
             },
+            // load() {
+            //     alert("222");
+            //     this.loading = true
+            //     // setTimeout(() => {
+            //     this.num += 2;
+            //     this.loading = false
+            //     //   }, 2000)
+
+            //     // this.getAttendanceList(1);
+            // },
             startFlow: function (flowId) {
                 const url = this.url.flowOpen + '?flow=' + flowId + '&uuid=' + this.userUuid;
                 window.open(url, '_blank');
@@ -116,6 +142,14 @@ if (document.getElementById('teacher-homepage-app')) {
             reloadThisPage: function () {
                 Util.reloadCurrentPage(this);
             }
-        }
+        },
+        //     computed: {
+        //         attendanceList2() {
+        //             return this.attendanceList.slice(0, this.num)
+        //         },
+        //         noMore() {
+        //             return this.num >= this.dataLength;
+        //         },
+        //     },
     });
 }
