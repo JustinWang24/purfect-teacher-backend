@@ -12,6 +12,7 @@ use App\Dao\Pipeline\HandlerDao;
 use App\Dao\Pipeline\NodeDao;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Pipeline\FlowRequest;
+use App\Models\Pipeline\Flow\Flow;
 use App\Models\Pipeline\Flow\NodeAttachment;
 use App\Utils\JsonBuilder;
 
@@ -27,6 +28,34 @@ class FlowsController extends Controller
         $this->dataForView['groupedFlows'] = $dao->getGroupedFlows($request->session()->get('school.id'));
         $this->dataForView['lastNewFlow'] = $request->getLastNewFlow(); // 上次可能刚创建了新流程
         return view('school_manager.pipeline.flow.manager', $this->dataForView);
+    }
+
+    /**
+     * 加载某个位置的全部流程
+     * @param FlowRequest $request
+     * @return string
+     */
+    public function load_flows(FlowRequest $request){
+        $schoolId = $request->session()->get('school.id');
+        $position = $request->getPosition();
+        $dao = new FlowDao();
+        $list = $dao->getGroupedFlows($schoolId,array_keys(Flow::getTypesByPosition($position)));
+        return JsonBuilder::Success($list);
+    }
+
+    /**
+     * 加载某个流程的所有步骤
+     * @param FlowRequest $request
+     * @return string
+     */
+    public function load_nodes(FlowRequest $request){
+        $dao = new FlowDao();
+        $flow = $dao->getById($request->get('flow_id'));
+        if($flow){
+            $nodes = $flow->getSimpleLinkedNodes();
+            return JsonBuilder::Success(['flow'=>$flow,'nodes'=>$nodes]);
+        }
+        return JsonBuilder::Error();
     }
 
     /**
@@ -100,20 +129,7 @@ class FlowsController extends Controller
         }
     }
 
-    /**
-     * 加载某个流程的所有步骤
-     * @param FlowRequest $request
-     * @return string
-     */
-    public function load_nodes(FlowRequest $request){
-        $dao = new FlowDao();
-        $flow = $dao->getById($request->get('flow_id'));
-        if($flow){
-            $nodes = $flow->getSimpleLinkedNodes();
-            return JsonBuilder::Success(['flow'=>$flow,'nodes'=>$nodes]);
-        }
-        return JsonBuilder::Error();
-    }
+
 
     /**
      * 删除流程中的节点
