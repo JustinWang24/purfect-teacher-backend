@@ -20,7 +20,6 @@ use App\Dao\Courses\Lectures\LectureDao;
 use App\Http\Requests\MyStandardRequest;
 use App\Dao\AttendanceSchedules\AttendancesDao;
 use App\Dao\AttendanceSchedules\AttendancesDetailsDao;
-use Illuminate\Support\Facades\DB;
 
 class IndexController extends Controller
 {
@@ -138,7 +137,6 @@ class IndexController extends Controller
             return JsonBuilder::Error('缺少参数');
         }
         $keyword = $request->get('keyword');
-        DB::connection()->enableQueryLog();  // 开启查询日志
         $user = $request->user();
         $schoolId = $user->getSchoolId();
         $schoolDao = new SchoolDao();
