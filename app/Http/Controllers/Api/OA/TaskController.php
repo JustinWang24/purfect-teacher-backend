@@ -162,6 +162,7 @@ class TaskController extends Controller
      */
     public function taskInfo(ProjectRequest $request)
     {
+        $userId = $request->user()->id;
         $taskId = $request->getTaskId();
         $dao = new TaskDao();
         $task = $dao->getProjectTaskById($taskId);
@@ -196,8 +197,10 @@ class TaskController extends Controller
             $logs[$key]['create_time'] = $item->created_at->format('Y-m-d H:i');
         }
         $output['log_list'] = $logs;
+
         $forum = [];
-        foreach ($task->discussions as $key => $val) {
+        $discussions = $task->discussions->whereIn('reply_user_id', [0,$userId]);
+        foreach ($discussions as $key => $val) {
             $forum[$key]['forumid']=$val->id;
             $forum[$key]['userid']=$val->user_id;
             $forum[$key]['username']=$val->user->name;
