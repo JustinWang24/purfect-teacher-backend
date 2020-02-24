@@ -982,14 +982,21 @@ Route::prefix('organizations')->middleware('auth:api')->group(function(){
 
 // 学习
 Route::prefix('study')->middleware('auth:api')->group(function(){
+    // 学习首页
     Route::any('/home-page', 'Api\Study\IndexController@index')
         ->name('api.study.home-page');
+    // 学习类型列表
     Route::any('/type-list', 'Api\Study\IndexController@materialType')
         ->name('api.study.type-list');
+    // 学生端资料列表
     Route::any('/material-list', 'Api\Study\IndexController@materialList')
         ->name('api.study.material-list');
+    // 教师端课程列表
     Route::any('/course-list', 'Api\Study\IndexController@courseList')
         ->name('api.study.course-list');
+    // 教师端资料列表
+    Route::any('/course-material-list', 'Api\Study\IndexController@courseMaterialList')
+        ->name('api.study.course-material-list');
 });
 
 

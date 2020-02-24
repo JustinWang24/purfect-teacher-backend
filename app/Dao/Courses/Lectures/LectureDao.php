@@ -7,6 +7,7 @@
 namespace App\Dao\Courses\Lectures;
 
 
+use App\Utils\Misc\ConfigurationTool;
 use Carbon\Carbon;
 use App\Utils\JsonBuilder;
 use App\Dao\Users\GradeUserDao;
@@ -248,6 +249,20 @@ class LectureDao
             ->orderBy('course_id')
             ->select('course_id')
             ->get();
+    }
+
+
+    /**
+     * 根据课程查询学习资料
+     * @param $courseId
+     * @param $type
+     * @param $teacherId
+     * @return mixed
+     */
+    public function getMaterialByCourseId($courseId, $type, $teacherId) {
+        $map = ['course_id'=>$courseId, 'type'=>$type, 'teacher_id'=>$teacherId];
+        return LectureMaterial::where($map)
+            ->paginate(ConfigurationTool::DEFAULT_PAGE_SIZE);
     }
 
 
