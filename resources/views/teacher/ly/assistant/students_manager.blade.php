@@ -13,10 +13,11 @@
                 </div>
                 <div class="card-body">
                     <el-table
+                            v-show="classData.length > 0"
                             :show-header="false"
                             :data="classData">
                         <el-table-column
-                                prop="class"
+                                prop="name"
                                 label="班级">
                         </el-table-column>
                         <el-table-column
@@ -29,6 +30,10 @@
                             </template>
                         </el-table-column>
                     </el-table>
+                    <div v-show="classData.length == 0" class="no-data-img">
+                        <img src="{{ asset('assets/img/teacher_blade/no-data.png') }}" alt="">
+                        <p>当前列表暂时没有数据哦~</p>
+                    </div>
                 </div>
             </div>
         </el-col>
@@ -42,6 +47,7 @@
                 </div>
                 <div class="card-body">
                     <el-table
+                            v-show="stuData.length > 0"
                             :show-header="false"
                             :data="stuData">
                         <el-table-column
@@ -58,6 +64,10 @@
                             </template>
                         </el-table-column>
                     </el-table>
+                    <div v-show="stuData.length == 0" class="no-data-img">
+                        <img src="{{ asset('assets/img/teacher_blade/no-data.png') }}" alt="">
+                        <p>当前列表暂时没有数据哦~</p>
+                    </div>
                 </div>
             </div>
         </el-col>
@@ -72,7 +82,7 @@
                     <div class="card-body">
                         <el-table
                                 :show-header="false"
-                                :data="detailData">
+                                :data="detailDataList">
                             <el-table-column
                                     prop="label">
                             </el-table-column>
@@ -94,70 +104,74 @@
                custom-class="stu-dialog">
         <el-form ref="form" :model="detailForm" label-width="80px">
             <el-form-item label="姓名" style="border-top: 1px solid #ccc;">
-               张三
+                @{{detailData.name}}
             </el-form-item>
             <el-form-item label="身份证号">
-               xxx
+                @{{detailData.id_number}}
             </el-form-item>
             <el-form-item label="性别">
-               男
+                @{{detailData.gender}}
             </el-form-item>
             <el-form-item label="出生日期">
-               1906
+                @{{detailData.birthday}}
             </el-form-item>
             <el-form-item label="民族">
-               汉族
+                @{{detailData.nation_name}}
             </el-form-item>
             <el-form-item label="政治面貌">
-               党员
+                @{{detailData.political_name}}
             </el-form-item>
             <el-form-item label="生源地">
-               广东
+                @{{detailData.source_place}}
             </el-form-item>
             <el-form-item label="籍贯">
-               广东
+                @{{detailData.country}}
             </el-form-item>
             <el-form-item class="can-edit" label="联系电话(可修改)">
-                <el-input v-model="detailForm.tel"></el-input>
+                <el-input v-model="detailForm.contact_number"></el-input>
             </el-form-item>
             <el-form-item class="can-edit" label="QQ号(可修改)">
                 <el-input v-model="detailForm.qq"></el-input>
             </el-form-item>
             <el-form-item class="can-edit" label="微信号(可修改)" style="border-bottom: 1px solid #ccc;">
-                <el-input v-model="detailForm.vx"></el-input>
+                <el-input v-model="detailForm.wx"></el-input>
             </el-form-item>
             <el-form-item label="家长姓名">
-                老王
+                @{{detailData.parent_name}}
             </el-form-item>
             <el-form-item class="can-edit" label="家长电话(可修改)">
-                <el-input v-model="detailForm.parentTel"></el-input>
+                <el-input v-model="detailForm.parent_mobile"></el-input>
             </el-form-item>
             <el-form-item class="can-edit" label="所在城市(可修改)">
                 <el-input v-model="detailForm.city"></el-input>
             </el-form-item>
             <el-form-item class="can-edit" label="详细地址(可修改)">
-                <el-input v-model="detailForm.address"></el-input>
+                <el-input v-model="detailForm.address_line"></el-input>
             </el-form-item>
             <el-form-item class="can-edit" label="邮箱(可修改)" style="border-bottom: 1px solid #ccc;">
                 <el-input v-model="detailForm.email"></el-input>
             </el-form-item>
             <el-form-item label="学制">
-               4
+                 @{{detailData.school_year}}
             </el-form-item>
             <el-form-item label="学历">
-               本科
+                 @{{detailData.education}}
             </el-form-item>
             <el-form-item label="学院">
-               国际贸易学院
+                 @{{detailData.institute}}
             </el-form-item>
             <el-form-item label="年级">
-               19级
+                 @{{detailData.year}}
             </el-form-item>
             <el-form-item label="专业">
-               国际金融
+                 @{{detailData.major}}
             </el-form-item>
             <el-form-item label="职务">
-               班长
+                <el-radio-group v-model="detailForm.position">
+                      <el-radio label="monitor">班长</el-radio>
+                      <el-radio label="group">团支书</el-radio>
+                      <el-radio label="">无</el-radio>
+                    </el-radio-group>
             </el-form-item>
         </el-form>
         <div class="dialog-footer">

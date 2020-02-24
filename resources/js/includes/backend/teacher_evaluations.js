@@ -1,4 +1,5 @@
 import {Util} from "../../common/utils";
+import {Constants} from "../../common/constants";
 
 if (document.getElementById('teacher-assistant-grades-evaluations-app')) {
     new Vue({
@@ -6,92 +7,76 @@ if (document.getElementById('teacher-assistant-grades-evaluations-app')) {
         data(){
             return {
                 schoolId: null,
-
-                filterOptions: [
-                    {
-                        value: '选项1',
-                        label: '黄金糕'
-                    }, {
-                        value: '选项2',
-                        label: '双皮奶'
-                    }, {
-                        value: '选项3',
-                        label: '蚵仔煎'
-                    }, {
-                        value: '选项4',
-                        label: '龙须面'
-                    }, {
-                        value: '选项5',
-                        label: '北京烤鸭'
-                    }
-                ],
+                date: '',
+                filterOptions: [],
                 filterValue: '',
-                data: [
-                    {
-                        class: '计算机一班',
-                        subject: 1,
-                        evaluation: 1
-                    }, {
-                        class: '计算机一班',
-                        subject: 1,
-                        evaluation: 0
-                    }, {
-                        class: '计算机一班',
-                        subject: 1,
-                        evaluation: 0
-                    }, {
-                        class: '计算机一班',
-                        subject: 1,
-                        evaluation: 1
-                    }
-                ],
+                data: [],
                 defaultProps: {
                     children: 'children',
                     label: 'label'
                 },
-                tableData: [
-                    {
-                        stuName: '王小虎',
-                        stuMark: '8',
-                        showNode: true
-                    }, {
-                        stuName: '张小虎',
-                        stuMark: '9',
-                        showNode: false
-                    }, {
-                        stuName: '李小虎',
-                        stuMark: '18',
-                        showNode: true
-                    }, {
-                        stuName: '赵小虎',
-                        stuMark: '28',
-                        showNode: false
-                    }, {
-                        stuName: '朱小虎',
-                        stuMark: '38',
-                        showNode: true
-                    }
-                ],
+                tableData: [],
                 ifShow: false,
-                ifShowNote: false,
-                teacherName: '评分教师:'
+                teacherName: ''
             }
         },
         created(){
             const dom = document.getElementById('app-init-data-holder');
             this.schoolId = dom.dataset.school;
+            this.getGradeList();
             console.log('班级评分');
         },
         methods: {
-            showDetail: function (data) {
-                this.ifShow = true;
-                this.ifShowNote = false;
-                console.log(data)
+            searchList: function () {
+                let params = this.filterValue ? JSON.parse(this.filterValue) : {};
+                params.date = this.date;
+                this.getGradeTable(params);
             },
-            showNote: function (stuData) {
-                this.ifShowNote = true;
-                console.log(stuData)
-                // this.stuName = stuData.stuName;
+            showDetail: function (data) {
+                console.log(data)
+                this.ifShow = true;
+                this.getGradeDetail(data)
+            },
+            getGradeList: function () {
+                const url = Util.buildUrl(Constants.API.TEACHER_WEB.GRADE_LIST);
+                axios.get(url).then((res) => {
+                    if (Util.isAjaxResOk(res)) {
+                        let data = res.data.data;
+                        this.filterOptions = [];
+                        data.forEach((item, index) => {
+                            let options = {};
+                            options.value = JSON.stringify(item);
+                            options.label = item.grade_name;
+                            this.filterOptions.push(options)
+                        });
+                    }
+                }).catch((err) => {
+
+                });
+            },
+            getGradeTable: function (params) {
+                const url = Util.buildUrl(Constants.API.TEACHER_WEB.GRADE_TODAY_GRADE);
+                axios.post(url, params).then((res) => {
+                    if (Util.isAjaxResOk(res)) {
+                        let data = res.data.data;
+                        this.data = data.list;
+                    }
+                }).catch((err) => {
+
+                });
+            },
+            getGradeDetail: function (params) {
+                const url = Util.buildUrl(Constants.API.TEACHER_WEB.GRADE_DETAIL);
+                axios.post(url, params).then((res) => {
+                    if (Util.isAjaxResOk(res)) {
+                        let data = res.data.data;
+                        this.tableData = data.data;
+                        console.log(this.tableData)
+                        this.teacherName = '评分教师:' + data.teacher;
+                    }
+                }).catch((err) => {
+
+                });
             }
         }
     });

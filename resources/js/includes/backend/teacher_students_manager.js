@@ -1,4 +1,7 @@
+
 import {Util} from "../../common/utils";
+import {Constants} from "../../common/constants";
+import qs from 'qs'
 
 if (document.getElementById('teacher-assistant-students-manager-app')) {
     new Vue({
@@ -6,180 +9,236 @@ if (document.getElementById('teacher-assistant-students-manager-app')) {
         data(){
             return {
                 schoolId: null,
-
-                filterOptions: [
-                    {
-                        value: '选项1',
-                        label: '黄金糕'
-                    }, {
-                        value: '选项2',
-                        label: '双皮奶'
-                    }, {
-                        value: '选项3',
-                        label: '蚵仔煎'
-                    }, {
-                        value: '选项4',
-                        label: '龙须面'
-                    }, {
-                        value: '选项5',
-                        label: '北京烤鸭'
-                    }
-                ],
-                filterValue: '',
-                classData: [
-                    {
-                        class: '计算机一班',
-                    }, {
-                        class: '计算机一班',
-                    }, {
-                        class: '计算机一班',
-                    }, {
-                        class: '计算机一班',
-                    }
-                ],
-                stuData: [
-                    {
-                        name: '王小虎',
-                    }, {
-                        name: '王小虎',
-                    }, {
-                        name: '王小虎',
-                    }, {
-                        name: '王小虎',
-                    }
-                ],
+                classData: [],
+                stuData: [],
+                stuDetail: {},
                 defaultProps: {
                     children: 'children',
                     label: 'label'
                 },
-                detailData: [
+                detailData: {},
+                detailDataList: [
                     {
                         label: '姓名',
-                        detail: '张三',
+                        detail: '',
                         key: 'name'
                     }, {
                         label: '身份证号',
-                        detail: 'xxx',
-                        key: 'IDNum'
+                        detail: '',
+                        key: 'id_number'
                     }, {
                         label: '性别',
                         detail: '男',
-                        key: 'sex'
+                        key: 'gender'
                     }, {
                         label: '出生日期',
-                        detail: '1906',
-                        key: 'barth'
+                        detail: '',
+                        key: 'birthday'
                     }, {
                         label: '民族',
-                        detail: '汉族',
-                        key: 'name'
+                        detail: '',
+                        key: 'nation_name'
                     }, {
                         label: '政治面貌',
-                        detail: '党员',
-                        key: 'name'
+                        detail: '',
+                        key: 'political_name'
                     }, {
                         label: '生源地',
-                        detail: '广东',
-                        key: 'name'
+                        detail: '',
+                        key: 'source_place'
                     }, {
                         label: '籍贯',
-                        detail: '广东',
-                        key: 'name'
+                        detail: '',
+                        key: 'country'
                     }, {
                         label: '联系电话',
-                        detail: '123',
-                        key: 'name'
+                        detail: '',
+                        key: 'contact_number'
                     }, {
                         label: 'QQ号',
-                        detail: '33',
-                        key: 'name'
+                        detail: '',
+                        key: 'qq'
                     }, {
                         label: '微信号',
-                        detail: '33',
-                        key: 'name'
+                        detail: '',
+                        key: 'wx'
                     }, {
                         label: '家长姓名',
-                        detail: '老王',
-                        key: 'name'
+                        detail: '',
+                        key: 'parent_name'
                     }, {
                         label: '家长电话',
-                        detail: '123',
-                        key: 'name'
+                        detail: '',
+                        key: 'parent_mobile'
                     }, {
                         label: '所在城市',
-                        detail: '广州',
-                        key: 'name'
+                        detail: '',
+                        key: 'city'
                     }, {
                         label: '详细地址',
-                        detail: '广州 ',
-                        key: 'name'
+                        detail: ' ',
+                        key: 'address_line'
                     }, {
                         label: '邮箱',
-                        detail: 'abc@abc',
-                        key: 'name'
+                        detail: '',
+                        key: 'email'
                     }, {
                         label: '学制',
-                        detail: '4',
-                        key: 'name'
+                        detail: '',
+                        key: 'school_year'
                     }, {
                         label: '学历',
-                        detail: '本科',
-                        key: 'name'
+                        detail: '',
+                        key: 'education'
                     }, {
                         label: '学院',
-                        detail: '国际贸易学院',
-                        key: 'name'
+                        detail: '',
+                        key: 'institute'
                     }, {
                         label: '年级',
-                        detail: '19级',
-                        key: 'name'
+                        detail: '',
+                        key: 'year'
                     }, {
                         label: '专业',
-                        detail: '国际金融',
-                        key: 'name'
+                        detail: '',
+                        key: 'major'
                     }, {
                         label: '职务',
-                        detail: '班长',
-                        key: 'name'
+                        detail: '',
+                        key: 'monitor'
+                    }, {
+                        label: '职务',
+                        detail: '',
+                        key: 'group'
                     }
                 ],
                 detailForm: {
-                    name: '',
-                    tel: '',
+                    contact_number: '',
                     qq: '',
-                    vx: '',
-                    parentTel: '',
+                    wx: '',
+                    parent_mobile: '',
                     city: '',
-                    address: '',
-                    email: ''
+                    address_line: '',
+                    email: '',
+                    position: ''
                 },
                 ifShowStu: false,
                 ifShowDetail: false,
                 dialogVisible: false,
-                teacherName: '评分教师:'
+                student_id: ''
             }
         },
         created(){
             const dom = document.getElementById('app-init-data-holder');
             this.schoolId = dom.dataset.school;
+            this.getClassData();
             console.log('班级评分');
         },
         methods: {
-            showStu: function (stuData) {
+            showStu: function (data) {
                 this.ifShowStu = true;
                 this.ifShowDetail = false;
-                console.log(stuData)
+                let params = {grade_id: data.grade_id};
+                this.getStuData(data);
+                console.log(data)
                 // this.stuName = stuData.stuName;
             },
             showDetail: function (data) {
                 this.ifShowDetail = true;
-                console.log(data)
+                let params = {student_id: data.student_id};
+                this.student_id = data.student_id;
+                this.getStuDetail(params)
             },
             editStu: function () {
 
             },
             onSubmit: function () {
-                console.log('提交')
+                console.log(this.detailForm);
+                console.log('提交');
+                let params = {};
+                params.data = {};
+                params.monitor = {};
+                params.group = {};
+                params.monitor['monitor_name'] = '';
+                params.monitor['monitor_id'] = 0;
+                params.monitor['grade_id'] = this.detailData.grade_id;
+                params.group['group_name'] = '';
+                params.group['group_id'] = 0;
+                params.group['grade_id'] = this.detailData.grade_id;
+                for (let item in this.detailForm) {
+                    if (item != 'position') {
+                        // 循环赋值数组内容
+                        params.data[item] = this.detailForm[item]
+                    } else {
+                        // 班长/团支书/无
+                        let type = this.detailForm[item];
+                        if (type) {
+                            // type为'monitor'或'group' 出现哪个把哪个赋值;
+                            params[type][type + '_id'] = this.detailData.student_id;
+                            params[type][type + '_name'] = this.detailData.name;
+                        }
+                    }
+                }
+                console.log(JSON.stringify(params.monitor))
+                this.updateStudents(params);
+            },
+            getClassData: function () {
+                const url = Util.buildUrl(Constants.API.TEACHER_WEB.STUDENTS_GRADE_LIST);
+                axios.post(url).then((res) => {
+                    if (Util.isAjaxResOk(res)) {
+                        let data = res.data.data;
+                        this.classData = data;
+                    }
+                }).catch((err) => {
+
+                });
+            },
+            getStuData: function (params) {
+                const url = Util.buildUrl(Constants.API.TEACHER_WEB.STUDENTS_LIST);
+                axios.post(url, params).then((res) => {
+                    if (Util.isAjaxResOk(res)) {
+                        this.stuData = res.data.data;
+                    }
+                }).catch((err) => {
+
+                });
+            },
+            getStuDetail: function (params) {
+                const url = Util.buildUrl(Constants.API.TEACHER_WEB.STUDENTS_INFO);
+                axios.post(url, params).then((res) => {
+                    if (Util.isAjaxResOk(res)) {
+                        let data = res.data.data;
+                        this.detailData = data;
+                        this.setStuDetail(data)
+                    }
+                }).catch((err) => {
+
+                });
+            },
+            setStuDetail: function (data) {
+                this.detailDataList.forEach(function (item, index) {
+                    item.detail = data[item.key];
+                })
+            },
+            updateStudents: function (params) {
+                console.log(params)
+                const url = '/api/Oa/update-student-info';
+                console.log(qs.stringify(params))
+                axios.post(url, params).then((res) => {
+                    if (Util.isAjaxResOk(res)) {
+                        this.$message({
+                            message: '保存成功',
+                            type: 'success'
+                        });
+                        let params = {student_id: this.student_id};
+                        this.getStuDetail(params)
+                    }
+                }).catch((err) => {
+                    this.$message({
+                        message: '保存失败',
+                        type: 'success'
+                    });
+                });
             }
         }
     });

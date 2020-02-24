@@ -10,48 +10,54 @@
                     <header class="full-width">
                         班级签到
                         <div class="search_filter">
-                            <el-select size="small" v-model="filterValue" placeholder="请选择">
+                            <el-date-picker
+                              v-model="date"
+                              type="date"
+                              placeholder="选择日期">
+                            </el-date-picker>
+                            <el-select size="small" v-model="gradeValue" placeholder="请选择班级">
                                 <el-option
-                                        v-for="item in filterOptions"
+                                        v-for="item in gradeOptions"
                                         :key="item.value"
                                         :label="item.label"
                                         :value="item.value">
                                 </el-option>
                             </el-select>
-                            <el-button type="primary" size="small">查询</el-button>
+                            <el-button type="primary" size="small" @click="searchList()">查询</el-button>
                         </div>
                     </header>
                 </div>
                 <div class="card-body">
                     <el-table
+                            v-show="tableData.length > 0"
                             :show-header="false"
                             :data="tableData">
                         <el-table-column
-                                prop="class"
+                                prop="slot_name"
                                 label="课程">
                         </el-table-column>
                         <el-table-column
-                                prop="stuOff"
+                                prop="missing_number"
                                 label="旷课">
                             <template slot-scope="scope">
                                 <span>旷课  </span>
-                                <span class="status_red" v-html="scope.row.stuOff"></span>
+                                <span class="status_red" v-html="scope.row.missing_number"></span>
                             </template>
                         </el-table-column>
                         <el-table-column
-                                prop="stuNor"
+                                prop="actual_number"
                                 label="已签到">
                             <template slot-scope="scope">
                                 <span>已签到  </span>
-                                <span class="status_green" v-html="scope.row.stuNor"></span>
+                                <span class="status_green" v-html="scope.row.actual_number"></span>
                             </template>
                         </el-table-column>
                         <el-table-column
-                                prop="stuHoli"
+                                prop="leave_number"
                                 label="请假">
                             <template slot-scope="scope">
                                 <span>请假  </span>
-                                <span class="status_yellow" v-html="scope.row.stuHoli"></span>
+                                <span class="status_yellow" v-html="scope.row.leave_number"></span>
                             </template>
                         </el-table-column>
                         <el-table-column>
@@ -63,6 +69,10 @@
                             </template>
                         </el-table-column>
                     </el-table>
+                     <div v-show="tableData.length == 0" class="no-data-img">
+                         <img src="{{ asset('assets/img/teacher_blade/no-data.png') }}" alt="">
+                         <p>当前列表暂时没有数据哦~</p>
+                     </div>
                 </div>
             </div>
         </el-col>
@@ -76,28 +86,33 @@
                     </div>
                     <div class="card-body">
                         <el-table
+                                v-show="detailData.length > 0"
                                 :show-header="false"
                                 :data="detailData">
                             <el-table-column
-                                    prop="stuName"
+                                    prop="name"
                                     label="姓名">
                             </el-table-column>
                             <el-table-column
-                                    prop="checkin_date"
+                                    prop="created_at"
                                     label="日期">
                             </el-table-column>
                             <el-table-column
-                                    prop="stuStatus"
+                                    prop="mold"
                                     label="旷课">
                                 <template slot-scope="scope">
                                     <span v-bind:class="{
-                                            'status_red': scope.row.stuStatus == 3,
-                                            'status_green': scope.row.stuStatus == 1,
-                                            'status_yellow': scope.row.stuStatus == 2,}"
-                                          v-html="studentsStatus[scope.row.stuStatus]"></span>
+                                            'status_red': scope.row.mold == 3,
+                                            'status_green': scope.row.mold == 1,
+                                            'status_yellow': scope.row.mold == 2,}"
+                                          v-html="studentsStatus[scope.row.mold]"></span>
                                 </template>
                             </el-table-column>
                         </el-table>
+                        <div v-show="detailData.length == 0" class="no-data-img">
+                            <img src="{{ asset('assets/img/teacher_blade/no-data.png') }}" alt="">
+                            <p>当前列表暂时没有数据哦~</p>
+                        </div>
                     </div>
                 </div>
             </div>

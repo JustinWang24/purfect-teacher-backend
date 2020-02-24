@@ -101,4 +101,5 @@ require('./includes/backend/teacher_blade_index'); // 后台,教师助手
 require('./includes/backend/teacher_evaluation'); // 后台,教师评分
 require('./includes/backend/teacher_evaluations'); // 后台,教师班级评分
 require('./includes/backend/teacher_students_manager'); // 后台,教师学生管理
-require('./includes/backend/teacher_grades_check_in'); // 后台,教师学生管理
+require('./includes/backend/teacher_grades_check_in'); // 后台,教师班级签到
+require('./includes/backend/teacher_grades_manager'); // 后台,教师班级管理
