@@ -30,7 +30,7 @@
             </el-input>
             <!-- list -->
             <div class="teacher-oa-logs-card-list" v-for="item in logList" :key="item.id">
-                <el-checkbox v-model="item.sele" v-if="nav[2].type"></el-checkbox>
+                <el-checkbox v-model="item.sele" v-show="nav[2].type"></el-checkbox>
                 <div>
                     <div class="teacher-oa-logs-card-list-top">
                         <img :src="item.avatar" alt="">
@@ -45,7 +45,7 @@
                 </div>
             </div>
             <!-- list -->
-            <div v-if="nav[2].type" class="teacher-oa-logs-card-button">
+            <div v-show="nav[2].type == 1" class="teacher-oa-logs-card-button">
                 <el-button @click="handleCheckAllChange">@{{btnText}}</el-button>
                 <el-button type="primary">发送至</el-button>
             </div>

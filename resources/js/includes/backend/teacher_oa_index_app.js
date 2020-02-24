@@ -18,6 +18,7 @@ if (document.getElementById('teacher-oa-index-app')) {
                 isLoading: false,
                 flowsStartedByMe: [],
                 flowsWaitingForMe: [],
+                iconList: [],
                 nav: [
                     { tit: "待审批" },
                     { tit: "已审批" },
@@ -44,6 +45,7 @@ if (document.getElementById('teacher-oa-index-app')) {
                     '/api/office/office-page',
                 ).then(res => {
                     if (Util.isAjaxResOk(res)) {
+                        this.iconList = res.data.data;
                         console.log(res)
                     }
                 })

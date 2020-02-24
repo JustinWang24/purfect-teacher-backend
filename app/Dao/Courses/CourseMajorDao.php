@@ -132,12 +132,12 @@ class CourseMajorDao
 
 
     /**
-     * @param $ids
+     * @param $courseId
      * @param $keyword
      * @return mixed
      */
-    public function getCourseMajorByIdsAndCourseName($ids, $keyword) {
+    public function getCourseMajorByCourseIdsAndCourseName($courseId, $keyword) {
         return CourseMajor::where('course_name','like',$keyword.'%')
-            ->whereIn('id',$ids)->get();
+            ->whereIn('course_id',$courseId)->get();
     }
 }
