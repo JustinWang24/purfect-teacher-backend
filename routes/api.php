@@ -988,6 +988,8 @@ Route::prefix('study')->middleware('auth:api')->group(function(){
         ->name('api.study.type-list');
     Route::any('/material-list', 'Api\Study\IndexController@materialList')
         ->name('api.study.material-list');
+    Route::any('/course-list', 'Api\Study\IndexController@courseList')
+        ->name('api.study.course-list');
 });
 
 

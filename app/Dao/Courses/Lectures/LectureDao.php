@@ -238,4 +238,17 @@ class LectureDao
     }
 
 
+    /**
+     * 获取课程列表
+     * @param $teacherId
+     * @return mixed
+     */
+    public function getMaterialByTeacherId($teacherId) {
+        return LectureMaterial::where('teacher_id', $teacherId)
+            ->orderBy('course_id')
+            ->select('course_id')
+            ->get();
+    }
+
+
 }

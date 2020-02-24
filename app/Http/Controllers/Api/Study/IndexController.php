@@ -245,4 +245,25 @@ class IndexController extends Controller
         return $arr;
     }
 
+
+    /**
+     * 学习资料课程列表
+     * @param MyStandardRequest $request
+     * @return string
+     */
+    public function courseList(MyStandardRequest $request) {
+        $userId = $request->user()->id;
+        $dao = new LectureDao();
+        $lectures = $dao->getMaterialByTeacherId($userId);
+        $courses = [];
+        foreach ($lectures as $key => $item) {
+            $courses[$key] = [
+                'course_id' => $item->course_id,
+                'course_name' => $item->course->name,
+            ];
+        }
+
+        return JsonBuilder::Success($courses);
+    }
+
 }
