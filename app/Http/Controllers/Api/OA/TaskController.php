@@ -199,8 +199,7 @@ class TaskController extends Controller
         $output['log_list'] = $logs;
 
         $forum = [];
-        $discussions = $dao->getDiscussionByTaskIdAndReplyUserId($taskId,$userId);
-//        dd($discussions);
+        $discussions = $task->discussions->whereIn('reply_user_id', [0, $userId]);
         foreach ($discussions as $key => $val) {
             $forum[$key]['forumid']=$val->id;
             $forum[$key]['userid']=$val->user_id;
