@@ -997,6 +997,9 @@ Route::prefix('study')->middleware('auth:api')->group(function(){
     // 教师端资料列表
     Route::any('/course-material-list', 'Api\Study\IndexController@courseMaterialList')
         ->name('api.study.course-material-list');
+    // 删除学习资料
+    Route::any('/delete-material', 'Api\Study\IndexController@deleteMaterial')
+        ->name('api.study.delete-material');
 });
 
 
