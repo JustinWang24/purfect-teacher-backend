@@ -318,7 +318,7 @@ class TeacherApplyElectiveCourseDao
                     'week' => $arrangement->week,
                     'week_day' => '',
                     'day_index' => $arrangement->day_index,
-                    'time' => ''
+                    'time' => $arrangement->timeslot->name
                 ];
             }
             $retList[] = $tmp;
