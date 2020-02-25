@@ -54,4 +54,8 @@ class FlowRequest extends MyStandardRequest
     public function isAppRequest(){
         return $this->get('is_app',false);
     }
+
+    public function getPosition(){
+        return $this->get('position', 0);
+    }
 }

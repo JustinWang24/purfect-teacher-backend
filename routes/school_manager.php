@@ -479,12 +479,15 @@ Route::prefix('school_manager')->group(function () {
     Route::prefix('pipeline')->group(function(){
         Route::get('flows/manager','Pipeline\FlowsController@manager')
             ->name('school_manager.pipeline.flows-manager');
+        Route::post('flows/load-flows', 'Pipeline\FlowsController@load_flows')
+            ->name('school_manager.pipeline.load-flows');
+        Route::post('flows/load-nodes','Pipeline\FlowsController@load_nodes')
+            ->name('school_manager.pipeline.load-nodes');
+
+
 
         Route::post('flows/save-flow','Pipeline\FlowsController@save_flow')
             ->name('school_manager.pipeline.save-flow');
-
-        Route::post('flows/load-nodes','Pipeline\FlowsController@load_nodes')
-            ->name('school_manager.pipeline.load-nodes');
 
         Route::post('flows/delete-flow','Pipeline\FlowsController@delete_flow')
             ->name('school_manager.pipeline.delete-flow');
