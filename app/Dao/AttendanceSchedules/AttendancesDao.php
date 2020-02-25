@@ -4,7 +4,6 @@ namespace App\Dao\AttendanceSchedules;
 
 
 use App\Dao\Schools\SchoolDao;
-use App\Dao\Users\UserDao;
 use App\Models\AttendanceSchedules\Attendance;
 use App\Models\AttendanceSchedules\AttendancesDetail;
 use App\Models\Timetable\TimetableItem;
@@ -36,16 +35,15 @@ class AttendancesDao
      */
     public function arrive($item, $user, $type)
     {
-        $now = Carbon::now(GradeAndYearUtil::TIMEZONE_CN);
+
         $schoolDao = new SchoolDao;
         $school = $schoolDao->getSchoolById($user->getSchoolId());
         $configuration = $school->configuration;
-
-        $date = Carbon::now()->toDateString();
+        $now = Carbon::now(GradeAndYearUtil::TIMEZONE_CN);
 
         // todo :: $now 为了方便测试, 上线需要删除
-        $date = Carbon::parse('2020-01-08 14:40:00');
-        $month = Carbon::parse($date)->month;
+        $now = Carbon::parse('2020-01-08 14:40:00');
+        $month = Carbon::parse($now)->month;
         $term = $configuration->guessTerm($month);
         $weeks = $configuration->getScheduleWeek($now, null, $term);
         $week = $weeks->getScheduleWeekIndex();
@@ -62,6 +60,7 @@ class AttendancesDao
             if(empty($attendance)) {
                 $attendance = $this->createAttendanceData($item);
             }
+
             $data = [
                 'attendance_id' => $attendance->id,
                 'student_id'    => $user->id,
@@ -73,8 +72,9 @@ class AttendancesDao
                 'week'          => $week,
                 'weekday_index' => $item->weekday_index,
                 'mold'          => AttendancesDetail::MOLD_SIGN_IN,
-                'date'          => Carbon::now()
+                'date'          => Carbon::now(),
             ];
+
             $detailsDao = new  AttendancesDetailsDao;
             $detailsDao->add($data);
 
@@ -83,7 +83,6 @@ class AttendancesDao
             DB::commit();
             $result = true;
         }catch (\Exception $e) {
-            DB::rollBack();
             $result = false;
         }
 
@@ -174,13 +173,14 @@ class AttendancesDao
      */
     public function getTeacherIsSignByItem(TimetableItem $item, $user)
     {
-        $now = Carbon::now(GradeAndYearUtil::TIMEZONE_CN);
         $schoolDao = new SchoolDao;
         $school = $schoolDao->getSchoolById($user->getSchoolId());
         $configuration = $school->configuration;
+        $now = Carbon::now(GradeAndYearUtil::TIMEZONE_CN);
 
-        $date = Carbon::now()->toDateString();
-        $month = Carbon::parse($date)->month;
+        // todo :: $now 为了方便测试, 上线需要删除
+        $now = Carbon::parse('2020-01-08 14:40:00');
+        $month = Carbon::parse($now)->month;
         $term = $configuration->guessTerm($month);
         $weeks = $configuration->getScheduleWeek($now, null, $term);
         $week = $weeks->getScheduleWeekIndex();
@@ -216,13 +216,14 @@ class AttendancesDao
      */
     public function createAttendanceData(TimetableItem $item)
     {
-        $now = Carbon::now(GradeAndYearUtil::TIMEZONE_CN);
         $schoolDao = new SchoolDao;
         $school = $schoolDao->getSchoolById($item->school_id);
         $configuration = $school->configuration;
+        $now = Carbon::now(GradeAndYearUtil::TIMEZONE_CN);
 
-        $date = Carbon::now()->toDateString();
-        $month = Carbon::parse($date)->month;
+        // todo :: $now 为了方便测试, 上线需要删除
+        $now = Carbon::parse('2020-01-08 14:40:00');
+        $month = Carbon::parse($now)->month;
         $term = $configuration->guessTerm($month);
         $weeks = $configuration->getScheduleWeek($now, null, $term);
         $week = $weeks->getScheduleWeekIndex();
