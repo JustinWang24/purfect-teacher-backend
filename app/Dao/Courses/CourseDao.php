@@ -418,8 +418,12 @@ class CourseDao
 
                 // 检查是选修课还是必修课, 如果是选修课, 则需要保留选修课的上课时间信息, 并保存到单独的记录表中
                 if(intval($data['optional']) === Course::ELECTIVE_COURSE){
-                    // 是选修课
-                    $this->_saveCourseArrangement($course, $data);
+                    // 是选修课 选修课必须添加成功上课信息 不然获取不到周信息无法判断是否达到上课时间
+                    if(!$this->_saveCourseArrangement($course, $data)) {
+                        DB::rollBack();
+                        $messageBag->setMessage('请完善上课时间地点');
+                        return $messageBag;
+                    }
                     //添加course_electives表的关联数据
                     $this->_saveCourseElective($course, $data);
 
@@ -544,10 +548,13 @@ class CourseDao
                     $courseArrangement = CourseArrangement::create($d);
                 }
                 DB::commit();
+                return true;
             } catch (\Exception $exception) {
                 DB::rollBack();
+                return false;
             }
         }
+        return false;
     }
 
     /**
