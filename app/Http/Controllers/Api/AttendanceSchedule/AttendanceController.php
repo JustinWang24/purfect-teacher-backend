@@ -185,15 +185,18 @@ class AttendanceController extends Controller
         }
         $attendancesDao = new AttendancesDao;
         $arrive = $attendancesDao->getTeacherIsSignByItem($items[0], $user);
+
         if ($arrive->teacher_sign == Attendance::TEACHER_SIGN) {
             $isArrive = true;
         } else {
             $isArrive = false;
         }
+
         $arriveTime = '';
         if (!empty($arrive->teacher_sign_time)) {
             $arriveTime = $arrive->teacher_sign_time;
         }
+
         $data['timetable_id'] = $items[0]->id;
         $data['time_slot_name'] = $items[0]->timeSlot->name;
         $data['course_name'] = $items[0]->course->name;
@@ -252,10 +255,11 @@ class AttendanceController extends Controller
     {
         $code = json_decode($request->get('code'), true);
         $user = $request->user();
-        
+
         $timetableItemDao = new TimetableItemDao;
         $item = $timetableItemDao->getCurrentItemByUser($user);
-        if (empty($item)) {
+
+        if (is_null($item)) {
             return JsonBuilder::Error('未找到当前学生要上的的课程');
         }
 

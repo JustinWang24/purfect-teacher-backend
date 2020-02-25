@@ -203,9 +203,9 @@ class InternalMessageController extends Controller
      * 更新信件
      * @param MyStandardRequest $request
      */
-    public function updateInternal(MyStandardRequest $request)
+    public function messageUpdate(MyStandardRequest $request)
     {
-
+        
 
 
     }

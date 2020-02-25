@@ -851,7 +851,8 @@ Route::prefix('Oa')->middleware('auth:api')->group(function () {
     Route::post('/message-update-or-del','Api\OA\InternalMessageController@updateOrDelMessage')
         ->name('api.oa.update.or.del.message');
     // 更新信件
-
+    Route::post('/message-update','Api\OA\InternalMessageController@messageUpdate')
+        ->name('api.oa.update.message');
     // 上传附件
     Route::post('/message-upload-files', 'Api\OA\InternalMessageController@uploadFiles')
         ->name('api.oa.upload.files');

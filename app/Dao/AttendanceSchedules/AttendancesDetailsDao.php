@@ -75,13 +75,14 @@ class AttendancesDetailsDao
      */
     public function getDetailByTimeTableIdAndStudentId($item, $user)
     {
-        $now = Carbon::now(GradeAndYearUtil::TIMEZONE_CN);
         $schoolDao = new SchoolDao;
         $school = $schoolDao->getSchoolById($user->getSchoolId());
         $configuration = $school->configuration;
+        $now = Carbon::now(GradeAndYearUtil::TIMEZONE_CN);
 
-        $date = Carbon::now()->toDateString();
-        $month = Carbon::parse($date)->month;
+        // todo :: $now 为了方便测试, 上线需要删除
+        $now = Carbon::parse('2020-01-08 14:40:00');
+        $month = Carbon::parse($now)->month;
         $term = $configuration->guessTerm($month);
         $weeks = $configuration->getScheduleWeek($now, null, $term);
         $week = $weeks->getScheduleWeekIndex();
