@@ -65,16 +65,32 @@ class FlowsController extends Controller
      */
     public function save_flow(FlowRequest $request){
         $flow = $request->getFlowFormData();
+        dd("a");
         if(empty($flow['id'])){
             // 创建新流程
             $node = $request->getNewFlowFirstNode();
-            $description = $node['description'];
-
             $dao = new FlowDao();
-            $result = $dao->create($flow, $description, $node);
+            $result = $dao->create($flow, '', $node);
             return $result->isSuccess() ?
                 JsonBuilder::Success(['id'=>$result->getData()->id]) :
                 JsonBuilder::Error($result->getMessage());
+        }
+    }
+
+    /**
+     * 删除流程
+     * @param FlowRequest $request
+     * @return string
+     */
+    public function delete_flow(FlowRequest $request)
+    {
+        $id = $request->get('flow_id');
+        $dao = new FlowDao();
+        if($dao->delete($id)){
+            return JsonBuilder::Success();
+        }
+        else{
+            return JsonBuilder::Error();
         }
     }
 
@@ -101,6 +117,7 @@ class FlowsController extends Controller
             return JsonBuilder::Error($result);
         }
     }
+
 
     /**
      * 更新节点的操作
@@ -198,20 +215,5 @@ class FlowsController extends Controller
         return $result ? JsonBuilder::Success() : JsonBuilder::Error('找不到指定的选项数据');
     }
 
-    /**
-     * 删除流程
-     * @param FlowRequest $request
-     * @return string
-     */
-    public function delete_flow(FlowRequest $request)
-    {
-        $id = $request->get('flow_id');
-        $dao = new FlowDao();
-        if($dao->delete($id)){
-            return JsonBuilder::Success();
-        }
-        else{
-            return JsonBuilder::Error();
-        }
-    }
+
 }

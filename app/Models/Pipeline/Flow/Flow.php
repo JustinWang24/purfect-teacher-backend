@@ -94,7 +94,9 @@ class Flow extends Model implements IFlow
             $result['copy'] = GradeUser::whereIn('user_id', $uidArr)->select(['user_id', 'name'])->get();
         }
         //审批人
-        $result['handler'][] = $node->handler;
+        if (!empty($node->handler->notice_to) || !empty($node->handler->notice_organizations)) {
+            $result['handler'][] = $node->handler;
+        }
         //表单
         if ($node->options) {
             $result['options'] = $node->options;

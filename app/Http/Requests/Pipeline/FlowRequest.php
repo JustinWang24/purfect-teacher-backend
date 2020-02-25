@@ -12,6 +12,14 @@ use App\Http\Requests\MyStandardRequest;
 class FlowRequest extends MyStandardRequest
 {
     public function getFlowFormData(){
+        /*
+         * {
+         *   name:流程名称,
+         *   type:分类id,
+         *   icon:图标,
+         *   school_id:学校id
+         * }
+         */
         return $this->get('flow', null);
     }
 
@@ -36,6 +44,13 @@ class FlowRequest extends MyStandardRequest
     }
 
     public function getNewFlowFirstNode(){
+        /**
+         * {
+         *   handlers:[教师,职工,学生],
+         *   organizations:[[组织1,组织2,组织3,组织4],[组织1,组织2,组织3,组织5]],
+         *   titles:[角色1,角色2]
+         * }
+         */
         return $this->get('node', null);
     }
 

@@ -483,14 +483,15 @@ Route::prefix('school_manager')->group(function () {
             ->name('school_manager.pipeline.load-flows');
         Route::post('flows/load-nodes','Pipeline\FlowsController@load_nodes')
             ->name('school_manager.pipeline.load-nodes');
-
-
-
         Route::post('flows/save-flow','Pipeline\FlowsController@save_flow')
             ->name('school_manager.pipeline.save-flow');
-
         Route::post('flows/delete-flow','Pipeline\FlowsController@delete_flow')
             ->name('school_manager.pipeline.delete-flow');
+        Route::post('flows/save-node','Pipeline\FlowsController@save_node')
+            ->name('school_manager.pipeline.save-node');
+
+
+
 
         Route::post('flows/delete-node','Pipeline\FlowsController@delete_node')
             ->name('school_manager.pipeline.delete-node');
@@ -498,8 +499,7 @@ Route::prefix('school_manager')->group(function () {
         Route::post('flows/delete-node-attachment','Pipeline\FlowsController@delete_node_attachment')
             ->name('school_manager.pipeline.delete-node-attachment');
 
-        Route::post('flows/save-node','Pipeline\FlowsController@save_node')
-            ->name('school_manager.pipeline.save-node');
+
 
         Route::post('flows/save-node-option','Pipeline\FlowsController@save_node_option')
             ->name('school_manager.pipeline.save-node-option');
