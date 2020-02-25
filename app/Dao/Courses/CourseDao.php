@@ -22,7 +22,6 @@ use App\Utils\ReturnData\MessageBag;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 use Ramsey\Uuid\Uuid;
 use App\Dao\BuildFillableData;
 
@@ -419,12 +418,8 @@ class CourseDao
 
                 // 检查是选修课还是必修课, 如果是选修课, 则需要保留选修课的上课时间信息, 并保存到单独的记录表中
                 if(intval($data['optional']) === Course::ELECTIVE_COURSE){
-                    // 是选修课 选修课必须添加成功上课信息 不然获取不到周信息无法判断是否达到上课时间
-                    if(!$this->_saveCourseArrangement($course, $data)) {
-                        DB::rollBack();
-                        $messageBag->setMessage('请完善上课时间地点');
-                        return $messageBag;
-                    }
+                    // 是选修课
+                    $this->_saveCourseArrangement($course, $data);
                     //添加course_electives表的关联数据
                     $this->_saveCourseElective($course, $data);
 
@@ -529,9 +524,11 @@ class CourseDao
      *
      */
     private function _saveCourseArrangement($course, $data){
+
         // 保存课时安排
         if (!empty($data['group'])) {
             $times = $data['group'];
+            DB::beginTransaction();
             try {
                 foreach ($times as $time) {
                     $d = [
@@ -546,13 +543,11 @@ class CourseDao
                     ];
                     $courseArrangement = CourseArrangement::create($d);
                 }
-                return true;
+                DB::commit();
             } catch (\Exception $exception) {
-                Log::channel('testlog')->info($exception->getMessage());
-                return false;
+                DB::rollBack();
             }
         }
-        return false;
     }
 
     /**
