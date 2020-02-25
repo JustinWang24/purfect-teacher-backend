@@ -16,6 +16,7 @@ class ModifyPipelineFlowsTable extends Migration
         //
         Schema::table('pipeline_flows', function (Blueprint $table) {
             $table->string('copy_uids')->nullable()->comment('抄送人');
+            $table->string('business')->nullable()->comment('关联业务');
         });
     }
 
@@ -30,6 +31,9 @@ class ModifyPipelineFlowsTable extends Migration
         Schema::table('pipeline_flows', function (Blueprint $table) {
             if (Schema::hasColumn('pipeline_flows', 'copy_uids')) {
                 $table->dropColumn('copy_uids');
+            }
+            if (Schema::hasColumn('pipeline_flows', 'business')) {
+                $table->dropColumn('business');
             }
         });
     }
