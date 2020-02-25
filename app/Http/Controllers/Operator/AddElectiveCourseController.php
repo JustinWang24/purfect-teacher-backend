@@ -75,7 +75,20 @@ class AddElectiveCourseController extends Controller
         }
         $content = $validatedData['reply_content']??'同意';
 
-        $applyDao->approvedApply($id, $content, $request->get('schedule'));
+        $schedule = $request->get('schedule');
+
+        //选修课表要求必须有building_id和classroom_id
+        if (empty($schedule)) {
+            return JsonBuilder::Error('请完善教室信息！');
+        }
+        foreach ($schedule as $item) {
+            if (empty($item['building_id']) || empty($item['classroom_id'])) {
+                return JsonBuilder::Error('请完善教室信息！');
+            }
+        }
+
+
+        $applyDao->approvedApply($id, $content, $schedule);
         $result  = $applyDao->publishToCourse($id);
         if($request->ajax()){
             return $result->isSuccess() ?
