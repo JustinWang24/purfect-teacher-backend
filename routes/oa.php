@@ -146,3 +146,13 @@ Route::prefix('meeting')->middleware('auth:api')->group(function () {
     Route::post('/signLog','Api\OA\MeetIngController@signLog')
         ->name('Oa.meeting.signLog');
 });
+
+// 到访
+Route::prefix('visitor')->middleware('auth:api')->group(function () {
+    // 到访列表
+    Route::post('/list','Api\OA\VisitorController@list')
+        ->name('Oa.visitor.list');
+    // 到访详情
+    Route::post('/detail','Api\OA\VisitorController@detail')
+        ->name('Oa.visitor.detail');
+});
