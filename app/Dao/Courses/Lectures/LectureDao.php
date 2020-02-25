@@ -266,4 +266,28 @@ class LectureDao
     }
 
 
+    /**
+     * 删除学习资料
+     * @param $materialId
+     * @return MessageBag
+     */
+    public function deleteMaterial($materialId) {
+        $messageBag = new MessageBag();
+        $info = LectureMaterial::where('id', $materialId)->first();
+        if(is_null($info)) {
+            $messageBag->setCode(JsonBuilder::CODE_ERROR);
+            $messageBag->setMessage('该资料不存在');
+            return $messageBag;
+        }
+        $re = LectureMaterial::where('id', $materialId)->delete();
+        if($re) {
+            $messageBag->setMessage('删除成功');
+        } else {
+            $messageBag->setCode(JsonBuilder::CODE_ERROR);
+            $messageBag->setMessage('删除失败');
+        }
+        return $messageBag;
+    }
+
+
 }

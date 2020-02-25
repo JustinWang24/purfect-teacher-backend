@@ -301,4 +301,24 @@ class IndexController extends Controller
         return JsonBuilder::Success($result);
     }
 
+
+    /**
+     * 删除学习教材
+     * @param MyStandardRequest $request
+     * @return string
+     */
+    public function deleteMaterial(MyStandardRequest $request) {
+        $materialId = $request->get('material_id');
+        if(is_null($materialId)) {
+            return JsonBuilder::Error('缺少参数');
+        }
+        $dao = new LectureDao();
+        $result = $dao->deleteMaterial($materialId);
+        if($result->isSuccess()) {
+            return JsonBuilder::Success($result->getMessage());
+        } else {
+            return JsonBuilder::Error($result->getMessage());
+        }
+    }
+
 }
