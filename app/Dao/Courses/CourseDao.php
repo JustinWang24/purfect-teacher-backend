@@ -22,6 +22,7 @@ use App\Utils\ReturnData\MessageBag;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Ramsey\Uuid\Uuid;
 use App\Dao\BuildFillableData;
 
@@ -528,11 +529,9 @@ class CourseDao
      *
      */
     private function _saveCourseArrangement($course, $data){
-
         // 保存课时安排
         if (!empty($data['group'])) {
             $times = $data['group'];
-            DB::beginTransaction();
             try {
                 foreach ($times as $time) {
                     $d = [
@@ -547,10 +546,9 @@ class CourseDao
                     ];
                     $courseArrangement = CourseArrangement::create($d);
                 }
-                DB::commit();
                 return true;
             } catch (\Exception $exception) {
-                DB::rollBack();
+                Log::channel('testlog')->info($exception->getMessage());
                 return false;
             }
         }
