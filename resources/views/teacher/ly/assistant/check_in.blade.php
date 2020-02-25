@@ -18,12 +18,13 @@
                                         :value="item.value">
                                 </el-option>
                             </el-select>
-                            <el-button type="primary" size="small">查询</el-button>
+                            <el-button @click="searchList()" type="primary" size="small">查询</el-button>
                         </div>
                     </header>
                 </div>
                 <div class="card-body">
                     <el-tree
+                            v-show="data.length > 0"
                             :data="data"
                             :props="defaultProps"
                             :highlight-current="false"
@@ -36,6 +37,10 @@
                             </span>
                         </div>
                     </el-tree>
+                    <div v-show="data.length == 0" class="no-data-img">
+                        <img src="{{ asset('assets/img/teacher_blade/no-data.png') }}" alt="">
+                        <p>当前列表暂时没有数据哦~</p>
+                    </div>
                 </div>
             </div>
         </el-col>
@@ -49,24 +54,29 @@
                     </div>
                     <div class="card-body">
                         <el-table
+                                v-show="tableData.length > 0"
                                 :data="tableData">
                             <el-table-column
-                                    prop="stuName"
+                                    prop="name"
                                     label="姓名">
                             </el-table-column>
                             <el-table-column
-                                    prop="stuNor"
+                                    prop="sign_in"
                                     label="已签到">
                             </el-table-column>
                             <el-table-column
-                                    prop="stuHoli"
+                                    prop="leave"
                                     label="请假">
                             </el-table-column>
                             <el-table-column
-                                    prop="stuOff"
+                                    prop="truant"
                                     label="旷课">
                             </el-table-column>
                         </el-table>
+                        <div v-show="tableData.length == 0" class="no-data-img">
+                            <img src="{{ asset('assets/img/teacher_blade/no-data.png') }}" alt="">
+                            <p>当前列表暂时没有数据哦~</p>
+                        </div>
                     </div>
                 </div>
             </div>

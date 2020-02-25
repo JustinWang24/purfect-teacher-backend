@@ -30,6 +30,7 @@
         "lockr": "^0.8.5",
         "moment": "^2.24.0",
         "normalize.css": "^8.0.1",
+        "qs": "^6.9.1",
         "vue-draggable": "^2.0.3"
     }
 }
