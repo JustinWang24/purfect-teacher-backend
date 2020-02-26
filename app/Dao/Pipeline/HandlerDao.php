@@ -40,6 +40,12 @@ class HandlerDao
             $handlerData['titles'] = $result['titles'];
             $handlerData['role_slugs'] = $result['role_slugs'];
         }
+        if(!empty($result['notice_to'])){
+            $handlerData['notice_to'] = $result['notice_to'];
+        }
+        if (!empty($result['notice_organizations'])) {
+            $handlerData['notice_organizations'] = $result['notice_organizations'];
+        }
         return Handler::create($handlerData);
     }
 
