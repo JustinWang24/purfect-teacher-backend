@@ -68,6 +68,12 @@ class NewMeetingController extends Controller
      */
     public function addMeeting(MeetingRequest $request) {
         $data = $request->all();
+
+        // 签退时间应大于会议时间
+        if($data['signout_status'] == NewMeeting::SIGNOUT &&
+            $data['meet_end'] > $data['signout_end']) {
+            return JsonBuilder::Error('签退结束时间应大于会议结束时间');
+        }
         $data['user_id'] = $request->user()->id;
         $data['school_id'] = $request->user()->getSchoolId();
         $user = $data['user'];
