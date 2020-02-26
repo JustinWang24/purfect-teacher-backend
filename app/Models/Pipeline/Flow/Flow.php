@@ -93,10 +93,6 @@ class Flow extends Model implements IFlow
             $uidArr = explode(';', $this->copy_uids);
             $result['copy'] = GradeUser::whereIn('user_id', $uidArr)->select(['user_id', 'name'])->get();
         }
-        //审批人
-        if (!empty($node->handler->notice_to) || !empty($node->handler->notice_organizations)) {
-            $result['handler'][] = $node->handler;
-        }
         //表单
         if ($node->options) {
             $result['options'] = $node->options;
@@ -108,7 +104,7 @@ class Flow extends Model implements IFlow
                 ->with('attachments')
                 ->with('options')
                 ->first();
-            if (!empty($next->handler->notice_to) || !empty($next->handler->notice_organizations)) {
+            if (!empty($next->handler->titles) || !empty($next->handler->organizations)) {
                 $result['handler'][] = $next->handler;
             }
             $node = $next;
