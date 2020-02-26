@@ -109,13 +109,19 @@ class NewMeetingDao
             ['new_meetings.meet_end', '>', $now],
             ['new_meetings.status', '=', NewMeeting::STATUS_PASS],
         ];
+        $where = [
+            ['new_meeting_users.user_id','=', $userId],
+            ['new_meetings.signout_end', '>', $now],
+            ['new_meetings.status', '=', NewMeeting::STATUS_PASS],
+        ];
 
         $field = ['new_meeting_users.*', 'new_meeting_users.signin_status as signIn_status',
             'new_meeting_users.signout_status as signOut_status', 'new_meetings.*'];
 
-        $list = NewMeetingUser::join('new_meetings', function ($join) use ($map){
+        $list = NewMeetingUser::join('new_meetings', function ($join) use ($map, $where){
             $join->on('new_meetings.id', '=', 'new_meeting_users.meet_id')
                 ->where($map)
+                ->orWhere($where)
                 ->orderBy('new_meetings.meet_start');
         })->select($field)->paginate(ConfigurationTool::DEFAULT_PAGE_SIZE);
         return $list;
@@ -129,17 +135,27 @@ class NewMeetingDao
      */
     public function accomplishMeet($userId) {
         $now = Carbon::now()->toDateTimeString();
+        // 不需要签退
         $map = [
             ['new_meeting_users.user_id','=', $userId],
             ['new_meetings.meet_end', '<=', $now],
             ['new_meetings.status', '=', NewMeeting::STATUS_PASS],
+            ['new_meetings.signout_status', '=', NewMeeting::NOT_SIGNOUT],
+        ];
+        // 需要签退
+        $where = [
+            ['new_meeting_users.user_id','=', $userId],
+            ['new_meetings.signout_end', '<=', $now],
+            ['new_meetings.status', '=', NewMeeting::STATUS_PASS],
+            ['new_meetings.signout_status', '=', NewMeeting::SIGNOUT],
         ];
 
         $field = ['new_meeting_users.*', 'new_meeting_users.signin_status as signIn_status',
             'new_meeting_users.signout_status as signOut_status', 'new_meetings.*'];
-        $list = NewMeetingUser::join('new_meetings', function ($join) use ($map){
+        $list = NewMeetingUser::join('new_meetings', function ($join) use ($map, $where){
             $join->on('new_meetings.id', '=', 'new_meeting_users.meet_id')
                 ->where($map)
+                ->orWhere($where)
                 ->orderBy('new_meetings.meet_start');
         })->select($field)->paginate(ConfigurationTool::DEFAULT_PAGE_SIZE);
         return $list;
