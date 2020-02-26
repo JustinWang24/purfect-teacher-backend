@@ -246,7 +246,7 @@ class LectureDao
      */
     public function getMaterialByTeacherId($teacherId) {
         return LectureMaterial::where('teacher_id', $teacherId)
-            ->orderBy('course_id')
+            ->groupBy('course_id')
             ->select('course_id')
             ->get();
     }
