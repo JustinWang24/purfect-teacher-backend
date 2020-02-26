@@ -25,7 +25,6 @@ class HandlerDao
         $handlerData = [
             'node_id' => $node->id,
         ];
-
         $result = NodeHandlersDescriptor::Parse($handlersDescriptor);
 
         /**
@@ -41,7 +40,13 @@ class HandlerDao
             $handlerData['titles'] = $result['titles'];
             $handlerData['role_slugs'] = $result['role_slugs'];
         }
+        return Handler::create($handlerData);
+    }
 
+    public function update(Node $node, $handlersDescriptor) {
+
+        $handlerData = [];
+        $result = NodeHandlersDescriptor::Parse($handlersDescriptor);
         /**
          * 负责审核的角色
          */
@@ -51,7 +56,6 @@ class HandlerDao
         if (!empty($result['notice_organizations'])) {
             $handlerData['notice_organizations'] = $result['notice_organizations'];
         }
-
-        return Handler::create($handlerData);
+        return Handler::where('id', $node->handler->id)->update($handlerData);
     }
 }

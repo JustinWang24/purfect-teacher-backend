@@ -109,7 +109,7 @@ class Flow extends Model implements IFlow
                 ->with('options')
                 ->first();
             if (!empty($next->handler->notice_to) || !empty($next->handler->notice_organizations)) {
-                $result['handler'][] = $next->handler;
+                $result['handler'][] = $node->handler;
             }
             $node = $next;
         }

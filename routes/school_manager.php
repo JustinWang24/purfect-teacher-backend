@@ -487,7 +487,7 @@ Route::prefix('school_manager')->group(function () {
             ->name('school_manager.pipeline.save-flow');
         Route::post('flows/delete-flow','Pipeline\FlowsController@delete_flow')
             ->name('school_manager.pipeline.delete-flow');
-        Route::post('flows/save-node','Pipeline\FlowsController@save_node')
+        Route::get('flows/save-node','Pipeline\FlowsController@save_node')
             ->name('school_manager.pipeline.save-node');
 
 

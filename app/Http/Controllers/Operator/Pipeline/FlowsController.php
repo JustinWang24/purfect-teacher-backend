@@ -65,7 +65,6 @@ class FlowsController extends Controller
      */
     public function save_flow(FlowRequest $request){
         $flow = $request->getFlowFormData();
-        dd("a");
         if(empty($flow['id'])){
             // 创建新流程
             $node = $request->getNewFlowFirstNode();
@@ -103,14 +102,28 @@ class FlowsController extends Controller
         $nodeData = $request->getNewFlowFirstNode();
         $flowId = $request->get('flow_id');
         $prevNodeId = $request->get('prev_node');
+
         $flowDao = new FlowDao();
         $flow = $flowDao->getById($flowId);
         $nodeDao = new NodeDao();
+        if (!$prevNodeId) {
+            //获取第一个节点
+            $firstNode = $nodeDao->getHeadNodeByFlow($flow->id);
+            $prevNodeId = $firstNode->id;
+        }
+        $nodeData['name'] = '';
+        //创建节点的时候已经不需要区分使用者了所以赋予全部人
+        $nodeData['handlers'] = ['教师', '职工', '学生'];
+        $nodeData['notice_to'] = $nodeData['titles'];
+        $nodeData['notice_organizations'] = $nodeData['organizations'];
         $prevNode = $nodeDao->getById($prevNodeId);
         $result = $nodeDao->insert($nodeData, $flow, $prevNode);
         if(is_object($result)){
             $handlerDao = new HandlerDao();
+            //创建新的handler使用者
             $handlerDao->create($result, $nodeData);
+            //更新前一个handler的审批人
+            $handlerDao->update($prevNode, $nodeData);
             return JsonBuilder::Success(['nodes'=>$flow->getSimpleLinkedNodes()]);
         }
         else{

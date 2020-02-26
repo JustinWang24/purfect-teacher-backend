@@ -57,13 +57,14 @@ class NodeDao
                 }
 
                 // 步骤所关联的附件
-                foreach ($data['attachments'] as $attachment){
-                    if(empty($attachment['id'])){
-                        $attachment['node_id'] = $currentNode->id;
-                        NodeAttachment::create($attachment);
+                if (!empty($data['attachments'])) {
+                    foreach ($data['attachments'] as $attachment){
+                        if(empty($attachment['id'])){
+                            $attachment['node_id'] = $currentNode->id;
+                            NodeAttachment::create($attachment);
+                        }
                     }
                 }
-
                 DB::commit();
                 return $currentNode;
             }
