@@ -78,7 +78,7 @@ class InternalMessageDao
      */
     public function update($id, $data, $files)
     {
-
+        
         DB::beginTransaction();
         try{
 
@@ -96,7 +96,7 @@ class InternalMessageDao
             InternalMessage::where('id', $id)->update($updateData);
             $message = InternalMessage::find($id);
 
-            // 删除之前收件人数据
+            // 删除之前附件数据
 //            InternalMessage::where('message_id', $message->message_id)->delete();
             $messageIds = $message->id; // 用于转发
 
@@ -132,13 +132,12 @@ class InternalMessageDao
                     $imageData['type']       = $val['type'];
                     $imageData['size']       = $val['size'];
                     $imageData['message_id'] = $message->id;
-                    InternalMessageFile::where('message_id', $id)->update($imageData);
+                    InternalMessageFile::create($imageData);
                 }
             }
             DB::commit();
             $result = true;
         }catch (\Exception $e) {
-            dd($e);
             DB::rollBack();
             $result = false;
         }
