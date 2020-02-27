@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\MyStandardRequest;
 use App\Models\OA\WorkLog;
 use App\Utils\JsonBuilder;
+use Carbon\Carbon;
 
 class WorkLogController extends  Controller
 {
@@ -89,24 +90,33 @@ class WorkLogController extends  Controller
         $userName = $request->get('user_name'); // 接收人
 
         $dao = new WorkLogDao;
-        $log = $dao->getWorkLogsById($id);
+        $log = $dao->getWorkLogsByIds(explode(',', $id));
 
-        $data['update_data']  = [
-            'collect_user_id' => $userId,
-            'collect_user_name' => $userName,
-            'type' => WorkLog::TYPE_SENT
-        ];
+
+        $data['update_data'] = [];
+        foreach (explode(',', $id) as $key => $val) {
+            $data['update_data'][$key] = [
+                'id'              => $val,
+                'collect_user_id' => $userId,
+                'collect_user_name' => $userName,
+                'type' => WorkLog::TYPE_SENT
+            ];
+        }
+
         $data['install_data'] = [];
         $userIds = explode(',', $userId);
-        foreach ($userIds as $key => $val) {
-            $data['install_data'][$key]['user_id'] = $val;
-            $data['install_data'][$key]['send_user_id'] = $log->user_id;
-            $data['install_data'][$key]['send_user_name'] = $log->user->name;
-            $data['install_data'][$key]['type'] = WorkLog::TYPE_READ;
-            $data['install_data'][$key]['title'] = $log->title;
-            $data['install_data'][$key]['content'] = $log->content;
+        foreach ($log as $key => $value) {
+            foreach ($userIds as $k => $val) {
+                $data['install_data'][$key][$k]['user_id'] = $val;
+                $data['install_data'][$key][$k]['send_user_name'] = $value->user->name;
+                $data['install_data'][$key][$k]['send_user_id'] = $value->user_id;
+                $data['install_data'][$key][$k]['type'] = WorkLog::TYPE_READ;
+                $data['install_data'][$key][$k]['title'] = $value->title;
+                $data['install_data'][$key][$k]['content'] = $value->content;
+                $data['install_data'][$key][$k]['created_at'] = Carbon::parse();
+            }
         }
-        $result = $dao->sendLog($id, $data);
+        $result = $dao->sendLog($data);
         if ($result) {
             return JsonBuilder::Success('发送成功');
         } else {
