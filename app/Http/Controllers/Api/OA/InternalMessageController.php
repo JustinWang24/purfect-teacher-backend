@@ -117,8 +117,8 @@ class InternalMessageController extends Controller
             foreach ($data['relay'] as $key => $val) {
                 $data['relay'][$key]['user_username'] = $data->user->name;
                 $data['relay'][$key]['create_time'] = $data->created_at->format('Y-m-d H:i:s');
-                if ($val->files) {
-                    $data['relay'][$key]['file'] = $val->files;
+                if ($val->file) {
+                    $data['relay'][$key]['file'] = $val->file;
                 } else {
                     $data['relay'][$key]['file'] = [];
                 }
