@@ -33,7 +33,6 @@ class VisitorDao
         {
             return false;
         }
-        print_r(Visitor::create($data));exit;
         DB::beginTransaction();
         try {
             if ($obj = Visitor::create($data)) {
