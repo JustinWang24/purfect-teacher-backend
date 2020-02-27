@@ -114,10 +114,13 @@ class InternalMessageController extends Controller
         if ($data->is_relay == InternalMessage::IS_RELAY) { // 是否有转发内容
             $data['relay'] = $dao->getForwardMessageByIds(explode(',', $data->message_id));
             foreach ($data['relay'] as $key => $val) {
-                $data['relay'][$key]['file'] = [];
                 $data['relay'][$key]['user_username'] = $data->user->name;
                 $data['relay'][$key]['create_time'] = $data->created_at->format('Y-m-d H:i:s');
-                $data['relay'][$key]['file'] = $val->files;
+                if ($val->files) {
+                    $data['relay'][$key]['file'] = $val->files;
+                } else {
+                    $data['relay'][$key]['file'] = [];
+                }
             }
         }
         if ($data->is_file == InternalMessage::IS_FILE) {
