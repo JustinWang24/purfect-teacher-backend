@@ -111,7 +111,7 @@ class FollowController extends Controller
 
         $user = $request->user();
         $user_id = $user->id;
-        $school_id = $user->gradeUser->school_id;
+        $school_id = $user->gradeUserOneInfo->school_id;
 
         $userIdArr = [];
         $userFollowobj = new UserFollowDao();
@@ -186,7 +186,7 @@ class FollowController extends Controller
 
         $user = $request->user();
         $user_id = $user->id;
-        $school_id = $user->gradeUser->school_id;
+        $school_id = $user->gradeUserOneInfo->school_id;
 
         $userFollowobj = new UserFollowDao();
 

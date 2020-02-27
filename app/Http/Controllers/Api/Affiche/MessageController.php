@@ -54,7 +54,7 @@ class MessageController extends Controller
 
        $user = $request->user();
        $user_id = $user->id;
-       $campus_id = $user->gradeUser->campus_id;
+       $campus_id = $user->gradeUserOneInfo->campus_id;
 
        // 实例化模型类
        $afficheobj = new AfficheDao();
@@ -175,7 +175,7 @@ class MessageController extends Controller
 
         $user = $request->user();
         $user_id = $user->id;
-        $campus_id = $user->gradeUser->campus_id;
+        $campus_id = $user->gradeUserOneInfo->campus_id;
 
 
         $messageobj = new MessageDao();

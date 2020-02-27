@@ -61,8 +61,8 @@ class AfficheController extends Controller
 
         $user = $request->user();
         $user_id = $user->id;
-        $school_id = $user->gradeUser->school_id;
-        $campus_id = $user->gradeUser->campus_id;
+        $school_id = $user->gradeUserOneInfo->school_id;
+        $campus_id = $user->gradeUserOneInfo->campus_id;
 
         // 上传图片
         $iche_pic = [];
@@ -188,7 +188,7 @@ class AfficheController extends Controller
 
             $user = $request->user();
             $user_id = $user->id;
-            $school_id = $user->gradeUser->school_id;
+            $school_id = $user->gradeUserOneInfo->school_id;
         }
 
         // 实例化模型类

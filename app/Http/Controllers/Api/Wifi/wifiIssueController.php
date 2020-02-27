@@ -74,8 +74,8 @@ class wifiIssueController extends Controller
       // 更新的数据
       $param2[ 'user_id' ]   = $user->id; // 用户id
       $param2[ 'trade_sn' ]  = date ( 'Ymd' ).random_int(10000,99999);; // 编号
-      $param2[ 'school_id' ] = $user->gradeUser->school_id; // 学校
-      $param2[ 'campus_id' ] = $user->gradeUser->campus_id; // 校区
+      $param2[ 'school_id' ] = $user->gradeUserOneInfo->school_id; // 学校
+      $param2[ 'campus_id' ] = $user->gradeUserOneInfo->campus_id; // 校区
 
       // 获取详细地址
       $getRoomOneInfo1 = WifiIssueTypesDao::getRoomOneInfo ( $param1[ 'addressoneid' ] );
@@ -224,8 +224,8 @@ class wifiIssueController extends Controller
 
       // 更新的数据
       $param2[ 'user_id' ]   = $user->id; // 用户id
-      $param2[ 'school_id' ] = $user->gradeUser->school_id; // 学校
-      $param2[ 'campus_id' ] = $user->gradeUser->campus_id; // 校区
+      $param2[ 'school_id' ] = $user->gradeUserOneInfo->school_id; // 学校
+      $param2[ 'campus_id' ] = $user->gradeUserOneInfo->campus_id; // 校区
 
       // 验证数据是否重复提交
       $dataSign = sha1 ( $user->id . 'addApiWifiIssueCommentInfo' );

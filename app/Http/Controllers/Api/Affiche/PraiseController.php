@@ -51,7 +51,7 @@ class PraiseController extends Controller
 
         $user = $request->user();
         $user_id = $user->id;
-        $campus_id = $user->gradeUser->campus_id;
+        $campus_id = $user->gradeUserOneInfo->campus_id;
 
         // 动态点赞
         if($type == 1)
