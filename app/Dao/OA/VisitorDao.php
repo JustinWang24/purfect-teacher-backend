@@ -12,11 +12,41 @@ use App\Dao\Affiche\CommonDao;
 use App\Models\OA\Visitor;
 use App\Utils\Misc\ConfigurationTool;
 use Illuminate\Support\Collection;
-
+use Illuminate\Support\Facades\DB;
+use Ramsey\Uuid\Uuid;
 class VisitorDao
 {
     public function __construct()
     {
+    }
+
+    /**
+     * Func 添加
+     *
+     * @param $data 基础信息
+     *
+     * @return false|id
+     */
+    public function addVisitorInfo($data = [])
+    {
+        if (empty($data))
+        {
+            return false;
+        }
+        print_r(Visitor::create($data));exit;
+        DB::beginTransaction();
+        try {
+            if ($obj = Visitor::create($data)) {
+                DB::commit();
+                return $obj->id;
+            } else {
+                DB::rollBack();
+                return false;
+            }
+        } catch (\Exception $exception) {
+            DB::rollBack();
+            return false;
+        }
     }
 
     /**
@@ -103,6 +133,18 @@ class VisitorDao
 
         return !empty($data) ? $data->toArray() : [];
 
+    }
+
+    /**
+     * Func Api 获取分享信息
+     *
+     * @return array
+     */
+    public function getShareInfo($user_id = 0)
+    {
+        $data['uuid'] = Uuid::uuid4()->toString();
+        $data['share_url'] = 'http://www.baidu.com/'.$data['uuid'];
+        return $data;
     }
 
     /**

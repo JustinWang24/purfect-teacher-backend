@@ -71,4 +71,43 @@ class VisitorController extends Controller
 
         return JsonBuilder::Success($infos,'访客详情');
     }
+
+    /**
+     * Func 获取分享地址
+     * @param VisitorRequest $request
+     * @return string
+     */
+    public function get_share_info(VisitorRequest $request)
+    {
+        $token = (String)$request->input('token', '');
+
+        // 邀请类型(1:微信,2:QQ，3：短信)
+        $cate_id = (Int)$request->input('cate_id', 0);
+
+        if (!in_array($cate_id, [1, 2, 3])) {
+            return JsonBuilder::Error('参数错误');
+        }
+
+        $user = $request->user();
+
+        $visitorObj = new VisitorDao();
+        $infos = $visitorObj->getShareInfo($user->id);
+
+        // 发送短信
+        if($cate_id == 3)
+        {
+            // TODO....发送短信
+
+        }
+
+        // 添加数据
+        $addData['uuid'] = $infos['uuid'];
+        $addData['user_id'] = $user->gradeUserOneInfo->id;
+        $addData['school_id'] = $user->gradeUserOneInfo->school_id;
+        $addData['cate_id'] = $cate_id;
+        $addData['share_url'] = $infos['share_url'];
+        $visitorObj->addVisitorInfo($addData);
+
+        return JsonBuilder::Success($infos,'访客详情');
+    }
 }

@@ -11,8 +11,8 @@ class Visitor extends Model
     const VISITED = 2;
 
     protected $fillable = [
-        'user_id','school_id','invited_by','cate_id','name','mobile','vehicle_license',
-        'reason','visitors_json1','visitors_json2','status','scheduled_at','arrived_at'
+        'uuid','user_id','school_id','invited_by','cate_id','name','mobile','vehicle_license',
+        'reason','visitors_json1','visitors_json2','share_url','status','scheduled_at','arrived_at'
     ];
 
     public $casts = [
