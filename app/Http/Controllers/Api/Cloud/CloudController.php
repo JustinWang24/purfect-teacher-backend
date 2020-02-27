@@ -320,6 +320,7 @@ class CloudController extends Controller
         $user = $request->user();
         $timetableItemDao = new TimetableItemDao;
         $item = $timetableItemDao->getCurrentItemByUser($user);
+
         if (empty($item)) {
             return JsonBuilder::Error('未找到该同学目前上的课程');
         }

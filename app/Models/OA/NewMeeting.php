@@ -113,4 +113,5 @@ class NewMeeting extends Model
         return $this->hasMany(NewMeetingSummary::class, 'meet_id');
     }
 
+
 }

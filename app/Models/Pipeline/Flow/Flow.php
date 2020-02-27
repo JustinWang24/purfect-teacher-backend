@@ -4,6 +4,7 @@ namespace App\Models\Pipeline\Flow;
 
 use App\Dao\Pipeline\ActionDao;
 use App\Models\Teachers\Teacher;
+use App\Models\Users\GradeUser;
 use App\User;
 use App\Utils\Pipeline\IFlow;
 use App\Utils\Pipeline\INode;
@@ -19,7 +20,7 @@ class Flow extends Model implements IFlow
     public $table = 'pipeline_flows';
     public $timestamps = false;
     protected $fillable = [
-        'school_id','name','type','icon'
+        'school_id','name','type','icon','copy_uids','business'
     ];
 
     /**
@@ -27,6 +28,7 @@ class Flow extends Model implements IFlow
      */
     public static function Types(){
         return [
+            //@TODO pipeline待删除
             IFlow::TYPE_TEACHER_ONLY=>IFlow::TYPE_TEACHER_ONLY_TXT,
             IFlow::TYPE_OFFICE=>IFlow::TYPE_OFFICE_TXT,
             IFlow::TYPE_2=>IFlow::TYPE_2_TXT,
@@ -36,7 +38,56 @@ class Flow extends Model implements IFlow
             IFlow::TYPE_STUDENT_ONLY=>IFlow::TYPE_STUDENT_ONLY_TXT, // 学生专用
             IFlow::TYPE_FINANCE=>IFlow::TYPE_FINANCE_TXT, // 资助中心 学生
             IFlow::TYPE_STUDENT_COMMON=>IFlow::TYPE_STUDENT_COMMON_TXT, // 日常申请 学生
+
+
+            IFlow::TYPE_1_01 => IFlow::TYPE_1_01_TXT,
+            IFlow::TYPE_1_02 => IFlow::TYPE_1_02_TXT,
+            IFlow::TYPE_1_03 => IFlow::TYPE_1_03_TXT,
+
+            IFlow::TYPE_2_01 => IFlow::TYPE_2_01_TXT,
+            IFlow::TYPE_2_02 => IFlow::TYPE_2_02_TXT,
+
+            IFlow::TYPE_3_01 => IFlow::TYPE_3_01_TXT,
+            IFlow::TYPE_3_02 => IFlow::TYPE_3_02_TXT,
         ];
+    }
+    //指定位置的分类
+    public static function getTypesByPosition($position) {
+        if ($position == IFlow::POSITION_1) {
+            return [
+                IFlow::TYPE_1_01 => IFlow::TYPE_1_01_TXT,
+                IFlow::TYPE_1_02 => IFlow::TYPE_1_02_TXT,
+                IFlow::TYPE_1_03 => IFlow::TYPE_1_03_TXT,
+            ];
+        }
+        if ($position == IFlow::POSITION_2) {
+            return [
+                IFlow::TYPE_2_01 => IFlow::TYPE_2_01_TXT,
+                IFlow::TYPE_2_02 => IFlow::TYPE_2_02_TXT,
+            ];
+        }
+        if ($position == IFlow::POSITION_3) {
+            return [
+                IFlow::TYPE_3_01 => IFlow::TYPE_3_01_TXT,
+                IFlow::TYPE_3_02 => IFlow::TYPE_3_02_TXT,
+            ];
+        }
+        return [];
+    }
+
+    public static function business($businessid = null) {
+        $list = [
+            IFlow::BUSINESS_ATTENDANCE_CLOCKIN,
+            IFlow::BUSINESS_ATTENDANCE_MACADDRESS
+        ];
+        if ($businessid) {
+            foreach ($list as $item) {
+                if ($businessid == $item['business']) {
+                    return $item;
+                }
+            }
+        }
+        return $list;
     }
 
     public function nodes(){
@@ -49,19 +100,31 @@ class Flow extends Model implements IFlow
      * @return Collection
      */
     public function getSimpleLinkedNodes(){
-        $collection = new Collection();
+        $result = ['head' => [], 'copy' => [], 'handler' => [], 'options' => []];
         $node = $this->getHeadNode();
-        $collection->add($node);
+        $result['head'] = $node;//发起人
+        if ($this->copy_uids) {
+            //抄送人
+            $uidArr = explode(';', $this->copy_uids);
+            $result['copy'] = GradeUser::whereIn('user_id', $uidArr)->select(['user_id', 'name'])->get();
+        }
+        //表单
+        if ($node->options) {
+            $result['options'] = $node->options;
+        }
         while ($node->next_node > 0){
+            //获取审批人
             $next = Node::where('id',$node->next_node)
                 ->with('handler')
                 ->with('attachments')
                 ->with('options')
                 ->first();
-            $collection->add($next);
+            if (!empty($next->handler->titles) || !empty($next->handler->organizations)) {
+                $result['handler'][] = $next->handler;
+            }
             $node = $next;
         }
-        return $collection;
+        return $result;
     }
 
     /**

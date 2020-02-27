@@ -55,6 +55,11 @@ class AttendanceDao
         return $attendance->usermacs()->where('user_id', $user_id)->first();
     }
 
+    public function checkMacUsed(Attendance $attendance, $mac_address)
+    {
+        return $attendance->usermacs()->where('mac_address', $mac_address)->count() > 0;
+    }
+
     /**
      * 检测某日是否放假日期
      * @param Attendance $attendance 考勤基本配置

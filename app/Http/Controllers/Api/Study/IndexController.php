@@ -9,6 +9,7 @@
 namespace App\Http\Controllers\Api\Study;
 
 
+use App\Dao\ElectiveCourses\TeacherApplyElectiveCourseDao;
 use Carbon\Carbon;
 use App\Utils\JsonBuilder;
 use App\Dao\Schools\SchoolDao;
@@ -26,13 +27,6 @@ class IndexController extends Controller
     public function index(MyStandardRequest $request) {
         $user = $request->user();
 
-        $selectCourse = [
-            'status' => 'true', // true 开启 false 关闭
-            'time' => '2020年1月3日-2020年1月15日',
-            'msg' => '大家选课期间请看好选课程对应的学分',
-        ];
-
-
         $schoolId = $user->getSchoolId();
         $schoolDao = new SchoolDao();
         $school = $schoolDao->getSchoolById($schoolId);
@@ -45,6 +39,17 @@ class IndexController extends Controller
         $term = $configuration->guessTerm($month);
         $timetableItemDao = new TimetableItemDao();
         $item = $timetableItemDao->getCurrentItemByUser($user);
+
+
+        $teacherApplyElectiveDao = new TeacherApplyElectiveCourseDao();
+        $electiveTime = $teacherApplyElectiveDao->getElectiveCourseStartAndEndTime($schoolId, $term);
+        $electiveStart = Carbon::parse($electiveTime[0]);
+        $electiveEnd = Carbon::parse($electiveTime[1]);
+        $selectCourse = [
+            'status' => $electiveStart->timestamp < $date->timestamp && $electiveEnd->timestamp > $date->timestamp, // true 开启 false 关闭
+            'time' => $electiveStart->format('Y年m月d日') . '-' . $electiveEnd->format('Y年m月d日'),
+            'msg' => '大家选课期间请看好选课程对应的学分',
+        ];
 
         $timetable = (object)[];
         $attendancesDetailsDao = new AttendancesDetailsDao();
@@ -294,6 +299,26 @@ class IndexController extends Controller
         }
 
         return JsonBuilder::Success($result);
+    }
+
+
+    /**
+     * 删除学习教材
+     * @param MyStandardRequest $request
+     * @return string
+     */
+    public function deleteMaterial(MyStandardRequest $request) {
+        $materialId = $request->get('material_id');
+        if(is_null($materialId)) {
+            return JsonBuilder::Error('缺少参数');
+        }
+        $dao = new LectureDao();
+        $result = $dao->deleteMaterial($materialId);
+        if($result->isSuccess()) {
+            return JsonBuilder::Success($result->getMessage());
+        } else {
+            return JsonBuilder::Error($result->getMessage());
+        }
     }
 
 }

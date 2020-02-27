@@ -25,7 +25,6 @@ class HandlerDao
         $handlerData = [
             'node_id' => $node->id,
         ];
-
         $result = NodeHandlersDescriptor::Parse($handlersDescriptor);
 
         /**
@@ -33,22 +32,36 @@ class HandlerDao
          */
         if(empty($result['organizations'])){
             $handlerData['organizations'] = null;
-            $handlerData['titles'] = null;
+            $handlerData['titles'] = $result['titles'];
             $handlerData['role_slugs'] = $result['role_slugs'];
         }
         else{
             $handlerData['organizations'] = $result['organizations'];
             $handlerData['titles'] = $result['titles'];
-            $handlerData['role_slugs'] = null;
+            $handlerData['role_slugs'] = $result['role_slugs'];
         }
+        if(!empty($result['notice_to'])){
+            $handlerData['notice_to'] = $result['notice_to'];
+        }
+        if (!empty($result['notice_organizations'])) {
+            $handlerData['notice_organizations'] = $result['notice_organizations'];
+        }
+        return Handler::create($handlerData);
+    }
 
+    public function update(Node $node, $handlersDescriptor) {
+
+        $handlerData = [];
+        $result = NodeHandlersDescriptor::Parse($handlersDescriptor);
         /**
          * 负责审核的角色
          */
         if(!empty($result['notice_to'])){
             $handlerData['notice_to'] = $result['notice_to'];
         }
-
-        return Handler::create($handlerData);
+        if (!empty($result['notice_organizations'])) {
+            $handlerData['notice_organizations'] = $result['notice_organizations'];
+        }
+        return Handler::where('id', $node->handler->id)->update($handlerData);
     }
 }

@@ -111,14 +111,20 @@ class InternalMessageController extends Controller
         $data['user_username'] = $data->user->name;
         $data['create_time'] = $data->created_at->format('Y-m-d H:i:s');
         $data['relay'] = [];
+
         if ($data->is_relay == InternalMessage::IS_RELAY) { // 是否有转发内容
             $data['relay'] = $dao->getForwardMessageByIds(explode(',', $data->message_id));
             foreach ($data['relay'] as $key => $val) {
                 $data['relay'][$key]['user_username'] = $data->user->name;
                 $data['relay'][$key]['create_time'] = $data->created_at->format('Y-m-d H:i:s');
-                $data['relay'][$key]['file'] = $val->files;
+                if ($val->file) {
+                    $data['relay'][$key]['file'] = $val->file;
+                } else {
+                    $data['relay'][$key]['file'] = [];
+                }
             }
         }
+
         if ($data->is_file == InternalMessage::IS_FILE) {
             $data->file;
         }else {
@@ -202,11 +208,43 @@ class InternalMessageController extends Controller
     /**
      * 更新信件
      * @param MyStandardRequest $request
+     * @return string
      */
-    public function updateInternal(MyStandardRequest $request)
+    public function messageUpdate(MyStandardRequest $request)
     {
+        $id = $request->get('id');
 
+        $user        = $request->user();
+        $collectId   = $request->get('collectId');
+        $collectUser = $request->get('collectUser');
+        $title       = $request->get('title');
+        $content     = $request->get('content');
+        $type        = $request->get('type');
+        $isRelay     = $request->get('isRelay');
+        $relayId     = $request->get('relayId');
+        $isFile      = $request->get('isFile');
+        $fileArr     = $request->get('image');
 
+        $dao = new InternalMessageDao;
+
+        $data = [
+            'user_id'           => $user->id,
+            'collect_user_id'   => $collectId,
+            'collect_user_name' => $collectUser,
+            'title'             => $title,
+            'content'           => $content,
+            'type'              => $type,
+            'is_relay'          => $isRelay,
+            'relay_id'          => $relayId,
+            'is_file'           => $isFile,
+        ];
+
+        $result = $dao->update($id, $data, $fileArr);
+        if ($result) {
+            return JsonBuilder::Success('更新成功');
+        } else {
+            return JsonBuilder::Error('更新失败');
+        }
 
     }
 

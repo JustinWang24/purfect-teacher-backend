@@ -851,10 +851,12 @@ Route::prefix('Oa')->middleware('auth:api')->group(function () {
     Route::post('/message-update-or-del','Api\OA\InternalMessageController@updateOrDelMessage')
         ->name('api.oa.update.or.del.message');
     // 更新信件
-
+    Route::post('/message-update','Api\OA\InternalMessageController@messageUpdate')
+        ->name('api.oa.update.message');
     // 上传附件
     Route::post('/message-upload-files', 'Api\OA\InternalMessageController@uploadFiles')
         ->name('api.oa.upload.files');
+
 
     /**
      * 工作日志
@@ -870,6 +872,9 @@ Route::prefix('Oa')->middleware('auth:api')->group(function () {
         ->name('api.oa.work.log.info');
     // 发送
     Route::post('/work-log-send', 'Api\OA\WorkLogController@workLogSend')
+        ->name('api.oa.work.log.send');
+    // 更新
+    Route::post('/update-work-log', 'Api\OA\WorkLogController@workLogUpdate')
         ->name('api.oa.work.log.send');
 
     /**
@@ -997,6 +1002,9 @@ Route::prefix('study')->middleware('auth:api')->group(function(){
     // 教师端资料列表
     Route::any('/course-material-list', 'Api\Study\IndexController@courseMaterialList')
         ->name('api.study.course-material-list');
+    // 删除学习资料
+    Route::any('/delete-material', 'Api\Study\IndexController@deleteMaterial')
+        ->name('api.study.delete-material');
 });
 
 

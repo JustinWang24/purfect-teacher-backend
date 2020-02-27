@@ -19,6 +19,7 @@ class NodeHandlersDescriptor
         $titles = $data['titles']??[];
         $handlers = $data['handlers']??[];
         $noticeTo = $data['notice_to']??[];
+        $noticeOrganizations = $data['notice_organizations']??[];
 
         $handlersDescriptor = [];
         $orgDao = new OrganizationDao();
@@ -27,11 +28,16 @@ class NodeHandlersDescriptor
          * 负责审核的人
          */
         if(!empty($noticeTo)){
-            $noticeToStr = '';
-            foreach ($noticeTo as $to) {
-                $noticeToStr .= $to.';';
+            if (is_string($noticeTo)) {
+                $handlersDescriptor['notice_to'] = $noticeTo;
+            }else {
+                $noticeToStr = '';
+                foreach ($noticeTo as $to) {
+                    $noticeToStr .= $to.';';
+                }
+                $handlersDescriptor['notice_to'] = $noticeToStr;
             }
-            $handlersDescriptor['notice_to'] = $noticeToStr;
+
         }
 
         if(!empty($organizations)){
@@ -44,6 +50,22 @@ class NodeHandlersDescriptor
                 $orgStr .= $orgDao->getById($organization[count($organization) - 1])->name.';';
             }
             $handlersDescriptor['organizations'] = $orgStr;
+        }
+
+        if(!empty($noticeOrganizations)){
+            if (is_string($noticeOrganizations)) {
+                $handlersDescriptor['notice_organizations'] = $noticeOrganizations;
+            }else {
+                $orgStr = '';
+                // 对应的是 handlers 表中的 organizations 字段, 需要解析提交的 title 和 organizations
+                foreach ($noticeOrganizations as $organization) {
+                    /**
+                     * @var array $organization : 这也是个数组, 其中后一个值, 代表了有效的组织的 id, 其余是其上层组织的 id. 保存时使用部门的真实名字
+                     */
+                    $orgStr .= $orgDao->getById($organization[count($organization) - 1])->name.';';
+                }
+                $handlersDescriptor['notice_organizations'] = $orgStr;
+            }
         }
 
         if(!empty($titles)){
