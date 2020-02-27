@@ -124,7 +124,7 @@ class InternalMessageController extends Controller
                 }
             }
         }
-        
+
         if ($data->is_file == InternalMessage::IS_FILE) {
             $data->file;
         }else {
@@ -208,6 +208,7 @@ class InternalMessageController extends Controller
     /**
      * 更新信件
      * @param MyStandardRequest $request
+     * @return string
      */
     public function messageUpdate(MyStandardRequest $request)
     {
