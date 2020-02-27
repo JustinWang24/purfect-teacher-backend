@@ -98,7 +98,7 @@ class TimeSlotDao
                 'current'=>$this->isCurrent($slot),
             ];
         }
-        //dd($result);
+
         return $result;
     }
 
