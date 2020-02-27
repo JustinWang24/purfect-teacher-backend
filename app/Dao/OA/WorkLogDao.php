@@ -79,5 +79,14 @@ class WorkLogDao
         return $result;
     }
 
-
+    /**
+     * 更新
+     * @param $id
+     * @param $data
+     * @return mixed
+     */
+    public function update($id, $data)
+    {
+        return WorkLog::where('id', $id)->update($data);
+    }
 }

@@ -872,6 +872,9 @@ Route::prefix('Oa')->middleware('auth:api')->group(function () {
     // 发送
     Route::post('/work-log-send', 'Api\OA\WorkLogController@workLogSend')
         ->name('api.oa.work.log.send');
+    // 更新
+    Route::post('/update-work-log', 'Api\OA\WorkLogController@workLogUpdate')
+        ->name('api.oa.work.log.send');
 
     /**
      * 助手页

@@ -114,6 +114,26 @@ class WorkLogController extends  Controller
         }
     }
 
+    /**
+     * 工作日志更新
+     * @param MyStandardRequest $request
+     * @return string
+     */
+    public function workLogUpdate(MyStandardRequest $request)
+    {
+        $id = $request->get('id');
+        $data = $request->get('data');
+
+        $dao = new WorkLogDao;
+
+        $result = $dao->update($id, $data);
+        if ($result) {
+            return JsonBuilder::Success('更新成功');
+        } else {
+            return JsonBuilder::Error('更新失败');
+        }
+    }
+
 
 
 
