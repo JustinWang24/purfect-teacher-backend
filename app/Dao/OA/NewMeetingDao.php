@@ -151,7 +151,7 @@ class NewMeetingDao
 //            ['new_meetings.signout_status', '=', NewMeeting::SIGNOUT],
         ];
 
-        $field = ['new_meeting_users.signin_status as signIn_status',
+        $field = ['new_meeting_users.meet_id','new_meeting_users.user_id','new_meeting_users.signin_status as signIn_status',
             'new_meeting_users.signout_status as signOut_status', 'new_meetings.*','new_meetings.id as meet_id'];
         $list = NewMeetingUser::join('new_meetings', function ($join) use ($map, $where){
             $join->on('new_meetings.id', '=', 'new_meeting_users.meet_id')
