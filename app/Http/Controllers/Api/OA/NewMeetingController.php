@@ -262,6 +262,8 @@ class NewMeetingController extends Controller
             'meet_content' => $info->meet_content,
             'fields' => $fields,
             'cause' => $info->cause,
+            'signin_status' => $info->signin_status,
+            'signout_status' => $info->signout_status,
         ];
         // 判断是否需要签到
         if($info['signin_status'] == NewMeeting::SIGNIN) {
