@@ -70,8 +70,8 @@ class TissueauthController extends Controller
         // 组装数据
         $addData['status'] = -1;
         $addData['user_id'] = $user->id;
-        $addData['school_id'] = $user->gradeUser->school_id;
-        $addData['campus_id'] = $user->gradeUser->campus_id;
+        $addData['school_id'] = $user->gradeUserOneInfo->school_id;
+        $addData['campus_id'] = $user->gradeUserOneInfo->campus_id;
         $addData['authu_tissuspics'] = trim($authu_tissuspics);
         $addData['authu_tissusname'] = trim($authu_tissusname);
         $addData['authu_tissusdesc'] = trim($authu_tissusdesc);

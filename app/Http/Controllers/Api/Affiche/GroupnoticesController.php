@@ -53,8 +53,8 @@ class GroupnoticesController extends Controller
 
         $user = $request->user();
         $user_id = $user->id;
-        $school_id = $user->gradeUser->school_id;
-        $campus_id = $user->gradeUser->campus_id;
+        $school_id = $user->gradeUserOneInfo->school_id;
+        $campus_id = $user->gradeUserOneInfo->campus_id;
 
         // 获取我是否有数据
         $collegeGroupObj = new CollegeGroupDao();
@@ -164,8 +164,8 @@ class GroupnoticesController extends Controller
 
         $user = $request->user();
         $user_id = $user->id;
-        $school_id = $user->gradeUser->school_id;
-        $campus_id = $user->gradeUser->campus_id;
+        $school_id = $user->gradeUserOneInfo->school_id;
+        $campus_id = $user->gradeUserOneInfo->campus_id;
 
         // 获取公告信息
         $collegeGroupNoticesObj = new CollegeGroupNoticesDao();
@@ -246,8 +246,8 @@ class GroupnoticesController extends Controller
 
         $user = $request->user();
         $user_id = $user->id;
-        $school_id = $user->gradeUser->school_id;
-        $campus_id = $user->gradeUser->campus_id;
+        $school_id = $user->gradeUserOneInfo->school_id;
+        $campus_id = $user->gradeUserOneInfo->campus_id;
 
         // 返回数据 number1 已读  number2 未读
         $infos[ 'number1' ]     = $infos[ 'number2' ] = 0;

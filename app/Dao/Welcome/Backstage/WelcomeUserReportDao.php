@@ -121,6 +121,28 @@ class WelcomeUserReportDao extends \App\Dao\Welcome\CommonDao
         return !empty($data) ? $data->toArray() : [];
     }
 
+    /**
+     * Func 获取缴费信息
+     *
+     * @param['user_id']  用户id
+     * @param['typeid']  类型(1:学费,2:书费,3:住宿费,4:生活用品,5:军训服装)
+     *
+     * @return array
+     */
+    public function getWelcomeUserReportsProjectsInfo($user_id = 0, $typeid = 0)
+    {
+        if (!intval($user_id) && !intval($typeid)) {
+            return [];
+        }
+
+        $condition[] = ['user_id', '=', (Int)$user_id];
+        $condition[] = ['typeid', '=', (Int)$typeid];
+        $condition[] = ['status', '=', 1];
+
+        $data = WelcomeUserReportsProject::where($condition)->orderBy('projectid','desc')->first();
+
+        return !empty($data) ? $data->toArray() : [];
+    }
 
     /**
      * Func 添加报到缴费信息

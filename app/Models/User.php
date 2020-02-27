@@ -421,4 +421,12 @@ class User extends Authenticatable implements HasMobilePhone, HasDeviceId, IUser
     {
         return $this->hasOne(GradeManager::class, 'group_id', 'id');
     }
+
+    /**
+     * 获取用户学校校区信息
+     * @return mixed
+     */
+    public function gradeUserOneInfo(){
+        return $this->hasOne(GradeUser::class);
+    }
 }

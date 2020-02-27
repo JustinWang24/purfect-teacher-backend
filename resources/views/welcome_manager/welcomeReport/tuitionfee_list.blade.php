@@ -15,7 +15,7 @@ use App\User;
                 <div class="card-body">
                     <div class="row">
                         <div class="col-12 mb-2">
-                            <form action="{{ route('welcome_manager.welcomeReport.tuitionfee_list') }}" method="get"  id="add-building-form">
+                            <form action="{{ route('welcome_manager.welcomeReport.tuitionfee_list',['page' => Request::get('page') ]) }}" method="get"  id="add-building-form">
                                 <div class="pull-left col-3">
                                     <label>关键词</label>
                                     <input type="text" class="el-input__inner col-10" value="{{ Request::get('keywords') }}" placeholder="姓名,身份证号码" name="keywords">
@@ -62,7 +62,7 @@ use App\User;
                                         <td>年级</td>
                                         <td>{{ isset($info->major_name)?$info->major_name:'---' }}</td>
                                         <td class="text-center">
-                                            {{ Anchor::Print(['text'=>'详情','class'=>'btn btn-round btn-default btn btn-primary','href'=>route('welcome_manager.welcomeReport.detail',['uuid'=>$val['uuid']])], Button::TYPE_DEFAULT,'') }}
+                                            {{ Anchor::Print(['text'=>'详情','class'=>'btn btn-round btn-default btn btn-primary','href'=>route('welcome_manager.welcomeReport.cost_detail',['id'=>$val['uuid'],'typeid'=>1,'index'=>Request::get('index')])], Button::TYPE_DEFAULT,'') }}
                                         </td>
                                     </tr>
                                 @endforeach

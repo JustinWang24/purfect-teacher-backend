@@ -47,7 +47,7 @@ class WifiCableController extends Controller
       }
 
       // 获取服务器配置端口
-      $condition1[] = [ 'campus_id' , '=' , $user->gradeUser->campus_id ];
+      $condition1[] = [ 'campus_id' , '=' , $user->gradeUserOneInfo->campus_id ];
       $condition1[] = [ 'status' , '=' , 1 ];
 
       $getWifiConfigsOneInfo = WifiConfigsDao::getWifiConfigsOneInfo (
@@ -85,7 +85,7 @@ class WifiCableController extends Controller
    {
       $user = $request->user ();
 
-      $infos = RoomsDao::getRoomsListMoreInfo ( $user->gradeUser->campus_id )->toArray();
+      $infos = RoomsDao::getRoomsListMoreInfo ( $user->gradeUserOneInfo->campus_id )->toArray();
 
       return JsonBuilder::Success ( $infos ,'宿舍楼地址列表');
    }
@@ -105,7 +105,7 @@ class WifiCableController extends Controller
          return JsonBuilder::Error ( '参数错误' );
       }
       // 查询条件
-      $condition[]           = [ 'campus_id' , '=' , $user->gradeUser->campus_id ];
+      $condition[]           = [ 'campus_id' , '=' , $user->gradeUserOneInfo->campus_id ];
       $condition[]           = [ 'status' , '=' , 1 ];
       $getWifiConfigsOneInfo = WifiConfigsDao::getWifiConfigsOneInfo (
          $condition , [ 'configid' , 'desc' ] , [ 'configid' , 'config_port_count' ]
@@ -168,7 +168,7 @@ class WifiCableController extends Controller
       }
 
       // 验证wifi有线是否存在
-      $condition1[]    = [ 'campus_id' , '=' , $user->gradeUser->campus_id ];
+      $condition1[]    = [ 'campus_id' , '=' , $user->gradeUserOneInfo->campus_id ];
       $condition1[]    = [ 'mode' , '=' , 2 ];
       $condition1[]    = [ 'status' , '=' , 1 ];
       $getWifisOneInfo = WifisDao::getWifisOneInfo ( $condition1 , [ 'wifiid' , 'desc' ] , [ '*' ] );
@@ -190,8 +190,8 @@ class WifiCableController extends Controller
       $addData[ 'mode' ]             = 2; // 类型(1:无线，2：有线)
       $addData[ 'trade_sn' ]         = date ( 'YmdHis' ); // 编号
       $addData[ 'user_id' ]          = $user->id; // 用户id
-      $addData[ 'school_id' ]        = $user->gradeUser->school_id; // 学校
-      $addData[ 'campus_id' ]        = $user->gradeUser->campus_id; // 校区
+      $addData[ 'school_id' ]        = $user->gradeUserOneInfo->school_id; // 学校
+      $addData[ 'campus_id' ]        = $user->gradeUserOneInfo->campus_id; // 校区
       $addData[ 'wifi_id' ]          = $getWifisOneInfo->wifiid; // wifiid
       $addData[ 'wifi_type' ]        = $getWifisOneInfo->wifi_type; // wifi类型
       $addData[ 'wifi_name' ]        = $getWifisOneInfo->wifi_name; // wifi名称
@@ -206,8 +206,8 @@ class WifiCableController extends Controller
          $addData1[ 'status' ]    = 1;
          $addData1[ 'orderid' ]   = $orderid;
          $addData1[ 'user_id' ]   = $user->id; // 用户id
-         $addData1[ 'school_id' ] = $user->gradeUser->school_id; // 学校
-         $addData1[ 'campus_id' ] = $user->gradeUser->campus_id; // 校区
+         $addData1[ 'school_id' ] = $user->gradeUserOneInfo->school_id; // 学校
+         $addData1[ 'campus_id' ] = $user->gradeUserOneInfo->campus_id; // 校区
          WifiOrdersLocationsDao::addOrUpdateWifiOrdersLocationsInfo ( array_merge ( $addData1 , $param1 ) );
 
          // 更新有线时长
