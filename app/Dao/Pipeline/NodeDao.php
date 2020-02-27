@@ -298,6 +298,7 @@ class NodeDao
      * @return NodeOption|null
      */
     public function saveNodeOption($nodeOptionData){
+        $nodeOptionData['extra'] = is_array($nodeOptionData['extra']) ? json_encode($nodeOptionData['extra']) : $nodeOptionData['extra'];
         if(isset($nodeOptionData['id']) && !empty($nodeOptionData['id'])){
             $option = NodeOption::find($nodeOptionData['id']);
             if($option){
@@ -305,7 +306,7 @@ class NodeDao
                 $option->type = $nodeOptionData['type'];
                 $option->tip = $nodeOptionData['tip'];
                 $option->required = $nodeOptionData['required'];
-                $option->extra = is_array($nodeOptionData['extra']) ? json_encode($nodeOptionData['extra']) : $nodeOptionData['extra'];
+                $option->extra = $nodeOptionData['extra'];
                 $option->save();
                 return $option;
             }
