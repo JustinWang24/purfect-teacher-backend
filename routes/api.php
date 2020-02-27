@@ -1001,6 +1001,10 @@ Route::prefix('study')->middleware('auth:api')->group(function(){
     // 删除学习资料
     Route::any('/delete-material', 'Api\Study\IndexController@deleteMaterial')
         ->name('api.study.delete-material');
+
+    // 学生端课表
+    Route::any('/timetable-student', 'Api\Study\TimetableController@student')
+        ->name('api.study.timetable-student');
 });
 
 

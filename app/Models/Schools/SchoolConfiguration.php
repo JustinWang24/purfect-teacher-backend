@@ -2,11 +2,12 @@
 
 namespace App\Models\Schools;
 
-use App\Utils\Time\CalendarWeek;
 use Carbon\Carbon;
-use Illuminate\Database\Eloquent\Model;
-use App\Utils\Misc\ConfigurationTool;
+use App\Utils\Time\CalendarWeek;
 use Illuminate\Support\Collection;
+use App\Utils\Time\GradeAndYearUtil;
+use App\Utils\Misc\ConfigurationTool;
+use Illuminate\Database\Eloquent\Model;
 
 class SchoolConfiguration extends Model
 {
@@ -214,16 +215,30 @@ class SchoolConfiguration extends Model
             $weeks = $this->getAllWeeksOfTerm($term);
         }
 
-        foreach ($weeks as $week) {
+        foreach ($weeks as $key => $week) {
             /**
              * @var CalendarWeek $week
              */
             if($week->includes($date)){
+                $this->isOddWeek = $key % 2 !== 0;
                 $w = $week;
                 break;
             }
         }
         return $w;
 
+    }
+
+
+    /**
+     * 获取单双周
+     * @param $date
+     * @param $weeks
+     * @param $term
+     * @return mixed
+     */
+    public function getOddWeek($date, $weeks, $term) {
+        $this->getScheduleWeek($date, $weeks, $term);
+        return $this->isOddWeek ? GradeAndYearUtil::WEEK_EVEN : GradeAndYearUtil::WEEK_ODD;
     }
 }

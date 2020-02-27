@@ -232,7 +232,6 @@ class TimetableItemDao
          * @var TimetableItem[] $rows
          */
         $rows = TimetableItem::where($where)->orderBy('time_slot_id','asc')->get();
-
         $result = [];
 
         foreach ($this->timeSlots as $timeSlot) {
