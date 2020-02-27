@@ -78,7 +78,7 @@ class InternalMessageDao
      */
     public function update($id, $data, $files)
     {
-        
+
         DB::beginTransaction();
         try{
 
@@ -97,7 +97,7 @@ class InternalMessageDao
             $message = InternalMessage::find($id);
 
             // 删除之前附件数据
-//            InternalMessage::where('message_id', $message->message_id)->delete();
+            InternalMessageFile::where('message_id', $message->message_id)->delete();
             $messageIds = $message->id; // 用于转发
 
             if ($data['is_relay'] == InternalMessage::IS_RELAY) {
