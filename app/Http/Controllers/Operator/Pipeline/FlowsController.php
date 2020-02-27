@@ -264,5 +264,9 @@ class FlowsController extends Controller
         return $result ? JsonBuilder::Success() : JsonBuilder::Error('找不到指定的选项数据');
     }
 
+    public function load_business(FlowRequest $request){
+        return JsonBuilder::Success(Flow::business());
+    }
+
 
 }

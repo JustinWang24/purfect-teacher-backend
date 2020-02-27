@@ -18,6 +18,7 @@ class FlowRequest extends MyStandardRequest
          *   type:分类id,
          *   icon:图标,
          *   school_id:学校id
+         *   business:''
          * }
          */
         return $this->get('flow', null);
