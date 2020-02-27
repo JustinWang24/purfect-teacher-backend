@@ -99,6 +99,7 @@ class NewMeetingDao
 
 
     /**
+     * 待完成
      * @param $userId
      * @return mixed
      */
@@ -140,14 +141,14 @@ class NewMeetingDao
             ['new_meeting_users.user_id','=', $userId],
             ['new_meetings.meet_end', '<=', $now],
             ['new_meetings.status', '=', NewMeeting::STATUS_PASS],
-            ['new_meetings.signout_status', '=', NewMeeting::NOT_SIGNOUT],
+//            ['new_meetings.signout_status', '=', NewMeeting::NOT_SIGNOUT],
         ];
         // 需要签退
         $where = [
             ['new_meeting_users.user_id','=', $userId],
             ['new_meetings.signout_end', '<=', $now],
             ['new_meetings.status', '=', NewMeeting::STATUS_PASS],
-            ['new_meetings.signout_status', '=', NewMeeting::SIGNOUT],
+//            ['new_meetings.signout_status', '=', NewMeeting::SIGNOUT],
         ];
 
         $field = ['new_meeting_users.*', 'new_meeting_users.signin_status as signIn_status',
