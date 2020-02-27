@@ -295,9 +295,11 @@ class IndexController extends Controller
             $avatarImg      = $avatar->store('public/avatar');
             $data['avatar'] = StudentProfile::avatarUploadPathToUrl($avatarImg);
         }
-        if ($data['nice_name'] || trim($data['user_signture']) ) {
-            $userDao = new UserDao;
-            $result = $userDao->updateUser($user->id, null,null,null,null, $data['nice_name'],$data['user_signture']);
+        $userDao = new UserDao;
+        if (isset($data['nice_name'])) {
+            $result = $userDao->updateUser($user->id, null,null,null,null, $data['nice_name'],null);
+        } elseif (isset($data['user_signture'])) {
+            $result = $userDao->updateUser($user->id, null,null,null,null, null, $data['user_signture']);
         } else {
             $dao        = new StudentProfileDao;
             $teacherDao = new TeacherProfileDao;
