@@ -1005,6 +1005,9 @@ Route::prefix('study')->middleware('auth:api')->group(function(){
     // 学生端课表
     Route::any('/timetable-student', 'Api\Study\TimetableController@student')
         ->name('api.study.timetable-student');
+    // 教师端课表
+    Route::any('/timetable-teacher', 'Api\Study\TimetableController@teacher')
+        ->name('api.study.timetable-teacher');
 });
 
 
