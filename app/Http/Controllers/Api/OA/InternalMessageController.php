@@ -111,15 +111,20 @@ class InternalMessageController extends Controller
         $data['user_username'] = $data->user->name;
         $data['create_time'] = $data->created_at->format('Y-m-d H:i:s');
         $data['relay'] = [];
+
         if ($data->is_relay == InternalMessage::IS_RELAY) { // 是否有转发内容
             $data['relay'] = $dao->getForwardMessageByIds(explode(',', $data->message_id));
             foreach ($data['relay'] as $key => $val) {
-                $data['relay'][$key]['file'] = [];
                 $data['relay'][$key]['user_username'] = $data->user->name;
                 $data['relay'][$key]['create_time'] = $data->created_at->format('Y-m-d H:i:s');
-                $data['relay'][$key]['file'] = $val->files;
+                if ($val->files) {
+                    $data['relay'][$key]['file'] = $val->files;
+                } else {
+                    $data['relay'][$key]['file'] = [];
+                }
             }
         }
+
         if ($data->is_file == InternalMessage::IS_FILE) {
             $data->file;
         }else {
@@ -203,6 +208,7 @@ class InternalMessageController extends Controller
     /**
      * 更新信件
      * @param MyStandardRequest $request
+     * @return string
      */
     public function messageUpdate(MyStandardRequest $request)
     {
@@ -235,9 +241,9 @@ class InternalMessageController extends Controller
 
         $result = $dao->update($id, $data, $fileArr);
         if ($result) {
-            return JsonBuilder::Success('添加成功');
+            return JsonBuilder::Success('更新成功');
         } else {
-            return JsonBuilder::Error('添加失败');
+            return JsonBuilder::Error('更新失败');
         }
 
     }
