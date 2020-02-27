@@ -18,6 +18,28 @@ interface IFlow extends IPersistent
     const POSITION_3 = 3;
     const POSITION_3_TXT = '系统流程';
 
+    //关联业务
+    const BUSINESS_ATTENDANCE_MACADDRESS = [
+        'business' => 'attendance_macaddress',
+        'name' => '考勤修改Mac地址',
+        'options' => [
+            ['name' => '考勤组ID', 'type' => 'hidden', 'tip' => '请选择考勤组', 'required' => 1],
+            ['name' => 'Mac地址', 'type' => 'text', 'tip' => '请输入新的Mac地址', 'required' => 1],
+        ]
+    ];
+    const BUSINESS_ATTENDANCE_CLOCKIN = [
+        'business' => 'attendance_clockin',
+        'name' => '考勤补卡',
+        'options' => [
+            ['name' => '考勤组ID', 'type' => 'hidden', 'tip' => '请选择考勤组', 'extra' => '', 'required' => 1],
+            ['name' => '补卡日期', 'type' => 'date', 'tip' => '请选择补卡日期', 'extra' => '', 'required' => 1],
+            ['name' => '补卡类型', 'type' => 'radio', 'tip' => '请选择补卡类型', 'extra' => [['id'=> 'morning', 'option' => '早上'],['id'=> 'afternoon', 'option' => '中午'],['id'=> 'evening', 'option' => '晚上']], 'required' => 1],
+            ['name' => '补卡原因', 'type' => 'text', 'tip' => '请输入补卡原因', 'extra' => '', 'required' => 1],
+        ]
+    ];
+
+
+
     //分类type_{position}_{num}={position}{num}
     const TYPE_1_01 = 101;
     const TYPE_1_01_TXT = '财务管理';

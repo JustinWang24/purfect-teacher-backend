@@ -303,6 +303,7 @@ class NodeDao
                 $option->type = $nodeOptionData['type'];
                 $option->tip = $nodeOptionData['tip'];
                 $option->required = $nodeOptionData['required'];
+                $option->extra = is_array($nodeOptionData['extra']) ? json_encode($nodeOptionData['extra']) : $nodeOptionData['extra'];
                 $option->save();
                 return $option;
             }

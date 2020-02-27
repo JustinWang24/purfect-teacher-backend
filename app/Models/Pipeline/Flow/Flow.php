@@ -20,7 +20,7 @@ class Flow extends Model implements IFlow
     public $table = 'pipeline_flows';
     public $timestamps = false;
     protected $fillable = [
-        'school_id','name','type','icon'
+        'school_id','name','type','icon','copy_uids','business'
     ];
 
     /**
@@ -73,6 +73,21 @@ class Flow extends Model implements IFlow
             ];
         }
         return [];
+    }
+
+    public static function business($businessid = null) {
+        $list = [
+            IFlow::BUSINESS_ATTENDANCE_CLOCKIN,
+            IFlow::BUSINESS_ATTENDANCE_MACADDRESS
+        ];
+        if ($businessid) {
+            foreach ($list as $item) {
+                if ($businessid == $item['business']) {
+                    return $item;
+                }
+            }
+        }
+        return $list;
     }
 
     public function nodes(){
