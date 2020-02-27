@@ -79,10 +79,12 @@ class NodeDao
                 // 如果还是没有取到 prev 的节点, 那么相当于是创建 head 节点
                 $node = Node::create($data);
                 // 步骤所关联的附件
-                foreach ($data['attachments'] as $attachment){
-                    if(empty($attachment['id'])){
-                        $attachment['node_id'] = $node->id;
-                        NodeAttachment::create($attachment);
+                if (!empty($data['attachments'])) {
+                    foreach ($data['attachments'] as $attachment){
+                        if(empty($attachment['id'])){
+                            $attachment['node_id'] = $node->id;
+                            NodeAttachment::create($attachment);
+                        }
                     }
                 }
                 DB::commit();

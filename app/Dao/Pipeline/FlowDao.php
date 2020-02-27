@@ -136,7 +136,7 @@ class FlowDao
             $headNode = $nodeDao->insert([
                 'name'=>'发起'.$flow->name.'流程',
                 'description'=>$headNodeDescription,
-                'attachments'=>$nodeAndHandlersDescriptor['attachments']
+                'attachments'=> $nodeAndHandlersDescriptor['attachments'] ?? ''
             ], $flow);
 
             // 创建头部流程的 handlers
