@@ -9,7 +9,6 @@
 namespace App\Http\Controllers\Api\Study;
 
 
-use Carbon\Carbon;
 use App\Utils\JsonBuilder;
 use App\Dao\Schools\SchoolDao;
 use App\Utils\Time\CalendarDay;
@@ -45,7 +44,7 @@ class TimetableController extends Controller
                         'name' => $val['course'],
                         'room' => $val['room'],
                         'teacher' => $val['teacher'],
-                        'label' => (object)[],
+                        'label' => [],
                     ];
                 }
 
