@@ -243,6 +243,7 @@ class TimetableItemDao
             if($row->course && $row->teacher){
                 $result[$row->time_slot_id] = [
                     'course' => $row->course->name,
+                    'course_id' => $row->course->id,
                     'teacher'=> $row->teacher->name,
                     'teacher_id'=> $row->teacher_id,
                     'building'=>$row->building->name??null,
@@ -336,6 +337,7 @@ class TimetableItemDao
             $result[$row->time_slot_id] = [
                 'grade_name' => $row->grade->name,
                 'course' => $row->course->name,
+                'course_id' => $row->course->id,
                 'teacher'=>'',
                 'teacher_id'=> $row->teacher_id,
                 'building'=>$row->building->name,
