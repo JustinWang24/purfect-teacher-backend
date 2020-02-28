@@ -26,7 +26,8 @@ class TimetableController extends Controller
      * @param TimetableRequest $request
      * @return string
      */
-    public function student(TimetableRequest $request) {
+    public function student(TimetableRequest $request)
+    {
         $user = $request->user();
         $date = $request->get('date','2020-02-27');
         // todo 调试把时间写死
@@ -43,6 +44,7 @@ class TimetableController extends Controller
             foreach ($item as $k => $val) {
                 if($value->id == $val['time_slot_id']) {
                     $course = [
+                        'time_table_id' => $val['id'],
                         'name' => $val['course'],
                         'room' => $val['room'],
                         'teacher' => $val['teacher'],
@@ -77,7 +79,8 @@ class TimetableController extends Controller
      * @param TimetableRequest $request
      * @return string
      */
-    public function teacher(TimetableRequest $request) {
+    public function teacher(TimetableRequest $request)
+    {
         $user = $request->user();
         $date = $request->get('date','2020-02-27');
         // todo 调试把时间写死
@@ -99,6 +102,7 @@ class TimetableController extends Controller
                 }
             }
             $timetable[] = [
+                'time_table_id' => $value['id'],
                 'time_slot_id' => $value['time_slot_id'],
                 'grade_name' => $value['grade_name'],
                 'room' => $value['room'],
@@ -128,7 +132,8 @@ class TimetableController extends Controller
      * @param $date
      * @return array
      */
-    public function timetable($user, $date) {
+    public function timetable($user, $date)
+    {
         $schoolId = $user->getSchoolId();
         $schoolDao = new SchoolDao();
         $school = $schoolDao->getSchoolById($schoolId);
@@ -159,6 +164,38 @@ class TimetableController extends Controller
             'week_index' => CalendarDay::GetWeekDayIndex($weekdayIndex),
             'forStudyingSlots' => $forStudyingSlots,
         ];
+    }
+
+
+    // 课表详情
+    public function timetableDetails(TimetableRequest $request)
+    {
+        $timetableId = $request->getTimetableId();
+        if(is_null($timetableId)) {
+            return JsonBuilder::Error('缺少参数');
+        }
+        $dao = new TimetableItemDao();
+        $info = $dao->getItemById($timetableId);
+        if(is_null($info)) {
+            return JsonBuilder::Error('该详情不在');
+        }
+        $timeSlot = $info->timeSlot;
+        $course = $info->course;
+        $teacher = $info->teacher;
+        $grade = $info->grade;
+        $room = $info->room;
+        $result = [
+            'time_slot' => $timeSlot->name,
+            'from' => $timeSlot->from,
+            'to' => $timeSlot->to,
+            'course' => $course->name,
+            'room' => $room->name,
+            'teacher' => $teacher->name,
+            'grade' => $grade->name,
+            'materials' => (object)[],
+        ];
+
+        return JsonBuilder::Success($result);
     }
 
 }

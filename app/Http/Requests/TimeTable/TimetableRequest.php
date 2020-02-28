@@ -12,4 +12,7 @@ use App\Http\Requests\MyStandardRequest;
 class TimetableRequest extends MyStandardRequest
 {
 
+    public function getTimetableId() {
+        return $this->get('time_table_id');
+    }
 }
