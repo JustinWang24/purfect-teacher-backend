@@ -7,11 +7,11 @@
  */
 
 namespace App\Dao\Timetable;
+
 use Carbon\Carbon;
 use App\Models\School;
 use App\Models\Schools\Room;
 use App\Dao\Schools\SchoolDao;
-use App\Utils\Time\CalendarWeek;
 use Illuminate\Support\Collection;
 use App\Models\Timetable\TimeSlot;
 use App\Utils\Time\GradeAndYearUtil;
@@ -67,7 +67,6 @@ class TimeSlotDao
     public function getAllStudyTimeSlots($schoolId, $simple = false, $noTime = false){
         $config = SchoolConfiguration::where('school_id',$schoolId)->first();
         $seasonType = GradeAndYearUtil::GetCurrentSeason($config);
-
         $slots = TimeSlot::where('school_id',$schoolId)
             ->where('season',$seasonType)
             ->whereIn('type',[TimeSlot::TYPE_STUDYING, TimeSlot::TYPE_PRACTICE, TimeSlot::TYPE_FREE_TIME])
@@ -98,7 +97,7 @@ class TimeSlotDao
                 'current'=>$this->isCurrent($slot),
             ];
         }
-        //dd($result);
+
         return $result;
     }
 

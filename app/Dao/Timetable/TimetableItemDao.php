@@ -232,7 +232,6 @@ class TimetableItemDao
          * @var TimetableItem[] $rows
          */
         $rows = TimetableItem::where($where)->orderBy('time_slot_id','asc')->get();
-
         $result = [];
 
         foreach ($this->timeSlots as $timeSlot) {
@@ -244,6 +243,7 @@ class TimetableItemDao
             if($row->course && $row->teacher){
                 $result[$row->time_slot_id] = [
                     'course' => $row->course->name,
+                    'course_id' => $row->course->id,
                     'teacher'=> $row->teacher->name,
                     'teacher_id'=> $row->teacher_id,
                     'building'=>$row->building->name??null,
@@ -311,7 +311,7 @@ class TimetableItemDao
     }
 
     /**
-     * 根据给定的条件加载 某个授课老师的 排课
+     * 根据给定的条件加载 某个授课老师的排课
      * @param $weekDayIndex
      * @param $year
      * @param $weekType
@@ -337,6 +337,7 @@ class TimetableItemDao
             $result[$row->time_slot_id] = [
                 'grade_name' => $row->grade->name,
                 'course' => $row->course->name,
+                'course_id' => $row->course->id,
                 'teacher'=>'',
                 'teacher_id'=> $row->teacher_id,
                 'building'=>$row->building->name,
