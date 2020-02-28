@@ -384,10 +384,11 @@ class NewMeetingController extends Controller
         }
 
         $result = $dao->saveSignIn($meet, $meetUser->id, $type);
-        if($result) {
-            return JsonBuilder::Success('签到成功');
+        $msg = $result->getMessage();
+        if($result->isSuccess()) {
+            return JsonBuilder::Success($msg);
         } else {
-            return JsonBuilder::Error('签到失败');
+            return JsonBuilder::Error($msg);
         }
     }
 
