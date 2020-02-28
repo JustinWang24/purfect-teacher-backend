@@ -41,6 +41,7 @@ class TimetableController extends Controller
                 if($value->id == $val['time_slot_id']) {
                     $course = [
                         'time_table_id' => $val['id'],
+                        'idx' => '', // 课节
                         'name' => $val['course'],
                         'room' => $val['room'],
                         'teacher' => $val['teacher'],
@@ -100,6 +101,7 @@ class TimetableController extends Controller
                 'time_table_id' => $value['id'],
                 'time_slot_id' => $value['time_slot_id'],
                 'grade_name' => $value['grade_name'],
+                'idx' => '', // 课节
                 'room' => $value['room'],
                 'course' => $value['course'],
                 'time_slot_name' => $time_slot_name,
@@ -192,7 +194,7 @@ class TimetableController extends Controller
             'room' => $room->name,
             'teacher' => $teacher->name,
             'grade' => $grade->name,
-            'materials' => (object)[],
+            'materials' => [],
         ];
 
         return JsonBuilder::Success($result);
