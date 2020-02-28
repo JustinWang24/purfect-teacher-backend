@@ -291,30 +291,50 @@ class NewMeetingDao
      * @param NewMeeting $meet
      * @param $meetUserId
      * @param $type
-     * @return mixed
+     * @return MessageBag
      */
     public function saveSignIn(NewMeeting $meet, $meetUserId, $type) {
+        $messageBag = new MessageBag();
         $now = Carbon::now()->toDateTimeString();
         $map = ['id'=>$meetUserId];
+        $meetingUser = NewMeetingUser::where($map)->first();
         if($type == 'signIn') {
+            if($meetingUser->signin_status !== NewMeetingUser::UN_SIGNIN) {
+                $messageBag->setMessage('已签到');
+                return $messageBag;
+            }
             // 签到时间大于会议开始时间
             if($now > $meet->meet_start) {
                 $status = 2; // 迟到
             } else {
                 $status = 1; // 正常
             }
+            $msg = '签到';
             $save = ['signin_status'=>$status, 'signin_time'=>$now];
         } else {
+
+            if($meetingUser->signout_status !== NewMeetingUser::UN_SIGNOUT) {
+                $messageBag->setMessage('已签退');
+                return $messageBag;
+            }
+
             if($now < $meet->meet_end ) {
                 $status = 2; // 早退
             } else {
                 $status = 1; // 正常
             }
-
+            $msg = '签退';
             $save = ['signout_status'=>$status, 'signout_time'=>$now];
         }
 
-        return NewMeetingUser::where($map)->update($save);
+        $result = NewMeetingUser::where($map)->update($save);
+        if($result) {
+            $messageBag->setMessage($msg.'成功');
+        } else {
+            $messageBag->setMessage($msg.'失败');
+            $messageBag->setCode(JsonBuilder::CODE_ERROR);
+        }
+        return $messageBag;
     }
 
 
