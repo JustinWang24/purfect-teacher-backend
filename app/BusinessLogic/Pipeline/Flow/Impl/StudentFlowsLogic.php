@@ -8,6 +8,7 @@
 
 namespace App\BusinessLogic\Pipeline\Flow\Impl;
 
+use App\Models\Pipeline\Flow\Flow;
 use App\User;
 use App\Dao\Pipeline\FlowDao;
 use App\Utils\Pipeline\IFlow;
@@ -46,10 +47,20 @@ class StudentFlowsLogic extends GeneralFlowsLogic
         ];
 
         $result =  $dao->getGroupedFlows(
-            $this->user->getSchoolId(), [IFlow::TYPE_FINANCE, IFlow::TYPE_STUDENT_COMMON], $forApp
+            $this->user->getSchoolId(), array_keys(Flow::getTypesByPosition(IFlow::POSITION_2)), $forApp
         );
-
-        $types = array_merge($types, $result);
+        foreach ( $result as $item) {
+            if (!empty($item['flows'])) {
+                $newflow = [];
+                foreach ($item['flows'] as $flow) {
+                    if ($dao->checkPermissionByuser($flow, $this->user, 0)) {
+                        $newflow[] = $flow;
+                    }
+                }
+                $item['flows'] = $newflow;
+            }
+            $types[] = $item;
+        }
 
         // 校园助手: 这个是特殊的
         $types[] = [
