@@ -62,7 +62,7 @@ class TaskDao
 
             // 创建日志
             $log = ['task_id'=>$result->id, 'school_id'=>$task['school_id'],
-                'user_id'=>$task['user_id'], 'desc'=>'创建任务'];
+                'user_id'=>$task['create_user'], 'desc'=>'创建任务'];
             ProjectTaskLog::create($log);
 
             DB::commit();
