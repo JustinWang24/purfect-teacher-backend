@@ -29,10 +29,7 @@ class TimetableController extends Controller
     public function student(TimetableRequest $request)
     {
         $user = $request->user();
-        $date = $request->get('date','2020-02-27');
-        // todo 调试把时间写死
-        $date = Carbon::parse('2020-02-27');
-
+        $date = $request->getDate();
 
         $return = $this->timetable($user, $date);
         $item = $return['item'];
@@ -82,9 +79,8 @@ class TimetableController extends Controller
     public function teacher(TimetableRequest $request)
     {
         $user = $request->user();
-        $date = $request->get('date','2020-02-27');
-        // todo 调试把时间写死
-        $date = Carbon::parse('2020-02-27');
+        $date = $request->getDate();
+
         $return = $this->timetable($user, $date);
         $item = $return['item'];
         $forStudyingSlots = $return['forStudyingSlots'];
@@ -167,7 +163,11 @@ class TimetableController extends Controller
     }
 
 
-    // 课表详情
+    /**
+     * 课程表详情
+     * @param TimetableRequest $request
+     * @return string
+     */
     public function timetableDetails(TimetableRequest $request)
     {
         $timetableId = $request->getTimetableId();
