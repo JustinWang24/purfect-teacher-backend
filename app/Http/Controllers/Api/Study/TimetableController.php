@@ -151,9 +151,6 @@ class TimetableController extends Controller
             $item = $timetableItemDao->getItemsByWeekDayIndexForTeacherView($weekdayIndex, $year, $term, $oddWeek, $user->id);
         }
 
-        $re = $timetableItemDao->getCourseCountByCourseId($gradeId, 2, $year, $term, $weeks);
-        dd($re);
-
         $timeSlotDao = new TimeSlotDao();
         $forStudyingSlots = $timeSlotDao->getAllStudyTimeSlots($schoolId);
 
