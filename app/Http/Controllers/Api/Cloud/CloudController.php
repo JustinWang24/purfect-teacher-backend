@@ -175,7 +175,6 @@ class CloudController extends Controller
          * @var  Facility $facility
          */
         $room = $facility->room;
-
         $timeSlotDao = new TimeSlotDao;
 
         $item = $timeSlotDao->getItemByRoomForNow($room);
