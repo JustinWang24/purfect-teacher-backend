@@ -185,7 +185,10 @@ class AttendanceController extends Controller
         }
         $attendancesDao = new AttendancesDao;
         $arrive = $attendancesDao->getTeacherIsSignByItem($items[0], $user);
-
+        if (is_null($arrive)) {
+            return JsonBuilder::Error('系统未生成签到初始化数据, 请学生先签到');
+        }
+        
         if ($arrive->teacher_sign == Attendance::TEACHER_SIGN) {
             $isArrive = true;
         } else {
@@ -393,10 +396,8 @@ class AttendanceController extends Controller
         $month = Carbon::parse($date)->month;
         $term = $configuration->guessTerm($month);
         $weeks = $configuration->getScheduleWeek($now, null, $term);
-//        $week = $weeks->getScheduleWeekIndex();
+        $week = $weeks->getScheduleWeekIndex();
         $dao = new AttendancesDao;
-        // todo:: 测试数据
-        $week = 5;
 
         $data = $dao->getTeacherSignInfo($itemIds, $week, $type);
 
