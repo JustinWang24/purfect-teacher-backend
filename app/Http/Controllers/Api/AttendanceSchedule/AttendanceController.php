@@ -188,7 +188,7 @@ class AttendanceController extends Controller
         if (is_null($arrive)) {
             return JsonBuilder::Error('系统未生成签到初始化数据, 请学生先签到');
         }
-        
+
         if ($arrive->teacher_sign == Attendance::TEACHER_SIGN) {
             $isArrive = true;
         } else {

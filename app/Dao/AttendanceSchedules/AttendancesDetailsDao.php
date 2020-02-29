@@ -80,8 +80,6 @@ class AttendancesDetailsDao
         $configuration = $school->configuration;
         $now = Carbon::now(GradeAndYearUtil::TIMEZONE_CN);
 
-        // todo :: $now 为了方便测试, 上线需要删除
-        $now = Carbon::parse('2020-01-08 14:40:00');
         $month = Carbon::parse($now)->month;
         $term = $configuration->guessTerm($month);
         $weeks = $configuration->getScheduleWeek($now, null, $term);
