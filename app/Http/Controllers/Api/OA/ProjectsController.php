@@ -72,9 +72,12 @@ class ProjectsController extends Controller
         $list = $dao->getProjects($schoolId);
         $data = [];
         foreach ($list as $key => $item) {
-//            $tasks = $item->tasks;
-//            $re = $tasks->first();
-            $end_time = $re->end_time ?? '';
+            $tasks = $item->tasks;
+            $endTimes = $tasks->pluck('end_time')->toArray();
+            sort($endTimes);
+
+            $endTimes = array_reverse($endTimes);
+            $end_time = $endTimes[0] ?? '';
             $members = $item->members;
             $memberIds = $members->pluck('user_id')->toArray(); // 项目成员
             array_push($memberIds,$item->user_id);
