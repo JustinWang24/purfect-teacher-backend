@@ -210,7 +210,7 @@ class GroupnoticesController extends Controller
             // 社团查看人数重新计算公告查看数
             $condition6[] = ['notice_id', '=', $infos['noticeid']];
             $condition6[] = ['group_id', '=', $infos['group_id']];
-            $condition6[] = ['notice_apply', '=', 0];
+            $condition6[] = ['notice_apply', '=', 1];
             $condition6[] = ['status', '=', 1];
 
             // 更新动态查看数
