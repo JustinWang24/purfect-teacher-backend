@@ -11,6 +11,7 @@ use App\Models\Affiche\Affiche;
 use App\Models\Affiche\AfficheComment;
 use App\Models\Affiche\AffichePics;
 use App\Models\Affiche\AffichePraise;
+use App\Models\Affiche\AfficheView;
 use App\Models\Affiche\AfficheVideo;
 use App\Models\Affiche\AfficheStick;
 
@@ -199,8 +200,39 @@ class AfficheDao extends \App\Dao\Affiche\CommonDao
             ->paginate(self::$bcckend_limit, $fieldArr, 'page', $page);
     }
 
+
     /**
-     * Func 冬天置顶
+     * Func 获取动态浏览列表
+     *
+     * @param['iche_id'] 是 int 动态id
+     * @param['keywords'] 是 string 关键词
+     * @param['status'] 是 array 状态(数组)
+     * @param['page']  int 分页ID
+     *
+     * @return array
+     */
+    public function getAfficheViewListInfo($param = [], $page = 1)
+    {
+        $condition = [];
+        // 检索条件
+        if (isset($param['iche_id']) && $param['iche_id'] > 0) {
+            $condition[] = ['a.iche_id', '=', (Int)$param['iche_id']];
+        }
+
+        // 获取的字段
+        $fieldArr = ['a.*', 'b.name', 'b.nice_name', 'b.mobile'];
+
+        return AfficheView::from('affiche_views as a')
+            ->where($condition)
+            ->where('b.mobile', 'like', '%'.trim($param['keywords']).'%')
+            ->join('users as b', 'a.user_id', '=', 'b.id')
+            ->orderBy('a.viewsid', 'desc')
+            ->select($fieldArr)
+            ->paginate(self::$bcckend_limit, $fieldArr, 'page', $page);
+    }
+
+    /**
+     * Func 动态置顶
      *
      * @param['iche_id'] 是 int 动态id
      * @param['keywords'] 是 string 关键词

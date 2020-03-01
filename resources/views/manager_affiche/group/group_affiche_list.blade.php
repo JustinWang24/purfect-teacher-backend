@@ -36,12 +36,11 @@ use App\User;
                                     <th>手机号</th>
                                     <th>学校</th>
                                     <th width="20%">内容</th>
-                                    <th>分享总数</th>
-                                    <th>点赞人数</th>
-                                    <th>评论人数</th>
-                                    <!--th>状态</th-->
+									<th>评论</th>
+									<th>点赞</th>
+									<th>浏览</th>
                                     <th>添加时间</th>
-                                    <th width="20%">操作</th>
+                                    <th width="25%">操作</th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -52,14 +51,15 @@ use App\User;
                                         <td>{{ $val->user->mobile }}</td>
                                         <td>{{ $val->school->name }}</td>
                                         <td>{{ $val->iche_content}}</td>
-                                        <td>{{ $val->iche_share_num }}</td>
-                                        <td>{{ $val->iche_praise_num }}</td>
                                         <td>{{ $val->iche_comment_num }}</td>
+                                        <td>{{ $val->iche_praise_num }}</td>
+                                        <td>{{ $val->iche_view_num }}</td>
                                         <!--td>{{ $afficheStatusArr[$val->status] }}</td-->
                                         <td>{{ $val->created_at }}</td>
                                         <td class="text-center">
 											{{ Anchor::Print(['text'=>'评论','class'=>'btn btn-primary','href'=>route('manager_affiche.affiche.affiche_comment_list',['icheid'=>$val->icheid])], Button::TYPE_DEFAULT,'') }}
 											{{ Anchor::Print(['text'=>'点赞','class'=>'btn btn-primary','href'=>route('manager_affiche.affiche.affiche_praise_list',['icheid'=>$val->icheid])], Button::TYPE_DEFAULT,'') }}
+											{{ Anchor::Print(['text'=>'浏览','class'=>'btn btn-primary','href'=>route('manager_affiche.affiche.affiche_view_list',['icheid'=>$val->icheid])], Button::TYPE_DEFAULT,'') }}
                                             {{ Anchor::Print(['text'=>'详情','class'=>'btn btn-primary','href'=>route('manager_affiche.group.group_affiche_one',['icheid'=>$val->icheid])], Button::TYPE_DEFAULT,'') }}
                                         </td>
                                     </tr>
