@@ -62,7 +62,7 @@ use App\User;
                                         <td>年级</td>
                                         <td>{{ isset($info->major_name)?$info->major_name:'---' }}</td>
                                         <td class="text-center">
-                                            {{ Anchor::Print(['text'=>'详情','class'=>'btn btn-round btn-default btn btn-primary','href'=>route('welcome_manager.welcomeReport.cost_detail',['uuid'=>$val['uuid'],'typeid'=>3])], Button::TYPE_DEFAULT,'') }}
+                                            {{ Anchor::Print(['text'=>'详情','class'=>'btn btn-round btn-default btn btn-primary','href'=>route('welcome_manager.welcomeReport.cost_detail',['id'=>$val['uuid'],'typeid'=>Request::get('typeid'),'index'=>Request::get('index')])], Button::TYPE_DEFAULT,'') }}
                                         </td>
                                     </tr>
                                 @endforeach

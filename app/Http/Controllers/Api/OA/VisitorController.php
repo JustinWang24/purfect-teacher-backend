@@ -80,12 +80,18 @@ class VisitorController extends Controller
     public function get_share_info(VisitorRequest $request)
     {
         $token = (String)$request->input('token', '');
-
-        // 邀请类型(1:微信,2:QQ，3：短信)
         $cate_id = (Int)$request->input('cate_id', 0);
+        $mobile_json = (String)$request->input('mobile_json', '');
 
         if (!in_array($cate_id, [1, 2, 3])) {
             return JsonBuilder::Error('参数错误');
+        }
+
+        // 如果是短信发送，需要验证手机号;
+        $mobileArr = json_decode($mobile_json, true);
+        if (!empty($mobileArr)) $mobileArr = array_filter(array_unique($mobileArr));
+        if ($cate_id == 3 && empty($mobileArr)) {
+            return JsonBuilder::Error('手机号不能为空');
         }
 
         $user = $request->user();
@@ -93,21 +99,32 @@ class VisitorController extends Controller
         $visitorObj = new VisitorDao();
         $infos = $visitorObj->getShareInfo($user->id);
 
-        // 发送短信
-        if($cate_id == 3)
-        {
-            // TODO....发送短信
-
+        // 1:微信,2:QQ
+        if (in_array($cate_id, [1, 2])) {
+            // 添加数据
+            $addData['uuid'] = $infos['uuid'];
+            $addData['user_id'] = $user->gradeUserOneInfo->id;
+            $addData['invited_by'] = $user->gradeUserOneInfo->id;
+            $addData['school_id'] = $user->gradeUserOneInfo->school_id;
+            $addData['cate_id'] = $cate_id;
+            $addData['share_url'] = $infos['share_url'];
+            $visitorObj->addVisitorInfo($addData);
         }
 
-        // 添加数据
-        $addData['uuid'] = $infos['uuid'];
-        $addData['user_id'] = $user->gradeUserOneInfo->id;
-        $addData['school_id'] = $user->gradeUserOneInfo->school_id;
-        $addData['cate_id'] = $cate_id;
-        $addData['share_url'] = $infos['share_url'];
-        $visitorObj->addVisitorInfo($addData);
-
-        return JsonBuilder::Success($infos,'访客详情');
+        // 短信
+        if ($cate_id == 3) {
+            foreach ($mobileArr as $val) {
+                $infos = $visitorObj->getShareInfo($user->id);
+                $addData['mobile'] = $val;
+                $addData['uuid'] = $infos['uuid'];
+                $addData['user_id'] = $user->gradeUserOneInfo->id;
+                $addData['invited_by'] = $user->gradeUserOneInfo->id;
+                $addData['school_id'] = $user->gradeUserOneInfo->school_id;
+                $addData['cate_id'] = $cate_id;
+                $addData['share_url'] = $infos['share_url'];
+                $visitorObj->addVisitorInfo($addData);
+            }
+        }
+        return JsonBuilder::Success($infos,'分享详情');
     }
 }

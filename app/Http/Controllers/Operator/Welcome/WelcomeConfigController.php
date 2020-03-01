@@ -43,9 +43,6 @@ class WelcomeConfigController extends Controller
     {
         $uuid = $request->get('uuid');
 
-        $this->dataForView['typeText'] = News::TypeText($request->get('type'));
-        $this->dataForView['pageTitle'] = $this->dataForView['typeText'] . '设置';
-
         $schoolObj = new SchoolDao();
         $school = $schoolObj->getSchoolByIdOrUuid($uuid);
 
