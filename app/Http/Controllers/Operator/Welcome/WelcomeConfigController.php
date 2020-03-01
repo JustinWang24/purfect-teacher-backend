@@ -19,6 +19,7 @@ use App\Utils\FlashMessageBuilder;
 use App\Utils\JsonBuilder;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use function GuzzleHttp\Psr7\str;
 
 class WelcomeConfigController extends Controller
 {
@@ -72,6 +73,10 @@ class WelcomeConfigController extends Controller
         $config_sdata = $request->input('data.config_sdata', '');
         $config_edate = $request->input('data.config_edate', '');
         $config_content2 = $request->input('data.config_content2', '');
+
+        $config_sdata = date('Y-m-d H:i:s', strtotime($config_sdata));
+        $config_edate = date('Y-m-d H:i:s', strtotime($config_edate));
+
         if (empty($school_id)) {
             return JsonBuilder::Error('参数错误');
         }
