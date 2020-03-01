@@ -9,7 +9,6 @@
 namespace App\Http\Controllers\Api\Study;
 
 
-use App\Dao\ElectiveCourses\TeacherApplyElectiveCourseDao;
 use Carbon\Carbon;
 use App\Utils\JsonBuilder;
 use App\Dao\Schools\SchoolDao;
@@ -21,6 +20,7 @@ use App\Dao\Courses\Lectures\LectureDao;
 use App\Http\Requests\MyStandardRequest;
 use App\Dao\AttendanceSchedules\AttendancesDao;
 use App\Dao\AttendanceSchedules\AttendancesDetailsDao;
+use App\Dao\ElectiveCourses\TeacherApplyElectiveCourseDao;
 
 class IndexController extends Controller
 {

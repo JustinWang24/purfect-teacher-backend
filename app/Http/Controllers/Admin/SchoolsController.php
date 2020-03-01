@@ -7,6 +7,7 @@ use App\Http\Requests\SchoolRequest;
 use App\Http\Controllers\Controller;
 use App\Dao\Schools\SchoolDao;
 use App\Models\School;
+use App\Models\Schools\SchoolResource;
 use App\User;
 use App\Utils\FlashMessageBuilder;
 
@@ -46,6 +47,10 @@ class SchoolsController extends Controller
     public function update(SchoolRequest $request){
         $dao = new SchoolDao($request->user());
         $schoolData = $request->get('school');
+        $schoolLogo = $request->file('logo')->store(SchoolResource::DEFAULT_UPLOAD_PATH_PREFIX);
+        if ($schoolLogo) {
+            $schoolData['logo'] = SchoolResource::schoolResourceUploadPathToUrl($schoolLogo);
+        }
 
         if(isset($schoolData['uuid'])){
             $result = $dao->updateSchool($schoolData);

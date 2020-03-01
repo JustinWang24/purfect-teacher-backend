@@ -8,8 +8,27 @@
 
 namespace App\Http\Requests\TimeTable;
 use App\Http\Requests\MyStandardRequest;
+use Carbon\Carbon;
 
 class TimetableRequest extends MyStandardRequest
 {
 
+    /**
+     * 获取课程表ID
+     * @return mixed
+     */
+    public function getTimetableId() {
+        return $this->get('time_table_id');
+    }
+
+
+    /**
+     * 获取日期
+     * @return mixed
+     */
+    public function getDate() {
+        // todo 暂时获取当前日期
+        $date = $this->get('date', '2020-02-27');
+        return Carbon::parse($date);
+    }
 }

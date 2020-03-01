@@ -891,7 +891,7 @@ Route::prefix('Oa')->middleware('auth:api')->group(function () {
         ->name('api.oa.grade.resources');
     // 上传班级风采
     Route::post('/upload-grade-resources', 'Api\OA\GradeManageController@uploadGradeResource')
-        ->name('api.oa.upload.grade.resources');
+        ->name('apigetQrCode.oa.upload.grade.resources');
     // 删除班级风采
     Route::post('/del-grade-resources', 'Api\OA\GradeManageController@delGradeResource')
         ->name('api.oa.del.grade.resources');
@@ -1005,6 +1005,16 @@ Route::prefix('study')->middleware('auth:api')->group(function(){
     // 删除学习资料
     Route::any('/delete-material', 'Api\Study\IndexController@deleteMaterial')
         ->name('api.study.delete-material');
+
+    // 学生端课表
+    Route::any('/timetable-student', 'Api\Study\TimetableController@student')
+        ->name('api.study.timetable-student');
+    // 教师端课表
+    Route::any('/timetable-teacher', 'Api\Study\TimetableController@teacher')
+        ->name('api.study.timetable-teacher');
+    // 课程表详情
+    Route::any('/timetable-details', 'Api\Study\TimetableController@timetableDetails')
+        ->name('api.study.timetable-details');
 });
 
 
