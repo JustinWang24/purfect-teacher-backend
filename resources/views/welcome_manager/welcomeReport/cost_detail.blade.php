@@ -1,6 +1,13 @@
 <?php
 use App\Utils\UI\Anchor;
 use App\Utils\UI\Button;
+
+// 返回跳转
+$routeArr = array(
+	1=>'welcome_manager.welcomeReport.tuitionfee_list',
+	2=>'welcome_manager.welcomeReport.bookfee_list',
+	3=>'welcome_manager.welcomeReport.roomfee_list'
+);
 ?>
 @extends('layouts.app')
 @section('content')
@@ -155,7 +162,7 @@ use App\Utils\UI\Button;
                 <div class="card-body menu-blck">
 
                     <!--学费-->
-                    @if( $dataOne['typeid'] == 1)
+                    @if( in_array($dataOne['typeid'],[1,2,3,4,5]))
                         @if(empty($dataOne['payInfo']))
                         <form action="{{ route('welcome_manager.welcomeReport.cost_detail',['id'=>Request::get('id'),'typeid'=>Request::get('typeid'),'index'=>Request::get('index')]) }}" method="post"  id="add-building-form">
                             @csrf
@@ -185,7 +192,7 @@ use App\Utils\UI\Button;
                             Button::Print(['id'=>'btn-create-building','text'=>trans('general.submit')], Button::TYPE_PRIMARY);
                             ?>
                             <?php
-                            Anchor::Print(['text'=>trans('general.return'),'href'=>route('welcome_manager.welcomeReport.tuitionfee_list',['uuid'=>session('school')['uuid'],'index'=>Request::get('index')]),'class'=>'pull-right link-return'], Button::TYPE_SUCCESS,'arrow-circle-o-right')
+                            Anchor::Print(['text'=>trans('general.return'),'href'=>route($routeArr[Request::get('typeid')],['uuid'=>session('school')['uuid'],'typeid'=>Request::get('typeid'),'index'=>Request::get('index')]),'class'=>'pull-right link-return'], Button::TYPE_SUCCESS,'arrow-circle-o-right')
                             ?>
                             </div>
                         </form>
@@ -229,7 +236,7 @@ use App\Utils\UI\Button;
                                     </el-row>
                                 </el-form>
                                 <?php
-                                Anchor::Print(['text'=>trans('general.return'),'href'=>route('welcome_manager.welcomeReport.tuitionfee_list',['uuid'=>session('school')['uuid'],'index'=>Request::get('index')]),'class'=>'pull-right link-return'], Button::TYPE_SUCCESS,'arrow-circle-o-right')
+                                Anchor::Print(['text'=>trans('general.return'),'href'=>route($routeArr[Request::get('typeid')],['uuid'=>session('school')['uuid'],'typeid'=>Request::get('typeid'),'index'=>Request::get('index')]),'class'=>'pull-right link-return'], Button::TYPE_SUCCESS,'arrow-circle-o-right')
                                 ?>
                             </div>
                         @endif

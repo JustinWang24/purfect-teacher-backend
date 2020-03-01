@@ -14,7 +14,9 @@ class EditUsersTable extends Migration
     public function up()
     {
         Schema::table('users', function (Blueprint $table) {
-			$table->string('user_signture',300)->nullable()->comment('签名');
+			if (!Schema::hasColumn('users', 'user_signture')) {
+                $table->string('user_signture',300)->nullable()->comment('签名');
+            }
         });
     }
 

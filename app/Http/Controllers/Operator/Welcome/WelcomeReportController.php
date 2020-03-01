@@ -201,7 +201,7 @@
 
            // 列表
            $welcomeUserReportObj = new WelcomeUserReportDao();
-           $dataList = $welcomeUserReportObj->getUserReportsOrProjectsListInfo($school->id, [1, 3], 2, $index, $page);
+           $dataList = $welcomeUserReportObj->getUserReportsOrProjectsListInfo($school->id, [1, 3], 3, $index, $page);
 
            $this->dataForView['dataList'] = $dataList;
 
@@ -223,11 +223,16 @@
            // 详情
            $welcomeUserReportObj = new WelcomeUserReportDao();
            $dataOne = $welcomeUserReportObj->getWelcomeUserReportOneInfo($uuid);
-           //print_r($dataOne);exit;
+
            if (!empty($dataOne)) {
                $dataOne['info1'] = json_decode($dataOne['steps_1_str'], true);
                $dataOne['info2'] = json_decode($dataOne['steps_2_str'], true);
                unset($dataOne['steps_1_str'], $dataOne['steps_2_str']);
+
+               // 获取报到函和缴费信息
+                // 类型(1:学费,2:书费,3:住宿费,4:生活用品,5:军训服装,10:报到函,11:党团文件,12:录取通知书)
+               $dataOne['reportInfo1'] = $welcomeUserReportObj->getWelcomeUserReportsProjectsListInfo($dataOne['user_id'],[10,11,12]);
+               $dataOne['reportInfo2'] = $welcomeUserReportObj->getWelcomeUserReportsProjectsListInfo($dataOne['user_id'],[1,2,3,4,5]);
            }
 
            $this->dataForView['dataOne'] = $dataOne;
@@ -235,7 +240,7 @@
            $this->dataForView['reportStatusArr'] = WelcomeUserReportDao::$reportStatusArr;
            $this->dataForView['reportProjectArr'] = WelcomeUserReportDao::$reportProjectArr[1];
 
-           return view('welcome_manager.welcomeReport.cost_detail', $this->dataForView);
+           return view('welcome_manager.welcomeReport.detail', $this->dataForView);
        }
 
        /**
@@ -248,8 +253,7 @@
            $uuid = (String)$request->input('uuid', '');
            $typeidArr = $request->input('typeid', '');
            $typeidArr = array_filter(array_unique($typeidArr));
-
-           if (!intval($uuid)) {
+           if (!trim($uuid)) {
                FlashMessageBuilder::Push($request, FlashMessageBuilder::DANGER, '参数错误');
                return redirect()->route('welcome_manager.welcomeReport.detail',[ 'uuid' => $uuid ]);
            }
@@ -334,8 +338,8 @@
            // 表单提交
            if ($request->isMethod('post'))
            {
-               // 1:学费,2:书费,3:住宿费
-               if (in_array($dataOne['typeid'],[1,2,3]))
+               // 1:学费,2:书费,3:住宿费,4:生活用品,5:军训服装
+               if (in_array($dataOne['typeid'],[1,2,3,4,5]))
                {
                    $infos = $request->all()['infos'];
                    // 添加数据
@@ -345,7 +349,7 @@
                    $addData['user_id'] = $dataOne['user_id'];
                    $addData['school_id'] = $dataOne['school_id'];
                    $addData['campus_id'] = $dataOne['campus_id'];
-                   $addData['project_title'] = WelcomeUserReportDao::$reportProjectArr[2][1];
+                   $addData['project_title'] = WelcomeUserReportDao::$reportProjectArr[2][$dataOne['typeid']];
                    $addData['pay_trade_sn'] = $infos['pay_trade_sn'];
                    $addData['pay_payment'] = $infos['pay_payment'];
                    $addData['pay_price'] = $infos['pay_price'];

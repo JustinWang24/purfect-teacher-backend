@@ -2,7 +2,7 @@
 @section('content')
     <div class="row" id="school-welcome-list-app">
 
-        <div class="col-6">
+        <div class="col-5">
             <div class="card">
                 <div class="card-head">
                     <header class="full-width">
@@ -135,7 +135,7 @@
             </div>
         </div>
 
-        <div class="col-4" v-if="dataList2 !== undefined && dataList2.length >0">
+        <div class="col-5" v-if="dataList2 !== undefined && dataList2.length >0">
             <div class="card">
                 <div class="card-head">
                     <header class="full-width">
@@ -206,7 +206,6 @@
         float: left;
         height: 1000px;
         text-align: left;
-        margin-left: 30px;
     }
     .menu-center-title ul{
         text-align: center;
