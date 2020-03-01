@@ -32,7 +32,7 @@ class IndexController extends Controller
         $school = $schoolDao->getSchoolById($schoolId);
         $configuration = $school->configuration;
 
-        $date = Carbon::now()->toDateString();
+        $date = Carbon::now();
 
         $year = $configuration->getSchoolYear($date);
         $month = Carbon::parse($date)->month;
