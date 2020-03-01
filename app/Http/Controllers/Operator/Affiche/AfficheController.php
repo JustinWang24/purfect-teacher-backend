@@ -248,6 +248,35 @@
         return view('manager_affiche.affiche.affiche_praise_list', $this->dataForView);
     }
 
+       /**
+        * Func 动态浏览列表
+        * @param Request $request
+        * @return view
+        */
+       public function affiche_view_list(Request $request)
+       {
+           $page = (Int)$request->input('page', 1);
+           $keywords = (String)$request->input('keywords', '');
+           $iche_id = (Int)$request->input('icheid', 0);
+
+           if (!$iche_id) {
+               FlashMessageBuilder::Push($request, FlashMessageBuilder::DANGER, '参数错误');
+               return redirect()->route('/');
+           }
+
+           // 关键词查询
+           $param['iche_id'] = $iche_id;
+           $param['keywords'] = $keywords;
+
+           $afficheObj = new AfficheDao();
+           $dataList = $afficheObj->getAfficheViewListInfo($param, $page);
+
+           // 返回数据
+           $this->dataForView['dataList'] = $dataList;
+
+           return view('manager_affiche.affiche.affiche_view_list', $this->dataForView);
+       }
+
     /**
      * Func 添加置顶
      * @param WifiRequest $request
