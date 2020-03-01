@@ -84,8 +84,8 @@ class ProjectsController extends Controller
             $memberIds = array_unique($memberIds);   // 项目总成员
             $userIds = array_merge($memberIds, [$item->create_user]);  // 可见人员 成员、负责人、创建者
             $statusArr = $tasks->pluck('status')->toArray();
-            if(count($tasks) == 0 || !in_array(ProjectTask::STATUS_IN_PROGRESS, $statusArr)
-                || !in_array(ProjectTask::STATUS_CLOSED, $statusArr)) {
+            if(count($tasks) == 0 || (!in_array(ProjectTask::STATUS_IN_PROGRESS, $statusArr)
+                && !in_array(ProjectTask::STATUS_CLOSED, $statusArr))) {
                 $status = Project::STATUS_NOT_BEGIN;  // 未开始
 
             } elseif(in_array(ProjectTask::STATUS_IN_PROGRESS,$statusArr)) {
