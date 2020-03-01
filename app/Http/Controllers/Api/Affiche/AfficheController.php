@@ -112,13 +112,13 @@ class AfficheController extends Controller
         }
 
         // 添加数据
-        $addData[ 'iche_title' ]          = '';
-        $addData[ 'iche_type' ]           = (String)$iche_type;
-        $addData[ 'iche_content' ]        = (String)trim ( $iche_content );
-        $addData[ 'iche_is_open_number' ] = (Int)$iche_is_open_number;
-        $addData[ 'userid' ]              = (Int)$user_id;
-        $addData[ 'schoolid' ]            = (Int)$school_id;
-        $addData[ 'schoolareaid' ]        = (Int)$campus_id;
+        $addData['iche_title'] = '';
+        $addData['iche_type'] = (String)$iche_type;
+        $addData['iche_content'] = (String)trim($iche_content);
+        $addData['iche_is_open_number'] = (Int)$iche_is_open_number;
+        $addData['user_id'] = (Int)$user_id;
+        $addData['schoolid'] = (Int)$school_id;
+        $addData['schoolareaid'] = (Int)$campus_id;
 
         // 添加动态
         $afficheObj = new AfficheDao();
