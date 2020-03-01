@@ -88,7 +88,7 @@ class VisitorController extends Controller
         }
 
         // 如果是短信发送，需要验证手机号;
-        $mobileArr = json_decode($mobile_json, true);
+        $mobileArr = json_decode( stripslashes( $mobile_json ) , true );
         if (!empty($mobileArr)) $mobileArr = array_filter(array_unique($mobileArr));
         if ($cate_id == 3 && empty($mobileArr)) {
             return JsonBuilder::Error('手机号不能为空');

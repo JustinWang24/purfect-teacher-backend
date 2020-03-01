@@ -8,6 +8,7 @@
 namespace App\Dao\Affiche\Api;
 
 use App\Models\Affiche\Affiche;
+use App\Models\Affiche\AfficheView;
 use App\Models\Affiche\AffichePics;
 use App\Models\Affiche\AfficheVideo;
 
@@ -272,5 +273,30 @@ class AfficheDao extends \App\Dao\Affiche\CommonDao
         $condition[] = ['icheid', '=', $iche_id];
 
         return Affiche::where($condition)->update(['status'=>0]);
+    }
+
+    /**
+     * Func 增加动态浏览数
+     *
+     * @param $user_id 用户id
+     * @param $iche_id 动态id
+     *
+     * @return
+     */
+    public function addAfficheViewsInfo($user_id = 0, $iche_id = 0)
+    {
+        if (!intval($user_id) || !intval($iche_id)) {
+            return;
+        }
+
+        // 添加数据
+        $addData['user_id'] = $user_id;
+        $addData['iche_id'] = $iche_id;
+        if (AfficheView::create($addData)) {
+            // 查询条件
+            $count = AfficheView::where('iche_id', '=', $iche_id)->count();
+            $this->editAffichesInfo(['iche_view_num' => $count], $iche_id);
+        }
+        return;
     }
 }

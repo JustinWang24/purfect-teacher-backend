@@ -287,6 +287,7 @@
             $addData['school_id'] = $school_id;
             $addData['stick_mixid'] = $dataOne['icheid'];
             $addData['stick_title'] = $dataOne['iche_content'];
+
             if ($AfficheObj->addAfficheStickInfo($addData)) {
                 FlashMessageBuilder::Push ( $request , FlashMessageBuilder::SUCCESS , '操作成功');
                 return redirect()->route('manager_affiche.affiche.top_affiche_list');
