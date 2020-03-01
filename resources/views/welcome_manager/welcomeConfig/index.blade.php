@@ -23,16 +23,14 @@
                         <div v-if="is_show1 == true">
                             <el-form label-width="100px">
                                 <el-row>
-                                    <el-col span="12">
-                                        <el-form-item label="开始时间">
-                                            <el-input autocomplete="off" v-model="baseInfoForm.config_sdata" placeholder="迎新开始时间"></el-input>
-                                        </el-form-item>
-                                    </el-col>
-                                    <el-col span="12">
-                                        <el-form-item label="结束时间">
-                                            <el-input autocomplete="off" v-model="baseInfoForm.config_edate" placeholder="迎新开始时间"></el-input>
-                                        </el-form-item>
-                                    </el-col>
+                                    <el-form-item label="开始时间">
+                                        <el-date-picker v-model="baseInfoForm.config_sdata" type="datetime" placeholder="选择日期时间"></el-date-picker>
+                                    </el-form-item>
+                                </el-row>
+                                <el-row>
+                                    <el-form-item label="结束时间">
+                                        <el-date-picker v-model="baseInfoForm.config_edate" type="datetime" placeholder="选择日期时间"></el-date-picker>
+                                    </el-form-item>
                                 </el-row>
                                 <el-row>
                                     <el-col>
@@ -51,7 +49,7 @@
                         </div>
                         <!--个人信息-->
                         <div v-if="is_show2 == true">
-                            <el-form label-width="100px">
+                            <el-form label-width="120px">
                                 <el-row>
                                     <el-col>
                                         <el-form-item label="一寸照片">

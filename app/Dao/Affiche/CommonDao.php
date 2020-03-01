@@ -100,7 +100,7 @@ class CommonDao
         $data['user_sex'] = '男'; // 性别
         $data['user_signture'] = $userInfo->user_signture; // 签名
         $data['user_pics'] = '/assets/img/dp.jpg'; // 头像
-        $data['user_nickname'] = $userInfo->user_signture; // 用户名
+        $data['user_nickname'] = $userInfo->nice_name; // 用户名
         $data['school_name'] = '礼县职业中等专业学校'; // 学校名称
         $data['user_fans_number'] = $userInfo->user_fans_number; // 粉丝数量
         $data['user_focus_number'] = $userInfo->user_focus_number; // 关注数量
