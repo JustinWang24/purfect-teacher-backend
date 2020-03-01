@@ -9,6 +9,7 @@
 namespace App\BusinessLogic\Pipeline\Flow\Impl;
 
 use App\Dao\Pipeline\FlowDao;
+use App\Models\Pipeline\Flow\Flow;
 use App\Models\Schools\News;
 use App\Models\Teachers\Teacher;
 use App\User;
@@ -108,10 +109,21 @@ class TeacherFlowsLogic extends GeneralFlowsLogic
         ];
 
         $result =  $dao->getGroupedFlows(
-            $this->user->getSchoolId(), Teacher::FlowTypes(), $forApp
+            $this->user->getSchoolId(), array_keys(Flow::getTypesByPosition(IFlow::POSITION_1)), $forApp
         );
 
-        $types = array_merge($types, $result);
+        foreach ( $result as $item) {
+            if (!empty($item['flows'])) {
+                $newflow = [];
+                foreach ($item['flows'] as $flow) {
+                    if ($dao->checkPermissionByuser($flow, $this->user, 0)) {
+                        $newflow[] = $flow;
+                    }
+                }
+                $item['flows'] = $newflow;
+            }
+            $types[] = $item;
+        }
         return $types;
     }
 }
