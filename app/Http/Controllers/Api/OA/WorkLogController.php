@@ -158,7 +158,7 @@ class WorkLogController extends  Controller
         if ($result) {
             return JsonBuilder::Success('删除成功');
         } else {
-            return JsonBuilder::Error('删除删除');
+            return JsonBuilder::Error('删除失败');
         }
     }
 
