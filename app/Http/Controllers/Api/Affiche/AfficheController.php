@@ -346,6 +346,7 @@ class AfficheController extends Controller
             if ($user_id) {
                 $isfollow = (Int)$userFollowobj->getUserFollowCount($user_id, $infos['user_id']);
                 $ispraise = (Int)$praiseobj->getAffichePraiseCount(1, $user_id, $infos['icheid']);
+                $afficheobj->addAfficheViewsInfo($user_id, $infos['icheid']);
             }
 
             // 用户信息

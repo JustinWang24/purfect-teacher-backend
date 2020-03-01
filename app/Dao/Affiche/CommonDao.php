@@ -102,9 +102,9 @@ class CommonDao
         $data['user_pics'] = '/assets/img/dp.jpg'; // 头像
         $data['user_nickname'] = $userInfo->user_signture; // 用户名
         $data['school_name'] = '礼县职业中等专业学校'; // 学校名称
-        $data['user_fans_number'] = 10; // 粉丝数量
-        $data['user_focus_number'] = 20; // 关注数量
-        $data['user_praise_number'] = 30; // 点赞数量
+        $data['user_fans_number'] = $userInfo->user_fans_number; // 粉丝数量
+        $data['user_focus_number'] = $userInfo->user_focus_number; // 关注数量
+        $data['user_praise_number'] = $userInfo->user_praise_number; // 点赞数量
 
          return $data;
     }
@@ -118,10 +118,13 @@ class CommonDao
      */
     public function getFansOrFocusOrPraiseNumber($user_id = 0)
     {
-        // TODO........
-        $data['user_fans_number'] = 10; // 粉丝数量
-        $data['user_focus_number'] = 20; // 关注数量
-        $data['user_praise_number'] = 30; // 点赞数量
+        $userObj = new UserDao();
+        $userInfo = $userObj->getUserById($user_id);
+
+        $data['user_fans_number'] = $userInfo->user_fans_number; // 粉丝数量
+        $data['user_focus_number'] = $userInfo->user_focus_number; // 关注数量
+        $data['user_praise_number'] = $userInfo->user_praise_number; // 点赞数量
+
         return $data;
     }
 
