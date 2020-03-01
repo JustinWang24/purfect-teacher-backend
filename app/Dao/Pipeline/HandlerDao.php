@@ -50,7 +50,6 @@ class HandlerDao
     }
 
     public function update(Node $node, $handlersDescriptor) {
-
         $handlerData = [];
         $result = NodeHandlersDescriptor::Parse($handlersDescriptor);
         /**
