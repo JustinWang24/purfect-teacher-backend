@@ -185,9 +185,11 @@ class GradeManageController extends Controller
         $dao = new StudentProfileDao;
         $gradeManagerDao = new GradeManagerDao;
         $userDao = new UserDao;
-        $userResult = $userDao->updateUser($studentId, null,null,null,$data['email']);
-        $gradeResult = $gradeManagerDao->updateGradeManger($monitor['grade_id'], $monitor);
+        if (isset($data['email'])) {
+            $userResult = $userDao->updateEmail($studentId, $data['email']);
+        }
         unset($data['email']);
+        $gradeResult = $gradeManagerDao->updateGradeManger($monitor['grade_id'], $monitor);
         $studentResult =  $dao->updateStudentProfile($studentId, $data);
         $groupResult = $gradeManagerDao->updateGradeManger($group['grade_id'], $group);
 

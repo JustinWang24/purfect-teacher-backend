@@ -1,0 +1,21 @@
+// 后台管理系统----- 工作流程管理
+#pipeline-flows-manager-app {
+  .manger-card-header {
+    padding: 10px 24px;
+    .card-header-top {
+      display: flex;
+      span {
+        flex: 1;
+        font-size: 20px;
+        text-align: center;
+        cursor: pointer;
+      }
+      .el-divider--vertical {
+        height: 1.5em !important;
+      }
+    }
+    .el-divider--horizontal {
+      margin: 5px !important;
+    }
+  }
+}

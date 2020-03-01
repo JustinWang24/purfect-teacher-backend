@@ -144,6 +144,7 @@ export const Constants = {
             LOAD_BY_PARENT: '/Oa/tissue/getOrganization',
         },
         FLOW: {
+            GETFLOWS: '/school_manager/pipeline/flows/load-flows', // 获取某一位置下的分类和流程列表
             SAVE: '/school_manager/pipeline/flows/save-flow',
             SAVE_NODE: '/school_manager/pipeline/flows/save-node',
             SAVE_NODE_OPTION: '/school_manager/pipeline/flows/save-node-option',

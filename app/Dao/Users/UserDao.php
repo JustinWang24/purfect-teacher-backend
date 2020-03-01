@@ -339,5 +339,15 @@ class UserDao
         return User::where('api_token', $apiToken)->first();
     }
 
+    /**
+     * 更新用户邮箱
+     * @param $userId
+     * @param $email
+     * @return mixed
+     */
+    public function updateEmail($userId, $email = null)
+    {
+        return User::where('id', $userId)->update(['email' => $email]);
+    }
 
 }
