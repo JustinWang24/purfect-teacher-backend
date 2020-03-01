@@ -171,7 +171,7 @@ class GradeManageController extends Controller
     }
 
     /**
-     * 修改学生信息
+     * 教师修改学生信息
      * @param MyStandardRequest $request
      * @return string
      */
@@ -187,9 +187,7 @@ class GradeManageController extends Controller
         $userDao = new UserDao;
         $userResult = $userDao->updateUser($studentId, null,null,null,$data['email']);
         $gradeResult = $gradeManagerDao->updateGradeManger($monitor['grade_id'], $monitor);
-        if ($data['email']) {
-            unset($data['email']);
-        }
+        unset($data['email']);
         $studentResult =  $dao->updateStudentProfile($studentId, $data);
         $groupResult = $gradeManagerDao->updateGradeManger($group['grade_id'], $group);
 

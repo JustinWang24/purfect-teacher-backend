@@ -279,7 +279,7 @@ class UserDao
         if($name){
             $data['name'] = $name;
         }
-        if($mobile){
+        if($email){
             $data['email'] = $email;
         }
         if($niceName) {

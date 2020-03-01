@@ -47,7 +47,7 @@ class StudentProfileDao
      */
     public function updateStudentProfile($userId, $profile)
     {
-        return StudentProfile::where('user_id',$userId)->update($profile);
+        return StudentProfile::where('user_id', $userId)->update($profile);
     }
 
 
