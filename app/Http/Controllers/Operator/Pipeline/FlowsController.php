@@ -111,7 +111,7 @@ class FlowsController extends Controller
             $firstNode = $nodeDao->getHeadNodeByFlow($flow->id);
             $prevNodeId = $firstNode->id;
         }
-        $nodeData['name'] = '';
+        $nodeData['name'] = '审批流程';
         //非第一个节点已经不需要区分使用者了所以赋予全部人
         $nodeData['handlers'] = ['教师', '职工', '学生'];
         $prevNode = $nodeDao->getById($prevNodeId);
@@ -129,9 +129,11 @@ class FlowsController extends Controller
             //创建新的handler使用者
             $handlerDao->create($result, $nodeData);
             //更新前一个handler的审批人为当前使用者
-            $nodeData['notice_to'] = $nodeData['titles'];
-            $nodeData['notice_organizations'] = $nodeData['organizations'];
-            $handlerDao->update($prevNode, $nodeData);
+            $upData = [
+                'notice_to' => $nodeData['titles'],
+                'notice_organizations' => $nodeData['organizations']
+            ];
+            $handlerDao->update($prevNode, $upData);
 
             return JsonBuilder::Success(['flow' => $flow,'nodes'=>$flow->getSimpleLinkedNodes()]);
         }
@@ -266,6 +268,12 @@ class FlowsController extends Controller
 
     public function load_business(FlowRequest $request){
         return JsonBuilder::Success(Flow::business());
+    }
+
+    public function load_titles(FlowRequest $request) {
+        $position = $request->getPosition();
+        $titleType = $request->get('type');
+        return JsonBuilder::Success(Flow::getTitlesByType($position, $titleType));
     }
 
 

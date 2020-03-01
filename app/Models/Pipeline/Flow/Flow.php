@@ -3,9 +3,11 @@
 namespace App\Models\Pipeline\Flow;
 
 use App\Dao\Pipeline\ActionDao;
+use App\Dao\Pipeline\FlowDao;
 use App\Models\Teachers\Teacher;
 use App\Models\Users\GradeUser;
 use App\User;
+use App\Utils\Misc\Contracts\Title;
 use App\Utils\Pipeline\IFlow;
 use App\Utils\Pipeline\INode;
 use App\Utils\Pipeline\IUser;
@@ -73,6 +75,35 @@ class Flow extends Model implements IFlow
             ];
         }
         return [];
+    }
+    public static function getTitlesByType($position, $type) {
+        if ($position == 1) {
+            //学生端
+            if ($type == 1) {
+                //组织
+                return [
+                    Title::ALL_TXT, Title::ORGANIZATION_EMPLOYEE, Title::ORGANIZATION_DEPUTY, Title::ORGANIZATION_LEADER
+                ];
+            }else {
+                //职务
+                return [
+                    Title::ALL_TXT, Title::CLASS_ADVISER, Title::GRADE_ADVISER, Title::DEPARTMENT_LEADER, Title::SCHOOL_DEPUTY, Title::SCHOOL_PRINCIPAL, Title::SCHOOL_COORDINATOR
+                ];
+            }
+        }else {
+            //教师端
+            if ($type == 1) {
+                //组织
+                return [
+                    Title::ALL_TXT, Title::ORGANIZATION_EMPLOYEE, Title::ORGANIZATION_DEPUTY, Title::ORGANIZATION_LEADER
+                ];
+            }else {
+                //职务
+                return [
+                    Title::ALL_TXT, Title::GRADE_ADVISER, Title::DEPARTMENT_LEADER, Title::SCHOOL_DEPUTY, Title::SCHOOL_PRINCIPAL, Title::SCHOOL_COORDINATOR
+                ];
+            }
+        }
     }
 
     public static function business($businessid = null) {
@@ -168,17 +199,10 @@ class Flow extends Model implements IFlow
 
     public function canBeStartBy(IUser $user): INode
     {
-        // Todo: 对于一个流程是否可以被一个用户启动的功能, 需要实现
         $node = null;
-        if($user->isStudent()){
-            if(in_array($this->type, User::StudentFlowTypes())){
-                $node = $this->getHeadNode();
-            }
-        }
-        elseif($user->isTeacher()){
-            if(in_array($this->type, Teacher::FlowTypes())){
-                $node = $this->getHeadNode();
-            }
+        $dao = new FlowDao();
+        if ($dao->checkPermissionByuser($this, $user, 0)){
+            $node= $this->getHeadNode();
         }
         return $node;
     }

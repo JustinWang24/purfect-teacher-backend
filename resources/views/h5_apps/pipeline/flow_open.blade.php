@@ -36,7 +36,7 @@
             <el-form-item label="申请加急" class="nb">
                 <el-switch v-model="action.urgent"></el-switch>
             </el-form-item>
-            <el-form-item label="选择附件" class="nb">
+            {{--<el-form-item label="选择附件" class="nb">
                 <el-button type="primary" size="mini" icon="el-icon-document" v-on:click="showFileManagerFlag=true">选择附件</el-button>
                 <ul style="padding-left: 0;">
                     <li v-for="(a, idx) in action.attachments" :key="idx">
@@ -45,30 +45,34 @@
                         </p>
                     </li>
                 </ul>
-            </el-form-item>
+            </el-form-item>--}}
 
             <p v-if="done" class="text-primary">
                 提交成功!
             </p>
 
-            <p>说明: {{ $node->description }}</p>
+            {{--<p>说明: {{ $node->description }}</p>
             @if(count($node->attachments) > 0)
                 <p>附件列表:</p>
                 @foreach($node->attachments as $attachment)
-                    <p><a href="{{ $attachment->url }}" target="_blank">{{ $attachment->file }}</a></p>
+                    <p><a href="{{ $attachment->url }}" target="_blank">{{ $attachment->file_name }}</a></p>
                 @endforeach
             @else
                 <p class="text-info">本步骤没有提供附件给申请人</p>
-            @endif
+            @endif--}}
         </el-form>
 
         <h5>审批流程</h5>
 
         <el-timeline>
-            @foreach($flow->nodes as $key=>$n)
+            @foreach($handlers as $key => $handler)
             <el-timeline-item
                     key="{{ $key }}">
-                {{ $n->name }}
+                @foreach($handler as $k => $val)
+                    @foreach ($val as $v)
+                    {{ $v->name }}({{ $k }})
+                    @endforeach
+                @endforeach
             </el-timeline-item>
             @endforeach
         </el-timeline>

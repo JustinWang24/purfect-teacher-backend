@@ -8,6 +8,7 @@
 
 namespace App\Dao\Pipeline;
 
+use App\BusinessLogic\OrganizationTitleHelpers\TitleToUsersFactory;
 use App\Dao\Users\UserOrganizationDao;
 use App\Models\Pipeline\Flow\Flow;
 use App\Models\Pipeline\Flow\Node;
@@ -68,6 +69,40 @@ class FlowDao
         return $groups;
     }
 
+    public function transTitlesToUser($titles, $organizations, User $user) {
+        $return = [];
+        $schoolId = $user->getSchoolId();
+        //组织部门
+        if (!empty($organizations)) {
+            $organizationArr = explode(';', trim($organizations, ';'));
+            $titlesArr = explode(';', trim($titles, ';'));
+            $organizations = UserOrganization::with(['organization' => function ($query) use ($organizationArr, $schoolId){
+                $query->where('school_id', $schoolId)->whereIn('name', $organizationArr);
+            }])->pluck('organization_id')->toArray();
+
+            //如果用户存在相同组织则仅显示自己所在组织
+            $userOrganizationId = $user->organizations->pluck('organization_id')->toArray();
+
+        }else {
+            //职务
+            $titlesArr = explode(';', trim($titles, ';'));
+            foreach ($titlesArr as $title) {
+                $helper = TitleToUsersFactory::GetInstance($title, $user);
+                $titleUsers = $helper->getUsers();
+                $return[$title] = $titleUsers;
+            }
+        }
+
+        return $return;
+    }
+
+    /**
+     * 检测用户是否有权限使用
+     * @param Flow $flow
+     * @param User $user
+     * @param int $nodeId
+     * @return bool
+     */
     public function checkPermissionByuser(Flow $flow, User $user, $nodeId = 0) {
         $schoolId = $user->getSchoolId();
         if (empty($nodeId)) {
