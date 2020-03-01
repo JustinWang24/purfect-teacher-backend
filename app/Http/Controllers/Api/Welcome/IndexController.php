@@ -86,9 +86,9 @@ class IndexController extends Controller
             {
                 foreach($val['data'] as $k=>&$v)
                 {
-                    // 如果个人已经报到，按照个人报到信息展示
-                    if(!empty($getWelcomeUserReportOneInfo->configid))
-                    {
+                    /*// 如果个人已经报到，按照个人报到信息展示
+                    if(empty($getWelcomeUserReportOneInfo->configid))
+                    {*/
                         // 个人信息(A)
                         if($v['letter'] == 'A')
                         {
@@ -119,12 +119,12 @@ class IndexController extends Controller
                             $v['message'] = $checkWelcomeUserReportOneInfo['message'];
                         }
 
-                    } else {
+                    /*} else {
                         // 学校全局配置验收
                         $v['notice'] = $checkUserIsWelcomeInfo['notice']; // 提示信息
                         $v['status'] = $checkUserIsWelcomeInfo['status']; // 0：弹出message
                         $v['message'] = $checkUserIsWelcomeInfo['message'];
-                    }
+                    }*/
                 }
             }
         }
