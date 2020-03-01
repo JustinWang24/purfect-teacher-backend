@@ -345,7 +345,7 @@ class UserDao
      * @param $email
      * @return mixed
      */
-    public function updateEmail($userId, $email)
+    public function updateEmail($userId, $email = null)
     {
         return User::where('id', $userId)->update(['email' => $email]);
     }

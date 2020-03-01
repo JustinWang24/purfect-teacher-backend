@@ -185,13 +185,13 @@ class GradeManageController extends Controller
         $dao = new StudentProfileDao;
         $gradeManagerDao = new GradeManagerDao;
         $userDao = new UserDao;
-        $userResult = $userDao->updateEmail($studentId, $data['email']);
+//        $userResult = $userDao->updateEmail($studentId, $data['email']);
         $gradeResult = $gradeManagerDao->updateGradeManger($monitor['grade_id'], $monitor);
-        unset($data['email']);
+//        unset($data['email']);
         $studentResult =  $dao->updateStudentProfile($studentId, $data);
         $groupResult = $gradeManagerDao->updateGradeManger($group['grade_id'], $group);
 
-        if ($gradeResult !==false || $studentResult !==false || $groupResult !==false || $userResult !==false ) {
+        if ($gradeResult !==false || $studentResult !==false || $groupResult !==false) {
             return JsonBuilder::Success('修改成功');
         } else {
             return JsonBuilder::Error('修改失败');
