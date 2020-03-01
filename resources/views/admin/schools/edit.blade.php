@@ -34,10 +34,10 @@ use App\Utils\UI\Button;
                             <img src="{{$school->logo}}" alt="">
                          </div>
                         <?php
-Button::Print(['id'=>'btnSubmit','text'=>trans('general.submit')], Button::TYPE_PRIMARY);
-?>&nbsp;
+                            Button::Print(['id'=>'btnSubmit','text'=>trans('general.submit')], Button::TYPE_PRIMARY);
+                        ?>&nbsp;
                         <?php
-Anchor::Print(['text'=>trans('general.return'),'href'=>route('home'),'class'=>'pull-right'], Button::TYPE_SUCCESS,'arrow-circle-o-right')
+                            Anchor::Print(['text'=>trans('general.return'),'href'=>route('home'),'class'=>'pull-right'], Button::TYPE_SUCCESS,'arrow-circle-o-right')
                         ?>
                         <p class="text-muted sub-title">上次更新: {{ $school->last_updated_by ? $school->lastUpdatedBy->name : '超级管理员' }}</p>
                     </form>

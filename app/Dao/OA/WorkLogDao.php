@@ -103,4 +103,5 @@ class WorkLogDao
     {
         return WorkLog::where('id', $id)->update($data);
     }
+
 }

@@ -81,7 +81,7 @@ class SignInGradeController extends Controller
         $school = $schoolDao->getSchoolById($schoolId);
         $configuration = $school->configuration;
         $now = Carbon::now();
-        $now = Carbon::parse('2020-01-08 14:40:00');
+//        $now = Carbon::parse('2020-01-08 14:40:00');
         $weeks = $configuration->getScheduleWeek($now);
         if(is_null($weeks)) {
            return JsonBuilder::Error('当前没有课程');

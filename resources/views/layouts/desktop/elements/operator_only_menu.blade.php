@@ -9,6 +9,9 @@
             <a href="{{ route('admin.versions.list') }}" class="nav-link ">
                 <span class="title">版本号管理</span>
             </a>
+             <a href="{{ route('admin.proposal.list') }}" class="nav-link ">
+                <span class="title">意见反馈</span>
+            </a>
         </li>
     </ul>
 </li>
