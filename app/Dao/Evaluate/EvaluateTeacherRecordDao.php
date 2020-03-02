@@ -69,6 +69,7 @@ class EvaluateTeacherRecordDao
                     'evaluate_student_id' => $evalStudent->id,
                     'user_id'     => $student['user_id'],
                     'score'       => $val['score'],
+                    'evaluate_teacher_id' => $info->id,
                 ];
                 EvaluateTeacherRecord::create($record);
             }
