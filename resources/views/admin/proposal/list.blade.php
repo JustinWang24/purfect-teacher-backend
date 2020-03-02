@@ -45,6 +45,7 @@ use App\Utils\UI\Button;
                             @endforeach
                         </tbody>
                     </table>
+                     {{ $data->appends(Request::all())->links() }}
                 </div>
                 </div>
             </div>
