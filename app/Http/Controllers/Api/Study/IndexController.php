@@ -32,14 +32,13 @@ class IndexController extends Controller
         $school = $schoolDao->getSchoolById($schoolId);
         $configuration = $school->configuration;
 
-        $date = Carbon::now()->toDateString();
+        $date = Carbon::now();
 
         $year = $configuration->getSchoolYear($date);
         $month = Carbon::parse($date)->month;
         $term = $configuration->guessTerm($month);
         $timetableItemDao = new TimetableItemDao();
-        $item = $timetableItemDao->getCurrentItemByUser($user);
-
+        $item = $timetableItemDao->getCurrentItemByUser($user, $date);
 
         $teacherApplyElectiveDao = new TeacherApplyElectiveCourseDao();
         $electiveTime = $teacherApplyElectiveDao->getElectiveCourseStartAndEndTime($schoolId, $term);
@@ -90,15 +89,14 @@ class IndexController extends Controller
             $weeks = $configuration->getScheduleWeek(Carbon::parse($date), null, $term);
 
             $week = $weeks->getScheduleWeekIndex() ?? '';
-
             $attendancesDao = new AttendancesDao();
 
             $attendance = $attendancesDao->getAttendanceByTimeTableId($item->id,$week);
+            if(!is_null($attendance)) {
+                $detail = $attendancesDetailsDao->getDetailByUserId($user->id, $attendance->id);
+                $signIn['status'] = $detail->mold ?? 0;
+            }
 
-
-            $detail = $attendancesDetailsDao->getDetailByUserId($user->id, $attendance->id);
-
-            $signIn['status'] = $detail->mold ?? 0;
             $evaluateTeacher = true;
         }
 

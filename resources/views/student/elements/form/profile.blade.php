@@ -124,7 +124,7 @@ use App\Utils\UI\Button;
         <div class="col-md-3 col-sm-12 col-xs-12">
             <div class="form-group">
                 <label for="student-country-input">籍贯(必填)</label>
-                <input required type="text" class="form-control" id="student-country-input" value="{{ $profile->source_place??$student->profile->source_place }}" placeholder="籍贯: 北京市" name="profile[source_place]">
+                <input required type="text" class="form-control" id="student-country-input" value="{{ $profile->country??$student->profile->country }}" placeholder="籍贯: 北京市" name="profile[country]">
             </div>
         </div>
     </div>

@@ -350,4 +350,14 @@ class UserDao
         return User::where('id', $userId)->update(['email' => $email]);
     }
 
+    /**
+     * 根据用户的电话号码获取用户
+     * @param $email
+     * @return User
+     */
+    public function getUserByEmail($email)
+    {
+        return User::where('email', $email)->first();
+    }
+
 }
