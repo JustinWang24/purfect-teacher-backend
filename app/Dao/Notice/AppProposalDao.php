@@ -55,7 +55,7 @@ class AppProposalDao
      */
     public function getAllProposal()
     {
-        return AppProposal::all();
+        return AppProposal::orderBy('created_at', 'desc')->paginate(ConfigurationTool::DEFAULT_PAGE_SIZE);;
     }
 
     /**

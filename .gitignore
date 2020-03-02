@@ -29,4 +29,3 @@ composer.lock
 package-lock.json
 /public/redactor/*
 .DS_Store
-/public/vendor/*
