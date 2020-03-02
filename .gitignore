@@ -30,3 +30,5 @@ package-lock.json
 /public/redactor/*
 .DS_Store
 /public/vendor/*
+config/telescope.php
+app/Providers/TelescopeServiceProvider.php
