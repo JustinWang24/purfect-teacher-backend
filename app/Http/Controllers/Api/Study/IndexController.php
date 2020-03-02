@@ -92,10 +92,11 @@ class IndexController extends Controller
             $attendancesDao = new AttendancesDao();
 
             $attendance = $attendancesDao->getAttendanceByTimeTableId($item->id,$week);
+            if(!is_null($attendance)) {
+                $detail = $attendancesDetailsDao->getDetailByUserId($user->id, $attendance->id);
+                $signIn['status'] = $detail->mold ?? 0;
+            }
 
-            $detail = $attendancesDetailsDao->getDetailByUserId($user->id, $attendance->id);
-
-            $signIn['status'] = $detail->mold ?? 0;
             $evaluateTeacher = true;
         }
 
