@@ -220,13 +220,26 @@ class NewMeetingController extends Controller
             $now = Carbon::now()->toDateTimeString();
             // 通过
             if($item->status == NewMeeting::STATUS_PASS) {
-                if($now < $item->meet_start) {
-                    $status = NewMeeting::STATUS_WAIT;
-                } elseif ($now > $item->meet_start && $now < $item->meet_end) {
-                    $status = NewMeeting::STATUS_UNDERWAY;
+                // 判断是否需要签退 不需要 用会议结束时间判断是否结束
+                if($item->signout_status == NewMeeting::NOT_SIGNOUT) {
+                    if($now < $item->meet_start) {
+                        $status = NewMeeting::STATUS_WAIT;
+                    } elseif ($now > $item->meet_start && $now < $item->meet_end) {
+                        $status = NewMeeting::STATUS_UNDERWAY;
+                    } else {
+                        $status = NewMeeting::STATUS_FINISHED;
+                    }
                 } else {
-                    $status = NewMeeting::STATUS_FINISHED;
+                    // 用签退时间判断会议是否结束
+                    if($now < $item->meet_start) {
+                        $status = NewMeeting::STATUS_WAIT;
+                    } elseif ($now > $item->meet_start && $now < $item->signout_end) {
+                        $status = NewMeeting::STATUS_UNDERWAY;
+                    } else {
+                        $status = NewMeeting::STATUS_FINISHED;
+                    }
                 }
+
             } else {
                 $status = $item->status;
             }
