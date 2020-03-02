@@ -141,7 +141,13 @@ class Flow extends Model implements IFlow
         }
         //表单
         if ($node->options) {
-            $result['options'] = $node->options;
+            foreach ($node->options as $option) {
+                $option = $option->toArray();
+                if (!empty($option['extra'])) {
+                    $option['extra'] = json_decode($option['extra'], true);
+                }
+                $result['options'][] = $option;
+            }
         }
         while ($node->next_node > 0){
             //获取审批人
