@@ -182,5 +182,4 @@ class IndexController extends Controller
         return JsonBuilder::Success ( $infos , '社区个人主页' );
     }
 
-
 }
