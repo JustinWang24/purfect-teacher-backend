@@ -43,6 +43,7 @@ class TeacherProfileDao
             ->where('type', Role::TEACHER)
             ->leftJoin('teacher_profiles as teacher', 'teacher.user_id', '=', 'users.id')
             ->where('teacher.school_id', $schoolId)
+            ->select(['users.id', 'users.name'])
             ->get();
     }
 
