@@ -80,15 +80,23 @@ class FlowsController extends Controller
      */
     public function save_flow(FlowRequest $request){
         $flow = $request->getFlowFormData();
-        // if(empty($flow['id'])){
+        if(empty($flow['id'])){
             // 创建新流程
             $node = $request->getNewFlowFirstNode();
             $dao = new FlowDao();
             $result = $dao->create($flow, '', $node);
             return $result->isSuccess() ?
                 JsonBuilder::Success(['id'=>$result->getData()->id]) :
-                JsonBuilder::Error($result->getMessage()); 
-        // }
+                JsonBuilder::Error($result->getMessage());
+        }else {
+            //更新流程
+            $node = $request->getNewFlowFirstNode();
+            $dao = new FlowDao();
+            $result = $dao->update($flow, '', $node, $flow['id']);
+            return $result->isSuccess() ?
+                JsonBuilder::Success(['id'=>$flow['id']]) :
+                JsonBuilder::Error($result->getMessage());
+        }
     }
 
     /**
