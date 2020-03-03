@@ -77,14 +77,16 @@ class PipelineTableSeeder extends Seeder
             'node_id' => $firstNode->id,
             'name' => '文本框',
             'type' => '文本',
-            'tip' => '请输入文本内容',
+            'title' => 'title',
+            'tips' => '请输入文本内容',
             'required' => 1
         ]);
         $option2 = \App\Models\Pipeline\Flow\NodeOption::create([
             'node_id' => $firstNode->id,
             'name' => '单选框',
             'type' => '文本',
-            'tip' => '请选择性别',
+            'title' => 'title',
+            'tips' => '请选择性别',
             'required' => 0,
             'extra' => json_encode([['id' => 1, 'name' => '男'], ['id' => 2, 'name' => '女']])
         ]);

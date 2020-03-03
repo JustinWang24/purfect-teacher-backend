@@ -34,13 +34,13 @@ class FlowRequest extends MyStandardRequest
 
     public function getNodeOptionFormData(){
         /**
-         * {
+         * [{
          *   id:null,
          *   name:名称
          *   type:类型
          *   tip:提示
          *   required:必填
-         * }
+         * }]
          */
         return $this->get('node_option',false);
     }

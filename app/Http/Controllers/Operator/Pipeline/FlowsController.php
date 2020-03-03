@@ -30,6 +30,21 @@ class FlowsController extends Controller
         return view('school_manager.pipeline.flow.manager', $this->dataForView);
     }
 
+    public function handler(FlowRequest $request){
+        $this->dataForView['pageTitle'] = '工作流程管理';
+        $dao = new FlowDao();
+        $flow = $dao->getById($request->get('flow_id'));
+        $this->dataForView['flow'] = $flow;
+        return view('school_manager.pipeline.flow.handler', $this->dataForView);
+    }
+    public function copy(FlowRequest $request){
+        $this->dataForView['pageTitle'] = '工作流程管理';
+        $dao = new FlowDao();
+        $flow = $dao->getById($request->get('flow_id'));
+        $this->dataForView['flow'] = $flow;
+        return view('school_manager.pipeline.flow.copy', $this->dataForView);
+    }
+
     /**
      * 加载某个位置的全部流程
      * @param FlowRequest $request
@@ -243,10 +258,13 @@ class FlowsController extends Controller
         if($nodeOptionFormData){
             $dao = new NodeDao();
             $firstNode = $dao->getHeadNodeByFlow($flowId);
-            $nodeOptionFormData['node_id'] = $firstNode->id;
             try{
-                $option = $dao->saveNodeOption($nodeOptionFormData);
-                return $option ? JsonBuilder::Success(['id'=>$option->id]) : JsonBuilder::Error('找不到指定的选项数据');
+                $dao->deleteOption($firstNode->id);
+                foreach ($nodeOptionFormData as $nodeData) {
+                    $nodeData['node_id'] = $firstNode->id;
+                    $dao->saveNodeOption($nodeData);
+                }
+                return JsonBuilder::Success();
             }
             catch (\Exception $exception){
                 return JsonBuilder::Error($exception->getMessage());
