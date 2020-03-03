@@ -188,10 +188,10 @@ class TaskDao
             }
 
 
-            $finish = $task->taskMembers
-                ->where('status',ProjectTaskMember::STATUS_CLOSED)
-                ->where('take_id','<>', $task->id);
-            if(count($finish) == 0) {
+            $taskMembers = $task->taskMembers;
+            $finish = $taskMembers->where('status',ProjectTaskMember::STATUS_CLOSED);
+
+            if(count($finish) == count($taskMembers)) {
                 // 关闭任务
                 ProjectTask::where('id',$task->id)->update(['status'=>ProjectTask::STATUS_CLOSED]);
             }
