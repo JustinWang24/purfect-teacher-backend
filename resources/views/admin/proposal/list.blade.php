@@ -21,6 +21,7 @@ use App\Utils\UI\Button;
                             <th>#</th>
                             <th>用户</th>
                             <th>反馈内容</th>
+                            <th>反馈类型</th>
                             <th>反馈时间</th>
                             <th>操作</th>
                         </tr>
@@ -34,6 +35,7 @@ use App\Utils\UI\Button;
                                 <td>{{ $index }}</td>
                                 <td class="center">{{ $val->user->name }}</td>
                                 <td class="center">@php echo mb_substr($val->content, 0, 10) @endphp</td>
+                                <td class="center">{{$val->getTypeText()}}</td>
                                 <td>{{$val->created_at}}</td>
                                 <td class="text-center">
                                     {{ Anchor::Print(['text'=>'详情','href'=>route('admin.proposal.info',['id' => $val->id])], Button::TYPE_PRIMARY,'edit') }}
