@@ -42,8 +42,10 @@ class LoginController extends Controller
         } elseif ($type == User::ID_NUMBER_LOGIN) {
 
             $idNumber = $request->get('id_number');
-            if (!$idNumber) {
-                return JsonBuilder::Error('身份证号输入错误');
+            $password = $request->get('password');
+
+            if (!$idNumber || !$password) {
+                return JsonBuilder::Error('请输入身份证号或者密码');
             }
 
             if ($request->getAppType() == Role::VERIFIED_USER_STUDENT) { // 学生登录
@@ -56,7 +58,11 @@ class LoginController extends Controller
             if (!$profile) {
                 return JsonBuilder::Error('身份证号输入错误,请重新登录');
             }
+
             $user = $profile->user;
+            if (!Hash::check($password, $user->password)) {
+                 return JsonBuilder::Error('身份证号或密码错误,请重新输入');
+            }
         }
         $userDeviceDao = new UserDeviceDao;
         if ($user->getType() != $request->getAppType()) {

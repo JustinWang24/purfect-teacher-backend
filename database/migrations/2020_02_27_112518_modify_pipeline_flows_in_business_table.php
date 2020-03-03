@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class ModifyPipelineFlowsTable extends Migration
+class ModifyPipelineFlowsInBusinessTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,6 @@ class ModifyPipelineFlowsTable extends Migration
      */
     public function up()
     {
-        //
         Schema::table('pipeline_flows', function (Blueprint $table) {
             if (!Schema::hasColumn('pipeline_flows', 'business')) {
                 $table->string('business')->nullable()->comment('关联业务');

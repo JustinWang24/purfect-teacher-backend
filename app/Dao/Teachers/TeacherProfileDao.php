@@ -5,6 +5,7 @@ namespace App\Dao\Teachers;
 use App\Models\Acl\Role;
 use App\Models\Users\GradeUser;
 use App\Models\Teachers\TeacherProfile;
+use App\User;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\DB;
 
@@ -31,22 +32,18 @@ class TeacherProfileDao
     }
 
     /**
+     * 搜索老师
      * @param $name
      * @param $schoolId
-     * @param $majorsId
      * @return \Illuminate\Support\Collection
      */
-    public function searchTeacherByNameSimple($name, $schoolId, $majorsId = []){
-        if(!empty($majorsId)){
-            return GradeUser::select(DB::raw('user_id as id, name'))
-                ->where('school_id',$schoolId)
-                ->whereIn('major_id',$majorsId)
-                ->where('name','like',$name.'%')
-                ->get();
-        }
-        return GradeUser::select(DB::raw('user_id as id, name'))
-            ->where('school_id',$schoolId)
-            ->where('name','like',$name.'%')
+    public function searchTeacherByNameSimple($name, $schoolId){
+
+        return User::where('name','like', $name.'%')
+            ->where('type', Role::TEACHER)
+            ->leftJoin('teacher_profiles as teacher', 'teacher.user_id', '=', 'users.id')
+            ->where('teacher.school_id', $schoolId)
+            ->select(['users.id', 'users.name'])
             ->get();
     }
 

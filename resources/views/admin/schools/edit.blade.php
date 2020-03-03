@@ -13,7 +13,7 @@ use App\Utils\UI\Button;
                 </div>
 
                 <div class="card-body " id="bar-parent">
-                    <form action="{{ route('admin.schools.update') }}" method="post">
+                    <form action="{{ route('admin.schools.update') }}" method="post" enctype="multipart/form-data">
                         @csrf
                         <input type="hidden" name="school[uuid]" value="{{ $school->uuid }}">
                         <div class="form-group">
@@ -28,11 +28,16 @@ use App\Utils\UI\Button;
                             <label for="max-employees">系统教工账户数量上限</label>
                             <input required type="text" class="form-control" id="max-employees" value="{{ $school->max_employees_number }}" placeholder="系统教工账户数量上限, 0表示无上限" name="school[max_employees_number]">
                         </div>
+                         <div class="form-group">
+                            <label for="max-employees">学校Logo</label>
+                            <input required type="file" class="form-control" id="max-employees" value="" placeholder="学校Logo, 0表示无上限" name="logo">
+                            <img src="{{$school->logo}}" alt="">
+                         </div>
                         <?php
-Button::Print(['id'=>'btnSubmit','text'=>trans('general.submit')], Button::TYPE_PRIMARY);
-?>&nbsp;
+                            Button::Print(['id'=>'btnSubmit','text'=>trans('general.submit')], Button::TYPE_PRIMARY);
+                        ?>&nbsp;
                         <?php
-Anchor::Print(['text'=>trans('general.return'),'href'=>route('home'),'class'=>'pull-right'], Button::TYPE_SUCCESS,'arrow-circle-o-right')
+                            Anchor::Print(['text'=>trans('general.return'),'href'=>route('home'),'class'=>'pull-right'], Button::TYPE_SUCCESS,'arrow-circle-o-right')
                         ?>
                         <p class="text-muted sub-title">上次更新: {{ $school->last_updated_by ? $school->lastUpdatedBy->name : '超级管理员' }}</p>
                     </form>

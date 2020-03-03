@@ -62,8 +62,8 @@ class GroupController extends Controller
 
         $user = $request->user();
         $user_id = $user->id;
-        $school_id = $user->gradeUser->school_id;
-        $campus_id = $user->gradeUser->campus_id;
+        $school_id = $user->gradeUserOneInfo->school_id;
+        $campus_id = $user->gradeUserOneInfo->campus_id;
 
         // 获取我之前是否有待审核信息
         $collegeGroupObj = new CollegeGroupDao();
@@ -208,7 +208,7 @@ class GroupController extends Controller
 
         $user = $request->user();
         $user_id = $user->id;
-        $school_id = $user->gradeUser->school_id;
+        $school_id = $user->gradeUserOneInfo->school_id;
 
         $groupIdArr = []; // 存放groupid
         $infos = $infos1 = $infos2 = $infos3 = [];
@@ -342,7 +342,7 @@ class GroupController extends Controller
 
         $user = $request->user();
         $user_id = $user->id;
-        $school_id = $user->gradeUser->school_id;
+        $school_id = $user->gradeUserOneInfo->school_id;
 
         $collegeGroupObj = new CollegeGroupDao();
         $collegeGroupJoinObj = new CollegeGroupJoinDao();
@@ -497,8 +497,8 @@ class GroupController extends Controller
 
         $user = $request->user();
         $user_id = $user->id;
-        $school_id = $user->gradeUser->school_id;
-        $campus_id = $user->gradeUser->campus_id;
+        $school_id = $user->gradeUserOneInfo->school_id;
+        $campus_id = $user->gradeUserOneInfo->campus_id;
 
         // TODO.....验证是否入驻
  /*       if (!$user_usercode) {
@@ -562,8 +562,8 @@ class GroupController extends Controller
 
         $user = $request->user();
         $user_id = $user->id;
-        $school_id = $user->gradeUser->school_id;
-        $campus_id = $user->gradeUser->campus_id;
+        $school_id = $user->gradeUserOneInfo->school_id;
+        $campus_id = $user->gradeUserOneInfo->campus_id;
 
         // 获取群组详情
         $collegeGroupobj = new CollegeGroupDao();
@@ -638,8 +638,8 @@ class GroupController extends Controller
 
         $user = $request->user();
         $user_id = $user->id;
-        $school_id = $user->gradeUser->school_id;
-        $campus_id = $user->gradeUser->campus_id;
+        $school_id = $user->gradeUserOneInfo->school_id;
+        $campus_id = $user->gradeUserOneInfo->campus_id;
 
         // 获取群组详情
         $collegeGroupobj = new CollegeGroupDao();
@@ -693,8 +693,8 @@ class GroupController extends Controller
 
         $user = $request->user();
         $user_id = $user->id;
-        $school_id = $user->gradeUser->school_id;
-        $campus_id = $user->gradeUser->campus_id;
+        $school_id = $user->gradeUserOneInfo->school_id;
+        $campus_id = $user->gradeUserOneInfo->campus_id;
 
         // 获取群组详情
         $collegeGroupobj = new CollegeGroupDao();

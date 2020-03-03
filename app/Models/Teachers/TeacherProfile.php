@@ -66,7 +66,7 @@ class TeacherProfile extends Model
 
 
     public function user() {
-        $field = ['id','name','mobile', 'type'];
+        $field = ['id','name','mobile', 'type', 'password'];
         return $this->belongsTo(User::class)->select($field);
     }
 

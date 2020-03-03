@@ -34,4 +34,10 @@ class NoticeOrganization extends Model
         return null;
     }
 
+
+    public function inspect()
+    {
+        return $this->belongsTo(NoticeInspect::class,'inspect_id');
+    }
+
 }

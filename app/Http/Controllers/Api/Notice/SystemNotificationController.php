@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\Notice;
 
 use App\Dao\Misc\SystemNotificationDao;
 use App\Utils\JsonBuilder;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
@@ -35,6 +36,7 @@ class SystemNotificationController extends Controller
                 ];
             }
             $systemNotification['app_extra'] = $retExtra;
+            $systemNotification['created_at'] = Carbon::parse($systemNotification['created_at'])->format('Y-m-d H:i');
         }
         //设置消息为已读
         $dao->setNotificationHasRead($user->getSchoolId(), $user);

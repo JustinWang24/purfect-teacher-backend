@@ -161,50 +161,87 @@ use App\Utils\UI\Button;
                                     <el-col>{{ $reportStatusArr[$dataOne['status']] }}</el-col>
                                 </el-form-item>
                             </el-row>
+							@if($dataOne['complete_date'])
                             <el-row>
                                 <el-form-item label="报到时间：">
                                     <el-col>{{ $dataOne['complete_date']?$dataOne['complete_date']:'---' }}</el-col>
                                 </el-form-item>
                             </el-row>
+							@endif
                         </el-form>
                     </div>
 
                     <div class="ln-title"><span>照片信息</span></div>
                     <div class="pics">
+						@if(!empty($dataOne['info2']))
                         @foreach($dataOne['info2'] as $key=>$val)
                             <div class="pics-1">
                                 <a href="{{ $val }}" target="_blank"><img src="{{ $val }}"></a>
                                 <span class="title">{{ $reportPicsArr[$key] }}</span>
                             </div>
                         @endforeach
+						@endif
                     </div>
-
+                    <div class="ln-title"><span>提交的资料</span></div>
+                    <div class="pics">
+						@if(!empty($dataOne['reportInfo1']))
+						<div>
+							@foreach($dataOne['reportInfo1'] as $key=>$val)
+								<span>{{ $val['project_title'] }}</span> 
+								@if(count($dataOne['reportInfo1']) != $key+1)
+									&nbsp;,&nbsp;
+								@endif
+							@endforeach
+						</div>
+						@endif
+                    </div>
                     <!--待报到  状态(0:关闭，2:app个人资料完善中，1:报到中(未交费)，3:已报到(已缴费))-->
                     @if($dataOne['status'] == 2 )
-                    <form action="{{ route('welcome_manager.welcomeReport.wait_update') }}" method="post"  id="add-building-form">
-                        @csrf
-                        <div class="ln-title"><span>提交的资料</span></div>
-                        <div>
-                            <div class="checkbox-1">
-                                @foreach($reportProjectArr as $key=>$val)
-                                    <p>
-                                    <input name="typeid[]" type="checkbox" value="{{ $key }}" id="checkbox_{{ $key }}"/>
-                                    <label for="checkbox_{{ $key }}">{{ $val }}</label>
-                                    </p>
-                                @endforeach
-                            </div>
-                            <p class="notice-1">温馨提示：确认报到后，将不能更改，请谨慎操作！</p>
-                        </div>
-                        <input type="hidden" name="uuid" value="{{ $dataOne['uuid']  }}">
-                        <div class="but-foter">
-                        <?php
-                        Button::Print(['id'=>'btn-create-building','text'=>trans('general.submit')], Button::TYPE_PRIMARY);
-                        ?>
-                        <?php
-                        Anchor::Print(['text'=>trans('general.return'),'href'=>url()->previous(),'class'=>'pull-right link-return'], Button::TYPE_SUCCESS,'arrow-circle-o-right')
-                        ?>
-                        </div>
-                    </form>
+						<form action="{{ route('welcome_manager.welcomeReport.wait_update') }}" method="post"  id="add-building-form">
+							@csrf
+							<div class="ln-title"><span>提交的资料</span></div>
+							<div>
+								<div class="checkbox-1">
+									@foreach($reportProjectArr as $key=>$val)
+										<p>
+										<input name="typeid[]" type="checkbox" value="{{ $key }}" id="checkbox_{{ $key }}"/>
+										<label for="checkbox_{{ $key }}">{{ $val }}</label>
+										</p>
+									@endforeach
+								</div>
+								<p class="notice-1">温馨提示：确认报到后，将不能更改，请谨慎操作！</p>
+							</div>
+							<input type="hidden" name="uuid" value="{{ $dataOne['uuid']  }}">
+							<div class="but-foter">
+							<?php
+							Button::Print(['id'=>'btn-create-building','text'=>trans('general.submit')], Button::TYPE_PRIMARY);
+							?>
+							<?php
+							Anchor::Print(['text'=>trans('general.return'),'href'=>url()->previous(),'class'=>'pull-right link-return'], Button::TYPE_SUCCESS,'arrow-circle-o-right')
+							?>
+							</div>
+						</form>
+					@else
+						@if(!empty($dataOne['reportInfo2']))
+							<table class="datagrid-btable" cellspacing="0" cellpadding="0" border="1">
+								<tbody>
+									<tr>
+									<th style="width:150px;text-align: center;">项目名称</th>
+									<th style="width:150px;text-align: center;">状态</th>
+									<th style="width:300px;text-align: center;">详情</th>
+									<th style="width:230px;text-align: center;">时间</th>
+									</tr>
+									@foreach($dataOne['reportInfo2'] as $key=>$val)
+									<tr>
+										<td style="width:150px;text-align: center;">{{ $val['project_title'] }}</td>
+										<td style="width:150px;text-align: center;">已缴费</td>
+										<td style="width:300px;text-align: center;">{{ $val['project_desc'] }}</td>
+										<td style="width:200px;text-align: center;">{{ $val['created_at'] }}</td>
+									</tr>  
+								@endforeach								
+								</tbody>
+							</table>
+						@endif
                     @endif
 
                 </div>

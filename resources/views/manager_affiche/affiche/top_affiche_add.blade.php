@@ -15,7 +15,7 @@ use App\Utils\UI\Button;
                         @csrf
                         <div class="form-group">
                             <label for="school-name-input">学校</label>
-                            <select id="cityid" class="form-control" name="infos[school_id]"  required>
+                            <select id="cityid" class="form-control" name="school_id"  required>
                                 <option value="0">社区未登录推荐</option>
                             </select>
                         </div>

@@ -1,4 +1,5 @@
 import {Util} from "../../common/utils";
+import {Constants} from "../../common/constants";
 
 if (document.getElementById('teacher-assistant-index-app')) {
     new Vue({
@@ -6,13 +7,14 @@ if (document.getElementById('teacher-assistant-index-app')) {
         data(){
             return {
                 schoolId: null,
-                input:'',
+                input: '',
+                bannerData: [],
                 statusMap: {
-                    0:'未通过',
-                    1:'已通过',
-                    2:'待审批',
-                    3:'已通过',
-                    5:'已撤回'
+                    0: '未通过',
+                    1: '已通过',
+                    2: '待审批',
+                    3: '已通过',
+                    5: '已撤回'
                 },
                 tableData: [{
                     iconState: 1,
@@ -50,12 +52,25 @@ if (document.getElementById('teacher-assistant-index-app')) {
         created(){
             const dom = document.getElementById('app-init-data-holder');
             this.schoolId = dom.dataset.school;
+            this.getBunnerData();
             console.log('助手');
         },
         methods: {
             handleClick: function (tab, event) {
                 console.log(tab)
                 console.log(event)
+            },
+            getBunnerData: function () {
+                const url = Util.buildUrl(Constants.API.TEACHER_WEB.INDEX);
+                console.log(url)
+                axios.post(url).then((res) => {
+                    console.log(res)
+                    if (Util.isAjaxResOk(res)) {
+                        this.bannerData = res.data.data;
+                    }
+                }).catch((err) => {
+
+                });
             }
         }
     });

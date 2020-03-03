@@ -34,8 +34,9 @@ class WifiController extends Controller
    {
       $user = $request->user ();
 
+
       $user_id   = $user->id;
-      $campus_id = $user->gradeUser->campus_id;
+      $campus_id = $user->gradeUserOneInfo->campus_id;
 
       if ( ! intval ( $campus_id ) || ! intval ( $user_id ) )
       {
@@ -70,7 +71,7 @@ class WifiController extends Controller
          'config_imgurl1','config_imgurl2','config_imgurl3',
          'config_imgurl1_status','config_imgurl2_status','config_imgurl3_status'
       ];
-      
+
 	  $infos['wifiConfig'] = WifiConfigsDao::getWifiConfigsOneInfo(
          $condition1,['configid','desc'],$fieldArr1
       );
@@ -83,7 +84,7 @@ class WifiController extends Controller
       // 获取是否同意协议
       $condition3[] = [ 'user_id' , '=' , $user_id ];
       $infos[ 'wifi_is_agree' ] = (Int)WifiUserAgreementsDao::getWifiUserAgreementsStatistics ( $condition3 ,'count');
- 
+
       return JsonBuilder::Success ( $infos , '校园网首页' );
    }
 
@@ -138,8 +139,8 @@ class WifiController extends Controller
       $param1 = self::getPostParamInfo ( $param , [ 'user_mobile_source' , 'user_mobile_password' ] );
       $param2[ 'user_id' ] = $user->id;
       $param2[ 'user_mobile_phone' ] = $user->mobile;
-      $param2[ 'school_id' ] = $user->gradeUser->school_id;
-      $param2[ 'campus_id' ] = $user->gradeUser->campus_id;
+      $param2[ 'school_id' ] = $user->gradeUserOneInfo->school_id;
+      $param2[ 'campus_id' ] = $user->gradeUserOneInfo->campus_id;
 
       if ( WifiUserTimesDao::addOrUpdateWifiUserTimesInfo ( array_merge ( $param1 , $param2 ) , $timesid ) )
       {

@@ -11,6 +11,7 @@ use App\Models\TeacherAttendance\Clockin;
 use App\Utils\JsonBuilder;
 use App\Utils\Misc\Contracts\Title;
 use Carbon\Carbon;
+use Psy\Util\Json;
 
 class AttendanceController extends Controller
 {
@@ -137,11 +138,16 @@ class AttendanceController extends Controller
             return JsonBuilder::Error('您已绑定Mac地址');
         }
 
+        $inputMac = $request->getInputMacAddress();
+        if ($dao->checkMacUsed($attendance, $inputMac)) {
+            return JsonBuilder::Error('该手机已绑定其他号码');
+        }
+
         $macDao = new UserMacDao();
         $data = [
             'teacher_attendance_id' => $attendance->id,
             'user_id' => $user->id,
-            'mac_address' => $request->getInputMacAddress()
+            'mac_address' => $inputMac
         ];
 
         $result = $macDao->create($data);

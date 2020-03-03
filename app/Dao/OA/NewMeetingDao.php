@@ -99,26 +99,35 @@ class NewMeetingDao
 
 
     /**
+     * 待完成
      * @param $userId
      * @return mixed
      */
     public function unfinishedMeet($userId) {
         $now = Carbon::now()->toDateTimeString();
+        $meetUser = NewMeetingUser::where('user_id',$userId)->get()->toArray();
+        if(count($meetUser) == 0) {
+            return null;
+        }
+        $meetIds = array_column($meetUser, 'meet_id');
+        // 不需要签退
         $map = [
-            ['new_meeting_users.user_id','=', $userId],
-            ['new_meetings.meet_end', '>', $now],
+            ['new_meetings.meet_end', '>=', $now],
             ['new_meetings.status', '=', NewMeeting::STATUS_PASS],
+            ['new_meetings.signout_status', '=', NewMeeting::NOT_SIGNOUT],
+        ];
+        // 需要签退
+        $where = [
+            ['new_meetings.signout_end', '>=', $now],
+            ['new_meetings.status', '=', NewMeeting::STATUS_PASS],
+            ['new_meetings.signout_status', '=', NewMeeting::SIGNOUT],
         ];
 
-        $field = ['new_meeting_users.*', 'new_meeting_users.signin_status as signIn_status',
-            'new_meeting_users.signout_status as signOut_status', 'new_meetings.*'];
 
-        $list = NewMeetingUser::join('new_meetings', function ($join) use ($map){
-            $join->on('new_meetings.id', '=', 'new_meeting_users.meet_id')
-                ->where($map)
-                ->orderBy('new_meetings.meet_start');
-        })->select($field)->paginate(ConfigurationTool::DEFAULT_PAGE_SIZE);
-        return $list;
+        return NewMeeting::where($map)
+            ->orWhere($where)
+            ->whereIn('id', $meetIds)
+            ->paginate(ConfigurationTool::DEFAULT_PAGE_SIZE);
     }
 
 
@@ -129,20 +138,29 @@ class NewMeetingDao
      */
     public function accomplishMeet($userId) {
         $now = Carbon::now()->toDateTimeString();
+        $meetUser = NewMeetingUser::where('user_id',$userId)->get()->toArray();
+        if(count($meetUser) == 0) {
+            return null;
+        }
+        $meetIds = array_column($meetUser, 'meet_id');
+
+        // 不需要签退
         $map = [
-            ['new_meeting_users.user_id','=', $userId],
-            ['new_meetings.meet_end', '<=', $now],
+            ['new_meetings.meet_end', '<', $now],
             ['new_meetings.status', '=', NewMeeting::STATUS_PASS],
+            ['new_meetings.signout_status', '=', NewMeeting::NOT_SIGNOUT],
+        ];
+        // 需要签退
+        $where = [
+            ['new_meetings.signout_end', '<', $now],
+            ['new_meetings.status', '=', NewMeeting::STATUS_PASS],
+            ['new_meetings.signout_status', '=', NewMeeting::SIGNOUT],
         ];
 
-        $field = ['new_meeting_users.*', 'new_meeting_users.signin_status as signIn_status',
-            'new_meeting_users.signout_status as signOut_status', 'new_meetings.*'];
-        $list = NewMeetingUser::join('new_meetings', function ($join) use ($map){
-            $join->on('new_meetings.id', '=', 'new_meeting_users.meet_id')
-                ->where($map)
-                ->orderBy('new_meetings.meet_start');
-        })->select($field)->paginate(ConfigurationTool::DEFAULT_PAGE_SIZE);
-        return $list;
+        return NewMeeting::where($map)
+            ->orwhere($where)
+            ->whereIn('id',$meetIds)
+            ->paginate(ConfigurationTool::DEFAULT_PAGE_SIZE);
     }
 
 
@@ -273,30 +291,50 @@ class NewMeetingDao
      * @param NewMeeting $meet
      * @param $meetUserId
      * @param $type
-     * @return mixed
+     * @return MessageBag
      */
     public function saveSignIn(NewMeeting $meet, $meetUserId, $type) {
+        $messageBag = new MessageBag();
         $now = Carbon::now()->toDateTimeString();
         $map = ['id'=>$meetUserId];
+        $meetingUser = NewMeetingUser::where($map)->first();
         if($type == 'signIn') {
+            if($meetingUser->signin_status !== NewMeetingUser::UN_SIGNIN) {
+                $messageBag->setMessage('已签到');
+                return $messageBag;
+            }
             // 签到时间大于会议开始时间
             if($now > $meet->meet_start) {
                 $status = 2; // 迟到
             } else {
                 $status = 1; // 正常
             }
+            $msg = '签到';
             $save = ['signin_status'=>$status, 'signin_time'=>$now];
         } else {
+
+            if($meetingUser->signout_status !== NewMeetingUser::UN_SIGNOUT) {
+                $messageBag->setMessage('已签退');
+                return $messageBag;
+            }
+
             if($now < $meet->meet_end ) {
                 $status = 2; // 早退
             } else {
                 $status = 1; // 正常
             }
-
+            $msg = '签退';
             $save = ['signout_status'=>$status, 'signout_time'=>$now];
         }
 
-        return NewMeetingUser::where($map)->update($save);
+        $result = NewMeetingUser::where($map)->update($save);
+        if($result) {
+            $messageBag->setMessage($msg.'成功');
+        } else {
+            $messageBag->setMessage($msg.'失败');
+            $messageBag->setCode(JsonBuilder::CODE_ERROR);
+        }
+        return $messageBag;
     }
 
 

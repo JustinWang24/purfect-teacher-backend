@@ -83,7 +83,7 @@ class FromStudentPoint implements ITimetableBuilder
         $startDate = $this->schoolConfiguration->getTermStartDate();
         $this->year = $startDate->year;
         $this->term = $this->schoolConfiguration->guessTerm($now->month);
-        $this->allWeeks = $this->schoolConfiguration->getAllWeeksOfTerm();
+        $this->allWeeks = $this->schoolConfiguration->getAllWeeksOfTerm($this->term);
 
         // 获取请求的数据的类型: 是指定某一天的, 还是指定某一周的
         $this->requestedDataType = $request->get('type', ITimetableBuilder::STUDENT_REQUEST_TYPE_DAILY);

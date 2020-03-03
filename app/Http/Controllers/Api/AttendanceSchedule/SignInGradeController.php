@@ -9,8 +9,6 @@
 namespace App\Http\Controllers\Api\AttendanceSchedule;
 
 
-use App\Models\AttendanceSchedules\Attendance;
-use App\Models\Schools\SchoolConfiguration;
 use Carbon\Carbon;
 use App\Utils\JsonBuilder;
 use App\Dao\Schools\GradeDao;
@@ -18,10 +16,13 @@ use App\Dao\Schools\SchoolDao;
 use App\Dao\Courses\CourseDao;
 use App\Utils\Time\CalendarDay;
 use App\Dao\Users\GradeUserDao;
+use App\Utils\Time\GradeAndYearUtil;
 use App\Dao\Schools\GradeManagerDao;
 use App\Http\Controllers\Controller;
 use App\Dao\Timetable\TimetableItemDao;
 use App\Http\Requests\MyStandardRequest;
+use App\Models\Schools\SchoolConfiguration;
+use App\Models\AttendanceSchedules\Attendance;
 use App\Dao\AttendanceSchedules\AttendancesDao;
 use App\Models\AttendanceSchedules\AttendancesDetail;
 use App\Dao\AttendanceSchedules\AttendancesDetailsDao;
@@ -80,11 +81,12 @@ class SignInGradeController extends Controller
         $schoolDao = new SchoolDao();
         $school = $schoolDao->getSchoolById($schoolId);
         $configuration = $school->configuration;
-        $now = Carbon::now();
-        $now = Carbon::parse('2020-01-08 14:40:00');
-        $weeks = $configuration->getScheduleWeek($now);
+        $now = Carbon::now(GradeAndYearUtil::TIMEZONE_CN);
+        $month = $now->month;
+        $term = $configuration->guessTerm($month);
+        $weeks = $configuration->getScheduleWeek($now, null, $term);
         if(is_null($weeks)) {
-           return JsonBuilder::Error('当前没有课程');
+           return JsonBuilder::Success('当前没有课程');
         }
 
         $week = $weeks->getScheduleWeekIndex();
@@ -468,7 +470,8 @@ class SignInGradeController extends Controller
             if(array_key_exists($value->user_id,$molds)) {
                 $list[$key]['mold'] = $molds[$value->user_id];
                 if($molds[$value->user_id] != AttendancesDetail::MOLD_TRUANT) {
-                    $list[$key]['created_at'] = $createdAts[$value->user_id];
+                    $createAt = $createdAts[$value->user_id];
+                    $list[$key]['created_at'] = Carbon::parse($createAt)->format('Y-m-d H:i');
                 }
             }
 

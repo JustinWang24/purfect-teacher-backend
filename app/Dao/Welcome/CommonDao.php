@@ -48,6 +48,13 @@ class CommonDao
         ],
     ];
 
+    // 支付方式(1: 微信,2: 支付宝,3: 其他)
+    public static $paymentArr = [
+        1 => '微信',
+        2 => '支付宝',
+        3 => '其他',
+    ];
+
     // 迎新缴费项目
     public static $projectArr = [
         'photo' => '一寸照片',

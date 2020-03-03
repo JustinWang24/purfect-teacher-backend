@@ -10,5 +10,12 @@
                 <span class="title">版本号管理</span>
             </a>
         </li>
+        <li class="nav-item">
+            <a href="{{ route('admin.proposal.list') }}" class="nav-link ">
+                <span class="title">意见反馈</span>
+            </a>
+        </li>
     </ul>
 </li>
+
+
