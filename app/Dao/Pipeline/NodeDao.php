@@ -79,10 +79,12 @@ class NodeDao
                 // 如果还是没有取到 prev 的节点, 那么相当于是创建 head 节点
                 $node = Node::create($data);
                 // 步骤所关联的附件
-                foreach ($data['attachments'] as $attachment){
-                    if(empty($attachment['id'])){
-                        $attachment['node_id'] = $node->id;
-                        NodeAttachment::create($attachment);
+                if (!empty($data['attachments'])) {
+                    foreach ($data['attachments'] as $attachment){
+                        if(empty($attachment['id'])){
+                            $attachment['node_id'] = $node->id;
+                            NodeAttachment::create($attachment);
+                        }
                     }
                 }
                 DB::commit();
@@ -296,6 +298,7 @@ class NodeDao
      * @return NodeOption|null
      */
     public function saveNodeOption($nodeOptionData){
+        $nodeOptionData['extra'] = is_array($nodeOptionData['extra']) ? json_encode($nodeOptionData['extra']) : $nodeOptionData['extra'];
         if(isset($nodeOptionData['id']) && !empty($nodeOptionData['id'])){
             $option = NodeOption::find($nodeOptionData['id']);
             if($option){
@@ -303,7 +306,7 @@ class NodeDao
                 $option->type = $nodeOptionData['type'];
                 $option->tip = $nodeOptionData['tip'];
                 $option->required = $nodeOptionData['required'];
-                $option->extra = is_array($nodeOptionData['extra']) ? json_encode($nodeOptionData['extra']) : $nodeOptionData['extra'];
+                $option->extra = $nodeOptionData['extra'];
                 $option->save();
                 return $option;
             }

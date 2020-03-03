@@ -144,6 +144,24 @@ class WorkLogController extends  Controller
         }
     }
 
+    /**
+     * 工作日志删除
+     * @param MyStandardRequest $request
+     * @return string
+     */
+    public function workLogDel(MyStandardRequest $request)
+    {
+        $id = $request->get('id');
+
+        $dao = new WorkLogDao;
+        $result = $dao->update($id, ['status' => WorkLog::STATUS_ERROR]);
+        if ($result) {
+            return JsonBuilder::Success('删除成功');
+        } else {
+            return JsonBuilder::Error('删除失败');
+        }
+    }
+
 
 
 

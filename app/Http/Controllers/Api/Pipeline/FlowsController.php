@@ -90,11 +90,12 @@ class FlowsController extends Controller
      */
     public function start(FlowRequest $request){
         $actionData = $request->getStartFlowData();
+        $user = $request->user();
 
         $flowDao = new FlowDao();
         $flow = $flowDao->getById($request->getStartFlowId());
 
-        $logic = FlowLogicFactory::GetInstance($request->user());
+        $logic = FlowLogicFactory::GetInstance($user);
 
         $bag = $logic->start(
             $flow,

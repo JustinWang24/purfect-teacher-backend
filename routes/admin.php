@@ -32,4 +32,6 @@ Route::prefix('admin')->group(function () {
     Route::get('importer/edit', 'ImporterController@edit')->name('admin.importer.edit');
     Route::get('importer/handle/{id}', 'ImporterController@handle')->name('admin.importer.handle');
     Route::get('importer/result/{id}', 'ImporterController@result')->name('admin.importer.result');
+    Route::get('proposal/list', 'IndexController@proposal')->name('admin.proposal.list');
+    Route::get('proposal/info', 'IndexController@proposalInfo')->name('admin.proposal.info');
 });

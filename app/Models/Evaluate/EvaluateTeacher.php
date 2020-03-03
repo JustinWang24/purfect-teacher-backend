@@ -68,7 +68,7 @@ class EvaluateTeacher extends Model
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
     public function records() {
-        return $this->hasMany(EvaluateTeacherRecord::class, 'evaluate_student_id');
+        return $this->hasMany(EvaluateTeacherRecord::class, 'evaluate_teacher_id');
     }
 
 

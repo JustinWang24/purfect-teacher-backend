@@ -71,7 +71,7 @@ class NodeHandlersDescriptor
         if(!empty($titles)){
             $titlesStr = '';
             // titles 表示的是所有可以使用这个流程的角色的中文名称
-            if(in_array(Title::ALL_TXT, $titles)){
+            /*if(in_array(Title::ALL_TXT, $titles)){
                 foreach (Organization::AllTitles() as $title) {
                     $titlesStr .= $title.';';
                 }
@@ -80,6 +80,9 @@ class NodeHandlersDescriptor
                 foreach ($titles as $title) {
                     $titlesStr .= $title.';';
                 }
+            }*/
+            foreach ($titles as $title) {
+                $titlesStr .= $title.';';
             }
             $handlersDescriptor['titles'] = $titlesStr;
         }

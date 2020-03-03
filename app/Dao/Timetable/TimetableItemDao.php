@@ -567,10 +567,13 @@ class TimetableItemDao
     /**
      * 根据给定的用户获取 当前时间的 课程表项
      * @param User $user
+     * @param Carbon $now
      * @return null
      */
-    public function getCurrentItemByUser(User $user){
-        $now = Carbon::now(GradeAndYearUtil::TIMEZONE_CN);
+    public function getCurrentItemByUser(User $user, $now = null){
+        if(is_null($now)) {
+            $now = Carbon::now(GradeAndYearUtil::TIMEZONE_CN);
+        }
         $school = (new SchoolDao())->getSchoolById($user->getSchoolId());
         $currentTimeSlot = GradeAndYearUtil::GetTimeSlot($now, $school->id);
         if($currentTimeSlot && $school){

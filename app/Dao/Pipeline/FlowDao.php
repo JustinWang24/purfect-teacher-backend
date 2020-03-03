@@ -8,10 +8,16 @@
 
 namespace App\Dao\Pipeline;
 
+use App\BusinessLogic\OrganizationTitleHelpers\TitleToUsersFactory;
+use App\Dao\Users\UserOrganizationDao;
 use App\Models\Pipeline\Flow\Flow;
+use App\Models\Pipeline\Flow\Node;
 use App\Models\Pipeline\Flow\UserFlow;
+use App\Models\Teachers\Teacher;
+use App\Models\Users\UserOrganization;
 use App\User;
 use App\Utils\JsonBuilder;
+use App\Utils\Misc\Contracts\Title;
 use App\Utils\Pipeline\IAction;
 use App\Utils\ReturnData\IMessageBag;
 use App\Utils\ReturnData\MessageBag;
@@ -61,6 +67,168 @@ class FlowDao
         }
 
         return $groups;
+    }
+
+    public function transTitlesToUser($titles, $organizations, User $user) {
+        $return = [];
+        $schoolId = $user->getSchoolId();
+        //组织部门
+        if (!empty($organizations)) {
+            $organizationArr = explode(';', trim($organizations, ';'));
+            $titlesArr = explode(';', trim($titles, ';'));
+            $organizations = UserOrganization::with(['organization' => function ($query) use ($organizationArr, $schoolId){
+                $query->where('school_id', $schoolId)->whereIn('name', $organizationArr);
+            }])->pluck('organization_id')->toArray();
+
+            //如果用户存在相同组织则仅显示自己所在组织
+            $userOrganizationId = $user->organizations->pluck('organization_id')->toArray();
+
+        }else {
+            //职务
+            $titlesArr = explode(';', trim($titles, ';'));
+            foreach ($titlesArr as $title) {
+                $helper = TitleToUsersFactory::GetInstance($title, $user);
+                $titleUsers = $helper->getUsers();
+                $return[$title] = $titleUsers;
+            }
+        }
+
+        return $return;
+    }
+
+    /**
+     * 检测用户是否有权限使用
+     * @param Flow $flow
+     * @param User $user
+     * @param int $nodeId
+     * @return bool
+     */
+    public function checkPermissionByuser(Flow $flow, User $user, $nodeId = 0) {
+        $schoolId = $user->getSchoolId();
+        if (empty($nodeId)) {
+            $node = $flow->getHeadNode();
+        }else {
+            $node = Node::where('id',$nodeId)
+                        ->with('handler')
+                        ->with('attachments')
+                        ->with('options')
+                        ->first();
+        }
+        //验证目标群体
+        $nodeSlugs = explode(';', trim($node->handler->role_slugs, ';'));
+        if ($user->isStudent()) {
+            $userSlug = '学生';
+        }elseif ($user->isEmployee()) {
+            $userSlug = '职工';
+        }elseif ($user->isTeacher()) {
+            $userSlug = '教师';
+        }else {
+            $userSlug = '';
+        }
+        if (!in_array($userSlug, $nodeSlugs)) {
+            return false;
+        }
+
+        //验证组织
+        if ($node->handler->organizations) {
+            $nodeOrganizationArr = explode(';', trim($node->handler->organizations, ';'));
+
+            $nodeTitlesArr = explode(';', trim($node->handler->titles, ';'));
+            $whereIn = [];
+            foreach ($nodeTitlesArr as $title) {
+                if ($title == Title::ALL_TXT) {
+                    $whereIn = [];
+                    break;
+                }
+                if ($title == Title::ORGANIZATION_EMPLOYEE) {
+                    $whereIn[] = Title::ORGANIZATION_EMPLOYEE_ID;
+                }
+                if ($title == Title::ORGANIZATION_DEPUTY) {
+                    $whereIn[] = Title::ORGANIZATION_DEPUTY_ID;
+                }
+                if ($title == Title::ORGANIZATION_LEADER) {
+                    $whereIn[] = Title::ORGANIZATION_LEADER_ID;
+                }
+            }
+
+            $nodeOrganizations = UserOrganization::with(['organization' => function ($query) use ($nodeOrganizationArr, $schoolId){
+                $query->where('school_id', $schoolId)->whereIn('name', $nodeOrganizationArr);
+            }])->where('user_id', $user->id);
+            if ($whereIn) {
+                $nodeOrganizations->whereIn('title_id', $whereIn);
+            }
+
+            if ($nodeOrganizations->count() < 1) {
+                return false;
+            }
+        }else {
+            //职务
+            $nodeTitlesArr = explode(';', trim($node->handler->titles, ';'));
+            $check = false;//满足其中之一即可
+            foreach ($nodeTitlesArr as $title) {
+                //全体
+                if ($title == Title::ALL_TXT) {
+                    $check = true;
+                    break;
+                }
+                //班主任
+                if ($title == Title::CLASS_ADVISER) {
+                    if (Teacher::myGradeManger($user->id)) {
+                        $check = true;
+                        break;
+                    }
+                }
+                //年级组长
+                if ($title == Title::GRADE_ADVISER) {
+                    if (Teacher::myYearManger($user->id)) {
+                        $check = true;
+                        break;
+                    }
+                }
+                //系主任
+                if ($title == Title::DEPARTMENT_LEADER) {
+                    if (Teacher::myDepartmentManger($user->id)) {
+                        $check = true;
+                        break;
+                    }
+                }
+                //副校长
+                if ($title == Title::SCHOOL_DEPUTY) {
+                    $userOrganizationDao = new UserOrganizationDao();
+                    $deputy = $userOrganizationDao->getDeputyPrinciples($schoolId);
+                    if ($deputy) {
+                        foreach ($deputy as $dep) {
+                            if ($dep->user_id == $user->id) {
+                                $check = true;
+                                break 2;
+                            }
+                        }
+                    }
+                }
+                //校长
+                if ($title == Title::SCHOOL_PRINCIPAL) {
+                    $userOrganizationDao = new UserOrganizationDao();
+                    $principle = $userOrganizationDao->getPrinciple($schoolId);
+                    if ($principle && $principle->user_id == $user->id) {
+                        $check = true;
+                        break;
+                    }
+                }
+                //书记
+                if ($title == Title::SCHOOL_COORDINATOR) {
+                    $userOrganizationDao = new UserOrganizationDao();
+                    $coordinator = $userOrganizationDao->getCoordinator($schoolId);
+                    if ($coordinator && $coordinator->user_id == $user->id) {
+                        $check = true;
+                        break;
+                    }
+                }
+            }
+            if (!$check) {
+                return false;
+            }
+        }
+        return true;
     }
 
     /**
@@ -136,7 +304,7 @@ class FlowDao
             $headNode = $nodeDao->insert([
                 'name'=>'发起'.$flow->name.'流程',
                 'description'=>$headNodeDescription,
-                'attachments'=>$nodeAndHandlersDescriptor['attachments']
+                'attachments'=> $nodeAndHandlersDescriptor['attachments'] ?? ''
             ], $flow);
 
             // 创建头部流程的 handlers

@@ -31,15 +31,14 @@ class IndexController extends Controller
         $schoolDao = new SchoolDao();
         $school = $schoolDao->getSchoolById($schoolId);
         $configuration = $school->configuration;
-        // todo 时间暂时写死
-        $date = Carbon::now()->toDateString();
-        $date = Carbon::parse('2020-01-08 14:40:00');;
+
+        $date = Carbon::now();
+
         $year = $configuration->getSchoolYear($date);
         $month = Carbon::parse($date)->month;
         $term = $configuration->guessTerm($month);
         $timetableItemDao = new TimetableItemDao();
-        $item = $timetableItemDao->getCurrentItemByUser($user);
-
+        $item = $timetableItemDao->getCurrentItemByUser($user, $date);
 
         $teacherApplyElectiveDao = new TeacherApplyElectiveCourseDao();
         $electiveTime = $teacherApplyElectiveDao->getElectiveCourseStartAndEndTime($schoolId, $term);
@@ -90,15 +89,14 @@ class IndexController extends Controller
             $weeks = $configuration->getScheduleWeek(Carbon::parse($date), null, $term);
 
             $week = $weeks->getScheduleWeekIndex() ?? '';
-
             $attendancesDao = new AttendancesDao();
 
             $attendance = $attendancesDao->getAttendanceByTimeTableId($item->id,$week);
+            if(!is_null($attendance)) {
+                $detail = $attendancesDetailsDao->getDetailByUserId($user->id, $attendance->id);
+                $signIn['status'] = $detail->mold ?? 0;
+            }
 
-
-            $detail = $attendancesDetailsDao->getDetailByUserId($user->id, $attendance->id);
-
-            $signIn['status'] = $detail->mold ?? 0;
             $evaluateTeacher = true;
         }
 

@@ -184,24 +184,27 @@ class GroupnoticesController extends Controller
             // 更新公告用户已经查看的操作
             $collegeGroupNoticeReaderObj = new CollegeGroupNoticeReaderDao();
             $noticeReaderOneInfo = $collegeGroupNoticeReaderObj->getCollegeGroupNoticeReaderOneInfo($user_id, $noticeid);
-            if (empty($noticeReaderOneInfo))
+            if (!empty($groupJoinOneInfo))
             {
-                $addData1['user_id'] = $user_id;
-                $addData1['notice_id'] = $noticeid;
-                $addData1['group_id'] = $infos['group_id'];
-                $addData1['school_id'] = $school_id;
-                $addData1['campus_id'] = $campus_id;
-                $addData1['notice_apply'] = !empty($groupJoinOneInfo) ? 1 : 0;
-                $collegeGroupNoticeReaderObj->addCollegeGroupNoticeReaderInfo($addData1);
-            } else {
-                $saveData1['notice_apply'] = !empty($groupJoinOneInfo) ? 1 : 0;
-                $collegeGroupNoticeReaderObj->editCollegeGroupNoticeReaderInfo($saveData1, $noticeReaderOneInfo['readerid']);
+                if (empty($noticeReaderOneInfo))
+                {
+                    $addData1['user_id'] = $user_id;
+                    $addData1['notice_id'] = $noticeid;
+                    $addData1['group_id'] = $infos['group_id'];
+                    $addData1['school_id'] = $school_id;
+                    $addData1['campus_id'] = $campus_id;
+                    $addData1['notice_apply'] = !empty($groupJoinOneInfo) ? 1 : 0;
+                    $collegeGroupNoticeReaderObj->addCollegeGroupNoticeReaderInfo($addData1);
+                } else {
+                    $saveData1['notice_apply'] = !empty($groupJoinOneInfo) ? 1 : 0;
+                    $collegeGroupNoticeReaderObj->editCollegeGroupNoticeReaderInfo($saveData1, $noticeReaderOneInfo['readerid']);
+                }
             }
 
             // 所有查看重新计算公告查看数
             $condition5[] = ['notice_id', '=', $infos['noticeid']];
             $condition5[] = ['group_id', '=', $infos['group_id']];
-            $condition5[] = ['notice_apply', '=', 0];
+            $condition5[] = ['notice_apply', '=', 1];
             $condition5[] = ['status', '=', 1];
 
             // 社团查看人数重新计算公告查看数
@@ -288,34 +291,37 @@ class GroupnoticesController extends Controller
 
                         // 用户信息
                         $userInfo = $collegeGroupJoinObj->userInfo($val['user_id']);
+                        $val['userid'] = $userInfo['user_id'];
                         $val['user_pics'] = $userInfo['user_pics'];
                         // 用户姓名
-                        $val['user_nickname'] = $val['join_typeid'] == 1 ? '团长' : $val['user_nickname'];
+                        $val['user_nickname'] = $val['join_typeid'] == 1 ? '团长' : $userInfo['user_nickname'];
                     }
+                }
 
-                    // 更新公告用户已经查看的操作
-                    $number2List = CollegeGroupNoticeReader::where('group_id', '=', $data['group_id'])
-                        ->whereNotIn('user_id', (array)array_column($infos['number1List'], 'user_id'))
-                        ->select(['user_id'])
-                        ->get();
-
-                    $infos['number2List'] = !empty($number2List->toArray()) ? $number2List->toArray() : [];
-                    $infos['number2'] = count($infos['number2List']);
-                    if (!empty($infos['number2List']))
+                // 获取未读的用户
+                $userReadArr = array_column($infos['number1List'], 'user_id');
+                $infos['number2List'] = [];
+                foreach ($groupJoinOneInfo as $_k => $_v) {
+                    if (!in_array($_v['user_id'], $userReadArr)) {
+                        $infos['number2List'][] = array('user_id' => $_v['user_id']);
+                    }
+                }
+                $infos['number2'] = count($infos['number2List']);
+                if (!empty($infos['number2List']))
+                {
+                    foreach ($infos['number2List'] as &$_v2)
                     {
-                        foreach ($infos['number2List'] as $key => &$val)
-                        {
-                            // 获取申请信息
-                            $joinInfo = $collegeGroupJoinObj->getGroupidOrUseridJoinOneInfo($val['user_id'], $val['group_id']);
-                            $val['user_nickname'] = !empty($joinInfo['join_apply_desc1']) ? $joinInfo['join_apply_desc1'] : '';
-                            $val['join_typeid'] = !empty($joinInfo['join_typeid']) ? $joinInfo['join_typeid'] : 0;
+                        // 获取申请信息
+                        $joinInfo = $collegeGroupJoinObj->getGroupidOrUseridJoinOneInfo($_v2['user_id'], $data['group_id']);
+                        $_v2['user_nickname'] = !empty($joinInfo['join_apply_desc1']) ? $joinInfo['join_apply_desc1'] : '';
+                        $_v2['join_typeid'] = !empty($joinInfo['join_typeid']) ? $joinInfo['join_typeid'] : 0;
 
-                            // 用户信息
-                            $userInfo = $collegeGroupJoinObj->userInfo($val['user_id']);
-                            $val['user_pics'] = $userInfo['user_pics'];
+                        // 用户信息
+                        $userInfo = $collegeGroupJoinObj->userInfo($_v2['user_id']);
+                        $_v2['userid'] = $userInfo['user_id'];
+                        $_v2['user_pics'] = $userInfo['user_pics'];
 
-                            $val['user_nickname'] = $val['join_typeid'] == 1 ? '团长' : $val['user_nickname'];
-                        }
+                        $_v2['user_nickname'] = $_v2['join_typeid'] == 1 ? '团长' : $userInfo['user_nickname'];
                     }
                 }
             }

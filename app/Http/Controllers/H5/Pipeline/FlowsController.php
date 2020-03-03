@@ -37,8 +37,14 @@ class FlowsController extends Controller
             $logic = FlowLogicFactory::GetInstance($user);
             $bag = $logic->open($flow);
             if($bag->isSuccess()){
+                $flowInfo = $flow->getSimpleLinkedNodes();
+                $handlers = [];
+                foreach ($flowInfo['handler'] as $handler) {
+                    $handlers[] = $flowDao->transTitlesToUser($handler->titles, $handler->organizations, $user);
+                }
                 $this->dataForView['user'] = $user;
                 $this->dataForView['flow'] = $flow;
+                $this->dataForView['handlers'] = $handlers;
                 $this->dataForView['node'] = $bag->getData()['node'];
                 $this->dataForView['api_token'] = $request->get('api_token');
                 $this->dataForView['appName'] = 'pipeline-flow-open-app';

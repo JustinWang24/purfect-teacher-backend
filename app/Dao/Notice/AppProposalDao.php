@@ -50,4 +50,22 @@ class AppProposalDao
         return AppProposal::where('user_id', $userId)->orderBy('created_at', 'desc')->paginate(ConfigurationTool::DEFAULT_PAGE_SIZE);
     }
 
+    /**
+     * 获取所有
+     */
+    public function getAllProposal()
+    {
+        return AppProposal::orderBy('created_at', 'desc')->paginate(ConfigurationTool::DEFAULT_PAGE_SIZE);;
+    }
+
+    /**
+     * 根据 ID 获取一条
+     * @param $id
+     * @return
+     */
+    public function getProposalById($id)
+    {
+        return AppProposal::find($id);
+    }
+
 }

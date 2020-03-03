@@ -160,14 +160,14 @@ export function loadNodes(flowId,affix) {
  * @param affix
  * @returns {*}
  */
-export function deleteFlow(flowId, schoolId,affix) {
+export function deleteFlow(flowId,affix) {
     const url = Util.buildUrl(Constants.API.FLOW.DELETE_FLOW);
     if(Util.isDevEnv()){
         return axios.get(url, affix);
     }
     return axios.post(
         url,
-        {flow_id: flowId, school_id: schoolId, version:Constants.VERSION}
+        {flow_id: flowId}
     );
 }
 

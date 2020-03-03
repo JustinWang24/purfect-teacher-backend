@@ -381,7 +381,7 @@ Route::prefix('questionnaire')->middleware('auth:api')->group(function () {
 
 // 最新版本号
 Route::prefix('version')->group(function () {
-    Route::get('/index', 'Api\Version\VersionController@index')->name('api.version.index');
+    Route::any('/index', 'Api\Version\VersionController@index')->name('api.version.index');
 });
 
 // APP 首页接口
@@ -876,7 +876,8 @@ Route::prefix('Oa')->middleware('auth:api')->group(function () {
     // 更新
     Route::post('/update-work-log', 'Api\OA\WorkLogController@workLogUpdate')
         ->name('api.oa.work.log.send');
-
+    Route::post('/delete-work-log', 'Api\OA\WorkLogController@workLogDel')
+        ->name('api.oa.work.log.send');
     /**
      * 助手页
      */
