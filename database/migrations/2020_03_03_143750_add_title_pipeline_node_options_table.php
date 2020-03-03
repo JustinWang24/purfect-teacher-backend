@@ -20,7 +20,7 @@ class AddTitlePipelineNodeOptionsTable extends Migration
             if (Schema::hasColumn('pipeline_node_options', 'tip')) {
                 $table->dropColumn('tip');
             }
-
+            $table->softDeletes();
         });
     }
 
@@ -33,6 +33,10 @@ class AddTitlePipelineNodeOptionsTable extends Migration
     {
         //
         Schema::table('pipeline_node_options', function (Blueprint $table) {
+            $table->dropSoftDeletes();
+            if (Schema::hasColumn('pipeline_node_options', 'tips')) {
+                $table->dropColumn('tips');
+            }
             if (Schema::hasColumn('pipeline_node_options', 'tips')) {
                 $table->dropColumn('tips');
             }
