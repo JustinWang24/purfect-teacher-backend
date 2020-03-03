@@ -289,13 +289,18 @@ class AfficheDao extends \App\Dao\Affiche\CommonDao
             return;
         }
 
-        // 添加数据
-        $addData['user_id'] = $user_id;
-        $addData['iche_id'] = $iche_id;
-        if (AfficheView::create($addData)) {
-            // 查询条件
-            $count = AfficheView::where('iche_id', '=', $iche_id)->count();
-            $this->editAffichesInfo(['iche_view_num' => $count], $iche_id);
+        // 查询条件
+        $condition[] = ['user_id', '=', $user_id];
+        $condition[] = ['iche_id', '=', $iche_id];
+        if (AfficheView::where($condition)->count() <= 0) {
+            // 添加数据
+            $addData['user_id'] = $user_id;
+            $addData['iche_id'] = $iche_id;
+            if (AfficheView::create($addData)) {
+                // 查询条件
+                $count = AfficheView::where('iche_id', '=', $iche_id)->count();
+                $this->editAffichesInfo(['iche_view_num' => $count], $iche_id);
+            }
         }
         return;
     }
