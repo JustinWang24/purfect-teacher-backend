@@ -259,7 +259,7 @@ class FlowsController extends Controller
             $dao = new NodeDao();
             $firstNode = $dao->getHeadNodeByFlow($flowId);
             try{
-                $dao->deleteOption($firstNode->id);
+                $dao->deleteOptionByNode($firstNode->id);
                 foreach ($nodeOptionFormData as $nodeData) {
                     $nodeData['node_id'] = $firstNode->id;
                     $dao->saveNodeOption($nodeData);
