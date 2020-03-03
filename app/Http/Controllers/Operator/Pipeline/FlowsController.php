@@ -37,12 +37,12 @@ class FlowsController extends Controller
         $this->dataForView['flow'] = $flow;
         return view('school_manager.pipeline.flow.handler', $this->dataForView);
     }
-    public function copy(FlowRequest $request){
+    public function option(FlowRequest $request){
         $this->dataForView['pageTitle'] = '工作流程管理';
         $dao = new FlowDao();
         $flow = $dao->getById($request->get('flow_id'));
         $this->dataForView['flow'] = $flow;
-        return view('school_manager.pipeline.flow.copy', $this->dataForView);
+        return view('school_manager.pipeline.flow.option', $this->dataForView);
     }
 
     /**
