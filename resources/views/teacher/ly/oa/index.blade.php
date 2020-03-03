@@ -21,9 +21,6 @@
                     <el-input placeholder="请输入审批类型/审批人">
                         <el-button slot="append">搜索</el-button>
                     </el-input>
-                    <div>
-
-                    </div>
                 </div>
             </div>
         </div>

@@ -57,10 +57,8 @@ class UserFlowDao
 
         $actionDao = new ActionDao();
         $actions = $actionDao->getHistoryByUserFlow($userFlowId, true);
-
         $nodeDao = new NodeDao();
         $nodes = $nodeDao->getNodesByFlowId($userFlow->flow_id);
-
         $data = [
             'userFlow'=>$userFlow,
             'nodes'=>[]
@@ -78,8 +76,8 @@ class UserFlowDao
                      */
                     $u = $userDao->getUserById($act->user_id);
                     $act->personal = [
-                        'name'=> $u->getName(),
-                        'avatar'=> $u->profile->avatar,
+                        'name'=> $u->name,
+                        'avatar'=> empty($u->profile) ? '' : $u->profile->avatar,
                     ];
                     // 把执行动作的用户名和头像放进来
                     $nodeActions[] = $act;

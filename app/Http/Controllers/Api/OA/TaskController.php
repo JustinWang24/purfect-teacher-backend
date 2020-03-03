@@ -183,7 +183,9 @@ class TaskController extends Controller
         $output['report_btn'] = 1; //结果按钮 1-显示 0-隐藏
 
         $members = [];
-        foreach ($task->taskMembers as $key => $val) {
+        $taskMembers = $task->taskMembers->where('user_id', '<>',$task->user_id);
+
+        foreach ($taskMembers as $key => $val) {
             $members[$key]['userid']=$val->user->id;
             $members[$key]['username']=$val->user->name;
             $members[$key]['user_pics']=$val->user->profile->avatar;
