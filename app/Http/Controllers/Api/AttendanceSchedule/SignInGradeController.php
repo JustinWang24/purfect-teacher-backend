@@ -468,7 +468,8 @@ class SignInGradeController extends Controller
             if(array_key_exists($value->user_id,$molds)) {
                 $list[$key]['mold'] = $molds[$value->user_id];
                 if($molds[$value->user_id] != AttendancesDetail::MOLD_TRUANT) {
-                    $list[$key]['created_at'] = $createdAts[$value->user_id];
+                    $createAt = $createdAts[$value->user_id];
+                    $list[$key]['created_at'] = Carbon::parse($createAt)->format('Y-m-d H:i');
                 }
             }
 
