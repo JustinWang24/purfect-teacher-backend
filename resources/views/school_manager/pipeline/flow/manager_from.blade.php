@@ -174,7 +174,7 @@
                     </div>
                     <div class="formItemVer">
                         验证
-                        <el-checkbox v-model="item.ver">必填</el-checkbox>
+                        <el-checkbox v-model="item.required">必填</el-checkbox>
                     </div>
                 </div>
             </div>
