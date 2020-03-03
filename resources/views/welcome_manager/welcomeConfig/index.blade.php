@@ -2,7 +2,7 @@
 @section('content')
     <div class="row" id="school-welcome-list-app">
 
-        <div class="col-6">
+        <div class="col-5">
             <div class="card">
                 <div class="card-head">
                     <header class="full-width">
@@ -23,16 +23,14 @@
                         <div v-if="is_show1 == true">
                             <el-form label-width="100px">
                                 <el-row>
-                                    <el-col span="12">
-                                        <el-form-item label="开始时间">
-                                            <el-input autocomplete="off" v-model="baseInfoForm.config_sdata" placeholder="迎新开始时间"></el-input>
-                                        </el-form-item>
-                                    </el-col>
-                                    <el-col span="12">
-                                        <el-form-item label="结束时间">
-                                            <el-input autocomplete="off" v-model="baseInfoForm.config_edate" placeholder="迎新开始时间"></el-input>
-                                        </el-form-item>
-                                    </el-col>
+                                    <el-form-item label="开始时间">
+                                        <el-date-picker v-model="baseInfoForm.config_sdata" type="datetime" placeholder="选择日期时间"></el-date-picker>
+                                    </el-form-item>
+                                </el-row>
+                                <el-row>
+                                    <el-form-item label="结束时间">
+                                        <el-date-picker v-model="baseInfoForm.config_edate" type="datetime" placeholder="选择日期时间"></el-date-picker>
+                                    </el-form-item>
                                 </el-row>
                                 <el-row>
                                     <el-col>
@@ -51,7 +49,7 @@
                         </div>
                         <!--个人信息-->
                         <div v-if="is_show2 == true">
-                            <el-form label-width="100px">
+                            <el-form label-width="120px">
                                 <el-row>
                                     <el-col>
                                         <el-form-item label="一寸照片">
@@ -135,7 +133,7 @@
             </div>
         </div>
 
-        <div class="col-4" v-if="dataList2 !== undefined && dataList2.length >0">
+        <div class="col-5" v-if="dataList2 !== undefined && dataList2.length >0">
             <div class="card">
                 <div class="card-head">
                     <header class="full-width">
@@ -206,7 +204,6 @@
         float: left;
         height: 1000px;
         text-align: left;
-        margin-left: 30px;
     }
     .menu-center-title ul{
         text-align: center;

@@ -57,27 +57,51 @@ class WorkLogDao
     }
 
     /**
+     * 根据多个ID 获取 多条
+     * @param $id
+     * @return WorkLog
+     */
+    public function getWorkLogsByIds(array $id)
+    {
+        return WorkLog::whereIn('id', $id)->get();
+    }
+
+    /**
      * 根据ID 发送日志
      * @param $id
      * @param $data
      * @return bool
      */
-    public function sendLog($id, $data)
+    public function sendLog($data)
     {
+
         DB::beginTransaction();
         try {
-            WorkLog::where('id', $id)->update($data['update_data']);
+            foreach ($data['update_data'] as $key => $val ) {
+                WorkLog::where('id', $val['id'])->update($val);
+            }
             foreach ($data['install_data'] as $key => $val) {
-                WorkLog::create($val);
+                WorkLog::insert($val);
             }
             DB::commit();
             $result = true;
         } catch (\Exception $e) {
+            dd($e);
             DB::rollBack();
             $result = false;
         }
         return $result;
     }
 
+    /**
+     * 更新
+     * @param $id
+     * @param $data
+     * @return mixed
+     */
+    public function update($id, $data)
+    {
+        return WorkLog::where('id', $id)->update($data);
+    }
 
 }

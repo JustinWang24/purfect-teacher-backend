@@ -162,6 +162,7 @@ class TaskController extends Controller
      */
     public function taskInfo(ProjectRequest $request)
     {
+        $userId = $request->user()->id;
         $taskId = $request->getTaskId();
         $dao = new TaskDao();
         $task = $dao->getProjectTaskById($taskId);
@@ -182,7 +183,9 @@ class TaskController extends Controller
         $output['report_btn'] = 1; //结果按钮 1-显示 0-隐藏
 
         $members = [];
-        foreach ($task->taskMembers as $key => $val) {
+        $taskMembers = $task->taskMembers->where('user_id', '<>',$task->user_id);
+
+        foreach ($taskMembers as $key => $val) {
             $members[$key]['userid']=$val->user->id;
             $members[$key]['username']=$val->user->name;
             $members[$key]['user_pics']=$val->user->profile->avatar;
@@ -196,17 +199,20 @@ class TaskController extends Controller
             $logs[$key]['create_time'] = $item->created_at->format('Y-m-d H:i');
         }
         $output['log_list'] = $logs;
-        $forum = [];
-        foreach ($task->discussions as $key => $val) {
-            $forum[$key]['forumid']=$val->id;
-            $forum[$key]['userid']=$val->user_id;
-            $forum[$key]['username']=$val->user->name;
-            $forum[$key]['user_pics']=$val->user->profile->avatar;
-            $forum[$key]['forum_content']=$val->content;
-            $forum[$key]['reply_user_id'] = $val->reply_user_id;
-            $forum[$key]['reply_username'] = $val->replyUser->name ?? '';
-            $forum[$key]['create_time']=$val->created_at->format('Y-m-d H:i');
 
+        $forum = [];
+        $discussions = $task->discussions->whereIn('reply_user_id', [0, $userId]);
+        foreach ($discussions as $key => $val) {
+            $forum[] = [
+                'forumid' => $val->id,
+                'userid'  => $val->user_id,
+                'username' => $val->user->name,
+                'user_pics' => $val->user->profile->avatar,
+                'forum_content' => $val->content,
+                'reply_user_id' => $val->reply_user_id,
+                'reply_username' => $val->replyUser->name ?? '',
+                'create_time' => $val->created_at->format('Y-m-d H:i'),
+            ];
         }
         $output['forum_list'] = $forum;
         return JsonBuilder::Success($output);

@@ -25,6 +25,8 @@ Route::prefix('manager_affiche')->group(function ()
         ->name('manager_affiche.affiche.affiche_comment_list'); // 动态评论列表
     Route::any('/affiche/affiche-praise-list','Affiche\AfficheController@affiche_praise_list')
         ->name('manager_affiche.affiche.affiche_praise_list'); // 动态点赞列表
+    Route::any('/affiche/affiche-view-list','Affiche\AfficheController@affiche_view_list')
+        ->name('manager_affiche.affiche.affiche_view_list'); // 动态浏览总数
 
     // 组织
     Route::any('/affiche/group-pending-list','Affiche\GroupController@group_pending_list')

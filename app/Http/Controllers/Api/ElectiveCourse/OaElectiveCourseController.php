@@ -66,7 +66,7 @@ class OaElectiveCourseController extends Controller
         $applyData['course']['scores'] = 1;
         $applyData['course']['year'] = 1;
         $applyData['course']['term'] = 1;
-        $applyData['course']['max_num'] = 0;
+        $applyData['course']['max_num'] = $applyData['course']['open_num'];
         $applyData['course']['start_year'] = date("Y");
         $applyData['course']['status'] = TeacherApplyElectiveCourse::STATUS_WAITING_FOR_VERIFIED;
 

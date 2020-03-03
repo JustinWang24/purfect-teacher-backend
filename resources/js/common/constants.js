@@ -97,14 +97,14 @@ export const Constants = {
             ATTACH_TEXTBOOKS: '/teacher/textbook/courseBindingTextbook',
             DELETE_TEXTBOOK: '/teacher/textbook/delete',
         },
-        WELCOME:{
+        WELCOME: {
             LOAD_STEP_DETAILS: '/api/enrolment-step/schoolEnrolmentStep/getEnrolmentInfo',
             LOAD_WHOLE_PROCESS: '/api/enrolment-step/step-list', // 获取某个学校校区的迎新流程中所有步骤
             LOAD_TEACHERS: '/api/school/teachers', // 获取某个学校的所有老师
         },
         CONTACTS: {
             ORG: '/api/campus/handleAffairs/getAddressBook/official',
-            GRADE:'/api/campus/handleAffairs/getAddressBook/class',
+            GRADE: '/api/campus/handleAffairs/getAddressBook/class',
             ALL_GRADES: '/api/campus/all-grades'
         },
         NEWS: {
@@ -144,6 +144,7 @@ export const Constants = {
             LOAD_BY_PARENT: '/Oa/tissue/getOrganization',
         },
         FLOW: {
+            GETFLOWS: '/school_manager/pipeline/flows/load-flows', // 获取某一位置下的分类和流程列表
             SAVE: '/school_manager/pipeline/flows/save-flow',
             SAVE_NODE: '/school_manager/pipeline/flows/save-node',
             SAVE_NODE_OPTION: '/school_manager/pipeline/flows/save-node-option',
@@ -181,13 +182,30 @@ export const Constants = {
         },
         GRADE: {
             LOAD: '/teacher/grade/load-students'
+        },
+        TEACHER_WEB: {
+            INDEX: '/api/office/help-page',
+            TIME_SCREEN: '/api/signInGrade/timeScreen',
+            SIGN_IN_COURSES: '/api/signInGrade/signInCourses',
+            SIGN_IN_STUDENTLSIT: '/api/signInGrade/signInStudentList',
+            REMARK_LIST: '/api/signInGrade/remarkList',
+            GRADE_LIST: '/api/signInGrade/gradeList',
+            GRADE_SINGIN: '/api/signInGrade/gradeSignIn',
+            GRADE_SINGIN_DETAIL: '/api/signInGrade/gradeSignIn-details',
+            GRADE_TODAY_GRADE: '/api/signInGrade/todayGrade',
+            GRADE_DETAIL: '/api/signInGrade/gradeDetails',
+            STUDENTS_GRADE_LIST: '/api/Oa/grade-list',
+            STUDENTS_LIST: '/api/Oa/student-list',
+            STUDENTS_INFO: '/api/Oa/student-info',
+            STUDENTS_UPDATE_INFO: '/api/Oa/update-student-info'
+
         }
     },
-    YEARS: ['N.A','一年级','二年级','三年级','四年级','五年级','六年级'],
-    TERMS: ['N.A','第一学期','第二学期'],
-    REPEAT_UNITS: ['每周重复','仅单周重复','仅双周重复','指定区间'],
-    WEEK_DAYS: ['周一','周二','周三','周四','周五','周六','周日',],
-    ENQUIRY_TYPES: ['请假','外出, 出差','报销','用章','用车','场地','物品领用','其他'],
+    YEARS: ['N.A', '一年级', '二年级', '三年级', '四年级', '五年级', '六年级'],
+    TERMS: ['N.A', '第一学期', '第二学期'],
+    REPEAT_UNITS: ['每周重复', '仅单周重复', '仅双周重复', '指定区间'],
+    WEEK_DAYS: ['周一', '周二', '周三', '周四', '周五', '周六', '周日',],
+    ENQUIRY_TYPES: ['请假', '外出, 出差', '报销', '用章', '用车', '场地', '物品领用', '其他'],
     WEEK_NUMBER_ODD: 1, // 单周
     WEEK_NUMBER_EVEN: 2,// 双周
     LOGIC: {
@@ -201,7 +219,7 @@ export const Constants = {
     TYPE_FILE: 'file',  // 文件类型
     TYPE_CATEGORY: 'category', // 目录类型
     MAX_UPLOAD_FILE_SIZE: 20 * 1024 * 1024, // 最大 10 兆文件上传
-    FILE_TYPE:{
+    FILE_TYPE: {
         GENERAL: 1,
         IMAGE: 2,
         WORD: 3,
@@ -256,9 +274,9 @@ export const Constants = {
         REJECTED_CLASS: 'text-danger',
     },
     NODE_OPTION: {
-        TEXT:'文本',
-        DATE:'日期',
-        TIME:'时间'
+        TEXT: '文本',
+        DATE: '日期',
+        TIME: '时间'
     },
     ADVISER: {
         DEPARTMENT: 1, // 系主任
@@ -266,19 +284,19 @@ export const Constants = {
         STUDY_GROUP: 3, // 教研组长
         STUDENTS: 4, // 班长
     },
-    COURSE_MATERIAL_TYPES:{
-        TYPE_PRE:1,
-        TYPE_PRE_TXT:'预习材料',
-        TYPE_LECTURE:2,
-        TYPE_LECTURE_TXT:'课堂讲义',
-        TYPE_AFTER:3,
-        TYPE_AFTER_TXT:'课后阅读',
-        TYPE_HOMEWORK:4,
-        TYPE_HOMEWORK_TXT:'随堂作业',
+    COURSE_MATERIAL_TYPES: {
+        TYPE_PRE: 1,
+        TYPE_PRE_TXT: '预习材料',
+        TYPE_LECTURE: 2,
+        TYPE_LECTURE_TXT: '课堂讲义',
+        TYPE_AFTER: 3,
+        TYPE_AFTER_TXT: '课后阅读',
+        TYPE_HOMEWORK: 4,
+        TYPE_HOMEWORK_TXT: '随堂作业',
         TYPE_EXAM: 5,
         TYPE_EXAM_TXT: '随堂测试'
     },
-    COURSE_MATERIAL_TYPES_TEXT:[
+    COURSE_MATERIAL_TYPES_TEXT: [
         '预习材料',
         '课堂讲义',
         '课后阅读',
@@ -287,7 +305,7 @@ export const Constants = {
     ],
     NOTICE_TYPE_INSPECT: 3,
     // 教师评教
-    TEACHER_QUALIFICATION_TYPES:[
-        '论文','课题','荣誉称号','教学','技能大赛'
+    TEACHER_QUALIFICATION_TYPES: [
+        '论文', '课题', '荣誉称号', '教学', '技能大赛'
     ]
 };

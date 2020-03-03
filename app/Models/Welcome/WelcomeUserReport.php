@@ -13,6 +13,8 @@ class WelcomeUserReport extends Model
 {
     protected $table = 'welcome_user_reports';
     protected $fillable = [
+        'configid',
+        'uuid',
         'user_id',
         'flow_id',
         'school_id',

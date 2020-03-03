@@ -57,7 +57,7 @@ Route::prefix('task')->middleware('auth:api')->group(function () {
     Route::post('/getOaTaskReport','Api\OA\TaskController@taskReport')
         ->name('Oa.task.getOaTaskReport');
     // 未读数
-    Route::post('/taskStatus','Api\OA\TaskController@taskStatus')
+    Route::any('/taskStatus','Api\OA\TaskController@taskStatus')
         ->name('Oa.task.taskStatus');
     // 指派任务
     Route::post('/addOaTaskUser','Api\OA\TaskController@addTaskUser')
@@ -145,4 +145,17 @@ Route::prefix('meeting')->middleware('auth:api')->group(function () {
     // 签到记录
     Route::post('/signLog','Api\OA\MeetIngController@signLog')
         ->name('Oa.meeting.signLog');
+});
+
+// 到访
+Route::prefix('visitor')->middleware('auth:api')->group(function () {
+    // 到访列表
+    Route::post('/list','Api\OA\VisitorController@list')
+        ->name('Oa.visitor.list');
+    // 到访详情
+    Route::post('/detail','Api\OA\VisitorController@detail')
+        ->name('Oa.visitor.detail');
+    // 获取分享信息
+    Route::post('/get-share-info','Api\OA\VisitorController@get_share_info')
+        ->name('Oa.visitor.get_share_info');
 });

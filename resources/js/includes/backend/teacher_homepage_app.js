@@ -106,16 +106,16 @@ if (document.getElementById('teacher-homepage-app')) {
                     }
                 })
             },
-            // load() {
-            //     alert("222");
-            //     this.loading = true
-            //     // setTimeout(() => {
-            //     this.num += 2;
-            //     this.loading = false
-            //     //   }, 2000)
-
-            //     // this.getAttendanceList(1);
-            // },
+            load() {
+                console.log(111)
+                // alert("222");
+                // this.loading = true
+                // setTimeout(() => {
+                // this.num += 2;
+                // this.loading = false
+                //   }, 2000)
+                // this.getAttendanceList(1);
+            },
             startFlow: function (flowId) {
                 const url = this.url.flowOpen + '?flow=' + flowId + '&uuid=' + this.userUuid;
                 window.open(url, '_blank');

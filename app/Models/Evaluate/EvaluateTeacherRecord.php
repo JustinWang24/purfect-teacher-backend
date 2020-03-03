@@ -12,7 +12,7 @@ class EvaluateTeacherRecord extends Model
 {
 
     protected $fillable = [
-        'evaluate_student_id', 'evaluate_id', 'user_id', 'score',
+        'evaluate_student_id', 'evaluate_id', 'user_id', 'score', 'evaluate_teacher_id',
     ];
 
 

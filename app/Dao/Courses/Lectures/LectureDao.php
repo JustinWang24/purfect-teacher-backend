@@ -7,6 +7,7 @@
 namespace App\Dao\Courses\Lectures;
 
 
+use App\Utils\Misc\ConfigurationTool;
 use Carbon\Carbon;
 use App\Utils\JsonBuilder;
 use App\Dao\Users\GradeUserDao;
@@ -206,7 +207,8 @@ class LectureDao
         $map = ['course_id'=>$courseId, 'grade_id'=>$gradeId,
             'teacher_id'=>$teacherId, 'type'=>$type];
         $result = LectureMaterial::where($map);
-        if(!is_null($result)) {
+        if(!is_null($keyword)) {
+
             $result = $result->where('description', 'like', '%'.$keyword.'%');
         }
         return $result->get();
@@ -234,6 +236,57 @@ class LectureDao
         return LectureMaterial::where('description', 'like', '%'.$keyword.'%')
             ->whereIn('course_id', $courseIds)
             ->get();
+    }
+
+
+    /**
+     * 获取课程列表
+     * @param $teacherId
+     * @return mixed
+     */
+    public function getMaterialByTeacherId($teacherId) {
+        return LectureMaterial::where('teacher_id', $teacherId)
+            ->groupBy('course_id')
+            ->select('course_id')
+            ->get();
+    }
+
+
+    /**
+     * 根据课程查询学习资料
+     * @param $courseId
+     * @param $type
+     * @param $teacherId
+     * @return mixed
+     */
+    public function getMaterialByCourseId($courseId, $type, $teacherId) {
+        $map = ['course_id'=>$courseId, 'type'=>$type, 'teacher_id'=>$teacherId];
+        return LectureMaterial::where($map)
+            ->paginate(ConfigurationTool::DEFAULT_PAGE_SIZE);
+    }
+
+
+    /**
+     * 删除学习资料
+     * @param $materialId
+     * @return MessageBag
+     */
+    public function deleteMaterial($materialId) {
+        $messageBag = new MessageBag();
+        $info = LectureMaterial::where('id', $materialId)->first();
+        if(is_null($info)) {
+            $messageBag->setCode(JsonBuilder::CODE_ERROR);
+            $messageBag->setMessage('该资料不存在');
+            return $messageBag;
+        }
+        $re = LectureMaterial::where('id', $materialId)->delete();
+        if($re) {
+            $messageBag->setMessage('删除成功');
+        } else {
+            $messageBag->setCode(JsonBuilder::CODE_ERROR);
+            $messageBag->setMessage('删除失败');
+        }
+        return $messageBag;
     }
 
 

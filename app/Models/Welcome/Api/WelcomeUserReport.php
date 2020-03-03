@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\DB;
 class WelcomeUserReport extends Model
 {
     protected $fillable = [
+        'uuid',
         'user_id',
         'flow_id',
         'school_id',
@@ -20,6 +21,7 @@ class WelcomeUserReport extends Model
         'steps_2_str',
         'steps_2_date',
         'complete_date',
+        'complete_date1',
         'status',
         'created_at',
         'updated_at'

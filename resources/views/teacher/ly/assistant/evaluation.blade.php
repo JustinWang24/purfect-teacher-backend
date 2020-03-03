@@ -18,12 +18,13 @@
                                         :value="item.value">
                                 </el-option>
                             </el-select>
-                            <el-button type="primary" size="small">查询</el-button>
+                            <el-button type="primary" size="small" @click="searchList()">查询</el-button>
                         </div>
                     </header>
                 </div>
                 <div class="card-body">
                     <el-tree
+                            v-show="data.length > 0"
                             :data="data"
                             :props="defaultProps"
                             :highlight-current="false"
@@ -36,6 +37,10 @@
                             </span>
                         </div>
                     </el-tree>
+                     <div v-show="data.length == 0" class="no-data-img">
+                         <img src="{{ asset('assets/img/teacher_blade/no-data.png') }}" alt="">
+                         <p>当前列表暂时没有数据哦~</p>
+                     </div>
                 </div>
             </div>
         </el-col>
@@ -49,27 +54,32 @@
                     </div>
                     <div class="card-body">
                         <el-table
+                                v-show="tableData.length > 0"
                                 :show-header="false"
                                 :data="tableData">
                             <el-table-column
-                                    prop="stuName"
+                                    prop="name"
                                     label="姓名">
                             </el-table-column>
                             <el-table-column
-                                    prop="stuMark"
+                                    prop="score"
                                     label="平均分">
                                 <template slot-scope="scope">
                                     <span style="color:#8A93A1">平均分</span>
-                                    <span v-text="scope.row.stuMark"></span>
+                                    <span v-text="scope.row.score"></span>
                                 </template>
                             </el-table-column>
                             <el-table-column
                                     label="备注">
                                 <template slot-scope="scope">
-                                    <a href="javascript:;" v-if="scope.row.showNode" style="color: #4EA5FE;" @click="showNote(scope.row)">备注</a>
+                                    <a href="javascript:;" v-if="scope.row.status" style="color: #4EA5FE;" @click="showNote(scope.row)">备注</a>
                                 </template>
                             </el-table-column>
                         </el-table>
+                        <div v-show="tableData.length == 0" class="no-data-img">
+                            <img src="{{ asset('assets/img/teacher_blade/no-data.png') }}" alt="">
+                            <p>当前列表暂时没有数据哦~</p>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -84,18 +94,18 @@
                         </header>
                     </div>
                     <div class="card-body">
-                        <div class="eva_note">
-                            <div class="eva_noteTitle">
-                                2019-09-09 周一 第三节
-                            </div>
-                            <div class="eva_noteText">
-                                上课备注的内容
-                            </div>
+                        <div v-show="nodeData.length > 0" class="eva_note" v-for="(item, i) in nodeData">
+                            <div class="eva_noteTitle" v-htm="item.time + ' ' + item.timeSlot"></div>
+                            <div class="eva_noteText" v-html="item.remark"></div>
                             <div class="clearfix">
                                 <a href="javascript:;" style="float: right;color: #4EA5FE">
                                     收起
                                 </a>
                             </div>
+                        </div>
+                        <div v-show="nodeData.length == 0" class="no-data-img">
+                            <img src="{{ asset('assets/img/teacher_blade/no-data.png') }}" alt="">
+                            <p>当前列表暂时没有数据哦~</p>
                         </div>
                     </div>
                 </div>

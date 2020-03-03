@@ -42,13 +42,13 @@ class WifiPayController extends Controller
    {
       $user = $request->user ();
 
-      if ( ! intval ( $user->gradeUser->campus_id ) )
+      if ( ! intval ( $user->gradeUserOneInfo->campus_id ) )
       {
          return JsonBuilder::Error ( '参数错误' );
       }
 
       // wifi产品列表
-      $condition[] = [ 'campus_id' , '=' , $user->gradeUser->campus_id ];
+      $condition[] = [ 'campus_id' , '=' , $user->gradeUserOneInfo->campus_id ];
       $condition[] = [ 'mode' , '=' , 1 ];
       $condition[] = [ 'status' , '=' , 1 ];
 
@@ -61,7 +61,7 @@ class WifiPayController extends Controller
       )->toArray ()[ 'data' ];
 
       // 获取通知信息
-      $condition1[] = [ 'campus_id' , '=' , $user->gradeUser->campus_id ];
+      $condition1[] = [ 'campus_id' , '=' , $user->gradeUserOneInfo->campus_id ];
       $condition1[] = [ 'typeid' , '=' , 3 ];
       $condition1[] = [ 'status' , '=' , 1 ];
 
@@ -112,8 +112,8 @@ class WifiPayController extends Controller
       $param1[ 'mode' ]           	   = 1;  // 类型(1:无线,2:有线)
       $param1[ 'user_id' ]           	= $user->id; // 用户id
       $param1[ 'trade_sn' ]         	= date('YmdHis').rand (100000,999999);
-      $param1[ 'school_id' ]         	= $user->gradeUser->school_id;
-      $param1[ 'campus_id' ]     	   = $user->gradeUser->campus_id;
+      $param1[ 'school_id' ]         	= $user->gradeUserOneInfo->school_id;
+      $param1[ 'campus_id' ]     	   = $user->gradeUserOneInfo->campus_id;
       $param1[ 'wifi_id' ]          	= $getWifisOneInfo->wifiid;
       $param1[ 'wifi_type' ]        	= $getWifisOneInfo->wifi_type;
       $param1[ 'wifi_name' ]        	= $getWifisOneInfo->wifi_name;

@@ -4,16 +4,13 @@
 namespace App\Http\Controllers\Api\OA;
 
 
-use App\Dao\OA\TaskDao;
-use App\Dao\Teachers\TeacherProfileDao;
 use App\Models\OA\Project;
-use App\Models\OA\ProjectTask;
 use App\Utils\JsonBuilder;
 use App\Dao\OA\ProjectDao;
+use Illuminate\Http\Request;
+use App\Models\OA\ProjectTask;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\OA\ProjectRequest;
-use function Couchbase\defaultDecoder;
-use Illuminate\Http\Request;
 
 class ProjectsController extends Controller
 {
@@ -76,22 +73,25 @@ class ProjectsController extends Controller
         $data = [];
         foreach ($list as $key => $item) {
             $tasks = $item->tasks;
-            $re = $tasks->first();
-            $end_time = $re->end_time ?? '';
+            $endTimes = $tasks->pluck('end_time')->toArray();
+            sort($endTimes);
+
+            $endTimes = array_reverse($endTimes);
+            $end_time = $endTimes[0] ?? '';
             $members = $item->members;
             $memberIds = $members->pluck('user_id')->toArray(); // 项目成员
             array_push($memberIds,$item->user_id);
             $memberIds = array_unique($memberIds);   // 项目总成员
             $userIds = array_merge($memberIds, [$item->create_user]);  // 可见人员 成员、负责人、创建者
             $statusArr = $tasks->pluck('status')->toArray();
-            if(empty($statusArr)) {
+            if(count($tasks) == 0) {
                 $status = Project::STATUS_NOT_BEGIN;  // 未开始
 
-            } elseif(in_array(Project::STATUS_IN_PROGRESS,$statusArr)) {
-                $status = Project::STATUS_IN_PROGRESS; // 正在进行
+            } elseif( $this->isProjectClosed($statusArr)) {
+                $status = Project::STATUS_CLOSED; // 已结束
 
             } else {
-                $status = Project::STATUS_CLOSED; // 已结束
+                $status = Project::STATUS_IN_PROGRESS; // 正在进行
             }
 
             if($item->is_open == Project::OPEN || in_array($userId, $userIds)) {
@@ -102,7 +102,7 @@ class ProjectsController extends Controller
                     'leader_userid' => $item->user->id,
                     'leader_name' => $item->user->name,
                     'member_count' => count($memberIds),
-                    'doing_status' => $status
+                    'doing_status' => $status,
                 ];
             }
 
@@ -110,6 +110,25 @@ class ProjectsController extends Controller
 
         return JsonBuilder::Success($data);
     }
+
+
+    /**
+     * 判断任务是否都结束
+     * @param $taskStatusArr
+     * @return bool true 结束 false 未结束
+     */
+    public function isProjectClosed($taskStatusArr) {
+        $status = true;
+        foreach ($taskStatusArr as $item) {
+            // 未结束
+            if($item !== ProjectTask::STATUS_CLOSED) {
+                $status = false; break;
+            }
+        }
+        return $status;
+    }
+
+
 
 
     /**

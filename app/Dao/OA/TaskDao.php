@@ -62,7 +62,7 @@ class TaskDao
 
             // 创建日志
             $log = ['task_id'=>$result->id, 'school_id'=>$task['school_id'],
-                'user_id'=>$task['user_id'], 'desc'=>'创建任务'];
+                'user_id'=>$task['create_user'], 'desc'=>'创建任务'];
             ProjectTaskLog::create($log);
 
             DB::commit();
@@ -188,10 +188,10 @@ class TaskDao
             }
 
 
-            $finish = $task->taskMembers
-                ->where('status',ProjectTaskMember::STATUS_CLOSED)
-                ->where('take_id','<>', $task->id);
-            if(count($finish) == 0) {
+            $taskMembers = $task->taskMembers->where('user_id', '<>', $userId);
+            $finish = $taskMembers->where('status',ProjectTaskMember::STATUS_CLOSED);
+
+            if(count($finish) == count($taskMembers)) {
                 // 关闭任务
                 ProjectTask::where('id',$task->id)->update(['status'=>ProjectTask::STATUS_CLOSED]);
             }

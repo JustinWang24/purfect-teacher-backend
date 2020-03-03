@@ -101,10 +101,6 @@ abstract class GeneralFlowsLogic implements IFlowLogic
             DB::beginTransaction();
             try{
                 // 先为当前的用户创建一个用户流程
-
-                /**
-                 * @var IUserFlow $userFlow
-                 */
                 $userFlow = UserFlow::create([
                     'flow_id'=>$flow->id,
                     'user_id'=>$this->user->id,

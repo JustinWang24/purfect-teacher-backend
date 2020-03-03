@@ -3,8 +3,11 @@
 namespace App\Models\Pipeline\Flow;
 
 use App\Dao\Pipeline\ActionDao;
+use App\Dao\Pipeline\FlowDao;
 use App\Models\Teachers\Teacher;
+use App\Models\Users\GradeUser;
 use App\User;
+use App\Utils\Misc\Contracts\Title;
 use App\Utils\Pipeline\IFlow;
 use App\Utils\Pipeline\INode;
 use App\Utils\Pipeline\IUser;
@@ -19,7 +22,7 @@ class Flow extends Model implements IFlow
     public $table = 'pipeline_flows';
     public $timestamps = false;
     protected $fillable = [
-        'school_id','name','type','icon'
+        'school_id','name','type','icon','copy_uids','business'
     ];
 
     /**
@@ -27,6 +30,7 @@ class Flow extends Model implements IFlow
      */
     public static function Types(){
         return [
+            //@TODO pipeline待删除
             IFlow::TYPE_TEACHER_ONLY=>IFlow::TYPE_TEACHER_ONLY_TXT,
             IFlow::TYPE_OFFICE=>IFlow::TYPE_OFFICE_TXT,
             IFlow::TYPE_2=>IFlow::TYPE_2_TXT,
@@ -36,7 +40,85 @@ class Flow extends Model implements IFlow
             IFlow::TYPE_STUDENT_ONLY=>IFlow::TYPE_STUDENT_ONLY_TXT, // 学生专用
             IFlow::TYPE_FINANCE=>IFlow::TYPE_FINANCE_TXT, // 资助中心 学生
             IFlow::TYPE_STUDENT_COMMON=>IFlow::TYPE_STUDENT_COMMON_TXT, // 日常申请 学生
+
+
+            IFlow::TYPE_1_01 => IFlow::TYPE_1_01_TXT,
+            IFlow::TYPE_1_02 => IFlow::TYPE_1_02_TXT,
+            IFlow::TYPE_1_03 => IFlow::TYPE_1_03_TXT,
+
+            IFlow::TYPE_2_01 => IFlow::TYPE_2_01_TXT,
+            IFlow::TYPE_2_02 => IFlow::TYPE_2_02_TXT,
+
+            IFlow::TYPE_3_01 => IFlow::TYPE_3_01_TXT,
+            IFlow::TYPE_3_02 => IFlow::TYPE_3_02_TXT,
         ];
+    }
+    //指定位置的分类
+    public static function getTypesByPosition($position) {
+        if ($position == IFlow::POSITION_1) {
+            return [
+                IFlow::TYPE_1_01 => IFlow::TYPE_1_01_TXT,
+                IFlow::TYPE_1_02 => IFlow::TYPE_1_02_TXT,
+                IFlow::TYPE_1_03 => IFlow::TYPE_1_03_TXT,
+            ];
+        }
+        if ($position == IFlow::POSITION_2) {
+            return [
+                IFlow::TYPE_2_01 => IFlow::TYPE_2_01_TXT,
+                IFlow::TYPE_2_02 => IFlow::TYPE_2_02_TXT,
+            ];
+        }
+        if ($position == IFlow::POSITION_3) {
+            return [
+                IFlow::TYPE_3_01 => IFlow::TYPE_3_01_TXT,
+                IFlow::TYPE_3_02 => IFlow::TYPE_3_02_TXT,
+            ];
+        }
+        return [];
+    }
+    public static function getTitlesByType($position, $type) {
+        if ($position == 1) {
+            //学生端
+            if ($type == 1) {
+                //组织
+                return [
+                    Title::ALL_TXT, Title::ORGANIZATION_EMPLOYEE, Title::ORGANIZATION_DEPUTY, Title::ORGANIZATION_LEADER
+                ];
+            }else {
+                //职务
+                return [
+                    Title::ALL_TXT, Title::CLASS_ADVISER, Title::GRADE_ADVISER, Title::DEPARTMENT_LEADER, Title::SCHOOL_DEPUTY, Title::SCHOOL_PRINCIPAL, Title::SCHOOL_COORDINATOR
+                ];
+            }
+        }else {
+            //教师端
+            if ($type == 1) {
+                //组织
+                return [
+                    Title::ALL_TXT, Title::ORGANIZATION_EMPLOYEE, Title::ORGANIZATION_DEPUTY, Title::ORGANIZATION_LEADER
+                ];
+            }else {
+                //职务
+                return [
+                    Title::ALL_TXT, Title::GRADE_ADVISER, Title::DEPARTMENT_LEADER, Title::SCHOOL_DEPUTY, Title::SCHOOL_PRINCIPAL, Title::SCHOOL_COORDINATOR
+                ];
+            }
+        }
+    }
+
+    public static function business($businessid = null) {
+        $list = [
+            IFlow::BUSINESS_ATTENDANCE_CLOCKIN,
+            IFlow::BUSINESS_ATTENDANCE_MACADDRESS
+        ];
+        if ($businessid) {
+            foreach ($list as $item) {
+                if ($businessid == $item['business']) {
+                    return $item;
+                }
+            }
+        }
+        return $list;
     }
 
     public function nodes(){
@@ -49,19 +131,37 @@ class Flow extends Model implements IFlow
      * @return Collection
      */
     public function getSimpleLinkedNodes(){
-        $collection = new Collection();
+        $result = ['head' => [], 'copy' => [], 'handler' => [], 'options' => []];
         $node = $this->getHeadNode();
-        $collection->add($node);
+        $result['head'] = $node;//发起人
+        if ($this->copy_uids) {
+            //抄送人
+            $uidArr = explode(';', $this->copy_uids);
+            $result['copy'] = GradeUser::whereIn('user_id', $uidArr)->select(['user_id', 'name'])->get();
+        }
+        //表单
+        if ($node->options) {
+            foreach ($node->options as $option) {
+                $option = $option->toArray();
+                if (!empty($option['extra'])) {
+                    $option['extra'] = json_decode($option['extra'], true);
+                }
+                $result['options'][] = $option;
+            }
+        }
         while ($node->next_node > 0){
+            //获取审批人
             $next = Node::where('id',$node->next_node)
                 ->with('handler')
                 ->with('attachments')
                 ->with('options')
                 ->first();
-            $collection->add($next);
+            if (!empty($next->handler->titles) || !empty($next->handler->organizations)) {
+                $result['handler'][] = $next->handler;
+            }
             $node = $next;
         }
-        return $collection;
+        return $result;
     }
 
     /**
@@ -105,17 +205,10 @@ class Flow extends Model implements IFlow
 
     public function canBeStartBy(IUser $user): INode
     {
-        // Todo: 对于一个流程是否可以被一个用户启动的功能, 需要实现
         $node = null;
-        if($user->isStudent()){
-            if(in_array($this->type, User::StudentFlowTypes())){
-                $node = $this->getHeadNode();
-            }
-        }
-        elseif($user->isTeacher()){
-            if(in_array($this->type, Teacher::FlowTypes())){
-                $node = $this->getHeadNode();
-            }
+        $dao = new FlowDao();
+        if ($dao->checkPermissionByuser($this, $user, 0)){
+            $node= $this->getHeadNode();
         }
         return $node;
     }

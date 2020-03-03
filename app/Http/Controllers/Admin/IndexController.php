@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Dao\Notice\AppProposalDao;
 use App\Http\Requests\MyStandardRequest;
 use App\Utils\JsonBuilder;
 use App\Http\Controllers\Controller;
+use Carbon\Carbon;
 
 class IndexController extends Controller
 {
@@ -54,6 +56,43 @@ class IndexController extends Controller
         ];
 
         return JsonBuilder::Success($data);
-
     }
+
+    /**
+     * 意见反馈列表
+     * @param MyStandardRequest $request
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function proposal(MyStandardRequest $request)
+    {
+        $dao = new AppProposalDao;
+
+        $data = $dao->getAllProposal();
+        foreach ($data as $key => $val) {
+            $val->user;
+        }
+
+        $this->dataForView['data'] = $data;
+        $this->dataForView['pageTitle'] = '意见反馈';
+        return view('admin.proposal.list', $this->dataForView);
+    }
+
+    /**
+     * 意见反馈详情
+     * @param MyStandardRequest $request
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function proposalInfo(MyStandardRequest $request)
+    {
+        $id = $request->get('id');
+
+        $dao = new AppProposalDao;
+
+        $data = $dao->getProposalById($id);
+        $this->dataForView['data'] = $data;
+        $this->dataForView['pageTitle'] = '意见反馈详情';
+        return view('admin.proposal.info', $this->dataForView);
+    }
+
+
 }

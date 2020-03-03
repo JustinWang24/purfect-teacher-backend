@@ -10,7 +10,7 @@ class NodeOption extends Model implements INodeOption
 {
     public $table = 'pipeline_node_options';
     public $timestamps = false;
-    protected $fillable = ['node_id','name','type'];
+    protected $fillable = ['node_id','name','type', 'tip', 'required', 'extra'];
 
     public function node(){
         return $this->belongsTo(Node::class);

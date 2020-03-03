@@ -185,15 +185,21 @@ class AttendanceController extends Controller
         }
         $attendancesDao = new AttendancesDao;
         $arrive = $attendancesDao->getTeacherIsSignByItem($items[0], $user);
+        if (is_null($arrive)) {
+            return JsonBuilder::Error('系统未生成签到初始化数据, 请学生先签到');
+        }
+
         if ($arrive->teacher_sign == Attendance::TEACHER_SIGN) {
             $isArrive = true;
         } else {
             $isArrive = false;
         }
+
         $arriveTime = '';
         if (!empty($arrive->teacher_sign_time)) {
             $arriveTime = $arrive->teacher_sign_time;
         }
+
         $data['timetable_id'] = $items[0]->id;
         $data['time_slot_name'] = $items[0]->timeSlot->name;
         $data['course_name'] = $items[0]->course->name;
@@ -252,10 +258,11 @@ class AttendanceController extends Controller
     {
         $code = json_decode($request->get('code'), true);
         $user = $request->user();
-        
+
         $timetableItemDao = new TimetableItemDao;
         $item = $timetableItemDao->getCurrentItemByUser($user);
-        if (empty($item)) {
+
+        if (is_null($item)) {
             return JsonBuilder::Error('未找到当前学生要上的的课程');
         }
 
@@ -389,10 +396,8 @@ class AttendanceController extends Controller
         $month = Carbon::parse($date)->month;
         $term = $configuration->guessTerm($month);
         $weeks = $configuration->getScheduleWeek($now, null, $term);
-//        $week = $weeks->getScheduleWeekIndex();
+        $week = $weeks->getScheduleWeekIndex();
         $dao = new AttendancesDao;
-        // todo:: 测试数据
-        $week = 5;
 
         $data = $dao->getTeacherSignInfo($itemIds, $week, $type);
 

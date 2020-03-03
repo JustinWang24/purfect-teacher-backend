@@ -4,6 +4,7 @@ namespace App\Models\Pipeline\Flow;
 
 use App\BusinessLogic\OrganizationTitleHelpers\TitleToUsersFactory;
 use App\Dao\Pipeline\ActionDao;
+use App\Dao\Pipeline\FlowDao;
 use App\User;
 use App\Utils\Pipeline\IAction;
 use App\Utils\Pipeline\IFlow;
@@ -83,16 +84,11 @@ class Handler extends Model implements INodeHandler
             $usersId = explode(';',$usersIds);
             $users = User::whereIn('id',$usersId)->get();
         }
-        elseif (!empty($this->notice_to)){
-            $noticeTo = $this->notice_to;
-            if(Str::endsWith($this->notice_to,';')){
-                $noticeTo = substr($this->notice_to, 0, strlen($this->notice_to) - 1);
-            }
-            $roles = explode(';',$noticeTo);
-            foreach ($roles as $role) {
-                $helper = TitleToUsersFactory::GetInstance($role, $user);
-                $titleUsers = $helper->getUsers();
-                $users = array_merge($users, $titleUsers);
+        if (!empty($this->notice_to)) {
+            $flowDao = new FlowDao();
+            $userList = $flowDao->transTitlesToUser($this->notice_to, $this->notice_organizations, $user);
+            foreach ($userList as $u) {
+                $users = array_merge($users, $u);
             }
         }
         return $users;

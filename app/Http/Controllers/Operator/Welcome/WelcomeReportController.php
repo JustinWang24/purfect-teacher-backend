@@ -3,12 +3,7 @@
 
    use App\Dao\Schools\SchoolDao;
    use App\Dao\Welcome\Backstage\WelcomeUserReportDao;
-
-
-   use App\Dao\Wifi\Backstage\UsersDao; // 用户
-   use App\Dao\Wifi\Backstage\WifiIssueDao; // 报修信息
-   use App\Dao\Wifi\Backstage\WifiIssueDisposesDao; // 报修处理
-   use App\Dao\Wifi\Backstage\WifiIssueCommentsDao; // 报修评论
+   use App\Models\Welcome\WelcomeUserReportsProject;
 
    use Illuminate\Http\Request;
    use App\Utils\FlashMessageBuilder;
@@ -48,9 +43,10 @@
 
           // 列表
           $welcomeUserReportObj = new WelcomeUserReportDao();
-          $dataList = $welcomeUserReportObj->getWelcomeUserReportListInfo($school->id, 2, $page);
+          $dataList = $welcomeUserReportObj->getWelcomeUserReportListInfo($school->id, [2], $page);
 
           $this->dataForView['dataList'] = $dataList;
+
           return view('welcome_manager.welcomeReport.wait_list', $this->dataForView);
       }
 
@@ -78,8 +74,11 @@
 
            // 列表
            $welcomeUserReportObj = new WelcomeUserReportDao();
-           $dataList = $welcomeUserReportObj->getWelcomeUserReportListInfo($school->id, 1, $page);
-           return view('welcome_manager.welcomeReport.wait_list', $this->dataForView);
+           $dataList = $welcomeUserReportObj->getWelcomeUserReportListInfo($school->id, [1], $page);
+
+           $this->dataForView['dataList'] = $dataList;
+
+           return view('welcome_manager.welcomeReport.processing_list', $this->dataForView);
        }
 
        /**
@@ -106,13 +105,111 @@
 
            // 列表
            $welcomeUserReportObj = new WelcomeUserReportDao();
-           $dataList = $welcomeUserReportObj->getWelcomeUserReportListInfo($school->id, 3, $page);
+           $dataList = $welcomeUserReportObj->getWelcomeUserReportListInfo($school->id, [3], $page);
 
-           return view('welcome_manager.welcomeReport.wait_list', $this->dataForView);
+           $this->dataForView['dataList'] = $dataList;
+
+           return view('welcome_manager.welcomeReport.completed_list', $this->dataForView);
        }
 
        /**
-        * Func 详情
+        * Func 学费列表
+        * @param Request $request
+        * @return view
+        */
+       public function tuitionfee_list(Request $request)
+       {
+           $index = $request->input('index', 1);
+           $page = $request->input('page', 1);
+           $uuid = $request->input('uuid', '');
+           $keywords = $request->input('keywords', '');
+
+           if (!trim($uuid)) {
+               return redirect(self::$redirectUrl);
+           }
+
+           // 获取学校信息
+           $schoolObj = new SchoolDao();
+           $school = $schoolObj->getSchoolByIdOrUuid($uuid);
+           if (empty($school)) {
+               return redirect(self::$redirectUrl);
+           }
+
+           // 列表
+           $welcomeUserReportObj = new WelcomeUserReportDao();
+           $dataList = $welcomeUserReportObj->getUserReportsOrProjectsListInfo($school->id, [1, 3], 1, $index, $page);
+
+           $this->dataForView['dataList'] = $dataList;
+
+           return view('welcome_manager.welcomeReport.tuitionfee_list', $this->dataForView);
+       }
+
+       /**
+        * Func 书费列表
+        * @param Request $request
+        * @return view
+        */
+       public function bookfee_list(Request $request)
+       {
+           $index = $request->input('index', 1);
+           $page = $request->input('page', 1);
+           $uuid = $request->input('uuid', '');
+           $keywords = $request->input('keywords', '');
+
+           if (!trim($uuid)) {
+               return redirect(self::$redirectUrl);
+           }
+
+           // 获取学校信息
+           $schoolObj = new SchoolDao();
+           $school = $schoolObj->getSchoolByIdOrUuid($uuid);
+           if (empty($school)) {
+               return redirect(self::$redirectUrl);
+           }
+
+           // 列表
+           $welcomeUserReportObj = new WelcomeUserReportDao();
+           $dataList = $welcomeUserReportObj->getUserReportsOrProjectsListInfo($school->id, [1, 3], 2, $index, $page);
+
+           $this->dataForView['dataList'] = $dataList;
+
+           return view('welcome_manager.welcomeReport.bookfee_list', $this->dataForView);
+       }
+
+       /**
+        * Func 住宿费
+        * @param Request $request
+        * @return view
+        */
+       public function roomfee_list(Request $request)
+       {
+           $index = $request->input('index', 1);
+           $page = $request->input('page', 1);
+           $uuid = $request->input('uuid', '');
+           $keywords = $request->input('keywords', '');
+
+           if (!trim($uuid)) {
+               return redirect(self::$redirectUrl);
+           }
+
+           // 获取学校信息
+           $schoolObj = new SchoolDao();
+           $school = $schoolObj->getSchoolByIdOrUuid($uuid);
+           if (empty($school)) {
+               return redirect(self::$redirectUrl);
+           }
+
+           // 列表
+           $welcomeUserReportObj = new WelcomeUserReportDao();
+           $dataList = $welcomeUserReportObj->getUserReportsOrProjectsListInfo($school->id, [1, 3], 3, $index, $page);
+
+           $this->dataForView['dataList'] = $dataList;
+
+           return view('welcome_manager.welcomeReport.roomfee_list', $this->dataForView);
+       }
+
+       /**
+        * Func 费用详情
         * @param Request $request
         * @return view
         */
@@ -126,10 +223,16 @@
            // 详情
            $welcomeUserReportObj = new WelcomeUserReportDao();
            $dataOne = $welcomeUserReportObj->getWelcomeUserReportOneInfo($uuid);
+
            if (!empty($dataOne)) {
                $dataOne['info1'] = json_decode($dataOne['steps_1_str'], true);
                $dataOne['info2'] = json_decode($dataOne['steps_2_str'], true);
                unset($dataOne['steps_1_str'], $dataOne['steps_2_str']);
+
+               // 获取报到函和缴费信息
+                // 类型(1:学费,2:书费,3:住宿费,4:生活用品,5:军训服装,10:报到函,11:党团文件,12:录取通知书)
+               $dataOne['reportInfo1'] = $welcomeUserReportObj->getWelcomeUserReportsProjectsListInfo($dataOne['user_id'],[10,11,12]);
+               $dataOne['reportInfo2'] = $welcomeUserReportObj->getWelcomeUserReportsProjectsListInfo($dataOne['user_id'],[1,2,3,4,5]);
            }
 
            $this->dataForView['dataOne'] = $dataOne;
@@ -140,4 +243,137 @@
            return view('welcome_manager.welcomeReport.detail', $this->dataForView);
        }
 
+       /**
+        * Func 提交待处理报到
+        * @param Request $request
+        * @return view
+        */
+       public function wait_update(Request $request)
+       {
+           $uuid = (String)$request->input('uuid', '');
+           $typeidArr = $request->input('typeid', '');
+           $typeidArr = array_filter(array_unique($typeidArr));
+           if (!trim($uuid)) {
+               FlashMessageBuilder::Push($request, FlashMessageBuilder::DANGER, '参数错误');
+               return redirect()->route('welcome_manager.welcomeReport.detail',[ 'uuid' => $uuid ]);
+           }
+           if (!is_array($typeidArr) && count($typeidArr) <= 0) {
+               FlashMessageBuilder::Push($request, FlashMessageBuilder::DANGER, '请选择提交的资料');
+               return redirect()->route('welcome_manager.welcomeReport.detail', ['uuid' => $uuid]);
+           }
+
+           // 获取数据
+           $welcomeUserReportObj = new WelcomeUserReportDao();
+           $dataOne = $welcomeUserReportObj->getWelcomeUserReportOneInfo($uuid);
+           if (empty($dataOne)) {
+               FlashMessageBuilder::Push($request, FlashMessageBuilder::DANGER, '参数错误');
+               return redirect()->route('welcome_manager.welcomeReport.detail', ['uuid' => $uuid]);
+           }
+           if ($dataOne['status'] != 2) {
+               FlashMessageBuilder::Push($request, FlashMessageBuilder::DANGER, '数据已处理');
+               return redirect()->route('welcome_manager.welcomeReport.detail', ['uuid' => $uuid]);
+           }
+
+           foreach ($typeidArr as $val)
+           {
+               // 更新状态值
+               $addData[] = [
+                   'uuid' => sha1(time()),
+                   'typeid' => $val,
+                   'user_id' => $dataOne['user_id'],
+                   'school_id' => $dataOne['school_id'],
+                   'campus_id' => $dataOne['campus_id'],
+                   'created_at' => date('Y-m-d H:i:s'),
+                   'project_title' => WelcomeUserReportDao::$reportProjectArr[1][$val],
+                   'project_desc' => WelcomeUserReportDao::$reportProjectArr[1][$val]
+               ];
+           }
+           if (WelcomeUserReportsProject::insert($addData)) {
+
+               // 更新状态
+               $welcomeUserReportObj = new WelcomeUserReportDao();
+               $welcomeUserReportObj->editWelcomeUserReportsInfo(['status'=>1,'complete_date1'=>date('Y-m-d H:i:s')],$dataOne['configid']);
+
+               $schoolObj = new SchoolDao();
+               $school = $schoolObj->getSchoolByIdOrUuid($dataOne['school_id']);
+               FlashMessageBuilder::Push($request, FlashMessageBuilder::SUCCESS, '操作成功');
+               return redirect()->route('welcome_manager.welcomeReport.wait_list', ['uuid' => $school['uuid']]);
+           } else {
+               FlashMessageBuilder::Push($request, FlashMessageBuilder::DANGER, '操作失败,请稍后重试');
+               return redirect()->route('welcome_manager.welcomeReport.detail', ['uuid' => $uuid]);
+           }
+       }
+
+       /**
+        * Func 费用详情
+        * @param Request $request
+        * @return view
+        */
+       public function cost_detail(Request $request)
+       {
+           $id = $request->input('id', '');
+           $index = $request->input('index', 0);
+           $typeid = $request->input('typeid', 0);
+
+           if (!trim($id) && !intval($typeid)) {
+               return redirect(self::$redirectUrl);
+           }
+
+           // 详情
+           $welcomeUserReportObj = new WelcomeUserReportDao();
+           $dataOne = $welcomeUserReportObj->getWelcomeUserReportOneInfo($id);
+
+           if (!empty($dataOne)) {
+               $dataOne['info1'] = json_decode($dataOne['steps_1_str'], true);
+               $dataOne['info2'] = json_decode($dataOne['steps_2_str'], true);
+
+               // 获取是否缴费
+               $dataOne['typeid'] = $typeid; // 费用类型
+
+               $dataOne['payInfo'] = $welcomeUserReportObj->getWelcomeUserReportsProjectsInfo($dataOne['user_id'], $typeid);
+
+               unset($dataOne['steps_1_str'], $dataOne['steps_2_str']);
+           }
+
+           // 表单提交
+           if ($request->isMethod('post'))
+           {
+               // 1:学费,2:书费,3:住宿费,4:生活用品,5:军训服装
+               if (in_array($dataOne['typeid'],[1,2,3,4,5]))
+               {
+                   $infos = $request->all()['infos'];
+                   // 添加数据
+                   $addData['status'] = 1;
+                   $addData['uuid'] = sha1(time().round(100,200));
+                   $addData['typeid'] = $dataOne['typeid'];
+                   $addData['user_id'] = $dataOne['user_id'];
+                   $addData['school_id'] = $dataOne['school_id'];
+                   $addData['campus_id'] = $dataOne['campus_id'];
+                   $addData['project_title'] = WelcomeUserReportDao::$reportProjectArr[2][$dataOne['typeid']];
+                   $addData['pay_trade_sn'] = $infos['pay_trade_sn'];
+                   $addData['pay_payment'] = $infos['pay_payment'];
+                   $addData['pay_price'] = $infos['pay_price'];
+                   $addData['project_desc'] = $infos['project_desc'];
+                   $addData['operator_name'] = '操作员';
+                   $addData['operator_datetime'] = date('Y-m-d H:i:s');
+
+                   if ($welcomeUserReportObj->addWelcomeUserReportsProjectInfo($addData))
+                   {
+                       // TODO....支付成功，需要更新是否已完成....
+                       FlashMessageBuilder::Push($request, FlashMessageBuilder::SUCCESS, '操作成功');
+                       return redirect()->route('welcome_manager.welcomeReport.cost_detail',['id'=>$dataOne['uuid'],'typeid'=>$typeid,'index'=>$index]);
+                   } else {
+                       FlashMessageBuilder::Push($request, FlashMessageBuilder::DANGER, '操作失败,请稍后重试');
+                       return redirect()->route('welcome_manager.welcomeReport.cost_detail',['id'=>$dataOne['uuid'],'typeid'=>$typeid,'index'=>$index]);
+                   }
+               }
+
+           }
+
+           $this->dataForView['dataOne'] = $dataOne;
+           $this->dataForView['paymentArr'] = WelcomeUserReportDao::$paymentArr; // 支付方式
+           $this->dataForView['reportProjectArr'] = WelcomeUserReportDao::$reportProjectArr[2];
+
+           return view('welcome_manager.welcomeReport.cost_detail', $this->dataForView);
+       }
    }

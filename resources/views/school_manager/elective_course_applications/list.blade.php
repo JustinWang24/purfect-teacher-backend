@@ -45,7 +45,7 @@ use App\Utils\UI\Button;
                                         <td>
                                             {{ $application->start_year }}年
                                         </td>
-                                        <td></td>
+                                        <td>{{ $application->arrangements[0]->building_name }} {{ $application->arrangements[0]->classroom_name }}</td>
                                         <td>
                                             <span class="{{ $application->getStatusColor() }}">
                                                 {{ $application->getStatusText() }}

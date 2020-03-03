@@ -70,27 +70,28 @@ class UserFollowDao extends \App\Dao\Affiche\CommonDao
         if($count > 0)
         {
             // 取消赞
-            if(UserFollow::where($condition)->delete())
-            {
-                return [ 'result' => 0 ];
+            if (UserFollow::where($condition)->delete()) {
+                $this->operationUpdateFollowUserInfo($user_id, $touser_id);
+                return ['result' => 0];
             } else {
-                return [ 'result' => 1 ];
+                $this->operationUpdateFollowUserInfo($user_id, $touser_id);
+                return ['result' => 1];
             }
         } else{
             // 添加关注
             $addData['user_id'] = $user_id;
             $addData['touser_id'] = $touser_id;
             $addData['created_at'] = date('Y-m-d H:i:s');
-            if(UserFollow::create($addData))
-            {
-                return [ 'result' => 1 ];
+            if (UserFollow::create($addData)) {
+                $this->operationUpdateFollowUserInfo($user_id, $touser_id);
+                return ['result' => 1];
             } else {
-                return [ 'result' => 0 ];
+                $this->operationUpdateFollowUserInfo($user_id, $touser_id);
+                return ['result' => 0];
             }
         }
         return [ 'result' => 0 ];
     }
-
 
     /**
      * Func 获取我的粉丝
@@ -117,5 +118,33 @@ class UserFollowDao extends \App\Dao\Affiche\CommonDao
             ->get();
 
         return  !empty($data->toArray()) ? $data->toArray() : [];
+    }
+
+    /**
+     * Func 获取粉丝总数
+     *
+     * @param['user_id']  用户id
+     * @param['limit'] 获取条数
+     *
+     * @return array
+     */
+    public function operationUpdateFollowUserInfo( $user_id , $touser_id )
+    {
+        // 更新用户关注的
+        if (intval($user_id)) {
+            $saveData = [];
+            $count = (Int)DB::table('user_follows')->where('user_id', '=', $user_id)->count();
+            $saveData['user_focus_number'] = $count;
+            $saveData['updated_at'] = date('Y-m-d H:i:s');
+            DB::table('users')->where('id', '=', $user_id)->update($saveData);
+        }
+        // 更新关注的人粉丝用户数
+        if (intval($touser_id)) {
+            $saveData = [];
+            $count = (Int)DB::table('user_follows')->where('touser_id', '=', $touser_id)->count();
+            $saveData['user_fans_number'] = $count;
+            $saveData['updated_at'] = date('Y-m-d H:i:s');
+            DB::table('users')->where('id', '=', $touser_id)->update($saveData);
+        }
     }
 }

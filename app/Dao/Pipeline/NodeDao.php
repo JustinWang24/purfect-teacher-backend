@@ -9,6 +9,7 @@
 namespace App\Dao\Pipeline;
 
 use App\Models\Pipeline\Flow\Flow;
+use App\Models\Pipeline\Flow\Handler;
 use App\Models\Pipeline\Flow\Node;
 use App\Models\Pipeline\Flow\NodeAttachment;
 use App\Models\Pipeline\Flow\NodeOption;
@@ -57,13 +58,14 @@ class NodeDao
                 }
 
                 // 步骤所关联的附件
-                foreach ($data['attachments'] as $attachment){
-                    if(empty($attachment['id'])){
-                        $attachment['node_id'] = $currentNode->id;
-                        NodeAttachment::create($attachment);
+                if (!empty($data['attachments'])) {
+                    foreach ($data['attachments'] as $attachment){
+                        if(empty($attachment['id'])){
+                            $attachment['node_id'] = $currentNode->id;
+                            NodeAttachment::create($attachment);
+                        }
                     }
                 }
-
                 DB::commit();
                 return $currentNode;
             }
@@ -77,10 +79,12 @@ class NodeDao
                 // 如果还是没有取到 prev 的节点, 那么相当于是创建 head 节点
                 $node = Node::create($data);
                 // 步骤所关联的附件
-                foreach ($data['attachments'] as $attachment){
-                    if(empty($attachment['id'])){
-                        $attachment['node_id'] = $node->id;
-                        NodeAttachment::create($attachment);
+                if (!empty($data['attachments'])) {
+                    foreach ($data['attachments'] as $attachment){
+                        if(empty($attachment['id'])){
+                            $attachment['node_id'] = $node->id;
+                            NodeAttachment::create($attachment);
+                        }
                     }
                 }
                 DB::commit();
@@ -235,16 +239,26 @@ class NodeDao
 
         $node = $this->getById($id);
         $result = false;
-
         if($node && $node->prev_node !== 0){
             // 前一个 node 的 next 应该被更新为 当前 node 的 next, 保证链表的链接正确; 永远不能删除流程中的第一步: 发起
             $prev = $node->prev;
+            $next = $node->next;
             $currentNextNode = $node->next_node;
             $prev->next_node = $currentNextNode;
+            $handler = $node->handler;
+            $prevHandler = $prev->handler;
+            $prevHandler->notice_to = $handler->notice_to;
+            $prevHandler->notice_organizations = $handler->notice_organizations;
             DB::beginTransaction();
             try{
+                if ($next) {
+                    $next->prev_node = $node->prev_node;
+                    $next->save();
+                }
+                $prevHandler->save();
                 $prev->save();
                 Node::where('id',$id)->delete();
+                Handler::where('node_id', $id)->delete();
                 NodeOption::where('node_id',$id)->delete(); // 删除选项
                 DB::commit();
                 $result = true;
@@ -284,11 +298,15 @@ class NodeDao
      * @return NodeOption|null
      */
     public function saveNodeOption($nodeOptionData){
+        $nodeOptionData['extra'] = is_array($nodeOptionData['extra']) ? json_encode($nodeOptionData['extra']) : $nodeOptionData['extra'];
         if(isset($nodeOptionData['id']) && !empty($nodeOptionData['id'])){
             $option = NodeOption::find($nodeOptionData['id']);
             if($option){
                 $option->name = $nodeOptionData['name'];
                 $option->type = $nodeOptionData['type'];
+                $option->tip = $nodeOptionData['tip'];
+                $option->required = $nodeOptionData['required'];
+                $option->extra = $nodeOptionData['extra'];
                 $option->save();
                 return $option;
             }

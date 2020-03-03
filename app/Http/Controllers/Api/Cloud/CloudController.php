@@ -175,7 +175,6 @@ class CloudController extends Controller
          * @var  Facility $facility
          */
         $room = $facility->room;
-
         $timeSlotDao = new TimeSlotDao;
 
         $item = $timeSlotDao->getItemByRoomForNow($room);
@@ -320,6 +319,7 @@ class CloudController extends Controller
         $user = $request->user();
         $timetableItemDao = new TimetableItemDao;
         $item = $timetableItemDao->getCurrentItemByUser($user);
+
         if (empty($item)) {
             return JsonBuilder::Error('未找到该同学目前上的课程');
         }

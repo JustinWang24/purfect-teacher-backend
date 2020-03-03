@@ -279,7 +279,7 @@ class UserDao
         if($name){
             $data['name'] = $name;
         }
-        if($mobile){
+        if($email){
             $data['email'] = $email;
         }
         if($niceName) {
@@ -339,5 +339,25 @@ class UserDao
         return User::where('api_token', $apiToken)->first();
     }
 
+    /**
+     * 更新用户邮箱
+     * @param $userId
+     * @param $email
+     * @return mixed
+     */
+    public function updateEmail($userId, $email = null)
+    {
+        return User::where('id', $userId)->update(['email' => $email]);
+    }
+
+    /**
+     * 根据用户的电话号码获取用户
+     * @param $email
+     * @return User
+     */
+    public function getUserByEmail($email)
+    {
+        return User::where('email', $email)->first();
+    }
 
 }

@@ -61,8 +61,8 @@ class AfficheController extends Controller
 
         $user = $request->user();
         $user_id = $user->id;
-        $school_id = $user->gradeUser->school_id;
-        $campus_id = $user->gradeUser->campus_id;
+        $school_id = $user->gradeUserOneInfo->school_id;
+        $campus_id = $user->gradeUserOneInfo->campus_id;
 
         // 上传图片
         $iche_pic = [];
@@ -112,13 +112,13 @@ class AfficheController extends Controller
         }
 
         // 添加数据
-        $addData[ 'iche_title' ]          = '';
-        $addData[ 'iche_type' ]           = (String)$iche_type;
-        $addData[ 'iche_content' ]        = (String)trim ( $iche_content );
-        $addData[ 'iche_is_open_number' ] = (Int)$iche_is_open_number;
-        $addData[ 'userid' ]              = (Int)$user_id;
-        $addData[ 'schoolid' ]            = (Int)$school_id;
-        $addData[ 'schoolareaid' ]        = (Int)$campus_id;
+        $addData['iche_title'] = '';
+        $addData['iche_type'] = (String)$iche_type;
+        $addData['iche_content'] = (String)trim($iche_content);
+        $addData['iche_is_open_number'] = (Int)$iche_is_open_number;
+        $addData['user_id'] = (Int)$user_id;
+        $addData['school_id'] = (Int)$school_id;
+        $addData['campus_id'] = (Int)$campus_id;
 
         // 添加动态
         $afficheObj = new AfficheDao();
@@ -188,7 +188,7 @@ class AfficheController extends Controller
 
             $user = $request->user();
             $user_id = $user->id;
-            $school_id = $user->gradeUser->school_id;
+            $school_id = $user->gradeUserOneInfo->school_id;
         }
 
         // 实例化模型类
@@ -346,6 +346,7 @@ class AfficheController extends Controller
             if ($user_id) {
                 $isfollow = (Int)$userFollowobj->getUserFollowCount($user_id, $infos['user_id']);
                 $ispraise = (Int)$praiseobj->getAffichePraiseCount(1, $user_id, $infos['icheid']);
+                $afficheobj->addAfficheViewsInfo($user_id, $infos['icheid']);
             }
 
             // 用户信息

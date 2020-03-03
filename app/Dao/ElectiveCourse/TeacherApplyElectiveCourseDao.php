@@ -318,7 +318,7 @@ class TeacherApplyElectiveCourseDao
                     'week' => $arrangement->week,
                     'week_day' => '',
                     'day_index' => $arrangement->day_index,
-                    'time' => ''
+                    'time' => $arrangement->timeslot->name
                 ];
             }
             $retList[] = $tmp;
@@ -610,6 +610,18 @@ class TeacherApplyElectiveCourseDao
         //全部课时
         $groups = self::getApplyCourseArrangements($applyId);
         $data['group'] = $groups->toArray();
+
+        //选修课表要求必须有building_id和classroom_id
+        if (empty($data['group'])) {
+            $messageBag->setMessage('请完善教室信息！');
+            return $messageBag;
+        }
+        foreach ($data['group'] as $item) {
+            if (empty($item['building_id']) || empty($item['classroom_id'])) {
+                $messageBag->setMessage('请完善教室信息！');
+                return $messageBag;
+            }
+        }
         $apply = self::getVerifiedApplyById($applyId);
         if (!$apply)
         {

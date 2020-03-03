@@ -78,8 +78,14 @@ class PraiseDao extends \App\Dao\Affiche\CommonDao
             // 取消赞
             if(AffichePraise::where($condition)->delete())
             {
+                if ($typeid == 1) {
+                    $this->updateUserPraiseNumber($minx_id);
+                }
                 return [ 'result' => 0 ];
             } else {
+                if ($typeid == 1) {
+                    $this->updateUserPraiseNumber($minx_id);
+                }
                 return [ 'result' => 1 ];
             }
         } else{
@@ -90,12 +96,46 @@ class PraiseDao extends \App\Dao\Affiche\CommonDao
             $addData['created_at'] = date('Y-m-d H:i:s');
             if(AffichePraise::create($addData))
             {
+                if ($typeid == 1) {
+                    $this->updateUserPraiseNumber($minx_id);
+                }
                 return [ 'result' => 1 ];
             } else {
+                if ($typeid == 1) {
+                    $this->updateUserPraiseNumber($minx_id);
+                }
                 return [ 'result' => 0 ];
             }
         }
         return [ 'result' => 0 ];
+    }
+
+    /**
+     * Func 更新动态点赞数据
+     *
+     * @param['icheid'] 是   动态id
+     * @param['type'] 是   1:加,2:减
+     *
+     * @return bool
+     */
+    public function updateUserPraiseNumber($icheid)
+    {
+        if (!intval($icheid)) {
+            return;
+        }
+        $afficheObj = new AfficheDao();
+        $getAfficheOneInfo = $afficheObj->getAfficheOneInfo($icheid);
+        if (!empty($getAfficheOneInfo)) {
+            // 检索条件
+            $condition[] = ['typeid', '=', 1];
+            $condition[] = ['minx_id', '=', $icheid];
+            $count = AffichePraise::where($condition)->count();
+            // 更新用户发布的动态点赞数
+            $saveData['user_praise_number'] = (Int)$count;
+            $saveData['updated_at'] = date('Y-m-d H:i:s');
+            DB::table('users')->where('id', '=', $getAfficheOneInfo['user_id'])->update($saveData);
+        }
+        return;
     }
 
 

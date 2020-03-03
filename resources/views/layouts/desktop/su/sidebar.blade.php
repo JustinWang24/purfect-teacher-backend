@@ -40,6 +40,8 @@
                     @include('layouts.desktop.elements.operator_only_menu')
                     @include('layouts.desktop.elements.community_menu')
                     @include('layouts.desktop.elements.code_menu')
+					@include('layouts.desktop.elements.affiche_menu')
+                    @include('layouts.desktop.elements.group_menu')
                     @include('layouts.desktop.elements.wifi_menu')
                     @include('layouts.desktop.elements.wifirepairs_menu')
                     @include('layouts.desktop.elements.evaluate')

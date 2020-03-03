@@ -42,7 +42,7 @@ class ProjectTask extends Model
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
     public function discussions(){
-        return $this->hasMany(ProjectTaskDiscussion::class)->orderBy('id','desc');
+        return $this->hasMany(ProjectTaskDiscussion::class,'project_task_id')->orderBy('id','desc');
     }
 
     /**

@@ -11,7 +11,7 @@ use App\Models\Wifi\Backstage\WifiNotices;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Collection;
 
-class WifiNoticesDao extends \App\Dao\Wifi\CommonDao
+class WifiNoticesDao extends CommonDao
 {
    /**
     * Func:  添加或更新数据

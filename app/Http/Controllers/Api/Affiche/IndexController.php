@@ -66,7 +66,7 @@ class IndexController extends Controller
         {
             $user = $request->user();
             $user_id = $user->id;
-            $school_id = $user->gradeUser->school_id;
+            $school_id = $user->gradeUserOneInfo->school_id;
         }
 
         // 返回数据
@@ -181,6 +181,5 @@ class IndexController extends Controller
         }
         return JsonBuilder::Success ( $infos , '社区个人主页' );
     }
-
 
 }

@@ -20,31 +20,35 @@ use App\Dao\Courses\Lectures\LectureDao;
 use App\Http\Requests\MyStandardRequest;
 use App\Dao\AttendanceSchedules\AttendancesDao;
 use App\Dao\AttendanceSchedules\AttendancesDetailsDao;
+use App\Dao\ElectiveCourses\TeacherApplyElectiveCourseDao;
 
 class IndexController extends Controller
 {
     public function index(MyStandardRequest $request) {
         $user = $request->user();
 
-        $selectCourse = [
-            'status' => 'true', // true 开启 false 关闭
-            'time' => '2020年1月3日-2020年1月15日',
-            'msg' => '大家选课期间请看好选课程对应的学分',
-        ];
-
-
         $schoolId = $user->getSchoolId();
         $schoolDao = new SchoolDao();
         $school = $schoolDao->getSchoolById($schoolId);
         $configuration = $school->configuration;
-        // todo 时间暂时写死
-        $date = Carbon::now()->toDateString();
-        $date = Carbon::parse('2020-01-08 14:40:00');;
+
+        $date = Carbon::now();
+
         $year = $configuration->getSchoolYear($date);
         $month = Carbon::parse($date)->month;
         $term = $configuration->guessTerm($month);
         $timetableItemDao = new TimetableItemDao();
-        $item = $timetableItemDao->getCurrentItemByUser($user);
+        $item = $timetableItemDao->getCurrentItemByUser($user, $date);
+
+        $teacherApplyElectiveDao = new TeacherApplyElectiveCourseDao();
+        $electiveTime = $teacherApplyElectiveDao->getElectiveCourseStartAndEndTime($schoolId, $term);
+        $electiveStart = Carbon::parse($electiveTime[0]);
+        $electiveEnd = Carbon::parse($electiveTime[1]);
+        $selectCourse = [
+            'status' => $electiveStart->timestamp < $date->timestamp && $electiveEnd->timestamp > $date->timestamp, // true 开启 false 关闭
+            'time' => $electiveStart->format('Y年m月d日') . '-' . $electiveEnd->format('Y年m月d日'),
+            'msg' => '大家选课期间请看好选课程对应的学分',
+        ];
 
         $timetable = (object)[];
         $attendancesDetailsDao = new AttendancesDetailsDao();
@@ -85,15 +89,14 @@ class IndexController extends Controller
             $weeks = $configuration->getScheduleWeek(Carbon::parse($date), null, $term);
 
             $week = $weeks->getScheduleWeekIndex() ?? '';
-
             $attendancesDao = new AttendancesDao();
 
             $attendance = $attendancesDao->getAttendanceByTimeTableId($item->id,$week);
+            if(!is_null($attendance)) {
+                $detail = $attendancesDetailsDao->getDetailByUserId($user->id, $attendance->id);
+                $signIn['status'] = $detail->mold ?? 0;
+            }
 
-
-            $detail = $attendancesDetailsDao->getDetailByUserId($user->id, $attendance->id);
-
-            $signIn['status'] = $detail->mold ?? 0;
             $evaluateTeacher = true;
         }
 
@@ -159,7 +162,10 @@ class IndexController extends Controller
         if(!is_null($keyword)) {
             // 根据资料名称搜索
             $material = $this->getMaterial($courseIds,$keyword, $gradeId, $year, $term, $type);
+            $courseMajorDao = new CourseMajorDao();
+            $courseMajors = $courseMajorDao->getCourseMajorByCourseIdsAndCourseName($courseIds, $keyword);
             $courseIds = $courseMajors->pluck('course_id')->toArray();
+
         }
 
         $itemDao = new TimetableItemDao();
@@ -217,7 +223,6 @@ class IndexController extends Controller
         foreach ($timetable as $key => $item) {
             $list[] = $dao->getMaterialsByType($item->course_id,$gradeId,$item->teacher_id,$type, $keyword);
         }
-
         return $list;
     }
 
@@ -241,6 +246,77 @@ class IndexController extends Controller
             }
         }
         return $arr;
+    }
+
+
+    /**
+     * 学习资料课程列表
+     * @param MyStandardRequest $request
+     * @return string
+     */
+    public function courseList(MyStandardRequest $request) {
+        $userId = $request->user()->id;
+        $dao = new LectureDao();
+        $lectures = $dao->getMaterialByTeacherId($userId);
+        $courses = [];
+        foreach ($lectures as $key => $item) {
+            $courses[$key] = [
+                'course_id' => $item->course_id,
+                'course_name' => $item->course->name,
+            ];
+        }
+
+        return JsonBuilder::Success($courses);
+    }
+
+
+    /**
+     * 课程资料列表
+     * @param MyStandardRequest $request
+     * @return string
+     */
+    public function courseMaterialList(MyStandardRequest $request) {
+        $userId = $request->user()->id;
+        $courseId = $request->getCourseId();
+        $type = $request->get('type_id');
+        if(empty($courseId) || empty($type)) {
+            return JsonBuilder::Error('缺少参数');
+        }
+
+        $dao = new LectureDao();
+        $return = $dao->getMaterialByCourseId($courseId, $type, $userId);
+        $result = pageReturn($return);
+
+        foreach ($result['list'] as $key => $item) {
+            $result['list'][$key] = [
+                'id' => $item->id,
+                'type' => $item->media->getTypeText(),
+                'file_name' => $item->media->file_name,
+                'url' => $item->url,
+            ];
+        }
+
+        return JsonBuilder::Success($result);
+    }
+
+
+    /**
+     * 删除学习教材
+     * @param MyStandardRequest $request
+     * @return string
+     */
+    public function deleteMaterial(MyStandardRequest $request) {
+        $materialId = $request->get('material_id');
+        if(is_null($materialId)) {
+            return JsonBuilder::Error('缺少参数');
+        }
+        $dao = new LectureDao();
+        $result = $dao->deleteMaterial($materialId);
+        if($result->isSuccess()) {
+            return JsonBuilder::Success($result->getMessage());
+        } else {
+            return JsonBuilder::Error($result->getMessage());
+        }
     }
 
 }

@@ -92,24 +92,21 @@ class CommonDao
      */
     public function userInfo($user_id = 0)
     {
+        $userObj = new UserDao();
+        $userInfo = $userObj->getUserById($user_id);
+
         // TODO.... 下面没写完.....
-        $data['user_id'] = $user_id; // 用户id
+        $data['user_id'] = $userInfo->id; // 用户id
         $data['user_sex'] = '男'; // 性别
-        $data['user_signture'] = '这世界很美好'; // 签名
+        $data['user_signture'] = $userInfo->user_signture; // 签名
         $data['user_pics'] = '/assets/img/dp.jpg'; // 头像
-        $data['user_nickname'] = '张三'; // 用户名
+        $data['user_nickname'] = $userInfo->nice_name; // 用户名
         $data['school_name'] = '礼县职业中等专业学校'; // 学校名称
-        $data['user_fans_number'] = 10; // 粉丝数量
-        $data['user_focus_number'] = 20; // 关注数量
-        $data['user_praise_number'] = 30; // 点赞数量
+        $data['user_fans_number'] = $userInfo->user_fans_number; // 粉丝数量
+        $data['user_focus_number'] = $userInfo->user_focus_number; // 关注数量
+        $data['user_praise_number'] = $userInfo->user_praise_number; // 点赞数量
 
-        if (!intval($user_id)) return $data;
-
-        //$userInfo = (new UserDao())->getUserById($user_id);
-
-        //$data['user_nickname'] = $userInfo->getName();
-
-        return $data;
+         return $data;
     }
 
     /**
@@ -121,10 +118,13 @@ class CommonDao
      */
     public function getFansOrFocusOrPraiseNumber($user_id = 0)
     {
-        // TODO........
-        $data['user_fans_number'] = 10; // 粉丝数量
-        $data['user_focus_number'] = 20; // 关注数量
-        $data['user_praise_number'] = 30; // 点赞数量
+        $userObj = new UserDao();
+        $userInfo = $userObj->getUserById($user_id);
+
+        $data['user_fans_number'] = $userInfo->user_fans_number; // 粉丝数量
+        $data['user_focus_number'] = $userInfo->user_focus_number; // 关注数量
+        $data['user_praise_number'] = $userInfo->user_praise_number; // 点赞数量
+
         return $data;
     }
 

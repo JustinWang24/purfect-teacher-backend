@@ -381,7 +381,7 @@ Route::prefix('questionnaire')->middleware('auth:api')->group(function () {
 
 // 最新版本号
 Route::prefix('version')->group(function () {
-    Route::get('/index', 'Api\Version\VersionController@index')->name('api.version.index');
+    Route::any('/index', 'Api\Version\VersionController@index')->name('api.version.index');
 });
 
 // APP 首页接口
@@ -851,10 +851,12 @@ Route::prefix('Oa')->middleware('auth:api')->group(function () {
     Route::post('/message-update-or-del','Api\OA\InternalMessageController@updateOrDelMessage')
         ->name('api.oa.update.or.del.message');
     // 更新信件
-
+    Route::post('/message-update','Api\OA\InternalMessageController@messageUpdate')
+        ->name('api.oa.update.message');
     // 上传附件
     Route::post('/message-upload-files', 'Api\OA\InternalMessageController@uploadFiles')
         ->name('api.oa.upload.files');
+
 
     /**
      * 工作日志
@@ -871,7 +873,11 @@ Route::prefix('Oa')->middleware('auth:api')->group(function () {
     // 发送
     Route::post('/work-log-send', 'Api\OA\WorkLogController@workLogSend')
         ->name('api.oa.work.log.send');
-
+    // 更新
+    Route::post('/update-work-log', 'Api\OA\WorkLogController@workLogUpdate')
+        ->name('api.oa.work.log.send');
+    Route::post('/delete-work-log', 'Api\OA\WorkLogController@workLogDel')
+        ->name('api.oa.work.log.send');
     /**
      * 助手页
      */
@@ -886,7 +892,7 @@ Route::prefix('Oa')->middleware('auth:api')->group(function () {
         ->name('api.oa.grade.resources');
     // 上传班级风采
     Route::post('/upload-grade-resources', 'Api\OA\GradeManageController@uploadGradeResource')
-        ->name('api.oa.upload.grade.resources');
+        ->name('apigetQrCode.oa.upload.grade.resources');
     // 删除班级风采
     Route::post('/del-grade-resources', 'Api\OA\GradeManageController@delGradeResource')
         ->name('api.oa.del.grade.resources');
@@ -982,12 +988,34 @@ Route::prefix('organizations')->middleware('auth:api')->group(function(){
 
 // 学习
 Route::prefix('study')->middleware('auth:api')->group(function(){
+    // 学习首页
     Route::any('/home-page', 'Api\Study\IndexController@index')
         ->name('api.study.home-page');
+    // 学习类型列表
     Route::any('/type-list', 'Api\Study\IndexController@materialType')
         ->name('api.study.type-list');
+    // 学生端资料列表
     Route::any('/material-list', 'Api\Study\IndexController@materialList')
         ->name('api.study.material-list');
+    // 教师端课程列表
+    Route::any('/course-list', 'Api\Study\IndexController@courseList')
+        ->name('api.study.course-list');
+    // 教师端资料列表
+    Route::any('/course-material-list', 'Api\Study\IndexController@courseMaterialList')
+        ->name('api.study.course-material-list');
+    // 删除学习资料
+    Route::any('/delete-material', 'Api\Study\IndexController@deleteMaterial')
+        ->name('api.study.delete-material');
+
+    // 学生端课表
+    Route::any('/timetable-student', 'Api\Study\TimetableController@student')
+        ->name('api.study.timetable-student');
+    // 教师端课表
+    Route::any('/timetable-teacher', 'Api\Study\TimetableController@teacher')
+        ->name('api.study.timetable-teacher');
+    // 课程表详情
+    Route::any('/timetable-details', 'Api\Study\TimetableController@timetableDetails')
+        ->name('api.study.timetable-details');
 });
 
 
