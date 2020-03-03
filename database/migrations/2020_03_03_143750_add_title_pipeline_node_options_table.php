@@ -33,7 +33,9 @@ class AddTitlePipelineNodeOptionsTable extends Migration
     {
         //
         Schema::table('pipeline_node_options', function (Blueprint $table) {
-            $table->dropSoftDeletes();
+            if (Schema::hasColumn('pipeline_node_options', 'deleted_at')) {
+                $table->dropSoftDeletes();
+            }
             if (Schema::hasColumn('pipeline_node_options', 'tips')) {
                 $table->dropColumn('tips');
             }
