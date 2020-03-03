@@ -92,8 +92,7 @@ class SignInGradeController extends Controller
         $week = $weeks->getScheduleWeekIndex();
         $timeTableItemDao = new TimetableItemDao();
         $return = $timeTableItemDao->getCurrentItemByUser($user);
-
-        if(count($return) == 0) {
+        if(is_null($return) || count($return) == 0 ) {
             return JsonBuilder::Success('当前没有课程');
         }
         $courseId = $return->pluck('course_id')->toArray()[0];
@@ -566,9 +565,9 @@ class SignInGradeController extends Controller
         $attendanceId = $request->getAttendanceId();
         $dao = new AttendancesDao();
         $attendance = $dao->getAttendanceById($attendanceId);
-        if($attendance->status == Attendance::STATUS_UN_EVALUATE) {
-            return JsonBuilder::Error('该课堂未评价');
-        }
+//        if($attendance->status == Attendance::STATUS_UN_EVALUATE) {
+//            return JsonBuilder::Error('该课堂未评价');
+//        }
 
         $gradeUserDao = new GradeUserDao();
         $return = $gradeUserDao->getGradeUserPageGradeId($attendance->grade_id);
