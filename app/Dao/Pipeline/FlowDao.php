@@ -81,7 +81,26 @@ class FlowDao
             }])->pluck('organization_id')->toArray();
 
             //如果用户存在相同组织则仅显示自己所在组织
-            $userOrganizationId = $user->organizations->pluck('organization_id')->toArray();
+            $userOrganizationId = $user->organizations->whereIn('organization_id', $organizations)->pluck('organization_id')->toArray();
+            if ($userOrganizationId) {
+                $organizations = $userOrganizationId;
+            }
+
+            foreach ($titlesArr as $title) {
+                if ($title == Title::ORGANIZATION_EMPLOYEE) {
+                    $titleId = Title::ORGANIZATION_EMPLOYEE_ID;
+                }
+                if ($title == Title::ORGANIZATION_DEPUTY) {
+                    $titleId = Title::ORGANIZATION_DEPUTY_ID;
+                }
+                if ($title == Title::ORGANIZATION_LEADER) {
+                    $titleId = Title::ORGANIZATION_LEADER_ID;
+                }
+                $userOrganizationList = UserOrganization::with('user')->whereIn('organization_id', $organizations)->where('title_id', $titleId)->get();
+                foreach ($userOrganizationList as $userOrganization) {
+                    $return[$userOrganization->title][] = $userOrganization->user;
+                }
+            }
 
         }else {
             //职务

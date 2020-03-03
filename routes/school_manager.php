@@ -479,6 +479,11 @@ Route::prefix('school_manager')->group(function () {
     Route::prefix('pipeline')->group(function(){
         Route::get('flows/manager','Pipeline\FlowsController@manager')
             ->name('school_manager.pipeline.flows-manager');
+        Route::get('flows/handler','Pipeline\FlowsController@handler')
+            ->name('school_manager.pipeline.flows-handler');
+        Route::get('flows/copy','Pipeline\FlowsController@copy')
+            ->name('school_manager.pipeline.flows-copy');
+
         Route::post('flows/load-flows', 'Pipeline\FlowsController@load_flows')
             ->name('school_manager.pipeline.load-flows');
         Route::post('flows/load-nodes','Pipeline\FlowsController@load_nodes')
