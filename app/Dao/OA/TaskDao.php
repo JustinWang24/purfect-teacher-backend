@@ -188,7 +188,7 @@ class TaskDao
             }
 
 
-            $taskMembers = $task->taskMembers;
+            $taskMembers = $task->taskMembers->where('user_id', '<>', $userId);
             $finish = $taskMembers->where('status',ProjectTaskMember::STATUS_CLOSED);
 
             if(count($finish) == count($taskMembers)) {
