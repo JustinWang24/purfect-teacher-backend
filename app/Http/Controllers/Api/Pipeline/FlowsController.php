@@ -127,7 +127,6 @@ class FlowsController extends Controller
         $flow = $flowDao->getById($request->getStartFlowId());
 
         $logic = FlowLogicFactory::GetInstance($user);
-
         $bag = $logic->start(
             $flow,
             $actionData
