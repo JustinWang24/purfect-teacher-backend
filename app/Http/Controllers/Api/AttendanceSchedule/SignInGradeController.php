@@ -408,7 +408,7 @@ class SignInGradeController extends Controller
 
         $weeks = $configuration->getScheduleWeek(Carbon::parse($date), null, $term);
         if(is_null($weeks)) {
-            return JsonBuilder::Error('当前没有课程');
+            return JsonBuilder::Success('当前没有课程');
         }
 
         $week = $weeks->getScheduleWeekIndex();
@@ -526,7 +526,7 @@ class SignInGradeController extends Controller
         $weekDay = Carbon::parse($date)->weekDay();
         $weeks = $configuration->getScheduleWeek(Carbon::parse($date), null, $term);
         if(is_null($weeks)) {
-            return JsonBuilder::Error('当前没有课程');
+            return JsonBuilder::Success('当前没有课程');
         }
 
         $week = $weeks->getScheduleWeekIndex();
