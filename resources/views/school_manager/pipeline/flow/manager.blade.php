@@ -43,30 +43,30 @@
             <div class="card-head">
                 <header class="full-width">
                     <span class="pull-left pt-2">流程: @{{ flow.name }} <i class="el-icon-loading" v-if="loadingNodes"></i></span>
-                    <el-button type="danger" size="mini" v-on:click="deleteFlow" icon="el-icon-delete" class="pull-right ml-2"></el-button>
+                    <el-button type="danger" size="mini" v-on:click="deleteFlow" icon="el-icon-delete" class="pull-right ml-2" v-if="node.titles.length > 0"></el-button>
                 </header>
             </div>
-            <div class="card-body" v-if="organizations.length > 0">
+            <div class="card-body" v-if="node.titles.length > 0">
                 <div class="row">
                     <el-timeline class="col-12">
                         <el-timeline-item timestamp="发起审批流程部门/人员" placement="top" color="green">
                             <p class="pull-right">
                                 <el-button-group>
-                                    <el-button icon="el-icon-plus" size="mini">自定义表单</el-button>
+                                    <el-button icon="el-icon-plus" size="mini" @click="option" ref="option" href="{{ route('school_manager.pipeline.flows-option') }}">自定义表单</el-button>
                                     <el-button icon="el-icon-edit" size="mini" @click="editFlow">编辑</el-button>
                                 </el-button-group>
                             </p>
-                            <p v-if="organizations.length > 0">
+                            <p v-if="node.organizations.length > 0">
                                 <span class="text-primary"><b>部门: </b></span>
-                                <span class="mr-2" v-for="dept in organizations.substring(0,organizations.length -1).split(';')">
+                                <span class="mr-2" v-for="dept in node.organizations.substring(0,node.organizations.length -1).split(';')">
                                     <el-tag effect="plain" type="info" size="mini">
                                         @{{ dept }}
                                     </el-tag>
                                 </span>
                             </p>
-                            <p v-if="titles.length > 0">
+                            <p v-if="node.titles.length > 0">
                                 <span class="text-primary"><b>角色: </b></span>
-                                <span v-for="title in titles.substring(0,titles.length -1).split(';')" class="mr-2">
+                                <span v-for="title in node.titles.substring(0,node.titles.length -1).split(';')" class="mr-2">
                                     <el-tag effect="plain" type="info" size="mini">
                                         @{{ title }}
                                     </el-tag>
@@ -77,14 +77,14 @@
                         <el-timeline-item timestamp="审批人" placement="top">
                             <p class="pull-right">
                                 <el-button-group>
-                                    <el-button size="mini">设置审批人</el-button>
+                                    <el-button size="mini" @click="approver" ref="approver" href="{{ route('school_manager.pipeline.flows-handler') }}">设置审批人</el-button>
                                 </el-button-group>
                             </p>
                         </el-timeline-item>
                         <el-timeline-item timestamp="抄送人" placement="top">
                             <p class="pull-right">
                                 <el-button-group>
-                                    <el-button size="mini">设置抄送人</el-button>
+                                    <el-button size="mini"  @click="approver" ref="approver" href="{{ route('school_manager.pipeline.flows-handler') }}">设置抄送人</el-button>
                                 </el-button-group>
                             </p>
                         </el-timeline-item>
