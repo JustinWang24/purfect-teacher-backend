@@ -37,12 +37,12 @@ class FlowsController extends Controller
         $this->dataForView['flow'] = $flow;
         return view('school_manager.pipeline.flow.handler', $this->dataForView);
     }
-    public function copy(FlowRequest $request){
+    public function option(FlowRequest $request){
         $this->dataForView['pageTitle'] = '工作流程管理';
         $dao = new FlowDao();
         $flow = $dao->getById($request->get('flow_id'));
         $this->dataForView['flow'] = $flow;
-        return view('school_manager.pipeline.flow.copy', $this->dataForView);
+        return view('school_manager.pipeline.flow.option', $this->dataForView);
     }
 
     /**
@@ -80,15 +80,23 @@ class FlowsController extends Controller
      */
     public function save_flow(FlowRequest $request){
         $flow = $request->getFlowFormData();
-        // if(empty($flow['id'])){
+        if(empty($flow['id'])){
             // 创建新流程
             $node = $request->getNewFlowFirstNode();
             $dao = new FlowDao();
             $result = $dao->create($flow, '', $node);
             return $result->isSuccess() ?
                 JsonBuilder::Success(['id'=>$result->getData()->id]) :
-                JsonBuilder::Error($result->getMessage()); 
-        // }
+                JsonBuilder::Error($result->getMessage());
+        }else {
+            //更新流程
+            $node = $request->getNewFlowFirstNode();
+            $dao = new FlowDao();
+            $result = $dao->update($flow, '', $node, $flow['id']);
+            return $result->isSuccess() ?
+                JsonBuilder::Success(['id'=>$flow['id']]) :
+                JsonBuilder::Error($result->getMessage());
+        }
     }
 
     /**
