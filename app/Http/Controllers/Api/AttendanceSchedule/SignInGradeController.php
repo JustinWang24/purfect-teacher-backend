@@ -91,7 +91,7 @@ class SignInGradeController extends Controller
 
         $week = $weeks->getScheduleWeekIndex();
         $timeTableItemDao = new TimetableItemDao();
-        $return = $timeTableItemDao->getCurrentItemByUser($user);
+        $return = $timeTableItemDao->getCurrentItemByUser($user, $now);
         if(is_null($return) || count($return) == 0 ) {
             return JsonBuilder::Success('当前没有课程');
         }
@@ -149,6 +149,7 @@ class SignInGradeController extends Controller
         $list = $dao->getAttendDetailsByAttendanceId($attendanceId);
         $molds = array_column($list->toArray(),'mold','student_id');
         $scores = array_column($list->toArray(),'score','student_id');
+        $remarks = array_column($list->toArray(),'remark','student_id');
         $student = [];
         $score = [];  // 评分列表
         foreach ($gradeUser as $key => $item) {
@@ -156,13 +157,16 @@ class SignInGradeController extends Controller
             $student[$key]['name'] = $item->name;
             $score[$key]['user_id'] = $item->user_id;
             $score[$key]['name'] = $item->name;
+            $score[$key]['name'] = $item->name;
 
             if(array_key_exists($item->user_id,$molds)) {
                 $student[$key]['mold'] = $molds[$item->user_id];
                 $score[$key]['score'] = $scores[$item->user_id];
+                $score[$key]['remark'] = $remarks[$item->user_id];
             } else {
                 $student[$key]['mold'] = 0;  // 未签到
                 $score[$key]['score'] = 0;
+                $score[$key]['remark'] = ''; // 备注
             }
         }
 
