@@ -182,5 +182,5 @@
     </el-col>
 </el-row>
 </div>
-<div id="app-init-data-holder" data-school="{{ session('school.id') }}" data-newflow="{{ $lastNewFlow }}"></div>
+<div id="app-init-data-holder" data-school="{{ session('school.id') }}" data-newflow="{{ $flow->id }}"></div>
 @endsection

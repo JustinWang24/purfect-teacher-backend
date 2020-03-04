@@ -43,7 +43,7 @@
             <div class="card-head">
                 <header class="full-width">
                     <span class="pull-left pt-2">流程: @{{ flow.name }} <i class="el-icon-loading" v-if="loadingNodes"></i></span>
-                    <el-button type="danger" size="mini" v-on:click="deleteFlow" icon="el-icon-delete" class="pull-right ml-2" v-if="organizations.length > 0"></el-button>
+                    <el-button type="danger" size="mini" v-on:click="deleteFlow" icon="el-icon-delete" class="pull-right ml-2"></el-button>
                 </header>
             </div>
             <div class="card-body" v-if="organizations.length > 0">
