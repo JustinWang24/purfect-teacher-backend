@@ -92,7 +92,7 @@ class SignInGradeController extends Controller
 
         $week = $weeks->getScheduleWeekIndex();
         $timeTableItemDao = new TimetableItemDao();
-        $return = $timeTableItemDao->getCurrentItemByUser($user);
+        $return = $timeTableItemDao->getCurrentItemByUser($user, $now);
         if(is_null($return) || count($return) == 0 ) {
             return JsonBuilder::Success('当前没有课程');
         }
