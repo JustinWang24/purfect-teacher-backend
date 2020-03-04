@@ -31,11 +31,8 @@ if (document.getElementById('pipeline-flows-manager-app')) {
                     titles: [], // 角色
                     attachments: []
                 },
-                titles: [], //右侧角色
-                organizations: [], //右侧组织
-                returnId: '',
+                returnId: '', // flow_id
                 titlesList: [], //侧边栏角色获取
-                approver: '', // 审批人
                 teacher: '', // 请输入教职工名字
 
                 lastNewFlow: null,
@@ -215,8 +212,8 @@ if (document.getElementById('pipeline-flows-manager-app')) {
                 this.loadingNodes = true;
                 loadNodes(flowId).then(res => {
                     if (Util.isAjaxResOk(res)) {
-                        this.titles = res.data.data.nodes.head.handler.titles
-                        this.organizations = res.data.data.nodes.head.handler.organizations
+                        this.node.titles = res.data.data.nodes.head.handler.titles
+                        this.node.organizations = res.data.data.nodes.head.handler.organizations
                     }
                     else {
                         this.$notify.error(
@@ -277,6 +274,17 @@ if (document.getElementById('pipeline-flows-manager-app')) {
                     });
                 });
             },
+            // 自定义表单
+            option() {
+                var url = this.$refs.option.$attrs.href + '?flow_id=' + this.returnId;
+                location.href = url;
+            },
+            // 设置审批人按钮
+            approver() {
+                var url = this.$refs.approver.$attrs.href + '?flow_id=' + this.returnId;
+                location.href = url;
+            },
+
             // 右侧编辑时侧边栏的保存按钮
 
 

@@ -98,7 +98,27 @@ class FlowsController extends Controller
                     $action->result === IAction::RESULT_PENDING && $action->user_id === $actionId->id;
             }
 
-            $this->dataForView['node'] = $action->node;
+            $flowDao = new FlowDao();
+            $flow = $flowDao->getById($action->flow_id);
+            $flowInfo = $flow->getSimpleLinkedNodes();
+            $startUser = User::where('id', $action->userFlow->user_id)->first();
+            $handlers = [];
+            $actionResult = $dao->getHistoryByUserFlow($action->flow_id);
+            $actionReList = [];
+            foreach ($actionResult as $actRet) {
+                $actionReList[$actRet->user_id] = $actRet;
+            }
+            foreach ($flowInfo['handler'] as $handler) {
+                $userList = $flowDao->transTitlesToUser($handler->titles, $handler->organizations, $startUser);
+                foreach ($userList as $item) {
+                    foreach ($item as $im) {
+                        $im->result = isset($actionReList[$im->id]) ? $actionReList[$im->id] : [];
+                    }
+                }
+                $handlers[] = $userList;
+            }
+            $this->dataForView['handlers'] = $handlers;
+
             $this->dataForView['action'] = $action;
             $this->dataForView['userFlow'] = $action->userFlow;
             $this->dataForView['actionId'] = $actionId;

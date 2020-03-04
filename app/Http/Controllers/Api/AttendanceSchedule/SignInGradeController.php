@@ -91,7 +91,7 @@ class SignInGradeController extends Controller
 
         $week = $weeks->getScheduleWeekIndex();
         $timeTableItemDao = new TimetableItemDao();
-        $return = $timeTableItemDao->getCurrentItemByUser($user);
+        $return = $timeTableItemDao->getCurrentItemByUser($user, $now);
         if(is_null($return) || count($return) == 0 ) {
             return JsonBuilder::Success('当前没有课程');
         }
@@ -149,6 +149,7 @@ class SignInGradeController extends Controller
         $list = $dao->getAttendDetailsByAttendanceId($attendanceId);
         $molds = array_column($list->toArray(),'mold','student_id');
         $scores = array_column($list->toArray(),'score','student_id');
+        $remarks = array_column($list->toArray(),'remark','student_id');
         $student = [];
         $score = [];  // 评分列表
         foreach ($gradeUser as $key => $item) {
@@ -156,13 +157,16 @@ class SignInGradeController extends Controller
             $student[$key]['name'] = $item->name;
             $score[$key]['user_id'] = $item->user_id;
             $score[$key]['name'] = $item->name;
+            $score[$key]['name'] = $item->name;
 
             if(array_key_exists($item->user_id,$molds)) {
                 $student[$key]['mold'] = $molds[$item->user_id];
                 $score[$key]['score'] = $scores[$item->user_id];
+                $score[$key]['remark'] = $remarks[$item->user_id];
             } else {
                 $student[$key]['mold'] = 0;  // 未签到
                 $score[$key]['score'] = 0;
+                $score[$key]['remark'] = ''; // 备注
             }
         }
 
@@ -390,23 +394,25 @@ class SignInGradeController extends Controller
         if(empty($gradeId)) {
             $gradeId = $grades[0]->grade_id;
         }
-        //时间
 
+        //时间
         $date = $request->get('date',Carbon::now()->toDateString());
+        $now = Carbon::parse($date);
+        $date = $now->toDateString();  // 统一时间格式
         $type = $request->get('type', 1); // 类型：1当天数据 2:历史数据
         $time = Carbon::now()->toTimeString();
-        $month = Carbon::parse($date)->month;
+        $month = $now->month;
         $schoolId = $user->getSchoolId();
         $schoolDao = new SchoolDao();
         $school = $schoolDao->getSchoolById($schoolId);
         $configuration = $school->configuration;
         $year = $configuration->getSchoolYear($date);
         $term = $configuration->guessTerm($month);
-        $weekDay = Carbon::parse($date)->weekday();
+        $weekDay = $now->weekday();
 
         $weeks = $configuration->getScheduleWeek(Carbon::parse($date), null, $term);
         if(is_null($weeks)) {
-            return JsonBuilder::Error('当前没有课程');
+            return JsonBuilder::Success('当前没有课程');
         }
 
         $week = $weeks->getScheduleWeekIndex();
@@ -524,7 +530,7 @@ class SignInGradeController extends Controller
         $weekDay = Carbon::parse($date)->weekDay();
         $weeks = $configuration->getScheduleWeek(Carbon::parse($date), null, $term);
         if(is_null($weeks)) {
-            return JsonBuilder::Error('当前没有课程');
+            return JsonBuilder::Success('当前没有课程');
         }
 
         $week = $weeks->getScheduleWeekIndex();
@@ -538,12 +544,14 @@ class SignInGradeController extends Controller
         $list = [];
         foreach ($return as $key => $item) {
             $attendance = $attendancesDao->getAttendanceByTimeTableId($item->id, $week);
-            $list[] = [
-                'attendance_id' => $attendance->id,
-                'slot_name' => $item->name,
-                'course_name' => $item->course->name,
-                'status' => $attendance->status
-            ];
+            if(!is_null($attendance)) {
+                $list[] = [
+                    'attendance_id' => $attendance->id,
+                    'slot_name' => $item->name,
+                    'course_name' => $item->course->name,
+                    'status' => $attendance->status
+                ];
+            }
         }
 
         $gradeDao = new GradeDao;
@@ -569,9 +577,9 @@ class SignInGradeController extends Controller
         $attendanceId = $request->getAttendanceId();
         $dao = new AttendancesDao();
         $attendance = $dao->getAttendanceById($attendanceId);
-//        if($attendance->status == Attendance::STATUS_UN_EVALUATE) {
-//            return JsonBuilder::Error('该课堂未评价');
-//        }
+        if($attendance->status == Attendance::STATUS_UN_EVALUATE) {
+            return JsonBuilder::Error('该课堂未评价');
+        }
 
         $gradeUserDao = new GradeUserDao();
         $return = $gradeUserDao->getGradeUserPageGradeId($attendance->grade_id);
