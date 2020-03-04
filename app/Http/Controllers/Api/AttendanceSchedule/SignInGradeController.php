@@ -540,12 +540,14 @@ class SignInGradeController extends Controller
         $list = [];
         foreach ($return as $key => $item) {
             $attendance = $attendancesDao->getAttendanceByTimeTableId($item->id, $week);
-            $list[] = [
-                'attendance_id' => $attendance->id,
-                'slot_name' => $item->name,
-                'course_name' => $item->course->name,
-                'status' => $attendance->status
-            ];
+            if(!is_null($attendance)) {
+                $list[] = [
+                    'attendance_id' => $attendance->id,
+                    'slot_name' => $item->name,
+                    'course_name' => $item->course->name,
+                    'status' => $attendance->status
+                ];
+            }
         }
 
         $gradeDao = new GradeDao;
