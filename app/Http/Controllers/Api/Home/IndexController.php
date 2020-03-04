@@ -299,8 +299,6 @@ class IndexController extends Controller
         $userDao = new UserDao;
         if (isset($data['nice_name'])) {
             $result = $userDao->updateUser($user->id, null,null,null,null, $data['nice_name'],null);
-        } elseif (isset($data['user_signture'])) {
-            $result = $userDao->updateUser($user->id, null,null,null,null, null, $data['user_signture']);
         } else {
             $dao        = new StudentProfileDao;
             $teacherDao = new TeacherProfileDao;
@@ -309,6 +307,9 @@ class IndexController extends Controller
             } elseif ($user->isTeacher()) {
                 $result = $teacherDao->updateTeacherProfile($user->id, $data);
             }
+        }
+        if (isset($data['user_signture'])) {
+            $result = $userDao->updateUser($user->id, null,null,null,null, null, $data['user_signture']);
         }
 
         if ($result) {

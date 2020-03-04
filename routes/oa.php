@@ -155,6 +155,12 @@ Route::prefix('visitor')->middleware('auth:api')->group(function () {
     // 到访详情
     Route::post('/detail','Api\OA\VisitorController@detail')
         ->name('Oa.visitor.detail');
+    // 被访信息
+    Route::post('/info','Api\OA\VisitorController@info')
+        ->name('Oa.visitor.info');
+    // 到访提交
+    Route::post('/update','Api\OA\VisitorController@update')
+        ->name('Oa.visitor.update');
     // 获取分享信息
     Route::post('/get-share-info','Api\OA\VisitorController@get_share_info')
         ->name('Oa.visitor.get_share_info');
