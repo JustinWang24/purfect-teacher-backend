@@ -9,8 +9,6 @@
 namespace App\Http\Controllers\Api\AttendanceSchedule;
 
 
-use App\Models\AttendanceSchedules\Attendance;
-use App\Models\Schools\SchoolConfiguration;
 use Carbon\Carbon;
 use App\Utils\JsonBuilder;
 use App\Dao\Schools\GradeDao;
@@ -18,10 +16,13 @@ use App\Dao\Schools\SchoolDao;
 use App\Dao\Courses\CourseDao;
 use App\Utils\Time\CalendarDay;
 use App\Dao\Users\GradeUserDao;
+use App\Utils\Time\GradeAndYearUtil;
 use App\Dao\Schools\GradeManagerDao;
 use App\Http\Controllers\Controller;
 use App\Dao\Timetable\TimetableItemDao;
 use App\Http\Requests\MyStandardRequest;
+use App\Models\Schools\SchoolConfiguration;
+use App\Models\AttendanceSchedules\Attendance;
 use App\Dao\AttendanceSchedules\AttendancesDao;
 use App\Models\AttendanceSchedules\AttendancesDetail;
 use App\Dao\AttendanceSchedules\AttendancesDetailsDao;
@@ -80,18 +81,18 @@ class SignInGradeController extends Controller
         $schoolDao = new SchoolDao();
         $school = $schoolDao->getSchoolById($schoolId);
         $configuration = $school->configuration;
-        $now = Carbon::now();
-//        $now = Carbon::parse('2020-01-08 14:40:00');
-        $weeks = $configuration->getScheduleWeek($now);
+        $now = Carbon::now(GradeAndYearUtil::TIMEZONE_CN);
+        $month = $now->month;
+        $term = $configuration->guessTerm($month);
+        $weeks = $configuration->getScheduleWeek($now, null, $term);
         if(is_null($weeks)) {
-           return JsonBuilder::Error('当前没有课程');
+           return JsonBuilder::Success('当前没有课程');
         }
 
         $week = $weeks->getScheduleWeekIndex();
         $timeTableItemDao = new TimetableItemDao();
         $return = $timeTableItemDao->getCurrentItemByUser($user);
-
-        if(count($return) == 0) {
+        if(is_null($return) || count($return) == 0 ) {
             return JsonBuilder::Success('当前没有课程');
         }
         $courseId = $return->pluck('course_id')->toArray()[0];
@@ -389,23 +390,25 @@ class SignInGradeController extends Controller
         if(empty($gradeId)) {
             $gradeId = $grades[0]->grade_id;
         }
-        //时间
 
+        //时间
         $date = $request->get('date',Carbon::now()->toDateString());
+        $now = Carbon::parse($date);
+        $date = $now->toDateString();  // 统一时间格式
         $type = $request->get('type', 1); // 类型：1当天数据 2:历史数据
         $time = Carbon::now()->toTimeString();
-        $month = Carbon::parse($date)->month;
+        $month = $now->month;
         $schoolId = $user->getSchoolId();
         $schoolDao = new SchoolDao();
         $school = $schoolDao->getSchoolById($schoolId);
         $configuration = $school->configuration;
         $year = $configuration->getSchoolYear($date);
         $term = $configuration->guessTerm($month);
-        $weekDay = Carbon::parse($date)->weekday();
+        $weekDay = $now->weekday();
 
         $weeks = $configuration->getScheduleWeek(Carbon::parse($date), null, $term);
         if(is_null($weeks)) {
-            return JsonBuilder::Error('当前没有课程');
+            return JsonBuilder::Success('当前没有课程');
         }
 
         $week = $weeks->getScheduleWeekIndex();
@@ -421,11 +424,15 @@ class SignInGradeController extends Controller
         $list = [];
         foreach ($return as $key => $item) {
             $attendance = $attendancesDao->getAttendanceByTimeTableId($item->id, $week);
-            $list[$key]['slot_name'] = $item->name;
-            $list[$key]['attendance_id'] = $attendance->id;
-            $list[$key]['actual_number'] = $attendance->actual_number;
-            $list[$key]['leave_number'] = $attendance->leave_number;
-            $list[$key]['missing_number'] = $attendance->missing_number;
+            if(!is_null($attendance)) {
+                $list[] = [
+                    'slot_name' => $item->name,
+                    'attendance_id' => $attendance->id,
+                    'actual_number' => $attendance->actual_number,
+                    'leave_number' => $attendance->leave_number,
+                    'missing_number' => $attendance->missing_number
+                ];
+            }
         }
         $gradeDao = new GradeDao;
         $grade = $gradeDao->getGradeById($gradeId);
@@ -519,7 +526,7 @@ class SignInGradeController extends Controller
         $weekDay = Carbon::parse($date)->weekDay();
         $weeks = $configuration->getScheduleWeek(Carbon::parse($date), null, $term);
         if(is_null($weeks)) {
-            return JsonBuilder::Error('当前没有课程');
+            return JsonBuilder::Success('当前没有课程');
         }
 
         $week = $weeks->getScheduleWeekIndex();
@@ -533,12 +540,14 @@ class SignInGradeController extends Controller
         $list = [];
         foreach ($return as $key => $item) {
             $attendance = $attendancesDao->getAttendanceByTimeTableId($item->id, $week);
-            $list[] = [
-                'attendance_id' => $attendance->id,
-                'slot_name' => $item->name,
-                'course_name' => $item->course->name,
-                'status' => $attendance->status
-            ];
+            if(!is_null($attendance)) {
+                $list[] = [
+                    'attendance_id' => $attendance->id,
+                    'slot_name' => $item->name,
+                    'course_name' => $item->course->name,
+                    'status' => $attendance->status
+                ];
+            }
         }
 
         $gradeDao = new GradeDao;

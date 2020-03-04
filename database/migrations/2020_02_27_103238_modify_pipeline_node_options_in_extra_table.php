@@ -14,7 +14,9 @@ class ModifyPipelineNodeOptionsInExtraTable extends Migration
     public function up()
     {
         Schema::table('pipeline_node_options', function (Blueprint $table) {
-            $table->text('extra')->nullable()->comment('扩展字段');
+            if (!Schema::hasColumn('pipeline_node_options', 'extra')) {
+                $table->text('extra')->nullable()->comment('扩展字段');
+            }
         });
     }
 
@@ -26,7 +28,10 @@ class ModifyPipelineNodeOptionsInExtraTable extends Migration
     public function down()
     {
         Schema::table('pipeline_node_options', function (Blueprint $table) {
-            $table->dropColumn('extra');
+            if (Schema::hasColumn('pipeline_node_options', 'extra')) {
+                $table->dropColumn('extra');
+            }
+
         });
     }
 }

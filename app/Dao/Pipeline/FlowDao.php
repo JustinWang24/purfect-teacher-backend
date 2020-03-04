@@ -81,7 +81,26 @@ class FlowDao
             }])->pluck('organization_id')->toArray();
 
             //如果用户存在相同组织则仅显示自己所在组织
-            $userOrganizationId = $user->organizations->pluck('organization_id')->toArray();
+            $userOrganizationId = $user->organizations->whereIn('organization_id', $organizations)->pluck('organization_id')->toArray();
+            if ($userOrganizationId) {
+                $organizations = $userOrganizationId;
+            }
+
+            foreach ($titlesArr as $title) {
+                if ($title == Title::ORGANIZATION_EMPLOYEE) {
+                    $titleId = Title::ORGANIZATION_EMPLOYEE_ID;
+                }
+                if ($title == Title::ORGANIZATION_DEPUTY) {
+                    $titleId = Title::ORGANIZATION_DEPUTY_ID;
+                }
+                if ($title == Title::ORGANIZATION_LEADER) {
+                    $titleId = Title::ORGANIZATION_LEADER_ID;
+                }
+                $userOrganizationList = UserOrganization::with('user')->whereIn('organization_id', $organizations)->where('title_id', $titleId)->get();
+                foreach ($userOrganizationList as $userOrganization) {
+                    $return[$userOrganization->title][] = $userOrganization->user;
+                }
+            }
 
         }else {
             //职务
@@ -310,6 +329,44 @@ class FlowDao
             // 创建头部流程的 handlers
             $handlerDao = new HandlerDao();
             $handlerDao->create($headNode, $nodeAndHandlersDescriptor);
+
+            DB::commit();
+            $bag->setCode(JsonBuilder::CODE_SUCCESS);
+            $bag->setData($flow);
+            return $bag;
+        }
+        catch (\Exception $exception){
+            DB::rollBack();
+            $bag->setMessage($exception->getMessage());
+            return $bag;
+        }
+    }
+
+    /**
+     * 更新流程
+     * @param $data
+     * @param string $headNodeDescription
+     * @param array $nodeAndHandlersDescriptor
+     * @param $flowId
+     * @return MessageBag
+     */
+    public function update($data, $headNodeDescription = '', $nodeAndHandlersDescriptor = [], $flowId){
+        $bag = new MessageBag(JsonBuilder::CODE_ERROR);
+        $flow = Flow::where('id', $flowId)->first();
+        if (!$flow) {
+            $bag->setMessage('flow_id 有误');
+            return $bag;
+        }
+
+        DB::beginTransaction();
+
+        try{
+            Flow::where('id', $flowId)->update($data);
+            $firstNode = $flow->getTailNode();
+
+            // 更新头部流程的 handlers
+            $handlerDao = new HandlerDao();
+            $handlerDao->update($firstNode, $nodeAndHandlersDescriptor);
 
             DB::commit();
             $bag->setCode(JsonBuilder::CODE_SUCCESS);
