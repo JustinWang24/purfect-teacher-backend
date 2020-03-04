@@ -82,7 +82,6 @@ class SignInGradeController extends Controller
         $school = $schoolDao->getSchoolById($schoolId);
         $configuration = $school->configuration;
         $now = Carbon::now(GradeAndYearUtil::TIMEZONE_CN);
-        $now = Carbon::parse('2020-03-04 11:30:00');
         $month = $now->month;
         $term = $configuration->guessTerm($month);
         $weeks = $configuration->getScheduleWeek($now, null, $term);
