@@ -16,8 +16,10 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Pipeline\FlowRequest;
 use App\Models\Pipeline\Flow\Action;
 use App\Models\Pipeline\Flow\Node;
+use App\User;
 use App\Utils\JsonBuilder;
 use App\Utils\Pipeline\IAction;
+use Psy\Util\Json;
 
 class FlowsController extends Controller
 {
@@ -39,6 +41,35 @@ class FlowsController extends Controller
                 ],
             ]
         );
+    }
+
+    public function open(FlowRequest $request){
+        $user = $request->user();
+        $flowDao = new FlowDao();
+        $flow = $flowDao->getById($request->get('flow_id'));
+
+        if($user && $flow){
+            $logic = FlowLogicFactory::GetInstance($user);
+            $bag = $logic->open($flow);
+            if($bag->isSuccess()){
+                $flowInfo = $flow->getSimpleLinkedNodes();
+                $handlers = [];
+                foreach ($flowInfo['handler'] as $handler) {
+                    $handlers[] = $flowDao->transTitlesToUser($handler->titles, $handler->organizations, $user);
+                }
+                $return = [
+                    'user' => $user,
+                    'flow' => $flow,
+                    'handlers' => $handlers,
+                    'copys' => $flowInfo['copy'],
+                    'options' => $flowInfo['options'],
+                    'api_token' => $request->get('api_token'),
+                    'appName' => 'pipeline-flow-open-app'
+                ];
+                return JsonBuilder::Success($return);
+            }
+        }
+        return JsonBuilder::Error('您没有权限执行此操作');;
     }
 
     /**

@@ -122,7 +122,9 @@ class TeacherFlowsLogic extends GeneralFlowsLogic
                 }
                 $item['flows'] = $newflow;
             }
-            $types[] = $item;
+            if (!empty($item['flows'])) {
+                $types[] = $item;
+            }
         }
         return $types;
     }

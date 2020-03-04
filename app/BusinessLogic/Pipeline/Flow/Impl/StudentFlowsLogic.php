@@ -59,7 +59,9 @@ class StudentFlowsLogic extends GeneralFlowsLogic
                 }
                 $item['flows'] = $newflow;
             }
-            $types[] = $item;
+            if (!empty($item['flows'])) {
+                $types[] = $item;
+            }
         }
 
         // 校园助手: 这个是特殊的
