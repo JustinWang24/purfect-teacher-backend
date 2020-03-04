@@ -11,7 +11,7 @@ class Visitor extends Model
     const VISITED = 2;
 
     protected $fillable = [
-        'uuid','user_id','school_id','invited_by','cate_id','name','mobile','vehicle_license',
+        'id','uuid','user_id','school_id','invited_by','cate_id','name','mobile','vehicle_license',
         'reason','visitors_json1','visitors_json2','share_url','status','scheduled_at','arrived_at'
     ];
 
@@ -19,6 +19,10 @@ class Visitor extends Model
         'scheduled_at'=>'datetime',
         'arrived_at'=>'datetime',
     ];
+
+    public function user(){
+        return $this->hasOne(User::class,'id','user_id');
+    }
 
     public function invitedBy(){
         return $this->belongsTo(User::class,'invited_by');
