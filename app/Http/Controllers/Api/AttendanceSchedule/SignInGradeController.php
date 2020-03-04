@@ -390,19 +390,21 @@ class SignInGradeController extends Controller
         if(empty($gradeId)) {
             $gradeId = $grades[0]->grade_id;
         }
-        //时间
 
+        //时间
         $date = $request->get('date',Carbon::now()->toDateString());
+        $now = Carbon::parse($date);
+        $date = $now->toDateString();  // 统一时间格式
         $type = $request->get('type', 1); // 类型：1当天数据 2:历史数据
         $time = Carbon::now()->toTimeString();
-        $month = Carbon::parse($date)->month;
+        $month = $now->month;
         $schoolId = $user->getSchoolId();
         $schoolDao = new SchoolDao();
         $school = $schoolDao->getSchoolById($schoolId);
         $configuration = $school->configuration;
         $year = $configuration->getSchoolYear($date);
         $term = $configuration->guessTerm($month);
-        $weekDay = Carbon::parse($date)->weekday();
+        $weekDay = $now->weekday();
 
         $weeks = $configuration->getScheduleWeek(Carbon::parse($date), null, $term);
         if(is_null($weeks)) {
