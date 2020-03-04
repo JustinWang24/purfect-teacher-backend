@@ -43,7 +43,7 @@ class AddTitlePipelineNodeOptionsTable extends Migration
             if (Schema::hasColumn('pipeline_node_options', 'title')) {
                 $table->dropColumn('title');
             }
-            if (!Schema::hasColumn('pipeline_node_options', 'title')) {
+            if (!Schema::hasColumn('pipeline_node_options', 'tip')) {
                 $table->string('tip')->nullable()->comment('提示文字');
             }
         });
