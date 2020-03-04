@@ -573,9 +573,9 @@ class SignInGradeController extends Controller
         $attendanceId = $request->getAttendanceId();
         $dao = new AttendancesDao();
         $attendance = $dao->getAttendanceById($attendanceId);
-//        if($attendance->status == Attendance::STATUS_UN_EVALUATE) {
-//            return JsonBuilder::Error('该课堂未评价');
-//        }
+        if($attendance->status == Attendance::STATUS_UN_EVALUATE) {
+            return JsonBuilder::Error('该课堂未评价');
+        }
 
         $gradeUserDao = new GradeUserDao();
         $return = $gradeUserDao->getGradeUserPageGradeId($attendance->grade_id);
