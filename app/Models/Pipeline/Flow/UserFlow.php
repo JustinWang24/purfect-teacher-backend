@@ -26,6 +26,10 @@ class UserFlow extends Model implements IUserFlow
         return $this->belongsTo(Flow::class);
     }
 
+    public function copys(){
+        return $this->hasMany(Copys::class, 'user_flow_id', 'id');
+    }
+
     public function actions(){
         return $this->hasMany(Action::class, 'transaction_id','id');
     }

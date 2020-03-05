@@ -446,10 +446,16 @@ Route::prefix('pipeline')->middleware('auth:api')->group(function (){
         ->name('api.pipeline.flows.started-by-me');
 
     /**
-     * 用户调取正在等待自己审核的申请
+     * 用户调取正在等待自己审核的列表
      */
     Route::post('/flows/waiting-for-me', 'Api\Pipeline\FlowsController@waiting_for_me')
         ->name('api.pipeline.flows.waiting-for-me');
+    //抄送我的审核列表
+    Route::post('/flows/copy-to-me', 'Api\Pipeline\FlowsController@copy_to_me')
+        ->name('api.pipeline.flows.copy-to-me');
+    //自己审批的审核列表
+    Route::post('/flows/my-processed', 'Api\Pipeline\FlowsController@my_processed')
+        ->name('api.pipeline.flows.my-processed');
 
     /**
      * 用户调取可用的流程集合的接口
@@ -463,17 +469,17 @@ Route::prefix('pipeline')->middleware('auth:api')->group(function (){
     Route::post('/flow/process', 'Api\Pipeline\FlowsController@process')
         ->name('api.pipeline.flow.process');
 
-    Route::post('/flow/resume', 'Api\Pipeline\FlowsController@resume')
-        ->name('api.pipeline.flow.resume');
+    /*Route::post('/flow/resume', 'Api\Pipeline\FlowsController@resume')
+        ->name('api.pipeline.flow.resume');*/
 
-    Route::post('/flow/watch', 'Api\Pipeline\FlowsController@watch')
-        ->name('api.pipeline.flow.watch');
+    /*Route::post('/flow/watch', 'Api\Pipeline\FlowsController@watch')
+        ->name('api.pipeline.flow.watch');*/
 
     Route::post('/flow/cancel-action', 'Api\Pipeline\FlowsController@cancel_action')
         ->name('api.pipeline.flow.cancel-action');
 
-    Route::post('/flow/view-action', 'Api\Pipeline\FlowsController@view_action')
-        ->name('api.pipeline.flow.view-action');
+    /*Route::post('/flow/view-action', 'Api\Pipeline\FlowsController@view_action')
+        ->name('api.pipeline.flow.view-action');*/
 });
 
 Route::prefix('notification')->middleware('auth:api')->group(function () {
