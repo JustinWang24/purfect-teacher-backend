@@ -240,6 +240,9 @@ class AttendancesDetailsDao
                     }
                     AttendancesDetail::where($map)->update($save);
                 }
+                // 修改主表评分状态
+                $update = ['status'=>Attendance::STATUS_EVALUATE];
+                Attendance::where(['id'=>$attendanceId])->update($update);
             }
 
             DB::commit();

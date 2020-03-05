@@ -6,18 +6,29 @@
             <div class="card-head">
                 <header>设置审批人</header>
             </div>
-            <div class="card-body"></div>
+            <div class="card-body">
+                <div class="card-body-approver">
+                    <div style="padding: 5px;background-color: yellow;">
+                        <img src="{{asset('assets/img/teacher_blade/qingjia@2x.png')}}" alt="">
+                        <span>&nbsp;&nbsp;&nbsp;审批人</span>
+                        <span> （一级审批）</span>
+                    </div>
+                    <div>
+                        请选择审批人
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
     <div class="col-sm-12 col-md-9 col-lg-9 col-xl-8">
-        <!-- <div class="card">
+        <div class="card">
             <div class="card-head">
                 <header>选择审批人</header>
             </div>
             <div class="card-body">
                 <el-form style="margin-top: 20px">
                     <el-form-item label="组织">
-                        <el-select v-model="organization" placeholder="请选择组织分类" style="width: 90%;">
+                        <el-select v-model="organization" placeholder="请选择组织分类" style="width: 90%;" @change="changeItem2(organization)">
                             <el-option v-for="item in organizationList" :key="item.key" :label="item.name" :value="item.key"></el-option>
                         </el-select>
                     </el-form-item>
@@ -25,12 +36,8 @@
                         <el-cascader style="width: 90%;" :props="props" v-model="node.organizations"></el-cascader>
                     </el-form-item>
                     <el-form-item label="审批人">
-                        <el-radio-group v-model="approver" v-if="organization === 1">
-                            <el-radio :label="3">部门正职</el-radio>
-                            <el-radio :label="6">部门副职</el-radio>
-                        </el-radio-group>
-                        <el-radio-group v-model="approver" v-if="organization === 2">
-                            <el-radio v-for="item in titlesList2" :label="item" :key="item">@{{item}}</el-radio>
+                        <el-radio-group v-model="approver">
+                            <el-radio v-for="item in titlesList" :label="item" :key="item">@{{item}}</el-radio>
                         </el-radio-group>
                     </el-form-item>
                     <el-form-item style="display: flex;justify-content: center;">
@@ -38,16 +45,16 @@
                     </el-form-item>
                 </el-form>
             </div>
-        </div> -->
+        </div>
         <div class="card">
             <div class="card-head">
                 <header>选择抄送人</header>
             </div>
             <div class="card-body" style="margin-top: 20px;">
-                <el-autocomplete v-model="teacher" prefix-icon="el-icon-search" placeholder="请输入教职工名字" :fetch-suggestions="querySearch" :trigger-on-focus="false" @select="handleSelect"></el-autocomplete>
+                <el-autocomplete v-model="teacher" prefix-icon="el-icon-search" placeholder="请输入教职工名字"></el-autocomplete>
             </div>
         </div>
     </div>
 </div>
-<div id="app-init-data-holder" data-school="{{ session('school.id') }}" data-newflow="{{ $lastNewFlow }}"></div>
+<div id="app-init-data-holder" data-school="{{ session('school.id') }}" data-newflow="{{ $flow->id }}"></div>
 @endsection

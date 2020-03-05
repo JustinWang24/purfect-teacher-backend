@@ -381,7 +381,7 @@ Route::prefix('questionnaire')->middleware('auth:api')->group(function () {
 
 // 最新版本号
 Route::prefix('version')->group(function () {
-    Route::get('/index', 'Api\Version\VersionController@index')->name('api.version.index');
+    Route::any('/index', 'Api\Version\VersionController@index')->name('api.version.index');
 });
 
 // APP 首页接口
@@ -454,7 +454,7 @@ Route::prefix('pipeline')->middleware('auth:api')->group(function (){
     /**
      * 用户调取可用的流程集合的接口
      */
-    Route::post('/flow/open', 'Api\Pipeline\FlowsController@open')
+    Route::any('/flow/open', 'Api\Pipeline\FlowsController@open')
         ->name('api.pipeline.flow.open');
 
     Route::post('/flow/start', 'Api\Pipeline\FlowsController@start')

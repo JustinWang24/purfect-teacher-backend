@@ -30,6 +30,21 @@ class FlowsController extends Controller
         return view('school_manager.pipeline.flow.manager', $this->dataForView);
     }
 
+    public function handler(FlowRequest $request){
+        $this->dataForView['pageTitle'] = '工作流程管理';
+        $dao = new FlowDao();
+        $flow = $dao->getById($request->get('flow_id'));
+        $this->dataForView['flow'] = $flow;
+        return view('school_manager.pipeline.flow.handler', $this->dataForView);
+    }
+    public function option(FlowRequest $request){
+        $this->dataForView['pageTitle'] = '工作流程管理';
+        $dao = new FlowDao();
+        $flow = $dao->getById($request->get('flow_id'));
+        $this->dataForView['flow'] = $flow;
+        return view('school_manager.pipeline.flow.option', $this->dataForView);
+    }
+
     /**
      * 加载某个位置的全部流程
      * @param FlowRequest $request
@@ -65,15 +80,23 @@ class FlowsController extends Controller
      */
     public function save_flow(FlowRequest $request){
         $flow = $request->getFlowFormData();
-        // if(empty($flow['id'])){
+        if(empty($flow['id'])){
             // 创建新流程
             $node = $request->getNewFlowFirstNode();
             $dao = new FlowDao();
             $result = $dao->create($flow, '', $node);
             return $result->isSuccess() ?
                 JsonBuilder::Success(['id'=>$result->getData()->id]) :
-                JsonBuilder::Error($result->getMessage()); 
-        // }
+                JsonBuilder::Error($result->getMessage());
+        }else {
+            //更新流程
+            $node = $request->getNewFlowFirstNode();
+            $dao = new FlowDao();
+            $result = $dao->update($flow, '', $node, $flow['id']);
+            return $result->isSuccess() ?
+                JsonBuilder::Success(['id'=>$flow['id']]) :
+                JsonBuilder::Error($result->getMessage());
+        }
     }
 
     /**
@@ -243,10 +266,13 @@ class FlowsController extends Controller
         if($nodeOptionFormData){
             $dao = new NodeDao();
             $firstNode = $dao->getHeadNodeByFlow($flowId);
-            $nodeOptionFormData['node_id'] = $firstNode->id;
             try{
-                $option = $dao->saveNodeOption($nodeOptionFormData);
-                return $option ? JsonBuilder::Success(['id'=>$option->id]) : JsonBuilder::Error('找不到指定的选项数据');
+                $dao->deleteOptionByNode($firstNode->id);
+                foreach ($nodeOptionFormData as $nodeData) {
+                    $nodeData['node_id'] = $firstNode->id;
+                    $dao->saveNodeOption($nodeData);
+                }
+                return JsonBuilder::Success();
             }
             catch (\Exception $exception){
                 return JsonBuilder::Error($exception->getMessage());

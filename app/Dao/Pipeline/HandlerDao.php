@@ -55,8 +55,17 @@ class HandlerDao
         /**
          * 负责审核的角色
          */
+        if (!empty($result['role_slugs'])) {
+            $handlerData['role_slugs'] = $result['role_slugs'];
+        }
+        if (!empty($result['titles'])) {
+            $handlerData['titles'] = $result['titles'];
+        }
         if(!empty($result['notice_to'])){
             $handlerData['notice_to'] = $result['notice_to'];
+        }
+        if (!empty($result['organizations'])) {
+            $handlerData['organizations'] = $result['organizations'];
         }
         if (!empty($result['notice_organizations'])) {
             $handlerData['notice_organizations'] = $result['notice_organizations'];

@@ -84,15 +84,14 @@ class ProjectsController extends Controller
             $memberIds = array_unique($memberIds);   // 项目总成员
             $userIds = array_merge($memberIds, [$item->create_user]);  // 可见人员 成员、负责人、创建者
             $statusArr = $tasks->pluck('status')->toArray();
-            if(count($tasks) == 0 || (!in_array(ProjectTask::STATUS_IN_PROGRESS, $statusArr)
-                && !in_array(ProjectTask::STATUS_CLOSED, $statusArr))) {
+            if(count($tasks) == 0) {
                 $status = Project::STATUS_NOT_BEGIN;  // 未开始
 
-            } elseif(in_array(ProjectTask::STATUS_IN_PROGRESS,$statusArr)) {
-                $status = Project::STATUS_IN_PROGRESS; // 正在进行
+            } elseif( $this->isProjectClosed($statusArr)) {
+                $status = Project::STATUS_CLOSED; // 已结束
 
             } else {
-                $status = Project::STATUS_CLOSED; // 已结束
+                $status = Project::STATUS_IN_PROGRESS; // 正在进行
             }
 
             if($item->is_open == Project::OPEN || in_array($userId, $userIds)) {
@@ -111,6 +110,25 @@ class ProjectsController extends Controller
 
         return JsonBuilder::Success($data);
     }
+
+
+    /**
+     * 判断任务是否都结束
+     * @param $taskStatusArr
+     * @return bool true 结束 false 未结束
+     */
+    public function isProjectClosed($taskStatusArr) {
+        $status = true;
+        foreach ($taskStatusArr as $item) {
+            // 未结束
+            if($item !== ProjectTask::STATUS_CLOSED) {
+                $status = false; break;
+            }
+        }
+        return $status;
+    }
+
+
 
 
     /**

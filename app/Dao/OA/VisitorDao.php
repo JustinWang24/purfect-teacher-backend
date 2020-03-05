@@ -49,6 +49,35 @@ class VisitorDao
     }
 
     /**
+     * Func 修改
+     *
+     * @param $id 更新Id
+     * @param $data 基础信息
+     *
+     * @return false|id
+     */
+    public function editVisitorInfo($data = [], $id = 0)
+    {
+        if (!intval($id) || empty($data))
+        {
+            return false;
+        }
+        DB::beginTransaction();
+        try {
+            if (Visitor::where('id',$id)->update($data)) {
+                DB::commit();
+                return $id;
+            } else {
+                DB::rollBack();
+                return false;
+            }
+        } catch (\Exception $exception) {
+            DB::rollBack();
+            return false;
+        }
+    }
+
+    /**
      * 根据学校获取访客列表
      * @param $schoolId
      * @return Collection
@@ -57,11 +86,37 @@ class VisitorDao
         return Visitor::where('school_id',$schoolId)
             ->orderBy('id','desc')->paginate(ConfigurationTool::DEFAULT_PAGE_SIZE);
     }
-
-    public function getTodayVisitorsBySchoolId($schoolId){
-        return Visitor::where('school_id',$schoolId)
-            ->orderBy('id','desc')->paginate(ConfigurationTool::DEFAULT_PAGE_SIZE);
+    /**
+     * Func 获取今天访客数据
+     * @param $schoolId
+     * @param $sdate
+     * @param $edata
+     * @param $status
+     * @return mixed
+     */
+    public function getTodayVisitorsBySchoolId($schoolId,$sdate,$edata)
+    {
+        return Visitor::where('school_id', $schoolId)
+            ->whereBetween('created_at', [$sdate, $edata])
+            ->orderBy('id', 'desc')->paginate(ConfigurationTool::DEFAULT_PAGE_SIZE);
     }
+
+    /**
+     * Func 统计今天的数量
+     * @param $schoolId
+     * @param $sdate
+     * @param $edata
+     * @param $status
+     * @return mixed
+     */
+    public function getTodayVisitorsBySchoolIdCount($schoolId, $sdate, $edata, $status)
+    {
+        return Visitor::where('school_id', $schoolId)
+            ->whereBetween('created_at', [$sdate, $edata])
+            ->where('status', '=', $status)
+            ->count();
+    }
+
 
     /**
      * @param $schoolId
@@ -126,6 +181,32 @@ class VisitorDao
             'id', 'user_id', 'cate_id', 'name', 'mobile', 'vehicle_license',
             'reason', 'visitors_json1', 'visitors_json2',
             'scheduled_at', 'arrived_at', 'created_at'
+        ];
+
+        $data = Visitor::where($condition)->first($fieldArr);
+
+        return !empty($data) ? $data->toArray() : [];
+
+    }
+
+    /**
+     * Func Api 获取到访详情
+     *
+     * @param['id']  到访id
+     * @param['user_id']  用户id
+     *
+     * @return array
+     */
+    public function getUuidVisitorOneInfo($uuid)
+    {
+        // 检索条件
+        $condition[] = ['uuid', '=', $uuid];
+
+        // 获取的字段
+        $fieldArr = [
+            'id', 'user_id', 'cate_id', 'name', 'mobile', 'vehicle_license',
+            'qrcode_url', 'reason', 'visitors_json1', 'visitors_json2',
+            'scheduled_at', 'arrived_at', 'created_at', 'status'
         ];
 
         $data = Visitor::where($condition)->first($fieldArr);

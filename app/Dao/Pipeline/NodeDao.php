@@ -292,6 +292,10 @@ class NodeDao
         return NodeOption::where('id',$id)->delete();
     }
 
+    public function deleteOptionByNode($nodeId){
+        return NodeOption::where('node_id', $nodeId)->delete();
+    }
+
     /**
      * 保存步骤关联的必填项数据
      * @param $nodeOptionData
@@ -299,23 +303,6 @@ class NodeDao
      */
     public function saveNodeOption($nodeOptionData){
         $nodeOptionData['extra'] = is_array($nodeOptionData['extra']) ? json_encode($nodeOptionData['extra']) : $nodeOptionData['extra'];
-        if(isset($nodeOptionData['id']) && !empty($nodeOptionData['id'])){
-            $option = NodeOption::find($nodeOptionData['id']);
-            if($option){
-                $option->name = $nodeOptionData['name'];
-                $option->type = $nodeOptionData['type'];
-                $option->tip = $nodeOptionData['tip'];
-                $option->required = $nodeOptionData['required'];
-                $option->extra = $nodeOptionData['extra'];
-                $option->save();
-                return $option;
-            }
-            else{
-                return null;
-            }
-        }
-        else{
-            return NodeOption::create($nodeOptionData);
-        }
+        return NodeOption::create($nodeOptionData);
     }
 }

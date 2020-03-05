@@ -31,11 +31,8 @@ if (document.getElementById('pipeline-flows-manager-app')) {
                     titles: [], // 角色
                     attachments: []
                 },
-                titles: [],
-                returnId: '',
-                titlesList1: ['全体成员', '普通教职工', '部门正职', '部门副职'],
-                titlesList2: ['校长', '副校长', '系主任', '班主任', '年级主任', '书记', '副书记'],
-                approver: '', // 审批人
+                returnId: '', // flow_id
+                titlesList: [], //侧边栏角色获取
                 teacher: '', // 请输入教职工名字
 
                 lastNewFlow: null,
@@ -100,74 +97,48 @@ if (document.getElementById('pipeline-flows-manager-app')) {
             //     this.loadFlowNodes(this.lastNewFlow);
             // }
             this.getList(1);
+            this.changeItem2(1);
         },
         methods: {
-            querySearchAsync: function (queryString, cb) {
-                const _queryString = queryString.trim();
-                if (Util.isEmpty(_queryString)) {
-                    // 如果视图搜索空字符串, 那么不执行远程调用, 而是直接回调一个空数组
-                    cb([]);
-                }
-                else {
-                    axios.post('/api/school/quick-search-users', {
-                        scope: queryString
-                    }).then(res => {
-                        if (Util.isAjaxResOk(res)) {
-                            console.log(res)
-                            // cb(res.data.data);  
-                        }
-                    })
-                }
-            },
-            createFilter(queryString) {
-                return (restaurant) => {
-                    return (restaurant.value.toLowerCase().indexOf(queryString.toLowerCase()) === 0);
-                };
-            },
-            handleSelect(item) {
-                console.log(item);
-            },
-
-            // 获取左侧分类和流程列表
+            // 获取左边分类和侧边栏显示位置和侧边栏关联业务
             getList(tab) {
                 const url = Util.buildUrl(Constants.API.FLOW.GETFLOWS);
                 axios.post(url, {
                     position: tab
                 }).then((res) => {
                     if (Util.isAjaxResOk(res)) {
-                        this.typeList = res.data.data
-                        this.posiType = tab
+                        this.typeList = res.data.data // 左边分类
+                        this.posiType = tab // 侧边栏显示位置
+                        if (this.posiType === 3) {
+                            this.getbusinessList(); // 侧边栏关联业务
+                        }
                     }
                 }).catch((err) => {
                     console.log(err)
                 });
             },
-            // 新增流程--打开侧边栏
+            // 新增流程按钮--打开侧边栏
             createNewFlow: function () {
+                this.flowFormFlag = true;
                 this.flow.type = '';
                 this.flow.name = '';
-                this._resetNodeForm();
-                this.flowFormFlag = true;
-                if (this.posiType === 3) {
-                    this.getbusinessList()
-                }
+                this.node.handlers = []; // 目标用户
+                this.node.organizations = []; // 部门
+                this.node.titles = []; // 角色
+                this.changeItem1(1)
+                this.changeItem2(1)
             },
-            // 新增流程--打开侧边栏
-            _resetNodeForm: function () {
-                this.node.handlers = [];
-                this.node.organizations = [];
-                this.node.titles = [];
-            },
+            // 关闭侧边栏
             handleClose(done) {
-                done()
+                done();
             },
-            // 获取流程图标       
+            // 获取侧边栏流程图标       
             iconSelectedHandler: function (payload) {
                 this.flow.icon = payload.url;
                 this.selectedImgUrl = payload.url;
                 this.iconSelectorShowFlag = false;
             },
-            // 获取关联业务
+            // 获取侧边栏关联业务
             getbusinessList() {
                 axios.post('/school_manager/pipeline/flows/load-business')
                     .then((res) => {
@@ -178,7 +149,29 @@ if (document.getElementById('pipeline-flows-manager-app')) {
                         console.log(err)
                     });
             },
-            // 创建新流程
+            // 获取侧边栏角色列表
+            changeItem1(value) {
+                this.posiType = value;
+                this.gettitlesList();
+            },
+            changeItem2(value) {
+                this.organization = value;
+                this.gettitlesList();
+            },
+            gettitlesList() {
+                axios.post('/school_manager/pipeline/flows/load-titles', {
+                    position: this.posiType,
+                    type: this.organization
+                })
+                    .then((res) => {
+                        if (Util.isAjaxResOk(res)) {
+                            this.titlesList = res.data.data
+                        }
+                    }).catch((err) => {
+                        console.log(err)
+                    });
+            },
+            // 侧边栏创建新流程按钮
             onNewFlowSubmit: function () {
                 if (this.flow.name.trim() === '') {
                     this.$notify.error({
@@ -203,9 +196,7 @@ if (document.getElementById('pipeline-flows-manager-app')) {
                 // 创建新的流程
                 saveFlow(this.flow, this.node).then(res => {
                     if (Util.isAjaxResOk(res)) {
-                        console.log(res)
                         window.location.href = '/school_manager/pipeline/flows/manager?lastNewFlow=' + res.data.id;
-                        this.returnId = res.data.id
                     }
                     else {
                         this.$notify.error(
@@ -216,12 +207,12 @@ if (document.getElementById('pipeline-flows-manager-app')) {
             },
             // 每个流程的点击事件
             loadFlowNodes: function (flowId, flowName) {
-                this.flow.name = flowName;
-                this.flow.id = flowId;
+                this.returnId = flowId
+                this.flow.name = flowName
                 this.loadingNodes = true;
                 loadNodes(flowId).then(res => {
                     if (Util.isAjaxResOk(res)) {
-                        this.titles = res.data.data.nodes.head.handler.titles
+                        this.node.titles = res.data.data.nodes.head.handler.titles
                         this.node.organizations = res.data.data.nodes.head.handler.organizations
                     }
                     else {
@@ -232,6 +223,69 @@ if (document.getElementById('pipeline-flows-manager-app')) {
                     this.loadingNodes = false;
                 })
             },
+            // 右侧编辑按钮回显
+            editFlow() {
+                this.flowFormFlag = true;
+                loadNodes(this.returnId).then(res => {
+                    if (Util.isAjaxResOk(res)) {
+                        // 有部门
+                        if (res.data.data.nodes.head.handler.organizations.length > 0) {
+                            this.changeItem1(this.posiType)
+                            this.changeItem2(this.organization)
+                            this.node.organizations = res.data.data.nodes.head.handler.organizations
+                            this.node.titles = res.data.data.nodes.head.handler.titles.substring(0, res.data.data.nodes.head.handler.titles.length - 1).split(';')
+                        } else {
+                            this.changeItem1(this.posiType)
+                            this.changeItem2(this.organization)
+                            this.node.titles = res.data.data.nodes.head.handler.titles.substring(0, res.data.data.nodes.head.handler.titles.length - 1).split(';')
+                        }
+                        this.flow = res.data.data.flow
+                        this.node.handlers = res.data.data.nodes.head.handler.role_slugs.substring(0, res.data.data.nodes.head.handler.role_slugs.length - 1).split(';')
+                    }
+                    else {
+                        this.$notify.error(
+                            { title: '加载失败', message: res.data.message, duration: 0 }
+                        );
+                    }
+                })
+            },
+            // 右侧的删除按钮
+            deleteFlow: function () {
+                this.$confirm('此操作将彻底删除此流程, 是否继续?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    this.loadingNodes = true;
+                    deleteFlow(this.returnId).then(res => {
+                        if (Util.isAjaxResOk(res)) {
+                            this.$message({ type: 'success', message: '删除成功, 页面将重新加载, 请稍候!' });
+                            window.location.reload();
+                        }
+                        else {
+                            this.$message.error('系统繁忙, 请稍候再试');
+                        }
+                        this.loadingNodes = false;
+                    })
+                }).catch(() => {
+                    this.$message({
+                        type: 'info',
+                        message: '已取消删除'
+                    });
+                });
+            },
+            // 自定义表单
+            option() {
+                var url = this.$refs.option.$attrs.href + '?flow_id=' + this.returnId;
+                location.href = url;
+            },
+            // 设置审批人按钮
+            approver() {
+                var url = this.$refs.approver.$attrs.href + '?flow_id=' + this.returnId;
+                location.href = url;
+            },
+
+            // 右侧编辑时侧边栏的保存按钮
 
 
 
@@ -308,30 +362,7 @@ if (document.getElementById('pipeline-flows-manager-app')) {
 
 
 
-            // deleteFlow: function () {
-            //     this.$confirm('此操作将彻底删除此流程, 是否继续?', '提示', {
-            //         confirmButtonText: '确定',
-            //         cancelButtonText: '取消',
-            //         type: 'warning'
-            //     }).then(() => {
-            //         this.loadingNodes = true;
-            //         deleteFlow(this.currentFlow.id, this.schoolId).then(res => {
-            //             if (Util.isAjaxResOk(res)) {
-            //                 this.$message({ type: 'success', message: '删除成功, 页面将重新加载, 请稍候!' });
-            //                 window.location.reload();
-            //             }
-            //             else {
-            //                 this.$message.error('系统繁忙, 请稍候再试');
-            //             }
-            //             this.loadingNodes = false;
-            //         })
-            //     }).catch(() => {
-            //         this.$message({
-            //             type: 'info',
-            //             message: '已取消删除'
-            //         });
-            //     });
-            // },
+
             // // 对 node 的操作
             // deleteNode: function (idx, node) {
             //     this.$confirm('此操作将永久删除步骤: "' + node.name + '", 是否继续?', '提示', {
