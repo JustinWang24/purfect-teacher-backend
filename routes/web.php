@@ -48,6 +48,10 @@ Route::prefix('h5')->group(function () {
     // 用户查看自己的流程历史详情
     Route::any('/flow/user/view-history','H5\Pipeline\FlowsController@view_history')
         ->name('h5.flow.user.view-history');
+    // 用户查看待自己审批的流程列表
+    Route::any('/flow/user/waiting-for-me', 'H5\Pipeline\FlowsController@waiting_for_me')
+        ->name('h5.flow.user.waiting-for-me');
+
     // 学生查看自己今天的课表
     Route::any('/timetable/student/view','H5\Timetable\StudentController@view')
         ->name('h5.timetable.student.view');

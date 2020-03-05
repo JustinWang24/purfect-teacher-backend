@@ -11,10 +11,12 @@ use App\Dao\NetworkDisk\MediaDao;
 use App\Models\Pipeline\Flow\Action;
 use App\Models\Pipeline\Flow\ActionAttachment;
 use App\Models\Pipeline\Flow\ActionOption;
+use App\Models\Pipeline\Flow\Flow;
 use App\Models\Pipeline\Flow\UserFlow;
 use App\User;
 use App\Utils\JsonBuilder;
 use App\Utils\Pipeline\IAction;
+use App\Utils\Pipeline\IFlow;
 use App\Utils\Pipeline\IUserFlow;
 use App\Utils\ReturnData\IMessageBag;
 use App\Utils\ReturnData\MessageBag;
@@ -191,13 +193,24 @@ class ActionDao
      * @param $user
      * @return Collection
      */
-    public function getFlowsWaitingFor($user){
-        return Action::where('user_id',$user->id??$user)
-            ->where('result','=',IAction::RESULT_PENDING)
-            ->with('flow')
-            ->with('userFlow')
-            ->orderBy('id','desc')
-            ->get();
+    public function getFlowsWaitingFor($user, $position = 0){
+        if (!$position) {
+            return Action::where('user_id',$user->id??$user)
+                ->where('result','=',IAction::RESULT_PENDING)
+                ->with('flow')
+                ->with('userFlow')
+                ->orderBy('id','desc')
+                ->get();
+        }else {
+            $flowIdArr = Flow::whereIn('type', array_keys(Flow::getTypesByPosition($position)))->pluck('id')->toArray();
+            return Action::where('user_id',$user->id??$user)
+                ->where('result','=',IAction::RESULT_PENDING)
+                ->whereIn('flow_id', $flowIdArr)
+                ->with('flow')
+                ->with('userFlow')
+                ->orderBy('id','desc')
+                ->get();
+        }
     }
 
     /**

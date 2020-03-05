@@ -463,17 +463,17 @@ Route::prefix('pipeline')->middleware('auth:api')->group(function (){
     Route::post('/flow/process', 'Api\Pipeline\FlowsController@process')
         ->name('api.pipeline.flow.process');
 
-    Route::post('/flow/resume', 'Api\Pipeline\FlowsController@resume')
-        ->name('api.pipeline.flow.resume');
+    /*Route::post('/flow/resume', 'Api\Pipeline\FlowsController@resume')
+        ->name('api.pipeline.flow.resume');*/
 
-    Route::post('/flow/watch', 'Api\Pipeline\FlowsController@watch')
-        ->name('api.pipeline.flow.watch');
+    /*Route::post('/flow/watch', 'Api\Pipeline\FlowsController@watch')
+        ->name('api.pipeline.flow.watch');*/
 
     Route::post('/flow/cancel-action', 'Api\Pipeline\FlowsController@cancel_action')
         ->name('api.pipeline.flow.cancel-action');
 
-    Route::post('/flow/view-action', 'Api\Pipeline\FlowsController@view_action')
-        ->name('api.pipeline.flow.view-action');
+    /*Route::post('/flow/view-action', 'Api\Pipeline\FlowsController@view_action')
+        ->name('api.pipeline.flow.view-action');*/
 });
 
 Route::prefix('notification')->middleware('auth:api')->group(function () {

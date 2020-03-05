@@ -54,6 +54,17 @@ class FlowsController extends Controller
         return '您无权使用本流程';
     }
 
+    public function waiting_for_me(Request $request) {
+        $this->dataForView['pageTitle'] = '待我审批';
+        $user = $request->user('api');
+        if ($user) {
+            $this->dataForView['user'] = $user;
+            $this->dataForView['api_token'] = $request->get('api_token');
+            return view('h5_apps.pipeline.flow_waiting_for_me', $this->dataForView);
+        }
+        return '您无权使用本流程';
+    }
+
     public function in_progress(Request $request){
         /**
          * @var User $user

@@ -42,10 +42,10 @@ abstract class GeneralFlowsLogic implements IFlowLogic
      * 获取所有等待用户处理的操作
      * @return IAction[]|\Illuminate\Database\Eloquent\Collection
      */
-    public function waitingForMe()
+    public function waitingForMe($position = 0)
     {
         $actionDao = new ActionDao();
-        return $actionDao->getFlowsWaitingFor($this->user);
+        return $actionDao->getFlowsWaitingFor($this->user, $position);
     }
 
     /**
@@ -160,16 +160,30 @@ abstract class GeneralFlowsLogic implements IFlowLogic
                     $action->save();
 
                     $next = $node->getNext();
-
                     if($next){
+                        $userFlowDao = new UserFlowDao();
+                        $userFlow = $userFlowDao->getById($action->getTransactionId());
                         $handler = $node->getHandler();
-                        $handler->handle($this->user, $action, $next);
+                        $handler->handle($userFlow->user, $action, $next);
                     }
                     else{
                         // 已经是流程的最后一步, 标记流程已经完成
                         $userFlowDao = new UserFlowDao();
                         // 整个流程被通过了
                         $userFlowDao->update($action->getTransactionId(),['done'=>IUserFlow::DONE]);
+
+                        //是否触发事件 @TODO 系统流程审批通过在这里定义事件
+                        switch ($action->flow->business) {
+                            case IFlow::BUSINESS_TYPE_MACADDRESS :
+                                $event = '';
+                                break;
+                            default:
+                                $event = null;
+                                break;
+                        }
+                        if ($event) {
+                            event($event);
+                        }
                     }
                     DB::commit();
                     $messageBag->setCode(JsonBuilder::CODE_SUCCESS);
@@ -188,7 +202,7 @@ abstract class GeneralFlowsLogic implements IFlowLogic
     }
 
     /**
-     * 驳回
+     * 驳回 @TODO 不要了 直接终止流程
      * @param IAction $action
      * @param $actionData
      * @return \App\Utils\ReturnData\IMessageBag
@@ -246,27 +260,7 @@ abstract class GeneralFlowsLogic implements IFlowLogic
 
                     // 将整个流程终止
                     $userFlowDao = new UserFlowDao();
-                    $allActions = $userFlowDao->terminate($action->getTransactionId());
-
-                    $systemMessageDao = new SystemNotificationDao();
-
-                    $flow = $action->getFlow();
-                    $userFlow = $userFlowDao->getById($action->getTransactionId());
-
-                    foreach ($allActions as $act) {
-                        // 所有涉及的人都被通知一下
-                        $systemMessageDao->create(
-                            [
-                                'sender'=>SystemNotification::FROM_SYSTEM,
-                                'to'=>$act->user_id,
-                                'type'=>SystemNotification::TYPE_NONE,
-                                'priority'=>SystemNotification::PRIORITY_LOW,
-                                'school_id'=>SystemNotification::SCHOOL_EMPTY,
-                                'content'=>$userFlow->user_name . '的'.$flow->getName().'申请被驳回了',
-                                'next_move'=>'',
-                            ]
-                        );
-                    }
+                    $userFlowDao->terminate($action->getTransactionId());
 
                     DB::commit();
                     $messageBag->setCode(JsonBuilder::CODE_SUCCESS);
