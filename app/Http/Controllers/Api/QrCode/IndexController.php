@@ -58,7 +58,7 @@ class IndexController extends Controller
             return JsonBuilder::Error('未找到您正在上的课');
         }
             
-        $codeStr = base64_encode(json_encode(['app'=> 'supplement',  'itme_id' => $item[0]->id, 'year' => $item[0]->year, 'term' => $item[0]->term]));
+        $codeStr = base64_encode(json_encode(['app'=> 'cloud',  'itme_id' => $item[0]->id, 'year' => $item[0]->year, 'term' => $item[0]->term]));
         $code = $this->generateQrCode($codeStr);
         if (!$code) {
             return  JsonBuilder::Error('生成二维码失败');
