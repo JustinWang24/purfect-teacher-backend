@@ -11,6 +11,7 @@ namespace App\BusinessLogic\Pipeline\Flow\Impl;
 use App\BusinessLogic\Pipeline\Flow\Contracts\IFlowLogic;
 use App\Dao\Misc\SystemNotificationDao;
 use App\Dao\Pipeline\UserFlowDao;
+use App\Models\Pipeline\Flow\Copys;
 use App\Models\Pipeline\Flow\UserFlow;
 use App\Utils\Pipeline\IAction;
 use App\Utils\Pipeline\IFlow;
@@ -171,6 +172,18 @@ abstract class GeneralFlowsLogic implements IFlowLogic
                         $userFlowDao = new UserFlowDao();
                         // 整个流程被通过了
                         $userFlowDao->update($action->getTransactionId(),['done'=>IUserFlow::DONE]);
+
+                        //添加抄送人
+                        if ($action->flow->copy_uids) {
+                            $userIdArr = explode(';', trim($action->flow->copy_uids, ';'));
+                            foreach ($userIdArr as $userid) {
+                                Copys::create([
+                                    'user_id' => $userid,
+                                    'user_flow_id' => $action->getTransactionId()
+                                ]);
+                            }
+                        }
+
 
                         //是否触发事件 @TODO 系统流程审批通过在这里定义事件
                         switch ($action->flow->business) {
