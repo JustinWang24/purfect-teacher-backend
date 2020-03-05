@@ -231,6 +231,8 @@
          // 处理数据
          $saveData[ 'status' ]      = 3;
          $saveData[ 'is_comment' ]  = 1;
+         $saveData[ 'admin_name' ]  = '4007792525';
+         $saveData[ 'admin_mobile' ]  = '4007792525';
          $saveData[ 'admin_desc' ]  = trim ( $param[ 'admin_desc' ] );
          $saveData[ 'chulis_time' ] = date ( 'Y-m-d H:i:s' );
          if ( WifiIssuesDao::addOrUpdateWifiIssuesInfo ( $saveData , $getWifiIssuesOneInfo->issueid ) )

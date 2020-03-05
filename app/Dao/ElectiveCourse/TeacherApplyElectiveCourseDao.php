@@ -123,7 +123,8 @@ class TeacherApplyElectiveCourseDao
             'created_at' => $item->created_at->toDateTimeString(),//?为什么自动转换会变成年-月-日
             'elective_status' => $item->course->courseElective->status,
             'elective_enrol_start_at' => Carbon::parse($item->course->courseElective->enrol_start_at),
-            'elective_expired_at' => Carbon::parse($item->course->courseElective->expired_at)
+            'elective_expired_at' => Carbon::parse($item->course->courseElective->expired_at),
+            'open_num' => $item->course->courseElective->open_num
         ];
         foreach ($item->course->arrangements as $arrangement) {
             $tmp['arrangement'][] = [
@@ -176,6 +177,7 @@ class TeacherApplyElectiveCourseDao
             'teacher_name' => $item->teacher_name,
             'scores' => 0,
             'max_num' => $item->max_num > 0 ? $item->max_num : $item->open_num,
+            'open_num' => $item->open_num,
             'desc' => $item->desc,
             'apply_content' => $item->apply_content,
             'reply_content' => $item->reply_content,
