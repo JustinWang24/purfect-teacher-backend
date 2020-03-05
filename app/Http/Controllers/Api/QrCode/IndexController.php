@@ -54,11 +54,11 @@ class IndexController extends Controller
         $user = $request->user();
         $timeTableDao = new  TimetableItemDao;
         $item = $timeTableDao->getCurrentItemByUser($user);
-        if ($item->isEmpty()) {
+        if (is_null($item)) {
             return JsonBuilder::Error('未找到您正在上的课');
         }
-
-        $codeStr = base64_encode(json_encode(['itme_id' => $item->id, 'year' => $item->year, 'term' => $item->term]));
+            
+        $codeStr = base64_encode(json_encode(['app'=> 'supplement',  'itme_id' => $item->id, 'year' => $item->year, 'term' => $item->term]));
         $code = $this->generateQrCode($codeStr);
         if (!$code) {
             return  JsonBuilder::Error('生成二维码失败');
