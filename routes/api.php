@@ -446,10 +446,16 @@ Route::prefix('pipeline')->middleware('auth:api')->group(function (){
         ->name('api.pipeline.flows.started-by-me');
 
     /**
-     * 用户调取正在等待自己审核的申请
+     * 用户调取正在等待自己审核的列表
      */
     Route::post('/flows/waiting-for-me', 'Api\Pipeline\FlowsController@waiting_for_me')
         ->name('api.pipeline.flows.waiting-for-me');
+    //抄送我的审核列表
+    Route::post('/flows/copy-to-me', 'Api\Pipeline\FlowsController@copy_to_me')
+        ->name('api.pipeline.flows.copy-to-me');
+    //自己审批的审核列表
+    Route::post('/flows/my-processed', 'Api\Pipeline\FlowsController@my_processed')
+        ->name('api.pipeline.flows.my-processed');
 
     /**
      * 用户调取可用的流程集合的接口

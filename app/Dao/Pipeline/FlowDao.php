@@ -76,16 +76,15 @@ class FlowDao
         if (!empty($organizations)) {
             $organizationArr = explode(';', trim($organizations, ';'));
             $titlesArr = explode(';', trim($titles, ';'));
-            $organizations = UserOrganization::with(['organization' => function ($query) use ($organizationArr, $schoolId){
+            $organizations = array_unique(UserOrganization::whereHas('organization', function($query) use($schoolId, $organizationArr) {
                 $query->where('school_id', $schoolId)->whereIn('name', $organizationArr);
-            }])->pluck('organization_id')->toArray();
+            })->pluck('organization_id')->toArray());
 
             //如果用户存在相同组织则仅显示自己所在组织
             $userOrganizationId = $user->organizations->whereIn('organization_id', $organizations)->pluck('organization_id')->toArray();
             if ($userOrganizationId) {
                 $organizations = $userOrganizationId;
             }
-
             foreach ($titlesArr as $title) {
                 if ($title == Title::ORGANIZATION_EMPLOYEE) {
                     $titleId = Title::ORGANIZATION_EMPLOYEE_ID;
@@ -170,14 +169,17 @@ class FlowDao
                 }
             }
 
-            $nodeOrganizations = UserOrganization::with(['organization' => function ($query) use ($nodeOrganizationArr, $schoolId){
-                $query->where('school_id', $schoolId)->whereIn('name', $nodeOrganizationArr);
-            }])->where('user_id', $user->id);
             if ($whereIn) {
-                $nodeOrganizations->whereIn('title_id', $whereIn);
+                $nodeOrganizations = UserOrganization::whereHas('organization', function ($query) use($schoolId, $nodeOrganizationArr) {
+                    $query->where('school_id', $schoolId)->whereIn('name', $nodeOrganizationArr);
+                })->where('user_id', $user->id)->whereIn('title_id', $whereIn)->count();
+            }else {
+                $nodeOrganizations = UserOrganization::whereHas('organization', function ($query) use($schoolId, $nodeOrganizationArr) {
+                    $query->where('school_id', $schoolId)->whereIn('name', $nodeOrganizationArr);
+                })->where('user_id', $user->id)->count();
             }
 
-            if ($nodeOrganizations->count() < 1) {
+            if ($nodeOrganizations < 1) {
                 return false;
             }
         }else {

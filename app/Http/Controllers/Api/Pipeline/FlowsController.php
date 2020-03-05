@@ -57,6 +57,7 @@ class FlowsController extends Controller
                 foreach ($flowInfo['handler'] as $handler) {
                     $handlers[] = $flowDao->transTitlesToUser($handler->titles, $handler->organizations, $user);
                 }
+                exit;
                 $return = [
                     'user' => $user,
                     'flow' => $flow,
@@ -89,6 +90,20 @@ class FlowsController extends Controller
         $logic = FlowLogicFactory::GetInstance($request->user());
         $position = $request->get('position', 0);
         return JsonBuilder::Success(['actions'=>$logic->waitingForMe($position)]);
+    }
+
+    /**
+     * @param FlowRequest $request
+     * @return string
+     */
+    public function copy_to_me(FlowRequest $request){
+        $logic = FlowLogicFactory::GetInstance($request->user());
+        return JsonBuilder::Success(['copys'=>$logic->copyToMe()]);
+    }
+
+    public function my_processed(FlowRequest $request){
+        $logic = FlowLogicFactory::GetInstance($request->user());
+        return JsonBuilder::Success(['processed'=>$logic->myProcessed()]);
     }
 
     /**
@@ -181,7 +196,6 @@ class FlowsController extends Controller
         $actionFormData = $request->getActionFormData();
         $dao = new ActionDao();
         $action = $dao->getByActionIdAndUserId($actionFormData['id'], $request->user()->id);
-
         if($action && $action->result == IAction::RESULT_PENDING){
             $logic = FlowLogicFactory::GetInstance($request->user());
 

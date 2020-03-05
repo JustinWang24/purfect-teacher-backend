@@ -23,7 +23,7 @@ class FlowsController extends Controller
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View|string
      */
     public function start(Request $request){
-        $this->dataForView['pageTitle'] = '办事大厅';
+        $this->dataForView['pageTitle'] = '发起审批';
 
         /**
          * @var User $user
@@ -65,7 +65,30 @@ class FlowsController extends Controller
         return '您无权使用本流程';
     }
 
+    public function my_processed(Request $request) {
+        $this->dataForView['pageTitle'] = '我审批的';
+        $user = $request->user('api');
+        if ($user) {
+            $this->dataForView['user'] = $user;
+            $this->dataForView['api_token'] = $request->get('api_token');
+            return view('h5_apps.pipeline.flow_my_processed', $this->dataForView);
+        }
+        return '您无权使用本流程';
+    }
+
+    public function copy_to_me(Request $request) {
+        $this->dataForView['pageTitle'] = '抄送我的';
+        $user = $request->user('api');
+        if ($user) {
+            $this->dataForView['user'] = $user;
+            $this->dataForView['api_token'] = $request->get('api_token');
+            return view('h5_apps.pipeline.flow_copy_to_me', $this->dataForView);
+        }
+        return '您无权使用本流程';
+    }
+
     public function in_progress(Request $request){
+        $this->dataForView['pageTitle'] = '我发起的';
         /**
          * @var User $user
          */
@@ -91,6 +114,7 @@ class FlowsController extends Controller
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View|string
      */
     public function view_history(Request $request){
+        $this->dataForView['pageTitle'] = '审批详情';
         /**
          * @var User $user
          */
