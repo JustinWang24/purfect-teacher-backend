@@ -165,7 +165,7 @@ class SignInGradeController extends Controller
                 $score[$key]['remark'] = $remarks[$item->user_id];
             } else {
                 $student[$key]['mold'] = 0;  // 未签到
-                $score[$key]['score'] = 0;
+                $score[$key]['score'] = 10;  // 默认10分
                 $score[$key]['remark'] = ''; // 备注
             }
         }
