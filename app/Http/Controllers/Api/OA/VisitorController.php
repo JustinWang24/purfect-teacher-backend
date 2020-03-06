@@ -107,6 +107,7 @@ class VisitorController extends Controller
     public function update(Request $request)
     {
         $uuid = (String)$request->input('uuid', '');
+        $device = (String)$request->input('device', '');
         $visitors_json1 = (String)$request->input('visitors_json1', ''); // 人员信息
         $visitors_json2 = (String)$request->input('visitors_json2', ''); // 车辆信息
         $scheduled_at = (String)$request->input('scheduled_at', ''); // 来访时间
@@ -116,7 +117,7 @@ class VisitorController extends Controller
         $visitors_json2_arr = json_decode($visitors_json2, true); // 车辆信息
         $scheduled_at = strtotime($scheduled_at); // 来访时间
 
-        if ($uuid == '') {
+        if ($uuid == '' || $device == '') {
             return JsonBuilder::Error('参数错误');
         }
         if ($visitors_json1 == '' || empty($visitors_json1_arr)) {
@@ -128,7 +129,7 @@ class VisitorController extends Controller
         if (!$scheduled_at) {
             return JsonBuilder::Error('来访时间格式错误');
         }
-        if ($scheduled_at < time()) {
+        if ($scheduled_at < (time()-10*60)) {
             return JsonBuilder::Error('来访时间不能小于当前时间');
         }
 
@@ -144,6 +145,7 @@ class VisitorController extends Controller
         // 添加数据
         $saveData['status'] = 2;
         $saveData['reason'] = $reason;
+        $saveData['device'] = trim($device);
         $saveData['name'] = (String)$visitors_json1_arr[0]['name'];
         $saveData['mobile'] = (String)$visitors_json1_arr[0]['mobile'];
         $saveData['visitors_json1'] = json_encode($visitors_json1_arr);
@@ -167,6 +169,39 @@ class VisitorController extends Controller
         } else {
             return JsonBuilder::Error('操作失败,请稍后重试');
         }
+    }
+
+    /**
+     * Func 获取访客信息
+     * @param VisitorRequest $request
+     * @return string
+     */
+    public function get_visiter_info(Request $request)
+    {
+        $uuid = (String)$request->input('uuid', '');
+        $device = (String)$request->input('device', '');
+       
+	    $infos = [];
+		if($uuid && $device)
+		{
+		    $visitorObj = new VisitorDao();
+			$data = $visitorObj->getUuidVisitorOneInfo($uuid);
+			if(!empty($data) && $data['device'] == trim($device) && in_array($data['status'],[2,3]))
+			{
+				$visitors_json1_arr = json_decode($data['visitors_json1'],true);
+				$visitors_json2_arr = json_decode($data['visitors_json2'],true);
+				
+				$userObj = new UserDao();
+				$userInfo = $userObj->getUserById($data['user_id']);
+				$infos['scheduled_at'] = $data['scheduled_at']; // 来访日期
+				$infos['name'] = isset($userInfo->name) ? $userInfo->name : ''; // 被访人
+				$infos['vehicle_is'] = !empty($visitors_json2_arr) ? '是' : '否'; // 是否开车
+				$infos['vehicle_license'] = !empty($visitors_json2_arr) ? implode(',', array_column($visitors_json2_arr, 'title')) : ''; // 是否开车
+				$infos['menber_count'] = count($visitors_json1_arr); // 来访人数
+				$infos['qrcode_url'] = (String)$data['qrcode_url']; // 二维码
+			}
+		}
+       return JsonBuilder::Success($infos,'获取访客信息');	
     }
 
     /**

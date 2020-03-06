@@ -161,4 +161,5 @@ Route::prefix('visitor')->middleware('auth:api')->group(function () {
 });
 
 Route::any('/visitor-h5/info','Api\OA\VisitorController@info')->name('Oa.visitor.info'); // 被访信息
+Route::any('/visitor-h5/get-visiter-info','Api\OA\VisitorController@get_visiter_info')->name('Oa.visitor.get_visiter_info'); // 获取访客信息
 Route::post('/visitor-h5/update','Api\OA\VisitorController@update')->name('Oa.visitor.update'); // 到访提交
