@@ -377,7 +377,7 @@ class SignInGradeController extends Controller
 
 
     /**
-     * 班级签到首页接口
+     * 班级签到
      * @param AttendanceRequest $request
      * @return string
      */
@@ -399,8 +399,6 @@ class SignInGradeController extends Controller
         $date = $request->get('date',Carbon::now()->toDateString());
         $now = Carbon::parse($date);
         $date = $now->toDateString();  // 统一时间格式
-        $type = $request->get('type', 1); // 类型：1当天数据 2:历史数据
-        $time = Carbon::now()->toTimeString();
         $month = $now->month;
         $schoolId = $user->getSchoolId();
         $schoolDao = new SchoolDao();
@@ -420,7 +418,7 @@ class SignInGradeController extends Controller
 
         // 查询当前时间这个班上的课
         $timeTableItemDao = new TimetableItemDao();
-        $return = $timeTableItemDao->getTimetableItemByTime($schoolId, $year, $term, $time, $user->id, $gradeId, $weekDay, $type);
+        $return = $timeTableItemDao->getTimetableItemByTime($schoolId, $year, $term, $user->id, $gradeId, $weekDay);
 
         $weekdayIndex = CalendarDay::GetWeekDayIndex($weekDay);
 
@@ -518,16 +516,16 @@ class SignInGradeController extends Controller
 
         //时间
         $date = $request->get('date',Carbon::now()->toDateString());
-        $type = $request->get('type', 1); // 类型：1当天数据 2:历史数据
-        $time = Carbon::now()->toTimeString();
-        $month = Carbon::parse($date)->month;
+        $now = Carbon::parse($date);
+        $date = $now->toDateString();
+        $month = $now->month;
         $schoolId = $user->getSchoolId();
         $schoolDao = new SchoolDao();
         $school = $schoolDao->getSchoolById($schoolId);
         $configuration = $school->configuration;
         $year = $configuration->getSchoolYear($date);
         $term = $configuration->guessTerm($month);
-        $weekDay = Carbon::parse($date)->weekDay();
+        $weekDay = $now->weekDay();
         $weeks = $configuration->getScheduleWeek(Carbon::parse($date), null, $term);
         if(is_null($weeks)) {
             return JsonBuilder::Success('当前没有课程');
@@ -538,7 +536,7 @@ class SignInGradeController extends Controller
 
         // 查询当前时间这个班上的课
         $timeTableItemDao = new TimetableItemDao();
-        $return = $timeTableItemDao->getTimetableItemByTime($schoolId, $year, $term, $time, $user->id, $gradeId, $weekDay, $type);
+        $return = $timeTableItemDao->getTimetableItemByTime($schoolId, $year, $term, $user->id, $gradeId, $weekDay);
 
         $attendancesDao = new AttendancesDao();
         $list = [];

@@ -27,8 +27,7 @@ class TimetableRequest extends MyStandardRequest
      * @return mixed
      */
     public function getDate() {
-        // todo 暂时获取当前日期
-        $date = $this->get('date', '2020-02-27');
+        $date = $this->get('date', Carbon::now()->toDateString());
         return Carbon::parse($date);
     }
 }

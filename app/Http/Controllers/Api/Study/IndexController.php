@@ -9,6 +9,7 @@
 namespace App\Http\Controllers\Api\Study;
 
 
+use App\Dao\Courses\CourseTeacherDao;
 use Carbon\Carbon;
 use App\Utils\JsonBuilder;
 use App\Dao\Schools\SchoolDao;
@@ -147,7 +148,6 @@ class IndexController extends Controller
         $configuration = $school->configuration;
         // todo 时间暂时写死
         $date = Carbon::now()->toDateString();
-        $date = Carbon::parse('2020-01-08 14:40:00');;
         $year = $configuration->getSchoolYear($date);
         $month = Carbon::parse($date)->month;
         $term = $configuration->guessTerm($month);
@@ -256,16 +256,15 @@ class IndexController extends Controller
      */
     public function courseList(MyStandardRequest $request) {
         $userId = $request->user()->id;
-        $dao = new LectureDao();
-        $lectures = $dao->getMaterialByTeacherId($userId);
+        $dao = new CourseTeacherDao();
+        $return = $dao->getCoursesByTeacher($userId);
         $courses = [];
-        foreach ($lectures as $key => $item) {
-            $courses[$key] = [
+        foreach ($return as $key => $item) {
+            $courses[] = [
                 'course_id' => $item->course_id,
                 'course_name' => $item->course->name,
             ];
         }
-
         return JsonBuilder::Success($courses);
     }
 

@@ -108,7 +108,7 @@ class WifiIssueEvent implements CanSendSystemNotification
     {
         $extra = [
             'type' => 'wifi-issue-info',
-            'param1' => $this->wifiIssue->id,
+            'param1' => $this->wifiIssue->issueid,
             'param2' => ''
         ];
         return json_encode($extra);
