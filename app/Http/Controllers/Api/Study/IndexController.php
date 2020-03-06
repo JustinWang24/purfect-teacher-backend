@@ -9,6 +9,7 @@
 namespace App\Http\Controllers\Api\Study;
 
 
+use App\Dao\Courses\CourseTeacherDao;
 use Carbon\Carbon;
 use App\Utils\JsonBuilder;
 use App\Dao\Schools\SchoolDao;
@@ -256,8 +257,8 @@ class IndexController extends Controller
      */
     public function courseList(MyStandardRequest $request) {
         $userId = $request->user()->id;
-        $dao = new LectureDao();
-        $lectures = $dao->getMaterialByTeacherId($userId);
+        $dao = new CourseTeacherDao();
+        $lectures = $dao->getCoursesByTeacher($userId);
         $courses = [];
         foreach ($lectures as $key => $item) {
             $courses[$key] = [
@@ -265,7 +266,6 @@ class IndexController extends Controller
                 'course_name' => $item->course->name,
             ];
         }
-
         return JsonBuilder::Success($courses);
     }
 
