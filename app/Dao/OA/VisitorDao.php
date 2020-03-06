@@ -215,7 +215,7 @@ class VisitorDao
         // 获取的字段
         $fieldArr = [
             'id', 'user_id', 'cate_id', 'name', 'mobile', 'vehicle_license',
-            'qrcode_url', 'reason', 'visitors_json1', 'visitors_json2',
+            'device','qrcode_url', 'reason', 'visitors_json1', 'visitors_json2',
             'scheduled_at', 'arrived_at', 'created_at', 'status'
         ];
 
