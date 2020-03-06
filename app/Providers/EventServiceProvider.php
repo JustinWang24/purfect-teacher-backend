@@ -42,24 +42,21 @@ class EventServiceProvider extends ServiceProvider
 
         // 和工作流相关的事件
         'App\Events\Pipeline\Flow\FlowStarted' => [ // 流程开始成功
-            'App\Listeners\Pipeline\Flow\NotifyStarter',    // 通知发起流程的人
             'App\Listeners\Pipeline\Flow\NotifyNextProcessors',  // 通知流程中下一步需要知晓的人
         ],
         'App\Events\Pipeline\Flow\FlowProcessed' => [ // 流程的某个步骤被同意了
             'App\Listeners\Pipeline\Flow\NotifyStarter',    // 通知发起流程的人
-            'App\Listeners\Pipeline\Flow\NotifyProcessor',  // 通知流程中本步骤操作的人
+            //'App\Listeners\Pipeline\Flow\NotifyProcessor',  // 通知流程中本步骤操作的人
             'App\Listeners\Pipeline\Flow\NotifyNextProcessors',  // 通知流程中下一步需要知晓的人
         ],
         'App\Events\Pipeline\Flow\FlowRejected' => [ // 流程的某个步骤被驳回了
             'App\Listeners\Pipeline\Flow\NotifyStarter',    // 通知发起流程的人
-            'App\Listeners\Pipeline\Flow\NotifyProcessor',  // 通知流程中本步骤操作的人
-            'App\Listeners\Pipeline\Flow\NotifyNextProcessors',  // 通知流程中下一步需要知晓的人
         ],
-        'App\Events\Pipeline\Flow\FlowResumed' => [  // 流程的某个步骤被再一次提交
+        /*'App\Events\Pipeline\Flow\FlowResumed' => [  // 流程的某个步骤被再一次提交
             'App\Listeners\Pipeline\Flow\NotifyStarter',    // 通知发起流程的人
             'App\Listeners\Pipeline\Flow\NotifyProcessor',  // 通知流程中本步骤操作的人
             'App\Listeners\Pipeline\Flow\NotifyNextProcessors',  // 通知流程中下一步需要知晓的人
-        ],
+        ],*/
 
         'App\Events\User\ForgetPasswordEvent' => [  // 忘记密码
             'App\Listeners\Send\Sms',  // 发送短信

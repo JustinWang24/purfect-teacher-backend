@@ -11,7 +11,7 @@ $flowStillInProgress = $startAction->userFlow->done === \App\Utils\Pipeline\IUse
         </p>
     </div>
     <div class="main" v-show="!isLoading">
-        @if (!$user->isStudent())
+        @if (!$user->isStudent() && $startUser->isStudent())
         <div class="information">
             <h3>基本信息</h3>
             <el-divider></el-divider>
