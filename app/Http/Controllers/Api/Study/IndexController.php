@@ -34,12 +34,13 @@ class IndexController extends Controller
         $configuration = $school->configuration;
 
         $date = Carbon::now();
-
+        $date = Carbon::parse('2020-03-06 14:00:00');
         $year = $configuration->getSchoolYear($date);
         $month = Carbon::parse($date)->month;
         $term = $configuration->guessTerm($month);
         $timetableItemDao = new TimetableItemDao();
-        $item = $timetableItemDao->getUnEndCoursesByUser($user, $date);
+        $item = $timetableItemDao->getCurrentItemByUser($user, $date);
+//        $item = $timetableItemDao->getUnEndCoursesByUser($user, $date);
         $teacherApplyElectiveDao = new TeacherApplyElectiveCourseDao();
         $electiveTime = $teacherApplyElectiveDao->getElectiveCourseStartAndEndTime($schoolId, $term);
         $electiveStart = Carbon::parse($electiveTime[0]);
@@ -60,9 +61,11 @@ class IndexController extends Controller
             'truant_num' => $attendancesDetailsDao->getTruantCountByUser($user->id, $year, $term),
         ];
 
-
         $evaluateTeacher = false;
-        if(!is_null($item) && count($item) >0) {
+        if(!is_null($item)) {
+//        if(!is_null($item) && count($item) >0) {
+
+//            $item = $item[0];
 
             $weeks = $configuration->getScheduleWeek(Carbon::parse($date), null, $term);
             $week = $weeks->getScheduleWeekIndex();
@@ -74,8 +77,6 @@ class IndexController extends Controller
             foreach ($types as $key => $val) {
                 $label[] = CourseMaterial::GetTypeText($val);
             }
-
-            $item = $item[0];
 
             $timetable = [
                 'time_slot' => $item->timeSlot->name,
