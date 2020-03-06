@@ -34,7 +34,6 @@ class IndexController extends Controller
         $configuration = $school->configuration;
 
         $date = Carbon::now();
-        $date = Carbon::parse('2020-03-06 14:00:00');
         $year = $configuration->getSchoolYear($date);
         $month = Carbon::parse($date)->month;
         $term = $configuration->guessTerm($month);
