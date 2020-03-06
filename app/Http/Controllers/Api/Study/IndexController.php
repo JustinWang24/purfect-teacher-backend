@@ -104,7 +104,7 @@ class IndexController extends Controller
         $gradeId = $user->gradeUser->grade_id;
         $dao = new LectureDao();
         $material = $dao->getMaterialByGradeId($gradeId);
-        $studyData = $material? $material->url : '';
+        $studyData = $material? $material->description : '';
         $data = [
             'selectCourse' => $selectCourse, // 选课
             'timetable' => $timetable,  // 课程
@@ -146,7 +146,6 @@ class IndexController extends Controller
         $schoolDao = new SchoolDao();
         $school = $schoolDao->getSchoolById($schoolId);
         $configuration = $school->configuration;
-        // todo 时间暂时写死
         $date = Carbon::now()->toDateString();
         $year = $configuration->getSchoolYear($date);
         $month = Carbon::parse($date)->month;
