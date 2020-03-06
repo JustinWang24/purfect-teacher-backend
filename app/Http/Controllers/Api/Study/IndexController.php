@@ -9,12 +9,12 @@
 namespace App\Http\Controllers\Api\Study;
 
 
-use App\Dao\Courses\CourseTeacherDao;
 use Carbon\Carbon;
 use App\Utils\JsonBuilder;
 use App\Dao\Schools\SchoolDao;
 use App\Dao\Courses\CourseMajorDao;
 use App\Http\Controllers\Controller;
+use App\Dao\Courses\CourseTeacherDao;
 use App\Models\Courses\CourseMaterial;
 use App\Dao\Timetable\TimetableItemDao;
 use App\Dao\Courses\Lectures\LectureDao;
@@ -94,7 +94,7 @@ class IndexController extends Controller
 
             $attendance = $attendancesDao->getAttendanceByTimeTableId($item->id,$week);
             if(!is_null($attendance)) {
-                $detail = $attendancesDetailsDao->getDetailByUserId($user->id, $attendance->id);
+                $detail = $attendance->details->where('student_id', $user->id);
                 $signIn['status'] = $detail->mold ?? 0;
             }
 

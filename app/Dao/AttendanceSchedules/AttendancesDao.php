@@ -3,14 +3,14 @@
 namespace App\Dao\AttendanceSchedules;
 
 
+use App\User;
+use Carbon\Carbon;
 use App\Dao\Schools\SchoolDao;
+use Illuminate\Support\Facades\DB;
+use App\Utils\Time\GradeAndYearUtil;
+use App\Models\Timetable\TimetableItem;
 use App\Models\AttendanceSchedules\Attendance;
 use App\Models\AttendanceSchedules\AttendancesDetail;
-use App\Models\Timetable\TimetableItem;
-use App\User;
-use App\Utils\Time\GradeAndYearUtil;
-use Carbon\Carbon;
-use Illuminate\Support\Facades\DB;
 
 class AttendancesDao
 {
@@ -69,7 +69,6 @@ class AttendancesDao
                 'week'          => $week,
                 'weekday_index' => $item->weekday_index,
                 'mold'          => AttendancesDetail::MOLD_SIGN_IN,
-                'date'          => Carbon::now(),
             ];
 
             $detailsDao = new  AttendancesDetailsDao;
@@ -98,19 +97,6 @@ class AttendancesDao
         $map = ['teacher_id'=>$teacherId, 'grade_id'=>$gradeId];
         return Attendance::where($map)->whereDate('created_at', $date)->get();
     }
-
-
-    /**
-     * 通过课节和周查询签到信息
-     * @param $timeTable
-     * @param $week
-     * @return mixed
-     */
-    public function getAttendByTimeTableIdAndWeek($timeTable, $week) {
-        $map = ['timetable_id'=>$timeTable, 'week'=>$week];
-        return Attendance::where($map)->first();
-    }
-
 
     /**
      * 根据学年和学期获取老师待的课程
@@ -280,6 +266,23 @@ class AttendancesDao
            array_push($map, ['teacher_late', '=', $late]);
         }
         return Attendance::where($map)->whereIn('timetable_id', $timetableIds)->get();
+    }
+
+
+    /**
+     * 判断是否有签到主表
+     * @param TimetableItem $timetable
+     * @param $week
+     * @return mixed
+     */
+    public function isAttendanceByTimetableAndWeek(TimetableItem $timetable, $week) {
+        $map = ['timetable_id'=>$timetable->id, 'week'=>$week];
+        $attendance = Attendance::where($map)->first();
+        if(is_null($attendance)) {
+            // 创建签到总表
+            $attendance = $this->createAttendanceData($timetable);
+        }
+        return $attendance;
     }
 
 

@@ -103,17 +103,17 @@ class SignInGradeController extends Controller
         $list = [];
         // 获取签到详情
         foreach ($return as $key => $item) {
-            $re = $attendancesDao->getAttendByTimeTableIdAndWeek($item->id, $week);
-            if(!is_null($re)) {
+            $attendances = $attendancesDao->isAttendanceByTimetableAndWeek($item, $week);
+            if(!is_null($attendances)) {
                 $list[] = [
-                    'attendance_id' => $re->id,
-                    'grade_id' => $re->grade->id,
-                    'grade' => $re->grade->name,
-                    'total_number' => $re->total_number,
-                    'actual_number' => $re->actual_number,
-                    'leave_number' => $re->leave_number,
-                    'missing_number' => $re->missing_number,
-                    'status' => $re->status,
+                    'attendance_id' => $attendances->id,
+                    'grade_id' => $attendances->grade->id,
+                    'grade' => $attendances->grade->name,
+                    'total_number' => $attendances->total_number,
+                    'actual_number' => $attendances->actual_number,
+                    'leave_number' => $attendances->leave_number,
+                    'missing_number' => $attendances->missing_number,
+                    'status' => $attendances->status,
                 ];
             }
 
@@ -165,7 +165,7 @@ class SignInGradeController extends Controller
                 $score[$key]['remark'] = $remarks[$item->user_id];
             } else {
                 $student[$key]['mold'] = 0;  // 未签到
-                $score[$key]['score'] = 0;
+                $score[$key]['score'] = 10;  // 默认10分
                 $score[$key]['remark'] = ''; // 备注
             }
         }
@@ -425,7 +425,7 @@ class SignInGradeController extends Controller
         $attendancesDao = new AttendancesDao();
         $list = [];
         foreach ($return as $key => $item) {
-            $attendance = $attendancesDao->getAttendanceByTimeTableId($item->id, $week);
+            $attendance = $attendancesDao->isAttendanceByTimetableAndWeek($item, $week);
             if(!is_null($attendance)) {
                 $list[] = [
                     'slot_name' => $item->name,
@@ -541,7 +541,7 @@ class SignInGradeController extends Controller
         $attendancesDao = new AttendancesDao();
         $list = [];
         foreach ($return as $key => $item) {
-            $attendance = $attendancesDao->getAttendanceByTimeTableId($item->id, $week);
+            $attendance = $attendancesDao->isAttendanceByTimetableAndWeek($item, $week);
             if(!is_null($attendance)) {
                 $list[] = [
                     'attendance_id' => $attendance->id,

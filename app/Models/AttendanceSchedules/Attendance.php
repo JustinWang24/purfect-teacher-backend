@@ -2,12 +2,12 @@
 
 namespace App\Models\AttendanceSchedules;
 
-use App\Models\Course;
-use App\Models\Schools\Grade;
-use App\Models\Timetable\TimetableItem;
-use App\Models\Users\GradeUser;
 use App\User;
 use Carbon\Carbon;
+use App\Models\Course;
+use App\Models\Schools\Grade;
+use App\Models\Users\GradeUser;
+use App\Models\Timetable\TimetableItem;
 use Illuminate\Database\Eloquent\Model;
 
 class Attendance extends Model
@@ -29,6 +29,10 @@ class Attendance extends Model
     const TEACHER_LATE = 1; // 教师上课迟到
     const TEACHER_NO_LATE = 0; // 教师上课未迟到
 
+
+    public function details() {
+        return $this->hasMany(AttendancesDetail::class, 'attendance_id');
+    }
 
 
     public function course() {
