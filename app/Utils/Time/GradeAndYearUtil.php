@@ -185,4 +185,29 @@ class GradeAndYearUtil
 
         return $bag;
     }
+
+
+    /**
+     * 获取当前的额 timeslot 对象
+     *
+     * @param null $time
+     * @param null $schoolId
+     * @return TimeSlot|null
+     */
+    public static function GetUnEndTimeSlot($time = null, $schoolId = null){
+        $dao = new TimeSlotDao();
+        $timeSlots = $dao->getAllStudyTimeSlots($schoolId ?? session('school.id'));
+        if(is_null($time)){
+            $time = Carbon::now(self::TIMEZONE_CN);
+        }
+
+        $slot = null;
+
+        foreach ($timeSlots as $timeSlot) {
+            if($timeSlot->to > $time->format('H:i:s')){
+                $slot[] = $timeSlot->toArray();
+            }
+        }
+        return $slot;
+    }
 }
