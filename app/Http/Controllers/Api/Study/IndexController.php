@@ -39,8 +39,8 @@ class IndexController extends Controller
         $month = Carbon::parse($date)->month;
         $term = $configuration->guessTerm($month);
         $timetableItemDao = new TimetableItemDao();
-        $item = $timetableItemDao->getCurrentItemByUser($user, $date);
-//        $item = $timetableItemDao->getUnEndCoursesByUser($user, $date);
+//        $item = $timetableItemDao->getCurrentItemByUser($user, $date);  // 获取当前时间的课程
+        $item = $timetableItemDao->getUnEndCoursesByUser($user, $date); // 获取今天未结束的课程
         $teacherApplyElectiveDao = new TeacherApplyElectiveCourseDao();
         $electiveTime = $teacherApplyElectiveDao->getElectiveCourseStartAndEndTime($schoolId, $term);
         $electiveStart = Carbon::parse($electiveTime[0]);
@@ -62,10 +62,10 @@ class IndexController extends Controller
         ];
 
         $evaluateTeacher = false;
-        if(!is_null($item)) {
-//        if(!is_null($item) && count($item) >0) {
+//        if(!is_null($item)) {
+        if(!is_null($item) && count($item) >0) {
 
-//            $item = $item[0];
+            $item = $item[0];
 
             $weeks = $configuration->getScheduleWeek(Carbon::parse($date), null, $term);
             $week = $weeks->getScheduleWeekIndex();
@@ -100,9 +100,9 @@ class IndexController extends Controller
                 if(!is_null($detail)) {
                     $signIn['status'] = $detail->mold;
                 }
+                $evaluateTeacher = true;
             }
 
-            $evaluateTeacher = true;
         }
 
         $gradeId = $user->gradeUser->grade_id;
