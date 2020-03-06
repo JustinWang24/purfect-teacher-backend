@@ -186,17 +186,21 @@ class TaskController extends Controller
         $taskMembers = $task->taskMembers->where('user_id', '<>',$task->user_id);
 
         foreach ($taskMembers as $key => $val) {
-            $members[$key]['userid']=$val->user->id;
-            $members[$key]['username']=$val->user->name;
-            $members[$key]['user_pics']=$val->user->profile->avatar;
+            $members[] = [
+                'userid' => $val->user->id,
+                'username' => $val->user->name,
+                'user_pics' => $val->user->profile->avatar,
+            ];
         }
         $output['member_list'] = $members;
 
         $logs = [];
         foreach ($task->taskLogs as $key => $item) {
-            $logs[$key]['username'] =$item->user->name;
-            $logs[$key]['log_content'] = $item->desc;
-            $logs[$key]['create_time'] = $item->created_at->format('Y-m-d H:i');
+            $logs[] = [
+                'username' => $item->user->name,
+                'log_content' => $item->desc,
+                'create_time' => $item->created_at->format('Y-m-d H:i'),
+            ];
         }
         $output['log_list'] = $logs;
 
