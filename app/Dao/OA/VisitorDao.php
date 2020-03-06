@@ -83,8 +83,13 @@ class VisitorDao
      * @return Collection
      */
     public function getVisitorsBySchoolId($schoolId){
-        return Visitor::where('school_id',$schoolId)
-            ->orderBy('id','desc')->paginate(ConfigurationTool::DEFAULT_PAGE_SIZE);
+        return Visitor::from('visitors as a')
+            ->whereIn('a.status',[2,3])
+            ->where('a.school_id',$schoolId)
+            ->join('users as b', 'a.user_id', '=', 'b.id')
+            ->orderBy('a.id','desc')
+            ->select(['a.*','b.name as uname'])
+            ->paginate(ConfigurationTool::DEFAULT_PAGE_SIZE_QUICK_SEARCH);
     }
     /**
      * Func 获取今天访客数据
@@ -96,9 +101,14 @@ class VisitorDao
      */
     public function getTodayVisitorsBySchoolId($schoolId,$sdate,$edata)
     {
-        return Visitor::where('school_id', $schoolId)
-            ->whereBetween('created_at', [$sdate, $edata])
-            ->orderBy('id', 'desc')->paginate(ConfigurationTool::DEFAULT_PAGE_SIZE);
+        return Visitor::from('visitors as a')
+            ->where('a.school_id', $schoolId)
+            ->whereIn('a.status',[2,3])
+            ->whereBetween('a.created_at', [$sdate, $edata])
+            ->join('users as b', 'a.user_id', '=', 'b.id')
+            ->orderBy('a.id', 'desc')
+            ->select(['a.*','b.name as uname'])
+            ->paginate(ConfigurationTool::DEFAULT_PAGE_SIZE_QUICK_SEARCH);
     }
 
     /**
