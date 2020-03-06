@@ -62,7 +62,7 @@ $routeArr = array(
                                 </el-row>
                                 <el-row>
                                     <el-col span="12">
-                                        <el-form-item label="出身日期：">
+                                        <el-form-item label="出生日期：">
                                             <el-col>{{ $dataOne['info1']['birthday']?$dataOne['info1']['birthday']:'---' }}</el-col>
                                         </el-form-item>
                                     </el-col>

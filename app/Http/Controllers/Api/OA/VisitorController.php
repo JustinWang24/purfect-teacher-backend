@@ -7,6 +7,7 @@ use App\Dao\Users\UserDao;
 use App\Dao\OA\VisitorDao;
 use App\Utils\JsonBuilder;
 use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
 use App\Http\Requests\OA\VisitorRequest;
 
 class VisitorController extends Controller
@@ -78,7 +79,7 @@ class VisitorController extends Controller
      * @param VisitorRequest $request
      * @return string
      */
-    public function info(VisitorRequest $request)
+    public function info(Request $request)
     {
         $uuid = (String)$request->input('uuid', '');
         if ($uuid == '') {
@@ -103,7 +104,7 @@ class VisitorController extends Controller
      * @param VisitorRequest $request
      * @return string
      */
-    public function update(VisitorRequest $request)
+    public function update(Request $request)
     {
         $uuid = (String)$request->input('uuid', '');
         $visitors_json1 = (String)$request->input('visitors_json1', ''); // 人员信息

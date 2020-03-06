@@ -195,4 +195,34 @@ class WelcomeUserReportDao extends \App\Dao\Welcome\CommonDao
             return false;
         }
     }
+
+
+    /**
+     * Func 用户缴费项完成后更新报到完成
+     *
+     * @param $user_id 用户id
+     * @param $typeArr 类型数组
+     *
+     * @return false|id
+     */
+    public function updateUserReportCompleteInfo($user_id, $typeArr = [])
+    {
+        if (!$user_id || empty($typeidArr)) return;
+
+        $typeInfo = WelcomeUserReportsProject::where('user_id', '=', $user_id)->get();
+        $typeIdArr = !empty($data) ? $data->toArray() : [];
+        if (empty($typeIdArr)) return;
+        $typeIdArr = array_unique(array_filter(array_column($typeIdArr, 'typeid')));
+
+        $intersection = array_diff($typeArr,$typeIdArr);
+
+        if(empty($intersection))
+        {
+             WelcomeUserReportsProject::where('user_id','=',$user_id)->update(
+                 ['complete_date'=>date('Y-m-d H:i:s'),'status'=>3]
+             );
+        }
+        return;
+    }
+
 }
