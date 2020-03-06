@@ -103,7 +103,7 @@ class SignInGradeController extends Controller
         $list = [];
         // 获取签到详情
         foreach ($return as $key => $item) {
-            $attendances = $attendancesDao->isAttendanceByTimetableAndWeek($item->id, $week);
+            $attendances = $attendancesDao->isAttendanceByTimetableAndWeek($item, $week);
             if(!is_null($attendances)) {
                 $list[] = [
                     'attendance_id' => $attendances->id,
