@@ -9,6 +9,7 @@ namespace App\Http\Controllers\H5\Pipeline;
 
 use App\Dao\Pipeline\FlowDao;
 use App\Http\Controllers\Controller;
+use App\Models\Pipeline\Flow\ActionOption;
 use App\User;
 use Illuminate\Http\Request;
 use App\BusinessLogic\Pipeline\Flow\FlowLogicFactory;
@@ -119,32 +120,31 @@ class FlowsController extends Controller
          * @var User $user
          */
         $user = $request->user('api');
-        $actionId = $request->get('action_id',null);
         $userFlowId = $request->get('user_flow_id', null);
 
         if($user && $userFlowId){
             $dao = new ActionDao();
-            if($userFlowId){
-                $action = $dao->getLastActionByUserFlow($userFlowId);
-                $this->dataForView['showActionEditForm'] = false;
-            }else{
-                $action = $dao->getByActionIdAndUserId($actionId, $user->id);
-                $this->dataForView['showActionEditForm'] =
-                    $action->result === IAction::RESULT_PENDING && $action->user_id === $actionId->id;
-            }
+            //发布者action
+            $startUserAction = $dao->getFirstActionByUserFlow($userFlowId);
+            //当前用户action
+            $nowUserAction = $dao->getActionByUserFlowAndUserId($userFlowId, $user->id);
+            $this->dataForView['showActionEditForm'] = !empty($nowUserAction)
+                && $nowUserAction->result == IAction::RESULT_PENDING ? true : false;
 
             $flowDao = new FlowDao();
-            $flow = $flowDao->getById($action->flow_id);
+            //流程信息
+            $flow = $flowDao->getById($startUserAction->flow_id);
             $flowInfo = $flow->getSimpleLinkedNodes();
-            $startUser = User::where('id', $action->userFlow->user_id)->first();
             $handlers = [];
-            $actionResult = $dao->getHistoryByUserFlow($action->flow_id);
+            //审批结果
+            $actionResult = $dao->getHistoryByUserFlow($startUserAction->flow_id, true);
             $actionReList = [];
             foreach ($actionResult as $actRet) {
                 $actionReList[$actRet->user_id] = $actRet;
             }
+            //审批人与结果关联
             foreach ($flowInfo['handler'] as $handler) {
-                $userList = $flowDao->transTitlesToUser($handler->titles, $handler->organizations, $startUser);
+                $userList = $flowDao->transTitlesToUser($handler->titles, $handler->organizations, $startUserAction->userFlow->user);
                 foreach ($userList as $item) {
                     foreach ($item as $im) {
                         $im->result = isset($actionReList[$im->id]) ? $actionReList[$im->id] : [];
@@ -152,16 +152,25 @@ class FlowsController extends Controller
                 }
                 $handlers[] = $userList;
             }
+            //表单信息
+            $optionReList = [];
+            foreach ($flowInfo['options'] as $option) {
+                $optionReList[] = [
+                    'name' => $option['name'],
+                    'title' => $option['title'],
+                    'value' => ActionOption::where('action_id', $startUserAction->id)->where('option_id', $option['id'])->value('value')
+                ];
+            }
             $this->dataForView['handlers'] = $handlers;
-
-            $this->dataForView['action'] = $action;
-            $this->dataForView['userFlow'] = $action->userFlow;
-            $this->dataForView['actionId'] = $actionId;
-            $this->dataForView['userFlowId'] = $userFlowId;
+            $this->dataForView['options'] = $optionReList;
+            $this->dataForView['copys'] = $flowInfo['copy'];
+            $this->dataForView['startUser'] = $startUserAction->userFlow->user;
+            $this->dataForView['startAction'] = $startUserAction;
+            $this->dataForView['userAction'] = $nowUserAction;
             $this->dataForView['user'] = $user;
             $this->dataForView['api_token'] = $user->api_token;
             $this->dataForView['appName'] = 'pipeline-flow-view-history';
-            $this->dataForView['pageTitle'] = $action->getFlow()->getName();
+            $this->dataForView['pageTitle'] = $flow->name;
 
             return view('h5_apps.pipeline.flow_view_history',$this->dataForView);
         }
