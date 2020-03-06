@@ -425,7 +425,7 @@ class SignInGradeController extends Controller
         $attendancesDao = new AttendancesDao();
         $list = [];
         foreach ($return as $key => $item) {
-            $attendance = $attendancesDao->getAttendanceByTimeTableId($item->id, $week);
+            $attendance = $attendancesDao->isAttendanceByTimetableAndWeek($item, $week);
             if(!is_null($attendance)) {
                 $list[] = [
                     'slot_name' => $item->name,
@@ -541,7 +541,7 @@ class SignInGradeController extends Controller
         $attendancesDao = new AttendancesDao();
         $list = [];
         foreach ($return as $key => $item) {
-            $attendance = $attendancesDao->getAttendanceByTimeTableId($item->id, $week);
+            $attendance = $attendancesDao->isAttendanceByTimetableAndWeek($item, $week);
             if(!is_null($attendance)) {
                 $list[] = [
                     'attendance_id' => $attendance->id,
