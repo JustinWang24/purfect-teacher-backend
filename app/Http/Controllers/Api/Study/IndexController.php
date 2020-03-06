@@ -39,8 +39,7 @@ class IndexController extends Controller
         $month = Carbon::parse($date)->month;
         $term = $configuration->guessTerm($month);
         $timetableItemDao = new TimetableItemDao();
-        $item = $timetableItemDao->getCurrentItemByUser($user, $date);
-
+        $item = $timetableItemDao->getUnEndCoursesByUser($user, $date);
         $teacherApplyElectiveDao = new TeacherApplyElectiveCourseDao();
         $electiveTime = $teacherApplyElectiveDao->getElectiveCourseStartAndEndTime($schoolId, $term);
         $electiveStart = Carbon::parse($electiveTime[0]);
@@ -63,7 +62,7 @@ class IndexController extends Controller
 
 
         $evaluateTeacher = false;
-        if(!is_null($item)) {
+        if(!is_null($item) && count($item) >0) {
 
             $weeks = $configuration->getScheduleWeek(Carbon::parse($date), null, $term);
             $week = $weeks->getScheduleWeekIndex();
@@ -75,6 +74,8 @@ class IndexController extends Controller
             foreach ($types as $key => $val) {
                 $label[] = CourseMaterial::GetTypeText($val);
             }
+
+            $item = $item[0];
 
             $timetable = [
                 'time_slot' => $item->timeSlot->name,

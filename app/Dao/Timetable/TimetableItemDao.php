@@ -902,4 +902,38 @@ class TimetableItemDao
             ->with('teacher')
             ->get();
     }
+
+
+    /**
+     * 获取当天未上的课程
+     * @param User $user
+     * @param $now
+     * @return null
+     */
+    public function getUnEndCoursesByUser(User $user, $now) {
+        if(is_null($now)) {
+            $now = Carbon::now(GradeAndYearUtil::TIMEZONE_CN);
+        }
+        $school = (new SchoolDao())->getSchoolById($user->getSchoolId());
+        $currentTimeSlot = GradeAndYearUtil::GetUnEndTimeSlot($now, $school->id);
+        if(!empty($currentTimeSlot) && $school){
+            $weekdayIndex = $now->weekday();
+            // 当前学年
+            $year = $school->configuration->getSchoolYear();
+
+            $term = $school->configuration->guessTerm($now->month);
+
+                $timeSlotIds = array_column($currentTimeSlot, 'id');
+
+                $where = [
+                    ['school_id','=',$school->id],
+                    ['year','=',$year],
+                    ['term','=',$term],
+                    ['grade_id','=',$user->gradeUser->grade_id],
+                    ['weekday_index','=',$weekdayIndex],
+                ];
+                return TimetableItem::where($where)->whereIn('time_slot_id', $timeSlotIds)->get();
+        }
+        return null;
+    }
 }
