@@ -41,4 +41,22 @@ class CourseTeacherDao
     public function delete($id){
         return CourseTeacher::where('id',$id)->delete();
     }
+
+
+    /**
+     * 获取教师待的课程
+     * @param $teacherId
+     * @param bool $simple
+     * @return mixed
+     */
+    public function getCoursesByTeacher($teacherId, $simple = true) {
+        $field = '*';
+        if($simple) {
+            $field = ['course_id', 'course_name'];
+        }
+
+        return CourseTeacher::where('teacher_id', $teacherId)
+            ->select($field)
+            ->get();
+    }
 }
