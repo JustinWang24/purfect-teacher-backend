@@ -395,7 +395,7 @@ class IndexController extends Controller
 
         if (!empty($getWelcomeUserReportOneInfo) &&  $getWelcomeUserReportOneInfo->complete_date != '')
         {
-            $infos['complete_date'] =  $getWelcomeUserReportOneInfo->complete_date;
+            $infos['complete_date'] =  date('Y-m-d H:i',strtotime($getWelcomeUserReportOneInfo->complete_date));
         }
 
         return JsonBuilder::Success($infos, '报到确认');
@@ -431,7 +431,7 @@ class IndexController extends Controller
                     $result3 = $WelcomeUserReportDao->getWelcomeUserReportsProjectsOneInfo($user_id, $val['typeid']);
                     $dataList1[] = array(
                         'title' => $val['type_name'],
-                        'notice' => isset($result3['projectid']) ? '已缴费' : '',
+                        'notice' => isset($result3['projectid']) ? '已缴费' : '未交费',
                         'value' => isset($result3['pay_price']) ? $result3['pay_price'] : '',
                     );
                 }
@@ -444,7 +444,7 @@ class IndexController extends Controller
                     $dataList2[] = array(
                         'title' => $val['type_name'],
                         'notice' => '',
-                        'value' => isset($result3['projectid']) ? '已提交' : '',
+                        'value' => isset($result3['projectid']) ? '已提交' : '未提交',
                     );
                 }
             }
