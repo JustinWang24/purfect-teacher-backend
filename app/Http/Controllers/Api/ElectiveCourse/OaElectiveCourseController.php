@@ -57,6 +57,8 @@ class OaElectiveCourseController extends Controller
         $schoolId = $user->getSchoolId();
         $dao = new TeacherApplyElectiveCourseDao();
 
+        $nowYearAndTerm = GradeAndYearUtil::GetYearAndTerm(Carbon::now());
+
         $applyData = $request->getInputData();
         $applyData['course']['school_id'] = $schoolId;
         $applyData['course']['teacher_id'] = $user->id;
@@ -65,9 +67,9 @@ class OaElectiveCourseController extends Controller
         $applyData['course']['code'] = 'auto';
         $applyData['course']['scores'] = 1;
         $applyData['course']['year'] = 1;
-        $applyData['course']['term'] = 1;
+        $applyData['course']['term'] = $nowYearAndTerm['term'];
         $applyData['course']['max_num'] = $applyData['course']['open_num'];
-        $applyData['course']['start_year'] = date("Y");
+        $applyData['course']['start_year'] = $nowYearAndTerm['year'];
         $applyData['course']['status'] = TeacherApplyElectiveCourse::STATUS_WAITING_FOR_VERIFIED;
 
         $result = $dao->createTeacherApplyElectiveCourse($applyData);
