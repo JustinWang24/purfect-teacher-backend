@@ -100,7 +100,7 @@ class Action extends Model implements IAction
 
     public function isSuccess()
     {
-        return $this->result === IAction::RESULT_PASS || $this->result === IAction::RESULT_NOTICED;
+        return $this->result == IAction::RESULT_PASS || $this->result == IAction::RESULT_NOTICED;
     }
 
     public function isUrgent(): bool

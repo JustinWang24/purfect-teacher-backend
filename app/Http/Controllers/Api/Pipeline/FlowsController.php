@@ -57,7 +57,6 @@ class FlowsController extends Controller
                 foreach ($flowInfo['handler'] as $handler) {
                     $handlers[] = $flowDao->transTitlesToUser($handler->titles, $handler->organizations, $user);
                 }
-                exit;
                 $return = [
                     'user' => $user,
                     'flow' => $flow,
@@ -198,7 +197,6 @@ class FlowsController extends Controller
         $action = $dao->getByActionIdAndUserId($actionFormData['id'], $request->user()->id);
         if($action && $action->result == IAction::RESULT_PENDING){
             $logic = FlowLogicFactory::GetInstance($request->user());
-
             switch ($actionFormData['result']){
                 /*case IAction::RESULT_REJECT:
                     $bag = $logic->reject($action, $actionFormData); // 进入驳回流程的操作
@@ -211,22 +209,26 @@ class FlowsController extends Controller
                     break;
             }
 
+            $event = null;
             if ($bag->isSuccess()){
                 switch ($actionFormData['result']){
                     /*case IAction::RESULT_REJECT:
                         // 驳回流程的事件
                         $event = new FlowRejected($request->user(),$action, $bag->getData()['prevNode'], $action->getFlow());
                         break;*/
+                    case IAction::RESULT_PASS:
+                        if ($dao->getCountWaitProcessUsers($action->getNode()->id) < 1) {
+                            $event = new FlowProcessed($request->user(),$action, $action->getNode(), $action->getFlow());
+                        }
+                        break;
                     case IAction::RESULT_TERMINATE:
-                        $event = new FlowRejected($request->user(),$action, $bag->getData()['prevNode'], $action->getFlow());
+                        $event = new FlowRejected($request->user(),$action, $action->getNode()->prev, $action->getFlow());
                         break;
                     default:
-                        // 同意流程的事件, 默认
-                        $event = new FlowProcessed($request->user(),$action, $bag->getData()['currentNode'], $action->getFlow());
-                        break;
+                        $event = null;
                 }
 
-                event($event); // 发布事件
+                $event && event($event); // 发布事件
                 return JsonBuilder::Success();
             }
             else{
