@@ -257,10 +257,10 @@ class IndexController extends Controller
     public function courseList(MyStandardRequest $request) {
         $userId = $request->user()->id;
         $dao = new CourseTeacherDao();
-        $lectures = $dao->getCoursesByTeacher($userId);
+        $return = $dao->getCoursesByTeacher($userId);
         $courses = [];
-        foreach ($lectures as $key => $item) {
-            $courses[$key] = [
+        foreach ($return as $key => $item) {
+            $courses[] = [
                 'course_id' => $item->course_id,
                 'course_name' => $item->course->name,
             ];
