@@ -66,6 +66,10 @@ class EventServiceProvider extends ServiceProvider
             'App\Listeners\Send\Sms',  // 发送短信
         ],
 
+        'App\Events\User\SendCodeVisiterMobileEvent' => [  // 发送访客短信
+            'App\Listeners\Send\SendCodeVisiterMobile',  // 发送访客短信
+        ],
+		
         //教师迟到时给教务处领导发短信通知
         'App\Events\User\TeacherBeLateEvent' =>[
             'App\Listeners\User\Teacher\NotifyTeacherBeLate'
