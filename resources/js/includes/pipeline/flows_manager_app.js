@@ -31,6 +31,8 @@ if (document.getElementById('pipeline-flows-manager-app')) {
                     titles: [], // 角色
                     attachments: []
                 },
+                juese: [], // 右侧框框角色
+                zuzhi: [], // 右侧框框组织
                 returnId: '', // flow_id
                 titlesList: [], //侧边栏角色获取
                 teacher: '', // 请输入教职工名字
@@ -212,8 +214,8 @@ if (document.getElementById('pipeline-flows-manager-app')) {
                 this.loadingNodes = true;
                 loadNodes(flowId).then(res => {
                     if (Util.isAjaxResOk(res)) {
-                        this.node.titles = res.data.data.nodes.head.handler.titles
-                        this.node.organizations = res.data.data.nodes.head.handler.organizations
+                        this.juese = res.data.data.nodes.head.handler.titles
+                        this.zuzhi = res.data.data.nodes.head.handler.organizations
                     }
                     else {
                         this.$notify.error(
@@ -284,7 +286,6 @@ if (document.getElementById('pipeline-flows-manager-app')) {
                 var url = this.$refs.approver.$attrs.href + '?flow_id=' + this.returnId;
                 location.href = url;
             },
-
             // 右侧编辑时侧边栏的保存按钮
 
 
