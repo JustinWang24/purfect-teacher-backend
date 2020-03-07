@@ -66,48 +66,45 @@ $flowStillInProgress = $startAction->userFlow->done === \App\Utils\Pipeline\IUse
                 <p>班级</p>
                 <p>{{ $startUser->gradeUser->grade->name }}</p>
             </h5>
-            <el-divider></el-divider>
         </div>
         @endif
         <div class="information">
             <h3>表单信息</h3>
             <el-divider></el-divider>
             @foreach($options as $option)
-                <h5>
-                    <p>{{ $option['title'] }}</p>
-                    <p>{{ $option['value'] }}</p>
-                </h5>
-                <el-divider></el-divider>
+            <h5>
+                <p>{{ $option['name'] }}</p>
+                <p>{{ $option['value'] }}</p>
+            </h5>
+            <el-divider></el-divider>
             @endforeach
         </div>
         <div class="information">
             <h3>申请理由</h3>
             <p class="reason">{{ $startAction->content }}</p>
         </div>
-        <div class="information">
-            {{--<h3>证明材料</h3> 写表单的那个人呢 还没对接过
+        {{--<div class="information">
+            <h3>证明材料</h3> 写表单的那个人呢 还没对接过
             <div class="imageBox">
                 <img src="{{asset('assets/img/bg-02.jpg')}}" alt="" class="image">
-                <img src="{{asset('assets/img/bg-02.jpg')}}" alt="" class="image">
-                <img src="{{asset('assets/img/bg-02.jpg')}}" alt="" class="image">
-                <img src="{{asset('assets/img/bg-02.jpg')}}" alt="" class="image">
-                <img src="{{asset('assets/img/bg-02.jpg')}}" alt="" class="image">
-                <img src="{{asset('assets/img/bg-02.jpg')}}" alt="" class="image">
-            </div>--}}
-        </div>
+            <img src="{{asset('assets/img/bg-02.jpg')}}" alt="" class="image">
+            <img src="{{asset('assets/img/bg-02.jpg')}}" alt="" class="image">
+            <img src="{{asset('assets/img/bg-02.jpg')}}" alt="" class="image">
+            <img src="{{asset('assets/img/bg-02.jpg')}}" alt="" class="image">
+            <img src="{{asset('assets/img/bg-02.jpg')}}" alt="" class="image">
+        </div>--}}
         <div class="information">
             <h3>审批人</h3>
             <div class="block">
                 <el-timeline>
                     @foreach($handlers as $key => $handler)
-                        <el-timeline-item
-                            key="{{ $key }}">
-                            @foreach($handler as $k => $val)
-                                @foreach ($val as $v)
-                                    {{ $v->name }}({{ $k }})
-                                @endforeach
-                            @endforeach
-                        </el-timeline-item>
+                    <el-timeline-item key="{{ $key }}">
+                        @foreach($handler as $k => $val)
+                        @foreach ($val as $v)
+                        {{ $v->name }}({{ $k }})
+                        @endforeach
+                        @endforeach
+                    </el-timeline-item>
                     @endforeach
                 </el-timeline>
             </div>
@@ -124,10 +121,11 @@ $flowStillInProgress = $startAction->userFlow->done === \App\Utils\Pipeline\IUse
             </div>
         </div>
     </div>
+</div>
 
 
 
-    <a style="display: block; color: white;text-decoration: none;text-align: center;" href="{{ route('h5.flow.user.in-progress',['api_token'=>$api_token]) }}" class="showMoreButton">返回</a>
+<a style="display: block; color: white;text-decoration: none;text-align: center;" href="{{ route('h5.flow.user.in-progress',['api_token'=>$api_token]) }}" class="showMoreButton">返回</a>
 </div>
 </div>
 @endsection
