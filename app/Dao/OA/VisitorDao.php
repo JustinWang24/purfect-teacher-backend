@@ -163,12 +163,47 @@ class VisitorDao
             'created_at', 'scheduled_at', 'arrived_at','status'
         ];
 
+        // 今日开始和结束时间
+        $sdate = date('Y-m-d H:i:s', mktime(0, 0, 0, date('m'), date('d'), date('Y')));
+        $edate = date('Y-m-d H:i:s', mktime(0, 0, 0, date('m'), date('d') + 1, date('Y')) - 1);
 
-        $data = Visitor::where($condition)->select($fieldArr)
-            ->orderBy('id', 'desc')
-            ->offset((new CommonDao)->offset($page))
-            ->limit(CommonDao::$limit)
-            ->get();
+        // 今日来访
+        if ($typeid == 1) {
+            // 开始和结束时间
+            $data = Visitor::where('user_id', $user_id)
+                ->whereIn('status', [2, 3])
+                ->whereBetween('scheduled_at', [$sdate, $edate])
+                ->orderBy('scheduled_at', 'asc')
+                ->offset((new CommonDao)->offset($page))
+                ->limit(CommonDao::$limit)
+                ->select($fieldArr)
+                ->get();
+        }
+
+        // 已邀请
+        if($typeid == 2)
+        {
+            $data = Visitor::where('user_id', $user_id)
+                ->whereIn('status', [1, 2])
+                ->orderBy('id', 'desc')
+                ->offset((new CommonDao)->offset($page))
+                ->limit(CommonDao::$limit)
+                ->select($fieldArr)
+                ->get();
+        }
+
+        // 已过期
+        if($typeid == 3)
+        {
+            $data = Visitor::where('user_id', $user_id)
+                ->whereIn('status', [2,3])
+                ->where('scheduled_at','<',$sdate)
+                ->orderBy('scheduled_at', 'desc')
+                ->offset((new CommonDao)->offset($page))
+                ->limit(CommonDao::$limit)
+                ->select($fieldArr)
+                ->get();
+        }
 
         return !empty($data) ? $data->toArray() : [];
     }
@@ -187,12 +222,12 @@ class VisitorDao
         // 检索条件
         $condition[] = ['id', '=', $id];
         $condition[] = ['user_id', '=', $user_id];
-        $condition[] = ['status', '=', 1];
+        //$condition[] = ['status', '=', 1];
 
         // 获取的字段
         $fieldArr = [
             'id', 'user_id', 'cate_id', 'name', 'mobile', 'vehicle_license',
-            'reason', 'visitors_json1', 'visitors_json2',
+            'reason', 'visitors_json1', 'visitors_json2','status',
             'scheduled_at', 'arrived_at', 'created_at'
         ];
 
@@ -265,7 +300,14 @@ class VisitorDao
      */
     public function getVisitorStatusInfo($visitorInfo = array())
     {
-        // TODO.....
-        return array('status' => 0, 'status_str' => '未到访');
+        if ($visitorInfo['status'] == 1) {
+            return array('status' => 1, 'status_str' => '未到访');
+        }
+        if ($visitorInfo['status'] == 2) {
+            return array('status' => 2, 'status_str' => '未到访');
+        }
+        if ($visitorInfo['status'] == 3) {
+            return array('status' => 3, 'status_str' => '已到访');
+        }
     }
 }
