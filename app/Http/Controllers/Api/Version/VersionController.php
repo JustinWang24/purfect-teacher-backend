@@ -74,7 +74,7 @@ class VersionController extends Controller
                             $condition1[] = ['version_id', '=', (Int)$version_id];
                             $condition1[] = ['date', '=', date('Y-m-d')];
                             $condition1[] = ['user_apptype', '=', $user_apptype];
-                            if ( DB::table('versions')->where($condition1)->count() )
+                            if ( DB::table('version_users')->where($condition1)->count() )
                             {
                                 $infos->version_isshow = 0; // 每天只需要弹一次
                             } else {
@@ -86,7 +86,7 @@ class VersionController extends Controller
                                 $addData[ 'version_id' ]  = $version_id;
                                 $addData[ 'date' ]        = date('Y-m-d');
                                 $addData[ 'user_apptype' ]= $user_apptype;
-                                DB::table('versions')->insert($addData);
+                                DB::table('version_users')->insert($addData);
                             }
                         }
                     } else {

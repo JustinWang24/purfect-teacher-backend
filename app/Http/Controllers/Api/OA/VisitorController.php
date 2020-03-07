@@ -35,7 +35,7 @@ class VisitorController extends Controller
         $infos = $visitorObj->getVisitorListInfo($user->id, $typeid, $page);
         if (!empty($infos)) {
             foreach ($infos as $key => &$val) {
-                $val['memberCount'] = count(json_decode($val['visitors_json1'], true));
+                $val['memberCount'] = !empty($val['visitors_json1'])?count(json_decode($val['visitors_json1'], true)):0;
                 $val['statusInfo'] = $visitorObj->getVisitorStatusInfo($val);
                 unset($val['status'], $val['visitors_json1'], $val['visitors_json2']);
             }
@@ -66,9 +66,9 @@ class VisitorController extends Controller
         $visitorObj = new VisitorDao();
         $infos = $visitorObj->getVisitorOneInfo($id, $user->id);
         if (!empty($infos)) {
-            $infos['memberList'] = json_decode($infos['visitors_json1'], true);
+            $infos['memberList'] = !empty($infos['visitors_json1'])?json_decode($infos['visitors_json1'], true):[];
             $infos['memberCount'] = count($infos['memberList']);
-            $infos['vehicleList'] = json_decode($infos['visitors_json2'], true);
+            $infos['vehicleList'] = !empty($infos['visitors_json2'])?json_decode($infos['visitors_json2'], true):[];
             $infos['statusInfo'] = $visitorObj->getVisitorStatusInfo($infos);
             unset($infos['status'],$infos['visitors_json1'], $infos['visitors_json2']);
         }
