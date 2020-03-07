@@ -30,6 +30,7 @@ class TeacherFlowsLogic extends GeneralFlowsLogic
     public function getMyFlows($forApp = false)
     {
         $dao = new FlowDao();
+        $types = [];
 
         // 以下是原生开发的
         /*$types[] = [

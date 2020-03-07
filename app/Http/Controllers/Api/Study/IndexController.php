@@ -34,13 +34,12 @@ class IndexController extends Controller
         $configuration = $school->configuration;
 
         $date = Carbon::now();
-
         $year = $configuration->getSchoolYear($date);
         $month = Carbon::parse($date)->month;
         $term = $configuration->guessTerm($month);
         $timetableItemDao = new TimetableItemDao();
-        $item = $timetableItemDao->getCurrentItemByUser($user, $date);
-
+//        $item = $timetableItemDao->getCurrentItemByUser($user, $date);  // 获取当前时间的课程
+        $item = $timetableItemDao->getUnEndCoursesByUser($user, $date); // 获取今天未结束的课程
         $teacherApplyElectiveDao = new TeacherApplyElectiveCourseDao();
         $electiveTime = $teacherApplyElectiveDao->getElectiveCourseStartAndEndTime($schoolId, $term);
         $electiveStart = Carbon::parse($electiveTime[0]);
@@ -61,9 +60,11 @@ class IndexController extends Controller
             'truant_num' => $attendancesDetailsDao->getTruantCountByUser($user->id, $year, $term),
         ];
 
-
         $evaluateTeacher = false;
-        if(!is_null($item)) {
+//        if(!is_null($item)) {
+        if(!is_null($item) && count($item) >0) {
+
+            $item = $item[0];
 
             $weeks = $configuration->getScheduleWeek(Carbon::parse($date), null, $term);
             $week = $weeks->getScheduleWeekIndex();
@@ -94,11 +95,13 @@ class IndexController extends Controller
 
             $attendance = $attendancesDao->getAttendanceByTimeTableId($item->id,$week);
             if(!is_null($attendance)) {
-                $detail = $attendance->details->where('student_id', $user->id);
-                $signIn['status'] = $detail->mold ?? 0;
+                $detail = $attendance->details->where('student_id', $user->id)->first();
+                if(!is_null($detail)) {
+                    $signIn['status'] = $detail->mold;
+                }
+                $evaluateTeacher = true;
             }
 
-            $evaluateTeacher = true;
         }
 
         $gradeId = $user->gradeUser->grade_id;

@@ -5,6 +5,7 @@
 namespace App\Models\Misc;
 
 use App\Models\Notices\Notice;
+use App\Utils\Pipeline\IFlow;
 use Illuminate\Database\Eloquent\Model;
 
 class SystemNotification extends Model
@@ -36,6 +37,7 @@ class SystemNotification extends Model
     const STUDENT_CATEGORY_VIP = 115;//学生端会员
     const STUDENT_CATEGORY_COUPON = 116;//学生端优惠券
     const STUDENT_CATEGORY_MESSAGE = 117;//学生端消息
+    const STUDENT_CATEGORY_APPLY = 118;//学生审批
 
     const TEACHER_CATEGORY_ATTENDANCE = 201;//教师端值周
     const TEACHER_CATEGORY_OAATTENDANCE = 202;//教师端考勤
@@ -79,6 +81,45 @@ class SystemNotification extends Model
             Notice::TYPE_NOTICE => self::COMMON_CATEGORY_NOTICE_NOTICE,
             Notice::TYPE_INSPECTION => self::COMMON_CATEGORY_NOTICE_INSPECTION
         ];
+    }
+    public static function getCategoryByPipelineTypeAndBusiness($type, $business = null, $isStudent = false){
+        $category = null;
+        if ($isStudent) {
+            if ($business) {
+
+            }
+            if (!$category) {
+                switch ($type) {
+                    case IFlow::TYPE_1_01:
+                    case IFlow::TYPE_1_02:
+                    case IFlow::TYPE_1_03:
+                        $category = self::STUDENT_CATEGORY_APPLY;
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }else {
+            if ($business) {
+
+            }
+            if (!$category) {
+                switch ($type) {
+                    case IFlow::TYPE_2_01:
+                    case IFlow::TYPE_2_02:
+                        $category = self::TEACHER_CATEGORY_APPLY_STUDENT;
+                        break;
+                    case IFlow::TYPE_1_01:
+                    case IFlow::TYPE_1_02:
+                    case IFlow::TYPE_1_03:
+                        $category = self::TEACHER_CATEGORY_APPLY;
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
+        return $category;
     }
     public function systemNotificationsOrganizations()
     {
