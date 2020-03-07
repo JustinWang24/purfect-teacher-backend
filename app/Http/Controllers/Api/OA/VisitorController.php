@@ -180,7 +180,7 @@ class VisitorController extends Controller
     {
         $uuid = (String)$request->input('uuid', '');
         $device = (String)$request->input('device', '');
-       
+
 	    $infos = [];
 		if($uuid && $device)
 		{
@@ -190,7 +190,7 @@ class VisitorController extends Controller
 			{
 				$visitors_json1_arr = json_decode($data['visitors_json1'],true);
 				$visitors_json2_arr = json_decode($data['visitors_json2'],true);
-				
+
 				$userObj = new UserDao();
 				$userInfo = $userObj->getUserById($data['user_id']);
 				$infos['scheduled_at'] = $data['scheduled_at']; // 来访日期
@@ -201,7 +201,7 @@ class VisitorController extends Controller
 				$infos['qrcode_url'] = (String)$data['qrcode_url']; // 二维码
 			}
 		}
-       return JsonBuilder::Success($infos,'获取访客信息');	
+       return JsonBuilder::Success($infos,'获取访客信息');
     }
 
     /**
@@ -233,13 +233,13 @@ class VisitorController extends Controller
 
         // 1:微信,2:QQ
         if (in_array($cate_id, [1, 2])) {
-            // 添加数据
             $addData['uuid'] = $infos['uuid'];
-            $addData['user_id'] = $user->gradeUserOneInfo->id;
-            $addData['invited_by'] = $user->gradeUserOneInfo->id;
+            $addData['user_id'] = $user->gradeUserOneInfo->user_id;
+            $addData['invited_by'] = $user->gradeUserOneInfo->user_id;
             $addData['school_id'] = $user->gradeUserOneInfo->school_id;
             $addData['cate_id'] = $cate_id;
             $addData['share_url'] = $infos['share_url'];
+            $addData['qrcode_url'] = $infos['qrcode_url'];
             $visitorObj->addVisitorInfo($addData);
         }
 
@@ -249,14 +249,16 @@ class VisitorController extends Controller
                 $infos = $visitorObj->getShareInfo($user->id);
                 $addData['mobile'] = $val;
                 $addData['uuid'] = $infos['uuid'];
-                $addData['user_id'] = $user->gradeUserOneInfo->id;
-                $addData['invited_by'] = $user->gradeUserOneInfo->id;
+                $addData['user_id'] = $user->gradeUserOneInfo->user_id;
+                $addData['invited_by'] = $user->gradeUserOneInfo->user_id;
                 $addData['school_id'] = $user->gradeUserOneInfo->school_id;
                 $addData['cate_id'] = $cate_id;
                 $addData['share_url'] = $infos['share_url'];
+                $addData['qrcode_url'] = $infos['qrcode_url'];
                 $visitorObj->addVisitorInfo($addData);
             }
         }
-        return JsonBuilder::Success($infos,'分享详情');
+        unset($infos['qrcode_url']);
+        return JsonBuilder::Success($infos, '分享详情');
     }
 }

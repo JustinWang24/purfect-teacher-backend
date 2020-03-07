@@ -14,6 +14,9 @@ use App\Utils\Misc\ConfigurationTool;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Ramsey\Uuid\Uuid;
+use Endroid\QrCode\QrCode;
+use Endroid\QrCode\Exception\InvalidPathException;
+
 class VisitorDao
 {
     public function __construct()
@@ -226,15 +229,31 @@ class VisitorDao
     }
 
     /**
-     * Func Api 获取分享信息
+     * Func Api 获取分享地址和二维码地址
      *
      * @return array
      */
     public function getShareInfo($user_id = 0)
     {
         $data['uuid'] = Uuid::uuid4()->toString();
-        $data['share_url'] = 'http://www.baidu.com/'.$data['uuid'];
+        $data['share_url'] = env('APP_URL').'/special/visitor/index.html?uuid='.$data['uuid'];
+        $data['qrcode_url'] = $this->getQrcodeInfo($data['uuid']); // 二维码
         return $data;
+    }
+
+    /**
+     * Func 生成二维码
+     */
+    public function getQrcodeInfo($str = '')
+    {
+        if (!$str) return '';
+        $qrCode = new QrCode($str);
+        $qrCode->setSize(200);
+        $qrCode->setLogoPath(public_path('assets/img/logo.png'));
+        $qrCode->setLogoSize(30, 30);
+        $qrcode_url = '/assets/img/fangke/' . $str . '.png';
+        file_put_contents('.' . $qrcode_url, $qrCode->writeString());
+        return env('APP_URL') . $qrcode_url;
     }
 
     /**
