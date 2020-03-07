@@ -12,7 +12,7 @@ class Visitor extends Model
 
     protected $fillable = [
         'id','uuid','user_id','school_id','invited_by','cate_id','name','mobile','vehicle_license',
-        'reason','visitors_json1','visitors_json2','share_url','status','scheduled_at','arrived_at'
+        'reason','visitors_json1','visitors_json2','share_url','qrcode_url','status','scheduled_at','arrived_at'
     ];
 
     public $casts = [
