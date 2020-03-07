@@ -4,6 +4,7 @@
 namespace App\Http\Controllers\Api\OA;
 
 use App\Dao\Users\UserDao;
+use App\Dao\Schools\SchoolDao;
 use App\Dao\OA\VisitorDao;
 use App\Utils\JsonBuilder;
 use App\Http\Controllers\Controller;
@@ -258,7 +259,18 @@ class VisitorController extends Controller
                 $visitorObj->addVisitorInfo($addData);
             }
         }
+
+        // 获取学校信息
+        $infos['school_name'] = '';
+        $infos['school_logo'] = '';
+        if (isset($user->gradeUserOneInfo->school_id)) {
+            $schoolObj = new SchoolDao();
+            $schoolInfo = $schoolObj->getSchoolById($user->gradeUserOneInfo->school_id);
+            $infos['school_name'] = (String)$schoolInfo->name;
+            $infos['school_logo'] = (String)$schoolInfo->logo;
+        }
         unset($infos['qrcode_url']);
+
         return JsonBuilder::Success($infos, '分享详情');
     }
 }

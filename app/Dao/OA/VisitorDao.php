@@ -236,7 +236,7 @@ class VisitorDao
     public function getShareInfo($user_id = 0)
     {
         $data['uuid'] = Uuid::uuid4()->toString();
-        $data['share_url'] = env('APP_URL').'/special/visitor/index.html?uuid='.$data['uuid'];
+        $data['share_url'] = asset('/special/visitor/index.html?uuid='.$data['uuid']);
         $data['qrcode_url'] = $this->getQrcodeInfo($data['uuid']); // 二维码
         return $data;
     }
@@ -253,7 +253,7 @@ class VisitorDao
         $qrCode->setLogoSize(30, 30);
         $qrcode_url = '/assets/img/fangke/' . $str . '.png';
         file_put_contents('.' . $qrcode_url, $qrCode->writeString());
-        return env('APP_URL') . $qrcode_url;
+        return asset($qrcode_url);;
     }
 
     /**
