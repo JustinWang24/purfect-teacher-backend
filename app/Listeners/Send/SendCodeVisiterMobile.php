@@ -1,0 +1,41 @@
+<?php
+
+namespace App\Listeners\Send;
+
+use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Contracts\Queue\ShouldQueue;
+use App\Events\CanReachByMobilePhone;
+use App\Utils\Misc\SmsFactory;
+use Illuminate\Support\Facades\Log;
+use App\Jobs\Notifier\SmsVisitor as SmsVisitor;
+
+class SendCodeVisiterMobile
+{
+
+    /**
+     * Create the event listener.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        //
+    }
+
+    /**
+     * Handle the event.
+     *
+     * @param CanReachByMobilePhone $event
+     * @return void
+     */
+    public function handle(CanReachByMobilePhone $event)
+    {
+        SmsVisitor::dispatchNow(
+            $event->getMobileNumber(),
+            $event->getSmsContent(),
+            $event->getSmsTemplateId()
+        );
+
+        Log::channel('smslog')->alert('发送短信进入队列了');
+    }
+}

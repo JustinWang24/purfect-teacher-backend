@@ -6,6 +6,7 @@ namespace App\Http\Controllers\Api\OA;
 use App\Dao\Users\UserDao;
 use App\Dao\Schools\SchoolDao;
 use App\Dao\OA\VisitorDao;
+use App\Events\User\SendCodeVisiterMobileEvent;
 use App\Utils\JsonBuilder;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -229,6 +230,7 @@ class VisitorController extends Controller
 
         $user = $request->user();
 
+        $schoolObj = new SchoolDao();
         $visitorObj = new VisitorDao();
         $infos = $visitorObj->getShareInfo($user->id);
 
@@ -257,6 +259,10 @@ class VisitorController extends Controller
                 $addData['share_url'] = $infos['share_url'];
                 $addData['qrcode_url'] = $infos['qrcode_url'];
                 $visitorObj->addVisitorInfo($addData);
+
+                // 发送验证码
+                $schoolInfo = $schoolObj->getSchoolById($user->gradeUserOneInfo->school_id);
+                event(new SendCodeVisiterMobileEvent($user, $val, $schoolInfo->name, $infos['share_url']));
             }
         }
 
@@ -264,7 +270,6 @@ class VisitorController extends Controller
         $infos['school_name'] = '';
         $infos['school_logo'] = '';
         if (isset($user->gradeUserOneInfo->school_id)) {
-            $schoolObj = new SchoolDao();
             $schoolInfo = $schoolObj->getSchoolById($user->gradeUserOneInfo->school_id);
             $infos['school_name'] = (String)$schoolInfo->name;
             $infos['school_logo'] = (String)$schoolInfo->logo;
