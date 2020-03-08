@@ -156,11 +156,6 @@
                 </div>
             </div>
         </div>
-
-        @include(
-                'reusable_elements.section.file_manager_component',
-                ['pickFileHandler'=>'pickFileHandler']
-            )
     </div>
     <div id="app-init-data-holder"
          data-school="{{ session('school.id') }}"
