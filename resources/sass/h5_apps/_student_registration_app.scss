@@ -38,12 +38,17 @@
         }
       }
       .sendBox {
+        display: flex;
         figure {
+          width: 50px;
+          margin: 0;
+          padding: 0 10px;
           img {
             border-radius: 50%;
           }
           p {
             font-size: 14px;
+            text-align: center;
             line-height: 0;
           }
         }
