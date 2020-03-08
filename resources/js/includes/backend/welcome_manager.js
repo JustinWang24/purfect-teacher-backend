@@ -9,8 +9,8 @@ import {
     saveReportBillInfo, // 报到单
     getConfigStepListInfo, // 获取流程数据
     deleteConfigStep, // 删除流程
-    upConfigStep, // 流程向上
-    downConfigStep, // 流程向下
+    upConfigStep, // 流程向 上
+    downConfigStep, // 流程向下 
 } from "../../common/welcomes";
 import {Constants} from "../../common/constants";
 import {Util} from "../../common/utils";
