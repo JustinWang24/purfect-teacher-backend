@@ -87,45 +87,65 @@ $flowStillInProgress = $startAction->userFlow->done === \App\Utils\Pipeline\IUse
             <h3>证明材料</h3> 写表单的那个人呢 还没对接过
             <div class="imageBox">
                 <img src="{{asset('assets/img/bg-02.jpg')}}" alt="" class="image">
-            <img src="{{asset('assets/img/bg-02.jpg')}}" alt="" class="image">
-            <img src="{{asset('assets/img/bg-02.jpg')}}" alt="" class="image">
-            <img src="{{asset('assets/img/bg-02.jpg')}}" alt="" class="image">
-            <img src="{{asset('assets/img/bg-02.jpg')}}" alt="" class="image">
-            <img src="{{asset('assets/img/bg-02.jpg')}}" alt="" class="image">
-        </div>--}}
-        <div class="information">
-            <h3>审批人</h3>
-            <div class="block">
-                <el-timeline>
-                    @foreach($handlers as $key => $handler)
-                    <el-timeline-item key="{{ $key }}">
-                        @foreach($handler as $k => $val)
-                        @foreach ($val as $v)
-                        {{ $v->name }}({{ $k }})
-                        @endforeach
-                        @endforeach
-                    </el-timeline-item>
+        <img src="{{asset('assets/img/bg-02.jpg')}}" alt="" class="image">
+        <img src="{{asset('assets/img/bg-02.jpg')}}" alt="" class="image">
+        <img src="{{asset('assets/img/bg-02.jpg')}}" alt="" class="image">
+        <img src="{{asset('assets/img/bg-02.jpg')}}" alt="" class="image">
+        <img src="{{asset('assets/img/bg-02.jpg')}}" alt="" class="image">
+    </div>--}}
+    <div class="information">
+        <h3>审批人</h3>
+        <div class="block">
+        <el-timeline>
+            <el-timeline-item
+            v-for="(activity, index) in activities"
+            :key="index"
+            :icon="activity.icon"
+            :type="activity.type"
+            :color="activity.color"
+            :size="activity.size"
+            :timestamp="activity.timestamp">
+            @{{activity.content}}
+                <el-timeline-item
+                    v-if="activity.arr"
+                    v-for="(item, index) in activity.arr"
+                    :key="index"
+                    :hide-timestamp=true>
+                    @{{item.content}}
+                </el-timeline-item>
+            </el-timeline-item>
+        </el-timeline>
+
+            <!-- <el-timeline>
+                @foreach($handlers as $key => $handler)
+                <el-timeline-item key="{{ $key }}">
+                    @foreach($handler as $k => $val)
+                    @foreach ($val as $v)
+                    {{ $v->name }}({{ $k }})
                     @endforeach
-                </el-timeline>
-            </div>
-        </div>
-        <div class="information">
-            <h3>抄送人</h3>
-            <div class="sendBox">
-                <figure>
-                    @foreach($copys as $copy)
-                    <img src="{{asset($copy->user->profile->avatar)}}" width="50" height="50" />
-                    <p>{{ $copy->name }}</p>
-                    @endforeach;
-                </figure>
-            </div>
+                    @endforeach
+                </el-timeline-item>
+                @endforeach
+            </el-timeline> -->
         </div>
     </div>
+    <div class="information">
+        <h3>抄送人</h3>
+        <div class="sendBox">
+            <figure>
+                @foreach($copys as $copy)
+                <img src="{{asset($copy->user->profile->avatar)}}" width="50" height="50" />
+                <p>{{ $copy->name }}</p>
+                @endforeach;
+            </figure>
+        </div>
+    </div>
+</div>
 </div>
 
 
 
-<a style="display: block; color: white;text-decoration: none;text-align: center;" href="{{ route('h5.flow.user.in-progress',['api_token'=>$api_token]) }}" class="showMoreButton">返回</a>
+<a style="display: block; color: white;text-decoration: none;text-align: center;" class="showMoreButton">审批</a>
 </div>
 </div>
 @endsection
