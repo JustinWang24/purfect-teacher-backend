@@ -189,8 +189,8 @@ if(document.getElementById('school-welcome-list-app')){
                             }
                             // 初始化个人配置
                             if (!Util.isEmpty(res.data.data.userConfigInfo)) {
-                                _that_.userInfoForm.photo = res.data.data.userConfigInfo.steps_json_arr.photo;
-                                _that_.userInfoForm.card_front = res.data.data.userConfigInfo.steps_json_arr.card_front;
+                                _that_.userInfoForm.photo = res.data.data.userConfigInfo.steps_json_arr.photo.status;
+                                _that_.userInfoForm.card_front = res.data.data.userConfigInfo.steps_json_arr.card_front.status;
                                 _that_.userInfoForm.config_content1 = res.data.data.baseConfigInfo.config_content1;
                             }
                         }
