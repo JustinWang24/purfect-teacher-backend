@@ -9,6 +9,7 @@
 namespace App\BusinessLogic\Pipeline\Flow\Impl;
 
 use App\BusinessLogic\Pipeline\Flow\Contracts\IFlowLogic;
+use App\BusinessLogic\Pipeline\Flow\FlowLogicFactory;
 use App\Dao\Misc\SystemNotificationDao;
 use App\Dao\Pipeline\UserFlowDao;
 use App\Models\Pipeline\Flow\Copys;
@@ -188,6 +189,8 @@ abstract class GeneralFlowsLogic implements IFlowLogic
                             $userFlow = $userFlowDao->getById($action->getTransactionId());
                             $handler = $node->getHandler();
                             $handler->handle($userFlow->user, $action, $next);
+                            //自动同意
+                            $this->autoProcessed($action->flow, $action, $next, $actionData);
                         }
                         else{
                             // 已经是流程的最后一步, 标记流程已经完成
@@ -236,6 +239,20 @@ abstract class GeneralFlowsLogic implements IFlowLogic
             }
         }
         return $messageBag;
+    }
+
+    public function autoProcessed($flow, $action, $next, $formData){
+        if (!$flow->auto_processed || !$next) {
+            return false;
+        }
+        $actionDao = new ActionDao();
+        $nextAction = $actionDao->getActionByUserFlowAndUserId($action->transaction_id, $action->user_id);
+        if ($nextAction && $nextAction->result == IAction::RESULT_PENDING) {
+            $logic = FlowLogicFactory::GetInstance($action->user);
+            return $logic->process($nextAction, $formData);
+        }
+
+        return false;
     }
 
     /**
