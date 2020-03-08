@@ -34,7 +34,9 @@ if (document.getElementById('pipeline-flows-manager-app')) {
                 juese: [], // 右侧框框角色
                 zuzhi: [], // 右侧框框组织
                 returnId: '', // flow_id
-                titlesList: [], //侧边栏角色获取
+                titlesList: [], // 侧边栏角色获取
+                agree: '',
+                agreeList: [{name: '启用自动同意', key: 1},{name: '不启用自动同意', key: 2}], // 是否同意
                 teacher: '', // 请输入教职工名字
 
                 lastNewFlow: null,
