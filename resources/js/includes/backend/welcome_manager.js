@@ -169,7 +169,6 @@ if(document.getElementById('school-welcome-list-app')){
             // 获取流程数据列表
             getConfigStepListInfo: function () {
                 let _that_ = this;
-
                 // 获取流程信息
                 this.formData = {};
                 this.formData.school_id = this.schoolId;

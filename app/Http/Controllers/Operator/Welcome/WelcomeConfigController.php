@@ -298,6 +298,7 @@ class WelcomeConfigController extends Controller
                 $data1 = [];
                 foreach ($data as $key => $val) {
                     if (isset($data1[$val['gname']])) {
+                        
                         array_push($data1[$val['gname']], $val);
                     } else {
                         $data1[$val['gname']][] = $val;
