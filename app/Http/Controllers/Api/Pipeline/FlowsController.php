@@ -136,6 +136,7 @@ class FlowsController extends Controller
      */
     public function start(FlowRequest $request){
         $actionData = $request->getStartFlowData();
+        $actionData['options'] = $request->get('options');
         $user = $request->user();
 
         $flowDao = new FlowDao();
@@ -218,7 +219,9 @@ class FlowsController extends Controller
                         break;*/
                     case IAction::RESULT_PASS:
                         if ($dao->getCountWaitProcessUsers($action->getNode()->id) < 1) {
-                            $event = new FlowProcessed($request->user(),$action, $action->getNode(), $action->getFlow());
+                            //可能存在自动同意已经到了下一个action
+                            $newAction = $dao->getActionByUserFlowAndUserId($action->transaction_id, $action->user_id);
+                            $event = new FlowProcessed($request->user(),$newAction, $newAction->getNode(), $newAction->getFlow());
                         }
                         break;
                     case IAction::RESULT_TERMINATE:
