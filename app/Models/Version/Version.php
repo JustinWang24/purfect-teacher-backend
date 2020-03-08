@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Version extends Model
 {
+    protected $table = 'versions';
     protected $fillable = [
         'schoolids',
         'user_apptype',

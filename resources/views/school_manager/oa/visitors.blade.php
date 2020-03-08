@@ -9,21 +9,19 @@ use App\User;
         <form action="{{ route('school_manager.oa.visitors-manager') }}" method="get"  id="add-building-form">
             <div class="pull-left col-3">
                 <label>开始时间</label>
-                <input type="text" class="el-input__inner col-8" value="" placeholder="">
+                <input type="text" name="startDate" class="form-control el-input__inner col-8 form_date" value="{{ Request::get('startDate') }}">
             </div>
             <div class="pull-left col-3">
                 <label>截止时间</label>
-                <input type="text" class="el-input__inner col-8" value="" placeholder="">
+                <input type="text" name="endDate" class="form-control el-input__inner col-8 form_date" value="{{ Request::get('endDate') }}">
             </div>
             <div class="pull-left col-2">
                 <label>状态</label>
                 <select id="cityid" class="el-input__inner col-8" name="status">
                     <option value="">-请选择-</option>
                     <!--状态(1:已分享,2:已填写,3:已使用)-->
-                    <option value="2" @if( Request::get('status') == 2 ) selected @endif >已邀请</option>
+                    <option value="2" @if( Request::get('status') == 2 ) selected @endif >未到访</option>
                     <option value="3" @if( Request::get('status') == 3 ) selected @endif >已到访</option>
-                    <option value="3" @if( Request::get('status') == 1 ) selected @endif >未到访</option>
-
                 </select>
             </div>
             <div class="pull-left col-3">
@@ -38,7 +36,7 @@ use App\User;
             <div class="card-container">
                 <div class="card-item">
                     <p class="card-item-1">今日预约</p>
-                    <p>{{ $todayVisitorsCount['count2'] }}</p>
+                    <p>{{ $todayVisitorsCount['count1'] }}</p>
                 </div>
                 <div class="card-item">
                     <p class="card-item-2">已到访</p>
@@ -46,16 +44,27 @@ use App\User;
                 </div>
                 <div class="card-item">
                     <p class="card-item-3">未到访</p>
-                    <p>{{ $todayVisitorsCount['count1'] }}</p>
+                    <p>{{ $todayVisitorsCount['count2'] }}</p>
                 </div>
             </div>
 
             <div class="card">
+            @if(count($todayVisitors) === 0)
+                    <div class="card-head">
+                        <header class="text-danger">今日无访客</header>
+                    </div>
+            @endif
             @foreach($todayVisitors as $vo)
                     <div class="card-body">
                         <p class="card-body-p"><span><strong>邀请人：</strong>{{ $vo->uname }}</span> <span>{{ $vo->created_at }}</span> </p>
                         <p class="card-body-p"><span><strong>来访人：</strong>{{ $vo->name }}</span> <span>{{ count(json_decode($vo->visitors_json1,true)) }}人</span> </p>
                         <p class="card-body-p"><span><strong>联系电话：</strong>{{ $vo->mobile }}</span> <span><strong>预约时间：</strong>{{ $vo->scheduled_at }}</span> </p>
+                        @if($vo->status == 2)
+                            <p class="card-body-p" style="text-align: right;color:#C4C4C4;font-weight: bold;font-size: 20px;">{{ $vo->getStatusArr($vo['status']) }}</p>
+                        @endif
+                        @if($vo->status == 3)
+                            <p class="card-body-p" style="text-align: right;color:forestgreen;font-weight: bold;font-size: 20px;">{{ $vo->getStatusArr($vo['status']) }}</p>
+                        @endif
                     </div>
             @endforeach
            </div>
@@ -91,7 +100,7 @@ use App\User;
                                 <tbody>
                                 @foreach($visitors as $index=>$visitor)
                                     <tr>
-                                        <td width="10%">{{ _printDate($visitor->scheduled_at) }}</td>
+                                        <td width="14%">{{ $visitor->scheduled_at }}</td>
                                         <td>
                                             {{ $visitor->uname }}
                                         </td>
@@ -117,17 +126,17 @@ use App\User;
                                                 <p>{{ $userVal['title'] }}</p>
                                             @endforeach
                                         </td>
-                                        <td  width="20%">
+                                        <td width="15%">
                                             {{ $visitor->reason }}
                                         </td>
                                         <td>
-                                            {{ $visitor->status === \App\Models\OA\Visitor::NOT_VISITED ? '未到访' : '已到访' }}
+                                            {{ $visitor->getStatusArr($visitor->status) }}
                                         </td>
                                     </tr>
                                 @endforeach
                                 </tbody>
                             </table>
-                            {{ $visitors->links() }}
+                            {{ $visitors->appends(Request::all())->links() }}
                         </div>
                     </div>
                 </div>

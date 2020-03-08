@@ -48,7 +48,7 @@ class SendCodeVisiterMobileEvent implements CanReachByMobilePhone
      */
     public function getSmsTemplateId(): string
     {
-        return  "488872"; // 短信模板ID
+        return  "568199"; // 短信模板ID
     }
 
     /***

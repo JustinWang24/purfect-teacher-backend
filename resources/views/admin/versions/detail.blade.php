@@ -9,18 +9,15 @@ use App\Utils\UI\Button;
         <div class="col-sm-12 col-md-12 col-xl-12">
             <div class="card">
                 <div class="card-head">
-                    <header>版本管理</header>
+                    <header>{{ $pageTitle }}</header>
                 </div>
 
                 <div class="card-body">
                     <div class="row">
                         <div class="table-padding col-12">
-
-                                <a href="{{ route('admin.versions.add') }}" class="btn btn-primary " id="btn-create-versions-from">
-                                    创建版本 <i class="fa fa-plus"></i>
+                                <a href="{{ route('admin.versions.list') }}" class="btn btn-primary pull-right">
+                                    返回
                                 </a>
-
-
                         </div>
                         <div class="table-responsive">
                             <table class="table table-striped table-bordered table-hover table-checkable order-column valign-middle " style="text-align: center">
@@ -35,13 +32,12 @@ use App\Utils\UI\Button;
                                     <th width="25%">更新内容</th>
                                     <th>下载地址</th>
                                     <th>弹框失效时间</th>
-                                    <th>操作</th>
                                 </tr>
                                 </thead>
                                 <tbody>
                                 @if(count($versions) == 0)
                                     <tr>
-                                        <td colspan="6">还没有内容 </td>
+                                        <td colspan="8">还没有内容 </td>
 
                                     </tr>
                                 @endif
@@ -69,11 +65,6 @@ use App\Utils\UI\Button;
                                         </td>
                                         <td>
                                             @if($version->vserion_invalidtime > 0) {{ date('Y-m-d H:i',$version->vserion_invalidtime) }} @else if 无 @endif
-                                        </td>
-
-                                        <td class="text-center">
-                                            <a href="{{ route('admin.versions.delete',['sid'=>$version->sid]) }}" onClick="return confirm('你确定删除吗？')"  class="btn btn-info">删除</a>
-                                            {{ Anchor::Print(['text'=>'历史版本','class'=>'btn btn-primary','href'=>route('admin.versions.detail',['typeid'=>$version->typeid,'user_apptype'=>$version->user_apptype])], Button::TYPE_DEFAULT,'detail') }}
                                         </td>
                                     </tr>
                                 @endforeach
