@@ -288,6 +288,16 @@ class ActionDao
             ->first();
     }
 
+    public function getActionByUserFlowAndUserId($userFlowId, $userId){
+        return Action::where('transaction_id',$userFlowId)
+            ->where('user_id', $userId)
+            ->with('node')
+            ->with('options')
+            ->with('attachments')
+            ->orderBy('id','desc')
+            ->first();
+    }
+
     /**
      * @param $actionId
      * @param $userId

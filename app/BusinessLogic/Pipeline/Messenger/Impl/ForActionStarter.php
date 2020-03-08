@@ -48,47 +48,32 @@ class ForActionStarter extends AbstractMessenger
             $flowName = $this->flow->getName();
 
             // 把查看此流程详情的链接放进去
-            $nextMove = route('pipeline.flow-view-history',['action_id'=>$action->id, 'user_flow_id'=>$action->getTransactionId()]);
-
-            if($this->node){
-
-                if($this->node->isHead()){
-                    $content .= '成功发起' . $flowName . '流程, 目前进入' . $this->node->getNext()->getName() . '阶段';
-                }
-                else{
-                    // 这个时候, 传入的 node, 是当前步骤
-                    if($this->node->getNext()){
-                        // 表示还有后面的步骤
-                        if($action->isSuccess())
-                            $content .= '发起的' . $flowName . '流程, 已经通过了' . $this->node->getName() . '阶段, 目前进入' . $this->node->getNext()->getName().'阶段';
-                        else
-                            $content .= '发起的' . $flowName . '流程在' . $this->node->getName() . '阶段被'.$this->userOfLastAction->getName().'驳回, 目前在'. $this->node->getPrev()->getName(). '阶段从新处理';
-                    }
-                    else{
-                        // 已经是最后一步了
-                        if($userFlow->isDone()){
-                            $content .= '发起的' . $flowName . '流程已经获得批准!';
-                        }
-                        elseif ($userFlow->isTerminated()){
-                            $content .= '发起的' . $flowName . '流程被否决了';
-                        }
-                        elseif (!$action->isSuccess()){
-                            $content .= '发起的' . $flowName . '流程被退回到' . $this->node->getPrev()->getName().'阶段';
-                        }
-                    }
-                }
+            $nextMove = route('h5.flow.user.view-history',['action_id'=>$action->id, 'user_flow_id'=>$action->getTransactionId()]);
+            if($userFlow->isDone()){
+                $content .= '发起的' . $flowName . '流程已经获得批准!';
+                $title = '你的' . $flowName .'流程申请已通过!';
+            }
+            elseif ($userFlow->isTerminated()){
+                $content .= '发起的' . $flowName . '流程被否决了';
+                $title = '你的' . $flowName .'流程申请未通过!';
+            }
+            else {
+                $content .= '成功发起' . $flowName . '流程, 目前进入' . $this->node->getNext()->getName() . '阶段';
+                $title = '你的' . $flowName .'流程申请有新的进展!';
             }
 
+            $category = SystemNotification::getCategoryByPipelineTypeAndBusiness($this->flow->type, $this->flow->business, $flowStarter->isStudent());
             InternalMessage::dispatchNow(
-                SystemNotification::SCHOOL_EMPTY,
+                $flowStarter->getSchoolId(),
                 SystemNotification::FROM_SYSTEM,
                 $flowStarter->getId(),
                 SystemNotification::TYPE_NONE,
                 SystemNotification::PRIORITY_LOW,
                 $content,
                 $nextMove,
-                '有一个' . $this->flow->getName() .'流程在等待您处理',
-                SystemNotification::COMMON_CATEGORY_PIPELINE //@TODO 工作流程可以区分特殊流程后会拆分不同类型
+                $title,
+                $category,
+                json_encode(['type' =>"web-view", 'param1' => $nextMove, 'param2' => ''])
             );
 
             if(env('APP_DEBUG', false)){
