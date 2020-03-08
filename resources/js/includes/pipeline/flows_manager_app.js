@@ -22,7 +22,6 @@ if (document.getElementById('pipeline-flows-manager-app')) {
                     name: '', // 流程名称
                     icon: '',
                     business: '',
-                    school_id: null,
                 },
                 organization: 1, // 组织
                 node: {
@@ -34,7 +33,9 @@ if (document.getElementById('pipeline-flows-manager-app')) {
                 juese: [], // 右侧框框角色
                 zuzhi: [], // 右侧框框组织
                 returnId: '', // flow_id
-                titlesList: [], //侧边栏角色获取
+                titlesList: [], // 侧边栏角色获取
+                agree: '',
+                agreeList: [{ name: '111', key: 1 }, { name: "22222", key: 2 }], // 是否同意
                 teacher: '', // 请输入教职工名字
 
                 lastNewFlow: null,
@@ -89,8 +90,7 @@ if (document.getElementById('pipeline-flows-manager-app')) {
         },
         created() {
             const dom = document.getElementById('app-init-data-holder');
-            this.schoolId = dom.dataset.school;
-            this.flow.school_id = this.schoolId;
+            this.returnId = dom.dataset.newflow;
 
             // 可能是刚刚创建了新流程, 检查一下
             // this.lastNewFlow = dom.dataset.newflow;
@@ -100,6 +100,7 @@ if (document.getElementById('pipeline-flows-manager-app')) {
             // }
             this.getList(1);
             this.changeItem2(1);
+            this.getargeeList();
         },
         methods: {
             // 获取左边分类和侧边栏显示位置和侧边栏关联业务
@@ -285,6 +286,19 @@ if (document.getElementById('pipeline-flows-manager-app')) {
             approver() {
                 var url = this.$refs.approver.$attrs.href + '?flow_id=' + this.returnId;
                 location.href = url;
+            },
+            // 
+            getargeeList() {
+                axios.post('/school_manager/pipeline/flows/save-auto-processed', {
+                    flow_id: this.returnId,
+                    auto_processed: 0
+                }).then((res) => {
+                    if (Util.isAjaxResOk(res)) {
+                        console.log(res)
+                    }
+                }).catch((err) => {
+                    console.log(err)
+                });
             },
             // 右侧编辑时侧边栏的保存按钮
 
