@@ -132,7 +132,6 @@
                 </div>
             </div>
         </div>
-
         <div class="col-5" v-if="dataList2 !== undefined && dataList2.length >0">
             <div class="card">
                 <div class="card-head">
