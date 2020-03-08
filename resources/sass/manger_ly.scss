@@ -28,8 +28,8 @@
       height: 30px;
       padding-left: 10px;
     }
-    .el-input {
-      border: none;
+    .el-input__inner {
+      border: none !important;
     }
   }
   .el-divider--vertical {
