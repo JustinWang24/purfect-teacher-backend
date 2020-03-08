@@ -577,7 +577,7 @@ class TimetableItemDao
         $school = (new SchoolDao())->getSchoolById($user->getSchoolId());
         $currentTimeSlot = GradeAndYearUtil::GetTimeSlot($now, $school->id);
         if($currentTimeSlot && $school){
-            $weekdayIndex = $now->weekday();
+            $weekdayIndex = $now->dayOfWeekIso;
             // 当前学年
             $year = $school->configuration->getSchoolYear();
 
@@ -689,7 +689,7 @@ class TimetableItemDao
                 // 学期第多少周
                 $startWeekIndex = $val->getScheduleWeekIndex();
                 // 当前周的第几天
-                $startWeekday = $atSpecialDatetime->weekday();
+                $startWeekday = $atSpecialDatetime->dayOfWeekIso;
                 // 判断这周开始时间的天大于该课的当周天
                 if($startWeekday > $weekDayIndex) {
                     $startWeekIndex = $startWeekIndex + 1;
@@ -697,7 +697,7 @@ class TimetableItemDao
             }
             if($val->includes($toSpecialDatetime)) {
                 $endWeekIndex = $val->getScheduleWeekIndex();
-                $endWeekDay = $toSpecialDatetime->weekday();
+                $endWeekDay = $toSpecialDatetime->dayOfWeekIso;
                 // 判断这周结束时间的天小于该课的当周天
                 if($endWeekDay < $weekDayIndex) {
                     $endWeekIndex = $endWeekIndex - 1;
@@ -787,7 +787,7 @@ class TimetableItemDao
 
         return TimetableItem::where('year', $year)
             ->where('term', $term)
-            ->where('weekday_index',$date->weekday())
+            ->where('weekday_index',$date->dayOfWeekIso)
             ->where('time_slot_id', $currentTimeSlot->id)
             ->where('published', 1)
             ->with('timeslot')
@@ -839,7 +839,7 @@ class TimetableItemDao
         $year = $configuration->getSchoolYear($date);
         $month = Carbon::parse($date)->month;
         $term = $configuration->guessTerm($month);
-        $weekDayIndex = Carbon::parse($date)->dayOfWeek;
+        $weekDayIndex = Carbon::parse($date)->dayOfWeekIso;
         $map = [
             ['school_id','=', $user->getSchoolId()],
             ['year', '=', $year],
@@ -917,7 +917,7 @@ class TimetableItemDao
         $school = (new SchoolDao())->getSchoolById($user->getSchoolId());
         $currentTimeSlot = GradeAndYearUtil::GetUnEndTimeSlot($now, $school->id);
         if(!empty($currentTimeSlot) && $school){
-            $weekdayIndex = $now->weekday();
+            $weekdayIndex = $now->dayOfWeekIso;
             // 当前学年
             $year = $school->configuration->getSchoolYear();
 
