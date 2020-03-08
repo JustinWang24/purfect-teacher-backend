@@ -58,7 +58,7 @@
                             </p>
                             <p v-if="zuzhi.length > 0">
                                 <span class="text-primary"><b>部门: </b></span>
-                                <span class="mr-2" v-for="dept in zuzhi.substring(0,node.organizations.length -1).split(';')">
+                                <span class="mr-2" v-for="dept in zuzhi.substring(0,zuzhi.length -1).split(';')">
                                     <el-tag effect="plain" type="info" size="mini">
                                         @{{ dept }}
                                     </el-tag>
@@ -80,12 +80,18 @@
                                     <el-button size="mini" @click="approver" ref="approver" href="{{ route('school_manager.pipeline.flows-handler') }}">设置审批人</el-button>
                                 </el-button-group>
                             </p>
+                            <p v-if="handler.length > 0" v-for="(item,index) in handler" :key="item.id">
+                                第@{{ index + 1}}步：@{{ item.titles }}
+                            </p>
                         </el-timeline-item>
                         <el-timeline-item timestamp="抄送人" placement="top">
                             <p class="pull-right">
                                 <el-button-group>
-                                    <el-button size="mini"  @click="approver" ref="approver" href="{{ route('school_manager.pipeline.flows-handler') }}">设置抄送人</el-button>
+                                    <el-button size="mini" @click="approver" ref="approver" href="{{ route('school_manager.pipeline.flows-handler') }}">设置抄送人</el-button>
                                 </el-button-group>
+                            </p>
+                            <p v-if="copy.length > 0" v-for="(item,index) in copy" :key="item.user_id">
+                                @{{ item.name }}
                             </p>
                         </el-timeline-item>
                     </el-timeline>
@@ -157,12 +163,12 @@
                             <el-checkbox label="学生"></el-checkbox>
                         </el-checkbox-group>
                     </el-form-item>
-                    <el-form-item label="组织">
+                    <el-form-item label="组织" v-if="posiType !== 2">
                         <el-select v-model="organization" placeholder="请选择组织分类" @change="changeItem2(organization)">
                             <el-option v-for="item in organizationList" :key="item.key" :label="item.name" :value="item.key"></el-option>
                         </el-select>
                     </el-form-item>
-                    <el-form-item label="部门" v-if="organization == 1">
+                    <el-form-item label="部门" v-if="organization == 1&&posiType !== 2">
                         <el-cascader style="width: 90%;" :props="props" v-model="node.organizations"></el-cascader>
                     </el-form-item>
                     <el-form-item label="角色">
