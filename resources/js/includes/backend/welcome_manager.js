@@ -20,6 +20,7 @@ if(document.getElementById('school-welcome-list-app')){
         el:'#school-welcome-list-app',
         data(){
             return {
+                showFileManagerFlag: false,
                 schoolId: null,
                 is_show1:true, // 基础信息
                 is_show2:false, // 个人信息
