@@ -382,6 +382,7 @@ Route::prefix('questionnaire')->middleware('auth:api')->group(function () {
 // 最新版本号
 Route::prefix('version')->group(function () {
     Route::any('/index', 'Api\Version\VersionController@index')->name('api.version.index');
+    Route::any('/download', 'Api\Version\VersionController@download')->name('api.version.download');
 });
 
 // APP 首页接口

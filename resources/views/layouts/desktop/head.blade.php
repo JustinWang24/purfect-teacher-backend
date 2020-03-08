@@ -12,6 +12,7 @@
     <link href="{{ asset('assets/fonts/material-design-icons/material-icon.css') }}" rel="stylesheet" type="text/css" />
     <!--bootstrap -->
     <link href="{{ asset('assets/plugins/bootstrap/css/bootstrap.min.css') }}" rel="stylesheet" type="text/css" />
+    <link href="{{ asset('assets/plugins/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css') }}" rel="stylesheet" type="text/css" />
     <link href="{{ asset('assets/plugins/summernote/summernote.css') }}" rel="stylesheet">
     <!-- Material Design Lite CSS -->
     <!-- inbox style -->
