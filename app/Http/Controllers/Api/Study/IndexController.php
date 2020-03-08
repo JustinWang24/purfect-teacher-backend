@@ -35,7 +35,7 @@ class IndexController extends Controller
 
         $date = Carbon::now();
         $year = $configuration->getSchoolYear($date);
-        $month = Carbon::parse($date)->month;
+        $month = $date->month;
         $term = $configuration->guessTerm($month);
         $timetableItemDao = new TimetableItemDao();
 //        $item = $timetableItemDao->getCurrentItemByUser($user, $date);  // 获取当前时间的课程

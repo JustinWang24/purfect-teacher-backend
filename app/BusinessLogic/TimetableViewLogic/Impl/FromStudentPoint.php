@@ -122,7 +122,7 @@ class FromStudentPoint implements ITimetableBuilder
             'timeSlots'=>$this->timeSlots,
             'current'=>[
                 'date'=>$this->requestedDate->format("Y-m-d"),
-                'weekday'=>$this->requestedDate->weekday(),
+                'weekday'=>$this->requestedDate->dayOfWeekIso,
                 'calendarWeekIndex'=>$this->currentWeek->getName(),
                 'odd'=>$this->isOddWeek?'单周':'双周'
             ]
@@ -135,7 +135,7 @@ class FromStudentPoint implements ITimetableBuilder
     protected function buildTimetableInDailyFormat(){
         $timetable = [];
         $timetable[] = $this->timetableItemDao->getItemsByWeekDayIndexForApp(
-            $this->requestedDate->weekday(), $this->year, $this->term, $this->weekType, $this->gradeUser->grade_id
+            $this->requestedDate->dayOfWeekIso, $this->year, $this->term, $this->weekType, $this->gradeUser->grade_id
         );
         // 检查从当前时刻起的特殊情况, 主要就是调课
         $specialCases = $this->timetableItemDao->getSpecialsAfterToday(
