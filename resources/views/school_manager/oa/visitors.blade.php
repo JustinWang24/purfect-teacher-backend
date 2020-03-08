@@ -6,7 +6,7 @@ use App\User;
 @extends('layouts.app')
 @section('content')
 <div class="row" style="margin-bottom: 6px;">
-        <form action="{{ route('manager_affiche.group.group_pending_list') }}" method="get"  id="add-building-form">
+        <form action="{{ route('school_manager.oa.visitors-manager') }}" method="get"  id="add-building-form">
             <div class="pull-left col-3">
                 <label>开始时间</label>
                 <input type="text" class="el-input__inner col-8" value="" placeholder="">
@@ -20,9 +20,9 @@ use App\User;
                 <select id="cityid" class="el-input__inner col-8" name="status">
                     <option value="">-请选择-</option>
                     <!--状态(1:已分享,2:已填写,3:已使用)-->
-                    <option value="1" @if( Request::get('status') == 1 ) selected @endif >已分享</option>
                     <option value="2" @if( Request::get('status') == 2 ) selected @endif >已邀请</option>
                     <option value="3" @if( Request::get('status') == 3 ) selected @endif >已到访</option>
+                    <option value="3" @if( Request::get('status') == 1 ) selected @endif >未到访</option>
 
                 </select>
             </div>
@@ -53,9 +53,9 @@ use App\User;
             <div class="card">
             @foreach($todayVisitors as $vo)
                     <div class="card-body">
-                        <p class="card-body-p"><span><strong>邀请人：</strong>张三</span> <span>2020-04-34 34:34</span> </p>
-                        <p class="card-body-p"><span><strong>来访人：</strong>张三</span> <span>5人</span> </p>
-                        <p class="card-body-p"><span><strong>联系电话：</strong>张三</span> <span><strong>预约时间：</strong>2020-04-34 34:34</span> </p>
+                        <p class="card-body-p"><span><strong>邀请人：</strong>{{ $vo->uname }}</span> <span>{{ $vo->created_at }}</span> </p>
+                        <p class="card-body-p"><span><strong>来访人：</strong>{{ $vo->name }}</span> <span>{{ count(json_decode($vo->visitors_json1,true)) }}人</span> </p>
+                        <p class="card-body-p"><span><strong>联系电话：</strong>{{ $vo->mobile }}</span> <span><strong>预约时间：</strong>{{ $vo->scheduled_at }}</span> </p>
                     </div>
             @endforeach
            </div>
@@ -91,24 +91,34 @@ use App\User;
                                 <tbody>
                                 @foreach($visitors as $index=>$visitor)
                                     <tr>
-                                        <td>{{ _printDate($visitor->scheduled_at) }}</td>
+                                        <td width="10%">{{ _printDate($visitor->scheduled_at) }}</td>
                                         <td>
-                                            cccc
+                                            {{ $visitor->uname }}
                                         </td>
                                         <td>
-                                            cccc
+                                            {{ $visitor->name }}
                                         </td>
                                         <td>
-                                            bbb
+                                            {{ $visitor->mobile }}
                                         </td>
                                         <td>
-
+                                            @php
+                                            $visitors_json1Arr = json_decode($visitor->visitors_json1,true);
+                                            @endphp
+                                            @foreach($visitors_json1Arr as $userVal)
+                                                <p>{{ $userVal['name'] }} / {{ $userVal['mobile'] }}</p>
+                                            @endforeach
                                         </td>
                                         <td>
-                                           ddd
+                                            @php
+                                                $visitors_json2Arr = json_decode($visitor->visitors_json2,true);
+                                            @endphp
+                                            @foreach($visitors_json2Arr as $userVal)
+                                                <p>{{ $userVal['title'] }}</p>
+                                            @endforeach
                                         </td>
-                                        <td>
-                                            sss
+                                        <td  width="20%">
+                                            {{ $visitor->reason }}
                                         </td>
                                         <td>
                                             {{ $visitor->status === \App\Models\OA\Visitor::NOT_VISITED ? '未到访' : '已到访' }}
@@ -117,7 +127,6 @@ use App\User;
                                 @endforeach
                                 </tbody>
                             </table>
-
                             {{ $visitors->links() }}
                         </div>
                     </div>

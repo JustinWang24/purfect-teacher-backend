@@ -7,6 +7,17 @@ use Illuminate\Database\Eloquent\Model;
 class Version extends Model
 {
     protected $fillable = [
-        'code', 'name', 'download_url', 'local_path',
+        'schoolids',
+        'user_apptype',
+        'typeid',
+        'isupdate',
+        'version_id',
+        'version_name',
+        'version_downurl',
+        'version_content',
+        'vserion_invalidtime',
+        'status',
+        'create_time',
+        'update_time',
     ];
 }

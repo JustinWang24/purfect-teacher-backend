@@ -14,6 +14,7 @@ use App\Utils\JsonBuilder;
 use App\Dao\Schools\SchoolDao;
 use App\Dao\Courses\CourseMajorDao;
 use App\Http\Controllers\Controller;
+use App\Dao\Courses\CourseTeacherDao;
 use App\Models\Courses\CourseMaterial;
 use App\Dao\Timetable\TimetableItemDao;
 use App\Dao\Courses\Lectures\LectureDao;
@@ -33,13 +34,12 @@ class IndexController extends Controller
         $configuration = $school->configuration;
 
         $date = Carbon::now();
-
         $year = $configuration->getSchoolYear($date);
-        $month = Carbon::parse($date)->month;
+        $month = $date->month;
         $term = $configuration->guessTerm($month);
         $timetableItemDao = new TimetableItemDao();
-        $item = $timetableItemDao->getCurrentItemByUser($user, $date);
-
+//        $item = $timetableItemDao->getCurrentItemByUser($user, $date);  // 获取当前时间的课程
+        $item = $timetableItemDao->getUnEndCoursesByUser($user, $date); // 获取今天未结束的课程
         $teacherApplyElectiveDao = new TeacherApplyElectiveCourseDao();
         $electiveTime = $teacherApplyElectiveDao->getElectiveCourseStartAndEndTime($schoolId, $term);
         $electiveStart = Carbon::parse($electiveTime[0]);
@@ -60,9 +60,11 @@ class IndexController extends Controller
             'truant_num' => $attendancesDetailsDao->getTruantCountByUser($user->id, $year, $term),
         ];
 
-
         $evaluateTeacher = false;
-        if(!is_null($item)) {
+//        if(!is_null($item)) {
+        if(!is_null($item) && count($item) >0) {
+
+            $item = $item[0];
 
             $weeks = $configuration->getScheduleWeek(Carbon::parse($date), null, $term);
             $week = $weeks->getScheduleWeekIndex();
@@ -93,17 +95,19 @@ class IndexController extends Controller
 
             $attendance = $attendancesDao->getAttendanceByTimeTableId($item->id,$week);
             if(!is_null($attendance)) {
-                $detail = $attendancesDetailsDao->getDetailByUserId($user->id, $attendance->id);
-                $signIn['status'] = $detail->mold ?? 0;
+                $detail = $attendance->details->where('student_id', $user->id)->first();
+                if(!is_null($detail)) {
+                    $signIn['status'] = $detail->mold;
+                }
+                $evaluateTeacher = true;
             }
 
-            $evaluateTeacher = true;
         }
 
         $gradeId = $user->gradeUser->grade_id;
         $dao = new LectureDao();
         $material = $dao->getMaterialByGradeId($gradeId);
-        $studyData = $material? $material->url : '';
+        $studyData = $material? $material->description : '';
         $data = [
             'selectCourse' => $selectCourse, // 选课
             'timetable' => $timetable,  // 课程
@@ -145,9 +149,7 @@ class IndexController extends Controller
         $schoolDao = new SchoolDao();
         $school = $schoolDao->getSchoolById($schoolId);
         $configuration = $school->configuration;
-        // todo 时间暂时写死
         $date = Carbon::now()->toDateString();
-        $date = Carbon::parse('2020-01-08 14:40:00');;
         $year = $configuration->getSchoolYear($date);
         $month = Carbon::parse($date)->month;
         $term = $configuration->guessTerm($month);
@@ -256,16 +258,15 @@ class IndexController extends Controller
      */
     public function courseList(MyStandardRequest $request) {
         $userId = $request->user()->id;
-        $dao = new LectureDao();
-        $lectures = $dao->getMaterialByTeacherId($userId);
+        $dao = new CourseTeacherDao();
+        $return = $dao->getCoursesByTeacher($userId);
         $courses = [];
-        foreach ($lectures as $key => $item) {
-            $courses[$key] = [
+        foreach ($return as $key => $item) {
+            $courses[] = [
                 'course_id' => $item->course_id,
                 'course_name' => $item->course->name,
             ];
         }
-
         return JsonBuilder::Success($courses);
     }
 

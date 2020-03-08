@@ -78,7 +78,7 @@ class wifiIssueController extends Controller
       $param2[ 'campus_id' ] = $user->gradeUserOneInfo->campus_id; // 校区
 
       // 获取详细地址
-      $getRoomOneInfo1 = WifiIssueTypesDao::getRoomOneInfo ( $param1[ 'addressoneid' ] );
+      $getRoomOneInfo1 = WifiIssueTypesDao::getBuildOneInfo ( $param1[ 'addressoneid' ] );
       $getRoomOneInfo2 = WifiIssueTypesDao::getRoomOneInfo ( $param1[ 'addresstwoid' ] );
       $address = '';
       if(isset($getRoomOneInfo1)) $address .= $getRoomOneInfo1->name;
@@ -118,7 +118,7 @@ class wifiIssueController extends Controller
       // 查询数据
       $condition[] = ['status','>',0];
       $condition[] = ['user_id','=',$user->id];
-      
+
 	  // 获取的字段信息
       $fieldsArr = [
          'issueid','trade_sn','typeone_id','typeone_name','typetwo_id',
@@ -126,7 +126,7 @@ class wifiIssueController extends Controller
          'addresstwoid','addressthreeid','addr_detail','admin_name','admin_mobile',
          'admin_desc','status','is_comment', 'created_at'
       ];
-      
+
 	  // 获取报修数据
       $infos = WifiIssuesDao::getWifiIssuesListInfo (
          $condition,['issueid','desc'],['page'=>$param['page'],'limit'=>10],$fieldsArr

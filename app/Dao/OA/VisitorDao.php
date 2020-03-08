@@ -14,6 +14,9 @@ use App\Utils\Misc\ConfigurationTool;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Ramsey\Uuid\Uuid;
+use Endroid\QrCode\QrCode;
+use Endroid\QrCode\Exception\InvalidPathException;
+
 class VisitorDao
 {
     public function __construct()
@@ -83,8 +86,13 @@ class VisitorDao
      * @return Collection
      */
     public function getVisitorsBySchoolId($schoolId){
-        return Visitor::where('school_id',$schoolId)
-            ->orderBy('id','desc')->paginate(ConfigurationTool::DEFAULT_PAGE_SIZE);
+        return Visitor::from('visitors as a')
+            ->whereIn('a.status',[2,3])
+            ->where('a.school_id',$schoolId)
+            ->join('users as b', 'a.user_id', '=', 'b.id')
+            ->orderBy('a.id','desc')
+            ->select(['a.*','b.name as uname'])
+            ->paginate(ConfigurationTool::DEFAULT_PAGE_SIZE_QUICK_SEARCH);
     }
     /**
      * Func 获取今天访客数据
@@ -96,9 +104,14 @@ class VisitorDao
      */
     public function getTodayVisitorsBySchoolId($schoolId,$sdate,$edata)
     {
-        return Visitor::where('school_id', $schoolId)
-            ->whereBetween('created_at', [$sdate, $edata])
-            ->orderBy('id', 'desc')->paginate(ConfigurationTool::DEFAULT_PAGE_SIZE);
+        return Visitor::from('visitors as a')
+            ->where('a.school_id', $schoolId)
+            ->whereIn('a.status',[2,3])
+            ->whereBetween('a.created_at', [$sdate, $edata])
+            ->join('users as b', 'a.user_id', '=', 'b.id')
+            ->orderBy('a.id', 'desc')
+            ->select(['a.*','b.name as uname'])
+            ->paginate(ConfigurationTool::DEFAULT_PAGE_SIZE_QUICK_SEARCH);
     }
 
     /**
@@ -150,12 +163,47 @@ class VisitorDao
             'created_at', 'scheduled_at', 'arrived_at','status'
         ];
 
+        // 今日开始和结束时间
+        $sdate = date('Y-m-d H:i:s', mktime(0, 0, 0, date('m'), date('d'), date('Y')));
+        $edate = date('Y-m-d H:i:s', mktime(0, 0, 0, date('m'), date('d') + 1, date('Y')) - 1);
 
-        $data = Visitor::where($condition)->select($fieldArr)
-            ->orderBy('id', 'desc')
-            ->offset((new CommonDao)->offset($page))
-            ->limit(CommonDao::$limit)
-            ->get();
+        // 今日来访
+        if ($typeid == 1) {
+            // 开始和结束时间
+            $data = Visitor::where('user_id', $user_id)
+                ->whereIn('status', [2, 3])
+                ->whereBetween('scheduled_at', [$sdate, $edate])
+                ->orderBy('scheduled_at', 'asc')
+                ->offset((new CommonDao)->offset($page))
+                ->limit(CommonDao::$limit)
+                ->select($fieldArr)
+                ->get();
+        }
+
+        // 已邀请
+        if($typeid == 2)
+        {
+            $data = Visitor::where('user_id', $user_id)
+                ->whereIn('status', [1, 2])
+                ->orderBy('id', 'desc')
+                ->offset((new CommonDao)->offset($page))
+                ->limit(CommonDao::$limit)
+                ->select($fieldArr)
+                ->get();
+        }
+
+        // 已过期
+        if($typeid == 3)
+        {
+            $data = Visitor::where('user_id', $user_id)
+                ->whereIn('status', [2,3])
+                ->where('scheduled_at','<',$sdate)
+                ->orderBy('scheduled_at', 'desc')
+                ->offset((new CommonDao)->offset($page))
+                ->limit(CommonDao::$limit)
+                ->select($fieldArr)
+                ->get();
+        }
 
         return !empty($data) ? $data->toArray() : [];
     }
@@ -174,12 +222,12 @@ class VisitorDao
         // 检索条件
         $condition[] = ['id', '=', $id];
         $condition[] = ['user_id', '=', $user_id];
-        $condition[] = ['status', '=', 1];
+        //$condition[] = ['status', '=', 1];
 
         // 获取的字段
         $fieldArr = [
             'id', 'user_id', 'cate_id', 'name', 'mobile', 'vehicle_license',
-            'reason', 'visitors_json1', 'visitors_json2',
+            'reason', 'visitors_json1', 'visitors_json2','status',
             'scheduled_at', 'arrived_at', 'created_at'
         ];
 
@@ -205,7 +253,7 @@ class VisitorDao
         // 获取的字段
         $fieldArr = [
             'id', 'user_id', 'cate_id', 'name', 'mobile', 'vehicle_license',
-            'qrcode_url', 'reason', 'visitors_json1', 'visitors_json2',
+            'device','qrcode_url', 'reason', 'visitors_json1', 'visitors_json2',
             'scheduled_at', 'arrived_at', 'created_at', 'status'
         ];
 
@@ -216,15 +264,31 @@ class VisitorDao
     }
 
     /**
-     * Func Api 获取分享信息
+     * Func Api 获取分享地址和二维码地址
      *
      * @return array
      */
     public function getShareInfo($user_id = 0)
     {
         $data['uuid'] = Uuid::uuid4()->toString();
-        $data['share_url'] = 'http://www.baidu.com/'.$data['uuid'];
+        $data['share_url'] = asset('/special/visitor/index.html?uuid='.$data['uuid']);
+        $data['qrcode_url'] = $this->getQrcodeInfo($data['uuid']); // 二维码
         return $data;
+    }
+
+    /**
+     * Func 生成二维码
+     */
+    public function getQrcodeInfo($str = '')
+    {
+        if (!$str) return '';
+        $qrCode = new QrCode($str);
+        $qrCode->setSize(200);
+        $qrCode->setLogoPath(public_path('assets/img/logo.png'));
+        $qrCode->setLogoSize(30, 30);
+        $qrcode_url = '/assets/img/fangke/' . $str . '.png';
+        file_put_contents('.' . $qrcode_url, $qrCode->writeString());
+        return asset($qrcode_url);;
     }
 
     /**
@@ -236,7 +300,14 @@ class VisitorDao
      */
     public function getVisitorStatusInfo($visitorInfo = array())
     {
-        // TODO.....
-        return array('status' => 0, 'status_str' => '未到访');
+        if ($visitorInfo['status'] == 1) {
+            return array('status' => 1, 'status_str' => '未到访');
+        }
+        if ($visitorInfo['status'] == 2) {
+            return array('status' => 2, 'status_str' => '未到访');
+        }
+        if ($visitorInfo['status'] == 3) {
+            return array('status' => 3, 'status_str' => '已到访');
+        }
     }
 }

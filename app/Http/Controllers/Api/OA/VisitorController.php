@@ -4,9 +4,12 @@
 namespace App\Http\Controllers\Api\OA;
 
 use App\Dao\Users\UserDao;
+use App\Dao\Schools\SchoolDao;
 use App\Dao\OA\VisitorDao;
+use App\Events\User\SendCodeVisiterMobileEvent;
 use App\Utils\JsonBuilder;
 use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
 use App\Http\Requests\OA\VisitorRequest;
 
 class VisitorController extends Controller
@@ -32,7 +35,7 @@ class VisitorController extends Controller
         $infos = $visitorObj->getVisitorListInfo($user->id, $typeid, $page);
         if (!empty($infos)) {
             foreach ($infos as $key => &$val) {
-                $val['memberCount'] = count(json_decode($val['visitors_json1'], true));
+                $val['memberCount'] = !empty($val['visitors_json1'])?count(json_decode($val['visitors_json1'], true)):0;
                 $val['statusInfo'] = $visitorObj->getVisitorStatusInfo($val);
                 unset($val['status'], $val['visitors_json1'], $val['visitors_json2']);
             }
@@ -63,9 +66,9 @@ class VisitorController extends Controller
         $visitorObj = new VisitorDao();
         $infos = $visitorObj->getVisitorOneInfo($id, $user->id);
         if (!empty($infos)) {
-            $infos['memberList'] = json_decode($infos['visitors_json1'], true);
+            $infos['memberList'] = !empty($infos['visitors_json1'])?json_decode($infos['visitors_json1'], true):[];
             $infos['memberCount'] = count($infos['memberList']);
-            $infos['vehicleList'] = json_decode($infos['visitors_json2'], true);
+            $infos['vehicleList'] = !empty($infos['visitors_json2'])?json_decode($infos['visitors_json2'], true):[];
             $infos['statusInfo'] = $visitorObj->getVisitorStatusInfo($infos);
             unset($infos['status'],$infos['visitors_json1'], $infos['visitors_json2']);
         }
@@ -78,7 +81,7 @@ class VisitorController extends Controller
      * @param VisitorRequest $request
      * @return string
      */
-    public function info(VisitorRequest $request)
+    public function info(Request $request)
     {
         $uuid = (String)$request->input('uuid', '');
         if ($uuid == '') {
@@ -103,9 +106,10 @@ class VisitorController extends Controller
      * @param VisitorRequest $request
      * @return string
      */
-    public function update(VisitorRequest $request)
+    public function update(Request $request)
     {
         $uuid = (String)$request->input('uuid', '');
+        $device = (String)$request->input('device', '');
         $visitors_json1 = (String)$request->input('visitors_json1', ''); // 人员信息
         $visitors_json2 = (String)$request->input('visitors_json2', ''); // 车辆信息
         $scheduled_at = (String)$request->input('scheduled_at', ''); // 来访时间
@@ -115,7 +119,7 @@ class VisitorController extends Controller
         $visitors_json2_arr = json_decode($visitors_json2, true); // 车辆信息
         $scheduled_at = strtotime($scheduled_at); // 来访时间
 
-        if ($uuid == '') {
+        if ($uuid == '' || $device == '') {
             return JsonBuilder::Error('参数错误');
         }
         if ($visitors_json1 == '' || empty($visitors_json1_arr)) {
@@ -127,7 +131,7 @@ class VisitorController extends Controller
         if (!$scheduled_at) {
             return JsonBuilder::Error('来访时间格式错误');
         }
-        if ($scheduled_at < time()) {
+        if ($scheduled_at < (time()-10*60)) {
             return JsonBuilder::Error('来访时间不能小于当前时间');
         }
 
@@ -143,6 +147,7 @@ class VisitorController extends Controller
         // 添加数据
         $saveData['status'] = 2;
         $saveData['reason'] = $reason;
+        $saveData['device'] = trim($device);
         $saveData['name'] = (String)$visitors_json1_arr[0]['name'];
         $saveData['mobile'] = (String)$visitors_json1_arr[0]['mobile'];
         $saveData['visitors_json1'] = json_encode($visitors_json1_arr);
@@ -169,6 +174,39 @@ class VisitorController extends Controller
     }
 
     /**
+     * Func 获取访客信息
+     * @param VisitorRequest $request
+     * @return string
+     */
+    public function get_visiter_info(Request $request)
+    {
+        $uuid = (String)$request->input('uuid', '');
+        $device = (String)$request->input('device', '');
+
+	    $infos = [];
+		if($uuid && $device)
+		{
+		    $visitorObj = new VisitorDao();
+			$data = $visitorObj->getUuidVisitorOneInfo($uuid);
+			if(!empty($data) && $data['device'] == trim($device) && in_array($data['status'],[2,3]))
+			{
+				$visitors_json1_arr = json_decode($data['visitors_json1'],true);
+				$visitors_json2_arr = json_decode($data['visitors_json2'],true);
+
+				$userObj = new UserDao();
+				$userInfo = $userObj->getUserById($data['user_id']);
+				$infos['scheduled_at'] = $data['scheduled_at']; // 来访日期
+				$infos['name'] = isset($userInfo->name) ? $userInfo->name : ''; // 被访人
+				$infos['vehicle_is'] = !empty($visitors_json2_arr) ? '是' : '否'; // 是否开车
+				$infos['vehicle_license'] = !empty($visitors_json2_arr) ? implode(',', array_column($visitors_json2_arr, 'title')) : ''; // 是否开车
+				$infos['menber_count'] = count($visitors_json1_arr); // 来访人数
+				$infos['qrcode_url'] = (String)$data['qrcode_url']; // 二维码
+			}
+		}
+       return JsonBuilder::Success($infos,'获取访客信息');
+    }
+
+    /**
      * Func 获取分享地址
      * @param VisitorRequest $request
      * @return string
@@ -192,18 +230,19 @@ class VisitorController extends Controller
 
         $user = $request->user();
 
+        $schoolObj = new SchoolDao();
         $visitorObj = new VisitorDao();
         $infos = $visitorObj->getShareInfo($user->id);
 
         // 1:微信,2:QQ
         if (in_array($cate_id, [1, 2])) {
-            // 添加数据
             $addData['uuid'] = $infos['uuid'];
-            $addData['user_id'] = $user->gradeUserOneInfo->id;
-            $addData['invited_by'] = $user->gradeUserOneInfo->id;
+            $addData['user_id'] = $user->gradeUserOneInfo->user_id;
+            $addData['invited_by'] = $user->gradeUserOneInfo->user_id;
             $addData['school_id'] = $user->gradeUserOneInfo->school_id;
             $addData['cate_id'] = $cate_id;
             $addData['share_url'] = $infos['share_url'];
+            $addData['qrcode_url'] = $infos['qrcode_url'];
             $visitorObj->addVisitorInfo($addData);
         }
 
@@ -213,14 +252,30 @@ class VisitorController extends Controller
                 $infos = $visitorObj->getShareInfo($user->id);
                 $addData['mobile'] = $val;
                 $addData['uuid'] = $infos['uuid'];
-                $addData['user_id'] = $user->gradeUserOneInfo->id;
-                $addData['invited_by'] = $user->gradeUserOneInfo->id;
+                $addData['user_id'] = $user->gradeUserOneInfo->user_id;
+                $addData['invited_by'] = $user->gradeUserOneInfo->user_id;
                 $addData['school_id'] = $user->gradeUserOneInfo->school_id;
                 $addData['cate_id'] = $cate_id;
                 $addData['share_url'] = $infos['share_url'];
+                $addData['qrcode_url'] = $infos['qrcode_url'];
                 $visitorObj->addVisitorInfo($addData);
+
+                // 发送验证码
+                $schoolInfo = $schoolObj->getSchoolById($user->gradeUserOneInfo->school_id);
+                event(new SendCodeVisiterMobileEvent($user, $val, $schoolInfo->name, $infos['share_url']));
             }
         }
-        return JsonBuilder::Success($infos,'分享详情');
+
+        // 获取学校信息
+        $infos['school_name'] = '';
+        $infos['school_logo'] = '';
+        if (isset($user->gradeUserOneInfo->school_id)) {
+            $schoolInfo = $schoolObj->getSchoolById($user->gradeUserOneInfo->school_id);
+            $infos['school_name'] = (String)$schoolInfo->name;
+            $infos['school_logo'] = (String)$schoolInfo->logo;
+        }
+        unset($infos['qrcode_url']);
+
+        return JsonBuilder::Success($infos, '分享详情');
     }
 }
