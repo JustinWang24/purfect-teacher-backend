@@ -3,10 +3,164 @@
 namespace App\Dao\TeacherAttendance;
 
 use App\Models\TeacherAttendance\Attendance;
+use App\Models\TeacherAttendance\Clockset;
+use App\Models\TeacherAttendance\ExceptionDay;
+use App\Models\TeacherAttendance\Organization;
+use App\Models\Users\UserOrganization;
+use App\Utils\JsonBuilder;
+use App\Utils\Misc\ConfigurationTool;
+use App\Utils\Misc\Contracts\Title;
+use App\Utils\ReturnData\MessageBag;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 
 class AttendanceDao
 {
+    public function saveClocksets($attendance,$data) {
+        $bag = new MessageBag(JsonBuilder::CODE_ERROR);
+        DB::beginTransaction();
+        try{
+            foreach ($data as $item) {
+                $item['start'] = Carbon::parse($data['start'])->format('H:i:s');
+                $item['end'] = Carbon::parse($data['end'])->format('H:i:s');
+                $item['morning'] = Carbon::parse($data['morning'])->format('H:i:s');
+                $item['morning_late'] = Carbon::parse($data['morning_late'])->format('H:i:s');
+                $item['evening'] = Carbon::parse($data['evening'])->format('H:i:s');
+                if ($attendance->using_afternoon) {
+                    $item['afternoon_start'] = Carbon::parse($data['afternoon_start'])->format('H:i:s');
+                    $item['afternoon'] = Carbon::parse($data['afternoon'])->format('H:i:s');
+                    $item['afternoon_late'] = Carbon::parse($data['afternoon_late'])->format('H:i:s');
+                }else {
+                    $item['afternoon_start'] = null;
+                    $item['afternoon'] = null;
+                    $item['afternoon_late'] = null;
+                }
+
+                $clockSet = Clockset::where('teacher_attendance_id', $attendance->id)
+                    ->where('week', $item['week'])->first();
+                if ($clockSet) {
+                    $clockSet->start = $item['start'];
+                    $clockSet->end = $item['end'];
+                    $clockSet->morning = $item['morning'];
+                    $clockSet->morning_late = $item['morning_late'];
+                    $clockSet->evening = $item['evening'];
+                    $clockSet->afternoon_start = $item['afternoon_start'];
+                    $clockSet->afternoon = $item['afternoon'];
+                    $clockSet->afternoon_late = $item['afternoon_late'];
+                    $clockSet->is_weekday = $item['is_weekday'];
+                    $clockSet->save();
+                }else {
+                    Clockset::create([
+                        'teacher_attendance_id' => $attendance->id,
+                        'week' => $item['week'],
+                        'start' => $item['start'],
+                        'end' => $item['end'],
+                        'morning' => $item['morning'],
+                        'morning_late' => $item['morning_late'],
+                        'evening' => $item['evening'],
+                        'afternoon_start' => $item['afternoon_start'],
+                        'afternoon' => $item['afternoon'],
+                        'afternoon_late' => $item['afternoon_late'],
+                        'is_weekday' => $item['is_weekday']
+                    ]);
+                }
+            }
+
+            DB::commit();
+            $bag->setCode(JsonBuilder::CODE_SUCCESS);
+            $bag->setData($attendance);
+            return $bag;
+        }catch (\Exception $exception){
+            DB::rollBack();
+            $bag->setMessage($exception->getMessage());
+            return $bag;
+        }
+    }
+    public function create($data, $organizations) {
+        $bag = new MessageBag(JsonBuilder::CODE_ERROR);
+        DB::beginTransaction();
+        try{
+            $attendance = Attendance::create($data);
+            //创建组织
+            foreach ($organizations as $organization) {
+                Organization::create([
+                    'teacher_attendance_id' => $attendance->id,
+                    'organization_id' => end($organization)
+                ]);
+            }
+            DB::commit();
+            $bag->setCode(JsonBuilder::CODE_SUCCESS);
+            $bag->setData($attendance);
+            return $bag;
+        }catch (\Exception $exception){
+            DB::rollBack();
+            $bag->setMessage($exception->getMessage());
+            return $bag;
+        }
+    }
+    public function update($data, $organizations) {
+        $bag = new MessageBag(JsonBuilder::CODE_ERROR);
+        DB::beginTransaction();
+        try{
+            $attendance = $this->getById($data['id']);
+            $attendance->title = $data['title'];
+            $attendance->wifi_name = $data['wifi_name'];
+            $attendance->using_afternoon = $data['using_afternoon'];
+            $attendance->save();
+            //更新组织
+            Organization::where('teacher_attendance_id', $attendance->id)->delete();
+            foreach ($organizations as $organization) {
+                Organization::create([
+                    'teacher_attendance_id' => $attendance->id,
+                    'organization_id' => end($organization)
+                ]);
+            }
+            DB::commit();
+            $bag->setCode(JsonBuilder::CODE_SUCCESS);
+            $bag->setData($attendance);
+            return $bag;
+        }catch (\Exception $exception){
+            DB::rollBack();
+            $bag->setMessage($exception->getMessage());
+            return $bag;
+        }
+    }
+    public function getById($id) {
+        return Attendance::with('clocksets')
+            ->with('exceptiondays')
+            ->with('organizations')
+            ->where('id', $id)->first();
+    }
+    public function deleteExceptionday($id) {
+        return ExceptionDay::where('id', $id)->delete();
+    }
+
+    public function getExceptiondayByday($attendanceId, Carbon $day) {
+        return ExceptionDay::where('teacher_attendance_id', $attendanceId)->where('day' , $day->format('Y-m-d'))->first();
+    }
+    public function saveExceptionday($attendanceId,Carbon $day) {
+        return ExceptionDay::create([
+            'teacher_attendance_id' => $attendanceId,
+            'day' => $day->format('Y-m-d')
+        ]);
+    }
+
+    /**
+     * 分页获取考勤配置
+     * @param $schoolId
+     * @return mixed
+     */
+    public function getPaginated($schoolId) {
+        $list = Attendance::where('school_id', $schoolId)
+            ->with('organizations')
+            ->orderBy('created_at','desc')
+            ->paginate(ConfigurationTool::DEFAULT_PAGE_SIZE);
+        foreach ($list as &$item) {
+            $item->members = UserOrganization::whereIn('organization_id', $item->organizations()->pluck('organization_id')->toArray())
+                ->where('title_id', '=', Title::MEMBER)->count();
+        }
+        return $list;
+    }
     /**
      * 根据组织获取考勤基本配置
      * @param $organizationIdArr 组织id数组
