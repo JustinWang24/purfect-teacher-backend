@@ -43,10 +43,10 @@
             <div class="card-head">
                 <header class="full-width">
                     <span class="pull-left pt-2">流程: @{{ flow.name }} <i class="el-icon-loading" v-if="loadingNodes"></i></span>
-                    <el-button type="danger" size="mini" v-on:click="deleteFlow" icon="el-icon-delete" class="pull-right ml-2" v-if="node.titles.length > 0"></el-button>
+                    <el-button type="danger" size="mini" v-on:click="deleteFlow" icon="el-icon-delete" class="pull-right ml-2" v-if="juese.length > 0"></el-button>
                 </header>
             </div>
-            <div class="card-body" v-if="node.titles.length > 0">
+            <div class="card-body" v-if="juese.length > 0">
                 <div class="row">
                     <el-timeline class="col-12">
                         <el-timeline-item timestamp="发起审批流程部门/人员" placement="top" color="green">
@@ -56,17 +56,17 @@
                                     <el-button icon="el-icon-edit" size="mini" @click="editFlow">编辑</el-button>
                                 </el-button-group>
                             </p>
-                            <p v-if="node.organizations.length > 0">
+                            <p v-if="zuzhi.length > 0">
                                 <span class="text-primary"><b>部门: </b></span>
-                                <span class="mr-2" v-for="dept in node.organizations.substring(0,node.organizations.length -1).split(';')">
+                                <span class="mr-2" v-for="dept in zuzhi.substring(0,node.organizations.length -1).split(';')">
                                     <el-tag effect="plain" type="info" size="mini">
                                         @{{ dept }}
                                     </el-tag>
                                 </span>
                             </p>
-                            <p v-if="node.titles.length > 0">
+                            <p v-if="juese.length > 0">
                                 <span class="text-primary"><b>角色: </b></span>
-                                <span v-for="title in node.titles.substring(0,node.titles.length -1).split(';')" class="mr-2">
+                                <span v-for="title in juese.substring(0,juese.length -1).split(';')" class="mr-2">
                                     <el-tag effect="plain" type="info" size="mini">
                                         @{{ title }}
                                     </el-tag>

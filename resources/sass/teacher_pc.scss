@@ -12,6 +12,11 @@
     height: 0;
 }
 
+.card-height-700 {
+    height: 700px;
+    overflow-y: auto;
+}
+
 .status_red {
     color: #FD1B1B;
 }
@@ -488,6 +493,8 @@
         width: 100%;
         height: 100%;
         background: #eaeef3;
+        overflow-y: auto;
+        overflow-x: hidden;
         .el-form-item {
             margin-bottom: 5px;
             background: white;
@@ -539,8 +546,19 @@
             white-space: pre-wrap;
             line-height: 24px;
         }
+        .el-icon-close {
+            cursor: pointer;
+        }
+    }
+    .van-checkbox {
+        margin-bottom: 5px;
+    }
+    .fromItem {
+        margin-bottom: 5px;
     }
 }
+
+
 
 
 

@@ -36,8 +36,7 @@ class ForActionNextProcessors extends AbstractMessenger
     {
         $handler = $this->node ? $this->node->getHandler() : null;
         if($handler){
-            $users = $handler->getNoticeTo($this->currentUser);
-
+            $users = $handler->getNoticeTo($action->getUserFlow()->getUser());
             $content = $this->currentUser->getName();
 
             if($this->node && $this->node->isHead()){

@@ -17,9 +17,13 @@ if (document.getElementById('pipeline-flow-view-history-app')) {
                     type: 'primary',
                     icon: 'el-icon-more'
                 }, {
-                    content: '支持自定义颜色',
-                    timestamp: '2018-04-03 20:46',
-                    color: '#0bbd87'
+                    arr: [{
+                        content: '活动按期开始',
+                      }, {
+                        content: '通过审核',
+                      }, {
+                        content: '创建成功',
+                      }]
                 }, {
                     content: '支持自定义尺寸',
                     timestamp: '2018-04-03 20:46',

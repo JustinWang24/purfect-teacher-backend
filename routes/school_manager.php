@@ -508,6 +508,8 @@ Route::prefix('school_manager')->group(function () {
             ->name('school_manager.pipeline.load-business');
         Route::post('flows/load-titles','Pipeline\FlowsController@load_titles')
             ->name('school_manager.pipeline.load-titles');
+        Route::post('flows/save-auto-processed','Pipeline\FlowsController@save_auto_processed')
+            ->name('school_manager.pipeline.save-auto-processed');
     });
 
 

@@ -8,15 +8,45 @@
             </div>
             <div class="card-body">
                 <div class="card-body-approver">
-                    <div style="padding: 5px;background-color: yellow;">
+                    <div style="padding: 5px;background-color: #FE7B1C;">
                         <img src="{{asset('assets/img/teacher_blade/qingjia@2x.png')}}" alt="">
                         <span>&nbsp;&nbsp;&nbsp;审批人</span>
                         <span> （一级审批）</span>
                     </div>
-                    <div>
+                    <div style="border: 1px solid #FE7B1C; color: #313B4C; padding: 10px 6px;">
                         请选择审批人
                     </div>
                 </div>
+                <el-divider direction="vertical"></el-divider>
+                <div class="card-body-approver">
+                    <div style="padding: 5px;background-color: #FE7B1C;">
+                        <img src="{{asset('assets/img/teacher_blade/qingjia@2x.png')}}" alt="">
+                        <span>&nbsp;&nbsp;&nbsp;审批人</span>
+                        <span> （二级审批）</span>
+                    </div>
+                    <div style="border: 1px solid #FE7B1C; color: #313B4C; padding: 10px 6px;">
+                        请选择审批人
+                    </div>
+                </div>
+                <el-divider direction="vertical"></el-divider>
+                <div class="card-body-approver">
+                    <div style="padding: 5px;background-color: #4EA5FE">
+                        <img src="{{asset('assets/img/teacher_blade/qingjia@2x.png')}}" alt="">
+                        <span>&nbsp;&nbsp;&nbsp;抄送人</span>
+                    </div>
+                    <div style="border: 1px solid #4EA5FE; color: #313B4C; padding: 10px 6px;">
+                        请选择抄送人
+                    </div>
+                </div>
+                <el-divider direction="vertical"></el-divider>
+                <p style="text-align: center;">流程结束</p>
+                <div style="display: flex;justify-content: space-around;align-items: center;margin-top: 60px;">
+                    <p>审批自动同意</p>
+                    <el-select v-model="agree">
+                        <el-option v-for="item in agreeList" :key="item.key" :label="item.name" :value="item.key"></el-option>
+                    </el-select>
+                </div>
+                <el-button type="primary" style="width: 100px;margin-top: 60px;margin-left: 35%;">保存</el-button>
             </div>
         </div>
     </div>

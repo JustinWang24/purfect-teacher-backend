@@ -2,82 +2,178 @@
 @section('content')
 <div id="app-init-data-holder" data-flowid="{{ $flow->id }}" data-nodeid="{{ $node->id }}" data-school="{{ $user->getSchoolId() }}" data-nodeoptions="{{ $node->options }}" data-apprequest="1"></div>
 <div id="{{ $appName }}" class="school-intro-container">
-    <div class="main p-15">
-        <h5>申请人: {{ $user->name }}</h5>
-        <el-form v-if="!done" ref="startActionForm" :model="action" label-width="80px">
+    <div class="main" style="overflow:hidden;">
+        <van-form @submit="onSubmit">
+            <h5 style="background:white;margin:0;padding: 10px;margin-bottom:5px;">申请人: {{ $user->name }}</h5>
 
-            @foreach($node->options as $key => $nodeOption)
-                @if($nodeOption->getType() === \App\Utils\Pipeline\INodeOption::TYPE_TEXT)
-                    <el-form-item label="{{ $nodeOption->name }}" class="nb mt-10">
-                        <el-input type="textarea" placeholder="必填: 请写明{{ $nodeOption->name }}" rows="2" v-model="action.options[{{ $key }}].value"></el-input>
-                    </el-form-item>
-                @elseif($nodeOption->getType() === \App\Utils\Pipeline\INodeOption::TYPE_DATE)
-                    <el-form-item label="{{ $nodeOption->name }}" class="nb mt-10">
-                        <el-date-picker
-                                v-model="action.options[{{ $key }}].value"
-                                type="date"
-                                value-format="yyyy-MM-dd"
-                                placeholder="{{ $nodeOption->name }}">
-                        </el-date-picker>
-                    </el-form-item>
-                @elseif($nodeOption->getType() === \App\Utils\Pipeline\INodeOption::TYPE_TIME)
-                    <el-form-item label="{{ $nodeOption->name }}" class="nb mt-10">
-                        <el-time-picker
-                                v-model="action.options[{{ $key }}].value"
-                                :picker-options="{selectableRange: '07:30:00 - 20:30:00'}"
-                                placeholder="选择时间"></el-time-picker>
-                    </el-form-item>
-                @endif
-            @endforeach
-
-            <el-form-item label="原因说明" class="nb mt-10">
-                <el-input type="textarea" placeholder="必填: 请写明原因" rows="6" v-model="action.content"></el-input>
-            </el-form-item>
-            <el-form-item label="申请加急" class="nb">
-                <el-switch v-model="action.urgent"></el-switch>
-            </el-form-item>
-            {{--<el-form-item label="选择附件" class="nb">
-                <el-button type="primary" size="mini" icon="el-icon-document" v-on:click="showFileManagerFlag=true">选择附件</el-button>
-                <ul style="padding-left: 0;">
-                    <li v-for="(a, idx) in action.attachments" :key="idx">
-                        <p style="margin-bottom: 0;">
-                            <span>@{{ a.file_name }}</span>&nbsp;<el-button v-on:click="dropAttachment(idx, a)" type="text" style="color: red">删除</el-button>
-                        </p>
-                    </li>
-                </ul>
-            </el-form-item>--}}
-
-            <p v-if="done" class="text-primary">
-                提交成功!
-            </p>
-
-            {{--<p>说明: {{ $node->description }}</p>
-            @if(count($node->attachments) > 0)
-                <p>附件列表:</p>
-                @foreach($node->attachments as $attachment)
-                    <p><a href="{{ $attachment->url }}" target="_blank">{{ $attachment->file_name }}</a></p>
-                @endforeach
-            @else
-                <p class="text-info">本步骤没有提供附件给申请人</p>
-            @endif--}}
-        </el-form>
-
-        <h5>审批流程</h5>
-
-        <el-timeline>
-            @foreach($handlers as $key => $handler)
-            <el-timeline-item
-                    key="{{ $key }}">
-                @foreach($handler as $k => $val)
-                    @foreach ($val as $v)
-                    {{ $v->name }}({{ $k }})
+    <div class="from-main">
+        <div class="fromItem" v-for="item in formList">
+            <div v-if="item.type == 'input' || item.type=='textarea' || item.type=='number'">
+                <van-field
+                        v-model="item.value"
+                        :type="item.type"
+                        :name="item.title"
+                        :label="item.title"
+                        :placeholder="item.tips"
+                        :required="item.required?true:false"
+                        :rules="item.required?[{ required: item.required,pattern: item.type=='number'?(item.extra.floats?/^[0-9]+(.[0-9]{2})?$/:/^(\-|\+)?\d*$/):'', message:item.type=='number'?(item.extra.floats?'支持输入两位小数':'请输入整数'): '请填写'+item.tips }]:[]"
+                />
+            </div>
+            <div v-if="item.type == 'radio'">
+                <van-field :required="item.required?true:false" name="radio" :label="item.title">
+                    <template #input>
+                        <van-radio-group v-model="item.value" direction="horizontal">
+                            <van-radio v-for="(item2, index2) in item.extra.itemList" :name="item2">@{{item2.itemText}}
+                            </van-radio>
+                        </van-radio-group>
+                    </template>
+                </van-field>
+            </div>
+            <div v-if="item.type == 'checkbox'">
+                <van-field :required="item.required?true:false" name="checkboxGroup" :label="item.title">
+                    <template #input>
+                        <van-checkbox-group v-model="item.value" direction="horizontal">
+                            <van-checkbox v-for="(itemCB, indexCB) in item.extra.itemList" :name="itemCB" shape="square">
+                                @{{itemCB.itemText}}
+                            </van-checkbox>
+                        </van-checkbox-group>
+                    </template>
+                </van-field>
+            </div>
+            <div v-if="item.type == 'date'">
+                <van-field
+                        :required="item.required?true:false"
+                        readonly
+                        clickable
+                        name="datetimePicker"
+                        :value="item.value"
+                        :label="item.title"
+                        :placeholder="item.tips"
+                        @click="item.extra.showPicker = true;"
+                />
+                </van-field>
+                <van-popup v-model="item.extra.showPicker" position="bottom">
+                    <van-datetime-picker
+                            v-model='item.time'
+                            :min-date="minDate"
+                            :max-date="maxDate"
+                            @confirm="onConfirm(item)"
+                            @cancel="item.extra.showPicker = false"
+                            :type="item.extra.dateType==1?'datetime':'date'"
+                    />
+                </van-popup>
+            </div>
+            <div v-if="item.type == 'date-date'">
+                <div>
+                    <van-field
+                            :required="item.required?true:false"
+                            readonly
+                            clickable
+                            name="datetimePicker"
+                            :value="item.valueS"
+                            :label="item.title"
+                            :placeholder="item.tips"
+                            @click="item.extra.showPickerS = true;"
+                    />
+                    </van-field>
+                    <van-popup v-model="item.extra.showPickerS" position="bottom">
+                        <van-datetime-picker
+                                v-model='item.timeS'
+                                :min-date="minDate"
+                                :max-date="maxDate"
+                                @confirm="onConfirmS(item)"
+                                @cancel="item.extra.showPickerS = false"
+                                :type="item.extra.dateType==1?'datetime':'date'"
+                        />
+                    </van-popup>
+                </div>
+                <div>
+                    <van-field
+                            :required="item.required?true:false"
+                            readonly
+                            clickable
+                            name="datetimePicker"
+                            :value="item.valueE"
+                            :label="item.title"
+                            :placeholder="item.tips"
+                            @click="item.extra.showPickerE = true;"
+                    />
+                    </van-field>
+                    <van-popup v-model="item.extra.showPickerE" position="bottom">
+                        <van-datetime-picker
+                                v-model='item.timeE'
+                                :min-date="minDate"
+                                :max-date="maxDate"
+                                @confirm="onConfirmE(item)"
+                                @cancel="item.extra.showPickerE = false"
+                                :type="item.extra.dateType==1?'datetime':'date'"
+                        />
+                    </van-popup>
+                </div>
+            </div>
+            <div v-if="item.type == 'image' || item.type == 'files'">
+                <van-field name="uploader" :required="item.required?true:false" :label="item.title">
+                    <template #input>
+                        <van-uploader v-model="item.files" :max-count="9" :after-read="uploadImg" />
+                    </template>
+                </van-field>
+            </div>
+            <div v-if="item.type == 'money'">
+                <van-field
+                        v-model="item.value"
+                        type="number"
+                        :name="item.title"
+                        :label="item.title"
+                        :placeholder="item.tips"
+                        :required="item.required?true:false"
+                        :rules="item.required?[{ required: item.required,pattern: /^[0-9]+(.[0-9]{2})?$/, message:'请输入正确金额'}]:[]"
+                />
+            </div>
+            <div v-if="item.type == 'area'">
+                <van-field
+                        readonly
+                        clickable
+                        name="area"
+                        :value="item.value"
+                        label="地区选择"
+                        placeholder="点击选择省市区"
+                        @click="item.extra.showPicker = true"
+                /></van-field>
+                <van-popup v-model="item.extra.showPicker" position="bottom">
+                    <van-area
+                            :area-list="provinceList"
+                            @confirm="setArea($event, item)"
+                            @cancel="item.extra.showPicker = false"
+                    />
+                </van-popup>
+            </div>
+            <div v-if="item.type == 'node'">
+                <van-field disabled
+                        v-model="item.nodeText"
+                        type="textarea"
+                        name="说明文字"
+                        label="说明文字"/>
+            </div>
+        </div>
+    </div>
+            <h5 style="background:white;margin:0;padding: 10px;">审批流程</h5>
+            <el-timeline>
+                @foreach($handlers as $key => $handler)
+                <el-timeline-item
+                        key="{{ $key }}">
+                    @foreach($handler as $k => $val)
+                        @foreach ($val as $v)
+                        {{ $v->name }}({{ $k }})
+                        @endforeach
                     @endforeach
+                </el-timeline-item>
                 @endforeach
-            </el-timeline-item>
-            @endforeach
-        </el-timeline>
+            </el-timeline>
 
-        <el-button class="full-width" type="primary" @click="onStartActionSubmit">发起</el-button>
+             <van-button round block type="info" native-type="submit">
+                发起
+             </van-button>
+        </van-form>
     </div>
     @include(
         'reusable_elements.section.file_manager_component_mobile',

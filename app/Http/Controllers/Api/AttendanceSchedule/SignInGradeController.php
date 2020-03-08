@@ -406,7 +406,7 @@ class SignInGradeController extends Controller
         $configuration = $school->configuration;
         $year = $configuration->getSchoolYear($date);
         $term = $configuration->guessTerm($month);
-        $weekDay = $now->weekday();
+        $weekDay = $now->dayOfWeekIso;
 
         $weeks = $configuration->getScheduleWeek(Carbon::parse($date), null, $term);
         if(is_null($weeks)) {
@@ -525,7 +525,7 @@ class SignInGradeController extends Controller
         $configuration = $school->configuration;
         $year = $configuration->getSchoolYear($date);
         $term = $configuration->guessTerm($month);
-        $weekDay = $now->weekDay();
+        $weekDay = $now->dayOfWeekIso;
         $weeks = $configuration->getScheduleWeek(Carbon::parse($date), null, $term);
         if(is_null($weeks)) {
             return JsonBuilder::Success('当前没有课程');

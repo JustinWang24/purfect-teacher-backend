@@ -28,59 +28,152 @@
                 <div class="view">
                     <div class="viewBg">
                         <div class="viewContent">
-                            <el-form ref="form" label-width="80px">
-                                <el-form-item :prop="item.type" :rules="rules[item.type]" v-for="(item, index) in formList" :key="index" :label="item.title">
-                                    <el-input v-model="item.value" v-if="item.type == 'input' || item.type == 'number' || item.type == 'money'" :placeholder="item.tips"></el-input>
-                                    <el-input @input="textareaInput" v-model="item.value" v-if="item.type == 'textarea'" class="ipt-textarea" :placeholder="item.tips"></el-input>
-                                    <el-radio v-model="item.value" v-if="item.type == 'radio'"  v-for="(itemRadio, indexRadio) in item.extra.itemList"
-                                               :key="indexRadio" :label="itemRadio.itemText"></el-radio>
-                                    <el-checkbox v-model="item.value" v-if="item.type == 'checkBox'"  v-for="(itemCheck, indexCheck) in item.extra.itemList"
-                                                  :key="indexCheck" :label="itemCheck.itemText"></el-checkbox>
-                                    <el-date-picker v-model="item.value"
-                                            v-if="item.type == 'date'"
-                                            :type="item.extra.dateType == 1?'datetime':'date'"
-                                            :placeholder="item.tips">
-                                    </el-date-picker>
-                                    <el-date-picker v-model="item.value" style="width:100%"
-                                            v-if="item.type == 'date-date'"
-                                            :type="item.extra.dateType == 1?'datetimerange':'daterange'"
-                                            :start-placeholder="item.title"
-                                            :end-placeholder="item.title2">
-                                    </el-date-picker>
-                                    <el-upload disabled v-if="item.type == 'image'"
-                                            class="avatar-uploader"
-                                            :show-file-list="false">
-                                        <img v-if="imageUrl" :src="imageUrl" class="avatar">
-                                        <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-                                    </el-upload>
-                                    <el-upload
-                                            disabled
-                                            v-if="item.type == 'files'"
-                                            class="upload-demo"
-                                            multiple>
-                                        <el-button size="small" type="primary">点击上传</el-button>
-                                    </el-upload>
-                                    <el-select v-if="item.type == 'department'"
-                                               v-model="item.value"
-                                               multiple
-                                               filterable
-                                               remote
-                                               reserve-keyword
-                                               :placeholder="item.tips">
-                                    </el-select>
-                                    <el-select v-if="item.type == 'area'"
-                                               v-model="item.value"
-                                               multiple
-                                               filterable
-                                               remote
-                                               reserve-keyword
-                                               :placeholder="item.tips">
-                                    </el-select>
-                                    <div class="nodeText" v-if="item.type == 'node'" v-html="item.nodeText"></div>
-                                </el-form-item>
-                            </el-form>
+                                <div class="fromItem" v-for="item in formList">
+                                    <div v-if="item.type == 'input' || item.type=='textarea' || item.type=='number'">
+                                        <van-field disabled
+                                                v-model="item.value"
+                                                :type="item.type"
+                                                :name="item.title"
+                                                :label="item.title"
+                                                :placeholder="item.tips"
+                                                :required="item.required?true:false"
+                                                :rules="item.required?[{ required: item.required,pattern: item.type=='number'?(item.extra.floats?/^[0-9]+(.[0-9]{2})?$/:/^(\-|\+)?\d*$/):'', message:item.type=='number'?(item.extra.floats?'支持输入两位小数':'请输入整数'): '请填写'+item.tips }]:[]"
+                                        />
+                                    </div>
+                                    <div v-if="item.type == 'radio'">
+                                        <van-field disabled :required="item.required?true:false" name="radio" :label="item.title">
+                                            <template #input>
+                                                <van-radio-group v-model="item.value" direction="horizontal">
+                                                    <van-radio v-for="(item2, index2) in item.extra.itemList" :name="item2">@{{item2.itemText}}
+                                                    </van-radio>
+                                                </van-radio-group>
+                                            </template>
+                                        </van-field>
+                                    </div>
+                                    <div v-if="item.type == 'checkbox'">
+                                        <van-field disabled :required="item.required?true:false" name="checkboxGroup" :label="item.title">
+                                            <template #input>
+                                                <van-checkbox-group direction="horizontal">
+                                                    <van-checkbox v-for="(itemCB, indexCB) in item.extra.itemList" :name="itemCB" shape="square">
+                                                        @{{itemCB.itemText}}
+                                                    </van-checkbox>
+                                                </van-checkbox-group>
+                                            </template>
+                                        </van-field>
+                                    </div>
+                                    <div v-if="item.type == 'date'">
+                                        <van-field disabled
+                                                :required="item.required?true:false"
+                                                readonly
+                                                clickable
+                                                name="datetimePicker"
+                                                :value="item.value"
+                                                :label="item.title"
+                                                :placeholder="item.tips"
+                                                @click="item.extra.showPicker = true;"
+                                        />
+                                        </van-field>
+                                        <van-popup v-model="item.extra.showPicker" position="bottom">
+                                            <van-datetime-picker
+                                                    v-model='item.time'
+                                                    :min-date="minDate"
+                                                    :max-date="maxDate"
+                                                    @confirm="onConfirm(item)"
+                                                    @cancel="item.extra.showPicker = false"
+                                                    :type="item.extra.dateType==1?'datetime':'date'"
+                                            />
+                                        </van-popup>
+                                    </div>
+                                    <div v-if="item.type == 'date-date'">
+                                        <div>
+                                            <van-field disabled
+                                                    :required="item.required?true:false"
+                                                    readonly
+                                                    clickable
+                                                    name="datetimePicker"
+                                                    :value="item.valueS"
+                                                    :label="item.title"
+                                                    :placeholder="item.tips"
+                                                    @click="item.extra.showPickerS = true;"
+                                            />
+                                            </van-field>
+                                            <van-popup v-model="item.extra.showPickerS" position="bottom">
+                                                <van-datetime-picker
+                                                        v-model='item.timeS'
+                                                        :min-date="minDate"
+                                                        :max-date="maxDate"
+                                                        @confirm="onConfirmS(item)"
+                                                        @cancel="item.extra.showPickerS = false"
+                                                        :type="item.extra.dateType==1?'datetime':'date'"
+                                                />
+                                            </van-popup>
+                                        </div>
+                                        <div>
+                                            <van-field disabled
+                                                    :required="item.required?true:false"
+                                                    readonly
+                                                    clickable
+                                                    name="datetimePicker"
+                                                    :value="item.valueE"
+                                                    :label="item.title"
+                                                    :placeholder="item.tips"
+                                                    @click="item.extra.showPickerE = true;"
+                                            />
+                                            </van-field>
+                                            <van-popup v-model="item.extra.showPickerE" position="bottom">
+                                                <van-datetime-picker
+                                                        v-model='item.timeE'
+                                                        :min-date="minDate"
+                                                        :max-date="maxDate"
+                                                        @confirm="onConfirmE(item)"
+                                                        @cancel="item.extra.showPickerE = false"
+                                                        :type="item.extra.dateType==1?'datetime':'date'"
+                                                />
+                                            </van-popup>
+                                        </div>
+                                    </div>
+                                    <div v-if="item.type == 'image' || item.type == 'files'">
+                                        <van-field disabled name="uploader" :required="item.required?true:false" :label="item.title">
+                                            <template #input>
+                                                <van-uploader v-model="item.files" :max-count="9" />
+                                            </template>
+                                        </van-field>
+                                    </div>
+                                    <div v-if="item.type == 'money'">
+                                        <van-field disabled
+                                                v-model="item.value"
+                                                type="number"
+                                                :name="item.title"
+                                                :label="item.title"
+                                                :placeholder="item.tips"
+                                                :required="item.required?true:false"
+                                                :rules="item.required?[{ required: item.required,pattern: /^[0-9]+(.[0-9]{2})?$/, message:'请输入正确金额'}]:[]"
+                                        />
+                                    </div>
+                                    <div v-if="item.type == 'area'">
+                                        <van-field disabled
+                                                readonly
+                                                clickable
+                                                name="area"
+                                                :value="item.value"
+                                                label="地区选择"
+                                                placeholder="点击选择省市区"
+                                                @click="item.extra.showPicker = true"
+                                        /></van-field>
+                                        <van-popup v-model="item.extra.showPicker" position="bottom">
+                                            <van-area
+                                                    @confirm="setArea($event, item)"
+                                                    @cancel="item.extra.showPicker = false"
+                                            />
+                                        </van-popup>
+                                    </div>
+                                </div>
+
                         </div>
                     </div>
+                </div>
+                <div style="text-align:center;margin-top:10px;">
+                    <el-button type="primary" @click="save">保存</el-button>
                 </div>
             </div>
         </div>
@@ -90,7 +183,7 @@
             <div class="card-head">
                 设置表单项
             </div>
-            <div class="card-body">
+            <div class="card-body card-height-700">
                 <div class="formItem" v-for="(item, index) in formList">
                     <div class="formItemName">
                         <span v-html="item.name"></span>
@@ -128,7 +221,8 @@
                             说明文字 <span class="status_gray">最多500个字</span>
                         </div>
                         <div class="">
-                            <el-input @input="textareaInput" type="textarea" maxlength="500" v-model="item.nodeText"></el-input>
+                            <el-input type="textarea" maxlength="500"
+                                      v-model="item.nodeText"></el-input>
                         </div>
                     </div>
                     <div class="formItemextra">
@@ -137,7 +231,7 @@
                             小数
                             <el-checkbox v-model="item.extra.floats">支持</el-checkbox>
                         </div>
-                        <div v-if="item.type == 'radio' || item.type == 'checkBox'">
+                        <div v-if="item.type == 'radio' || item.type == 'checkbox'">
                             <div>
                                 选项 <span class="status_gray">最多20个字</span>
                             </div>
@@ -172,9 +266,9 @@
                             </div>
                         </div>
                     </div>
-                    <div class="formItemVer">
+                    <div class="formItemVer" v-if="item.type != 'node'">
                         验证
-                        <el-checkbox v-model="item.required">必填</el-checkbox>
+                        <el-checkbox v-model="item.required" :true-label="1">必填</el-checkbox>
                     </div>
                 </div>
             </div>

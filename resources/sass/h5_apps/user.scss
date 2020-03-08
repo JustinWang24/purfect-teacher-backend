@@ -71,3 +71,19 @@
 .el-form-item__error{
   z-index: 199;
 }
+
+#pipeline-flow-open-app {
+    .van-cell {
+        padding: 8px 16px;
+    }
+    .el-timeline {
+        background: white;
+        padding: 20px;
+    }
+    .fromItem {
+        margin-bottom: 5px;
+    }
+    .van-checkbox {
+        margin-bottom: 5px;
+    }
+}
