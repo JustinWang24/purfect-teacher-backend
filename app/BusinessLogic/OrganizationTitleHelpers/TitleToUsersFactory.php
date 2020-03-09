@@ -10,6 +10,8 @@ namespace App\BusinessLogic\OrganizationTitleHelpers;
 
 use App\BusinessLogic\OrganizationTitleHelpers\Contracts\TitleToUsers;
 use App\BusinessLogic\OrganizationTitleHelpers\Impl\ClassAdviser;
+use App\BusinessLogic\OrganizationTitleHelpers\Impl\ClassGroup;
+use App\BusinessLogic\OrganizationTitleHelpers\Impl\ClassMonitor;
 use App\BusinessLogic\OrganizationTitleHelpers\Impl\DepartmentManager;
 use App\BusinessLogic\OrganizationTitleHelpers\Impl\GradeAdviser;
 use App\BusinessLogic\OrganizationTitleHelpers\Impl\SchoolCoordinator;
@@ -51,6 +53,12 @@ class TitleToUsersFactory
                 break;
             case Title::GRADE_ADVISER: // 年级组长
                 $instance = new GradeAdviser($user);
+                break;
+            case Title::CLASS_MONITOR: //班长
+                $instance = new ClassMonitor($user);
+                break;
+            case Title::CLASS_GROUP: //团支书
+                $instance = new ClassGroup($user);
                 break;
             default:
                 break;
