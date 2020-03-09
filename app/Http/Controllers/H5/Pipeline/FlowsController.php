@@ -10,7 +10,9 @@ namespace App\Http\Controllers\H5\Pipeline;
 use App\Dao\Pipeline\FlowDao;
 use App\Http\Controllers\Controller;
 use App\Models\Pipeline\Flow\ActionOption;
+use App\Models\Pipeline\Flow\UserFlow;
 use App\User;
+use App\Utils\Pipeline\IUserFlow;
 use Illuminate\Http\Request;
 use App\BusinessLogic\Pipeline\Flow\FlowLogicFactory;
 use App\Dao\Pipeline\ActionDao;
@@ -129,7 +131,8 @@ class FlowsController extends Controller
             //当前用户action
             $nowUserAction = $dao->getActionByUserFlowAndUserId($userFlowId, $user->id);
             $this->dataForView['showActionEditForm'] = !empty($nowUserAction)
-                && $nowUserAction->result == IAction::RESULT_PENDING ? true : false;
+                && $nowUserAction->result == IAction::RESULT_PENDING
+                && $startUserAction->userFlow->done == IUserFlow::IN_PROGRESS  ? true : false;
 
             $flowDao = new FlowDao();
             //流程信息

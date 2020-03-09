@@ -1,6 +1,3 @@
-@php
-$flowStillInProgress = $startAction->userFlow->done === \App\Utils\Pipeline\IUserFlow::IN_PROGRESS;
-@endphp
 @extends('layouts.h5_app')
 @section('content')
 <div id="app-init-data-holder" data-school="{{ $user->getSchoolId() }}" data-useruuid="{{ $user->uuid }}" data-apitoken="{{ $user->api_token }}" data-flowid="{{ $startAction->userFlow->id }}" data-actionid="{{ $userAction ? $userAction->id : null }}" data-theaction="{{ $userAction }}" data-apprequest="1"></div>
@@ -125,7 +122,7 @@ $flowStillInProgress = $startAction->userFlow->done === \App\Utils\Pipeline\IUse
                 <el-timeline-item key="{{ $key }}" icon="el-icon-more" type="primary" size="large">
                     @foreach($handler as $k => $val)
                     @foreach ($val as $v)
-                            <el-timeline-item @if (!empty($v->result)) avatar="{{ $v->profile->avatar }}" result="{{ $v->result->result }}" timestamp="{{ substr($v->result->updated_at, 5, 11) }}" @endif>
+                            <el-timeline-item @if (!empty($v->result)) avatar="{{ $v->profile->avatar }}" result="{{ $v->result->result }}" @if($v->result->result != \App\Utils\Pipeline\IAction::RESULT_PENDING) timestamp="{{ substr($v->result->updated_at, 5, 11) }}" @endif @endif>
                                 {{ $v->name }}({{ $k }})
                             </el-timeline-item>
                     @endforeach
@@ -149,8 +146,7 @@ $flowStillInProgress = $startAction->userFlow->done === \App\Utils\Pipeline\IUse
 </div>
 </div>
 
-
-
+@if ($showActionEditForm)
 <a style="display: block; color: white;text-decoration: none;text-align: center;" class="showMoreButton">审批</a>
-
+@endif
 @endsection
