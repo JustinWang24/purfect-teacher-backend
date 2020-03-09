@@ -1084,7 +1084,5 @@ Route::prefix('office')->middleware('auth:api')->group(function(){
 });
 
 // 服务协议及隐私政策
-Route::prefix('app')->middleware('auth:api')->group(function(){
-    Route::any('/agreement', 'Api\Home\IndexController@agreement')
+Route::any('app/agreement', 'Api\Home\IndexController@agreement')
     ->name('api.office.office-page');
-});
