@@ -494,6 +494,37 @@ class TeacherApplyElectiveCourseDao
     }
 
     /**
+     * 解散一门选修课
+     * @param $id
+     */
+    public function discolved($courseId){
+        $messageBag = new MessageBag(JsonBuilder::CODE_ERROR);
+        $course = Course::where('id', $courseId)->first();
+        DB::beginTransaction();
+        try{
+            //标记申请状态为驳回
+            TeacherApplyElectiveCourse::where('course_id', $courseId)->update([
+                'status' => TeacherApplyElectiveCourse::STATUS_WAITING_FOR_REJECTED,
+                'reply_content' => '管理员取消'
+            ]);
+            //对应课程删除
+            $dao = new CourseDao();
+            $dao->deleteCourseByUuid($course->uuid);
+            //标记选修课状态为取消
+            CourseElective::where('course_id', $courseId)->update([
+                'status' => CourseElective::STATUS_CANCEL
+            ]);
+            DB::commit();
+            $messageBag->setCode(JsonBuilder::CODE_SUCCESS);
+
+        }catch (\Exception $exception) {
+            DB::rollBack();
+            $messageBag->setMessage($exception->getMessage());
+        }
+        return $messageBag;
+    }
+
+    /**
      * 批准申请
      * @param $id
      * @param $content
@@ -1049,6 +1080,12 @@ class TeacherApplyElectiveCourseDao
         }
         $year = date("Y-");
         return [$year.date("m-d",strtotime($start)), $year.date("m-d",strtotime($end))];
+    }
+
+    public function gettoDissolvedElectiveList()
+    {
+        $nowTime = Carbon::now()->format('Y-m-d H:i:s');
+        return CourseElective::where('status', CourseElective::STATUS_WAITING)->where('expired_at', '<', $nowTime)->get();
     }
 }
 
