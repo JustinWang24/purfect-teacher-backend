@@ -1091,7 +1091,12 @@ Route::prefix('material')->middleware('auth:api')->group(function(){
     // 类型材料列表
     Route::any('/materialsByType', 'Api\Study\MaterialController@materialsByType')
         ->name('api.material.materialsByType');
-
+    // 课程详情
+    Route::any('/courseDetails', 'Api\Study\MaterialController@courseDetails')
+        ->name('api.material.courseDetails');
+    // 编辑课程详情
+    Route::any('/saveCourse', 'Api\Study\MaterialController@saveCourse')
+        ->name('api.material.saveCourse');
 });
 
 

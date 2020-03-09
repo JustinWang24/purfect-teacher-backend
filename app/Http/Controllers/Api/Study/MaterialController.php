@@ -9,6 +9,7 @@
 namespace App\Http\Controllers\Api\Study;
 
 
+use App\Dao\Courses\CourseDao;
 use App\Utils\JsonBuilder;
 use App\Http\Controllers\Controller;
 use App\Dao\Courses\CourseTeacherDao;
@@ -84,7 +85,46 @@ class MaterialController extends Controller
     }
 
 
-    public function courseDetails() {
+    /**
+     * 课程详情
+     * @param MaterialRequest $request
+     * @return string
+     */
+    public function courseDetails(MaterialRequest $request) {
+        $courseId = $request->getCourseId();
+        if(is_null($courseId)) {
+            return JsonBuilder::Error('缺少参数');
+        }
+        $dao = new CourseDao();
+        $course = $dao->getCourseById($courseId);
+        $result = [
+            'course_id' => $course->id,
+            'course_name' => $course->name,
+            'desc' => $course->desc,
+        ];
+
+        return JsonBuilder::Success($result);
+    }
+
+
+    /**
+     * 编辑课程详情
+     * @param MaterialRequest $request
+     * @return string
+     */
+    public function saveCourse(MaterialRequest $request) {
+        $courseId = $request->getCourseId();
+        $desc = $request->get('desc');
+        if(is_null($courseId) || is_null($desc)) {
+            return JsonBuilder::Error('缺少参数');
+        }
+        $dao = new CourseDao();
+        $result = $dao->updateCourseDescByCourseId($courseId, $desc);
+        if($result) {
+            return JsonBuilder::Success('编辑成功');
+        } else {
+            return JsonBuilder::Error('编辑失败');
+        }
 
     }
 
