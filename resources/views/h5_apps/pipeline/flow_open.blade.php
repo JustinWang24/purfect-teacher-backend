@@ -1,6 +1,6 @@
 @extends('layouts.h5_app')
 @section('content')
-<div id="app-init-data-holder" data-flowid="{{ $flow->id }}" data-nodeid="{{ $node->id }}" data-school="{{ $user->getSchoolId() }}" data-nodeoptions="{{ $node->options }}" data-apprequest="1"></div>
+<div id="app-init-data-holder" data-apitoken="{{ $api_token }}" data-flowid="{{ $flow->id }}" data-nodeid="{{ $node->id }}" data-school="{{ $user->getSchoolId() }}" data-nodeoptions="{{ $node->options }}" data-apprequest="1"></div>
 <div id="{{ $appName }}" class="school-intro-container">
     <div class="main" style="overflow:hidden;">
         <van-form @submit="onSubmit">
@@ -159,14 +159,15 @@
             <h5 style="background:white;margin:0;padding: 10px;">审批流程</h5>
             <el-timeline>
                 @foreach($handlers as $key => $handler)
-                <el-timeline-item
-                        key="{{ $key }}">
-                    @foreach($handler as $k => $val)
-                        @foreach ($val as $v)
-                        {{ $v->name }}({{ $k }})
+                    <el-timeline-item key="{{ $key }}" icon="el-icon-more" type="primary" size="large">
+                        @foreach($handler as $k => $val)
+                            @foreach ($val as $v)
+                                <el-timeline-item>
+                                    {{ $v->name }}({{ $k }})
+                                </el-timeline-item>
+                            @endforeach
                         @endforeach
-                    @endforeach
-                </el-timeline-item>
+                    </el-timeline-item>
                 @endforeach
             </el-timeline>
 

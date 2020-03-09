@@ -137,7 +137,7 @@ class FlowsController extends Controller
             $flowInfo = $flow->getSimpleLinkedNodes();
             $handlers = [];
             //审批结果
-            $actionResult = $dao->getHistoryByUserFlow($startUserAction->flow_id, true);
+            $actionResult = $dao->getHistoryByUserFlow($startUserAction->userFlow->id, true);
             $actionReList = [];
             foreach ($actionResult as $actRet) {
                 $actionReList[$actRet->user_id] = $actRet;
