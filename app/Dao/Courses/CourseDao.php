@@ -587,4 +587,16 @@ class CourseDao
         return Course::whereIn('id',$ids)->where('year', $year)->get();
     }
 
+
+    /**
+     * 修改课程描述
+     * @param $courseId
+     * @param $desc
+     * @return mixed
+     */
+    public function updateCourseDescByCourseId($courseId, $desc) {
+        return Course::where('id', $courseId)
+            ->update(['desc'=>$desc]);
+    }
+
 }

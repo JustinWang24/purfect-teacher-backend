@@ -7,15 +7,16 @@
 namespace App\Dao\Courses\Lectures;
 
 
-use App\Utils\Misc\ConfigurationTool;
 use Carbon\Carbon;
 use App\Utils\JsonBuilder;
 use App\Dao\Users\GradeUserDao;
 use App\Models\Courses\Lecture;
 use App\Models\Users\GradeUser;
 use App\Models\Courses\Homework;
+use Illuminate\Support\Facades\DB;
 use App\Utils\ReturnData\MessageBag;
 use App\Utils\Time\GradeAndYearUtil;
+use App\Utils\Misc\ConfigurationTool;
 use App\Models\Courses\LectureMaterial;
 use App\Models\Courses\LectureMaterialType;
 use Illuminate\Database\Eloquent\Collection;
@@ -257,12 +258,18 @@ class LectureDao
      * @param $courseId
      * @param $type
      * @param $teacherId
+     * @param bool $isPage
      * @return mixed
      */
-    public function getMaterialByCourseId($courseId, $type, $teacherId) {
+    public function getMaterialByCourseId($courseId, $type, $teacherId, $isPage = true) {
         $map = ['course_id'=>$courseId, 'type'=>$type, 'teacher_id'=>$teacherId];
-        return LectureMaterial::where($map)
-            ->paginate(ConfigurationTool::DEFAULT_PAGE_SIZE);
+        $result = LectureMaterial::where($map);
+
+        if($isPage) {
+            return $result->paginate(ConfigurationTool::DEFAULT_PAGE_SIZE);
+        }
+
+        return $result->get();
     }
 
 
@@ -289,5 +296,109 @@ class LectureDao
         return $messageBag;
     }
 
+
+    /**
+     * 获取数量
+     * @param $teacherId
+     * @param $type
+     * @return mixed
+     */
+    public function getMaterialNumByUserAndType($teacherId, $type) {
+        $map = ['teacher_id'=>$teacherId, 'type'=>$type];
+        return LectureMaterial::where($map)->count();
+    }
+
+
+    /**
+     * 上传学习资料
+     * @param $data
+     * @return MessageBag
+     */
+    public function addMaterial($data) {
+        $messageBag = new MessageBag();
+
+        // 查询当前课节是否已上传
+        $info = $this->getMaterialByCourseIdAndIdxAndTeacherId($data['course_id'], $data['idx'], $data['user_id']);
+
+        $lecture = [
+            'course_id' => $data['course_id'],
+            'teacher_id' => $data['user_id'],
+            'idx' => $data['idx'],
+            'title' => $data['title'],
+        ];
+
+        try{
+            DB::beginTransaction();
+
+            if(is_null($info)) {
+                $info = Lecture::create($lecture);
+            }
+
+            foreach ($data['material'] as $key => $item) {
+                $material = [
+                    'lecture_id' => $info->id,
+                    'teacher_id' => $data['user_id'],
+                    'course_id' => $data['course_id'],
+                    'media_id' => $item['media_id']??0,
+                    'type' => $item['type_id'],
+                    'description' => $item['desc'],
+                    'url' => $item['url'],
+                    'grade_id' => $data['grade_id']
+                ];
+
+                LectureMaterial::create($material);
+            }
+            DB::commit();
+            $messageBag->setMessage('上传成功');
+
+        } catch (\Exception $e) {
+
+            DB::rollBack();
+            $msg = $e->getMessage();
+            $messageBag->setCode(JsonBuilder::CODE_ERROR);
+            $messageBag->setMessage($msg);
+        }
+
+        return $messageBag;
+    }
+
+
+    /**
+     * 根据课节查询
+     * @param $courseId
+     * @param $idx
+     * @param $teacherId
+     * @return mixed
+     */
+    public function getMaterialByCourseIdAndIdxAndTeacherId($courseId, $idx, $teacherId) {
+        $map = ['idx'=>$idx, 'course_id'=>$courseId, 'teacher_id'=>$teacherId];
+        return Lecture::where($map)->first();
+    }
+
+
+    /**
+     * 根据老师获取学习资料
+     * @param $userId
+     * @return mixed
+     */
+    public function getMaterialByUser($userId) {
+        $map = ['teacher_id'=>$userId];
+        return LectureMaterial::where($map)
+            ->select(['lecture_id', 'media_id'])
+            ->distinct(['lecture_id', 'media_id'])
+            ->get();
+    }
+
+
+    /**
+     * 根据课节和资料获取信息
+     * @param $lectureId
+     * @param $mediaId
+     * @return mixed
+     */
+    public function getMaterialByLectureIdAndMediaId($lectureId, $mediaId) {
+        $map = ['lecture_id'=>$lectureId, 'media_id'=>$mediaId];
+        return LectureMaterial::where($map)->get();
+    }
 
 }

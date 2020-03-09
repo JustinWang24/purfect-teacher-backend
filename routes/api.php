@@ -1081,8 +1081,33 @@ Route::prefix('office')->middleware('auth:api')->group(function(){
     ->name('api.office.office-page');
     Route::any('/help-page', 'Admin\IndexController@helpIcon')
     ->name('api.office.help-page');
+    // 服务协议及隐私政策
+    Route::any('app/agreement', 'Api\Home\IndexController@agreement')
+    ->name('api.office.office-page');
 });
 
-// 服务协议及隐私政策
-Route::any('app/agreement', 'Api\Home\IndexController@agreement')
-    ->name('api.office.office-page');
+// PC端教学资料
+Route::prefix('material')->middleware('auth:api')->group(function(){
+    // 我的课程
+    Route::any('/myCourse', 'Api\Study\MaterialController@courses')
+        ->name('api.material.myCourse');
+    // 类型材料列表
+    Route::any('/materialsByType', 'Api\Study\MaterialController@materialsByType')
+        ->name('api.material.materialsByType');
+    // 课程详情
+    Route::any('/courseDetails', 'Api\Study\MaterialController@courseDetails')
+        ->name('api.material.courseDetails');
+    // 编辑课程详情
+    Route::any('/saveCourse', 'Api\Study\MaterialController@saveCourse')
+        ->name('api.material.saveCourse');
+    // 课程班级列表
+    Route::any('/getCourseGradeList', 'Api\Study\MaterialController@getCourseGradeList')
+        ->name('api.material.getCourseGradeList');
+    // 添加教材
+    Route::post('/addMaterial', 'Api\Study\MaterialController@addMaterial')
+        ->name('api.material.addMaterial');
+    // 教材资料
+    Route::any('/materials', 'Api\Study\MaterialController@materials')
+        ->name('api.material.materials');
+});
+
