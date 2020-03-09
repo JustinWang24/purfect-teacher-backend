@@ -48,6 +48,16 @@ Route::prefix('h5')->group(function () {
     // 用户查看自己的流程历史详情
     Route::any('/flow/user/view-history','H5\Pipeline\FlowsController@view_history')
         ->name('h5.flow.user.view-history');
+    // 用户查看待自己审批的流程列表
+    Route::any('/flow/user/waiting-for-me', 'H5\Pipeline\FlowsController@waiting_for_me')
+        ->name('h5.flow.user.waiting-for-me');
+    // 用户查看抄送自己审批的流程列表
+    Route::any('/flow/user/copy-to-me', 'H5\Pipeline\FlowsController@copy_to_me')
+        ->name('h5.flow.user.copy-to-me');
+    // 用户查看自己审批的流程列表
+    Route::any('/flow/user/cc', 'H5\Pipeline\FlowsController@my_processed')
+        ->name('h5.flow.user.my-processed');
+
     // 学生查看自己今天的课表
     Route::any('/timetable/student/view','H5\Timetable\StudentController@view')
         ->name('h5.timetable.student.view');
@@ -107,7 +117,7 @@ Route::prefix('pipeline')->group(function () {
         ->name('pipeline.flow-view-history');
 
     // 学生专用
-    Route::get('/flow/student/open','Teacher\Pipeline\FlowsController@open')
+    Route::get('c','Teacher\Pipeline\FlowsController@open')
         ->name('student.pipeline.flow-open');
 });
 

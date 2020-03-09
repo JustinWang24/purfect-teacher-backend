@@ -23,27 +23,23 @@ class VersionDao
      */
     public function create($data)
     {
-        if (!isset($data['id']) || empty($data['id'])) {
-            unset($data['id']);
+        if (empty($data))
+        {
+            return false;
         }
-        $messageBag = new MessageBag(JsonBuilder::CODE_ERROR);
         DB::beginTransaction();
         try {
-            $fillableData = $this->getFillableData(new Version(), $data);
-            $version = Version::create($fillableData);
-            if ($version) {
+            if ($obj = Version::create($data)) {
                 DB::commit();
-                $messageBag->setCode(JsonBuilder::CODE_SUCCESS);
-                $messageBag->setData($version);
+                return $obj->id;
             } else {
                 DB::rollBack();
-                $messageBag->setMessage('保存版本号失败, 请联系管理员');
+                return false;
             }
         } catch (\Exception $exception) {
             DB::rollBack();
-            $messageBag->setMessage($exception->getMessage());
+            return false;
         }
-        return $messageBag;
     }
 
     /**
@@ -80,8 +76,27 @@ class VersionDao
      */
     public function getVersions($field="*")
     {
-        return Version::orderBy('code','desc')->get();
+        return Version::orderBy('sid','desc')->get();
     }
+
+    /**
+     * @param string $field
+     * @return Version[]|\Illuminate\Database\Eloquent\Collection
+     */
+    public function getVersionListInfo($condition = [], $field = "*")
+    {
+        return Version::where($condition)->orderBy('sid', 'desc')->get();
+    }
+
+    /**
+     * @param string $field
+     * @return Version[]|\Illuminate\Database\Eloquent\Collection
+     */
+    public function getVersionOneInfo($condition = [], $field = "*")
+    {
+        return Version::where($condition)->orderBy('sid', 'desc')->first();
+    }
+
 
     /**
      * @param $id
@@ -99,7 +114,7 @@ class VersionDao
      */
     public function delete($id)
     {
-        return Version::where('id', $id)->delete();
+        return Version::where('sid', $id)->delete();
     }
 
     /**

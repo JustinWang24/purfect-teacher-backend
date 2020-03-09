@@ -30,9 +30,10 @@ class TeacherFlowsLogic extends GeneralFlowsLogic
     public function getMyFlows($forApp = false)
     {
         $dao = new FlowDao();
+        $types = [];
 
         // 以下是原生开发的
-        $types[] = [
+        /*$types[] = [
             'name'=>IFlow::TYPE_TEACHER_ONLY_TXT,
             'key'=>1000,
             'flows'=>[
@@ -106,7 +107,7 @@ class TeacherFlowsLogic extends GeneralFlowsLogic
                     'icon'=>asset('assets/img/pipeline/t3@2x.png')
                 ],
             ]
-        ];
+        ];*/
 
         $result =  $dao->getGroupedFlows(
             $this->user->getSchoolId(), array_keys(Flow::getTypesByPosition(IFlow::POSITION_1)), $forApp

@@ -11,10 +11,13 @@ use App\Dao\NetworkDisk\MediaDao;
 use App\Models\Pipeline\Flow\Action;
 use App\Models\Pipeline\Flow\ActionAttachment;
 use App\Models\Pipeline\Flow\ActionOption;
+use App\Models\Pipeline\Flow\Copys;
+use App\Models\Pipeline\Flow\Flow;
 use App\Models\Pipeline\Flow\UserFlow;
 use App\User;
 use App\Utils\JsonBuilder;
 use App\Utils\Pipeline\IAction;
+use App\Utils\Pipeline\IFlow;
 use App\Utils\Pipeline\IUserFlow;
 use App\Utils\ReturnData\IMessageBag;
 use App\Utils\ReturnData\MessageBag;
@@ -187,17 +190,54 @@ class ActionDao
     }
 
     /**
+     * 获取抄送我的流程
+     * @param $user
+     * @return mixed
+     */
+    public function getFlowsWhichCopyTo($user){
+        return UserFlow::whereHas('copys', function ($query) use ($user) {
+                $query->where('user_id', $user->id);
+            })->with('flow')
+            ->orderBy('id','desc')
+            ->get();
+    }
+
+    /**
+     * 我审批的
+     * @param $user
+     * @return mixed
+     */
+    public function getFlowsWhichMyProcessed($user){
+        return UserFlow::whereHas('actions', function ($query) use ($user) {
+            $query->where('user_id', $user->id)->where('result', '>', IAction::RESULT_PENDING);
+        })->with('flow')
+            ->orderBy('id','desc')
+            ->get();
+    }
+
+    /**
      * 获取给定用户的所有等待审核的流程
      * @param $user
      * @return Collection
      */
-    public function getFlowsWaitingFor($user){
-        return Action::where('user_id',$user->id??$user)
-            ->where('result','=',IAction::RESULT_PENDING)
-            ->with('flow')
-            ->with('userFlow')
-            ->orderBy('id','desc')
-            ->get();
+    public function getFlowsWaitingFor($user, $position = 0){
+        if (!$position) {
+            return Action::where('user_id',$user->id??$user)
+                ->where('result','=',IAction::RESULT_PENDING)
+                ->with('flow')
+                ->with('userFlow')
+                ->orderBy('id','desc')
+                ->get();
+        }else {
+            $flowIdArr = Flow::whereIn('type', array_keys(Flow::getTypesByPosition($position)))->pluck('id')->toArray();
+            return Action::where('user_id',$user->id??$user)
+                ->where('result','=',IAction::RESULT_PENDING)
+                ->whereIn('flow_id', $flowIdArr)
+                ->with('flow')
+                ->with('userFlow')
+                ->orderBy('id','desc')
+                ->get();
+        }
     }
 
     /**
@@ -248,6 +288,16 @@ class ActionDao
             ->first();
     }
 
+    public function getActionByUserFlowAndUserId($userFlowId, $userId){
+        return Action::where('transaction_id',$userFlowId)
+            ->where('user_id', $userId)
+            ->with('node')
+            ->with('options')
+            ->with('attachments')
+            ->orderBy('id','desc')
+            ->first();
+    }
+
     /**
      * @param $actionId
      * @param $userId
@@ -270,5 +320,9 @@ class ActionDao
             ->with('options')
             ->with('attachments')
             ->first();
+    }
+
+    public function getCountWaitProcessUsers($nodeId){
+        return Action::where('node_id', $nodeId)->where('result', IAction::RESULT_PENDING)->count();
     }
 }

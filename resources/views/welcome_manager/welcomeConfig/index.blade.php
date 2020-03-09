@@ -132,7 +132,6 @@
                 </div>
             </div>
         </div>
-
         <div class="col-5" v-if="dataList2 !== undefined && dataList2.length >0">
             <div class="card">
                 <div class="card-head">
@@ -156,11 +155,6 @@
                 </div>
             </div>
         </div>
-
-        @include(
-                'reusable_elements.section.file_manager_component',
-                ['pickFileHandler'=>'pickFileHandler']
-            )
     </div>
     <div id="app-init-data-holder"
          data-school="{{ session('school.id') }}"

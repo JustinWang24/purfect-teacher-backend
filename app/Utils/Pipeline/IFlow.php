@@ -18,9 +18,12 @@ interface IFlow extends IPersistent
     const POSITION_3 = 3;
     const POSITION_3_TXT = '系统流程';
 
+    const BUSINESS_TYPE_MACADDRESS = 'attendance_macaddress';
+    const BUSINESS_TYPE_CLOCKIN = 'attendance_clockin';
+
     //关联业务
     const BUSINESS_ATTENDANCE_MACADDRESS = [
-        'business' => 'attendance_macaddress',
+        'business' => self::BUSINESS_TYPE_MACADDRESS,
         'name' => '考勤修改Mac地址',
         'options' => [
             ['name' => '考勤组ID', 'type' => 'hidden', 'tip' => '请选择考勤组', 'required' => 1],
@@ -28,7 +31,7 @@ interface IFlow extends IPersistent
         ]
     ];
     const BUSINESS_ATTENDANCE_CLOCKIN = [
-        'business' => 'attendance_clockin',
+        'business' => self::BUSINESS_TYPE_CLOCKIN,
         'name' => '考勤补卡',
         'options' => [
             ['name' => '考勤组ID', 'type' => 'hidden', 'tip' => '请选择考勤组', 'extra' => '', 'required' => 1],

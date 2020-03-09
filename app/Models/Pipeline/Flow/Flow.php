@@ -22,7 +22,7 @@ class Flow extends Model implements IFlow
     public $table = 'pipeline_flows';
     public $timestamps = false;
     protected $fillable = [
-        'school_id','name','type','icon','copy_uids','business'
+        'school_id','name','type','icon','copy_uids','business','auto_processed'
     ];
 
     /**

@@ -1,65 +1,88 @@
 /**
  * 查看一个流程
  */
-import {processAction, viewApplicationByAction} from "../../common/flow";
-import {Constants} from "../../common/constants";
-import {Util} from "../../common/utils";
+import { processAction, viewApplicationByAction } from "../../common/flow";
+import { Constants } from "../../common/constants";
+import { Util } from "../../common/utils";
 
-if(document.getElementById('pipeline-flow-view-history-app')){
+if (document.getElementById('pipeline-flow-view-history-app')) {
     new Vue({
-        el:'#pipeline-flow-view-history-app',
-        data(){
+        el: '#pipeline-flow-view-history-app',
+        data() {
             return {
+                activities: [{
+                    content: '支持使用图标',
+                    timestamp: '2018-04-12 20:46',
+                    size: 'large',
+                    type: 'primary',
+                    icon: 'el-icon-more'
+                }, {
+                    arr: [{
+                        content: '活动按期开始',
+                      }, {
+                        content: '通过审核',
+                      }, {
+                        content: '创建成功',
+                      }]
+                }, {
+                    content: '支持自定义尺寸',
+                    timestamp: '2018-04-03 20:46',
+                    size: 'large'
+                }, {
+                    content: '默认样式的节点',
+                    timestamp: '2018-04-03 20:46'
+                }],
+
                 userUuid: null,
                 actionId: null,
                 userFlowId: null,
                 schoolId: null,
-                action:{
-                    content:'',
-                    attachments:[],
+                action: {
+                    content: '',
+                    attachments: [],
                     result: null,
                     urgent: false,
                 },
                 showFileManagerFlag: false,
                 isLoading: false,
-                history:[],
-                results:[
-                    {id: Constants.FLOW_ACTION_RESULT.PENDING, label: Constants.FLOW_ACTION_RESULT.PENDING_TXT},
-                    {id: Constants.FLOW_ACTION_RESULT.NOTICED, label: Constants.FLOW_ACTION_RESULT.NOTICED_TXT},
-                    {id: Constants.FLOW_ACTION_RESULT.PASSED, label: Constants.FLOW_ACTION_RESULT.PASSED_TXT},
-                    {id: Constants.FLOW_ACTION_RESULT.REJECTED, label: Constants.FLOW_ACTION_RESULT.REJECTED_TXT},
+                history: [],
+                results: [
+                    { id: Constants.FLOW_ACTION_RESULT.PENDING, label: Constants.FLOW_ACTION_RESULT.PENDING_TXT },
+                    { id: Constants.FLOW_ACTION_RESULT.NOTICED, label: Constants.FLOW_ACTION_RESULT.NOTICED_TXT },
+                    { id: Constants.FLOW_ACTION_RESULT.PASSED, label: Constants.FLOW_ACTION_RESULT.PASSED_TXT },
+                    { id: Constants.FLOW_ACTION_RESULT.REJECTED, label: Constants.FLOW_ACTION_RESULT.REJECTED_TXT },
                 ],
-                userFlow:{}, // 服务器端返回的
+                userFlow: {}, // 服务器端返回的
                 appRequest: false,  // 是否 App 嵌入的
             }
         },
-        created(){
+        created() {
             const dom = document.getElementById('app-init-data-holder');
             this.schoolId = dom.dataset.school;
             this.appRequest = !Util.isEmpty(dom.dataset.apprequest);
             this.actionId = dom.dataset.actionid;
             this.userUuid = dom.dataset.useruuid;
             this.userFlowId = dom.dataset.flowid;
-            if(this.actionId){
+            if (this.actionId) {
                 this.action = JSON.parse(dom.dataset.theaction);
-                if(this.action.node.next_node === 0){
+                if (this.action.node.next_node === 0) {
                     this.results.push({
                         id: Constants.FLOW_ACTION_RESULT.TERMINATED,
                         label: Constants.FLOW_ACTION_RESULT.TERMINATED_TXT
                     });
                 }
             }
-            this.loadWholeFlow();
+            // this.loadWholeFlow();
         },
         methods: {
-            loadWholeFlow: function(){
+            loadWholeFlow: function () {
                 this.isLoading = true;
                 viewApplicationByAction(this.actionId, this.userFlowId).then(res => {
-                    if(Util.isAjaxResOk(res)){
+                    if (Util.isAjaxResOk(res)) {
                         this.userFlow = res.data.data.flow.userFlow;
                         this.history = res.data.data.flow.nodes;
                     }
-                    else{
+                    else {
                         this.$message.error(res.data.message);
                     }
                     this.isLoading = false;
@@ -67,34 +90,34 @@ if(document.getElementById('pipeline-flow-view-history-app')){
                     this.$message.error('系统繁忙!');
                 })
             },
-            onCreateActionSubmit: function(){
-                if(this.action.result === Constants.FLOW_ACTION_RESULT.PENDING){
+            onCreateActionSubmit: function () {
+                if (this.action.result === Constants.FLOW_ACTION_RESULT.PENDING) {
                     this.$message.info('请给出您的审核意见');
                     return;
                 }
 
-                if(this.action.content.trim() === ''){
+                if (this.action.content.trim() === '') {
                     this.$message.info('请写下您的审核意见的说明文字');
                     return;
                 }
 
                 processAction(this.action).then(res => {
-                    if(Util.isAjaxResOk(res)){
+                    if (Util.isAjaxResOk(res)) {
                         this.$message({
-                            type:'success',
-                            message:'审核完毕'
+                            type: 'success',
+                            message: '审核完毕'
                         });
                         window.location.href = '/home';
                     }
-                    else{
+                    else {
                         this.$message.error(res.data.message);
                     }
                 });
             },
-            pickFileHandler: function(payload){
+            pickFileHandler: function (payload) {
                 this.showFileManagerFlag = false;
                 const attachment = {
-                    id:null,
+                    id: null,
                     action_id: null,
                     media_id: payload.file.id,
                     url: payload.file.url,
@@ -102,20 +125,20 @@ if(document.getElementById('pipeline-flow-view-history-app')){
                 };
                 this.action.attachments.push(attachment);
             },
-            getDotColor: function(node, currentNodeId, done){
+            getDotColor: function (node, currentNodeId, done) {
                 let color = '#0bbd87';
-                if(done === Constants.FLOW_FINAL_RESULT.PENDING){
-                    if(node.id !== currentNodeId){
-                        if(node.actions.length === 0){
+                if (done === Constants.FLOW_FINAL_RESULT.PENDING) {
+                    if (node.id !== currentNodeId) {
+                        if (node.actions.length === 0) {
                             color = '#F2F6FC';
                         }
                     }
-                    else{
+                    else {
                         color = '#409EFF';
                     }
                     return color;
                 }
-                else if(done === Constants.FLOW_FINAL_RESULT.REJECTED){
+                else if (done === Constants.FLOW_FINAL_RESULT.REJECTED) {
                     color = '#F56C6C';
                 }
                 return color;

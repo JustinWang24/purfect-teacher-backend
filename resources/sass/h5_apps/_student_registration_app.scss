@@ -1,90 +1,58 @@
-.school-intro-container{
-  .header{
-    position: relative;
-    border-bottom: solid 1px $borderColor;
-    .close-btn{
-      position: absolute;
-      top: 7px;
-      left: 7px;
-      color: #6F7275;
-      font-size: 30px;
-    }
-    .title{
-      text-align: center;
-      margin: 0;
-      line-height: 44px;
-      color: $txtColor;
-      font-size: 18px;
-    }
-  }
-
-  .main{
-    .intro-img{
-      padding: $defaultPadding;
-    }
-    .intro-content{
-      padding: $defaultPadding;
-      border-bottom: solid 7px $borderColor;
-      p{
-        color: $txtColor;
-        font-size: 14px;
-        line-height: 20px;
-        margin: 10px 0;
+.school-intro-container {
+  background-color: #f6f6f6;
+  .main {
+    .information {
+      margin-bottom: 10px;
+      background-color: #fff;
+      h3 {
+        padding: 10px 10px 0;
       }
-    }
-    .sub-title{
-      color: $txtColor;
-      padding-left: $defaultPadding;
-      margin-bottom: 0;
-    }
-    .majors-wrap{
-      padding: $defaultPadding;
-      .el-card{
-        border: none;
-        margin-bottom: $defaultPadding;
-        p{
-          margin:0;
-          line-height: 23px;
-          color: $txtColor;
+      h5 {
+        font-weight: 100;
+        line-height: 0;
+        padding: 0 15px;
+        margin: 0;
+        display: flex;
+        p:first-child {
+          flex: 1;
         }
-        .major-name{
-          font-size: 14px;
-          font-weight: bold;
+        p:nth-child(2) {
+          flex: 3;
+          text-align: right;
         }
-        .stat{
-          color: #6F7275;
-          font-size: 12px;
-          text-align: center;
-          .enrolled{
-            color: #0c83fc;
+      }
+      .reason {
+        font-size: 14px;
+        font-weight: 400;
+        color: rgba(51, 51, 51, 1);
+        padding: 0 15px;
+      }
+      .el-divider--horizontal {
+        margin: 0;
+      }
+      .imageBox {
+        padding: 0 15px;
+        .image {
+          width: 100px;
+          height: 100px;
+        }
+      }
+      .sendBox {
+        display: flex;
+        figure {
+          width: 50px;
+          margin: 0;
+          padding: 0 10px;
+          img {
+            border-radius: 50%;
+          }
+          p {
+            font-size: 14px;
+            text-align: center;
+            line-height: 0;
           }
         }
-        .fee{
-          font-size: 12px;
-        }
-        .status-text{
-          color: #0c83fc;
-          font-size: 12px;
-        }
       }
     }
-  }
-}
-
-.major-detail-wrapper{
-  margin-top: -20px;
-  padding: $defaultPadding;
-  border-top: solid 1px $borderColor;
-  p{
-    margin:0;
-    line-height: 23px;
-    color: $txtColor;
-  }
-  .md-name{
-    margin-bottom: 10px;
-  }
-  .md-desc{
-    font-size: 13px;
-    line-height: 18px;
   }
 }

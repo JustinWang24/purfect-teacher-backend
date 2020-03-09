@@ -151,7 +151,7 @@ class TimeSlotDao
         $timeSlots = TimetableItem::where('room_id',$room->id)
             ->where('year', $year)
             ->where('term', $term)
-            ->where('weekday_index',$date->weekday())
+            ->where('weekday_index',$date->dayOfWeekIso)
             ->where('time_slot_id','>=',$currentTimeSlot->id)
             ->with('timeslot')
             ->orderBy('time_slot_id','asc')
@@ -198,7 +198,7 @@ class TimeSlotDao
         return TimetableItem::where('room_id',$room->id)
             ->where('year', $year)
             ->where('term', $term)
-            ->where('weekday_index',$date->weekday())
+            ->where('weekday_index',$date->dayOfWeekIso)
             ->where('time_slot_id', $currentTimeSlot->id)
             ->with('timeslot')
             ->first();

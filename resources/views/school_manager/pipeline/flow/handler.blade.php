@@ -7,16 +7,37 @@
                 <header>设置审批人</header>
             </div>
             <div class="card-body">
-                <div class="card-body-approver">
-                    <div style="padding: 5px;background-color: yellow;">
+                <div class="card-body-approver" v-for="(item,index) in handler" :key="item.id">
+                    <div style="padding: 5px;background-color: #FE7B1C;">
                         <img src="{{asset('assets/img/teacher_blade/qingjia@2x.png')}}" alt="">
                         <span>&nbsp;&nbsp;&nbsp;审批人</span>
-                        <span> （一级审批）</span>
+                        <span> （@{{ index + 1 }}级审批）</span>
                     </div>
-                    <div>
-                        请选择审批人
+                    <div style="border: 1px solid #FE7B1C; color: #313B4C; padding: 10px 6px;">
+                        <p>@{{ item .titles }}</p>
+                        <!-- <el-input placeholder="请选择审批人"></el-input> -->
                     </div>
                 </div>
+                <!-- <el-divider direction="vertical"></el-divider> -->
+                <div class="card-body-approver">
+                    <div style="padding: 5px;background-color: #4EA5FE">
+                        <img src="{{asset('assets/img/teacher_blade/qingjia@2x.png')}}" alt="">
+                        <span>&nbsp;&nbsp;&nbsp;抄送人</span>
+                    </div>
+                    <div style="border: 1px solid #4EA5FE; color: #313B4C; padding: 10px 6px;">
+                        <!-- <el-input placeholder="请选择抄送人"></el-input> -->
+                        <p v-if="copy.length == 0">请选择抄送人</p>
+                        <p v-for="(item,index) in copy" :key="item.user_id" v-else>@{{ item.name }}</p>
+                    </div>
+                </div>
+                <!-- <p style="text-align: center;">流程结束</p> -->
+                <div style="display: flex;justify-content: space-around;align-items: center;margin-top: 60px;">
+                    <p>审批自动同意</p>
+                    <el-select v-model="agree">
+                        <el-option v-for="item in agreeList" :key="item.key" :label="item.name" :value="item.key"></el-option>
+                    </el-select>
+                </div>
+                <el-button type="primary" style="width: 100px;margin-top: 60px;margin-left: 35%;" @click="saveagree">保存</el-button>
             </div>
         </div>
     </div>
@@ -36,9 +57,9 @@
                         <el-cascader style="width: 90%;" :props="props" v-model="node.organizations"></el-cascader>
                     </el-form-item>
                     <el-form-item label="审批人">
-                        <el-radio-group v-model="approver">
-                            <el-radio v-for="item in titlesList" :label="item" :key="item">@{{item}}</el-radio>
-                        </el-radio-group>
+                        <el-checkbox-group v-model="approver">
+                            <el-checkbox v-for="item in titlesList" :label="item" :key="item">@{{item}}</el-checkbox>
+                        </el-checkbox-group>
                     </el-form-item>
                     <el-form-item style="display: flex;justify-content: center;">
                         <el-button type="primary" style="width: 140px; height: 37px;">确定</el-button>
@@ -51,8 +72,12 @@
                 <header>选择抄送人</header>
             </div>
             <div class="card-body" style="margin-top: 20px;">
-                <el-autocomplete v-model="teacher" prefix-icon="el-icon-search" placeholder="请输入教职工名字"></el-autocomplete>
+                <search-bar :school-id="{{ session('school.id') }}" full-tip="输入教职工名字" scope="employee" class="ml-4" :init-query="teacher" v-on:result-item-selected="selectMember"></search-bar>
+                <el-tag :key="idx" v-for="(member, idx) in members" class="mr-2" closable :disable-transitions="false" @click="editMember(member)" @close="removeFromOrg(member)">
+                    @{{ member }}
+                </el-tag>
             </div>
+            <el-button type="primary" style="width: 140px; height: 37px; margin: 20px auto;" @click="savecopy">确定</el-button>
         </div>
     </div>
 </div>

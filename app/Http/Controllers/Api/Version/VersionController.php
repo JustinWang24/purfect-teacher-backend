@@ -34,7 +34,6 @@ class VersionController extends Controller
                 ->where('api_token','=',$token)
                 ->orderBy('id')->first();
             $user_id = $userInfo->id;
-            //$school_id = $user->gradeUserOneInfo->school_id;
             $school_id = 1;
         }
 
@@ -54,7 +53,8 @@ class VersionController extends Controller
                 ->orderBy('version_id', 'desc')
                 ->first();
         }
-
+        // 组装下载url地址
+        $infos->version_downurl = $infos->typeid == 1 ? route('api.version.download',['sid'=>$infos->sid]) : $infos->version_downurl;
         if (isset($infos->sid))
         {
            $infos->version_isshow = 0; // 不显示
@@ -65,7 +65,6 @@ class VersionController extends Controller
                     if( time() < $infos->vserion_invalidtime )
                     {
                         $infos->version_isshow = 1;
-
                         if ( $user_id )
                         {
                             // 每天只需要弹一次
@@ -74,7 +73,7 @@ class VersionController extends Controller
                             $condition1[] = ['version_id', '=', (Int)$version_id];
                             $condition1[] = ['date', '=', date('Y-m-d')];
                             $condition1[] = ['user_apptype', '=', $user_apptype];
-                            if ( DB::table('versions')->where($condition1)->count() )
+                            if ( DB::table('version_users')->where($condition1)->count() )
                             {
                                 $infos->version_isshow = 0; // 每天只需要弹一次
                             } else {
@@ -86,7 +85,7 @@ class VersionController extends Controller
                                 $addData[ 'version_id' ]  = $version_id;
                                 $addData[ 'date' ]        = date('Y-m-d');
                                 $addData[ 'user_apptype' ]= $user_apptype;
-                                DB::table('versions')->insert($addData);
+                                DB::table('version_users')->insert($addData);
                             }
                         }
                     } else {
@@ -101,4 +100,19 @@ class VersionController extends Controller
         return JsonBuilder::Success($infos, '获取版本更新');
     }
 
+    /**
+     * Func 获取下载地址
+     *
+     * @param Request $request
+     * @param['token'] 是  token
+     *
+     * @return Json
+     */
+    public function download(Request $request)
+    {
+        $sid = (Int)$request->input('sid', '');
+        if (!$sid) return;
+        $infos = DB::table('versions')->where('sid','=',$sid)->first();
+        return response()->download(storage_path($infos->version_downurl));
+    }
 }

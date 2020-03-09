@@ -6,6 +6,8 @@
 <!-- bootstrap -->
 <script src="{{ asset('assets/plugins/bootstrap/js/bootstrap.min.js') }}"></script>
 <script src="{{ asset('assets/plugins/bootstrap-switch/js/bootstrap-switch.min.js') }}"></script>
+<script src="{{ asset('assets/plugins/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js') }}"></script>
+<script src="{{ asset('assets/plugins/bootstrap-datetimepicker/js/bootstrap-datetimepicker-init.js') }}"></script>
 <script src="{{ asset('assets/plugins/sparkline/jquery.sparkline.js') }}"></script>
 <script src="{{ asset('assets/js/pages/sparkline/sparkline-data.js') }}"></script>
 <!-- Common js-->

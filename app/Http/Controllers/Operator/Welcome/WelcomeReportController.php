@@ -359,7 +359,7 @@
 
                    if ($welcomeUserReportObj->addWelcomeUserReportsProjectInfo($addData))
                    {
-                       // TODO....支付成功，需要更新是否已完成....
+                       $welcomeUserReportObj->updateUserReportCompleteInfo($dataOne['user_id'], [1, 2, 3]);
                        FlashMessageBuilder::Push($request, FlashMessageBuilder::SUCCESS, '操作成功');
                        return redirect()->route('welcome_manager.welcomeReport.cost_detail',['id'=>$dataOne['uuid'],'typeid'=>$typeid,'index'=>$index]);
                    } else {

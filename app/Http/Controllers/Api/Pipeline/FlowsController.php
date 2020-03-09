@@ -87,7 +87,22 @@ class FlowsController extends Controller
      */
     public function waiting_for_me(FlowRequest $request){
         $logic = FlowLogicFactory::GetInstance($request->user());
-        return JsonBuilder::Success(['actions'=>$logic->waitingForMe()]);
+        $position = $request->get('position', 0);
+        return JsonBuilder::Success(['actions'=>$logic->waitingForMe($position)]);
+    }
+
+    /**
+     * @param FlowRequest $request
+     * @return string
+     */
+    public function copy_to_me(FlowRequest $request){
+        $logic = FlowLogicFactory::GetInstance($request->user());
+        return JsonBuilder::Success(['copys'=>$logic->copyToMe()]);
+    }
+
+    public function my_processed(FlowRequest $request){
+        $logic = FlowLogicFactory::GetInstance($request->user());
+        return JsonBuilder::Success(['processed'=>$logic->myProcessed()]);
     }
 
     /**
@@ -121,6 +136,7 @@ class FlowsController extends Controller
      */
     public function start(FlowRequest $request){
         $actionData = $request->getStartFlowData();
+        $actionData['options'] = $request->get('options');
         $user = $request->user();
 
         $flowDao = new FlowDao();
@@ -180,14 +196,12 @@ class FlowsController extends Controller
         $actionFormData = $request->getActionFormData();
         $dao = new ActionDao();
         $action = $dao->getByActionIdAndUserId($actionFormData['id'], $request->user()->id);
-
-        if($action){
+        if($action && $action->result == IAction::RESULT_PENDING){
             $logic = FlowLogicFactory::GetInstance($request->user());
-
             switch ($actionFormData['result']){
-                case IAction::RESULT_REJECT:
+                /*case IAction::RESULT_REJECT:
                     $bag = $logic->reject($action, $actionFormData); // 进入驳回流程的操作
-                    break;
+                    break;*/
                 case IAction::RESULT_TERMINATE:
                     $bag = $logic->terminate($action, $actionFormData); // 进入终止流程的操作
                     break;
@@ -196,22 +210,28 @@ class FlowsController extends Controller
                     break;
             }
 
+            $event = null;
             if ($bag->isSuccess()){
                 switch ($actionFormData['result']){
-                    case IAction::RESULT_REJECT:
+                    /*case IAction::RESULT_REJECT:
                         // 驳回流程的事件
                         $event = new FlowRejected($request->user(),$action, $bag->getData()['prevNode'], $action->getFlow());
+                        break;*/
+                    case IAction::RESULT_PASS:
+                        if ($dao->getCountWaitProcessUsers($action->getNode()->id) < 1) {
+                            //可能存在自动同意已经到了下一个action
+                            $newAction = $dao->getActionByUserFlowAndUserId($action->transaction_id, $action->user_id);
+                            $event = new FlowProcessed($request->user(),$newAction, $newAction->getNode(), $newAction->getFlow());
+                        }
                         break;
                     case IAction::RESULT_TERMINATE:
-                        $event = new FlowRejected($request->user(),$action, $bag->getData()['prevNode'], $action->getFlow());
+                        $event = new FlowRejected($request->user(),$action, $action->getNode()->prev, $action->getFlow());
                         break;
                     default:
-                        // 同意流程的事件, 默认
-                        $event = new FlowProcessed($request->user(),$action, $bag->getData()['currentNode'], $action->getFlow());
-                        break;
+                        $event = null;
                 }
 
-                event($event); // 发布事件
+                $event && event($event); // 发布事件
                 return JsonBuilder::Success();
             }
             else{

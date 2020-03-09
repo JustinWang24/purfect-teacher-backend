@@ -7,6 +7,7 @@ if (document.getElementById('pipeline-flows-manager_form-app')) {
         data(){
             return {
                 schoolId: null,
+                flow_id: null,
                 formList: [
                     /*                  formList列表属性定义
                      {
@@ -43,7 +44,7 @@ if (document.getElementById('pipeline-flows-manager_form-app')) {
                      depType: 1,
                      },
                      // 是否必填
-                     required: false
+                     required: 0
                      },*/
                 ],
                 itemMap: [
@@ -58,7 +59,7 @@ if (document.getElementById('pipeline-flows-manager_form-app')) {
                         extra: {
                             text: '用户申请时填写的内容最多可填写100个字'
                         },
-                        required: false,
+                        required: 0,
                         icon: 'el-icon-document-remove'
                     },
                     {
@@ -70,7 +71,7 @@ if (document.getElementById('pipeline-flows-manager_form-app')) {
                         extra: {
                             text: '用户申请时填写的内容最多可填写200个字'
                         },
-                        required: false,
+                        required: 0,
                         icon: 'el-icon-document'
                     },
                     {
@@ -85,7 +86,7 @@ if (document.getElementById('pipeline-flows-manager_form-app')) {
                             text: '',
                             floats: true
                         },
-                        required: false,
+                        required: 0,
                         icon: 'el-icon-document-remove'
                     },
                     {
@@ -110,12 +111,12 @@ if (document.getElementById('pipeline-flows-manager_form-app')) {
                                 }
                             ]
                         },
-                        required: false,
+                        required: 0,
                         icon: 'el-icon-circle-check'
                     },
                     {
                         name: '多选框',
-                        type: 'checkBox',
+                        type: 'checkbox',
                         value: '',
                         title: '申请单位',
                         title_holder: '申请单位',
@@ -135,7 +136,7 @@ if (document.getElementById('pipeline-flows-manager_form-app')) {
                                 }
                             ]
                         },
-                        required: false,
+                        required: 0,
                         icon: 'el-icon-circle-check'
                     },
                     {
@@ -148,9 +149,10 @@ if (document.getElementById('pipeline-flows-manager_form-app')) {
                         tips_holder: '请选择',
                         extra: {
                             text: '',
-                            dateType: 1
+                            dateType: 1,
+                            showPicker: false
                         },
-                        required: false,
+                        required: 0,
                         icon: 'el-icon-date'
                     },
                     {
@@ -165,9 +167,11 @@ if (document.getElementById('pipeline-flows-manager_form-app')) {
                         tips_holder: '请选择',
                         extra: {
                             text: '',
-                            dateType: 2
+                            dateType: 2,
+                            showPickerS: false,
+                            showPickerE: false
                         },
-                        required: false,
+                        required: 0,
                         icon: 'el-icon-date'
                     },
                     {
@@ -178,8 +182,9 @@ if (document.getElementById('pipeline-flows-manager_form-app')) {
                         title_holder: '图片',
                         extra: {
                             text: '图片最多可添加9张',
+                            files:[]
                         },
-                        required: false,
+                        required: 0,
                         icon: 'el-icon-picture-outline'
                     },
                     {
@@ -193,7 +198,7 @@ if (document.getElementById('pipeline-flows-manager_form-app')) {
                         extra: {
                             text: '',
                         },
-                        required: false,
+                        required: 0,
                         icon: 'el-icon-coin'
                     },
                     {
@@ -206,8 +211,9 @@ if (document.getElementById('pipeline-flows-manager_form-app')) {
                         tips_holder: '',
                         extra: {
                             text: '',
+                            files:[]
                         },
-                        required: false,
+                        required: 0,
                         icon: 'el-icon-paperclip'
                     },
                     {
@@ -222,7 +228,7 @@ if (document.getElementById('pipeline-flows-manager_form-app')) {
                             text: '',
                             depType: 1
                         },
-                        required: false,
+                        required: 0,
                         icon: 'el-icon-house'
                     },
                     {
@@ -235,8 +241,9 @@ if (document.getElementById('pipeline-flows-manager_form-app')) {
                         tips_holder: '请选择',
                         extra: {
                             text: '',
+                            showPicker: false
                         },
-                        required: false,
+                        required: 0,
                         icon: 'el-icon-location-outline'
                     },
                     {
@@ -248,21 +255,23 @@ if (document.getElementById('pipeline-flows-manager_form-app')) {
                         extra: {
                             text: '',
                         },
-                        required: false,
+                        required: 0,
                         icon: 'el-icon-warning-outline'
                     }
                 ],
                 rules:{
                     ipnut: [{ required: true, message: '请输入', trigger: 'blur' },]
                 },
+                minDate: new Date(1900, 0, 1),
+                maxDate: new Date(2100, 1, 1),
                 radio:""
             }
         },
         created(){
             const dom = document.getElementById('app-init-data-holder');
             this.schoolId = dom.dataset.school;
-            // 载入时间选择
-            console.log('表单');
+            this.flow_id = dom.dataset.newflow;
+            this.getForm();
         },
         methods: {
             clickItem(item) {
@@ -276,14 +285,49 @@ if (document.getElementById('pipeline-flows-manager_form-app')) {
                 let items = {itemText: '选项',};
                 console.log(item)
                 item.splice(index + 1, 0, items)
-                console.log(this.formList)
             },
             removeRadioItem (item, index) {
                 item.splice(index, 1)
-                console.log(this.formList)
             },
-            textareaInput(value) {
-
+            save () {
+                console.log(this.formList)
+                const url = '/school_manager/pipeline/flows/save-option';
+                let params = {};
+                params.flow_id = this.flow_id;
+                params.node_option = this.formList;
+                axios.post(url, params).then((res) => {
+                    if (Util.isAjaxResOk(res)) {
+                        console.log(res)
+                        this.$message({
+                            message: '保存成功',
+                            type: 'success'
+                        });
+                    } else {
+                        this.$message({
+                            message: '保存失败',
+                            type: 'warning'
+                        });
+                    }
+                }).catch((err) => {
+                    console.log(err)
+                    this.$message({
+                        message: '保存失败',
+                        type: 'warning'
+                    });
+                });
+            },
+            getForm () {
+                const url = '/school_manager/pipeline/flows/load-nodes';
+                let params = {};
+                params.flow_id = this.flow_id;
+                axios.post(url, params).then((res) => {
+                    if (Util.isAjaxResOk(res)) {
+                        let data = res.data.data;
+                        this.formList = data.nodes.options;
+                    }
+                }).catch((err) => {
+                    console.log(err)
+                });
             }
         }
     });

@@ -12,7 +12,7 @@ class NodeOption extends Model implements INodeOption
     use SoftDeletes;
     public $table = 'pipeline_node_options';
     public $timestamps = false;
-    protected $fillable = ['node_id','name','type', 'tip', 'required', 'extra'];
+    protected $fillable = ['node_id','name','type', 'tips', 'title', 'required', 'extra'];
 
     public function node(){
         return $this->belongsTo(Node::class);

@@ -23,14 +23,18 @@ use App\Utils\UI\Button;
 
                         </div>
                         <div class="table-responsive">
-                            <table class="table table-striped table-bordered table-hover table-checkable order-column valign-middle">
+                            <table class="table table-striped table-bordered table-hover table-checkable order-column valign-middle " style="text-align: center">
                                 <thead>
                                 <tr>
-                                    <th>#</th>
-                                    <th>版本名</th>
-                                    <th style="width: 800px;">版本号</th>
-                                    <th>下载url</th>
-                                    <th>本地磁盘路径</th>
+                                    <th>ID</th>
+                                    <th>终端</th>
+                                    <th>类型</th>
+                                    <th>更新</th>
+                                    <th>版本号</th>
+                                    <th>版本号名称</th>
+                                    <th width="25%">更新内容</th>
+                                    <th>下载地址</th>
+                                    <th>弹框失效时间</th>
                                     <th>操作</th>
                                 </tr>
                                 </thead>
@@ -43,14 +47,33 @@ use App\Utils\UI\Button;
                                 @endif
                                 @foreach($versions as $index=>$version)
                                     <tr>
-                                        <td>{{ $index+1 }}</td>
-                                        <td>{{ $version->name }}</td>
-                                        <td>{{ $version->code }}</td>
-                                        <td>{{ $version->download_url }} </td>
-                                        <td class="text-center">{{ $version->local_path }}</td>
+                                        <td>{{ $version->sid }}</td>
+                                        <td>
+                                            @if($version->user_apptype ==1) 校园版 @endif
+                                            @if($version->user_apptype ==2) 商企版 @endif
+                                            @if($version->user_apptype ==3) 教师版 @endif
+                                        </td>
+                                        <td>{{ $typeidArr[$version->typeid] }}</td>
+                                        <td>{{ $isupdateArr[$version->isupdate] }}</td>
+                                        <td>{{ $version->version_id }}</td>
+                                        <td>{{ $version->version_name }}</td>
+                                        <td>{{ $version->version_content }}</td>
+                                        <td>
+                                            @if($version->typeid == 1)
+                                                <a href="{{ route('api.version.download',['sid'=>$version->sid]) }}"  target="_blank" >{{ $version->created_at }}
+                                                    @if($version->typeid == 1) .apk @endif
+                                                </a>
+                                            @else
+                                                <a href="{{ $version->version_downurl }}"  target="_blank" >{{ $version->created_at }}</a>
+                                            @endif
+                                        </td>
+                                        <td>
+                                            @if($version->vserion_invalidtime > 0) {{ date('Y-m-d H:i',$version->vserion_invalidtime) }} @else if 无 @endif
+                                        </td>
+
                                         <td class="text-center">
-                                            {{ Anchor::Print(['text'=>'编辑','class'=>'btn-edit-building','href'=>route('admin.versions.edit',['id'=>$version->id])], Button::TYPE_DEFAULT,'edit') }}
-                                            {{ Anchor::Print(['text'=>'删除','class'=>'btn-edit-building','href'=>route('admin.versions.delete',['id'=>$version->id])], Button::TYPE_DEFAULT,'delete') }}
+                                            <a href="{{ route('admin.versions.delete',['sid'=>$version->sid]) }}" onClick="return confirm('你确定删除吗？')"  class="btn btn-info">删除</a>
+                                            {{ Anchor::Print(['text'=>'历史版本','class'=>'btn btn-primary','href'=>route('admin.versions.detail',['typeid'=>$version->typeid,'user_apptype'=>$version->user_apptype])], Button::TYPE_DEFAULT,'detail') }}
                                         </td>
                                     </tr>
                                 @endforeach

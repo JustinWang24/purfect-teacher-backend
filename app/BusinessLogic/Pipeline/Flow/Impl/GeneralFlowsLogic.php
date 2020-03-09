@@ -9,8 +9,11 @@
 namespace App\BusinessLogic\Pipeline\Flow\Impl;
 
 use App\BusinessLogic\Pipeline\Flow\Contracts\IFlowLogic;
+use App\BusinessLogic\Pipeline\Flow\FlowLogicFactory;
 use App\Dao\Misc\SystemNotificationDao;
 use App\Dao\Pipeline\UserFlowDao;
+use App\Models\Pipeline\Flow\Copys;
+use App\Models\Pipeline\Flow\Node;
 use App\Models\Pipeline\Flow\UserFlow;
 use App\Utils\Pipeline\IAction;
 use App\Utils\Pipeline\IFlow;
@@ -42,10 +45,26 @@ abstract class GeneralFlowsLogic implements IFlowLogic
      * 获取所有等待用户处理的操作
      * @return IAction[]|\Illuminate\Database\Eloquent\Collection
      */
-    public function waitingForMe()
+    public function waitingForMe($position = 0)
     {
         $actionDao = new ActionDao();
-        return $actionDao->getFlowsWaitingFor($this->user);
+        return $actionDao->getFlowsWaitingFor($this->user, $position);
+    }
+
+    /**
+     * 获取抄送我的流程
+     * @return mixed
+     */
+    public function copyToMe()
+    {
+        $actionDao = new ActionDao();
+        return $actionDao->getFlowsWhichCopyTo($this->user);
+    }
+
+    public function myProcessed()
+    {
+        $actionDao = new ActionDao();
+        return $actionDao->getFlowsWhichMyProcessed($this->user);
     }
 
     /**
@@ -159,18 +178,53 @@ abstract class GeneralFlowsLogic implements IFlowLogic
                     $action->urgent = $actionData['urgent'];
                     $action->save();
 
-                    $next = $node->getNext();
+                    $actionDao = new ActionDao();
+                    if ($actionDao->getCountWaitProcessUsers($node->id) > 0) {
+                        //当前流程还需别人审批
 
-                    if($next){
-                        $handler = $node->getHandler();
-                        $handler->handle($this->user, $action, $next);
+                    }else {
+                        $next = $node->getNext();
+                        if($next){
+                            $userFlowDao = new UserFlowDao();
+                            $userFlow = $userFlowDao->getById($action->getTransactionId());
+                            $handler = $node->getHandler();
+                            $handler->handle($userFlow->user, $action, $next);
+                            //自动同意
+                            $this->autoProcessed($action->flow, $action, $next, $actionData);
+                        }
+                        else{
+                            // 已经是流程的最后一步, 标记流程已经完成
+                            $userFlowDao = new UserFlowDao();
+                            // 整个流程被通过了
+                            $userFlowDao->update($action->getTransactionId(),['done'=>IUserFlow::DONE]);
+
+                            //添加抄送人
+                            if ($action->flow->copy_uids) {
+                                $userIdArr = explode(';', trim($action->flow->copy_uids, ';'));
+                                foreach ($userIdArr as $userid) {
+                                    Copys::create([
+                                        'user_id' => $userid,
+                                        'user_flow_id' => $action->getTransactionId()
+                                    ]);
+                                }
+                            }
+
+
+                            //是否触发事件 @TODO 系统流程审批通过在这里定义事件
+                            switch ($action->flow->business) {
+                                case IFlow::BUSINESS_TYPE_MACADDRESS :
+                                    $event = '';
+                                    break;
+                                default:
+                                    $event = null;
+                                    break;
+                            }
+                            if ($event) {
+                                event($event);
+                            }
+                        }
                     }
-                    else{
-                        // 已经是流程的最后一步, 标记流程已经完成
-                        $userFlowDao = new UserFlowDao();
-                        // 整个流程被通过了
-                        $userFlowDao->update($action->getTransactionId(),['done'=>IUserFlow::DONE]);
-                    }
+
                     DB::commit();
                     $messageBag->setCode(JsonBuilder::CODE_SUCCESS);
                     $messageBag->setData(['nextNode'=>$next,'currentNode'=>$node]);
@@ -187,8 +241,22 @@ abstract class GeneralFlowsLogic implements IFlowLogic
         return $messageBag;
     }
 
+    public function autoProcessed($flow, $action, $next, $formData){
+        if (!$flow->auto_processed || !$next) {
+            return false;
+        }
+        $actionDao = new ActionDao();
+        $nextAction = $actionDao->getActionByUserFlowAndUserId($action->transaction_id, $action->user_id);
+        if ($nextAction && $nextAction->result == IAction::RESULT_PENDING) {
+            $logic = FlowLogicFactory::GetInstance($action->user);
+            return $logic->process($nextAction, $formData);
+        }
+
+        return false;
+    }
+
     /**
-     * 驳回
+     * 驳回 @TODO 不要了 直接终止流程
      * @param IAction $action
      * @param $actionData
      * @return \App\Utils\ReturnData\IMessageBag
@@ -246,27 +314,7 @@ abstract class GeneralFlowsLogic implements IFlowLogic
 
                     // 将整个流程终止
                     $userFlowDao = new UserFlowDao();
-                    $allActions = $userFlowDao->terminate($action->getTransactionId());
-
-                    $systemMessageDao = new SystemNotificationDao();
-
-                    $flow = $action->getFlow();
-                    $userFlow = $userFlowDao->getById($action->getTransactionId());
-
-                    foreach ($allActions as $act) {
-                        // 所有涉及的人都被通知一下
-                        $systemMessageDao->create(
-                            [
-                                'sender'=>SystemNotification::FROM_SYSTEM,
-                                'to'=>$act->user_id,
-                                'type'=>SystemNotification::TYPE_NONE,
-                                'priority'=>SystemNotification::PRIORITY_LOW,
-                                'school_id'=>SystemNotification::SCHOOL_EMPTY,
-                                'content'=>$userFlow->user_name . '的'.$flow->getName().'申请被驳回了',
-                                'next_move'=>'',
-                            ]
-                        );
-                    }
+                    $userFlowDao->terminate($action->getTransactionId());
 
                     DB::commit();
                     $messageBag->setCode(JsonBuilder::CODE_SUCCESS);

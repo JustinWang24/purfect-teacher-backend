@@ -49,6 +49,18 @@ class CommonDao
         5 => '已关闭',
     ];
 
+    /**
+     * Func 获取学校地址信息
+     * @param $id 地址id
+     *            return array
+     */
+    public static function getBuildOneInfo ( $id = null )
+    {
+        if ( !intval ( $id ) ) return [];
+
+        return DB::table ( 'buildings' )->where ( 'id' , $id )->first ();
+    }
+
    /**
     * Func 获取学校地址信息
     * @param $id 地址id
@@ -99,7 +111,7 @@ class CommonDao
       2 => '处理中',
       3 => '已完成',
    ];
-   
+
    // 报修类型
    public static $manageIssueTypesArr = [
       1 => 'APP类型',

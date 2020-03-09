@@ -281,6 +281,16 @@ class FlowsController extends Controller
         return JsonBuilder::Error('找不到提交的表单信息');
     }
 
+    public function save_auto_processed(FlowRequest $request){
+        $flowId = $request->get('flow_id');
+        $autoProcessed = $request->get('auto_processed', 0);
+        $dao = new FlowDao();
+        $flow = $dao->getById($flowId);
+        $flow->auto_processed = $autoProcessed ? 1 : 0;
+        $flow->save();
+        return JsonBuilder::Success();
+    }
+
     /**
      * @param FlowRequest $request
      * @return string
