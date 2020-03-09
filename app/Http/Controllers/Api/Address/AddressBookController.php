@@ -54,7 +54,6 @@ class AddressBookController extends Controller
         $data = $gradeUserDao->getGradeAddressBook($gradeId);
 
         $gradeManger = $gradeMangerDao->getGradMangerByGradeId($gradeId);
-
         $result['schoolmate_list'] = [];
         $result['teacher_list'] = [];
         foreach ($data as $key => $val) {
@@ -65,6 +64,12 @@ class AddressBookController extends Controller
             if(!is_null($gradeManger['monitor_id'])) {
                 if($val['user_id'] == $gradeManger['monitor_id']) {
                     $result['schoolmate_list'][$key]['type'] = GradeManager::MONITOR;
+                }
+            }
+
+            if(!is_null($gradeManger['group_id'])) {
+                if($val['user_id'] == $gradeManger['group_id']) {
+                    $result['schoolmate_list'][$key]['type'] = GradeManager::GROUP;
                 }
             }
         }

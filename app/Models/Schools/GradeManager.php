@@ -20,6 +20,7 @@ class GradeManager extends Model
     const ADVISER = '班主任';
     const MONITOR = '班长';
     const STUDENT = '学生';
+    const GROUP = '团支书';
 
     /**
      * 班长

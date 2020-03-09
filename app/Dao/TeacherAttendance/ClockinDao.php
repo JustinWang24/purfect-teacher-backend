@@ -181,6 +181,7 @@ class ClockinDao
         $endTime = Carbon::parse($day . $clockset->end)->timestamp;
         $morningTime = Carbon::parse($day . $clockset->morning)->timestamp;
         $morningLateTime = Carbon::parse($day . $clockset->morning_late)->timestamp;
+        $afternoonStartTime = Carbon::parse($day . $clockset->afternoon_start)->timestamp;
         $afternoonTime = Carbon::parse($day . $clockset->afternoon)->timestamp;
         $afternoonLateTime = Carbon::parse($day . $clockset->afternoon_late)->timestamp;
         $eveningTime = Carbon::parse($day . $clockset->evening)->timestamp;
@@ -205,8 +206,12 @@ class ClockinDao
                     $return['status'] = Clockin::STATUS_NORMAL;
                 }elseif ($dateTime < $morningLateTime) {
                     $return['status'] = Clockin::STATUS_LATE;
+                }elseif ($dateTime < $afternoonStartTime) {
+                    $return['status'] - Clockin::STATUS_LATER;
                 }elseif ($dateTime < $afternoonTime) {
-                    $return['status'] = Clockin::STATUS_LATER;
+                    //上午已经缺卡
+                    $return['type'] = 'afternoon';
+                    $return['status'] = Clockin::STATUS_NORMAL;
                 }elseif ($dateTime < $afternoonLateTime) {
                     //上午已经缺卡
                     $return['type'] = 'afternoon';
@@ -221,7 +226,7 @@ class ClockinDao
                     $return['status'] = Clockin::STATUS_NORMAL;
                 }
             }elseif ($return['type'] == 'afternoon') {
-                if ($dateTime < $morningTime) {
+                if ($dateTime < $afternoonStartTime) {
                     $return['status'] = Clockin::STATUS_NONE;
                 }elseif ($dateTime < $afternoonTime) {
                     $return['status'] = Clockin::STATUS_NORMAL;

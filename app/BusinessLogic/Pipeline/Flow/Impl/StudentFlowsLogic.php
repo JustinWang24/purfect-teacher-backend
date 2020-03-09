@@ -45,7 +45,6 @@ class StudentFlowsLogic extends GeneralFlowsLogic
                 ]
             ]
         ];
-
         $result =  $dao->getGroupedFlows(
             $this->user->getSchoolId(), array_keys(Flow::getTypesByPosition(IFlow::POSITION_2)), $forApp
         );

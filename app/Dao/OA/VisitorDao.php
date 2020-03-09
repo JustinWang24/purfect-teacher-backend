@@ -83,16 +83,27 @@ class VisitorDao
     /**
      * 根据学校获取访客列表
      * @param $schoolId
+     * @param $param['keywords'] 搜索关键词
+     * @param $param['status'] 状态
      * @return Collection
      */
-    public function getVisitorsBySchoolId($schoolId){
+    public function getVisitorsBySchoolId($schoolId,$param = []){
+
+        // 判断状态
+        $param['status'] = !empty($param['status']) ? [$param['status']] : [2, 3];
+
+        $sdate = !empty($param['startDate']) ? trim($param['startDate']) : date('Y-01-01 00:00:00');
+        $edata = !empty($param['endDate']) ? trim($param['endDate']) : date('Y-12-31 23:59:50');
+
         return Visitor::from('visitors as a')
-            ->whereIn('a.status',[2,3])
+            ->whereIn('a.status',$param['status'])
             ->where('a.school_id',$schoolId)
+            ->whereBetween('a.created_at', [$sdate, $edata])
+            ->where([['a.name','like', '%'.trim($param['keywords']).'%'],['b.name','like', '%'.trim($param['keywords']).'%','or']])
             ->join('users as b', 'a.user_id', '=', 'b.id')
             ->orderBy('a.id','desc')
             ->select(['a.*','b.name as uname'])
-            ->paginate(ConfigurationTool::DEFAULT_PAGE_SIZE_QUICK_SEARCH);
+            ->paginate(10);
     }
     /**
      * Func 获取今天访客数据
@@ -107,11 +118,11 @@ class VisitorDao
         return Visitor::from('visitors as a')
             ->where('a.school_id', $schoolId)
             ->whereIn('a.status',[2,3])
-            ->whereBetween('a.created_at', [$sdate, $edata])
+            ->whereBetween('a.scheduled_at', [$sdate, $edata])
             ->join('users as b', 'a.user_id', '=', 'b.id')
-            ->orderBy('a.id', 'desc')
+            ->orderBy('a.scheduled_at', 'asc')
             ->select(['a.*','b.name as uname'])
-            ->paginate(ConfigurationTool::DEFAULT_PAGE_SIZE_QUICK_SEARCH);
+            ->get();
     }
 
     /**
@@ -125,8 +136,8 @@ class VisitorDao
     public function getTodayVisitorsBySchoolIdCount($schoolId, $sdate, $edata, $status)
     {
         return Visitor::where('school_id', $schoolId)
-            ->whereBetween('created_at', [$sdate, $edata])
-            ->where('status', '=', $status)
+            ->whereBetween('scheduled_at', [$sdate, $edata])
+            ->whereIn('status',$status)
             ->count();
     }
 

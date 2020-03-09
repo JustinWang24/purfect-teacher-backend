@@ -19,11 +19,16 @@ if (token) {
 window.Vue = require('vue');
 // 引入 Element UI 库
 import 'element-ui/lib/theme-chalk/index.css';
+// 引入Vant库
+import Vant from 'vant';
+import 'vant/lib/index.css';
 
 import {
     Button, Card, Row, Col, Drawer, Image, Badge, Divider, Tag, Form, FormItem, Input,
     Select, Option, Switch, Alert, Message, MessageBox, DatePicker, Timeline, TimelineItem, TimePicker, Avatar
 } from 'element-ui';
+
+Vue.use(Vant);
 
 Vue.component(Button.name, Button);
 Vue.component(Card.name, Card);

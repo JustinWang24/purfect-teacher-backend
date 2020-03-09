@@ -217,6 +217,21 @@ Route::prefix('school_manager')->group(function () {
     Route::post('elective-course/delete-arrangement','ElectiveCoursesController@delete_arrangement')
         ->name('school_manager.elective-course.delete-arrangement');
 
+    //考勤管理-新
+    Route::prefix('teacher-attendance')->group(function(){
+        Route::get('manager', 'TeacherAttendance\AttendanceController@manager')
+            ->name('school_manager.teacher-attendance.manager');
+        Route::post('load-attendance', 'TeacherAttendance\AttendanceController@load_attendance')
+            ->name('school_manager.teacher-attendance.load-attendance');
+        Route::post('save-exceptionday', 'TeacherAttendance\AttendanceController@save_exceptionday')
+            ->name('school_manager.teacher-attendance.save-exceptionday');
+        Route::post('delete-exceptionday', 'TeacherAttendance\AttendanceController@delete_exceptionday')
+            ->name('school_manager.teacher-attendance.delete-exceptionday');
+        Route::post('save-attendance', 'TeacherAttendance\AttendanceController@save_attendance')
+            ->name('school_manager.teacher-attendance.save-attendance');
+        Route::post('save-clocksets', 'TeacherAttendance\AttendanceController@save_clocksets')
+            ->name('school_manager.teacher-attendance.save-clocksets');
+    });
     // 办公管理
     Route::prefix('oa')->group(function(){
         // 项目管理

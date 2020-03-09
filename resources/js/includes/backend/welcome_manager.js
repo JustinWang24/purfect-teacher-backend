@@ -9,8 +9,8 @@ import {
     saveReportBillInfo, // 报到单
     getConfigStepListInfo, // 获取流程数据
     deleteConfigStep, // 删除流程
-    upConfigStep, // 流程向上
-    downConfigStep, // 流程向下
+    upConfigStep, // 流程向 上
+    downConfigStep, // 流程向下 
 } from "../../common/welcomes";
 import {Constants} from "../../common/constants";
 import {Util} from "../../common/utils";
@@ -20,6 +20,7 @@ if(document.getElementById('school-welcome-list-app')){
         el:'#school-welcome-list-app',
         data(){
             return {
+                showFileManagerFlag: false,
                 schoolId: null,
                 is_show1:true, // 基础信息
                 is_show2:false, // 个人信息
@@ -168,7 +169,6 @@ if(document.getElementById('school-welcome-list-app')){
             // 获取流程数据列表
             getConfigStepListInfo: function () {
                 let _that_ = this;
-
                 // 获取流程信息
                 this.formData = {};
                 this.formData.school_id = this.schoolId;
@@ -188,8 +188,8 @@ if(document.getElementById('school-welcome-list-app')){
                             }
                             // 初始化个人配置
                             if (!Util.isEmpty(res.data.data.userConfigInfo)) {
-                                _that_.userInfoForm.photo = res.data.data.userConfigInfo.steps_json_arr.photo;
-                                _that_.userInfoForm.card_front = res.data.data.userConfigInfo.steps_json_arr.card_front;
+                                _that_.userInfoForm.photo = res.data.data.userConfigInfo.steps_json_arr.photo.status;
+                                _that_.userInfoForm.card_front = res.data.data.userConfigInfo.steps_json_arr.card_front.status;
                                 _that_.userInfoForm.config_content1 = res.data.data.baseConfigInfo.config_content1;
                             }
                         }
