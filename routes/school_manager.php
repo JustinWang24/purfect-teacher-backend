@@ -205,6 +205,9 @@ Route::prefix('school_manager')->group(function () {
     // 拒绝选修课申请表
     Route::any('elective-course/refuse','AddElectiveCourseController@refuse')
         ->name('school_manager.elective-course.refuse');
+    // 解散选修课
+    Route::any('elective-course/dissolved','AddElectiveCourseController@dissolved')
+        ->name('school_manager.elective-course.dissolved');
 
     // 管理员审批选修课的 action
     Route::get('elective-course/management','ElectiveCoursesController@management')
