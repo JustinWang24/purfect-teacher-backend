@@ -1082,3 +1082,14 @@ Route::prefix('office')->middleware('auth:api')->group(function(){
         Route::any('/help-page', 'Admin\IndexController@helpIcon')
         ->name('api.office.help-page');
 });
+
+// PC端教学资料
+Route::prefix('material')->middleware('auth:api')->group(function(){
+    // 我的课程
+    Route::any('/myCourse', 'Api\Study\MaterialController@courses')
+        ->name('api.material.myCourse');
+});
+
+
+
+

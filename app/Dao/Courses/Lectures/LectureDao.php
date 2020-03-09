@@ -290,4 +290,16 @@ class LectureDao
     }
 
 
+    /**
+     * 获取数量
+     * @param $teacherId
+     * @param $type
+     * @return mixed
+     */
+    public function getMaterialNumByUserAndType($teacherId, $type) {
+        $map = ['teacher_id'=>$teacherId, 'type'=>$type];
+        return LectureMaterial::where($map)->count();
+    }
+
+
 }
