@@ -39,9 +39,15 @@ if (document.getElementById('pipeline-flows-manager-app')) {
                 titlesList: [], // 侧边栏角色获取
                 agree: '',
                 agreeList: [{ name: '是', key: 1 }, { name: "否", key: 0 }], // 是否同意
-                teacher: '', // 请输入教职工名字
+                teacher: {
+                    name: '',
+                    id: ''
+                }, // 请输入教职工名字
                 members: [], // 展示所有选中的老师
                 teachers: [], // 所有选中的老师
+                show1: false, // 审批人的显示隐藏
+                show2: false, // 抄送人的显示隐藏
+                prev_node: 0, // 设置审批人时的节点
 
                 lastNewFlow: null,
                 schoolId: '',
@@ -110,33 +116,12 @@ if (document.getElementById('pipeline-flows-manager-app')) {
             if (window.location.search != '') {
                 this.returnId = window.location.search.split('=')[1]
                 loadNodes(this.returnId).then(res => {
-                    console.log(res)
                     this.copy = res.data.data.nodes.copy
                     this.handler = res.data.data.nodes.handler
                 })
             }
         },
         methods: {
-            // 一级审批 
-            // setone() {
-            //     axios.post('/school_manager/pipeline/flows/save-node', {
-            //         flow_id: this.returnId,		
-            //         prev_node: 0,
-            //         node.organizations: this.organization, // 组织
-            //         node.titles: this.approver,
-            //     }).then((res) => {
-            //         if (Util.isAjaxResOk(res)) {
-            //             this.typeList = res.data.data // 左边分类
-            //             this.posiType = tab // 侧边栏显示位置
-            //             if (this.posiType === 3) {
-            //                 this.getbusinessList(); // 侧边栏关联业务
-            //             }
-            //         }
-            //     }).catch((err) => {
-            //         console.log(err)
-            //     });
-            // },
-
             // 获取左边分类和侧边栏显示位置和侧边栏关联业务
             getList(tab) {
                 // /school_manager/pipeline/flows/load-flows
@@ -325,6 +310,31 @@ if (document.getElementById('pipeline-flows-manager-app')) {
                 var url = this.$refs.approver.$attrs.href + '?flow_id=' + this.returnId;
                 location.href = url;
             },
+            // 新建下一级审批人时获取上一级审批人的id
+            prev(id) {
+                this.show1 = !this.show1;
+                this.prev_node = id
+            },
+            // 设置审批人确定啊按钮 
+            setone() {
+                const obj = {
+                    flow_id: this.returnId,
+                    prev_node: this.prev_node,
+                    node: {
+                        organizations: this.node.organizations, // 组织
+                        titles: this.node.titles
+                    }
+                }
+                axios.post('/school_manager/pipeline/flows/save-node', obj).then((res) => {
+                    if (Util.isAjaxResOk(res)) {
+                        this.handler = res.data.data.nodes.handler
+                        this.node.organizations = ''
+                        this.node.titles = ''
+                    }
+                }).catch((err) => {
+                    console.log(err)
+                });
+            },
             // 保存 --- 是否自动审批
             saveagree() {
                 axios.post('/school_manager/pipeline/flows/save-auto-processed', {
@@ -340,17 +350,23 @@ if (document.getElementById('pipeline-flows-manager-app')) {
             },
             // 联想teacher
             selectMember: function (payload) {
+                this.teacher.name = payload.item.value
+                this.teacher.id = payload.item.id
                 this.teachers.push(payload.item.id)
                 this.members.push(payload.item.value)
             },
+            // 删除某个teacher
+            removeFromOrg: function (member) {
+                this.members.splice(this.members.indexOf(member), 1);
+            },
             // 保存所有选中的老师
             savecopy() {
-                axios.post('school_manager/pipeline/flows/save-copy', {
+                axios.post('/school_manager/pipeline/flows/save-copy', {
                     flow_id: this.returnId,
                     users: this.teachers
                 }).then((res) => {
                     if (Util.isAjaxResOk(res)) {
-                        console.log(res)
+                        this.teacher.name = ''
                     }
                 }).catch((err) => {
                     console.log(err)
