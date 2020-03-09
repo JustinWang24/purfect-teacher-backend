@@ -57,7 +57,7 @@ class ForActionNextProcessors extends AbstractMessenger
                 // 紧急, 利用 APP 的消息通知下一步的处理人员
                 $title = '有一个' . $this->flow->getName() .'流程在等待您处理';
                 foreach ($users as $key => $user){
-                    $pushData = ['noticedTo'=>$user, 'title'=>$title, 'content'=>$content, 'nextStep'=>$this->getActionUrl()];
+                    $pushData = ['noticedTo'=>$user, 'title'=>$title, 'content'=>$content, 'nextStep'=>$nextMove];
                     Push::dispatch($pushData)
                         ->delay(now()->addSeconds($key+1));
                 }

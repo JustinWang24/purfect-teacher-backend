@@ -11,6 +11,7 @@ if (document.getElementById('pipeline-flow-open-app')) {
         data(){
             return {
                 schoolId: null,
+                apiToken: null,
                 action: {
                     id: null,
                     flow_id: '',
@@ -30,6 +31,7 @@ if (document.getElementById('pipeline-flow-open-app')) {
         created(){
             const dom = document.getElementById('app-init-data-holder');
             this.schoolId = dom.dataset.school;
+            this.apiToken = dom.dataset.apitoken;
             // this.action.node_id = dom.dataset.nodeid;
             // this.appRequest = !Util.isEmpty(dom.dataset.apprequest);
             this.action.flow_id = dom.dataset.flowid;
@@ -46,7 +48,7 @@ if (document.getElementById('pipeline-flow-open-app')) {
             getFormList () {
                 const url = '/api/pipeline/flow/open';
                 let params = {};
-                params.api_token = '7e8e3755-2bb1-49b2-8f09-714a8c703c38';
+                params.api_token = this.apiToken;
                 params.flow_id = this.action.flow_id;
                 axios.post(url, params).then((res) => {
                     if (Util.isAjaxResOk(res)) {
