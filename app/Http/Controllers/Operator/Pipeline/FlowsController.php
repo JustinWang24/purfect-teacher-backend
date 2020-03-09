@@ -14,6 +14,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Pipeline\FlowRequest;
 use App\Models\Pipeline\Flow\Flow;
 use App\Models\Pipeline\Flow\NodeAttachment;
+use App\Models\Users\GradeUser;
 use App\Utils\JsonBuilder;
 
 class FlowsController extends Controller
@@ -191,7 +192,7 @@ class FlowsController extends Controller
         $flowId = $request->get('flow_id');
         $userIdArr = $request->get('users');
         if (Flow::where('id', $flowId)->update(['copy_uids' => implode(';', $userIdArr)])) {
-            return JsonBuilder::Success();
+            return JsonBuilder::Success(['copy' =>GradeUser::whereIn('user_id', $userIdArr)->select(['user_id', 'name'])->get()]);
         }else {
             return JsonBuilder::Error('系统繁忙, 请稍候再试');
         }
