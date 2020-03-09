@@ -257,12 +257,18 @@ class LectureDao
      * @param $courseId
      * @param $type
      * @param $teacherId
+     * @param bool $isPage
      * @return mixed
      */
-    public function getMaterialByCourseId($courseId, $type, $teacherId) {
+    public function getMaterialByCourseId($courseId, $type, $teacherId, $isPage = true) {
         $map = ['course_id'=>$courseId, 'type'=>$type, 'teacher_id'=>$teacherId];
-        return LectureMaterial::where($map)
-            ->paginate(ConfigurationTool::DEFAULT_PAGE_SIZE);
+        $result = LectureMaterial::where($map);
+
+        if($isPage) {
+            return $result->paginate(ConfigurationTool::DEFAULT_PAGE_SIZE);
+        }
+
+        return $result->get();
     }
 
 

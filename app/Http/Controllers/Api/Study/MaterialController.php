@@ -54,4 +54,43 @@ class MaterialController extends Controller
         return JsonBuilder::Success($courses);
     }
 
+
+    /**
+     * 类型课程资料
+     * @param MaterialRequest $request
+     * @return string
+     */
+    public function materialsByType(MaterialRequest $request) {
+        $user = $request->user();
+        $typeId = $request->getType();
+        $courseId = $request->getCourseId();
+        if(is_null($typeId) || is_null($courseId)) {
+            return JsonBuilder::Error('缺少参数');
+        }
+
+        $lectureDao = new LectureDao();
+
+        $return = $lectureDao->getMaterialByCourseId($courseId, $typeId, $user->id, false);
+        $result = [];
+        foreach ($return as $key => $item) {
+            $idx = $item->lecture->idx;
+            $result[] = [
+                'desc' => $item->description,
+                'url' => $item->url,
+                'lecture' => '第'.$idx.'节',
+            ];
+        }
+        return JsonBuilder::Success($result);
+    }
+
+
+    public function courseDetails() {
+
+    }
+
+
+    public function materials(MaterialRequest $request) {
+        $user = $request->user();
+    }
+
 }

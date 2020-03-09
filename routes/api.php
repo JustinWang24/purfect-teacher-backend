@@ -1088,6 +1088,10 @@ Route::prefix('material')->middleware('auth:api')->group(function(){
     // 我的课程
     Route::any('/myCourse', 'Api\Study\MaterialController@courses')
         ->name('api.material.myCourse');
+    // 类型材料列表
+    Route::any('/materialsByType', 'Api\Study\MaterialController@materialsByType')
+        ->name('api.material.materialsByType');
+
 });
 
 
