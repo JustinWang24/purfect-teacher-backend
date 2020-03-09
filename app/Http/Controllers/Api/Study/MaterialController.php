@@ -9,11 +9,11 @@
 namespace App\Http\Controllers\Api\Study;
 
 
-use App\Dao\Courses\CourseDao;
-use App\Dao\Timetable\TimetableItemDao;
 use App\Utils\JsonBuilder;
+use App\Dao\Courses\CourseDao;
 use App\Http\Controllers\Controller;
 use App\Dao\Courses\CourseTeacherDao;
+use App\Dao\Timetable\TimetableItemDao;
 use App\Dao\Courses\Lectures\LectureDao;
 use App\Http\Requests\Course\MaterialRequest;
 
@@ -175,8 +175,31 @@ class MaterialController extends Controller
 
         return JsonBuilder::Success($data);
 
+    }
 
 
+    /**
+     * 上传资料
+     * @param MaterialRequest $request
+     * @return string
+     */
+    public function addMaterial(MaterialRequest $request) {
+        $user = $request->user();
+        $all = $request->all();
+        $all['user_id'] = $user->id;
+        $dao = new LectureDao();
+        // 查询当前课节是否已上传
+        $lecture = $dao->getMaterialByCourseIdAndIdxAndTeacherId($all['course_id'], $all['idx'], $user->id);
+        if(!is_null($lecture)) {
+            return JsonBuilder::Error('当前课节信息已存在');
+        }
+        $result = $dao->addMaterial($all);
+        $msg = $result->getMessage();
+        if($result->isSuccess()) {
+            return JsonBuilder::Success($msg);
+        } else {
+            return JsonBuilder::Error($msg);
+        }
     }
 
 

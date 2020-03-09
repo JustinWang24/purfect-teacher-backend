@@ -1100,6 +1100,9 @@ Route::prefix('material')->middleware('auth:api')->group(function(){
     // 课程班级列表
     Route::any('/getCourseGradeList', 'Api\Study\MaterialController@getCourseGradeList')
         ->name('api.material.getCourseGradeList');
+    // 添加教材
+    Route::post('/addMaterial', 'Api\Study\MaterialController@addMaterial')
+        ->name('api.material.addMaterial');
 });
 
 

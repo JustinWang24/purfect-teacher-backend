@@ -2,10 +2,10 @@
 
 namespace App\Models\Courses;
 
-use App\Models\Course;
-use App\Models\NetworkDisk\Media;
 use App\User;
 use Carbon\Carbon;
+use App\Models\Course;
+use App\Models\NetworkDisk\Media;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -20,6 +20,7 @@ class LectureMaterial extends Model
         'type',
         'description',
         'url',
+        'grade_id'
     ];
 
     public function lecture(){

@@ -7,15 +7,16 @@
 namespace App\Dao\Courses\Lectures;
 
 
-use App\Utils\Misc\ConfigurationTool;
 use Carbon\Carbon;
 use App\Utils\JsonBuilder;
 use App\Dao\Users\GradeUserDao;
 use App\Models\Courses\Lecture;
 use App\Models\Users\GradeUser;
 use App\Models\Courses\Homework;
+use Illuminate\Support\Facades\DB;
 use App\Utils\ReturnData\MessageBag;
 use App\Utils\Time\GradeAndYearUtil;
+use App\Utils\Misc\ConfigurationTool;
 use App\Models\Courses\LectureMaterial;
 use App\Models\Courses\LectureMaterialType;
 use Illuminate\Database\Eloquent\Collection;
@@ -307,5 +308,66 @@ class LectureDao
         return LectureMaterial::where($map)->count();
     }
 
+
+    /**
+     * 上传学习资料
+     * @param $data
+     * @return MessageBag
+     */
+    public function addMaterial($data) {
+        $messageBag = new MessageBag();
+
+        $lecture = [
+            'course_id' => $data['course_id'],
+            'teacher_id' => $data['user_id'],
+            'idx' => $data['idx'],
+            'title' => $data['title'],
+        ];
+
+        try{
+            DB::beginTransaction();
+
+            $s1 = Lecture::create($lecture);
+
+            foreach ($data['material'] as $key => $item) {
+                $material = [
+                    'lecture_id' => $s1->id,
+                    'teacher_id' => $data['user_id'],
+                    'course_id' => $data['course_id'],
+                    'media_id' => $item['media_id']??0,
+                    'type' => $item['type_id'],
+                    'description' => $item['desc'],
+                    'url' => $item['url'],
+                    'grade_id' => $data['grade_id']
+                ];
+
+                LectureMaterial::create($material);
+            }
+            DB::commit();
+            $messageBag->setMessage('上传成功');
+
+        } catch (\Exception $e) {
+
+            DB::rollBack();
+            $msg = $e->getMessage();
+            $messageBag->setCode(JsonBuilder::CODE_ERROR);
+            $messageBag->setMessage($msg);
+        }
+
+        return $messageBag;
+    }
+
+
+    /**
+     * 根据课节查询
+     * @param $courseId
+     * @param $idx
+     * @param $teacherId
+     * @return mixed
+     */
+    public function getMaterialByCourseIdAndIdxAndTeacherId($courseId, $idx, $teacherId) {
+        $map = ['idx'=>$idx, 'course_id'=>$courseId, 'teacher_id'=>$teacherId];
+        return Lecture::where($map)->first();
+    }
 
 }
