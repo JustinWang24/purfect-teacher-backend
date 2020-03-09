@@ -29,6 +29,13 @@ class GradeManager extends Model
     }
 
     /**
+     * 团支书
+     */
+    public function group(){
+        return $this->hasOne(User::class, 'id', 'group_id');
+    }
+
+    /**
      * 关联的班主任
      */
     public function adviser(){

@@ -192,6 +192,20 @@ class FlowDao
                     $check = true;
                     break;
                 }
+                //班长
+                if ($title == Title::CLASS_MONITOR) {
+                    if ($user->monitor) {
+                        $check = true;
+                        break;
+                    }
+                }
+                //团支书
+                if ($title == Title::CLASS_GROUP) {
+                    if ($user->group) {
+                        $check = true;
+                        break;
+                    }
+                }
                 //班主任
                 if ($title == Title::CLASS_ADVISER) {
                     if (Teacher::myGradeManger($user->id)) {

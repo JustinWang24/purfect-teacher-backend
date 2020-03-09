@@ -87,7 +87,7 @@ class Flow extends Model implements IFlow
             }else {
                 //职务
                 return [
-                    Title::ALL_TXT, Title::CLASS_ADVISER, Title::GRADE_ADVISER, Title::DEPARTMENT_LEADER, Title::SCHOOL_DEPUTY, Title::SCHOOL_PRINCIPAL, Title::SCHOOL_COORDINATOR
+                    Title::ALL_TXT, Title::CLASS_ADVISER, Title::GRADE_ADVISER, Title::DEPARTMENT_LEADER, Title::CLASS_MONITOR, Title::CLASS_GROUP
                 ];
             }
         }else {
@@ -100,7 +100,7 @@ class Flow extends Model implements IFlow
             }else {
                 //职务
                 return [
-                    Title::ALL_TXT, Title::GRADE_ADVISER, Title::DEPARTMENT_LEADER, Title::SCHOOL_DEPUTY, Title::SCHOOL_PRINCIPAL, Title::SCHOOL_COORDINATOR
+                    Title::ALL_TXT, Title::GRADE_ADVISER, Title::DEPARTMENT_LEADER
                 ];
             }
         }
