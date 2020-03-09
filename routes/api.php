@@ -1097,6 +1097,9 @@ Route::prefix('material')->middleware('auth:api')->group(function(){
     // 编辑课程详情
     Route::any('/saveCourse', 'Api\Study\MaterialController@saveCourse')
         ->name('api.material.saveCourse');
+    // 课程班级列表
+    Route::any('/getCourseGradeList', 'Api\Study\MaterialController@getCourseGradeList')
+        ->name('api.material.getCourseGradeList');
 });
 
 

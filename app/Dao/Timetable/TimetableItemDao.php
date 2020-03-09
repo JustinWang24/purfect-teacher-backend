@@ -936,4 +936,19 @@ class TimetableItemDao
         }
         return null;
     }
+
+
+    /**
+     * 查询老师所待课程的班级
+     * @param $courseId
+     * @param $teacherId
+     * @return mixed
+     */
+    public function getGradeListByCourseIdAndTeacherId($courseId, $teacherId) {
+        $map = ['course_id'=>$courseId, 'teacher_id'=>$teacherId];
+        return TimetableItem::where($map)
+            ->select('grade_id')
+            ->distinct('grade_id')
+            ->get();
+    }
 }

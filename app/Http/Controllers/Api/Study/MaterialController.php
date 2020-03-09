@@ -10,6 +10,7 @@ namespace App\Http\Controllers\Api\Study;
 
 
 use App\Dao\Courses\CourseDao;
+use App\Dao\Timetable\TimetableItemDao;
 use App\Utils\JsonBuilder;
 use App\Http\Controllers\Controller;
 use App\Dao\Courses\CourseTeacherDao;
@@ -100,6 +101,7 @@ class MaterialController extends Controller
         $result = [
             'course_id' => $course->id,
             'course_name' => $course->name,
+            'duration' => $course->duration,
             'desc' => $course->desc,
         ];
 
@@ -127,6 +129,56 @@ class MaterialController extends Controller
         }
 
     }
+
+
+    /**
+     * 课程班级列表和课节列表
+     * @param MaterialRequest $request
+     * @return string
+     */
+    public function getCourseGradeList(MaterialRequest $request) {
+        $user = $request->user();
+        $courseId = $request->getCourseId();
+        if(is_null($courseId)) {
+            return JsonBuilder::Error('缺少参数');
+        }
+        $timeTableDao = new TimetableItemDao();
+        $gradeIds = $timeTableDao->getGradeListByCourseIdAndTeacherId($courseId, $user->id);
+        if(count($gradeIds) == 0) {
+            return JsonBuilder::Success('当前课程没有代理班级');
+        }
+
+        $courseDao = new CourseDao();
+        $course = $courseDao->getCourseById($courseId);
+
+        $grades = [];
+        foreach ($gradeIds as $key => $item) {
+            $grade = $item->grade;
+            $grades[] = [
+                'grade_id' => $grade->id,
+                'grade_name' => $grade->name,
+            ];
+        }
+
+        $duration = [];
+        for ($i=1; $i<=$course->duration; $i++) {
+            $duration[] = [
+                'idx' => $i,
+                'name' => '第'.$i.'节',
+            ];
+        }
+
+        $data = [
+            'grades' => $grades,
+            'durations' => $duration,
+        ];
+
+        return JsonBuilder::Success($data);
+
+
+
+    }
+
 
 
     public function materials(MaterialRequest $request) {
