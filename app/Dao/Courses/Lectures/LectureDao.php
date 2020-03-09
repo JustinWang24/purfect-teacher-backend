@@ -317,6 +317,9 @@ class LectureDao
     public function addMaterial($data) {
         $messageBag = new MessageBag();
 
+        // 查询当前课节是否已上传
+        $info = $this->getMaterialByCourseIdAndIdxAndTeacherId($data['course_id'], $data['idx'], $data['user_id']);
+
         $lecture = [
             'course_id' => $data['course_id'],
             'teacher_id' => $data['user_id'],
@@ -327,11 +330,13 @@ class LectureDao
         try{
             DB::beginTransaction();
 
-            $s1 = Lecture::create($lecture);
+            if(is_null($info)) {
+                $info = Lecture::create($lecture);
+            }
 
             foreach ($data['material'] as $key => $item) {
                 $material = [
-                    'lecture_id' => $s1->id,
+                    'lecture_id' => $info->id,
                     'teacher_id' => $data['user_id'],
                     'course_id' => $data['course_id'],
                     'media_id' => $item['media_id']??0,
@@ -368,6 +373,32 @@ class LectureDao
     public function getMaterialByCourseIdAndIdxAndTeacherId($courseId, $idx, $teacherId) {
         $map = ['idx'=>$idx, 'course_id'=>$courseId, 'teacher_id'=>$teacherId];
         return Lecture::where($map)->first();
+    }
+
+
+    /**
+     * 根据老师获取学习资料
+     * @param $userId
+     * @return mixed
+     */
+    public function getMaterialByUser($userId) {
+        $map = ['teacher_id'=>$userId];
+        return LectureMaterial::where($map)
+            ->select(['lecture_id', 'media_id'])
+            ->distinct(['lecture_id', 'media_id'])
+            ->get();
+    }
+
+
+    /**
+     * 根据课节和资料获取信息
+     * @param $lectureId
+     * @param $mediaId
+     * @return mixed
+     */
+    public function getMaterialByLectureIdAndMediaId($lectureId, $mediaId) {
+        $map = ['lecture_id'=>$lectureId, 'media_id'=>$mediaId];
+        return LectureMaterial::where($map)->get();
     }
 
 }

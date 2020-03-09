@@ -188,11 +188,6 @@ class MaterialController extends Controller
         $all = $request->all();
         $all['user_id'] = $user->id;
         $dao = new LectureDao();
-        // 查询当前课节是否已上传
-        $lecture = $dao->getMaterialByCourseIdAndIdxAndTeacherId($all['course_id'], $all['idx'], $user->id);
-        if(!is_null($lecture)) {
-            return JsonBuilder::Error('当前课节信息已存在');
-        }
         $result = $dao->addMaterial($all);
         $msg = $result->getMessage();
         if($result->isSuccess()) {
@@ -203,9 +198,53 @@ class MaterialController extends Controller
     }
 
 
-
+    /**
+     * 教材列表
+     * @param MaterialRequest $request
+     * @return string
+     */
     public function materials(MaterialRequest $request) {
         $user = $request->user();
+        $dao = new LectureDao();
+
+        $schoolId = $user->getSchoolId();
+        $lectureDao = new LectureDao();
+        $types = $lectureDao->getMaterialType($schoolId);
+        $return = $dao->getMaterialByUser($user->id)->toArray();
+
+        $list = [];
+        foreach ($return as $key => $item) {
+            $re = $dao->getMaterialByLectureIdAndMediaId($item['lecture_id'], $item['media_id']);
+            $grades = [];
+            foreach ($re as $k => $value) {
+                $grades[] = [
+                    'grade_id' =>$value->grade->id,
+                    'grade_name' => $value->grade->name,
+                ];
+                $list[$value->lecture_id.'_'.$value->media_id] = [
+                    'desc'=>$value->description,
+                    'url' => $value->url,
+                    'type' => $value->type,
+                    'grades' => $grades,
+                ];
+            }
+        }
+
+        $result = [];
+        foreach ($types as $key => $item) {
+            $result[$key] = [
+                'name' => $item->name,
+                'num' => 0,
+                'list' => [],
+            ];
+            foreach ($list as $k => $val) {
+                if($val['type'] == $item['type_id']) {
+                    $result[$key]['num'] += 1;
+                    $result[$key]['list'][] = $val;
+                }
+            }
+        }
+        return JsonBuilder::Success($result);
     }
 
 }

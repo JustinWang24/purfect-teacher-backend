@@ -5,6 +5,7 @@ namespace App\Models\Courses;
 use App\User;
 use Carbon\Carbon;
 use App\Models\Course;
+use App\Models\Schools\Grade;
 use App\Models\NetworkDisk\Media;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -56,5 +57,13 @@ class LectureMaterial extends Model
      */
     public function getCreatedAtAttribute($value) {
         return Carbon::parse($value)->format('Y-m-d H:i');
+    }
+
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function grade() {
+        return $this->belongsTo(Grade::class);
     }
 }

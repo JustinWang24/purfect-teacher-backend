@@ -1103,6 +1103,9 @@ Route::prefix('material')->middleware('auth:api')->group(function(){
     // 添加教材
     Route::post('/addMaterial', 'Api\Study\MaterialController@addMaterial')
         ->name('api.material.addMaterial');
+    // 教材资料
+    Route::any('/materials', 'Api\Study\MaterialController@materials')
+        ->name('api.material.materials');
 });
 
 
