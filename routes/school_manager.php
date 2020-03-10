@@ -224,6 +224,8 @@ Route::prefix('school_manager')->group(function () {
     Route::prefix('teacher-attendance')->group(function(){
         Route::get('manager', 'TeacherAttendance\AttendanceController@manager')
             ->name('school_manager.teacher-attendance.manager');
+        Route::post('load-manager', 'TeacherAttendance\AttendanceController@load_manager')
+            ->name('school_manager.teacher-attendance.load-manager');
         Route::post('load-attendance', 'TeacherAttendance\AttendanceController@load_attendance')
             ->name('school_manager.teacher-attendance.load-attendance');
         Route::post('save-exceptionday', 'TeacherAttendance\AttendanceController@save_exceptionday')
