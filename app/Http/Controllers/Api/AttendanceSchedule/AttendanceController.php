@@ -186,7 +186,10 @@ class AttendanceController extends Controller
         $attendancesDao = new AttendancesDao;
         $arrive = $attendancesDao->getTeacherIsSignByItem($items[0], $user);
         if (is_null($arrive)) {
-            return JsonBuilder::Error('系统未生成签到初始化数据, 请学生先签到');
+            $createData = $attendancesDao->createAttendanceData($items[0]);
+            if (!$createData) {
+                return JsonBuilder::Error('生成签到初始化数据失败');
+            }
         }
 
         if ($arrive->teacher_sign == Attendance::TEACHER_SIGN) {
