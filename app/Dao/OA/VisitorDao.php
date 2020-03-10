@@ -312,7 +312,7 @@ class VisitorDao
     public function getVisitorStatusInfo($visitorInfo = array())
     {
         if ($visitorInfo['status'] == 1) {
-            return array('status' => 1, 'status_str' => '未到访');
+            return array('status' => 1, 'status_str' => '已分享');
         }
         if ($visitorInfo['status'] == 2) {
             return array('status' => 2, 'status_str' => '未到访');
