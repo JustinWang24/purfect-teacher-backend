@@ -46,8 +46,7 @@ use App\Utils\UI\Button;
                                         <td>{{ $version->sid }}</td>
                                         <td>
                                             @if($version->user_apptype ==1) 校园版 @endif
-                                            @if($version->user_apptype ==2) 商企版 @endif
-                                            @if($version->user_apptype ==3) 教师版 @endif
+                                            @if($version->user_apptype ==2) 教师版 @endif
                                         </td>
                                         <td>{{ $typeidArr[$version->typeid] }}</td>
                                         <td>{{ $isupdateArr[$version->isupdate] }}</td>
