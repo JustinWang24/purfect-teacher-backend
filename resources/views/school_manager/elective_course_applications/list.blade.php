@@ -45,7 +45,7 @@ use App\Utils\UI\Button;
                                         <td>
                                             {{ $application->start_year }}年
                                         </td>
-                                        <td>{{ $application->arrangements[0]->building_name }} {{ $application->arrangements[0]->classroom_name }}</td>
+                                        <td>@if(!empty($application->arrangements[0])){{ $application->arrangements[0]->building_name }} {{ $application->arrangements[0]->classroom_name }} @endif</td>
                                         <td>
                                             <span class="{{ $application->getStatusColor() }}">
                                                 {{ $application->getStatusText() }}
@@ -58,6 +58,9 @@ use App\Utils\UI\Button;
                                             ];
                                             if($application->status === \App\Models\ElectiveCourses\TeacherApplyElectiveCourse::STATUS_WAITING_FOR_VERIFIED){
                                                 $subs[] = ['url'=>route('school_manager.elective-course.refuse',['course_id'=>$application->id]),'text'=>'拒绝'];
+                                            }
+                                            if ($application->status === \App\Models\ElectiveCourses\TeacherApplyElectiveCourse::STATUS_PUBLISHED) {
+                                                $subs[] = ['url'=>route('school_manager.elective-course.dissolved',['course_id'=>$application->id]),'text'=>'解散'];
                                             }
                                             Button::PrintGroup(
                                                 [

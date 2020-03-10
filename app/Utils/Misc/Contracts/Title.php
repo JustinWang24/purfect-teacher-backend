@@ -34,6 +34,9 @@ interface Title
     const SCHOOL_PRINCIPAL = '校长';
     const SCHOOL_COORDINATOR = '书记';
 
+    const CLASS_MONITOR = '班长';
+    const CLASS_GROUP = '团支书';
+
     /**
      * 以下定义用于在发送消息通知时, 定位消息的接收者
      */

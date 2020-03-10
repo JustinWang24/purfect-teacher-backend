@@ -7,31 +7,32 @@
                 <header>设置审批人</header>
             </div>
             <div class="card-body">
+                <p style="text-align: center;">流程开始</p>
+                <img src="{{asset('assets/img/pipeline/addTo@2x.png')}}" alt="" @click="show1 = !show1" style="position: relative;left: 45%;vertical-align: baseline;">
                 <div class="card-body-approver" v-for="(item,index) in handler" :key="item.id">
                     <div style="padding: 5px;background-color: #FE7B1C;">
-                        <img src="{{asset('assets/img/teacher_blade/qingjia@2x.png')}}" alt="">
+                        <img src="{{asset('assets/img/teacher_blade/qingjia@2x.png')}}" alt="" class="portrait">
                         <span>&nbsp;&nbsp;&nbsp;审批人</span>
                         <span> （@{{ index + 1 }}级审批）</span>
                     </div>
                     <div style="border: 1px solid #FE7B1C; color: #313B4C; padding: 10px 6px;">
-                        <p>@{{ item .titles }}</p>
-                        <!-- <el-input placeholder="请选择审批人"></el-input> -->
+                        <p>@{{ item .titles }} @{{ item.node_id }}</p>
                     </div>
+                    <img src="{{asset('assets/img/pipeline/addTo@2x.png')}}" alt="" @click="prev(item.node_id)" style="position: relative;left: 45%;vertical-align: baseline;margin-top: 10px">
                 </div>
-                <!-- <el-divider direction="vertical"></el-divider> -->
+
                 <div class="card-body-approver">
                     <div style="padding: 5px;background-color: #4EA5FE">
-                        <img src="{{asset('assets/img/teacher_blade/qingjia@2x.png')}}" alt="">
+                        <img src="{{asset('assets/img/teacher_blade/qingjia@2x.png')}}" alt="" class="portrait">
                         <span>&nbsp;&nbsp;&nbsp;抄送人</span>
                     </div>
-                    <div style="border: 1px solid #4EA5FE; color: #313B4C; padding: 10px 6px;">
-                        <!-- <el-input placeholder="请选择抄送人"></el-input> -->
+                    <div style="border: 1px solid #4EA5FE; color: #313B4C; padding: 10px 6px;" @click="show2 = !show2">
                         <p v-if="copy.length == 0">请选择抄送人</p>
                         <p v-for="(item,index) in copy" :key="item.user_id" v-else>@{{ item.name }}</p>
                     </div>
                 </div>
-                <!-- <p style="text-align: center;">流程结束</p> -->
-                <div style="display: flex;justify-content: space-around;align-items: center;margin-top: 60px;">
+                <p style="text-align: center;margin: 30px 0;">流程结束</p>
+                <div style="display: flex;justify-content: space-around;align-items: center;margin-top: 30px;">
                     <p>审批自动同意</p>
                     <el-select v-model="agree">
                         <el-option v-for="item in agreeList" :key="item.key" :label="item.name" :value="item.key"></el-option>
@@ -42,7 +43,7 @@
         </div>
     </div>
     <div class="col-sm-12 col-md-9 col-lg-9 col-xl-8">
-        <div class="card">
+        <div class="card" v-if="show1">
             <div class="card-head">
                 <header>选择审批人</header>
             </div>
@@ -57,25 +58,25 @@
                         <el-cascader style="width: 90%;" :props="props" v-model="node.organizations"></el-cascader>
                     </el-form-item>
                     <el-form-item label="审批人">
-                        <el-checkbox-group v-model="approver">
+                        <el-checkbox-group v-model="node.titles">
                             <el-checkbox v-for="item in titlesList" :label="item" :key="item">@{{item}}</el-checkbox>
                         </el-checkbox-group>
                     </el-form-item>
                     <el-form-item style="display: flex;justify-content: center;">
-                        <el-button type="primary" style="width: 140px; height: 37px;">确定</el-button>
+                        <el-button type="primary" style="width: 140px; height: 37px;" @click="setone">确定</el-button>
                     </el-form-item>
                 </el-form>
             </div>
         </div>
-        <div class="card">
+        <div class="card" v-if="show2">
             <div class="card-head">
                 <header>选择抄送人</header>
             </div>
             <div class="card-body" style="margin-top: 20px;">
-                <search-bar :school-id="{{ session('school.id') }}" full-tip="输入教职工名字" scope="employee" class="ml-4" :init-query="teacher" v-on:result-item-selected="selectMember"></search-bar>
-                <el-tag :key="idx" v-for="(member, idx) in members" class="mr-2" closable :disable-transitions="false" @click="editMember(member)" @close="removeFromOrg(member)">
+                <search-bar :school-id="{{ session('school.id') }}" full-tip="输入教职工名字" scope="employee" class="ml-4" :init-query="teacher.name" v-on:result-item-selected="selectMember"></search-bar>
+                <!-- <el-tag :key="idx" v-for="(member, idx) in members" class="mr-2" closable :disable-transitions="false" @close="removeFromOrg(member)">
                     @{{ member }}
-                </el-tag>
+                </el-tag> -->
             </div>
             <el-button type="primary" style="width: 140px; height: 37px; margin: 20px auto;" @click="savecopy">确定</el-button>
         </div>

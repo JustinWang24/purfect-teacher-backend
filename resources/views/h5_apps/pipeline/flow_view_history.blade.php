@@ -1,6 +1,3 @@
-@php
-$flowStillInProgress = $startAction->userFlow->done === \App\Utils\Pipeline\IUserFlow::IN_PROGRESS;
-@endphp
 @extends('layouts.h5_app')
 @section('content')
 <div id="app-init-data-holder" data-school="{{ $user->getSchoolId() }}" data-useruuid="{{ $user->uuid }}" data-apitoken="{{ $user->api_token }}" data-flowid="{{ $startAction->userFlow->id }}" data-actionid="{{ $userAction ? $userAction->id : null }}" data-theaction="{{ $userAction }}" data-apprequest="1"></div>
@@ -73,7 +70,7 @@ $flowStillInProgress = $startAction->userFlow->done === \App\Utils\Pipeline\IUse
             <el-divider></el-divider>
             @foreach($options as $option)
             <h5>
-                <p>{{ $option['name'] }}</p>
+                <p>{{ $option['title'] }}</p>
                 <p>{{ $option['value'] }}</p>
             </h5>
             <el-divider></el-divider>
@@ -96,7 +93,7 @@ $flowStillInProgress = $startAction->userFlow->done === \App\Utils\Pipeline\IUse
     <div class="information">
         <h3>审批人</h3>
         <div class="block">
-        <el-timeline>
+        {{--<el-timeline>
             <el-timeline-item
             v-for="(activity, index) in activities"
             :key="index"
@@ -114,19 +111,25 @@ $flowStillInProgress = $startAction->userFlow->done === \App\Utils\Pipeline\IUse
                     @{{item.content}}
                 </el-timeline-item>
             </el-timeline-item>
-        </el-timeline>
 
-            <!-- <el-timeline>
+            @foreach($handlers as $key => $handler)
+
+            @endforeach
+        </el-timeline>--}}
+
+            <el-timeline>
                 @foreach($handlers as $key => $handler)
-                <el-timeline-item key="{{ $key }}">
+                <el-timeline-item key="{{ $key }}" icon="el-icon-more" type="primary" size="large">
                     @foreach($handler as $k => $val)
                     @foreach ($val as $v)
-                    {{ $v->name }}({{ $k }})
+                            <el-timeline-item @if (!empty($v->result)) avatar="{{ $v->profile->avatar }}" result="{{ $v->result->result }}" @if($v->result->result != \App\Utils\Pipeline\IAction::RESULT_PENDING) timestamp="{{ substr($v->result->updated_at, 5, 11) }}" @endif @endif>
+                                {{ $v->name }}({{ $k }})
+                            </el-timeline-item>
                     @endforeach
                     @endforeach
                 </el-timeline-item>
                 @endforeach
-            </el-timeline> -->
+            </el-timeline>
         </div>
     </div>
     <div class="information">
@@ -136,16 +139,14 @@ $flowStillInProgress = $startAction->userFlow->done === \App\Utils\Pipeline\IUse
                 @foreach($copys as $copy)
                 <img src="{{asset($copy->user->profile->avatar)}}" width="50" height="50" />
                 <p>{{ $copy->name }}</p>
-                @endforeach;
+                @endforeach
             </figure>
         </div>
     </div>
 </div>
 </div>
 
-
-
+@if ($showActionEditForm)
 <a style="display: block; color: white;text-decoration: none;text-align: center;" class="showMoreButton">审批</a>
-</div>
-</div>
+@endif
 @endsection

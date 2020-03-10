@@ -20,4 +20,9 @@ class MaterialRequest extends MyStandardRequest
     public function getTeacherId(){
         return $this->get('teacher');
     }
+
+
+    public function getType() {
+        return $this->get('type_id');
+    }
 }

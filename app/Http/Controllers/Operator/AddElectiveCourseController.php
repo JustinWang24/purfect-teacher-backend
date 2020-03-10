@@ -125,4 +125,22 @@ class AddElectiveCourseController extends Controller
             return redirect()->route('school_manager.elective-course.manager',['uuid'=>session('school.uuid')]);
         }
     }
+
+    public function dissolved(Request $request){
+        $schoolId = $request->session()->get('school.id');
+        $applyDao = new TeacherApplyElectiveCourseDao();
+        $apply = $applyDao->getApplyById($request->get('course_id'));
+        if ($apply->school_id !== $schoolId) {
+            return JsonBuilder::Error('您没有权限修改这个申请');
+        }
+        $dissolved = $applyDao->discolved($apply->course_id);
+        if($request->ajax()){
+            return $dissolved->isSuccess() ?
+                JsonBuilder::Success()
+                : JsonBuilder::Error($dissolved->getMessage());
+        }
+        else{
+            return redirect()->route('school_manager.elective-course.manager',['uuid'=>session('school.uuid')]);
+        }
+    }
 }

@@ -20,10 +20,9 @@
   }
   .card-body-approver {
     width: 85%;
-    height: 120px;
     color: #fff;
     margin: 0 auto;
-    img {
+    .portrait {
       width: 30px;
       height: 30px;
       padding-left: 10px;
@@ -33,7 +32,7 @@
     }
   }
   .el-divider--vertical {
-    height: 10em;
+    height: 3em;
     margin: 0;
     left: 50%;
     top: -15px;

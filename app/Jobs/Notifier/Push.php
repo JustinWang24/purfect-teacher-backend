@@ -46,12 +46,7 @@ class Push implements ShouldQueue
         }
         else{
             $push = JPushFactory::GetInstance();
-            foreach ($this->noticedTo as $user) {
-                $url = null;
-                if($this->nextStep)
-                    $url = $this->nextStep->getActionUrl($user);
-                $response = $push->send();
-            }
+            $push->send($this->noticedTo, $this->title, $this->content, $this->nextStep);
         }
     }
 }
