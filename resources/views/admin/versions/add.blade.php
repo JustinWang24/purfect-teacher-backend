@@ -25,8 +25,7 @@ use App\Utils\UI\Button;
                             <select class="form-control" name="version[user_apptype]"  required>
                                 <option value="">请选择</option>
                                 <option value="1">校园版</option>
-                                <option value="2">商企版</option>
-                                <option value="3">教师版</option>
+                                <option value="2">教师版</option>
                             </select>
                         </div>
                         <div class="form-group">
