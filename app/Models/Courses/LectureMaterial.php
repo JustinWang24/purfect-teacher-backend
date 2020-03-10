@@ -14,14 +14,8 @@ class LectureMaterial extends Model
 {
     use SoftDeletes;
     protected $fillable = [
-        'lecture_id',
-        'teacher_id',
-        'course_id',
-        'media_id',
-        'type',
-        'description',
-        'url',
-        'grade_id'
+        'lecture_id', 'teacher_id', 'course_id', 'media_id', 'type',
+        'description', 'url', 'grade_id', 'idx'
     ];
 
     public function lecture(){
@@ -65,5 +59,9 @@ class LectureMaterial extends Model
      */
     public function grade() {
         return $this->belongsTo(Grade::class);
+    }
+
+    public function materialType() {
+        return $this->belongsTo(LectureMaterialType::class,'type');
     }
 }

@@ -343,7 +343,8 @@ class LectureDao
                     'type' => $item['type_id'],
                     'description' => $item['desc'],
                     'url' => $item['url'],
-                    'grade_id' => $data['grade_id']
+                    'grade_id' => $data['grade_id'],
+                    'idx' => $data['idx'],
                 ];
 
                 LectureMaterial::create($material);
@@ -401,4 +402,39 @@ class LectureDao
         return LectureMaterial::where($map)->get();
     }
 
+
+    /**
+     * @param $courseId
+     * @param $teacherId
+     * @param $gradeId
+     * @return mixed
+     */
+    public function getMaterialsByCourseIdAndTeacherIdAndGradeId($courseId, $teacherId, $gradeId) {
+        $map = [
+            'course_id'=>$courseId, 'teacher_id'=>$teacherId,
+            'grade_id'=>$gradeId
+        ];
+        return LectureMaterial::where($map)
+            ->orderBy('idx', 'asc')
+            ->get();
+    }
+
+
+    /**
+     * 查询分类
+     * @param $courseId
+     * @param $teacherId
+     * @param $gradeId
+     * @return mixed
+     */
+    public function getMaterialTypeByCourseId($courseId, $teacherId, $gradeId) {
+        $map = [
+            'course_id'=>$courseId, 'teacher_id'=>$teacherId,
+            'grade_id'=>$gradeId
+        ];
+        return LectureMaterial::where($map)
+            ->select('type')
+            ->distinct('type')
+            ->get();
+    }
 }
