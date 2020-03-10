@@ -32,8 +32,6 @@ class VersionController extends Controller
         $data1_2 = $dao->getVersionOneInfo([['user_apptype', '=', 1], ['typeid', '=', 2]]);
         $data2_1 = $dao->getVersionOneInfo([['user_apptype', '=', 2], ['typeid', '=', 1]]);
         $data2_2 = $dao->getVersionOneInfo([['user_apptype', '=', 2], ['typeid', '=', 2]]);
-        $data2_1 = $dao->getVersionOneInfo([['user_apptype', '=', 3], ['typeid', '=', 1]]);
-        $data2_2 = $dao->getVersionOneInfo([['user_apptype', '=', 3], ['typeid', '=', 2]]);
         $versions = collect([$data1_1, $data1_2, $data2_1, $data2_2]);
 	
         $this->dataForView['versions'] = $versions;
