@@ -7,7 +7,7 @@
                 <header>设置审批人</header>
             </div>
             <div class="card-body">
-                <p style="text-align: center;">流程开始</p>
+                <p style="text-align: center;margin-bottom: 20px;">流程开始</p>
                 <img src="{{asset('assets/img/pipeline/addTo@2x.png')}}" alt="" @click="show1 = !show1" style="position: relative;left: 45%;vertical-align: baseline;">
                 <div class="card-body-approver" v-for="(item,index) in handler" :key="item.id">
                     <div style="padding: 5px;background-color: #FE7B1C;">
@@ -16,7 +16,7 @@
                         <span> （@{{ index + 1 }}级审批）</span>
                     </div>
                     <div style="border: 1px solid #FE7B1C; color: #313B4C; padding: 10px 6px;">
-                        <p>@{{ item .titles }} @{{ item.node_id }}</p>
+                        <p>@{{ item .titles }}</p>
                     </div>
                     <img src="{{asset('assets/img/pipeline/addTo@2x.png')}}" alt="" @click="prev(item.node_id)" style="position: relative;left: 45%;vertical-align: baseline;margin-top: 10px">
                 </div>
@@ -58,9 +58,9 @@
                         <el-cascader style="width: 90%;" :props="props" v-model="node.organizations"></el-cascader>
                     </el-form-item>
                     <el-form-item label="审批人">
-                        <el-checkbox-group v-model="node.titles">
-                            <el-checkbox v-for="item in titlesList" :label="item" :key="item">@{{item}}</el-checkbox>
-                        </el-checkbox-group>
+                        <el-radio-group v-model="node.titles">
+                            <el-radio v-for="item in titlesList" :label="item" :key="item">@{{item}}</el-radio>
+                        </el-radio-group>
                     </el-form-item>
                     <el-form-item style="display: flex;justify-content: center;">
                         <el-button type="primary" style="width: 140px; height: 37px;" @click="setone">确定</el-button>
@@ -73,8 +73,26 @@
                 <header>选择抄送人</header>
             </div>
             <div class="card-body" style="margin-top: 20px;">
-                <search-bar :school-id="{{ session('school.id') }}" full-tip="输入教职工名字" scope="employee" class="ml-4" :init-query="teacher.name" v-on:result-item-selected="selectMember"></search-bar>
-                <!-- <el-tag :key="idx" v-for="(member, idx) in members" class="mr-2" closable :disable-transitions="false" @close="removeFromOrg(member)">
+                <search-bar
+                    :school-id="{{ session('school.id') }}"
+                    full-tip="输入教职工名字"
+                    scope="employee"
+                    class="ml-4"
+                    :init-query="currentMember.name"
+                    v-on:result-item-selected="selectMember"
+                ></search-bar>
+                <el-tag
+                        :key="idx"
+                        v-for="(member, idx) in members"
+                        class="mr-2"
+                        closable
+                        :disable-transitions="false"
+                        @click="editMember(member)"
+                        @close="removeFromOrg(member)">
+                    @{{  member.title }}: @{{ member.name }}
+                </el-tag>
+                <!-- <search-bar :school-id="{{ session('school.id') }}" full-tip="输入教职工名字" scope="employee" class="ml-4" :init-query="teacher.name" v-on:result-item-selected="selectMember"></search-bar>
+                <el-tag :key="idx" v-for="(member, idx) in members" class="mr-2" closable :disable-transitions="false" @close="removeFromOrg(member)">
                     @{{ member }}
                 </el-tag> -->
             </div>

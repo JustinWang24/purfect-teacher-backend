@@ -6,9 +6,9 @@
             <div class="manger-card-header">
                 <h4 class="card-header-top">
                     <span @click="getList(1)" :style="{'color': posiType === 1 ? '#409EFF' :'#313B4C'}">办公审批</span>
-                    <el-divider direction="vertical"></el-divider>
+                    <el-divider direction="vertical" class="card-header-top-vertical"></el-divider>
                     <span @click="getList(2)" :style="{'color': posiType === 2 ? '#409EFF' :'#313B4C'}">办事大厅</span>
-                    <el-divider direction="vertical"></el-divider>
+                    <el-divider direction="vertical" class="card-header-top-vertical"></el-divider>
                     <span @click="getList(3)" :style="{'color': posiType === 3 ? '#409EFF' :'#313B4C'}">系统流程</span>
                 </h4>
                 <el-divider></el-divider>
