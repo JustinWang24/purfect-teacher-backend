@@ -525,7 +525,7 @@ Route::prefix('attendance')->middleware('auth:api')->group(function () {
     Route::post('/student-sweep-qr-code', 'Api\AttendanceSchedule\AttendanceController@studentSweepQrCode')
         ->name('api.student.sweep.code');
 
-    // 教师上个课签到
+    // 教师上课签到
     Route::post('/teacher-course-sign', 'Api\AttendanceSchedule\AttendanceController@teacherSign')
         ->name('api.teacher.course.sign');
 
@@ -754,7 +754,7 @@ Route::prefix('Oa')->middleware('auth:api')->group(function(){
     Route::post('/zone/getCpcZoneListInfo','Api\OA\IndexController@zone')
         ->name('api.cloud.course');
 });
-
+// 学生手动扫云班牌签到
 Route::post('/manual/attendances','Api\Cloud\CloudController@manual')
         ->middleware('auth:api')->name('api.manual.attendances');
 
@@ -1081,10 +1081,12 @@ Route::prefix('office')->middleware('auth:api')->group(function(){
     ->name('api.office.office-page');
     Route::any('/help-page', 'Admin\IndexController@helpIcon')
     ->name('api.office.help-page');
-    // 服务协议及隐私政策
-    Route::any('app/agreement', 'Api\Home\IndexController@agreement')
-    ->name('api.office.office-page');
 });
+
+// 服务协议及隐私政策
+
+Route::any('app/agreement', 'Api\Home\IndexController@agreement')
+->name('api.office.office-page');
 
 // PC端教学资料
 Route::prefix('material')->middleware('auth:api')->group(function(){
@@ -1110,4 +1112,5 @@ Route::prefix('material')->middleware('auth:api')->group(function(){
     Route::any('/materials', 'Api\Study\MaterialController@materials')
         ->name('api.material.materials');
 });
+
 

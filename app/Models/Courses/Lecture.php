@@ -24,4 +24,12 @@ class Lecture extends Model
     public function teacher(){
         return $this->belongsTo(User::class,'teacher_id');
     }
+
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function lectureMaterials() {
+        return $this->hasMany(LectureMaterial::class, 'lecture_id');
+    }
 }

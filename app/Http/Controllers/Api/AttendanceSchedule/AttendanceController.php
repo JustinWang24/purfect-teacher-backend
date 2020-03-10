@@ -83,16 +83,21 @@ class AttendanceController extends Controller
         $attendancesDetailsDao = new AttendancesDetailsDao();
         $signInList = $attendancesDetailsDao->signInList($year, $user->id, $courseId, $term);
         foreach ($signInList as $key => $val) {
+
             $signInList[$key]['time_slots'] = $val->timetable->timeSlot->name;
             $signInList[$key]['weekday_index'] = $val->timetable->weekday_index;
-            $signInList[$key]['time'] = Carbon::parse($val->date)->format('H:i');
-            $signInList[$key]['date'] = Carbon::parse($val->date)->format('Y-m-d');
+            $signInList[$key]['date'] = Carbon::parse($val->created_at)->format('Y-m-d');
+            $signInList[$key]['time'] = '';
 
             // 判断请假的
             if ($val['mold'] == AttendancesDetail::MOLD_LEAVE) {
                 if ($val['status'] !== AttendancesDetail::STATUS_CONSENT) {
-                    unset($signInList[$key]);
+                    $signInList[$key]['mold'] = AttendancesDetail::MOLD_TRUANT;
                 }
+            }
+            if($val['mold'] == AttendancesDetail::MOLD_SIGN_IN) {
+                $signInList[$key]['time'] = Carbon::parse($val->created_at)->format('H:i');
+
             }
             unset($val->status);
             unset($val->timetable);
@@ -186,7 +191,10 @@ class AttendanceController extends Controller
         $attendancesDao = new AttendancesDao;
         $arrive = $attendancesDao->getTeacherIsSignByItem($items[0], $user);
         if (is_null($arrive)) {
-            return JsonBuilder::Error('系统未生成签到初始化数据, 请学生先签到');
+            $createData = $attendancesDao->createAttendanceData($items[0]);
+            if (!$createData) {
+                return JsonBuilder::Error('生成签到初始化数据失败');
+            }
         }
 
         if ($arrive->teacher_sign == Attendance::TEACHER_SIGN) {
