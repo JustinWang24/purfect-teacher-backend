@@ -14,14 +14,8 @@ class LectureMaterial extends Model
 {
     use SoftDeletes;
     protected $fillable = [
-        'lecture_id',
-        'teacher_id',
-        'course_id',
-        'media_id',
-        'type',
-        'description',
-        'url',
-        'grade_id'
+        'lecture_id', 'teacher_id', 'course_id', 'media_id', 'type',
+        'description', 'url', 'grade_id', 'idx'
     ];
 
     public function lecture(){

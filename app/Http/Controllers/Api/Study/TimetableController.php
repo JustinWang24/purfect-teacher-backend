@@ -9,6 +9,7 @@
 namespace App\Http\Controllers\Api\Study;
 
 
+use App\Dao\Courses\Lectures\LectureDao;
 use App\Utils\JsonBuilder;
 use App\Dao\Schools\SchoolDao;
 use App\Utils\Time\CalendarDay;
@@ -16,6 +17,7 @@ use App\Dao\Timetable\TimeSlotDao;
 use App\Http\Controllers\Controller;
 use App\Dao\Timetable\TimetableItemDao;
 use App\Http\Requests\TimeTable\TimetableRequest;
+use function Couchbase\defaultDecoder;
 
 class TimetableController extends Controller
 {
@@ -170,8 +172,7 @@ class TimetableController extends Controller
      * @param TimetableRequest $request
      * @return string
      */
-    public function timetableDetails(TimetableRequest $request)
-    {
+    public function timetableDetails(TimetableRequest $request) {
         $timetableId = $request->getTimetableId();
         if(is_null($timetableId)) {
             return JsonBuilder::Error('缺少参数');
@@ -186,6 +187,26 @@ class TimetableController extends Controller
         $teacher = $info->teacher;
         $grade = $info->grade;
         $room = $info->room;
+
+        $dao = new LectureDao();
+        $return = $dao->getMaterialsByCourseIdAndTeacherIdAndGradeId($course->id, $teacher->id, $grade->id);
+        $types = $dao->getMaterialType($info->school_id);
+
+        $materials = [];
+        foreach ($types as $key => $value) {
+            foreach ($return as $k => $val) {
+                if($val->type == $value->type_id) {
+
+                    $materials[$key]['type_name'] = $value->name;
+                    $materials[$key]['list'][] = [
+                        'idx' => '第'.$val->idx.'节',
+                        'desc' => $val->description,
+                        'url' => $val->url,
+                    ];
+                }
+            }
+        }
+
         $result = [
             'time_slot' => $timeSlot->name,
             'from' => $timeSlot->from,
@@ -194,7 +215,7 @@ class TimetableController extends Controller
             'room' => $room->name,
             'teacher' => $teacher->name,
             'grade' => $grade->name,
-            'materials' => [],
+            'materials' => $materials,
         ];
 
         return JsonBuilder::Success($result);
