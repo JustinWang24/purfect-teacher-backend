@@ -21,6 +21,12 @@ class AttendanceController extends Controller
         return view('school_manager.teacher_attendance.manager', $this->dataForView);
     }
 
+    public function load_manager(AttendanceRequest $request){
+        $dao = new AttendanceDao();
+        $result = $dao->getPaginated($request->session()->get('school.id'));
+        return JsonBuilder::Success($result);
+    }
+
     public function load_attendance(AttendanceRequest $request) {
         $dao = new AttendanceDao();
         $info = $dao->getById($request->get('attendance_id'));
