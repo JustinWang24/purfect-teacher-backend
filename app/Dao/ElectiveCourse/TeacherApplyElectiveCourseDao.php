@@ -213,7 +213,10 @@ class TeacherApplyElectiveCourseDao
      */
     public function getApplicationsByTeacher($teacherId, $schoolId, $type, $page){
         //UI的分类与表结构太不一致,全部拿到内存处理
-        $list = TeacherApplyElectiveCourse::with('course')->where('teacher_id', '=', $teacherId)->where('course_id', '>', 0)->orderBy('id', 'desc')->get();
+        $list = TeacherApplyElectiveCourse::with('course')
+            ->where('teacher_id', '=', $teacherId)
+            ->where('status', TeacherApplyElectiveCourse::STATUS_PUBLISHED)
+            ->where('course_id', '>', 0)->orderBy('id', 'desc')->get();
         $retList = [];
         $nowDate = Carbon::now()->timestamp;
         foreach ($list as $item) {
