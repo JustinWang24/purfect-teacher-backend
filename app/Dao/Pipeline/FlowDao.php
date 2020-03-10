@@ -50,7 +50,7 @@ class FlowDao
         foreach ($flows as $flow) {
             if(in_array($flow->type, $types)){
                 if($forApp){
-                    $flow->icon = str_replace('.png','@2x.png',$flow->icon);
+                    //$flow->icon = str_replace('.png','@2x.png',$flow->icon);
                 }
                 $data[$flow->type][] = $flow;
             }
