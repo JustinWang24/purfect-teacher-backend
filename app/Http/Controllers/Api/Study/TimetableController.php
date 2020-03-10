@@ -9,15 +9,14 @@
 namespace App\Http\Controllers\Api\Study;
 
 
-use App\Dao\Courses\Lectures\LectureDao;
 use App\Utils\JsonBuilder;
 use App\Dao\Schools\SchoolDao;
 use App\Utils\Time\CalendarDay;
 use App\Dao\Timetable\TimeSlotDao;
 use App\Http\Controllers\Controller;
 use App\Dao\Timetable\TimetableItemDao;
+use App\Dao\Courses\Lectures\LectureDao;
 use App\Http\Requests\TimeTable\TimetableRequest;
-use function Couchbase\defaultDecoder;
 
 class TimetableController extends Controller
 {
@@ -34,6 +33,8 @@ class TimetableController extends Controller
 
         $return = $this->timetable($user, $date);
         $item = $return['item'];
+
+        $dao = new LectureDao();
         $forStudyingSlots = $return['forStudyingSlots'];
 
         $timetable = [];
@@ -41,13 +42,19 @@ class TimetableController extends Controller
             $course = (object)[];
             foreach ($item as $k => $val) {
                 if($value->id == $val['time_slot_id']) {
+                    // 查询当前老师在该班级上传的资料
+                    $types = $dao->getMaterialTypeByCourseId($val['course_id'],$val['teacher_id'],$val['grade_id']);
+                    $label = [];
+                    foreach ($types as $v) {
+                        $label[] = $v->materialType->name;
+                    }
                     $course = [
                         'time_table_id' => $val['id'],
                         'idx' => '', // 课节
                         'name' => $val['course'],
                         'room' => $val['room'],
                         'teacher' => $val['teacher'],
-                        'label' => [],
+                        'label' => $label,
                     ];
                 }
 
@@ -85,6 +92,7 @@ class TimetableController extends Controller
 
         $return = $this->timetable($user, $date);
         $item = $return['item'];
+        $dao = new LectureDao();
         $forStudyingSlots = $return['forStudyingSlots'];
         $timetable = [];
         foreach ($item as $key => $value) {
@@ -99,6 +107,14 @@ class TimetableController extends Controller
                     $to = $val->to;
                 }
             }
+
+            // 查询当前老师在该班级上传的资料
+            $types = $dao->getMaterialTypeByCourseId($value['course_id'],$value['teacher_id'],$value['grade_id']);
+            $label = [];
+            foreach ($types as $v) {
+                $label[] = $v->materialType->name;
+            }
+
             $timetable[] = [
                 'time_table_id' => $value['id'],
                 'time_slot_id' => $value['time_slot_id'],
@@ -109,7 +125,7 @@ class TimetableController extends Controller
                 'time_slot_name' => $time_slot_name,
                 'from' => $from,
                 'to' => $to,
-                'label' => [],
+                'label' => $label,
             ];
         }
 

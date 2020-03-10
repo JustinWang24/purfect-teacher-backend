@@ -418,4 +418,23 @@ class LectureDao
             ->orderBy('idx', 'asc')
             ->get();
     }
+
+
+    /**
+     * 查询分类
+     * @param $courseId
+     * @param $teacherId
+     * @param $gradeId
+     * @return mixed
+     */
+    public function getMaterialTypeByCourseId($courseId, $teacherId, $gradeId) {
+        $map = [
+            'course_id'=>$courseId, 'teacher_id'=>$teacherId,
+            'grade_id'=>$gradeId
+        ];
+        return LectureMaterial::where($map)
+            ->select('type')
+            ->distinct('type')
+            ->get();
+    }
 }

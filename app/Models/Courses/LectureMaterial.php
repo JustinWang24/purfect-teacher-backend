@@ -60,4 +60,8 @@ class LectureMaterial extends Model
     public function grade() {
         return $this->belongsTo(Grade::class);
     }
+
+    public function materialType() {
+        return $this->belongsTo(LectureMaterialType::class,'type');
+    }
 }
