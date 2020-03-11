@@ -18,7 +18,9 @@ if (document.getElementById('teacher-assistant-evaluation-app')) {
                 ifShow: false,
                 ifShowNote: false,
                 nodeData: [],
-                stuName: ''
+                stuName: '',
+                course_id: ''
+
             }
         },
         created(){
@@ -111,6 +113,9 @@ if (document.getElementById('teacher-assistant-evaluation-app')) {
                 let params = this.filterValue ? JSON.parse(this.filterValue) : '';
                 params.course_id = data.id;
                 params.grade_id = data.data.id;
+                this.course_id = data.id;
+                console.log(params)
+                console.log(data)
                 axios.post(url, params).then((res) => {
                     if (Util.isAjaxResOk(res)) {
                         let data = res.data.data;
@@ -123,7 +128,10 @@ if (document.getElementById('teacher-assistant-evaluation-app')) {
             getNodeData: function (data) {
                 const url = Util.buildUrl(Constants.API.TEACHER_WEB.REMARK_LIST);
                 let params = this.filterValue ? JSON.parse(this.filterValue) : {};
+                console.log(data)
                 params.user_id = data.user_id;
+                params.course_id = this.course_id;
+
                 axios.post(url, params).then((res) => {
                     if (Util.isAjaxResOk(res)) {
                         let data = res.data.data;

@@ -111,7 +111,7 @@ if (document.getElementById('pipeline-flow-open-app')) {
                 item.value = this.setTime(item.time, item.extra.dateType);
                 item.extra.showPicker = false;
             },
-            onConfirmRange(item) {
+            onConfirmS(item) {
                 item.valueS = this.setTime(item.timeS, item.extra.dateType);
                 item.extra.showPickerS = false;
             },

@@ -94,7 +94,7 @@
                             clickable
                             name="datetimePicker"
                             :value="item.valueE"
-                            :label="item.title"
+                            :label="item.extra.title2"
                             :placeholder="item.tips"
                             @click="item.extra.showPickerE = true;"
                     />
@@ -135,8 +135,8 @@
                         clickable
                         name="area"
                         :value="item.value"
-                        label="地区选择"
-                        placeholder="点击选择省市区"
+                        :label="item.title"
+                        :placeholder="item.tips"
                         @click="item.extra.showPicker = true"
                 /></van-field>
                 <van-popup v-model="item.extra.showPicker" position="bottom">
@@ -149,7 +149,7 @@
             </div>
             <div v-if="item.type == 'node'">
                 <van-field disabled
-                        v-model="item.nodeText"
+                        v-model="item.title"
                         type="textarea"
                         name="说明文字"
                         label="说明文字"/>
