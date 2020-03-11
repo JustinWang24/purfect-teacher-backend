@@ -98,7 +98,7 @@ class VisitorDao
         return Visitor::from('visitors as a')
             ->whereIn('a.status',$param['status'])
             ->where('a.school_id',$schoolId)
-            ->whereBetween('a.created_at', [$sdate, $edata])
+            ->whereBetween('a.scheduled_at', [$sdate, $edata])
             ->where([['a.name','like', '%'.trim($param['keywords']).'%'],['b.name','like', '%'.trim($param['keywords']).'%','or']])
             ->join('users as b', 'a.user_id', '=', 'b.id')
             ->orderBy('a.id','desc')

@@ -4,6 +4,7 @@ namespace App\Models\OA;
 
 use App\User;
 use Illuminate\Database\Eloquent\Model;
+use function GuzzleHttp\Psr7\str;
 
 class Visitor extends Model
 {
@@ -38,6 +39,18 @@ class Visitor extends Model
         'scheduled_at'=>'datetime',
         'arrived_at'=>'datetime',
     ];
+
+    public function getCreatedAtAttribute($value){
+        return !empty($value)?date('Y-m-d H:i',strtotime($value)) : '';
+    }
+
+    public function getScheduledAtAttribute($value){
+        return !empty($value)?date('Y-m-d H:i',strtotime($value)) : '';
+    }
+
+    public function getArrivedAtAttribute($value){
+        return !empty($value)?date('Y-m-d H:i',strtotime($value)) : '';
+    }
 
     public function user(){
         return $this->hasOne(User::class,'id','user_id');

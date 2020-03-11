@@ -10,8 +10,10 @@
         text-align: center;
         cursor: pointer;
       }
-      .el-divider--vertical {
+      .card-header-top-vertical {
         height: 1.5em !important;
+        left: 0;
+        top: 0;
       }
     }
     .el-divider--horizontal {

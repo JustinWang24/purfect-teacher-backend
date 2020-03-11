@@ -9,11 +9,11 @@ use App\User;
         <form action="{{ route('school_manager.oa.visitors-manager') }}" method="get"  id="add-building-form">
             <div class="pull-left col-3">
                 <label>开始时间</label>
-                <input type="text" name="startDate" class="form-control el-input__inner col-8 form_date" value="{{ Request::get('startDate') }}">
+                <input type="text" name="startDate" class="form-control el-input__inner col-8 form_datetime" value="{{ Request::get('startDate') }}">
             </div>
             <div class="pull-left col-3">
                 <label>截止时间</label>
-                <input type="text" name="endDate" class="form-control el-input__inner col-8 form_date" value="{{ Request::get('endDate') }}">
+                <input type="text" name="endDate" class="form-control el-input__inner col-8 form_datetime" value="{{ Request::get('endDate') }}">
             </div>
             <div class="pull-left col-2">
                 <label>状态</label>

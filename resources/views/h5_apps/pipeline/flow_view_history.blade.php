@@ -70,7 +70,7 @@
             <el-divider></el-divider>
             @foreach($options as $option)
             <h5>
-                <p>{{ $option['title'] }}</p>
+                <p>{{ $option['name'] }}</p>
                 <p>{{ $option['value'] }}</p>
             </h5>
             <el-divider></el-divider>
@@ -92,7 +92,7 @@
     </div>--}}
     <div class="information">
         <h3>审批人</h3>
-        <div class="block">
+        <div class="block" style="padding: 0 15px;">
         {{--<el-timeline>
             <el-timeline-item
             v-for="(activity, index) in activities"
@@ -117,19 +117,20 @@
             @endforeach
         </el-timeline>--}}
 
-            <el-timeline>
-                @foreach($handlers as $key => $handler)
-                <el-timeline-item key="{{ $key }}" icon="el-icon-more" type="primary" size="large">
-                    @foreach($handler as $k => $val)
-                    @foreach ($val as $v)
-                            <el-timeline-item @if (!empty($v->result)) avatar="{{ $v->profile->avatar }}" result="{{ $v->result->result }}" @if($v->result->result != \App\Utils\Pipeline\IAction::RESULT_PENDING) timestamp="{{ substr($v->result->updated_at, 5, 11) }}" @endif @endif>
-                                {{ $v->name }}({{ $k }})
-                            </el-timeline-item>
-                    @endforeach
-                    @endforeach
-                </el-timeline-item>
+        <el-timeline>
+            @foreach($handlers as $key => $handler)
+            <el-timeline-item key="{{ $key }}" icon="el-icon-more" type="primary" size="large">
+                @foreach($handler as $k => $val)
+                @foreach ($val as $v)
+                    <el-timeline-item @if (!empty($v->result)) result="{{ $v->result->result }}" @if($v->result->result != \App\Utils\Pipeline\IAction::RESULT_PENDING) timestamp="{{ substr($v->result->updated_at, 5, 11) }}" @endif @endif>
+                        <img src="{{ $v->profile->avatar }}" alt="" style="width: 40px; height: 40px;border-radius: 50%;vertical-align: middle;">
+                        {{ $v->name }}({{ $k }})
+                    </el-timeline-item>
                 @endforeach
-            </el-timeline>
+                @endforeach
+            </el-timeline-item>
+            @endforeach
+        </el-timeline>
         </div>
     </div>
     <div class="information">

@@ -38,8 +38,10 @@ use Illuminate\Support\Facades\Schema;
 class TeacherApplyElectiveCourseDao
 {
     use BuildFillableData;
+
     public function __construct()
-    {}
+    {
+    }
 
     /**
      * 根据 id 获取老师的选修课申请表
@@ -48,7 +50,7 @@ class TeacherApplyElectiveCourseDao
      */
     public function getApplyById($id)
     {
-        $application = TeacherApplyElectiveCourse::where('id',$id)
+        $application = TeacherApplyElectiveCourse::where('id', $id)
             ->with('openToMajors')
             ->with('arrangements')
             ->first();
@@ -64,14 +66,14 @@ class TeacherApplyElectiveCourseDao
         $schedule = [];
         foreach ($application->arrangements as $arrangement) {
             $item = [
-                'weeks'=>[$arrangement->week],
-                'days'=>[$arrangement->day_index],
-                'timeSlots'=>[$arrangement->time_slot_id],
-                'building_id'=>$arrangement->building_id,
-                'building_name'=>$arrangement->building_name,
-                'classroom_name'=>$arrangement->classroom_name,
-                'classroom_id'=>$arrangement->classroom_id,
-                'id'=>$arrangement->id,
+                'weeks' => [$arrangement->week],
+                'days' => [$arrangement->day_index],
+                'timeSlots' => [$arrangement->time_slot_id],
+                'building_id' => $arrangement->building_id,
+                'building_name' => $arrangement->building_name,
+                'classroom_name' => $arrangement->classroom_name,
+                'classroom_id' => $arrangement->classroom_id,
+                'id' => $arrangement->id,
             ];
             $schedule[] = $item;
         }
@@ -85,8 +87,9 @@ class TeacherApplyElectiveCourseDao
      * @param $id
      * @return mixed
      */
-    public function deleteArrangementItem($id){
-        return ApplyCourseArrangement::where('id',$id)->delete();
+    public function deleteArrangementItem($id)
+    {
+        return ApplyCourseArrangement::where('id', $id)->delete();
     }
 
     /**
@@ -94,13 +97,15 @@ class TeacherApplyElectiveCourseDao
      * @param $schoolId
      * @return mixed
      */
-    public function getPaginatedApplications($schoolId){
-        return TeacherApplyElectiveCourse::where('school_id',$schoolId)
-            ->orderBy('created_at','desc')
+    public function getPaginatedApplications($schoolId)
+    {
+        return TeacherApplyElectiveCourse::where('school_id', $schoolId)
+            ->orderBy('created_at', 'desc')
             ->paginate(ConfigurationTool::DEFAULT_PAGE_SIZE);
     }
 
-    public function getApplicationByTeacherById($applyid, $schoolId) {
+    public function getApplicationByTeacherById($applyid, $schoolId)
+    {
         $item = TeacherApplyElectiveCourse::with('course')->where('id', '=', $applyid)->first();
         $nowDate = Carbon::now()->timestamp;
         //将周转换成日期
@@ -141,22 +146,22 @@ class TeacherApplyElectiveCourseDao
         if ($tmp['elective_status'] == CourseElective::STATUS_CANCEL) {
             $tmp['status'] = 1;//已关闭
             $retList[] = $tmp;
-        }else {
+        } else {
             if ($nowDate < $tmp['elective_enrol_start_at']->timestamp) {
                 $tmp['status'] = 2;//待选课
-            }elseif ($nowDate < $tmp['elective_expired_at']->timestamp) {
+            } elseif ($nowDate < $tmp['elective_expired_at']->timestamp) {
                 $tmp['status'] = 3;//报名中
-            }elseif ($nowDate < $tmp['min_day']->timestamp) {
+            } elseif ($nowDate < $tmp['min_day']->timestamp) {
                 $tmp['status'] = 4;//待开课
-            }elseif ($nowDate > $tmp['max_day']->timestamp) {
+            } elseif ($nowDate > $tmp['max_day']->timestamp) {
                 $tmp['status'] = 5;//已结束
-            }elseif ($nowDate > $tmp['min_day']->timestamp) {
+            } elseif ($nowDate > $tmp['min_day']->timestamp) {
                 $tmp['status'] = 6;//进行中
-            }else {
+            } else {
                 $tmp['status'] = 7;//异常
             }
         }
-        $userList = StudentEnrolledOptionalCourse::with('user')->where(['course_id' => $item->course_id,'teacher_id' => $item->teacher_id])->get();
+        $userList = StudentEnrolledOptionalCourse::with('user')->where(['course_id' => $item->course_id, 'teacher_id' => $item->teacher_id])->get();
         $tmp['user_list'] = [];
         foreach ($userList as $user) {
             $tmp['user_list'][] = [
@@ -166,10 +171,24 @@ class TeacherApplyElectiveCourseDao
                 'created_at' => $user->created_at
             ];
         }
+
+        $tableName = 'student_enrolled_optional_courses_'.$item->course->courseElective->start_year.'_'.$item->course->term;
+        $userList2 = DB::table($tableName)->where(['course_id' => $item->course_id, 'teacher_id' => $item->teacher_id])->get();
+        foreach ($userList2 as $user2) {
+            $user = User::where('id',$user2->user_id)->first();
+            $tmp['user_list'][] = [
+                'name' => $user->name,
+                'avatar' => $user->profile->avatar,
+                'major' => $user->gradeUser->major->name,
+                'created_at' => $user2->created_at
+            ];
+        }
+
         return $tmp;
     }
 
-    public function getApplication2ByTeacherById($applyid) {
+    public function getApplication2ByTeacherById($applyid)
+    {
         $item = TeacherApplyElectiveCourse::where('id', '=', $applyid)->first();
         $tmp = [
             'applyid' => $item->id,
@@ -211,9 +230,13 @@ class TeacherApplyElectiveCourseDao
      * @param $page
      * @return array
      */
-    public function getApplicationsByTeacher($teacherId, $schoolId, $type, $page){
+    public function getApplicationsByTeacher($teacherId, $schoolId, $type, $page)
+    {
         //UI的分类与表结构太不一致,全部拿到内存处理
-        $list = TeacherApplyElectiveCourse::with('course')->where('teacher_id', '=', $teacherId)->where('course_id', '>', 0)->orderBy('id', 'desc')->get();
+        $list = TeacherApplyElectiveCourse::with('course')
+            ->where('teacher_id', '=', $teacherId)
+            ->where('status', TeacherApplyElectiveCourse::STATUS_PUBLISHED)
+            ->where('course_id', '>', 0)->orderBy('id', 'desc')->get();
         $retList = [];
         $nowDate = Carbon::now()->timestamp;
         foreach ($list as $item) {
@@ -249,26 +272,26 @@ class TeacherApplyElectiveCourseDao
                 if ($tmp['elective_status'] == CourseElective::STATUS_CANCEL) {
                     $tmp['status'] = 1;//已关闭
                     $retList[] = $tmp;
-                }else {
+                } else {
                     if ($nowDate < $tmp['elective_enrol_start_at']->timestamp) {
                         $tmp['status'] = 2;//待选课
                         $retList[] = $tmp;
-                    }elseif ($nowDate < $tmp['elective_expired_at']->timestamp) {
+                    } elseif ($nowDate < $tmp['elective_expired_at']->timestamp) {
                         $tmp['status'] = 3;//报名中
                         $retList[] = $tmp;
-                    }elseif ($nowDate < $tmp['min_day']->timestamp) {
+                    } elseif ($nowDate < $tmp['min_day']->timestamp) {
                         $tmp['status'] = 4;//待开课
                         $retList[] = $tmp;
-                    }else {
+                    } else {
 
                     }
                 }
-            }else {
+            } else {
                 if ($tmp['elective_status'] != CourseElective::STATUS_CANCEL) {
                     if ($nowDate > $tmp['max_day']->timestamp) {
                         $tmp['status'] = 5;//已结束
                         $retList[] = $tmp;
-                    }elseif ($nowDate > $tmp['min_day']->timestamp) {
+                    } elseif ($nowDate > $tmp['min_day']->timestamp) {
                         $tmp['status'] = 6;//进行中
                         $retList[] = $tmp;
                     }
@@ -277,7 +300,7 @@ class TeacherApplyElectiveCourseDao
         }
         $return = [];
         $i = 0;
-        $start = ($page-1) * ConfigurationTool::DEFAULT_PAGE_SIZE;
+        $start = ($page - 1) * ConfigurationTool::DEFAULT_PAGE_SIZE;
         $end = $start + ConfigurationTool::DEFAULT_PAGE_SIZE;
         foreach ($retList as $item) {
             if ($i >= $start) {
@@ -297,10 +320,11 @@ class TeacherApplyElectiveCourseDao
      * @param $schoolId
      * @return array
      */
-    public function getApplications2ByTeacher($teacherId, $schoolId){
+    public function getApplications2ByTeacher($teacherId, $schoolId)
+    {
         $list = TeacherApplyElectiveCourse::where('teacher_id', '=', $teacherId)
             ->whereIn('status', [TeacherApplyElectiveCourse::STATUS_WAITING_FOR_VERIFIED, TeacherApplyElectiveCourse::STATUS_WAITING_FOR_REJECTED])
-            ->orderBy('id','desc')
+            ->orderBy('id', 'desc')
             ->paginate(ConfigurationTool::DEFAULT_PAGE_SIZE);
         $retList = [];
         foreach ($list as $item) {
@@ -335,7 +359,7 @@ class TeacherApplyElectiveCourseDao
      */
     public function getVerifiedApplyById($id)
     {
-        $obj =  $this->getApplyById($id);
+        $obj = $this->getApplyById($id);
         return $obj->isVerified() ? $obj : false;
     }
 
@@ -414,12 +438,11 @@ class TeacherApplyElectiveCourseDao
                 //保存关联专业
                 $this->saveApplyMajor($data['course']['majors'], $apply->id, $data['course']['school_id']);
 
-                if($bag->isSuccess()){
+                if ($bag->isSuccess()) {
                     DB::commit();
                     $messageBag->setCode(JsonBuilder::CODE_SUCCESS);
                     $messageBag->setData($apply);
-                }
-                else{
+                } else {
                     DB::rollBack();
                     $messageBag->setMessage($bag->getMessage());
                 }
@@ -447,7 +470,7 @@ class TeacherApplyElectiveCourseDao
         unset($data['course']['id']);
         $data['course']['teacher_name'] = $this->getTeacherName($data['course']['teacher_id']);
         $applyGroups = $data['schedule'];
-        $data['course']['status'] = $data['course']['status']??TeacherApplyElectiveCourse::STATUS_WAITING_FOR_VERIFIED;
+        $data['course']['status'] = $data['course']['status'] ?? TeacherApplyElectiveCourse::STATUS_WAITING_FOR_VERIFIED;
         $messageBag = new MessageBag(JsonBuilder::CODE_ERROR);
 
         DB::beginTransaction();
@@ -497,11 +520,12 @@ class TeacherApplyElectiveCourseDao
      * 解散一门选修课
      * @param $id
      */
-    public function discolved($courseId){
+    public function discolved($courseId)
+    {
         $messageBag = new MessageBag(JsonBuilder::CODE_ERROR);
         $course = Course::where('id', $courseId)->first();
         DB::beginTransaction();
-        try{
+        try {
             //标记申请状态为驳回
             TeacherApplyElectiveCourse::where('course_id', $courseId)->update([
                 'status' => TeacherApplyElectiveCourse::STATUS_WAITING_FOR_REJECTED,
@@ -517,7 +541,7 @@ class TeacherApplyElectiveCourseDao
             DB::commit();
             $messageBag->setCode(JsonBuilder::CODE_SUCCESS);
 
-        }catch (\Exception $exception) {
+        } catch (\Exception $exception) {
             DB::rollBack();
             $messageBag->setMessage($exception->getMessage());
         }
@@ -534,14 +558,14 @@ class TeacherApplyElectiveCourseDao
     public function approvedApply($id, $content, $newSchedule)
     {
         foreach ($newSchedule as $item) {
-            ApplyCourseArrangement::where('id',$item['id'])->update([
-                'week'=>$item['weeks'][0],
-                'day_index'=>$item['days'][0],
-                'time_slot_id'=>$item['timeSlots'][0],
-                'building_id'=>$item['building_id'],
-                'building_name'=>$item['building_name'],
-                'classroom_id'=>$item['classroom_id'],
-                'classroom_name'=>$item['classroom_name'],
+            ApplyCourseArrangement::where('id', $item['id'])->update([
+                'week' => $item['weeks'][0],
+                'day_index' => $item['days'][0],
+                'time_slot_id' => $item['timeSlots'][0],
+                'building_id' => $item['building_id'],
+                'building_name' => $item['building_name'],
+                'classroom_id' => $item['classroom_id'],
+                'classroom_name' => $item['classroom_name'],
             ]);
         }
         return $this->operateApply($id, TeacherApplyElectiveCourse::STATUS_VERIFIED, $content);
@@ -564,7 +588,7 @@ class TeacherApplyElectiveCourseDao
      * @param $content
      * @return IMessageBag
      */
-    public function operateApply($id, $status = TeacherApplyElectiveCourse::STATUS_VERIFIED, $content='同意')
+    public function operateApply($id, $status = TeacherApplyElectiveCourse::STATUS_VERIFIED, $content = '同意')
     {
         $msgBag = new MessageBag(JsonBuilder::CODE_ERROR, '系统错误');
         DB::beginTransaction();
@@ -574,7 +598,7 @@ class TeacherApplyElectiveCourseDao
             if (TeacherApplyElectiveCourse::STATUS_VERIFIED === $status) {
                 $apply->status = TeacherApplyElectiveCourse::STATUS_VERIFIED;
                 $apply->reply_content .= $content;
-            } elseif (in_array($status, [TeacherApplyElectiveCourse::STATUS_WAITING_FOR_REJECTED,TeacherApplyElectiveCourse::STATUS_PUBLISHED])) {
+            } elseif (in_array($status, [TeacherApplyElectiveCourse::STATUS_WAITING_FOR_REJECTED, TeacherApplyElectiveCourse::STATUS_PUBLISHED])) {
                 $apply->status = $status;
             } else {
                 throw new Exception('参数错误');
@@ -621,9 +645,9 @@ class TeacherApplyElectiveCourseDao
      */
     public function getDefaultStatusByRole($user)
     {
-        if($user->isSchoolAdminOrAbove()) {
+        if ($user->isSchoolAdminOrAbove()) {
             return TeacherApplyElectiveCourse::STATUS_VERIFIED;
-        }else {
+        } else {
             return TeacherApplyElectiveCourse::STATUS_WAITING_FOR_VERIFIED;
         }
     }
@@ -636,8 +660,7 @@ class TeacherApplyElectiveCourseDao
         //全部专业
         $applyMajors = $this->getApplyMajor($applyId);
         $majorArrs = [];
-        foreach ($applyMajors->toArray() as $majorArr)
-        {
+        foreach ($applyMajors->toArray() as $majorArr) {
             $majorArrs[] = $majorArr['major_id'];
         }
         //全部课时
@@ -656,28 +679,27 @@ class TeacherApplyElectiveCourseDao
             }
         }
         $apply = self::getVerifiedApplyById($applyId);
-        if (!$apply)
-        {
+        if (!$apply) {
             $messageBag->setMessage('没有审批过的申请不能发布！');
             return $messageBag;
         }
         //获取选修课的起止时间
-        $electiveCourseStartAndEnd = $this->getElectiveCourseStartAndEndTime($apply->school_id,$apply->term);
-        $data['school_id']      = $apply->school_id;
-        $data['teachers'][0]    = $apply->teacher_id;
-        $data['majors']         = $majorArrs;
-        $data['code']           = $apply->code;
-        $data['name']           = $apply->name;
-        $data['scores']         = $apply->scores;
-        $data['optional']       = Course::ELECTIVE_COURSE;
-        $data['year']           = $apply->year;
-        $data['term']           = $apply->term;
-        $data['desc']           = $apply->desc;
-        $data['open_num']       = $apply->open_num;
-        $data['max_num']        = $apply->max_num;
-        $data['start_year']     = $apply->start_year;
+        $electiveCourseStartAndEnd = $this->getElectiveCourseStartAndEndTime($apply->school_id, $apply->term);
+        $data['school_id'] = $apply->school_id;
+        $data['teachers'][0] = $apply->teacher_id;
+        $data['majors'] = $majorArrs;
+        $data['code'] = $apply->code;
+        $data['name'] = $apply->name;
+        $data['scores'] = $apply->scores;
+        $data['optional'] = Course::ELECTIVE_COURSE;
+        $data['year'] = $apply->year;
+        $data['term'] = $apply->term;
+        $data['desc'] = $apply->desc;
+        $data['open_num'] = $apply->open_num;
+        $data['max_num'] = $apply->max_num;
+        $data['start_year'] = $apply->start_year;
         $data['enrol_start_at'] = $electiveCourseStartAndEnd[0];
-        $data['expired_at']     = $electiveCourseStartAndEnd[1];
+        $data['expired_at'] = $electiveCourseStartAndEnd[1];
 
 
         DB::beginTransaction();
@@ -706,9 +728,10 @@ class TeacherApplyElectiveCourseDao
      * @param int $monthsAgo
      * @return Collection
      */
-    public function getAllBySchool($schoolId, $monthsAgo = 3){
-        return TeacherApplyElectiveCourse::where('school_id',$schoolId)
-            ->where('created_at','>',Carbon::now()->subMonths($monthsAgo))
+    public function getAllBySchool($schoolId, $monthsAgo = 3)
+    {
+        return TeacherApplyElectiveCourse::where('school_id', $schoolId)
+            ->where('created_at', '>', Carbon::now()->subMonths($monthsAgo))
             ->get();
     }
 
@@ -731,9 +754,9 @@ class TeacherApplyElectiveCourseDao
                             foreach ($group['timeSlots'] as $timeSlot) {
                                 $buildingName = null;
                                 $buildingId = null;
-                                if(!empty($group['building_id'])){
+                                if (!empty($group['building_id'])) {
                                     $building = $buildingDao->getBuildingById($group['building_id']);
-                                    if($building){
+                                    if ($building) {
                                         $buildingName = $building->name;
                                         $buildingId = $group['building_id'];
                                     }
@@ -741,9 +764,9 @@ class TeacherApplyElectiveCourseDao
 
                                 $roomName = null;
                                 $roomId = null;
-                                if(!empty($group['classroom_id'])){
-                                    $room= $roomDao->getRoomById($group['classroom_id']);
-                                    if($room){
+                                if (!empty($group['classroom_id'])) {
+                                    $room = $roomDao->getRoomById($group['classroom_id']);
+                                    if ($room) {
                                         $roomName = $room->name;
                                         $roomId = $group['classroom_id'];
                                     }
@@ -781,16 +804,14 @@ class TeacherApplyElectiveCourseDao
      */
     public function saveApplyMajor($data, $applyId, $schoolId)
     {
-        if (!empty($data))
-        {
-            foreach ($data as $major)
-            {
+        if (!empty($data)) {
+            foreach ($data as $major) {
                 $majorObj = self::getMajor($major);
                 $f = [
-                    'apply_id'    => $applyId,
-                    'school_id'   => $schoolId,
-                    'major_id'    => $major,
-                    'major_name'  => $majorObj->name,
+                    'apply_id' => $applyId,
+                    'school_id' => $schoolId,
+                    'major_id' => $major,
+                    'major_name' => $majorObj->name,
                 ];
                 ApplyCourseMajor::create($f);
             }
@@ -812,9 +833,9 @@ class TeacherApplyElectiveCourseDao
      * @param $applyId
      * @return ApplyCourseArrangement|null
      */
-    public function  getApplyCourseArrangements($applyId)
+    public function getApplyCourseArrangements($applyId)
     {
-        return ApplyCourseArrangement::where('apply_id',$applyId)->get();
+        return ApplyCourseArrangement::where('apply_id', $applyId)->get();
     }
 
     /**
@@ -852,7 +873,7 @@ class TeacherApplyElectiveCourseDao
         $num1 = $this->getNumHasEnroll($user, $tableName);
         //报名中的数量
         $num2 = $this->getNumEnroll($user);
-        return $num1+$num2;
+        return $num1 + $num2;
     }
 
     /**
@@ -863,6 +884,12 @@ class TeacherApplyElectiveCourseDao
     public function getNumHasEnroll($user, $tableName)
     {
         return DB::table($tableName)->where('user_id', $user->id)->count();
+    }
+
+    public function checkHasEnrolled($user, $courseId, $tableName)
+    {
+        return StudentEnrolledOptionalCourse::where('user_id', $user->id)->where('course_id', $courseId)->first() ||
+            DB::table($tableName)->where('user_id', $user->id)->where('course_id', $courseId)->first();
     }
 
     /**
@@ -883,7 +910,7 @@ class TeacherApplyElectiveCourseDao
     public function createEnrollTable($tableName)
     {
         $sql = '
-        CREATE TABLE IF NOT EXISTS '.$tableName.' (
+        CREATE TABLE IF NOT EXISTS ' . $tableName . ' (
           `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
           `course_id` int(10) unsigned DEFAULT NULL COMMENT \'课程的 ID\',
           `school_id` int(10) unsigned DEFAULT NULL COMMENT \'学校的 ID\',
@@ -898,7 +925,7 @@ class TeacherApplyElectiveCourseDao
           KEY `idx_user_id` (`user_id`)
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
         ';
-        if ( ! Schema::hasTable($tableName)) {
+        if (!Schema::hasTable($tableName)) {
             return DB::statement($sql);
         } else {
             return true;
@@ -912,7 +939,7 @@ class TeacherApplyElectiveCourseDao
      */
     public function quotaIsFull($courseId)
     {
-        return CourseElective::where('course_id',$courseId)->first()->status == CourseElective::STATUS_ISFULL;
+        return CourseElective::where('course_id', $courseId)->first()->status == CourseElective::STATUS_ISFULL;
     }
 
     /**
@@ -927,8 +954,8 @@ class TeacherApplyElectiveCourseDao
     {
         $d = [
             'course_id' => $courseId,
-            'teacher_id'=> $teacherId,
-            'user_id'   => $userId,
+            'teacher_id' => $teacherId,
+            'user_id' => $userId,
             'school_id' => $schoolId,
         ];
         return StudentEnrolledOptionalCourse::create($d);
@@ -948,28 +975,25 @@ class TeacherApplyElectiveCourseDao
         //创建报名结果表
         $this->createEnrollTable($tableName);
         if (self::quotaIsFull($courseId)) return true;
-        if (self::getEnrolledTotalForCourses($courseId) >= $maxNum)
-        {
+        if (self::getEnrolledTotalForCourses($courseId) >= $maxNum) {
             DB::beginTransaction();
             try {
                 //先修改course_elective表的状态，让其他用户不能报名
                 $updateNum = CourseElective::where('course_id', $courseId)
-                                ->update(['status' => CourseElective::STATUS_ISFULL]);
-                if ($updateNum==1)
-                {
+                    ->update(['status' => CourseElective::STATUS_ISFULL]);
+                if ($updateNum == 1) {
                     $result = StudentEnrolledOptionalCourse::where('course_id', $courseId)
                         ->orderBy('id', 'ASC')->limit($maxNum)->get();
                     $i = 0;
-                    foreach($result as $rowObj)
-                    {
+                    foreach ($result as $rowObj) {
 
                         $d = [
-                            'course_id'     => $rowObj->course_id,
-                            'teacher_id'    => $rowObj->teacher_id,
-                            'user_id'       => $rowObj->user_id,
-                            'school_id'     => $rowObj->school_id,
-                            'created_at'    => Carbon::now(),
-                            'updated_at'    => Carbon::now(),
+                            'course_id' => $rowObj->course_id,
+                            'teacher_id' => $rowObj->teacher_id,
+                            'user_id' => $rowObj->user_id,
+                            'school_id' => $rowObj->school_id,
+                            'created_at' => Carbon::now(),
+                            'updated_at' => Carbon::now(),
                         ];
                         DB::table($tableName)->insert($d) && $i++;
                     }
@@ -1015,6 +1039,11 @@ class TeacherApplyElectiveCourseDao
     public function getEnrolledTotalForCourses($courseId)
     {
         return StudentEnrolledOptionalCourse::where('course_id', $courseId)->count();
+    }
+
+    public function getEnrolledResultTotalForCourse($courseId, $tableName)
+    {
+        return DB::table($tableName)->where('course_id', $courseId)->count();
     }
 
     /**

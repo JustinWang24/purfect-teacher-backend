@@ -525,7 +525,7 @@ Route::prefix('attendance')->middleware('auth:api')->group(function () {
     Route::post('/student-sweep-qr-code', 'Api\AttendanceSchedule\AttendanceController@studentSweepQrCode')
         ->name('api.student.sweep.code');
 
-    // 教师上个课签到
+    // 教师上课签到
     Route::post('/teacher-course-sign', 'Api\AttendanceSchedule\AttendanceController@teacherSign')
         ->name('api.teacher.course.sign');
 
@@ -754,7 +754,7 @@ Route::prefix('Oa')->middleware('auth:api')->group(function(){
     Route::post('/zone/getCpcZoneListInfo','Api\OA\IndexController@zone')
         ->name('api.cloud.course');
 });
-
+// 学生手动扫云班牌签到
 Route::post('/manual/attendances','Api\Cloud\CloudController@manual')
         ->middleware('auth:api')->name('api.manual.attendances');
 
@@ -1017,9 +1017,12 @@ Route::prefix('study')->middleware('auth:api')->group(function(){
     // 学生端课表
     Route::any('/timetable-student', 'Api\Study\TimetableController@student')
         ->name('api.study.timetable-student');
-    // 教师端课表
+    // 教师端课表 天
     Route::any('/timetable-teacher', 'Api\Study\TimetableController@teacher')
         ->name('api.study.timetable-teacher');
+    // 教师端课表 周
+    Route::any('/timetable-teacher-week', 'Api\Study\TimetableController@teacherWeek')
+        ->name('api.study.timetable-teacher-week');
     // 课程表详情
     Route::any('/timetable-details', 'Api\Study\TimetableController@timetableDetails')
         ->name('api.study.timetable-details');
@@ -1084,6 +1087,7 @@ Route::prefix('office')->middleware('auth:api')->group(function(){
 });
 
 // 服务协议及隐私政策
+
 Route::any('app/agreement', 'Api\Home\IndexController@agreement')
 ->name('api.office.office-page');
 
