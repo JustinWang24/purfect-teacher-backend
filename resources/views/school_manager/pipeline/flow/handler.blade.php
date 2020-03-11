@@ -4,7 +4,7 @@
     <div class="col-sm-12 col-md-3 col-lg-3 col-xl-4">
         <div class="card">
             <div class="card-head">
-                <header>设置审批人</header>
+                <header>设置</header>
             </div>
             <div class="card-body">
                 <p style="text-align: center;margin-bottom: 20px;">流程开始</p>
@@ -15,7 +15,7 @@
                         <span>&nbsp;&nbsp;&nbsp;审批人</span>
                         <span> （@{{ index + 1 }}级审批）</span>
                     </div>
-                    <div style="border: 1px solid #FE7B1C; color: #313B4C; padding: 10px 6px;">
+                    <div style="border: 1px solid #FE7B1C; color: #313B4C; padding: 10px 6px;cursor: pointer;">
                         <p>@{{ item .titles }}</p>
                     </div>
                     <img src="{{asset('assets/img/pipeline/addTo@2x.png')}}" alt="" @click="prev(item.node_id)" style="position: relative;left: 45%;vertical-align: baseline;margin-top: 10px">
@@ -26,9 +26,9 @@
                         <img src="{{asset('assets/img/teacher_blade/qingjia@2x.png')}}" alt="" class="portrait">
                         <span>&nbsp;&nbsp;&nbsp;抄送人</span>
                     </div>
-                    <div style="border: 1px solid #4EA5FE; color: #313B4C; padding: 10px 6px;" @click="show2 = !show2">
+                    <div style="border: 1px solid #4EA5FE; color: #313B4C; padding: 10px 6px;cursor: pointer;" @click="show2 = !show2">
                         <p v-if="copy.length == 0">请选择抄送人</p>
-                        <p v-for="(item,index) in copy" :key="item.user_id" v-else>@{{ item.name }}</p>
+                        <span v-for="(item,index) in copy" :key="item.user_id" v-else style="padding-right: 10px;">@{{ item.name }}；</span>
                     </div>
                 </div>
                 <p style="text-align: center;margin: 30px 0;">流程结束</p>
@@ -55,10 +55,10 @@
                         </el-select>
                     </el-form-item>
                     <el-form-item label="部门" v-if="organization === 1">
-                        <el-cascader style="width: 90%;" :props="props" v-model="node.organizations"></el-cascader>
+                        <el-cascader style="width: 90%;" :props="prop" v-model="node.organizations"></el-cascader>
                     </el-form-item>
                     <el-form-item label="审批人">
-                        <el-radio-group v-model="node.titles">
+                        <el-radio-group v-model="approval">
                             <el-radio v-for="item in titlesList" :label="item" :key="item">@{{item}}</el-radio>
                         </el-radio-group>
                     </el-form-item>
@@ -73,28 +73,10 @@
                 <header>选择抄送人</header>
             </div>
             <div class="card-body" style="margin-top: 20px;">
-                <search-bar
-                    :school-id="{{ session('school.id') }}"
-                    full-tip="输入教职工名字"
-                    scope="employee"
-                    class="ml-4"
-                    :init-query="currentMember.name"
-                    v-on:result-item-selected="selectMember"
-                ></search-bar>
-                <el-tag
-                        :key="idx"
-                        v-for="(member, idx) in members"
-                        class="mr-2"
-                        closable
-                        :disable-transitions="false"
-                        @click="editMember(member)"
-                        @close="removeFromOrg(member)">
-                    @{{  member.title }}: @{{ member.name }}
-                </el-tag>
-                <!-- <search-bar :school-id="{{ session('school.id') }}" full-tip="输入教职工名字" scope="employee" class="ml-4" :init-query="teacher.name" v-on:result-item-selected="selectMember"></search-bar>
-                <el-tag :key="idx" v-for="(member, idx) in members" class="mr-2" closable :disable-transitions="false" @close="removeFromOrg(member)">
+                <search-bar :school-id="{{ session('school.id') }}" full-tip="输入教职工名字" scope="employee" class="ml-4" :init-query="teacher" v-on:result-item-selected="selectMember"></search-bar>
+                <el-tag :key="idx" v-for="(member, idx) in members" class="mr-2" closable :disable-transitions="false" @close="removeFromOrg(idx)">
                     @{{ member }}
-                </el-tag> -->
+                </el-tag>
             </div>
             <el-button type="primary" style="width: 140px; height: 37px; margin: 20px auto;" @click="savecopy">确定</el-button>
         </div>
