@@ -91,6 +91,10 @@ class GradeManageController extends Controller
     public function gradesList(MyStandardRequest $request)
     {
         $teacher = $request->user();
+        if (is_null($teacher->isAdviser)) {
+            return JsonBuilder::Error('当前用户不是班主任, 无权限发布');
+        }
+
         $dao = new GradeManagerDao;
         $grades = $dao->getAllGradesByAdviserId($teacher->id);
         $data = [];
@@ -109,8 +113,13 @@ class GradeManageController extends Controller
      */
     public function studentList(MyStandardRequest $request)
     {
-        $gradeId = $request->get('grade_id');
 
+        $teacher = $request->user();
+        if (is_null($teacher->isAdviser)) {
+            return JsonBuilder::Error('当前用户不是班主任, 无权限发布');
+        }
+
+        $gradeId = $request->get('grade_id');
         $dao = new GradeUserDao;
         $data = $dao->paginateUserByGrade($gradeId, Role::VERIFIED_USER_STUDENT);
         $result = [];
@@ -191,7 +200,7 @@ class GradeManageController extends Controller
                 return  JsonBuilder::Error('邮箱已经有人用了');
             }
         }
-        
+
         $userResult = $userDao->updateEmail($studentId, $data['email']);
         unset($data['email']);
         $studentResult =  $dao->updateStudentProfile($studentId, $data);
