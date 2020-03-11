@@ -76,32 +76,65 @@ class Flow extends Model implements IFlow
         }
         return [];
     }
-    public static function getTitlesByType($position, $type) {
+    public static function getTitlesByType($position, $type, $roleType = 1) {
         if ($position == 1) {
             //学生端
             if ($type == 1) {
                 //组织
-                return [
-                    Title::ALL_TXT, Title::ORGANIZATION_EMPLOYEE, Title::ORGANIZATION_DEPUTY, Title::ORGANIZATION_LEADER
-                ];
+                if ($roleType == 1) {
+                    //使用者
+                    return [
+                        Title::ALL_TXT, Title::ORGANIZATION_EMPLOYEE, Title::ORGANIZATION_DEPUTY, Title::ORGANIZATION_LEADER
+                    ];
+                }else {
+                    //审批者
+                    return [
+                        Title::ORGANIZATION_DEPUTY, Title::ORGANIZATION_LEADER
+                    ];
+                }
+
             }else {
                 //职务
-                return [
-                    Title::ALL_TXT, Title::CLASS_ADVISER, Title::GRADE_ADVISER, Title::DEPARTMENT_LEADER, Title::CLASS_MONITOR, Title::CLASS_GROUP
-                ];
+                if ($roleType == 1) {
+                    //使用者
+                    return [
+                        Title::ALL_TXT, Title::CLASS_ADVISER, Title::GRADE_ADVISER, Title::DEPARTMENT_LEADER, Title::CLASS_MONITOR, Title::CLASS_GROUP
+                    ];
+                }else {
+                    //审批者
+                    return [
+                        Title::CLASS_ADVISER, Title::GRADE_ADVISER, Title::DEPARTMENT_LEADER
+                    ];
+                }
             }
         }else {
             //教师端
             if ($type == 1) {
                 //组织
-                return [
-                    Title::ALL_TXT, Title::ORGANIZATION_EMPLOYEE, Title::ORGANIZATION_DEPUTY, Title::ORGANIZATION_LEADER
-                ];
+                if ($roleType == 1) {
+                    //使用者
+                    return [
+                        Title::ALL_TXT, Title::ORGANIZATION_EMPLOYEE, Title::ORGANIZATION_DEPUTY, Title::ORGANIZATION_LEADER
+                    ];
+                }else {
+                    //审批者
+                    return [
+                        Title::ORGANIZATION_DEPUTY, Title::ORGANIZATION_LEADER
+                    ];
+                }
             }else {
                 //职务
-                return [
-                    Title::ALL_TXT, Title::GRADE_ADVISER, Title::DEPARTMENT_LEADER
-                ];
+                if ($roleType == 1) {
+                    //使用者
+                    return [
+                        Title::ALL_TXT, Title::CLASS_ADVISER, Title::GRADE_ADVISER, Title::DEPARTMENT_LEADER
+                    ];
+                }else {
+                    //审批者
+                    return [
+                        Title::CLASS_ADVISER, Title::GRADE_ADVISER, Title::DEPARTMENT_LEADER
+                    ];
+                }
             }
         }
     }

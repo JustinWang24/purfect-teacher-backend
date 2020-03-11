@@ -310,7 +310,8 @@ class FlowsController extends Controller
     public function load_titles(FlowRequest $request) {
         $position = $request->getPosition();
         $titleType = $request->get('type');
-        return JsonBuilder::Success(Flow::getTitlesByType($position, $titleType));
+        $roleType = $request->get('role');
+        return JsonBuilder::Success(Flow::getTitlesByType($position, $titleType, $roleType));
     }
 
 
