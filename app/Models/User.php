@@ -245,9 +245,6 @@ class User extends Authenticatable implements HasMobilePhone, HasDeviceId, IUser
      * 是否用户为班主任
      */
     public function isAdviser(){
-       if (!$this->isTeacher()) {
-           return false;
-       }
        return $this->hasOne(GradeManager::class,'adviser_id','id');
     }
 
