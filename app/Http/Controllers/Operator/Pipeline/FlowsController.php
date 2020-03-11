@@ -68,6 +68,7 @@ class FlowsController extends Controller
         $dao = new FlowDao();
         $flow = $dao->getById($request->get('flow_id'));
         if($flow){
+            $flow->position = Flow::getPositionByType($flow->type);
             $nodes = $flow->getSimpleLinkedNodes();
             return JsonBuilder::Success(['flow'=>$flow,'nodes'=>$nodes]);
         }
