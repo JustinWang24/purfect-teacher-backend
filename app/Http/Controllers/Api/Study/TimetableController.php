@@ -215,6 +215,7 @@ class TimetableController extends Controller
 
                     $materials[$key]['type_name'] = $value->name;
                     $materials[$key]['list'][] = [
+                        'material_id' =>$val->id,
                         'idx' => '第'.$val->idx.'节',
                         'desc' => $val->description,
                         'url' => $val->url,
