@@ -210,11 +210,11 @@ class TimetableController extends Controller
 
         $materials = [];
         foreach ($types as $key => $value) {
+
+            $list = [];
             foreach ($return as $k => $val) {
                 if($val->type == $value->type_id) {
-
-                    $materials[$key]['type_name'] = $value->name;
-                    $materials[$key]['list'][] = [
+                    $list[] = [
                         'material_id' =>$val->id,
                         'idx' => '第'.$val->idx.'节',
                         'desc' => $val->description,
@@ -222,6 +222,10 @@ class TimetableController extends Controller
                     ];
                 }
             }
+            $materials[] = [
+                'type_name' => $value->name,
+                'list' => $list
+            ];
         }
 
         $result = [
@@ -237,5 +241,13 @@ class TimetableController extends Controller
 
         return JsonBuilder::Success($result);
     }
+
+
+
+
+    public function teacherWeek(TimetableRequest $request) {
+
+    }
+
 
 }
