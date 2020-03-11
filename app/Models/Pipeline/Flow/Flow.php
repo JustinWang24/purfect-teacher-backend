@@ -53,6 +53,29 @@ class Flow extends Model implements IFlow
             IFlow::TYPE_3_02 => IFlow::TYPE_3_02_TXT,
         ];
     }
+
+    //根据分类获取位置
+    public static function getPositionByType($type) {
+        $position = null;
+        switch ($type) {
+            case IFlow::TYPE_1_01:
+            case IFlow::TYPE_1_02:
+            case IFlow::TYPE_1_03:
+                $position = IFlow::POSITION_1;
+                break;
+            case IFlow::TYPE_2_01:
+            case IFlow::TYPE_2_02:
+                $position = IFlow::POSITION_2;
+                break;
+            case IFlow::TYPE_3_01:
+            case IFlow::TYPE_3_02:
+                $position = IFlow::POSITION_3;
+                break;
+            default:
+                break;
+        }
+        return $position;
+    }
     //指定位置的分类
     public static function getTypesByPosition($position) {
         if ($position == IFlow::POSITION_1) {
