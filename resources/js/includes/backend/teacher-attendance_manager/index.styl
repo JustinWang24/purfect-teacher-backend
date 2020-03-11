@@ -1,0 +1,82 @@
+.attendance-manager-container
+  padding 20px
+  :focus
+    outline none
+  .attendance-add
+    display flex
+    justify-content space-between
+    padding 5px 11px 5px 18px
+    background #ffffff
+    .title
+      font-size 18px
+      font-weight 500
+  .attendance-form-drawer
+    width 60% !important
+    height 93%
+    margin-top 80px
+    border-radius 10px
+    margin-right 21px
+    .el-drawer__header
+      padding 10px 10px 0
+      margin-bottom 10px
+    .el-drawer__body
+      overflow auto
+    .attendance-form
+      padding 0 20px
+      .using-switch
+        display flex
+        align-items center
+        margin-top 10px
+        .el-switch
+          width 30%
+    .btn-create
+      position absolute
+      bottom 30px
+      left 50%
+      transform translateX(-50%)
+  .attendance-clockset-form
+    padding 20px
+    .clock-set
+      border-bottom 1px solid #EAEDF2
+      margin-bottom 10px
+      font-size 14px
+      color #475B6D
+    .set-top
+      display flex
+      justify-content space-between
+      align-content center
+      align-items center
+      .week
+        font-weight 500
+        font-size 14px
+        width 43px
+        margin-right 19px
+      .week-copy
+        color #4EA5FE
+        width 71px
+        .el-button
+          font-weight normal
+      .is-weekday
+        flex 1
+        text-align right
+    .set-day
+      display flex
+      .title
+        margin-top 10px
+        margin-right 5px
+      .el-form-item
+        margin-bottom 20px
+        .el-input--mini .el-input__inner
+          width 90px
+          height 39px
+          line-height 39px
+        .el-form-item__label
+          font-size 14px
+          color #475B6D
+  .clock-btn
+    text-align center
+    padding-bottom 40px
+  .attendance-list-container
+    width 100%
+    .el-button--mini
+      padding 5px 12px

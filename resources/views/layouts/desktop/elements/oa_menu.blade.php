@@ -31,7 +31,7 @@
             </a>
         </li>
         <li class="nav-item">
-            <a href="{{ route('school_manager.oa.attendances-manager',['uuid'=>session('school.uuid')]) }}" class="nav-link">
+            <a href="{{ route('school_manager.teacher-attendance.manager',['uuid'=>session('school.uuid')]) }}" class="nav-link">
                 <span class="title">考勤管理</span>
             </a>
         </li>

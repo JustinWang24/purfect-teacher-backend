@@ -7,6 +7,7 @@ namespace App\Http\Controllers\Api\OA;
 use App\Models\OA\Project;
 use App\Utils\JsonBuilder;
 use App\Dao\OA\ProjectDao;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Models\OA\ProjectTask;
 use App\Http\Controllers\Controller;
@@ -193,14 +194,18 @@ class ProjectsController extends Controller
             $taskList[$key]['taskid'] = $item->id;
             $taskList[$key]['task_title'] = $item->title;
             $status = $item->status;
-            if($item->status == ProjectTask::STATUS_CLOSED) {
-                $taskMembers = $item->taskMembers;
-                foreach ($taskMembers as $k => $v) {
-                    if($v->end_time > $item->end_time) {
-                        $status = ProjectTask::STATUS_OVERTIME;  // 任务超时
-                        break;
-                    }
+
+            // 进行中 判断是否超时
+            if($item->status == ProjectTask::STATUS_IN_PROGRESS) {
+                // 会议结束时间
+                $endTime = Carbon::parse($item->end_time);
+                // 当前时间
+                $now = Carbon::now();
+                // 判断当前时间是否大于会议结束时间
+                if($now->gt($endTime)) {
+                    $status = ProjectTask::STATUS_OVERTIME;  // 任务超时
                 }
+
             }
 
             $taskList[$key]['doing_status'] = $status;

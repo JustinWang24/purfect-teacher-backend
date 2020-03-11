@@ -51,9 +51,10 @@ class ElectiveController extends Controller
             {
                 continue;
             }
-
+            $tableName = self::STUDENT_ENROLLED_OPTIONAL_COURSES_TABLE_NAME.'_'.$elective->start_year.'_'.$course->term;
             $electiveDao = new TeacherApplyElectiveCourseDao();
             $studentCount = $electiveDao->getEnrolledTotalForCourses($course->id); // 学生报名数量
+            $studentCount += $electiveDao->getEnrolledResultTotalForCourse($course->id, $tableName);
 
             $arrangements = $course->courseArrangements;
 
@@ -87,29 +88,27 @@ class ElectiveController extends Controller
 
     public function mylist(ElectiveRequest $request)
     {
-        $userId = $request->user()->id;
+        $retList = [];
+        $user = $request->user();
+        $electiveList = CourseElective::with('course')->get();
+        $dao = new TeacherApplyElectiveCourseDao();
+        foreach ($electiveList as $elective) {
+            $tableName = self::STUDENT_ENROLLED_OPTIONAL_COURSES_TABLE_NAME.'_'.$elective->start_year.'_'.$course->term;
+            $course = $elective->course;
+            if (!$check = $dao->checkHasEnrolled($user, $course->id, $tableName)) {
+                continue;
+            }
+            $studentCount = $dao->getEnrolledTotalForCourses($course->id); // 学生报名数量
+            $studentCount += $dao->getEnrolledResultTotalForCourse($course->id, $tableName);
 
-        $dao = new GradeUserDao;
-
-        $userInfo = $dao->getUserInfoByUserId($userId);
-
-        $item = [];
-
-        $nowTime = Carbon::now()->timestamp;
-        $myList = StudentEnrolledOptionalCourse::with('course')->where('user_id', '=', $userId)->get();
-
-        foreach ($myList as $key => $enroll) {
-            $course = $enroll->course;
-            $elective     = $course->courseElective()->first();
             $arrangements = $course->courseArrangements;
-            $electiveDao = new TeacherApplyElectiveCourseDao();
-            $studentCount = $electiveDao->getEnrolledTotalForCourses($course->id); // 学生报名数量
             $schedules = [];
             foreach ($arrangements as $arrangement) {
                 $s = ['week' => $arrangement->week, 'day_index' => $arrangement->day_index, 'time' => $arrangement->timeslot->name];
                 $schedules[] = $s;
             }
-            $item[]= [
+
+            $retList[]= [
                 'course_id'    => $course->id,
                 'course_name'  => $course->name,
                 'course_time'  => $schedules,
@@ -117,11 +116,11 @@ class ElectiveController extends Controller
                 'seats'        => $elective->max_num == 0 ? $elective->open_num : $elective->max_num,
                 'applied'      => $studentCount,
                 'expired_at'   => Carbon::parse($elective->expired_at)->format('Y-m-d H:i'),
-                'status'       => $elective->status == CourseElective::STATUS_CANCEL ? CourseElective::STATUS_CANCEL : $enroll->status
+                'status'       => $elective->status == CourseElective::STATUS_CANCEL ? CourseElective::STATUS_CANCEL : $check->status
             ];
         }
 
-        return JsonBuilder::Success($item);
+        return JsonBuilder::Success($retList);
     }
 
     /**
@@ -147,7 +146,11 @@ class ElectiveController extends Controller
 
         $elective = $course->courseElective;
 
-        $studentCount = $course->studentEnrolledOptionalCourse()->count();
+        $tableName = self::STUDENT_ENROLLED_OPTIONAL_COURSES_TABLE_NAME.'_'.$elective->start_year.'_'.$course->term;
+
+        $dao = new TeacherApplyElectiveCourseDao();
+        $studentCount = $dao->getEnrolledTotalForCourses($course->id); // 学生报名数量
+        $studentCount += $dao->getEnrolledResultTotalForCourse($course->id, $tableName);
 
         $arrangements = $course->courseArrangements;
 
@@ -194,16 +197,13 @@ class ElectiveController extends Controller
             }
         }
 
-        $dao = new TeacherApplyElectiveCourseDao();
 
         //按钮状态
         $myenroll = StudentEnrolledOptionalCourse::where(['course_id' => $course->id, 'user_id' => $user->id])->first();
-        if ($myenroll) {
-            if ($myenroll) {
-                $buttonStatus = 1;//已经报名
-            }
+        $myenroll2 = DB::table($tableName)->where(['course_id' => $course->id, 'user_id' => $user->id])->first();
+        if ($myenroll || $myenroll2) {
+            $buttonStatus = 1;//已经报名
         }else {
-            $tableName = self::STUDENT_ENROLLED_OPTIONAL_COURSES_TABLE_NAME.'_'.$elective->start_year.'_'.$course->term;
             //先处理名额报满的情况
             $dao->operateEnrollResult($elective->max_num, $course->id, $tableName);
             $enrollNum = $dao->getTotalOfEnroll($user, $tableName);
@@ -278,6 +278,12 @@ class ElectiveController extends Controller
         }
 
         $tableName = self::STUDENT_ENROLLED_OPTIONAL_COURSES_TABLE_NAME.'_'.$start_year.'_'.$term;
+
+        //自己是否已经报名
+        if ($dao->checkHasEnrolled($user, $courseId, $tableName)) {
+            return JsonBuilder::Error('您已经报名了该课程');
+        }
+
         $maxNum = $elective->max_num;
         //先处理名额报满的情况
         $dao->operateEnrollResult($maxNum, $courseId, $tableName);
@@ -293,6 +299,9 @@ class ElectiveController extends Controller
         if ($dao->quotaIsFull($courseId)){
             return JsonBuilder::Error('此选修课报名数量已满');
         }
+
+        //验证课程是否冲突
+
         $result = $dao->enroll($courseId, $user->id, $teacherId, $schoolId);
         return JsonBuilder::Success($result);
 

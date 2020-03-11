@@ -100,7 +100,7 @@ class Flow extends Model implements IFlow
         return [];
     }
     public static function getTitlesByType($position, $type, $roleType = 1) {
-        if ($position == 1) {
+        if ($position == 2) {
             //学生端
             if ($type == 1) {
                 //组织
@@ -112,7 +112,7 @@ class Flow extends Model implements IFlow
                 }else {
                     //审批者
                     return [
-                        Title::ORGANIZATION_DEPUTY, Title::ORGANIZATION_LEADER
+                        Title::ORGANIZATION_EMPLOYEE, Title::ORGANIZATION_DEPUTY, Title::ORGANIZATION_LEADER
                     ];
                 }
 
@@ -121,7 +121,7 @@ class Flow extends Model implements IFlow
                 if ($roleType == 1) {
                     //使用者
                     return [
-                        Title::ALL_TXT, Title::CLASS_ADVISER, Title::GRADE_ADVISER, Title::DEPARTMENT_LEADER, Title::CLASS_MONITOR, Title::CLASS_GROUP
+                        Title::ALL_TXT, Title::CLASS_MONITOR, Title::CLASS_GROUP
                     ];
                 }else {
                     //审批者
@@ -142,7 +142,7 @@ class Flow extends Model implements IFlow
                 }else {
                     //审批者
                     return [
-                        Title::ORGANIZATION_DEPUTY, Title::ORGANIZATION_LEADER
+                        Title::ORGANIZATION_EMPLOYEE, Title::ORGANIZATION_DEPUTY, Title::ORGANIZATION_LEADER
                     ];
                 }
             }else {

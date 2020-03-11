@@ -4,6 +4,7 @@ namespace App\Models\Timetable;
 
 use App\Models\Course;
 use App\Models\School;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -92,5 +93,15 @@ class TimeSlot extends Model
     public function course()
     {
         return $this->belongsTo(Course::class);
+    }
+
+
+    public function getFromAttribute($val) {
+        return Carbon::parse($val)->format('H:i');
+    }
+
+
+    public function getToAttribute($val) {
+        return Carbon::parse($val)->format('H:i');
     }
 }
