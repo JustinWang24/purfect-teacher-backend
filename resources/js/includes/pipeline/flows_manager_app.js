@@ -44,6 +44,7 @@ if (document.getElementById('pipeline-flows-manager-app')) {
                 members: [], // 展示所有选中的老师
                 teachers: [], // 所有选中的老师
                 approval: '', // 设置审批人--审批人类型
+                section: [], // 设置审批人--审批人部门
                 show1: false, // 审批人的显示隐藏
                 show2: false, // 抄送人的显示隐藏
                 prev_node: 0, // 设置审批人时的节点
@@ -131,13 +132,13 @@ if (document.getElementById('pipeline-flows-manager-app')) {
             //     this.loadFlowNodes(this.lastNewFlow);
             // }
             this.getList(1);
-            // this.changeItem2(1);
             // 进入设置页面之后获取流程
             if (window.location.search != '') {
                 this.returnId = window.location.search.split('=')[1]
                 loadNodes(this.returnId).then(res => {
                     this.copy = res.data.data.nodes.copy
                     this.handler = res.data.data.nodes.handler
+                    this.posiType = res.data.data.flow.position
                 })
             }
         },
@@ -262,7 +263,6 @@ if (document.getElementById('pipeline-flows-manager-app')) {
                         this.zuzhi = res.data.data.nodes.head.handler.organizations
                         this.copy = res.data.data.nodes.copy
                         this.handler = res.data.data.nodes.handler
-                        this.posiType = res.data.data.flow.position
                     }
                     else {
                         this.$notify.error(
@@ -333,14 +333,23 @@ if (document.getElementById('pipeline-flows-manager-app')) {
                 var url = this.$refs.approver.$attrs.href + '?flow_id=' + this.returnId;
                 location.href = url;
             },
+            // 设置页面---流程开始的加号
+            first() {
+                this.show1 = !this.show1;
+                this.role = 2;
+                this.gettitlesList();
+            },
             // 新建下一级审批人时获取上一级审批人的id
             prev(id) {
                 this.show1 = !this.show1;
-                this.prev_node = id
+                this.prev_node = id;
+                this.role = 2;
+                this.gettitlesList();
             },
             // 设置审批人确定啊按钮 
             setone() {
                 this.node.titles.splice(0, 0, this.approval)
+                this.node.organizations.splice(0, 0, this.section)
                 const obj = {
                     flow_id: this.returnId,
                     prev_node: this.prev_node,
@@ -389,7 +398,7 @@ if (document.getElementById('pipeline-flows-manager-app')) {
                     users: this.teachers
                 }).then((res) => {
                     if (Util.isAjaxResOk(res)) {
-                        console.log(111)
+                        this.copy = res.data.data.copy
                     }
                 }).catch((err) => {
                     console.log(err)
