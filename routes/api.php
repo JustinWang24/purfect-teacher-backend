@@ -1017,9 +1017,12 @@ Route::prefix('study')->middleware('auth:api')->group(function(){
     // 学生端课表
     Route::any('/timetable-student', 'Api\Study\TimetableController@student')
         ->name('api.study.timetable-student');
-    // 教师端课表
+    // 教师端课表 天
     Route::any('/timetable-teacher', 'Api\Study\TimetableController@teacher')
         ->name('api.study.timetable-teacher');
+    // 教师端课表 周
+    Route::any('/timetable-teacher-week', 'Api\Study\TimetableController@teacherWeek')
+        ->name('api.study.timetable-teacher-week');
     // 课程表详情
     Route::any('/timetable-details', 'Api\Study\TimetableController@timetableDetails')
         ->name('api.study.timetable-details');
