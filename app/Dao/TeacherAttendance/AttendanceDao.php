@@ -21,15 +21,16 @@ class AttendanceDao
         DB::beginTransaction();
         try{
             foreach ($data as $item) {
-                $item['start'] = Carbon::parse($data['start'])->format('H:i:s');
-                $item['end'] = Carbon::parse($data['end'])->format('H:i:s');
-                $item['morning'] = Carbon::parse($data['morning'])->format('H:i:s');
-                $item['morning_late'] = Carbon::parse($data['morning_late'])->format('H:i:s');
-                $item['evening'] = Carbon::parse($data['evening'])->format('H:i:s');
+                $item['start'] = Carbon::parse($item['start'])->format('H:i:s');
+                $item['end'] = Carbon::parse($item['end'])->format('H:i:s');
+                $item['morning'] = Carbon::parse($item['morning'])->format('H:i:s');
+                $item['morning_late'] = Carbon::parse($item['morning_late'])->format('H:i:s');
+                $item['evening'] = Carbon::parse($item['evening'])->format('H:i:s');
+                $item['is_weekday'] = $item['is_weekday'] ? 1 : 0;
                 if ($attendance->using_afternoon) {
-                    $item['afternoon_start'] = Carbon::parse($data['afternoon_start'])->format('H:i:s');
-                    $item['afternoon'] = Carbon::parse($data['afternoon'])->format('H:i:s');
-                    $item['afternoon_late'] = Carbon::parse($data['afternoon_late'])->format('H:i:s');
+                    $item['afternoon_start'] = Carbon::parse($item['afternoon_start'])->format('H:i:s');
+                    $item['afternoon'] = Carbon::parse($item['afternoon'])->format('H:i:s');
+                    $item['afternoon_late'] = Carbon::parse($item['afternoon_late'])->format('H:i:s');
                 }else {
                     $item['afternoon_start'] = null;
                     $item['afternoon'] = null;
