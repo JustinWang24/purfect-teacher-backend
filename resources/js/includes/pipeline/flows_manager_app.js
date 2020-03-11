@@ -131,7 +131,7 @@ if (document.getElementById('pipeline-flows-manager-app')) {
             //     this.loadFlowNodes(this.lastNewFlow);
             // }
             this.getList(1);
-            this.changeItem2(1);
+            // this.changeItem2(1);
             // 进入设置页面之后获取流程
             if (window.location.search != '') {
                 this.returnId = window.location.search.split('=')[1]
@@ -169,8 +169,7 @@ if (document.getElementById('pipeline-flows-manager-app')) {
                 this.node.organizations = []; // 部门
                 this.node.titles = []; // 角色
                 this.role = 1;
-                this.changeItem1(this.posiType)
-                this.changeItem2(this.organization)
+                this.gettitlesList();
             },
             // 关闭侧边栏
             handleClose(done) {
@@ -194,20 +193,20 @@ if (document.getElementById('pipeline-flows-manager-app')) {
                     });
             },
             // 获取侧边栏角色列表
-            changeItem1(value) {
-                this.posiType = value;
-                this.gettitlesList();
-            },
-            changeItem2(value) {
-                this.organization = value;
-                this.role = 2;
+            changeItem(name, value) {
+                if (name == 'p') {
+                    this.posiType = value
+                    if (this.posiType == 2) {
+                        this.organization = 2
+                    }
+                }
                 this.gettitlesList();
             },
             gettitlesList() {
                 axios.post('/school_manager/pipeline/flows/load-titles', {
                     position: this.posiType, // 显示位置
                     type: this.organization, // 组织类型
-                    role:  this.role // 1.使用者2.审批者
+                    role: this.role // 1.使用者2.审批者
                 })
                     .then((res) => {
                         if (Util.isAjaxResOk(res)) {
@@ -263,7 +262,7 @@ if (document.getElementById('pipeline-flows-manager-app')) {
                         this.zuzhi = res.data.data.nodes.head.handler.organizations
                         this.copy = res.data.data.nodes.copy
                         this.handler = res.data.data.nodes.handler
-                        this.position = res.data.data.flow.position
+                        this.posiType = res.data.data.flow.position
                     }
                     else {
                         this.$notify.error(
