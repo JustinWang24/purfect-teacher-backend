@@ -6,6 +6,8 @@
       background-color: #fff;
       h3 {
         padding: 10px 10px 0;
+        display: flex;
+        justify-content: space-between;
       }
       h5 {
         font-weight: 100;
@@ -25,7 +27,7 @@
         font-size: 14px;
         font-weight: 400;
         color: rgba(51, 51, 51, 1);
-        padding: 0 15px;
+        padding: 0 15px 10px;
       }
       .el-divider--horizontal {
         margin: 0;

@@ -14,7 +14,7 @@
                 <div style="display: flex;align-items: center;">
                     <img :src="userFlow.flow.icon" width="40">
                     <h3 style="margin-left: 20px;flex: 4;">
-                        <p style="line-height: 0;">@{{ userFlow.flow.name }}</p>
+                        <p style="line-height: 0;">@{{userFlow.user_name}}的@{{ userFlow.flow.name }}</p>
                         <time style="font-size: 13px;color: #999;">@{{ userFlow.created_at.substring(0, 10) }}</time>
                     </h3>
                     <h5 style="flex: 1;">
