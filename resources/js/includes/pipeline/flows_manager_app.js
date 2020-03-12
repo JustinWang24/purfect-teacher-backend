@@ -170,6 +170,9 @@ if (document.getElementById('pipeline-flows-manager-app')) {
                 this.node.organizations = []; // 部门
                 this.node.titles = []; // 角色
                 this.role = 1;
+                if (this.posiType === 2) {
+                    this.organization = 2
+                }
                 this.gettitlesList();
             },
             // 关闭侧边栏
@@ -349,7 +352,9 @@ if (document.getElementById('pipeline-flows-manager-app')) {
             // 设置审批人确定啊按钮 
             setone() {
                 this.node.titles.splice(0, 0, this.approval)
-                this.node.organizations.splice(0, 0, this.section)
+                if (this.section.length !== 0) {
+                    this.node.organizations.splice(0, 0, this.section)
+                }
                 const obj = {
                     flow_id: this.returnId,
                     prev_node: this.prev_node,

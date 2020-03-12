@@ -2,9 +2,9 @@
   background-color: #f6f6f6;
   .main {
     .information {
-      margin-bottom: 10px;
       background-color: #fff;
       h3 {
+        margin-top: 10px;
         padding: 10px 10px 0;
         display: flex;
         justify-content: space-between;
@@ -41,6 +41,7 @@
       }
       .sendBox {
         display: flex;
+        padding-bottom: 10px;
         figure {
           width: 50px;
           margin: 0;
