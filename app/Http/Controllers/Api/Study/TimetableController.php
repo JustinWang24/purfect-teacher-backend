@@ -163,6 +163,7 @@ class TimetableController extends Controller
         }
         $dao = new TimetableItemDao();
         $info = $dao->getItemById($timetableId);
+
         if(is_null($info)) {
             return JsonBuilder::Error('该详情不在');
         }
@@ -185,7 +186,7 @@ class TimetableController extends Controller
                     $list[] = [
                         'material_id' =>$val->id,
                         'idx' => '第'.$val->idx.'节',
-                        'desc' => $val->description,
+                        'desc' => $val->media->file_name ?? '',
                         'url' => $val->url,
                     ];
                 }
