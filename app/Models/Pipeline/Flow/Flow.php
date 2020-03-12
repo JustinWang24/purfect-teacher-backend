@@ -53,6 +53,29 @@ class Flow extends Model implements IFlow
             IFlow::TYPE_3_02 => IFlow::TYPE_3_02_TXT,
         ];
     }
+
+    //根据分类获取位置
+    public static function getPositionByType($type) {
+        $position = null;
+        switch ($type) {
+            case IFlow::TYPE_1_01:
+            case IFlow::TYPE_1_02:
+            case IFlow::TYPE_1_03:
+                $position = IFlow::POSITION_1;
+                break;
+            case IFlow::TYPE_2_01:
+            case IFlow::TYPE_2_02:
+                $position = IFlow::POSITION_2;
+                break;
+            case IFlow::TYPE_3_01:
+            case IFlow::TYPE_3_02:
+                $position = IFlow::POSITION_3;
+                break;
+            default:
+                break;
+        }
+        return $position;
+    }
     //指定位置的分类
     public static function getTypesByPosition($position) {
         if ($position == IFlow::POSITION_1) {
@@ -76,32 +99,65 @@ class Flow extends Model implements IFlow
         }
         return [];
     }
-    public static function getTitlesByType($position, $type) {
-        if ($position == 1) {
+    public static function getTitlesByType($position, $type, $roleType = 1) {
+        if ($position == 2) {
             //学生端
             if ($type == 1) {
                 //组织
-                return [
-                    Title::ALL_TXT, Title::ORGANIZATION_EMPLOYEE, Title::ORGANIZATION_DEPUTY, Title::ORGANIZATION_LEADER
-                ];
+                if ($roleType == 1) {
+                    //使用者
+                    return [
+                        Title::ALL_TXT, Title::ORGANIZATION_EMPLOYEE, Title::ORGANIZATION_DEPUTY, Title::ORGANIZATION_LEADER
+                    ];
+                }else {
+                    //审批者
+                    return [
+                        Title::ORGANIZATION_EMPLOYEE, Title::ORGANIZATION_DEPUTY, Title::ORGANIZATION_LEADER
+                    ];
+                }
+
             }else {
                 //职务
-                return [
-                    Title::ALL_TXT, Title::CLASS_ADVISER, Title::GRADE_ADVISER, Title::DEPARTMENT_LEADER, Title::CLASS_MONITOR, Title::CLASS_GROUP
-                ];
+                if ($roleType == 1) {
+                    //使用者
+                    return [
+                        Title::ALL_TXT, Title::CLASS_MONITOR, Title::CLASS_GROUP
+                    ];
+                }else {
+                    //审批者
+                    return [
+                        Title::CLASS_ADVISER, Title::GRADE_ADVISER, Title::DEPARTMENT_LEADER
+                    ];
+                }
             }
         }else {
             //教师端
             if ($type == 1) {
                 //组织
-                return [
-                    Title::ALL_TXT, Title::ORGANIZATION_EMPLOYEE, Title::ORGANIZATION_DEPUTY, Title::ORGANIZATION_LEADER
-                ];
+                if ($roleType == 1) {
+                    //使用者
+                    return [
+                        Title::ALL_TXT, Title::ORGANIZATION_EMPLOYEE, Title::ORGANIZATION_DEPUTY, Title::ORGANIZATION_LEADER
+                    ];
+                }else {
+                    //审批者
+                    return [
+                        Title::ORGANIZATION_EMPLOYEE, Title::ORGANIZATION_DEPUTY, Title::ORGANIZATION_LEADER
+                    ];
+                }
             }else {
                 //职务
-                return [
-                    Title::ALL_TXT, Title::GRADE_ADVISER, Title::DEPARTMENT_LEADER
-                ];
+                if ($roleType == 1) {
+                    //使用者
+                    return [
+                        Title::ALL_TXT, Title::CLASS_ADVISER, Title::GRADE_ADVISER, Title::DEPARTMENT_LEADER
+                    ];
+                }else {
+                    //审批者
+                    return [
+                        Title::CLASS_ADVISER, Title::GRADE_ADVISER, Title::DEPARTMENT_LEADER
+                    ];
+                }
             }
         }
     }

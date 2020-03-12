@@ -70,7 +70,7 @@
             <el-divider></el-divider>
             @foreach($options as $option)
             <h5>
-                <p>{{ $option['title'] }}</p>
+                <p>{{ $option['name'] }}</p>
                 <p>{{ $option['value'] }}</p>
             </h5>
             <el-divider></el-divider>
@@ -80,70 +80,61 @@
             <h3>申请理由</h3>
             <p class="reason">{{ $startAction->content }}</p>
         </div>
-        {{--<div class="information">
+        <!-- <div class="information">
             <h3>证明材料</h3> 写表单的那个人呢 还没对接过
             <div class="imageBox">
                 <img src="{{asset('assets/img/bg-02.jpg')}}" alt="" class="image">
-        <img src="{{asset('assets/img/bg-02.jpg')}}" alt="" class="image">
-        <img src="{{asset('assets/img/bg-02.jpg')}}" alt="" class="image">
-        <img src="{{asset('assets/img/bg-02.jpg')}}" alt="" class="image">
-        <img src="{{asset('assets/img/bg-02.jpg')}}" alt="" class="image">
-        <img src="{{asset('assets/img/bg-02.jpg')}}" alt="" class="image">
-    </div>--}}
-    <div class="information">
-        <h3>审批人</h3>
-        <div class="block">
-        {{--<el-timeline>
-            <el-timeline-item
-            v-for="(activity, index) in activities"
-            :key="index"
-            :icon="activity.icon"
-            :type="activity.type"
-            :color="activity.color"
-            :size="activity.size"
-            :timestamp="activity.timestamp">
-            @{{activity.content}}
-                <el-timeline-item
-                    v-if="activity.arr"
-                    v-for="(item, index) in activity.arr"
-                    :key="index"
-                    :hide-timestamp=true>
-                    @{{item.content}}
-                </el-timeline-item>
-            </el-timeline-item>
-
-            @foreach($handlers as $key => $handler)
-
-            @endforeach
-        </el-timeline>--}}
-
-            <el-timeline>
-                @foreach($handlers as $key => $handler)
-                <el-timeline-item key="{{ $key }}" icon="el-icon-more" type="primary" size="large">
-                    @foreach($handler as $k => $val)
-                    @foreach ($val as $v)
-                            <el-timeline-item @if (!empty($v->result)) avatar="{{ $v->profile->avatar }}" result="{{ $v->result->result }}" @if($v->result->result != \App\Utils\Pipeline\IAction::RESULT_PENDING) timestamp="{{ substr($v->result->updated_at, 5, 11) }}" @endif @endif>
-                                {{ $v->name }}({{ $k }})
-                            </el-timeline-item>
+                <img src="{{asset('assets/img/bg-02.jpg')}}" alt="" class="image">
+                <img src="{{asset('assets/img/bg-02.jpg')}}" alt="" class="image">
+                <img src="{{asset('assets/img/bg-02.jpg')}}" alt="" class="image">
+                <img src="{{asset('assets/img/bg-02.jpg')}}" alt="" class="image">
+                <img src="{{asset('assets/img/bg-02.jpg')}}" alt="" class="image">
+            </div>
+        </div> -->
+        <!-- <div class="information">
+            <h3>部门</h3>
+            <span class="reason" style="display: inline-block" v-for="(item,index) in activities" :key="index">@{{ item }}</span>
+        </div> -->
+        <!-- <div class="information">
+            <h3>附件</h3>
+            <p class="reason" style="color: #0385FF;overflow: hidden;white-space: nowrap;text-overflow: ellipsis;" v-for="(item,index) in activities" :key="index">@{{ item }}</p>
+        </div> -->
+        <div class="information">
+            <h3>
+                <span>审批人</span>
+                <span style="font-size: 14px; font-weight: 100;">自动同意</span>
+            </h3>
+            <div class="block" style="padding: 0 15px;">
+                <el-timeline>
+                    @foreach($handlers as $key => $handler)
+                    <!-- <el-timeline-item key="{{ $key }}" icon="审批状态"  :timestamp="时间戳2018-04-12 20:46">-->
+                    <el-timeline-item key="{{ $key }}" icon="el-icon-more">
+                        @foreach($handler as $k => $val)
+                        @foreach ($val as $v)
+                        <el-timeline-item @if (!empty($v->result)) result="{{ $v->result->result }}" @if($v->result->result != \App\Utils\Pipeline\IAction::RESULT_PENDING) timestamp="{{ substr($v->result->updated_at, 5, 11) }}" @endif @endif>
+                            <img src="{{ $v->profile->avatar }}" alt="" style="width: 40px; height: 40px;border-radius: 50%;vertical-align: middle;">
+                            {{ $v->name }}({{ $k }})
+                            <span style="text-align: right;">状态</span>
+                        </el-timeline-item>
+                        @endforeach
+                        @endforeach
+                    </el-timeline-item>
                     @endforeach
+                </el-timeline>
+            </div>
+        </div>
+        <div class="information">
+            <h3>抄送人（多少人）</h3>
+            <div class="sendBox">
+                <figure>
+                    @foreach($copys as $copy)
+                    <img src="{{asset($copy->user->profile->avatar)}}" width="50" height="50" />
+                    <p>{{ $copy->name }}</p>
                     @endforeach
-                </el-timeline-item>
-                @endforeach
-            </el-timeline>
+                </figure>
+            </div>
         </div>
     </div>
-    <div class="information">
-        <h3>抄送人</h3>
-        <div class="sendBox">
-            <figure>
-                @foreach($copys as $copy)
-                <img src="{{asset($copy->user->profile->avatar)}}" width="50" height="50" />
-                <p>{{ $copy->name }}</p>
-                @endforeach
-            </figure>
-        </div>
-    </div>
-</div>
 </div>
 
 @if ($showActionEditForm)

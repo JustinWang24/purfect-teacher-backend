@@ -10,13 +10,14 @@ if (document.getElementById('pipeline-flows-manager-app')) {
         el: '#pipeline-flows-manager-app',
         data() {
             return {
-                posiList: [{ name: '办公审批', key: 1 }, { name: '办公大厅', key: 2 }, { name: '系统流程', key: 3 }],
+                posiList: [{ name: '办公审批', key: 1 }, { name: '办事大厅', key: 2 }, { name: '系统流程', key: 3 }],
                 typeList: [],
                 organizationList: [{ name: '组织架构人员', key: 1 }, { name: '其他职务人员', key: 2 }],
                 iconSelectorShowFlag: false, // 控制图标选择器的显示
                 selectedImgUrl: '',
                 businessList: [],
                 posiType: '', // 显示位置
+                role: '', // 角色类型
                 flow: {
                     type: '', // 流程分类
                     name: '', // 流程名称
@@ -38,13 +39,12 @@ if (document.getElementById('pipeline-flows-manager-app')) {
                 returnId: '', // flow_id
                 titlesList: [], // 侧边栏角色获取
                 agree: '',
-                agreeList: [{ name: '是', key: 1 }, { name: "否", key: 0 }], // 是否同意
-                teacher: {
-                    name: '',
-                    id: ''
-                }, // 请输入教职工名字
+                agreeList: [{ name: '同一审批人，自动同意', key: 1 }, { name: "不启用自动同意", key: 0 }], // 是否同意
+                teacher: '', // 请输入教职工名字
                 members: [], // 展示所有选中的老师
                 teachers: [], // 所有选中的老师
+                approval: '', // 设置审批人--审批人类型
+                section: [], // 设置审批人--审批人部门
                 show1: false, // 审批人的显示隐藏
                 show2: false, // 抄送人的显示隐藏
                 prev_node: 0, // 设置审批人时的节点
@@ -77,10 +77,11 @@ if (document.getElementById('pipeline-flows-manager-app')) {
                 organizationsTabArrayWhenEdit: [],
                 flowNodes: [],
                 loadingNodes: false, // 正在加载步骤
+
                 props: {
                     lazy: true,
-                    multiple: true,
                     value: 'id',
+                    multiple: true,
                     label: 'name',
                     lazyLoad(node, resolve) {
                         let parentId = null;
@@ -96,7 +97,27 @@ if (document.getElementById('pipeline-flows-manager-app')) {
                             }
                         });
                     }
-                }
+                },
+                prop: {
+                    lazy: true,
+                    value: 'id',
+                    multiple: false,
+                    label: 'name',
+                    lazyLoad(node, resolve) {
+                        let parentId = null;
+                        if (!Util.isEmpty(node.data)) {
+                            parentId = node.data.id;
+                        }
+                        axios.post(
+                            Constants.API.ORGANIZATION.LOAD_CHILDREN,
+                            { level: node.level + 1, parent_id: parentId }
+                        ).then(res => {
+                            if (Util.isAjaxResOk(res)) {
+                                resolve(res.data.data.orgs);
+                            }
+                        });
+                    }
+                },
             }
         },
         created() {
@@ -111,13 +132,13 @@ if (document.getElementById('pipeline-flows-manager-app')) {
             //     this.loadFlowNodes(this.lastNewFlow);
             // }
             this.getList(1);
-            this.changeItem2(1);
             // 进入设置页面之后获取流程
             if (window.location.search != '') {
                 this.returnId = window.location.search.split('=')[1]
                 loadNodes(this.returnId).then(res => {
                     this.copy = res.data.data.nodes.copy
                     this.handler = res.data.data.nodes.handler
+                    this.posiType = res.data.data.flow.position
                 })
             }
         },
@@ -141,22 +162,22 @@ if (document.getElementById('pipeline-flows-manager-app')) {
                 });
             },
             // 新增流程按钮--打开侧边栏
-            createNewFlow: function () {
+            createNewFlow() {
                 this.flowFormFlag = true;
                 this.flow.type = '';
                 this.flow.name = '';
                 this.node.handlers = []; // 目标用户
                 this.node.organizations = []; // 部门
                 this.node.titles = []; // 角色
-                this.changeItem1(1)
-                this.changeItem2(1)
+                this.role = 1;
+                this.gettitlesList();
             },
             // 关闭侧边栏
             handleClose(done) {
                 done();
             },
             // 获取侧边栏流程图标       
-            iconSelectedHandler: function (payload) {
+            iconSelectedHandler(payload) {
                 this.flow.icon = payload.url;
                 this.selectedImgUrl = payload.url;
                 this.iconSelectorShowFlag = false;
@@ -173,18 +194,20 @@ if (document.getElementById('pipeline-flows-manager-app')) {
                     });
             },
             // 获取侧边栏角色列表
-            changeItem1(value) {
-                this.posiType = value;
-                this.gettitlesList();
-            },
-            changeItem2(value) {
-                this.organization = value;
+            changeItem(name, value) {
+                if (name == 'p') {
+                    this.posiType = value
+                    if (this.posiType == 2) {
+                        this.organization = 2
+                    }
+                }
                 this.gettitlesList();
             },
             gettitlesList() {
                 axios.post('/school_manager/pipeline/flows/load-titles', {
-                    position: this.posiType,
-                    type: this.organization
+                    position: this.posiType, // 显示位置
+                    type: this.organization, // 组织类型
+                    role: this.role // 1.使用者2.审批者
                 })
                     .then((res) => {
                         if (Util.isAjaxResOk(res)) {
@@ -300,7 +323,7 @@ if (document.getElementById('pipeline-flows-manager-app')) {
                     });
                 });
             },
-            // 自定义表单
+            // 自定义表单 -- 进入页面
             option() {
                 var url = this.$refs.option.$attrs.href + '?flow_id=' + this.returnId;
                 location.href = url;
@@ -310,13 +333,23 @@ if (document.getElementById('pipeline-flows-manager-app')) {
                 var url = this.$refs.approver.$attrs.href + '?flow_id=' + this.returnId;
                 location.href = url;
             },
+            // 设置页面---流程开始的加号
+            first() {
+                this.show1 = !this.show1;
+                this.role = 2;
+                this.gettitlesList();
+            },
             // 新建下一级审批人时获取上一级审批人的id
             prev(id) {
                 this.show1 = !this.show1;
-                this.prev_node = id
+                this.prev_node = id;
+                this.role = 2;
+                this.gettitlesList();
             },
             // 设置审批人确定啊按钮 
             setone() {
+                this.node.titles.splice(0, 0, this.approval)
+                this.node.organizations.splice(0, 0, this.section)
                 const obj = {
                     flow_id: this.returnId,
                     prev_node: this.prev_node,
@@ -328,8 +361,8 @@ if (document.getElementById('pipeline-flows-manager-app')) {
                 axios.post('/school_manager/pipeline/flows/save-node', obj).then((res) => {
                     if (Util.isAjaxResOk(res)) {
                         this.handler = res.data.data.nodes.handler
-                        this.node.organizations = ''
-                        this.node.titles = ''
+                        this.node.organizations = []
+                        this.approval = ''
                     }
                 }).catch((err) => {
                     console.log(err)
@@ -350,14 +383,13 @@ if (document.getElementById('pipeline-flows-manager-app')) {
             },
             // 联想teacher
             selectMember: function (payload) {
-                this.teacher.name = payload.item.value
-                this.teacher.id = payload.item.id
-                this.teachers.push(payload.item.id)
-                this.members.push(payload.item.value)
+                this.members.push(payload.item.value); // 存名字
+                this.teachers.push(payload.item.id); // 存id
             },
             // 删除某个teacher
-            removeFromOrg: function (member) {
-                this.members.splice(this.members.indexOf(member), 1);
+            removeFromOrg: function (index) {
+                this.members.splice(index, 1);
+                this.teachers.splice(index, 1);
             },
             // 保存所有选中的老师
             savecopy() {
@@ -366,7 +398,7 @@ if (document.getElementById('pipeline-flows-manager-app')) {
                     users: this.teachers
                 }).then((res) => {
                     if (Util.isAjaxResOk(res)) {
-                        this.teacher.name = ''
+                        this.copy = res.data.data.copy
                     }
                 }).catch((err) => {
                     console.log(err)
