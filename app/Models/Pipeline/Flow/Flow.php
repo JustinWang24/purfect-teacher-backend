@@ -121,7 +121,7 @@ class Flow extends Model implements IFlow
                 if ($roleType == 1) {
                     //使用者
                     return [
-                        Title::ALL_TXT, Title::CLASS_ADVISER, Title::GRADE_ADVISER, Title::DEPARTMENT_LEADER, Title::CLASS_MONITOR, Title::CLASS_GROUP
+                        Title::ALL_TXT, Title::CLASS_MONITOR, Title::CLASS_GROUP
                     ];
                 }else {
                     //审批者
