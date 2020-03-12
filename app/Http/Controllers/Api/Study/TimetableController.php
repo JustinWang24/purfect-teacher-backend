@@ -9,6 +9,7 @@
 namespace App\Http\Controllers\Api\Study;
 
 
+use Carbon\Carbon;
 use App\Utils\JsonBuilder;
 use App\Dao\Schools\SchoolDao;
 use App\Utils\Time\CalendarDay;
@@ -17,7 +18,6 @@ use App\Http\Controllers\Controller;
 use App\Dao\Timetable\TimetableItemDao;
 use App\Dao\Courses\Lectures\LectureDao;
 use App\Http\Requests\TimeTable\TimetableRequest;
-use Carbon\Carbon;
 
 class TimetableController extends Controller
 {
