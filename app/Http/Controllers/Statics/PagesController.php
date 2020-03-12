@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Statics;
 use App\Dao\RecruitmentPlan\RecruitmentPlanDao;
 use App\Dao\Schools\MajorDao;
 use App\Dao\Schools\SchoolDao;
+use App\Http\Requests\MyStandardRequest;
 use App\Models\RecruitStudent\RecruitNote;
 use App\Models\Schools\SchoolConfiguration;
 use App\User;
@@ -77,4 +78,17 @@ class PagesController extends Controller
         $this->dataForView['api_token'] = $request->get('api_token',null);
         return view('h5_apps.student.registration_form_app', $this->dataForView);
     }
+
+  /**
+   * 教师端-我的-管理系统
+   * @param Request $request
+   * @return \Illuminate\Http\RedirectResponse
+   */
+    public function system(Request $request)
+    {
+        $user = $request->user('api');
+        Auth::login($user);
+        return redirect()->route('home');
+    }
+
 }
