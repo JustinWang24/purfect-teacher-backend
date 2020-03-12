@@ -84,6 +84,11 @@ class TeacherApplyElectiveCourseDao
         return $application;
     }
 
+    public function checkTimeConflictByUserId($enrollCourseId, $year, $term, $userId) {
+        $courseDao =  new CourseDao;
+        $enrollCourse = $courseDao->getCourseById($enrollCourseId);
+    }
+
 
     /**
      * 检测教师冲突时间 false=不冲突
@@ -98,7 +103,7 @@ class TeacherApplyElectiveCourseDao
         $list = $courseTeacherDao->getCoursesByTeacher($teacherId, true);
         $valList = [];
         foreach ($list as $item) {
-            if ($term == $item->course->term && $year == $item->course->courseElective->start_year) {
+            if ($term == $item->course->term && ($item->course->optional == Course::OBLIGATORY_COURSE ||$year == $item->course->courseElective->start_year)) {
                 foreach ($item->course->courseArrangements as $arrangement) {
                     $valList[] = 'w_' . $arrangement->week . '_d_' . $arrangement->day_index . '_t_' . $arrangement->time_slot_id;
                 }

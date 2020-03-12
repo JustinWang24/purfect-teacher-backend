@@ -299,6 +299,9 @@ class ElectiveController extends Controller
         if ($dao->quotaIsFull($courseId)){
             return JsonBuilder::Error('此选修课报名数量已满');
         }
+
+        //验证课程是否冲突
+
         $result = $dao->enroll($courseId, $user->id, $teacherId, $schoolId);
         return JsonBuilder::Success($result);
 
