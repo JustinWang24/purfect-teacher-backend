@@ -39,7 +39,8 @@ export default new Vuex.Store({
     visibleClockDrawer: false,
     clockSetData,
     usingAfternoon:false,
-    attendance_id:0
+    attendance_id:0,
+    visibleHolidaySet:false //节假日
   },
   mutations: {
     SETOPTIONS(state, res) {

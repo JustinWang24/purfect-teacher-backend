@@ -2,10 +2,11 @@ import { Mixins } from "../Mixins";
 import { _load_attendance, catchErr } from "../api/index";
 Vue.component("AttendanceList", {
   template: `
-    <div style="width:100%;">
+    <div class="attendance-list-container">
     <el-table
       :data="data.data"
       v-loading="isTableLoading"
+      :empty-text="isTableLoading? ' ':'暂无数据'"
       :style="{'width': '100%','min-height':minHeight + 'px'}"
       border
       :header-cell-style="{'background':'#F8F9FB','color':'#313B4C'}"
@@ -37,16 +38,16 @@ Vue.component("AttendanceList", {
         align="center"
         prop="wifi_name"
         label="WiFi"
-        min-width="180">
+        min-width="120">
       </el-table-column>
       <el-table-column
         align="center"
-        min-width="230"
+        width="300"
       label="操作"
       >
       <template slot-scope="scope">
         <el-button @click="_record(scope.row)" type="primary" size="mini">记录</el-button>
-        <el-button @click="_record(scope.row)" type="success"  size="mini">节假日</el-button>
+        <el-button @click="_holiday_set(scope.row.id)" type="success"  size="mini">节假日</el-button>
         <el-button @click="_clock_set(scope.row.id)" type="primary" size="mini">时间</el-button>
         <el-button @click="_edit(scope.row.id)" type="warning" icon="el-icon-edit" size="mini"></el-button>
       </template>
@@ -61,6 +62,10 @@ Vue.component("AttendanceList", {
   },
   methods: {
     _record(item) {},
+    _holiday_set (id) {
+      console.log(id)
+      this.SETOPTIONS({ visibleHolidaySet: true });
+    },
     async _edit(attendance_id) {
       this.SETOPTIONS({ visibleFormDrawer: true, isEditFormLoading: true });
       const [err, res] = await catchErr(_load_attendance({ attendance_id }));
@@ -82,9 +87,14 @@ Vue.component("AttendanceList", {
       this.SETOPTIONS({ visibleClockDrawer: true, isEditFormLoading: true });
       const [err, res] = await catchErr(_load_attendance({ attendance_id }));
       if (err) return false;
-      const { clocksets,using_afternoon } = res;
+      const { clocksets, using_afternoon } = res;
       if (clocksets.length) {
-        this.SETOPTIONS({ clockSetData:clocksets})
+        this.SETOPTIONS({
+          clockSetData: clocksets,
+          usingAfternoon: using_afternoon == 1,
+          isEditFormLoading: false,
+          attendance_id
+        });
       } else {
         const clockSetData = [
           "Monday",
@@ -95,7 +105,7 @@ Vue.component("AttendanceList", {
           "Saturday",
           "Sunday"
         ].map(week => ({
-          id:'',
+          id: "",
           week,
           start: "",
           end: "",
@@ -104,9 +114,14 @@ Vue.component("AttendanceList", {
           afternoon: "",
           afternoon_late: "",
           evening: "",
-          is_weekday: true
+          is_weekday: 1
         }));
-        this.SETOPTIONS({ clockSetData,usingAfternoon:using_afternoon==1,isEditFormLoading: false,attendance_id})
+        this.SETOPTIONS({
+          clockSetData,
+          usingAfternoon: using_afternoon == 1,
+          isEditFormLoading: false,
+          attendance_id
+        });
       }
     }
   }

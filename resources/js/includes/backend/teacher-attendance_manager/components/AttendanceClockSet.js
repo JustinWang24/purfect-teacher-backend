@@ -4,55 +4,137 @@ import { _save_clocksets, catchErr } from "../api/index";
 import moment from "moment";
 Vue.component("AttendanceClockSet", {
   template: `
-    <el-drawer
-    title="时间"
-    :visible.sync="visibleClockDrawer"
-    direction="rtl"
-    modal-append-to-body
-    custom-class="attendance-form-drawer"
-    :before-close= "_handleClose">
-    <el-form v-loading="isEditFormLoading" ref="ruleForm" class="attendance-clockset-form"  label-width="100px">
-    <div v-for="(item,index) in clockSetData" class="clock-set">
-    <div class="set-top">
-      <div class="week">{{weekDays[item.week]}}</div>
-      <div class="week-copy" v-if="item.week!=='Monday'"><el-button type="text" @click="_copy(index)">复制前一天</el-button></div>
-      <div class="is-weekday"><el-checkbox v-model="item.is_weekday">工作日</el-checkbox></div>
+  <el-drawer
+  title="时间"
+  :visible.sync="visibleClockDrawer"
+  direction="rtl"
+  modal-append-to-body
+  custom-class="attendance-form-drawer"
+  :before-close="_handleClose"
+  :wrapperClosable="false"
+>
+  <el-form
+    v-loading="isEditFormLoading"
+    ref="ruleForm"
+    class="attendance-clockset-form"
+    label-width="100px"
+  >
+    <div
+      v-for="(item,index) in clockSetData"
+      :key="index"
+      class="clock-set"
+    >
+      <div class="set-top">
+        <div class="week">{{weekDays[item.week]}}</div>
+        <div
+          class="week-copy"
+          v-if="item.week!=='Monday'"
+        >
+          <el-button
+            type="text"
+            @click="_copy(index)"
+          >复制前一天</el-button>
+        </div>
+        <div class="is-weekday">
+          <el-checkbox v-model="item.is_weekday" :true-label="1" :false-label= "0">工作日</el-checkbox>
+        </div>
+      </div>
+      <div class="set-day">
+        <div class="title">全天</div>
+        <el-form-item label="开始时间">
+          <el-input
+            size="mini"
+            v-model="item.start"
+            @change="_changeDate(item,'start')"
+          ></el-input>
+        </el-form-item>
+        <el-form-item label="结束时间">
+          <el-input
+            size="mini"
+            v-model="item.end"
+            @change="_changeDate(item,'end')"
+          ></el-input>
+        </el-form-item>
+      </div>
+      <div class="set-day">
+        <div class="title">上午</div>
+        <el-form-item label="上班时间">
+          <el-input
+            size="mini"
+            v-model="item.morning"
+            @change="_changeDate(item,'morning')"
+          ></el-input>
+        </el-form-item>
+        <el-form-item label="迟到">
+          <el-input
+            size="mini"
+            v-model="item.morning_late"
+            @change="_changeDate(item,'morning_late')"
+          ></el-input>
+        </el-form-item>
+      </div>
+      <template
+        v-if="usingAfternoon"
+      >
+        <div  class="set-day">
+        <div class="title">下午</div>
+        <el-form-item label="开始时间">
+          <el-input
+            size="mini"
+            v-model="item.afternoon_start"
+            @change="_changeDate(item,'afternoon_start')"
+          ></el-input>
+        </el-form-item>
+        <el-form-item label="上班时间">
+          <el-input
+            size="mini"
+            v-model="item.afternoon"
+            @change="_changeDate(item,'afternoon')"
+          ></el-input>
+        </el-form-item>
+        <el-form-item label="迟到">
+          <el-input
+            size="mini"
+            v-model="item.afternoon_late"
+            @change="_changeDate(item,'afternoon_late')"
+          ></el-input>
+        </el-form-item>
+        </div>
+        <div class="set-day">
+          <div class="title" style="color:#fff;">下午</div>
+          <el-form-item label="下班时间">
+          <el-input
+            size="mini"
+            v-model="item.evening"
+            @change="_changeDate(item,'evening')"
+          ></el-input>
+        </el-form-item>
+        </div>
+        
+      </template>
+      <div
+        class="set-day"
+        v-if="!usingAfternoon"
+      >
+        <div class="title">下午</div>
+        <el-form-item label="下班时间">
+          <el-input
+            size="mini"
+            v-model="item.evening"
+            @change="_changeDate(item,'evening')"
+          ></el-input>
+        </el-form-item>
+      </div>
     </div>
-    <div class="set-day">
-      <div class="title">全天</div>
-      <el-form-item label="开始时间">
-      <el-input  size="mini" v-model="item.start" @change="_changeDate(item,'start')"></el-input>
-    </el-form-item>
-    <el-form-item label="结束时间">
-      <el-input  size="mini" v-model="item.end" @change="_changeDate(item,'end')"></el-input>
-    </el-form-item>
-    </div>
-    <div class="set-day">
-      <div class="title">上午</div>
-      <el-form-item label="上班时间">
-      <el-input  size="mini" v-model="item.morning" @change="_changeDate(item,'morning')"></el-input>
-    </el-form-item>
-    <el-form-item label="迟到">
-      <el-input  size="mini" v-model="item.morning_late"  @change="_changeDate(item,'morning_late')"></el-input>
-    </el-form-item>
-    </div>
-    <div class="set-day" v-if="usingAfternoon">
-      <div class="title">下午</div>
-      <el-form-item label="开始时间">
-      <el-input  size="mini" v-model="item.afternoon_start"  @change="_changeDate(item,'afternoon_start')"></el-input>
-    </el-form-item>
-    <el-form-item label="上班时间">
-      <el-input  size="mini" v-model="item.afternoon" @change="_changeDate(item,'afternoon')"></el-input>
-    </el-form-item>
-    <el-form-item label="迟到">
-      <el-input  size="mini" v-model="item.afternoon_late" @change="_changeDate(item,'afternoon_late')"></el-input>
-    </el-form-item>
-    </div>
-    </div>
-    </el-form>
-    <div class="clock-btn">
-        <el-button  @click="_saveClockSet()" :loading="isLoading" type="primary" size="mini">保存</el-button>
-     </div>
+  </el-form>
+  <div class="clock-btn">
+    <el-button
+      @click="_saveClockSet()"
+      :loading="isLoading"
+      type="primary"
+      size="mini"
+    >保存</el-button>
+  </div>
 </el-drawer>
     `,
   mixins: [Mixins],
@@ -64,7 +146,7 @@ Vue.component("AttendanceClockSet", {
         if (item[key].split(":")[0] < 10) {
           item[key] = "0" + item[key];
         }
-        item[key] += ':00'
+        item[key] += ":00";
       }
     },
     _copy(index) {
@@ -75,7 +157,9 @@ Vue.component("AttendanceClockSet", {
         afternoon_start,
         afternoon,
         afternoon_late,
-        end
+        evening, //下班时间
+        end, //结束时间
+        is_weekday
       } = this.clockSetData[index - 1];
       const checkNullData = {
         start,
@@ -84,6 +168,7 @@ Vue.component("AttendanceClockSet", {
         afternoon_start,
         afternoon,
         afternoon_late,
+        evening,
         end
       };
       if (!this.usingAfternoon) {
@@ -95,63 +180,87 @@ Vue.component("AttendanceClockSet", {
       Object.keys(checkNullData).forEach(item => {
         this.clockSetData[index][item] = checkNullData[item];
       });
+      // 工作日复制
+      this.clockSetData[index]["is_weekday"] = is_weekday;
     },
+    /**
+     * 为空检查 格式检查 日期比较
+     * @param {Aarray} data 
+     */
     _checkData(data) {
-      const checkData = JSON.parse(JSON.stringify(data))
+      const checkData = JSON.parse(JSON.stringify(data));
       let nullFlag = false,
         regFlag = false,
-        dateFlag = false;
+        dateFlag = false,
+        checkResult = [];
       let regTest = /^(20|21|22|23|[0-1]\d):[0-5]\d:[0-5]\d$/;
-      const currentDay = moment(new Date()).format("YYYY-MM-DD");
-      // 时间检查
-      const DateFullDay = {};
-      checkData.forEach(item => {
-        Object.keys(item).forEach(date => {
-          item.nullFlag = item[date] == "";
-          item.regFlag = !regTest.test(item[date]);
-          DateFullDay[date] = moment(currentDay + " " + item[date]).valueOf();
+      const currentDay = moment(new Date()).format("YYYY/MM/DD");
+      checkData.forEach((item, index) => {
+        let DateFullDay = {},
+          cuNullFlag = false,
+          cuRegFlag = false,
+          cuDateFlag = false;
+        // 只要有一个不满足就返回
+        cuNullFlag = Object.keys(item).some(key => item[key] == "");
+        cuRegFlag = Object.keys(item).some(key => !regTest.test(item[key]));
+        // 加当前日期 转为时间戳进行判断
+        Object.keys(item).forEach(key => {
+          DateFullDay[key] = moment(currentDay + " " + item[key]).valueOf();
         });
-        const dateFlagReult = this.usingAfternoon
-          ? DateFullDay.start <=
-            DateFullDay.morning <
-            DateFullDay.morning_late <
-            DateFullDay.afternoon_start <
-            DateFullDay.afternoon <
-            DateFullDay.afternoon_late <
-            DateFullDay.end
-          : DateFullDay.start <=
-            DateFullDay.morning <
-            DateFullDay.morning_late <
-            DateFullDay.end;
-        item.dateFlagReult = !dateFlagReult;
+        if (this.usingAfternoon) {
+          const {
+            start,
+            morning,
+            morning_late,
+            afternoon_start,
+            afternoon,
+            afternoon_late,
+            evening,
+            end
+          } = DateFullDay;
+          cuDateFlag = !(
+            start <= morning &&
+            morning < morning_late &&
+            morning_late < afternoon_start &&
+            afternoon_start < afternoon &&
+            afternoon < afternoon_late &&
+            afternoon_late < evening &&
+            evening <= end
+          );
+        } else {
+          const { start, morning, morning_late, evening,end } = DateFullDay;
+          cuDateFlag = !(
+            start <= morning &&
+            morning < morning_late &&
+            morning_late < evening &&
+            evening <= end
+          );
+        }
+        checkResult[index] = { cuNullFlag, cuRegFlag, cuDateFlag };
       });
-      console.log(checkData);
-      checkData.forEach(item => {
-        if (item.nullFlag) {
-          nullFlag = true;
+      // 判断为true阻断
+      for (let cIndex = 0; cIndex < checkResult.length; cIndex++) {
+        const element = checkResult[cIndex];
+        if(element.cuNullFlag) {
+          nullFlag = true
+          break
         }
-        if (item.regFlag) {
-          regFlag = true;
+        if(element.cuRegFlag) {
+          regFlag = true
+          break
         }
-        if (item.dateFlag) {
-          dateFlag = true;
+        if(element.cuDateFlag) {
+          dateFlag = true
+          break
         }
-      });
-      if (nullFlag) {
-        this.$message.error("请输入考勤时间");
-        return false;
       }
-      if (regFlag) {
-        this.$message.error("请输入正确的考勤时间");
-        return false;
-      }
-      if (dateFlag) {
-        this.$message.error("输入的时间顺序不正确");
+      if (nullFlag || regFlag || dateFlag) {
+        this.$message.error(nullFlag ? "请输入考勤时间" :regFlag ? '请输入正确的考勤时间' : '输入的时间顺序不正确' );
         return false;
       }
       return true;
     },
-   async _saveClockSet() {
+    async _saveClockSet() {
       if (this.isLoading || this.isEditFormLoading) return false;
       this.isLoading = true;
       const clockSetData = this.clockSetData.map(item => {
@@ -162,6 +271,7 @@ Vue.component("AttendanceClockSet", {
           afternoon_start,
           afternoon,
           afternoon_late,
+          evening,
           end
         } = item;
         if (this.usingAfternoon) {
@@ -172,6 +282,7 @@ Vue.component("AttendanceClockSet", {
             afternoon_start,
             afternoon,
             afternoon_late,
+            evening,
             end
           };
         } else {
@@ -179,17 +290,26 @@ Vue.component("AttendanceClockSet", {
             start,
             morning,
             morning_late,
+            evening,
             end
           };
         }
       });
-      if (!this._checkData(clockSetData)) return false;
-        const [err, data] = await catchErr(_save_clocksets({attendance_id:this.attendance_id,clocksets:this.clockSetData}));
-        data &&
-          (this.$message.success("保存成功"),
-          this._handleClose(),
-          this._initData());
+      if (!this._checkData(clockSetData)) {
         this.isLoading = false;
+        return false;
+      }
+      const [err, data] = await catchErr(
+        _save_clocksets({
+          attendance_id: this.attendance_id,
+          clocksets: this.clockSetData
+        })
+      );
+      data &&
+        (this.$message.success("保存成功"),
+        this._handleClose(),
+        this._initData());
+      this.isLoading = false;
     },
     _handleClose() {
       this.SETOPTIONS({ visibleClockDrawer: false });

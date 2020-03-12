@@ -13,7 +13,8 @@ export const Mixins = {
       'visibleClockDrawer',
       'clockSetData',
       'usingAfternoon',
-      'attendance_id'
+      'attendance_id',
+      'visibleHolidaySet'
     ])
   },
   methods: {

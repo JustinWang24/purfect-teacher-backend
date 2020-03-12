@@ -8,6 +8,7 @@ Vue.component("AttendanceForm", {
     :visible.sync="visibleFormDrawer"
     direction="rtl"
     modal-append-to-body
+    :wrapperClosable="false"
     custom-class="attendance-form-drawer"
     :before-close="_handleClose">
     <el-form v-loading="isEditFormLoading" :model="formData" :rules="rulesForm" ref="ruleForm" class="attendance-form"  label-width="100px">

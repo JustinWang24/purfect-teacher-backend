@@ -1,10 +1,12 @@
 .attendance-manager-container
-  background pink
   padding 20px
+  :focus
+    outline none
   .attendance-add
     display flex
     justify-content space-between
-    margin-bottom 5px
+    padding 5px 11px 5px 18px
+    background #ffffff
     .title
       font-size 18px
       font-weight 500
@@ -61,7 +63,7 @@
       display flex
       .title
         margin-top 10px
-        margin-right 76px
+        margin-right 5px
       .el-form-item
         margin-bottom 20px
         .el-input--mini .el-input__inner
@@ -74,3 +76,7 @@
   .clock-btn
     text-align center
     padding-bottom 40px
+  .attendance-list-container
+    width 100%
+    .el-button--mini
+      padding 5px 12px
