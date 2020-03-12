@@ -8,11 +8,11 @@
             </div>
             <div class="card-body">
                 <p style="text-align: center;margin-bottom: 20px;">流程开始</p>
-                <img src="{{asset('assets/img/pipeline/addTo@2x.png')}}" alt="" @click="show1 = !show1" style="position: relative;left: 45%;vertical-align: baseline;">
+                <img src="{{asset('assets/img/pipeline/addTo@2x.png')}}" alt="" @click="first" style="position: relative;left: 45%;vertical-align: baseline;">
                 <div class="card-body-approver" v-for="(item,index) in handler" :key="item.id">
                     <div style="padding: 5px;background-color: #FE7B1C;">
-                        <img src="{{asset('assets/img/teacher_blade/qingjia@2x.png')}}" alt="" class="portrait">
-                        <span>&nbsp;&nbsp;&nbsp;审批人</span>
+                        <img src="{{asset('assets/img/pipeline/shenpiren@3x.png')}}" alt="" class="portrait">
+                        <span>&nbsp;&nbsp;审批人</span>
                         <span> （@{{ index + 1 }}级审批）</span>
                     </div>
                     <div style="border: 1px solid #FE7B1C; color: #313B4C; padding: 10px 6px;cursor: pointer;">
@@ -23,8 +23,8 @@
 
                 <div class="card-body-approver">
                     <div style="padding: 5px;background-color: #4EA5FE">
-                        <img src="{{asset('assets/img/teacher_blade/qingjia@2x.png')}}" alt="" class="portrait">
-                        <span>&nbsp;&nbsp;&nbsp;抄送人</span>
+                        <img src="{{asset('assets/img/pipeline/chaosongrenyuan@3x.png')}}" alt="" class="portrait">
+                        <span>&nbsp;&nbsp;抄送人</span>
                     </div>
                     <div style="border: 1px solid #4EA5FE; color: #313B4C; padding: 10px 6px;cursor: pointer;" @click="show2 = !show2">
                         <p v-if="copy.length == 0">请选择抄送人</p>
@@ -50,12 +50,12 @@
             <div class="card-body">
                 <el-form style="margin-top: 20px">
                     <el-form-item label="组织">
-                        <el-select v-model="organization" placeholder="请选择组织分类" style="width: 90%;" @change="changeItem2(organization)">
+                        <el-select v-model="organization" placeholder="请选择组织分类" style="width: 90%;" @change="changeItem('o',organization)">
                             <el-option v-for="item in organizationList" :key="item.key" :label="item.name" :value="item.key"></el-option>
                         </el-select>
                     </el-form-item>
                     <el-form-item label="部门" v-if="organization === 1">
-                        <el-cascader style="width: 90%;" :props="prop" v-model="node.organizations"></el-cascader>
+                        <el-cascader style="width: 90%;" :props="prop" v-model="section"></el-cascader>
                     </el-form-item>
                     <el-form-item label="审批人">
                         <el-radio-group v-model="approval">

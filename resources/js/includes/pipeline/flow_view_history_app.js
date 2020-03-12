@@ -10,28 +10,7 @@ if (document.getElementById('pipeline-flow-view-history-app')) {
         el: '#pipeline-flow-view-history-app',
         data() {
             return {
-                activities: [{
-                    content: '支持使用图标',
-                    timestamp: '2018-04-12 20:46',
-                    size: 'large',
-                    type: 'primary',
-                    icon: 'el-icon-more'
-                }, {
-                    arr: [{
-                        content: '活动按期开始',
-                      }, {
-                        content: '通过审核',
-                      }, {
-                        content: '创建成功',
-                      }]
-                }, {
-                    content: '支持自定义尺寸',
-                    timestamp: '2018-04-03 20:46',
-                    size: 'large'
-                }, {
-                    content: '默认样式的节点',
-                    timestamp: '2018-04-03 20:46'
-                }],
+                activities: ['办公室','校长室','还有哪里'],
 
                 userUuid: null,
                 actionId: null,
