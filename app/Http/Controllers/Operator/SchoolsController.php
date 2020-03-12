@@ -238,6 +238,27 @@ class SchoolsController extends Controller
         return JsonBuilder::Success(['parents'=>$orgs]);
     }
 
+    public function load_by_orgs(SchoolRequest $request) {
+        $schoolId = $request->getSchoolId();
+        $orgArr = $request->get('orgs');
+        $dao = new OrganizationDao();
+        $parents = $dao->loadByLevel(1, $schoolId);
+        $return = $parents;
+        $nowNode = $return;
+        foreach ($orgArr as $orgid) {
+            //@TODO 哪里出现的引用?
+            foreach ($parents as $pkey => $parent) {
+                if ($parent->id == $orgid) {
+                    $nowNode[$pkey]->children = $dao->getByParentId($schoolId, $orgid);
+                    $parents = $nowNode[$pkey]->children;
+                    $nowNode = $nowNode[$pkey]->children;
+                    break;
+                }
+            }
+        }
+        return JsonBuilder::Success($return);
+    }
+
     /**
      * 获取某个级别或者指定的父级单位的下级单位集合
      * @param SchoolRequest $request
