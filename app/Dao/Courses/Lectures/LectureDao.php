@@ -7,6 +7,7 @@
 namespace App\Dao\Courses\Lectures;
 
 
+use App\User;
 use Carbon\Carbon;
 use App\Utils\JsonBuilder;
 use App\Dao\Users\GradeUserDao;
@@ -272,18 +273,23 @@ class LectureDao
         return $result->get();
     }
 
-
     /**
      * 删除学习资料
+     * @param User $user
      * @param $materialId
      * @return MessageBag
      */
-    public function deleteMaterial($materialId) {
+    public function deleteMaterial(User $user,$materialId) {
         $messageBag = new MessageBag();
         $info = LectureMaterial::where('id', $materialId)->first();
         if(is_null($info)) {
             $messageBag->setCode(JsonBuilder::CODE_ERROR);
             $messageBag->setMessage('该资料不存在');
+            return $messageBag;
+        }
+        if($info->teacher_id != $user->id) {
+            $messageBag->setMessage('您没有权限删除');
+            $messageBag->setCode(JsonBuilder::CODE_ERROR);
             return $messageBag;
         }
         $re = LectureMaterial::where('id', $materialId)->delete();
