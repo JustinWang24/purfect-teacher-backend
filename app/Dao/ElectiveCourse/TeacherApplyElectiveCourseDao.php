@@ -98,7 +98,7 @@ class TeacherApplyElectiveCourseDao
         $list = $courseTeacherDao->getCoursesByTeacher($teacherId, true);
         $valList = [];
         foreach ($list as $item) {
-            if ($term == $item->course->term && $year == $item->course->start_year) {
+            if ($term == $item->course->term && $year == $item->course->courseElective->start_year) {
                 foreach ($item->course->courseArrangements as $arrangement) {
                     $valList[] = 'w_' . $arrangement->week . '_d_' . $arrangement->day_index . '_t_' . $arrangement->time_slot_id;
                 }
