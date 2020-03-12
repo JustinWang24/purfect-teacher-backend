@@ -9,6 +9,7 @@
 namespace App\Dao\ElectiveCourses;
 use App\Dao\BuildFillableData;
 use App\Dao\Courses\CourseDao;
+use App\Dao\Courses\CourseTeacherDao;
 use App\Dao\Schools\BuildingDao;
 use App\Dao\Schools\DepartmentDao;
 use App\Dao\Schools\RoomDao;
@@ -81,6 +82,44 @@ class TeacherApplyElectiveCourseDao
         //
 
         return $application;
+    }
+
+
+    /**
+     * 检测教师冲突时间 false=不冲突
+     * @param $schedule
+     * @param $year
+     * @param $term
+     * @param $teacherId
+     * @return array|bool
+     */
+    public function checkTimeConflictByTeacherId($schedule, $year , $term, $teacherId) {
+        $courseTeacherDao = new CourseTeacherDao();
+        $list = $courseTeacherDao->getCoursesByTeacher($teacherId, true);
+        $valList = [];
+        foreach ($list as $item) {
+            if ($term == $item->course->term && $year == $item->course->start_year) {
+                foreach ($item->course->courseArrangements as $arrangement) {
+                    $valList[] = 'w_' . $arrangement->week . '_d_' . $arrangement->day_index . '_t_' . $arrangement->time_slot_id;
+                }
+            }
+        }
+        if (empty($valList)) {
+            return false;
+        }
+        foreach ($schedule as $key => $group) {
+            foreach ($group['weeks'] as $week) {
+                foreach ($group['days'] as $day) {
+                    foreach ($group['timeSlots'] as $timeSlot) {
+                        $val = 'w_' . $week . '_d_' . $day . '_t_' . $timeSlot;
+                        if (in_array($val, $valList)) {
+                            return ['week' => $week, 'day' => $day, 'time' => $timeSlot];
+                        }
+                    }
+                }
+            }
+        }
+        return false;
     }
 
     /**

@@ -72,6 +72,9 @@ class OaElectiveCourseController extends Controller
         $applyData['course']['start_year'] = $nowYearAndTerm['year'];
         $applyData['course']['status'] = TeacherApplyElectiveCourse::STATUS_WAITING_FOR_VERIFIED;
 
+        if ($dao->checkTimeConflictByTeacherId($applyData['schedule'], $applyData['course']['start_year'], $applyData['course']['term'], $user->id)){
+            return JsonBuilder::Error('授课时间冲突');
+        }
         $result = $dao->createTeacherApplyElectiveCourse($applyData);
 
         return $result->isSuccess() ?
