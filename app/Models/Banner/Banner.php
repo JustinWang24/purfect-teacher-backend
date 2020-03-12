@@ -6,8 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 class Banner extends Model
 {
     protected $fillable = [
-        'school_id', 'campus_id', 'posit', 'type', 'sort',
-        'title', 'image_url', 'content', 'external','public','clicks','status'
+        'school_id','app', 'posit', 'type', 'sort', 'title', 'image_url',
+        'content', 'external','status','public','clicks','status'
     ];
 
     // 展示位置
@@ -47,18 +47,21 @@ class Banner extends Model
     ];
 
     /**
-     * 终端位置
+     * 终端
+     * @var array
+     */
+    public static $appArr = [
+      1 => '学生端',
+      2 => '老师端',
+    ];
+
+    /**
+     * 位置
      * @var array
      */
     public static $positArr = [
-        // 学生端
-        1 => [
-            ['id' => 11, 'title' => '校园首页'], // 学生端-校园首页
-        ],
-        // 老师端
-        2 => [
-            ['id' => 21, 'title' => '校园首页'], // 老师端-校园首页
-        ],
+      11 => '校园首页',// 学生端-校园首页
+      21 => '校园首页',// 老师端-校园首页
     ];
 
     /**
@@ -78,13 +81,28 @@ class Banner extends Model
 
     /**
      * Func 学校对应的资源位
+     * @return array
+     */
+    public function getAppArr()
+    {
+      return self::$appArr;
+    }
+
+    /**
+     * Func 学校对应的资源位
      * @param int $appid (1:学生端，2:老师端)
      * @return array
      */
-    public static function getPositArr($appid = 0)
+    public function getPositArr($appid = 0)
     {
-        if (!$appid) return [];
-        return self::$positArr[$appid];
+      if (!$appid) return [];
+      $positArr = [
+        // 学生端
+        1 => array_intersect_key(self::$positArr, array_flip([11])),
+        // 教师端
+        2 => array_intersect_key(self::$positArr, array_flip([21])),
+      ];
+      return $positArr[$appid];
     }
 
     /**
@@ -93,17 +111,48 @@ class Banner extends Model
      * @param int $posit
      * @return array
      */
-    public static function getTypeArr($posit = 0)
+    public function getTypeArr($posit = 0)
     {
-        if (!$posit) return [];
-        $positArr = [
-            // 学生端校园首页
-            11 => array_intersect_key(self::$typeArr, array_flip([1, 2, 3, 4, 5, 6, 7, 8])),
-            // 教师端校园首页
-            21 => array_intersect_key(self::$typeArr, array_flip([1, 2, 3])),
-        ];
+      if (!$posit) return [];
+      $positArr = [
+        // 学生端校园首页
+        11 => array_intersect_key(self::$typeArr, array_flip([1, 2, 3, 4, 5, 6, 7, 8])),
+        // 教师端校园首页
+        21 => array_intersect_key(self::$typeArr, array_flip([1, 2, 3])),
+      ];
+      return $positArr[$posit];
     }
 
+    /**
+     * Func 学校对应的资源位
+     * @param int $app 终端id
+     * @return String
+     */
+    public function getAppStr($app = 0)
+    {
+      return $app ? self::$appArr[$app] : '';
+    }
+
+    /**
+     * Func 位置名称
+     * @param int $posit 位置id
+     * @return String
+     */
+    public function getPositStr($posit = 0)
+    {
+      return $posit ? self::$positArr[$posit] : '';
+    }
+
+    /**
+     * Func 类型名称
+     * @param int $type 类型id
+     * @return String
+     */
+    public function getTypeStr($type = 0)
+    {
+      return $type ? self::$typeArr[$type] : '';
+    }
+  //------------------------------------------------下面是以前的-----------------------------------------------
     /**
      * Func 获取类型
      *
@@ -116,22 +165,6 @@ class Banner extends Model
             return empty(self::$typeArr[$typeid]) ? self::$typeArr[$typeid] : '';
         }
         return self::$typeArr;
-    }
-
-    public static function GetAllPositByPosit($posit){
-        return self::allPosit()[$posit] ?? null;
-    }
-
-    public static function GetAllTypeByType($type){
-        return self::allType()[$type] ?? null;
-    }
-
-    public function getTypeText(){
-        return self::allType()[$this->type];
-    }
-
-    public function getPositionText(){
-        return self::allPosit()[$this->posit];
     }
 
     public function isPublicText(){
