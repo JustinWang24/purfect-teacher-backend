@@ -32,6 +32,7 @@ if(document.getElementById('student-homepage-app')){
             startFlow: function(flowId){
                 window.location.href = this.url.flowOpen + '?flow=' + flowId + '&uuid=' + this.userUuid;
             },
+            // 申请list
             loadFlowsStartedByMe: function(){
                 this.isLoading = true;
                 startedByMe(this.userUuid).then(res => {
