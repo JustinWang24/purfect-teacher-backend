@@ -53,7 +53,7 @@ class TimetableController extends Controller
                         'time_table_id' => $val['id'],
                         'idx' => '', // 课节
                         'name' => $val['course'],
-                        'room' => $val['room'],
+                        'room' => $val['building'].$val['room'],
                         'teacher' => $val['teacher'],
                         'label' => $label,
                     ];
@@ -163,7 +163,6 @@ class TimetableController extends Controller
         }
         $dao = new TimetableItemDao();
         $info = $dao->getItemById($timetableId);
-
         if(is_null($info)) {
             return JsonBuilder::Error('该详情不在');
         }
@@ -172,6 +171,7 @@ class TimetableController extends Controller
         $teacher = $info->teacher;
         $grade = $info->grade;
         $room = $info->room;
+        $building = $info->building;
 
         $dao = new LectureDao();
         $return = $dao->getMaterialsByCourseIdAndTeacherIdAndGradeId($course->id, $teacher->id, $grade->id);
@@ -202,7 +202,7 @@ class TimetableController extends Controller
             'from' => $timeSlot->from,
             'to' => $timeSlot->to,
             'course' => $course->name,
-            'room' => $room->name,
+            'room' => $building->name.$room->name,
             'teacher' => $teacher->name,
             'grade' => $grade->name,
             'materials' => $materials,
@@ -303,7 +303,7 @@ class TimetableController extends Controller
                 'time_slot_id' => $value['time_slot_id'],
                 'grade_name' => $value['grade_name'],
                 'idx' => '', // 课节
-                'room' => $value['room'],
+                'room' => $value['building'].$value['room'],
                 'course' => $value['course'],
                 'time_slot_name' => $time_slot_name,
                 'from' => $from,
