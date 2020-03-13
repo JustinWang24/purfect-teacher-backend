@@ -368,6 +368,11 @@ if (document.getElementById('pipeline-flows-manager-app')) {
                         this.handler = res.data.data.nodes.handler
                         this.node.organizations = []
                         this.approval = ''
+                        this.section = []
+                        this.$message({
+                            message: '保存成功',
+                            type: 'success'
+                        });
                     }
                 }).catch((err) => {
                     console.log(err)
@@ -404,6 +409,12 @@ if (document.getElementById('pipeline-flows-manager-app')) {
                 }).then((res) => {
                     if (Util.isAjaxResOk(res)) {
                         this.copy = res.data.data.copy
+                        this.teacher = ''
+                        this.members = []
+                        this.$message({
+                            message: '保存成功',
+                            type: 'success'
+                        });
                     }
                 }).catch((err) => {
                     console.log(err)
