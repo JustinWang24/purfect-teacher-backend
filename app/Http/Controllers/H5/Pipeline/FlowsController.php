@@ -75,6 +75,9 @@ class FlowsController extends Controller
         $this->dataForView['pageTitle'] = '我审批的';
         $user = $request->user('api');
         if ($user) {
+            $logic = FlowLogicFactory::GetInstance($user);
+            $position = $request->get('position', 0);
+            $this->dataForView['list'] = $logic->myProcessed($position);
             $this->dataForView['user'] = $user;
             $this->dataForView['api_token'] = $request->get('api_token');
             return view('h5_apps.pipeline.flow_my_processed', $this->dataForView);
@@ -86,6 +89,9 @@ class FlowsController extends Controller
         $this->dataForView['pageTitle'] = '抄送我的';
         $user = $request->user('api');
         if ($user) {
+            $logic = FlowLogicFactory::GetInstance($user);
+            $position = $request->get('position', 0);
+            $this->dataForView['list'] = $logic->copyToMe($position);
             $this->dataForView['user'] = $user;
             $this->dataForView['api_token'] = $request->get('api_token');
             return view('h5_apps.pipeline.flow_copy_to_me', $this->dataForView);
