@@ -19,6 +19,10 @@ class Attendance extends Model
     {
         return $this->belongsToMany(Organization::class, 'teacher_attendance_organizations', 'teacher_attendance_id', 'organization_id');
     }
+    public function managers()
+    {
+        return $this->hasMany(Managers::class, 'teacher_attendance_id');
+    }
 
     public function clocksets()
     {

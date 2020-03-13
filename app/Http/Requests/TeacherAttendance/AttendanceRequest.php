@@ -47,6 +47,14 @@ class AttendanceRequest extends MyStandardRequest
     }
 
     /**
+     * [1,2,3]
+     * @return mixed
+     */
+    public function getMenagersData(){
+        return $this->get('managers');
+    }
+
+    /**
      * [
      *   {
      *      week:"Monday",
