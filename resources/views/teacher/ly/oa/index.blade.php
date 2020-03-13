@@ -3,17 +3,10 @@
 <div class="row" id="teacher-oa-index-app">
     <div class="col-sm-12 col-md-12 col-xl-12">
         <div class="teacher_oa_card">
-<<<<<<< HEAD
             <dl class="teacher_oa_card_body" v-for="item in iconList" :key="item.name">
                 <dt><img :src="item.icon" alt=""></dt>
                 <dd>@{{ item.name }}</dd>
             </dl>
-=======
-            <div class="teacher_oa_card_each" v-for="item in iconList" :key="item.name">
-                <img :src="item.icon" alt="" class="teacher_oa_card_img">
-                <p>@{{ item.name }}</p>
-            </div>
->>>>>>> master
         </div>
         <p class="teacher_oa_approval">我的审批</p>
         <div class="teacher_oa_approval_content">
@@ -28,12 +21,9 @@
                     <el-input placeholder="请输入审批类型/审批人">
                         <el-button slot="append">搜索</el-button>
                     </el-input>
-<<<<<<< HEAD
                     <div>
 
                     </div>
-=======
->>>>>>> master
                 </div>
             </div>
         </div>
