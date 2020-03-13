@@ -9,19 +9,25 @@
     </div>
     <div class="main p-15">
         <div class="pipeline-user-flow-box">
+            @foreach($list as $item)
             <el-card shadow="hover" class="pb-3">
                 <div style="display: flex;align-items: center;">
-                    <img src="{{asset('assets/img/pipeline/addTo@2x.png')}}" width="40">
+                    <img src="@if(isset($item->user->profile->avatar)){{ $item->user->profile->avatar }}@endif" width="40">
                     <h3 style="margin-left: 20px;flex: 4;">
                         <p style="line-height: 0;display: flex;justify-content: space-between;">
-                            <span>谁的什么申请</span>
-                            <span style="font-weight: 100;font-size: 16px;">通过</span>
+                            <span>{{ $item->user->name }}的{{ $item->flow->name }}申请</span>
+                            <span style="font-weight: 100;font-size: 16px;">
+                                @if ($item->done == \App\Utils\Pipeline\IUserFlow::IN_PROGRESS) 进行中 @endif
+                                @if ($item->done == \App\Utils\Pipeline\IUserFlow::DONE) 已通过 @endif
+                                @if ($item->done == \App\Utils\Pipeline\IUserFlow::TERMINATED) 被拒绝 @endif
+                            </span>
                         </p>
-                        <p style="font-size: 13px;color: #999;margin: 0">类型：奖学金</p>
-                        <time style="font-size: 13px;color: #999;">2020-03-12&nbsp;&nbsp;&nbsp;22:14</time>
+                        <p style="font-size: 13px;color: #999;margin: 0">类型：{{ $item->flow->name }}</p>
+                        <time style="font-size: 13px;color: #999;">{{ substr($item->created_at, 0, 16) }}</time>
                     </h3>
                 </div>
             </el-card>
+            @endforeach
         </div>
     </div>
 </div>

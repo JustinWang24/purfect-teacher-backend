@@ -52,15 +52,12 @@ class ForActionNextProcessors extends AbstractMessenger
             }
 
             $nextMove = route('h5.flow.user.view-history',['action_id'=>$action->id, 'user_flow_id'=>$action->getTransactionId()]);
-
             if($action->isUrgent()){
                 // 紧急, 利用 APP 的消息通知下一步的处理人员
                 $title = '有一个' . $this->flow->getName() .'流程在等待您处理';
-                foreach ($users as $key => $user){
-                    $pushData = ['noticedTo'=>$user, 'title'=>$title, 'content'=>$content, 'nextStep'=>$nextMove];
-                    Push::dispatch($pushData)
-                        ->delay(now()->addSeconds($key+1));
-                }
+              $pushData = ['noticedTo'=>$users, 'title'=>$title, 'content'=>$content, 'nextStep'=>$nextMove];
+              Push::dispatch($pushData)
+                ->delay(now());
             }
 
             $category = SystemNotification::getCategoryByPipelineTypeAndBusiness($this->flow->type, $this->flow->business, false);
