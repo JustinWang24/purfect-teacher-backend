@@ -239,14 +239,14 @@ class SchoolsController extends Controller
     }
 
     public function load_by_orgs(SchoolRequest $request) {
-        $schoolId = $request->getSchoolId();
+        $schoolId = $request->get('school_id');
         $orgArr = $request->get('orgs');
         $dao = new OrganizationDao();
         $parents = $dao->loadByLevel(1, $schoolId);
         $return = $parents;
         $nowNode = $return;
         foreach ($orgArr as $orgid) {
-            //@TODO 哪里出现的引用?
+            //@TODO 哪里出现对return的引用?
             foreach ($parents as $pkey => $parent) {
                 if ($parent->id == $orgid) {
                     $nowNode[$pkey]->children = $dao->getByParentId($schoolId, $orgid);
