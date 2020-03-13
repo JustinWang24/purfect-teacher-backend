@@ -10,9 +10,10 @@
     <div class="main p-15">
         <div class="pipeline-user-flow-box">
             <!-- foreach -->
+          @foreach($list as $item)
             <el-card shadow="hover" class="pb-3">
                 <div style="display: flex;align-items: center;">
-                    <img src="{{asset('assets/img/pipeline/addTo@2x.png')}}" width="40">
+                    <img src="{{ $item->userFlow->user->profile->avatar }}" width="40">
                     <h3 style="margin-left: 20px;flex: 4;">
                         <p style="line-height: 0;">谁的什么申请</p>
                         <p style="font-size: 13px;color: #999;margin: 0">类型：奖学金</p>
@@ -20,6 +21,7 @@
                     </h3>
                 </div>
             </el-card>
+            @endforeach
         </div>
     </div>
 </div>
