@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers\Operator\TeacherAttendance;
 
+use App\Dao\Schools\OrganizationDao;
 use App\Dao\TeacherAttendance\AttendanceDao;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\TeacherAttendance\AttendanceRequest;
+use App\Models\Schools\Organization;
 use App\Utils\JsonBuilder;
 use Carbon\Carbon;
 
@@ -30,6 +32,29 @@ class AttendanceController extends Controller
     public function load_attendance(AttendanceRequest $request) {
         $dao = new AttendanceDao();
         $info = $dao->getById($request->get('attendance_id'));
+        $organizationArr = [];
+        $organizationDao = new OrganizationDao();
+        foreach ($info->organizations as $organization) {
+            $nowLevel = $organization->level;
+            $return = [
+                'id' => $organization->id,
+                'name' => $organization->name
+            ];
+            $parentid = $organization->parent_id;
+            while ($nowLevel > 1) {
+                $parent = $organizationDao->getById($parentid);
+                $return = [
+                    'id' => $parent->id,
+                    'name' => $parent->name,
+                    'child' => $return,
+                ];
+                $parentid = $parent->parent_id;
+                $nowLevel = $parent->level;
+            }
+            $organizationArr[] = $return;
+        }
+        unset($info->organizations);
+        $info->organizations = $organizationArr;
         return JsonBuilder::Success($info);
     }
 

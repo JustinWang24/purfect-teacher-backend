@@ -84,9 +84,15 @@ class TeacherApplyElectiveCourseDao
         return $application;
     }
 
-    public function checkTimeConflictByUserId($enrollCourseId, $year, $term, $userId) {
+    /**
+     * 检测报名课程冲突时间 false=不冲突
+     * @param $enrollCourseId
+     * @param $userId
+     */
+    public function checkTimeConflictByUserId($enrollCourseId, $userId) {
         $courseDao =  new CourseDao;
         $enrollCourse = $courseDao->getCourseById($enrollCourseId);
+
     }
 
 
