@@ -189,7 +189,7 @@ class GradeManageController extends Controller
         $userDao = new UserDao;
         if ($data['email']) {
             $result = $userDao->getUserByEmail($data['email']);
-            if ($result) {
+            if ($result  && $result['id'] != $studentId) {
                 return  JsonBuilder::Error('邮箱已经有人用了');
             }
         }
@@ -197,8 +197,16 @@ class GradeManageController extends Controller
         $userResult = $userDao->updateEmail($studentId, $data['email']);
         unset($data['email']);
         $studentResult =  $dao->updateStudentProfile($studentId, $data);
-        $gradeResult = $gradeManagerDao->updateGradeManger($monitor['grade_id'], $monitor);
-        $groupResult = $gradeManagerDao->updateGradeManger($group['grade_id'], $group);
+        if ($monitor['monitor_id'] != 0) {
+            $gradeResult = $gradeManagerDao->updateGradeManger($monitor['grade_id'], $monitor);
+        } else {
+            $gradeResult = true;
+        }
+        if ($group['group_id'] != 0) {
+           $groupResult = $gradeManagerDao->updateGradeManger($group['grade_id'], $group);
+        } else {
+            $gradeResult = true;
+        }
 
         if ($gradeResult !==false || $studentResult !==false || $groupResult !==false || $userResult !==false ) {
             return JsonBuilder::Success('修改成功');
