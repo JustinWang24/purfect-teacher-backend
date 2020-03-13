@@ -189,7 +189,7 @@ class GradeManageController extends Controller
         $userDao = new UserDao;
         if ($data['email']) {
             $result = $userDao->getUserByEmail($data['email']);
-            if ($result) {
+            if ($result  && $result['id'] != $studentId) {
                 return  JsonBuilder::Error('邮箱已经有人用了');
             }
         }
