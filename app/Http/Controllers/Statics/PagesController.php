@@ -9,6 +9,7 @@ use App\Http\Requests\MyStandardRequest;
 use App\Models\RecruitStudent\RecruitNote;
 use App\Models\Schools\SchoolConfiguration;
 use App\User;
+use App\Utils\JsonBuilder;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
@@ -87,6 +88,10 @@ class PagesController extends Controller
     public function system(Request $request)
     {
         $user = $request->user('api');
+        if (is_null($user)) {
+          return  JsonBuilder::Error('未找到用户');
+        }
+        
         Auth::login($user);
         return redirect()->route('home');
     }
