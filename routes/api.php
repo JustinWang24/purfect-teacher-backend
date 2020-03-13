@@ -910,12 +910,14 @@ Route::prefix('Oa')->middleware('auth:api')->group(function () {
     Route::post('/student-list', 'Api\OA\GradeManageController@studentList')
         ->name('api.oa.student.list');
     // 学生详情
-    Route::post('/student-info', 'Api\OA\GradeManageController@studentInfo')
+    Route::post('/student-grade-resourcesinfo', 'Api\OA\GradeManageController@studentInfo')
         ->name('api.oa.student.info');
     // 修改学生信息
     Route::post('/update-student-info', 'Api\OA\GradeManageController@updateStudentInfo')
         ->name('api.oa.update.student.info');
-
+    // 是否为班主任
+    Route::post('/is-adviser', 'Api\OA\GradeManageController@isAdviser')
+        ->name('api.oa.is.adviser');
 });
 
 

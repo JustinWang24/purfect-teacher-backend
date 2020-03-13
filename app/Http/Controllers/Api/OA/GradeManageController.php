@@ -10,6 +10,7 @@ use App\Dao\Users\UserDao;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\MyStandardRequest;
 use App\Models\Acl\Role;
+use App\Models\Schools\GradeManager;
 use App\Models\Schools\GradeResource;
 use App\Utils\JsonBuilder;
 
@@ -91,9 +92,6 @@ class GradeManageController extends Controller
     public function gradesList(MyStandardRequest $request)
     {
         $teacher = $request->user();
-        if (is_null($teacher->isAdviser)) {
-            return JsonBuilder::Error('当前用户不是班主任, 无权限发布');
-        }
 
         $dao = new GradeManagerDao;
         $grades = $dao->getAllGradesByAdviserId($teacher->id);
@@ -113,11 +111,6 @@ class GradeManageController extends Controller
      */
     public function studentList(MyStandardRequest $request)
     {
-
-        $teacher = $request->user();
-        if (is_null($teacher->isAdviser)) {
-            return JsonBuilder::Error('当前用户不是班主任, 无权限发布');
-        }
 
         $gradeId = $request->get('grade_id');
         $dao = new GradeUserDao;
@@ -212,6 +205,23 @@ class GradeManageController extends Controller
         } else {
             return JsonBuilder::Error('修改失败');
         }
+    }
+
+  /**
+   * 是否为班主任
+   * @param MyStandardRequest $request
+   * @return string
+   */
+    public function isAdviser(MyStandardRequest $request)
+    {
+        $teacher = $request->user();
+        if (is_null($teacher->isAdviser)) {
+           $data = ['is_adviser' => GradeManager::ADVISER_0];
+        } else {
+           $data = ['is_adviser' => GradeManager::ADVISER_1];
+        }
+
+        return  JsonBuilder::Success($data);
     }
 
 }
