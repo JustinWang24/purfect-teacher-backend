@@ -23,7 +23,7 @@ class AttendanceController extends Controller
         $day = Carbon::parse($request->getInputDay())->format('Y-m-d');
         $enDay = Carbon::parse($request->getInputDay())->englishDayOfWeek;
         //获取用户所在组织
-        $organizationIdArr = $user->organizations->where('title_id', '=', Title::MEMBER)->pluck('organization_id')->toArray();
+        $organizationIdArr = $user->organizations->pluck('organization_id')->toArray();
         $dao = new AttendanceDao();
         //获取考勤配置
         $attendance = $dao->getByOrganizationIdArr($organizationIdArr, $schoolId);
@@ -71,7 +71,7 @@ class AttendanceController extends Controller
         $useMac = $request->getInputMacAddress();//mac
 
         //获取用户所在组织
-        $organizationIdArr = $user->organizations->where('title_id', '=', Title::MEMBER)->pluck('organization_id')->toArray();
+        $organizationIdArr = $user->organizations->pluck('organization_id')->toArray();
         $dao = new AttendanceDao();
         //获取考勤配置
         $attendance = $dao->getByOrganizationIdArr($organizationIdArr, $schoolId);
@@ -126,7 +126,7 @@ class AttendanceController extends Controller
         $schoolId = $user->getSchoolId();
         $dao = new AttendanceDao();
         //获取用户所在组织
-        $organizationIdArr = $user->organizations->where('title_id', '=', Title::MEMBER)->pluck('organization_id')->toArray();
+        $organizationIdArr = $user->organizations->pluck('organization_id')->toArray();
         //获取考勤配置
         $attendance = $dao->getByOrganizationIdArr($organizationIdArr, $schoolId);
         if (empty($attendance)) {
@@ -161,10 +161,9 @@ class AttendanceController extends Controller
     public function getGroupList(AttendanceRequest $request) {
         $user = $request->user();
         $schoolId = $user->getSchoolId();
-        //获取用户拥有的管理权限组织
-        $organizationIdArr = $user->organizations->whereIn('title_id', [Title::LEADER, Title::DEPUTY])->pluck('organization_id')->toArray();
+        //获取用户拥有的管理权限的考勤组
         $dao = new AttendanceDao();
-        $list = $dao->getListByOrganizationIdArr($organizationIdArr, $schoolId);
+        $list = $dao->getListByManagerId($user->id, $schoolId);
         $return = [
             ['groupid' => 0, 'title' => '全部']
         ];
@@ -179,10 +178,9 @@ class AttendanceController extends Controller
         $schoolId = $user->getSchoolId();
         $day = $request->getInputDay();
         $groupid = $request->getInputGroupId();
-        //获取用户拥有的管理权限组织
-        $organizationIdArr = $user->organizations->whereIn('title_id', [Title::LEADER, Title::DEPUTY])->pluck('organization_id')->toArray();
+        //获取用户拥有的管理权限的考勤组
         $dao = new AttendanceDao();
-        $list = $dao->getListByOrganizationIdArr($organizationIdArr, $schoolId);
+        $list = $dao->getListByManagerId($user->id, $schoolId);
         $groupIdList = [];//用户要查询的组ID 验证权限
         foreach ($list as $item) {
             //如果只是查询某一分组数据
@@ -216,14 +214,14 @@ class AttendanceController extends Controller
             $monthEnd = Carbon::parse($request->getInputMonth())->lastOfMonth();
         }
         //获取用户所在组织
-        $organizationIdArr = $user->organizations->where('title_id', '=', Title::MEMBER)->pluck('organization_id')->toArray();
+        $organizationIdArr = $user->organizations->pluck('organization_id')->toArray();
         //获取考勤配置
         $attendance = $dao->getByOrganizationIdArr($organizationIdArr, $schoolId);
         if (empty($attendance)) {
             return JsonBuilder::Error('您还没有加入考勤组，请联系管理员');
         }
         $clockinDao = new ClockinDao();
-        $countList = $clockinDao->getList($attendance, $monthStart, $monthEnd);
+        $countList = $clockinDao->getList($attendance, $monthStart, $monthEnd, $user->id);
 
         $return = [
             'attendance' => [

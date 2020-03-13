@@ -85,12 +85,13 @@ class ClockinDao
         return $return;
     }
 
-    public function getList(Attendance $attendance, Carbon $monthStart,Carbon $monthEnd)
+    public function getList(Attendance $attendance, Carbon $monthStart,Carbon $monthEnd, $userId)
     {
         $dao = new AttendanceDao();
-        $clockins = $attendance->clockins()->where([
-            ['day', '>=', $monthStart->format('Y-m-d')],
-            ['day', '<=', $monthEnd->format('Y-m-d')]
+        $clockins = $attendance->clockins()->where('user_id', $userId)
+            ->where([
+                ['day', '>=', $monthStart->format('Y-m-d')],
+                ['day', '<=', $monthEnd->format('Y-m-d')]
         ])->orderBy('day','asc')->get();
 
         $groupDays = $dao->groupDayArray($attendance, $monthStart, $monthEnd);
