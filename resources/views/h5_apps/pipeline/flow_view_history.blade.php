@@ -108,7 +108,7 @@
 
                 <el-timeline>
                   <el-timeline-item key="0">
-                    <el-timeline-item timestamp="{{ substr($startAction->created_at, 5, 11) }}">
+                    <el-timeline-item timestamp="{{ substr($startAction->created_at, 0, 16) }}">
                       <img src="{{ $startUser->profile->avatar }}" alt="" style="width: 40px; height: 40px;border-radius: 50%;vertical-align: middle;">
                       {{ $startUser->name }}
                       <span style="text-align: right;"> 发起审批 </span>
@@ -119,7 +119,7 @@
                     <el-timeline-item key="{{ $key+1 }}">
                         @foreach($handler as $k => $val)
                         @foreach ($val as $v)
-                        <el-timeline-item @if (!empty($v->result)) result="{{ $v->result->result }}" @if($v->result->result != \App\Utils\Pipeline\IAction::RESULT_PENDING) timestamp="{{ substr($v->result->updated_at, 5, 11) }}" @endif @endif>
+                        <el-timeline-item @if (!empty($v->result)) result="{{ $v->result->result }}" @if($v->result->result != \App\Utils\Pipeline\IAction::RESULT_PENDING) timestamp="{{ substr($v->result->updated_at, 0, 16) }}" @endif @endif>
                             <img src="{{ $v->profile->avatar }}" alt="" style="width: 40px; height: 40px;border-radius: 50%;vertical-align: middle;">
                             {{ $v->name }}({{ $k }})
                             <span style="text-align: right;">
