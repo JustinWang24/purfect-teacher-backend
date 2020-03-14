@@ -105,11 +105,10 @@
                 <span style="font-size: 14px; font-weight: 100;">自动同意</span>
             </h3>
             <div class="block" style="padding: 0 15px;">
-
-
+              
                 <el-timeline>
                   <el-timeline-item key="0">
-                    <el-timeline-item  timestamp="{{ substr($startAction->created_at, 5, 11) }}">
+                    <el-timeline-item timestamp="{{ substr($startAction->created_at, 5, 11) }}">
                       <img src="{{ $startUser->profile->avatar }}" alt="" style="width: 40px; height: 40px;border-radius: 50%;vertical-align: middle;">
                       {{ $startUser->name }}
                       <span style="text-align: right;"> 发起审批 </span>
