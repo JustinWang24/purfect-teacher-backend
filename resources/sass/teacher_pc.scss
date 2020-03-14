@@ -312,7 +312,6 @@
       overflow: hidden;
     }
 
-
   }
 
 }
@@ -562,7 +561,19 @@
   }
 }
 
-
+#teacher-assistant-grades-manager-app {
+  .card-body {
+    padding: 0;
+  }
+  .content-head {
+    margin-bottom: 10px;
+    font-size: 18px;
+  }
+  .card-content {
+    border-bottom: 1px solid #ccc;
+    padding: 20px 20px;
+  }
+}
 
 
 

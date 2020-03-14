@@ -225,7 +225,8 @@ if (document.getElementById('pipeline-flows-manager_form-app')) {
                         tips_holder: '',
                         extra: {
                             text: '',
-                            depType: 1
+                            depType: 1,
+                            showPicker: false
                         },
                         required: 0,
                         icon: 'el-icon-house'

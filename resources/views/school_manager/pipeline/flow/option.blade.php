@@ -171,6 +171,18 @@
                                                         name="说明文字"
                                                         label="说明文字"/>
                                             </div>
+                                                    <div v-if="item.type == 'department'">
+                                                        <van-field
+                                                                readonly
+                                                                clickable
+                                                                name="area"
+                                                                :value="item.value"
+                                                                :label="item.title"
+                                                                :placeholder="item.tips"
+                                                                @click="showDepart(item)"
+                                                        />
+                                                        </van-field>
+                                             </div>
                                         </div>
 
                         </div>

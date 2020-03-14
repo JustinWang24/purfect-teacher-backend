@@ -4,7 +4,7 @@
 <div id="{{ $appName }}" class="school-intro-container">
     <div class="main" style="overflow:hidden;">
         <van-form @submit="onSubmit">
-            <h5 style="background:white;margin:0;padding: 10px;margin-bottom:5px;">申请人: {{ $user->name }}</h5>
+           <!-- <h5 style="background:white;margin:0;padding: 10px;margin-bottom:5px;">申请人: {{ $user->name }}</h5> -->
 
     <div class="from-main">
         <div class="fromItem" v-for="item in formList">
@@ -22,7 +22,7 @@
             <div v-if="item.type == 'radio'">
                 <van-field :required="item.required?true:false" name="radio" :label="item.title">
                     <template #input>
-                        <van-radio-group v-model="item.value" direction="horizontal">
+                        <van-radio-group v-model="item.value">
                             <van-radio v-for="(item2, index2) in item.extra.itemList" :name="item2">@{{item2.itemText}}
                             </van-radio>
                         </van-radio-group>
@@ -32,7 +32,7 @@
             <div v-if="item.type == 'checkbox'">
                 <van-field :required="item.required?true:false" name="checkboxGroup" :label="item.title">
                     <template #input>
-                        <van-checkbox-group v-model="item.value" direction="horizontal">
+                        <van-checkbox-group v-model="item.value">
                             <van-checkbox v-for="(itemCB, indexCB) in item.extra.itemList" :name="itemCB" shape="square">
                                 @{{itemCB.itemText}}
                             </van-checkbox>
@@ -114,7 +114,7 @@
             <div v-if="item.type == 'image' || item.type == 'files'">
                 <van-field name="uploader" :required="item.required?true:false" :label="item.title">
                     <template #input>
-                        <van-uploader v-model="item.files" :max-count="9" :after-read="uploadImg" />
+                        <van-uploader v-model="item.files" :max-count="9" :after-read="uploadImg"/>
                     </template>
                 </van-field>
             </div>
@@ -138,7 +138,8 @@
                         :label="item.title"
                         :placeholder="item.tips"
                         @click="item.extra.showPicker = true"
-                /></van-field>
+                />
+                </van-field>
                 <van-popup v-model="item.extra.showPicker" position="bottom">
                     <van-area
                             :area-list="provinceList"
@@ -149,33 +150,64 @@
             </div>
             <div v-if="item.type == 'node'">
                 <van-field disabled
-                        v-model="item.title"
-                        type="textarea"
-                        name="说明文字"
-                        label="说明文字"/>
+                           v-model="item.title"
+                           type="textarea"
+                           name="说明文字"
+                           label="说明文字"/>
+            </div>
+            <div v-if="item.type == 'department'">
+                <van-field
+                        readonly
+                        clickable
+                        name="area"
+                        :value="item.value"
+                        :label="item.title"
+                        :placeholder="item.tips"
+                        @click="showDepart(item)"
+                />
+                </van-field>
+                <van-action-sheet
+                        v-model="item.extra.showPicker" :title="item.title">
+                    <div class="part-content">
+                        <div v-show="!item.partEnter" class="partGroup clearfix" v-for="itemPart in part">
+                            <div v-for="item2 in itemPart.organ" class="partItem"
+                                 :class="{'part-active': item2.active}" @click="clickPart(item2, itemPart, item.extra.depType)"
+                                 v-html="item2.name"></div>
+                        </div>
+                        <div v-show="item.partEnter">
+                            <div class="partListItem" v-for="partItem in selectParts" v-html="partItem.name">
+
+                            </div>
+                        </div>
+                    </div>
+                </van-action-sheet>
+                <button v-show="item.extra.showPicker" type="button" class="van-action-sheet__cancel" @click="partNext(item)">@{{item.cancelText}}</button>
             </div>
         </div>
     </div>
-            <h5 style="background:white;margin:0;padding: 10px;">审批流程</h5>
-            <el-timeline>
-                @foreach($handlers as $key => $handler)
-                    <el-timeline-item key="{{ $key }}" icon="el-icon-more" type="primary" size="large">
-                        @foreach($handler as $k => $val)
-                            @foreach ($val as $v)
-                                <el-timeline-item>
-                                    {{ $v->name }}({{ $k }})
-                                </el-timeline-item>
-                            @endforeach
-                        @endforeach
-                    </el-timeline-item>
-                @endforeach
-            </el-timeline>
 
-             <van-button round block type="info" native-type="submit">
-                提交
-             </van-button>
-        </van-form>
-    </div>
+
+
+          <h5 style="background:white;margin:0;padding: 10px;">审批流程</h5>
+          <el-timeline>
+               @foreach($handlers as $key => $handler)
+                   <el-timeline-item key="{{ $key }}" icon="el-icon-more" type="primary" size="large">
+                       @foreach($handler as $k => $val)
+                           @foreach ($val as $v)
+                               <el-timeline-item>
+                                   {{ $v->name }}({{ $k }})
+                               </el-timeline-item>
+                           @endforeach
+                       @endforeach
+                   </el-timeline-item>
+               @endforeach
+           </el-timeline>
+
+          <van-button round block type="info" native-type="submit">
+               提交
+          </van-button>
+          </van-form>
+           </div>
     @include(
         'reusable_elements.section.file_manager_component_mobile',
         ['pickFileHandler'=>'pickFileHandler']
