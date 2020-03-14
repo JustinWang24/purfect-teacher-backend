@@ -152,6 +152,7 @@
                                                 <van-field disabled
                                                         readonly
                                                         clickable
+                                                        :required="item.required?true:false"
                                                         name="area"
                                                         :value="item.value"
                                                         :label="item.title"
@@ -173,13 +174,13 @@
                                             </div>
                                                     <div v-if="item.type == 'department'">
                                                         <van-field
+                                                        :required="item.required?true:false"
                                                                 readonly
                                                                 clickable
                                                                 name="area"
                                                                 :value="item.value"
                                                                 :label="item.title"
                                                                 :placeholder="item.tips"
-                                                                @click="showDepart(item)"
                                                         />
                                                         </van-field>
                                              </div>

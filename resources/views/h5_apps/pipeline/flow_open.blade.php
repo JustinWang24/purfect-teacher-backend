@@ -134,6 +134,7 @@
                         readonly
                         clickable
                         name="area"
+                        :required="item.required?true:false"
                         :value="item.value"
                         :label="item.title"
                         :placeholder="item.tips"
@@ -160,6 +161,7 @@
                         readonly
                         clickable
                         name="area"
+                        :required="item.required?true:false"
                         :value="item.value"
                         :label="item.title"
                         :placeholder="item.tips"
@@ -169,9 +171,9 @@
                 <van-action-sheet
                         v-model="item.extra.showPicker" :title="item.title">
                     <div class="part-content">
-                        <div v-show="!item.partEnter" class="partGroup clearfix" v-for="itemPart in part">
-                            <div v-for="item2 in itemPart.organ" class="partItem"
-                                 :class="{'part-active': item2.active}" @click="clickPart(item2, itemPart, item.extra.depType)"
+                        <div v-show="!item.partEnter" class="partGroup clearfix" v-for="itemParent in part">
+                            <div v-for="item2 in itemParent.organ" class="partItem"
+                                 :class="{'part-active': item2.active}" @click="clickPart(item2, itemParent, item.extra.depType)"
                                  v-html="item2.name"></div>
                         </div>
                         <div v-show="item.partEnter">
