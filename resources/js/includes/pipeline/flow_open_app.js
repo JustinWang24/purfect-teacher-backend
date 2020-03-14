@@ -25,7 +25,8 @@ if (document.getElementById('pipeline-flow-open-app')) {
         showFileManagerFlag: false,
         minDate: new Date(1900, 0, 1),
         maxDate: new Date(2100, 1, 1),
-        provinceList: provinceList
+        provinceList: provinceList,
+        canSubmit: true
       }
     },
     created(){
@@ -85,27 +86,34 @@ if (document.getElementById('pipeline-flow-open-app')) {
           options: options,
           is_app: true
         };
-        axios.post(url, params).then((res) => {
-          if (Util.isAjaxResOk(res)) {
+        if(this.canSubmit) {
+          this.canSubmit = false;
+          axios.post(url, params).then((res) => {
+            if (Util.isAjaxResOk(res)) {
+              this.$message({
+                message: '提交成功',
+                type: 'success'
+              });
+              console.log(res)
+              setTimeout(() => {
+                window.location.href = res.data.data.url;
+              }, 400)
+            } else {
+              this.canSubmit = true;
+              this.$message({
+                message: '提交失败',
+                type: 'warning'
+              });
+            }
+          }).catch((err) => {
+            this.canSubmit = true;
             this.$message({
-              message: '发起成功',
-              type: 'success'
-            });
-            setTimeout(() => {
-              this.closeWindow()
-            }, 400)
-          } else {
-            this.$message({
-              message: '发起失败',
+              message: '提交失败',
               type: 'warning'
             });
-          }
-        }).catch((err) => {
-          this.$message({
-            message: '发起失败',
-            type: 'warning'
           });
-        });
+        }
+
       },
       onConfirm(item) {
         item.value = this.setTime(item.time, item.extra.dateType);

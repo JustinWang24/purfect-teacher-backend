@@ -172,7 +172,7 @@
             </el-timeline>
 
              <van-button round block type="info" native-type="submit">
-                发起
+                提交
              </van-button>
         </van-form>
     </div>
