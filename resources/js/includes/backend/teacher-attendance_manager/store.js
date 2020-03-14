@@ -32,7 +32,8 @@ export default new Vuex.Store({
         wifi_name: "",
         using_afternoon: true //是否启用中午打卡
       },
-      organizations: []
+      organizations: [],
+      managers:[]
     },
     organizations: [],
     isEditFormLoading: false,
@@ -40,7 +41,7 @@ export default new Vuex.Store({
     clockSetData,
     usingAfternoon:false,
     attendance_id:0,
-    visibleHolidaySet:false //节假日
+    visibleHolidaySet:false, //节假日
   },
   mutations: {
     SETOPTIONS(state, res) {

@@ -144,9 +144,14 @@ Vue.component("AttendanceClockSet", {
     _changeDate(item, key) {
       if (/^([0-1]?[0-9]|2[0-3]):([0-5][0-9])$/.test(item[key])) {
         if (item[key].split(":")[0] < 10) {
-          item[key] = "0" + item[key];
+          item[key] = item[key].charAt(0) ==0 ? item[key] : "0" + item[key];
         }
-        item[key] += ":00";
+      }
+      if (/^([0-1]?[0-9]|2[0-3])：([0-5][0-9])$/.test(item[key])) {
+        if (item[key].split("：")[0] < 10) {
+          item[key] = item[key].charAt(0) ==0 ? item[key] : "0" + item[key];
+        }
+        item[key] = item[key].replace('：',':')
       }
     },
     _copy(index) {
@@ -194,7 +199,7 @@ Vue.component("AttendanceClockSet", {
         dateFlag = false,
         checkResult = [];
       let regTest = /^(20|21|22|23|[0-1]\d):[0-5]\d:[0-5]\d$/;
-      const currentDay = moment(new Date()).format("YYYY/MM/DD");
+      const currentDay = moment(new Date()).format("YYYY-MM-DD");
       checkData.forEach((item, index) => {
         let DateFullDay = {},
           cuNullFlag = false,
@@ -202,10 +207,10 @@ Vue.component("AttendanceClockSet", {
           cuDateFlag = false;
         // 只要有一个不满足就返回
         cuNullFlag = Object.keys(item).some(key => item[key] == "");
-        cuRegFlag = Object.keys(item).some(key => !regTest.test(item[key]));
+        cuRegFlag = Object.keys(item).some(key => !regTest.test(item[key] + ':00'));
         // 加当前日期 转为时间戳进行判断
         Object.keys(item).forEach(key => {
-          DateFullDay[key] = moment(currentDay + " " + item[key]).valueOf();
+          DateFullDay[key] = moment(currentDay + " " + item[key] + ':00').valueOf();
         });
         if (this.usingAfternoon) {
           const {

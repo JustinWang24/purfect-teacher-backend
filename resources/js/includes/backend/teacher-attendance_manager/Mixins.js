@@ -14,7 +14,7 @@ export const Mixins = {
       'clockSetData',
       'usingAfternoon',
       'attendance_id',
-      'visibleHolidaySet'
+      'visibleHolidaySet',
     ])
   },
   methods: {
