@@ -78,7 +78,13 @@ class FlowsController extends Controller
      */
     public function started_by_me(FlowRequest $request){
         $logic = FlowLogicFactory::GetInstance($request->user());
-        return JsonBuilder::Success(['flows'=>$logic->startedByMe()]);
+        $list = $logic->startedByMe();
+        if ($list) {
+            foreach ($list as $key => $value) {
+                $value->avatar = $value->user->profile->avatar ?? '';
+            }
+        }
+        return JsonBuilder::Success(['flows'=> $list]);
     }
 
     /**
