@@ -1,188 +1,188 @@
 // 教师管理PC端
 .blade_title {
-    font-size: 30px;
-    color: #777f8d;
+  font-size: 30px;
+  color: #777f8d;
 }
 
 .clearfix:before, .clearfix:after {
-    content: "";
-    display: block;
-    visibility: hidden;
-    clear: both;
-    height: 0;
+  content: "";
+  display: block;
+  visibility: hidden;
+  clear: both;
+  height: 0;
 }
 
 .card-height-700 {
-    height: 700px;
-    overflow-y: auto;
+  height: 700px;
+  overflow-y: auto;
 }
 
 .status_red {
-    color: #FD1B1B;
+  color: #FD1B1B;
 }
 
 .status_green {
-    color: #6DCC58;
+  color: #6DCC58;
 }
 
 .status_yellow {
-    color: #FE7B1C;
+  color: #FE7B1C;
 }
 
 .status_gray {
-    color: #ABABAB;
+  color: #ABABAB;
 }
 
 .status_blue {
-    color: #4EA5FE !important;
+  color: #4EA5FE !important;
 }
 
 .status_black {
-    //color: black;
+  //color: black;
 }
 
 // 无数据占位符
 .no-data-img {
-    width: 100%;
-    height: 100%;
-    img {
-        width: 160px;
-        display: block;
-        margin: 30% auto 0 auto;
-    }
-    p {
-        color: #AFACB0;
-        text-align: center;
-    }
+  width: 100%;
+  height: 100%;
+  img {
+    width: 160px;
+    display: block;
+    margin: 30% auto 0 auto;
+  }
+  p {
+    color: #AFACB0;
+    text-align: center;
+  }
 }
 
 // 助手首页
 #teacher-assistant-index-app {
-    .card {
-        width: fit-content;
+  .card {
+    width: fit-content;
+  }
+  .card-body {
+    padding-top: 20px;
+  }
+  .banner-item {
+    float: left;
+    text-align: center;
+    font-size: 16px;
+  }
+  .banner-item dl {
+    margin: 0 62px;
+    float: left;
+  }
+  .banner-item dt {
+    margin-bottom: 12px;
+  }
+  .banner-item dd {
+    margin-bottom: 12px;
+    a {
+      color: black;
     }
-    .card-body {
-        padding-top: 20px;
+  }
+  .bunner-line {
+    float: left;
+    height: 100px;
+    width: 1px;
+    border: none;
+    border-right: 1px solid #EAEDF2;
+  }
+  .banner-item img {
+    width: 70px;
+    height: 70px;
+  }
+  .bottom-card {
+    width: 728px;
+    height: 445px;
+    .card-head {
+      height: 50px;
+      line-height: 50px;
+      padding: 0;
+      border-bottom: 1px solid #EAEDF2;
+      width: 100%;
     }
-    .banner-item {
-        float: left;
-        text-align: center;
-        font-size: 16px;
+  }
+  .el-tabs__item {
+    height: 50px;
+    line-height: 50px;
+    font-size: 16px;
+  }
+  .bottom-search {
+    width: 100%;
+    padding: 0 24px;
+    .el-button {
+      width: 84px;
+      height: 40px;
+      border-tadus: 3px;
+      border-bottom-left-radius: 0;
+      border-top-left-radius: 0;
+      font-size: 14px;
     }
-    .banner-item dl {
-        margin: 0 62px;
-        float: left;
+    .el-input {
+      width: calc(100% - 84px);
+      margin-right: 0;
+      input {
+        border-tadus: 3px;
+        border-bottom-right-radius: 0;
+        border-top-right-radius: 0;
+      }
     }
-    .banner-item dt {
-        margin-bottom: 12px;
+  }
+  .bottom-table {
+    padding: 0 24px;
+    font-size: 14px;
+    .blade_listImage {
+      width: 28px;
+      height: 28px;
     }
-    .banner-item dd {
-        margin-bottom: 12px;
-        a {
-            color: black;
-        }
+    .el-table--striped .el-table__body tr.el-table__row--striped td {
+      background: #F5F6FF;
     }
-    .bunner-line {
-        float: left;
-        height: 100px;
-        width: 1px;
-        border: none;
-        border-right: 1px solid #EAEDF2;
+    .icon-image {
+      width: 34px;
+      height: 24px;
     }
-    .banner-item img {
-        width: 70px;
-        height: 70px;
-    }
-    .bottom-card {
-        width: 728px;
-        height: 445px;
-        .card-head {
-            height: 50px;
-            line-height: 50px;
-            padding: 0;
-            border-bottom: 1px solid #EAEDF2;
-            width: 100%;
-        }
-    }
-    .el-tabs__item {
-        height: 50px;
-        line-height: 50px;
-        font-size: 16px;
-    }
-    .bottom-search {
-        width: 100%;
-        padding: 0 24px;
-        .el-button {
-            width: 84px;
-            height: 40px;
-            border-tadus: 3px;
-            border-bottom-left-radius: 0;
-            border-top-left-radius: 0;
-            font-size: 14px;
-        }
-        .el-input {
-            width: calc(100% - 84px);
-            margin-right: 0;
-            input {
-                border-tadus: 3px;
-                border-bottom-right-radius: 0;
-                border-top-right-radius: 0;
-            }
-        }
-    }
-    .bottom-table {
-        padding: 0 24px;
-        font-size: 14px;
-        .blade_listImage {
-            width: 28px;
-            height: 28px;
-        }
-        .el-table--striped .el-table__body tr.el-table__row--striped td {
-            background: #F5F6FF;
-        }
-        .icon-image {
-            width: 34px;
-            height: 24px;
-        }
 
+  }
+  .bottom-List {
+    list-style: none;
+    margin-top: 20px;
+    padding: 0 24px;
+    li {
+      line-height: 64px;
+      font-size: 16px;
+      span {
+        display: inline-block;
+      }
+      .blade_listImage {
+        width: 28px;
+        height: 28px;
+        margin-right: 14px;
+      }
+      .blade_listState {
+        display: inline-block;
+        width: 40px;
+        margin-right: 20px;
+      }
+      .blade_listUser {
+        width: 160px;
+        text-align: center;
+        color: #99A0AD;
+        margin-right: 20px;
+      }
+      .blade_listDate {
+        width: 200px;
+        color: #D5D7E0;
+        margin-right: 20px;
+        text-align: center;
+      }
     }
-    .bottom-List {
-        list-style: none;
-        margin-top: 20px;
-        padding: 0 24px;
-        li {
-            line-height: 64px;
-            font-size: 16px;
-            span {
-                display: inline-block;
-            }
-            .blade_listImage {
-                width: 28px;
-                height: 28px;
-                margin-right: 14px;
-            }
-            .blade_listState {
-                display: inline-block;
-                width: 40px;
-                margin-right: 20px;
-            }
-            .blade_listUser {
-                width: 160px;
-                text-align: center;
-                color: #99A0AD;
-                margin-right: 20px;
-            }
-            .blade_listDate {
-                width: 200px;
-                color: #D5D7E0;
-                margin-right: 20px;
-                text-align: center;
-            }
-        }
-        li:nth-child(2n) {
-            background: #F5F6FF;
-        }
+    li:nth-child(2n) {
+      background: #F5F6FF;
     }
+  }
 }
 
 // 签到/评分/班级评分/学生管理
@@ -191,371 +191,375 @@
 #teacher-assistant-grades-evaluations-app,
 #teacher-assistant-students-manager-app,
 #teacher-assistant-grades-check-in-app {
-    .card {
-        min-height: 700px;
-    }
+  .card {
+    min-height: 700px;
+  }
 
-    .card-head {
-        border-bottom: none;
-    }
+  .card-head {
+    border-bottom: none;
+  }
 
-    .card-body {
-        padding: 0;
-    }
+  .card-body {
+    padding: 0;
+  }
 
-    .showDetail {
-        float: right;
-        margin-right: 20px;
-    }
+  .showDetail {
+    float: right;
+    margin-right: 20px;
+  }
 
-    .showDetail img {
-        width: 34px;
-        height: 24px;
-    }
+  .showDetail img {
+    width: 34px;
+    height: 24px;
+  }
 
-    .full-width {
-        padding: 0 20px;
-        line-height: 50px;
-        height: 50px;
-    }
+  .full-width {
+    padding: 0 20px;
+    line-height: 50px;
+    height: 50px;
+  }
 
-    .search_filter {
-        .el-select input {
-            text-align: center;
-            width: 180px;
-            border: none;
-        }
+  .search_filter {
+    .el-select input {
+      text-align: center;
+      width: 180px;
+      border: none;
     }
+  }
 
-    .search_filter {
-        float: right;
-    }
+  .search_filter {
+    float: right;
+  }
 
-    .el-tree-node__content {
-        padding-left: 0 !important;
-        display: block !important;
-    }
+  .el-tree-node__content {
+    padding-left: 0 !important;
+    display: block !important;
+  }
 
+  .el-tree-node__expand-icon {
+    float: right;
+    margin-top: 15px;
+    margin-right: 15px;
+  }
+
+  .el-tree-node {
+    text-indent: 20px;
+    border-top: 1px solid #EAEDF2;
+  }
+
+  .el-tree-node__content {
+    min-height: 55px;
+    line-height: 55px;
+    background: white;
+  }
+
+  .el-tree-node__children {
+    margin: 2px 10px;
+    width: calc(100% - 20px);
+    border-radius: 2px;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.33);
     .el-tree-node__expand-icon {
-        float: right;
-        margin-top: 15px;
-        margin-right: 15px;
+      display: none;
     }
 
     .el-tree-node {
-        text-indent: 20px;
-        border-top: 1px solid #EAEDF2;
+
     }
 
     .el-tree-node__content {
-        min-height: 55px;
-        line-height: 55px;
-        background: white;
+      min-height: 49px;
+      line-height: 49px;
+      background: #EEEFF8;
+    }
+  }
+
+  .el-icon-arrow-right:before {
+    margin-left: -15px !important;
+  }
+
+  .el-table td,
+  .el-table th {
+    padding: 0;
+    height: 55px;
+    line-height: 55px;
+    text-align: center;
+    font-size: 16px;
+  }
+
+  .el-table th {
+    color: black;
+    font-wight: bold;
+  }
+
+  .el-table {
+    border-top: 1px solid #EAEDF2;
+  }
+
+  .eva_note {
+    margin-top: 10px;
+    min-height: 70px;
+    border-bottom: 1px solid #CCCCCC;
+    line-height: 20px;
+    padding: 0 20px;
+    .eva_noteTitle {
+      color: #8A93A1;
+      margin-top: 5px;
+    }
+    .eva_noteText {
+      position: relative;
+      max-height: 60px;
+      margin-top: 5px;
+      overflow: hidden;
     }
 
-    .el-tree-node__children {
-        margin: 2px 10px;
-        width: calc(100% - 20px);
-        border-radius: 2px;
-        box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.33);
-        .el-tree-node__expand-icon {
-            display: none;
-        }
 
-        .el-tree-node {
-
-        }
-
-        .el-tree-node__content {
-            min-height: 49px;
-            line-height: 49px;
-            background: #EEEFF8;
-        }
-    }
-
-    .el-icon-arrow-right:before {
-        margin-left: -15px !important;
-    }
-
-    .el-table td,
-    .el-table th {
-        padding: 0;
-        height: 55px;
-        line-height: 55px;
-        text-align: center;
-        font-size: 16px;
-    }
-
-    .el-table th {
-        color: black;
-        font-wight: bold;
-    }
-
-    .el-table {
-        border-top: 1px solid #EAEDF2;
-    }
-
-    .eva_note {
-        margin-top: 10px;
-        min-height: 70px;
-        border-bottom: 1px solid #CCCCCC;
-        line-height: 20px;
-        padding: 0 20px;
-        .eva_noteTitle {
-            color: #8A93A1;
-            margin-top: 5px;
-        }
-        .eva_noteText {
-            margin-top: 5px;
-        }
-
-    }
+  }
 
 }
 
 #teacher-assistant-grades-check-in-app,
 #teacher-assistant-grades-evaluations-app {
-    .el-input__inner {
-        border: none;
-        text-align: center;
-    }
-    .el-input {
-        width: 180px;
-    }
+  .el-input__inner {
+    border: none;
+    text-align: center;
+  }
+  .el-input {
+    width: 180px;
+  }
 }
 
 #teacher-assistant-check-in-app {
 
-    .el-table__row td:nth-child(2) {
-        color: #6DCC58;
-    }
+  .el-table__row td:nth-child(2) {
+    color: #6DCC58;
+  }
 
-    .el-table__row td:nth-child(3) {
-        color: #FE7B1C;
-    }
+  .el-table__row td:nth-child(3) {
+    color: #FE7B1C;
+  }
 
-    .el-table__row td:nth-child(4) {
-        color: #FD1B1B;
-    }
+  .el-table__row td:nth-child(4) {
+    color: #FD1B1B;
+  }
 
 }
 
 #teacher-assistant-grades-evaluations-app,
 #teacher-assistant-students-manager-app {
-    .el-tree-node__expand-icon {
-        display: none;
+  .el-tree-node__expand-icon {
+    display: none;
+  }
+  .el-table td {
+    text-align: left;
+    color: black;
+  }
+  .evaluations_table2 {
+    .el-table td:nth-child(2) {
+      text-align: right;
+      padding-right: 20px;
     }
-    .el-table td {
-        text-align: left;
-        color: black;
-    }
-    .evaluations_table2 {
-        .el-table td:nth-child(2) {
-            text-align: right;
-            padding-right: 20px;
-        }
-    }
+  }
 }
 
 #teacher-assistant-students-manager-app {
-    .stu-table3 td:nth-child(1) {
-        color: #777f8d;
+  .stu-table3 td:nth-child(1) {
+    color: #777f8d;
+  }
+  .stu-table3 td:nth-child(2) {
+    text-align: right;
+  }
+  .stu-edit {
+    width: 140px;
+    height: 38px;
+    background: #FE7C1A;
+    color: #FFF;
+  }
+  .el-dialog {
+    margin: 0;
+    margin-top: 120px;
+    margin-left: calc(100% - 670px);
+  }
+  .el-dialog__title {
+    font-weight: bold;
+  }
+  .el-dialog__body {
+    padding: 0;
+    .el-form-item {
+      font-size: 14px;
+      margin-bottom: 0;
+      padding: 5px 25px;
+      border-bottom: 1px solid #ccc;
+      color: #475B6D;
+      label {
+        margin-bottom: 0;
+        text-align: left;
+        color: #B1B7C0;
+      }
     }
-    .stu-table3 td:nth-child(2) {
-        text-align: right;
+    .can-edit {
+      color: #B1B7C0;
+      border: none;
+      label {
+        width: 130px !important;
+        color: #475B6D
+      }
+      .el-form-item__content {
+        margin-left: 130px !important;
+        padding-right: 40px;
+      }
     }
-    .stu-edit {
-        width: 140px;
-        height: 38px;
-        background: #FE7C1A;
-        color: #FFF;
-    }
-    .el-dialog {
-        margin: 0;
-        margin-top: 120px;
-        margin-left: calc(100% - 670px);
-    }
-    .el-dialog__title {
-        font-weight: bold;
-    }
-    .el-dialog__body {
-        padding: 0;
-        .el-form-item {
-            font-size: 14px;
-            margin-bottom: 0;
-            padding: 5px 25px;
-            border-bottom: 1px solid #ccc;
-            color: #475B6D;
-            label {
-                margin-bottom: 0;
-                text-align: left;
-                color: #B1B7C0;
-            }
-        }
-        .can-edit {
-            color: #B1B7C0;
-            border: none;
-            label {
-                width: 130px !important;
-                color: #475B6D
-            }
-            .el-form-item__content {
-                margin-left: 130px !important;
-                padding-right: 40px;
-            }
-        }
-    }
+  }
 
-    .dialog-footer {
-        text-align: center;
-        padding: 20px;
-    }
+  .dialog-footer {
+    text-align: center;
+    padding: 20px;
+  }
 }
 
 #teacher-assistant-grades-manager-app {
-    .card-body {
-        min-height: 700px;
-    }
+  .card-body {
+    min-height: 700px;
+  }
 }
 
 // 流程管理 表单
 #pipeline-flows-manager_form-app {
-    .card-body {
-        min-height: 700px;
-        padding: 0;
+  .card-body {
+    min-height: 700px;
+    padding: 0;
+  }
+  .formItem {
+    margin-top: 20px;
+    padding: 0 20px;
+    border-bottom: 1px solid #cccccc;
+    > div {
+      margin-bottom: 10px;
     }
-    .formItem {
-        margin-top: 20px;
-        padding: 0 20px;
-        border-bottom: 1px solid #cccccc;
-        > div {
-            margin-bottom: 10px;
-        }
+  }
+  .formItemName {
+    font-size: 18px;
+    font-weight: bold;
+  }
+  .radioItem {
+    line-height: 40px;
+    margin-bottom: 5px;
+    .el-input {
+      width: auto;
+      vertical-align: top;
     }
-    .formItemName {
-        font-size: 18px;
-        font-weight: bold;
+    .inline {
+      display: inline-block;
+      padding-top: 5px;
+      height: 40px;
     }
-    .radioItem {
-        line-height: 40px;
-        margin-bottom: 5px;
-        .el-input {
-            width: auto;
-            vertical-align: top;
-        }
-        .inline {
-            display: inline-block;
-            padding-top: 5px;
-            height: 40px;
-        }
-        .radioItemIcon {
-            font-size: 26px;
-            cursor: pointer;
-        }
-        .el-icon-remove {
-            //color: #ccc;
-        }
-        .el-icon-circle-plus {
-            color: #409eff;
-        }
+    .radioItemIcon {
+      font-size: 26px;
+      cursor: pointer;
     }
+    .el-icon-remove {
+      //color: #ccc;
+    }
+    .el-icon-circle-plus {
+      color: #409eff;
+    }
+  }
 
-    .formItems {
-        padding: 20px;
-        .items {
-            float: left;
-            margin-bottom: 10px;
-            width: calc(50% - 10px);
-            height: 40px;
-            border: 1px solid #ccc;
-            text-indent: 20px;
-            line-height: 40px;
-        }
-        .itemIcon {
-            float: right;
-            margin-right: 5px;
-        }
-        .items:nth-child(2n - 1) {
-            margin-right: 20px;
-        }
+  .formItems {
+    padding: 20px;
+    .items {
+      float: left;
+      margin-bottom: 10px;
+      width: calc(50% - 10px);
+      height: 40px;
+      border: 1px solid #ccc;
+      text-indent: 20px;
+      line-height: 40px;
     }
-    .view {
-        padding: 10px;
+    .itemIcon {
+      float: right;
+      margin-right: 5px;
     }
-    .viewBg {
-        width: 356px;
-        height: 620px;
-        background: url("../assets/img/ios_bg.png") no-repeat 0 0/ 100% 100%;
+    .items:nth-child(2n - 1) {
+      margin-right: 20px;
+    }
+  }
+  .view {
+    padding: 10px;
+  }
+  .viewBg {
+    width: 356px;
+    height: 620px;
+    background: url("../assets/img/ios_bg.png") no-repeat 0 0/ 100% 100%;
 
-        padding: 75px 24px;
+    padding: 75px 24px;
+  }
+  .viewContent {
+    width: 100%;
+    height: 100%;
+    background: #eaeef3;
+    overflow-y: auto;
+    overflow-x: hidden;
+    .el-form-item {
+      margin-bottom: 5px;
+      background: white;
     }
-    .viewContent {
-        width: 100%;
-        height: 100%;
-        background: #eaeef3;
-        overflow-y: auto;
-        overflow-x: hidden;
-        .el-form-item {
-            margin-bottom: 5px;
-            background: white;
-        }
-        .el-form-item__label {
-            font-size: 8px !important;
-            line-height: 30px;
-            margin-bottom: 0;
-        }
-        .el-form-item__content {
-            line-height: 30px;
-        }
-        .el-input__inner {
-            border: none;
-            text-align: right;
-            height: 30px;
-            font-size: 8px !important;
-        }
-        .el-input.is-disabled .el-input__inner {
-            background: white
-        }
-        .ipt-textarea .el-input__inner {
-            height: 60px;
-        }
-        .el-input__icon {
-            line-height: 33px;
-        }
-        .el-date-editor .el-input__icon {
-            line-height: 24px;
-        }
-        .el-range-editor.is-disabled{
-            background: white;
-        }
-        .el-range-input {
-            background: white;
-        }
-        .el-date-editor .el-range-separator {
-            line-height: 23px;
-        }
-        .avatar-uploader {
-            min-height: 50px;
-        }
-        .el-upload {
-            width: 50px;
-            height: 50px;
-            line-height: 50px;
-        }
-        .nodeText {
-            white-space: pre-wrap;
-            line-height: 24px;
-        }
-        .el-icon-close {
-            cursor: pointer;
-        }
+    .el-form-item__label {
+      font-size: 8px !important;
+      line-height: 30px;
+      margin-bottom: 0;
     }
-    .van-checkbox {
-        margin-bottom: 5px;
+    .el-form-item__content {
+      line-height: 30px;
     }
-    .fromItem {
-        margin-bottom: 5px;
+    .el-input__inner {
+      border: none;
+      text-align: right;
+      height: 30px;
+      font-size: 8px !important;
     }
+    .el-input.is-disabled .el-input__inner {
+      background: white
+    }
+    .ipt-textarea .el-input__inner {
+      height: 60px;
+    }
+    .el-input__icon {
+      line-height: 33px;
+    }
+    .el-date-editor .el-input__icon {
+      line-height: 24px;
+    }
+    .el-range-editor.is-disabled {
+      background: white;
+    }
+    .el-range-input {
+      background: white;
+    }
+    .el-date-editor .el-range-separator {
+      line-height: 23px;
+    }
+    .avatar-uploader {
+      min-height: 50px;
+    }
+    .el-upload {
+      width: 50px;
+      height: 50px;
+      line-height: 50px;
+    }
+    .nodeText {
+      white-space: pre-wrap;
+      line-height: 24px;
+    }
+    .el-icon-close {
+      cursor: pointer;
+    }
+  }
+  .van-checkbox {
+    margin-bottom: 5px;
+  }
+  .fromItem {
+    margin-bottom: 5px;
+  }
 }
 
 
