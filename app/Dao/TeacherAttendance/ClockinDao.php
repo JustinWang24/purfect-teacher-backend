@@ -153,7 +153,7 @@ class ClockinDao
         return [
             'normal' => $normalList,
             'rest' => $groupDays['rest'],
-            'not' => $notList,
+            'not' => $notList ? array_values($notList) : [],
             'late' => $lateList,
             'early' => $earlyList,
             'miss' => $missList,
