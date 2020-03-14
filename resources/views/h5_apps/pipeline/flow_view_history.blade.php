@@ -76,10 +76,10 @@
             <el-divider></el-divider>
             @endforeach
         </div>
-        <div class="information">
+        {{--<div class="information">
             <h3>申请理由</h3>
             <p class="reason">{{ $startAction->content }}</p>
-        </div>
+        </div>--}}
         <!-- <div class="information">
             <h3>证明材料</h3> 写表单的那个人呢 还没对接过
             <div class="imageBox">
@@ -102,10 +102,10 @@
         <div class="information">
             <h3>
                 <span>审批人</span>
-                <span style="font-size: 14px; font-weight: 100;">自动同意</span>
+                <span style="font-size: 14px; font-weight: 100;">@if (!empty($flowInfo->auto_processed))自动同意@endif</span>
             </h3>
             <div class="block" style="padding: 0 15px;">
-              
+
                 <el-timeline>
                   <el-timeline-item key="0">
                     <el-timeline-item timestamp="{{ substr($startAction->created_at, 5, 11) }}">
