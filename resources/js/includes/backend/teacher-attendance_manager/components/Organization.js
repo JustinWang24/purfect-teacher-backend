@@ -17,6 +17,7 @@ Vue.component("Organization", {
       if (!Util.isEmpty(node.data)) {
         parent_id = node.data.id;
       }
+      console.log(node)
       const [err, data] = await catchErr(_load_children({level: node.level + 1,parent_id}));
       data && resolve(data.orgs)
     },

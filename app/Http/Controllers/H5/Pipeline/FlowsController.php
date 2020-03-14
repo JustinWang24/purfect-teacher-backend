@@ -173,6 +173,7 @@ class FlowsController extends Controller
                     'value' => ActionOption::where('action_id', $startUserAction->id)->where('option_id', $option['id'])->value('value')
                 ];
             }
+            $this->dataForView['flowInfo'] = $flowInfo;
             $this->dataForView['handlers'] = $handlers;
             $this->dataForView['options'] = $optionReList;
             $this->dataForView['copys'] = $flowInfo['copy'];
