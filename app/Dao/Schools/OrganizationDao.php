@@ -135,7 +135,6 @@ class OrganizationDao
         $return = [
             'id' => $org->id,
             'name' => $org->name,
-            'children' => []
         ];
         foreach ($org->branch as $branch) {
             $return['children'][] = $this->outputOnlyData($branch);
