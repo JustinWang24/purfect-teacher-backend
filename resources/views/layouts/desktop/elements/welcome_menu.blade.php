@@ -50,12 +50,12 @@ $school = School::find(session('school.id'));
             </a>
         </li>
 		<li class="nav-item">
-            <a href="{{ route('welcome_manager.welcomeReport.roomfee_list',['uuid'=>session('school.uuid'),'typeid'=>2,'index'=>1]) }}" class="nav-link ">
+            <a href="{{ route('welcome_manager.welcomeReport.roomfee_list',['uuid'=>session('school.uuid'),'typeid'=>3,'index'=>1]) }}" class="nav-link ">
                 <span class="title">住宿费-未交费</span>
             </a>
         </li>
 		<li class="nav-item">
-            <a href="{{ route('welcome_manager.welcomeReport.roomfee_list',['uuid'=>session('school.uuid'),'typeid'=>2,'index'=>2]) }}" class="nav-link ">
+            <a href="{{ route('welcome_manager.welcomeReport.roomfee_list',['uuid'=>session('school.uuid'),'typeid'=>3,'index'=>2]) }}" class="nav-link ">
                 <span class="title">住宿费-已交费</span>
             </a>
         </li>

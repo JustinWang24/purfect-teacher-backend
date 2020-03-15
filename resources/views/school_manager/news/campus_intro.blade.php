@@ -21,7 +21,7 @@ use App\Utils\UI\Button;
                         <?php
                         Button::Print(['id'=>'btn-create-facility','text'=>trans('general.submit')], Button::TYPE_PRIMARY);
                         ?>
-                    </form>
+                    </form> 
                 </div>
             </div>
         </div>

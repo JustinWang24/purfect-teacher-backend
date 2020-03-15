@@ -403,7 +403,12 @@ Route::prefix('school_manager')->group(function () {
     Route::post('banner/save','BannerController@save')->name('school_manager.banner.save');
     Route::post('banner/load','BannerController@load')->name('school_manager.banner.load');
 
-   // 通知管理
+
+    Route::any('banner/get-type','BannerController@get_type')->name('school_manager.banner.get_type');// 获取分类
+    Route::post('banner/save-banner','BannerController@save_banner')->name('school_manager.banner.save_banner');// 保存数据
+    Route::post('banner/get-banner-one','BannerController@get_banner_one')->name('school_manager.banner.get_banner_one');// 获取数据
+
+  // 通知管理
     Route::prefix('notice')->group(function (){
         // 添加
         Route::get('news-notice','NoticeController@add')
@@ -524,7 +529,7 @@ Route::prefix('school_manager')->group(function () {
             ->name('school_manager.pipeline.save-option');
         Route::post('flows/delete-option','Pipeline\FlowsController@delete_option')
             ->name('school_manager.pipeline.delete-option');
-        Route::post('flows/load-business','Pipeline\FlowsController@load_business')
+        Route::post('flows/load-ausiness','Pipeline\FlowsController@load_business')
             ->name('school_manager.pipeline.load-business');
         Route::post('flows/load-titles','Pipeline\FlowsController@load_titles')
             ->name('school_manager.pipeline.load-titles');

@@ -83,7 +83,13 @@ return [
             'url' => env('APP_URL').'/storage/app/import',
             'visibility' => 'public',
         ],
-
+		// 轮播图图片存储路径
+        'banner' => [
+            'driver' => 'local',
+            'root' => storage_path('app/banner'),
+            'url' => env('APP_URL').'/storage/app/banner',
+            'visibility' => 'public',
+        ],
     ],
 
 ];

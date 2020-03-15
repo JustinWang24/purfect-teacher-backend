@@ -31,3 +31,5 @@ Route::prefix('api_welcome')->middleware('auth:api')->group(function () {
 
 // 迎新指南
 Route::get('/welcome/page-info','\App\Http\Controllers\Api\Welcome\IndexController@page_info');
+Route::post('/welcome/uploadFiles','\App\Http\Controllers\Api\Welcome\IndexController@uploadFiles')->name('uploadFiles');;
+

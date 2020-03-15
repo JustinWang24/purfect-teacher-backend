@@ -198,8 +198,12 @@ export const Constants = {
             STUDENTS_LIST: '/api/Oa/student-list',
             STUDENTS_INFO: '/api/Oa/student-info',
             STUDENTS_UPDATE_INFO: '/api/Oa/update-student-info'
-
-        }
+        },
+        BANNER: {
+          POST_TYPE: '/school_manager/banner/get-type', // 获取基础信息
+          POST_SAVE_BANNER: '/school_manager/banner/save-banner', // 保存信息
+          GET_BANNER_ONE: '/school_manager/banner/get-banner-one', // 获取数据
+        },
     },
     YEARS: ['N.A', '一年级', '二年级', '三年级', '四年级', '五年级', '六年级'],
     TERMS: ['N.A', '第一学期', '第二学期'],
