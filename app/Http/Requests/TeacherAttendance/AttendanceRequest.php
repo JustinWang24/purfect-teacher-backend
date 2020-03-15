@@ -47,7 +47,13 @@ class AttendanceRequest extends MyStandardRequest
     }
 
     /**
-     * [1,2,3]
+     * [1,2,3]//前端不接受这样格式
+     * [
+     *   {
+     *      "id":1,
+     *      "name":""
+     *   }
+     * ]
      * @return mixed
      */
     public function getMenagersData(){
