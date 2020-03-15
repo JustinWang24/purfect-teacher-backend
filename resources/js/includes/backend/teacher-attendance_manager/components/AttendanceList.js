@@ -1,5 +1,5 @@
 import { Mixins } from "../Mixins";
-import { _load_attendance, catchErr } from "../api/index";
+import { _load_attendance,_load_all, catchErr } from "../api/index";
 Vue.component("AttendanceList", {
   template: `
     <div class="attendance-list-container">
@@ -62,15 +62,27 @@ Vue.component("AttendanceList", {
   },
   methods: {
     _record(item) {},
-    _holiday_set (id) {
-      console.log(id)
-      this.SETOPTIONS({ visibleHolidaySet: true });
+    async _holiday_set (attendance_id) {
+      const [err, res] = await catchErr(_load_attendance({ attendance_id }));
+      const exceptiondays = res.exceptiondays.map(({day}) => (day))
+      this.SETOPTIONOBJ({
+        key: "formData",
+        value: {
+          exceptiondays:res.exceptiondays
+        }
+      });
+      this.SETOPTIONS({ visibleHolidaySet: true,attendance_id,exceptiondays });
     },
     async _edit(attendance_id) {
-      this.SETOPTIONS({ visibleFormDrawer: true, isEditFormLoading: true });
+      this.SETOPTIONS({ visibleFormDrawer: true, isEditFormLoading: true,isCreated:false });
+      if(!this.organizations.length) {
+        let [, orgs] = await catchErr(_load_all({ school_id:this.schoolIdx }));
+        // console.log(orgs)
+        this.SETOPTIONS({ organizations: orgs });
+      }
       const [err, res] = await catchErr(_load_attendance({ attendance_id }));
       if (err) return false;
-      const { id, school_id, title, wifi_name, using_afternoon } = res;
+      const { id, school_id, title, wifi_name, using_afternoon, organizations,managers,exceptiondays} = res;
       const formData = {
         attendance: {
           id, //编辑时传递
@@ -79,9 +91,10 @@ Vue.component("AttendanceList", {
           wifi_name,
           using_afternoon: using_afternoon == 1
         },
-        organizations: []
+        organizations,
+        managers,
       };
-      res && this.SETOPTIONS({ formData, isEditFormLoading: false });
+      res && this.SETOPTIONS({ formData, isEditFormLoading: false,isCreated:false,teacherName:"" });
     },
     async _clock_set(attendance_id) {
       this.SETOPTIONS({ visibleClockDrawer: true, isEditFormLoading: true });
