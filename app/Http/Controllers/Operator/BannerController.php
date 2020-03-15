@@ -26,10 +26,7 @@ class BannerController extends Controller
         $this->dataForView['pageTitle'] = '资源位管理';
         $dao = new BannerDao;
         $this->dataForView['data'] = $dao->getBannerBySchoolId($schoolId,$param);
-        $this->dataForView['redactor'] = true;
-        $this->dataForView['js'] = [
-          'school_manager.banner.campus_intro_js'
-        ];
+
         return view('school_manager.banner.index', $this->dataForView);
     }
 

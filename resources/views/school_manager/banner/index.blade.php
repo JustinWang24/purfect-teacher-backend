@@ -124,11 +124,12 @@ use App\Utils\UI\Button;
               <el-cascader style="width: 90%;" v-model="bannerFormInfo.type" :options="typeList" :props="{ checkStrictly: true }" @change="handlechange" clearable></el-cascader>
             </el-form-item>
             <el-form-item :label="isshow1Lable" v-if="isshow1">
-              <el-input style="width: 90%;" v-model="bannerFormInfo.external"  :placeholder="isshow1Placeholder"></el-input>
+              <el-input style="width: 90%;" v-model="bannerFormInfo.external" :placeholder="isshow1Placeholder"></el-input>
             </el-form-item>
             <el-form-item label="内容" v-if="isshow2">
-              <textarea id="content" height="400"></textarea>
+              <textarea id="content" height="400" v-model="bannerFormInfo.content">adfasdfa</textarea>
             </el-form-item>
+
             <el-form-item label="浏览权限">
               <el-switch v-model="bannerFormInfo.public" active-text="只有登录可见" inactive-text="不需要登录">
               </el-switch>

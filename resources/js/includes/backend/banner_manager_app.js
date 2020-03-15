@@ -29,30 +29,13 @@ if(document.getElementById('banner-manager-app')){
                 public : true, // 浏览权限
                 status: true, // 发布状态
               },
-
-              banner:{
-                id:0,
-                schoolId:'',
-                title:'',
-                posit:0,
-                type:0,
-                content:'',
-                external:'', // 跳转到 url
-                image_url:'',
-                sort:1,
-                public:true,
-                status:true,
-              },
-              positions:[],
-              types:[],
-              isLoading: false,
             }
         },
         computed: {
         },
         created(){
           const dom = document.getElementById('app-init-data-holder');
-          this.school_id = dom.dataset.school
+          this.school_id = dom.dataset.school;
         },
         methods: {
           saveFile(response) {
