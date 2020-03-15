@@ -25,6 +25,7 @@ export default new Vuex.Store({
     isTableLoading: false,
     visibleFormDrawer: false,
     formData: {
+      managers:[],
       attendance: {
         id: "", //编辑时传递
         school_id: "",
@@ -33,7 +34,7 @@ export default new Vuex.Store({
         using_afternoon: true //是否启用中午打卡
       },
       organizations: [],
-      managers:[]
+      exceptiondays:[]
     },
     organizations: [],
     isEditFormLoading: false,
@@ -42,6 +43,10 @@ export default new Vuex.Store({
     usingAfternoon:false,
     attendance_id:0,
     visibleHolidaySet:false, //节假日
+    schoolIdx:'',
+    isCreated:false,
+    teacherName:'',
+    exceptiondays:[],//节假日数据
   },
   mutations: {
     SETOPTIONS(state, res) {
