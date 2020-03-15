@@ -36,7 +36,8 @@ use App\Utils\UI\Button;
                         <div class="table-responsive">
                             <table class="table table-striped table-bordered table-hover table-checkable order-column valign-middle">
                                 <tr>
-                                    <th>序号</th>
+                                    <th>ID</th>
+                                    <th>排序</th>
                                     <th>应用</th>
                                     <th>位置</th>
                                     <th>类型</th>
@@ -51,6 +52,10 @@ use App\Utils\UI\Button;
                                 @foreach($data as $val)
                                     <tr>
                                         <td>{{ $val->id }}</td>
+                                        <td>
+                                          <input type="text" class="input-text-c input-text" id="sort_{{ $val->id }}" onblur="sort({{ $val->id }},this.value)"
+                                                 value="{{ $val->sort }}" style="width:100px;height:30px;" name="listorders[{{ $val->id }}]">
+                                        </td>
                                         <td>{{ $val->getAppStr($val->app) }}</td>
                                         <td>{{ $val->getPositStr($val->posit) }}</td>
                                         <td>{{ $val->getTypeStr($val->type) }}</td>
@@ -150,5 +155,11 @@ use App\Utils\UI\Button;
       #school-campus-intro-app {height: 100%;}
     </style>
     <div id="app-init-data-holder" data-school="{{ session('school.id') }}" data-newflow="1"></div>
+    <script>
+      function sort(id,sort) {
+        $.get("{{ route('school_manager.banner.top_banner_sort') }}", { id: id,sort:sort }, function(jsondata) {},'json');
+        window.location.reload();
+      }
+    </script>
 @endsection
 

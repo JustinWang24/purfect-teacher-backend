@@ -11,6 +11,7 @@ use App\Models\Students\StudentProfile;
 use App\Dao\Welcome\Api\WelcomeConfigDao;
 use App\Models\Welcome\Api\WelcomeConfig;
 use App\Models\Welcome\Api\WelcomeUserReport;
+use App\Models\Welcome\WelcomeConfigStep;
 use App\Models\Welcome\WelcomeProject;
 use App\Models\Welcome\WelcomeUserReportsProject;
 
@@ -370,4 +371,26 @@ class WelcomeUserReportDao
         return !empty($data) ? $data->toArray() : [];
     }
 
+
+    /**
+     * Func 获取缴费详情
+     *
+     * @param['school_id']  学校id
+     * @param['flowid']  流程id
+     *
+     * @return array
+     */
+    public function getWelcomeConfigStepOneInfo($school_id = 0, $flowid = 1)
+    {
+      if (!intval($school_id) || !intval($flowid)) {
+        return [];
+      }
+
+      $condition[] = ['school_id', '=', $school_id];
+      $condition[] = ['steps_id', '=', 1];
+
+      $data = WelcomeConfigStep::where($condition)->orderBy('flowid', 'desc')->first();
+
+      return !empty($data) ? $data->toArray() : [];
+    }
 }
