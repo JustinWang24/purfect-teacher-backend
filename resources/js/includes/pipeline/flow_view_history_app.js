@@ -10,7 +10,9 @@ if (document.getElementById('pipeline-flow-view-history-app')) {
         el: '#pipeline-flow-view-history-app',
         data() {
             return {
-                activities: ['办公室','校长室','还有哪里'],
+                textarea: "", // 审批意见
+                dialogVisible: false, // 弹框
+                activities: ['办公室', '校长室', '还有哪里'],
 
                 userUuid: null,
                 actionId: null,
@@ -54,6 +56,14 @@ if (document.getElementById('pipeline-flow-view-history-app')) {
             // this.loadWholeFlow();
         },
         methods: {
+            // 关闭弹框
+            handleClose(done) {
+                this.$confirm('确认关闭？')
+                    .then(_ => {
+                        done();
+                    })
+                    .catch(_ => { });
+            },
             loadWholeFlow: function () {
                 this.isLoading = true;
                 viewApplicationByAction(this.actionId, this.userFlowId).then(res => {

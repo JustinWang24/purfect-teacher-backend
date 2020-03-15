@@ -131,6 +131,17 @@ class OrganizationDao
         }
     }
 
+    public function outputOnlyData(Organization $org){
+        $return = [
+            'id' => $org->id,
+            'name' => $org->name,
+        ];
+        foreach ($org->branch as $branch) {
+            $return['children'][] = $this->outputOnlyData($branch);
+        }
+        return $return;
+    }
+
     public function getByName($schoolId, $name) {
         return Organization::where('school_id', $schoolId)
             ->where('name','like', '%'.$name.'%')

@@ -18,7 +18,9 @@ if (document.getElementById('teacher-assistant-evaluation-app')) {
                 ifShow: false,
                 ifShowNote: false,
                 nodeData: [],
-                stuName: ''
+                stuName: '',
+                course_id: ''
+
             }
         },
         created(){
@@ -43,6 +45,15 @@ if (document.getElementById('teacher-assistant-evaluation-app')) {
                 this.stuName = stuData.name;
                 this.getNodeData(stuData);
             },
+            showText: function (item) {
+              console.log(item)
+              item.ifShow = !item.ifShow;
+              if (item.ifShow) {
+                item.ifText = '收起'
+              } else {
+                item.ifText = '展开'
+              }
+            },
             getTreeData: function () {
                 const url = Util.buildUrl(Constants.API.TEACHER_WEB.SIGN_IN_COURSES);
                 let params = this.filterValue ? JSON.parse(this.filterValue) : '';
@@ -54,7 +65,6 @@ if (document.getElementById('teacher-assistant-evaluation-app')) {
                     });
                     return false
                 }
-                ;
                 axios.post(url, params).then((res) => {
                     if (Util.isAjaxResOk(res)) {
                         let data = res.data.data;
@@ -77,6 +87,7 @@ if (document.getElementById('teacher-assistant-evaluation-app')) {
                                 });
                                 this.data.push(level1Item)
                             })
+                          console.log(this.data)
                         } else {
                             this.data = [];
                             this.$message({
@@ -109,8 +120,10 @@ if (document.getElementById('teacher-assistant-evaluation-app')) {
             getDetailData: function (data) {
                 const url = Util.buildUrl(Constants.API.TEACHER_WEB.SIGN_IN_STUDENTLSIT);
                 let params = this.filterValue ? JSON.parse(this.filterValue) : '';
-                params.course_id = data.id;
+                params.course_id = data.parent.data.id;
                 params.grade_id = data.data.id;
+                this.course_id = data.parent.data.id;
+                console.log(params)
                 axios.post(url, params).then((res) => {
                     if (Util.isAjaxResOk(res)) {
                         let data = res.data.data;
@@ -124,10 +137,16 @@ if (document.getElementById('teacher-assistant-evaluation-app')) {
                 const url = Util.buildUrl(Constants.API.TEACHER_WEB.REMARK_LIST);
                 let params = this.filterValue ? JSON.parse(this.filterValue) : {};
                 params.user_id = data.user_id;
+                params.course_id = this.course_id;
+
                 axios.post(url, params).then((res) => {
                     if (Util.isAjaxResOk(res)) {
                         let data = res.data.data;
                         this.nodeData = data.list;
+                        this.nodeData.forEach(function (item, index) {
+                          item.ifShow = false;
+                          item.ifText = '展开'
+                        })
                     }
                 }).catch((err) => {
                     this.nodeData = [];

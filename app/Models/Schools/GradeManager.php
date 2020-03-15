@@ -22,6 +22,9 @@ class GradeManager extends Model
     const STUDENT = '学生';
     const GROUP = '团支书';
 
+    const ADVISER_0 = 0;  // 不是班主任
+    const ADVISER_1 = 1;  // 是班主任
+
     /**
      * 班长
      */

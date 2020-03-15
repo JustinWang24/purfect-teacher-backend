@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers\Operator\TeacherAttendance;
 
+use App\Dao\Schools\OrganizationDao;
 use App\Dao\TeacherAttendance\AttendanceDao;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\TeacherAttendance\AttendanceRequest;
+use App\Models\Schools\Organization;
 use App\Utils\JsonBuilder;
 use Carbon\Carbon;
 
@@ -30,6 +32,34 @@ class AttendanceController extends Controller
     public function load_attendance(AttendanceRequest $request) {
         $dao = new AttendanceDao();
         $info = $dao->getById($request->get('attendance_id'));
+        $organizationArr = [];
+        $organizationDao = new OrganizationDao();
+        foreach ($info->organizations as $organization) {
+            $nowLevel = $organization->level;
+            $return = [$organization->id];
+            $parentid = $organization->parent_id;
+            while ($nowLevel > 1) {
+                $parent = $organizationDao->getById($parentid);
+                array_unshift($return, $parent->id);
+                $parentid = $parent->parent_id;
+                $nowLevel = $parent->level;
+            }
+            $organizationArr[] = $return;
+        }
+        unset($info->organizations);
+        $info->organizations = $organizationArr;
+
+        $managerArr = [];
+        if (!empty($info->managers)) {
+            foreach ($info->managers as $manager) {
+                $managerArr[] = [
+                    'id' => $manager->user->id,
+                    'name' => $manager->user->name
+                ];
+            }
+        }
+        unset($info->managers);
+        $info->managers = $managerArr;
         return JsonBuilder::Success($info);
     }
 
@@ -37,15 +67,16 @@ class AttendanceController extends Controller
         $dao = new AttendanceDao();
         $attendance = $request->getAttendanceData();
         $organizations = $request->getOrganizationsData();
+        $managers = $request->getMenagersData();
         if(empty($attendance['id'])){
             // 创建
-            $result = $dao->create($attendance, $organizations);
+            $result = $dao->create($attendance, $organizations, $managers);
             return $result->isSuccess() ?
                 JsonBuilder::Success(['id'=>$result->getData()->id]) :
                 JsonBuilder::Error($result->getMessage());
         }else {
             //更新
-            $result = $dao->update($attendance, $organizations);
+            $result = $dao->update($attendance, $organizations, $managers);
             return $result->isSuccess() ?
                 JsonBuilder::Success(['id'=>$result->getData()->id]) :
                 JsonBuilder::Error($result->getMessage());

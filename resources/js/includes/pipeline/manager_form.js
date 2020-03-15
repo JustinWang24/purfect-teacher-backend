@@ -161,15 +161,14 @@ if (document.getElementById('pipeline-flows-manager_form-app')) {
                         value: '',
                         title: '开始时间',
                         title_holder: '开始时间',
-                        title2: '结束时间',
-                        title_holder2: '结束时间',
                         tips: '',
                         tips_holder: '请选择',
                         extra: {
                             text: '',
                             dateType: 2,
                             showPickerS: false,
-                            showPickerE: false
+                            showPickerE: false,
+                            title2: '结束时间',
                         },
                         required: 0,
                         icon: 'el-icon-date'
@@ -226,7 +225,8 @@ if (document.getElementById('pipeline-flows-manager_form-app')) {
                         tips_holder: '',
                         extra: {
                             text: '',
-                            depType: 1
+                            depType: 1,
+                            showPicker: false
                         },
                         required: 0,
                         icon: 'el-icon-house'
@@ -250,8 +250,7 @@ if (document.getElementById('pipeline-flows-manager_form-app')) {
                         name: '说明文字',
                         type: 'node',
                         value: '',
-                        title: '说明文字',
-                        nodeText: '',
+                        title: '',
                         extra: {
                             text: '',
                         },
@@ -302,6 +301,7 @@ if (document.getElementById('pipeline-flows-manager_form-app')) {
                             message: '保存成功',
                             type: 'success'
                         });
+                        window.history.back(-1);
                     } else {
                         this.$message({
                             message: '保存失败',

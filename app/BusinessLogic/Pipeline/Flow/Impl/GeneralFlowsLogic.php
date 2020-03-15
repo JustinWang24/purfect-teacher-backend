@@ -55,16 +55,16 @@ abstract class GeneralFlowsLogic implements IFlowLogic
      * 获取抄送我的流程
      * @return mixed
      */
-    public function copyToMe()
+    public function copyToMe($position = 0)
     {
         $actionDao = new ActionDao();
-        return $actionDao->getFlowsWhichCopyTo($this->user);
+        return $actionDao->getFlowsWhichCopyTo($this->user,$position);
     }
 
-    public function myProcessed()
+    public function myProcessed($position = 0)
     {
         $actionDao = new ActionDao();
-        return $actionDao->getFlowsWhichMyProcessed($this->user);
+        return $actionDao->getFlowsWhichMyProcessed($this->user,$position);
     }
 
     /**
@@ -115,6 +115,8 @@ abstract class GeneralFlowsLogic implements IFlowLogic
             $actionData['node_id'] = $startNode->id;
             $actionData['user_id'] = $this->user->id;
             $actionData['result'] = IAction::RESULT_PASS; // 启动工作没有审核, 直接就是 pass 的状态
+            //@TODO 不启用加急功能
+            $actionData['urgent'] = 0;
 
             $dao = new ActionDao();
             DB::beginTransaction();

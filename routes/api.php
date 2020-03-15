@@ -915,7 +915,9 @@ Route::prefix('Oa')->middleware('auth:api')->group(function () {
     // 修改学生信息
     Route::post('/update-student-info', 'Api\OA\GradeManageController@updateStudentInfo')
         ->name('api.oa.update.student.info');
-
+    // 是否为班主任
+    Route::post('/is-adviser', 'Api\OA\GradeManageController@isAdviser')
+        ->name('api.oa.is.adviser');
 });
 
 

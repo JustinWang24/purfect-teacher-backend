@@ -170,6 +170,9 @@ if (document.getElementById('pipeline-flows-manager-app')) {
                 this.node.organizations = []; // 部门
                 this.node.titles = []; // 角色
                 this.role = 1;
+                if (this.posiType === 2) {
+                    this.organization = 2
+                }
                 this.gettitlesList();
             },
             // 关闭侧边栏
@@ -348,38 +351,68 @@ if (document.getElementById('pipeline-flows-manager-app')) {
             },
             // 设置审批人确定啊按钮 
             setone() {
-                this.node.titles.splice(0, 0, this.approval)
-                this.node.organizations.splice(0, 0, this.section)
-                const obj = {
-                    flow_id: this.returnId,
-                    prev_node: this.prev_node,
-                    node: {
-                        organizations: this.node.organizations, // 组织
-                        titles: this.node.titles
+                if (this.section == '') {
+                    this.$message({
+                        message: '请选择部门',
+                        type: 'error'
+                    });
+
+                } else if (this.approval == '') {
+                    this.$message({
+                        message: '请选择审批人',
+                        type: 'error'
+                    });
+                } else {
+                    this.node.titles.splice(0, 0, this.approval)
+                    if (this.section.length !== 0) {
+                        this.node.organizations.splice(0, 0, this.section)
                     }
+                    const obj = {
+                        flow_id: this.returnId,
+                        prev_node: this.prev_node,
+                        node: {
+                            organizations: this.node.organizations, // 组织
+                            titles: this.node.titles
+                        }
+                    }
+                    axios.post('/school_manager/pipeline/flows/save-node', obj).then((res) => {
+                        if (Util.isAjaxResOk(res)) {
+                            this.handler = res.data.data.nodes.handler
+                            this.node.organizations = []
+                            this.approval = ''
+                            this.section = []
+                            this.$message({
+                                message: '保存成功',
+                                type: 'success'
+                            });
+                        }
+                    }).catch((err) => {
+                        console.log(err)
+                    });
                 }
-                axios.post('/school_manager/pipeline/flows/save-node', obj).then((res) => {
-                    if (Util.isAjaxResOk(res)) {
-                        this.handler = res.data.data.nodes.handler
-                        this.node.organizations = []
-                        this.approval = ''
-                    }
-                }).catch((err) => {
-                    console.log(err)
-                });
             },
             // 保存 --- 是否自动审批
             saveagree() {
-                axios.post('/school_manager/pipeline/flows/save-auto-processed', {
-                    flow_id: this.returnId,
-                    auto_processed: this.agree
-                }).then((res) => {
-                    if (Util.isAjaxResOk(res)) {
-                        console.log(res)
-                    }
-                }).catch((err) => {
-                    console.log(err)
-                });
+                if (this.agree == '') {
+                    this.$message({
+                        message: '请选择是否自动同意',
+                        type: 'error'
+                    });
+                } else {
+                    axios.post('/school_manager/pipeline/flows/save-auto-processed', {
+                        flow_id: this.returnId,
+                        auto_processed: this.agree
+                    }).then((res) => {
+                        if (Util.isAjaxResOk(res)) {
+                            this.$message({
+                                message: '保存成功',
+                                type: 'success'
+                            });
+                        }
+                    }).catch((err) => {
+                        console.log(err)
+                    });
+                }
             },
             // 联想teacher
             selectMember: function (payload) {
@@ -393,16 +426,29 @@ if (document.getElementById('pipeline-flows-manager-app')) {
             },
             // 保存所有选中的老师
             savecopy() {
-                axios.post('/school_manager/pipeline/flows/save-copy', {
-                    flow_id: this.returnId,
-                    users: this.teachers
-                }).then((res) => {
-                    if (Util.isAjaxResOk(res)) {
-                        this.copy = res.data.data.copy
-                    }
-                }).catch((err) => {
-                    console.log(err)
-                });
+                if (this.teachers == '') {
+                    this.$message({
+                        message: '请选择抄送人',
+                        type: 'error'
+                    });
+                } else {
+                    axios.post('/school_manager/pipeline/flows/save-copy', {
+                        flow_id: this.returnId,
+                        users: this.teachers
+                    }).then((res) => {
+                        if (Util.isAjaxResOk(res)) {
+                            this.copy = res.data.data.copy
+                            this.teacher = ''
+                            this.members = []
+                            this.$message({
+                                message: '保存成功',
+                                type: 'success'
+                            });
+                        }
+                    }).catch((err) => {
+                        console.log(err)
+                    });
+                }
             },
 
             // 右侧编辑时侧边栏的保存按钮

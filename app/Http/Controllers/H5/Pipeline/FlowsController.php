@@ -61,6 +61,9 @@ class FlowsController extends Controller
         $this->dataForView['pageTitle'] = '待我审批';
         $user = $request->user('api');
         if ($user) {
+            $logic = FlowLogicFactory::GetInstance($user);
+            $position = $request->get('position', 0);
+            $this->dataForView['list'] = $logic->waitingForMe($position);
             $this->dataForView['user'] = $user;
             $this->dataForView['api_token'] = $request->get('api_token');
             return view('h5_apps.pipeline.flow_waiting_for_me', $this->dataForView);
@@ -72,6 +75,9 @@ class FlowsController extends Controller
         $this->dataForView['pageTitle'] = '我审批的';
         $user = $request->user('api');
         if ($user) {
+            $logic = FlowLogicFactory::GetInstance($user);
+            $position = $request->get('position', 0);
+            $this->dataForView['list'] = $logic->myProcessed($position);
             $this->dataForView['user'] = $user;
             $this->dataForView['api_token'] = $request->get('api_token');
             return view('h5_apps.pipeline.flow_my_processed', $this->dataForView);
@@ -83,6 +89,9 @@ class FlowsController extends Controller
         $this->dataForView['pageTitle'] = '抄送我的';
         $user = $request->user('api');
         if ($user) {
+            $logic = FlowLogicFactory::GetInstance($user);
+            $position = $request->get('position', 0);
+            $this->dataForView['list'] = $logic->copyToMe($position);
             $this->dataForView['user'] = $user;
             $this->dataForView['api_token'] = $request->get('api_token');
             return view('h5_apps.pipeline.flow_copy_to_me', $this->dataForView);
@@ -164,6 +173,7 @@ class FlowsController extends Controller
                     'value' => ActionOption::where('action_id', $startUserAction->id)->where('option_id', $option['id'])->value('value')
                 ];
             }
+            $this->dataForView['flowInfo'] = $flowInfo;
             $this->dataForView['handlers'] = $handlers;
             $this->dataForView['options'] = $optionReList;
             $this->dataForView['copys'] = $flowInfo['copy'];

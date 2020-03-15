@@ -21,7 +21,7 @@ use App\Utils\Misc\ConfigurationTool;
             <p class="bottom_title">校园新闻</p>
             <div style="overflow:auto;height: 675px;">
                 <div class="bottom_first_content" v-for="item in newsList" :key="item.id">
-                    <img :src="item.image" alt="" :οnerrοr="item.image_url" class="bottom_first_content_img">
+                    <img v-if="item.image" :src="item.image" alt="" :οnerrοr="item.image_url" class="bottom_first_content_img">
                     <div class="bottom_first_content_right">
                         <p class="bottom_first_content_title">@{{ item.title }}</p>
                         <p class="bottom_first_content_detail">@{{ item.title }}</p>
@@ -33,6 +33,7 @@ use App\Utils\Misc\ConfigurationTool;
         <div class="bottom_second">
             <div class="bottom_second_calendar">
                 <p class="bottom_title">校历</p>
+                <!-- <el-calendar v-model="calendar"></el-calendar> -->
             </div>
             <div class="bottom_second_plan">
                 <div class="bottom_title bottom_title_span">校园安排<span @click="drawer = true" style="cursor: pointer">历史安排 ></span></div>

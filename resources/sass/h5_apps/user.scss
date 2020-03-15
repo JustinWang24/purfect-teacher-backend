@@ -1,89 +1,162 @@
 @import "basic";
-
 @import "student_registration_app";
 
 // Pipeline
-.pipeline-user-flow-box{
+.pipeline-user-flow-box {
   margin-bottom: 15px;
   cursor: pointer;
 }
-.user-view-flow-history-steps{
-  ul{
-    padding-left:0;
+
+.user-view-flow-history-steps {
+  ul {
+    padding-left: 0;
   }
 }
+
 // Pipeline end
 
 // 课程表
-.tools-wrap{
+.tools-wrap {
   list-style: none;
-  .tool-item{
-    p{
-      a{
+  .tool-item {
+    p {
+      a {
         color: #0c0c0c;
         text-decoration: none;
       }
     }
   }
 }
-.the-avatar-big{
+
+.the-avatar-big {
   border-radius: 50%;
   width: 80px;
 }
-.lesson-summary{
+
+.lesson-summary {
 
 }
-.rate-box{
+
+.rate-box {
   text-align: center;
 }
+
 // 课程表 结束
 
-
-.showMoreButton{
-  background:-webkit-linear-gradient(to right, #66D9FF, #4EA5FE) !important;
-  background:linear-gradient(to right,#66D9FF,#4EA5FE) !important;
+.showMoreButton {
+  background: -webkit-linear-gradient(to right, #66D9FF, #4EA5FE) !important;
+  background: linear-gradient(to right, #66D9FF, #4EA5FE) !important;
   border: none !important;
   padding: 8px 60px !important;
 }
 
-.el-form-item__label{
+.el-form-item__label {
   text-align: left !important;
   font-size: 13px !important;
 }
-.el-input--mini .el-input__inner{
-  border:none !important;
+
+.el-input--mini .el-input__inner {
+  border: none !important;
   text-align: right !important;
 }
-.el-form-item{
+
+.el-form-item {
   margin-bottom: 0 !important;
   border-bottom: solid 1px $borderColor;
 }
-.no-border-bottom{
+
+.no-border-bottom {
   border-bottom: none;
 }
+
 .el-drawer.ltr, .el-drawer.rtl, .el-drawer__container {
   overflow: scroll;
 }
-.for-mobile-alert{
+
+.for-mobile-alert {
   max-width: 360px !important;
 }
 
-.el-form-item__error{
+.el-form-item__error {
   z-index: 199;
 }
 
+.clearfix:before, .clearfix:after {
+  content: "";
+  display: block;
+  visibility: hidden;
+  clear: both;
+  height: 0;
+}
+
+
 #pipeline-flow-open-app {
-    .van-cell {
-        padding: 8px 16px;
-    }
-    .el-timeline {
-        background: white;
-        padding: 20px;
-    }
-    .fromItem {
-        margin-bottom: 5px;
-    }
-    .van-checkbox {
-        margin-bottom: 5px;
-    }
+  .van-cell {
+    padding: 8px 16px;
+  }
+  .el-timeline {
+    background: white;
+    padding: 20px;
+  }
+  .fromItem {
+    margin-bottom: 5px;
+  }
+  .van-checkbox {
+    margin-bottom: 5px;
+  }
+  input.van-field__control {
+    text-align: right;
+  }
+  .van-action-sheet {
+    height: 80%;
+  }
+  //.picker-content {
+  //  min-height: 100%;
+  //}
+  .van-action-sheet__cancel {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    z-index: 10000;
+  }
+  .van-action-sheet__content {
+    height: 80%;
+    overflow-y:auto;
+  }
+  .partGroup {
+    //display: flex;
+    //flex-wrap: wrap;
+    //justify-content: space-around;
+    //align-content: space-around;
+    //align-items: flex-start;
+    //margin-bottom: 10px;
+    padding: 10px;
+  }
+  .partItem {
+    float: left;
+    width: 32%;
+    margin-right: 2%;
+    height: 42px;
+    line-height: 42px;
+    box-sizing: border-box;
+    background: #f6f6f6;
+    border: none;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    text-align: center;
+    font-size: 14px;
+  }
+  .partItem:nth-child(3n) {
+    margin-right: 0;
+  }
+  .part-active {
+    background: #e8f4ff;
+    color: #7ebdfe;
+    border: 1px solid #c4e1ff;
+  }
+  .partListItem {
+    line-height: 40px;
+    border-bottom: 1px solid #CCCCCC;
+    text-indent: 15px;
+  }
 }

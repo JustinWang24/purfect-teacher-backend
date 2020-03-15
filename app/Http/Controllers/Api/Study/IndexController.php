@@ -308,11 +308,19 @@ class IndexController extends Controller
      */
     public function deleteMaterial(MyStandardRequest $request) {
         $materialId = $request->get('material_id');
+        $user = $request->user();
+
+        if($user->isStudent()) {
+            return JsonBuilder::Error('学生不能删除');
+        }
+
+
         if(is_null($materialId)) {
             return JsonBuilder::Error('缺少参数');
         }
         $dao = new LectureDao();
-        $result = $dao->deleteMaterial($materialId);
+        $result = $dao->deleteMaterial($materialId, $user);
+
         if($result->isSuccess()) {
             return JsonBuilder::Success($result->getMessage());
         } else {

@@ -5,6 +5,7 @@ namespace App\Dao\TeacherAttendance;
 use App\Models\TeacherAttendance\Attendance;
 use App\Models\TeacherAttendance\Clockset;
 use App\Models\TeacherAttendance\ExceptionDay;
+use App\Models\TeacherAttendance\Managers;
 use App\Models\TeacherAttendance\Organization;
 use App\Models\Users\UserOrganization;
 use App\Utils\JsonBuilder;
@@ -77,7 +78,7 @@ class AttendanceDao
             return $bag;
         }
     }
-    public function create($data, $organizations) {
+    public function create($data, $organizations, $managers = []) {
         $bag = new MessageBag(JsonBuilder::CODE_ERROR);
         DB::beginTransaction();
         try{
@@ -89,6 +90,15 @@ class AttendanceDao
                     'organization_id' => end($organization)
                 ]);
             }
+            //创建管理员
+            if (!empty($managers)) {
+                foreach ($managers as $manager) {
+                    Managers::create([
+                        'teacher_attendance_id' => $attendance->id,
+                        'user_id' => $manager['id']
+                    ]);
+                }
+            }
             DB::commit();
             $bag->setCode(JsonBuilder::CODE_SUCCESS);
             $bag->setData($attendance);
@@ -99,7 +109,7 @@ class AttendanceDao
             return $bag;
         }
     }
-    public function update($data, $organizations) {
+    public function update($data, $organizations, $managers = []) {
         $bag = new MessageBag(JsonBuilder::CODE_ERROR);
         DB::beginTransaction();
         try{
@@ -116,6 +126,17 @@ class AttendanceDao
                     'organization_id' => end($organization)
                 ]);
             }
+            //更新管理员
+            Managers::where('teacher_attendance_id', $attendance->id)->delete();
+            if (!empty($managers)) {
+                foreach ($managers as $manager) {
+                    Managers::create([
+                        'teacher_attendance_id' => $attendance->id,
+                        'user_id' => $manager['id']
+                    ]);
+                }
+            }
+
             DB::commit();
             $bag->setCode(JsonBuilder::CODE_SUCCESS);
             $bag->setData($attendance);
@@ -130,6 +151,7 @@ class AttendanceDao
         return Attendance::with('clocksets')
             ->with('exceptiondays')
             ->with('organizations')
+            ->with('managers')
             ->where('id', $id)->first();
     }
     public function deleteExceptionday($id) {
@@ -185,6 +207,13 @@ class AttendanceDao
     {
         return Attendance::whereHas('organizations', function ($query) use ($organizationIdArr) {
             $query->whereIn('organizations.id', $organizationIdArr);
+        })->where('school_id', $school_id)->get();
+    }
+
+    public function getListByManagerId($userId, $school_id)
+    {
+        return Attendance::whereHas('managers', function ($query) use($userId) {
+            $query->where('user_id', $userId);
         })->where('school_id', $school_id)->get();
     }
 

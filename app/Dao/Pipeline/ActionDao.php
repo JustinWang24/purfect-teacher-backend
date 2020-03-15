@@ -142,7 +142,7 @@ class ActionDao
                     $actionOptionData = [
                         'action_id' => $action->id,
                         'option_id' => $option['id'],
-                        'value' => $option['value'],
+                        'value' => is_string($option['value']) ? $option['value'] : json_encode($option['value']),
                     ];
                     ActionOption::create($actionOptionData);
                 }
@@ -194,12 +194,23 @@ class ActionDao
      * @param $user
      * @return mixed
      */
-    public function getFlowsWhichCopyTo($user){
-        return UserFlow::whereHas('copys', function ($query) use ($user) {
+    public function getFlowsWhichCopyTo($user, $position = 0){
+        if (!$position) {
+            return UserFlow::whereHas('copys', function ($query) use ($user) {
                 $query->where('user_id', $user->id);
             })->with('flow')
-            ->orderBy('id','desc')
-            ->get();
+                ->orderBy('id','desc')
+                ->get();
+        }else {
+            $flowIdArr = Flow::whereIn('type', array_keys(Flow::getTypesByPosition($position)))->pluck('id')->toArray();
+            return UserFlow::whereHas('copys', function ($query) use ($user) {
+                $query->where('user_id', $user->id);
+            })->with('flow')
+                ->whereIn('flow_id', $flowIdArr)
+                ->orderBy('id','desc')
+                ->get();
+        }
+
     }
 
     /**
@@ -207,12 +218,22 @@ class ActionDao
      * @param $user
      * @return mixed
      */
-    public function getFlowsWhichMyProcessed($user){
-        return UserFlow::whereHas('actions', function ($query) use ($user) {
-            $query->where('user_id', $user->id)->where('result', '>', IAction::RESULT_PENDING);
-        })->with('flow')
-            ->orderBy('id','desc')
-            ->get();
+    public function getFlowsWhichMyProcessed($user, $position = 0){
+        if (!$position) {
+            return UserFlow::whereHas('actions', function ($query) use ($user) {
+              $query->where('user_id', $user->id)->where('result', '>', IAction::RESULT_PENDING);
+            })->with('flow')
+              ->orderBy('id','desc')
+              ->get();
+        }else {
+            $flowIdArr = Flow::whereIn('type', array_keys(Flow::getTypesByPosition($position)))->pluck('id')->toArray();
+            return UserFlow::whereHas('actions', function ($query) use ($user) {
+              $query->where('user_id', $user->id)->where('result', '>', IAction::RESULT_PENDING);
+            })->with('flow')
+                ->whereIn('flow_id', $flowIdArr)
+                ->orderBy('id','desc')
+                ->get();
+        }
     }
 
     /**

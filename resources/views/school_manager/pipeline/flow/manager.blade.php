@@ -90,9 +90,9 @@
                                     <el-button size="mini" @click="approver" ref="approver" href="{{ route('school_manager.pipeline.flows-handler') }}">设置抄送人</el-button>
                                 </el-button-group>
                             </p>
-                            <p v-if="copy.length > 0" v-for="(item,index) in copy" :key="item.user_id">
-                                @{{ item.name }}
-                            </p>
+                            <span v-if="copy.length > 0" v-for="(item,index) in copy" :key="item.user_id">
+                                @{{ item.name }}；
+                            </span>
                         </el-timeline-item>
                     </el-timeline>
                 </div>

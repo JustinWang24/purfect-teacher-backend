@@ -15,12 +15,16 @@ Route::get('/', function () {
     return view('auth.login');
 });
 
+
+
 /**
  * 无须登录的前端页面路由
  */
 // 招生相关
 Route::prefix('statics')->group(function () {
     Route::get('/school/majors/list', 'Statics\PagesController@school_majors_list')->name('static.school.majors-list');
+    // 教师端-我的-管理系统
+    Route::get('management/system', 'Statics\PagesController@system')->name('static.management.system');
 });
 Route::prefix('static')->group(function () {
     // 报名须知页面
@@ -55,7 +59,7 @@ Route::prefix('h5')->group(function () {
     Route::any('/flow/user/copy-to-me', 'H5\Pipeline\FlowsController@copy_to_me')
         ->name('h5.flow.user.copy-to-me');
     // 用户查看自己审批的流程列表
-    Route::any('/flow/user/cc', 'H5\Pipeline\FlowsController@my_processed')
+    Route::any('/flow/user/my-processed', 'H5\Pipeline\FlowsController@my_processed')
         ->name('h5.flow.user.my-processed');
 
     // 学生查看自己今天的课表
@@ -120,5 +124,6 @@ Route::prefix('pipeline')->group(function () {
     Route::get('c','Teacher\Pipeline\FlowsController@open')
         ->name('student.pipeline.flow-open');
 });
+
 
 
