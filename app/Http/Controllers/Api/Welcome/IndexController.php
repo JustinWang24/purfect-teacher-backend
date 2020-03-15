@@ -10,6 +10,9 @@ namespace App\Http\Controllers\Api\Welcome;
 use App\Dao\Welcome\Api\WelcomeConfigDao;
 use App\Dao\Welcome\Api\WelcomeUserReportDao;
 
+use App\Http\Requests\MyStandardRequest;
+use App\Models\OA\InternalMessage;
+use Illuminate\Http\Request;
 use Psy\Util\Json;
 use App\Utils\JsonBuilder;
 use App\Http\Controllers\Controller;
@@ -17,11 +20,47 @@ use App\Http\Requests\Api\Welcome\IndexRequest;
 use App\Models\Notices\AppProposalImage;
 use Illuminate\Support\Facades\DB;
 use Ramsey\Uuid\Uuid;
+use Illuminate\Support\Facades\Storage;
 
 class IndexController extends Controller
 {
 
+  /**
+   * 上传图片
+   * @param IndexRequest $request
+   * @return string
+   */
+  public function uploadFiles(IndexRequest $request)
+  {
+    $files = $request->file('file');
+    $infos = [];
+    if ($files) {
+      $infos['name'] = $files->getClientOriginalName();
+      $infos['type'] = $files->extension();
+      $infos['size'] = getFileSize($files->getSize());
+      $ext = $files->getClientOriginalExtension();
+      $fileName = date('Y-m-d').'-'.rand(10000,99999).'.'.$ext;
+      $uploadResult = Storage::disk('banner')->put($fileName, file_get_contents($files->getRealPath()));
+      $infos[ 'path' ] = '/app/banner/'.$fileName;
+    }
+    return JsonBuilder::Success($infos);
+  }
 
+  /**
+   * Func 获取下载地址
+   *
+   * @param Request $request
+   * @param['token'] 是  token
+   *
+   * @return Json
+   */
+  public function download(Request $request)
+  {
+    $sid = (Int)$request->input('sid', '');
+    if (!$sid) return;
+    $infos = DB::table('versions')->where('sid','=',$sid)->first();
+    return response()->download(storage_path($infos->version_downurl));
+  }
     /**
      * Func 迎新首页
      * @param Request $request
