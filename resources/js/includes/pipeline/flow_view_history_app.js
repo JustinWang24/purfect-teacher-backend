@@ -4,7 +4,9 @@
 import { processAction, viewApplicationByAction } from "../../common/flow";
 import { Constants } from "../../common/constants";
 import { Util } from "../../common/utils";
-
+import { Dialog } from 'element-ui';
+import Axios from "axios";
+Vue.use(Dialog);
 if (document.getElementById('pipeline-flow-view-history-app')) {
     new Vue({
         el: '#pipeline-flow-view-history-app',
@@ -13,6 +15,12 @@ if (document.getElementById('pipeline-flow-view-history-app')) {
                 textarea: "", // 审批意见
                 dialogVisible: false, // 弹框
                 activities: ['办公室', '校长室', '还有哪里'],
+                action1: {
+                    id: null, //action.id
+                    result: "3", //3=同意 5=驳回
+                    content: "dddd", //审批意见
+                    urgent: false //是否加急
+                },
 
                 userUuid: null,
                 actionId: null,
@@ -56,13 +64,20 @@ if (document.getElementById('pipeline-flow-view-history-app')) {
             // this.loadWholeFlow();
         },
         methods: {
-            // 关闭弹框
-            handleClose(done) {
-                this.$confirm('确认关闭？')
-                    .then(_ => {
-                        done();
-                    })
-                    .catch(_ => { });
+            // 审批按钮
+            button(result) {
+                this.action1 = {
+                    id: this.actionId, //action.id
+                    result: result, //3=同意 5=驳回
+                    content: this.textarea, //审批意见
+                    urgent: false //是否加急
+                },
+                axios.post('/api/pipeline/flow/process', {action: this.action1}
+                ).then(res => {
+                    console.log(res)
+                }).catch(err => {
+                    console.log(err)
+                })
             },
             loadWholeFlow: function () {
                 this.isLoading = true;
