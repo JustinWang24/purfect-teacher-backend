@@ -118,21 +118,6 @@ class BannerController extends Controller
       }
     }
 
-
-
-    /**
-     * Func 上传图片
-     * @param BannerRequest $request
-     * @return string
-     */
-    public function upload_bannner(BannerRequest $request)
-    {echo 123;
-    }
-  /////////////////////////////////////////////////////
-
-
-
-
     /**
      * @param BannerRequest $request
      * @return string
@@ -158,5 +143,18 @@ class BannerController extends Controller
         return redirect()->route('school_manager.banner.list');
     }
 
-
+    /**
+     * Func 排序
+     * @param $request
+     * @return view
+     */
+    public function top_banner_sort(BannerRequest $request){
+      $id = (Int)$request->get('id', 0);
+      $sort = (Int)$request->get('sort', 1000);
+      if ($id && $sort) {
+        $data['id'] = $id;
+        $data['sort'] = $sort;
+        (new BannerDao())->update($data);
+      }
+    }
 }

@@ -26,8 +26,9 @@ class BannerDao
         $condition[] = ['status', '=', (Int)$param['status']];
       }
       return Banner::where('school_id', $schoolId)->where($condition)
-        ->orderBy('posit', 'asc')
+        ->orderBy('app', 'asc')
         ->orderBy('sort', 'asc')
+        ->orderBy('id', 'desc')
         ->paginate(ConfigurationTool::DEFAULT_PAGE_SIZE);
     }
 
