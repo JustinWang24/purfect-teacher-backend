@@ -8,11 +8,11 @@
         </p>
     </div>
     <div class="main p-15">
-        <div class="pipeline-user-flow-box">
-            @foreach($list as $item)
-            <el-card shadow="hover" class="pb-3" @click="viewMyApplication({{ $item->userFlow }})">
+        @foreach($list as $item)
+        <div class="pipeline-user-flow-box" @click="viewMyApplication({{ $item->userFlow }})">
+            <el-card shadow="hover" class="pb-3">
                 <div style="display: flex;align-items: center;">
-                    <img src="@if(isset($item->user->profile->avatar)){{ $item->user->profile->avatar }}@endif" width="40">
+                    <img src="@if(isset($item->user->profile->avatar)){{ $item->user->profile->avatar }}@endif" style="border-radius: 50%;width: 40px;height: 40px;">
                     <h3 style="margin-left: 20px;flex: 4;">
                         <p style="line-height: 0;display: flex;justify-content: space-between;">
                             <span>{{ $item->user->name }}的{{ $item->flow->name }}申请</span>
@@ -22,13 +22,13 @@
                                 @if ($item->done == \App\Utils\Pipeline\IUserFlow::TERMINATED) 被拒绝 @endif
                             </span>
                         </p>
-                        <p style="font-size: 13px;color: #999;margin: 0">类型：{{ $item->flow->name }}</p>
-                        <time style="font-size: 13px;color: #999;">{{ substr($item->created_at, 0, 16) }}</time>
+                        <p style="font-size: 13px;color: #ABABAB;margin: 0">类型：{{ $item->flow->name }}</p>
+                        <time style="font-size: 13px;color: #ABABAB;">{{ substr($item->created_at, 0, 16) }}</time>
                     </h3>
                 </div>
             </el-card>
-            @endforeach
         </div>
+        @endforeach
     </div>
 </div>
 @endsection
