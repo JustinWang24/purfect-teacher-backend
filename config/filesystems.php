@@ -86,8 +86,8 @@ return [
 		// 轮播图图片存储路径
         'banner' => [
             'driver' => 'local',
-            'root' => storage_path('app/banner'),
-            'url' => env('APP_URL').'/storage/app/banner',
+            'root' => storage_path('app/public/banner'),
+            'url' => env('APP_URL').'/storage/public/banner',
             'visibility' => 'public',
         ],
     ],
