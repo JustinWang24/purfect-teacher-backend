@@ -45,7 +45,7 @@ Vue.component("AttendanceForm", {
     </div>
     </el-form-item>
      <Organization/>
-     <ManagerMent />
+     <ManagerMent ref="managerMent" />
     </el-form>
     <div class="btn-create">
         <el-button  @click="_add()" :loading="isLoading" type="primary" size="mini">保存</el-button>
@@ -87,7 +87,7 @@ Vue.component("AttendanceForm", {
         ],
         organizations: [{ required: true, message: "请选择考勤部门" }],
         managers:[
-          { required: true, message: "请选择管理员", trigger: "blur" }
+          { required: true, message: "请选择管理员" }
         ],
       }
     };

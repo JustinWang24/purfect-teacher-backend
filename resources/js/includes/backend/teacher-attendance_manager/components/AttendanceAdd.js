@@ -14,14 +14,16 @@ Vue.component("AttendanceAdd", {
       const formData = {
         attendance: {
           id: "", //编辑时传递
-          school_id,
+          school_id:this.schoolIdx,
           title: "",
           wifi_name: "",
           using_afternoon: true //是否启用中午打卡
         },
-        organizations: []
+        organizations: [],
+        managers:[],
+        exceptiondays:[]
       };
-      this.SETOPTIONS({ formData, organizations: [] });
+      this.SETOPTIONS({ formData, organizations: [],isCreated:true ,teacherName:''});
       this.SETOPTIONS({ visibleFormDrawer: true, isEditFormLoading: false });
     }
   }
