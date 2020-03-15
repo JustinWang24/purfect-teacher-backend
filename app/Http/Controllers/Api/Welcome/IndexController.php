@@ -41,10 +41,11 @@ class IndexController extends Controller
       $ext = $files->getClientOriginalExtension();
       $fileName = date('Y-m-d').'-'.rand(10000,99999).'.'.$ext;
       $uploadResult = Storage::disk('banner')->put($fileName, file_get_contents($files->getRealPath()));
-      $infos[ 'path' ] = '/app/banner/'.$fileName;
+      $infos[ 'path' ] = '/storage/banner/'.$fileName;
     }
     return JsonBuilder::Success($infos);
   }
+
 
   /**
    * Func 获取下载地址

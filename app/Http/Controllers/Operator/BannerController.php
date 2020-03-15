@@ -78,6 +78,8 @@ class BannerController extends Controller
       $public = (Int)$request->input('public', 1); // 是否需要登录才可看到
       $status = (Int)$request->input('status',1); // 状态
 
+      $image_url = parse_url($image_url)['path'];
+
       // 验证字段值
       if (!$image_url) {
         return JsonBuilder::Error('请上传图片');
