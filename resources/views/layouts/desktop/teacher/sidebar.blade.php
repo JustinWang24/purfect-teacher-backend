@@ -62,6 +62,8 @@ $teacher = \Illuminate\Support\Facades\Auth::user();
                         <span class="arrow nav-toggle"></span>
                     </a>
                     <ul class="sub-menu">
+                        @include('layouts.desktop.elements.submenu_selected',['routeName'=>'teacher.ly.assistant.course','name'=>'课程表'])
+                        @include('layouts.desktop.elements.submenu_selected',['routeName'=>'teacher.ly.assistant.material','name'=>'教学资料'])
                         @include('layouts.desktop.elements.submenu_selected',['routeName'=>'teacher.ly.assistant.check-in','name'=>'签到'])
                         @include('layouts.desktop.elements.submenu_selected',['routeName'=>'teacher.ly.assistant.evaluation','name'=>'评分'])
                         @include('layouts.desktop.elements.submenu_selected',['routeName'=>'teacher.ly.assistant.electives','name'=>'选课'])
