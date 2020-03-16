@@ -2,9 +2,8 @@
 
 namespace App\Http\Controllers\Operator;
 
-use App\Dao\Schools\GradeDao;
-use Carbon\Carbon;
 use App\Utils\JsonBuilder;
+use App\Dao\Schools\GradeDao;
 use App\Dao\Schools\CampusDao;
 use App\Utils\Files\HtmlToCsv;
 use App\Dao\Users\GradeUserDao;
@@ -115,6 +114,7 @@ class TextbookController extends Controller
         $this->dataForView['gradeUser'] = $gradeInfo;
         $this->dataForView['textbooks'] = $info;
         $this->dataForView['year'] = $year;
+        $this->dataForView['uuid'] = $gradeInfo->grade_id;
         return view('teacher.textbook.user.edit',$this->dataForView);
     }
 
