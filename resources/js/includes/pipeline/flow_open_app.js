@@ -60,13 +60,18 @@ if (document.getElementById('pipeline-flow-open-app')) {
             let data = res.data.data;
             // console.log(data)
             this.formList = data.options;
-            // this.formList.forEach(function(item, index) {
-            //     item.value = '';
-            // });
+            this.formList.forEach((item, index) => {
+              if (item.type == 'input' || item.type == 'textarea' || item.type == 'number') {
+                this.$set(item, 'value', '')
+              }
+            });
             // console.log(this.formList)
           }
         }).catch((err) => {
-
+          this.$message({
+            message: '获取表单信息失败',
+            type: 'warning'
+          });
         });
       },
       onSubmit() {
@@ -125,13 +130,46 @@ if (document.getElementById('pipeline-flow-open-app')) {
       },
       onConfirmS(item) {
         item.valueS = this.setTime(item.timeS, item.extra.dateType);
-        item.value = item.valueS + item.valueE ? item.valueE : '';
+
+        if (item.timeS > item.timeE) {
+          item.timeE = item.timeS
+          item.valueE = item.valueS
+        }
+
+        item.value = item.valueS + (item.valueE ? ' ~ ' + item.valueE : '');
+        console.log(item.valueE ? item.valueE : '')
+        console.log(item, item.value)
         item.extra.showPickerS = false;
       },
       onConfirmE(item) {
         item.valueE = this.setTime(item.timeE, item.extra.dateType);
-        item.value = item.valueS ? item.valueS : '' + item.valueE;
+
+        if (item.timeE < item.timeS) {
+          item.timeS = item.timeE
+          item.valueS = item.valueE
+        }
+
+        item.value = (item.valueS ? item.valueS + ' ~ ' : '') + item.valueE;
+        console.log(item, item.value)
         item.extra.showPickerE = false;
+      },
+      showPicker(item) {
+        item.extra.showPicker = true;
+        if (!item.value) {
+          item.time = new Date();
+        }
+      },
+      showPickerStart(item) {
+        item.extra.showPickerS = true;
+        if (!item.timeS) {
+          item.timeS = new Date();
+        }
+      },
+      showPickerEnd(item) {
+        item.extra.showPickerE = true;
+        if (!item.timeE) {
+          item.timeE = new Date();
+        }
       },
       setTime(time, type) {
         let year = time.getFullYear();
@@ -173,7 +211,7 @@ if (document.getElementById('pipeline-flow-open-app')) {
       },
       showDepart(item) {
         // if (this.part.length == 0 || item.value) {
-          this.getPart()
+        this.getPart()
         // }
         item.extra.showPicker = true;
         item.cancelText = '下一步';
@@ -228,9 +266,9 @@ if (document.getElementById('pipeline-flow-open-app')) {
               });
               item.active = true;
             } else if (data.organ.length == 0) {
-              if (type == 1) {
+              if (type == 2) {
                 this.selectParts[0] = item;
-              } else if (type == 2) {
+              } else if (type == 1) {
                 let noPart = true;
                 this.selectParts.forEach((part, index) => {
                   if (part.id == item.id) {

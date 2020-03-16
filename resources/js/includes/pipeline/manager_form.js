@@ -66,8 +66,8 @@ if (document.getElementById('pipeline-flows-manager_form-app')) {
                         name: '多行输入框',
                         type: 'textarea',
                         value: '',
-                        title: '标题',
-                        tips: '提示',
+                        title: '多行输入框',
+                        tips: '请输入内容',
                         extra: {
                             text: '用户申请时填写的内容最多可填写200个字'
                         },

@@ -16,38 +16,13 @@
                     <div class="content-head" v-html="item.name"></div>
                     <div class="content-body">
                         <el-upload
-                                action="#"
+                                class="avatar-uploader"
+                                action="##"
                                 list-type="picture-card"
-                                :auto-upload="false">
-                            <i slot="default" class="el-icon-plus"></i>
-                            <div slot="file" slot-scope="{file}">
-                                <img
-                                        class="el-upload-list__item-thumbnail"
-                                        :src="file.url" alt=""
-                                >
-                                <span class="el-upload-list__item-actions">
-                                <span
-                                        class="el-upload-list__item-preview"
-                                        @click="handlePictureCardPreview(file)"
-                                >
-                                  <i class="el-icon-zoom-in"></i>
-                                </span>
-                                <span
-                                        v-if="!disabled"
-                                        class="el-upload-list__item-delete"
-                                        @click="handleDownload(file)"
-                                >
-                                  <i class="el-icon-download"></i>
-                                </span>
-                                <span
-                                        v-if="!disabled"
-                                        class="el-upload-list__item-delete"
-                                        @click="handleRemove(file)"
-                                >
-                                  <i class="el-icon-delete"></i>
-                                </span>
-                              </span>
-                            </div>
+                                :file-list="item.image"
+                                with-credentials
+                                :on-progress="upload">
+                            <i class="el-icon-plus avatar-uploader-icon"></i>
                         </el-upload>
                     </div>
                 </div>

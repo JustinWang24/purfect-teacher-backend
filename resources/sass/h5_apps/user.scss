@@ -89,7 +89,6 @@
   height: 0;
 }
 
-
 #pipeline-flow-open-app {
   .van-cell {
     padding: 8px 16px;
@@ -103,6 +102,34 @@
   }
   .van-checkbox {
     margin-bottom: 5px;
+  }
+  .van-radio {
+    margin-bottom: 5px;
+  }
+  .myRadio {
+    position: relative;
+    .myTips {
+      position: absolute;
+      right: 16px;
+      top: 10px;
+      color: #969799;
+      z-index: 100;
+      font-size: 14px;
+    }
+    .van-field__label {
+      max-width: 200px;
+    }
+    .van-cell {
+      flex-direction: column;
+    }
+    .van-cell__value {
+      padding: 10px 0 0 20px;
+    }
+  }
+  .myNode {
+    .van-field__control {
+      color: #4EA5FE !important;
+    }
   }
   input.van-field__control {
     text-align: right;
@@ -121,7 +148,7 @@
   }
   .van-action-sheet__content {
     height: 80%;
-    overflow-y:auto;
+    overflow-y: auto;
   }
   .partGroup {
     //display: flex;
@@ -158,5 +185,10 @@
     line-height: 40px;
     border-bottom: 1px solid #CCCCCC;
     text-indent: 15px;
+  }
+  .van-field__label {
+    width: auto;
+    min-width: 90px;
+    max-width: 110px;
   }
 }
