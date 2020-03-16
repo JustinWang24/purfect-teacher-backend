@@ -167,6 +167,9 @@ class FlowsController extends Controller
             //表单信息
             $optionReList = [];
             foreach ($flowInfo['options'] as $option) {
+                if ($option['type'] == 'node') {
+                  continue;
+                }
                 $optionRet = ActionOption::where('action_id', $startUserAction->id)->where('option_id', $option['id'])->value('value');
                 $value = '';
                 switch ($option['type']) {
