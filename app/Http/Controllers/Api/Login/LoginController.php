@@ -66,7 +66,11 @@ class LoginController extends Controller
         }
         $userDeviceDao = new UserDeviceDao;
         if ($user->getType() != $request->getAppType()) {
-            return JsonBuilder::Error('登录APP版本与您的账号不符,请登录对应的APP');
+            if ($user->getType() == Role::SCHOOL_MANAGER) {
+
+            } else {
+              return JsonBuilder::Error('登录APP版本与您的账号不符,请登录对应的APP');
+            }
         } else {
             $userDeviceDao->updateOrCreate($user->getId(), $request->getUserDevice());
             $token  = Uuid::uuid4()->toString();

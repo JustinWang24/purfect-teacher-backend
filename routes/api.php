@@ -918,6 +918,9 @@ Route::prefix('Oa')->middleware('auth:api')->group(function () {
     // 是否为班主任
     Route::post('/is-adviser', 'Api\OA\GradeManageController@isAdviser')
         ->name('api.oa.is.adviser');
+    // 是否为学校管理员
+    Route::post('/is-school-manager', 'Api\OA\GradeManageController@isSchoolManager')
+        ->name('api.oa.is.adviser');
 });
 
 
