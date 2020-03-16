@@ -74,6 +74,9 @@ class IndexController extends Controller
      */
     public function delete(CalendarRequest $request){
         $eventId = $request->get('event_id');
+        if(is_null($eventId)) {
+            return JsonBuilder::Error('缺少参数');
+        }
         $dao = new CalendarDao();
         return $dao->deleteEvent($eventId) ? JsonBuilder::Success() : JsonBuilder::Error();
     }
