@@ -86,11 +86,11 @@ class TextbookController extends Controller
         $gradeId = $request->get('uuid');
         $dao = new GradeDao();
         $grade = $dao->getGradeById($gradeId);
+        $school = $grade->school;
 
-        $year = $request->get('year', Carbon::now()->year);
+        $year = $request->get('year', $school->configuration->getSchoolYear());
         // 计算当年班的年级
         $gradeYear = $year - $grade->year + 1;
-
         $this->dataForView['gradeYear'] = $gradeYear;
         return view('teacher.textbook.user.list',
             array_merge($this->dataForView, $logic->getUsers()));
