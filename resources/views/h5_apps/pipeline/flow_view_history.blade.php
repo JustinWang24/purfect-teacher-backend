@@ -70,7 +70,7 @@
             <el-divider></el-divider>
             @foreach($options as $option)
             <h5>
-                <p>{{ $option['name'] }}</p>
+                <p>{{ $option['title'] }}</p>
                 <p>{{ $option['value'] }}</p>
             </h5>
             <el-divider></el-divider>
