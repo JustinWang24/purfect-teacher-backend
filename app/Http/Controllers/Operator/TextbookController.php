@@ -150,8 +150,8 @@ class TextbookController extends Controller
     public function submit(TextbookRequest $request) {
         $userId = $request->get('user_id');
         $textbookIds = $request->getTextbookId();
+        $year = $request->get('year');
         if(!is_null($textbookIds)) {
-            $year = $request->get('year');
             $dao = new TextbookDao();
             $result = $dao->batchAddStudentTextbook($userId, $year, $textbookIds);
             if ($result->isSuccess()) {
