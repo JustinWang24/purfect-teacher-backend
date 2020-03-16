@@ -64,12 +64,18 @@ class TimetablesController extends Controller
         // 这是一个单独的页面, 不是课程表管理页面
         $gradeDao = new GradeDao($request->user());
         $grade = $gradeDao->getGradeById($request->uuid());
+        $school = $grade->school;
+        $year = $school->configuration->getSchoolYear();
+        $month = Carbon::now()->month;
+        $term = $school->configuration->guessTerm($month);
 
         $this->dataForView['pageTitle'] = $grade->name . ' 课程表';
         $this->dataForView['needManagerNav'] = false;
         $this->dataForView['grade'] = $grade;
-        $this->dataForView['school'] = $grade->school;
-        $this->dataForView['term'] = $request->has('term') ? $request->get('term') : 1; // 默认加载第一学期
+        $this->dataForView['school'] = $school;
+
+        $this->dataForView['year'] = $year; // 默认加载第一学期
+        $this->dataForView['term'] = $term; // 默认加载第一学期
         $this->dataForView['app_name'] = 'timetable_grade_view_app';
         return view('school_manager.timetable.manager', $this->dataForView);
     }
