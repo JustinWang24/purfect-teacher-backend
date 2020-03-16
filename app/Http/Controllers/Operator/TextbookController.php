@@ -2,9 +2,8 @@
 
 namespace App\Http\Controllers\Operator;
 
-use App\Dao\Schools\GradeDao;
-use Carbon\Carbon;
 use App\Utils\JsonBuilder;
+use App\Dao\Schools\GradeDao;
 use App\Dao\Schools\CampusDao;
 use App\Utils\Files\HtmlToCsv;
 use App\Dao\Users\GradeUserDao;
@@ -86,11 +85,11 @@ class TextbookController extends Controller
         $gradeId = $request->get('uuid');
         $dao = new GradeDao();
         $grade = $dao->getGradeById($gradeId);
+        $school = $grade->school;
 
-        $year = $request->get('year', Carbon::now()->year);
+        $year = $request->get('year', $school->configuration->getSchoolYear());
         // 计算当年班的年级
         $gradeYear = $year - $grade->year + 1;
-
         $this->dataForView['gradeYear'] = $gradeYear;
         return view('teacher.textbook.user.list',
             array_merge($this->dataForView, $logic->getUsers()));
@@ -115,6 +114,7 @@ class TextbookController extends Controller
         $this->dataForView['gradeUser'] = $gradeInfo;
         $this->dataForView['textbooks'] = $info;
         $this->dataForView['year'] = $year;
+        $this->dataForView['uuid'] = $gradeInfo->grade_id;
         return view('teacher.textbook.user.edit',$this->dataForView);
     }
 

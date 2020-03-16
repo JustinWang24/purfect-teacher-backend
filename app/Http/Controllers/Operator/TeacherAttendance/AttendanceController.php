@@ -32,6 +32,19 @@ class AttendanceController extends Controller
     public function load_attendance(AttendanceRequest $request) {
         $dao = new AttendanceDao();
         $info = $dao->getById($request->get('attendance_id'));
+        if (!empty($info->clocksets)) {
+            foreach ($info->clocksets as $clockset) {
+                $clockset->start = substr($clockset->start,0, 5);
+                $clockset->end = substr($clockset->end,0, 5);
+                $clockset->morning = substr($clockset->morning,0, 5);
+                $clockset->morning_late = substr($clockset->morning_late,0, 5);
+                $clockset->afternoon_start = substr($clockset->afternoon_start,0, 5);
+                $clockset->afternoon = substr($clockset->afternoon,0, 5);
+                $clockset->afternoon_late = substr($clockset->afternoon_late,0, 5);
+                $clockset->evening = substr($clockset->evening,0, 5);
+            }
+        }
+
         $organizationArr = [];
         $organizationDao = new OrganizationDao();
         foreach ($info->organizations as $organization) {

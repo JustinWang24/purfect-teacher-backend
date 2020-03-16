@@ -232,4 +232,15 @@ class GradeManageController extends Controller
         return  JsonBuilder::Success($data);
     }
 
+  /**
+   * 是否为学校管理员
+   * @param MyStandardRequest $request
+   * @return string
+   */
+    public function isSchoolManager(MyStandardRequest $request)
+    {
+        $teacher = $request->user();
+        $data = ['is_school_manger' => $teacher->isSchoolManager()];
+        return  JsonBuilder::Success($data);
+    }
 }

@@ -65,7 +65,13 @@ class LoginController extends Controller
             }
         }
         $userDeviceDao = new UserDeviceDao;
-        if ($user->getType() != $request->getAppType()) {
+        // 某个APP版本可登录角色
+        $arr = [
+          6 => [Role::VERIFIED_USER_STUDENT], // 学生端
+          9 => [Role::SCHOOL_MANAGER, Role::TEACHER, Role::EMPLOYEE] // 教师端
+        ];
+
+        if (!in_array($user->getType(), $arr[$request->getAppType()])) {
             return JsonBuilder::Error('登录APP版本与您的账号不符,请登录对应的APP');
         } else {
             $userDeviceDao->updateOrCreate($user->getId(), $request->getUserDevice());
