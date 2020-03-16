@@ -150,13 +150,17 @@ class TextbookController extends Controller
     public function submit(TextbookRequest $request) {
         $userId = $request->get('user_id');
         $textbookIds = $request->getTextbookId();
-        $year = $request->get('year');
-        $dao = new TextbookDao();
-        $result = $dao->batchAddStudentTextbook($userId, $year, $textbookIds);
-        if($result->isSuccess()) {
-            FlashMessageBuilder::Push($request, FlashMessageBuilder::SUCCESS,'领取成功');
+        if(!is_null($textbookIds)) {
+            $year = $request->get('year');
+            $dao = new TextbookDao();
+            $result = $dao->batchAddStudentTextbook($userId, $year, $textbookIds);
+            if ($result->isSuccess()) {
+                FlashMessageBuilder::Push($request, FlashMessageBuilder::SUCCESS, '领取成功');
+            } else {
+                FlashMessageBuilder::Push($request, FlashMessageBuilder::DANGER, '领取失败');
+            }
         } else {
-            FlashMessageBuilder::Push($request, FlashMessageBuilder::DANGER,'领取失败');
+            FlashMessageBuilder::Push($request, FlashMessageBuilder::DANGER, '请选择领取的教材');
         }
 
         return redirect()->route('school_manager.textbook.users',['user_id'=>$userId, 'year'=>$year]);
