@@ -101,7 +101,7 @@ class AttendanceScheduleController extends Controller
         $dao = new AttendanceSchedulesDao();
 
         $schoolId = $request->get('school_id', null);
-        if($schoolId){
+        if(is_null($schoolId)){
             $schoolId = $request->user('api')->getSchoolId();
         }
 

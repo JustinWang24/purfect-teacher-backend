@@ -41,7 +41,7 @@
                         <p class="text-center">
                             <el-button type="primary" @click="onSubmit">保 存</el-button>
                             <el-button v-if="!showEventDeleteBtn">取 消</el-button>
-                            <el-button type="danger" v-if="showEventDeleteBtn" @click="deleteEvent">删除</el-button>
+                            <el-button type="danger" v-if="showEventDeleteBtn" @click="deleteEvent()">删除</el-button>
                         </p>
                     </el-form>
                 </div>
