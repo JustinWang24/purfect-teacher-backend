@@ -32,8 +32,21 @@ class AttendanceController extends Controller
         }
         //获取当日配置
         $clockset = $dao->getOnedayClockset($attendance, $enDay);
+        $clockset->start = substr($clockset->start,0, 5);
+        $clockset->end = substr($clockset->end,0, 5);
+        $clockset->morning = substr($clockset->morning,0, 5);
+        $clockset->morning_late = substr($clockset->morning_late,0, 5);
+        $clockset->afternoon_start = substr($clockset->afternoon_start,0, 5);
+        $clockset->afternoon = substr($clockset->afternoon,0, 5);
+        $clockset->afternoon_late = substr($clockset->afternoon_late,0, 5);
+        $clockset->evening = substr($clockset->evening,0, 5);
+
         //获取当日记录
         $clockin = $dao->getOnedayClockin($attendance, $day, $user->id);
+
+        $clockin['morning']['time'] = substr($clockin['morning']['time'], 0, 5);
+        $clockin['afternoon']['time'] = substr($clockin['afternoon']['time'], 0, 5);
+        $clockin['evening']['time'] = substr($clockin['evening']['time'], 0, 5);
 
         //获取Mac
         $mac = $dao->getMacAddress($attendance, $user->id);
@@ -46,6 +59,8 @@ class AttendanceController extends Controller
             $nextType = $check['type'] ?? '';
             $showButton = $check['status'] == Clockin::STATUS_NONE ? false : true;
         }
+
+
 
         $return = [
             'attendance' => $attendance,
