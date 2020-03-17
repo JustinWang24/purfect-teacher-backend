@@ -218,6 +218,21 @@
                        @endforeach
                    </el-timeline-item>
                @endforeach
+
+                   @foreach($handlers as $key => $handler)
+                   <!-- <el-timeline-item key="{{ $key }}" icon="审批状态"  :timestamp="时间戳2018-04-12 20:46">-->
+                       <el-timeline-item key="{{ $key+1 }}">
+                           @foreach($handler as $k => $val)
+                               @foreach ($val as $v)
+                                   <el-timeline-item @if (!empty($v->result)) result="{{ $v->result->result }}" @if($v->result->result != \App\Utils\Pipeline\IAction::RESULT_PENDING) timestamp="{{ substr($v->result->updated_at, 0, 16) }}" @endif @endif>
+                                       <img src="{{ $v->profile->avatar }}" alt="" style="width: 40px; height: 40px;border-radius: 50%;vertical-align: middle;">
+                                       {{ $v->name }}({{ $k }})
+                                   </el-timeline-item>
+                               @endforeach
+                           @endforeach
+                       </el-timeline-item>
+                   @endforeach
+
            </el-timeline>
           <div style="width: 100%;background: white;text-align: center">
                     <van-button style="width: 70%;margin: 0 auto" round block type="info" native-type="submit">
