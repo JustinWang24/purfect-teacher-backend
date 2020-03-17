@@ -129,7 +129,7 @@ class TeacherApplyElectiveCourseDao
             }
         }
 
-        @TODO 验证学生课表
+        //@TODO 验证学生课表
         return false;
     }
 
