@@ -339,7 +339,7 @@ class TimetableItemDao
                 'grade_name' => $row->grade->name,
                 'course' => $row->course->name,
                 'course_id' => $row->course->id,
-                'teacher'=>'',
+                'teacher'=> $row->teacher->name,
                 'teacher_id'=> $row->teacher_id,
                 'grade_id'=> $row->grade_id,
                 'building'=>$row->building->name,
