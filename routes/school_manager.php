@@ -532,7 +532,7 @@ Route::prefix('school_manager')->group(function () {
             ->name('school_manager.pipeline.save-option');
         Route::post('flows/delete-option','Pipeline\FlowsController@delete_option')
             ->name('school_manager.pipeline.delete-option');
-        Route::post('flows/load-ausiness','Pipeline\FlowsController@load_business')
+        Route::post('flows/load-business','Pipeline\FlowsController@load_business')
             ->name('school_manager.pipeline.load-business');
         Route::post('flows/load-titles','Pipeline\FlowsController@load_titles')
             ->name('school_manager.pipeline.load-titles');
