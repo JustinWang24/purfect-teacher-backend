@@ -95,7 +95,7 @@ class TimetableController extends Controller
         $item = $return['item'];
         $forStudyingSlots = $return['forStudyingSlots'];
 
-        $timetable = $this->dataProcessing($item, $forStudyingSlots);
+        $timetable = $this->courseDataProcessing($item, $forStudyingSlots);
         $result = [
             'date' => $date,
             'week' => $return['week'],
@@ -244,23 +244,32 @@ class TimetableController extends Controller
 
 
         $timetableItemDao = new TimetableItemDao();
-        $result = [];
+        $timetable = [];
         // 循环一周
         for ($i=0; $i<$day; $i++) {
             $date = Carbon::parse($start)->addDays($i);
             $weekdayIndex = $date->dayOfWeekIso;  // 周几
             $item = $timetableItemDao->getItemsByWeekDayIndexForTeacherView($weekdayIndex, $year, $term, $oddWeek, $user->id);
 
-            $timetable = $this->dataProcessing($item, $forStudyingSlots);
+            $timetable[] = $this->slotDataProcessing($item, $forStudyingSlots);
 
-            $result[] = [
-                'date' => $date->toDateString(),
-                'week' => $week->getName(),
-                'week_index' => CalendarDay::GetWeekDayIndex($weekdayIndex),
-                'timetable' => $timetable,
-            ];
+//            $result[] = [
+//                'date' => $date->toDateString(),
+//                'week' => $week->getName(),
+//                'week_index' => CalendarDay::GetWeekDayIndex($weekdayIndex),
+//                'timetable' => $timetable,
+//            ];
 
         }
+        $weekdayIndex = $date->dayOfWeekIso;  // 周几
+        $result = [
+            'date' => $date,
+            'week' => $week->getName(),
+            'week_index' => CalendarDay::GetWeekDayIndex($weekdayIndex),
+            'time_slots' => $forStudyingSlots,
+            'timetable' => $timetable,
+
+        ];
 
         return JsonBuilder::Success($result);
 
@@ -268,12 +277,12 @@ class TimetableController extends Controller
 
 
     /**
-     * 数据处理
+     * 课程数据处理
      * @param $item
      * @param $forStudyingSlots
      * @return array
      */
-    public function dataProcessing($item, $forStudyingSlots)
+    public function courseDataProcessing($item, $forStudyingSlots)
     {
 
         $dao = new LectureDao();
@@ -310,6 +319,47 @@ class TimetableController extends Controller
                 'to' => $to,
                 'label' => $label,
             ];
+        }
+
+        return $timetable;
+    }
+
+
+
+    /**
+     * 课节数据处理
+     * @param $item
+     * @param $forStudyingSlots
+     * @return array
+     */
+    public function slotDataProcessing($item, $forStudyingSlots) {
+
+        $dao = new LectureDao();
+
+        $timetable = [];
+        foreach ($forStudyingSlots as $key => $value) {
+            $course = (object)[];
+            foreach ($item as $k => $val) {
+                if($value->id == $val['time_slot_id']) {
+                    // 查询当前老师在该班级上传的资料
+                    $types = $dao->getMaterialTypeByCourseId($val['course_id'],$val['teacher_id'],$val['grade_id']);
+                    $label = [];
+                    foreach ($types as $v) {
+                        $label[] = $v->materialType->name;
+                    }
+                    $course = [
+                        'time_table_id' => $val['id'],
+                        'idx' => '', // 课节
+                        'name' => $val['course'],
+                        'room' => $val['building'].$val['room'],
+                        'teacher' => $val['teacher'],
+                        'label' => $label,
+                    ];
+                }
+
+            }
+
+            $timetable[] = $course;
         }
 
         return $timetable;
