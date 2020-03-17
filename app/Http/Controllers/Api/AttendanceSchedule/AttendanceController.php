@@ -311,7 +311,9 @@ class AttendanceController extends Controller
                 $result[$key]['id'] = $val->id;
                 $result[$key]['name'] = $val->name;
             }
+            array_unshift($result,['id' => 0, 'name' => '全部']);
         }
+
         return JsonBuilder::Success($result);
     }
 
