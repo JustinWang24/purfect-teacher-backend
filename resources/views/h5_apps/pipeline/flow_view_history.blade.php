@@ -138,7 +138,7 @@
             </div>
         </div>
         <div class="information">
-            <h3>抄送人（多少人）</h3>
+            <h3>抄送人（{{ count($copys) }}人）</h3>
             <div class="sendBox">
                 @foreach($copys as $copy)
                 <figure>
