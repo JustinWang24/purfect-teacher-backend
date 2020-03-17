@@ -271,21 +271,30 @@ class FlowsController extends Controller
             $flowDao = new FlowDao();
             $firstNode = $dao->getHeadNodeByFlow($flowId);
             $flow = $flowDao->getById($flowId);
-            if ($flow->business) {
-                //关联业务的表单
-                $businessOptions = Flow::business($flow->business);
-                foreach ($businessOptions['options'] as $option) {
-                    foreach ($nodeOptionFormData as $nodeOptionFormDatum) {
-                        
-                    }
-                }
-            }
             try{
                 $dao->deleteOptionByNode($firstNode->id);
-                foreach ($nodeOptionFormData as $nodeData) {
-                    $nodeData['node_id'] = $firstNode->id;
-                    $dao->saveNodeOption($nodeData);
+                if ($flow->business) {
+                    $businessOptions = Flow::business($flow->business);
+                    $businessIgnore = [];
+                    foreach ($businessOptions['options'] as $businessOption) {
+                        $businessOption['node_id'] = $firstNode->id;
+                        $dao->saveNodeOption($businessOption);
+                        $businessIgnore[] = $businessOption['title'];
+                    }
+                    foreach ($nodeOptionFormData as $nodeData) {
+                        if (in_array($nodeData['title'], $businessIgnore)) {
+                            continue;
+                        }
+                        $nodeData['node_id'] = $firstNode->id;
+                        $dao->saveNodeOption($nodeData);
+                    }
+                }else {
+                    foreach ($nodeOptionFormData as $nodeData) {
+                        $nodeData['node_id'] = $firstNode->id;
+                        $dao->saveNodeOption($nodeData);
+                    }
                 }
+
                 return JsonBuilder::Success();
             }
             catch (\Exception $exception){

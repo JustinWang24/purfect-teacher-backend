@@ -26,8 +26,8 @@ interface IFlow extends IPersistent
         'business' => self::BUSINESS_TYPE_MACADDRESS,
         'name' => '考勤修改Mac地址',
         'options' => [
-            ['name' => '单行输入框', 'type' => 'input', 'required' => 1, 'extra' => ['text' => '考勤组id'], 'title' => '考勤组id', 'tips' => '考勤组id'],
-            ['name' => '单行输入框', 'type' => 'input', 'required' => 1, 'extra' => ['text' => '新Mac地址'], 'title' => '新Mac地址', 'tips' => '新Mac地址'],
+            ['name' => '单行输入框', 'type' => 'input', 'required' => 1, 'extra' => ['text' => '考勤组id'], 'title' => 'attendance_id', 'tips' => '考勤组id'],
+            ['name' => '单行输入框', 'type' => 'input', 'required' => 1, 'extra' => ['text' => '新Mac地址'], 'title' => 'mac_address', 'tips' => '新Mac地址'],
         ]
     ];
     const BUSINESS_ATTENDANCE_CLOCKIN = [
