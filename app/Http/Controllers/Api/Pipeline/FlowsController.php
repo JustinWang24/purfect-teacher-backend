@@ -55,7 +55,18 @@ class FlowsController extends Controller
                 $flowInfo = $flow->getSimpleLinkedNodes();
                 $handlers = [];
                 foreach ($flowInfo['handler'] as $handler) {
-                    $handlers[] = $flowDao->transTitlesToUser($handler->titles, $handler->organizations, $user);
+                    $tmpHandlers = $flowDao->transTitlesToUser($handler->titles, $handler->organizations, $user);
+                    $retHandlers = [];
+                    foreach ($tmpHandlers as $tmpKey => $tmpHandler) {
+                        foreach ($tmpHandler as $tmp) {
+                            $retHandlers[$tmpKey][] = [
+                                'id' => $tmp->id,
+                                'name' => $tmp->name,
+                                'avatar' => $tmp->profile->avatar ?? ''
+                            ];
+                        }
+                    }
+                    $handlers[] = $retHandlers;
                 }
                 $return = [
                     'user' => $user,
