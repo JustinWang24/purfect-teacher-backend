@@ -180,9 +180,12 @@ class FlowsController extends Controller
                             if (!empty($optionRet[1])) {
                                 $optionReList[] = [
                                     'name' => $option['name'],
-                                    'title' => $option['extra']['title2'],
-                                    'value' => $optionRet[1]
+                                    'title' => $option['title'],
+                                    'value' => $value
                                 ];
+
+                                $option['title'] = $option['extra']['title2'];
+                                $value = $optionRet[1];
                             }
                         }
                         break;
