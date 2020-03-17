@@ -126,7 +126,7 @@ class NoticeController extends Controller
     public function delete_media(NoticeRequest $request){
         $dao = new NoticeDao();
         $result = $dao->deleteNoticeMedia($request->get('id'));
-        return $result ? JsonBuilder::Success() : JsonBuilder::Error();
+        return JsonBuilder::Success();
     }
 
     /**

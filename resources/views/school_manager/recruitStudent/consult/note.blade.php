@@ -14,7 +14,7 @@ use App\Utils\UI\Button;
                         <div class="col-12">
                             <form action="" method="post">
                                 @csrf
-                                <input type="hidden" name="config[school_id]" value="{{ \Illuminate\Support\Facades\Auth::user()->getSchoolId() }}">
+                                <input type="hidden" name="config[school_id]" value="{{ session('school.id') }}">
                                 <div class="form-group">
                                     <Redactor v-model="recruitment_intro" placeholder="请输入招生简章" :config="configOptions" name="config[recruitment_intro]" />
                                     @{{ recruitment_intro }}
@@ -38,7 +38,7 @@ use App\Utils\UI\Button;
                         <div class="col-12">
                             <form action="" method="post">
                                 @csrf
-                                <input type="hidden" name="note[school_id]" value="{{ \Illuminate\Support\Facades\Auth::user()->getSchoolId() }}">
+                                <input type="hidden" name="note[school_id]" value="{{ session('school.id') }}">
                                 <input type="hidden" name="note[plan_id]" value="0">
                                 <div class="form-group">
                                     <Redactor v-model="content" placeholder="请输入报名须知" :config="configOptions" name="note[content]" />

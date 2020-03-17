@@ -369,7 +369,11 @@ Route::prefix('school_manager')->group(function () {
         Route::get('campus-intro','Contents\NewsController@campus_intro')
             ->name('school_manager.contents.campus-intro');
         Route::post('save-campus-intro','Contents\NewsController@save_campus_intro')
-            ->name('school_manager.contents.save-campus-intro');
+		            ->name('school_manager.contents.save-campus-intro');
+        Route::get('get-campus-video','Contents\NewsController@get_campus_video')
+            ->name('school_manager.contents.get-campus-video'); // 获取视频
+        Route::post('save-campus-video','Contents\NewsController@save_campus_video')
+            ->name('school_manager.contents.save-campus-video'); // 保存视频
 
         // 动态管理
         Route::get('news-manager','Contents\NewsController@management')
