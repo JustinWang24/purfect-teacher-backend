@@ -54,7 +54,9 @@ export default {
       window.location.href = "/teacher/ly/oa/task/detail?taskId=" + task.id;
     },
     getTaskList() {
-      // getTaskList()
+      getTaskList().then(data => {
+        debugger;
+      });
       console.log("get list for " + this.mode);
       this.list = [
         {
