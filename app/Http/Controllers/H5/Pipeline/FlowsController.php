@@ -178,10 +178,9 @@ class FlowsController extends Controller
                             $optionRet = explode('~', $optionRet);
                             $value = $optionRet[0];
                             if (!empty($optionRet[1])) {
-                                $extra = json_decode($option['extra'], true);
                                 $optionReList[] = [
                                     'name' => $option['name'],
-                                    'title' => $extra['title2'],
+                                    'title' => $option['extra']['title2'],
                                     'value' => $optionRet[1]
                                 ];
                             }
