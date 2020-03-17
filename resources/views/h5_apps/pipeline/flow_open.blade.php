@@ -207,17 +207,6 @@
 
           <h5 style="background:white;margin:0;padding: 10px;">审批流程</h5>
           <el-timeline>
-               @foreach($handlers as $key => $handler)
-                   <el-timeline-item key="{{ $key }}" icon="el-icon-more" type="primary" size="large">
-                       @foreach($handler as $k => $val)
-                           @foreach ($val as $v)
-                               <el-timeline-item>
-                                   {{ $v->name }}({{ $k }})
-                               </el-timeline-item>
-                           @endforeach
-                       @endforeach
-                   </el-timeline-item>
-               @endforeach
 
                    @foreach($handlers as $key => $handler)
                    <!-- <el-timeline-item key="{{ $key }}" icon="审批状态"  :timestamp="时间戳2018-04-12 20:46">-->
