@@ -9,6 +9,7 @@ use App\BusinessLogic\Pipeline\Flow\FlowLogicFactory;
 use App\Dao\Pipeline\ActionDao;
 use App\Dao\Pipeline\FlowDao;
 use App\Dao\Pipeline\UserFlowDao;
+use App\Events\Pipeline\Flow\FlowBusiness;
 use App\Events\Pipeline\Flow\FlowProcessed;
 use App\Events\Pipeline\Flow\FlowRejected;
 use App\Events\Pipeline\Flow\FlowStarted;
@@ -74,7 +75,8 @@ class FlowsController extends Controller
                     $businessDefault = [];
                     foreach ($businessOptions['options'] as $businessOption) {
                         if ($businessOption['readonly']) {
-                            $businessDefault[$businessOption['title']] = $request->get($businessOption['title'], '');
+                            parse_str($request->headers->get('referer'), $getParam);
+                            $businessDefault[$businessOption['title']] = $getParam[$businessOption['title']] ?? '';
                         }
                     }
                     $options = [];
@@ -265,7 +267,13 @@ class FlowsController extends Controller
                         if ($dao->getCountWaitProcessUsers($action->getNode()->id) < 1) {
                             //可能存在自动同意已经到了下一个action
                             $newAction = $dao->getActionByUserFlowAndUserId($action->transaction_id, $action->user_id);
-                            $event = new FlowProcessed($request->user(),$newAction, $newAction->getNode(), $newAction->getFlow());
+                            $flow = $newAction->getFlow();
+                            $event = new FlowProcessed($request->user(),$newAction, $newAction->getNode(), $flow);
+
+                            //业务事件
+                            if ($newAction->userFlow->isDone() && $flow->business) {
+                                  event(new FlowBusiness($flow, $newAction->userFlow));
+                            }
                         }
                         break;
                     case IAction::RESULT_TERMINATE:
