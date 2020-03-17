@@ -29,6 +29,18 @@ if (document.getElementById('student-homepage-app')) {
             this.loadFlowsStartedByMe();
         },
         methods: {
+            into() {
+                console.log(1)
+            },
+            // 学生查看自己的申请详情
+            viewMyApplication: function (userFlow) {
+                this.into();
+                let url = '/pipeline/flow/view-history?user_flow_id=' + userFlow.id;
+                if (!Util.isEmpty(this.apiToken)) {
+                    url = '/h5/flow/user/view-history?user_flow_id=' + userFlow.id + '&api_token=' + this.apiToken;
+                }
+                window.location.href = url;
+            },
             startFlow: function (flowId) {
                 window.location.href = this.url.flowOpen + '?flow=' + flowId + '&uuid=' + this.userUuid;
             },
@@ -69,14 +81,6 @@ if (document.getElementById('student-homepage-app')) {
                         message: '操作取消'
                     });
                 });
-            },
-            // 学生查看自己的申请详情
-            viewMyApplication: function (userFlow) {
-                let url = '/pipeline/flow/view-history?user_flow_id=' + userFlow.id;
-                if (!Util.isEmpty(this.apiToken)) {
-                    url = '/h5/flow/user/view-history?user_flow_id=' + userFlow.id + '&api_token=' + this.apiToken;
-                }
-                window.location.href = url;
             },
             reloadThisPage: function () {
                 Util.reloadCurrentPage(this);
