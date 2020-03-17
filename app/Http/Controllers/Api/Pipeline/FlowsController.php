@@ -72,8 +72,10 @@ class FlowsController extends Controller
                 if ($flow->business) {
                     $businessOptions = Flow::business($flow->business);
                     $businessDefault = [];
-                    foreach ($businessOptions as $businessOption) {
-                        $businessDefault[$businessOption['title']] = $request->get($businessOption['title'], '');
+                    foreach ($businessOptions['options'] as $businessOption) {
+                        if ($businessOption['readonly']) {
+                            $businessDefault[$businessOption['title']] = $request->get($businessOption['title'], '');
+                        }
                     }
                     $options = [];
                     foreach ($flowInfo['options'] as $option) {
