@@ -17,9 +17,11 @@
         display: flex;
         p:first-child {
           flex: 1;
+          color: #6f7275;
         }
         p:nth-child(2) {
           flex: 3;
+          color: #333333;
           text-align: right;
         }
       }
@@ -55,6 +57,9 @@
             line-height: 0;
           }
         }
+      }
+      .el-timeline-item {
+        padding-bottom: 10px;
       }
     }
     .el-dialog__body {
