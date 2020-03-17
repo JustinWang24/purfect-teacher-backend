@@ -353,6 +353,7 @@ class TimetableController extends Controller
                         'name' => $val['course'],
                         'room' => $val['building'].$val['room'],
                         'teacher' => $val['teacher'],
+                        'grade' => $val['grade'],
                         'label' => $label,
                     ];
                 }
