@@ -123,13 +123,18 @@
                     </template>
                 </van-field>
             </div>
-            <div class="myRadio" v-if="item.type == 'files'">
+            <div class="myRadio myFiles" v-if="item.type == 'files'">
                 <div class="myTips" v-html="item.tips"></div>
                 <van-field name="uploader" :required="item.required?true:false" :label="item.title">
                     <template #input>
-                        <van-uploader v-model="item.files" :max-count="9" :after-read="uploadImg">
-                            <van-button size="small" type="info">上传文件</van-button>
-                        </van-uploader>
+                       <el-button style="background: none;border: none;color: #409EFF;padding: 5px;" type="primary" size="mini" icon="el-icon-paperclip" v-on:click="showFileManagerFlag=true">选择附件</el-button>
+                        <ul style="padding-left: 0;">
+                            <li v-for="(a, idx) in action.attachments" :key="idx">
+                                <p style="margin-bottom: 0;">
+                                    <span>@{{ a.file_name }}</span>&nbsp;<el-button v-on:click="dropAttachment(idx, a)" type="text" style="color: red">删除</el-button>
+                                </p>
+                            </li>
+                        </ul>
                     </template>
                 </van-field>
             </div>
@@ -205,22 +210,9 @@
 
 
 
-          <h5 style="background:white;margin:0;padding: 10px;">审批流程</h5>
-          <el-timeline>
-               @foreach($handlers as $key => $handler)
-                   <el-timeline-item key="{{ $key }}" icon="el-icon-more" type="primary" size="large">
-                       @foreach($handler as $k => $val)
-                           @foreach ($val as $v)
-                               <el-timeline-item>
-                                   {{ $v->name }}({{ $k }})
-                               </el-timeline-item>
-                           @endforeach
-                       @endforeach
-                   </el-timeline-item>
-               @endforeach
-           </el-timeline>
-          <div style="width: 100%;background: white;text-align: center">
-                    <van-button style="width: 70%;margin: 0 auto" round block type="info" native-type="submit">
+
+          <div style="width: 100%;background: white;text-align: center;margin-top:10px;padding-top:40px">
+                    <van-button style="width: 160px;margin: 0 auto" round block type="info" native-type="submit">
                          提交
                     </van-button>
           </div>
