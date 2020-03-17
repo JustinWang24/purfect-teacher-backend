@@ -26,7 +26,7 @@
             <el-divider></el-divider>
             <h5>
                 <p>出生年月</p>
-                <p>{{ $startUser->profile->birthday }}</p>
+                <p>{{ substr($startUser->profile->birthday, 0, 10) }}</p>
             </h5>
             <el-divider></el-divider>
             <h5>
