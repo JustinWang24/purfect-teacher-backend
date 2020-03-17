@@ -62,4 +62,20 @@ class AlbumDao
         }
         return $bag;
     }
+
+  /**
+   * Func 删除之前的附件信息
+   * @param $param
+   * @return bool
+   */
+  public function deleteListInfo($param = []){
+    if (isset($param['school_id'])) {
+      $condition[] = ['school_id', '=', (Int)$param['school_id']];
+    }
+    if (isset($param['type'])) {
+      $condition[] = ['type', '=', (Int)$param['type']];
+    }
+    if (empty($condition)) return false;
+    return Album::where($condition)->delete();
+  }
 }

@@ -8,6 +8,7 @@ use App\Dao\Schools\NewsSectionDao;
 use App\Dao\Schools\SchoolDao;
 use App\Models\School;
 use App\Models\Schools\News;
+use App\Models\Contents\Album;
 use App\Utils\FlashMessageBuilder;
 use App\Utils\JsonBuilder;
 use Illuminate\Http\Request;
@@ -28,17 +29,60 @@ class NewsController extends Controller
 
         $campusIntro = $school->configuration->campus_intro;
 
+        // 获取视频
+        $condition[] = ['type', '=', 2];
+        $condition[] = ['school_id', '=', $school->id];
+        $videoInfo = Album::where($condition)->orderBy('id', 'desc')->first();
+
         $this->dataForView['pageTitle'] = '校园简介';
         $this->dataForView['campusIntro'] = $campusIntro;
         $this->dataForView['school'] = $school;
+        $this->dataForView['videoInfo'] = $videoInfo;
 
         $this->dataForView['redactor'] = true;
         $this->dataForView['js'] = [
-            'school_manager.news.campus_intro_js'
+          'school_manager.news.campus_intro_js'
         ];
 
         return view('school_manager.news.campus_intro',$this->dataForView);
     }
+
+  /**
+   * Func 获取视频
+   * @param Request $request
+   * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+   */
+  public function get_campus_video(Request $request){
+    $condition[] = ['type', '=', 2];
+    $condition[] = ['school_id', '=', session('school.id')];
+    $videoInfo = Album::where($condition)->orderBy('id', 'desc')->first();
+    return JsonBuilder::Success(['videoInfo'=>$videoInfo]);
+  }
+
+  /**
+   * Func 保存视频
+   * @param Request $request
+   * @return \Illuminate\Http\RedirectResponse
+   */
+  public function save_campus_video(Request $request)
+  {
+    $videoUrl = $request->post('videoUrl');
+    if($videoUrl == '') {
+      return JsonBuilder::Error("请上传视频文件");
+    }
+    $dao = new AlbumDao();
+    $dao->deleteListInfo(['type' => 2, 'school_id' => session('school.id')]);
+    // 添加数据
+    $addata['type'] = 2;
+    $addata['title'] = " ";
+    $addata['url'] = $videoUrl;
+    $addata['school_id'] = session('school.id');
+    if (Album::create($addata)) {
+      return JsonBuilder::Success('上传成功');
+    } else {
+      return JsonBuilder::Error("上传失败,请稍后重试");
+    }
+  }
 
     /**
      * 保存校园简介的方法
