@@ -100,7 +100,7 @@ require('./includes/pipeline/flow_open_app'); // 用户启动流程
 require('./includes/pipeline/flow_view_history_app'); // 用户查看流程详情
 require('./includes/pipeline/flows_manager_app'); // 流程管理后台
 require('./includes/pipeline/manager_form'); // 流程管理后台
-//require('./includes/backend/student_list_app'); // 待审批 已审批 抄送我  h5教师list页
+// require('./includes/backend/student_list_app'); // 待审批 已审批 抄送我  h5教师list页
 
 require('./includes/backend/teacher_check_in'); // 后台,教师签到
 require('./includes/backend/teacher_blade_index'); // 后台,教师助手
@@ -110,3 +110,6 @@ require('./includes/backend/teacher_students_manager'); // 后台,教师学生�
 require('./includes/backend/teacher_grades_check_in'); // 后台,教师班级签到
 require('./includes/backend/teacher_grades_manager'); // 后台,教师班级管理
 require('./includes/backend/teacher-attendance_manager/index'); // 后台,考勤管理
+
+require('./includes/backend/teacher_oa_tasks/index'); // 后台,oa-task
+require('./includes/backend/teacher_oa_tasks/detail.js'); // 后台,oa-task-detail
