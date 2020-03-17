@@ -133,7 +133,7 @@
                                             <div v-if="item.type == 'image' || item.type == 'files'">
                                                 <van-field disabled name="uploader" :required="item.required?true:false" :label="item.title">
                                                     <template #input>
-                                                        <van-uploader v-model="item.files" :max-count="9" :after-read="uploadImg" />
+                                                        <van-uploader v-model="item.files" :max-count="9" />
                                                     </template>
                                                 </van-field>
                                             </div>

@@ -57,7 +57,7 @@ if (document.getElementById('pipeline-flows-manager_form-app')) {
                         tips: '请输入',
                         tips_holder: '请输入',
                         extra: {
-                            text: '用户申请时填写的内容最多可填写100个字'
+                            text: '用户申请时填写的内容最多可填写20个字'
                         },
                         required: 0,
                         icon: 'el-icon-document-remove'
@@ -66,8 +66,8 @@ if (document.getElementById('pipeline-flows-manager_form-app')) {
                         name: '多行输入框',
                         type: 'textarea',
                         value: '',
-                        title: '标题',
-                        tips: '提示',
+                        title: '多行输入框',
+                        tips: '请输入内容',
                         extra: {
                             text: '用户申请时填写的内容最多可填写200个字'
                         },

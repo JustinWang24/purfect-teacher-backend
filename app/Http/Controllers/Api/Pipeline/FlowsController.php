@@ -9,12 +9,14 @@ use App\BusinessLogic\Pipeline\Flow\FlowLogicFactory;
 use App\Dao\Pipeline\ActionDao;
 use App\Dao\Pipeline\FlowDao;
 use App\Dao\Pipeline\UserFlowDao;
+use App\Events\Pipeline\Flow\FlowBusiness;
 use App\Events\Pipeline\Flow\FlowProcessed;
 use App\Events\Pipeline\Flow\FlowRejected;
 use App\Events\Pipeline\Flow\FlowStarted;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Pipeline\FlowRequest;
 use App\Models\Pipeline\Flow\Action;
+use App\Models\Pipeline\Flow\Flow;
 use App\Models\Pipeline\Flow\Node;
 use App\User;
 use App\Utils\JsonBuilder;
@@ -55,14 +57,45 @@ class FlowsController extends Controller
                 $flowInfo = $flow->getSimpleLinkedNodes();
                 $handlers = [];
                 foreach ($flowInfo['handler'] as $handler) {
-                    $handlers[] = $flowDao->transTitlesToUser($handler->titles, $handler->organizations, $user);
+                    $tmpHandlers = $flowDao->transTitlesToUser($handler->titles, $handler->organizations, $user);
+                    $retHandlers = [];
+                    foreach ($tmpHandlers as $tmpKey => $tmpHandler) {
+                        foreach ($tmpHandler as $tmp) {
+                            $retHandlers[$tmpKey][] = [
+                                'id' => $tmp->id,
+                                'name' => $tmp->name,
+                                'avatar' => $tmp->profile->avatar ?? ''
+                            ];
+                        }
+                    }
+                    $handlers[] = $retHandlers;
+                }
+                if ($flow->business) {
+                    $businessOptions = Flow::business($flow->business);
+                    $businessDefault = [];
+                    foreach ($businessOptions['options'] as $businessOption) {
+                        if ($businessOption['readonly']) {
+                            parse_str($request->headers->get('referer'), $getParam);
+                            $businessDefault[$businessOption['title']] = $getParam[$businessOption['title']] ?? '';
+                        }
+                    }
+                    $options = [];
+                    foreach ($flowInfo['options'] as $option) {
+                        if (isset($businessDefault[$option['title']])) {
+                            $option['value'] = $businessDefault[$option['title']];
+                            $option['default'] = true;
+                        }
+                        $options[] = $option;
+                    }
+                }else {
+                    $options = $flowInfo['options'];
                 }
                 $return = [
                     'user' => $user,
                     'flow' => $flow,
                     'handlers' => $handlers,
                     'copys' => $flowInfo['copy'],
-                    'options' => $flowInfo['options'],
+                    'options' => $options,
                     'api_token' => $request->get('api_token'),
                     'appName' => 'pipeline-flow-open-app'
                 ];
@@ -78,7 +111,9 @@ class FlowsController extends Controller
      */
     public function started_by_me(FlowRequest $request){
         $logic = FlowLogicFactory::GetInstance($request->user());
-        $list = $logic->startedByMe();
+        $position = $request->get('position', 0);
+        $keyword = $request->get('keyword');
+        $list = $logic->startedByMe($position, $keyword);
         if ($list) {
             foreach ($list as $key => $value) {
                 $value->avatar = $value->user->profile->avatar ?? '';
@@ -94,7 +129,8 @@ class FlowsController extends Controller
     public function waiting_for_me(FlowRequest $request){
         $logic = FlowLogicFactory::GetInstance($request->user());
         $position = $request->get('position', 0);
-        return JsonBuilder::Success(['actions'=>$logic->waitingForMe($position)]);
+        $keyword = $request->get('keyword');
+        return JsonBuilder::Success(['actions'=>$logic->waitingForMe($position,$keyword)]);
     }
 
     /**
@@ -103,12 +139,16 @@ class FlowsController extends Controller
      */
     public function copy_to_me(FlowRequest $request){
         $logic = FlowLogicFactory::GetInstance($request->user());
-        return JsonBuilder::Success(['copys'=>$logic->copyToMe()]);
+        $position = $request->get('position', 0);
+        $keyword = $request->get('keyword');
+        return JsonBuilder::Success(['copys'=>$logic->copyToMe($position, $keyword)]);
     }
 
     public function my_processed(FlowRequest $request){
         $logic = FlowLogicFactory::GetInstance($request->user());
-        return JsonBuilder::Success(['processed'=>$logic->myProcessed()]);
+        $position = $request->get('position', 0);
+        $keyword = $request->get('keyword');
+        return JsonBuilder::Success(['processed'=>$logic->myProcessed($position, $keyword)]);
     }
 
     /**
@@ -227,7 +267,13 @@ class FlowsController extends Controller
                         if ($dao->getCountWaitProcessUsers($action->getNode()->id) < 1) {
                             //可能存在自动同意已经到了下一个action
                             $newAction = $dao->getActionByUserFlowAndUserId($action->transaction_id, $action->user_id);
-                            $event = new FlowProcessed($request->user(),$newAction, $newAction->getNode(), $newAction->getFlow());
+                            $flow = $newAction->getFlow();
+                            $event = new FlowProcessed($request->user(),$newAction, $newAction->getNode(), $flow);
+
+                            //业务事件
+                            if ($newAction->userFlow->isDone() && $flow->business) {
+                                  event(new FlowBusiness($flow, $newAction->userFlow));
+                            }
                         }
                         break;
                     case IAction::RESULT_TERMINATE:

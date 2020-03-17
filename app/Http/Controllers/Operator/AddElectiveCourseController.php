@@ -87,6 +87,9 @@ class AddElectiveCourseController extends Controller
             }
         }
 
+        if ($applyDao->checkTimeConflictByTeacherId($schedule, $apply->start_year, $apply->term, $apply->teacher_id)){
+            return JsonBuilder::Error('授课时间冲突');
+        }
 
         $applyDao->approvedApply($id, $content, $schedule);
         $result  = $applyDao->publishToCourse($id);

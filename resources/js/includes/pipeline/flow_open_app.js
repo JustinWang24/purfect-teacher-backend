@@ -60,13 +60,18 @@ if (document.getElementById('pipeline-flow-open-app')) {
             let data = res.data.data;
             // console.log(data)
             this.formList = data.options;
-            // this.formList.forEach(function(item, index) {
-            //     item.value = '';
-            // });
+            this.formList.forEach((item, index) => {
+              if (item.type == 'input' || item.type == 'textarea' || item.type == 'number') {
+                this.$set(item, 'value', '')
+              }
+            });
             // console.log(this.formList)
           }
         }).catch((err) => {
-
+          this.$message({
+            message: '获取表单信息失败',
+            type: 'warning'
+          });
         });
       },
       onSubmit() {
@@ -125,13 +130,46 @@ if (document.getElementById('pipeline-flow-open-app')) {
       },
       onConfirmS(item) {
         item.valueS = this.setTime(item.timeS, item.extra.dateType);
-        item.value = item.valueS + item.valueE ? item.valueE : '';
+
+        if (item.timeS > item.timeE) {
+          item.timeE = item.timeS
+          item.valueE = item.valueS
+        }
+
+        item.value = item.valueS + (item.valueE ? ' ~ ' + item.valueE : '');
+        console.log(item.valueE ? item.valueE : '')
+        console.log(item, item.value)
         item.extra.showPickerS = false;
       },
       onConfirmE(item) {
         item.valueE = this.setTime(item.timeE, item.extra.dateType);
-        item.value = item.valueS ? item.valueS : '' + item.valueE;
+
+        if (item.timeE < item.timeS) {
+          item.timeS = item.timeE
+          item.valueS = item.valueE
+        }
+
+        item.value = (item.valueS ? item.valueS + ' ~ ' : '') + item.valueE;
+        console.log(item, item.value)
         item.extra.showPickerE = false;
+      },
+      showPicker(item) {
+        item.extra.showPicker = true;
+        if (!item.value) {
+          item.time = new Date();
+        }
+      },
+      showPickerStart(item) {
+        item.extra.showPickerS = true;
+        if (!item.timeS) {
+          item.timeS = new Date();
+        }
+      },
+      showPickerEnd(item) {
+        item.extra.showPickerE = true;
+        if (!item.timeE) {
+          item.timeE = new Date();
+        }
       },
       setTime(time, type) {
         let year = time.getFullYear();
@@ -156,24 +194,13 @@ if (document.getElementById('pipeline-flow-open-app')) {
         item.value = val[0].name + '/' + val[1].name + '/' + val[2].name;
         item.extra.showPicker = false;
       },
-      pickFileHandler: function (payload) {
-        this.showFileManagerFlag = false;
-        const attachment = {
-          id: null,
-          action_id: null,
-          media_id: payload.file.id,
-          url: payload.file.url,
-          file_name: payload.file.file_name
-        };
-        this.action.attachments.push(attachment);
-      },
       uploadImg(img) {
         // console.log(img)
 
       },
       showDepart(item) {
         // if (this.part.length == 0 || item.value) {
-          this.getPart()
+        this.getPart()
         // }
         item.extra.showPicker = true;
         item.cancelText = '下一步';
@@ -221,7 +248,7 @@ if (document.getElementById('pipeline-flow-open-app')) {
               return
             }
             this.part.splice(level, this.part.length + level, data);
-            if (data.organ.length != 0 && type == 2) {
+            if (data.organ.length != 0) {
               this.selectParts = [];
               parentItem.organ.forEach((itemPart, index) => {
                 itemPart.active = false;
@@ -229,6 +256,10 @@ if (document.getElementById('pipeline-flow-open-app')) {
               item.active = true;
             } else if (data.organ.length == 0) {
               if (type == 1) {
+                parentItem.organ.forEach((itemPart, index) => {
+                  itemPart.active = false;
+                });
+                item.active = true;
                 this.selectParts[0] = item;
               } else if (type == 2) {
                 let noPart = true;
@@ -250,6 +281,21 @@ if (document.getElementById('pipeline-flow-open-app')) {
           }
         }).catch((err) => {
         });
+      },
+      pickFileHandler: function(payload){
+        this.showFileManagerFlag = false;
+        const attachment = {
+          id:null,
+          action_id: null,
+          media_id: payload.file.id,
+          url: payload.file.url,
+          file_name: payload.file.file_name
+        };
+        this.action.attachments.push(attachment);
+      },
+      dropAttachment: function(idx, attachment){
+        this.action.attachments.splice(idx, 1);
+        this.$message({type:'info', message: '移除文件: ' + attachment.file_name});
       }
     }
   });

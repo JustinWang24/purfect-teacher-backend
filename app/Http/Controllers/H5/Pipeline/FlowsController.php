@@ -167,10 +167,51 @@ class FlowsController extends Controller
             //表单信息
             $optionReList = [];
             foreach ($flowInfo['options'] as $option) {
+                if ($option['type'] == 'node') {
+                  continue;
+                }
+                $optionRet = ActionOption::where('action_id', $startUserAction->id)->where('option_id', $option['id'])->value('value');
+                $value = '';
+                switch ($option['type']) {
+                    case 'date-date':
+                        if ($optionRet) {
+                            $optionRet = explode('~', $optionRet);
+                            $value = $optionRet[0];
+                            if (!empty($optionRet[1])) {
+                                $optionReList[] = [
+                                    'name' => $option['name'],
+                                    'title' => $option['title'],
+                                    'value' => $value
+                                ];
+
+                                $option['title'] = $option['extra']['title2'];
+                                $value = $optionRet[1];
+                            }
+                        }
+                        break;
+                    case 'radio':
+                        if ($optionRet) {
+                            $optionRet = json_decode($optionRet, true);
+                            $value = $optionRet['itemText'];
+                        }
+                        break;
+                    case 'checkbox':
+                        if ($optionRet) {
+                            $optionRet = json_decode($optionRet, true);
+                            foreach ($optionRet as $ret) {
+                                $value .= ' ' . $ret['itemText'];
+                            }
+                        }
+                        break;
+                    default:
+                        $value = $optionRet;
+                        break;
+                }
+
                 $optionReList[] = [
                     'name' => $option['name'],
                     'title' => $option['title'],
-                    'value' => ActionOption::where('action_id', $startUserAction->id)->where('option_id', $option['id'])->value('value')
+                    'value' => $value
                 ];
             }
             $this->dataForView['flowInfo'] = $flowInfo;

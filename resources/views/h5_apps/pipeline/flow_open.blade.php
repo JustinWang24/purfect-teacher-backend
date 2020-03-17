@@ -15,11 +15,14 @@
                         :name="item.title"
                         :label="item.title"
                         :placeholder="item.tips"
+                        :maxlength="item.type == 'input' || item.type=='number'?20:200"
+                        show-word-limit
                         :required="item.required?true:false"
                         :rules="item.required?[{ required: item.required,pattern: item.type=='number'?(item.extra.floats?/^[0-9]+(.[0-9]{2})?$/:/^(\-|\+)?\d*$/):'', message:item.type=='number'?(item.extra.floats?'支持输入两位小数':'请输入整数'): '请填写'+item.tips }]:[]"
                 />
             </div>
-            <div v-if="item.type == 'radio'">
+            <div class="myRadio" v-if="item.type == 'radio'">
+                <div class="myTips" v-html="item.tips"></div>
                 <van-field :required="item.required?true:false" name="radio" :label="item.title">
                     <template #input>
                         <van-radio-group v-model="item.value">
@@ -29,7 +32,8 @@
                     </template>
                 </van-field>
             </div>
-            <div v-if="item.type == 'checkbox'">
+            <div class="myRadio" v-if="item.type == 'checkbox'">
+                <div class="myTips" v-html="item.tips"></div>
                 <van-field :required="item.required?true:false" name="checkboxGroup" :label="item.title">
                     <template #input>
                         <van-checkbox-group v-model="item.value">
@@ -48,8 +52,8 @@
                         name="datetimePicker"
                         :value="item.value"
                         :label="item.title"
-                        :placeholder="item.tips"
-                        @click="item.extra.showPicker = true;"
+                        :placeholder="item.tips + '  >'"
+                        @click="showPicker(item)"
                 />
                 </van-field>
                 <van-popup v-model="item.extra.showPicker" position="bottom">
@@ -72,8 +76,8 @@
                             name="datetimePicker"
                             :value="item.valueS"
                             :label="item.title"
-                            :placeholder="item.tips"
-                            @click="item.extra.showPickerS = true;"
+                            :placeholder="item.tips + '  >'"
+                            @click="showPickerStart(item)"
                     />
                     </van-field>
                     <van-popup v-model="item.extra.showPickerS" position="bottom">
@@ -95,8 +99,8 @@
                             name="datetimePicker"
                             :value="item.valueE"
                             :label="item.extra.title2"
-                            :placeholder="item.tips"
-                            @click="item.extra.showPickerE = true;"
+                            :placeholder="item.tips + '  >'"
+                            @click="showPickerEnd(item)"
                     />
                     </van-field>
                     <van-popup v-model="item.extra.showPickerE" position="bottom">
@@ -111,10 +115,26 @@
                     </van-popup>
                 </div>
             </div>
-            <div v-if="item.type == 'image' || item.type == 'files'">
+            <div class="myRadio" v-if="item.type == 'image'">
+                <div class="myTips" v-html="item.tips"></div>
                 <van-field name="uploader" :required="item.required?true:false" :label="item.title">
                     <template #input>
                         <van-uploader v-model="item.files" :max-count="9" :after-read="uploadImg"/>
+                    </template>
+                </van-field>
+            </div>
+            <div class="myRadio myFiles" v-if="item.type == 'files'">
+                <div class="myTips" v-html="item.tips"></div>
+                <van-field name="uploader" :required="item.required?true:false" :label="item.title">
+                    <template #input>
+                       <el-button style="background: none;border: none;color: #409EFF;padding: 5px;" type="primary" size="mini" icon="el-icon-paperclip" v-on:click="showFileManagerFlag=true">选择附件</el-button>
+                        <ul style="padding-left: 0;">
+                            <li v-for="(a, idx) in action.attachments" :key="idx">
+                                <p style="margin-bottom: 0;">
+                                    <span>@{{ a.file_name }}</span>&nbsp;<el-button v-on:click="dropAttachment(idx, a)" type="text" style="color: red">删除</el-button>
+                                </p>
+                            </li>
+                        </ul>
                     </template>
                 </van-field>
             </div>
@@ -137,7 +157,7 @@
                         :required="item.required?true:false"
                         :value="item.value"
                         :label="item.title"
-                        :placeholder="item.tips"
+                        :placeholder="item.tips + '  >'"
                         @click="item.extra.showPicker = true"
                 />
                 </van-field>
@@ -149,7 +169,7 @@
                     />
                 </van-popup>
             </div>
-            <div v-if="item.type == 'node'">
+            <div class="myRadio myNode" v-if="item.type == 'node'">
                 <van-field disabled
                            v-model="item.title"
                            type="textarea"
@@ -164,7 +184,7 @@
                         :required="item.required?true:false"
                         :value="item.value"
                         :label="item.title"
-                        :placeholder="item.tips"
+                        :placeholder="item.tips + '  >'"
                         @click="showDepart(item)"
                 />
                 </van-field>
@@ -190,24 +210,12 @@
 
 
 
-          <h5 style="background:white;margin:0;padding: 10px;">审批流程</h5>
-          <el-timeline>
-               @foreach($handlers as $key => $handler)
-                   <el-timeline-item key="{{ $key }}" icon="el-icon-more" type="primary" size="large">
-                       @foreach($handler as $k => $val)
-                           @foreach ($val as $v)
-                               <el-timeline-item>
-                                   {{ $v->name }}({{ $k }})
-                               </el-timeline-item>
-                           @endforeach
-                       @endforeach
-                   </el-timeline-item>
-               @endforeach
-           </el-timeline>
 
-          <van-button round block type="info" native-type="submit">
-               提交
-          </van-button>
+          <div style="width: 100%;background: white;text-align: center;margin-top:10px;padding-top:40px">
+                    <van-button style="width: 160px;margin: 0 auto" round block type="info" native-type="submit">
+                         提交
+                    </van-button>
+          </div>
           </van-form>
            </div>
     @include(

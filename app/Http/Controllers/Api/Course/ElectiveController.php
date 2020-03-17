@@ -19,7 +19,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use PHPUnit\Util\Json;
 
-//@TODO ?为什么逻辑代码都在控制器 下面的流程不是理解
 class ElectiveController extends Controller
 {
     //选修课报名结果表前缀
@@ -301,6 +300,9 @@ class ElectiveController extends Controller
         }
 
         //验证课程是否冲突
+        if ($dao->checkTimeConflictByUserId($courseId, $user->id)) {
+            return JsonBuilder::Error('课程时间冲突');
+        }
 
         $result = $dao->enroll($courseId, $user->id, $teacherId, $schoolId);
         return JsonBuilder::Success($result);

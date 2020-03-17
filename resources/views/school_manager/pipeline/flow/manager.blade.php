@@ -81,7 +81,7 @@
                                 </el-button-group>
                             </p>
                             <p v-if="handler.length > 0" v-for="(item,index) in handler" :key="item.id">
-                                第@{{ index + 1}}步：@{{ item.titles }}
+                                第@{{ index + 1}}步：@{{ item.organizations }}@{{ item.titles }}
                             </p>
                         </el-timeline-item>
                         <el-timeline-item timestamp="抄送人" placement="top">
@@ -181,7 +181,8 @@
                 </el-col>
             </el-row>
             <el-form-item>
-                <el-button type="primary" @click="onNewFlowSubmit">立即创建</el-button>
+                <el-button type="primary" @click="onNewFlowSubmit" v-if="newFlow">立即创建</el-button>
+                <el-button type="primary" @click="saveFlowSubmit" v-else>保存流程</el-button>
                 <el-button @click="flowFormFlag = false">取消</el-button>
             </el-form-item>
         </el-form>
