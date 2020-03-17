@@ -16,6 +16,7 @@ use App\Models\Pipeline\Flow\Flow;
 use App\Models\Pipeline\Flow\NodeAttachment;
 use App\Models\Users\GradeUser;
 use App\Utils\JsonBuilder;
+use App\Utils\Pipeline\IFlow;
 
 class FlowsController extends Controller
 {
@@ -267,7 +268,18 @@ class FlowsController extends Controller
 
         if($nodeOptionFormData){
             $dao = new NodeDao();
+            $flowDao = new FlowDao();
             $firstNode = $dao->getHeadNodeByFlow($flowId);
+            $flow = $flowDao->getById($flowId);
+            if ($flow->business) {
+                //关联业务的表单
+                $businessOptions = Flow::business($flow->business);
+                foreach ($businessOptions['options'] as $option) {
+                    foreach ($nodeOptionFormData as $nodeOptionFormDatum) {
+                        
+                    }
+                }
+            }
             try{
                 $dao->deleteOptionByNode($firstNode->id);
                 foreach ($nodeOptionFormData as $nodeData) {
