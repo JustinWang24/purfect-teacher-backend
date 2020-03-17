@@ -16,6 +16,7 @@ use App\Models\Pipeline\Flow\Flow;
 use App\Models\Pipeline\Flow\NodeAttachment;
 use App\Models\Users\GradeUser;
 use App\Utils\JsonBuilder;
+use App\Utils\Pipeline\IFlow;
 
 class FlowsController extends Controller
 {
@@ -267,13 +268,33 @@ class FlowsController extends Controller
 
         if($nodeOptionFormData){
             $dao = new NodeDao();
+            $flowDao = new FlowDao();
             $firstNode = $dao->getHeadNodeByFlow($flowId);
+            $flow = $flowDao->getById($flowId);
             try{
                 $dao->deleteOptionByNode($firstNode->id);
-                foreach ($nodeOptionFormData as $nodeData) {
-                    $nodeData['node_id'] = $firstNode->id;
-                    $dao->saveNodeOption($nodeData);
+                if ($flow->business) {
+                    $businessOptions = Flow::business($flow->business);
+                    $businessIgnore = [];
+                    foreach ($businessOptions['options'] as $businessOption) {
+                        $businessOption['node_id'] = $firstNode->id;
+                        $dao->saveNodeOption($businessOption);
+                        $businessIgnore[] = $businessOption['title'];
+                    }
+                    foreach ($nodeOptionFormData as $nodeData) {
+                        if (in_array($nodeData['title'], $businessIgnore)) {
+                            continue;
+                        }
+                        $nodeData['node_id'] = $firstNode->id;
+                        $dao->saveNodeOption($nodeData);
+                    }
+                }else {
+                    foreach ($nodeOptionFormData as $nodeData) {
+                        $nodeData['node_id'] = $firstNode->id;
+                        $dao->saveNodeOption($nodeData);
+                    }
                 }
+
                 return JsonBuilder::Success();
             }
             catch (\Exception $exception){

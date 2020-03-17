@@ -15,6 +15,7 @@ use App\Events\Pipeline\Flow\FlowStarted;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Pipeline\FlowRequest;
 use App\Models\Pipeline\Flow\Action;
+use App\Models\Pipeline\Flow\Flow;
 use App\Models\Pipeline\Flow\Node;
 use App\User;
 use App\Utils\JsonBuilder;
@@ -68,12 +69,29 @@ class FlowsController extends Controller
                     }
                     $handlers[] = $retHandlers;
                 }
+                if ($flow->business) {
+                    $businessOptions = Flow::business($flow->business);
+                    $businessDefault = [];
+                    foreach ($businessOptions as $businessOption) {
+                        $businessDefault[$businessOption['title']] = $request->get($businessOption['title'], '');
+                    }
+                    $options = [];
+                    foreach ($flowInfo['options'] as $option) {
+                        if (isset($businessDefault[$option['title']])) {
+                            $option['value'] = $businessDefault[$option['title']];
+                            $option['default'] = true;
+                        }
+                        $options[] = $option;
+                    }
+                }else {
+                    $options = $flowInfo['options'];
+                }
                 $return = [
                     'user' => $user,
                     'flow' => $flow,
                     'handlers' => $handlers,
                     'copys' => $flowInfo['copy'],
-                    'options' => $flowInfo['options'],
+                    'options' => $options,
                     'api_token' => $request->get('api_token'),
                     'appName' => 'pipeline-flow-open-app'
                 ];
@@ -89,7 +107,9 @@ class FlowsController extends Controller
      */
     public function started_by_me(FlowRequest $request){
         $logic = FlowLogicFactory::GetInstance($request->user());
-        $list = $logic->startedByMe();
+        $position = $request->get('position', 0);
+        $keyword = $request->get('keyword');
+        $list = $logic->startedByMe($position, $keyword);
         if ($list) {
             foreach ($list as $key => $value) {
                 $value->avatar = $value->user->profile->avatar ?? '';
@@ -105,7 +125,8 @@ class FlowsController extends Controller
     public function waiting_for_me(FlowRequest $request){
         $logic = FlowLogicFactory::GetInstance($request->user());
         $position = $request->get('position', 0);
-        return JsonBuilder::Success(['actions'=>$logic->waitingForMe($position)]);
+        $keyword = $request->get('keyword');
+        return JsonBuilder::Success(['actions'=>$logic->waitingForMe($position,$keyword)]);
     }
 
     /**
@@ -114,12 +135,16 @@ class FlowsController extends Controller
      */
     public function copy_to_me(FlowRequest $request){
         $logic = FlowLogicFactory::GetInstance($request->user());
-        return JsonBuilder::Success(['copys'=>$logic->copyToMe()]);
+        $position = $request->get('position', 0);
+        $keyword = $request->get('keyword');
+        return JsonBuilder::Success(['copys'=>$logic->copyToMe($position, $keyword)]);
     }
 
     public function my_processed(FlowRequest $request){
         $logic = FlowLogicFactory::GetInstance($request->user());
-        return JsonBuilder::Success(['processed'=>$logic->myProcessed()]);
+        $position = $request->get('position', 0);
+        $keyword = $request->get('keyword');
+        return JsonBuilder::Success(['processed'=>$logic->myProcessed($position, $keyword)]);
     }
 
     /**
