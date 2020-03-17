@@ -241,7 +241,7 @@ class ActionDao
      * @param $user
      * @return Collection
      */
-    public function getFlowsWaitingFor($user, $position = 0){
+    public function getFlowsWaitingFor($user, $position = 0, $keyword= ''){
         if (!$position) {
             return Action::where('user_id',$user->id??$user)
                 ->where('result','=',IAction::RESULT_PENDING)

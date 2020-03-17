@@ -81,6 +81,7 @@ class TaskController extends Controller
         // 我创建的
         if($type == ProjectTask::STATUS_MY_CREATE) {
             $list = $dao->myCreateTasks($userId);
+            $lastPage = $list->lastPage();
             $output = [];
             foreach ($list as $key => $val) {
                 $output[$key]['taskid'] = $val->id;
@@ -116,6 +117,7 @@ class TaskController extends Controller
         } else {
             // 我参与的
             $list = $dao->attendTasks($userId, $type);
+            $lastPage = $list->lastPage();
             $output = [];
             foreach ($list as $key => $val) {
 
@@ -151,7 +153,14 @@ class TaskController extends Controller
         }
 
 
-        return JsonBuilder::Success($output);
+        $result = [
+            'code'=>JsonBuilder::CODE_SUCCESS,
+            'message' => 'OK',
+            'lastPage' => $lastPage,
+            'data' => $output,
+        ];
+
+        return $result;
     }
 
 
