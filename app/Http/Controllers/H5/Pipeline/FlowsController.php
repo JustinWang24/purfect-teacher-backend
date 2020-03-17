@@ -173,6 +173,20 @@ class FlowsController extends Controller
                 $optionRet = ActionOption::where('action_id', $startUserAction->id)->where('option_id', $option['id'])->value('value');
                 $value = '';
                 switch ($option['type']) {
+                    case 'date-date':
+                        if ($optionRet) {
+                            $optionRet = explode('~', $optionRet);
+                            $value = $optionRet[0];
+                            if (!empty($optionRet[1])) {
+                                $extra = json_decode($option['extra'], true);
+                                $optionReList[] = [
+                                    'name' => $option['name'],
+                                    'title' => $extra['title2'],
+                                    'value' => $optionRet[1]
+                                ];
+                            }
+                        }
+                        break;
                     case 'radio':
                         if ($optionRet) {
                             $optionRet = json_decode($optionRet, true);
