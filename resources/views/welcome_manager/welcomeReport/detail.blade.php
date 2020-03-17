@@ -242,6 +242,9 @@ use App\Utils\UI\Button;
 								</tbody>
 							</table>
 						@endif
+						<?php
+							Anchor::Print(['text'=>trans('general.return'),'href'=>url()->previous(),'class'=>'pull-right link-return'], Button::TYPE_SUCCESS,'arrow-circle-o-right')
+						?>
                     @endif
 
                 </div>

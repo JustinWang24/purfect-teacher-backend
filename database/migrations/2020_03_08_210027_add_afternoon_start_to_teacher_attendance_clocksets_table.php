@@ -15,7 +15,9 @@ class AddAfternoonStartToTeacherAttendanceClocksetsTable extends Migration
     {
         Schema::table('teacher_attendance_clocksets', function (Blueprint $table) {
             //
-            $table->time('afternoon_start')->nullable(true)->comment('下午开始打卡');
+            if (!Schema::hasColumn('teacher_attendance_clocksets', 'afternoon_start')) {
+                $table->time('afternoon_start')->nullable(true)->comment('下午开始打卡');
+            }
         });
     }
 

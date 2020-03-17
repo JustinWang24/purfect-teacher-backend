@@ -30,7 +30,7 @@
                         <div class="viewContent">
                                         <div class="fromItem" v-for="item in formList">
                                             <div v-if="item.type == 'input' || item.type=='textarea' || item.type=='number'">
-                                                <van-field
+                                                <van-field disabled
                                                         v-model="item.value"
                                                         :type="item.type"
                                                         :name="item.title"
@@ -41,7 +41,7 @@
                                                 />
                                             </div>
                                             <div v-if="item.type == 'radio'">
-                                                <van-field :required="item.required?true:false" name="radio" :label="item.title">
+                                                <van-field disabled :required="item.required?true:false" name="radio" :label="item.title">
                                                     <template #input>
                                                         <van-radio-group v-model="item.value" direction="horizontal">
                                                             <van-radio v-for="(item2, index2) in item.extra.itemList" :name="item2">@{{item2.itemText}}
@@ -51,7 +51,7 @@
                                                 </van-field>
                                             </div>
                                             <div v-if="item.type == 'checkbox'">
-                                                <van-field :required="item.required?true:false" name="checkboxGroup" :label="item.title">
+                                                <van-field disabled :required="item.required?true:false" name="checkboxGroup" :label="item.title">
                                                     <template #input>
                                                         <van-checkbox-group v-model="item.value" direction="horizontal">
                                                             <van-checkbox v-for="(itemCB, indexCB) in item.extra.itemList" :name="itemCB" shape="square">
@@ -62,7 +62,7 @@
                                                 </van-field>
                                             </div>
                                             <div v-if="item.type == 'date'">
-                                                <van-field
+                                                <van-field disabled
                                                         :required="item.required?true:false"
                                                         readonly
                                                         clickable
@@ -70,7 +70,6 @@
                                                         :value="item.value"
                                                         :label="item.title"
                                                         :placeholder="item.tips"
-                                                        @click="item.extra.showPicker = true;"
                                                 />
                                                 </van-field>
                                                 <van-popup v-model="item.extra.showPicker" position="bottom">
@@ -86,7 +85,7 @@
                                             </div>
                                             <div v-if="item.type == 'date-date'">
                                                 <div>
-                                                    <van-field
+                                                    <van-field disabled
                                                             :required="item.required?true:false"
                                                             readonly
                                                             clickable
@@ -94,7 +93,6 @@
                                                             :value="item.valueS"
                                                             :label="item.title"
                                                             :placeholder="item.tips"
-                                                            @click="item.extra.showPickerS = true;"
                                                     />
                                                     </van-field>
                                                     <van-popup v-model="item.extra.showPickerS" position="bottom">
@@ -109,7 +107,7 @@
                                                     </van-popup>
                                                 </div>
                                                 <div>
-                                                    <van-field
+                                                    <van-field disabled
                                                             :required="item.required?true:false"
                                                             readonly
                                                             clickable
@@ -117,7 +115,7 @@
                                                             :value="item.valueE"
                                                             :label="item.extra.title2"
                                                             :placeholder="item.tips"
-                                                            @click="item.extra.showPickerE = true;"
+
                                                     />
                                                     </van-field>
                                                     <van-popup v-model="item.extra.showPickerE" position="bottom">
@@ -133,14 +131,14 @@
                                                 </div>
                                             </div>
                                             <div v-if="item.type == 'image' || item.type == 'files'">
-                                                <van-field name="uploader" :required="item.required?true:false" :label="item.title">
+                                                <van-field disabled name="uploader" :required="item.required?true:false" :label="item.title">
                                                     <template #input>
                                                         <van-uploader v-model="item.files" :max-count="9" :after-read="uploadImg" />
                                                     </template>
                                                 </van-field>
                                             </div>
                                             <div v-if="item.type == 'money'">
-                                                <van-field
+                                                <van-field disabled
                                                         v-model="item.value"
                                                         type="number"
                                                         :name="item.title"
@@ -151,18 +149,17 @@
                                                 />
                                             </div>
                                             <div v-if="item.type == 'area'">
-                                                <van-field
+                                                <van-field disabled
                                                         readonly
                                                         clickable
+                                                        :required="item.required?true:false"
                                                         name="area"
                                                         :value="item.value"
                                                         :label="item.title"
                                                         :placeholder="item.tips"
-                                                        @click="item.extra.showPicker = true"
                                                 /></van-field>
                                                 <van-popup v-model="item.extra.showPicker" position="bottom">
                                                     <van-area
-                                                            :area-list="provinceList"
                                                             @confirm="setArea($event, item)"
                                                             @cancel="item.extra.showPicker = false"
                                                     />
@@ -175,6 +172,18 @@
                                                         name="说明文字"
                                                         label="说明文字"/>
                                             </div>
+                                                    <div v-if="item.type == 'department'">
+                                                        <van-field
+                                                        :required="item.required?true:false"
+                                                                readonly
+                                                                clickable
+                                                                name="area"
+                                                                :value="item.value"
+                                                                :label="item.title"
+                                                                :placeholder="item.tips"
+                                                        />
+                                                        </van-field>
+                                             </div>
                                         </div>
 
                         </div>

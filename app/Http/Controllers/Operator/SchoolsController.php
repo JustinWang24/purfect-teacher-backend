@@ -22,6 +22,7 @@ use App\Utils\FlashMessageBuilder;
 use App\Dao\Schools\InstituteDao;
 use App\Utils\JsonBuilder;
 use Illuminate\Support\Facades\DB;
+use Psy\Util\Json;
 
 class SchoolsController extends Controller
 {
@@ -246,7 +247,6 @@ class SchoolsController extends Controller
         $return = $parents;
         $nowNode = $return;
         foreach ($orgArr as $orgid) {
-            //@TODO 哪里出现对return的引用?
             foreach ($parents as $pkey => $parent) {
                 if ($parent->id == $orgid) {
                     $nowNode[$pkey]->children = $dao->getByParentId($schoolId, $orgid);
@@ -255,6 +255,22 @@ class SchoolsController extends Controller
                     break;
                 }
             }
+        }
+        return JsonBuilder::Success($return);
+    }
+
+    /**
+     * 前端要求返回所有节点的树形结构
+     * @param SchoolRequest $request
+     * @return string
+     */
+    public function load_all(SchoolRequest $request) {
+        $schoolId = $request->get('school_id');
+        $dao = new OrganizationDao();
+        $parents = $dao->loadByLevel(1, $schoolId);
+        $return = [];
+        foreach ($parents as $parent) {
+            $return[] = $dao->outputOnlyData($parent);
         }
         return JsonBuilder::Success($return);
     }

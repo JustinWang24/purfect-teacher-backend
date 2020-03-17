@@ -100,7 +100,7 @@ require('./includes/pipeline/flow_open_app'); // 用户启动流程
 require('./includes/pipeline/flow_view_history_app'); // 用户查看流程详情
 require('./includes/pipeline/flows_manager_app'); // 流程管理后台
 require('./includes/pipeline/manager_form'); // 流程管理后台
-require('./includes/backend/student_list_app'); // 待审批 已审批 抄送我  h5教师list页
+//require('./includes/backend/student_list_app'); // 待审批 已审批 抄送我  h5教师list页
 
 require('./includes/backend/teacher_check_in'); // 后台,教师签到
 require('./includes/backend/teacher_blade_index'); // 后台,教师助手

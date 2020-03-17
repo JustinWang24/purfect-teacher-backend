@@ -1,5 +1,7 @@
 import { Mixins } from "../Mixins";
 import Organization from "./Organization";
+import ManagerMent from "./ManagerMent";
+
 import { _save_attendance, catchErr } from "../api/index";
 Vue.component("AttendanceForm", {
   template: `
@@ -43,7 +45,7 @@ Vue.component("AttendanceForm", {
     </div>
     </el-form-item>
      <Organization/>
-     
+     <ManagerMent ref="managerMent" />
     </el-form>
     <div class="btn-create">
         <el-button  @click="_add()" :loading="isLoading" type="primary" size="mini">保存</el-button>
@@ -83,7 +85,10 @@ Vue.component("AttendanceForm", {
         "attendance.wifi_name": [
           { required: true, message: "请填写指定WIFI", trigger: "blur" }
         ],
-        organizations: [{ required: true, message: "请选择考勤部门" }]
+        organizations: [{ required: true, message: "请选择考勤部门" }],
+        managers:[
+          { required: true, message: "请选择管理员" }
+        ],
       }
     };
   }

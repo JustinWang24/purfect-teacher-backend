@@ -26,7 +26,7 @@
             <el-divider></el-divider>
             <h5>
                 <p>出生年月</p>
-                <p>{{ $startUser->profile->birthday }}</p>
+                <p>{{ substr($startUser->profile->birthday, 0, 10) }}</p>
             </h5>
             <el-divider></el-divider>
             <h5>
@@ -70,16 +70,16 @@
             <el-divider></el-divider>
             @foreach($options as $option)
             <h5>
-                <p>{{ $option['name'] }}</p>
+                <p>{{ $option['title'] }}</p>
                 <p>{{ $option['value'] }}</p>
             </h5>
             <el-divider></el-divider>
             @endforeach
         </div>
-        <div class="information">
+        <!-- <div class="information">
             <h3>申请理由</h3>
             <p class="reason">{{ $startAction->content }}</p>
-        </div>
+        </div> -->
         <!-- <div class="information">
             <h3>证明材料</h3> 写表单的那个人呢 还没对接过
             <div class="imageBox">
@@ -102,19 +102,33 @@
         <div class="information">
             <h3>
                 <span>审批人</span>
-                <span style="font-size: 14px; font-weight: 100;">自动同意</span>
+                <span style="font-size: 14px; font-weight: 100;">@if (!empty($flowInfo->auto_processed))自动同意@endif</span>
             </h3>
             <div class="block" style="padding: 0 15px;">
                 <el-timeline>
+                    <el-timeline-item key="0">
+                        <el-timeline-item timestamp="{{ substr($startAction->created_at, 0, 16) }}">
+                            <img src="{{ $startUser->profile->avatar }}" alt="" style="width: 40px; height: 40px;border-radius: 50%;vertical-align: middle;">
+                            {{ $startUser->name }}
+                            <span style="text-align: right;"> 发起审批 </span>
+                        </el-timeline-item>
+                    </el-timeline-item>
                     @foreach($handlers as $key => $handler)
                     <!-- <el-timeline-item key="{{ $key }}" icon="审批状态"  :timestamp="时间戳2018-04-12 20:46">-->
-                    <el-timeline-item key="{{ $key }}">
+                    <el-timeline-item key="{{ $key+1 }}">
                         @foreach($handler as $k => $val)
                         @foreach ($val as $v)
-                        <el-timeline-item @if (!empty($v->result)) result="{{ $v->result->result }}" @if($v->result->result != \App\Utils\Pipeline\IAction::RESULT_PENDING) :timestamp="{{ substr($v->result->updated_at, 5, 11) }}" @endif @endif>
+                        <el-timeline-item @if (!empty($v->result)) result="{{ $v->result->result }}" @if($v->result->result != \App\Utils\Pipeline\IAction::RESULT_PENDING) timestamp="{{ substr($v->result->updated_at, 0, 16) }}" @endif @endif>
                             <img src="{{ $v->profile->avatar }}" alt="" style="width: 40px; height: 40px;border-radius: 50%;vertical-align: middle;">
                             {{ $v->name }}({{ $k }})
-                            <span style="text-align: right;">状态</span>
+                            <span style="text-align: right;">
+                                @if (!empty($v->result))
+                                @if ($v->result->result == \App\Utils\Pipeline\IAction::RESULT_PENDING) 审批中 @endif
+                                @if ($v->result->result == \App\Utils\Pipeline\IAction::RESULT_PASS) 已通过 @endif
+                                @if ($v->result->result == \App\Utils\Pipeline\IAction::RESULT_TERMINATE) 被拒绝 @endif
+                                @if ($v->result->result == \App\Utils\Pipeline\IAction::RESULT_REJECT) 被驳回 @endif
+                                @endif
+                            </span>
                         </el-timeline-item>
                         @endforeach
                         @endforeach
@@ -124,7 +138,7 @@
             </div>
         </div>
         <div class="information">
-            <h3>抄送人（多少人）</h3>
+            <h3>抄送人（{{ count($copys) }}人）</h3>
             <div class="sendBox">
                 @foreach($copys as $copy)
                 <figure>
@@ -134,19 +148,18 @@
                 @endforeach
             </div>
         </div>
-        <!-- <el-button type="primary" style="width: 100%" @click="dialogVisible = true">审批</el-button> -->
-
-        <!-- <el-button type="text" @click="dialogVisible = true">点击打开 Dialog</el-button>
-        <el-dialog title="提示" :visible.sync="dialogVisible" width="30%" :before-close="handleClose">
-            <span>这是一段信息</span>
-            <span slot="footer" class="dialog-footer">
-                <el-button @click="dialogVisible = false">取 消</el-button>
-                <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
-            </span>
-        </el-dialog> -->
         @if ($showActionEditForm)
-        <a style="display: block; color: white;text-decoration: none;text-align: center;" class="showMoreButton">审批</a>
+        <div style="display: flex;justify-content: center;background-color: #fff;padding-top: 10px;">
+            <el-button type="primary" style="width: 40%;" @click="dialogVisible = true">审批</el-button>
+        </div>
         @endif
+        <el-dialog title="审批意见" :visible.sync="dialogVisible" width="90%" center>
+            <el-input type="textarea" :rows="5" placeholder="请输入内容" v-model="textarea"></el-input>
+            <span slot="footer" class="dialog-footer">
+                <el-button type="danger" @click="button(5)">拒 绝</el-button>
+                <el-button type="primary" @click="button(3)">同 意</el-button>
+            </span>
+        </el-dialog>
     </div>
 </div>
 @endsection

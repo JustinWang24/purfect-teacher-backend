@@ -32,22 +32,28 @@ class AttendanceController extends Controller
     public function load_attendance(AttendanceRequest $request) {
         $dao = new AttendanceDao();
         $info = $dao->getById($request->get('attendance_id'));
+        if (!empty($info->clocksets)) {
+            foreach ($info->clocksets as $clockset) {
+                $clockset->start = substr($clockset->start,0, 5);
+                $clockset->end = substr($clockset->end,0, 5);
+                $clockset->morning = substr($clockset->morning,0, 5);
+                $clockset->morning_late = substr($clockset->morning_late,0, 5);
+                $clockset->afternoon_start = substr($clockset->afternoon_start,0, 5);
+                $clockset->afternoon = substr($clockset->afternoon,0, 5);
+                $clockset->afternoon_late = substr($clockset->afternoon_late,0, 5);
+                $clockset->evening = substr($clockset->evening,0, 5);
+            }
+        }
+
         $organizationArr = [];
         $organizationDao = new OrganizationDao();
         foreach ($info->organizations as $organization) {
             $nowLevel = $organization->level;
-            $return = [
-                'id' => $organization->id,
-                'name' => $organization->name
-            ];
+            $return = [$organization->id];
             $parentid = $organization->parent_id;
             while ($nowLevel > 1) {
                 $parent = $organizationDao->getById($parentid);
-                $return = [
-                    'id' => $parent->id,
-                    'name' => $parent->name,
-                    'child' => $return,
-                ];
+                array_unshift($return, $parent->id);
                 $parentid = $parent->parent_id;
                 $nowLevel = $parent->level;
             }
@@ -55,6 +61,18 @@ class AttendanceController extends Controller
         }
         unset($info->organizations);
         $info->organizations = $organizationArr;
+
+        $managerArr = [];
+        if (!empty($info->managers)) {
+            foreach ($info->managers as $manager) {
+                $managerArr[] = [
+                    'id' => $manager->user->id,
+                    'name' => $manager->user->name
+                ];
+            }
+        }
+        unset($info->managers);
+        $info->managers = $managerArr;
         return JsonBuilder::Success($info);
     }
 
@@ -62,15 +80,16 @@ class AttendanceController extends Controller
         $dao = new AttendanceDao();
         $attendance = $request->getAttendanceData();
         $organizations = $request->getOrganizationsData();
+        $managers = $request->getMenagersData();
         if(empty($attendance['id'])){
             // 创建
-            $result = $dao->create($attendance, $organizations);
+            $result = $dao->create($attendance, $organizations, $managers);
             return $result->isSuccess() ?
                 JsonBuilder::Success(['id'=>$result->getData()->id]) :
                 JsonBuilder::Error($result->getMessage());
         }else {
             //更新
-            $result = $dao->update($attendance, $organizations);
+            $result = $dao->update($attendance, $organizations, $managers);
             return $result->isSuccess() ?
                 JsonBuilder::Success(['id'=>$result->getData()->id]) :
                 JsonBuilder::Error($result->getMessage());

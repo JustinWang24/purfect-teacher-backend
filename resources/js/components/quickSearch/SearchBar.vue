@@ -77,6 +77,7 @@
                 }
             },
             handleSelect: function (item) {
+                this.query =''
                 // 把找到的发布出去
                 this.$emit('result-item-selected',{item: item})
             }

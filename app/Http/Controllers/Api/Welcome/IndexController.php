@@ -9,7 +9,11 @@ namespace App\Http\Controllers\Api\Welcome;
 
 use App\Dao\Welcome\Api\WelcomeConfigDao;
 use App\Dao\Welcome\Api\WelcomeUserReportDao;
+use App\Models\Welcome\WelcomeConfigStep;
 
+use App\Http\Requests\MyStandardRequest;
+use App\Models\OA\InternalMessage;
+use Illuminate\Http\Request;
 use Psy\Util\Json;
 use App\Utils\JsonBuilder;
 use App\Http\Controllers\Controller;
@@ -17,11 +21,48 @@ use App\Http\Requests\Api\Welcome\IndexRequest;
 use App\Models\Notices\AppProposalImage;
 use Illuminate\Support\Facades\DB;
 use Ramsey\Uuid\Uuid;
+use Illuminate\Support\Facades\Storage;
 
 class IndexController extends Controller
 {
 
+  /**
+   * 上传图片
+   * @param IndexRequest $request
+   * @return string
+   */
+  public function uploadFiles(IndexRequest $request)
+  {
+    $files = $request->file('file');
+    $infos = [];
+    if ($files) {
+      $infos['name'] = $files->getClientOriginalName();
+      $infos['type'] = $files->extension();
+      $infos['size'] = getFileSize($files->getSize());
+      $ext = $files->getClientOriginalExtension();
+      $fileName = date('Y-m-d').'-'.rand(10000,99999).'.'.$ext;
+      $uploadResult = Storage::disk('banner')->put($fileName, file_get_contents($files->getRealPath()));
+      $infos[ 'path' ] = '/storage/banner/'.$fileName;
+    }
+    return JsonBuilder::Success($infos);
+  }
 
+
+  /**
+   * Func 获取下载地址
+   *
+   * @param Request $request
+   * @param['token'] 是  token
+   *
+   * @return Json
+   */
+  public function download(Request $request)
+  {
+    $sid = (Int)$request->input('sid', '');
+    if (!$sid) return;
+    $infos = DB::table('versions')->where('sid','=',$sid)->first();
+    return response()->download(storage_path($infos->version_downurl));
+  }
     /**
      * Func 迎新首页
      * @param Request $request
@@ -277,24 +318,30 @@ class IndexController extends Controller
                 $path[$key] = AppProposalImage::proposalUploadPathToUrl($val->store(AppProposalImage::DEFAULT_UPLOAD_PATH_PREFIX));
             }
         }
-        if(empty($path['photo']))
-        {
-            return JsonBuilder::Error('请上传照片');
-        }
-        if(empty($path['card_front']))
-        {
-            return JsonBuilder::Error('请上传身份证正面照片');
-        }
-        if(empty($path['card_reverse']))
-        {
-            return JsonBuilder::Error('请上传身份证反面照片');
+
+        // 获取是否必传照片信息
+        $getWelcomeConfigStepOneInfo = $WelcomeUserReportDao->getWelcomeConfigStepOneInfo($school_id, 1);
+        if (!empty($getWelcomeConfigStepOneInfo)) {
+          // 验证照片是否比传
+          $checkArr = json_decode($getWelcomeConfigStepOneInfo['steps_json'], true);
+          if(!empty($checkArr)) {
+            if (empty($path['photo']) && $checkArr['photo']['status'] == 1) {
+              return JsonBuilder::Error('请上传照片');
+            }
+            if (empty($path['card_front']) && $checkArr['card_front']['status'] == 1) {
+              return JsonBuilder::Error('请上传身份证正面照片');
+            }
+            if (empty($path['card_reverse']) && $checkArr['card_front']['status'] == 1) {
+              return JsonBuilder::Error('请上传身份证反面照片');
+            }
+          }
         }
 
         // 更新数据
         $picsArr = [
-            'photo' => $path['photo'], // 照片
-            'card_front' => $path['card_front'], // 身份证正面照片
-            'card_reverse' => $path['card_reverse'] // 身份证反面照片
+            'photo' => !empty($path['photo'])?$path['photo']:"", // 照片
+            'card_front' => !empty($path['card_front'])?$path['card_front']:"", // 身份证正面照片
+            'card_reverse' => !empty($path['card_reverse'])?$path['card_reverse']:"" // 身份证反面照片
         ];
 
         // 添加或更新数据

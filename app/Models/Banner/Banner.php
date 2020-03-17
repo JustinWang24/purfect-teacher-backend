@@ -70,13 +70,16 @@ class Banner extends Model
      */
     public static $typeArr = [
         1 => '无跳转',
-        2 => '图文',
-        3 => 'URL',
+        2 => '图文', // content
+        3 => 'URL', // external
         4 => '校园网',
         5 => '招生主页',
         6 => '迎新主页',
         7 => '选课列表页',
-        8 => '社区动态详情',
+        8 => '社区动态详情', // external
+        11 => '无跳转',
+        12 => '图文', // content
+        13 => 'URL', // external
     ];
 
     /**
@@ -118,7 +121,7 @@ class Banner extends Model
         // 学生端校园首页
         11 => array_intersect_key(self::$typeArr, array_flip([1, 2, 3, 4, 5, 6, 7, 8])),
         // 教师端校园首页
-        21 => array_intersect_key(self::$typeArr, array_flip([1, 2, 3])),
+        21 => array_intersect_key(self::$typeArr, array_flip([11, 12, 13])),
       ];
       return $positArr[$posit];
     }
@@ -171,7 +174,7 @@ class Banner extends Model
         return $this->public ? '不需登录' : '需要登录';
     }
 
-    public function getImageUrlAttribute($value){
-        return asset($value);
+    public function getImageUrlAttribute($value){;
+       return asset($value);
     }
 }

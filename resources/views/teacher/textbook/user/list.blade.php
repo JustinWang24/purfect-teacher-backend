@@ -47,7 +47,7 @@ use App\User;
                                         <td>
                                             {{ $gradeUser->user->name ?? 'n.a' }}
                                         </td>
-                                        <td>{{ $gradeUser->user->profile->student_number }}</td>
+                                        <td>{{ $gradeUser->user->profile->student_number?? '' }}</td>
                                         <td>{{ $gradeUser->studyAt() }}</td>
                                         <td></td>
                                         <td>{{ $studentTextbook?'已领取':'未领取' }}</td>

@@ -19,6 +19,7 @@ if (document.getElementById('teacher-homepage-app')) {
                 flowsWaitingForMe: [],
                 bannerList: [], // 获取首页banner
                 newsList: [], // 获取首页校园新闻
+                calendar: new Date(), // 校历
                 schooleventsList: [], // 获取首页校园安排
                 schoolalleventsList: [], // 获取首页历史安排
                 attendanceList: [], // 获取首页值周内容
