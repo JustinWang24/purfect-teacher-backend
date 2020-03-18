@@ -111,3 +111,5 @@ require('./includes/backend/teacher_students_manager'); // 后台,教师学生�
 require('./includes/backend/teacher_grades_check_in'); // 后台,教师班级签到
 require('./includes/backend/teacher_grades_manager'); // 后台,教师班级管理
 require('./includes/backend/teacher-attendance_manager/index'); // 后台,考勤管理
+require('./includes/backend/teacher-week-timetable/index'); // 后台,课程表
+
