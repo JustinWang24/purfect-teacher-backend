@@ -7,6 +7,7 @@
  */
 
 namespace App\BusinessLogic\Pipeline\Business;
+use App\BusinessLogic\Pipeline\Flow\Business\Impl\ClockinLogic;
 use App\BusinessLogic\Pipeline\Flow\Business\Impl\MacAddressLogic;
 use App\Utils\Pipeline\IFlow;
 
@@ -25,6 +26,8 @@ class BusinessFactory
             case IFlow::BUSINESS_TYPE_MACADDRESS:
                 $instance = new MacAddressLogic($user);
                 break;
+            case IFlow::BUSINESS_TYPE_CLOCKIN:
+                $instance = new ClockinLogic($user);
             default:
                 break;
         }

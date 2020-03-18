@@ -100,7 +100,7 @@ class FlowsController extends Controller
                     $businessDefault = [];
                     foreach ($businessOptions['options'] as $businessOption) {
                         if ($businessOption['readonly']) {
-                            parse_str($request->headers->get('referer'), $getParam);
+                            parse_str(parse_url($request->headers->get('referer'), PHP_URL_QUERY), $getParam);
                             $businessDefault[$businessOption['title']] = $getParam[$businessOption['title']] ?? '';
                         }
                     }

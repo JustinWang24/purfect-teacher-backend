@@ -34,10 +34,9 @@ interface IFlow extends IPersistent
         'business' => self::BUSINESS_TYPE_CLOCKIN,
         'name' => '考勤补卡',
         'options' => [
-            ['name' => '考勤组ID', 'type' => 'hidden', 'tip' => '请选择考勤组', 'extra' => '', 'required' => 1],
-            ['name' => '补卡日期', 'type' => 'date', 'tip' => '请选择补卡日期', 'extra' => '', 'required' => 1],
-            ['name' => '补卡类型', 'type' => 'radio', 'tip' => '请选择补卡类型', 'extra' => [['id'=> 'morning', 'option' => '早上'],['id'=> 'afternoon', 'option' => '中午'],['id'=> 'evening', 'option' => '晚上']], 'required' => 1],
-            ['name' => '补卡原因', 'type' => 'text', 'tip' => '请输入补卡原因', 'extra' => '', 'required' => 1],
+            ['name' => '单行输入框', 'type' => 'input', 'readonly' => true, 'required' => 1, 'extra' => ['text' => '考勤组id'], 'title' => 'attendance_id', 'tips' => '考勤组id'],
+            ['name' => '单行输入框', 'type' => 'input', 'readonly' => true, 'required' => 1, 'extra' => ['text' => '补卡日期'], 'title' => 'day', 'tips' => '补卡日期'],
+            ['name' => '单行输入框', 'type' => 'input', 'readonly' => true, 'required' => 1, 'extra' => ['text' => '补卡时间'], 'title' => 'type', 'tips' => '补卡时间'],
         ]
     ];
 
