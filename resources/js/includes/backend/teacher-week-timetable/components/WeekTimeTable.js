@@ -2,11 +2,9 @@ import { Mixins } from "../Mixins";
 Vue.component("WeekTimeTable", {
   template: `
     <div class="week-time-table">
-      <div v-for="(pItem,pIndex) in tableData">
-        <div class="table-list">
-          <div v-for="(item,index) in pItem">
-            {{item.time_slot_name}}  {{index}}
-          </div>
+      <div v-for="(pItem,pIndex) in data.time_slots">
+        <div>
+          <div>{{pItem.name}}</div>
         </div>
       </div>
     </div>
