@@ -9,6 +9,7 @@ use App\BusinessLogic\Pipeline\Flow\FlowLogicFactory;
 use App\Dao\Pipeline\ActionDao;
 use App\Dao\Pipeline\FlowDao;
 use App\Dao\Pipeline\UserFlowDao;
+use App\Events\Pipeline\Flow\FlowBusiness;
 use App\Events\Pipeline\Flow\FlowProcessed;
 use App\Events\Pipeline\Flow\FlowRejected;
 use App\Events\Pipeline\Flow\FlowStarted;
@@ -20,6 +21,7 @@ use App\Models\Pipeline\Flow\Node;
 use App\User;
 use App\Utils\JsonBuilder;
 use App\Utils\Pipeline\IAction;
+use App\Utils\Pipeline\IFlow;
 use Psy\Util\Json;
 
 class FlowsController extends Controller
@@ -42,6 +44,30 @@ class FlowsController extends Controller
                 ],
             ]
         );
+    }
+
+    public function business_url(FlowRequest $request) {
+        $business = $request->get('business');
+        $param = $request->get('param');
+        $user = $request->user();
+        $dao = $dao = new FlowDao();
+        $result =  $dao->getListByBusiness($user->getSchoolId(), $business);
+        $retFlow = [];
+
+        foreach ( $result as $flow) {
+            if ($dao->checkPermissionByuser($flow, $user, 0)) {
+                $retFlow = $flow;
+                break;
+            }
+        }
+        if (empty($retFlow)) {
+            return JsonBuilder::Error('权限不足');
+        }else {
+            $param['flow_id'] = $retFlow->id;
+            $param['api_token'] = $user->api_token;
+            $url = route('h5.flow.user.start', $param);
+            return JsonBuilder::Success(['url' => $url]);
+        }
     }
 
     public function open(FlowRequest $request){
@@ -70,11 +96,12 @@ class FlowsController extends Controller
                     $handlers[] = $retHandlers;
                 }
                 if ($flow->business) {
-                    $businessOptions = Flow::business($flow->business);
+                    $businessOptions = Flow::getBusiness($flow->business);
                     $businessDefault = [];
                     foreach ($businessOptions['options'] as $businessOption) {
                         if ($businessOption['readonly']) {
-                            $businessDefault[$businessOption['title']] = $request->get($businessOption['title'], '');
+                            parse_str(parse_url($request->headers->get('referer'), PHP_URL_QUERY), $getParam);
+                            $businessDefault[$businessOption['title']] = $getParam[$businessOption['title']] ?? '';
                         }
                     }
                     $options = [];
@@ -265,7 +292,13 @@ class FlowsController extends Controller
                         if ($dao->getCountWaitProcessUsers($action->getNode()->id) < 1) {
                             //可能存在自动同意已经到了下一个action
                             $newAction = $dao->getActionByUserFlowAndUserId($action->transaction_id, $action->user_id);
-                            $event = new FlowProcessed($request->user(),$newAction, $newAction->getNode(), $newAction->getFlow());
+                            $flow = $newAction->getFlow();
+                            $event = new FlowProcessed($request->user(),$newAction, $newAction->getNode(), $flow);
+
+                            //业务事件
+                            if ($newAction->userFlow->isDone() && $flow->business) {
+                                  event(new FlowBusiness($flow, $newAction->userFlow));
+                            }
                         }
                         break;
                     case IAction::RESULT_TERMINATE:
