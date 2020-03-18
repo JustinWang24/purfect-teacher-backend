@@ -274,7 +274,7 @@ class FlowsController extends Controller
             try{
                 $dao->deleteOptionByNode($firstNode->id);
                 if ($flow->business) {
-                    $businessOptions = Flow::business($flow->business);
+                    $businessOptions = Flow::getBusiness($flow->business);
                     $businessIgnore = [];
                     foreach ($businessOptions['options'] as $businessOption) {
                         $businessOption['node_id'] = $firstNode->id;
@@ -326,7 +326,7 @@ class FlowsController extends Controller
     }
 
     public function load_business(FlowRequest $request){
-        return JsonBuilder::Success(Flow::business());
+        return JsonBuilder::Success(Flow::getBusiness());
     }
 
     public function load_titles(FlowRequest $request) {

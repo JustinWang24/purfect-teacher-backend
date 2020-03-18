@@ -150,7 +150,7 @@ class Flow extends Model implements IFlow
         }
     }
 
-    public static function business($businessid = null) {
+    public static function getBusiness($businessid = null) {
         $list = [
             IFlow::BUSINESS_ATTENDANCE_CLOCKIN,
             IFlow::BUSINESS_ATTENDANCE_MACADDRESS

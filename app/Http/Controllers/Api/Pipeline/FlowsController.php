@@ -100,7 +100,7 @@ class FlowsController extends Controller
                     $handlers[] = $retHandlers;
                 }
                 if ($flow->business) {
-                    $businessOptions = Flow::business($flow->business);
+                    $businessOptions = Flow::getBusiness($flow->business);
                     $businessDefault = [];
                     foreach ($businessOptions['options'] as $businessOption) {
                         if ($businessOption['readonly']) {
