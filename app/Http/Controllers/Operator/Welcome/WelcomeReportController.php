@@ -71,7 +71,6 @@
            if (empty($school)) {
                return redirect(self::$redirectUrl);
            }
-
            // 列表
            $welcomeUserReportObj = new WelcomeUserReportDao();
            $dataList = $welcomeUserReportObj->getWelcomeUserReportListInfo($school->id, [1], $page);

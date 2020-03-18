@@ -139,6 +139,7 @@ if (document.getElementById('pipeline-flows-manager-app')) {
                     this.copy = res.data.data.nodes.copy
                     this.handler = res.data.data.nodes.handler
                     this.posiType = res.data.data.flow.position
+                    this.agree = res.data.data.flow.auto_processed
                 })
             }
         },
@@ -351,7 +352,7 @@ if (document.getElementById('pipeline-flows-manager-app')) {
             },
             // 设置审批人确定啊按钮 
             setone() {
-                if (this.section == '') {
+                if (this.section == '' && this.organization === 1) {
                     this.$message({
                         message: '请选择部门',
                         type: 'error'
@@ -393,7 +394,7 @@ if (document.getElementById('pipeline-flows-manager-app')) {
             },
             // 保存 --- 是否自动审批
             saveagree() {
-                if (this.agree == '') {
+                if (this.agree === '') {
                     this.$message({
                         message: '请选择是否自动同意',
                         type: 'error'

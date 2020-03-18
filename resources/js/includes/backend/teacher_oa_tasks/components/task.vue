@@ -9,32 +9,42 @@
       <div class="left">
         <div class="item">
           <span class="title">任务名称</span>
-          <span class="content">{{ task.name }}</span>
+          <span class="content">{{ task.task_title }}</span>
         </div>
         <div class="item">
           <span class="title">截至时间</span>
-          <span class="content">{{ task.endTime }}</span>
+          <span class="content">{{ task.end_time }}</span>
         </div>
         <div class="item">
           <span class="title">负责人</span>
-          <span class="content">{{ task.endTime }}</span>
+          <span class="content">{{ task.leader_name }}</span>
         </div>
         <div class="item">
           <span class="title">发起人</span>
-          <span class="content">{{ task.endTime }}</span>
+          <span class="content">{{ task.create_name }}</span>
         </div>
       </div>
       <div class="right">
-        <div class="status">{{ task.status }}</div>
-        <div class="time">{{ task.createTime }}</div>
+        <div :class="'status ' + getStatusClass(task.status)">
+          {{ getStatusText(task.status) }}
+        </div>
+        <div class="time">{{ task.create_time }}</div>
       </div>
     </div>
-    <el-pagination background layout="prev, pager, next" :total="1000">
+    <el-pagination
+      background
+      layout="prev, pager, next"
+      :page-count="pagination.pageCount"
+      :current-page="pagination.page"
+      @current-change="onPageChange"
+    >
     </el-pagination>
   </div>
 </template>
 <script>
 import { getTaskList } from "../common/api";
+import { TaskMode, TaskStatus } from "../common/enum";
+import { Util } from "../../../../common/utils";
 export default {
   name: "task-list",
   props: {
@@ -46,35 +56,47 @@ export default {
   },
   data() {
     return {
-      list: []
+      list: [],
+      pagination: {
+        page: 1,
+        pageCount: 0
+      }
     };
+  },
+  computed: {
+    getStatusText() {
+      return function(status) {
+        return TaskStatus[status].text;
+      };
+    },
+    getStatusClass() {
+      return function(status) {
+        return TaskStatus[status].classes;
+      };
+    }
+  },
+  watch: {
+    "pagination.page": page => {
+      this.getTaskList();
+    }
   },
   methods: {
     goDetail(task) {
       window.location.href = "/teacher/ly/oa/task/detail?taskId=" + task.id;
     },
     getTaskList() {
-      getTaskList().then(data => {
-        debugger;
+      getTaskList({
+        page: this.pagination.page,
+        type: TaskMode[this.mode].value
+      }).then(res => {
+        if (Util.isAjaxResOk(res)) {
+          this.list = res.data.data;
+          this.pagination.pageCount = res.data.lastPage;
+        }
       });
-      console.log("get list for " + this.mode);
-      this.list = [
-        {
-          name: "123",
-          endTime: "超凡大师",
-          createTime: "20193333",
-          status: "wanjie",
-          id: "123"
-        },
-        {},
-        {},
-        {},
-        {},
-        {},
-        {},
-        {},
-        {}
-      ];
+    },
+    onPageChange(page) {
+      this.pagination.page = page;
     }
   }
 };
@@ -107,7 +129,6 @@ export default {
     }
   }
   .right {
-    flex: 0;
     display: flex;
     flex-direction: column;
     .status {
@@ -138,5 +159,9 @@ export default {
 }
 .list-item:hover {
   box-shadow: 0 0 6px #ccc;
+}
+.el-pagination {
+  float: right;
+  padding-top: 16px;
 }
 </style>

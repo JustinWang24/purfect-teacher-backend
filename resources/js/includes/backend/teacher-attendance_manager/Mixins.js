@@ -15,12 +15,16 @@ export const Mixins = {
       'usingAfternoon',
       'attendance_id',
       'visibleHolidaySet',
+      'schoolIdx',
+      'isCreated',
+      'teacherName',
+      'exceptiondays'
     ])
   },
   methods: {
     ...mapMutations(["SETOPTIONS", "SETOPTIONOBJ"]),
     async _initData() {
-      this.SETOPTIONS({ isTableLoading: true });
+      this.SETOPTIONS({ isTableLoading: true ,schoolIdx:school_id});
       const [err, data] = await catchErr(_load_manager());
       data && this.SETOPTIONS({ data, isTableLoading: false });
     },

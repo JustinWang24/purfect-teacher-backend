@@ -92,7 +92,45 @@ class TeacherApplyElectiveCourseDao
     public function checkTimeConflictByUserId($enrollCourseId, $userId) {
         $courseDao =  new CourseDao;
         $enrollCourse = $courseDao->getCourseById($enrollCourseId);
+        $term = $enrollCourse->term;
+        $year = $enrollCourse->courseElective->start_year;
+        $valList = [];
+        foreach ($enrollCourse->arrangements as $arrangement) {
+          $valList[] = 'w_' . $arrangement->week . '_d_' . $arrangement->day_index . '_t_' . $arrangement->time_slot_id;
+        }
+        if (!$valList) {
+            return false;
+        }
+        $enrollList = StudentEnrolledOptionalCourse::with('course')->where('user_id', $userId)->get();
+        if ($enrollList) {
+            foreach ($enrollList as $enroll) {
+                if ($enroll->course->term == $term && $enroll->course->courseElective->start_year == $year) {
+                    foreach ($enroll->course->arrangements as $arrangement1) {
+                        $checkKey = 'w_' . $arrangement1->week . '_d_' . $arrangement1->day_index . '_t_' . $arrangement1->time_slot_id;
+                        if (in_array($checkKey, $valList)) {
+                            return ['week' => $arrangement1->week, 'day' => $arrangement1->day_index, 'time' => $arrangement1->time_slot_id];
+                        }
+                    }
+                }
+            }
+        }
 
+        $tableName = 'student_enrolled_optional_courses_'.$year.'_'.$term;
+        $enrollList2 = DB::table($tableName)->where('user_id', $userId)->get();
+        if ($enrollList2) {
+            foreach ($enrollList2 as $enroll2) {
+                $encourse = $courseDao->getCourseById($enroll2->course_id);
+                foreach ($encourse->arrangements as $arrangement2) {
+                  $checkKey = 'w_' . $arrangement2->week . '_d_' . $arrangement2->day_index . '_t_' . $arrangement2->time_slot_id;
+                  if (in_array($checkKey, $valList)) {
+                      return ['week' => $arrangement2->week, 'day' => $arrangement2->day_index, 'time' => $arrangement2->time_slot_id];
+                  }
+                }
+            }
+        }
+
+        //@TODO 验证学生课表
+        return false;
     }
 
 

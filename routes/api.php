@@ -537,7 +537,7 @@ Route::prefix('attendance')->middleware('auth:api')->group(function () {
         ->name('api.get.day.course');
 
     // 获取教师签到统计
-    Route::post('/get-teacher-statistics', 'Api\AttendanceSchedule\add-messageadd-message@getTeacherCourseStatistics')
+    Route::post('/get-teacher-statistics', 'Api\AttendanceSchedule\AttendanceController@getTeacherCourseStatistics')
         ->name('api.get.teacher.statistics');
 
     // 获取教师签到统计详情
@@ -917,6 +917,9 @@ Route::prefix('Oa')->middleware('auth:api')->group(function () {
         ->name('api.oa.update.student.info');
     // 是否为班主任
     Route::post('/is-adviser', 'Api\OA\GradeManageController@isAdviser')
+        ->name('api.oa.is.adviser');
+    // 是否为学校管理员
+    Route::post('/is-school-manager', 'Api\OA\GradeManageController@isSchoolManager')
         ->name('api.oa.is.adviser');
 });
 

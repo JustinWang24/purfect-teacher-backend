@@ -95,13 +95,9 @@
                     </div>
                     <div class="card-body">
                         <div v-show="nodeData.length > 0" class="eva_note" v-for="(item, i) in nodeData">
-                            <div class="eva_noteTitle" v-htm="item.time + ' ' + item.timeSlot"></div>
+                            <div class="eva_noteTitle" v-html="item.time + ' ' + item.timeSlot"></div>
                             <div class="eva_noteText" v-html="item.remark"></div>
-                            <div class="clearfix">
-                                <a href="javascript:;" style="float: right;color: #4EA5FE">
-                                    收起
-                                </a>
-                            </div>
+
                         </div>
                         <div v-show="nodeData.length == 0" class="no-data-img">
                             <img src="{{ asset('assets/img/teacher_blade/no-data.png') }}" alt="">

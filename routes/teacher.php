@@ -42,8 +42,6 @@ Route::prefix('teacher')->group(function () {
     //分组
     Route::get('group/list', 'GroupController@list')->name('teacher.group.list');
 
-
-
     Route::get('preset/step', 'OfficialDocumentController@presetStep')->name('teacher.get.preset.step');                    // 所有系统预置步骤
     Route::post('production/process', 'OfficialDocumentController@productionProcess')->name('teacher.production.process');  // 生成公文流程
     Route::get('list/documents', 'OfficialDocumentController@listAll')->name('teacher.list.official.documents');        // 学校公文列表
@@ -202,6 +200,12 @@ Route::prefix('teacher')->group(function () {
             Route::get('index','LY\AssistantController@index')
                 ->name('teacher.ly.assistant.index');
 
+            Route::get('course','LY\AssistantController@course')
+                ->name('teacher.ly.assistant.course');
+				
+            Route::get('material','LY\AssistantController@material')
+                ->name('teacher.ly.assistant.material');
+				
             Route::get('check-in','LY\AssistantController@check_in')
                 ->name('teacher.ly.assistant.check-in');
 

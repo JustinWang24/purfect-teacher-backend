@@ -95,7 +95,7 @@ class AttendanceDao
                 foreach ($managers as $manager) {
                     Managers::create([
                         'teacher_attendance_id' => $attendance->id,
-                        'user_id' => $manager
+                        'user_id' => $manager['id']
                     ]);
                 }
             }
@@ -132,7 +132,7 @@ class AttendanceDao
                 foreach ($managers as $manager) {
                     Managers::create([
                         'teacher_attendance_id' => $attendance->id,
-                        'user_id' => $manager
+                        'user_id' => $manager['id']
                     ]);
                 }
             }

@@ -55,7 +55,18 @@ class FlowsController extends Controller
                 $flowInfo = $flow->getSimpleLinkedNodes();
                 $handlers = [];
                 foreach ($flowInfo['handler'] as $handler) {
-                    $handlers[] = $flowDao->transTitlesToUser($handler->titles, $handler->organizations, $user);
+                    $tmpHandlers = $flowDao->transTitlesToUser($handler->titles, $handler->organizations, $user);
+                    $retHandlers = [];
+                    foreach ($tmpHandlers as $tmpKey => $tmpHandler) {
+                        foreach ($tmpHandler as $tmp) {
+                            $retHandlers[$tmpKey][] = [
+                                'id' => $tmp->id,
+                                'name' => $tmp->name,
+                                'avatar' => $tmp->profile->avatar ?? ''
+                            ];
+                        }
+                    }
+                    $handlers[] = $retHandlers;
                 }
                 $return = [
                     'user' => $user,
@@ -78,7 +89,13 @@ class FlowsController extends Controller
      */
     public function started_by_me(FlowRequest $request){
         $logic = FlowLogicFactory::GetInstance($request->user());
-        return JsonBuilder::Success(['flows'=>$logic->startedByMe()]);
+        $list = $logic->startedByMe();
+        if ($list) {
+            foreach ($list as $key => $value) {
+                $value->avatar = $value->user->profile->avatar ?? '';
+            }
+        }
+        return JsonBuilder::Success(['flows'=> $list]);
     }
 
     /**
@@ -163,7 +180,7 @@ class FlowsController extends Controller
             return JsonBuilder::Success(
                 [
                     'id'=>$action->id,
-                    'url'=>$request->isAppRequest()?route('h5.flow.user.in-progress',['api_token'=>$request->user()->api_token]):null
+                    'url'=>$request->isAppRequest()?route('h5.flow.user.view-history',['user_flow_id' => $action->transaction_id,'api_token'=>$request->user()->api_token]):null
                 ]
             );
         }

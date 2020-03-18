@@ -1,6 +1,6 @@
 import './style/common.scss'
 import './style/index.scss'
-import { TaskStatus } from './common/enum'
+import { TaskMode } from './common/enum'
 import TaskList from './components/task'
 import TaskForm from './components/task-form'
 
@@ -23,12 +23,18 @@ if (app) {
     },
     computed: {
       activeNameText () {
-        return (TaskStatus[this.activeName] || {}).text || ''
+        return (TaskMode[this.activeName] || {}).text || ''
       }
     },
     methods: {
-      createTask () {
-
+      onTaskCreated () {
+        this.refreshList(this.activeName)
+        this.addDrawer = false
+      },
+      refreshList (val) {
+        if (this.$refs[val]) {
+          this.$refs[val][0].getTaskList()
+        }
       }
     },
     data () {
@@ -37,7 +43,7 @@ if (app) {
           return Object.keys(types).map(typeKey => {
             return types[typeKey]
           })
-        })(TaskStatus),
+        })(TaskMode),
         activeName: '',
         addDrawer: false
       }

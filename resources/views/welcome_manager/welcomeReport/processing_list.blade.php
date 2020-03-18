@@ -19,7 +19,8 @@ use App\User;
                                 <div class="pull-left col-3">
                                     <label>关键词</label>
                                     <input type="text" class="el-input__inner col-10" value="{{ Request::get('keywords') }}" placeholder="姓名,身份证号码" name="keywords">
-                                </div>
+									<input type="hidden" name="uuid" value="{{ Request::get('uuid') }}"/>
+								</div>
                                 <button class="btn btn-primary">搜索</button>
                             </form>
                         </div>

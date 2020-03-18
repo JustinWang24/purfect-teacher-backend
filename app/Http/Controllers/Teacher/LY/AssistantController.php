@@ -21,9 +21,17 @@ class AssistantController extends Controller
     public function index(Request $request){
         return view('teacher.ly.assistant.index',$this->dataForView);
     }
-
+	
     public function evaluation(Request $request){
         return view('teacher.ly.assistant.evaluation',$this->dataForView);
+    }
+	
+    public function course(Request $request){
+        return view('teacher.ly.assistant.course',$this->dataForView);
+    }
+	
+    public function material(Request $request){
+        return view('teacher.ly.assistant.material',$this->dataForView);
     }
 
     public function check_in(Request $request){

@@ -23,9 +23,10 @@
         </div>
         <el-drawer
           title="创建任务"
+          :destroy-on-close="true"
           :visible.sync="addDrawer"
           direction="rtl">
-          <task-form />
+          <task-form @done="onTaskCreated"/>
         </el-drawer>
 
     <div id="app-init-data-holder"
