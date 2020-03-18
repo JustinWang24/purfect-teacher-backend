@@ -37,7 +37,6 @@ class noticeTeacherAttendanceBeLate extends Command
      */
     public function handle()
     {
-        
         $dao = new TeacherApplyElectiveCourseDao();
         $list = $dao->gettoDissolvedElectiveList();
         if ($list) {
