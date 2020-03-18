@@ -1,14 +1,7 @@
 <template>
   <div class="form">
     <el-form ref="form" :model="form" label-width="80px">
-      <el-form-item>
-        <el-input
-          type="textarea"
-          v-model="form.desc"
-          rows="5"
-          placeholder="请输入讨论内容"
-        ></el-input>
-      </el-form-item>
+      <el-input type="textarea" v-model="form.content" rows="5" placeholder="请输入讨论内容"></el-input>
     </el-form>
     <div class="btn-box">
       <el-button type="primary" @click="onSubmit">立即创建</el-button>
@@ -16,10 +9,32 @@
   </div>
 </template>
 <script>
+import { TaskApi } from "../common/api";
 export default {
   name: "comment-form",
+  props: {
+    taskid: {
+      type: String,
+      required: true
+    },
+    userid: {
+      default: null
+    }
+  },
   methods: {
-    onSubmit() {}
+    onSubmit() {
+      if (!this.form.content) {
+        this.$message.error("请输入内容");
+        return;
+      }
+      TaskApi.excute("addOaTaskForum", {
+        taskid: this.taskid,
+        forum_content: this.form.content,
+        userid: this.userid || 0
+      }).then(res => {
+        this.$emit("reply");
+      });
+    }
   },
   data() {
     return {
@@ -36,16 +51,6 @@ export default {
   .el-form {
     flex: 1;
     padding: 12px;
-    .el-select {
-      width: 100%;
-    }
-    .el-form-item__label {
-      font-weight: bold;
-      color: #666666;
-    }
-    .el-form-item__content {
-      margin-left: 0px;
-    }
   }
   .btn-box {
     flex: none;

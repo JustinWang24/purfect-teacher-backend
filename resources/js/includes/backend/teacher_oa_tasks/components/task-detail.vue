@@ -6,84 +6,55 @@
       </div>
       <div class="detail-item">
         <span class="title">任务名称</span>
-        <span class="content">content</span>
+        <span class="content">{{task.task_title}}</span>
       </div>
       <div class="detail-item">
         <span class="title">创建人</span>
-        <span class="content">content</span>
+        <span class="content">{{task.create_name}}</span>
       </div>
       <div class="detail-item">
         <span class="title">截止时间</span>
-        <span class="content">content</span>
+        <span class="content">{{task.end_time}}</span>
       </div>
       <div class="detail-item">
         <span class="title">负责人</span>
-        <span class="content">content</span>
+        <span class="content">{{task.leader_name}}</span>
       </div>
       <div class="detail-item">
         <span class="title">执行人</span>
-        <span class="content ">content</span>
+        <span class="content">{{task.member_list.length}}人</span>
       </div>
       <div class="detail-item">
         <span class="title"></span>
         <span class="content executer">
-          <span class="item">张三</span>
-          <span class="item">张三</span>
-          <span class="item">王晓伟</span>
-          <span class="item">张三</span>
-          <span class="item">张三</span>
+          <span
+            class="item"
+            v-for="(member, index) in task.member_list"
+            :key="index"
+          >{{member.username}}</span>
         </span>
       </div>
       <div class="detail-item">
         <span class="title">任务描述</span>
-        <span class="content ">content</span>
+        <span class="content">{{task.task_content}}</span>
       </div>
       <div class="detail-item">
         <span class="title">关联项目</span>
-        <span class="content "
-          >contentcontentcontentcontentcontentcontentcontentcontentcontentcontentcontent</span
-        >
+        <span class="content">{{task.project_title}}</span>
       </div>
       <div class="btn-box">
-        <el-button class="dispatch" size="small" @click="dispath"
-          >指派他人</el-button
-        >
-        <el-button type="primary" size="small" @click="finish"
-          >确认完成</el-button
-        >
+        <el-button class="dispatch" size="small" @click="()=>{dispathModal = true}">指派他人</el-button>
+        <el-button type="primary" size="small" @click="()=>{finishModal = true}">确认完成</el-button>
       </div>
     </div>
     <div class="operate detail-panel">
       <div class="title">
         <span>操作日志</span>
       </div>
-      <div class="detail-item">
-        <span class="operater">小明</span>
-        <span class="operation"
-          >做了什么做了什么做了什么做了什么做了什么做了什么</span
-        >
-        <span class="operate-time">2019-01-01 02:30</span>
-      </div>
-      <div class="detail-item">
-        <span class="operater">小明</span>
-        <span class="operation"
-          >做了什么做了什么做了什么做了什么做了什么做了什么</span
-        >
-        <span class="operate-time">2019-01-01 02:30</span>
-      </div>
-      <div class="detail-item">
-        <span class="operater">小明</span>
-        <span class="operation"
-          >做了什么做了什么做了什么做了什么做了什么做了什么</span
-        >
-        <span class="operate-time">2019-01-01 02:30</span>
-      </div>
-      <div class="detail-item">
-        <span class="operater">小明</span>
-        <span class="operation"
-          >做了什么做了什么做了什么做了什么做了什么做了什么</span
-        >
-        <span class="operate-time">2019-01-01 02:30</span>
+      <div class="detail-item" v-for="(log, index) in task.log_list" :key="index">
+        <UserLink :name="log.username" />
+        <span class="operation">{{log.log_content}}</span>
+        <span class="operate-time">{{log.create_time}}</span>
       </div>
     </div>
     <div class="discuss detail-panel">
@@ -96,65 +67,140 @@
           @click="
             () => {
               discussModal = true;
+              userid = 0;
             }
           "
-          >我要讨论</el-button
-        >
+        >我要讨论</el-button>
       </div>
-      <div class="detail-item comment">
-        <div class="avatar"></div>
+      <div class="detail-item comment" v-for="(comment, index) in task.forum_list" :key="index">
+        <div class="avatar" :style="{backgroundImage:comment.user_pics}"></div>
+        <Avatar :src="comment.user_pics" />
         <div class="right">
           <div class="header">
-            <span class="name">姓名</span>
-            <span class="time">2019-03-03 19:39</span>
+            <span class="name">{{comment.username}}</span>
+            <span class="time">{{comment.create_time}}</span>
           </div>
-          <div class="msg">这是消息，留言</div>
+          <div class="msg">
+            <div class="reply" v-if="comment.reply_username">
+              回复
+              <UserLink :name="comment.reply_username" />：
+            </div>
+            <span>{{comment.forum_content}}</span>
+          </div>
           <div class="ctrl">
-            <i class="el-icon-chat-dot-square"></i>
-            <i class="el-icon-delete"></i>
-          </div>
-        </div>
-      </div>
-      <div class="detail-item comment">
-        <div class="avatar"></div>
-        <div class="right">
-          <div class="header">
-            <span class="name">姓名</span>
-            <span class="time">2019-03-03 19:39</span>
-          </div>
-          <div class="msg">这是消息，留言</div>
-          <div class="ctrl">
-            <i class="el-icon-chat-dot-square"></i>
-            <i class="el-icon-delete"></i>
+            <i
+              class="el-icon-chat-dot-square"
+              @click="
+                () => {
+                  discussModal = true;
+                  chatUserId = comment.userid;
+              }"
+            ></i>
+            <i
+              v-if="isMyComment(comment.userid)"
+              class="el-icon-delete"
+              @click="deleteComment(comment.forumid)"
+            ></i>
           </div>
         </div>
       </div>
     </div>
     <el-drawer
       title="编辑讨论的内容"
+      ref="discussDrawer"
+      :destroy-on-close="true"
       :visible.sync="discussModal"
       direction="rtl"
     >
-      <comment />
+      <comment :taskid="taskid" :userid="chatUserId" @reply="onReply" />
+    </el-drawer>
+    <el-drawer
+      title="确认完成"
+      ref="finishModal"
+      :destroy-on-close="true"
+      :visible.sync="finishModal"
+      direction="rtl"
+    >
+      <FinishForm @submit="onFinish" :taskid="taskid" />
     </el-drawer>
   </div>
 </template>
 <script>
 import comment from "./comment";
+import UserLink from "./userLink";
+import FinishForm from "./finishForm";
+import Avatar from "./avatar";
+import { Util } from "../../../../common/utils";
+import { TaskApi } from "../common/api";
+import { getQueryString } from "../common/utils";
 
 export default {
   name: "TaskDetail",
   components: {
-    comment
+    comment,
+    Avatar,
+    UserLink,
+    FinishForm
   },
   data() {
     return {
-      discussModal: false
+      discussModal: false,
+      dispathModal: false,
+      finishModal: false,
+      task: {
+        member_list: [],
+        log_list: [],
+        forum_list: []
+      },
+      taskid: "",
+      chatUserId: ""
     };
   },
+  computed: {
+    isMyComment() {
+      return function(userid) {
+        debugger;
+        return this.task.login_userid === userid;
+      };
+    }
+  },
   methods: {
-    dispath() {},
-    finish() {}
+    onDispath() {},
+    onFinish() {
+      // TaskApi.excute('finishOaTaskInfo')
+    },
+    onReply() {
+      this.$refs.discussDrawer.closeDrawer();
+      this.discussModal = false;
+      this.getOaTaskInfo();
+    },
+    deleteComment(forumid) {
+      this.$confirm("确认删除该回复?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      }).then(() => {
+        TaskApi.excute("delOaTaskForum", {
+          forumid
+        }).then(res => {
+          this.getOaTaskInfo();
+        });
+      });
+    },
+    getOaTaskInfo() {
+      TaskApi.excute("getOaTaskInfo", {
+        taskid: this.taskid
+      }).then(res => {
+        if (Util.isAjaxResOk(res)) {
+          this.task = res.data.data;
+        }
+      });
+    }
+  },
+  created() {
+    const taskid = getQueryString("taskid");
+    this.taskid = taskid;
+    this.getOaTaskInfo();
   }
 };
 </script>
@@ -209,13 +255,6 @@ export default {
           word-break: keep-all;
         }
       }
-      .operater {
-        color: #4ea5fe;
-        cursor: pointer;
-      }
-      .operater:hover {
-        text-decoration: underline;
-      }
       .operation {
         color: #8a93a1;
         padding: 0 8px;
@@ -228,13 +267,6 @@ export default {
     }
     .detail-item.comment {
       display: flex;
-      .avatar {
-        height: 50px;
-        width: 50px;
-        border-radius: 50%;
-        background-color: red;
-        margin-right: 8px;
-      }
       .right {
         flex: 1;
         .header {

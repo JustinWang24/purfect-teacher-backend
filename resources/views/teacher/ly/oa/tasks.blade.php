@@ -23,6 +23,7 @@
         </div>
         <el-drawer
           title="创建任务"
+          ref="addTaskDrawer"
           :destroy-on-close="true"
           :visible.sync="addDrawer"
           direction="rtl">

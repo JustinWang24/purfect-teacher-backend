@@ -1,11 +1,6 @@
 <template>
   <div>
-    <div
-      class="list-item"
-      v-for="(task, index) in list"
-      :key="index"
-      @click="goDetail(task)"
-    >
+    <div class="list-item" v-for="(task, index) in list" :key="index" @click="goDetail(task)">
       <div class="left">
         <div class="item">
           <span class="title">任务名称</span>
@@ -25,9 +20,7 @@
         </div>
       </div>
       <div class="right">
-        <div :class="'status ' + getStatusClass(task.status)">
-          {{ getStatusText(task.status) }}
-        </div>
+        <div :class="'status ' + getStatusClass(task.status)">{{ getStatusText(task.status) }}</div>
         <div class="time">{{ task.create_time }}</div>
       </div>
     </div>
@@ -37,12 +30,11 @@
       :page-count="pagination.pageCount"
       :current-page="pagination.page"
       @current-change="onPageChange"
-    >
-    </el-pagination>
+    ></el-pagination>
   </div>
 </template>
 <script>
-import { getTaskList } from "../common/api";
+import { TaskApi } from "../common/api";
 import { TaskMode, TaskStatus } from "../common/enum";
 import { Util } from "../../../../common/utils";
 export default {
@@ -82,10 +74,10 @@ export default {
   },
   methods: {
     goDetail(task) {
-      window.location.href = "/teacher/ly/oa/task/detail?taskId=" + task.id;
+      window.location.href = "/teacher/ly/oa/task/detail?taskid=" + task.taskid;
     },
     getTaskList() {
-      getTaskList({
+      TaskApi.excute("getOaTaskListInfo", {
         page: this.pagination.page,
         type: TaskMode[this.mode].value
       }).then(res => {

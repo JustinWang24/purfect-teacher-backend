@@ -2,32 +2,19 @@
   <div class="form">
     <el-form ref="form" :model="form" label-width="80px">
       <el-form-item label="任务名称">
-        <el-input
-          v-model="form.task_title"
-          placeholder="请输入（必填）"
-        ></el-input>
+        <el-input v-model="form.task_title" placeholder="请输入（必填）"></el-input>
       </el-form-item>
       <el-form-item label="截止时间">
-        <el-date-picker
-          v-model="form.end_time"
-          type="datetime"
-          placeholder="请输入（必填）"
-        >
-        </el-date-picker>
+        <el-date-picker v-model="form.end_time" type="datetime" placeholder="请输入（必填）"></el-date-picker>
       </el-form-item>
       <el-form-item label="负责人">
-        <el-select
-          v-model="form.leader_userid"
-          filterable
-          placeholder="请输入（必填）"
-        >
+        <el-select v-model="form.leader_userid" filterable placeholder="请输入（必填）">
           <el-option
             v-for="item in ownerOptions"
             :key="item.value"
             :label="item.label"
             :value="item.value"
-          >
-          </el-option>
+          ></el-option>
         </el-select>
       </el-form-item>
       <el-form-item label="任务成员">
@@ -38,14 +25,10 @@
                 ? form.member_userids.length + '人'
                 : ''
             "
-            readonly=""
+            readonly
           ></el-input>
           <el-dropdown-menu slot="dropdown" ref="dropdownSlot">
-            <el-cascader-panel
-              ref="cascader"
-              :props="memberOptions"
-              @expand-change="onNodeChange"
-            ></el-cascader-panel>
+            <el-cascader-panel ref="cascader" :props="memberOptions" @expand-change="onNodeChange"></el-cascader-panel>
             <member-select v-model="form.member_userids" :members="members" />
           </el-dropdown-menu>
         </el-dropdown>
@@ -53,14 +36,10 @@
 
           style="width: 90%;"
           :props="memberOptions"
-        ></el-cascader> -->
+        ></el-cascader>-->
       </el-form-item>
       <el-form-item label="任务描述">
-        <el-input
-          type="textarea"
-          v-model="form.task_content"
-          placeholder="请输入"
-        ></el-input>
+        <el-input type="textarea" v-model="form.task_content" placeholder="请输入"></el-input>
       </el-form-item>
       <el-form-item label="关联项目">
         <el-select v-model="form.projectid" placeholder="请输入（选填）">
@@ -69,8 +48,7 @@
             :key="item.value"
             :label="item.label"
             :value="item.value"
-          >
-          </el-option>
+          ></el-option>
         </el-select>
       </el-form-item>
     </el-form>
@@ -80,14 +58,10 @@
   </div>
 </template>
 <script>
-import {
-  getOrganization,
-  getProjects,
-  getOaProjectUserListInfo,
-  addOaTaskInfo
-} from "../common/api";
+import { TaskApi } from "../common/api";
 import { Util } from "../../../../common/utils";
 import MemberSelect from "./member-select";
+import moment from "moment";
 
 export default {
   name: "task-form",
@@ -113,8 +87,11 @@ export default {
         return;
       }
       let formdata = JSON.parse(JSON.stringify(this.form));
+      formdata.end_time = moment(formdata.end_time).format(
+        "YYYY-MM-DD hh:mm:ss"
+      );
       formdata.member_userids = formdata.member_userids.toString();
-      addOaTaskInfo(formdata).then(res => {
+      TaskApi.excute("addOaTaskInfo", formdata).then(res => {
         this.$emit("done");
       });
     },
@@ -153,7 +130,7 @@ export default {
           if (!Util.isEmpty(node.data)) {
             parentId = node.data.id;
           }
-          getOrganization({
+          TaskApi.excute("getOrganization", {
             parent_id: parentId
           }).then(res => {
             if (Util.isAjaxResOk(res)) {
@@ -170,7 +147,7 @@ export default {
     };
   },
   created() {
-    getProjects().then(res => {
+    TaskApi.excute("getOaProjectListInfo").then(res => {
       if (Util.isAjaxResOk(res)) {
         this.projectOptions = res.data.data.map(pro => {
           return {
@@ -180,7 +157,7 @@ export default {
         });
       }
     });
-    getOaProjectUserListInfo().then(res => {
+    TaskApi.excute("getOaProjectUserListInfo").then(res => {
       if (Util.isAjaxResOk(res)) {
         this.ownerOptions = res.data.data.map(per => {
           return {
@@ -220,10 +197,6 @@ export default {
     padding: 12px;
     text-align: right;
   }
-}
-.el-dropdown-menu {
-  // right: 0 !important;
-  // left: initial !important;
 }
 .el-cascader-panel {
   border: none !important;

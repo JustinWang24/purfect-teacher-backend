@@ -29,6 +29,7 @@ if (app) {
     methods: {
       onTaskCreated () {
         this.refreshList(this.activeName)
+        this.$refs.addTaskDrawer.closeDrawer()
         this.addDrawer = false
       },
       refreshList (val) {

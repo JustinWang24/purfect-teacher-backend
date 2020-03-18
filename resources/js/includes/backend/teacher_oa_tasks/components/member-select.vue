@@ -33,7 +33,6 @@ export default {
       deep: true,
       immediate: true,
       handler(value) {
-        debugger;
         this.$emit("input", this.checkList);
       }
     }

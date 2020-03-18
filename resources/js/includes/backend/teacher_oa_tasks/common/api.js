@@ -1,63 +1,28 @@
-import { Util } from "../../../../common/utils";
+import {
+  Util
+} from "../../../../common/utils";
 
-const getOaTaskListInfoUrl = '/Oa/task/getOaTaskListInfo'
-const getOrganizationUrl = '/Oa/tissue/getOrganization'
-const getProjectsUrl = '/Oa/project/getOaProjectListInfo'
-const getOaProjectUserListInfoUrl = '/Oa/project/getOaProjectUserListInfo'
-const addOaTaskInfoUrl = '/Oa/task/addOaTaskInfo'
-
-export function getTaskList (params) {
-  const url = Util.buildUrl(getOaTaskListInfoUrl);
-  if (Util.isDevEnv()) {
-    return axios.get(url, affix);
-  }
-  return axios.post(
-    url,
-    params
-  );
+const API_MAP = {
+  getOaTaskListInfo: '/Oa/task/getOaTaskListInfo',
+  getOrganization: '/Oa/tissue/getOrganization',
+  getOaProjectListInfo: '/Oa/project/getOaProjectListInfo',
+  getOaProjectUserListInfo: '/Oa/project/getOaProjectUserListInfo',
+  addOaTaskInfo: '/Oa/task/addOaTaskInfo',
+  getOaTaskInfo: '/Oa/task/getOaTaskInfo',
+  addOaTaskForum: '/Oa/task/addOaTaskForum',
+  delOaTaskForum: '/Oa/task/delOaTaskForum',
+  finishOaTaskInfo: '/Oa/task/finishOaTaskInfo'
 }
 
-
-export function getOrganization (params = {}) {
-  const url = Util.buildUrl(getOrganizationUrl);
-  if (Util.isDevEnv()) {
-    return axios.get(url, affix);
+export const TaskApi = {
+  excute: function (fn, params = {}) {
+    const url = Util.buildUrl(API_MAP[fn]);
+    if (Util.isDevEnv()) {
+      return axios.get(url, affix);
+    }
+    return axios.post(
+      url,
+      params
+    );
   }
-  return axios.post(
-    url,
-    params
-  );
-}
-
-export function getProjects (params = {}) {
-  const url = Util.buildUrl(getProjectsUrl);
-  if (Util.isDevEnv()) {
-    return axios.get(url, affix);
-  }
-  return axios.post(
-    url,
-    params
-  );
-}
-
-export function getOaProjectUserListInfo (params = {}) {
-  const url = Util.buildUrl(getOaProjectUserListInfoUrl);
-  if (Util.isDevEnv()) {
-    return axios.get(url, affix);
-  }
-  return axios.post(
-    url,
-    params
-  );
-}
-
-export function addOaTaskInfo (params = {}) {
-  const url = Util.buildUrl(addOaTaskInfoUrl);
-  if (Util.isDevEnv()) {
-    return axios.get(url, affix);
-  }
-  return axios.post(
-    url,
-    params
-  );
 }
