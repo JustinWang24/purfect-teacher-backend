@@ -247,6 +247,9 @@ Route::prefix('teacher')->group(function () {
             // 任务
             Route::get('tasks','LY\OaController@tasks')
                 ->name('teacher.ly.oa.tasks');
+            // 任务
+            Route::get('task/detail','LY\OaController@task_detail')
+                ->name('teacher.ly.oa.task_detail');
             // 申请
             Route::get('applications','LY\OaController@applications')
                 ->name('teacher.ly.oa.applications');

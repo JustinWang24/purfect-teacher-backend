@@ -42,6 +42,10 @@ class OaController extends Controller
         return view('teacher.ly.oa.tasks',$this->dataForView);
     }
 
+    public function task_detail(Request $request){
+        return view('teacher.ly.oa.task_detail',$this->dataForView);
+    }
+
     public function applications(Request $request){
         return view('teacher.ly.oa.applications',$this->dataForView);
     }
