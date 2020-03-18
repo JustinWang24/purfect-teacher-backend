@@ -191,4 +191,10 @@
     min-width: 90px;
     max-width: 110px;
   }
+  textarea.van-field__control {
+    min-height: 120px;
+  }
+  .myFiles .van-field__control--custom {
+    display: block;
+  }
 }

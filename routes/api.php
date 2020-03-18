@@ -440,6 +440,9 @@ Route::prefix('pipeline')->middleware('auth:api')->group(function (){
     Route::any('/flows/my', 'Api\Pipeline\FlowsController@my')
         ->name('api.pipeline.flows.my');
 
+    Route::post('/flows/business-url', 'Api\Pipeline\FlowsController@business_url')
+        ->name('api.pipeline.flows.business-url');
+
     /**
      * 用户调取自己发起的申请的接口
      */

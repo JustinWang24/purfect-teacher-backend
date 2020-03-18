@@ -25,19 +25,19 @@ class CampusController extends Controller
          * @var User $user
          */
         $user = $request->user('api');
-
         if($user){
             $schoolId = $user->getSchoolId();
-            // 表示用户找到了， 并正确的对应到了学校
+            // 表示用户找到了
             $albumDao = new AlbumDao();
             $album = $albumDao->getAllBySchool($schoolId);
-            /**
-             * @var School $school
-             */
             $school = (new SchoolDao())->getSchoolById($schoolId);
-            $scenery = new CampusScenery($album, $school->configuration->campus_intro);
+            $str = '<link href="http://libs.baidu.com/bootstrap/3.0.3/css/bootstrap.min.css" rel="stylesheet"><style>
+                    body{margin-left:10px;margin-right:10px;}
+                    img{max-width: 100% !important;}
+                  </style>';
+            $scenery = new CampusScenery($album, $str . $school->configuration->campus_intro);
             return JsonBuilder::Success($scenery->toArray());
-        }
+          }
         return JsonBuilder::Error('无法定位用户所属学校');
     }
 

@@ -32,13 +32,14 @@ class ConsultController extends Controller
          * @var User $user
          */
         $user = $request->user();
-        $note = RecruitNote::where('school_id', $user->getSchoolId())->first();
+        $note = RecruitNote::where('school_id', session('school.id'))->first();
         // 招生简章
-        $config = SchoolConfiguration::where('school_id', $user->getSchoolId())->first();
+        $config = SchoolConfiguration::where('school_id', session('school.id'))->first();
         $recruitment_intro = $config->recruitment_intro;
 
         // 由于需求太简单, 就不去使用 Dao 了, 而是直接操作 Model. 后期如果需求变复杂, 还是要回归 Dao 的方式
         if($request->isMethod('post')){
+          //print_r($request->has('note'));exit;
             if($request->has('note')){
                 $noteData = $request->get('note');
                 if(is_null($note)){
@@ -62,7 +63,6 @@ class ConsultController extends Controller
                 }
             }
         }
-
         $this->dataForView['note'] = $note;
         $this->dataForView['recruitment_intro'] = $recruitment_intro;
         $this->dataForView['user'] = $user;
