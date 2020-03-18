@@ -3,6 +3,7 @@
 namespace App\Dao\TeacherAttendance;
 
 use App\Models\TeacherAttendance\Attendance;
+use App\Models\TeacherAttendance\Clockin;
 use App\Models\TeacherAttendance\Clockset;
 use App\Models\TeacherAttendance\ExceptionDay;
 use App\Models\TeacherAttendance\Managers;
@@ -17,6 +18,36 @@ use Illuminate\Support\Facades\DB;
 
 class AttendanceDao
 {
+    public function getBeLates($type) {
+        $now = Carbon::now()->addMinutes(10);
+        $week = $now->englishDayOfWeek;
+        $time = $now->format('H:i:s');
+        $day = $now->format('Y-m-d');
+        $clocksetList = Clockset::where([
+            'week' => $week,
+            'is_weekday' => 1,
+            $type => $time
+        ])->with('attendance')->get();
+
+        $userList = [];
+        foreach ($clocksetList as $clcokset) {
+            $hasUserIdArr = Clockin::where([
+                'teacher_attendance_id' => $clcokset->attendance->id,
+                'day' => $day,
+                'type' => $type
+            ])->pluck('user_id')->toArray();
+            $allUserArr = UserOrganization::whereIn('organization_id', $clcokset->attendance->organizations()->pluck('organization_id')->toArray())
+                ->get();
+            if ($allUserArr) {
+                foreach ($allUserArr as $userorganization) {
+                    if (!in_array($userorganization->user_id, $hasUserIdArr)) {
+                        $userList[] = $userorganization->user;
+                    }
+                }
+            }
+        }
+        return $userList;
+    }
     public function saveClocksets($attendance,$data) {
         $bag = new MessageBag(JsonBuilder::CODE_ERROR);
         DB::beginTransaction();
