@@ -42,17 +42,17 @@ Vue.component('recruitment-plan-form', require('./components/recruitment/Recruit
 Vue.component('file-manager', require('./components/fileManager/FileManager.vue').default);
 Vue.component('elective-course-form', require('./components/courses/ElectiveCourseForm.vue').default);
 Vue.component('textbooks-table', require('./components/textbook/TextbooksTable.vue').default); // 教材列表
-Vue.component('file-preview', require('./components/fileManager/elements/FilePreview.vue').default);      // 教材表单
+Vue.component('file-preview', require('./components/fileManager/elements/FilePreview.vue').default); // 教材表单
 // Vue.component('drag-to-sort', require('./components/dnd/DragToSort.vue').default);      // 教材表单
-Vue.component('icon-selector', require('./components/misc/IconSelector.vue').default);      // 教材表单
-Vue.component('node', require('./components/pipeline/Node.vue').default);      // 教材表单
-Vue.component('notification-item', require('./components/message/NotificationItem.vue').default);      // 教材表单
-Vue.component('organizations-selector', require('./components/organization/OrganizationsSelector').default);      // 可见范围选择器
+Vue.component('icon-selector', require('./components/misc/IconSelector.vue').default); // 教材表单
+Vue.component('node', require('./components/pipeline/Node.vue').default); // 教材表单
+Vue.component('notification-item', require('./components/message/NotificationItem.vue').default); // 教材表单
+Vue.component('organizations-selector', require('./components/organization/OrganizationsSelector').default); // 可见范围选择器
 
 // 仿 Moodle 的教学管理功能所用的组件
-Vue.component('course-indexer', require('./components/moodle/teacher/CourseIndexer').default);      // 可见范围选择器
-Vue.component('lecture', require('./components/moodle/teacher/Lecture').default);      // 课件组件
-Vue.component('grade-table', require('./components/moodle/teacher/GradeTable').default);      // 班级组件
+Vue.component('course-indexer', require('./components/moodle/teacher/CourseIndexer').default); // 可见范围选择器
+Vue.component('lecture', require('./components/moodle/teacher/Lecture').default); // 课件组件
+Vue.component('grade-table', require('./components/moodle/teacher/GradeTable').default); // 班级组件
 
 require('./includes/backend/school_calendar_app'); // 后台: 校历的管理
 require('./includes/backend/notice_manager_app'); // 后台: Notice 的管理
@@ -111,6 +111,6 @@ require('./includes/backend/teacher_students_manager'); // 后台,教师学生�
 require('./includes/backend/teacher_grades_check_in'); // 后台,教师班级签到
 require('./includes/backend/teacher_grades_manager'); // 后台,教师班级管理
 require('./includes/backend/teacher-attendance_manager/index'); // 后台,考勤管理
-
+require('./includes/backend/teacher-week-timetable/index'); // 后台,课程表
 require('./includes/backend/teacher_oa_tasks/index'); // 后台,oa-task
 require('./includes/backend/teacher_oa_tasks/detail.js'); // 后台,oa-task-detail
