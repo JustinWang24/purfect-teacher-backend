@@ -21,7 +21,7 @@ class AttendanceDao
     public function getBeLates($type) {
         $now = Carbon::now()->addMinutes(10);
         $week = $now->englishDayOfWeek;
-        $time = $now->format('H:i:s');
+        $time = $now->format('H:i:00');
         $day = $now->format('Y-m-d');
         $clocksetList = Clockset::where([
             'week' => $week,
