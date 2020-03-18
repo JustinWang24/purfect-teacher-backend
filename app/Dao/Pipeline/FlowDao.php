@@ -60,7 +60,7 @@ class FlowDao
 
         foreach ($data as $key=>$items) {
             $groups[] = [
-                'name'=>Flow::Types()[$key],
+                'name'=>Flow::Types()[$key] ?? '',
                 'key'=>$key,
                 'flows'=>$items
             ];
