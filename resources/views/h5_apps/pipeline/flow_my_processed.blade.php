@@ -9,16 +9,16 @@
     </div>
     <div class="main p-15" v-if="processedList.length > 0">
         <el-input placeholder="搜索标题、发起人关键字" v-model="keyword" style="margin-bottom: 10px;" @input="loadFlowsProcessedByMe"></el-input>
-        <div class="pipeline-user-flow-box" v-for="(userFlow, idx) in processedList" :key="idx" @click="viewMyApplication(item)">
+        <div class="pipeline-user-flow-box" v-for="(userFlow, idx) in processedList" :key="idx" @click="viewMyApplication(userFlow)">
             <el-card shadow="hover" class="pb-3">
                 <div style="display: flex;align-items: center;">
                     <img :src="userFlow.avatar" style="border-radius: 50%;width: 40px;height: 40px;">
                     <h3 style="margin-left: 20px;flex: 4;">
                         <p style="line-height: 0;display: flex;justify-content: space-between;">
                             <span>@{{ userFlow.user_name }}的@{{ userFlow.flow.name }}申请</span>
-                            <!-- <span style="font-weight: 100;font-size: 16px;color: #FE7B1C" v-if="{{userFlow.done === 0}}">审批中</span>
+                            <span style="font-weight: 100;font-size: 16px;color: #FE7B1C" v-if="{{userFlow.done === 0}}">审批中</span>
                             <span style="font-weight: 100;font-size: 16px;color: #6DCC58" v-if="{{userFlow.done === 1}}">已通过</span>
-                            <span style="font-weight: 100;font-size: 16px;color: #FD1B1B" v-if="{{userFlow.done === 1}}">未通过</span> -->
+                            <span style="font-weight: 100;font-size: 16px;color: #FD1B1B" v-if="{{userFlow.done === 2}}">未通过</span>
                         </p>
                         <p style="font-size: 13px;color: #ABABAB;margin: 0">类型：@{{ userFlow.flow.name }}</p>
                         <time style="font-size: 13px;color: #ABABAB;">@{{ userFlow.created_at.substring(0, 16) }}</time>
