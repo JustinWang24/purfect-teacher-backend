@@ -179,6 +179,8 @@ class TaskController extends Controller
             return JsonBuilder::Error('没有内容');
         }
 
+
+        $output['login_userid'] = $userId;
         $output['create_userid'] = $task->create_user;
         $output['create_name'] = $task->createUser->name;
         $output['task_title'] = $task->title;
@@ -198,7 +200,7 @@ class TaskController extends Controller
             $members[] = [
                 'userid' => $val->user->id,
                 'username' => $val->user->name,
-                'user_pics' => $val->user->profile->avatar,
+                'user_pics' => $val->user->profile->avatar ?? '',
             ];
         }
         $output['member_list'] = $members;

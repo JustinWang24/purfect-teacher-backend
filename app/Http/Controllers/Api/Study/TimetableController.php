@@ -251,14 +251,15 @@ class TimetableController extends Controller
             $weekdayIndex = $time->dayOfWeekIso;  // 周几
             $item = $timetableItemDao->getItemsByWeekDayIndexForTeacherView($weekdayIndex, $year, $term, $oddWeek, $user->id);
 
-            $timetable[] = $this->slotDataProcessing($item, $forStudyingSlots);
-
-//            $result[] = [
-//                'date' => $date->toDateString(),
-//                'week' => $week->getName(),
-//                'week_index' => CalendarDay::GetWeekDayIndex($weekdayIndex),
-//                'timetable' => $timetable,
-//            ];
+            $course = $this->slotDataProcessing($item, $forStudyingSlots);
+            $table = [
+                'week_index' => CalendarDay::GetWeekDayIndex($weekdayIndex),
+                'date' => $time->format('m月d日'),
+            ];
+            $timetable[] = [
+                'table'=>$table,
+                'course'=> $course,
+            ];
 
         }
         $weekdayIndex = $date->dayOfWeekIso;  // 周几

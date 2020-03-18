@@ -2,6 +2,7 @@
 
 namespace App\Models\Teachers;
 use App\Models\Schools\Department;
+use App\Models\Schools\DepartmentAdviser;
 use App\Models\Schools\Grade;
 use App\Models\Schools\GradeManager;
 use App\Models\Schools\TeachingAndResearchGroup;
@@ -59,7 +60,7 @@ class Teacher extends User
      */
     public static function myDepartmentManger($userId)
     {
-        return Department::where('user_id', $userId)->first();
+        return DepartmentAdviser::where('user_id', $userId)->first();
     }
 
 
