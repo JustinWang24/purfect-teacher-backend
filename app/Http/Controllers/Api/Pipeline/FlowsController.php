@@ -51,17 +51,13 @@ class FlowsController extends Controller
         $param = $request->get('param');
         $user = $request->user();
         $dao = $dao = new FlowDao();
-        $result =  $dao->getGroupedFlows($user->getSchoolId());
+        $result =  $dao->getListByBusiness($user->getSchoolId(), $business);
         $retFlow = [];
 
-        foreach ( $result as $item) {
-            if (!empty($item['flows'])) {
-                foreach ($item['flows'] as $flow) {
-                    if ($flow->business == $business && $dao->checkPermissionByuser($flow, $this->user, 0)) {
-                        $retFlow = $flow;
-                        break 2;
-                    }
-                }
+        foreach ( $result as $flow) {
+            if ($dao->checkPermissionByuser($flow, $user, 0)) {
+                $retFlow = $flow;
+                break;
             }
         }
         if (empty($retFlow)) {
