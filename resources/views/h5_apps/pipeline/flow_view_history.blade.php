@@ -152,6 +152,10 @@
             <el-button type="primary" style="width: 40%;border-radius: 50px;margin-bottom: 20px;" @click="dialogVisible = true">审批</el-button>
         </div>
         @endif
+
+
+
+        
         <el-dialog title="审批" :visible.sync="dialogVisible" width="90%" center>
             <el-input type="textarea" :rows="6" placeholder="请输入审批意见" v-model="textarea" maxlength="100"></el-input>
             <span style="position: relative;top: -18px;left: 85%;">@{{textarea.length}}/100</span>
