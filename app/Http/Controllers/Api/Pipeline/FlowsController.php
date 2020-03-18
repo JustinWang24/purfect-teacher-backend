@@ -21,6 +21,7 @@ use App\Models\Pipeline\Flow\Node;
 use App\User;
 use App\Utils\JsonBuilder;
 use App\Utils\Pipeline\IAction;
+use App\Utils\Pipeline\IFlow;
 use Psy\Util\Json;
 
 class FlowsController extends Controller
@@ -43,6 +44,34 @@ class FlowsController extends Controller
                 ],
             ]
         );
+    }
+
+    public function business_url(FlowRequest $request) {
+        $business = $request->get('business');
+        $param = $request->get('param');
+        $user = $request->user();
+        $dao = $dao = new FlowDao();
+        $result =  $dao->getGroupedFlows($user->getSchoolId());
+        $retFlow = [];
+
+        foreach ( $result as $item) {
+            if (!empty($item['flows'])) {
+                foreach ($item['flows'] as $flow) {
+                    if ($flow->business == $business && $dao->checkPermissionByuser($flow, $this->user, 0)) {
+                        $retFlow = $flow;
+                        break 2;
+                    }
+                }
+            }
+        }
+        if (empty($retFlow)) {
+            return JsonBuilder::Error('权限不足');
+        }else {
+            $param['flow_id'] = $retFlow->id;
+            $param['api_token'] = $user->api_token;
+            $url = route('h5.flow.user.start', $param);
+            return JsonBuilder::Success(['url' => $url]);
+        }
     }
 
     public function open(FlowRequest $request){

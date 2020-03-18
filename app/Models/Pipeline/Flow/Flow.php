@@ -30,18 +30,6 @@ class Flow extends Model implements IFlow
      */
     public static function Types(){
         return [
-            //@TODO pipeline待删除
-            IFlow::TYPE_TEACHER_ONLY=>IFlow::TYPE_TEACHER_ONLY_TXT,
-            IFlow::TYPE_OFFICE=>IFlow::TYPE_OFFICE_TXT,
-            IFlow::TYPE_2=>IFlow::TYPE_2_TXT,
-            IFlow::TYPE_3=>IFlow::TYPE_3_TXT,
-            IFlow::TYPE_4=>IFlow::TYPE_4_TXT,
-
-            IFlow::TYPE_STUDENT_ONLY=>IFlow::TYPE_STUDENT_ONLY_TXT, // 学生专用
-            IFlow::TYPE_FINANCE=>IFlow::TYPE_FINANCE_TXT, // 资助中心 学生
-            IFlow::TYPE_STUDENT_COMMON=>IFlow::TYPE_STUDENT_COMMON_TXT, // 日常申请 学生
-
-
             IFlow::TYPE_1_01 => IFlow::TYPE_1_01_TXT,
             IFlow::TYPE_1_02 => IFlow::TYPE_1_02_TXT,
             IFlow::TYPE_1_03 => IFlow::TYPE_1_03_TXT,
