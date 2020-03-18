@@ -67,7 +67,7 @@ if (document.getElementById('pipeline-flow-view-history-app')) {
             // 审批按钮
             button(result) {
                 if (result === 5 && this.textarea === '') {
-                    this.$message.error('审批意见不能为空');
+                    this.$message.info('审批意见不能为空');
                     return;
                 } else {
                     this.action1 = {

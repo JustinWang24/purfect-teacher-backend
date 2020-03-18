@@ -151,7 +151,7 @@ class FlowsController extends Controller
                     'id' => $value->id,
                     'avatar' => $value->user->profile->avatar ?? '',
                     'user_name' => $value->user_name,
-                    'flow' => ['name' => $value->flow->name],
+                    'flow' => ['name' => $value->flow->name ?? ''],
                     'done' => $value->done,
                     'created_at' => $value->created_at
                 ];
@@ -181,7 +181,7 @@ class FlowsController extends Controller
                     'id' => $value->userFlow->id,
                     'avatar' => $value->userFlow->user->profile->avatar ?? '',
                     'user_name' => $value->userFlow->user_name,
-                    'flow' => ['name' => $value->flow->name],
+                    'flow' => ['name' => $value->flow->name ?? ''],
                     'done' => $value->userFlow->done,
                     'created_at' => $value->userFlow->created_at
                 ];
@@ -211,7 +211,7 @@ class FlowsController extends Controller
                     'id' => $value->id,
                     'avatar' => $value->user->profile->avatar ?? '',
                     'user_name' => $value->user_name,
-                    'flow' => ['name' => $value->flow->name],
+                    'flow' => ['name' => $value->flow->name ?? ''],
                     'done' => $value->done,
                     'created_at' => $value->created_at
                 ];
@@ -237,7 +237,7 @@ class FlowsController extends Controller
                     'id' => $value->id,
                     'avatar' => $value->user->profile->avatar ?? '',
                     'user_name' => $value->user_name,
-                    'flow' => ['name' => $value->flow->name],
+                    'flow' => ['name' => $value->flow->name ?? ''],
                     'done' => $value->done,
                     'created_at' => $value->created_at
                 ];
