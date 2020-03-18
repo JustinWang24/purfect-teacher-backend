@@ -2,6 +2,9 @@
 
 namespace App\Console\Commands;
 
+use App\Dao\TeacherAttendance\AttendanceDao;
+use App\Jobs\Notifier\InternalMessage;
+use App\Models\Misc\SystemNotification;
 use Illuminate\Console\Command;
 
 class noticeTeacherAttendanceBeLate extends Command
@@ -37,14 +40,26 @@ class noticeTeacherAttendanceBeLate extends Command
      */
     public function handle()
     {
-        $dao = new TeacherApplyElectiveCourseDao();
-        $list = $dao->gettoDissolvedElectiveList();
-        if ($list) {
-            foreach ($list as $item) {
-                $enrollCount = $dao->getEnrolledTotalForCourses($item->course_id);
-                if ($enrollCount < $item->open_num) {
-                    $dao->discolved($item->course_id);
-                }
+        $dao = new AttendanceDao();
+        $morningList = $dao->getBeLates('morning');
+        if ($morningList) {
+            foreach ($morningList as $user) {
+                InternalMessage::dispatchNow(
+                    $user->getSchoolId(),
+                    SystemNotification::FROM_SYSTEM,
+                    $user->id,
+                    SystemNotification::TYPE_NONE,
+                    SystemNotification::PRIORITY_LOW,
+                    '你还有10分钟就要迟到了！',
+                    '',
+                    '你还有10分钟就要迟到了！',
+                    SystemNotification::TEACHER_CATEGORY_OAATTENDANCE,
+                    json_encode([
+                        'type' => 'teacher-attendance',
+                        'param1' => '',
+                        'param2' => ''
+                    ])
+                );
             }
         }
     }

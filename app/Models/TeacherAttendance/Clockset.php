@@ -11,4 +11,8 @@ class Clockset extends Model
     protected $fillable = [
         'teacher_attendance_id','week','start','end','morning','morning_late','afternoon_start','afternoon','afternoon_late','evening','is_weekday'
     ];
+    public function attendance()
+    {
+        return $this->belongsTo(Attendance::class, 'teacher_attendance_id');
+    }
 }
