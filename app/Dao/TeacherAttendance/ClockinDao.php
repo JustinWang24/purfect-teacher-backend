@@ -22,7 +22,14 @@ class ClockinDao
     public function create($data)
     {
         try{
-            $result = Clockin::create($data);
+            foreach ($data as $key => $val) {
+                if (in_array($key, ['time', 'status', 'source'])) {
+                    $data1[$key] = $val;
+                }else {
+                    $data2[$key] = $val;
+                }
+            }
+            $result = Clockin::updateOrInsert($data1, $data2);
             return new MessageBag(JsonBuilder::CODE_SUCCESS,'创建成功', $result);
         }catch (\Exception $e) {
             return new MessageBag(JsonBuilder::CODE_ERROR, $e->getMessage());

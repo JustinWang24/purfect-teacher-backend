@@ -182,11 +182,20 @@ class ActionDao
      * @param $user
      * @return Collection
      */
-    public function getFlowsWhichStartBy($user){
-        return UserFlow::where('user_id',$user->id??$user)
-            ->with('flow')
-            ->orderBy('id','desc')
-            ->get();
+    public function getFlowsWhichStartBy($user, $position = 0, $keyword =''){
+        if (!$position) {
+            return UserFlow::where('user_id',$user->id??$user)
+                ->with('flow')
+                ->orderBy('id','desc')
+                ->get();
+        }else {
+            $flowIdArr = Flow::whereIn('type', array_keys(Flow::getTypesByPosition($position)))->pluck('id')->toArray();
+            return UserFlow::where('user_id',$user->id??$user)
+                ->whereIn('flow_id', $flowIdArr)
+                ->with('flow')
+                ->orderBy('id','desc')
+                ->get();
+        }
     }
 
     /**
