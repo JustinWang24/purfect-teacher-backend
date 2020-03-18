@@ -31,13 +31,13 @@ class AddressBookController extends Controller
 
         $user = $request->user();
 
-        $gradeId = $user->gradeUser->grade_id; // 班级ID
-
         if ($request->has('grade_id')) {
             $gradeId = $request->get('grade_id');
+        } else {
+            $gradeId = $user->gradeUser->grade_id; // 班级ID
         }
 
-        if(!$gradeId){
+        if (!$gradeId) {
             $uuid = $request->uuid();
             $userDao = new UserDao;
             $user = $userDao->getUserGradeByUuid($uuid);
@@ -47,7 +47,7 @@ class AddressBookController extends Controller
         if (!$gradeId) {
             return JsonBuilder::Error('未找到用户所在班级');
         }
-
+        
         $gradeUserDao = new GradeUserDao;
         $gradeMangerDao = new GradeManagerDao;
 
