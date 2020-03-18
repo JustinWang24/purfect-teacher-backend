@@ -247,8 +247,8 @@ class TimetableController extends Controller
         $timetable = [];
         // 循环一周
         for ($i=0; $i<$day; $i++) {
-            $date = Carbon::parse($start)->addDays($i);
-            $weekdayIndex = $date->dayOfWeekIso;  // 周几
+            $time = Carbon::parse($start)->addDays($i);
+            $weekdayIndex = $time->dayOfWeekIso;  // 周几
             $item = $timetableItemDao->getItemsByWeekDayIndexForTeacherView($weekdayIndex, $year, $term, $oddWeek, $user->id);
 
             $timetable[] = $this->slotDataProcessing($item, $forStudyingSlots);
