@@ -194,17 +194,6 @@ if (document.getElementById('pipeline-flow-open-app')) {
         item.value = val[0].name + '/' + val[1].name + '/' + val[2].name;
         item.extra.showPicker = false;
       },
-      pickFileHandler: function (payload) {
-        this.showFileManagerFlag = false;
-        const attachment = {
-          id: null,
-          action_id: null,
-          media_id: payload.file.id,
-          url: payload.file.url,
-          file_name: payload.file.file_name
-        };
-        this.action.attachments.push(attachment);
-      },
       uploadImg(img) {
         // console.log(img)
 
@@ -259,16 +248,20 @@ if (document.getElementById('pipeline-flow-open-app')) {
               return
             }
             this.part.splice(level, this.part.length + level, data);
-            if (data.organ.length != 0 && type == 2) {
+            if (data.organ.length != 0) {
               this.selectParts = [];
               parentItem.organ.forEach((itemPart, index) => {
                 itemPart.active = false;
               });
               item.active = true;
             } else if (data.organ.length == 0) {
-              if (type == 2) {
+              if (type == 1) {
+                parentItem.organ.forEach((itemPart, index) => {
+                  itemPart.active = false;
+                });
+                item.active = true;
                 this.selectParts[0] = item;
-              } else if (type == 1) {
+              } else if (type == 2) {
                 let noPart = true;
                 this.selectParts.forEach((part, index) => {
                   if (part.id == item.id) {
@@ -288,6 +281,21 @@ if (document.getElementById('pipeline-flow-open-app')) {
           }
         }).catch((err) => {
         });
+      },
+      pickFileHandler: function(payload){
+        this.showFileManagerFlag = false;
+        const attachment = {
+          id:null,
+          action_id: null,
+          media_id: payload.file.id,
+          url: payload.file.url,
+          file_name: payload.file.file_name
+        };
+        this.action.attachments.push(attachment);
+      },
+      dropAttachment: function(idx, attachment){
+        this.action.attachments.splice(idx, 1);
+        this.$message({type:'info', message: '移除文件: ' + attachment.file_name});
       }
     }
   });

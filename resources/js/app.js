@@ -64,6 +64,7 @@ require('./includes/backend/teacher_oa_notices_app'); // 后台: 教师的办公
 require('./includes/backend/student_homepage_app'); // 后台: 学生的首页
 require('./includes/backend/organization_app'); // 组织架构管理
 require('./includes/backend/news_list_manager'); // 动态新闻的管理
+require('./includes/backend/campus_intro'); // 校园风光
 require('./includes/backend/welcome_manager'); // 迎新管理
 require('./includes/backend/contacts_list_manager'); // 通讯录
 require('./includes/backend/textbook_manager'); // 教材

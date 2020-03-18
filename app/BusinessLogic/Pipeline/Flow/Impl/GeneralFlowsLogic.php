@@ -58,23 +58,23 @@ abstract class GeneralFlowsLogic implements IFlowLogic
     public function copyToMe($position = 0)
     {
         $actionDao = new ActionDao();
-        return $actionDao->getFlowsWhichCopyTo($this->user,$position);
+        return $actionDao->getFlowsWhichCopyTo($this->user, $position);
     }
 
     public function myProcessed($position = 0)
     {
         $actionDao = new ActionDao();
-        return $actionDao->getFlowsWhichMyProcessed($this->user,$position);
+        return $actionDao->getFlowsWhichMyProcessed($this->user, $position);
     }
 
     /**
      * 获取我发起的流程
      * @return IAction[]|\Illuminate\Database\Eloquent\Collection
      */
-    public function startedByMe()
+    public function startedByMe($position = 0)
     {
         $actionDao = new ActionDao();
-        return $actionDao->getFlowsWhichStartBy($this->user);
+        return $actionDao->getFlowsWhichStartBy($this->user, $position);
     }
 
     /**

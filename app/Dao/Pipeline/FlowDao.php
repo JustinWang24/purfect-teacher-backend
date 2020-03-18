@@ -60,13 +60,17 @@ class FlowDao
 
         foreach ($data as $key=>$items) {
             $groups[] = [
-                'name'=>Flow::Types()[$key],
+                'name'=>Flow::Types()[$key] ?? '',
                 'key'=>$key,
                 'flows'=>$items
             ];
         }
 
         return $groups;
+    }
+
+    public function getListByBusiness($schoolId, $business){
+        return Flow::where('school_id', $schoolId)->where('business', $business)->get();
     }
 
     public function transTitlesToUser($titles, $organizations, User $user) {
