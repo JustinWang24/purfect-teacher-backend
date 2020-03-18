@@ -34,6 +34,7 @@
 <script>
 import { TaskApi } from "../common/api";
 import { getFileURL } from "../common/utils";
+import { Util } from "../../../../common/utils";
 export default {
   name: "comment-form",
   props: {
@@ -55,7 +56,9 @@ export default {
           return img.file;
         })
       }).then(res => {
-        this.$emit("reply");
+        if (Util.isAjaxResOk(res)) {
+          this.$emit("submit");
+        }
       });
     },
     onFileSelected(e) {

@@ -167,7 +167,7 @@ export default {
   methods: {
     onDispath() {},
     onFinish() {
-      // TaskApi.excute('finishOaTaskInfo')
+      this.getOaTaskInfo();
     },
     onReply() {
       this.$refs.discussDrawer.closeDrawer();
