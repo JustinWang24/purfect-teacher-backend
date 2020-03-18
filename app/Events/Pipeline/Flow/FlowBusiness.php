@@ -43,7 +43,7 @@ class FlowBusiness
     {
         $startUserAction = (new ActionDao())->getFirstActionByUserFlow($this->userFlow->id);
         $node = $this->flow->getHeadNode();
-        $business = Flow::business($this->flow->business);
+        $business = Flow::getBusiness($this->flow->business);
         $businessOptions = [];
         foreach ($business['options'] as $busi) {
             $businessOptions[$busi['title']] = '';
