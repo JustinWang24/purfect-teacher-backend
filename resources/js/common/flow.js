@@ -83,14 +83,44 @@ export function start(action, isAppRequest, affix) {
     );
 }
 
-export function startedByMe(userUuid, affix) {
+export function startedByMe(userUuid, keyword, affix) {
     const url = Util.buildUrl(Constants.API.FLOW.START_BY_ME);
     if(Util.isDevEnv()){
         return axios.get(url, affix);
     }
     return axios.post(
         url,
-        {user_uuid: userUuid, version:Constants.VERSION}
+        {user_uuid: userUuid, keyword: keyword, version:Constants.VERSION}
+    );
+}
+export function waitingByMe(userUuid, keyword, affix) {
+    const url = Util.buildUrl(Constants.API.FLOW.WAITING_FOR_ME);
+    if(Util.isDevEnv()){
+        return axios.get(url, affix);
+    }
+    return axios.post(
+        url,
+        {user_uuid: userUuid, keyword: keyword, version:Constants.VERSION}
+    );
+}
+export function processedByMe(userUuid, keyword, affix) {
+    const url = Util.buildUrl(Constants.API.FLOW.MY_PROCESSED);
+    if(Util.isDevEnv()){
+        return axios.get(url, affix);
+    }
+    return axios.post(
+        url,
+        {user_uuid: userUuid, keyword: keyword,  version:Constants.VERSION}
+    );
+}
+export function copyByMe(userUuid, keyword, affix) {
+    const url = Util.buildUrl(Constants.API.FLOW.COPY_TO_ME);
+    if(Util.isDevEnv()){
+        return axios.get(url, affix);
+    }
+    return axios.post(
+        url,
+        {user_uuid: userUuid, keyword: keyword, version:Constants.VERSION}
     );
 }
 

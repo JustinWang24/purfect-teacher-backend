@@ -139,7 +139,6 @@ if (document.getElementById('pipeline-flows-manager-app')) {
                 loadNodes(this.returnId).then(res => {
                     this.copy = res.data.data.nodes.copy
                     this.handler = res.data.data.nodes.handler
-                    this.posiType = res.data.data.flow.position
                     this.agree = res.data.data.flow.auto_processed
                 })
             }
@@ -166,6 +165,7 @@ if (document.getElementById('pipeline-flows-manager-app')) {
             // 新增流程按钮--打开侧边栏
             createNewFlow() {
                 this.flowFormFlag = true;
+                this.newFlow = true;
                 this.flow.type = '';
                 this.flow.name = '';
                 this.node.handlers = []; // 目标用户
@@ -223,12 +223,18 @@ if (document.getElementById('pipeline-flows-manager-app')) {
                     });
             },
             // 侧边栏创建新流程按钮
-            onNewFlowSubmit: function () {
-                this.newFlow = true
+            onNewFlowSubmit: function (id) {
+                if (this.flow.type === '') {
+                    this.$notify.error({
+                        title: '错误',
+                        message: '流程分类不能为空'
+                    });
+                    return;
+                }
                 if (this.flow.name.trim() === '') {
                     this.$notify.error({
                         title: '错误',
-                        message: '流程的名称必须填写'
+                        message: '流程的名称不能为空'
                     });
                     return;
                 } else if (this.flow.name.trim().length > 10) {
@@ -238,25 +244,71 @@ if (document.getElementById('pipeline-flows-manager-app')) {
                     });
                     return;
                 }
-                if (this.node.organizations.length === 0 && this.node.handlers.length === 0) {
+                if (this.flow.icon === '') {
                     this.$notify.error({
                         title: '错误',
-                        message: '新流程必须选择: 哪些用户可以发起本流程'
+                        message: '流程图标不能为空'
+                    });
+                    return;
+                }
+                if (this.posiType === 3) {
+                    if (this.flow.business === '') {
+                        this.$notify.error({
+                            title: '错误',
+                            message: '关联业务不能为空'
+                        });
+                        return;
+                    }
+                }
+                if (this.node.handlers.length === 0) {
+                    this.$notify.error({
+                        title: '错误',
+                        message: '请选择目标用户'
+                    });
+                    return;
+                }
+                if (this.organization === 1) {
+                    if (this.node.organizations.length === 0) {
+                        this.$notify.error({
+                            title: '错误',
+                            message: '请选择部门'
+                        });
+                        return;
+                    }
+                }
+                if (this.node.titles.length === 0) {
+                    this.$notify.error({
+                        title: '错误',
+                        message: '请选择角色类型'
                     });
                     return;
                 }
                 // 创建新的流程
-                saveFlow(this.flow, this.node).then(res => {
-                    if (Util.isAjaxResOk(res)) {
-                        console.log(res)
-                        // window.location.href = '/school_manager/pipeline/flows/manager?lastNewFlow=' + res.data.id;
-                    }
-                    else {
-                        this.$notify.error(
-                            { title: '保存失败', message: res.data.message, duration: 0 }
-                        );
-                    }
-                })
+                if (id === 1) {
+                    saveFlow(this.flow, this.node).then(res => {
+                        if (Util.isAjaxResOk(res)) {
+                            window.location.href = '/school_manager/pipeline/flows/manager?lastNewFlow=' + res.data.data.id;
+                        }
+                        else {
+                            this.$notify.error(
+                                { title: '保存失败', message: res.data.message, duration: 0 }
+                            );
+                        }
+                    })
+                } else {
+                    // 右侧编辑时侧边栏的保存按钮
+                    this.editFlow();
+                    saveFlow(this.flow, this.node).then(res => {
+                        if (Util.isAjaxResOk(res)) {
+                            window.location.href = '/school_manager/pipeline/flows/manager?lastNewFlow=' + res.data.data.id;
+                        }
+                        else {
+                            this.$notify.error(
+                                { title: '保存失败', message: res.data.message, duration: 0 }
+                            );
+                        }
+                    })
+                }
             },
             // 每个流程的点击事件
             loadFlowNodes: function (flowId, flowName) {
@@ -295,7 +347,8 @@ if (document.getElementById('pipeline-flows-manager-app')) {
                         // 有部门
                         if (res.data.data.nodes.head.handler.organizations.length > 0) {
                             this.organization = 1;
-                            this.node.organizations = res.data.data.nodes.head.handler.organizations
+                            this.node.organizations = ''
+                            // this.node.organizations = res.data.data.nodes.head.handler.organizations.substring(0, res.data.data.nodes.head.handler.organizations.length - 1).split(';')
                             this.node.titles = res.data.data.nodes.head.handler.titles.substring(0, res.data.data.nodes.head.handler.titles.length - 1).split(';')
                             this.gettitlesList();
                         } else {
@@ -308,40 +361,6 @@ if (document.getElementById('pipeline-flows-manager-app')) {
                     else {
                         this.$notify.error(
                             { title: '加载失败', message: res.data.message, duration: 0 }
-                        );
-                    }
-                })
-            },
-            // 右侧编辑时侧边栏的保存按钮
-            saveFlowSubmit() {
-                if (this.flow.name.trim() === '') {
-                    this.$notify.error({
-                        title: '错误',
-                        message: '流程的名称必须填写'
-                    });
-                    return;
-                } else if (this.flow.name.trim().length > 10) {
-                    this.$notify.error({
-                        title: '错误',
-                        message: '流程的名称不可超过10个字符'
-                    });
-                    return;
-                }
-                if (this.node.organizations.length === 0 && this.node.handlers.length === 0) {
-                    this.$notify.error({
-                        title: '错误',
-                        message: '新流程必须选择: 哪些用户可以发起本流程'
-                    });
-                    return;
-                }
-                this.editFlow();
-                saveFlow(this.flow, this.node).then(res => {
-                    if (Util.isAjaxResOk(res)) {
-                        window.location.href = '/school_manager/pipeline/flows/manager?lastNewFlow=' + res.data.id;
-                    }
-                    else {
-                        this.$notify.error(
-                            { title: '保存失败', message: res.data.message, duration: 0 }
                         );
                     }
                 })
