@@ -62,5 +62,26 @@ class noticeTeacherAttendanceBeLate extends Command
                 );
             }
         }
+        $afternoonList = $dao->getBeLates('afternoon');
+        if ($afternoonList) {
+            foreach ($afternoonList as $user) {
+                InternalMessage::dispatchNow(
+                    $user->getSchoolId(),
+                    SystemNotification::FROM_SYSTEM,
+                    $user->id,
+                    SystemNotification::TYPE_NONE,
+                    SystemNotification::PRIORITY_LOW,
+                    '你还有10分钟就要迟到了！',
+                    '',
+                    '你还有10分钟就要迟到了！',
+                    SystemNotification::TEACHER_CATEGORY_OAATTENDANCE,
+                    json_encode([
+                        'type' => 'teacher-attendance',
+                        'param1' => '',
+                        'param2' => ''
+                    ])
+                );
+            }
+        }
     }
 }
