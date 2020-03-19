@@ -101,7 +101,12 @@ class SystemNotification extends Model
             }
         }else {
             if ($business) {
-
+                if ($business == IFlow::BUSINESS_TYPE_CLOCKIN) {
+                    $category = self::TEACHER_CATEGORY_APPLY;
+                }
+                if ($business == IFlow::BUSINESS_TYPE_MACADDRESS) {
+                    $category = self::TEACHER_CATEGORY_APPLY;
+                }
             }
             if (!$category) {
                 switch ($type) {
