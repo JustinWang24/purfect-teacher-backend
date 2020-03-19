@@ -153,7 +153,7 @@ class FlowsController extends Controller
                     'user_name' => $value->user_name,
                     'flow' => ['name' => $value->flow->name ?? ''],
                     'done' => $value->done,
-                    'created_at' => $value->created_at
+                    'created_at' => $value->created_at->format('Y-m-d H:i:s')
                 ];
             }
         }
@@ -183,7 +183,7 @@ class FlowsController extends Controller
                     'user_name' => $value->userFlow->user_name,
                     'flow' => ['name' => $value->flow->name ?? ''],
                     'done' => $value->userFlow->done,
-                    'created_at' => $value->userFlow->created_at
+                    'created_at' => $value->userFlow->created_at->format('Y-m-d H:i:s')
                 ];
             }
         }
@@ -213,7 +213,7 @@ class FlowsController extends Controller
                     'user_name' => $value->user_name,
                     'flow' => ['name' => $value->flow->name ?? ''],
                     'done' => $value->done,
-                    'created_at' => $value->created_at
+                    'created_at' => $value->created_at->format('Y-m-d H:i:s')
                 ];
             }
         }
@@ -239,7 +239,7 @@ class FlowsController extends Controller
                     'user_name' => $value->user_name,
                     'flow' => ['name' => $value->flow->name ?? ''],
                     'done' => $value->done,
-                    'created_at' => $value->created_at
+                    'created_at' => $value->created_at->format('Y-m-d H:i:s')
                 ];
             }
         }
