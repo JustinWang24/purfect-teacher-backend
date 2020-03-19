@@ -16,6 +16,7 @@ use App\Dao\Schools\RoomDao;
 use App\Dao\Schools\SchoolDao;
 use App\Dao\Users\GradeUserDao;
 use App\Events\SystemNotification\ApproveElectiveCourseEvent;
+use App\Events\SystemNotification\ApproveElectiveTeacherEvent;
 use App\Events\User\Student\EnrollCourseEvent;
 use App\Models\Course;
 use App\Models\ElectiveCourses\ApplyCourseArrangement;
@@ -630,6 +631,11 @@ class TeacherApplyElectiveCourseDao
             ]);
             DB::commit();
 
+            //通知教师
+            $apply = TeacherApplyElectiveCourse::where('course_id', $courseId)->first();
+            $teacher = User::find($apply->teacher_id);
+            event(new ApproveElectiveTeacherEvent($teacher, $apply, 0));
+
             //通知所有报名的人
             $userList = [];
             $userIdArr = StudentEnrolledOptionalCourse::where('course_id', $course->id)->pluck('user_id')->toArray();
@@ -818,6 +824,10 @@ class TeacherApplyElectiveCourseDao
             //记录一下申请和课表对应id
             TeacherApplyElectiveCourse::where('id', $applyId)->update(['course_id' => $course->getData()->id]);
             DB::commit();
+
+            //通知教师
+            $teacher = User::find($apply->teacher_id);
+            event(new ApproveElectiveTeacherEvent($teacher, $apply, 1));
             $messageBag->setCode(JsonBuilder::CODE_SUCCESS);
             $messageBag->setData($course->getData());
         } catch (\Exception $exception) {
