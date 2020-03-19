@@ -39,7 +39,7 @@ class ApproveElectiveCourseEvent implements CanSendSystemNotification
      */
     public function getSchoolId(): int
     {
-        return $this->user->school_id;
+        return $this->user->getSchoolId();
     }
 
     /**
