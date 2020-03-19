@@ -192,6 +192,7 @@ class TaskController extends Controller
         $output['leader_userid'] = $task->user_id;
         $output['leader_name'] = $task->user->name;
         $output['report_btn'] = 1; //结果按钮 1-显示 0-隐藏
+        $output['status'] = $task->status; // 任务状态
 
         $members = [];
         $taskMembers = $task->taskMembers->where('user_id', '<>',$task->user_id);
