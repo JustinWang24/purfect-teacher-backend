@@ -4,18 +4,19 @@ namespace App\Events\SystemNotification;
 
 use App\Events\CanSendSystemNotification;
 use App\Models\Course;
+use App\Models\ElectiveCourses\TeacherApplyElectiveCourse;
 use App\Models\Misc\SystemNotification;
 use App\User;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Broadcasting\InteractsWithSockets;
 
-class ApproveElectiveCourseEvent implements CanSendSystemNotification
+class ApproveElectiveTeacherEvent implements CanSendSystemNotification
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
     private  $user;
-    private  $course;
+    private  $apply;
     private  $result;
 
     /**
@@ -23,10 +24,10 @@ class ApproveElectiveCourseEvent implements CanSendSystemNotification
      * @param User $user
      * @param $courseId
      */
-    public function __construct(User $user, Course $course, $result)
+    public function __construct(User $user, TeacherApplyElectiveCourse $apply, $result)
     {
         $this->user = $user;
-        $this->course = $course;
+        $this->apply = $apply;
         $this->result = $result;
     }
 
@@ -80,7 +81,7 @@ class ApproveElectiveCourseEvent implements CanSendSystemNotification
      */
     public function getTitle(): string
     {
-        return '选修课程(' . $this->course->name . ')' . ($this->result ? '已开课！': '已取消！');
+        return $this->result ? '你有一条选课信息！' : '你申请的选修课程未通过！';
     }
 
     /**
@@ -89,7 +90,7 @@ class ApproveElectiveCourseEvent implements CanSendSystemNotification
      */
     public function getContent(): string
     {
-        return '选修课程(' . $this->course->name . ')' . ($this->result ? '已开课！': '已取消！');
+        return $this->result ? '你有一条选课信息！' : '你申请的选修课程未通过！';
     }
 
     /**
@@ -98,7 +99,7 @@ class ApproveElectiveCourseEvent implements CanSendSystemNotification
      */
     public function getCategory(): int
     {
-        return SystemNotification::STUDENT_CATEGORY_COURSE;
+        return SystemNotification::TEACHER_CATEGORY_COURSE;
     }
 
     /**
@@ -108,8 +109,8 @@ class ApproveElectiveCourseEvent implements CanSendSystemNotification
     public function getAppExtra(): string
     {
         $extra = [
-            'type' => 'course-elective-details',
-            'param1' => $this->course->id,
+            'type' => $this->result ? 'oa-elective-info' : 'oa-elective-apply',
+            'param1' => $this->apply->id,
             'param2' => ''
         ];
         return json_encode($extra);
