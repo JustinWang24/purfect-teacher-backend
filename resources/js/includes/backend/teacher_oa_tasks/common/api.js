@@ -2,6 +2,8 @@ import {
   Util
 } from "../../../../common/utils";
 
+const message = Vue.prototype.$message
+
 const API_MAP = {
   getOaTaskListInfo: '/Oa/task/getOaTaskListInfo',
   getOrganization: '/Oa/tissue/getOrganization',
@@ -11,18 +13,35 @@ const API_MAP = {
   getOaTaskInfo: '/Oa/task/getOaTaskInfo',
   addOaTaskForum: '/Oa/task/addOaTaskForum',
   delOaTaskForum: '/Oa/task/delOaTaskForum',
-  finishOaTaskInfo: '/Oa/task/finishOaTaskInfo'
+  finishOaTaskInfo: '/Oa/task/finishOaTaskInfo',
+  addOaTaskUser: '/Oa/task/addOaTaskUser'
 }
 
 export const TaskApi = {
   excute: function (fn, params = {}) {
-    const url = Util.buildUrl(API_MAP[fn]);
-    if (Util.isDevEnv()) {
-      return axios.get(url, affix);
-    }
-    return axios.post(
-      url,
-      params
-    );
+    return new Promise((resolve, reject) => {
+      const url = Util.buildUrl(API_MAP[fn]);
+      if (Util.isDevEnv()) {
+        return axios.get(url, affix).then(res => {
+          if (Util.isAjaxResOk(res)) {
+            resolve(res)
+          } else {
+            message.error(res.data.message);
+            reject(res)
+          }
+        });
+      }
+      return axios.post(
+        url,
+        params
+      ).then(res => {
+        if (Util.isAjaxResOk(res)) {
+          resolve(res)
+        } else {
+          message.error(res.data.message);
+          reject(res)
+        }
+      });
+    })
   }
 }

@@ -173,19 +173,22 @@ class TaskDao
                 'task_id'=>$task->id, 'desc'=>'完成了任务'];
             ProjectTaskLog::create($log);
 
-            // 添加附件
-            $path = ProjectTaskPic::DEFAULT_UPLOAD_PATH_PREFIX.$userId; // 上传路径
+            if(!empty($pics)) {
+                // 添加附件
+                $path = ProjectTaskPic::DEFAULT_UPLOAD_PATH_PREFIX.$userId; // 上传路径
 
-            foreach ($pics as $key => $item) {
-                $uuid = Uuid::uuid4()->toString();
-                $url = $item->storeAs($path, $uuid. '.' .$item->getClientOriginalExtension()); // 上传并返回路径
-                $data = [
-                    'url' => ProjectTaskPic::ConvertUploadPathToUrl($url),
-                    'task_id' => $task->id,
-                    'task_member_id' => $taskMemberId,
-                ];
-                ProjectTaskPic::create($data);
+                foreach ($pics as $key => $item) {
+                    $uuid = Uuid::uuid4()->toString();
+                    $url = $item->storeAs($path, $uuid. '.' .$item->getClientOriginalExtension()); // 上传并返回路径
+                    $data = [
+                        'url' => ProjectTaskPic::ConvertUploadPathToUrl($url),
+                        'task_id' => $task->id,
+                        'task_member_id' => $taskMemberId,
+                    ];
+                    ProjectTaskPic::create($data);
+                }
             }
+
 
 
             $taskMembers = $task->taskMembers->where('user_id', '<>', $userId);
@@ -263,11 +266,18 @@ class TaskDao
                 $name[$key] = $user->name;
                 ProjectTaskMember::create($data);
             }
-            // 当前用户任务结束
-            $map = ['task_id'=>$taskId, 'user_id'=>$userId];
-            $now = Carbon::now()->toDateTimeString();
-            $upd = ['status'=>ProjectTaskMember::STATUS_CLOSED,'end_time'=>$now];
-            ProjectTaskMember::where($map)->update($upd);
+
+            $task = $this->getProjectTaskById($taskId);
+
+            // 当前用户不是创建者
+            if($task->create_user != $userId) {
+                // 当前用户任务结束
+                $map = ['task_id'=>$taskId, 'user_id'=>$userId];
+                $now = Carbon::now()->toDateTimeString();
+                $upd = ['status'=>ProjectTaskMember::STATUS_CLOSED,'end_time'=>$now];
+                ProjectTaskMember::where($map)->update($upd);
+            }
+
             // 添加日志
             $name = implode(',', $name);
             $log = [

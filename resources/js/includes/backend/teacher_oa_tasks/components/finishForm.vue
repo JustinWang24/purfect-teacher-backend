@@ -56,9 +56,7 @@ export default {
           return img.file;
         })
       }).then(res => {
-        if (Util.isAjaxResOk(res)) {
-          this.$emit("submit");
-        }
+        this.$emit("submit");
       });
     },
     onFileSelected(e) {

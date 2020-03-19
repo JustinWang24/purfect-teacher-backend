@@ -2,6 +2,7 @@
 
 namespace App\Models\AttendanceSchedules;
 
+use App\Models\Timetable\TimeSlot;
 use App\User;
 use Carbon\Carbon;
 use App\Models\Course;
@@ -14,7 +15,7 @@ class Attendance extends Model
 {
     protected  $fillable = ['timetable_id', 'actual_number', 'leave_number',
                             'missing_number', 'total_number', 'course_id',
-                            'year', 'term', 'grade_id', 'teacher_id', 'week'
+                            'year', 'term', 'grade_id', 'teacher_id', 'week', 'time_slot_id'
     ];
 
     protected $hidden = ['updated_at'];
@@ -64,6 +65,10 @@ class Attendance extends Model
         return $this->belongsTo(User::class, 'teacher_id','id');
     }
 
+    public function timeSlot()
+    {
+      return $this->belongsTo(TimeSlot::class,'time_slot_id', 'id');
+    }
 
     public function getTeacherSignTimeAttribute($value)
     {

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\Recruitment;
 
+use App\Events\SystemNotification\ApproveOpenMajorEvent;
 use App\Events\User\Student\ApplyRecruitmentPlanEvent;
 use App\Events\User\Student\ApproveRegistrationEvent;
 use App\Events\User\Student\EnrolRegistrationEvent;
@@ -168,9 +169,13 @@ class OpenMajorController extends Controller
             $dao = new RegistrationInformaticsDao();
             if($request->isApprovedAction()){
                 $bag = $dao->approve($form['currentId'],$manager,$form['note']??null);
+
+                event(new ApproveOpenMajorEvent($bag->getData()));
                 event(new ApproveRegistrationEvent($bag->getData()));
             }else{
                 $bag = $dao->refuse($form['currentId'],$manager,$form['note']??null);
+
+                event(new ApproveOpenMajorEvent($bag->getData()));
                 event(new RefuseRegistrationEvent($bag->getData()));
             }
             if($bag->isSuccess()){

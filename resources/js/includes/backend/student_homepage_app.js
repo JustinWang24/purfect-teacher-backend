@@ -17,6 +17,7 @@ if (document.getElementById('student-homepage-app')) {
                 },
                 isLoading: false,
                 keyword: '',
+                position: '',
                 flowsStartedByMe: [],
                 waitingList: [],
                 processedList: [],
@@ -27,6 +28,7 @@ if (document.getElementById('student-homepage-app')) {
         created() {
             const dom = document.getElementById('app-init-data-holder');
             this.schoolId = dom.dataset.school;
+            this.position = dom.dataset.position;
             this.userUuid = dom.dataset.useruuid;
             this.url.flowOpen = dom.dataset.flowopen;
             this.apiToken = dom.dataset.apitoken;
@@ -39,7 +41,7 @@ if (document.getElementById('student-homepage-app')) {
             // in_progress=我发起的
             loadFlowsStartedByMe: function () {
                 this.isLoading = true;
-                startedByMe(this.userUuid, this.keyword).then(res => {
+                startedByMe(this.userUuid, this.keyword, this.position).then(res => {
                     if (Util.isAjaxResOk(res)) {
                         this.flowsStartedByMe = res.data.data.flows;
                     }
@@ -49,7 +51,7 @@ if (document.getElementById('student-homepage-app')) {
             // waiting_for_me=待我审批
             loadFlowsWaitingByMe: function () {
                 this.isLoading = true;
-                waitingByMe(this.userUuid).then(res => {
+                waitingByMe(this.userUuid, this.keyword, this.position).then(res => {
                     if (Util.isAjaxResOk(res)) {
                         this.waitingList = res.data.data.flows;
                     }
@@ -59,7 +61,7 @@ if (document.getElementById('student-homepage-app')) {
             // my_processed=我审批的
             loadFlowsProcessedByMe: function () {
                 this.isLoading = true;
-                processedByMe(this.userUuid).then(res => {
+                processedByMe(this.userUuid, this.keyword, this.position).then(res => {
                     if (Util.isAjaxResOk(res)) {
                         this.processedList = res.data.data.flows;
                     }
@@ -69,7 +71,7 @@ if (document.getElementById('student-homepage-app')) {
             // copy_to_me=抄送我的
             loadFlowsCopyByMe: function () {
                 this.isLoading = true;
-                copyByMe(this.userUuid).then(res => {
+                copyByMe(this.userUuid, this.keyword, this.position).then(res => {
                     if (Util.isAjaxResOk(res)) {
                         this.copyList = res.data.data.flows;
                     }

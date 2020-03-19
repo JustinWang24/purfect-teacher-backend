@@ -86,6 +86,24 @@ class EventServiceProvider extends ServiceProvider
         'App\Events\SystemNotification\WifiIssueEvent' => [
             'App\Listeners\SystemNotification\WifiIssue'
         ],
+
+        //报名被批准或拒绝发送系统消息
+        'App\Events\SystemNotification\ApproveOpenMajorEvent' => [
+            'App\Listeners\SystemNotification\ApproveOpenMajor'
+        ],
+
+        //选修课开班或解散时发送系统消息
+        'App\Events\SystemNotification\ApproveElectiveCourseEvent' => [
+            'App\Listeners\SystemNotification\ApproveElectiveCourse'
+        ],
+        //选修课审批通过或解散时发送系统消息
+        'App\Events\SystemNotification\ApproveElectiveTeacherEvent' => [
+            'App\Listeners\SystemNotification\ApproveElectiveTeacher'
+        ],
+        //内部信发送时发送系统消息
+        'App\Events\SystemNotification\OaMessageEvent' => [
+            'App\Listeners\SystemNotification\OaMessage'
+        ],
     ];
 
     /**

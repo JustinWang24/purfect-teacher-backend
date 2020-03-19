@@ -250,7 +250,6 @@ class TimetableController extends Controller
             $time = Carbon::parse($start)->addDays($i);
             $weekdayIndex = $time->dayOfWeekIso;  // 周几
             $item = $timetableItemDao->getItemsByWeekDayIndexForTeacherView($weekdayIndex, $year, $term, $oddWeek, $user->id);
-
             $course = $this->slotDataProcessing($item, $forStudyingSlots);
             $table = [
                 'week_index' => CalendarDay::GetWeekDayIndex($weekdayIndex),
@@ -336,7 +335,6 @@ class TimetableController extends Controller
     public function slotDataProcessing($item, $forStudyingSlots) {
 
         $dao = new LectureDao();
-
         $timetable = [];
         foreach ($forStudyingSlots as $key => $value) {
             $course = (object)[];
@@ -350,12 +348,21 @@ class TimetableController extends Controller
                     }
                     $course = [
                         'time_table_id' => $val['id'],
-                        'idx' => '', // 课节
                         'name' => $val['course'],
                         'room' => $val['building'].$val['room'],
                         'teacher' => $val['teacher'],
-                        'grade' => $val['grade'],
+                        'grade' => [
+                            [
+                                'grade_id'=>$val['grade_id'],
+                                'grade_name'=>$val['grade']
+                            ],
+
+                        ],
                         'label' => $label,
+                        'optional' => $val['optional'],  // true必修课 false选修课
+                        'repeat_unit' => $val['repeat_unit'], // 1每周重复 2每单周重复 3每双周重复
+                        'switching'=> false, // 调课 true 是调课 false不是调课
+                        'old_course' => '', // 调课时显示原课程名称
                     ];
                 }
 

@@ -22,8 +22,9 @@ class ProjectTask extends Model
     protected $table = 'oa_project_tasks';
 
     protected $hidden = ['updated_at'];
-    public $fillable = ['project_id', 'user_id', 'title', 'content', 'is_open', 'end_time',
-        'create_user', 'remark', 'school_id'];
+    public $fillable = [
+        'status','project_id', 'user_id', 'title', 'content', 'is_open',
+        'end_time', 'create_user', 'remark', 'school_id'];
 
     public $user_field = ['*'];
     const MAP_ARR = [

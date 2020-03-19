@@ -352,7 +352,11 @@ class ActionDao
             ->first();
     }
 
-    public function getCountWaitProcessUsers($nodeId){
-        return Action::where('node_id', $nodeId)->where('result', IAction::RESULT_PENDING)->count();
+    public function getCountWaitProcessUsers($nodeId, $userFlowId){
+        return Action::where([
+            'node_id' => $nodeId,
+            'result' => IAction::RESULT_PENDING,
+            'transaction_id' => $userFlowId
+        ])->count();
     }
 }

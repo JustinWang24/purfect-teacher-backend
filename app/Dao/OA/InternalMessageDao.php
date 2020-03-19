@@ -2,6 +2,7 @@
 
 namespace App\Dao\OA;
 
+use App\Events\SystemNotification\OaMessageEvent;
 use App\Models\OA\InternalMessage;
 use App\Models\OA\InternalMessageFile;
 use App\Utils\Misc\ConfigurationTool;
@@ -44,7 +45,9 @@ class InternalMessageDao
                     $collData['type']              = InternalMessage::TYPE_UNREAD;
                     $collData['is_relay']          = $data['is_relay'];
 					$collData['is_file']           = $data['is_file'];
-					InternalMessage::create($collData);
+					$newMessage = InternalMessage::create($collData);
+
+					event(new OaMessageEvent($value, $newMessage->id));
                 }
             }
 
@@ -121,7 +124,9 @@ class InternalMessageDao
                     $collData['type']              = InternalMessage::TYPE_UNREAD;
                     $collData['is_relay']          = $data['is_relay'];
                     $collData['is_file']           = $data['is_file'];
-                    InternalMessage::create($collData);
+                    $newMessage = InternalMessage::create($collData);
+
+                    event(new OaMessageEvent($value, $newMessage->id));
                 }
             }
 

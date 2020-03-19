@@ -325,6 +325,7 @@ class TimetableItemDao
         /**
          * @var TimetableItem[] $rows
          */
+
         $rows = TimetableItem::where($where)->orderBy('time_slot_id','asc')->get();
 
         $result = [];
@@ -334,8 +335,10 @@ class TimetableItemDao
         }
 
         foreach ($rows as $row) {
-            // 要判断一下, 是否为调课的记录
+            // todo 要判断一下, 是否为调课的记录
+
             $result[$row->time_slot_id] = [
+                'timetable_id' => $row->id,
                 'grade_name' => $row->grade->name,
                 'course' => $row->course->name,
                 'course_id' => $row->course->id,
@@ -954,4 +957,28 @@ class TimetableItemDao
             ->distinct('grade_id')
             ->get();
     }
+
+  /**
+   * 获取同一时间上课的老师
+   * @param $schoolId
+   * @param $year
+   * @param $term
+   * @param $weekDayIndex
+   * @param $timeSlotId
+   * @return mixed
+   */
+    public function getSameTimePeopleNum($schoolId, $year, $term, $weekDayIndex, $timeSlotId)
+    {
+       $map = [
+            ['school_id', '=', $schoolId],
+            ['year', '=', $year],
+            ['term', '=', $term],
+            ['weekday_index', '=', $weekDayIndex],
+            ['time_slot_id', '=', $timeSlotId],
+       ];
+
+       return TimetableItem::where($map)->count();
+    }
+
+
 }

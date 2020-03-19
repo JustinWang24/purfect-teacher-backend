@@ -81,10 +81,8 @@ export default {
         page: this.pagination.page,
         type: TaskMode[this.mode].value
       }).then(res => {
-        if (Util.isAjaxResOk(res)) {
-          this.list = res.data.data;
-          this.pagination.pageCount = res.data.lastPage;
-        }
+        this.list = res.data.data;
+        this.pagination.pageCount = res.data.lastPage;
       });
     },
     onPageChange(page) {
