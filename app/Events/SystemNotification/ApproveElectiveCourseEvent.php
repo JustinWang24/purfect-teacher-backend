@@ -29,7 +29,7 @@ class ApproveElectiveCourseEvent implements CanSendSystemNotification
     public function __construct(User $user, Course $course, $result)
     {
         $this->user = $user;
-        $this->$course = $course;
+        $this->course = $course;
         $this->result = $result;
     }
 
@@ -83,7 +83,7 @@ class ApproveElectiveCourseEvent implements CanSendSystemNotification
      */
     public function getTitle(): string
     {
-        return '选修课程(' . $this->course->name . ')' . $this->result ? '已开课！': '已取消！';
+        return '选修课程(' . $this->course->name . ')' . ($this->result ? '已开课！': '已取消！');
     }
 
     /**
@@ -92,7 +92,7 @@ class ApproveElectiveCourseEvent implements CanSendSystemNotification
      */
     public function getContent(): string
     {
-        return '选修课程(' . $this->course->name . ')' . $this->result ? '已开课！': '已取消！';
+        return '选修课程(' . $this->course->name . ')' . ($this->result ? '已开课！': '已取消！');
     }
 
     /**
