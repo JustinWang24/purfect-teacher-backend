@@ -378,11 +378,11 @@ class SchoolsController extends Controller
             $id = $member['id'];
             unset($member['id']);
             $result = $dao->update($id, $member);
-            if($result){
+            if($result->isSuccess()){
                 return JsonBuilder::Success(['id'=>$id]);
             }
             else{
-                return JsonBuilder::Error();
+                return JsonBuilder::Error($result->getMessage());
             }
         }
     }
