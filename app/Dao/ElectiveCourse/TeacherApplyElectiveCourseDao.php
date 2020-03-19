@@ -105,7 +105,7 @@ class TeacherApplyElectiveCourseDao
         $enrollList = StudentEnrolledOptionalCourse::with('course')->where('user_id', $userId)->get();
         if ($enrollList) {
             foreach ($enrollList as $enroll) {
-                if ($enroll->course->term == $term && $enroll->course->courseElective->start_year == $year) {
+                if ($enroll->course && $enroll->course->term == $term && $enroll->course->courseElective->start_year == $year) {
                     foreach ($enroll->course->arrangements as $arrangement1) {
                         $checkKey = 'w_' . $arrangement1->week . '_d_' . $arrangement1->day_index . '_t_' . $arrangement1->time_slot_id;
                         if (in_array($checkKey, $valList)) {
