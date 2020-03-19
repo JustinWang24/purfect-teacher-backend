@@ -33,7 +33,7 @@ class ClockinLogic
             $clockinDao = new ClockinDao();
             $data = [
                 'teacher_attendance_id' => $options['attendance_id'],
-                'user_id' => $user->id,
+                'user_id' => $this->user->id,
                 'day' => $options['day'],
                 'time' => $time,
                 'type' => $options['type'],
