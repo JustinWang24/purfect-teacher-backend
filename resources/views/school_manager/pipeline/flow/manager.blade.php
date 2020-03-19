@@ -105,7 +105,6 @@
             <el-row>
                 <el-col :span="7">
                     <el-form-item label="显示位置">
-                        <!-- <el-select v-model="posiType" placeholder="请选择显示位置" @change="changeItem1(posiType)"> -->
                         <el-select v-model="posiType" placeholder="请选择显示位置" @change="changeItem('p',posiType)">
                             <el-option v-for="item in posiList" :key="item.key" :label="item.name" :value="item.key"></el-option>
                         </el-select>
@@ -165,7 +164,6 @@
                         </el-checkbox-group>
                     </el-form-item>
                     <el-form-item label="组织" v-if="posiType !== 2">
-                        <!-- <el-select v-model="organization" placeholder="请选择组织分类" @change="changeItem2(organization)"> -->
                         <el-select v-model="organization" placeholder="请选择组织分类" @change="changeItem('o',organization)">
                             <el-option v-for="item in organizationList" :key="item.key" :label="item.name" :value="item.key"></el-option>
                         </el-select>
@@ -181,12 +179,12 @@
                 </el-col>
             </el-row>
             <el-form-item>
-                <el-button type="primary" @click="onNewFlowSubmit" v-if="newFlow">立即创建</el-button>
-                <el-button type="primary" @click="saveFlowSubmit" v-else>保存流程</el-button>
+                <el-button type="primary" @click="onNewFlowSubmit(1)" v-if="newFlow">立即创建</el-button>
+                <el-button type="primary" @click="onNewFlowSubmit(2)" v-else>保存流程</el-button>
                 <el-button @click="flowFormFlag = false">取消</el-button>
             </el-form-item>
         </el-form>
-        <el-dialog width="30%" title="选择图标" :visible.sync="iconSelectorShowFlag" append-to-body>
+        <el-dialog width="30%" title="选择图标" :visible.sync="iconSelectorShowFlag">
             <icon-selector v-on:icon-selected="iconSelectedHandler"></icon-selector>
         </el-dialog>
     </el-drawer>

@@ -66,18 +66,23 @@ if (document.getElementById('pipeline-flow-view-history-app')) {
         methods: {
             // 审批按钮
             button(result) {
-                this.action1 = {
-                    id: this.actionId, //action.id
-                    result: result, //3=同意 5=驳回
-                    content: this.textarea, //审批意见
-                    urgent: false //是否加急
-                },
-                axios.post('/api/pipeline/flow/process', {action: this.action1}
-                ).then(res => {
-                    console.log(res)
-                }).catch(err => {
-                    console.log(err)
-                })
+                if (result === 5 && this.textarea === '') {
+                    this.$message.info('审批意见不能为空');
+                    return;
+                } else {
+                    this.action1 = {
+                        id: this.actionId, //action.id
+                        result: result, //3=同意 5=驳回
+                        content: this.textarea, //审批意见
+                        urgent: false //是否加急
+                    }
+                    axios.post('/api/pipeline/flow/process', { action: this.action1 }
+                    ).then(res => {
+                        this.dialogVisible = false
+                    }).catch(err => {
+                        console.log(err)
+                    })
+                }
             },
             loadWholeFlow: function () {
                 this.isLoading = true;
@@ -146,6 +151,11 @@ if (document.getElementById('pipeline-flow-view-history-app')) {
                     color = '#F56C6C';
                 }
                 return color;
+            }
+        },
+        computed: {
+            countLength() {
+                return this.textarea.length >= 100;
             }
         }
     });

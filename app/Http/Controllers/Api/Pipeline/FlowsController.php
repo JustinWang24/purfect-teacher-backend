@@ -151,9 +151,9 @@ class FlowsController extends Controller
                     'id' => $value->id,
                     'avatar' => $value->user->profile->avatar ?? '',
                     'user_name' => $value->user_name,
-                    'flow' => ['name' => $value->flow->name],
+                    'flow' => ['name' => $value->flow->name ?? ''],
                     'done' => $value->done,
-                    'created_at' => $value->created_at
+                    'created_at' => $value->created_at->format('Y-m-d H:i:s')
                 ];
             }
         }
@@ -181,9 +181,9 @@ class FlowsController extends Controller
                     'id' => $value->userFlow->id,
                     'avatar' => $value->userFlow->user->profile->avatar ?? '',
                     'user_name' => $value->userFlow->user_name,
-                    'flow' => ['name' => $value->flow->name],
+                    'flow' => ['name' => $value->flow->name ?? ''],
                     'done' => $value->userFlow->done,
-                    'created_at' => $value->userFlow->created_at
+                    'created_at' => $value->userFlow->created_at->format('Y-m-d H:i:s')
                 ];
             }
         }
@@ -211,9 +211,9 @@ class FlowsController extends Controller
                     'id' => $value->id,
                     'avatar' => $value->user->profile->avatar ?? '',
                     'user_name' => $value->user_name,
-                    'flow' => ['name' => $value->flow->name],
+                    'flow' => ['name' => $value->flow->name ?? ''],
                     'done' => $value->done,
-                    'created_at' => $value->created_at
+                    'created_at' => $value->created_at->format('Y-m-d H:i:s')
                 ];
             }
         }
@@ -237,9 +237,9 @@ class FlowsController extends Controller
                     'id' => $value->id,
                     'avatar' => $value->user->profile->avatar ?? '',
                     'user_name' => $value->user_name,
-                    'flow' => ['name' => $value->flow->name],
+                    'flow' => ['name' => $value->flow->name ?? ''],
                     'done' => $value->done,
-                    'created_at' => $value->created_at
+                    'created_at' => $value->created_at->format('Y-m-d H:i:s')
                 ];
             }
         }
@@ -359,7 +359,7 @@ class FlowsController extends Controller
                         $event = new FlowRejected($request->user(),$action, $bag->getData()['prevNode'], $action->getFlow());
                         break;*/
                     case IAction::RESULT_PASS:
-                        if ($dao->getCountWaitProcessUsers($action->getNode()->id) < 1) {
+                        if ($dao->getCountWaitProcessUsers($action->getNode()->id, $action->transaction_id) < 1) {
                             //可能存在自动同意已经到了下一个action
                             $newAction = $dao->getActionByUserFlowAndUserId($action->transaction_id, $action->user_id);
                             $flow = $newAction->getFlow();

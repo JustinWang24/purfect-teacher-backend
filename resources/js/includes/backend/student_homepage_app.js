@@ -3,7 +3,7 @@
  */
 import { Constants } from "../../common/constants";
 import { Util } from "../../common/utils";
-import { startedByMe, cancelApplicationByUser } from "../../common/flow";
+import { startedByMe, cancelApplicationByUser, waitingByMe, processedByMe, copyByMe } from "../../common/flow";
 
 if (document.getElementById('student-homepage-app')) {
     new Vue({
@@ -16,19 +16,68 @@ if (document.getElementById('student-homepage-app')) {
                     flowOpen: '',
                 },
                 isLoading: false,
+                keyword: '',
+                position: '',
                 flowsStartedByMe: [],
+                waitingList: [],
+                processedList: [],
+                copyList: [],
                 apiToken: null,
             }
         },
         created() {
             const dom = document.getElementById('app-init-data-holder');
             this.schoolId = dom.dataset.school;
+            this.position = dom.dataset.position;
             this.userUuid = dom.dataset.useruuid;
             this.url.flowOpen = dom.dataset.flowopen;
             this.apiToken = dom.dataset.apitoken;
             this.loadFlowsStartedByMe();
+            this.loadFlowsWaitingByMe();
+            this.loadFlowsProcessedByMe();
+            this.loadFlowsCopyByMe();
         },
         methods: {
+            // in_progress=我发起的
+            loadFlowsStartedByMe: function () {
+                this.isLoading = true;
+                startedByMe(this.userUuid, this.keyword, this.position).then(res => {
+                    if (Util.isAjaxResOk(res)) {
+                        this.flowsStartedByMe = res.data.data.flows;
+                    }
+                    this.isLoading = false;
+                });
+            },
+            // waiting_for_me=待我审批
+            loadFlowsWaitingByMe: function () {
+                this.isLoading = true;
+                waitingByMe(this.userUuid, this.keyword, this.position).then(res => {
+                    if (Util.isAjaxResOk(res)) {
+                        this.waitingList = res.data.data.flows;
+                    }
+                    this.isLoading = false;
+                });
+            },
+            // my_processed=我审批的
+            loadFlowsProcessedByMe: function () {
+                this.isLoading = true;
+                processedByMe(this.userUuid, this.keyword, this.position).then(res => {
+                    if (Util.isAjaxResOk(res)) {
+                        this.processedList = res.data.data.flows;
+                    }
+                    this.isLoading = false;
+                });
+            },
+            // copy_to_me=抄送我的
+            loadFlowsCopyByMe: function () {
+                this.isLoading = true;
+                copyByMe(this.userUuid, this.keyword, this.position).then(res => {
+                    if (Util.isAjaxResOk(res)) {
+                        this.copyList = res.data.data.flows;
+                    }
+                    this.isLoading = false;
+                });
+            },
             into() {
                 console.log(1)
             },
@@ -44,16 +93,9 @@ if (document.getElementById('student-homepage-app')) {
             startFlow: function (flowId) {
                 window.location.href = this.url.flowOpen + '?flow=' + flowId + '&uuid=' + this.userUuid;
             },
-            // 申请list
-            loadFlowsStartedByMe: function () {
-                this.isLoading = true;
-                startedByMe(this.userUuid).then(res => {
-                    if (Util.isAjaxResOk(res)) {
-                        this.flowsStartedByMe = res.data.data.flows;
-                    }
-                    this.isLoading = false;
-                });
-            },
+
+
+
             // 取消一个申请
             cancelMyApplication: function (userFlow) {
                 this.$confirm('您确认撤销此申请吗?', '提示', {

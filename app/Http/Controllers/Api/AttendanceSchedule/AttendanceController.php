@@ -328,52 +328,34 @@ class AttendanceController extends Controller
         $user = $request->user();
         $time = $request->get('time');
         $timeSlot = $request->get('time_slot_id');
-        $timeSlotDao = new TimeSlotDao;
-        $data =  $timeSlotDao->getAllStudyTimeSlots($user->getSchoolId());
 
-        $timeSlots = [$timeSlot];
-        if (!$timeSlot) {
-            foreach ($data as $k => $v) {
-                $timeSlots[$k] = $v->id;
-            }
-        }
-
-        $timeTableDao = new TimetableItemDao;
-        $item = $timeTableDao->getTimetableItemByUserOrTime($user, $time, $timeSlots);
-
-        $items = [];
-        foreach ($item as $key => $value) {
-            $items[$value->timeSlot->name][] = $value->toArray();
-        }
-
-        $dao = new AttendancesDao;
-        $timeTableDao = new TimetableItemDao;
-        $timetableIds = [];
-        foreach ($items as $key => $val) {
-           $timetableIds[$key][] = array_column($val, 'id');
-        }
+        $attendancesDao = new AttendancesDao;
 
         $now = Carbon::now(GradeAndYearUtil::TIMEZONE_CN);
         $schoolDao = new SchoolDao;
         $school = $schoolDao->getSchoolById($user->getSchoolId());
         $configuration = $school->configuration;
-        $date = Carbon::now()->toDateString();
-        $month = Carbon::parse($date)->month;
+        $month = Carbon::parse($time)->month;
         $term = $configuration->guessTerm($month);
         $weeks = $configuration->getScheduleWeek($now, null, $term);
         $week = $weeks->getScheduleWeekIndex();
 
+        $data = $attendancesDao->getTeacherSignInfo($timeSlot, $week, $term);
+
+        $new = [];
+        foreach ($data as $key => $val) {
+            $new[$val->time_slot_id] = $val;
+        }
+
         $result = [];
-        foreach ($timetableIds as $key => $val) {
-              for ($x=0; $x<=count($result); $x++) {
-              }
-              foreach ($val[0] as $k => $v) {
-                $result[$x]['time_slot_id'] = $timeTableDao->getItemById($v)->time_slot_id;
-              }
-              $result[$x]['course'] = $key;
-              $result[$x]['sign'] = $dao->getTeacherSignInStatus($val[0], $week, Attendance::TEACHER_SIGN);
-              $result[$x]['no_sign'] = $dao->getTeacherSignInStatus($val[0], $week, Attendance::TEACHER_NO_SIGN);
-              $result[$x]['late'] = $dao->getTeacherSignInStatus($val[0], $week, Attendance::TEACHER_SIGN, Attendance::TEACHER_LATE);
+        if (!empty($new)) {
+          foreach ($new as $key => $value) {
+            $result[$key]['time_slot_id'] = $value->time_slot_id;
+            $result[$key]['course'] = $value->timeSlot->name;
+            $result[$key]['sign'] = 0;
+            $result[$key]['no_sign'] = 0;
+            $result[$key]['late'] = 0;
+          }
         }
 
         return JsonBuilder::Success(array_merge($result));

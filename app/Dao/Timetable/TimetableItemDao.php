@@ -325,6 +325,7 @@ class TimetableItemDao
         /**
          * @var TimetableItem[] $rows
          */
+
         $rows = TimetableItem::where($where)->orderBy('time_slot_id','asc')->get();
 
         $result = [];
@@ -334,8 +335,10 @@ class TimetableItemDao
         }
 
         foreach ($rows as $row) {
-            // 要判断一下, 是否为调课的记录
+            // todo 要判断一下, 是否为调课的记录
+
             $result[$row->time_slot_id] = [
+                'timetable_id' => $row->id,
                 'grade_name' => $row->grade->name,
                 'course' => $row->course->name,
                 'course_id' => $row->course->id,

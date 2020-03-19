@@ -25,7 +25,7 @@ class UserOrganizationDao
      */
     public function create($data){
         $re = null;
-        $info = $this->getUserOrganization($data['user_id'], $data['school_id']);
+        $info = $this->getUserOrganization($data['user_id'], $data['school_id'], $data['organization_id']);
         if(!is_null($info)) {
             return new MessageBag(JsonBuilder::CODE_ERROR, $data['name'].'已经属于当前的机构/部门, 请勿重复添加',$info);
         }else{
@@ -40,15 +40,28 @@ class UserOrganizationDao
     }
 
     public function update($id, $data){
-        return UserOrganization::where('id',$id)->update($data);
+        $info = UserOrganization::where('id',$id)->first();
+        if ($info->user_id != $data['user_id']) {
+            if(!is_null($this->getUserOrganization($data['user_id'], $data['school_id'], $data['organization_id']))) {
+                return new MessageBag(JsonBuilder::CODE_ERROR, $data['name'].'已经属于当前的机构/部门, 请勿重复添加');
+            }
+        }
+        if (UserOrganization::where('id',$id)->update($data) !== false) {
+            return new MessageBag(JsonBuilder::CODE_SUCCESS, '更新成功');
+        }else {
+            return new MessageBag(JsonBuilder::CODE_SUCCESS, '更新失败');
+        }
     }
 
     public function delete($id){
         return UserOrganization::where('id',$id)->delete();
     }
 
-    public function getUserOrganization($userId, $schoolId) {
+    public function getUserOrganization($userId, $schoolId, $organizationId = null) {
         $map = ['user_id'=>$userId, 'school_id'=>$schoolId];
+        if ($organizationId) {
+            $map['organization_id'] = $organizationId;
+        }
         return UserOrganization::where($map)->first();
     }
 

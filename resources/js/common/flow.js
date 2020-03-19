@@ -1,5 +1,5 @@
-import {Constants} from "./constants";
-import {Util} from "./utils";
+import { Constants } from "./constants";
+import { Util } from "./utils";
 
 /**
  * 保存流程
@@ -10,12 +10,12 @@ import {Util} from "./utils";
  */
 export function saveFlow(flow, node, affix) {
     const url = Util.buildUrl(Constants.API.FLOW.SAVE);
-    if(Util.isDevEnv()){
+    if (Util.isDevEnv()) {
         return axios.get(url, affix);
     }
     return axios.post(
         url,
-        {flow: flow, node: node, version:Constants.VERSION}
+        { flow: flow, node: node, version: Constants.VERSION }
     );
 }
 
@@ -29,12 +29,12 @@ export function saveFlow(flow, node, affix) {
  */
 export function saveNode(flow, node, prevNodeId, affix) {
     const url = Util.buildUrl(Constants.API.FLOW.SAVE_NODE);
-    if(Util.isDevEnv()){
+    if (Util.isDevEnv()) {
         return axios.get(url, affix);
     }
     return axios.post(
         url,
-        {flow_id: flow.id, node: node, prev_node: prevNodeId, version:Constants.VERSION}
+        { flow_id: flow.id, node: node, prev_node: prevNodeId, version: Constants.VERSION }
     );
 }
 
@@ -46,12 +46,12 @@ export function saveNode(flow, node, prevNodeId, affix) {
  */
 export function saveNodeOption(nodeOption, affix) {
     const url = Util.buildUrl(Constants.API.FLOW.SAVE_NODE_OPTION);
-    if(Util.isDevEnv()){
+    if (Util.isDevEnv()) {
         return axios.get(url, affix);
     }
     return axios.post(
         url,
-        {node_option: nodeOption, version:Constants.VERSION}
+        { node_option: nodeOption, version: Constants.VERSION }
     );
 }
 
@@ -63,45 +63,75 @@ export function saveNodeOption(nodeOption, affix) {
  */
 export function deleteNodeOption(nodeOptionId, affix) {
     const url = Util.buildUrl(Constants.API.FLOW.DELETE_NODE_OPTION);
-    if(Util.isDevEnv()){
+    if (Util.isDevEnv()) {
         return axios.get(url, affix);
     }
     return axios.post(
         url,
-        {node_option_id: nodeOptionId, version:Constants.VERSION}
+        { node_option_id: nodeOptionId, version: Constants.VERSION }
     );
 }
 
 export function start(action, isAppRequest, affix) {
     const url = Util.buildUrl(Constants.API.FLOW.START);
-    if(Util.isDevEnv()){
+    if (Util.isDevEnv()) {
         return axios.get(url, affix);
     }
     return axios.post(
         url,
-        {action: action, is_app: isAppRequest, version:Constants.VERSION}
+        { action: action, is_app: isAppRequest, version: Constants.VERSION }
     );
 }
 
-export function startedByMe(userUuid, affix) {
+export function startedByMe(userUuid, keyword, position, affix) {
     const url = Util.buildUrl(Constants.API.FLOW.START_BY_ME);
-    if(Util.isDevEnv()){
+    if (Util.isDevEnv()) {
         return axios.get(url, affix);
     }
     return axios.post(
         url,
-        {user_uuid: userUuid, version:Constants.VERSION}
+        { user_uuid: userUuid, keyword: keyword, position: position, version: Constants.VERSION }
+    );
+}
+export function waitingByMe(userUuid, keyword, position, affix) {
+    const url = Util.buildUrl(Constants.API.FLOW.WAITING_FOR_ME);
+    if (Util.isDevEnv()) {
+        return axios.get(url, affix);
+    }
+    return axios.post(
+        url,
+        { user_uuid: userUuid, keyword: keyword, position: position, version: Constants.VERSION }
+    );
+}
+export function processedByMe(userUuid, keyword, position, affix) {
+    const url = Util.buildUrl(Constants.API.FLOW.MY_PROCESSED);
+    if (Util.isDevEnv()) {
+        return axios.get(url, affix);
+    }
+    return axios.post(
+        url,
+        { user_uuid: userUuid, keyword: keyword, position: position, version: Constants.VERSION }
+    );
+}
+export function copyByMe(userUuid, keyword, position, affix) {
+    const url = Util.buildUrl(Constants.API.FLOW.COPY_TO_ME);
+    if (Util.isDevEnv()) {
+        return axios.get(url, affix);
+    }
+    return axios.post(
+        url,
+        { user_uuid: userUuid, keyword: keyword, position: position, version: Constants.VERSION }
     );
 }
 
 export function waitingForMe(userUuid, affix) {
     const url = Util.buildUrl(Constants.API.FLOW.WAITING_FOR_ME);
-    if(Util.isDevEnv()){
+    if (Util.isDevEnv()) {
         return axios.get(url, affix);
     }
     return axios.post(
         url,
-        {user_uuid: userUuid, version:Constants.VERSION}
+        { user_uuid: userUuid, version: Constants.VERSION }
     );
 }
 
@@ -114,12 +144,12 @@ export function waitingForMe(userUuid, affix) {
  */
 export function viewApplicationByAction(actionId, userFlowId, affix) {
     const url = Util.buildUrl(Constants.API.FLOW.VIEW_ACTION);
-    if(Util.isDevEnv()){
+    if (Util.isDevEnv()) {
         return axios.get(url, affix);
     }
     return axios.post(
         url,
-        {action_id: actionId, user_flow_id: userFlowId, version:Constants.VERSION}
+        { action_id: actionId, user_flow_id: userFlowId, version: Constants.VERSION }
     );
 }
 
@@ -133,23 +163,23 @@ export function viewApplicationByAction(actionId, userFlowId, affix) {
  */
 export function updateNode(flow, node, prevNodeId, prevOrganizations, affix) {
     const url = Util.buildUrl(Constants.API.FLOW.UPDATE_NODE);
-    if(Util.isDevEnv()){
+    if (Util.isDevEnv()) {
         return axios.get(url, affix);
     }
     return axios.post(
         url,
-        {flow_id: flow.id, node: node, prev_node: prevNodeId, prev_orgs: prevOrganizations, version:Constants.VERSION}
+        { flow_id: flow.id, node: node, prev_node: prevNodeId, prev_orgs: prevOrganizations, version: Constants.VERSION }
     );
 }
 
-export function loadNodes(flowId,affix) {
+export function loadNodes(flowId, affix) {
     const url = Util.buildUrl(Constants.API.FLOW.LOAD_FLOW_NODES);
-    if(Util.isDevEnv()){
+    if (Util.isDevEnv()) {
         return axios.get(url, affix);
     }
     return axios.post(
         url,
-        {flow_id: flowId, version:Constants.VERSION}
+        { flow_id: flowId, version: Constants.VERSION }
     );
 }
 
@@ -160,48 +190,48 @@ export function loadNodes(flowId,affix) {
  * @param affix
  * @returns {*}
  */
-export function deleteFlow(flowId,affix) {
+export function deleteFlow(flowId, affix) {
     const url = Util.buildUrl(Constants.API.FLOW.DELETE_FLOW);
-    if(Util.isDevEnv()){
+    if (Util.isDevEnv()) {
         return axios.get(url, affix);
     }
     return axios.post(
         url,
-        {flow_id: flowId}
+        { flow_id: flowId }
     );
 }
 
-export function deleteNode(nodeId, schoolId,affix) {
+export function deleteNode(nodeId, schoolId, affix) {
     const url = Util.buildUrl(Constants.API.FLOW.DELETE_NODE);
-    if(Util.isDevEnv()){
+    if (Util.isDevEnv()) {
         return axios.get(url, affix);
     }
     return axios.post(
         url,
-        {node_id: nodeId, school_id: schoolId, version:Constants.VERSION}
+        { node_id: nodeId, school_id: schoolId, version: Constants.VERSION }
     );
 }
 
-export function deleteNodeAttachment(attachmentId,affix) {
+export function deleteNodeAttachment(attachmentId, affix) {
     const url = Util.buildUrl(Constants.API.FLOW.DELETE_NODE_ATTACHMENT);
-    if(Util.isDevEnv()){
+    if (Util.isDevEnv()) {
         return axios.get(url, affix);
     }
     return axios.post(
         url,
-        {attachment_id: attachmentId, version:Constants.VERSION}
+        { attachment_id: attachmentId, version: Constants.VERSION }
     );
 }
 
 // 取消已经发起的流程
-export function cancelApplicationByUser(userFlowId,affix) {
+export function cancelApplicationByUser(userFlowId, affix) {
     const url = Util.buildUrl(Constants.API.FLOW.CANCEL_ACTION);
-    if(Util.isDevEnv()){
+    if (Util.isDevEnv()) {
         return axios.get(url, affix);
     }
     return axios.post(
         url,
-        {user_flow_id: userFlowId, version:Constants.VERSION}
+        { user_flow_id: userFlowId, version: Constants.VERSION }
     );
 }
 
@@ -213,11 +243,11 @@ export function cancelApplicationByUser(userFlowId,affix) {
  */
 export function processAction(action, affix) {
     const url = Util.buildUrl(Constants.API.FLOW.PROCESS);
-    if(Util.isDevEnv()){
+    if (Util.isDevEnv()) {
         return axios.get(url, affix);
     }
     return axios.post(
         url,
-        {action: action, version:Constants.VERSION}
+        { action: action, version: Constants.VERSION }
     );
 }

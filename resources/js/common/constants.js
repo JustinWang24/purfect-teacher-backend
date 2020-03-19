@@ -157,7 +157,9 @@ export const Constants = {
             // Action相关
             OPEN: '/api/pipeline/flow/open', // 打开流程
             START_BY_ME: '/api/pipeline/flows/started-by-me', // 获取我的流程
-            WAITING_FOR_ME: '/api/pipeline/flows/waiting-for-me', // 获取等待我处理的流程
+            WAITING_FOR_ME: '/api/pipeline/flows/waiting-for-me',  // 获取等待我处理的流程
+            MY_PROCESSED: '/api/pipeline/flows/my-processed',  // 我审批的流程
+            COPY_TO_ME: '/api/pipeline/flows/copy-to-me',  // 抄送我的流程
             START: '/api/pipeline/flow/start', // 流程开始
             PROCESS: '/api/pipeline/flow/process', // 同意流程向下一步
             RESUME: '/api/pipeline/flow/resume', // 流程驳回

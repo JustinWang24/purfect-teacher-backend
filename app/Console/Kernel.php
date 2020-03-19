@@ -30,8 +30,10 @@ class Kernel extends ConsoleKernel
         //$schedule->command('sendMessageForTeacherBeLate 1')->weekdays()->between('7:00', '20:00')->everyMinute();
         //TODO 上线时打开此设置 每小时扫描一次，将管理员上传的新生导入任务执行一条
         //$schedule->command('importerStudent')->hourly();
-        //toDO 上线时打开此设置 每天凌晨扫描一次，将不满足开课条件的选修课取消
+        //TODO 上线时打开此设置 每天凌晨扫描一次，将不满足开课条件的选修课取消
         $schedule->command('dissolvedElectiveCourse')->daily();
+        //TODO 上线时打开此设置 每分钟扫描一次，将要迟到的消息推送给老师
+        $schedule->command('noticeTeacherAttendanceBeLate')->everyMinute();
     }
 
     /**

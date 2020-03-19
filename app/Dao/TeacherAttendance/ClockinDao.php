@@ -57,14 +57,14 @@ class ClockinDao
             $attendance = Attendance::find($attendanceId);
             //该考勤组下总成员
             $return['all'] += UserOrganization::whereIn('organization_id', $attendance->organizations()->pluck('organization_id')->toArray())
-                ->where('title_id', '=', Title::MEMBER)->count();
+                ->count();
             //该考勤组下已打卡人员
             $return['normal'] += $attendance->clockins()->where('day', '=', $day)->distinct()->count('user_id');
             $return['late'] += $attendance->clockins()->where('day', '=', $day)->whereIn('status', [Clockin::STATUS_LATE, Clockin::STATUS_LATER])->distinct()->count('user_id');
 
             //总人员列表
             $userList = UserOrganization::whereIn('organization_id', $attendance->organizations()->pluck('organization_id')->toArray())
-                ->where('title_id', '=', Title::MEMBER)->get();
+                ->get();
             foreach ($userList as $userOrganization) {
                 //今日打卡状态
                 $clockin = $attendance->clockins()->where(['user_id' => $userOrganization->user->id, 'day' => $day])->pluck('status', 'type')->toArray();
