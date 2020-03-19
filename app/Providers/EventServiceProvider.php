@@ -96,6 +96,10 @@ class EventServiceProvider extends ServiceProvider
         'App\Events\SystemNotification\ApproveElectiveCourseEvent' => [
             'App\Listeners\SystemNotification\ApproveElectiveCourse'
         ],
+        //内部信发送时发送系统消息
+        'App\Events\SystemNotification\OaMessageEvent' => [
+            'App\Listeners\SystemNotification\OaMessage'
+        ],
     ];
 
     /**
