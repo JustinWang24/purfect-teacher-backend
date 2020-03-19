@@ -123,12 +123,22 @@
     >
       <FinishForm @submit="onFinish" :taskid="taskid" />
     </el-drawer>
+    <el-drawer
+      title="指派他人"
+      ref="dispathModal"
+      :destroy-on-close="true"
+      :visible.sync="dispathModal"
+      direction="rtl"
+    >
+      <DispatchForm @submit="onFinish('dispatch')" :taskid="taskid" />
+    </el-drawer>
   </div>
 </template>
 <script>
 import comment from "./comment";
 import UserLink from "./userLink";
 import FinishForm from "./finishForm";
+import DispatchForm from "./dispatchForm";
 import Avatar from "./avatar";
 import { Util } from "../../../../common/utils";
 import { TaskApi } from "../common/api";
@@ -140,7 +150,8 @@ export default {
     comment,
     Avatar,
     UserLink,
-    FinishForm
+    FinishForm,
+    DispatchForm
   },
   data() {
     return {
@@ -159,15 +170,18 @@ export default {
   computed: {
     isMyComment() {
       return function(userid) {
-        debugger;
         return this.task.login_userid === userid;
       };
     }
   },
   methods: {
     onDispath() {},
-    onFinish() {
+    onFinish(modal) {
       this.getOaTaskInfo();
+      if (modal === "dispatch") {
+        this.$refs.dispathModal.closeDrawer();
+        this.dispathModal = false;
+      }
     },
     onReply() {
       this.$refs.discussDrawer.closeDrawer();
@@ -191,9 +205,7 @@ export default {
       TaskApi.excute("getOaTaskInfo", {
         taskid: this.taskid
       }).then(res => {
-        if (Util.isAjaxResOk(res)) {
-          this.task = res.data.data;
-        }
+        this.task = res.data.data;
       });
     }
   },

@@ -8,7 +8,13 @@
         <el-date-picker v-model="form.end_time" type="datetime" placeholder="请输入（必填）"></el-date-picker>
       </el-form-item>
       <el-form-item label="负责人">
-        <el-select v-model="form.leader_userid" filterable placeholder="请输入（必填）">
+        <el-select
+          v-model="form.leader_userid"
+          remote
+          filterable
+          :remote-method="remoteLeader"
+          placeholder="请输入（必填）"
+        >
           <el-option
             v-for="item in ownerOptions"
             :key="item.value"
@@ -20,6 +26,8 @@
       <el-form-item label="任务成员">
         <el-dropdown ref="dropdown" trigger="click" placement="bottom-start">
           <el-input
+            id="task-dropdownSlot"
+            placeholder="请输入"
             :value="
               form.member_userids.length > 0
                 ? form.member_userids.length + '人'
@@ -27,9 +35,8 @@
             "
             readonly
           ></el-input>
-          <el-dropdown-menu slot="dropdown" ref="dropdownSlot">
-            <el-cascader-panel ref="cascader" :props="memberOptions" @expand-change="onNodeChange"></el-cascader-panel>
-            <member-select v-model="form.member_userids" :members="members" />
+          <el-dropdown-menu slot="dropdown" ref="dropdownSlot" id="task-dropdown-menu">
+            <member-select parentId="task-dropdownSlot" v-model="form.member_userids"></member-select>
           </el-dropdown-menu>
         </el-dropdown>
         <!-- <el-cascader
@@ -60,7 +67,7 @@
 <script>
 import { TaskApi } from "../common/api";
 import { Util } from "../../../../common/utils";
-import MemberSelect from "./member-select";
+import MemberSelect from "./member-chose";
 import moment from "moment";
 
 export default {
@@ -95,23 +102,17 @@ export default {
         this.$emit("done");
       });
     },
-    onNodeChange(val) {
-      this.currentNodeId = val.pop();
-      this.$nextTick(() => {
-        let a = this.$refs.cascader.$el.clientWidth;
-        let b = this.$refs.dropdown.$el.clientWidth;
-        if (a > b) {
-          this.$refs.dropdownSlot.$el.style.transform = `translateX(-${a -
-            b}px)`;
-        } else {
-          this.$refs.dropdownSlot.$el.style.transform = `translateX(0px)`;
-        }
+    remoteLeader(v) {
+      TaskApi.excute("getOaProjectUserListInfo", {
+        keyword: v
+      }).then(res => {
+        this.ownerOptions = res.data.data.map(per => {
+          return {
+            label: per.username,
+            value: per.userid
+          };
+        });
       });
-    }
-  },
-  computed: {
-    members() {
-      return this.membersMap[this.currentNodeId] || [];
     }
   },
   data() {
@@ -120,52 +121,18 @@ export default {
       form: {
         member_userids: []
       },
-      memberOptions: {
-        lazy: true,
-        value: "id",
-        multiple: false,
-        label: "name",
-        lazyLoad(node, resolve) {
-          let parentId = null;
-          if (!Util.isEmpty(node.data)) {
-            parentId = node.data.id;
-          }
-          TaskApi.excute("getOrganization", {
-            parent_id: parentId
-          }).then(res => {
-            if (Util.isAjaxResOk(res)) {
-              resolve(res.data.data.organ);
-              that.membersMap[parentId] = res.data.data.members;
-            }
-          });
-        }
-      },
-      membersMap: {},
-      currentNodeId: null,
       ownerOptions: [],
       projectOptions: []
     };
   },
   created() {
     TaskApi.excute("getOaProjectListInfo").then(res => {
-      if (Util.isAjaxResOk(res)) {
-        this.projectOptions = res.data.data.map(pro => {
-          return {
-            label: pro.project_title,
-            value: pro.projectid
-          };
-        });
-      }
-    });
-    TaskApi.excute("getOaProjectUserListInfo").then(res => {
-      if (Util.isAjaxResOk(res)) {
-        this.ownerOptions = res.data.data.map(per => {
-          return {
-            label: per.username,
-            value: per.userid
-          };
-        });
-      }
+      this.projectOptions = res.data.data.map(pro => {
+        return {
+          label: pro.project_title,
+          value: pro.projectid
+        };
+      });
     });
   }
 };
@@ -175,30 +142,33 @@ export default {
   display: flex;
   height: 100%;
   flex-direction: column;
+
   .el-form {
     flex: 1;
     padding: 12px;
+
     .el-select {
       width: 100%;
     }
+
     .el-form-item__label {
       font-weight: bold;
       color: #666666;
     }
+
     .el-dropdown {
       width: 100%;
     }
+
     .el-date-editor {
       width: 100%;
     }
   }
+
   .btn-box {
     flex: none;
     padding: 12px;
     text-align: right;
   }
-}
-.el-cascader-panel {
-  border: none !important;
 }
 </style>
