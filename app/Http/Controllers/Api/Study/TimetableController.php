@@ -250,8 +250,6 @@ class TimetableController extends Controller
             $time = Carbon::parse($start)->addDays($i);
             $weekdayIndex = $time->dayOfWeekIso;  // 周几
             $item = $timetableItemDao->getItemsByWeekDayIndexForTeacherView($weekdayIndex, $year, $term, $oddWeek, $user->id);
-
-
             $course = $this->slotDataProcessing($item, $forStudyingSlots);
             $table = [
                 'week_index' => CalendarDay::GetWeekDayIndex($weekdayIndex),
@@ -362,8 +360,8 @@ class TimetableController extends Controller
 
                         ],
                         'label' => $label,
-                        'optional' => $val['optional'],  // 0必修课 1选修课
-                        'repeat_unit' => $val['repeat_unit'], // 1每周重复 2每单周重复 3每双周重负
+                        'optional' => $val['optional'],  // true必修课 false选修课
+                        'repeat_unit' => $val['repeat_unit'], // 1每周重复 2每单周重复 3每双周重复
                     ];
                 }
 
