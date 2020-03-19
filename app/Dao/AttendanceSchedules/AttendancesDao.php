@@ -221,6 +221,7 @@ class AttendancesDao
             'grade_id'       => $item->grade_id,
             'teacher_id'     => $item->teacher_id,
             'week'           => $week,
+            'time_slot_id'   => $item->time_slot_id
         ];
 
         return Attendance::create($attendanceData);
@@ -250,22 +251,22 @@ class AttendancesDao
 
      /**
      * 统计老师签到
-     * @param $timetableIds
+     * @param $timeSlotId
      * @param $week
-     * @param $signStatus
-     * @param $late
      * @return mixed
      */
-    public function getTeacherSignInfo($timetableIds, $week, $signStatus, $late = false)
+    public function getTeacherSignInfo($timeSlotId = false, $week, $term)
     {
         $map = [
             ['week', '=' ,$week],
-            ['teacher_sign', '=', $signStatus]
+            ['term', '=' ,$term],
         ];
-        if ($late) {
-           array_push($map, ['teacher_late', '=', $late]);
+
+        if ($timeSlotId) {
+            array_push( $map, ['time_slot_id', '=', $timeSlotId]);
         }
-        return Attendance::where($map)->whereIn('timetable_id', $timetableIds)->get();
+
+        return Attendance::where($map)->get();
     }
 
 
