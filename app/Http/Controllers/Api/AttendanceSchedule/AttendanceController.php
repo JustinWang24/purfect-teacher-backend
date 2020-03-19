@@ -330,31 +330,47 @@ class AttendanceController extends Controller
         $timeSlot = $request->get('time_slot_id');
 
         $attendancesDao = new AttendancesDao;
+        $timeTableDao = new TimetableItemDao;
 
-        $now = Carbon::now(GradeAndYearUtil::TIMEZONE_CN);
+        $now = Carbon::parse($time);
+
         $schoolDao = new SchoolDao;
         $school = $schoolDao->getSchoolById($user->getSchoolId());
         $configuration = $school->configuration;
-        $month = Carbon::parse($time)->month;
+        $year =  $configuration->getSchoolYear();
+        $month = Carbon::parse($now)->month;
         $term = $configuration->guessTerm($month);
         $weeks = $configuration->getScheduleWeek($now, null, $term);
         $week = $weeks->getScheduleWeekIndex();
-
         $data = $attendancesDao->getTeacherSignInfo($timeSlot, $week, $term);
+        $weekDayIndex = $now->dayOfWeekIso;
 
         $new = [];
         foreach ($data as $key => $val) {
-            $new[$val->time_slot_id] = $val;
+            $new[$val->time_slot_id][] = $val;
         }
 
         $result = [];
-        if (!empty($new)) {
-          foreach ($new as $key => $value) {
-            $result[$key]['time_slot_id'] = $value->time_slot_id;
-            $result[$key]['course'] = $value->timeSlot->name;
-            $result[$key]['sign'] = 0;
-            $result[$key]['no_sign'] = 0;
-            $result[$key]['late'] = 0;
+        $sign = 0;
+        $late = 0;
+        foreach ($new as $key => $value) {
+          foreach ($value as $k => $v) {
+            if ($v->teacher_sign == Attendance::TEACHER_SIGN) {
+                $sign = $sign +=1;
+            }
+
+            if ($v->teacher_late == Attendance::TEACHER_LATE) {
+                $late = $late +=1;
+            }
+
+            $sum = $timeTableDao->getSameTimePeopleNum($user->getSchoolId(), $year, $term, $weekDayIndex, $v->time_slot_id);
+            $result[] = [
+                'time_slot_id' => $v->time_slot_id,
+                'course' => $v->timeSlot->name,
+                'sign' => $sign,
+                'no_sign' => $sum - $sign,
+                'late' => $late,
+            ];
           }
         }
 
