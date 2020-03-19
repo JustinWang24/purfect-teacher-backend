@@ -6,7 +6,7 @@
  * Time: 8:49 PM
  */
 
-namespace App\BusinessLogic\Pipeline\Flow\Business\Impl;
+namespace App\BusinessLogic\Pipeline\Business\Impl;
 use App\Dao\TeacherAttendance\ClockinDao;
 use App\Models\TeacherAttendance\Clockin;
 use App\Models\TeacherAttendance\Clockset;

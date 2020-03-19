@@ -6,7 +6,7 @@
  * Time: 8:49 PM
  */
 
-namespace App\BusinessLogic\Pipeline\Flow\Business\Impl;
+namespace App\BusinessLogic\Pipeline\Business\Impl;
 use App\Models\TeacherAttendance\UserMac;
 use App\User;
 use App\Utils\JsonBuilder;
