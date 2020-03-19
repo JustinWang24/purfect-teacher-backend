@@ -33,8 +33,9 @@ class CampusScenery
             if($album->isVideo()){
                 $this->videoPath = $album->url;
                 $this->videoTitle = $album->title;
-            }
-            else{
+            } elseif($album->isVideoImage()){
+              $this->videoImage = $album->url;
+            }else{
                 $schoolAlbum[] = [
                     'image_path'=>$album->url,
                     'title'=>$album->title,
