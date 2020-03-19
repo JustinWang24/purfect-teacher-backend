@@ -4,7 +4,6 @@ namespace App\Events\SystemNotification;
 
 use App\Events\CanSendSystemNotification;
 use App\Models\Misc\SystemNotification;
-use App\Models\RecruitStudent\RegistrationInformatics;
 use App\User;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Foundation\Events\Dispatchable;
