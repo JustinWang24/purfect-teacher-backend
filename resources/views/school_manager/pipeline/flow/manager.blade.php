@@ -184,7 +184,7 @@
                 <el-button @click="flowFormFlag = false">取消</el-button>
             </el-form-item>
         </el-form>
-        <el-dialog width="30%" title="选择图标" :visible.sync="iconSelectorShowFlag" append-to-body>
+        <el-dialog width="30%" title="选择图标" :visible.sync="iconSelectorShowFlag">
             <icon-selector v-on:icon-selected="iconSelectedHandler"></icon-selector>
         </el-dialog>
     </el-drawer>
