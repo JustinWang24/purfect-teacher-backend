@@ -173,19 +173,22 @@ class TaskDao
                 'task_id'=>$task->id, 'desc'=>'完成了任务'];
             ProjectTaskLog::create($log);
 
-            // 添加附件
-            $path = ProjectTaskPic::DEFAULT_UPLOAD_PATH_PREFIX.$userId; // 上传路径
+            if(!empty($pics)) {
+                // 添加附件
+                $path = ProjectTaskPic::DEFAULT_UPLOAD_PATH_PREFIX.$userId; // 上传路径
 
-            foreach ($pics as $key => $item) {
-                $uuid = Uuid::uuid4()->toString();
-                $url = $item->storeAs($path, $uuid. '.' .$item->getClientOriginalExtension()); // 上传并返回路径
-                $data = [
-                    'url' => ProjectTaskPic::ConvertUploadPathToUrl($url),
-                    'task_id' => $task->id,
-                    'task_member_id' => $taskMemberId,
-                ];
-                ProjectTaskPic::create($data);
+                foreach ($pics as $key => $item) {
+                    $uuid = Uuid::uuid4()->toString();
+                    $url = $item->storeAs($path, $uuid. '.' .$item->getClientOriginalExtension()); // 上传并返回路径
+                    $data = [
+                        'url' => ProjectTaskPic::ConvertUploadPathToUrl($url),
+                        'task_id' => $task->id,
+                        'task_member_id' => $taskMemberId,
+                    ];
+                    ProjectTaskPic::create($data);
+                }
             }
+
 
 
             $taskMembers = $task->taskMembers->where('user_id', '<>', $userId);
