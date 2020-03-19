@@ -19,7 +19,7 @@ class dissolvedElectiveCourse extends Command
      *
      * @var string
      */
-    protected $description = '取消不满足人数的选修课';
+    protected $description = '对报名截止的选修课通知并解散不达开班要求的';
 
     /**
      * Create a new command instance.
@@ -48,5 +48,6 @@ class dissolvedElectiveCourse extends Command
                 }
             }
         }
+        $dao->noticeStartElective();
     }
 }

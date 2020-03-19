@@ -15,6 +15,7 @@ use App\Dao\Schools\DepartmentDao;
 use App\Dao\Schools\RoomDao;
 use App\Dao\Schools\SchoolDao;
 use App\Dao\Users\GradeUserDao;
+use App\Events\SystemNotification\ApproveElectiveCourseEvent;
 use App\Events\User\Student\EnrollCourseEvent;
 use App\Models\Course;
 use App\Models\ElectiveCourses\ApplyCourseArrangement;
@@ -612,6 +613,7 @@ class TeacherApplyElectiveCourseDao
     {
         $messageBag = new MessageBag(JsonBuilder::CODE_ERROR);
         $course = Course::where('id', $courseId)->first();
+        $tableName = 'student_enrolled_optional_courses_'.$course->courseElective->start_year.'_'.$course->term;
         DB::beginTransaction();
         try {
             //标记申请状态为驳回
@@ -627,6 +629,22 @@ class TeacherApplyElectiveCourseDao
                 'status' => CourseElective::STATUS_CANCEL
             ]);
             DB::commit();
+
+            //通知所有报名的人
+            $userList = [];
+            $userIdArr = StudentEnrolledOptionalCourse::where('course_id', $course->id)->pluck('user_id')->toArray();
+            if ($userIdArr) {
+                $userList = array_merge($userList, $userIdArr);
+            }
+
+            $userIdArr2 = DB::table($tableName)->where('course_id', $course->id)->pluck('user_id')->toArray();
+            if ($userIdArr2) {
+                $userList = array_merge($userList, $userIdArr2);
+            }
+            foreach ($userList as $userId) {
+                $user = User::find($userId);
+                event(new ApproveElectiveCourseEvent($user, $course, 0));
+            }
             $messageBag->setCode(JsonBuilder::CODE_SUCCESS);
 
         } catch (\Exception $exception) {
@@ -1203,6 +1221,31 @@ class TeacherApplyElectiveCourseDao
     {
         $nowTime = Carbon::now()->format('Y-m-d H:i:s');
         return CourseElective::where('status', CourseElective::STATUS_WAITING)->where('expired_at', '<', $nowTime)->get();
+    }
+
+    public function noticeStartElective()
+    {
+        $date = Carbon::now()->format('Y-m-d 00:00:00');
+        $list = CourseElective::where('status', '<>', CourseElective::STATUS_CANCEL)->where('expired_at', $date)->get();
+        foreach ($list as $elective) {
+            $course = $elective->course;
+            $tableName = 'student_enrolled_optional_courses_'.$elective->start_year.'_'.$course->term;
+            //通知所有报名的人
+            $userList = [];
+            $userIdArr = StudentEnrolledOptionalCourse::where('course_id', $course->id)->pluck('user_id')->toArray();
+            if ($userIdArr) {
+                $userList = array_merge($userList, $userIdArr);
+            }
+
+            $userIdArr2 = DB::table($tableName)->where('course_id', $course->id)->pluck('user_id')->toArray();
+            if ($userIdArr2) {
+                $userList = array_merge($userList, $userIdArr2);
+            }
+            foreach ($userList as $userId) {
+                $user = User::find($userId);
+                event(new ApproveElectiveCourseEvent($user, $course, 1));
+            }
+        }
     }
 }
 

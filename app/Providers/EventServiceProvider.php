@@ -91,6 +91,11 @@ class EventServiceProvider extends ServiceProvider
         'App\Events\SystemNotification\ApproveOpenMajorEvent' => [
             'App\Listeners\SystemNotification\ApproveOpenMajor'
         ],
+
+        //选修课开班或解散时发送系统消息
+        'App\Events\SystemNotification\ApproveElectiveCourseEvent' => [
+            'App\Listeners\SystemNotification\ApproveElectiveCourse'
+        ],
     ];
 
     /**
