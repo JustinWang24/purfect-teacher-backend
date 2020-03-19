@@ -1,6 +1,6 @@
 @extends('layouts.h5_app')
 @section('content')
-<div id="app-init-data-holder" data-school="{{ $user->getSchoolId() }}" data-useruuid="{{ $user->uuid }}" data-apitoken="{{ $user->api_token }}" data-apprequest="1"></div>
+<div id="app-init-data-holder" data-position="{{ $position }}" data-school="{{ $user->getSchoolId() }}" data-useruuid="{{ $user->uuid }}" data-apitoken="{{ $user->api_token }}" data-apprequest="1"></div>
 <div id="student-homepage-app" class="school-intro-container">
     <div class="main" v-if="isLoading">
         <p class="text-center text-grey">
