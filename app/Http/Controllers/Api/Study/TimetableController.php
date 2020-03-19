@@ -251,6 +251,7 @@ class TimetableController extends Controller
             $weekdayIndex = $time->dayOfWeekIso;  // 周几
             $item = $timetableItemDao->getItemsByWeekDayIndexForTeacherView($weekdayIndex, $year, $term, $oddWeek, $user->id);
 
+
             $course = $this->slotDataProcessing($item, $forStudyingSlots);
             $table = [
                 'week_index' => CalendarDay::GetWeekDayIndex($weekdayIndex),
@@ -336,7 +337,6 @@ class TimetableController extends Controller
     public function slotDataProcessing($item, $forStudyingSlots) {
 
         $dao = new LectureDao();
-
         $timetable = [];
         foreach ($forStudyingSlots as $key => $value) {
             $course = (object)[];
@@ -354,8 +354,16 @@ class TimetableController extends Controller
                         'name' => $val['course'],
                         'room' => $val['building'].$val['room'],
                         'teacher' => $val['teacher'],
-                        'grade' => $val['grade'],
+                        'grade' => [
+                            [
+                                'grade_id'=>$val['grade_id'],
+                                'grade_name'=>$val['grade']
+                            ],
+
+                        ],
                         'label' => $label,
+                        'optional' => $val['optional'],  // 0必修课 1选修课
+                        'repeat_unit' => $val['repeat_unit'], // 1每周重复 2每单周重复 3每双周重负
                     ];
                 }
 
