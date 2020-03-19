@@ -348,7 +348,6 @@ class TimetableController extends Controller
                     }
                     $course = [
                         'time_table_id' => $val['id'],
-                        'idx' => '', // 课节
                         'name' => $val['course'],
                         'room' => $val['building'].$val['room'],
                         'teacher' => $val['teacher'],
@@ -362,6 +361,8 @@ class TimetableController extends Controller
                         'label' => $label,
                         'optional' => $val['optional'],  // true必修课 false选修课
                         'repeat_unit' => $val['repeat_unit'], // 1每周重复 2每单周重复 3每双周重复
+                        'switching'=> false, // 调课 true 是调课 false不是调课
+                        'old_course' => '', // 调课时显示原课程名称
                     ];
                 }
 
