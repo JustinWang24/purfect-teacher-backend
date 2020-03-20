@@ -141,13 +141,13 @@ class ClockinDao
             if (isset($clockinList[$groupDay])) {
                 $week = Carbon::parse($groupDay)->englishDayOfWeek;
                 if ($clockinList[$groupDay]['morning']['status'] == Clockin::STATUS_NONE) {
-                    $missList[] = ['day' => $groupDay, 'type' => 'morning', 'set_time' => $clocksets[$week]->morning];
+                    $missList[] = ['day' => $groupDay, 'type' => 'morning', 'set_time' => substr($clocksets[$week]->morning, 0, 5)];
                 }
                 if ($attendance->using_afternoon && $clockinList[$groupDay]['afternoon']['status'] == Clockin::STATUS_NONE) {
-                    $missList[] = ['day' => $groupDay, 'type' => 'afternoon', 'set_time' => $clocksets[$week]->afternoon];
+                    $missList[] = ['day' => $groupDay, 'type' => 'afternoon', 'set_time' => substr($clocksets[$week]->afternoon, 0, 5)];
                 }
                 if ($clockinList[$groupDay]['evening'] == Clockin::STATUS_NONE) {
-                    $missList[] = ['day' => $groupDay, 'type' => 'evening', 'set_time' => $clocksets[$week]->evening];
+                    $missList[] = ['day' => $groupDay, 'type' => 'evening', 'set_time' => substr($clocksets[$week]->evening, 0, 5)];
                 }
             }
         }
