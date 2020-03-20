@@ -34,6 +34,8 @@ class Kernel extends ConsoleKernel
         $schedule->command('dissolvedElectiveCourse')->daily();
         //TODO 上线时打开此设置 每分钟扫描一次，将要迟到的消息推送给老师
         $schedule->command('noticeTeacherAttendanceBeLate')->everyMinute();
+        //TODO 上线时打开此设置 每分钟扫描一次，将要下课还没签到的学生推送消息
+        $schedule->command('noticeStudentAttendanceSignin')->everyMinute();
     }
 
     /**

@@ -188,14 +188,18 @@ class FlowsController extends Controller
                     case 'radio':
                         if ($optionRet) {
                             $optionRet = json_decode($optionRet, true);
-                            $value = $optionRet['itemText'];
+                            if (!empty($optionRet)) {
+                                $value = $optionRet['itemText'];
+                            }
                         }
                         break;
                     case 'checkbox':
                         if ($optionRet) {
                             $optionRet = json_decode($optionRet, true);
-                            foreach ($optionRet as $ret) {
-                                $value .= ' ' . $ret['itemText'];
+                            if (!empty($optionRet)) {
+                                foreach ($optionRet as $ret) {
+                                    $value .= ' ' . $ret['itemText'];
+                                }
                             }
                         }
                         break;

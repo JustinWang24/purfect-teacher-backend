@@ -101,6 +101,11 @@ class ClockinDao
                 ['day', '<=', $monthEnd->format('Y-m-d')]
         ])->orderBy('day','asc')->get();
 
+        $clocksets = [];
+        foreach ($attendance->clocksets as $clockset) {
+            $clocksets[$clockset->week] = $clockset;
+        }
+
         $groupDays = $dao->groupDayArray($attendance, $monthStart, $monthEnd);
         //出勤临时列表
         $clockinList = [];
@@ -134,14 +139,15 @@ class ClockinDao
         }
         foreach ($groupDays['week'] as $groupDay) {
             if (isset($clockinList[$groupDay])) {
+                $week = Carbon::parse($groupDay)->englishDayOfWeek;
                 if ($clockinList[$groupDay]['morning']['status'] == Clockin::STATUS_NONE) {
-                    $missList[] = ['day' => $groupDay, 'type' => 'morning'];
+                    $missList[] = ['day' => $groupDay, 'type' => 'morning', 'set_time' => substr($clocksets[$week]->morning, 0, 5)];
                 }
                 if ($attendance->using_afternoon && $clockinList[$groupDay]['afternoon']['status'] == Clockin::STATUS_NONE) {
-                    $missList[] = ['day' => $groupDay, 'type' => 'afternoon'];
+                    $missList[] = ['day' => $groupDay, 'type' => 'afternoon', 'set_time' => substr($clocksets[$week]->afternoon, 0, 5)];
                 }
                 if ($clockinList[$groupDay]['evening'] == Clockin::STATUS_NONE) {
-                    $missList[] = ['day' => $groupDay, 'type' => 'evening'];
+                    $missList[] = ['day' => $groupDay, 'type' => 'evening', 'set_time' => substr($clocksets[$week]->evening, 0, 5)];
                 }
             }
         }

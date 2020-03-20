@@ -4,6 +4,7 @@
 namespace App\Http\Controllers\Api\OA;
 
 
+use App\Events\SystemNotification\OaProjectEvent;
 use App\Models\OA\Project;
 use App\Utils\JsonBuilder;
 use App\Dao\OA\ProjectDao;
@@ -33,6 +34,14 @@ class ProjectsController extends Controller
         $dao = new ProjectDao();
         $result = $dao->createProject($data, $member);
         if($result->isSuccess()){
+            $projectId = $result->getData()['id'];
+            //通知负责人
+            event(new OaProjectEvent($data['user_id'], $projectId));
+            //通知成员
+            foreach ($member as $userid) {
+                event(new OaProjectEvent($userid, $projectId));
+            }
+
             $data = $result->getData();
             return JsonBuilder::Success($data);
         } else {
