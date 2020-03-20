@@ -16,9 +16,6 @@
         top: 0;
       }
     }
-    .el-divider--horizontal {
-      margin: 5px !important;
-    }
   }
   .card-body-approver {
     width: 85%;
@@ -37,5 +34,8 @@
     margin: 0;
     left: 50%;
     top: -15px;
+  }
+  .el-divider--horizontal {
+    margin: 5px !important;
   }
 }

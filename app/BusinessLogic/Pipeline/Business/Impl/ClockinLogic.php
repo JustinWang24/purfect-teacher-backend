@@ -6,7 +6,7 @@
  * Time: 8:49 PM
  */
 
-namespace App\BusinessLogic\Pipeline\Flow\Business\Impl;
+namespace App\BusinessLogic\Pipeline\Business\Impl;
 use App\Dao\TeacherAttendance\ClockinDao;
 use App\Models\TeacherAttendance\Clockin;
 use App\Models\TeacherAttendance\Clockset;
@@ -33,7 +33,7 @@ class ClockinLogic
             $clockinDao = new ClockinDao();
             $data = [
                 'teacher_attendance_id' => $options['attendance_id'],
-                'user_id' => $user->id,
+                'user_id' => $this->user->id,
                 'day' => $options['day'],
                 'time' => $time,
                 'type' => $options['type'],

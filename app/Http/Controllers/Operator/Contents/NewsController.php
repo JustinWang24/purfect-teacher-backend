@@ -53,10 +53,15 @@ class NewsController extends Controller
    * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
    */
   public function get_campus_video(Request $request){
-    $condition[] = ['type', '=', 2];
-    $condition[] = ['school_id', '=', session('school.id')];
-    $videoInfo = Album::where($condition)->orderBy('id', 'desc')->first();
-    return JsonBuilder::Success(['videoInfo'=>$videoInfo]);
+    // 获取视频文件
+    $condition2[] = ['type', '=', 2];
+    $condition2[] = ['school_id', '=', session('school.id')];
+    $videoInfo = Album::where($condition2)->orderBy('id', 'desc')->first();
+    // 获取封面图
+    $condition3[] = ['type', '=', 3];
+    $condition3[] = ['school_id', '=', session('school.id')];
+    $imageInfo = Album::where($condition3)->orderBy('id', 'desc')->first();
+    return JsonBuilder::Success(['videoInfo'=>$videoInfo,'imageInfo'=>$imageInfo]);
   }
 
   /**
@@ -66,15 +71,19 @@ class NewsController extends Controller
    */
   public function save_campus_video(Request $request)
   {
+    $type = $request->post('type');
     $videoUrl = $request->post('videoUrl');
-    if($videoUrl == '') {
+    if($type == 2 && $videoUrl == '') {
       return JsonBuilder::Error("请上传视频文件");
     }
+    if($type == 3 && $videoUrl == '') {
+      return JsonBuilder::Error("请上传视频封面图");
+    }
     $dao = new AlbumDao();
-    $dao->deleteListInfo(['type' => 2, 'school_id' => session('school.id')]);
+    $dao->deleteListInfo(['type' => $type, 'school_id' => session('school.id')]);
     // 添加数据
-    $addata['type'] = 2;
     $addata['title'] = " ";
+    $addata['type'] = $type;
     $addata['url'] = $videoUrl;
     $addata['school_id'] = session('school.id');
     if (Album::create($addata)) {

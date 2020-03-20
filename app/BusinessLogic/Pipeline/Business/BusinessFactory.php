@@ -7,8 +7,8 @@
  */
 
 namespace App\BusinessLogic\Pipeline\Business;
-use App\BusinessLogic\Pipeline\Flow\Business\Impl\ClockinLogic;
-use App\BusinessLogic\Pipeline\Flow\Business\Impl\MacAddressLogic;
+use App\BusinessLogic\Pipeline\Business\Impl\ClockinLogic;
+use App\BusinessLogic\Pipeline\Business\Impl\MacAddressLogic;
 use App\Utils\Pipeline\IFlow;
 
 class BusinessFactory

@@ -181,7 +181,7 @@ abstract class GeneralFlowsLogic implements IFlowLogic
                     $action->save();
 
                     $actionDao = new ActionDao();
-                    if ($actionDao->getCountWaitProcessUsers($node->id) > 0) {
+                    if ($actionDao->getCountWaitProcessUsers($node->id, $action->getTransactionId()) > 0) {
                         //当前流程还需别人审批
 
                     }else {

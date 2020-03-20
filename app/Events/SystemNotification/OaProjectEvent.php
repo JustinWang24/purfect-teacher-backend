@@ -3,31 +3,27 @@
 namespace App\Events\SystemNotification;
 
 use App\Events\CanSendSystemNotification;
-use App\Models\Course;
 use App\Models\Misc\SystemNotification;
 use App\User;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Broadcasting\InteractsWithSockets;
 
-class ApproveElectiveCourseEvent implements CanSendSystemNotification
+class OaProjectEvent implements CanSendSystemNotification
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
     private  $user;
-    private  $course;
-    private  $result;
+    private  $projectId;
 
     /**
-     * ApproveElectiveCourseEvent constructor.
-     * @param User $user
-     * @param $courseId
+     * OaMessageEvent constructor.
+     * @param $userid
      */
-    public function __construct(User $user, Course $course, $result)
+    public function __construct($userId, $projectId)
     {
-        $this->user = $user;
-        $this->course = $course;
-        $this->result = $result;
+        $this->user = User::find($userId);
+        $this->projectId = $projectId;
     }
 
     /**
@@ -80,7 +76,7 @@ class ApproveElectiveCourseEvent implements CanSendSystemNotification
      */
     public function getTitle(): string
     {
-        return '选修课程(' . $this->course->name . ')' . ($this->result ? '已开课！': '已取消！');
+        return '你有一条新的项目信息！';
     }
 
     /**
@@ -89,7 +85,7 @@ class ApproveElectiveCourseEvent implements CanSendSystemNotification
      */
     public function getContent(): string
     {
-        return '选修课程(' . $this->course->name . ')' . ($this->result ? '已开课！': '已取消！');
+        return '你有一条新的项目信息！';
     }
 
     /**
@@ -98,7 +94,7 @@ class ApproveElectiveCourseEvent implements CanSendSystemNotification
      */
     public function getCategory(): int
     {
-        return SystemNotification::STUDENT_CATEGORY_COURSE;
+        return SystemNotification::TEACHER_CATEGORY_PROJECT;
     }
 
     /**
@@ -108,8 +104,8 @@ class ApproveElectiveCourseEvent implements CanSendSystemNotification
     public function getAppExtra(): string
     {
         $extra = [
-            'type' => 'course-elective-details',
-            'param1' => $this->course->id,
+            'type' => 'oa-project-info',
+            'param1' => $this->projectId,
             'param2' => ''
         ];
         return json_encode($extra);
@@ -132,5 +128,8 @@ class ApproveElectiveCourseEvent implements CanSendSystemNotification
     {
         return [];//单人消息 无组织可见范围
     }
+
+
+
 
 }
