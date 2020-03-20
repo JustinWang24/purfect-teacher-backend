@@ -252,11 +252,12 @@ class AttendancesDao
   /**
    * 根据 给定时间获取所有签到
    * @param $time
+   * @param $timeSlotId
    * @return mixed
    */
-    public function getTeacherSignInfoByTime($time)
+    public function getTeacherSignInfoByTime($time, $timeSlotId)
     {
-        return Attendance::whereDate('created_at', $time)->get();
+        return Attendance::whereDate('created_at', $time)->where('time_slot_id', $timeSlotId)->get();
     }
 
 
