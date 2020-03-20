@@ -223,9 +223,9 @@ class IndexController extends Controller
 
         $profile = $user->profile;
 
-        $schoolId   = $user->getSchoolId();
-        $dao        = new SchoolDao;
-        $schoolName = $dao->getSchoolById($schoolId);
+//        $schoolId   = $user->getSchoolId();
+//        $dao        = new SchoolDao;
+//        $schoolName = $dao->getSchoolById($schoolId);
 
         $allDuties = Teacher::getTeacherAllDuties($user->id);
 
@@ -257,6 +257,7 @@ class IndexController extends Controller
         }
 
         $data = [
+            'user_id'        => $user->id,
             'name'           => $user->name,
             'mobile'         => $user->mobile,
             'avatar'         => $profile->avatar,
