@@ -59,7 +59,6 @@ export default {
       }
       finishTask(form).then(res => {
         this.$emit("submit");
-        debugger;
       });
     },
     onFileSelected(e) {

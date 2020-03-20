@@ -4,19 +4,23 @@
       <div class="item">
         <span class="title">反馈人</span>
         <span class="content">
-          <span class="name"></span>
-          <span class="status"></span>
+          <span class="name">{{info.username}}</span>
+          <span class="status" :class="getStatusClass(info.status)">{{getFinishText(info.status)}}</span>
         </span>
       </div>
       <div class="item">
         <span class="title">备注说明</span>
-        <span class="content">content</span>
+        <span class="content">{{info.remark}}</span>
       </div>
       <div class="item">
         <span class="title">附件材料</span>
         <span class="content">
-          <div class="img-box" v-for="(img, index) in (info.imgList||[])" :key="index">
-            <img :src="img.src" alt />
+          <div
+            class="img-box"
+            v-for="(img, index) in (info.user_pics?info.user_pics.split(','):[])"
+            :key="index"
+          >
+            <img :src="img" alt />
           </div>
         </span>
       </div>
@@ -27,12 +31,25 @@
 import { TaskApi } from "../common/api";
 import { getFileURL } from "../common/utils";
 import { Util } from "../../../../common/utils";
+import { TaskStatus } from "../common/enum";
 export default {
   name: "finish-info",
   props: {
     taskid: {
       type: String,
       required: true
+    }
+  },
+  computed: {
+    getFinishText() {
+      return function(status) {
+        return (TaskStatus[status] || {}).text;
+      };
+    },
+    getStatusClass() {
+      return function(status) {
+        return (TaskStatus[status] || {}).classes;
+      };
     }
   },
   methods: {},
@@ -42,8 +59,10 @@ export default {
     };
   },
   created() {
-    TaskApi.excute("getOaTaskReport").then(res => {
-      debugger;
+    TaskApi.excute("getOaTaskReport", {
+      taskid: this.taskid
+    }).then(res => {
+      this.infoList = res.data.data;
     });
   }
 };
@@ -51,7 +70,14 @@ export default {
 <style lang="scss" scoped>
 .infoList {
   padding: 0 12px;
+  .info:last-child {
+    border: none;
+  }
   .info {
+    border-bottom: 1px solid #aaaaaa;
+    .item:first-child {
+      border: none;
+    }
     .item {
       display: flex;
       border-top: 1px solid #eaedf2;
@@ -80,6 +106,26 @@ export default {
             max-width: 100%;
             max-height: 100%;
           }
+        }
+        .status {
+          float: right;
+        }
+        .status.done {
+          color: #6dcc58;
+        }
+        .status.timeout {
+          color: #fd3434;
+        }
+        .status.pending {
+          color: #fe7b1c;
+        }
+        .status.waiting {
+          color: #fe7b1c;
+        }
+        .time {
+          flex: 0;
+          color: #eaedf2;
+          font-size: 12px;
         }
       }
     }

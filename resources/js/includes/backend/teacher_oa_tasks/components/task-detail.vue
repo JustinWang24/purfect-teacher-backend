@@ -43,10 +43,30 @@
         <span class="content">{{task.project_title}}</span>
       </div>
       <div class="btn-box">
-        <el-button class="dispatch" size="small" @click="()=>{dispathModal = true}">指派他人</el-button>
-        <el-button type="primary" size="small" @click="receiveTask">确认接收</el-button>
-        <el-button type="primary" size="small" @click="()=>{finishModal = true}">确认完成</el-button>
-        <el-button type="primary" size="small" @click="()=>{finishInfoModal = true}">完成结果</el-button>
+        <el-button
+          v-if="unfinished"
+          class="dispatch"
+          size="small"
+          @click="()=>{dispathModal = true}"
+        >指派他人</el-button>
+        <el-button
+          type="primary"
+          v-if="unreceive && !isMyTask"
+          size="small"
+          @click="receiveTask"
+        >确认接收</el-button>
+        <el-button
+          type="primary"
+          v-if="pending && !isMyTask"
+          size="small"
+          @click="()=>{finishModal = true}"
+        >确认完成</el-button>
+        <el-button
+          type="primary"
+          v-if="finished"
+          size="small"
+          @click="()=>{finishInfoModal = true}"
+        >完成结果</el-button>
       </div>
     </div>
     <div class="operate detail-panel">
@@ -189,7 +209,41 @@ export default {
       };
     },
     statusText() {
+      if (this.isMyTask) {
+        return "我创建的";
+      }
       return (TaskFinishStatus[this.task.status] || {}).text;
+    },
+    isMyTask() {
+      return this.task.login_userid === this.task.create_userid;
+    },
+    unfinished() {
+      if (this.isMyTask) {
+        return this.task.status !== 3;
+      } else {
+        return this.task.member_status !== 3;
+      }
+    },
+    finished() {
+      if (this.isMyTask) {
+        return this.task.status === 3;
+      } else {
+        return this.task.member_status === 3;
+      }
+    },
+    unreceive() {
+      if (this.isMyTask) {
+        return this.task.status === 1;
+      } else {
+        return this.task.member_status === 1;
+      }
+    },
+    pending() {
+      if (this.isMyTask) {
+        return this.task.status === 2;
+      } else {
+        return this.task.member_status === 2;
+      }
     }
   },
   methods: {
@@ -209,7 +263,6 @@ export default {
     onDispath() {},
     onFinish(modal) {
       this.getOaTaskInfo();
-      debugger;
       if (!modal) {
         this.$refs.finishModal.closeDrawer();
         this.finishModal = false;
@@ -264,7 +317,7 @@ export default {
     border-radius: 4px;
     > .title {
       font-size: 18px;
-      color: #313b4c;
+      color: #4ea5fe;
       padding: 14px;
       .el-button {
         float: right;
