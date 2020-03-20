@@ -368,7 +368,6 @@ class AttendanceController extends Controller
             $result[$key]['late'] = $late;
           }
         }
-
         return JsonBuilder::Success(sort(array_merge($result)));
     }
 
