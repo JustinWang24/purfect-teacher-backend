@@ -11,6 +11,7 @@ namespace App\Http\Controllers\Api\OA;
 
 use App\Dao\OA\ProjectDao;
 use App\Dao\OA\TaskDao;
+use App\Events\SystemNotification\OaTaskEvent;
 use App\Models\OA\ProjectTask;
 use App\Utils\JsonBuilder;
 use App\Models\OA\ProjectTaskMember;
@@ -53,6 +54,13 @@ class TaskController extends Controller
         ];
         $result = $dao->createTask($data, $memberUserIds);
         if($result->isSuccess()) {
+            $taskId = $result->getData()['id'];
+            //通知负责人
+            //event(new OaTaskEvent($leader_userid, $taskId)); --成员已经包含了负责人
+            //通知成员
+            foreach ($memberUserIds as $userid) {
+                event(new OaTaskEvent($userid, $taskId));
+            }
             return JsonBuilder::Success($result->getData());
         } else {
             return JsonBuilder::Error($result->getMessage());
