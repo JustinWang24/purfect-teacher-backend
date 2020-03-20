@@ -17,6 +17,7 @@
         >
           <el-option
             v-for="item in ownerOptions"
+            :disabled="item.disabled"
             :key="item.value"
             :label="item.label"
             :value="item.value"
@@ -36,7 +37,11 @@
             readonly
           ></el-input>
           <el-dropdown-menu slot="dropdown" ref="dropdownSlot" id="task-dropdown-menu">
-            <member-select parentId="task-dropdownSlot" v-model="form.member_userids"></member-select>
+            <member-select
+              parentId="task-dropdownSlot"
+              :disabledList="disabledList"
+              v-model="form.member_userids"
+            ></member-select>
           </el-dropdown-menu>
         </el-dropdown>
         <!-- <el-cascader
@@ -75,6 +80,30 @@ export default {
   components: {
     MemberSelect
   },
+  computed: {
+    disabledList() {
+      return [this.currentUserId, this.form.leader_userid];
+    }
+  },
+  watch: {
+    "form.member_userids": {
+      deep: true,
+      immediate: true,
+      handler(val, oldval) {
+        this.ownerOptions.map(member => {
+          if (val.includes(member.value.toString())) {
+            member.disabled = true;
+          } else {
+            if (this.currentUserId === member.value) {
+              member.disabled = true;
+            } else {
+              member.disabled = false;
+            }
+          }
+        });
+      }
+    }
+  },
   methods: {
     onSubmit() {
       if (!this.form.task_title) {
@@ -109,7 +138,10 @@ export default {
         this.ownerOptions = res.data.data.map(per => {
           return {
             label: per.username,
-            value: per.userid
+            value: per.userid,
+            disabled:
+              per.userid === this.currentUserId ||
+              this.form.member_userids.includes(per.userid.toString())
           };
         });
       });
@@ -122,7 +154,8 @@ export default {
         member_userids: []
       },
       ownerOptions: [],
-      projectOptions: []
+      projectOptions: [],
+      currentUserId: 0
     };
   },
   created() {
@@ -134,6 +167,7 @@ export default {
         };
       });
     });
+    this.currentUserId = this.$attrs.currentuserid;
   }
 };
 </script>

@@ -16,7 +16,8 @@ const API_MAP = {
   finishOaTaskInfo: '/Oa/task/finishOaTaskInfo',
   addOaTaskUser: '/Oa/task/addOaTaskUser',
   receiveOaTaskInfo: '/Oa/task/receiveOaTaskInfo',
-  getOaTaskReport: '/Oa/task/getOaTaskReport'
+  getOaTaskReport: '/Oa/task/getOaTaskReport',
+  getTeacherInfo: '/api/user/getTeacherInfo'
 }
 
 export const TaskApi = {

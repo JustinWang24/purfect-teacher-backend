@@ -30,7 +30,7 @@
           <div
             class="item"
             @click="selectMember(member)"
-            :class="{'disabled': chosenMap[member.id]}"
+            :class="{'disabled': chosenMap[member.id] || disabledList.includes(member.id)}"
             v-for="member in memberListSearch"
             :key="member.id"
           >{{member.name}}</div>
@@ -39,7 +39,7 @@
           <div
             class="item"
             @click="selectMember(member)"
-            :class="{'disabled': chosenMap[member.id]}"
+            :class="{'disabled': chosenMap[member.id] || disabledList.includes(member.id)}"
             v-for="member in memberListGroup"
             :key="member.id"
           >{{member.name}}</div>
@@ -57,6 +57,10 @@ export default {
   props: {
     parentId: {
       require: true
+    },
+    disabledList: {
+      type: Array,
+      default: []
     }
   },
   data() {
