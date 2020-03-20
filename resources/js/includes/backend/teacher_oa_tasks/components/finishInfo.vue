@@ -17,6 +17,7 @@
         <span class="content">
           <div
             class="img-box"
+            @click="viewImg(img)"
             v-for="(img, index) in (info.user_pics?info.user_pics.split(','):[])"
             :key="index"
           >
@@ -25,6 +26,9 @@
         </span>
       </div>
     </div>
+    <el-dialog :visible.sync="previewModal">
+      <img width="100%" :src="previewSrc" alt />
+    </el-dialog>
   </div>
 </template>
 <script>
@@ -52,10 +56,17 @@ export default {
       };
     }
   },
-  methods: {},
+  methods: {
+    viewImg(src) {
+      this.previewModal = true;
+      this.previewSrc = src;
+    }
+  },
   data() {
     return {
-      infoList: [{}]
+      infoList: [{}],
+      previewModal: false,
+      previewSrc: ""
     };
   },
   created() {
@@ -95,6 +106,7 @@ export default {
         word-wrap: break-word;
         color: #313b4c;
         .img-box {
+          cursor: pointer;
           display: inline-block;
           width: 120px;
           border-radius: 4px;
