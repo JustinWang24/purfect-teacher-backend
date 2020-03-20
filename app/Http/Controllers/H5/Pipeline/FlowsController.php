@@ -148,14 +148,14 @@ class FlowsController extends Controller
             $actionResult = $dao->getHistoryByUserFlow($startUserAction->userFlow->id, true);
             $actionReList = [];
             foreach ($actionResult as $actRet) {
-                $actionReList[$actRet->user_id] = $actRet;
+                $actionReList[$actRet->node_id . '_' .$actRet->user_id] = $actRet;
             }
             //审批人与结果关联
             foreach ($flowInfo['handler'] as $handler) {
                 $userList = $flowDao->transTitlesToUser($handler->titles, $handler->organizations, $startUserAction->userFlow->user);
                 foreach ($userList as $item) {
                     foreach ($item as $im) {
-                        $im->result = isset($actionReList[$im->id]) ? $actionReList[$im->id] : [];
+                        $im->result = isset($actionReList[$handler->node_id.'_'.$im->id]) ? $actionReList[$handler->node_id.'_'.$im->id] : [];
                     }
                 }
                 $handlers[] = $userList;
