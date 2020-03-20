@@ -15,7 +15,7 @@ if (document.getElementById('student-homepage-app')) {
                 url: {
                     flowOpen: '',
                 },
-                isLoading: false,
+                isLoading: true,
                 keyword: '',
                 position: '',
                 flowsStartedByMe: [],

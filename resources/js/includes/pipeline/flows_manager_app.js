@@ -1,7 +1,7 @@
 /**
  * 工作流程管理
  */
-import { deleteFlow, deleteNode, loadNodes, saveFlow, saveNode, updateNode, saveNodeOption, deleteNodeOption } from "../../common/flow";
+import { deleteFlow, loadNodes, saveFlow } from "../../common/flow";
 import { Constants } from "../../common/constants";
 import { Util } from "../../common/utils";
 
@@ -10,6 +10,7 @@ if (document.getElementById('pipeline-flows-manager-app')) {
         el: '#pipeline-flows-manager-app',
         data() {
             return {
+                loadingNodes: false, // 正在加载步骤
                 newFlow: true, // 立即创建显示
                 posiList: [{ name: '办公审批', key: 1 }, { name: '办事大厅', key: 2 }, { name: '系统流程', key: 3 }],
                 typeList: [],
@@ -77,7 +78,6 @@ if (document.getElementById('pipeline-flows-manager-app')) {
                 prevNodeId: null, // 编辑 node 的时候, 前一个步骤的 ID
                 organizationsTabArrayWhenEdit: [],
                 flowNodes: [],
-                loadingNodes: false, // 正在加载步骤
 
                 props: {
                     lazy: true,
@@ -454,6 +454,21 @@ if (document.getElementById('pipeline-flows-manager-app')) {
                         console.log(err)
                     });
                 }
+            },
+            // 删除某一级审批人
+            deleteNode(id) {
+                axios.post("/school_manager/pipeline/flows/delete-node", {
+                    node_id: id,
+                    school_id: this.flow.school_id
+                }).then(res => {
+                    this.$message({
+                        message: '删除成功',
+                        type: 'success'
+                    });
+                    window.location.reload()
+                }).catch(err => {
+                    console.log(err)
+                })
             },
             // 保存 --- 是否自动审批
             saveagree() {
