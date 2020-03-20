@@ -47,7 +47,7 @@ if (document.getElementById('teacher-homepage-app')) {
             getBanner() {
                 axios.post(
                     '/api/banner/getBanner',
-                    { posit: 12 }
+                    { posit: 21 }
                 ).then(res => {
                     if (Util.isAjaxResOk(res)) {
                         this.bannerList = res.data.data

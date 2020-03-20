@@ -2,7 +2,7 @@
 @section('content')
 <div id="app-init-data-holder" data-position="{{ $position }}" data-school="{{ $user->getSchoolId() }}" data-useruuid="{{ $user->uuid }}" data-apitoken="{{ $user->api_token }}" data-apprequest="1"></div>
 <div id="student-homepage-app" class="school-intro-container">
-    <div class="main" v-if="isLoading">
+    <div class="main" v-loading="loading">
         <p class="text-center text-grey">
             <i class="el-icon-loading"></i>&nbsp;数据加载中 ...
         </p>
