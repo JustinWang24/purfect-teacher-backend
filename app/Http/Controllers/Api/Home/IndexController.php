@@ -515,4 +515,16 @@ class IndexController extends Controller
         }
         return JsonBuilder::Success($result);
     }
+
+  /**
+   * 校园新闻详情
+   * @param MyStandardRequest $request
+   * @return string
+   */
+    public function newsInfo(MyStandardRequest $request)
+    {
+        $news = (new NewsDao())->getById($request->get('id'));
+
+        return JsonBuilder::Success($news);
+    }
 }
