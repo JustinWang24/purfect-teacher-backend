@@ -374,6 +374,9 @@ class TaskController extends Controller
      */
     public function taskReport(ProjectRequest $request) {
         $taskId = $request->getTaskId();
+        if(is_null($taskId)) {
+            return JsonBuilder::Error('缺少参数');
+        }
         $dao = new TaskDao();
         $list = $dao->getTaskMembersByTaskId($taskId);
         $task = $dao->getProjectTaskById($taskId);
