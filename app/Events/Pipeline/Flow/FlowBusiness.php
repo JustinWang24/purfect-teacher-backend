@@ -45,12 +45,14 @@ class FlowBusiness
         $node = $this->flow->getHeadNode();
         $business = Flow::getBusiness($this->flow->business);
         $businessOptions = [];
+        $titleToUri = [];
         foreach ($business['options'] as $busi) {
-            $businessOptions[$busi['title']] = '';
+            $businessOptions[$busi['uri']] = '';
+            $titleToUri[$busi['title']] = $busi['uri'];
         }
         foreach ($node->options as $option) {
-            if (isset($businessOptions[$option->title])) {
-                $businessOptions[$option->title] = ActionOption::where('action_id', $startUserAction->id)->where('option_id', $option->id)->value('value');
+            if (isset($titleToUri[$option->title])) {
+                $businessOptions[$titleToUri[$option->title]] = ActionOption::where('action_id', $startUserAction->id)->where('option_id', $option->id)->value('value');
             }
         }
         return $businessOptions;

@@ -26,17 +26,17 @@ interface IFlow extends IPersistent
         'business' => self::BUSINESS_TYPE_MACADDRESS,
         'name' => '考勤修改Mac地址',
         'options' => [
-            ['name' => '单行输入框', 'type' => 'input', 'readonly' => true, 'required' => 1, 'extra' => ['text' => '考勤组id'], 'title' => 'attendance_id', 'tips' => '考勤组id'],
-            ['name' => '单行输入框', 'type' => 'input', 'readonly' => false, 'required' => 1, 'extra' => ['text' => '新Mac地址'], 'title' => 'mac_address', 'tips' => '新Mac地址'],
+            ['name' => '单行输入框', 'type' => 'input', 'readonly' => true, 'required' => 1, 'extra' => ['text' => '考勤组id'], 'uri' => 'attendance_id', 'title' => '考勤组id', 'tips' => '考勤组id'],
+            ['name' => '单行输入框', 'type' => 'input', 'readonly' => false, 'required' => 1, 'extra' => ['text' => '新Mac地址'], 'uri' => 'mac_address', 'title' => '新Mac地址','tips' => '新Mac地址'],
         ]
     ];
     const BUSINESS_ATTENDANCE_CLOCKIN = [
         'business' => self::BUSINESS_TYPE_CLOCKIN,
         'name' => '考勤补卡',
         'options' => [
-            ['name' => '单行输入框', 'type' => 'input', 'readonly' => true, 'required' => 1, 'extra' => ['text' => '考勤组id'], 'title' => 'attendance_id', 'tips' => '考勤组id'],
-            ['name' => '单行输入框', 'type' => 'input', 'readonly' => true, 'required' => 1, 'extra' => ['text' => '补卡日期'], 'title' => 'day', 'tips' => '补卡日期'],
-            ['name' => '单行输入框', 'type' => 'input', 'readonly' => true, 'required' => 1, 'extra' => ['text' => '补卡时间'], 'title' => 'type', 'tips' => '补卡时间'],
+            ['name' => '单行输入框', 'type' => 'input', 'readonly' => true, 'required' => 1, 'extra' => ['text' => '考勤组id'], 'uri' => 'attendance_id', 'title' => '考勤组id', 'tips' => '考勤组id'],
+            ['name' => '单行输入框', 'type' => 'input', 'readonly' => true, 'required' => 1, 'extra' => ['text' => '补卡日期'], 'uri' => 'day', 'title' => '补卡日期', 'tips' => '补卡日期'],
+            ['name' => '单行输入框', 'type' => 'input', 'readonly' => true, 'required' => 1, 'extra' => ['text' => '补卡时间'], 'uri' => 'type', 'title' => '补卡时间', 'tips' => '补卡时间'],
         ]
     ];
 
