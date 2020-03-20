@@ -249,24 +249,14 @@ class AttendancesDao
     }
 
 
-     /**
-     * 统计老师签到
-     * @param $timeSlotId
-     * @param $week
-     * @return mixed
-     */
-    public function getTeacherSignInfo($timeSlotId = false, $week, $term)
+  /**
+   * 根据 给定时间获取所有签到
+   * @param $time
+   * @return mixed
+   */
+    public function getTeacherSignInfoByTime($time)
     {
-        $map = [
-            ['week', '=' ,$week],
-            ['term', '=' ,$term],
-        ];
-
-        if ($timeSlotId) {
-            array_push( $map, ['time_slot_id', '=', $timeSlotId]);
-        }
-
-        return Attendance::where($map)->get();
+        return Attendance::whereDate('created_at', $time)->get();
     }
 
 

@@ -333,7 +333,6 @@ class AttendanceController extends Controller
         $timeTableDao = new TimetableItemDao;
 
         $now = Carbon::parse($time);
-
         $schoolDao = new SchoolDao;
         $school = $schoolDao->getSchoolById($user->getSchoolId());
         $configuration = $school->configuration;
@@ -342,8 +341,9 @@ class AttendanceController extends Controller
         $term = $configuration->guessTerm($month);
         $weeks = $configuration->getScheduleWeek($now, null, $term);
         $week = $weeks->getScheduleWeekIndex();
-        $data = $attendancesDao->getTeacherSignInfo($timeSlot, $week, $term);
         $weekDayIndex = $now->dayOfWeekIso;
+
+        $data = $attendancesDao->getTeacherSignInfoByTime($now);
 
         $new = [];
         foreach ($data as $key => $val) {
