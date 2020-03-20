@@ -32,7 +32,7 @@
   </div>
 </template>
 <script>
-import { TaskApi } from "../common/api";
+import { finishTask } from "../common/api";
 import { getFileURL } from "../common/utils";
 import { Util } from "../../../../common/utils";
 export default {
@@ -49,14 +49,17 @@ export default {
         this.$message.error("请输入完成结果");
         return;
       }
-      TaskApi.excute("finishOaTaskInfo", {
-        taskid: this.taskid,
-        remark: this.form.content,
-        pics: this.imglist.map(img => {
-          return img.file;
-        })
-      }).then(res => {
+      let form = new FormData();
+      form.append("taskid", this.taskid);
+      form.append("remark", this.form.content);
+      if (this.imglist.length > 0) {
+        this.imglist.forEach(img => {
+          form.append("pics[]", img.file);
+        });
+      }
+      finishTask(form).then(res => {
         this.$emit("submit");
+        debugger;
       });
     },
     onFileSelected(e) {

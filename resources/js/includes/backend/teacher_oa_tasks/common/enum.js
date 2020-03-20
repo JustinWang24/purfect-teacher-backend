@@ -43,3 +43,15 @@ export const TaskStatus = {
     classes: 'timeout'
   }
 }
+
+export const TaskFinishStatus = {
+  1: {
+    text: '已开始'
+  },
+  2: {
+    text: '进行中',
+  },
+  3: {
+    text: '已完成'
+  }
+}
