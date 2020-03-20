@@ -381,11 +381,11 @@ class AttendanceController extends Controller
     {
         $user = $request->user();
         $time = $request->get('time');
-        $timeSlot = $request->get('time_slot_id');
+        $timeSlotId = $request->get('time_slot_id');
         $type = $request->get('type');
 
         $timeTableDao = new TimetableItemDao;
-        $item = $timeTableDao->getTimetableItemByUserOrTime($user, $time, [$timeSlot]);
+        $item = $timeTableDao->getTimetableItemByUserOrTime($user, $time, [$timeSlotId]);
 
         $itemIds = $item->pluck('id');
 
@@ -402,7 +402,7 @@ class AttendanceController extends Controller
         $week = $weeks->getScheduleWeekIndex();
         $dao = new AttendancesDao;
 
-        $data = $dao->getTeacherSignInfo($itemIds, $week, $type);
+        $data = $dao->getTeacherSignInfoByTime($now, $timeSlotId);
 
         $result = [];
         foreach ($data as $key => $val) {
