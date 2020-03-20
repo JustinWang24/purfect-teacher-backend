@@ -9,6 +9,7 @@
 namespace App\Http\Controllers\Api\OA;
 
 
+use App\Events\SystemNotification\OaMeetingEvent;
 use Carbon\Carbon;
 use Endroid\QrCode\QrCode;
 use App\Utils\JsonBuilder;
@@ -88,6 +89,11 @@ class NewMeetingController extends Controller
         $result = $dao->addMeeting($data, $user, $file);
 
         if($result->isSuccess()) {
+            $meetId = $result->getData()['meet_id'];
+            //通知负责人和成员
+            foreach ($user as $userid) {
+                event(new OaMeetingEvent($userid, $meetId));
+            }
             return JsonBuilder::Success($result->getData());
         } else {
             return JsonBuilder::Error($result->getMessage());

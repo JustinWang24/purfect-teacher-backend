@@ -1,5 +1,119 @@
-.week-time-header,.table-list
+@font-face {
+  font-family: 'iconfont';  /* project id 1317872 */
+  src: url('//at.alicdn.com/t/font_1317872_ru9x8e72xq.eot');
+  src: url('//at.alicdn.com/t/font_1317872_ru9x8e72xq.eot?#iefix') format('embedded-opentype'),
+  url('//at.alicdn.com/t/font_1317872_ru9x8e72xq.woff2') format('woff2'),
+  url('//at.alicdn.com/t/font_1317872_ru9x8e72xq.woff') format('woff'),
+  url('//at.alicdn.com/t/font_1317872_ru9x8e72xq.ttf') format('truetype'),
+  url('//at.alicdn.com/t/font_1317872_ru9x8e72xq.svg#iconfont') format('svg');
+}
+.iconfont {
+  font-family: "iconfont";
+  font-style: normal;
+}
+.teacher-week-content
   display flex
-  justify-content space-between
-  text-align center
-    
+  justify-content space-around
+  align-items center
+  background #ffffff
+  padding 0 10px
+  .week-prev
+    width 50px
+    .el-icon-arrow-right
+      font-size 25px
+      font-weight bold
+    .el-icon-arrow-left
+      font-size 25px
+      font-weight bold
+.week-main-title
+  font-size 20px
+  margin-bottom 10px
+.teacher-week-timetable-main
+  background #ffffff
+  padding-bottom 2px
+.teacher-week-timetable-container
+  margin 40px 10px 20px
+  flex 1
+  background-color #EAEDF2FF
+  padding 21px
+  border-radius 10px
+  .week-title
+    text-align center
+    font-size 18px
+    font-weight Bold
+    color #414A5A
+    padding 15px 0
+    border-bottom 1px solid #EAEDF2FF
+    margin-bottom 30px
+  .teacher-week-timetable
+    border 1px solid #DFE1EAFF
+    border-left none
+    margin 16px
+    .week-time-header
+      display flex
+      justify-content space-between
+      text-align center
+      font-size 16px
+      color rgba(65,74,90,1)
+      .header-index-r
+        text-align right
+        padding-right 10px
+        color #FFFFFFFF
+        background #4EA5FEFF
+      .header-index-l
+        text-align left 
+        padding-left 10px
+        color #FFFFFFFF
+        background #4EA5FEFF
+      .time-ul
+        width 12.5%
+        border-left 1px solid #DFE1EAFF
+    .table-list
+      display flex
+      justify-content space-between
+      text-align center
+      .table-item
+        width 12.5%
+        border 1px solid #DFE1EAFF 
+        border-right none
+        border-bottom none
+        padding 8px 6px 4px
+        .item-content
+          border-radius 4px
+          font-size 12px
+          overflow hidden
+          height 100%
+          display flex
+          flex-direction column
+        .item-top
+          color rgba(255,255,255,1)
+          height 33px
+          line-height 33px
+          text-align left
+          .optional
+            margin 0 10px 
+        .item-bottom
+          flex 1
+          padding 10px
+          .des-info
+            display flex
+            text-align left 
+            .iconfont
+              margin-right 5px
+          .info-grade
+            display flex
+            flex-direction column
+    .item-first
+      background #eff0fb
+      &:before
+        content ''
+        display inline-block
+        height 100%
+        vertical-align middle
+        margin-right -0.25em;
+      .first-des
+        display inline-block
+        vertical-align middle
+        font-size 14px
+        color rgba(70,79,95,1)
+      

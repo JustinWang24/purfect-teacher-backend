@@ -11,6 +11,7 @@ namespace App\Http\Controllers\Api\OA;
 
 use App\Dao\OA\ProjectDao;
 use App\Dao\OA\TaskDao;
+use App\Events\SystemNotification\OaTaskEvent;
 use App\Models\OA\ProjectTask;
 use App\Utils\JsonBuilder;
 use App\Models\OA\ProjectTaskMember;
@@ -53,6 +54,13 @@ class TaskController extends Controller
         ];
         $result = $dao->createTask($data, $memberUserIds);
         if($result->isSuccess()) {
+            $taskId = $result->getData()['id'];
+            //通知负责人
+            //event(new OaTaskEvent($leader_userid, $taskId)); --成员已经包含了负责人
+            //通知成员
+            foreach ($memberUserIds as $userid) {
+                event(new OaTaskEvent($userid, $taskId));
+            }
             return JsonBuilder::Success($result->getData());
         } else {
             return JsonBuilder::Error($result->getMessage());
@@ -192,7 +200,11 @@ class TaskController extends Controller
         $output['leader_userid'] = $task->user_id;
         $output['leader_name'] = $task->user->name;
         $output['report_btn'] = 1; //结果按钮 1-显示 0-隐藏
-        $output['status'] = $task->status; // 任务状态
+        $output['status'] = $task->status; // 任务总状态
+
+        $taskMember = $task->taskMembers->where('user_id', $userId)->first();
+
+        $output['member_status'] = $taskMember->status ?? 0; // 当前自己任务状态
 
         $members = [];
         $taskMembers = $task->taskMembers->where('user_id', '<>',$task->user_id);
