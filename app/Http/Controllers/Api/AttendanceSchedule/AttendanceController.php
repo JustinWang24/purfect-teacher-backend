@@ -327,7 +327,7 @@ class AttendanceController extends Controller
     {
         $user = $request->user();
         $time = $request->get('time');
-        $timeSlot = $request->get('time_slot_id');
+        $timeSlotId = $request->get('time_slot_id');
 
         $attendancesDao = new AttendancesDao;
         $timeTableDao = new TimetableItemDao;
@@ -343,34 +343,31 @@ class AttendanceController extends Controller
         $week = $weeks->getScheduleWeekIndex();
         $weekDayIndex = $now->dayOfWeekIso;
 
-        $data = $attendancesDao->getTeacherSignInfoByTime($now);
+        $data = $attendancesDao->getTeacherSignInfoByTime($now, $timeSlotId);
 
         $new = [];
         foreach ($data as $key => $val) {
             $new[$val->time_slot_id][] = $val;
         }
-
         $result = [];
         $sign = 0;
         $late = 0;
         foreach ($new as $key => $value) {
+          $sum = $timeTableDao->getSameTimePeopleNum($user->getSchoolId(), $year, $term, $weekDayIndex, $key);
           foreach ($value as $k => $v) {
             if ($v->teacher_sign == Attendance::TEACHER_SIGN) {
-                $sign = $sign +=1;
+                $sign +=1;
             }
 
             if ($v->teacher_late == Attendance::TEACHER_LATE) {
-                $late = $late +=1;
+                $late +=1;
             }
 
-            $sum = $timeTableDao->getSameTimePeopleNum($user->getSchoolId(), $year, $term, $weekDayIndex, $v->time_slot_id);
-            $result[] = [
-                'time_slot_id' => $v->time_slot_id,
-                'course' => $v->timeSlot->name,
-                'sign' => $sign,
-                'no_sign' => $sum - $sign,
-                'late' => $late,
-            ];
+            $result[$key]['time_slot_id'] = $v->time_slot_id;
+            $result[$key]['course'] = $v->timeSlot->name;
+            $result[$key]['sign'] = $sign;
+            $result[$key]['no_sign'] = $sum - $sign;
+            $result[$key]['late'] = $late;
           }
         }
 
