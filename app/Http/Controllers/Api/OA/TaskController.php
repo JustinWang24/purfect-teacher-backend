@@ -229,7 +229,7 @@ class TaskController extends Controller
         $output['log_list'] = $logs;
 
         $forum = [];
-        $discussions = $task->discussions->whereIn('reply_user_id', [0, $userId]);
+        $discussions = $task->discussions;
         foreach ($discussions as $key => $val) {
             $forum[] = [
                 'forumid' => $val->id,
