@@ -266,6 +266,25 @@ class AttendancesDao
         return $result->get();
     }
 
+    /**
+     * 统计老师签到
+     * @param $timetableIds
+     * @param $week
+     * @param $signStatus
+     * @param $late
+     * @return mixed
+     */
+    public function getTeacherSignInfo($timetableIds, $week, $signStatus, $late = false)
+    {
+        $map = [
+            ['week', '=' ,$week],
+            ['teacher_sign', '=', $signStatus]
+        ];
+        if ($late) {
+           array_push($map, ['teacher_late', '=', $late]);
+        }
+        return Attendance::where($map)->whereIn('timetable_id', $timetableIds)->get();
+    }
 
     /**
      * 判断是否有签到主表
