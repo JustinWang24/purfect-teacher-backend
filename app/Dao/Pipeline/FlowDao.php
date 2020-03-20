@@ -382,7 +382,7 @@ class FlowDao
 
         try{
             Flow::where('id', $flowId)->update($data);
-            $firstNode = $flow->getTailNode();
+            $firstNode = $flow->getHeadNode();
 
             // 更新头部流程的 handlers
             $handlerDao = new HandlerDao();
