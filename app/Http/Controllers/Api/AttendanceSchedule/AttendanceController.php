@@ -339,7 +339,7 @@ class AttendanceController extends Controller
         $year =  $configuration->getSchoolYear();
         $month = Carbon::parse($now)->month;
         $term = $configuration->guessTerm($month);
-        
+
         $weekDayIndex = $now->dayOfWeekIso;
         $data = $attendancesDao->getTeacherSignInfoByTime($now, $timeSlotId);
 
@@ -368,8 +368,7 @@ class AttendanceController extends Controller
             $result[$key]['late'] = $late;
           }
         }
-
-        return JsonBuilder::Success(array_merge($result));
+        return JsonBuilder::Success(sort(array_merge($result)));
     }
 
     /**
