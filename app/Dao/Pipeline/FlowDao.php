@@ -99,7 +99,11 @@ class FlowDao
                 if ($title == Title::ORGANIZATION_LEADER) {
                     $titleId = Title::ORGANIZATION_LEADER_ID;
                 }
-                $userOrganizationList = UserOrganization::with('user')->whereIn('organization_id', $organizations)->where('title_id', $titleId)->get();
+                if (isset($titleId)) {
+                    $userOrganizationList = UserOrganization::with('user')->whereIn('organization_id', $organizations)->where('title_id', $titleId)->get();
+                }else {
+                    $userOrganizationList = UserOrganization::with('user')->whereIn('organization_id', $organizations)->get();
+                }
                 foreach ($userOrganizationList as $userOrganization) {
                     $return[$userOrganization->title][] = $userOrganization->user;
                 }
