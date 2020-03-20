@@ -104,6 +104,10 @@ class EventServiceProvider extends ServiceProvider
         'App\Events\SystemNotification\OaMessageEvent' => [
             'App\Listeners\SystemNotification\OaMessage'
         ],
+        //项目创建时发送系统消息
+        'App\Events\SystemNotification\OaProjectEvent' => [
+            'App\Listeners\SystemNotification\OaProject'
+        ],
     ];
 
     /**
