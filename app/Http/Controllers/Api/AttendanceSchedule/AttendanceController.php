@@ -339,10 +339,8 @@ class AttendanceController extends Controller
         $year =  $configuration->getSchoolYear();
         $month = Carbon::parse($now)->month;
         $term = $configuration->guessTerm($month);
-        $weeks = $configuration->getScheduleWeek($now, null, $term);
-        $week = $weeks->getScheduleWeekIndex();
+        
         $weekDayIndex = $now->dayOfWeekIso;
-
         $data = $attendancesDao->getTeacherSignInfoByTime($now, $timeSlotId);
 
         $new = [];

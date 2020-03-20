@@ -255,9 +255,15 @@ class AttendancesDao
    * @param $timeSlotId
    * @return mixed
    */
-    public function getTeacherSignInfoByTime($time, $timeSlotId)
+    public function getTeacherSignInfoByTime($time, $timeSlotId = false)
     {
-        return Attendance::whereDate('created_at', $time)->where('time_slot_id', $timeSlotId)->get();
+        $result =  Attendance::whereDate('created_at', $time);
+
+        if ($timeSlotId) {
+            $result->where('time_slot_id', $timeSlotId);
+        }
+
+        return $result->get();
     }
 
 
