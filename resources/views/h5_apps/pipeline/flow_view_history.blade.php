@@ -129,6 +129,9 @@
                                 @endif
                             </span>
                         </div>
+                        <!-- 审批意见 if条件-->
+                        <!-- <p>审批：</p> -->
+                        
                         @endforeach
                         @endforeach
                     </el-timeline-item>

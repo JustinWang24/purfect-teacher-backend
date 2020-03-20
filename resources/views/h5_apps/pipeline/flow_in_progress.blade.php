@@ -7,29 +7,31 @@
             <i class="el-icon-loading"></i>&nbsp;数据加载中 ...
         </p>
     </div>
-    <div class="main p-15" v-if="flowsStartedByMe.length > 0">
-        <div v-if="position === 1">
-            <el-input placeholder="搜索标题、发起人关键字" v-model="keyword" style="margin-bottom: 10px;" @input="loadFlowsStartedByMe"></el-input>
+    <div v-else>
+        <div class="main p-15" v-if="flowsStartedByMe.length > 0">
+            <div v-if="position === '1'">
+                <el-input placeholder="搜索标题、发起人关键字" v-model="keyword" style="margin-bottom: 10px;" @input="loadFlowsStartedByMe"></el-input>
+            </div>
+            <div class="pipeline-user-flow-box" v-for="(userFlow, idx) in flowsStartedByMe" :key="idx" @click="viewMyApplication(userFlow)">
+                <el-card shadow="hover" class="pb-3">
+                    <div style="display: flex;align-items: center;">
+                        <img :src="userFlow.avatar" style="border-radius: 50%;width: 40px;height: 40px;">
+                        <h3 style="margin-left: 20px;flex: 4;">
+                            <p style="line-height: 0;font-weight:400;color:#333333;">@{{ userFlow.user_name }}的@{{ userFlow.flow.name }}</p>
+                            <p style="font-size: 13px;color: #ABABAB;margin: 0">类型：@{{ userFlow.flow.name }}</p>
+                            <time style="font-size: 13px;color: #ABABAB;">@{{ userFlow.created_at.substring(0, 16) }}</time>
+                        </h3>
+                        <h5 style="flex: 1;">
+                            <span :class="flowResultClass(userFlow.done)">@{{ flowResultText(userFlow.done) }}</span>
+                        </h5>
+                    </div>
+                </el-card>
+            </div>
         </div>
-        <div class="pipeline-user-flow-box" v-for="(userFlow, idx) in flowsStartedByMe" :key="idx" @click="viewMyApplication(userFlow)">
-            <el-card shadow="hover" class="pb-3">
-                <div style="display: flex;align-items: center;">
-                    <img :src="userFlow.avatar" style="border-radius: 50%;width: 40px;height: 40px;">
-                    <h3 style="margin-left: 20px;flex: 4;">
-                        <p style="line-height: 0;font-weight:400;color:#333333;">@{{ userFlow.user_name }}的@{{ userFlow.flow.name }}</p>
-                        <p style="font-size: 13px;color: #ABABAB;margin: 0">类型：@{{ userFlow.flow.name }}</p>
-                        <time style="font-size: 13px;color: #ABABAB;">@{{ userFlow.created_at.substring(0, 16) }}</time>
-                    </h3>
-                    <h5 style="flex: 1;">
-                        <span :class="flowResultClass(userFlow.done)">@{{ flowResultText(userFlow.done) }}</span>
-                    </h5>
-                </div>
-            </el-card>
+        <div v-else style="display: flex;flex-direction: column;align-items: center;background-color: #fff;margin-top: 150px;">
+            <img src="{{asset('assets/img/pipeline/nothing@2x.png')}}" alt="" style="width: 240px;height: 180px;">
+            <p style="color: #6F7275;text-align: center;font-family:PingFangSC-Regular,PingFang SC;">暂无数据哦~</p>
         </div>
-    </div>
-    <div v-else style="display: flex;flex-direction: column;align-items: center;background-color: #fff;margin-top: 150px;">
-        <img src="{{asset('assets/img/pipeline/nothing@2x.png')}}" alt="" style="width: 240px;height: 180px;">
-        <p style="color: #6F7275;text-align: center;font-family:PingFangSC-Regular,PingFang SC;">暂无数据哦~</p>
     </div>
 </div>
 @endsection
