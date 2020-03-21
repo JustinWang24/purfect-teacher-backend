@@ -2,14 +2,14 @@
 @section('content')
 <div id="app-init-data-holder" data-position="{{ $position }}" data-school="{{ $user->getSchoolId() }}" data-useruuid="{{ $user->uuid }}" data-apitoken="{{ $user->api_token }}" data-apprequest="1"></div>
 <div id="student-homepage-app" class="school-intro-container">
-    <div class="main" v-loading="loading">
+    <div class="main" v-if="isLoading">
         <p class="text-center text-grey">
             <i class="el-icon-loading"></i>&nbsp;数据加载中 ...
         </p>
     </div>
-    <div v-else>
+    <div v-cloak>
         <div class="main p-15" v-if="copyList.length > 0">
-            <div v-if="position === '1'">
+            <div v-if="position !== '0'">
                 <el-input placeholder="搜索标题、发起人关键字" v-model="keyword" style="margin-bottom: 10px;" @input="loadFlowsCopyByMe"></el-input>
             </div>
             <div class="pipeline-user-flow-box" v-for="(userFlow, idx) in copyList" :key="idx" @click="viewMyApplication(userFlow)">
@@ -25,7 +25,7 @@
                 </el-card>
             </div>
         </div>
-        <div v-else style="display: flex;flex-direction: column;align-items: center;background-color: #fff;margin-top: 150px;">
+        <div v-if="!isLoading && copyList.length === 0" style="display: flex;flex-direction: column;align-items: center;background-color: #fff;margin-top: 150px;">
             <img src="{{asset('assets/img/pipeline/nothing@2x.png')}}" alt="" style="width: 240px;height: 180px;">
             <p style="color: #6F7275;text-align: center;font-family:PingFangSC-Regular,PingFang SC;">暂无数据哦~</p>
         </div>
