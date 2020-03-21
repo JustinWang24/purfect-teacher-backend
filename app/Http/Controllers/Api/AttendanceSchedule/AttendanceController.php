@@ -39,10 +39,11 @@ class AttendanceController extends Controller
         $year = $request->get('year', $configuration->getSchoolYear());
         // 学期
         $term = $request->get('term', $configuration->guessTerm(Carbon::now()->month));
+        $gradeYear = $year - $grade->year + 1; // 年级
 
         $courseMajorDao = new CourseMajorDao();
         $attendancesDetailsDao = new AttendancesDetailsDao();
-        $courseList = $courseMajorDao->getCoursesByMajorAndYear($grade->major_id, $grade->gradeYear());
+        $courseList = $courseMajorDao->getCoursesByMajorAndYear($grade->major_id, $gradeYear);
         foreach ($courseList as $key => $val) {
 
             // 签到次数
