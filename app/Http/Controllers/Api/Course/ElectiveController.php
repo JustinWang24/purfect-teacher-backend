@@ -93,6 +93,9 @@ class ElectiveController extends Controller
         $dao = new TeacherApplyElectiveCourseDao();
         foreach ($electiveList as $elective) {
             $course = $elective->course;
+            if (!$course) {
+                continue;
+            }
             $tableName = self::STUDENT_ENROLLED_OPTIONAL_COURSES_TABLE_NAME.'_'.$elective->start_year.'_'.$course->term;
             if (!$check = $dao->checkHasEnrolled($user, $course->id, $tableName)) {
                 continue;
