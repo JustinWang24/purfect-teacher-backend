@@ -43,7 +43,7 @@ class AttendanceController extends Controller
 
         $courseMajorDao = new CourseMajorDao();
         $attendancesDetailsDao = new AttendancesDetailsDao();
-        $courseList = $courseMajorDao->getCoursesByMajorAndYear($grade->major_id, $gradeYear);
+        $courseList = $courseMajorDao->getCoursesByMajorAndYear($grade->major_id, $gradeYear, $term);
         foreach ($courseList as $key => $val) {
 
             // 签到次数
