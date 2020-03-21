@@ -105,14 +105,22 @@ class SystemNotificationDao
     private function _build($schoolId, $user) {
         $organizationId = $user->organizations->pluck('organization_id')->toArray();
         array_push($organizationId, 0);
-        return SystemNotification::where(function ($query) use ($organizationId) {
+
+        $toArr = [0];//广播的消息
+        if ($user->isStudent()) {
+            $toArr[] = SystemNotification::TO_STUDENT;
+        }
+        if ($user->isTeacher()) {
+            $toArr[] = SystemNotification::TO_TEACHER;
+        }
+        return SystemNotification::where(function ($query) use ($organizationId, $toArr) {
             // 1: 系统发出的消息, 此类消息 school_id 为 0, 表示任何学校的用户都可以接收
-            $query->where(['school_id' => 0, 'to' => 0])->whereHas('systemNotificationsOrganizations', function($q) use($organizationId) {
+            $query->where('school_id', 0)->whereIn('to', $toArr)->whereHas('systemNotificationsOrganizations', function($q) use($organizationId) {
                 $q->whereIn('system_notifications_organizations.organization_id', $organizationId);
             });
-        })->orWhere(function ($query) use($schoolId, $organizationId){
+        })->orWhere(function ($query) use($schoolId, $organizationId, $toArr){
             // 2: 学校发出的消息, to 的值为 0, 表示该学校的所有的用户都可以收到
-            $query->where(['school_id' => $schoolId, 'to' => 0])->whereHas('systemNotificationsOrganizations', function($q) use($organizationId) {
+            $query->where('school_id', $schoolId)->whereIn('to', $toArr)->whereHas('systemNotificationsOrganizations', function($q) use($organizationId) {
                 $q->whereIn('system_notifications_organizations.organization_id', $organizationId);
             });
         })->orWhere(function ($query) use($user){
