@@ -253,6 +253,10 @@ class FlowsController extends Controller
         $flowDao = new FlowDao();
         $flow = $flowDao->getById($flowId);
 
+        if (!$flowDao->canBeUpdate($flowId)) {
+            return JsonBuilder::Error('已有人发起审批不能修改');
+        }
+
         $nodeDao = new NodeDao();
         $prevNode = $nodeDao->getById($prevNodeId);
 
@@ -297,6 +301,11 @@ class FlowsController extends Controller
             $flowDao = new FlowDao();
             $firstNode = $dao->getHeadNodeByFlow($flowId);
             $flow = $flowDao->getById($flowId);
+
+            if (!$flowDao->canBeUpdate($flowId)) {
+                return JsonBuilder::Error('已有人发起审批不能修改');
+            }
+
             try{
                 $dao->deleteOptionByNode($firstNode->id);
                 if ($flow->business) {

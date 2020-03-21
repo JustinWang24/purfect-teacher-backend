@@ -40,6 +40,7 @@ class FlowDao
 
         $flows = Flow::select(['id','name','icon','type'])
             ->where('school_id',$schoolId)
+            ->where('closed', 0)
             ->whereIn('type',$types)
             ->orderBy('type','asc')->get();
 
@@ -409,7 +410,7 @@ class FlowDao
      * @return mixed
      */
     public function delete($flowId){
-        return Flow::where('id',$flowId)->delete();
+        return Flow::where('id',$flowId)->update(['closed' => 1]);
     }
 
     /**
