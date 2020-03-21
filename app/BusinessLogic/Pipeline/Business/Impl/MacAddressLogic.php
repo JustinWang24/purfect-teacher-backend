@@ -24,7 +24,7 @@ class MacAddressLogic
     {
         $bag = new MessageBag(JsonBuilder::CODE_ERROR);
         try {
-            UserMac::where('teacher_attendance_id', $options['attendance_id'])->where('user_id', $user->id)->update([
+            UserMac::where('teacher_attendance_id', $options['attendance_id'])->where('user_id', $this->user->id)->update([
                 'mac_address' => $options['mac_address']
             ]);
             $bag->setCode(JsonBuilder::CODE_SUCCESS);
