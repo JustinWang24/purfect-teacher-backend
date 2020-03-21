@@ -61,6 +61,7 @@
         border-bottom: 1px solid #eaedf2;
         display: flex;
         padding: 20px 0 20px 10px;
+        cursor: pointer;
         .bottom_first_content_img {
           width: 180px;
           height: 92px;
@@ -202,6 +203,70 @@
           overflow: hidden;
           -webkit-line-clamp: 2;
           -webkit-box-orient: vertical;
+        }
+      }
+    }
+  }
+  .el-drawer {
+    .el-drawer__header {
+      height: 50px;
+      padding: 20px;
+      display: flex;
+      justify-content: space-between;
+      font-size: 18px;
+      font-family: MicrosoftYaHei-Bold, MicrosoftYaHei;
+      font-weight: bold;
+      color: #414a5a;
+      margin-bottom: 0;
+      border-bottom: 1px solid #eaedf2;
+    }
+    .el-drawer__body {
+      .demo-drawer__content {
+        p:first-child {
+          font-size: 18px;
+          font-family: MicrosoftYaHei-Bold, MicrosoftYaHei;
+          font-weight: bold;
+          color: #414a5a;
+          padding: 10px 20px 0;
+        }
+        p:nth-child(2) {
+          font-size: 12px;
+          font-family: MicrosoftYaHei;
+          color: #d2d5de;
+          padding: 0 20px;
+        }
+        // p:nth-child(3) {
+        //   font-size: 14px;
+        //   font-family: MicrosoftYaHei;
+        //   color: #414a5a;
+        //   padding: 0 20px 20px;
+        // }
+        img {
+          width: 420px;
+          height: 200px;
+          margin: 20px;
+          display: inline-block;
+          border: 1px solid red;
+          border-radius: 4px;
+        }
+        .demo-drawer__content_enclosure {
+          .word {
+            font-size: 16px;
+            font-family: MicrosoftYaHei;
+            color: #414a5a;
+            padding: 15px 20px;
+            border-top: 1px solid #eaedf2;
+          }
+          .enclosure {
+            width: 92%;
+            height: 65px;
+            font-size: 14px;
+            font-family: MicrosoftYaHei;
+            color: #414a5a;
+            line-height: 65px;
+            margin: 0 20px;
+            background-color: #f2f9ff;
+          }
         }
       }
     }
