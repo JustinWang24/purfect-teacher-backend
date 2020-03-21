@@ -95,6 +95,9 @@ class FlowsController extends Controller
             //更新流程
             $node = $request->getNewFlowFirstNode();
             $dao = new FlowDao();
+            if (!$dao->canBeUpdate($flow['id'])) {
+                return JsonBuilder::Error('已有人发起审批不能修改');
+            }
             $result = $dao->update($flow, '', $node, $flow['id']);
             return $result->isSuccess() ?
                 JsonBuilder::Success(['id'=>$flow['id']]) :
@@ -131,6 +134,11 @@ class FlowsController extends Controller
 
         $flowDao = new FlowDao();
         $flow = $flowDao->getById($flowId);
+
+        if (!$flowDao->canBeUpdate($flowId)) {
+            return JsonBuilder::Error('已有人发起审批不能修改');
+        }
+
         $nodeDao = new NodeDao();
         if (!$prevNodeId) {
             //获取第一个节点
@@ -181,6 +189,14 @@ class FlowsController extends Controller
 
         $nodeId = $request->get('node_id');
         $dao = new NodeDao();
+
+        $node = $dao->getById($nodeId);
+        $flowId = $node->flow_id;
+        $flowDao = new FlowDao();
+        if (!$flowDao->canBeUpdate($flowId)) {
+            return JsonBuilder::Error('已有人发起审批不能修改');
+        }
+
         $result = $dao->delete($nodeId);
         if($result === true){
             return JsonBuilder::Success();
@@ -192,6 +208,11 @@ class FlowsController extends Controller
 
     public function save_copy(FlowRequest $request){
         $flowId = $request->get('flow_id');
+        /*$flowDao = new FlowDao();
+        if (!$flowDao->canBeUpdate($flowId)) {
+            return JsonBuilder::Error('已有人发起审批不能修改');
+        }*/
+
         $userIdArr = $request->get('users');
         if (Flow::where('id', $flowId)->update(['copy_uids' => implode(';', $userIdArr)])) {
             return JsonBuilder::Success(['copy' =>GradeUser::whereIn('user_id', $userIdArr)->select(['user_id', 'name'])->get()]);
@@ -205,6 +226,11 @@ class FlowsController extends Controller
             return JsonBuilder::Error('您无权进行此操作');
         }
         $flowId = $request->get('flow_id');
+        /*$flowDao = new FlowDao();
+        if (!$flowDao->canBeUpdate($flowId)) {
+            return JsonBuilder::Error('已有人发起审批不能修改');
+        }*/
+
         if (Flow::where('id', $flowId)->update(['copy_uids' => null])) {
             return JsonBuilder::Success();
         }else {

@@ -411,4 +411,13 @@ class FlowDao
     public function delete($flowId){
         return Flow::where('id',$flowId)->delete();
     }
+
+    /**
+     * 是否能update true=能
+     * @param $flowId
+     * @return bool
+     */
+    public function canBeUpdate($flowId) {
+        return UserFlow::where('flow_id', $flowId)->first() ? false : true;
+    }
 }
