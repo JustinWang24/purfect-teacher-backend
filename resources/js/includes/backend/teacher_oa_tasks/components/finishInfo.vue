@@ -13,7 +13,7 @@
         <span class="content">{{info.remark}}</span>
       </div>
       <div class="item">
-        <span class="title">附件材料</span>
+        <span class="title">附件资料</span>
         <span class="content">
           <div
             class="img-box"
@@ -24,6 +24,10 @@
             <img :src="img" alt />
           </div>
         </span>
+      </div>
+      <div class="item">
+        <span class="title">反馈时间</span>
+        <span class="content">{{info.update_time}}</span>
       </div>
     </div>
     <el-dialog :visible.sync="previewModal">

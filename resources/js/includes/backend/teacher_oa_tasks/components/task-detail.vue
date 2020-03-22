@@ -44,7 +44,7 @@
       </div>
       <div class="btn-box">
         <el-button
-          v-if="unfinished"
+          v-if="unfinished && !unreceive"
           class="dispatch"
           size="small"
           @click="()=>{dispathModal = true}"
@@ -63,7 +63,7 @@
         >确认完成</el-button>
         <el-button
           type="primary"
-          v-if="finished"
+          v-if="finished || isMyTask"
           size="small"
           @click="()=>{finishInfoModal = true}"
         >完成结果</el-button>
@@ -210,7 +210,7 @@ export default {
     },
     statusText() {
       if (this.isMyTask) {
-        return "我创建的";
+        return "我发起的";
       }
       return (TaskFinishStatus[this.task.status] || {}).text;
     },
