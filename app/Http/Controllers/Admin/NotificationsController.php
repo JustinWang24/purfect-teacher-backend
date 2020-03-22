@@ -29,6 +29,7 @@ class NotificationsController extends Controller
     public function list(Request $request)
     {
       $to = (Int)$request->input('to', 0);
+      $page = (Int)$request->input('page', 1);
       $keywords = (String)$request->input('keywords', '');
 
       $school = session('school');
@@ -40,9 +41,9 @@ class NotificationsController extends Controller
       // 检索参数
       $param['keywords'] = $keywords;
       $param['school_id'] = $school['id'];
-      $param['to'] = [$to?[$to]:[0,-1,-2]];
+      $param['to'] = $to?[$to]:[0,-1,-2];
       $systemNotificationDao = new SystemNotificationDao();
-      $dataList = $systemNotificationDao->getNotificationList($param);
+      $dataList = $systemNotificationDao->getNotificationList($param,$page);
 
       $this->dataForView['dataList'] = $dataList;
       $this->dataForView['pageTitle'] = '消息列表';
