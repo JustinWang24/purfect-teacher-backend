@@ -8,6 +8,8 @@
 
 namespace App\Utils\Pipeline;
 
+use phpDocumentor\Reflection\Types\Self_;
+
 interface IFlow extends IPersistent
 {
     //展示位置
@@ -20,6 +22,9 @@ interface IFlow extends IPersistent
 
     const BUSINESS_TYPE_MACADDRESS = 'attendance_macaddress';
     const BUSINESS_TYPE_CLOCKIN = 'attendance_clockin';
+    const BUSINESS_TYPE_LEAVE = 'attendance_leave';
+    const BUSINESS_TYPE_AWAY = 'attendance_away';
+    const BUSINESS_TYPE_TRAVEL = 'attendance_travel';
 
     //关联业务
     const BUSINESS_ATTENDANCE_MACADDRESS = [
@@ -37,6 +42,27 @@ interface IFlow extends IPersistent
             ['name' => '单行输入框', 'type' => 'input', 'readonly' => true, 'required' => 1, 'extra' => ['text' => '考勤组id'], 'uri' => 'attendance_id', 'title' => '考勤组id', 'tips' => '考勤组id'],
             ['name' => '单行输入框', 'type' => 'input', 'readonly' => true, 'required' => 1, 'extra' => ['text' => '补卡日期'], 'uri' => 'day', 'title' => '补卡日期', 'tips' => '补卡日期'],
             ['name' => '单行输入框', 'type' => 'input', 'readonly' => true, 'required' => 1, 'extra' => ['text' => '补卡时间'], 'uri' => 'type', 'title' => '补卡时间', 'tips' => '补卡时间'],
+        ]
+    ];
+    const BUSINESS_ATTENDANCE_LEAVE = [
+        'business' => self::BUSINESS_TYPE_LEAVE,
+        'name' => '请假',
+        'options' => [
+            ['name' => '日期区间', 'type' => 'date-date', 'readonly' => false, 'required' => 1, 'extra' => ['text' => null, 'dateType' => 1, 'showPickerS' => false, 'showPickerE' => false, 'title2' => '结束时间'], 'uri' => 'date_date', 'title' => '开始时间', 'tips' => '选择时间']
+        ]
+    ];
+    const BUSINESS_ATTENDANCE_AWAY = [
+        'business' => self::BUSINESS_TYPE_AWAY,
+        'name' => '外出',
+        'options' => [
+            ['name' => '日期区间', 'type' => 'date-date', 'readonly' => false, 'required' => 1, 'extra' => ['text' => null, 'dateType' => 1, 'showPickerS' => false, 'showPickerE' => false, 'title2' => '结束时间'], 'uri' => 'date_date', 'title' => '开始时间', 'tips' => '选择时间']
+        ]
+    ];
+    const BUSINESS_ATTENDANCE_TRAVEL = [
+        'business' => self::BUSINESS_TYPE_TRAVEL,
+        'name' => '出差',
+        'options' => [
+            ['name' => '日期区间', 'type' => 'date-date', 'readonly' => false, 'required' => 1, 'extra' => ['text' => null, 'dateType' => 1, 'showPickerS' => false, 'showPickerE' => false, 'title2' => '结束时间'], 'uri' => 'date_date', 'title' => '开始时间', 'tips' => '选择时间']
         ]
     ];
 
