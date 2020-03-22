@@ -61,9 +61,11 @@ class SystemNotification extends Model
     const COMMON_CATEGORY_NOTICE_INSPECTION = 303;//检查
     const COMMON_CATEGORY_WIFI = 304;//校园网
     const COMMON_CATEGORY_PIPELINE = 305;//审批 @TODO 工作流程加入事件监听后会拆分不同类型
+    const COMMON_CATEGORY_MESSAGE = 306; // 后台发布的系统消息
 
 
     protected $fillable = [
+        'uuid',
         'sender',
         'to',
         'type',

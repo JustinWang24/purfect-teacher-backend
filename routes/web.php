@@ -100,6 +100,10 @@ Route::prefix('h5')->group(function () {
 
 // 分享
 Route::get('/share-file','Api\NetworkDisk\MediaController@shareFile')->name('shareFile');
+// banner页
+Route::get('/h5/banner/page-info', 'H5\Banner\IndexController@page_info')->name('h5_apps.banner.page_info');
+// 后台消息页
+Route::get('/h5/banner/notification-info', 'H5\Banner\IndexController@notification_info')->name('h5_apps.banner.notification_info');
 
 Auth::routes();
 
@@ -124,6 +128,4 @@ Route::prefix('pipeline')->group(function () {
     Route::get('c','Teacher\Pipeline\FlowsController@open')
         ->name('student.pipeline.flow-open');
 });
-
-
 

@@ -16,7 +16,9 @@ use App\Http\Requests\SchoolRequest;
 use App\Http\Controllers\Controller;
 use App\Dao\Schools\SchoolDao;
 use App\Models\Acl\Role;
+use App\Models\Banner\Banner;
 use App\Models\School;
+use App\Models\Pipeline\Flow\Handler;
 use App\Models\Schools\TeachingAndResearchGroup;
 use App\Utils\FlashMessageBuilder;
 use App\Dao\Schools\InstituteDao;
@@ -233,10 +235,12 @@ class SchoolsController extends Controller
         $level = intval($request->get('level')) - 1;
         $orgs = [];
         if($level > 0){
-            $dao = new OrganizationDao();
-            $orgs = $dao->loadByLevel($level, $request->getSchoolId());
+          $dao = new OrganizationDao();
+          $orgs = $dao->loadByLevel($level, $request->getSchoolId());
         }
-        return JsonBuilder::Success(['parents'=>$orgs]);
+        // 获取职务数据
+        $organizationLevels = (new Handler())->OrganizationLevels();
+        return JsonBuilder::Success(['parents'=>$orgs,'organizationLevels'=>$organizationLevels]);
     }
 
     public function load_by_orgs(SchoolRequest $request) {

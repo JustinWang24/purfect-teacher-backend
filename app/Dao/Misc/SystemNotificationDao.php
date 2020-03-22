@@ -58,6 +58,38 @@ class SystemNotificationDao
     }
 
 
+  /**
+   * Func 查询系统通知消息
+   *
+   * @param $school_id 学校id
+   * @param $keywords 搜索关键词
+   *
+   * @return object
+   */
+  public function getNotificationList($param = [], $pageSize = ConfigurationTool::DEFAULT_PAGE_SIZE)
+  {
+    $condition[] = ['id', '>', 0];
+    if ($param['school_id']) {
+      $condition[] = ['school_id', '=', $param['school_id']];
+    }
+    return SystemNotification::where($condition)
+      ->where('title', 'like', '%' . trim($param['keywords']) . '%')
+      ->orderBy('id', 'desc')->simplePaginate($pageSize);
+  }
+
+    /**
+     * Func 查询系统通知详情
+     *
+     * @param $uuid uuid
+     *
+     * @return object
+     */
+    public function getNotificationOne($param = [])
+    {
+      $condition[] = ['uuid', '=', $param['uuid']];
+      return SystemNotification::where($condition)->first();
+    }
+
     /**
      * 根据学校ID 获取通知
      *

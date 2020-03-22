@@ -60,32 +60,27 @@ class FrontendLogic implements IPlansLoaderLogic
         $dao = new RecruitmentPlanDao($school->id);
 
         $rows = $dao->getPlansBySchoolForToday($this->today, $school->id);
-
         $plans = [];
 
         $profileDao = new StudentProfileDao();
         $userId = $profileDao->getUserIdByIdNumberOrMobile($this->studentIdNumber, $this->studentMobile);
-
-        $regDao = new RegistrationInformaticsDao();
-
         if($rows){
+          $regDao = new RegistrationInformaticsDao();
             foreach ($rows as $row) {
-                $applied = false;
-                if($userId){
-                    $applied = $regDao->getInformaticsByUserIdAndPlanId($userId, $row->id);
-                    if($applied){
-                        $applied = $applied->getStatusText();
-                    }
-                }
+              // 获取我是否可以报名
+              $statusMessageArr = $regDao->getRegistrationInformaticsStatusInfo($userId, $row);
+              $applied = $statusMessageArr['status'] == 100 ? false : $statusMessageArr['message'];
 
+                // 返回数据
                 $plans[] = [
                     'id'=>$row->id,
                     'name'=>$row->major->name,
                     'fee'=>$row->fee,
                     'period'=>$row->major->period,
-                    'seats'=>$row->seats,
-                    'enrolled'=>$row->applied_count,
-                    'applied'=>$applied??false,
+                    'seats'=>$row->seats, // 招生人数
+                    'applied_count'=>$row->applied_count, // 报名人数
+                    'enrolled'=>$row->enrolled_count, // 已招生人数
+                    'applied'=>$applied,
                     'hot'=>$row->hot,
                     'title'=>$row->title,
                     'tease'=>$row->tease,

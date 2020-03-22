@@ -124,10 +124,8 @@ class OpenMajorController extends Controller
         }
 
         $dao =  new RegistrationInformaticsDao;
-
         $profileDao = new StudentProfileDao();
         $userId = $profileDao->getUserIdByIdNumberOrMobile($formData['id_number'], $formData['mobile']);
-
         if (!$userId) {
             $msgBag = $dao->addUser($formData, $plan);
             if ($msgBag->isSuccess()) {
@@ -139,12 +137,19 @@ class OpenMajorController extends Controller
             $userDao = new UserDao();
             $user = $userDao->getUserByIdOrUuid($userId);
         }
+
+        // 获取我是否可以报名
+        $regDao = new RegistrationInformaticsDao();
+        $statusMessageArr = $regDao->getRegistrationInformaticsStatusInfo($user->getId(), $plan);
+        if ($statusMessageArr['status'] != 100) {
+          return JsonBuilder::Error($statusMessageArr['message']);
+        }
+
         /**
          * signUp 中会执行包括报名总人数更新, 消息通知发布的功能
          */
         $result = $user ? $dao->signUp($formData, $user) : false;
-
-        if ($result && $result->isSuccess()) {
+          if ($result && $result->isSuccess()) {
             // 通知老师, 有个新报名的学生
             event(new ApplyRecruitmentPlanEvent($result->getData()));
             return JsonBuilder::Success('报名成功');

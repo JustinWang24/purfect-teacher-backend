@@ -20,6 +20,12 @@ Route::prefix('admin')->group(function () {
     Route::post('versions/update', 'VersionController@update')->name('admin.versions.update');
     Route::get('versions/detail', 'VersionController@detail')->name('admin.versions.detail');
 
+    // 系统消息
+    Route::get('notifications/list', 'NotificationsController@list')->name('admin.notifications.list');
+    Route::any('notifications/add', 'NotificationsController@add')->name('admin.notifications.add');
+    Route::any('notifications/edit', 'NotificationsController@edit')->name('admin.notifications.edit');
+    Route::get('notifications/delete', 'NotificationsController@delete')->name('admin.notifications.delete');
+
     // 创建学校管理员
     Route::any('create/school-manager', 'SchoolsController@create_school_manager')
         ->name('admin.create.school-manager');
