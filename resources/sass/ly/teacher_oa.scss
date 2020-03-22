@@ -40,7 +40,7 @@
     flex-wrap: wrap;
     .teacher_oa_approval_content_left {
       width: 455px;
-      height: 445px;
+      min-height: 445px;
       background: rgba(255, 255, 255, 1);
       border-radius: 4px;
       margin-bottom: 10px;

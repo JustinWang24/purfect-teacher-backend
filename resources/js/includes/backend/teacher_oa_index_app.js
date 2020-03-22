@@ -62,7 +62,24 @@ if (document.getElementById('teacher-oa-index-app')) {
                         "name": "通讯录",
                         "icon": "http:\/\/t.ytx.com\/assets\/img\/pipeline\/icon13@2x.png"
                     }]
+                }, {
+                    "name": "学生专用",
+                    "key": 1000,
+                    "flows": [{
+                        "id": -1,
+                        "name": "招生",
+                        "icon": "http:\/\/t.ytx.com\/assets\/img\/pipeline\/icon1@2x.png"
+                    }, {
+                        "id": -2,
+                        "name": "迎新",
+                        "icon": "http:\/\/t.ytx.com\/assets\/img\/pipeline\/icon2@2x.png"
+                    }, {
+                        "id": -3,
+                        "name": "离校",
+                        "icon": "http:\/\/t.ytx.com\/assets\/img\/pipeline\/icon3@2x.png"
+                    }]
                 }], // 我的审批
+                activeNames: [],
                 open: 0, // 当前展开的我的审批
                 tableData: [{
                     iconState: 1,
@@ -131,10 +148,6 @@ if (document.getElementById('teacher-oa-index-app')) {
                 }).catch(err => {
                     console.log(err)
                 })
-            },
-            // 展示--收起
-            close(index) {
-                this.open = index
             },
             // list展示
             // in_progress=我发起的
