@@ -27,6 +27,7 @@ class PlansController extends Controller
         if($logic){
             $plans = $logic->getPlans();
         }
+
         $user = $request->user('api');
 
         // 添加图片，招生资源位作为查询的依据

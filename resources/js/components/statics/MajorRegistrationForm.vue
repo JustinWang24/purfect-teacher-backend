@@ -221,15 +221,21 @@
         },
         methods: {
             save: function(){
+              this.$refs.ruleForm.validate(valid => {
+                if (!valid) {
+                  console.log("验证未通过----------------");
+                }
                 saveRegistrationForm(this.registrationForm, this.major.id, '/mock_expect_success.json')
-                    .then(res => {
-                        if(Util.isAjaxResOk(res)){
-                            // 保存成功
-                            this.$emit('form-saved-success',{plan: this.major})
-                        }else{
-                            this.$emit('form-saved-failed',res.data.message)
-                        }
-                    });
+                  .then(res => {
+                    if(Util.isAjaxResOk(res)){
+                      // 保存成功
+                      this.$emit('form-saved-success',{plan: this.major})
+                    }else{
+                      this.$emit('form-saved-failed',res.data.message)
+                    }
+                  });
+              })
+
             }
         }
     }

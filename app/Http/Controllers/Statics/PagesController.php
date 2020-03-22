@@ -91,7 +91,7 @@ class PagesController extends Controller
         if (is_null($user)) {
           return  JsonBuilder::Error('未找到用户');
         }
-        
+
         Auth::login($user);
         return redirect()->route('home');
     }

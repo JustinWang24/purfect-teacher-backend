@@ -82,7 +82,6 @@ class RecruitmentPlanDao
             ->orderBy('updated_at','desc')
             ->skip($pageNumber * $pageSize)
             ->take($pageSize);
-
         if($userUuid){
             $userDao = new UserDao();
             $u = $userDao->getUserByUuid($userUuid);
