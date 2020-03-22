@@ -399,6 +399,10 @@ Route::prefix('home')->middleware('auth:api')->group(function () {
 
     Route::any('/load-notices', 'Api\Home\IndexController@loadNotices')
         ->name('api.home.load-notices');
+
+    // 动态新闻详情
+    Route::any('/news-info','Api\Home\IndexController@newsInfo')
+        ->name('api.home.news.info');
 });
 
 // 消息通知

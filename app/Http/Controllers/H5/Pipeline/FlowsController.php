@@ -148,14 +148,14 @@ class FlowsController extends Controller
             $actionResult = $dao->getHistoryByUserFlow($startUserAction->userFlow->id, true);
             $actionReList = [];
             foreach ($actionResult as $actRet) {
-                $actionReList[$actRet->user_id] = $actRet;
+                $actionReList[$actRet->node_id . '_' .$actRet->user_id] = $actRet;
             }
             //审批人与结果关联
             foreach ($flowInfo['handler'] as $handler) {
                 $userList = $flowDao->transTitlesToUser($handler->titles, $handler->organizations, $startUserAction->userFlow->user);
                 foreach ($userList as $item) {
                     foreach ($item as $im) {
-                        $im->result = isset($actionReList[$im->id]) ? $actionReList[$im->id] : [];
+                        $im->result = isset($actionReList[$handler->node_id.'_'.$im->id]) ? $actionReList[$handler->node_id.'_'.$im->id] : [];
                     }
                 }
                 $handlers[] = $userList;
@@ -188,14 +188,18 @@ class FlowsController extends Controller
                     case 'radio':
                         if ($optionRet) {
                             $optionRet = json_decode($optionRet, true);
-                            $value = $optionRet['itemText'];
+                            if (!empty($optionRet)) {
+                                $value = $optionRet['itemText'];
+                            }
                         }
                         break;
                     case 'checkbox':
                         if ($optionRet) {
                             $optionRet = json_decode($optionRet, true);
-                            foreach ($optionRet as $ret) {
-                                $value .= ' ' . $ret['itemText'];
+                            if (!empty($optionRet)) {
+                                foreach ($optionRet as $ret) {
+                                    $value .= ' ' . $ret['itemText'];
+                                }
                             }
                         }
                         break;

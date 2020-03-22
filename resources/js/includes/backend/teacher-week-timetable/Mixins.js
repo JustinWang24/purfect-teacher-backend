@@ -7,23 +7,22 @@ export const Mixins = {
   },
   methods: {
     ...mapMutations(["SETOPTIONS", "SETOPTIONOBJ"]),
-    async _initData() {
+    async _initData(currentDate) {
       this.SETOPTIONS({ isTableLoading: true });
-      const date = moment(new Date()).format("YYYY-MM-DD");
-      let [err, data] = await catchErr(_timetable_teacher_week({ date }));
-      let tableHeader = data.timetable.map(({table})=>table)
+      let [err, data] = await catchErr(_timetable_teacher_week({ date:currentDate }));
+      const {timetable,time_slots,week_index,date} = data
+      let tableHeader = timetable.map(({table})=>table)
       tableHeader.unshift({title:'周课'})
       let tableList =  []
-      for (let index = 0; index < data.time_slots.length; index++) {
-        const rowFirst = [data.time_slots[index]]  
-        const coureList = data.timetable.map(item => {
+      for (let index = 0; index < time_slots.length; index++) {
+        const rowFirst = time_slots[index]
+        const coureList = timetable.map(item => {
           return item['course'][index]
         })
-        tableList.push(rowFirst.concat(coureList))
+        coureList.unshift(rowFirst)
+        tableList.push({...coureList})
       }
-      console.log(tableHeader)
-      console.log(tableList)
-      data && this.SETOPTIONS({ data:{tableList,tableHeader}, isTableLoading: false });
+      data && this.SETOPTIONS({ data:{date,week_index,tableList,tableHeader}, isTableLoading: false });
     }
   }
 };

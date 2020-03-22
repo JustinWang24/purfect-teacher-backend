@@ -11,6 +11,7 @@ namespace App\Http\Controllers\Api\OA;
 
 use App\Dao\OA\ProjectDao;
 use App\Dao\OA\TaskDao;
+use App\Events\SystemNotification\OaTaskEvent;
 use App\Models\OA\ProjectTask;
 use App\Utils\JsonBuilder;
 use App\Models\OA\ProjectTaskMember;
@@ -53,6 +54,13 @@ class TaskController extends Controller
         ];
         $result = $dao->createTask($data, $memberUserIds);
         if($result->isSuccess()) {
+            $taskId = $result->getData()['id'];
+            //通知负责人
+            //event(new OaTaskEvent($leader_userid, $taskId)); --成员已经包含了负责人
+            //通知成员
+            foreach ($memberUserIds as $userid) {
+                event(new OaTaskEvent($userid, $taskId));
+            }
             return JsonBuilder::Success($result->getData());
         } else {
             return JsonBuilder::Error($result->getMessage());
@@ -221,7 +229,7 @@ class TaskController extends Controller
         $output['log_list'] = $logs;
 
         $forum = [];
-        $discussions = $task->discussions->whereIn('reply_user_id', [0, $userId]);
+        $discussions = $task->discussions;
         foreach ($discussions as $key => $val) {
             $forum[] = [
                 'forumid' => $val->id,
@@ -366,6 +374,9 @@ class TaskController extends Controller
      */
     public function taskReport(ProjectRequest $request) {
         $taskId = $request->getTaskId();
+        if(is_null($taskId)) {
+            return JsonBuilder::Error('缺少参数');
+        }
         $dao = new TaskDao();
         $list = $dao->getTaskMembersByTaskId($taskId);
         $task = $dao->getProjectTaskById($taskId);

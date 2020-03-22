@@ -1,7 +1,7 @@
 /**
  * 工作流程管理
  */
-import { deleteFlow, deleteNode, loadNodes, saveFlow, saveNode, updateNode, saveNodeOption, deleteNodeOption } from "../../common/flow";
+import { deleteFlow, loadNodes, saveFlow } from "../../common/flow";
 import { Constants } from "../../common/constants";
 import { Util } from "../../common/utils";
 
@@ -10,6 +10,7 @@ if (document.getElementById('pipeline-flows-manager-app')) {
         el: '#pipeline-flows-manager-app',
         data() {
             return {
+                loadingNodes: false, // 正在加载步骤
                 newFlow: true, // 立即创建显示
                 posiList: [{ name: '办公审批', key: 1 }, { name: '办事大厅', key: 2 }, { name: '系统流程', key: 3 }],
                 typeList: [],
@@ -77,7 +78,6 @@ if (document.getElementById('pipeline-flows-manager-app')) {
                 prevNodeId: null, // 编辑 node 的时候, 前一个步骤的 ID
                 organizationsTabArrayWhenEdit: [],
                 flowNodes: [],
-                loadingNodes: false, // 正在加载步骤
 
                 props: {
                     lazy: true,
@@ -357,8 +357,7 @@ if (document.getElementById('pipeline-flows-manager-app')) {
                             this.gettitlesList();
                         }
                         this.node.handlers = res.data.data.nodes.head.handler.role_slugs.substring(0, res.data.data.nodes.head.handler.role_slugs.length - 1).split(';')
-                    }
-                    else {
+                    } else {
                         this.$notify.error(
                             { title: '加载失败', message: res.data.message, duration: 0 }
                         );
@@ -377,8 +376,7 @@ if (document.getElementById('pipeline-flows-manager-app')) {
                         if (Util.isAjaxResOk(res)) {
                             this.$message({ type: 'success', message: '删除成功, 页面将重新加载, 请稍候!' });
                             window.location.reload();
-                        }
-                        else {
+                        } else {
                             this.$message.error('系统繁忙, 请稍候再试');
                         }
                         this.loadingNodes = false;
@@ -449,11 +447,32 @@ if (document.getElementById('pipeline-flows-manager-app')) {
                                 message: '保存成功',
                                 type: 'success'
                             });
+                        } else {
+                            this.$notify.error(
+                                { title: '保存失败', message: res.data.message, duration: 0 }
+                            );
                         }
                     }).catch((err) => {
                         console.log(err)
                     });
                 }
+            },
+            // 删除某一级审批人
+            deleteNode(id) {
+                axios.post("/school_manager/pipeline/flows/delete-node", {
+                    node_id: id,
+                    school_id: this.flow.school_id
+                }).then(res => {
+                    if (Util.isAjaxResOk(res)) {
+                        this.$message({
+                            message: '删除成功',
+                            type: 'success'
+                        });
+                        window.location.reload()
+                    }
+                }).catch(err => {
+                    console.log(err)
+                })
             },
             // 保存 --- 是否自动审批
             saveagree() {
@@ -472,6 +491,10 @@ if (document.getElementById('pipeline-flows-manager-app')) {
                                 message: '保存成功',
                                 type: 'success'
                             });
+                        } else {
+                            this.$notify.error(
+                                { title: '保存失败', message: res.data.message, duration: 0 }
+                            );
                         }
                     }).catch((err) => {
                         console.log(err)
@@ -508,6 +531,10 @@ if (document.getElementById('pipeline-flows-manager-app')) {
                                 message: '保存成功',
                                 type: 'success'
                             });
+                        } else {
+                            this.$notify.error(
+                                { title: '保存失败', message: res.data.message, duration: 0 }
+                            );
                         }
                     }).catch((err) => {
                         console.log(err)

@@ -2,7 +2,7 @@
   <div class="task-detail-container">
     <div class="detail detail-panel">
       <div class="title">
-        <span>已接收</span>
+        <span>{{statusText}}</span>
       </div>
       <div class="detail-item">
         <span class="title">任务名称</span>
@@ -43,8 +43,30 @@
         <span class="content">{{task.project_title}}</span>
       </div>
       <div class="btn-box">
-        <el-button class="dispatch" size="small" @click="()=>{dispathModal = true}">指派他人</el-button>
-        <el-button type="primary" size="small" @click="()=>{finishModal = true}">确认完成</el-button>
+        <el-button
+          v-if="unfinished && !unreceive"
+          class="dispatch"
+          size="small"
+          @click="()=>{dispathModal = true}"
+        >指派他人</el-button>
+        <el-button
+          type="primary"
+          v-if="unreceive && !isMyTask"
+          size="small"
+          @click="receiveTask"
+        >确认接收</el-button>
+        <el-button
+          type="primary"
+          v-if="pending && !isMyTask"
+          size="small"
+          @click="()=>{finishModal = true}"
+        >确认完成</el-button>
+        <el-button
+          type="primary"
+          v-if="finished || isMyTask"
+          size="small"
+          @click="()=>{finishInfoModal = true}"
+        >完成结果</el-button>
       </div>
     </div>
     <div class="operate detail-panel">
@@ -130,7 +152,20 @@
       :visible.sync="dispathModal"
       direction="rtl"
     >
-      <DispatchForm @submit="onFinish('dispatch')" :taskid="taskid" />
+      <DispatchForm
+        @submit="onFinish('dispatch')"
+        :taskid="taskid"
+        :disabledList="disabledDispatchList"
+      />
+    </el-drawer>
+    <el-drawer
+      title="完成结果"
+      ref="dispathModal"
+      :destroy-on-close="true"
+      :visible.sync="finishInfoModal"
+      direction="rtl"
+    >
+      <FinishInfo @submit="onFinish('info')" :taskid="taskid" />
     </el-drawer>
   </div>
 </template>
@@ -139,9 +174,11 @@ import comment from "./comment";
 import UserLink from "./userLink";
 import FinishForm from "./finishForm";
 import DispatchForm from "./dispatchForm";
+import FinishInfo from "./finishInfo";
 import Avatar from "./avatar";
 import { Util } from "../../../../common/utils";
 import { TaskApi } from "../common/api";
+import { TaskFinishStatus } from "../common/enum";
 import { getQueryString } from "../common/utils";
 
 export default {
@@ -151,13 +188,15 @@ export default {
     Avatar,
     UserLink,
     FinishForm,
-    DispatchForm
+    DispatchForm,
+    FinishInfo
   },
   data() {
     return {
       discussModal: false,
       dispathModal: false,
       finishModal: false,
+      finishInfoModal: false,
       task: {
         member_list: [],
         log_list: [],
@@ -172,12 +211,75 @@ export default {
       return function(userid) {
         return this.task.login_userid === userid;
       };
+    },
+    statusText() {
+      if (this.isMyTask) {
+        return "我发起的";
+      }
+      return (TaskFinishStatus[this.task.status] || {}).text;
+    },
+    isMyTask() {
+      return this.task.login_userid === this.task.create_userid;
+    },
+    unfinished() {
+      if (this.isMyTask) {
+        return this.task.status !== 3;
+      } else {
+        return this.task.member_status !== 3;
+      }
+    },
+    finished() {
+      if (this.isMyTask) {
+        return this.task.status === 3;
+      } else {
+        return this.task.member_status === 3;
+      }
+    },
+    unreceive() {
+      if (this.isMyTask) {
+        return this.task.status === 1;
+      } else {
+        return this.task.member_status === 1;
+      }
+    },
+    pending() {
+      if (this.isMyTask) {
+        return this.task.status === 2;
+      } else {
+        return this.task.member_status === 2;
+      }
+    },
+    disabledDispatchList() {
+      return [
+        this.task.create_userid,
+        this.task.leader_userid,
+        ...this.task.member_list.map(member => {
+          return member.userid;
+        })
+      ];
     }
   },
   methods: {
+    receiveTask() {
+      this.$confirm("确认接收该任务?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      }).then(() => {
+        TaskApi.excute("receiveOaTaskInfo", {
+          taskid: this.taskid
+        }).then(res => {
+          this.getOaTaskInfo();
+        });
+      });
+    },
     onDispath() {},
     onFinish(modal) {
       this.getOaTaskInfo();
+      if (!modal) {
+        this.$refs.finishModal.closeDrawer();
+        this.finishModal = false;
+      }
       if (modal === "dispatch") {
         this.$refs.dispathModal.closeDrawer();
         this.dispathModal = false;
@@ -228,7 +330,7 @@ export default {
     border-radius: 4px;
     > .title {
       font-size: 18px;
-      color: #313b4c;
+      color: #4ea5fe;
       padding: 14px;
       .el-button {
         float: right;

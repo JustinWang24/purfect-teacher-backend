@@ -20,16 +20,15 @@
                   </el-tabs>
                 </div>
             </div>
+          <el-drawer
+            title="创建任务"
+            ref="addTaskDrawer"
+            :destroy-on-close="true"
+            :visible.sync="addDrawer"
+            direction="rtl">
+            <task-form @done="onTaskCreated" :currentUserId="currentUserId"/>
+          </el-drawer>
         </div>
-        <el-drawer
-          title="创建任务"
-          ref="addTaskDrawer"
-          :destroy-on-close="true"
-          :visible.sync="addDrawer"
-          direction="rtl">
-          <task-form @done="onTaskCreated"/>
-        </el-drawer>
-
     <div id="app-init-data-holder"
          data-school="{{ session('school.id') }}"
     ></div>

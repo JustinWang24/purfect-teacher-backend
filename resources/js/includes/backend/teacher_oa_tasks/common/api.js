@@ -14,7 +14,10 @@ const API_MAP = {
   addOaTaskForum: '/Oa/task/addOaTaskForum',
   delOaTaskForum: '/Oa/task/delOaTaskForum',
   finishOaTaskInfo: '/Oa/task/finishOaTaskInfo',
-  addOaTaskUser: '/Oa/task/addOaTaskUser'
+  addOaTaskUser: '/Oa/task/addOaTaskUser',
+  receiveOaTaskInfo: '/Oa/task/receiveOaTaskInfo',
+  getOaTaskReport: '/Oa/task/getOaTaskReport',
+  getTeacherInfo: '/api/user/getTeacherInfo'
 }
 
 export const TaskApi = {
@@ -44,4 +47,15 @@ export const TaskApi = {
       });
     })
   }
+}
+
+export const finishTask = function (data) {
+  return axios({
+    method: 'post',
+    url: API_MAP.finishOaTaskInfo,
+    headers: {
+      'Content-Type': 'multipart/form-data;charset=UTF-8'
+    },
+    data
+  })
 }

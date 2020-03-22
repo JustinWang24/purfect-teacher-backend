@@ -1004,8 +1004,11 @@ class TeacherApplyElectiveCourseDao
 
     public function checkHasEnrolled($user, $courseId, $tableName)
     {
-        return StudentEnrolledOptionalCourse::where('user_id', $user->id)->where('course_id', $courseId)->first() ||
-            DB::table($tableName)->where('user_id', $user->id)->where('course_id', $courseId)->first();
+        $result = StudentEnrolledOptionalCourse::where('user_id', $user->id)->where('course_id', $courseId)->first();
+        if (!$result) {
+            $result = DB::table($tableName)->where('user_id', $user->id)->where('course_id', $courseId)->first();
+        }
+        return  $result;
     }
 
     /**

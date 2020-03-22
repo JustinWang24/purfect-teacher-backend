@@ -249,26 +249,42 @@ class AttendancesDao
     }
 
 
-     /**
+  /**
+   * 根据 给定时间获取所有签到
+   * @param $time
+   * @param $timeSlotId
+   * @return mixed
+   */
+    public function getTeacherSignInfoByTime($time, $timeSlotId = false)
+    {
+        $result =  Attendance::whereDate('created_at', $time);
+
+        if ($timeSlotId) {
+            $result->where('time_slot_id', $timeSlotId);
+        }
+
+        return $result->get();
+    }
+
+    /**
      * 统计老师签到
-     * @param $timeSlotId
+     * @param $timetableIds
      * @param $week
+     * @param $signStatus
+     * @param $late
      * @return mixed
      */
-    public function getTeacherSignInfo($timeSlotId = false, $week, $term)
+    public function getTeacherSignInfo($timetableIds, $week, $signStatus, $late = false)
     {
         $map = [
             ['week', '=' ,$week],
-            ['term', '=' ,$term],
+            ['teacher_sign', '=', $signStatus]
         ];
-
-        if ($timeSlotId) {
-            array_push( $map, ['time_slot_id', '=', $timeSlotId]);
+        if ($late) {
+           array_push($map, ['teacher_late', '=', $late]);
         }
-
-        return Attendance::where($map)->get();
+        return Attendance::where($map)->whereIn('timetable_id', $timetableIds)->get();
     }
-
 
     /**
      * 判断是否有签到主表

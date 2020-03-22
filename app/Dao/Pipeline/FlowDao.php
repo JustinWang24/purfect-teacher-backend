@@ -40,6 +40,7 @@ class FlowDao
 
         $flows = Flow::select(['id','name','icon','type'])
             ->where('school_id',$schoolId)
+            ->where('closed', 0)
             ->whereIn('type',$types)
             ->orderBy('type','asc')->get();
 
@@ -99,7 +100,11 @@ class FlowDao
                 if ($title == Title::ORGANIZATION_LEADER) {
                     $titleId = Title::ORGANIZATION_LEADER_ID;
                 }
-                $userOrganizationList = UserOrganization::with('user')->whereIn('organization_id', $organizations)->where('title_id', $titleId)->get();
+                if (isset($titleId)) {
+                    $userOrganizationList = UserOrganization::with('user')->whereIn('organization_id', $organizations)->where('title_id', $titleId)->get();
+                }else {
+                    $userOrganizationList = UserOrganization::with('user')->whereIn('organization_id', $organizations)->get();
+                }
                 foreach ($userOrganizationList as $userOrganization) {
                     $return[$userOrganization->title][] = $userOrganization->user;
                 }
@@ -382,7 +387,7 @@ class FlowDao
 
         try{
             Flow::where('id', $flowId)->update($data);
-            $firstNode = $flow->getTailNode();
+            $firstNode = $flow->getHeadNode();
 
             // 更新头部流程的 handlers
             $handlerDao = new HandlerDao();
@@ -405,6 +410,15 @@ class FlowDao
      * @return mixed
      */
     public function delete($flowId){
-        return Flow::where('id',$flowId)->delete();
+        return Flow::where('id',$flowId)->update(['closed' => 1]);
+    }
+
+    /**
+     * 是否能update true=能
+     * @param $flowId
+     * @return bool
+     */
+    public function canBeUpdate($flowId) {
+        return UserFlow::where('flow_id', $flowId)->first() ? false : true;
     }
 }
