@@ -26,7 +26,15 @@ if (document.getElementById('teacher-homepage-app')) {
                 dataLength: 0,
                 num: 4,
                 loading: false,
-                drawer: false // 全部历史安排
+                drawer: false, // 全部历史安排
+                showNewInfo: false, // 校园新闻详情侧边栏
+                notice: {
+                    title: "",
+                    created_at: "",
+                    sections: "",
+                    image: "",
+                    type: ""
+                } // 校园新闻详情
             }
         },
         created() {
@@ -65,6 +73,18 @@ if (document.getElementById('teacher-homepage-app')) {
                     }
                 })
             },
+            // 校园新闻详情
+            newInfo(id) {
+                axios.post("/api/home/news-info", {
+                    id: id
+                }).then(res => {
+                    this.showNewInfo = true
+                    this.notice = res.data.data
+                    console.log(this.notice)
+                }).catch(err => {
+                    console.log(err)
+                })
+            },
             // 获取首页校历
             getCalendar() {
                 axios.post(
@@ -87,7 +107,7 @@ if (document.getElementById('teacher-homepage-app')) {
                     }
                 })
             },
-            // 全部历史安排关不按钮
+            // 全部历史安排和校园新闻详情关闭按钮
             handleClose(done) {
                 done()
             },
@@ -99,7 +119,6 @@ if (document.getElementById('teacher-homepage-app')) {
                     { page: page }
                 ).then(res => {
                     if (Util.isAjaxResOk(res)) {
-                        console.log(res.data.data.data)
                         // this.attendanceList2 = res.data.data.data.slice(0, 4)
                         this.attendanceList = res.data.data.data;
                         // this.dataLength = res.data.data.data.length;

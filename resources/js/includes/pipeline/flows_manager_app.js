@@ -357,8 +357,7 @@ if (document.getElementById('pipeline-flows-manager-app')) {
                             this.gettitlesList();
                         }
                         this.node.handlers = res.data.data.nodes.head.handler.role_slugs.substring(0, res.data.data.nodes.head.handler.role_slugs.length - 1).split(';')
-                    }
-                    else {
+                    } else {
                         this.$notify.error(
                             { title: '加载失败', message: res.data.message, duration: 0 }
                         );
@@ -377,8 +376,7 @@ if (document.getElementById('pipeline-flows-manager-app')) {
                         if (Util.isAjaxResOk(res)) {
                             this.$message({ type: 'success', message: '删除成功, 页面将重新加载, 请稍候!' });
                             window.location.reload();
-                        }
-                        else {
+                        } else {
                             this.$message.error('系统繁忙, 请稍候再试');
                         }
                         this.loadingNodes = false;
@@ -449,6 +447,10 @@ if (document.getElementById('pipeline-flows-manager-app')) {
                                 message: '保存成功',
                                 type: 'success'
                             });
+                        } else {
+                            this.$notify.error(
+                                { title: '保存失败', message: res.data.message, duration: 0 }
+                            );
                         }
                     }).catch((err) => {
                         console.log(err)
@@ -461,11 +463,13 @@ if (document.getElementById('pipeline-flows-manager-app')) {
                     node_id: id,
                     school_id: this.flow.school_id
                 }).then(res => {
-                    this.$message({
-                        message: '删除成功',
-                        type: 'success'
-                    });
-                    window.location.reload()
+                    if (Util.isAjaxResOk(res)) {
+                        this.$message({
+                            message: '删除成功',
+                            type: 'success'
+                        });
+                        window.location.reload()
+                    }
                 }).catch(err => {
                     console.log(err)
                 })
@@ -487,6 +491,10 @@ if (document.getElementById('pipeline-flows-manager-app')) {
                                 message: '保存成功',
                                 type: 'success'
                             });
+                        } else {
+                            this.$notify.error(
+                                { title: '保存失败', message: res.data.message, duration: 0 }
+                            );
                         }
                     }).catch((err) => {
                         console.log(err)
@@ -523,6 +531,10 @@ if (document.getElementById('pipeline-flows-manager-app')) {
                                 message: '保存成功',
                                 type: 'success'
                             });
+                        } else {
+                            this.$notify.error(
+                                { title: '保存失败', message: res.data.message, duration: 0 }
+                            );
                         }
                     }).catch((err) => {
                         console.log(err)
