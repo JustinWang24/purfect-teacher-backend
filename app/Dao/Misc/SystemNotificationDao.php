@@ -73,6 +73,7 @@ class SystemNotificationDao
       $condition[] = ['school_id', '=', $param['school_id']];
     }
     return SystemNotification::where($condition)
+      ->whereIn('to',$param['to'])
       ->where('title', 'like', '%' . trim($param['keywords']) . '%')
       ->orderBy('id', 'desc')->simplePaginate($pageSize);
   }
