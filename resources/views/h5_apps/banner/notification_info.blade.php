@@ -15,7 +15,7 @@
 </style>
 </head>
 <body style="margin:10px;font-family: '微软雅黑';font-size: 85%;">
-{{isset($data->content)?$data->content:''}}
+{!!isset($data->content)?$data->content:''!!}
 </body>
 <script>
 	$(window).load(function(){

@@ -40,7 +40,7 @@ class NotificationsController extends Controller
       // 检索参数
       $param['keywords'] = $keywords;
       $param['school_id'] = $school['id'];
-      $param['to'] = [$to?[$to]:[0,-1,-2]]; // 0 全部,-1:
+      $param['to'] = [$to?[$to]:[0,-1,-2]];
       $systemNotificationDao = new SystemNotificationDao();
       $dataList = $systemNotificationDao->getNotificationList($param);
 
