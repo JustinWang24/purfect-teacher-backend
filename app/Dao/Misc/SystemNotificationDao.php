@@ -66,16 +66,19 @@ class SystemNotificationDao
    *
    * @return object
    */
-  public function getNotificationList($param = [], $pageSize = ConfigurationTool::DEFAULT_PAGE_SIZE)
+  public function getNotificationList($param = [], $page = 1 )
   {
     $condition[] = ['id', '>', 0];
     if ($param['school_id']) {
       $condition[] = ['school_id', '=', $param['school_id']];
     }
+    if ($param['keywords']) {
+      $condition[] = ['title', 'like', '%'.trim($param['keywords']).'%'];
+    }
     return SystemNotification::where($condition)
       ->whereIn('to',$param['to'])
-      ->where('title', 'like', '%' . trim($param['keywords']) . '%')
-      ->orderBy('id', 'desc')->simplePaginate($pageSize);
+      ->orderBy('id', 'desc')
+      ->paginate(ConfigurationTool::DEFAULT_PAGE_SIZE, ['*'], 'page', $page);
   }
 
     /**
