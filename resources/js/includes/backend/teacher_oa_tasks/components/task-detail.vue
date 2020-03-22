@@ -152,7 +152,11 @@
       :visible.sync="dispathModal"
       direction="rtl"
     >
-      <DispatchForm @submit="onFinish('dispatch')" :taskid="taskid" />
+      <DispatchForm
+        @submit="onFinish('dispatch')"
+        :taskid="taskid"
+        :disabledList="disabledDispatchList"
+      />
     </el-drawer>
     <el-drawer
       title="完成结果"
@@ -244,6 +248,15 @@ export default {
       } else {
         return this.task.member_status === 2;
       }
+    },
+    disabledDispatchList() {
+      return [
+        this.task.create_userid,
+        this.task.leader_userid,
+        ...this.task.member_list.map(member => {
+          return member.userid;
+        })
+      ];
     }
   },
   methods: {

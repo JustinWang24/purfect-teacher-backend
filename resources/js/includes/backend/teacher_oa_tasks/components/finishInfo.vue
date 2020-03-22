@@ -1,33 +1,35 @@
 <template>
-  <div class="infoList">
-    <div class="info" v-for="(info,index) in infoList" :key="index">
-      <div class="item">
-        <span class="title">反馈人</span>
-        <span class="content">
-          <span class="name">{{info.username}}</span>
-          <span class="status" :class="getStatusClass(info.status)">{{getFinishText(info.status)}}</span>
-        </span>
-      </div>
-      <div class="item">
-        <span class="title">备注说明</span>
-        <span class="content">{{info.remark}}</span>
-      </div>
-      <div class="item">
-        <span class="title">附件资料</span>
-        <span class="content">
-          <div
-            class="img-box"
-            @click="viewImg(img)"
-            v-for="(img, index) in (info.user_pics?info.user_pics.split(','):[])"
-            :key="index"
-          >
-            <img :src="img" alt />
-          </div>
-        </span>
-      </div>
-      <div class="item">
-        <span class="title">反馈时间</span>
-        <span class="content">{{info.update_time}}</span>
+  <div>
+    <div class="infoList">
+      <div class="info" v-for="(info,index) in infoList" :key="index">
+        <div class="item">
+          <span class="title">反馈人</span>
+          <span class="content">
+            <span class="name">{{info.username}}</span>
+            <span class="status" :class="getStatusClass(info.status)">{{getFinishText(info.status)}}</span>
+          </span>
+        </div>
+        <div class="item">
+          <span class="title">备注说明</span>
+          <span class="content">{{info.remark}}</span>
+        </div>
+        <div class="item">
+          <span class="title">附件资料</span>
+          <span class="content">
+            <div
+              class="img-box"
+              @click="viewImg(img)"
+              v-for="(img, index) in (info.attach?info.attach.split(','):[])"
+              :key="index"
+            >
+              <img :src="img" alt />
+            </div>
+          </span>
+        </div>
+        <div class="item">
+          <span class="title">反馈时间</span>
+          <span class="content">{{info.update_time}}</span>
+        </div>
       </div>
     </div>
     <el-dialog :visible.sync="previewModal">
@@ -84,12 +86,12 @@ export default {
 </script>
 <style lang="scss" scoped>
 .infoList {
-  padding: 0 12px;
   .info:last-child {
-    border: none;
+    border-bottom: none !important;
   }
   .info {
-    border-bottom: 1px solid #aaaaaa;
+    padding: 0 12px;
+    border-bottom: 1px solid #cccccc;
     .item:first-child {
       border: none;
     }
