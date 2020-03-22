@@ -153,7 +153,10 @@ class Flow extends Model implements IFlow
     public static function getBusiness($businessid = null) {
         $list = [
             IFlow::BUSINESS_ATTENDANCE_CLOCKIN,
-            IFlow::BUSINESS_ATTENDANCE_MACADDRESS
+            IFlow::BUSINESS_ATTENDANCE_MACADDRESS,
+            IFlow::BUSINESS_ATTENDANCE_LEAVE,
+            IFlow::BUSINESS_ATTENDANCE_AWAY,
+            IFlow::BUSINESS_ATTENDANCE_TRAVEL
         ];
         if ($businessid) {
             foreach ($list as $item) {
