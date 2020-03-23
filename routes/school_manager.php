@@ -240,6 +240,10 @@ Route::prefix('school_manager')->group(function () {
             ->name('school_manager.teacher-attendance.save-attendance');
         Route::post('save-clocksets', 'TeacherAttendance\AttendanceController@save_clocksets')
             ->name('school_manager.teacher-attendance.save-clocksets');
+        Route::any('load-clockins-daycount', 'TeacherAttendance\AttendanceController@load_clockins_daycount')
+            ->name('school_manager.teacher-attendance.load-clockins-daycount');
+        Route::any('load-clockins-monthcount', 'TeacherAttendance\AttendanceController@load_clockins_monthcount')
+            ->name('school_manager.teacher-attendance.load-clockins-monthcount');
     });
     // 办公管理
     Route::prefix('oa')->group(function(){
