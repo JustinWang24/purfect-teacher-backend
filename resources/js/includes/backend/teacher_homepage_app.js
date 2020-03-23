@@ -3,6 +3,7 @@
  */
 import { Util } from "../../common/utils";
 import { startedByMe, waitingForMe } from "../../common/flow";
+import Calendar from 'vue-calendar-component';
 
 if (document.getElementById('teacher-homepage-app')) {
     new Vue({
@@ -14,19 +15,9 @@ if (document.getElementById('teacher-homepage-app')) {
                 url: {
                     flowOpen: ''
                 },
-                isLoading: false,
-                flowsStartedByMe: [],
-                flowsWaitingForMe: [],
+
                 bannerList: [], // 获取首页banner
                 newsList: [], // 获取首页校园新闻
-                calendar: new Date(), // 校历
-                schooleventsList: [], // 获取首页校园安排
-                schoolalleventsList: [], // 获取首页历史安排
-                attendanceList: [], // 获取首页值周内容
-                dataLength: 0,
-                num: 4,
-                loading: false,
-                drawer: false, // 全部历史安排
                 showNewInfo: false, // 校园新闻详情侧边栏
                 notice: {
                     title: "",
@@ -34,16 +25,33 @@ if (document.getElementById('teacher-homepage-app')) {
                     sections: "",
                     image: "",
                     type: ""
-                } // 校园新闻详情
+                }, // 校园新闻详情
+                calendar: new Date(), // 校历
+                schooleventsList: [], // 获取首页校园安排
+                schoolalleventsList: [], // 获取首页历史安排
+                drawer: false, // 全部历史安排
+                current_page: 1, // 值周第一页
+                attendanceList: [], // 获取首页值周内容
+                last_page: '', // 值周总页数 
+
+                // num: 4,
+                // isLoading: false,
+                // flowsStartedByMe: [],
+                // flowsWaitingForMe: [],
+                // dataLength: 0,
+                // loading: false,
             }
+        },
+        components: {
+            Calendar
         },
         created() {
             const dom = document.getElementById('app-init-data-holder');
             this.schoolId = dom.dataset.school;
             this.userUuid = dom.dataset.useruuid;
             this.url.flowOpen = dom.dataset.flowopen;
-            this.loadFlowsStartedByMe();
-            this.loadFlowsWaitingForMe();
+            // this.loadFlowsStartedByMe();
+            // this.loadFlowsWaitingForMe();
             this.getBanner(); // 获取首页banner
             this.getnewsPage(); // 获取首页校园新闻
             this.getCalendar(); // 获取首页校历
@@ -51,6 +59,15 @@ if (document.getElementById('teacher-homepage-app')) {
             this.getAttendanceList(); // 获取首页值周内容
         },
         methods: {
+            clickday(data) {
+                debugger;
+                console.log(data); //选中某天
+            },
+            changedate(data) {
+                console.log(data); //左右点击切换月份
+            },
+
+
             // 获取首页banner
             getBanner() {
                 axios.post(
@@ -102,7 +119,7 @@ if (document.getElementById('teacher-homepage-app')) {
                     '/api/school/all-events'
                 ).then(res => {
                     if (Util.isAjaxResOk(res)) {
-                        this.schooleventsList = res.data.data.events.slice(0, 6)
+                        this.schooleventsList = res.data.data.events.reverse().slice(0, 6)
                         this.schoolalleventsList = res.data.data.events
                     }
                 })
@@ -112,34 +129,58 @@ if (document.getElementById('teacher-homepage-app')) {
                 done()
             },
             // 获取首页值周内容
-            getAttendanceList(page = 1) {
-                // alert(page)
+            getAttendanceList() {
                 axios.post(
                     '/api/attendance/list',
-                    { page: page }
+                    { page: this.current_page }
                 ).then(res => {
                     if (Util.isAjaxResOk(res)) {
-                        // this.attendanceList2 = res.data.data.data.slice(0, 4)
                         this.attendanceList = res.data.data.data;
-                        // this.dataLength = res.data.data.data.length;
-                        // alert(this.dataLength)/
+                        this.last_page = res.data.data.last_page; // 总页数
+                        this.current_page = res.data.data.current_page; // 当前页数
                     }
                 })
             },
-            load() {
-                console.log(111)
-                // alert("222");
-                // this.loading = true
-                // setTimeout(() => {
-                // this.num += 2;
-                // this.loading = false
-                //   }, 2000)
-                // this.getAttendanceList(1);
+            // 滚动事件
+            handleScroll() {
+                let scrollTop = this.$refs.scrollTopList.scrollTop, // 2772.800048828125
+                    clientHeight = this.$refs.scrollTopList.clientHeight, // 675
+                    scrollHeight = this.$refs.scrollTopList.scrollHeight, // 3448
+                    height = 675; //根据项目实际定义
+                if (scrollTop + clientHeight >= scrollHeight - height) {
+                    if (Number(this.current_page) >= Number(this.last_page)) {
+                        return false
+                    } else {
+                        this.current_page = this.current_page + 1  //显示条数新增
+                        this.getAttendanceList() //请求列表list 接口方法
+                    }
+                } else {
+                    return false
+                }
             },
-            startFlow: function (flowId) {
-                const url = this.url.flowOpen + '?flow=' + flowId + '&uuid=' + this.userUuid;
-                window.open(url, '_blank');
+            // 节流函数
+            throttle(func, wait) {
+                let lastTime = null
+                let timeout
+                return () => {
+                    let context = this;
+                    let now = new Date();
+                    let arg = arguments;
+                    if (now - lastTime - wait > 0) {
+                        if (timeout) {
+                            clearTimeout(timeout)
+                            timeout = null
+                        }
+                        func.apply(context, arg)
+                        lastTime = now
+                    } else if (!timeout) {
+                        timeout = setTimeout(() => {
+                            func.apply(context, arg)
+                        }, wait)
+                    }
+                }
             },
+
             loadFlowsStartedByMe: function () {
                 this.isLoading = true;
                 startedByMe(this.userUuid).then(res => {
@@ -159,9 +200,17 @@ if (document.getElementById('teacher-homepage-app')) {
             viewApplicationDetail: function (action) {
                 window.location.href = '/pipeline/flow/view-history?action_id=' + action.id;
             },
+            startFlow: function (flowId) {
+                const url = this.url.flowOpen + '?flow=' + flowId + '&uuid=' + this.userUuid;
+                window.open(url, '_blank');
+            },
             reloadThisPage: function () {
                 Util.reloadCurrentPage(this);
             }
+        },
+        mounted() {
+            // 值周-------加载下一页
+            this.$refs.scrollTopList.addEventListener("scroll", this.throttle(this.handleScroll, 1000), true)
         },
         //     computed: {
         //         attendanceList2() {

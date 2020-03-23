@@ -75,6 +75,9 @@ if (document.getElementById('pipeline-flow-open-app')) {
         });
       },
       onSubmit() {
+        console.log('submit')
+
+        return
         // console.log(1)
         // console.log(this.formList)
         let options = [];
@@ -296,6 +299,11 @@ if (document.getElementById('pipeline-flow-open-app')) {
       dropAttachment: function(idx, attachment){
         this.action.attachments.splice(idx, 1);
         this.$message({type:'info', message: '移除文件: ' + attachment.file_name});
+      },
+      //表单验证
+      radioRules: function (val) {
+        console.log(val)
+        return false
       }
     }
   });

@@ -5,27 +5,24 @@
         <div class="teacher_oa_card">
             <dl class="teacher_oa_card_body" v-for="item in iconList" :key="item.name">
                 <dt><img :src="item.icon" alt=""></dt>
-                <dd>@{{ item.name }}</dd>
+                <dd v-cloak>@{{ item.name }}</dd>
             </dl>
         </div>
         <p class="teacher_oa_approval">我的审批</p>
         <div class="teacher_oa_approval_content">
-            <div class="teacher_oa_approval_content_left">
-                <div v-for="(item,index) in myflows" :key="index">
-                    <p class="name">
-                        <span>@{{ item.name }}</span>
-                        <span @click="close(index)">收起</span>
-                    </p>
-                    <el-divider></el-divider>
-                    <div class="showFlows" v-if="open == index">
-                        <div v-for="i in item.flows" :key="i.id" class="itemFlows">
-                            <img src="{{asset('assets/img/pipeline/addTo@2x.png')}}" alt="">
-                            <p>@{{ i.name }}</p>
+            <div class="teacher_oa_approval_content_left" v-cloak>
+                <el-collapse v-for="(item,index) in myflows" :key="index" v-model="activeNames">
+                    <el-collapse-item :title="item.name" :name="index">
+                        <div class="showFlows">
+                            <div v-for="i in item.flows" :key="i.id" class="itemFlows">
+                                <img src="{{asset('assets/img/pipeline/addTo@2x.png')}}" alt="">
+                                <p>@{{ i.name }}</p>
+                            </div>
                         </div>
-                    </div>
-                </div>
+                    </el-collapse-item>
+                </el-collapse>
             </div>
-            <div class="teacher_oa_approval_content_right">
+            <div class="teacher_oa_approval_content_right" v-cloak>
                 <div class="teacher_oa_approval_content_right_tabs">
                     <ul>
                         <li v-for="(item,index) in nav" :key="index" @click="list_click(index)" :class="{'bgred':show==index}">@{{item.tit}}</li>

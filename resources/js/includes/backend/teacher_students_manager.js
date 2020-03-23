@@ -231,6 +231,7 @@ if (document.getElementById('teacher-assistant-students-manager-app')) {
                             type: 'success'
                         });
                         let params = {student_id: this.student_id};
+                        this.dialogVisible = false;
                         this.getStuDetail(params)
                     }
                 }).catch((err) => {

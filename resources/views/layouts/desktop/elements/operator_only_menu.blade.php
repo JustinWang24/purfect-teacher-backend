@@ -15,6 +15,11 @@
                 <span class="title">意见反馈</span>
             </a>
         </li>
+        <li class="nav-item">
+          <a href="{{ route('admin.notifications.list',['uuid'=>session('school.uuid')]) }}" class="nav-link ">
+            <span class="title">消息中心</span>
+          </a>
+        </li>
     </ul>
 </li>
 

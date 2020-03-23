@@ -61,9 +61,11 @@ class SystemNotification extends Model
     const COMMON_CATEGORY_NOTICE_INSPECTION = 303;//检查
     const COMMON_CATEGORY_WIFI = 304;//校园网
     const COMMON_CATEGORY_PIPELINE = 305;//审批 @TODO 工作流程加入事件监听后会拆分不同类型
+    const COMMON_CATEGORY_MESSAGE = 306; // 后台发布的系统消息
 
 
     protected $fillable = [
+        'uuid',
         'sender',
         'to',
         'type',
@@ -95,6 +97,8 @@ class SystemNotification extends Model
                     case IFlow::TYPE_1_01:
                     case IFlow::TYPE_1_02:
                     case IFlow::TYPE_1_03:
+                    case IFlow::TYPE_3_01:
+                    case IFlow::TYPE_3_02:
                         $category = self::STUDENT_CATEGORY_APPLY;
                         break;
                     default:
@@ -119,6 +123,8 @@ class SystemNotification extends Model
                     case IFlow::TYPE_1_01:
                     case IFlow::TYPE_1_02:
                     case IFlow::TYPE_1_03:
+                    case IFlow::TYPE_3_01:
+                    case IFlow::TYPE_3_02:
                         $category = self::TEACHER_CATEGORY_APPLY;
                         break;
                     default:
