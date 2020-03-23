@@ -3,7 +3,6 @@
  */
 import { Util } from "../../common/utils";
 import { startedByMe, waitingForMe } from "../../common/flow";
-import Calendar from 'vue-calendar-component';
 
 if (document.getElementById('teacher-homepage-app')) {
     new Vue({
@@ -19,14 +18,19 @@ if (document.getElementById('teacher-homepage-app')) {
                 bannerList: [], // 获取首页banner
                 newsList: [], // 获取首页校园新闻
                 showNewInfo: false, // 校园新闻详情侧边栏
-                notice: {
+                notice: { // 校园新闻详情
                     title: "",
                     created_at: "",
                     sections: "",
                     image: "",
                     type: ""
-                }, // 校园新闻详情
+                },
                 calendar: new Date(), // 校历
+                yyyy: '', // 日历年份
+                mm: '', // 日历月份
+                week: ['一', '二', '三', '四', '五', '六', '日'],
+                tableWeek: [],
+                tableDay: [],
                 schooleventsList: [], // 获取首页校园安排
                 schoolalleventsList: [], // 获取首页历史安排
                 drawer: false, // 全部历史安排
@@ -42,9 +46,6 @@ if (document.getElementById('teacher-homepage-app')) {
                 // loading: false,
             }
         },
-        components: {
-            Calendar
-        },
         created() {
             const dom = document.getElementById('app-init-data-holder');
             this.schoolId = dom.dataset.school;
@@ -59,15 +60,6 @@ if (document.getElementById('teacher-homepage-app')) {
             this.getAttendanceList(); // 获取首页值周内容
         },
         methods: {
-            clickday(data) {
-                debugger;
-                console.log(data); //选中某天
-            },
-            changedate(data) {
-                console.log(data); //左右点击切换月份
-            },
-
-
             // 获取首页banner
             getBanner() {
                 axios.post(
@@ -97,7 +89,6 @@ if (document.getElementById('teacher-homepage-app')) {
                 }).then(res => {
                     this.showNewInfo = true
                     this.notice = res.data.data
-                    console.log(this.notice)
                 }).catch(err => {
                     console.log(err)
                 })
@@ -108,10 +99,27 @@ if (document.getElementById('teacher-homepage-app')) {
                     '/api/school/calendar'
                 ).then(res => {
                     if (Util.isAjaxResOk(res)) {
-                        // console.log(res)
-                        // this.schoolalleventsList = res.data.data.events.slice(0,5)
+                        this.yyyy = this.calendar.getFullYear();
+                        this.mm = this.calendar.getMonth();
+                        this.tableWeek = res.data.data.weeks;
+                        let arr = res.data.data.days;
+                        const times = Math.ceil(1000 / 7)
+                        for (let i = 0; i <= times; i++) {
+                            if (i * 7 >= arr.length) {
+                                break
+                            }
+                            this.tableDay.push(arr.slice(i * 7, (i + 1) * 7))
+                        }
                     }
                 })
+            },
+            // 上一个月
+            prevMonth() {
+                console.log(this.mm)
+            },
+            // 下一个月
+            nextMonth() {
+                console.log(this.yyyy)
             },
             // 获取首页校园安排
             getAllevents() {

@@ -87,7 +87,7 @@
                         <el-timeline-item timestamp="抄送人" placement="top">
                             <p class="pull-right">
                                 <el-button-group>
-                                    <el-button size="mini" @click="approver" ref="approver" href="{{ route('school_manager.pipeline.flows-handler') }}">设置抄送人</el-button>
+                                    <el-button size="mini" @click="approvers" ref="approver" href="{{ route('school_manager.pipeline.flows-handler') }}">设置抄送人</el-button>
                                 </el-button-group>
                             </p>
                             <span v-if="copy.length > 0" v-for="(item,index) in copy" :key="item.user_id">
