@@ -57,6 +57,48 @@
       background: rgba(255, 255, 255, 1);
       border-radius: 4px;
       margin-bottom: 10px;
+      .el-drawer {
+        height: 100%;
+        overflow-y: scroll;
+        .el-drawer__header {
+          height: 50px;
+          padding: 20px;
+          display: flex;
+          justify-content: space-between;
+          font-size: 18px;
+          font-family: MicrosoftYaHei-Bold, MicrosoftYaHei;
+          font-weight: bold;
+          color: #414a5a;
+          margin-bottom: 0;
+          border-bottom: 1px solid #eaedf2;
+        }
+        .el-drawer__body {
+          .demo-drawer__content {
+            margin-bottom: 20px;
+            p:first-child {
+              font-size: 18px;
+              font-family: MicrosoftYaHei-Bold, MicrosoftYaHei;
+              font-weight: bold;
+              color: #414a5a;
+              padding: 10px 20px 0;
+            }
+            p:nth-child(2) {
+              font-size: 12px;
+              font-family: MicrosoftYaHei;
+              color: #d2d5de;
+              padding: 0 20px;
+            }
+            img {
+              width: 420px;
+              height: 200px;
+              margin: 20px;
+              display: inline-block;
+              border: 1px solid red;
+              border-radius: 4px;
+            }
+          }
+        }
+      }
       .bottom_first_content {
         height: 135px;
         border-bottom: 1px solid #eaedf2;
@@ -87,7 +129,6 @@
             text-overflow: ellipsis;
           }
           .bottom_first_content_detail {
-            // width: 250px;
             padding-left: 14px;
             padding-right: 14px;
             font-size: 14px;
@@ -113,17 +154,43 @@
       flex: 1;
       margin: 0 20px 10px;
       .bottom_second_calendar {
-        width: 100%;
         height: 418px;
         background: rgba(255, 255, 255, 1);
         border-radius: 4px;
-        .wh_content_all {
-          background-color: #fff;
-          .wh_top_changge li {
-            color: #ababab;
+        ul {
+          height: 50px;
+          display: flex;
+          align-items: center;
+          font-size: 18px;
+          li {
+            flex: 1;
+            text-align: center;
           }
-          .wh_content_item {
-            color: #949CA9;
+          li:nth-child(odd) {
+            cursor: pointer;
+          }
+        }
+        table {
+          width: 100%;
+          height: 100%;
+          > thead {
+            width: 100%;
+            td:nth-child(7) {
+              color: #4ea5fe !important;
+            }
+            td:last-child {
+              color: #4ea5fe !important;
+            }
+            > tr {
+              width: 100%;
+            }
+          }
+          > tbody {
+            th {
+              color: #fe7b1c !important;
+              font-weight: 100 !important;
+              text-align: center;
+            }
           }
         }
       }
@@ -233,70 +300,6 @@
           overflow: hidden;
           -webkit-line-clamp: 2;
           -webkit-box-orient: vertical;
-        }
-      }
-    }
-  }
-  .el-drawer {
-    .el-drawer__header {
-      height: 50px;
-      padding: 20px;
-      display: flex;
-      justify-content: space-between;
-      font-size: 18px;
-      font-family: MicrosoftYaHei-Bold, MicrosoftYaHei;
-      font-weight: bold;
-      color: #414a5a;
-      margin-bottom: 0;
-      border-bottom: 1px solid #eaedf2;
-    }
-    .el-drawer__body {
-      .demo-drawer__content {
-        p:first-child {
-          font-size: 18px;
-          font-family: MicrosoftYaHei-Bold, MicrosoftYaHei;
-          font-weight: bold;
-          color: #414a5a;
-          padding: 10px 20px 0;
-        }
-        p:nth-child(2) {
-          font-size: 12px;
-          font-family: MicrosoftYaHei;
-          color: #d2d5de;
-          padding: 0 20px;
-        }
-        // p:nth-child(3) {
-        //   font-size: 14px;
-        //   font-family: MicrosoftYaHei;
-        //   color: #414a5a;
-        //   padding: 0 20px 20px;
-        // }
-        img {
-          width: 420px;
-          height: 200px;
-          margin: 20px;
-          display: inline-block;
-          border: 1px solid red;
-          border-radius: 4px;
-        }
-        .demo-drawer__content_enclosure {
-          .word {
-            font-size: 16px;
-            font-family: MicrosoftYaHei;
-            color: #414a5a;
-            padding: 15px 20px;
-            border-top: 1px solid #eaedf2;
-          }
-          .enclosure {
-            width: 92%;
-            height: 65px;
-            font-size: 14px;
-            font-family: MicrosoftYaHei;
-            color: #414a5a;
-            line-height: 65px;
-            margin: 0 20px;
-            background-color: #f2f9ff;
-          }
         }
       }
     }

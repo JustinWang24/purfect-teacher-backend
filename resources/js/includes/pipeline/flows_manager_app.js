@@ -38,6 +38,7 @@ if (document.getElementById('pipeline-flows-manager-app')) {
                 copy: [], // 右侧抄送人列表，设置页面同理
                 juese: [], // 右侧框框角色
                 zuzhi: [], // 右侧框框组织
+                options: [], // 表单
                 returnId: '', // flow_id
                 titlesList: [], // 侧边栏角色获取
                 agree: '',
@@ -322,6 +323,7 @@ if (document.getElementById('pipeline-flows-manager-app')) {
                         this.zuzhi = res.data.data.nodes.head.handler.organizations
                         this.copy = res.data.data.nodes.copy
                         this.handler = res.data.data.nodes.handler
+                        this.options = res.data.data.nodes.options
                     }
                     else {
                         this.$notify.error(
@@ -390,13 +392,29 @@ if (document.getElementById('pipeline-flows-manager-app')) {
             },
             // 自定义表单 -- 进入页面
             option() {
-                var url = this.$refs.option.$attrs.href + '?flow_id=' + this.returnId;
-                location.href = url;
+                if (this.options.length) {
+                    this.$message('无法修改，可删除重新创建');
+                } else {
+                    var url = this.$refs.option.$attrs.href + '?flow_id=' + this.returnId;
+                    location.href = url;
+                }
             },
             // 设置审批人按钮--进入页面
             approver() {
-                var url = this.$refs.approver.$attrs.href + '?flow_id=' + this.returnId;
-                location.href = url;
+                if (this.handler.length) {
+                    this.$message('无法修改，可删除重新创建');
+                } else {
+                    var url = this.$refs.approver.$attrs.href + '?flow_id=' + this.returnId;
+                    location.href = url;
+                }
+            },
+            approvers() {
+                if (this.copy.length) {
+                    this.$message('无法修改，可删除重新创建');
+                } else {
+                    var url = this.$refs.approver.$attrs.href + '?flow_id=' + this.returnId;
+                    location.href = url;
+                }
             },
             // 设置页面---流程开始的加号
             first() {

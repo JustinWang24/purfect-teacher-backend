@@ -18,8 +18,6 @@ Vue.use(ElementUI);
 import Vant from 'vant';
 import 'vant/lib/index.css';
 Vue.use(Vant)
-// 教师端首页日历插件
-import Calendar from 'vue-calendar-component';
 
 /**
 
