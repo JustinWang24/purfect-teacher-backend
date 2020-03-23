@@ -47,7 +47,7 @@ use App\Utils\Misc\ConfigurationTool;
                     <li></li>
                     <li></li>
                 </ul> -->
-                <Calendar @chose-day="clickday" @change-month="changedate"></Calendar>
+                <Calendar></Calendar>
                 <!-- <el-calendar v-model="calendar"></el-calendar> -->
             </div>
             <div class="bottom_second_plan">
