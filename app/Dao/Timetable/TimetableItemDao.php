@@ -212,7 +212,11 @@ class TimetableItemDao
         if(isset($data['id']) && $data['id']){
             $id = $data['id'];
             unset($data['id']);
+
+            $data['available_only'] = json_encode($data['available_only']);
+
             return TimetableItem::where('id',$id)->update($data);
+
         }
         return false;
     }
