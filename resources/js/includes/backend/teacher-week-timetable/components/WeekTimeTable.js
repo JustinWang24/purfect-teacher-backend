@@ -14,7 +14,7 @@ Vue.component("WeekTimeTable", {
         <template v-else>
           <div v-if="item.name" class="table-item">
             <div class="item-content">
-            <div class="item-top" :style="{'background': _getColor(item,'backAndColors')}"><span class="optional">{{item.optional ? '必修课' :'选修课'}}</span><span>{{repeatUnits[item.repeat_unit]}}</span></div>
+            <div class="item-top" :style="{'background': _getColor(item,'backAndColors')}"><span class="optional">{{item.optional ? '选修课':'必修课'}}</span><span>{{repeatUnits[item.repeat_unit]}}</span></div>
             <div class="item-bottom" :style="{'color': _getColor(item,'backAndColors'),'background':_getColor(item,'bottomBack')}">
               <p class="des-info"><span class="iconfont">&#xe7ed;</span>{{item.switching ? item.old_course: item.name }}</p>
               <p class="des-info">
@@ -39,9 +39,9 @@ Vue.component("WeekTimeTable", {
   mixins: [Mixins],
   methods: {
     _getColor(item,name) {
-      // item.optional // true必修课 false选修课
       //"repeat_unit": 1,  // 1每周重复 2每单周重复 3每双周重复
-      return item.switching ? this[name][4]:item.optional ? this[name][parseInt(item.repeat_unit)] : this[name][0]
+      // "optional": true, //true选修课 // false必修课 
+      return item.switching ? this[name][4]:item.optional ? this[name][0] :this[name][parseInt(item.repeat_unit)]
     },
   },
   data() {
