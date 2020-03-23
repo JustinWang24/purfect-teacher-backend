@@ -8,7 +8,7 @@
     padding: 20px 20px 0;
     background: rgba(255, 255, 255, 1);
     .teacher_oa_card_body {
-      padding: 0 80px;
+      padding: 0 5%;
       border-right: 1px solid #eaedf2;
       img {
         width: 70px;
@@ -39,11 +39,15 @@
     justify-content: space-between;
     flex-wrap: wrap;
     .teacher_oa_approval_content_left {
-      width: 455px;
+      flex: 1;
       min-height: 445px;
       background: rgba(255, 255, 255, 1);
       border-radius: 4px;
       margin-bottom: 10px;
+      .el-collapse-item__header {
+        font-size: 18px;
+        color: #313b4c;
+      }
       .name {
         display: flex;
         justify-content: space-between;
@@ -84,11 +88,12 @@
       }
     }
     .teacher_oa_approval_content_right {
-      width: 940px;
+      flex: 2;
       height: 445px;
       background: rgba(255, 255, 255, 1);
       border-radius: 4px;
       margin-bottom: 10px;
+      margin-left: 20px;
       .teacher_oa_approval_content_right_tabs {
         width: 100%;
         height: 50px;
@@ -138,5 +143,8 @@
         }
       }
     }
+  }
+  [v-cloak] {
+    display: none;
   }
 }

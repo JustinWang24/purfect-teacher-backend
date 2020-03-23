@@ -5,12 +5,12 @@
         <div class="teacher_oa_card">
             <dl class="teacher_oa_card_body" v-for="item in iconList" :key="item.name">
                 <dt><img :src="item.icon" alt=""></dt>
-                <dd>@{{ item.name }}</dd>
+                <dd v-cloak>@{{ item.name }}</dd>
             </dl>
         </div>
         <p class="teacher_oa_approval">我的审批</p>
         <div class="teacher_oa_approval_content">
-            <div class="teacher_oa_approval_content_left">
+            <div class="teacher_oa_approval_content_left" v-cloak>
                 <el-collapse v-for="(item,index) in myflows" :key="index" v-model="activeNames">
                     <el-collapse-item :title="item.name" :name="index">
                         <div class="showFlows">
@@ -22,7 +22,7 @@
                     </el-collapse-item>
                 </el-collapse>
             </div>
-            <div class="teacher_oa_approval_content_right">
+            <div class="teacher_oa_approval_content_right" v-cloak>
                 <div class="teacher_oa_approval_content_right_tabs">
                     <ul>
                         <li v-for="(item,index) in nav" :key="index" @click="list_click(index)" :class="{'bgred':show==index}">@{{item.tit}}</li>
