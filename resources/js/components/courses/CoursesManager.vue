@@ -55,7 +55,7 @@
                                 <el-option label="3年级" :value="3"></el-option>
                                 <el-option label="4年级" :value="4"></el-option>
                                 <el-option label="5年级" :value="5"></el-option>
-                                <el-option label="6年级" :value="6"></el-option>
+
                             </el-select>
                         </el-form-item>
                     </el-col>
@@ -86,6 +86,7 @@
                         </el-option>
                     </el-select>
                 </el-form-item>
+
                 <el-form-item label="授课教师" prop="teachers">
                     <el-select style="width: 100%;"
                                v-model="courseModel.teachers"
@@ -242,6 +243,9 @@
                     ],
                     term: [
                         { required: true, message: '请选择学期', trigger: 'change' }
+                    ],
+                    teachers: [
+                        { required: true, message: '授课教师', trigger: 'change' }
                     ]
                 },
                 terms: Constants.TERMS,
@@ -431,10 +435,10 @@
                     return;
                 }
 
-                if(this.courseModel.majors.length === 0){
-                    this.$message.error('请至少选择一个本课程所关联的专业');
-                    return;
-                }
+                // if(this.courseModel.majors.length === 0){
+                //     this.$message.error('请至少选择一个本课程所关联的专业');
+                //     return;
+                // }
                 if(this.courseModel.teachers.length === 0){
                     this.$message.error('请至少选择一位本课程的授课老师');
                     return;
@@ -462,7 +466,7 @@
                     else{
                         this.$notify.error({
                             title: '错误',
-                            message: '无法保存课程数据, 请稍候再试或联系管理员',
+                            message: res.data.message,
                             position: 'bottom-right'
                         });
                     }
