@@ -61,7 +61,7 @@ class noticeStudentAttendanceSignin extends Command
         $timetableItemDao = new TimetableItemDao;
         $gradeUserDao = new GradeUserDao;
 
-        // 当前时间 + 5分钟 业务需求下课前五分钟
+        // 当前时间 + 5分钟 业务需求下课前五分钟.
         $time = Carbon::parse('+5 Minute')->format('H:i');
 
         foreach ($schoolIds as $schoolId) {
