@@ -90,7 +90,7 @@ class noticeStudentAttendanceSignin extends Command
 
                   foreach ($gradeUsers as $key => $val) {
                     if(!in_array($val->user_id, $userIds)) {
-                        $notSignUser[] = $val->user->toArray();
+                        $notSignUser[] = $val->user;
                     }
                   }
                   $list[] = [
@@ -100,7 +100,7 @@ class noticeStudentAttendanceSignin extends Command
                 }
             }
         }
-        
+
         /*
          * [
          *   {
