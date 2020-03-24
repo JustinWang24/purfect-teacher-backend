@@ -60,8 +60,9 @@ use App\Utils\Misc\ConfigurationTool;
                         </thead>
                         <tbody>
                             <tr v-for="(item,index) in tableDay" :key="index">
-                                <th>@{{tableWeek[index].name}}</th>
-                                <td v-for="(i,index) in item" :key="index">@{{ i.name.split('-')[1] }}
+                                <th style="width: 75px;">@{{tableWeek[index].name}}</th>
+                                <td v-for="(i,index) in item" :key="index" style="width: 45px;">
+                                    <span :class="i.name.split('-')[1] == dd ? 'current' : ''">@{{ i.name.split('-')[1] }}</span>
                                     <span v-if="i.events.length > 0" style="display: inline-block;width: 3px;height: 3px;background-color: red;border-radius: 50%;position: relative;top: 10px;left: -15px;"></span>
                                 </td>
                             </tr>

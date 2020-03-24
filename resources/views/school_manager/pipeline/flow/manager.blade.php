@@ -13,7 +13,7 @@
                 </h4>
                 <el-divider></el-divider>
             </div>
-            <div class="card-body" v-for="item in typeList" :key="item.key">
+            <div class="card-body" v-for="item in typeList" :key="item.key" v-cloak>
                 <div class="row mb-4">
                     <div class="col-12">
                         <h4 style="font-weight: 600;">
@@ -38,7 +38,7 @@
         </div>
     </div>
 
-    <div class="col-sm-12 col-md-6 col-lg-6 col-xl-6">
+    <div class="col-sm-12 col-md-6 col-lg-6 col-xl-6" v-cloak>
         <div class="card">
             <div class="card-head">
                 <header class="full-width">
@@ -87,7 +87,7 @@
                         <el-timeline-item timestamp="抄送人" placement="top">
                             <p class="pull-right">
                                 <el-button-group>
-                                    <el-button size="mini" @click="approvers" ref="approver" href="{{ route('school_manager.pipeline.flows-handler') }}">设置抄送人</el-button>
+                                    <el-button size="mini" @click="approver" ref="approver" href="{{ route('school_manager.pipeline.flows-handler') }}">设置抄送人</el-button>
                                 </el-button-group>
                             </p>
                             <span v-if="copy.length > 0" v-for="(item,index) in copy" :key="item.user_id">
@@ -100,7 +100,7 @@
         </div>
     </div>
 
-    <el-drawer title="添加/修改流程" size="70%" :visible.sync="flowFormFlag">
+    <el-drawer title="添加/修改流程" size="70%" :visible.sync="flowFormFlag" v-cloak>
         <el-form ref="currentFlowForm" label-width="120px" style="padding: 10px;">
             <el-row>
                 <el-col :span="7">
