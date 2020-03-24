@@ -339,7 +339,7 @@
                 this.courseModel.teachers = [];
                 this.courseModel.majors = [];
                 this.courseModel.scores = '0';
-                this.courseModel.duration = 0;
+                this.courseModel.duration = '0';
                 this.courseModel.year = '';
                 this.courseModel.term = '';
                 this.courseModel.desc = '';
@@ -347,7 +347,7 @@
                 if(typeof model !== "undefined"){
                     this.courseModel.id = model.id;
                     this.courseModel.code = model.code;
-                    this.courseModel.duration = model.duration;
+                    this.courseModel.duration = model.duration + '';
                     this.courseModel.name = model.name;
                     this.courseModel.scores = model.scores;
                     this.courseModel.year = model.year;
