@@ -28,6 +28,7 @@ if (document.getElementById('teacher-homepage-app')) {
                 calendar: new Date(), // 校历
                 yyyy: '', // 日历年份
                 mm: '', // 日历月份
+                dd: '',
                 week: ['一', '二', '三', '四', '五', '六', '日'],
                 tableWeek: [],
                 tableDay: [],
@@ -101,6 +102,7 @@ if (document.getElementById('teacher-homepage-app')) {
                     if (Util.isAjaxResOk(res)) {
                         this.yyyy = this.calendar.getFullYear();
                         this.mm = this.calendar.getMonth();
+                        this.dd = this.calendar.getDate();
                         this.tableWeek = res.data.data.weeks;
                         let arr = res.data.data.days;
                         const times = Math.ceil(1000 / 7)

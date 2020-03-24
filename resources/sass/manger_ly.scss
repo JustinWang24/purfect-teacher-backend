@@ -37,4 +37,7 @@
   .el-divider--horizontal {
     margin: 5px !important;
   }
+  [v-cloak] {
+    display: none;
+  }
 }
