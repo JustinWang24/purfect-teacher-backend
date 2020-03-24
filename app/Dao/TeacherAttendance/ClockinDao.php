@@ -5,6 +5,7 @@ namespace App\Dao\TeacherAttendance;
 use App\Models\TeacherAttendance\Attendance;
 use App\Models\TeacherAttendance\Clockin;
 use App\Models\TeacherAttendance\Clockset;
+use App\Models\TeacherAttendance\Leave;
 use App\Models\Users\UserOrganization;
 use App\Utils\JsonBuilder;
 use App\Utils\Misc\Contracts\Title;
@@ -69,6 +70,8 @@ class ClockinDao
                 'time' => ''
             ];
         }
+
+
     }
 
     public function getOneDayCount(Attendance $attendance, $day) {
@@ -166,6 +169,8 @@ class ClockinDao
             'not' =>0,//未打卡人数 全部-已打卡
             'late' => 0,//迟到人数
             'leave' => 0,//请假人数
+            'away' => 0,//外出人数
+            'travel' => 0,//出差人数
             'normal_list' => [],
             'not_list' => []
         ];
@@ -174,9 +179,14 @@ class ClockinDao
             //该考勤组下总成员
             $return['all'] += UserOrganization::whereIn('organization_id', $attendance->organizations()->pluck('organization_id')->toArray())
                 ->count();
+
             //该考勤组下已打卡人员
             $return['normal'] += $attendance->clockins()->where('day', '=', $day)->distinct()->count('user_id');
             $return['late'] += $attendance->clockins()->where('day', '=', $day)->whereIn('status', [Clockin::STATUS_LATE, Clockin::STATUS_LATER])->distinct()->count('user_id');
+            //请假、外出、出差人员
+            $return['leave'] += $attendance->leaves()->where('day', '=', $day)->where('source', Leave::SOURCE_LEAVE)->distinct()->count('user_id');
+            $return['away'] += $attendance->leaves()->where('day', '=', $day)->where('source', Leave::SOURCE_AWAY)->distinct()->count('user_id');
+            $return['travel'] += $attendance->leaves()->where('day', '=', $day)->where('source', Leave::SOURCE_TRAVEL)->distinct()->count('user_id');
 
             //总人员列表
             $userList = UserOrganization::whereIn('organization_id', $attendance->organizations()->pluck('organization_id')->toArray())
