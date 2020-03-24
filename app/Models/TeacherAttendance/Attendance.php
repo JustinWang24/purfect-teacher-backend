@@ -39,6 +39,11 @@ class Attendance extends Model
         return $this->hasMany(UserMac::class, 'teacher_attendance_id');
     }
 
+    public function leaves()
+    {
+        return $this->hasMany(LeaveDetail::class, 'teacher_attendance_id');
+    }
+
     public function exceptiondays()
     {
         return $this->hasMany(ExceptionDay::class, 'teacher_attendance_id');

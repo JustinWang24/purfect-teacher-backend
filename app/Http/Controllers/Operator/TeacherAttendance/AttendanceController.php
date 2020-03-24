@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Operator\TeacherAttendance;
 
 use App\Dao\Schools\OrganizationDao;
 use App\Dao\TeacherAttendance\AttendanceDao;
+use App\Dao\TeacherAttendance\ClockinDao;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\TeacherAttendance\AttendanceRequest;
 use App\Models\Schools\Organization;
@@ -27,6 +28,41 @@ class AttendanceController extends Controller
         $dao = new AttendanceDao();
         $result = $dao->getPaginated($request->session()->get('school.id'));
         return JsonBuilder::Success($result);
+    }
+
+    public function load_clockins_daycount(AttendanceRequest $request) {
+        $dao = new AttendanceDao();
+        $clockinDao = new ClockinDao();
+        $attendance = $dao->getById($request->get('attendance_id'));
+        $day = $request->get('day', Carbon::now()->format('Y-m-d'));
+        $info = $clockinDao->getOneDayCount($attendance, $day);
+        $return = [
+            'using_afternoon' => $attendance->using_afternoon,
+            'date' => $day,
+            'info' => $info
+        ];
+        return JsonBuilder::Success($return);
+    }
+    public function load_clockins_monthcount(AttendanceRequest $request) {
+        $dao = new AttendanceDao();
+        $clockinDao = new ClockinDao();
+        $attendance = $dao->getById($request->get('attendance_id'));
+        $month = $request->get('month', Carbon::now()->format('Y-m'));
+        $monthStart = Carbon::parse($month)->firstOfMonth();
+        if (Carbon::parse($month)->isSameMonth(Carbon::today())) {
+            //当月只显示到今日
+            $monthEnd = Carbon::today();
+        }else {
+            $monthEnd = Carbon::parse($month)->lastOfMonth();
+        }
+
+        $info = $clockinDao->getOneMonthCount($attendance, $monthStart, $monthEnd);
+        $return = [
+            'using_afternoon' => $attendance->using_afternoon,
+            'date' => $month,
+            'info' => $info
+        ];
+        return JsonBuilder::Success($return);
     }
 
     public function load_attendance(AttendanceRequest $request) {
