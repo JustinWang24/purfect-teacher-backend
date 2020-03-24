@@ -194,11 +194,13 @@ class ClockinDao
             foreach ($userList as $userOrganization) {
                 //今日打卡状态
                 $clockin = $attendance->clockins()->where(['user_id' => $userOrganization->user->id, 'day' => $day])->pluck('status', 'type')->toArray();
+                $tags = $attendance->leaves()->where(['user_id' => $userOrganization->user->id, 'day' => $day])->distinct()->pluck('source')->ToArray();
                 $userInfo = [
                     'userid' => $userOrganization->user->id,
                     'name' => $userOrganization->user->name,
                     'avatar' => $userOrganization->user->profile->avatar,
                     'title' => $attendance->title,
+                    'tags' => $tags ?? [],
                     'clockin' => [
                         'using_afternoon' => $attendance->using_afternoon,
                         'morning' => $clockin['morning'] ?? Clockin::STATUS_NONE,
