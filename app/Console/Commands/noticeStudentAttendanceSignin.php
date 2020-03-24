@@ -2,9 +2,15 @@
 
 namespace App\Console\Commands;
 
-use App\Dao\TeacherAttendance\AttendanceDao;
+use App\Dao\AttendanceSchedules\AttendancesDao;
+use App\Dao\Schools\SchoolDao;
+use App\Dao\Timetable\TimeSlotDao;
+use App\Dao\Timetable\TimetableItemDao;
+use App\Dao\Users\GradeUserDao;
 use App\Jobs\Notifier\InternalMessage;
 use App\Models\Misc\SystemNotification;
+use App\Utils\Time\GradeAndYearUtil;
+use Carbon\Carbon;
 use Illuminate\Console\Command;
 
 class noticeStudentAttendanceSignin extends Command
@@ -41,7 +47,60 @@ class noticeStudentAttendanceSignin extends Command
     public function handle()
     {
         $list = [];
-        //@TODO 获取5分后下课的课程以及还没签到的用户
+
+        // 获取所有学校
+        $schoolDao = new SchoolDao;
+        $schools = $schoolDao->getAllSchool();
+        $schoolIds = [];
+        foreach ($schools as $key => $school) {
+            $schoolIds[] = $school->id;
+        }
+        $timeSlotDao = new TimeSlotDao;
+
+        $attendanceDao    = new AttendancesDao;
+        $timetableItemDao = new TimetableItemDao;
+        $gradeUserDao = new GradeUserDao;
+
+        // 当前时间 + 5分钟 业务需求下课前五分钟
+        $time = Carbon::parse('+5 Minute')->format('H:i');
+
+        foreach ($schoolIds as $schoolId) {
+            // 获取学周
+            $school = $schoolDao->getSchoolById($schoolId);
+            $configuration = $school->configuration;
+            $now = Carbon::now(GradeAndYearUtil::TIMEZONE_CN);
+            $month = Carbon::parse($now)->month;
+            $term = $configuration->guessTerm($month);
+            $weeks = $configuration->getScheduleWeek($now, null, $term);
+            $week = $weeks->getScheduleWeekIndex();
+
+            // 获取当前时间是第几节课
+            $timeSlot =  $timeSlotDao->getTimeSlotByCurrentTime($schoolId);
+            if($timeSlot->to == $time) {
+                $timetables = $timetableItemDao->getCourseListByCurrentTime($schoolId, $timeSlot->id);
+                foreach ($timetables as $timetable) {
+                  // 班级学生
+                  $gradeUsers = $gradeUserDao->getGradeUserByGradeId($timetable->grade_id);
+                  // 签到主表数据
+                  $attendanceData = $attendanceDao->isAttendanceByTimetableAndWeek($timetable, $week);
+                  // 签到详情表数据
+                  $attendanceInfo = $attendanceData->details;
+                  // 取出签到详情所有user_id
+                  $userIds = $attendanceInfo->pluck('student_id')->toArray();
+
+                  foreach ($gradeUsers as $key => $val) {
+                    if(!in_array($val->user_id, $userIds)) {
+                        $notSignUser[] = $val->user->toArray();
+                    }
+                  }
+                  $list[] = [
+                            'time_table_id' => $timetable->id,
+                            'not_sign_user' => $notSignUser,
+                  ];
+                }
+            }
+        }
+        
         /*
          * [
          *   {

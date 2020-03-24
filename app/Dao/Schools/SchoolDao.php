@@ -225,4 +225,12 @@ class SchoolDao
     public function saveSchoolIntro($schoolId, $intro){
         return SchoolConfiguration::where('school_id', $schoolId)->update(['campus_intro'=>$intro]);
     }
+
+  /**
+   * 获取所有学校
+   */
+    public function getAllSchool()
+    {
+       return School::get();
+    }
 }
