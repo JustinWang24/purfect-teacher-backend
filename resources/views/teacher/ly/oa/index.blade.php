@@ -11,10 +11,10 @@
         <p class="teacher_oa_approval">我的审批</p>
         <div class="teacher_oa_approval_content">
             <div class="teacher_oa_approval_content_left" v-cloak>
-                <el-collapse v-for="(item,index) in myflows" :key="index" v-model="activeNames">
+                <el-collapse v-for="(item,index) in myflows.types" :key="index" v-model="activeNames">
                     <el-collapse-item :title="item.name" :name="index">
                         <div class="showFlows">
-                            <div v-for="i in item.flows" :key="i.id" class="itemFlows">
+                            <div v-for="i in item.flows" :key="i.id" class="itemFlows" @click="goCreatFlow(i)">
                                 <img src="{{asset('assets/img/pipeline/addTo@2x.png')}}" alt="">
                                 <p>@{{ i.name }}</p>
                             </div>
@@ -66,6 +66,7 @@
             </div>
         </div>
     </div>
+    <flow-form ref="flowForm"/>
 </div>
 
 <div id="app-init-data-holder" data-school="{{ session('school.id') }}"></div>
