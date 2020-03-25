@@ -35,7 +35,9 @@ if (document.getElementById('teacher-assistant-grades-check-in-app')) {
     methods: {
       searchList: function () {
         let params = this.gradeValue ? JSON.parse(this.gradeValue) : {};
-        params.date = this.date;
+        if (this.date) {
+          params.date = params.date = this.date.getFullYear() + '-' + (this.date.getMonth() + 1) + '-' + this.date.getDate();
+        }
         this.ifShow = false;
         this.getGradeSignin(params);
       },
