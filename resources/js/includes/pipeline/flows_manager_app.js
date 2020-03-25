@@ -252,15 +252,6 @@ if (document.getElementById('pipeline-flows-manager-app')) {
                     });
                     return;
                 }
-                if (this.posiType === 3) {
-                    if (this.flow.business === '') {
-                        this.$notify.error({
-                            title: '错误',
-                            message: '关联业务不能为空'
-                        });
-                        return;
-                    }
-                }
                 if (this.node.handlers.length === 0) {
                     this.$notify.error({
                         title: '错误',

@@ -287,8 +287,11 @@
           border-bottom: 1px solid #eaedf2;
         }
         .attendance_detail {
-          padding-left: 17px;
+          // background: rgba(239, 247, 255, 1);
+          padding: 10px 17px;
+          border-bottom: 1px solid #eaedf2;
           p {
+            margin-bottom: 10px;
             span:first-child {
               font-size: 14px;
               font-family: MicrosoftYaHei;
@@ -304,13 +307,12 @@
           }
         }
         .attendance_task {
-          height: 47px;
-          background: rgba(239, 247, 255, 1);
-          padding: 0 14px;
+          padding: 5px 14px;
           display: -webkit-box;
           overflow: hidden;
           -webkit-line-clamp: 2;
           -webkit-box-orient: vertical;
+          border-bottom: 1px solid #eaedf2;
         }
       }
     }

@@ -19,7 +19,7 @@ use App\Utils\Misc\ConfigurationTool;
     <div class="bottom">
         <div class="bottom_first">
             <div>
-                <p class="bottom_title">校园新闻</p>
+                <p class="bottom_title"><img src="{{asset('assets/img/teacher_blade/news.png')}}" alt="">&nbsp; 校园新闻</p>
                 <div style="overflow:auto;height: 675px;" v-cloak>
                     <div class="bottom_first_content" v-for="item in newsList" :key="item.id" @click="newInfo(item.id)">
                         <img v-if="item.image" :src="item.image" alt="" :οnerrοr="item.image_url" class="bottom_first_content_img">
@@ -44,7 +44,7 @@ use App\Utils\Misc\ConfigurationTool;
         </div>
         <div class="bottom_second">
             <div class="bottom_second_calendar">
-                <p class="bottom_title">校历</p>
+                <p class="bottom_title"><img src="{{asset('assets/img/teacher_blade/calendar.png')}}" alt="">&nbsp; 校历</p>
                 <div style="height: calc(100% - 100px)" v-cloak>
                     <ul>
                         <li @click="prevMonth"><i class="el-icon-arrow-left"></i></li>
@@ -87,14 +87,20 @@ use App\Utils\Misc\ConfigurationTool;
             </el-drawer>
         </div>
         <div class="bottom_third">
-            <p class="bottom_title">值周</p>
+            <p class="bottom_title"><img src="{{asset('assets/img/teacher_blade/week.png')}}" alt="">&nbsp; 值周</p>
             <div style="overflow:auto;height: 675px;" v-cloak ref="scrollTopList">
                 <div class="attendance_content" v-for="item in attendanceList" :key="item.id">
                     <div class="attendance_time">@{{ item.start_date }}-@{{ item.end_date }}</div>
                     <div class="attendance_detail">
                         <p><span>负责部门：</span><span>@{{ item.related_organizations[0] }}</span></p>
-                        <p><span>值周班级：</span><span>@{{ item.grade_name }}</span></p>
-                        <p><span>值周人员：</span><span>@{{ item.high_level }}&nbsp;&nbsp;&nbsp; @{{ item.middle_level }} &nbsp;&nbsp;&nbsp;@{{ item.teacher_level }}</span></p>
+                        <p style="padding: 10px 0;"><span>值周班级：</span><span>@{{ item.grade_name }}</span></p>
+                        <p><span>值周人员：</span>
+                            <span>
+                                <span style="background-color: #E8F4FF;color: #4FA5FE;padding: 1px 5px;">@{{ item.high_level }}</span>&nbsp;&nbsp;&nbsp; 
+                                <span style="background-color: #E8F4FF;color: #4FA5FE;padding: 1px 5px;">@{{ item.middle_level }}</span> &nbsp;&nbsp;&nbsp; 
+                                <span style="background-color: #E8F4FF;color: #4FA5FE;padding: 1px 5px;">@{{ item.teacher_level }}</span>
+                            </span>
+                        </p>
                     </div>
                     <p class="attendance_task">@{{item .description }}</p>
                 </div>
