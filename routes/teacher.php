@@ -202,10 +202,13 @@ Route::prefix('teacher')->group(function () {
 
             Route::get('course','LY\AssistantController@course')
                 ->name('teacher.ly.assistant.course');
-				
+
+          Route::get('material','LY\AssistantController@material')
+            ->name('teacher.ly.assistant.material');
+
             Route::get('material','LY\AssistantController@material')
                 ->name('teacher.ly.assistant.material');
-				
+
             Route::get('check-in','LY\AssistantController@check_in')
                 ->name('teacher.ly.assistant.check-in');
 
