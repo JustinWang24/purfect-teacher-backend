@@ -20,8 +20,9 @@
                                 action="##"
                                 list-type="picture-card"
                                 :file-list="item.image"
+                                :auto-uplode='false'
                                 with-credentials
-                                :on-progress="upload">
+                                :on-change="upload">
                             <i class="el-icon-plus avatar-uploader-icon"></i>
                         </el-upload>
                     </div>

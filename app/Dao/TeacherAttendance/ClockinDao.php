@@ -5,6 +5,7 @@ namespace App\Dao\TeacherAttendance;
 use App\Models\TeacherAttendance\Attendance;
 use App\Models\TeacherAttendance\Clockin;
 use App\Models\TeacherAttendance\Clockset;
+use App\Models\TeacherAttendance\Leave;
 use App\Models\Users\UserOrganization;
 use App\Utils\JsonBuilder;
 use App\Utils\Misc\Contracts\Title;
@@ -36,6 +37,124 @@ class ClockinDao
         }
     }
 
+    public function getOneMonthCount(Attendance $attendance, Carbon $monthStart, Carbon $monthEnd) {
+        $return = [
+            'morning' => [
+                'ok' => ['count' => 0, 'users' => 0, 'list' => []],
+                'late' => ['count' => 0, 'users' => 0, 'list' => []],
+                'later' => ['count' => 0, 'users' => 0, 'list' => []],
+                'not' => ['count' => 0, 'users' => 0, 'list' => []],
+            ],
+            'afternoon' => [
+                'ok' => ['count' => 0, 'users' => 0, 'list' => []],
+                'late' => ['count' => 0, 'users' => 0, 'list' => []],
+                'later' => ['count' => 0, 'users' => 0, 'list' => []],
+                'not' => ['count' => 0, 'users' => 0, 'list' => []],
+            ],
+            'evening' => [
+                'ok' => ['count' => 0, 'users' => 0, 'list' => []],
+                'early' => ['count' => 0, 'users' => 0, 'list' => []],
+                'not' => ['count' => 0, 'users' => 0, 'list' => []],
+            ]
+        ];
+
+        $userOrganizationList = UserOrganization::whereIn('organization_id', $attendance->organizations()->pluck('organization_id')->toArray())->get();
+        $userList = [];
+        foreach ($userOrganizationList as $item) {
+            $userList[$item->user->id] = [
+                'userid' => $item->user->id,
+                'name' => $item->user->name,
+                'avatar' => $item->user->profile->avatar,
+                'status' => Clockin::STATUS_NONE,
+                'day' => '',
+                'time' => ''
+            ];
+        }
+
+
+    }
+
+    public function getOneDayCount(Attendance $attendance, $day) {
+        $return = [
+            'morning' => [
+                'ok' => ['count' => 0, 'list' => []],
+                'late' => ['count' => 0, 'list' => []],
+                'later' => ['count' => 0, 'list' => []],
+                'not' => ['count' => 0, 'list' => []],
+            ],
+            'afternoon' => [
+                'ok' => ['count' => 0, 'list' => []],
+                'late' => ['count' => 0, 'list' => []],
+                'later' => ['count' => 0, 'list' => []],
+                'not' => ['count' => 0, 'list' => []],
+            ],
+            'evening' => [
+                'ok' => ['count' => 0, 'list' => []],
+                'early' => ['count' => 0, 'list' => []],
+                'not' => ['count' => 0, 'list' => []],
+            ]
+        ];
+        $userOrganizationList = UserOrganization::whereIn('organization_id', $attendance->organizations()->pluck('organization_id')->toArray())->get();
+        $userList = [];
+        foreach ($userOrganizationList as $item) {
+            $userList[$item->user->id] = [
+                'userid' => $item->user->id,
+                'name' => $item->user->name,
+                'avatar' => $item->user->profile->avatar,
+                'status' => Clockin::STATUS_NONE,
+                'time' => ''
+            ];
+        }
+
+        $clockins = $attendance->clockins()->where('day', '=', $day)->orderBy('id', 'desc')->get();
+        $hasUserId = ['morning' => [], 'afternoon' => [], 'evening' => []];
+        foreach ($clockins as $clockin) {
+            //该用户已不在此组内
+            if (!isset($userList[$clockin->user_id])) {
+                continue;
+            }
+            $hasUserId[$clockin->type][] = $clockin->user_id;
+            $user = $userList[$clockin->user_id];
+            $user['status'] = $clockin->status;
+            $user['time'] = $clockin->time;
+            switch ($clockin->status) {
+                case Clockin::STATUS_NORMAL:
+                    $return[$clockin->type]['ok']['count']++;
+                    $return[$clockin->type]['ok']['list'][] = $user;
+                    break;
+                case Clockin::STATUS_LATE:
+                    $return[$clockin->type]['late']['count']++;
+                    $return[$clockin->type]['late']['list'][] = $user;
+                    break;
+                case Clockin::STATUS_LATER:
+                    $return[$clockin->type]['later']['count']++;
+                    $return[$clockin->type]['later']['list'][] = $user;
+                    break;
+                case Clockin::STATUS_EARLY:
+                    $return[$clockin->type]['early']['count']++;
+                    $return[$clockin->type]['early']['list'][] = $user;
+                    break;
+                default:
+                    break;
+            }
+        }
+        foreach ($userList as $userId => $user) {
+            if (!in_array($userId, $hasUserId['morning'])) {
+                $return['morning']['not']['count']++;
+                $return['morning']['not']['list'][] = $user;
+            }
+            if (!in_array($userId, $hasUserId['afternoon'])) {
+                $return['afternoon']['not']['count']++;
+                $return['afternoon']['not']['list'][] = $user;
+            }
+            if (!in_array($userId, $hasUserId['evening'])) {
+                $return['evening']['not']['count']++;
+                $return['evening']['not']['list'][] = $user;
+            }
+        }
+        return $return;
+    }
+
     /**
      * 管理员获取某日的考勤统计
      * @param $attendanceIdArr
@@ -50,6 +169,8 @@ class ClockinDao
             'not' =>0,//未打卡人数 全部-已打卡
             'late' => 0,//迟到人数
             'leave' => 0,//请假人数
+            'away' => 0,//外出人数
+            'travel' => 0,//出差人数
             'normal_list' => [],
             'not_list' => []
         ];
@@ -58,9 +179,14 @@ class ClockinDao
             //该考勤组下总成员
             $return['all'] += UserOrganization::whereIn('organization_id', $attendance->organizations()->pluck('organization_id')->toArray())
                 ->count();
+
             //该考勤组下已打卡人员
             $return['normal'] += $attendance->clockins()->where('day', '=', $day)->distinct()->count('user_id');
             $return['late'] += $attendance->clockins()->where('day', '=', $day)->whereIn('status', [Clockin::STATUS_LATE, Clockin::STATUS_LATER])->distinct()->count('user_id');
+            //请假、外出、出差人员
+            $return['leave'] += $attendance->leaves()->where('day', '=', $day)->where('source', Leave::SOURCE_LEAVE)->distinct()->count('user_id');
+            $return['away'] += $attendance->leaves()->where('day', '=', $day)->where('source', Leave::SOURCE_AWAY)->distinct()->count('user_id');
+            $return['travel'] += $attendance->leaves()->where('day', '=', $day)->where('source', Leave::SOURCE_TRAVEL)->distinct()->count('user_id');
 
             //总人员列表
             $userList = UserOrganization::whereIn('organization_id', $attendance->organizations()->pluck('organization_id')->toArray())
@@ -68,11 +194,13 @@ class ClockinDao
             foreach ($userList as $userOrganization) {
                 //今日打卡状态
                 $clockin = $attendance->clockins()->where(['user_id' => $userOrganization->user->id, 'day' => $day])->pluck('status', 'type')->toArray();
+                $tags = $attendance->leaves()->where(['user_id' => $userOrganization->user->id, 'day' => $day])->distinct()->pluck('source')->ToArray();
                 $userInfo = [
                     'userid' => $userOrganization->user->id,
                     'name' => $userOrganization->user->name,
                     'avatar' => $userOrganization->user->profile->avatar,
                     'title' => $attendance->title,
+                    'tags' => $tags ?? [],
                     'clockin' => [
                         'using_afternoon' => $attendance->using_afternoon,
                         'morning' => $clockin['morning'] ?? Clockin::STATUS_NONE,

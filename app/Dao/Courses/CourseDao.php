@@ -373,11 +373,19 @@ class CourseDao
         $majorsId = $data['majors'];
 
         $messageBag = new MessageBag(JsonBuilder::CODE_ERROR);
+        $courseModel = new Course();
+        // 验证唯一性
+        $map = ['school_id'=>$data['school_id'], 'code'=>$data['code']];
+        $info = $courseModel->where($map)->first();
+        if(!is_null($info)) {
+            $messageBag->setMessage('该课程编号已存在');
+            return $messageBag;
+        }
 
         DB::beginTransaction();
         try{
             $data['uuid'] = Uuid::uuid4()->toString();
-            $fillableData = $this->getFillableData(new Course(),$data);
+            $fillableData = $this->getFillableData($courseModel,$data);
 
             // 先保存课程数据
             $course = Course::create($fillableData);

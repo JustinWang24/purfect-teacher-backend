@@ -144,6 +144,7 @@ if (document.getElementById('teacher-assistant-students-manager-app')) {
                 // this.stuName = stuData.stuName;
             },
             showDetail: function (data) {
+              console.log(data)
                 this.ifShowDetail = true;
                 let params = {student_id: data.student_id};
                 this.student_id = data.student_id;
@@ -180,6 +181,7 @@ if (document.getElementById('teacher-assistant-students-manager-app')) {
                     }
                 }
                 console.log(JSON.stringify(params.monitor))
+                params.student_id = this.student_id
                 this.updateStudents(params);
             },
             getClassData: function () {
@@ -221,9 +223,7 @@ if (document.getElementById('teacher-assistant-students-manager-app')) {
                 })
             },
             updateStudents: function (params) {
-                console.log(params)
                 const url = '/api/Oa/update-student-info';
-                console.log(qs.stringify(params))
                 axios.post(url, params).then((res) => {
                     if (Util.isAjaxResOk(res)) {
                         this.$message({
@@ -231,6 +231,7 @@ if (document.getElementById('teacher-assistant-students-manager-app')) {
                             type: 'success'
                         });
                         let params = {student_id: this.student_id};
+                        this.dialogVisible = false;
                         this.getStuDetail(params)
                     }
                 }).catch((err) => {

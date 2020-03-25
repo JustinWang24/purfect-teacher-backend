@@ -18,36 +18,77 @@ use App\Utils\Misc\ConfigurationTool;
     </el-carousel>
     <div class="bottom">
         <div class="bottom_first">
-            <p class="bottom_title">校园新闻</p>
-            <div style="overflow:auto;height: 675px;">
-                <div class="bottom_first_content" v-for="item in newsList" :key="item.id" @click="newInfo(item.id)">
-                    <img v-if="item.image" :src="item.image" alt="" :οnerrοr="item.image_url" class="bottom_first_content_img">
-                    <div class="bottom_first_content_right">
-                        <p class="bottom_first_content_title">@{{ item.title }}</p>
-                        <p class="bottom_first_content_detail">@{{ item.title }}</p>
-                        <p class="bottom_first_content_time">@{{ item.created_at }}</p>
+            <div>
+                <p class="bottom_title">校园新闻</p>
+                <div style="overflow:auto;height: 675px;" v-cloak>
+                    <div class="bottom_first_content" v-for="item in newsList" :key="item.id" @click="newInfo(item.id)">
+                        <img v-if="item.image" :src="item.image" alt="" :οnerrοr="item.image_url" class="bottom_first_content_img">
+                        <div class="bottom_first_content_right">
+                            <p class="bottom_first_content_title">@{{ item.title }}</p>
+                            <p class="bottom_first_content_detail">@{{ item.title }}</p>
+                            <p class="bottom_first_content_time">@{{ item.created_at }}</p>
+                        </div>
                     </div>
                 </div>
             </div>
+            <el-drawer title="校园新闻详情" :before-close="handleClose" :visible.sync="showNewInfo" custom-class="demo-drawer" v-cloak>
+                <div class="demo-drawer__content">
+                    <p>@{{notice.title}}</p>
+                    <p>@{{notice.created_at}}</p>
+                    <div v-for="item in notice.sections" :key="item.id" style="display: flex;justify-content: center;">
+                        <span v-if="item.media_id === ''" style="width: 95%;display: inline-block;text-indent: 2em;">@{{item.content}}</span>
+                        <img v-if="item.media_id" :src="item.content">
+                    </div>
+                </div>
+            </el-drawer>
         </div>
         <div class="bottom_second">
             <div class="bottom_second_calendar">
                 <p class="bottom_title">校历</p>
-                <!-- <el-calendar v-model="calendar"></el-calendar> -->
+                <div style="height: calc(100% - 100px)" v-cloak>
+                    <ul>
+                        <li @click="prevMonth"><i class="el-icon-arrow-left"></i></li>
+                        <li><span style="color: #333;">@{{ yyyy }}年</span><span style="color: #949CA9">@{{mm < 9 ? '0'+(mm+1) : mm+1}}月</span></li>
+                        <li @click="nextMonth"><i class="el-icon-arrow-right"></i></li>
+                    </ul>
+                    <table>
+                        <thead>
+                            <tr>
+                                <td style="color: #333;text-align: center;">周次</td>
+                                <td style="color: #949CA9;" v-for="(item,index) in week" :key="index">@{{ item }}</td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr v-for="(item,index) in tableDay" :key="index">
+                                <th style="width: 75px;">@{{tableWeek[index].name}}</th>
+                                <td v-for="(i,index) in item" :key="index" style="width: 45px;">
+                                    <span :class="i.name.split('-')[1] == dd ? 'current' : ''">@{{ i.name.split('-')[1] }}</span>
+                                    <span v-if="i.events.length > 0" style="display: inline-block;width: 3px;height: 3px;background-color: red;border-radius: 50%;position: relative;top: 10px;left: -15px;"></span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
             <div class="bottom_second_plan">
                 <div class="bottom_title bottom_title_span">校园安排<span @click="drawer = true" style="cursor: pointer">历史安排 ></span></div>
-                <p v-for="item in schooleventsList">@{{ item.event_time}}&nbsp;&nbsp;&nbsp; @{{ item.week_idx }} &nbsp;&nbsp;&nbsp;@{{ item.content }}</p>
+                <p v-for="item in schooleventsList" v-cloak>
+                    <span>@{{ item.event_time}}</span>
+                    <span>@{{ item.week_idx }}</span>
+                    <span>@{{ item.content }}</span>
+                </p>
             </div>
-            <el-drawer title="校历安排" :before-close="handleClose" :visible.sync="drawer" custom-class="demo-drawer" ref="drawer">
+            <el-drawer title="校历安排" :before-close="handleClose" :visible.sync="drawer" custom-class="demo-drawer" ref="drawer" v-cloak>
                 <div class="demo-drawer__content" v-for="item in schoolalleventsList">
-                    @{{ item.event_time}}&nbsp;&nbsp;&nbsp; @{{ item.week_idx }} &nbsp;&nbsp;&nbsp;@{{ item.content }}
+                    <span>@{{ item.event_time}}</span>
+                    <span>@{{ item.week_idx }}</span>
+                    <span>@{{ item.content }}</span>
                 </div>
             </el-drawer>
         </div>
         <div class="bottom_third">
             <p class="bottom_title">值周</p>
-            <div style="overflow:auto;height: 675px;" v-infinite-scroll="load">
+            <div style="overflow:auto;height: 675px;" v-cloak ref="scrollTopList">
                 <div class="attendance_content" v-for="item in attendanceList" :key="item.id">
                     <div class="attendance_time">@{{ item.start_date }}-@{{ item.end_date }}</div>
                     <div class="attendance_detail">
@@ -62,20 +103,6 @@ use App\Utils\Misc\ConfigurationTool;
             </div>
         </div>
     </div>
-    <el-drawer title="校园新闻详情" :before-close="handleClose" :visible.sync="showNewInfo" custom-class="demo-drawer">
-        <div class="demo-drawer__content">
-            <p>@{{notice.title}}</p>
-            <p>@{{notice.created_at}}</p>
-            <div v-for="item in notice.sections" :key="item.id">
-                @{{item.content}}
-            </div>
-            <img :src="notice.image" alt="" v-if="notice.type != 1">
-            <!-- <div class="demo-drawer__content_enclosure" v-if="attachments.length">
-                <p class="word">附件</p>
-                <p class="enclosure">@{{ attachments[0].file_name}}</p>
-            </div> -->
-        </div>
-    </el-drawer>
 </div>
 
 

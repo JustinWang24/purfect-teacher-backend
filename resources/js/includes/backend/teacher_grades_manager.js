@@ -30,19 +30,72 @@ if (document.getElementById('teacher-assistant-grades-manager-app')) {
 
         });
       },
-      upload: function (e,file) {
-        console.log(e, file)
-        let params  = {};
+      upload: function (file) {
+        let params = {};
         params.grade_id = 10;
-        params.file = file;
-        const url = '/api/Oa/upload-grade-resources';
-        axios.post(url, params).then((res) => {
-          if (Util.isAjaxResOk(res)) {
-            console.log(res)
-          }
-        }).catch((err) => {
+        console.log(file)
+        // params.file = file.raw;
+        // console.log()
+        // const url = '/api/Oa/upload-grade-resources';
+        // axios.post(url, params).then((res) => {
+        //   if (Util.isAjaxResOk(res)) {
+        //     console.log(res)
+        //   }
+        // }).catch((err) => {
+        //
+        // });
+        this.getBase64(file.raw).then(res => {
+          // params.file = this.base64ToBlob(res);
+          console.log(params.file)
+          console.log(params)
+          const url = '/api/Oa/upload-grade-resources';
+          axios({
+            method: 'post',
+            url: url,
+            transformRequest: [ (data) {
+              // 对 data 进行任意转换处理
+              data.file  = this.base64ToBlob(res)
+              return data;
+            }],
+            data: params,
+          }).then((res) => {
+            if (Util.isAjaxResOk(res)) {
+              console.log(res)
+            }
+          }).catch((err) => {
 
+          });
+        })
+
+      },
+      getBase64(file) {
+        return new Promise(function (resolve, reject) {
+          let reader = new FileReader();
+          let imgResult = "";
+          reader.readAsDataURL(file);
+          reader.onload = function () {
+            imgResult = reader.result;
+          };
+          reader.onerror = function (error) {
+            reject(error);
+          };
+          reader.onloadend = function () {
+            resolve(imgResult);
+          };
         });
+      },
+      base64ToBlob(code) {
+        let parts = code.split(";base64,");
+        let contentType = parts[0].split(":")[1];
+        let raw = window.atob(parts[1]);
+        let rawLength = raw.length;
+
+        let uInt8Array = new Uint8Array(rawLength);
+
+        for (let i = 0; i < rawLength; ++i) {
+          uInt8Array[i] = raw.charCodeAt(i);
+        }
+        return new Blob([uInt8Array], {type: contentType});
       }
     }
   });

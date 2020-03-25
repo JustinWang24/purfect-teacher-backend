@@ -212,7 +212,11 @@ class TimetableItemDao
         if(isset($data['id']) && $data['id']){
             $id = $data['id'];
             unset($data['id']);
+
+            $data['available_only'] = json_encode($data['available_only']);
+
             return TimetableItem::where('id',$id)->update($data);
+
         }
         return false;
     }
@@ -757,11 +761,14 @@ class TimetableItemDao
             ->get();
     }
 
-    /**
-     * 上课3分钟内需要发送没有老师打卡的记录给教务处，需要一个总列表来比对
-     * 获取当前时间应该上的所有课程
-     */
-    public function getCourseListByCurrentTime($schoolId)
+  /**
+   * 上课3分钟内需要发送没有老师打卡的记录给教务处，需要一个总列表来比对
+   * 获取当前时间应该上的所有课程
+   * @param $schoolId
+   * @param $timeSlotId
+   * @return array
+   */
+    public function getCourseListByCurrentTime($schoolId, $timeSlotId = null)
     {
         $date = Carbon::now();
         $schoolDao = new SchoolDao();
@@ -774,7 +781,6 @@ class TimetableItemDao
         $term = $schoolConfiguration->guessTerm($date->month);
 
         $timeSlots = $timeSlotDao->getAllStudyTimeSlots($schoolId);
-
 
         $currentTimeSlot = null;
         foreach ($timeSlots as $timeSlot) {
@@ -791,13 +797,16 @@ class TimetableItemDao
             return [];
         }
 
-        return TimetableItem::where('year', $year)
+        $result =  TimetableItem::where('year', $year)
             ->where('term', $term)
             ->where('weekday_index',$date->dayOfWeekIso)
             ->where('time_slot_id', $currentTimeSlot->id)
             ->where('published', 1)
-            ->with('timeslot')
-            ->get();
+            ->with('timeslot');
+        if (!is_null($timeSlotId)){
+          $result = $result->where('time_slot_id', $timeSlotId);
+        }
+        return  $result->get();
     }
 
 

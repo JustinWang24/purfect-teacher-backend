@@ -75,7 +75,7 @@ class NotificationsController extends Controller
           [
             'type' => 'web-view',
             'param1' => route('h5_apps.banner.notification_info', ['uuid' => $addData['uuid']]),
-            'param2' => []
+            'param2' => ""
           ]
         );
         $systemNotificationDao = new SystemNotificationDao();

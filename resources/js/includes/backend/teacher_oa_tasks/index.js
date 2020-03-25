@@ -42,6 +42,13 @@ if (app) {
         if (this.$refs[val]) {
           this.$refs[val][0].getTaskList()
         }
+      },
+      checkClose(close) {
+        if (!this.$refs.addTaskDrawer.$children[0].selectMb) {
+          close()
+        } else {
+          this.$refs.addTaskDrawer.$children[0].selectMb = false
+        }
       }
     },
     data() {

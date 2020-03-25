@@ -16,11 +16,6 @@ if (document.getElementById('teacher-oa-index-app')) {
                     flowOpen: ''
                 },
                 isLoading: true,
-                flowsStartedByMe: [],
-                waitingList: [],
-                processedList: [],
-                copyList: [],
-
                 iconList: [],
                 show: 0, // showtab
                 nav: [
@@ -62,39 +57,69 @@ if (document.getElementById('teacher-oa-index-app')) {
                         "name": "通讯录",
                         "icon": "http:\/\/t.ytx.com\/assets\/img\/pipeline\/icon13@2x.png"
                     }]
+                }, {
+                    "name": "学生专用",
+                    "key": 1000,
+                    "flows": [{
+                        "id": -1,
+                        "name": "招生",
+                        "icon": "http:\/\/t.ytx.com\/assets\/img\/pipeline\/icon1@2x.png"
+                    }, {
+                        "id": -2,
+                        "name": "迎新",
+                        "icon": "http:\/\/t.ytx.com\/assets\/img\/pipeline\/icon2@2x.png"
+                    }, {
+                        "id": -3,
+                        "name": "离校",
+                        "icon": "http:\/\/t.ytx.com\/assets\/img\/pipeline\/icon3@2x.png"
+                    }]
                 }], // 我的审批
-                open: 0, // 当前展开的我的审批
+                activeNames: [],
+                statusMap: {
+                    0: '未通过',
+                    1: '已通过',
+                    2: '待审批',
+                    3: '已通过',
+                    5: '已撤回'
+                },
                 tableData: [{
                     iconState: 1,
-                    state: '请假',
-                    name: '王小虎',
-                    date: '2016-05-02',
-                    status: 0,
-                }, {
-                    iconState: 0,
-                    state: '休学',
-                    name: '王小虎',
-                    date: '2016-05-02',
-                    status: 1,
-                }, {
-                    iconState: 0,
-                    state: '休学',
-                    name: '王小虎',
-                    date: '2016-05-02',
-                    status: 2,
-                }, {
-                    iconState: 1,
-                    state: '请假',
-                    name: '王小虎',
-                    date: '2016-05-02',
-                    status: 3,
-                }, {
-                    iconState: 1,
-                    state: '请假',
-                    name: '王小虎',
-                    date: '2016-05-02',
-                    status: 5,
+                    state: '',
+                    user_name: '申请人：',
+                    created_at: '申请日期：',
+                    done: '',
                 }]
+                // tableData: [{
+                //     iconState: 1,
+                //     state: '请假',
+                //     name: '申请人：'+'王小虎',
+                //     date: '申请日期：'+'2016-05-02 14:20',
+                //     done: 0,
+                // }, {
+                //     iconState: 0,
+                //     state: '休学',
+                //     name: '王小虎',
+                //     date: '2016-05-02',
+                //     done: 1,
+                // }, {
+                //     iconState: 0,
+                //     state: '休学',
+                //     name: '王小虎',
+                //     date: '2016-05-02',
+                //     done: 2,
+                // }, {
+                //     iconState: 1,
+                //     state: '请假',
+                //     name: '王小虎',
+                //     date: '2016-05-02',
+                //     done: 3,
+                // }, {
+                //     iconState: 1,
+                //     state: '请假',
+                //     name: '王小虎',
+                //     date: '2016-05-02',
+                //     done: 5,
+                // }]
             }
         },
         created() {
@@ -102,11 +127,8 @@ if (document.getElementById('teacher-oa-index-app')) {
             this.schoolId = dom.dataset.school;
             this.userUuid = dom.dataset.useruuid;
             this.url.flowOpen = dom.dataset.flowopen;
-            this.loadFlowsStartedByMe();
-            this.loadFlowsWaitingByMe();
-            this.loadFlowsProcessedByMe();
-            this.loadFlowsCopyByMe();
             this.getofficeIcon();
+            this.loadFlowsWaitingByMe();
             // this.myFlows();
         },
         methods: {
@@ -123,6 +145,13 @@ if (document.getElementById('teacher-oa-index-app')) {
             // tab切换
             list_click(tab) {
                 this.show = tab;
+                if (tab === 1) {
+                    this.loadFlowsProcessedByMe();
+                } else if (tab === 2) {
+                    this.loadFlowsStartedByMe();
+                } else {
+                    this.loadFlowsCopyByMe();
+                }
             },
             // 获取--我的审批
             myFlows() {
@@ -132,27 +161,13 @@ if (document.getElementById('teacher-oa-index-app')) {
                     console.log(err)
                 })
             },
-            // 展示--收起
-            close(index) {
-                this.open = index
-            },
             // list展示
-            // in_progress=我发起的
-            loadFlowsStartedByMe: function () {
-                this.isLoading = true;
-                startedByMe(this.userUuid, this.keyword, this.position).then(res => {
-                    if (Util.isAjaxResOk(res)) {
-                        this.flowsStartedByMe = res.data.data.flows;
-                    }
-                    this.isLoading = false;
-                });
-            },
             // waiting_for_me=待我审批
             loadFlowsWaitingByMe: function () {
                 this.isLoading = true;
                 waitingByMe(this.userUuid, this.keyword, this.position).then(res => {
                     if (Util.isAjaxResOk(res)) {
-                        this.waitingList = res.data.data.flows;
+                        this.tableData = res.data.data.flows;
                     }
                     this.isLoading = false;
                 });
@@ -162,7 +177,17 @@ if (document.getElementById('teacher-oa-index-app')) {
                 this.isLoading = true;
                 processedByMe(this.userUuid, this.keyword, this.position).then(res => {
                     if (Util.isAjaxResOk(res)) {
-                        this.processedList = res.data.data.flows;
+                        this.tableData = res.data.data.flows;
+                    }
+                    this.isLoading = false;
+                });
+            },
+            // in_progress=我发起的
+            loadFlowsStartedByMe: function () {
+                this.isLoading = true;
+                startedByMe(this.userUuid, this.keyword, this.position).then(res => {
+                    if (Util.isAjaxResOk(res)) {
+                        this.tableData = res.data.data.flows;
                     }
                     this.isLoading = false;
                 });
@@ -172,7 +197,7 @@ if (document.getElementById('teacher-oa-index-app')) {
                 this.isLoading = true;
                 copyByMe(this.userUuid, this.keyword, this.position).then(res => {
                     if (Util.isAjaxResOk(res)) {
-                        this.copyList = res.data.data.flows;
+                        this.tableData = res.data.data.flows;
                     }
                     this.isLoading = false;
                 });

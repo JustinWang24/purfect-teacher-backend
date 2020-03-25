@@ -215,22 +215,20 @@ class TimeSlotDao
     public function getTimeSlotByCurrentTime($schoolId, $term = null, $time = null) {
 
         if(is_null($term)) {
-            $month = Carbon::now()->month;
             $schoolDao = new SchoolDao();
             $school = $schoolDao->getSchoolById($schoolId);
             $configuration = $school->configuration;
-            $term = $configuration->guessTerm($month);
+            $season = GradeAndYearUtil::GetCurrentSeason($configuration, $time);
         }
-
         if(is_null($time)) {
             $time = Carbon::now()->toTimeString();
         }
-
         $map = [
             ['school_id', '=', $schoolId],
             ['from', '<', $time],
             ['to', '>', $time],
-            ['season', '=', $term]
+            ['season', '=', $season],
+//            ['type', '=', TimeSlot::TYPE_STUDYING]
         ];
         return TimeSlot::where($map)->first();
     }

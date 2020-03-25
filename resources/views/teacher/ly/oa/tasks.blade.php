@@ -24,6 +24,7 @@
             title="创建任务"
             ref="addTaskDrawer"
             :destroy-on-close="true"
+            :before-close="checkClose"
             :visible.sync="addDrawer"
             direction="rtl">
             <task-form @done="onTaskCreated" :currentUserId="currentUserId"/>

@@ -44,7 +44,7 @@
       </div>
       <div class="btn-box">
         <el-button
-          v-if="unfinished && !unreceive"
+          v-if="dispatchShow"
           class="dispatch"
           size="small"
           @click="()=>{dispathModal = true}"
@@ -240,6 +240,15 @@ export default {
         return this.task.status === 1;
       } else {
         return this.task.member_status === 1;
+      }
+    },
+    dispatchShow() {
+      if (this.isMyTask) {
+        // 我的任务 未完成的 都可以指派
+        return this.task.status !== 3;
+      } else {
+        // 别人的任务 已接收 未完成才有指派
+        return !this.unreceive && !this.finished;
       }
     },
     pending() {

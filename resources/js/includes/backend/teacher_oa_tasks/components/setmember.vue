@@ -53,10 +53,6 @@ import { searchMemberDebounce } from "../common/utils";
 export default {
   name: "dispatch-form",
   props: {
-    taskid: {
-      type: String,
-      required: true
-    },
     disabledList: {
       type: Array,
       default: Array
@@ -83,16 +79,12 @@ export default {
         this.$message.error("请选择指派人");
         return;
       }
-      TaskApi.excute("addOaTaskUser", {
-        taskid: this.taskid,
-        userid: this.chosenList
-          .map(member => {
-            return member.id;
-          })
-          .toString()
-      }).then(res => {
-        this.$emit("submit");
-      });
+      this.$emit(
+        "onSelect",
+        this.chosenList.map(member => {
+          return member.id.toString();
+        })
+      );
     },
     onNodeChange(val) {
       this.currentNodeId = val.pop();

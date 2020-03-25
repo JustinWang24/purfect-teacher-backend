@@ -85,7 +85,6 @@
       img {
         width: 148px;
         height: 92px;
-        border: 1px solid red;
       }
       .teacher-oa-notices-app-two-body-title {
         flex: 1;
@@ -151,9 +150,11 @@
       }
       .teacher-oa-notices-app-three-body-time {
         p:first-child {
+          width: 50px;
           font-size: 12px;
           font-family: MicrosoftYaHei;
           color: #fff;
+          text-align: center;
           padding: 0 7px;
           background-color: yellow;
         }
@@ -205,7 +206,6 @@
           height: 200px;
           margin: 20px;
           display: inline-block;
-          border: 1px solid red;
           border-radius: 4px;
         }
         .demo-drawer__content_enclosure {
@@ -221,7 +221,7 @@
             height: 65px;
             font-size: 14px;
             font-family: MicrosoftYaHei;
-            color: #414A5A;
+            color: #414a5a;
             line-height: 65px;
             margin: 0 20px;
             background-color: #f2f9ff;
@@ -229,5 +229,8 @@
         }
       }
     }
+  }
+  [v-cloak] {
+    display: none;
   }
 }

@@ -87,7 +87,8 @@ if (document.getElementById('teacher-oa-notices-app')) {
             },
             // 关闭
             handleClose(done) {
-                done()
+                done();
+                window.location.reload()
             },
             startFlow: function (flowId) {
                 const url = this.url.flowOpen + '?flow=' + flowId + '&uuid=' + this.userUuid;

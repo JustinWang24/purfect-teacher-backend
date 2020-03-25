@@ -97,6 +97,8 @@ class SystemNotification extends Model
                     case IFlow::TYPE_1_01:
                     case IFlow::TYPE_1_02:
                     case IFlow::TYPE_1_03:
+                    case IFlow::TYPE_3_01:
+                    case IFlow::TYPE_3_02:
                         $category = self::STUDENT_CATEGORY_APPLY;
                         break;
                     default:
@@ -121,6 +123,8 @@ class SystemNotification extends Model
                     case IFlow::TYPE_1_01:
                     case IFlow::TYPE_1_02:
                     case IFlow::TYPE_1_03:
+                    case IFlow::TYPE_3_01:
+                    case IFlow::TYPE_3_02:
                         $category = self::TEACHER_CATEGORY_APPLY;
                         break;
                     default:

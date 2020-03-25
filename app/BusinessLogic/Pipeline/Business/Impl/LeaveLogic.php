@@ -52,12 +52,12 @@ class LeaveLogic
                 DB::beginTransaction();
                 while ($start <= $end) {
                     $selectedDay = date('Y-m-d', $start);
-                    $selectedStart = isset($selectedStart) ? '00:00:00' : strtotime('H:i:s', $start);
-                    $selectedEnd = $selectedDay == date('Y-m-d', $end) ? strtotime('H:i:s', $end) : '23:59:59';
+                    $selectedStart = isset($selectedStart) ? '00:00:00' : date('H:i:s', $start);
+                    $selectedEnd = $selectedDay == date('Y-m-d', $end) ? date('H:i:s', $end) : '23:59:59';
                     $selectedEnday = Carbon::parse($start)->englishDayOfWeek;
                     $clocketSet = $dao->getOnedayClockset($attendance, $selectedEnday);
                     if (strtotime($selectedDay . ' ' . $selectedStart) <= strtotime($selectedDay . ' ' . $clocketSet->morning)
-                        && strtotime($selectedDay . ' ' . $selectedEnd >= strtotime($selectedDay. ' ' . $clocketSet->morning))
+                        && strtotime($selectedDay . ' ' . $selectedEnd) >= strtotime($selectedDay. ' ' . $clocketSet->morning)
                     ) {
                         $data = [
                             'leave_id' => $info->id,
@@ -72,7 +72,7 @@ class LeaveLogic
                     }
                     if ($attendance->using_afternoon
                         && strtotime($selectedDay . ' ' . $selectedStart) <= strtotime($selectedDay . ' ' . $clocketSet->afternoon)
-                        && strtotime($selectedDay . ' ' . $selectedEnd >= strtotime($selectedDay. ' ' . $clocketSet->afternoon))
+                        && strtotime($selectedDay . ' ' . $selectedEnd) >= strtotime($selectedDay. ' ' . $clocketSet->afternoon)
                     ) {
                         $data = [
                             'leave_id' => $info->id,
@@ -87,7 +87,7 @@ class LeaveLogic
                     }
 
                     if (strtotime($selectedDay . ' ' . $selectedStart) <= strtotime($selectedDay . ' ' . $clocketSet->evening)
-                        && strtotime($selectedDay . ' ' . $selectedEnd >= strtotime($selectedDay. ' ' . $clocketSet->evening))
+                        && strtotime($selectedDay . ' ' . $selectedEnd) >= strtotime($selectedDay. ' ' . $clocketSet->evening)
                     ) {
                         $data = [
                             'leave_id' => $info->id,
