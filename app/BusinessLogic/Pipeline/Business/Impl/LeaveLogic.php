@@ -113,7 +113,7 @@ class LeaveLogic
                 }
 
                 //更新请假天数与考勤组关联
-                $info->daybumber = round($dayTimeNumber, 2);
+                $info->daynumber = round($dayTimeNumber, 2);
                 $info->teacher_attendance_id = $attendance->id;
                 $info->save();
                 DB::commit();

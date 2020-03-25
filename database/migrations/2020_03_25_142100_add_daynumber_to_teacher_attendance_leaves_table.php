@@ -15,7 +15,7 @@ class AddDaynumberToTeacherAttendanceLeavesTable extends Migration
     {
         Schema::table('teacher_attendance_leaves', function (Blueprint $table) {
             //
-            $table->decimal('daybumber', 8, 2)->default(0)->comment('请假天数');
+            $table->decimal('daynumber', 8, 2)->default(0)->comment('请假天数');
             $table->unsignedTinyInteger('teacher_attendance_id')->default(0)->comment('考勤组id');
         });
     }
@@ -29,8 +29,8 @@ class AddDaynumberToTeacherAttendanceLeavesTable extends Migration
     {
         Schema::table('teacher_attendance_leaves', function (Blueprint $table) {
             //
-            if (Schema::hasColumn('teacher_attendance_leaves', 'daybumber')) {
-                $table->dropColumn('daybumber');
+            if (Schema::hasColumn('teacher_attendance_leaves', 'daynumber')) {
+                $table->dropColumn('daynumber');
             }
             if (Schema::hasColumn('teacher_attendance_leaves', 'teacher_attendance_id')) {
                 $table->dropColumn('teacher_attendance_id');
