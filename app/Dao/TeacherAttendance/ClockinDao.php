@@ -252,9 +252,11 @@ class ClockinDao
         //出差列表
         $travelList = ['num' => 0, 'list' => []];
 
-        $leaveALl = $attendance->leaves()->where('user_id', $userId)->where(function ($query) use ($monthStart){
-            $query->whereMonth('start', $monthStart->format('m'))->orWhereMonth('end', $monthStart->format('m'));
-        })->get();
+        $leaveALl = $attendance->leaves()->where([
+            ['user_id', '=', $userId],
+            ['start', '<=', $monthStart->format('Y-m-d H:i:s')],
+            ['end', '>=', $monthEnd->format('Y-m-d H:i:s')]
+        ])->get();
 
         if ($leaveALl) {
             foreach ($leaveALl as $leave) {
