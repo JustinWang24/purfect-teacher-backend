@@ -261,10 +261,10 @@ class ClockinDao
                 $leaveArr = [
                     'start' => $leave->start,
                     'end' => $leave->end,
-                    'daynumber' => $leave->daybumber
+                    'daynumber' => $leave->daynumber
                 ];
                 if ($leave->source == Leave::SOURCE_LEAVE) {
-                    $leaveList['num']+= $leave->daybumber;
+                    $leaveList['num'] += $leave->daynumber;
                     $leaveList['list'][] = $leaveArr;
                 }
                 if ($leave->source == Leave::SOURCE_AWAY) {

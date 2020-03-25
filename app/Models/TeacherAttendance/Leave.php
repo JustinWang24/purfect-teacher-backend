@@ -12,6 +12,6 @@ class Leave extends Model
     const SOURCE_TRAVEL = 3;
     public $table = 'teacher_attendance_leaves';
     protected $fillable = [
-        'user_id','start', 'end', 'source', 'daybumber', 'teacher_attendance_id'
+        'user_id','start', 'end', 'source', 'daynumber', 'teacher_attendance_id'
     ];
 }
