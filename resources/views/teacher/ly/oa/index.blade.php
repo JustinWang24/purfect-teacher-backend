@@ -38,23 +38,12 @@
                                     <img class="blade_listImage" v-if="!scope.row.iconState" src="{{asset('assets/img/teacher_blade/tingzhi@2x.png')}}" alt="">
                                 </template>
                             </el-table-column>
-                            <el-table-column prop="state" label="状态" width="110">
-                            </el-table-column>
-                            <el-table-column prop="name" label="姓名">
-                            </el-table-column>
-                            <el-table-column prop="date" label="日期" width="200">
-                            </el-table-column>
-                            <el-table-column prop="status" width="80px">
+                            <el-table-column prop="state" label="状态" width="110"></el-table-column>
+                            <el-table-column prop="user_name" label="姓名" width="250"></el-table-column>
+                            <el-table-column prop="created_at" label="日期" width="250"></el-table-column>
+                            <el-table-column prop="done" width="100px">
                                 <template slot-scope="scope">
-                                    <span v-bind:class="{
-                                'status_red': scope.row.status == 0,
-                                'status_green': scope.row.status == 1,
-                                'status_yellow': scope.row.status == 2,
-                                'status_gray': scope.row.status == 3,
-                                'status_black': scope.row.status == 4
-                            }">
-                                        <!-- @{{statusMap[scope.row.status]}} -->
-                                    </span>
+                                    <span v-bind:class="{'status_red': scope.row.done == 0,'status_green': scope.row.done == 1,'status_yellow': scope.row.done == 2,'status_gray': scope.row.done == 3,'status_black': scope.row.done == 4}">@{{statusMap[scope.row.done]}}</span>
                                 </template>
                             </el-table-column>
                             <el-table-column width="80px">
