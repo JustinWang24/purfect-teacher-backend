@@ -113,3 +113,4 @@ require('./includes/backend/teacher-attendance_manager/index'); // 后台,考勤
 require('./includes/backend/teacher-week-timetable/index'); // 后台,课程表
 require('./includes/backend/teacher_oa_tasks/index'); // 后台,oa-task
 require('./includes/backend/teacher_oa_tasks/detail.js'); // 后台,oa-task-detail
+require('./common/add_new_student.js'); // 后台,学生档案
