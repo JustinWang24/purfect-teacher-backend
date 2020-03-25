@@ -52,11 +52,6 @@ if (document.getElementById('teacher-assistant-grades-manager-app')) {
           axios({
             method: 'post',
             url: url,
-            transformRequest: [ (data) {
-              // 对 data 进行任意转换处理
-              data.file  = this.base64ToBlob(res)
-              return data;
-            }],
             data: params,
           }).then((res) => {
             if (Util.isAjaxResOk(res)) {
