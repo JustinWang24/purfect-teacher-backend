@@ -261,8 +261,8 @@ class ClockinDao
         if ($leaveALl) {
             foreach ($leaveALl as $leave) {
                 $leaveArr = [
-                    'start' => $leave->start,
-                    'end' => $leave->end,
+                    'start' => substr($leave->start, 0, 16),
+                    'end' => substr($leave->end, 0, 16),
                     'daynumber' => $leave->daynumber
                 ];
                 if ($leave->source == Leave::SOURCE_LEAVE) {
