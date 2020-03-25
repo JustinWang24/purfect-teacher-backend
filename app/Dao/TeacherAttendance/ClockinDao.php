@@ -184,9 +184,9 @@ class ClockinDao
             $return['normal'] += $attendance->clockins()->where('day', '=', $day)->distinct()->count('user_id');
             $return['late'] += $attendance->clockins()->where('day', '=', $day)->whereIn('status', [Clockin::STATUS_LATE, Clockin::STATUS_LATER])->distinct()->count('user_id');
             //请假、外出、出差人员
-            $return['leave'] += $attendance->leaves()->where('day', '=', $day)->where('source', Leave::SOURCE_LEAVE)->distinct()->count('user_id');
-            $return['away'] += $attendance->leaves()->where('day', '=', $day)->where('source', Leave::SOURCE_AWAY)->distinct()->count('user_id');
-            $return['travel'] += $attendance->leaves()->where('day', '=', $day)->where('source', Leave::SOURCE_TRAVEL)->distinct()->count('user_id');
+            $return['leave'] += $attendance->leaveDetails()->where('day', '=', $day)->where('source', Leave::SOURCE_LEAVE)->distinct()->count('user_id');
+            $return['away'] += $attendance->leaveDetails()->where('day', '=', $day)->where('source', Leave::SOURCE_AWAY)->distinct()->count('user_id');
+            $return['travel'] += $attendance->leaveDetails()->where('day', '=', $day)->where('source', Leave::SOURCE_TRAVEL)->distinct()->count('user_id');
 
             //总人员列表
             $userList = UserOrganization::whereIn('organization_id', $attendance->organizations()->pluck('organization_id')->toArray())
@@ -194,7 +194,7 @@ class ClockinDao
             foreach ($userList as $userOrganization) {
                 //今日打卡状态
                 $clockin = $attendance->clockins()->where(['user_id' => $userOrganization->user->id, 'day' => $day])->pluck('status', 'type')->toArray();
-                $tags = $attendance->leaves()->where(['user_id' => $userOrganization->user->id, 'day' => $day])->distinct()->pluck('source')->ToArray();
+                $tags = $attendance->leaveDetails()->where(['user_id' => $userOrganization->user->id, 'day' => $day])->distinct()->pluck('source')->ToArray();
                 $userInfo = [
                     'userid' => $userOrganization->user->id,
                     'name' => $userOrganization->user->name,
@@ -245,6 +245,42 @@ class ClockinDao
         $applyList = [];
         //缺卡列表
         $missList = [];
+        //请假列表
+        $leaveList = ['num' => 0, 'list' => []];
+        //外出列表
+        $awayList = ['num' => 0, 'list' => []];
+        //出差列表
+        $travelList = ['num' => 0, 'list' => []];
+
+        $leaveALl = $attendance->leaves()->where('user_id', $userId)->where(function ($query) use ($monthStart){
+            $query->whereMonth('start', $monthStart->format('m'))->orWhereMonth('end', $monthStart->format('m'));
+        })->get();
+
+        if ($leaveALl) {
+            foreach ($leaveALl as $leave) {
+                $leaveArr = [
+                    'start' => $leave->start,
+                    'end' => $leave->end,
+                    'daynumber' => $leave->daybumber
+                ];
+                if ($leave->source == Leave::SOURCE_LEAVE) {
+                    $leaveList['num']+= $leave->daybumber;
+                    $leaveList['list'][] = $leaveArr;
+                }
+                if ($leave->source == Leave::SOURCE_AWAY) {
+                    $awayList['num'] += $leave->daynumber;
+                    $awayList['list'][] = $leaveArr;
+                }
+                if ($leave->source == Leave::SOURCE_TRAVEL) {
+                    $travelList['num'] += $leave->daynumber;
+                    $travelList['list'][] = $leaveArr;
+                }
+            }
+        }
+        $leaveList['num'] = strval($leaveList['num']);
+        $awayList['num'] = strval($awayList['num']);
+        $travelList['num'] = strval($travelList['num']);
+
         foreach ($clockins as $clockin) {
             if (!isset($clockinList[$clockin->day])) {
                 $clockinList[$clockin->day] = [
@@ -299,7 +335,10 @@ class ClockinDao
             'early' => $earlyList,
             'miss' => $missList,
             'apply' => $applyList,
-            'all' => $groupDays['all']
+            'all' => $groupDays['all'],
+            'leave' => $leaveList,
+            'travel' => $travelList,
+            'away' => $awayList
         ];
     }
 
