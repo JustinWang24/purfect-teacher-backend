@@ -47,9 +47,12 @@ class SchoolsController extends Controller
     public function update(SchoolRequest $request){
         $dao = new SchoolDao($request->user());
         $schoolData = $request->get('school');
-        $schoolLogo = $request->file('logo')->store(SchoolResource::DEFAULT_UPLOAD_PATH_PREFIX);
-        if ($schoolLogo) {
-            $schoolData['logo'] = SchoolResource::schoolResourceUploadPathToUrl($schoolLogo);
+
+        if ($request->has('logo')) {
+            $schoolLogo = $request->file('logo')->store(SchoolResource::DEFAULT_UPLOAD_PATH_PREFIX);
+            if ($schoolLogo) {
+                $schoolData['logo'] = SchoolResource::schoolResourceUploadPathToUrl($schoolLogo);
+            }
         }
 
         if(isset($schoolData['uuid'])){

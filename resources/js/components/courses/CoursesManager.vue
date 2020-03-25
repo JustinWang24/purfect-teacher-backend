@@ -103,7 +103,7 @@
                                 v-for="(teacher, idx) in teachers"
                                 :key="idx"
                                 :label="teacher.name"
-                                :value="teacher.name + ' - ID:'+ teacher.id">
+                                :value="teacher.id">
                         </el-option>
                     </el-select>
                 </el-form-item>

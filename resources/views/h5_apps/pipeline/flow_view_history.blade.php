@@ -123,15 +123,15 @@
                             <span style="text-align: right;">
                                 @if (!empty($v->result))
                                 @if ($v->result->result == \App\Utils\Pipeline\IAction::RESULT_PENDING) 审批中 @endif
-                                @if ($v->result->result == \App\Utils\Pipeline\IAction::RESULT_PASS) 已通过 @endif
-                                @if ($v->result->result == \App\Utils\Pipeline\IAction::RESULT_TERMINATE) 被拒绝 @endif
-                                @if ($v->result->result == \App\Utils\Pipeline\IAction::RESULT_REJECT) 被驳回 @endif
+                                @if ($v->result->result == \App\Utils\Pipeline\IAction::RESULT_PASS) {{ substr($v->result->updated_at, 5, 11) }} 已通过 @endif
+                                @if ($v->result->result == \App\Utils\Pipeline\IAction::RESULT_TERMINATE) {{ substr($v->result->updated_at, 5, 11) }} 被拒绝 @endif
+                                @if ($v->result->result == \App\Utils\Pipeline\IAction::RESULT_REJECT) {{ substr($v->result->updated_at, 5, 11) }} 被驳回 @endif
                                 @endif
                             </span>
                         </div>
                         <!-- 审批意见 if条件-->
                         <!-- <p>审批：</p> -->
-                        
+
                         @endforeach
                         @endforeach
                     </el-timeline-item>
