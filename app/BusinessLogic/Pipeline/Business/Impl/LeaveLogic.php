@@ -47,6 +47,7 @@ class LeaveLogic
             $dao = new AttendanceDao();
             $attendance = $dao->getByOrganizationIdArr($organizationIdArr, $this->user->getSchoolId());
             if (!empty($attendance)) {
+                $dayTimeNumber = 0;
                 $start = $start->timestamp;
                 $end = $end->timestamp;
                 DB::beginTransaction();
@@ -56,6 +57,13 @@ class LeaveLogic
                     $selectedEnd = $selectedDay == date('Y-m-d', $end) ? date('H:i:s', $end) : '23:59:59';
                     $selectedEnday = Carbon::parse($start)->englishDayOfWeek;
                     $clocketSet = $dao->getOnedayClockset($attendance, $selectedEnday);
+
+                    $dayTimeApply = min(strtotime($selectedDay . ' ' . $selectedEnd), strtotime($selectedDay . ' ' . $clocketSet->evening))
+                                    - max(strtotime($selectedDay . ' ' . $selectedStart), strtotime($selectedDay . ' ' . $clocketSet->morning));
+                    $dayTimeSet = strtotime($selectedDay . ' ' . $clocketSet->evening) - strtotime($selectedDay . ' ' . $clocketSet->morning);
+
+                    $dayTimeNumber += round($dayTimeApply / $dayTimeSet, 3);
+
                     if (strtotime($selectedDay . ' ' . $selectedStart) <= strtotime($selectedDay . ' ' . $clocketSet->morning)
                         && strtotime($selectedDay . ' ' . $selectedEnd) >= strtotime($selectedDay. ' ' . $clocketSet->morning)
                     ) {
@@ -103,6 +111,11 @@ class LeaveLogic
 
                     $start += 86400;
                 }
+
+                //更新请假天数与考勤组关联
+                $info->daynumber = round($dayTimeNumber, 2);
+                $info->teacher_attendance_id = $attendance->id;
+                $info->save();
                 DB::commit();
             }
 

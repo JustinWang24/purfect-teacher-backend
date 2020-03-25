@@ -361,7 +361,15 @@ class FlowsController extends Controller
     }
 
     public function load_business(FlowRequest $request){
-        return JsonBuilder::Success(Flow::getBusiness());
+        $list = [
+            [
+                'business' => '',
+                'name' => '不关联业务',
+                'options' => []
+            ]
+        ];
+        $list += Flow::getBusiness();
+        return JsonBuilder::Success($list);
     }
 
     public function load_titles(FlowRequest $request) {
