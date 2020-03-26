@@ -28,7 +28,7 @@
                     <input type="hidden" id="school-config-id-input" name="uuid" value="{{ session('school.uuid') }}">
                     <input type="hidden" name="redirectTo" value="{{ route('school_manager.timetable.manager',['uuid'=>session('school.uuid')])  }}">
                     <div class="form-group">
-                        <label>第一学期, 学生可以在以下时间段选择选修课</label>
+                        <label>秋季开学, 学生可以在以下时间段选择选修课</label>
                         <div class="clearfix"></div>
                         @php
                             $months = range(1,12);
@@ -59,7 +59,7 @@
 
                     <div class="clearfix"></div>
                     <div class="form-group mt-4">
-                        <label>第二学期, 学生可以在一下时间段选择选修课</label>
+                        <label>春季开学, 学生可以在一下时间段选择选修课</label>
                         <div class="clearfix"></div>
                         <select class="form-control pull-left mr-2" name="ec2[from][month]" style="width: 20%;">
                             @foreach($months as $month)
@@ -87,7 +87,7 @@
                     <hr>
 
                     <div class="form-group mt-4">
-                        <label>本学年第一学期开学时间</label>
+                        <label>本学年秋季开学时间</label>
                         <div class="clearfix"></div>
                         <select class="form-control pull-left mr-2" name="term_start[term1][month]" style="width: 20%;">
                             @foreach($months as $month)
@@ -102,7 +102,7 @@
                         <div class="clearfix"></div>
                     </div>
                     <div class="form-group mt-4">
-                        <label>本学年第二学期开学时间</label>
+                        <label>本学年秋季开学时间</label>
                         <div class="clearfix"></div>
                         <select class="form-control pull-left mr-2" name="term_start[term2][month]" style="width: 20%;">
                             @foreach($months as $month)

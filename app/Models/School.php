@@ -2,19 +2,18 @@
 
 namespace App\Models;
 
-use App\Dao\Timetable\TimeSlotDao;
-use App\Models\Acl\Role;
-use App\Models\Schools\SchoolConfiguration;
-use App\Models\Teachers\Performance\TeacherPerformanceConfig;
-use App\Models\Users\GradeUser;
 use App\User;
-use App\Utils\Time\GradeAndYearUtil;
-use Carbon\Carbon;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
-use App\Models\Schools\Campus;
+use App\Models\Acl\Role;
 use Illuminate\Http\Request;
+use App\Models\Schools\Campus;
+use App\Models\Users\GradeUser;
 use App\Models\Timetable\TimeSlot;
+use App\Dao\Timetable\TimeSlotDao;
+use App\Utils\Time\GradeAndYearUtil;
+use Illuminate\Database\Eloquent\Model;
+use App\Models\Schools\SchoolConfiguration;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Models\Teachers\Performance\TeacherPerformanceConfig;
 
 class School extends Model
 {
@@ -60,6 +59,7 @@ class School extends Model
         $config = $this->configuration;
         $seasonType = GradeAndYearUtil::GetCurrentSeason($config);
         $slots = TimeSlot::select(['id','name','type','from','to','season'])
+            ->where('school_id',$this->id)
             ->where('season',$seasonType)
             ->orderBy('from','asc')->get();
 
@@ -68,7 +68,7 @@ class School extends Model
             $dao = new TimeSlotDao();
             $frames = $dao->getDefaultTimeFrame(TimeSlot::SEASONS_WINTER_AND_SPRINT)['frames'];
             foreach ($frames as $frame) {
-                $frame['school_id'] = 1;
+                $frame['school_id'] = $this->id;
                 $frame['season'] = TimeSlot::SEASONS_WINTER_AND_SPRINT;
                 $dao->createTimeSlot($frame);
             }
