@@ -39,10 +39,7 @@ use App\Utils\UI\Button;
                                 <tbody>
                                 @foreach($attendances as $index=>$attendance)
                                     <tr>
-                                        @php
-                                            $week = $configuration->getScheduleWeek($attendance->start_date, $weeks);
-                                        @endphp
-                                        <td>{{ $week ? $week->getName() : null }}</td>
+                                        <td>{{ '第'.\Carbon\Carbon::parse($attendance->start_date)->week.'周' }}</td>
                                         <td>{{ _printDate($attendance->start_date) }}</td>
                                         <td>{{ _printDate($attendance->end_date) }}</td>
                                         <td>{{ $attendance->high_level }}</td>

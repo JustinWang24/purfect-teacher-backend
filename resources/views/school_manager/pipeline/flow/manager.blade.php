@@ -133,7 +133,7 @@
                     </el-form-item>
                 </el-col>
             </el-row>
-            <el-row v-if="posiType === 3">
+            <el-row>
                 <el-col :span="7">
                     <el-form-item label="关联业务">
                         <el-select v-model="flow.business" placeholder="请选择关联业务" @change="getbusinessList">

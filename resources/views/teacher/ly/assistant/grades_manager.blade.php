@@ -15,15 +15,23 @@
                 <div class="card-content" v-for="item in gradeList">
                     <div class="content-head" v-html="item.name"></div>
                     <div class="content-body">
-                        <el-upload
-                                class="avatar-uploader"
-                                action="##"
-                                list-type="picture-card"
-                                :file-list="item.image"
-                                with-credentials
-                                :on-progress="upload">
-                            <i class="el-icon-plus avatar-uploader-icon"></i>
-                        </el-upload>
+                        <div class="imageList"  v-for="img in item.image">
+                            <img :src="img.path" alt="">
+                            <i class="el-icon-error" @click="remove(img.image_id)"></i>
+                        </div>
+                        <div class="uploaderWrap" @click="setId(item.grade_id)">
+                            <el-upload
+                                    class="avatar-uploader"
+                                    action="##"
+                                    list-type="picture-card"
+                                    :auto-uplode='false'
+                                    :show-file-list="false"
+                                    with-credentials
+                                    :before-upload="upload">
+                                <i class="el-icon-plus avatar-uploader-icon"></i>
+                            </el-upload>
+                        </div>
+
                     </div>
                 </div>
                 <div v-show="gradeList.length = 0" class="no-data-img">

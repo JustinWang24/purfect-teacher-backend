@@ -132,16 +132,9 @@
             <div class="myRadio myFiles" v-if="item.type == 'files'">
                 <div class="myTips" v-html="item.tips"></div>
                 <van-field name="uploader" :required="item.required?true:false" :label="item.title">
-                    <template #input>
-                       <el-button style="background: none;border: none;color: #409EFF;padding: 5px;" type="primary" size="mini" icon="el-icon-paperclip" v-on:click="showFileManagerFlag=true">选择附件</el-button>
-                        <ul style="padding-left: 0;">
-                            <li v-for="(a, idx) in action.attachments" :key="idx">
-                                <p style="margin-bottom: 0;">
-                                    <span>@{{ a.file_name }}</span>&nbsp;<el-button v-on:click="dropAttachment(idx, a)" type="text" style="color: red">删除</el-button>
-                                </p>
-                            </li>
-                        </ul>
-                    </template>
+                   <template #input>
+                       <van-uploader v-model="item.files" :max-count="9" :after-read="uploadImg"/>
+                   </template>
                 </van-field>
             </div>
             <div v-if="item.type == 'money'">

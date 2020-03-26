@@ -241,4 +241,38 @@ class SchoolConfiguration extends Model
         $this->getScheduleWeek($date, $weeks, $term);
         return $this->isOddWeek ? GradeAndYearUtil::WEEK_EVEN : GradeAndYearUtil::WEEK_ODD;
     }
+
+
+    /**
+     * 返回自然年的所有周
+     * @param null $year
+     * @return Collection
+     */
+    public function getAllWeeksOfYear($year = null){
+        if(is_null($year)) {
+            $year = Carbon::now()->year;
+        }
+        // 预备周, 是开始日期的前一周
+        $weeks = new Collection();
+
+        $startDate = Carbon::parse($year.'-01-01');
+
+        $week = $startDate->weeksInYear;
+
+        // 工作周
+        for ($i = 1; $i <= $week; $i++){
+
+            $weeks->push(
+                new CalendarWeek('第' . $i . '周',
+                    $startDate->startOfWeek()->toDateString(),
+                    $startDate->endOfWeek()->toDateString()
+                )
+            );
+            $startDate = $startDate->addWeek();
+
+        }
+        return $weeks;
+    }
+
+
 }
