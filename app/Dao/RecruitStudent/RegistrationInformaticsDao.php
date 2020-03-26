@@ -643,13 +643,13 @@ class RegistrationInformaticsDao
     public function getRegistrationInformaticsStatusInfo($userId, $planInfo = [])
     {
       $messageArr = [
-        0 => array('status'=>0,'message'=>'参数错误'),
-        1 => array('status'=>1,'message'=>'您已申请，不能重复申请'),
-        2 => array('status'=>2,'message'=>'招生人数已满'),
-        3 => array('status'=>3,'message'=>'您申请的已通过，不能重复申请'),
-        5 => array('status'=>5,'message'=>'您申请的已通过，不能重复申请'),
-        6 => array('status'=>6,'message'=>'您申请的已通过，不能重复申请'),
-        100 => array('status'=>100,'message'=>'ok'),
+        0 => array('status'=>0,'message'=>'参数错误','message1'=>'报名'),
+        1 => array('status'=>1,'message'=>'您已申请，不能重复申请','message1'=>'已申请'),
+        2 => array('status'=>2,'message'=>'招生人数已满','message1'=>'人已满'),
+        3 => array('status'=>3,'message'=>'您申请的已通过，不能重复申请','message1'=>'已报名'),
+        5 => array('status'=>5,'message'=>'您申请的已通过，不能重复申请','message1'=>'已报名'),
+        6 => array('status'=>6,'message'=>'您申请的已通过，不能重复申请','message1'=>'已报名'),
+        100 => array('status'=>100,'message'=>'报名','message1'=>'报名'),
       ];
 
       if (!intval($userId) || empty($planInfo)) return $messageArr[0];

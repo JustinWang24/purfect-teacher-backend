@@ -29,12 +29,14 @@ class FrontendLogic implements IPlansLoaderLogic
 
     public function __construct(PlanRecruitRequest $request)
     {
+        $this->userId = null;
         $this->schoolUuId = $request->getSchoolId();
         $this->schoolId = null;
 
         if(empty($this->schoolUuId)){
             $user = $request->user('api');
             if($user){
+                $this->userId = $user->id;
                 $this->schoolId = $user->getSchoolId();
             }
         }
@@ -68,8 +70,8 @@ class FrontendLogic implements IPlansLoaderLogic
           $regDao = new RegistrationInformaticsDao();
             foreach ($rows as $row) {
               // 获取我是否可以报名
-              $statusMessageArr = $regDao->getRegistrationInformaticsStatusInfo($userId, $row);
-              $applied = $statusMessageArr['status'] == 100 ? false : $statusMessageArr['message'];
+              $statusMessageArr = $regDao->getRegistrationInformaticsStatusInfo($this->userId, $row);
+              $applied = $statusMessageArr['status'] == 100 ? false : $statusMessageArr['message1'];
 
                 // 返回数据
                 $plans[] = [
