@@ -138,15 +138,10 @@ class FlowsController extends Controller
         $logic = FlowLogicFactory::GetInstance($request->user());
         $position = $request->get('position', 0);
         $keyword = $request->get('keyword');
-        $list = $logic->startedByMe($position);
+        $list = $logic->startedByMe($position, $keyword);
         $retList = [];
         if ($list) {
             foreach ($list as $key => $value) {
-                if ($keyword) {
-                    if (mb_strpos($value->user->name, $keyword) === false && mb_strpos($value->flow->name, $keyword) === false) {
-                        continue;
-                    }
-                }
                 $retList[] = [
                     'id' => $value->id,
                     'avatar' => $value->user->profile->avatar ?? '',
@@ -168,15 +163,10 @@ class FlowsController extends Controller
         $logic = FlowLogicFactory::GetInstance($request->user());
         $position = $request->get('position', 0);
         $keyword = $request->get('keyword');
-        $list = $logic->waitingForMe($position);
+        $list = $logic->waitingForMe($position, $keyword);
         $retList = [];
         if ($list) {
             foreach ($list as $key => $value) {
-                if ($keyword) {
-                    if (mb_strpos($value->user->name, $keyword) === false && mb_strpos($value->flow->name, $keyword) === false) {
-                        continue;
-                    }
-                }
                 $retList[] = [
                     'id' => $value->userFlow->id,
                     'avatar' => $value->userFlow->user->profile->avatar ?? '',
@@ -198,15 +188,10 @@ class FlowsController extends Controller
         $logic = FlowLogicFactory::GetInstance($request->user());
         $position = $request->get('position', 0);
         $keyword = $request->get('keyword');
-        $list = $logic->copyToMe($position);
+        $list = $logic->copyToMe($position, $keyword);
         $retList = [];
         if ($list) {
             foreach ($list as $key => $value) {
-                if ($keyword) {
-                    if (mb_strpos($value->user->name, $keyword) === false && mb_strpos($value->flow->name, $keyword) === false) {
-                        continue;
-                    }
-                }
                 $retList[] = [
                     'id' => $value->id,
                     'avatar' => $value->user->profile->avatar ?? '',
@@ -224,15 +209,10 @@ class FlowsController extends Controller
         $logic = FlowLogicFactory::GetInstance($request->user());
         $position = $request->get('position', 0);
         $keyword = $request->get('keyword');
-        $list = $logic->myProcessed($position);
+        $list = $logic->myProcessed($position, $keyword);
         $retList = [];
         if ($list) {
             foreach ($list as $key => $value) {
-                if ($keyword) {
-                    if (mb_strpos($value->user->name, $keyword) === false && mb_strpos($value->flow->name, $keyword) === false) {
-                        continue;
-                    }
-                }
                 $retList[] = [
                     'id' => $value->id,
                     'avatar' => $value->user->profile->avatar ?? '',

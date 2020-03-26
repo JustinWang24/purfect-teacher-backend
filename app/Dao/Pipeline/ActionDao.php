@@ -16,6 +16,7 @@ use App\Models\Pipeline\Flow\Flow;
 use App\Models\Pipeline\Flow\UserFlow;
 use App\User;
 use App\Utils\JsonBuilder;
+use App\Utils\Misc\ConfigurationTool;
 use App\Utils\Pipeline\IAction;
 use App\Utils\Pipeline\IFlow;
 use App\Utils\Pipeline\IUserFlow;
@@ -25,6 +26,7 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use function foo\func;
 
 class ActionDao
 {
@@ -182,24 +184,26 @@ class ActionDao
      * @param $user
      * @return Collection
      */
-    public function getFlowsWhichStartBy($user, $position = 0){
-        if (!$position) {
-            return UserFlow::where('user_id',$user->id??$user)
-                ->with('flow')
-                ->orderBy('id','desc')
-                ->get();
-        }else {
+    public function getFlowsWhichStartBy($user, $position = 0, $keyword = ''){
+        $return = UserFlow::where('user_id',$user->id??$user);
+        if ($position) {
             $typeArr = array_keys(Flow::getTypesByPosition($position));
             if ($position == 1) {
                 $typeArr = array_merge($typeArr, array_keys(Flow::getTypesByPosition(3)));
             }
             $flowIdArr = Flow::whereIn('type', $typeArr)->pluck('id')->toArray();
-            return UserFlow::where('user_id',$user->id??$user)
-                ->whereIn('flow_id', $flowIdArr)
-                ->with('flow')
-                ->orderBy('id','desc')
-                ->get();
+            ->whereIn('flow_id', $flowIdArr);
         }
+        if ($keyword) {
+            $return->whereHas('flow', function ($query) use ($keyword) {
+                $query->where('name', 'like', '%'.$keyword.'%');
+            });
+            $return->orWhereHas('user', function ($query) use ($keyword) {
+                $query->where('name', 'like', '%'.$keyword.'%');
+            });
+        }
+        $return->with('flow')->orderBy('id','desc')->paginate(ConfigurationTool::DEFAULT_PAGE_SIZE);
+        return $return;
     }
 
     /**
