@@ -45,36 +45,36 @@ abstract class GeneralFlowsLogic implements IFlowLogic
      * 获取所有等待用户处理的操作
      * @return IAction[]|\Illuminate\Database\Eloquent\Collection
      */
-    public function waitingForMe($position = 0)
+    public function waitingForMe($position = 0, $keyword= '', $size= '')
     {
         $actionDao = new ActionDao();
-        return $actionDao->getFlowsWaitingFor($this->user, $position);
+        return $actionDao->getFlowsWaitingFor($this->user, $position, $keyword, $size);
     }
 
     /**
      * 获取抄送我的流程
      * @return mixed
      */
-    public function copyToMe($position = 0)
+    public function copyToMe($position = 0, $keyword= '', $size= '')
     {
         $actionDao = new ActionDao();
-        return $actionDao->getFlowsWhichCopyTo($this->user, $position);
+        return $actionDao->getFlowsWhichCopyTo($this->user, $position, $keyword, $size);
     }
 
-    public function myProcessed($position = 0)
+    public function myProcessed($position = 0, $keyword= '', $size= '')
     {
         $actionDao = new ActionDao();
-        return $actionDao->getFlowsWhichMyProcessed($this->user, $position);
+        return $actionDao->getFlowsWhichMyProcessed($this->user, $position, $keyword, $size);
     }
 
     /**
      * 获取我发起的流程
      * @return IAction[]|\Illuminate\Database\Eloquent\Collection
      */
-    public function startedByMe($position = 0)
+    public function startedByMe($position = 0, $keyword= '', $size= '')
     {
         $actionDao = new ActionDao();
-        return $actionDao->getFlowsWhichStartBy($this->user, $position);
+        return $actionDao->getFlowsWhichStartBy($this->user, $position, $keyword, $size);
     }
 
     /**

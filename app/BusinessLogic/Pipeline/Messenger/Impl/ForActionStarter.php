@@ -44,22 +44,22 @@ class ForActionStarter extends AbstractMessenger
             $userFlow = $action->getUserFlow();
             $flowStarter = $userFlow->getUser(); // 流程的发起者
 
-            $content = $flowStarter->getName();
+            //$content = $flowStarter->getName();
+            $content = '';
             $flowName = $this->flow->getName();
 
             // 把查看此流程详情的链接放进去
             $nextMove = route('h5.flow.user.view-history',['action_id'=>$action->id, 'user_flow_id'=>$action->getTransactionId()]);
             if($userFlow->isDone()){
-                $content .= '发起的' . $flowName . '流程已经获得批准!';
-                $title = '你的' . $flowName .'流程申请已通过!';
+                $title = '你的' . $flowName .'已经通过了审批';
             }
             elseif ($userFlow->isTerminated()){
-                $content .= '发起的' . $flowName . '流程被否决了';
-                $title = '你的' . $flowName .'流程申请未通过!';
+                $content .= '原因：' . $action->content;
+                $title = '你的' . $flowName .'未通过审批';
             }
             else {
                 $content .= '成功发起' . $flowName . '流程, 目前进入' . $this->node->getNext()->getName() . '阶段';
-                $title = '你的' . $flowName .'流程申请有新的进展!';
+                $title = '你的' . $flowName .'有新的进展!';
             }
 
             $category = SystemNotification::getCategoryByPipelineTypeAndBusiness($this->flow->type, $this->flow->business, $flowStarter->isStudent());

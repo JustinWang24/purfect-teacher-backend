@@ -63,7 +63,7 @@ use App\User;
                                         /** @var \App\Models\Users\GradeUser $gradeUser */
                                     @endphp
                                     <tr>
-                                        <td>{{ $gradeUser->studentProfile->serial_number??$gradeUser->id }}</td>
+                                        <td>{{ $gradeUser->studentProfile->student_number??'-' }}</td>
                                         <td>
                                             <img src="{{ $gradeUser->studentProfile->avatar??null }}" style="width: 60px;border-radius: 50%;">
                                         </td>

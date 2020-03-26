@@ -4,6 +4,7 @@ namespace App\Events\SystemNotification;
 
 use App\Events\CanSendSystemNotification;
 use App\Models\Misc\SystemNotification;
+use App\Models\OA\NewMeeting;
 use App\User;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Foundation\Events\Dispatchable;
@@ -85,7 +86,8 @@ class OaMeetingEvent implements CanSendSystemNotification
      */
     public function getContent(): string
     {
-        return '你有一条新的会议信息！';
+        $meet = NewMeeting::find($this->meetId);
+        return '会议主题：' . $meet->meet_title . "\r\n会议时间：" .  $meet->meet_start . '~' . $meet->meet_end;
     }
 
     /**

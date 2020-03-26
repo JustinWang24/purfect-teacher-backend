@@ -376,7 +376,7 @@ Route::prefix('school_manager')->group(function () {
 		            ->name('school_manager.contents.save-campus-intro');
         Route::get('get-campus-video','Contents\NewsController@get_campus_video')
             ->name('school_manager.contents.get-campus-video'); // 获取视频
-        Route::post('save-campus-video','Contents\NewsController@save_campus_video')
+        Route::post('save-campus-video','Conschoolroller@save_campus_video')
             ->name('school_manager.contents.save-campus-video'); // 保存视频
 
         // 动态管理

@@ -150,7 +150,7 @@ class TaskController extends Controller
                     }
                 // 已结束
                 } else  {
-                    if($now < $projectTask->end_time) {
+                    if($val->end_time < $projectTask->end_time) {
                         $status = 2; // 按时完成
                     } else {
                         $status = 4; // 超时完成

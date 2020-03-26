@@ -7,7 +7,8 @@ if (document.getElementById('teacher-assistant-grades-manager-app')) {
     data(){
       return {
         schoolId: null,
-        gradeList: []
+        gradeList: [],
+        grade_id: null
       }
     },
     created(){
@@ -30,67 +31,49 @@ if (document.getElementById('teacher-assistant-grades-manager-app')) {
 
         });
       },
+      setId: function (id) {
+        console.log(id)
+        this.grade_id = id;
+      },
       upload: function (file) {
-        let params = {};
-        params.grade_id = 10;
-        console.log(file)
-        // params.file = file.raw;
-        // console.log()
-        // const url = '/api/Oa/upload-grade-resources';
-        // axios.post(url, params).then((res) => {
-        //   if (Util.isAjaxResOk(res)) {
-        //     console.log(res)
-        //   }
-        // }).catch((err) => {
-        //
-        // });
-        this.getBase64(file.raw).then(res => {
-          // params.file = this.base64ToBlob(res);
-          console.log(params.file)
-          console.log(params)
-          const url = '/api/Oa/upload-grade-resources';
-          axios({
-            method: 'post',
-            url: url,
-            data: params,
-          }).then((res) => {
-            if (Util.isAjaxResOk(res)) {
-              console.log(res)
-            }
-          }).catch((err) => {
-
-          });
-        })
-
-      },
-      getBase64(file) {
-        return new Promise(function (resolve, reject) {
-          let reader = new FileReader();
-          let imgResult = "";
-          reader.readAsDataURL(file);
-          reader.onload = function () {
-            imgResult = reader.result;
-          };
-          reader.onerror = function (error) {
-            reject(error);
-          };
-          reader.onloadend = function () {
-            resolve(imgResult);
-          };
+        let params = new FormData();
+        console.log(this.grade_id)
+        params.append("grade_id", this.grade_id);  //图片
+        params.append("file", file)
+        const url = '/api/Oa/upload-grade-resources';
+        axios.post(url, params).then((res) => {
+          if (Util.isAjaxResOk(res)) {
+            this.getGradeList()
+            this.$message({
+              message: '上传成功',
+              type: 'success'
+            });
+          }
+        }).catch((err) => {
+              this.$message({
+                message: '上传失败',
+                type: 'warning'
+              });
         });
+        return false
       },
-      base64ToBlob(code) {
-        let parts = code.split(";base64,");
-        let contentType = parts[0].split(":")[1];
-        let raw = window.atob(parts[1]);
-        let rawLength = raw.length;
-
-        let uInt8Array = new Uint8Array(rawLength);
-
-        for (let i = 0; i < rawLength; ++i) {
-          uInt8Array[i] = raw.charCodeAt(i);
-        }
-        return new Blob([uInt8Array], {type: contentType});
+      remove (id) {
+        const url = '/api/Oa/del-grade-resources'
+        let params = {image_id: id};
+        axios.post(url, params).then((res) => {
+          if (Util.isAjaxResOk(res)) {
+            this.getGradeList()
+            this.$message({
+              message: '删除成功',
+              type: 'success'
+            });
+          }
+        }).catch((err) => {
+              this.$message({
+                message: '删除失败',
+                type: 'warning'
+              });
+        });
       }
     }
   });
