@@ -152,7 +152,10 @@ class FlowsController extends Controller
                 ];
             }
         }
-        return JsonBuilder::Success(['flows'=> $retList]);
+        $list = $list->toArray();
+        unset($list['data']);
+        $list['flows'] = $retList;
+        return JsonBuilder::Success($list);
     }
 
     /**
@@ -177,7 +180,10 @@ class FlowsController extends Controller
                 ];
             }
         }
-        return JsonBuilder::Success(['flows'=>$retList]);
+        $list = $list->toArray();
+        unset($list['data']);
+        $list['flows'] = $retList;
+        return JsonBuilder::Success($list);
     }
 
     /**
@@ -202,7 +208,10 @@ class FlowsController extends Controller
                 ];
             }
         }
-        return JsonBuilder::Success(['flows'=>$retList]);
+        $list = $list->toArray();
+        unset($list['data']);
+        $list['flows'] = $retList;
+        return JsonBuilder::Success($list);
     }
 
     public function my_processed(FlowRequest $request){
@@ -223,7 +232,10 @@ class FlowsController extends Controller
                 ];
             }
         }
-        return JsonBuilder::Success(['flows'=>$retList]);
+        $list = $list->toArray();
+        unset($list['data']);
+        $list['flows'] = $retList;
+        return JsonBuilder::Success($list);
     }
 
     /**
