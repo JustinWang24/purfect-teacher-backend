@@ -184,7 +184,7 @@ class ActionDao
      * @param $user
      * @return Collection
      */
-    public function getFlowsWhichStartBy($user, $position = 0, $keyword = ''){
+    public function getFlowsWhichStartBy($user, $position = 0, $keyword = '', $size = ConfigurationTool::DEFAULT_PAGE_SIZE){
         $return = UserFlow::where('user_id',$user->id??$user);
         if ($position) {
             $typeArr = array_keys(Flow::getTypesByPosition($position));
@@ -201,7 +201,7 @@ class ActionDao
             });
         }
         $return->with('flow')->orderBy('id','desc');
-        return $return->paginate(ConfigurationTool::DEFAULT_PAGE_SIZE);
+        return $return->paginate($size);
     }
 
     /**
@@ -209,7 +209,7 @@ class ActionDao
      * @param $user
      * @return mixed
      */
-    public function getFlowsWhichCopyTo($user, $position = 0, $keyword = ''){
+    public function getFlowsWhichCopyTo($user, $position = 0, $keyword = '', $size = ConfigurationTool::DEFAULT_PAGE_SIZE){
         $return = UserFlow::whereHas('copys', function ($query) use ($user) {
             $query->where('user_id', $user->id);
         });
@@ -229,7 +229,7 @@ class ActionDao
             });
         }
         $return->with('flow')->orderBy('id','desc');
-        return $return->paginate(ConfigurationTool::DEFAULT_PAGE_SIZE);
+        return $return->paginate($size);
     }
 
     /**
@@ -237,7 +237,7 @@ class ActionDao
      * @param $user
      * @return mixed
      */
-    public function getFlowsWhichMyProcessed($user, $position = 0, $keyword = ''){
+    public function getFlowsWhichMyProcessed($user, $position = 0, $keyword = '', $size = ConfigurationTool::DEFAULT_PAGE_SIZE){
         $return = UserFlow::whereHas('actions', function ($query) use ($user) {
             $query->where('user_id', $user->id)->where('result', '>', IAction::RESULT_PENDING);
         });
@@ -257,7 +257,7 @@ class ActionDao
             });
         }
         $return->with('flow')->orderBy('id','desc');
-        return $return->paginate(ConfigurationTool::DEFAULT_PAGE_SIZE);
+        return $return->paginate($size);
     }
 
     /**
@@ -265,7 +265,7 @@ class ActionDao
      * @param $user
      * @return Collection
      */
-    public function getFlowsWaitingFor($user, $position = 0, $keyword = ''){
+    public function getFlowsWaitingFor($user, $position = 0, $keyword = '', $size = ConfigurationTool::DEFAULT_PAGE_SIZE){
         $return = Action::where('user_id',$user->id??$user)
             ->where('result','=',IAction::RESULT_PENDING);
         if ($position) {
@@ -286,7 +286,7 @@ class ActionDao
         }
 
         $return->with('flow')->with('userFlow')->orderBy('id','desc');
-        return $return->paginate(ConfigurationTool::DEFAULT_PAGE_SIZE);
+        return $return->paginate($size);
     }
 
     /**
