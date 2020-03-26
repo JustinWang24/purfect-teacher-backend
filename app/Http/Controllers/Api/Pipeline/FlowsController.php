@@ -138,7 +138,8 @@ class FlowsController extends Controller
         $logic = FlowLogicFactory::GetInstance($request->user());
         $position = $request->get('position', 0);
         $keyword = $request->get('keyword');
-        $list = $logic->startedByMe($position, $keyword);
+        $size = $request->get('size');
+        $list = $logic->startedByMe($position, $keyword, $size);
         $retList = [];
         if ($list) {
             foreach ($list as $key => $value) {
@@ -166,7 +167,8 @@ class FlowsController extends Controller
         $logic = FlowLogicFactory::GetInstance($request->user());
         $position = $request->get('position', 0);
         $keyword = $request->get('keyword');
-        $list = $logic->waitingForMe($position, $keyword);
+        $size = $request->get('size');
+        $list = $logic->waitingForMe($position, $keyword, $size);
         $retList = [];
         if ($list) {
             foreach ($list as $key => $value) {
@@ -194,7 +196,8 @@ class FlowsController extends Controller
         $logic = FlowLogicFactory::GetInstance($request->user());
         $position = $request->get('position', 0);
         $keyword = $request->get('keyword');
-        $list = $logic->copyToMe($position, $keyword);
+        $size = $request->get('size');
+        $list = $logic->copyToMe($position, $keyword, $size);
         $retList = [];
         if ($list) {
             foreach ($list as $key => $value) {
@@ -218,7 +221,8 @@ class FlowsController extends Controller
         $logic = FlowLogicFactory::GetInstance($request->user());
         $position = $request->get('position', 0);
         $keyword = $request->get('keyword');
-        $list = $logic->myProcessed($position, $keyword);
+        $size = $request->get('size');
+        $list = $logic->myProcessed($position, $keyword, $size);
         $retList = [];
         if ($list) {
             foreach ($list as $key => $value) {
