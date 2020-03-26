@@ -192,18 +192,16 @@ class ActionDao
                 $typeArr = array_merge($typeArr, array_keys(Flow::getTypesByPosition(3)));
             }
             $flowIdArr = Flow::whereIn('type', $typeArr)->pluck('id')->toArray();
-            ->whereIn('flow_id', $flowIdArr);
+            $return->whereIn('flow_id', $flowIdArr);
         }
         if ($keyword) {
-            $return->whereHas('flow', function ($query) use ($keyword) {
-                $query->where('name', 'like', '%'.$keyword.'%');
-            });
-            $return->orWhereHas('user', function ($query) use ($keyword) {
-                $query->where('name', 'like', '%'.$keyword.'%');
+            $flowIdArr = Flow::where('name', 'like', '%'.$keyword.'%')->pluck('id')->toArray();
+            $return->where(function ($query) use ($flowIdArr) {
+                $query->whereIn('flow_id', $flowIdArr);
             });
         }
-        $return->with('flow')->orderBy('id','desc')->paginate(ConfigurationTool::DEFAULT_PAGE_SIZE);
-        return $return;
+        $return->with('flow')->orderBy('id','desc');
+        return $return->simplePaginate(ConfigurationTool::DEFAULT_PAGE_SIZE);
     }
 
     /**
@@ -211,27 +209,27 @@ class ActionDao
      * @param $user
      * @return mixed
      */
-    public function getFlowsWhichCopyTo($user, $position = 0){
-        if (!$position) {
-            return UserFlow::whereHas('copys', function ($query) use ($user) {
-                $query->where('user_id', $user->id);
-            })->with('flow')
-                ->orderBy('id','desc')
-                ->get();
-        }else {
+    public function getFlowsWhichCopyTo($user, $position = 0, $keyword = ''){
+        $return = UserFlow::whereHas('copys', function ($query) use ($user) {
+            $query->where('user_id', $user->id);
+        });
+        if ($position) {
             $typeArr = array_keys(Flow::getTypesByPosition($position));
             if ($position == 1) {
                 $typeArr = array_merge($typeArr, array_keys(Flow::getTypesByPosition(3)));
             }
             $flowIdArr = Flow::whereIn('type', $typeArr)->pluck('id')->toArray();
-            return UserFlow::whereHas('copys', function ($query) use ($user) {
-                $query->where('user_id', $user->id);
-            })->with('flow')
-                ->whereIn('flow_id', $flowIdArr)
-                ->orderBy('id','desc')
-                ->get();
+            $return->whereIn('flow_id', $flowIdArr);
         }
-
+        if ($keyword) {
+            $flowIdArr = Flow::where('name', 'like', '%'.$keyword.'%')->pluck('id')->toArray();
+            $userIdArr = User::where('name', 'like', '%'.$keyword.'%')->pluck('id')->toArray();
+            $return->where(function ($query) use ($flowIdArr, $userIdArr) {
+                $query->whereIn('flow_id', $flowIdArr)->orWhereIn('user_id', $userIdArr);
+            });
+        }
+        $return->with('flow')->orderBy('id','desc');
+        return $return->simplePaginate(ConfigurationTool::DEFAULT_PAGE_SIZE);
     }
 
     /**
@@ -239,26 +237,27 @@ class ActionDao
      * @param $user
      * @return mixed
      */
-    public function getFlowsWhichMyProcessed($user, $position = 0){
-        if (!$position) {
-            return UserFlow::whereHas('actions', function ($query) use ($user) {
-              $query->where('user_id', $user->id)->where('result', '>', IAction::RESULT_PENDING);
-            })->with('flow')
-              ->orderBy('id','desc')
-              ->get();
-        }else {
+    public function getFlowsWhichMyProcessed($user, $position = 0, $keyword = ''){
+        $return = UserFlow::whereHas('actions', function ($query) use ($user) {
+            $query->where('user_id', $user->id)->where('result', '>', IAction::RESULT_PENDING);
+        });
+        if ($position) {
             $typeArr = array_keys(Flow::getTypesByPosition($position));
             if ($position == 1) {
                 $typeArr = array_merge($typeArr, array_keys(Flow::getTypesByPosition(3)));
             }
             $flowIdArr = Flow::whereIn('type', $typeArr)->pluck('id')->toArray();
-            return UserFlow::whereHas('actions', function ($query) use ($user) {
-              $query->where('user_id', $user->id)->where('result', '>', IAction::RESULT_PENDING);
-            })->with('flow')
-                ->whereIn('flow_id', $flowIdArr)
-                ->orderBy('id','desc')
-                ->get();
+            $return->whereIn('flow_id', $flowIdArr);
         }
+        if ($keyword) {
+            $flowIdArr = Flow::where('name', 'like', '%'.$keyword.'%')->pluck('id')->toArray();
+            $userIdArr = User::where('name', 'like', '%'.$keyword.'%')->pluck('id')->toArray();
+            $return->where(function ($query) use ($flowIdArr, $userIdArr) {
+                $query->whereIn('flow_id', $flowIdArr)->orWhereIn('user_id', $userIdArr);
+            });
+        }
+        $return->with('flow')->orderBy('id','desc');
+        return $return->simplePaginate(ConfigurationTool::DEFAULT_PAGE_SIZE);
     }
 
     /**
@@ -266,28 +265,28 @@ class ActionDao
      * @param $user
      * @return Collection
      */
-    public function getFlowsWaitingFor($user, $position = 0){
-        if (!$position) {
-            return Action::where('user_id',$user->id??$user)
-                ->where('result','=',IAction::RESULT_PENDING)
-                ->with('flow')
-                ->with('userFlow')
-                ->orderBy('id','desc')
-                ->get();
-        }else {
+    public function getFlowsWaitingFor($user, $position = 0, $keyword = ''){
+        $return = Action::where('user_id',$user->id??$user)
+            ->where('result','=',IAction::RESULT_PENDING);
+        if ($position) {
             $typeArr = array_keys(Flow::getTypesByPosition($position));
             if ($position == 1) {
                 $typeArr = array_merge($typeArr, array_keys(Flow::getTypesByPosition(3)));
             }
             $flowIdArr = Flow::whereIn('type', $typeArr)->pluck('id')->toArray();
-            return Action::where('user_id',$user->id??$user)
-                ->where('result','=',IAction::RESULT_PENDING)
-                ->whereIn('flow_id', $flowIdArr)
-                ->with('flow')
-                ->with('userFlow')
-                ->orderBy('id','desc')
-                ->get();
+            $return->whereIn('flow_id', $flowIdArr);
         }
+        if ($keyword) {
+            $flowIdArr = Flow::where('name', 'like', '%'.$keyword.'%')->pluck('id')->toArray();
+            $userIdArr = User::where('name', 'like', '%'.$keyword.'%')->pluck('id')->toArray();
+            $userFlowIdArr = UserFlow::whereIn('user_id', $userIdArr)->pluck('id')->toArray();
+            $return->where(function ($query) use ($flowIdArr, $userFlowIdArr) {
+                $query->whereIn('flow_id', $flowIdArr)->orWhereIn('transaction_id', $userFlowIdArr);
+            });
+        }
+
+        $return->with('flow')->with('userFlow')->orderBy('id','desc');
+        return $return->simplePaginate(ConfigurationTool::DEFAULT_PAGE_SIZE);
     }
 
     /**
