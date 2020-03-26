@@ -1,17 +1,16 @@
 <?php
 namespace App\Http\Controllers\Operator;
-use App\Dao\AttendanceSchedules\AttendanceSchedulesDao;
-use App\Dao\Schools\GradeDao;
-use App\Dao\Schools\OrganizationDao;
-use App\Dao\Schools\SchoolDao;
-use App\Dao\Users\GradeUserDao;
-use App\Http\Controllers\Controller;
+
 use App\Models\Acl\Role;
-use App\Models\AttendanceSchedules\AttendanceSchedule;
-use App\Models\AttendanceSchedules\SpecialAttendance;
-use App\Utils\FlashMessageBuilder;
 use App\Utils\JsonBuilder;
 use Illuminate\Http\Request;
+use App\Dao\Schools\GradeDao;
+use App\Dao\Schools\SchoolDao;
+use App\Dao\Users\GradeUserDao;
+use App\Utils\FlashMessageBuilder;
+use App\Dao\Schools\OrganizationDao;
+use App\Http\Controllers\Controller;
+use App\Dao\AttendanceSchedules\AttendanceSchedulesDao;
 
 class AttendanceSchedulesController extends Controller
 {
@@ -34,7 +33,6 @@ class AttendanceSchedulesController extends Controller
 
         $school = (new SchoolDao())->getSchoolById($schoolId);
         $this->dataForView['configuration'] = $school->configuration;
-        $this->dataForView['weeks'] = $school->configuration->getAllWeeksOfTerm();
 
         return view('school_manager.attendance.list', $this->dataForView);
     }
@@ -47,19 +45,25 @@ class AttendanceSchedulesController extends Controller
         $schoolId = $request->session()->get('school.id');
         $school = (new SchoolDao())->getSchoolById($schoolId);
         $this->dataForView['configuration'] = $school->configuration;
-        $this->dataForView['weeks'] = $school->configuration->getAllWeeksOfTerm();
-
+        $this->dataForView['weeks'] = $school->configuration->getAllWeeksOfYear();
         $this->dataForView['grades'] = (new GradeDao())->getAllBySchool(session('school.id'));
         $this->dataForView['orgs'] = (new OrganizationDao())->getBySchoolId(session('school.id'), true);
         $this->dataForView['attendance'] = null;
         return view('school_manager.attendance.add', $this->dataForView);
     }
 
+
+    /**
+     * 编辑
+     * @param Request $request
+     * @param $id
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function edit(Request $request, $id){
         $schoolId = $request->session()->get('school.id');
         $school = (new SchoolDao())->getSchoolById($schoolId);
         $this->dataForView['configuration'] = $school->configuration;
-        $this->dataForView['weeks'] = $school->configuration->getAllWeeksOfTerm();
+        $this->dataForView['weeks'] = $school->configuration->getAllWeeksOfYear();
 
         $this->dataForView['grades'] = (new GradeDao())->getAllBySchool(session('school.id'));
         $this->dataForView['orgs'] = (new OrganizationDao())->getBySchoolId(session('school.id'), true);
@@ -67,6 +71,12 @@ class AttendanceSchedulesController extends Controller
         return view('school_manager.attendance.add', $this->dataForView);
     }
 
+
+    /**
+     * 删除
+     * @param Request $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function delete(Request $request){
         $id = $request->get('id');
         (new AttendanceSchedulesDao())->deleteSpecial($id);

@@ -138,15 +138,11 @@ class FlowsController extends Controller
         $logic = FlowLogicFactory::GetInstance($request->user());
         $position = $request->get('position', 0);
         $keyword = $request->get('keyword');
-        $list = $logic->startedByMe($position);
+        $size = $request->get('size');
+        $list = $logic->startedByMe($position, $keyword, $size);
         $retList = [];
         if ($list) {
             foreach ($list as $key => $value) {
-                if ($keyword) {
-                    if (mb_strpos($value->user->name, $keyword) === false && mb_strpos($value->flow->name, $keyword) === false) {
-                        continue;
-                    }
-                }
                 $retList[] = [
                     'id' => $value->id,
                     'avatar' => $value->user->profile->avatar ?? '',
@@ -157,7 +153,10 @@ class FlowsController extends Controller
                 ];
             }
         }
-        return JsonBuilder::Success(['flows'=> $retList]);
+        $list = $list->toArray();
+        unset($list['data']);
+        $list['flows'] = $retList;
+        return JsonBuilder::Success($list);
     }
 
     /**
@@ -168,15 +167,11 @@ class FlowsController extends Controller
         $logic = FlowLogicFactory::GetInstance($request->user());
         $position = $request->get('position', 0);
         $keyword = $request->get('keyword');
-        $list = $logic->waitingForMe($position);
+        $size = $request->get('size');
+        $list = $logic->waitingForMe($position, $keyword, $size);
         $retList = [];
         if ($list) {
             foreach ($list as $key => $value) {
-                if ($keyword) {
-                    if (mb_strpos($value->user->name, $keyword) === false && mb_strpos($value->flow->name, $keyword) === false) {
-                        continue;
-                    }
-                }
                 $retList[] = [
                     'id' => $value->userFlow->id,
                     'avatar' => $value->userFlow->user->profile->avatar ?? '',
@@ -187,7 +182,10 @@ class FlowsController extends Controller
                 ];
             }
         }
-        return JsonBuilder::Success(['flows'=>$retList]);
+        $list = $list->toArray();
+        unset($list['data']);
+        $list['flows'] = $retList;
+        return JsonBuilder::Success($list);
     }
 
     /**
@@ -198,15 +196,11 @@ class FlowsController extends Controller
         $logic = FlowLogicFactory::GetInstance($request->user());
         $position = $request->get('position', 0);
         $keyword = $request->get('keyword');
-        $list = $logic->copyToMe($position);
+        $size = $request->get('size');
+        $list = $logic->copyToMe($position, $keyword, $size);
         $retList = [];
         if ($list) {
             foreach ($list as $key => $value) {
-                if ($keyword) {
-                    if (mb_strpos($value->user->name, $keyword) === false && mb_strpos($value->flow->name, $keyword) === false) {
-                        continue;
-                    }
-                }
                 $retList[] = [
                     'id' => $value->id,
                     'avatar' => $value->user->profile->avatar ?? '',
@@ -217,22 +211,21 @@ class FlowsController extends Controller
                 ];
             }
         }
-        return JsonBuilder::Success(['flows'=>$retList]);
+        $list = $list->toArray();
+        unset($list['data']);
+        $list['flows'] = $retList;
+        return JsonBuilder::Success($list);
     }
 
     public function my_processed(FlowRequest $request){
         $logic = FlowLogicFactory::GetInstance($request->user());
         $position = $request->get('position', 0);
         $keyword = $request->get('keyword');
-        $list = $logic->myProcessed($position);
+        $size = $request->get('size');
+        $list = $logic->myProcessed($position, $keyword, $size);
         $retList = [];
         if ($list) {
             foreach ($list as $key => $value) {
-                if ($keyword) {
-                    if (mb_strpos($value->user->name, $keyword) === false && mb_strpos($value->flow->name, $keyword) === false) {
-                        continue;
-                    }
-                }
                 $retList[] = [
                     'id' => $value->id,
                     'avatar' => $value->user->profile->avatar ?? '',
@@ -243,7 +236,10 @@ class FlowsController extends Controller
                 ];
             }
         }
-        return JsonBuilder::Success(['flows'=>$retList]);
+        $list = $list->toArray();
+        unset($list['data']);
+        $list['flows'] = $retList;
+        return JsonBuilder::Success($list);
     }
 
     /**

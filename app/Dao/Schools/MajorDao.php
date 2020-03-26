@@ -167,4 +167,19 @@ class MajorDao
         return Major::where('school_id',$schoolId)->where('institute_id',$instituteId)->
                       where('department_id',$departmentId)->where('name', $name)->first();
     }
+
+    /**
+     * 根据学校ID和专业代码获取专业
+     * @param $code
+     * @param $schoolId
+     * @return mixed
+     */
+    public function getMajorByCategoryCode($code, $schoolId)
+    {
+        $map = [
+            'category_code' => $code,
+            'school_id' => $schoolId
+        ];
+        return Major::where($map)->first();
+    }
 }

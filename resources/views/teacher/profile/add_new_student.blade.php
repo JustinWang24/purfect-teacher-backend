@@ -5,7 +5,8 @@ use App\Utils\UI\Button;
 
 @extends('layouts.app')
 @section('content')
-    <div class="row">
+    <div id="school-add-student-app">
+      <div class="row">
         <div class="col-sm-12 col-md-12 col-xl-12">
             <div class="card">
                 <div class="card-head">
@@ -47,18 +48,18 @@ use App\Utils\UI\Button;
                             <div class="col-3">
                                 <div class="form-group">
                                     <label>专业</label>
-                                    <select name="major[id]" class="form-control">
-                                        @foreach($majors as $major)
-                                            <option value="{{ $major->id }}">{{ $major->name }}</option>
-                                        @endforeach
+                                    <select name="major[id]" class="form-control" @click="getMajors()" v-model="majorId">
+                                      <option value="">请选择</option>
+                                      <option v-for="(item, key) in majors"  :value="item.id" >@{{item.name}}</option>
                                     </select>
                                 </div>
                             </div>
+
                             <div class="col-3">
                                 <div class="form-group">
                                     <label>招生年度/年级</label>
-                                    <select required type="date" class="form-control" name="profile[year]">
-                                        <option value="{{ date('Y') }}"></option>
+                                    <select required type="date" class="form-control" name="profile[year]" v-model="year" @click="getGrades()">
+                                         <option value="">请选择</option>
                                         @foreach(\App\Utils\Time\GradeAndYearUtil::GetAllYears() as $year)
                                             <option {{ intval(date('Y'))===$year+1 ? 'selected':null }} value="{{ $year+1 }}">{{ $year+1 }}年</option>
                                         @endforeach
@@ -69,10 +70,9 @@ use App\Utils\UI\Button;
                             <div class="col-3">
                                 <div class="form-group">
                                     <label>班级</label>
-                                    <select name="grade[id]" class="form-control">
-                                        @foreach($grades as $grade)
-                                            <option value="{{ $grade->id }}">{{ $grade->name }}</option>
-                                        @endforeach
+                                    <select name="grade[id]" class="form-control" @click="getGrades()">
+                                      <option value="">请选择</option>
+                                      <option v-for="(item, key) in grades"  :value="item.id" >@{{item.name}}</option>
                                     </select>
                                 </div>
                             </div>
@@ -91,7 +91,7 @@ use App\Utils\UI\Button;
                             <div class="col-4">
                                 <div class="form-group">
                                     <label>学生编号</label>
-                                    <input type="text" class="form-control" value="" placeholder="选填: 学生编号" name="profile[serial_number]">
+                                    <input required type="text" class="form-control" value="" placeholder="必填: 学生编号" name="profile[serial_number]">
                                 </div>
                             </div>
                             <div class="col-4">
@@ -207,8 +207,8 @@ use App\Utils\UI\Button;
                         <div class="row">
                             <div class="col-4">
                                 <div class="form-group">
-                                    <label>生源地</label>
-                                    <input type="text" class="form-control" value="" placeholder="选填: 生源地" name="profile[source_place]">
+                                    <label>家庭住址</label>
+                                    <input type="text" class="form-control" value="" placeholder="选填: 家庭住址" name="profile[source_place]">
                                 </div>
                             </div>
                             <div class="col-4">
@@ -229,7 +229,7 @@ use App\Utils\UI\Button;
                             <label>备注</label>
                             <textarea class="form-control" placeholder="选填: 备注" name="profile[comments]"></textarea>
                         </div>
-
+                        <div id="app-init-data-holder" data-school="{{ session('school.id') }}"></div>
                         <?php
                         Button::Print(['id'=>'btn-create-building','text'=>trans('general.submit')], Button::TYPE_PRIMARY);
                         ?>&nbsp;
@@ -237,5 +237,6 @@ use App\Utils\UI\Button;
                 </div>
             </div>
         </div>
+    </div>
     </div>
 @endsection

@@ -37,9 +37,9 @@ class ForActionNextProcessors extends AbstractMessenger
         $handler = $this->node ? $this->node->getHandler() : null;
         if($handler){
             $users = $handler->getNoticeTo($action->getUserFlow()->getUser());
-            $content = $this->currentUser->getName();
+            $content = '申请人：'. $this->currentUser->getName();
 
-            if($this->node && $this->node->isHead()){
+            /*if($this->node && $this->node->isHead()){
                 $content .= '提交 "' . $this->flow->getName() .'" 申请等您审核';
             }
             else{
@@ -49,7 +49,7 @@ class ForActionNextProcessors extends AbstractMessenger
                 else{
                     $content .= '驳回了' . $this->flow->getName() .'的'.$this->node->getName().'阶段';
                 }
-            }
+            }*/
 
             $nextMove = route('h5.flow.user.view-history',['action_id'=>$action->id, 'user_flow_id'=>$action->getTransactionId()]);
             if($action->isUrgent()){
