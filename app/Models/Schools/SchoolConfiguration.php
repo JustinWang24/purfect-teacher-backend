@@ -269,8 +269,16 @@ class SchoolConfiguration extends Model
                 )
             );
             $startDate = $startDate->addWeek();
-
         }
+
+        $weeks->push(
+            new CalendarWeek('第' . 1 . '周',
+                $startDate->startOfWeek()->toDateString(),
+                $startDate->endOfWeek()->toDateString()
+            )
+        );
+
+
         return $weeks;
     }
 
