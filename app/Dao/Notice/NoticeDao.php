@@ -149,10 +149,13 @@ class NoticeDao
         }
     }
 
+
     /**
+     * 通知公告列表
      * @param $type
      * @param $schoolId
-     * @return array
+     * @param $organizationId
+     * @return mixed
      */
     public function getNotice($type, $schoolId, $organizationId) {
         $field = ['notices.id', 'title', 'content', 'type', 'created_at',

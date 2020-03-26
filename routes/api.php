@@ -34,6 +34,14 @@ Route::prefix('school')->middleware('auth:api')->group(function () {
     Route::any('/load-study-time-slots','Api\School\TimeSlotsController@load_study_time_slots')
         ->name('api.school.load.study.time.slots');
 
+    // 获取某个学校所有的学院
+    Route::any('/load-institute','Api\School\MajorsController@institute')
+        ->name('api.school.load.institute');
+
+     // 获取某个学校所有的系
+    Route::any('/load-department','Api\School\MajorsController@department')
+        ->name('api.school.load.department');
+
     // 获取某个学校所有的专业
     Route::any('/load-majors','Api\School\MajorsController@load_by_school')
         ->name('api.school.load.majors');
@@ -429,7 +437,7 @@ Route::prefix('banner')->middleware('auth:api')->group(function () {
 
 // APP 生成二维码 接口
 Route::prefix('QrCode')->middleware('auth:api')->group(function () {
-    // 生成学生端二维码
+    // 生成学生端 教师端 二维码
     Route::post('/getQrCode', 'Api\QrCode\IndexController@generate')->name('api.generate.qr.code');
     // 上课补签二维码
     Route::post('/courseQrCode', 'Api\QrCode\IndexController@courseQrCode')->name('api.course.qr.code');

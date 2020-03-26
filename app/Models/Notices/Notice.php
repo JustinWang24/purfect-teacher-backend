@@ -112,6 +112,11 @@ class Notice extends Model
     }
 
 
+    /**
+     * 发布时间
+     * @param $value
+     * @return string
+     */
     public function getCreatedAtAttribute($value)
     {
         return Carbon::parse($value)->format('Y-m-d H:i');

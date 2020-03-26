@@ -1,6 +1,7 @@
 <?php
 namespace App\Http\Controllers\Operator\Applications;
 
+use App\Dao\Pipeline\UserFlowDao;
 use App\Utils\FlashMessageBuilder;
 use App\Dao\Students\ApplicationDao;
 use App\Http\Controllers\Controller;
@@ -9,9 +10,14 @@ use App\Http\Requests\School\ApplicationRequest;
 class ApplicationController extends Controller
 {
     public function list(ApplicationRequest $request) {
-        $dao = new ApplicationDao();
+        /*$dao = new ApplicationDao();
         $schoolId = $request->getSchoolId();
-        $this->dataForView['list'] = $dao->getApplicationBySchoolId($schoolId);
+        $this->dataForView['list'] = $dao->getApplicationBySchoolId($schoolId);*/
+
+        $dao = new UserFlowDao();
+        $schoolId = $request->getSchoolId();
+        $this->dataForView['list'] = $dao->getListByPosition($request->getSchoolId(), $request->get('position'));
+        $this->dataForView['list_type'] = $request->get('position');
         return view('school_manager.application.list', $this->dataForView);
     }
 

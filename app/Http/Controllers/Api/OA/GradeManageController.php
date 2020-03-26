@@ -115,12 +115,17 @@ class GradeManageController extends Controller
         $gradeId = $request->get('grade_id');
         $dao = new GradeUserDao;
         $data = $dao->paginateUserByGrade($gradeId, Role::VERIFIED_USER_STUDENT);
-        $result = [];
+        $output = [];
         foreach ($data as $key => $val) {
-            $result[$key]['student_id'] = $val->user_id;
-            $result[$key]['name'] = $val->name;
+            $output[$key]['student_id'] = $val->user_id;
+            $output[$key]['name'] = $val->name;
         }
-        return JsonBuilder::Success($result);
+        return [
+            'code' => JsonBuilder::CODE_SUCCESS,
+            'message' => "ok",
+            'data' => $output,
+            'lastPage' => $data->lastPage()
+        ];
     }
 
     /**

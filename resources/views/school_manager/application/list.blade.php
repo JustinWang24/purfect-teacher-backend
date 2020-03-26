@@ -16,29 +16,59 @@
                                     valign-middle">
                                 <thead>
                                 <tr>
+                                    @if ($list_type == 2)
                                     <th>序号</th>
                                     <th>姓名</th>
                                     <th>性别</th>
+                                    <th>学院</th>
                                     <th>专业</th>
-                                    <th>申请类型</th>
+                                    <th>班级</th>
+                                    <th>类型</th>
                                     <th>申请时间</th>
                                     <th>状态</th>
-                                    <th>操作</th>
+                                    @endif
+
+                                    @if ($list_type == 1)
+                                        <th>序号</th>
+                                        <th>姓名</th>
+                                        <th>类型</th>
+                                        <th>申请时间</th>
+                                        <th>状态</th>
+                                    @endif
                                 </tr>
                                 </thead>
                                 <tbody>
                                     @foreach($list as $key => $val)
                                     <tr>
-                                        <td>{{$key + 1}}</td>
-                                        <td>{{$val->user->name}}</td>
-                                        <td>{{$val->user->profile->gender_text}}</td>
-                                        <td>{{$val->user->gradeUser->major->name}}</td>
-                                        <td>{{$val->applicationType->name}}</td>
-                                        <td>{{$val->created_at}}</td>
-                                        <td>{{$val->status_text}}</td>
+                                        @if ($list_type == 2)
+                                        <td>{{ $val->id }}</td>
+                                        <td>{{ $val->user->name }}</td>
+                                        <td>@if($val->user->profile->gender == 1)男@endif
+                                            @if($val->user->profile->gender == 2)女@endif</td>
+
+                                        <td>{{ $val->user->gradeUser->institute->name }}</td>
+                                        <td>{{ $val->user->gradeUser->major->name }}</td>
+                                        <td>{{ $val->user->gradeUser->grade->name }}</td>
+                                        <td>{{ $val->flow->name }}</td>
+                                        <td>{{ $val->created_at }}</td>
                                         <td>
-                                            {{ \App\Utils\UI\Anchor::Print(['text'=>'编辑','class'=>'btn-edit-facility','href'=>route('school_manager.students.applications-edit',['id'=>$val->id])], \App\Utils\UI\Button::TYPE_DEFAULT,'edit') }}
+                                            @if($val->done == \App\Utils\Pipeline\IUserFlow::IN_PROGRESS)审核中@endif
+                                            @if($val->done == \App\Utils\Pipeline\IUserFlow::DONE)已通过@endif
+                                            @if($val->done == \App\Utils\Pipeline\IUserFlow::TERMINATED)被拒绝@endif
                                         </td>
+                                        @endif
+
+                                        @if ($list_type == 1)
+                                            <td>{{ $val->id }}</td>
+                                            <td>{{ $val->user->name }}</td>
+                                            <td>{{ $val->flow->name }}</td>
+                                            <td>{{ $val->created_at }}</td>
+                                            <td>
+                                                @if($val->done == \App\Utils\Pipeline\IUserFlow::IN_PROGRESS)审核中@endif
+                                                @if($val->done == \App\Utils\Pipeline\IUserFlow::DONE)已通过@endif
+                                                @if($val->done == \App\Utils\Pipeline\IUserFlow::TERMINATED)被拒绝@endif
+                                            </td>
+                                        @endif
                                     </tr>
                                     @endforeach
                                 </tbody>

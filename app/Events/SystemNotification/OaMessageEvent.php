@@ -4,6 +4,7 @@ namespace App\Events\SystemNotification;
 
 use App\Events\CanSendSystemNotification;
 use App\Models\Misc\SystemNotification;
+use App\Models\OA\InternalMessage;
 use App\User;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Foundation\Events\Dispatchable;
@@ -14,16 +15,16 @@ class OaMessageEvent implements CanSendSystemNotification
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
     private  $user;
-    private  $messageId;
+    private  $message;
 
     /**
      * OaMessageEvent constructor.
      * @param $userid
      */
-    public function __construct($userId, $messageId)
+    public function __construct($userId, InternalMessage $message)
     {
         $this->user = User::find($userId);
-        $this->messageId = $messageId;
+        $this->message = $message;
     }
 
     /**
@@ -85,7 +86,7 @@ class OaMessageEvent implements CanSendSystemNotification
      */
     public function getContent(): string
     {
-        return '你有一封新的信件！';
+        return $this->message->title;
     }
 
     /**
@@ -105,7 +106,7 @@ class OaMessageEvent implements CanSendSystemNotification
     {
         $extra = [
             'type' => 'oa-message-info',
-            'param1' => $this->messageId,
+            'param1' => $this->message->id,
             'param2' => ''
         ];
         return json_encode($extra);

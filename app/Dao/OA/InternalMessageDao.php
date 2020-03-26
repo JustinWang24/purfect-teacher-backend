@@ -47,7 +47,7 @@ class InternalMessageDao
 					$collData['is_file']           = $data['is_file'];
 					$newMessage = InternalMessage::create($collData);
 
-					event(new OaMessageEvent($value, $newMessage->id));
+					event(new OaMessageEvent($value, $newMessage));
                 }
             }
 
@@ -126,7 +126,7 @@ class InternalMessageDao
                     $collData['is_file']           = $data['is_file'];
                     $newMessage = InternalMessage::create($collData);
 
-                    event(new OaMessageEvent($value, $newMessage->id));
+                    event(new OaMessageEvent($value, $newMessage));
                 }
             }
 

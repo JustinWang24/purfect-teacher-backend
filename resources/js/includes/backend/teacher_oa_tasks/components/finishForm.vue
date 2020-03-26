@@ -19,6 +19,7 @@
             accept="image/gif, image/jpeg, image/jpg, image/png, image/svg"
             @change="onFileSelected"
             hidden
+            ref="referenceUpload"
             multiple="multiple"
             id="task-finish-upload"
             class="el-upload__input"
@@ -73,7 +74,7 @@ export default {
           });
         }
       }
-      var file = document.getElementById("task-finish-upload");
+      this.$refs.referenceUpload.value = null;
     }
   },
   data() {
@@ -100,13 +101,17 @@ export default {
     }
     .uploader-box {
       .img-box {
-        display: inline-block;
+        display: flex;
         width: 120px;
         border-radius: 4px;
+        text-align: center;
         margin: 0 12px 12px 0;
         height: 120px;
         border: 1px solid #aaaaaa;
         float: left;
+        position: relative;
+        align-items: center;
+        justify-content: center;
         img {
           max-width: 100%;
           max-height: 100%;
@@ -116,6 +121,7 @@ export default {
         color: #aaaaaa;
         cursor: pointer;
         .upload-desc {
+          cursor: pointer;
           font-size: 12px;
           display: flex;
           flex-direction: column;

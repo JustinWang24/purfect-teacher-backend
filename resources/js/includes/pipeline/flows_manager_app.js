@@ -155,9 +155,7 @@ if (document.getElementById('pipeline-flows-manager-app')) {
                     if (Util.isAjaxResOk(res)) {
                         this.typeList = res.data.data // 左边分类
                         this.posiType = tab // 侧边栏显示位置
-                        if (this.posiType === 3) {
-                            this.getbusinessList(); // 侧边栏关联业务
-                        }
+                        this.getbusinessList(); // 侧边栏关联业务
                     }
                 }).catch((err) => {
                     console.log(err)
@@ -251,15 +249,6 @@ if (document.getElementById('pipeline-flows-manager-app')) {
                         message: '流程图标不能为空'
                     });
                     return;
-                }
-                if (this.posiType === 3) {
-                    if (this.flow.business === '') {
-                        this.$notify.error({
-                            title: '错误',
-                            message: '关联业务不能为空'
-                        });
-                        return;
-                    }
                 }
                 if (this.node.handlers.length === 0) {
                     this.$notify.error({
