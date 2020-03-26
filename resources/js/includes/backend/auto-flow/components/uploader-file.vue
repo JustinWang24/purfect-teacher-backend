@@ -7,12 +7,13 @@
         <span class="size">{{converSize(file.size)}}</span>
       </div>
     </div>
-    <div class="file-add" v-if="filelist.length < 9">
-      <label for="auto-form-file-upload" class="upload-desc">
+    <div class="file-add" v-if="filelist.length < 9" @click="()=>{showFileManagerFlag = true}">
+      <label class="upload-desc">
         <i class="el-icon-paperclip"></i>
         <span>添加附件</span>
       </label>
       <input
+        v-if="!uuid"
         type="file"
         name="file"
         @change="onFileSelected"
@@ -22,16 +23,53 @@
         class="el-upload__input"
       />
     </div>
+    <el-drawer
+      v-if="uuid"
+      title="我的易云盘"
+      :visible.sync="showFileManagerFlag"
+      direction="rtl"
+      size="100%"
+      :append-to-body="true"
+      custom-class="e-yun-pan"
+    >
+      <file-manager
+        :user-uuid="uuid"
+        :allowed-file-types="[]"
+        :pick-file="true"
+        v-on:pick-this-file="pickFileHandler"
+      ></file-manager>
+    </el-drawer>
   </div>
 </template>
 <script>
 import { converSize } from "../common/util";
 export default {
   name: "uploader",
+  props: {
+    uuid: {
+      type: String,
+      default: ""
+    }
+  },
   data() {
     return {
-      filelist: []
+      filelist: [],
+      showFileManagerFlag: false
     };
+  },
+  watch: {
+    filelist: {
+      deep: true,
+      immediate: true,
+      handler(val) {
+        this.$emit(
+          "input",
+          val.map(file => {
+            return file.url;
+          }).toString()
+        );
+      }
+    }
   },
   computed: {
     converSize() {
@@ -54,6 +92,17 @@ export default {
     remove(index) {
       this.filelist.splice(index, 1);
       this.files.splice(index, 1);
+    },
+    pickFileHandler(payload) {
+      if (payload && payload.file) {
+        this.showFileManagerFlag = false;
+        this.filelist.push({
+          name: payload.file.file_name,
+          size: payload.file.size,
+          url: payload.file.url
+        });
+        this.files.push(payload.file);
+      }
     }
   },
   created() {
@@ -70,7 +119,7 @@ export default {
     background: #f3f9ff;
     margin-bottom: 8px;
     .name {
-      flex: 1;
+      flex: auto;
       align-self: center;
       color: #666666;
       /* white-space: nowrap; */
@@ -80,7 +129,9 @@ export default {
       padding-right: 24px;
     }
     .info {
-      flex: 0;
+      flex: 1;
+      flex-direction: column;
+      display: flex;
       text-align: right;
       .delete {
         cursor: pointer;
