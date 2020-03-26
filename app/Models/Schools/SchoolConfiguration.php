@@ -257,26 +257,19 @@ class SchoolConfiguration extends Model
 
         $startDate = Carbon::parse($year.'-01-01');
 
+        $week = $startDate->weeksInYear;
+
         // 工作周
-        for ($i = 1; $i <= 52; $i++){
-            if($i == 1) {
-                $weeks->push(
-                    new CalendarWeek('第' . $i . '周',
-                        $startDate->toDateString(),
-                        $startDate->endOfWeek()->toDateString())
+        for ($i = 1; $i <= $week; $i++){
 
-                    );
-            }
-            else {
+            $weeks->push(
+                new CalendarWeek('第' . $i . '周',
+                    $startDate->startOfWeek()->toDateString(),
+                    $startDate->endOfWeek()->toDateString()
+                )
+            );
+            $startDate = $startDate->addWeek();
 
-                $startDate = $startDate->addWeek();
-                $weeks->push(
-                    new CalendarWeek('第' . $i . '周',
-                        $startDate->startOfWeek()->toDateString(),
-                        $startDate->endOfWeek()->toDateString()
-                    )
-                );
-            }
         }
         return $weeks;
     }
