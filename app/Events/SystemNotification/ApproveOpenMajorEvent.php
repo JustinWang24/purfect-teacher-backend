@@ -83,7 +83,7 @@ class ApproveOpenMajorEvent implements CanSendSystemNotification
      */
     public function getContent(): string
     {
-        return '你的' . $this->RegistrationInformatics->getStatusText() . '！';
+        return '';
     }
 
     /**

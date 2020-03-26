@@ -81,7 +81,7 @@ class ApproveElectiveTeacherEvent implements CanSendSystemNotification
      */
     public function getTitle(): string
     {
-        return $this->result ? '你有一条选课信息！' : '你申请的选修课程未通过！';
+        return $this->result ? '你有一个新的课程安排！' : '你申请的选课未开课！';
     }
 
     /**
@@ -90,7 +90,7 @@ class ApproveElectiveTeacherEvent implements CanSendSystemNotification
      */
     public function getContent(): string
     {
-        return $this->result ? '你有一条选课信息！' : '你申请的选修课程未通过！';
+        return '课程名称：' . $this->apply->name;
     }
 
     /**

@@ -80,7 +80,7 @@ class ApproveElectiveCourseEvent implements CanSendSystemNotification
      */
     public function getTitle(): string
     {
-        return '选修课程(' . $this->course->name . ')' . ($this->result ? '已开课！': '已取消！');
+        return '选修课程' . ($this->result ? '已开课！': '已取消！');
     }
 
     /**
@@ -89,7 +89,7 @@ class ApproveElectiveCourseEvent implements CanSendSystemNotification
      */
     public function getContent(): string
     {
-        return '选修课程(' . $this->course->name . ')' . ($this->result ? '已开课！': '已取消！');
+        return '课程名称：' . $this->course->name;
     }
 
     /**

@@ -4,6 +4,7 @@ namespace App\Events\SystemNotification;
 
 use App\Events\CanSendSystemNotification;
 use App\Models\Misc\SystemNotification;
+use App\Models\OA\ProjectTask;
 use App\User;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Foundation\Events\Dispatchable;
@@ -85,7 +86,8 @@ class OaTaskEvent implements CanSendSystemNotification
      */
     public function getContent(): string
     {
-        return '你有一条新的待办任务！';
+        $task = ProjectTask::find($this->taskId);
+        return $task->title;
     }
 
     /**
