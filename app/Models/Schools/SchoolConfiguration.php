@@ -142,10 +142,11 @@ class SchoolConfiguration extends Model
             $weeks->push(
             new CalendarWeek(
                 '预备周',
-                $termStartDate->subWeek()->format('Y-m-d'),
-                $termStartDate->addDays(6)->format('Y-m-d')
+                $termStartDate->subWeek()->startOfWeek()->toDateString(),
+                $termStartDate->endOfWeek()->toDateString()
                 )
             );
+            $termStartDate = $termStartDate->addWeek();
         }
 
 
@@ -153,10 +154,11 @@ class SchoolConfiguration extends Model
         for ($i = 0; $i < $weeksNumber; $i++){
             $weeks->push(
                 new CalendarWeek('第' . ($i+1) . '周',
-                    $termStartDate->addDay()->format('Y-m-d'),
-                    $termStartDate->addDays(6)->format('Y-m-d')
+                    $termStartDate->startOfWeek()->toDateString(),
+                    $termStartDate->endOfWeek()->toDateString()
                 )
             );
+            $termStartDate = $termStartDate->addWeek();
         }
         return $weeks;
     }
