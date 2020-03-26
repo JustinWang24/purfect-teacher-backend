@@ -78,7 +78,7 @@ class IndexController extends Controller
         $qrCode = new QrCode($codeStr);
         $qrCode->setSize(200);
         if ($edition == Role::TEACHER) {
-            $logo = public_path('assets/img/teacher_logo.jpg');
+            $logo = public_path('assets/img/teacher_logo.png');
         } else {
             $logo = public_path('assets/img/logo.png');
         }
