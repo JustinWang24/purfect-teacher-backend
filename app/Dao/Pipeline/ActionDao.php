@@ -201,7 +201,7 @@ class ActionDao
             });
         }
         $return->with('flow')->orderBy('id','desc');
-        return $return->simplePaginate(ConfigurationTool::DEFAULT_PAGE_SIZE);
+        return $return->paginate(ConfigurationTool::DEFAULT_PAGE_SIZE);
     }
 
     /**
@@ -229,7 +229,7 @@ class ActionDao
             });
         }
         $return->with('flow')->orderBy('id','desc');
-        return $return->simplePaginate(ConfigurationTool::DEFAULT_PAGE_SIZE);
+        return $return->paginate(ConfigurationTool::DEFAULT_PAGE_SIZE);
     }
 
     /**
@@ -257,7 +257,7 @@ class ActionDao
             });
         }
         $return->with('flow')->orderBy('id','desc');
-        return $return->simplePaginate(ConfigurationTool::DEFAULT_PAGE_SIZE);
+        return $return->paginate(ConfigurationTool::DEFAULT_PAGE_SIZE);
     }
 
     /**
@@ -286,7 +286,7 @@ class ActionDao
         }
 
         $return->with('flow')->with('userFlow')->orderBy('id','desc');
-        return $return->simplePaginate(ConfigurationTool::DEFAULT_PAGE_SIZE);
+        return $return->paginate(ConfigurationTool::DEFAULT_PAGE_SIZE);
     }
 
     /**
