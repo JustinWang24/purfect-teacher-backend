@@ -165,9 +165,9 @@ class NewMeetingController extends Controller
      * @return string
      */
     public function accomplish(MeetingRequest $request) {
-        $userId = $request->user()->id;
+        $user = $request->user();
         $dao = new NewMeetingDao();
-        $return = $dao->accomplishMeet($userId);
+        $return = $dao->accomplishMeet($user);
         if(is_null($return)) {
             $data = [
                 'currentPage' => 0,
