@@ -74,7 +74,7 @@ class School extends Model
             }
             $frames = $dao->getDefaultTimeFrame(TimeSlot::SEASONS_SUMMER_AND_AUTUMN)['frames'];
             foreach ($frames as $frame) {
-                $frame['school_id'] = 1;
+                $frame['school_id'] = $this->id;
                 $frame['season'] = TimeSlot::SEASONS_SUMMER_AND_AUTUMN;
                 $dao->createTimeSlot($frame);
             }
