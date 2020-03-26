@@ -368,7 +368,7 @@ class FlowsController extends Controller
                 'options' => []
             ]
         ];
-        $list += Flow::getBusiness();
+        $list = array_merge($list, Flow::getBusiness());
         return JsonBuilder::Success($list);
     }
 
