@@ -30,12 +30,16 @@ class BusinessFactory
                 break;
             case IFlow::BUSINESS_TYPE_CLOCKIN:
                 $instance = new ClockinLogic($user);
+                break;
             case IFlow::BUSINESS_TYPE_LEAVE:
                 $instance = new LeaveLogic($user, Leave::SOURCE_LEAVE);
+                break;
             case IFlow::BUSINESS_TYPE_AWAY:
                 $instance = new LeaveLogic($user, Leave::SOURCE_AWAY);
+                break;
             case IFlow::BUSINESS_TYPE_TRAVEL:
                 $instance = new LeaveLogic($user, Leave::SOURCE_TRAVEL);
+                break;
             default:
                 break;
         }
