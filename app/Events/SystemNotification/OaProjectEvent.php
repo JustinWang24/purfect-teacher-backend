@@ -4,6 +4,7 @@ namespace App\Events\SystemNotification;
 
 use App\Events\CanSendSystemNotification;
 use App\Models\Misc\SystemNotification;
+use App\Models\OA\Project;
 use App\User;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Foundation\Events\Dispatchable;
@@ -85,7 +86,8 @@ class OaProjectEvent implements CanSendSystemNotification
      */
     public function getContent(): string
     {
-        return '你有一条新的项目信息！';
+        $project = Project::find($this->projectId);
+        return $project->title;
     }
 
     /**

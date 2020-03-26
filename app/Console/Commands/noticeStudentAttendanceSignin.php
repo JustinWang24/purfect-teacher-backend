@@ -105,6 +105,7 @@ class noticeStudentAttendanceSignin extends Command
          * [
          *   {
          *     "time_table_id":1,
+         *     "course_name":"",
          *     "not_sign_user": [User,User]
          *   }
          * ]
@@ -120,7 +121,7 @@ class noticeStudentAttendanceSignin extends Command
                             $user->id,//接收对象
                             SystemNotification::TYPE_NONE,//消息类型 已废弃
                             SystemNotification::PRIORITY_LOW,//消息级别 已废弃
-                            '当前课程未签到！',//消息内容
+                            '课程名称：' . $item['course_name'],//消息内容
                             '',//h5下一步链接 已废弃
                             '当前课程未签到！',//消息标题
                             SystemNotification::STUDENT_CATEGORY_SIGNIN,//消息类型 学生签到
