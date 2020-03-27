@@ -4,6 +4,8 @@ use App\Utils\UI\Button;
 ?>
 @csrf
 <input type="hidden" id="department-id-input" name="major[department_id]" value="{{ $department->id }}">
+<input type="hidden" id="department-id-input" name="major[campus_id]" value="{{ $department->institute->campus->id }}">
+<input type="hidden" id="department-id-input" name="major[institute_id]" value="{{ $department->institute->id }}">
 <input type="hidden" id="school-id-input" name="major[school_id]" value="{{ session('school.id') }}">
 
 <div class="row">

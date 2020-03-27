@@ -130,4 +130,21 @@ class DepartmentDao
         }
         return $bag;
     }
+
+    /**
+     * 根据学校ID 获取所有系
+     * @param $schoolId
+     * @param $instituteId
+     * @return mixed
+     */
+    public function getAllDepartmentBySchoolId($schoolId, $instituteId = false)
+    {
+        $map = [
+            'school_id' => $schoolId
+        ];
+        if ($instituteId)  {
+            array_push($map, ['institute_id', $instituteId]);
+        }
+        return Department::where($map)->get();
+    }
 }
