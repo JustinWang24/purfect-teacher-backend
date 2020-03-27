@@ -4,10 +4,14 @@
 import { Util } from "../../common/utils";
 import { startedByMe, waitingForMe, cancelApplicationByUser, waitingByMe, processedByMe, copyByMe } from "../../common/flow";
 import Axios from "axios";
+import FlowForm from './auto-flow/flow-form'
 
 if (document.getElementById('teacher-oa-index-app')) {
     new Vue({
         el: '#teacher-oa-index-app',
+        components: {
+            FlowForm
+        },
         data() {
             return {
                 schoolId: null,
@@ -84,7 +88,7 @@ if (document.getElementById('teacher-oa-index-app')) {
             this.url.flowOpen = dom.dataset.flowopen;
             this.getofficeIcon();
             this.loadFlowsWaitingByMe();
-            // this.myFlows();
+            this.myFlows();
         },
         methods: {
             // 获取头部icon
@@ -161,10 +165,6 @@ if (document.getElementById('teacher-oa-index-app')) {
                     this.isLoading = false;
                 });
             },
-
-
-
-
             startFlow: function (flowId) {
                 const url = this.url.flowOpen + '?flow=' + flowId + '&uuid=' + this.userUuid;
                 window.open(url, '_blank');
@@ -174,6 +174,9 @@ if (document.getElementById('teacher-oa-index-app')) {
             },
             reloadThisPage: function () {
                 Util.reloadCurrentPage(this);
+            },
+            goCreateFlow(flow){
+                this.$refs.flowForm.init(flow)
             }
         }
     });

@@ -18,7 +18,7 @@
                     </p>
                     <el-divider></el-divider>
                     <div class="showFlows" v-if="open === item.key">
-                        <div v-for="i in item.flows" :key="i.id" class="itemFlows">
+                        <div v-for="i in item.flows" :key="i.id" class="itemFlows ddd"  @click="goCreateFlow(i)">
                             <img src="{{asset('assets/img/pipeline/addTo@2x.png')}}" alt="">
                             <p>@{{ i.name }}</p>
                         </div>
@@ -62,6 +62,7 @@
             </div>
         </div>
     </div>
+    <flow-form ref="flowForm"/>
 </div>
 
 <div id="app-init-data-holder" data-school="{{ session('school.id') }}"></div>
