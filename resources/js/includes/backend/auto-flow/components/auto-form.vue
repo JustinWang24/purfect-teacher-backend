@@ -3,7 +3,7 @@
     <div class="forms">
       <template v-for="(form, index) in formList">
         <template v-if="form.type === 'date-date'">
-          <base-form :key="index" :type="form.type" :props="form" v-model="form.value"/>
+          <base-form :key="index" :type="form.type" :props="form" v-model="form.value" />
         </template>
         <template v-if="form.type === 'node'">
           <div class="form-item" :key="index" style="padding: 12px 0">
@@ -23,7 +23,7 @@
               <span>{{form.title}}</span>
             </div>
             <div class="content">
-              <base-form :type="form.type" :props="form" :uuid="user.uuid" v-model="form.value"/>
+              <base-form :type="form.type" :props="form" :uuid="user.uuid" v-model="form.value" />
             </div>
           </div>
         </template>
@@ -63,7 +63,7 @@
       </div>
     </div>
     <div class="submit-btn">
-      <el-button type="primary" @click="onSubmit">立即创建</el-button>
+      <el-button type="primary" @click="onSubmit">提交</el-button>
     </div>
   </div>
 </template>
@@ -91,7 +91,8 @@ export default {
       formList: [],
       copys: [],
       handlers: [],
-      user: {}
+      user: {},
+      flow: {}
     };
   },
   methods: {
@@ -107,6 +108,7 @@ export default {
             this.user = data.user;
             this.formList = data.options;
             this.copys = data.copys;
+            this.flow = data.flow;
             this.handlers = data.handlers.map(handleLevel => {
               let list = [];
               Object.keys(handleLevel).forEach(levelKey => {
@@ -123,7 +125,39 @@ export default {
           });
         });
     },
-    onSubmit() {}
+    onSubmit() {
+      try {
+        let options = [];
+        this.formList.forEach(option => {
+          if (option.required && (!option.value || option.value.length === 0)) {
+            throw new Error(option.title);
+          }
+          if (option.type !== "node") {
+            options.push({
+              id: option.id, //表单id
+              value: option.value
+            });
+          }
+        });
+        window.axios
+          .post("/api/pipeline/flow/start", {
+            options,
+            action: {
+              flow_id: this.flow.id,
+              // "content":"申请原因",
+              attachments: [], //附件列表[mediaid1,mediaid2]
+              urgent: false //是否加急
+            }
+          })
+          .then(res => {
+            if (Util.isAjaxResOk(res)) {
+              this.$emit('created')
+            }
+          });
+      } catch (e) {
+        this.$message.error(e.message + "不能为空");
+      }
+    }
   },
   created() {
     this.initData();

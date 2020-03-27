@@ -30,7 +30,7 @@
       direction="rtl"
       size="100%"
       :append-to-body="true"
-      custom-class="e-yun-pan"
+      custom-class="e-yun-pan auto-flow"
     >
       <file-manager
         :user-uuid="uuid"
@@ -152,6 +152,15 @@ export default {
     i {
       font-size: 24px;
       float: left;
+    }
+  }
+}
+</style>
+<style lang="scss">
+.e-yun-pan.auto-flow{
+  .el-drawer__header{
+    .el-drawer__close-btn{
+      z-index: 20;
     }
   }
 }

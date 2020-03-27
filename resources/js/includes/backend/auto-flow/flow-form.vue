@@ -7,7 +7,7 @@
       :visible.sync="formDrawer"
       direction="rtl"
     >
-      <auto-form :id="flow.id" />
+      <auto-form :id="flow.id" @created="onCreated"/>
     </el-drawer>
   </div>
 </template>
@@ -29,6 +29,10 @@ export default {
     init(flow) {
       this.flow = flow;
       this.formDrawer = true;
+    },
+    onCreated(){
+      this.$refs.formDrawer.closeDrawer();
+      this.formDrawer = false;
     }
   }
 };
