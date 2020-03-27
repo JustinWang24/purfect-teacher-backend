@@ -12,8 +12,10 @@ namespace App\Dao\Pipeline;
 use App\Dao\Students\StudentProfileDao;
 use App\Dao\Teachers\TeacherProfileDao;
 use App\Dao\Users\UserDao;
+use App\Models\Pipeline\Flow\Flow;
 use App\Models\Pipeline\Flow\UserFlow;
 use App\User;
+use App\Utils\Misc\ConfigurationTool;
 use App\Utils\Pipeline\IAction;
 use App\Utils\Pipeline\IUserFlow;
 
@@ -25,6 +27,16 @@ class UserFlowDao
      */
     public function getById($id){
         return UserFlow::find($id);
+    }
+
+    public function getListByPosition($schoolId, $position)
+    {
+        $typeArr = array_keys(Flow::getTypesByPosition($position));
+        if ($position == 1) {
+            $typeArr = array_merge($typeArr, array_keys(Flow::getTypesByPosition(3)));
+        }
+        $flowIdArr = Flow::where('school_id', $schoolId)->whereIn('type', $typeArr)->pluck('id')->toArray();
+        return UserFlow::whereIn('flow_id', $flowIdArr)->orderBy('id', 'desc')->paginate(ConfigurationTool::DEFAULT_PAGE_SIZE);
     }
 
     /**
