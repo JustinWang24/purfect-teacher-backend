@@ -84,6 +84,18 @@
                         </select>
                     </div>
                     <div class="clearfix"></div>
+
+                    <hr>
+                    <div class="form-group">
+                        <label for="config-radio">状态</label>&nbsp&nbsp&nbsp&nbsp
+                        <input type="radio" class="form-control-radio" id="config-status-radio-close" value="0"  name="config[apply_status]"
+                                                       @if($config['apply_status'] == 0) checked @endif> 关闭  &nbsp&nbsp&nbsp&nbsp
+                        <input type="radio" class="form-control-radio" id="config-status-radio-open"  value="1"  name="config[apply_status]"
+                               @if($config['apply_status'] == 1) checked @endif> 开启
+
+
+                    </div>
+
                     <hr>
 
                     <div class="form-group mt-4">
