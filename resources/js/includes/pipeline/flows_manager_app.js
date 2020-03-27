@@ -155,9 +155,7 @@ if (document.getElementById('pipeline-flows-manager-app')) {
                     if (Util.isAjaxResOk(res)) {
                         this.typeList = res.data.data // 左边分类
                         this.posiType = tab // 侧边栏显示位置
-                        if (this.posiType === 3) {
-                            this.getbusinessList(); // 侧边栏关联业务
-                        }
+                        this.getbusinessList(); // 侧边栏关联业务
                     }
                 }).catch((err) => {
                     console.log(err)
