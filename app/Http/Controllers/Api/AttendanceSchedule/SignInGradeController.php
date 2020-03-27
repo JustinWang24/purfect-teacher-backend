@@ -34,33 +34,38 @@ class SignInGradeController extends Controller
 
     /**
      * 全部记录的筛选
+     * @param MyStandardRequest $request
      * @return string
      */
-    public function timeScreen() {
-        $year = Carbon::now()->year;
-        $lastYear = $year - 1;
-        $data = [
-            [
-                'name'=>$lastYear.'学年第一学期',
-                'year'=>$lastYear,
-                'term'=>SchoolConfiguration::LAST_TERM,
-            ],
-            [
-                'name'=>$lastYear.'学年第二学期',
-                'year'=>$lastYear,
-                'term'=>SchoolConfiguration::NEXT_TERM,
-            ],
-            [
-                'name'=>$year.'学年第一学期',
-                'year'=>$year,
-                'term'=>SchoolConfiguration::LAST_TERM,
-            ],
-            [
-                'name'=>$year.'学年第一学期',
-                'year'=>$year,
-                'term'=>SchoolConfiguration::NEXT_TERM,
-            ],
-        ];
+    public function timeScreen(MyStandardRequest $request) {
+        $user = $request->user();
+        $schoolId = $user->getSchoolId();
+        $dao = new SchoolDao();
+        $school = $dao->getSchoolById($schoolId);
+        $configuration = $school->configuration;
+        $schoolYear = $configuration->getSchoolYear();
+        $term = $configuration->guessTerm();
+        $allTerm = $configuration->getAllTerm();
+
+        $data = [];
+        for ($i = 0; $i<=1; $i++) {
+            $year = $schoolYear - $i;
+
+            for ($j = 1; $j<=2; $j++) {
+                $isCurrent = false;
+                if($year == $schoolYear && $term == $j) {
+                    $isCurrent = true;
+                }
+
+                $data[] = [
+                    'name' => $year.'学年'.$allTerm[$j],
+                    'year' => $year,
+                    'term' => $j,
+                    'is_current' => $isCurrent,
+                ];
+            }
+
+        }
 
         return JsonBuilder::Success($data);
     }
