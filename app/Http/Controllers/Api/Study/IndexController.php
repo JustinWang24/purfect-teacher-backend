@@ -93,7 +93,7 @@ class IndexController extends Controller
             $week = $weeks->getScheduleWeekIndex() ?? '';
             $attendancesDao = new AttendancesDao();
 
-            $attendance = $attendancesDao->getAttendanceByTimeTableId($item->id,$week);
+            $attendance = $attendancesDao->isAttendanceByTimetableAndWeek($item,$week);
             if(!is_null($attendance)) {
                 $detail = $attendance->details->where('student_id', $user->id)->first();
                 if(!is_null($detail)) {
