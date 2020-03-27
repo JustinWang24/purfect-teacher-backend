@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\Api\School;
 
 use App\Dao\Courses\CourseMajorDao;
+use App\Dao\Schools\DepartmentDao;
 use App\Dao\Schools\GradeDao;
+use App\Dao\Schools\InstituteDao;
 use App\Dao\Schools\MajorDao;
 use App\Dao\Schools\SchoolDao;
 use App\Dao\Timetable\TimetableItemDao;
@@ -74,5 +76,29 @@ class MajorsController extends Controller
             $courses = $dao->getCoursesByMajorAndTerm($request->get('id'), $request->get('term'));
         }
         return JsonBuilder::Success(['courses'=>$courses]);
+    }
+
+    /**
+     * 获取某个学校的所有学院
+     * @param Request $request
+     * @return string
+     */
+    public  function institute(Request $request)
+    {
+        $result = (new InstituteDao)->getAllInstituteBySchoolId($request->get('school_id'));
+        return JsonBuilder::Success($result);
+    }
+
+    /**
+     * 获取某个学校的所有系
+     * @param Request $request
+     * @return string
+     */
+    public function department(Request $request)
+    {
+        $schoolId = $request->get('school_id');
+        $instituteId = $request->get('institute_id');
+        $result = (new DepartmentDao)->getAllDepartmentBySchoolId($schoolId, $instituteId);
+        return JsonBuilder::Success($result);
     }
 }

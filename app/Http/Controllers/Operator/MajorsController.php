@@ -93,7 +93,5 @@ class MajorsController extends Controller
             return redirect()->route('school_manager.department.majors',['uuid'=>$major->department_id,'by'=>'department']);
         }
 
-
-
     }
 }

@@ -79,7 +79,7 @@ class StudentsController extends Controller
                 'school_id'=>$request->getSchoolId(),
                 'campus_id'=>$major->campus_id,
                 'institute_id'=>$major->institute_id,
-                'department'=>$major->department_id,
+                'department_id'=>$major->department_id,
                 'major_id'=>$major->id,
                 'grade_id'=>$gradeData['id'],
                 'last_updated_by'=>$request->user()->id
