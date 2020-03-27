@@ -156,7 +156,8 @@ class Flow extends Model implements IFlow
             IFlow::BUSINESS_ATTENDANCE_MACADDRESS,
             IFlow::BUSINESS_ATTENDANCE_LEAVE,
             IFlow::BUSINESS_ATTENDANCE_AWAY,
-            IFlow::BUSINESS_ATTENDANCE_TRAVEL
+            IFlow::BUSINESS_ATTENDANCE_TRAVEL,
+            IFlow::BUSINESS_OA_MEETING
         ];
         if ($businessid) {
             foreach ($list as $item) {
