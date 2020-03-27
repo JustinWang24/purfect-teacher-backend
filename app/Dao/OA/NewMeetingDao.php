@@ -164,6 +164,7 @@ class NewMeetingDao
         return NewMeeting::where($map)
             ->orwhere($where)
             ->whereIn('id',$meetIds)
+            ->orderBy('meet_start','desc')
             ->paginate(ConfigurationTool::DEFAULT_PAGE_SIZE);
     }
 

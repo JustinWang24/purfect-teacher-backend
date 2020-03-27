@@ -206,10 +206,14 @@ export const Constants = {
           POST_SAVE_BANNER: '/school_manager/banner/save-banner', // 保存信息
           GET_BANNER_ONE: '/school_manager/banner/get-banner-one', // 获取数据
         },
-      CAMPUS_VIDEO: {
-        GET_CAMPUS_VIDEO: '/school_manager/contents/get-campus-video', // 获取视频
-        SAVE_CAMPUS_VIDEO: '/school_manager/contents/save-campus-video', // 保存视频
-      },
+        CAMPUS_VIDEO: {
+          GET_CAMPUS_VIDEO: '/school_manager/contents/get-campus-video', // 获取视频
+          SAVE_CAMPUS_VIDEO: '/school_manager/contents/save-campus-video', // 保存视频
+        },
+        MATERIAL: {
+          POST_COURSE_URL: '/api/material/myCourse', // 我的课程
+          POST_MATERIALS_URL: '/api/material/materials', // 我的课程资料
+        },
     },
     YEARS: ['N.A', '一年级', '二年级', '三年级', '四年级', '五年级', '六年级'],
     TERMS: ['N.A', '第一学期', '第二学期'],

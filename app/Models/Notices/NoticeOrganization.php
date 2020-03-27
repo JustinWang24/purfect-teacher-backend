@@ -10,6 +10,7 @@ namespace App\Models\Notices;
 
 
 use App\Models\Schools\Organization;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
 class NoticeOrganization extends Model
@@ -40,4 +41,8 @@ class NoticeOrganization extends Model
         return $this->belongsTo(NoticeInspect::class,'inspect_id');
     }
 
+
+    public function getCreatedAtAttribute($value) {
+        return Carbon::parse($value)->format('Y-m-d H:i');
+    }
 }

@@ -60,7 +60,9 @@
       popper-class="auto-flow-form"
       v-if="type==='department'"
       :props="orgProps"
-      v-model="data"
+      ref="department"
+      v-model="departmentData"
+      separator="/"
     ></el-cascader>
     <el-cascader
       popper-class="auto-flow-form"
@@ -68,6 +70,7 @@
       :options="cities"
       filterable
       ref="areaSelector"
+      separator="/"
       :props="{
         label:'name',
         value:'id'
@@ -165,6 +168,25 @@ export default {
         this.$emit("input", value.toString());
       }
     },
+    departmentData: {
+      deep: true,
+      immediate: true,
+      handler(value) {
+        setTimeout(() => {
+          if(!this.$refs.department){
+            return
+          }
+          this.$emit(
+            "input",
+            this.$refs.department.presentTags
+              .map(tag => {
+                return tag.text;
+              })
+              .toString()
+          );
+        });
+      }
+    },
     areaData: function(val) {
       setTimeout(() => {
         this.$emit("input", this.$refs.areaSelector.inputValue);
@@ -183,6 +205,7 @@ export default {
       data: "",
       checkData: [],
       areaData: [],
+      departmentData: [],
       start: "",
       end: "",
       orgProps: {

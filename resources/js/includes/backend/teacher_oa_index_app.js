@@ -55,30 +55,16 @@ if (document.getElementById('teacher-oa-index-app')) {
                     }]
                 }, {
                     "name": "校园助手",
-                    "key": 1000,
+                    "key": 1001,
                     "flows": [{
                         "id": -4,
                         "name": "通讯录",
                         "icon": "http:\/\/t.ytx.com\/assets\/img\/pipeline\/icon13@2x.png"
                     }]
-                }, {
-                    "name": "学生专用",
-                    "key": 1000,
-                    "flows": [{
-                        "id": -1,
-                        "name": "招生",
-                        "icon": "http:\/\/t.ytx.com\/assets\/img\/pipeline\/icon1@2x.png"
-                    }, {
-                        "id": -2,
-                        "name": "迎新",
-                        "icon": "http:\/\/t.ytx.com\/assets\/img\/pipeline\/icon2@2x.png"
-                    }, {
-                        "id": -3,
-                        "name": "离校",
-                        "icon": "http:\/\/t.ytx.com\/assets\/img\/pipeline\/icon3@2x.png"
-                    }]
                 }], // 我的审批
-                activeNames: [],
+                open: false, // 当前展开的我的审批
+                opened: 0,
+                state: '展开',
                 statusMap: {
                     0: '未通过',
                     1: '已通过',
@@ -93,37 +79,6 @@ if (document.getElementById('teacher-oa-index-app')) {
                     created_at: '申请日期：',
                     done: '',
                 }]
-                // tableData: [{
-                //     iconState: 1,
-                //     state: '请假',
-                //     name: '申请人：'+'王小虎',
-                //     date: '申请日期：'+'2016-05-02 14:20',
-                //     done: 0,
-                // }, {
-                //     iconState: 0,
-                //     state: '休学',
-                //     name: '王小虎',
-                //     date: '2016-05-02',
-                //     done: 1,
-                // }, {
-                //     iconState: 0,
-                //     state: '休学',
-                //     name: '王小虎',
-                //     date: '2016-05-02',
-                //     done: 2,
-                // }, {
-                //     iconState: 1,
-                //     state: '请假',
-                //     name: '王小虎',
-                //     date: '2016-05-02',
-                //     done: 3,
-                // }, {
-                //     iconState: 1,
-                //     state: '请假',
-                //     name: '王小虎',
-                //     date: '2016-05-02',
-                //     done: 5,
-                // }]
             }
         },
         created() {
@@ -160,10 +115,14 @@ if (document.getElementById('teacher-oa-index-app')) {
             // 获取--我的审批
             myFlows() {
                 axios.post("/api/pipeline/flows/my").then(res => {
-                    this.myflows = res.data.data;
+                    this.myflows = res.data.data.types;
                 }).catch(err => {
                     console.log(err)
                 })
+            },
+            // 展示--收起
+            close(id) {
+                this.open = id
             },
             // list展示
             // waiting_for_me=待我审批

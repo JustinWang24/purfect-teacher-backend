@@ -16,7 +16,7 @@
             </a>
         </li>
         <li class="nav-item">
-            <a href="{{ route('school_manager.students.applications-manager',['uuid'=>session('school.uuid')]) }}" class="nav-link">
+            <a href="{{ route('school_manager.students.applications-manager',['uuid'=>session('school.uuid'), 'position' => 2]) }}" class="nav-link">
                 <span class="title">申请管理</span>
             </a>
         </li>
