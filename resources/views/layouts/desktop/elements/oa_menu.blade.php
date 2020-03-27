@@ -41,8 +41,8 @@
             </a>
         </li>
         <li class="nav-item">
-            <a href="{{ route('school_manager.oa.userflows',['uuid'=>session('school.uuid'), 'position' => 1]) }}" class="nav-link">
-                <span class="title">教师申请</span>
+            <a href="{{ route('school_manager.students.applications-manager',['uuid'=>session('school.uuid'), 'position' => 1]) }}" class="nav-link">
+                <span class="title">申请管理</span>
             </a>
         </li>
     </ul>
