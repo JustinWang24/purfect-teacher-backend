@@ -15,8 +15,11 @@ class SchoolConfiguration extends Model
     const FAKE_YEAR = 1980;
     const FIRST_TERM_START_MONTH = 8; // 第一学期开学日期在 8 月份
     const SECOND_TERM_START_MONTH = 2; // 第二学期开学日期在 2 月份
+
     const LAST_TERM = 1;
     const NEXT_TERM = 2;
+    const LAST_TERM_TEXT = '秋季开学';
+    const NEXT_TER_TEXT = '春季开学';
 
 
     protected $fillable = [
@@ -37,6 +40,8 @@ class SchoolConfiguration extends Model
         'open_for_uploading_qualification',
     ];
 
+
+
     public $casts = [
         ConfigurationTool::KEY_SELF_STUDY_NEED_REGISTRATION => 'boolean',
         'open_for_uploading_qualification'=>'boolean',
@@ -49,6 +54,14 @@ class SchoolConfiguration extends Model
         'summer_start_date'=>'datetime',
         'winter_start_date'=>'datetime',
     ];
+
+
+    public function getAllTerm() {
+        return  [
+            self::LAST_TERM => self::LAST_TERM_TEXT,
+            self::NEXT_TERM => self::NEXT_TER_TEXT,
+        ];
+    }
 
     /**
      * 为学校创建默认的配置项
@@ -116,10 +129,13 @@ class SchoolConfiguration extends Model
 
     /**
      * 根据指定的月份猜测在第几个学期
-     * @param $month
+     * @param null $month
      * @return int
      */
-    public function guessTerm($month){
+    public function guessTerm($month = null){
+        if(is_null($month)) {
+            $month = Carbon::parse()->month;
+        }
         return ($month >= self::FIRST_TERM_START_MONTH || $month < self::SECOND_TERM_START_MONTH) ? 1 : 2;
     }
 
