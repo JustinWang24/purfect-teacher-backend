@@ -62,8 +62,8 @@
                     <el-col :span="8">
                         <el-form-item label="适用学期" prop="term">
                             <el-select v-model="courseModel.term" placeholder="课程针对哪个学期">
-                                <el-option label="第一学期" :value="1"></el-option>
-                                <el-option label="第二学期" :value="2"></el-option>
+                                <el-option label="秋季开学" :value="1"></el-option>
+                                <el-option label="春季开学" :value="2"></el-option>
                             </el-select>
                         </el-form-item>
                     </el-col>
