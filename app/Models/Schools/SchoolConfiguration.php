@@ -35,6 +35,7 @@ class SchoolConfiguration extends Model
         'campus_intro',
         'recruitment_intro',
         'open_for_uploading_qualification',
+        'apply_status' // 选课状态 0关闭 1开启
     ];
 
     public $casts = [
@@ -48,6 +49,7 @@ class SchoolConfiguration extends Model
         'first_day_term_2'=>'datetime',
         'summer_start_date'=>'datetime',
         'winter_start_date'=>'datetime',
+        'apply_status' => 'boolean',
     ];
 
     /**

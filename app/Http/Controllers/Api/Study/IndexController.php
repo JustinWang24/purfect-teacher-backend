@@ -45,7 +45,8 @@ class IndexController extends Controller
         $electiveStart = Carbon::parse($electiveTime[0]);
         $electiveEnd = Carbon::parse($electiveTime[1]);
         $selectCourse = [
-            'status' => $electiveStart->timestamp < $date->timestamp && $electiveEnd->timestamp > $date->timestamp, // true 开启 false 关闭
+//            'status' => $electiveStart->timestamp < $date->timestamp && $electiveEnd->timestamp > $date->timestamp, // true 开启 false 关闭
+            'status' => $configuration->apply_status, // true 开启 false 关闭
             'time' => $electiveStart->format('Y年m月d日') . '-' . $electiveEnd->format('Y年m月d日'),
             'msg' => '大家选课期间请看好选课程对应的学分',
         ];
