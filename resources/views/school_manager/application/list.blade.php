@@ -16,6 +16,7 @@
                                     valign-middle">
                                 <thead>
                                 <tr>
+                                    @if ($list_type == 2)
                                     <th>序号</th>
                                     <th>姓名</th>
                                     <th>性别</th>
@@ -25,11 +26,21 @@
                                     <th>类型</th>
                                     <th>申请时间</th>
                                     <th>状态</th>
+                                    @endif
+
+                                    @if ($list_type == 1)
+                                        <th>序号</th>
+                                        <th>姓名</th>
+                                        <th>类型</th>
+                                        <th>申请时间</th>
+                                        <th>状态</th>
+                                    @endif
                                 </tr>
                                 </thead>
                                 <tbody>
                                     @foreach($list as $key => $val)
                                     <tr>
+                                        @if ($list_type == 2)
                                         <td>{{ $val->id }}</td>
                                         <td>{{ $val->user->name }}</td>
                                         <td>@if($val->user->profile->gender == 1)男@endif
@@ -45,6 +56,19 @@
                                             @if($val->done == \App\Utils\Pipeline\IUserFlow::DONE)已通过@endif
                                             @if($val->done == \App\Utils\Pipeline\IUserFlow::TERMINATED)被拒绝@endif
                                         </td>
+                                        @endif
+
+                                        @if ($list_type == 1)
+                                            <td>{{ $val->id }}</td>
+                                            <td>{{ $val->user->name }}</td>
+                                            <td>{{ $val->flow->name }}</td>
+                                            <td>{{ $val->created_at }}</td>
+                                            <td>
+                                                @if($val->done == \App\Utils\Pipeline\IUserFlow::IN_PROGRESS)审核中@endif
+                                                @if($val->done == \App\Utils\Pipeline\IUserFlow::DONE)已通过@endif
+                                                @if($val->done == \App\Utils\Pipeline\IUserFlow::TERMINATED)被拒绝@endif
+                                            </td>
+                                        @endif
                                     </tr>
                                     @endforeach
                                 </tbody>

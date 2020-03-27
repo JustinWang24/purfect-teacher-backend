@@ -16,7 +16,8 @@ class ApplicationController extends Controller
 
         $dao = new UserFlowDao();
         $schoolId = $request->getSchoolId();
-        $this->dataForView['list'] = $dao->getListByPosition($request->getSchoolId(), 2);
+        $this->dataForView['list'] = $dao->getListByPosition($request->getSchoolId(), $request->get('position'));
+        $this->dataForView['list_type'] = $request->get('position');
         return view('school_manager.application.list', $this->dataForView);
     }
 
