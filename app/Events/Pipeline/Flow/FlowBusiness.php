@@ -55,6 +55,8 @@ class FlowBusiness
                 $businessOptions[$titleToUri[$option->title]] = ActionOption::where('action_id', $startUserAction->id)->where('option_id', $option->id)->value('value');
             }
         }
+        //加入审核结果
+        $businessOptions['pipeline_done'] = $this->userFlow->done;
         return $businessOptions;
     }
 
