@@ -298,12 +298,28 @@ class NewMeetingController extends Controller
             $fields[] = $item->url;
         }
 
-        $meetUser = $info->meetUsers->where('user_id',$userId);
-        if($meetUser->signin_status != 0) {
-            $meetUser->signin_status = NewMeetingUser::NORMAL_SIGNIN ;
-        }
-        if($meetUser->signout_status != 0) {
-            $meetUser->signout_status = NewMeetingUser::NORMAL_SIGNOUT;
+        $status = 0;  // 隐藏
+        $meetUser = $info->meetUsers->where('user_id',$userId)->first();
+
+        if(!is_null($meetUser)) {
+            // 需要签到
+            if($info['signin_status'] == NewMeeting::SIGNIN) {
+                // 未签到
+                if($meetUser->signin_status == NewMeetingUser::UN_SIGNIN) {
+                    $status = 1; // 签到
+                } else {
+                    $status = 0; // 隐藏
+                }
+            }
+
+            // 需要签退&& 已签退
+            if($status == 0 && $info['signout_status'] == NewMeeting::SIGNOUT) {
+                if($meetUser->signout_status == NewMeetingUser::UN_SIGNOUT) {
+                    $status = 2; // 签退
+                } else {
+                    $status = 0; //隐藏
+                }
+            }
         }
 
 
@@ -322,9 +338,9 @@ class NewMeetingController extends Controller
             'cause' => $info->cause,
             'signin_status' => $info->signin_status,
             'signout_status' => $info->signout_status,
-            'is_signin' => $meetUser->signin_status,
-            'is_signout' => $meetUser->signout_status,
+            'status' => $status,
         ];
+
         // 判断是否需要签到
         if($info['signin_status'] == NewMeeting::SIGNIN) {
             $result['signin_time'] = $info->getSignInTime();
