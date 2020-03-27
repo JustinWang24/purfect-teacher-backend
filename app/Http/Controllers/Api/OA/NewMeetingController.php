@@ -291,6 +291,7 @@ class NewMeetingController extends Controller
             'meet_title' => $info->meet_title,
             'room' => $info->room_id? $info->room->name : $info->room_text,
             'meet_time' => $info->getMeetTime(),
+            'approve_userid' => $info->approve_userid,
             'approve' => $info->approve->name,
             'user_num' => $info->meetUsers->count(),
             'signin_time' => '',
