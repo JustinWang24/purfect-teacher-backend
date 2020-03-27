@@ -286,6 +286,7 @@ class NewMeetingController extends Controller
      */
     public function meetDetails(MeetingRequest $request) {
         $meetId = $request->getMeetId();
+        $userId = $request->user()->id;
         $dao = new NewMeetingDao();
         $info = $dao->meetDetails($meetId);
         if(is_null($info)) {
@@ -296,6 +297,15 @@ class NewMeetingController extends Controller
         foreach ($info->files as $item) {
             $fields[] = $item->url;
         }
+
+        $meetUser = $info->meetUsers->where('user_id',$userId);
+        if($meetUser->signin_status != 0) {
+            $meetUser->signin_status = NewMeetingUser::NORMAL_SIGNIN ;
+        }
+        if($meetUser->signout_status != 0) {
+            $meetUser->signout_status = NewMeetingUser::NORMAL_SIGNOUT;
+        }
+
 
         $result = [
             'meet_id' => $info->id,
@@ -312,6 +322,8 @@ class NewMeetingController extends Controller
             'cause' => $info->cause,
             'signin_status' => $info->signin_status,
             'signout_status' => $info->signout_status,
+            'is_signin' => $meetUser->signin_status,
+            'is_signout' => $meetUser->signout_status,
         ];
         // 判断是否需要签到
         if($info['signin_status'] == NewMeeting::SIGNIN) {
