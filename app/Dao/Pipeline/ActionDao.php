@@ -68,9 +68,13 @@ class ActionDao
                 ];
             }
             if ($option->title == '参会人数') {
+                $users = $meet->meetUsers;
+                array_push($users, $meet['approve_userid']);
+                $users = array_unique($users);
+
                 $options[] = [
                     'id' => $option->id,
-                    'value' => $meet->meetUsers->count()
+                    'value' => count($users)
                 ];
             }
             if ($option->title == '会议室名称') {

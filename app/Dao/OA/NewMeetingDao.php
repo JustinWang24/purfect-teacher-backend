@@ -9,6 +9,7 @@
 namespace App\Dao\OA;
 
 
+use App\Dao\Pipeline\ActionDao;
 use App\Models\OA\NewMeeting;
 use App\Models\OA\NewMeetingFile;
 use App\Models\OA\NewMeetingSummary;
@@ -42,11 +43,12 @@ class NewMeetingDao
     /**
      * 创建会议
      * @param $data
-     * @param $user
+     * @param $users
      * @param $file
+     * @param User $createUser
      * @return MessageBag
      */
-    public function addMeeting($data, $user, $file) {
+    public function addMeeting($data, $users, $file, User $createUser) {
 
         $messageBag = new MessageBag();
         try {
@@ -62,7 +64,13 @@ class NewMeetingDao
             DB::beginTransaction();
             $meeting = NewMeeting::create($data);
 
-            foreach ($user as $key => $item) {
+            // 判断是否需要审批
+            if($data['type'] == NewMeeting::TYPE_MEETING_ROOM) {
+                $actionDao = new ActionDao();
+                $actionDao->createMeetingFlow($createUser,$meeting->id);
+            }
+
+            foreach ($users as $key => $item) {
                 $meetUser = [
                     'meet_id' => $meeting->id,
                     'user_id' => $item,
@@ -83,6 +91,9 @@ class NewMeetingDao
                     NewMeetingFile::create($meetFile);
                 }
             }
+
+
+
 
             DB::commit();
 
