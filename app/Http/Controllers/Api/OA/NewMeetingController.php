@@ -68,6 +68,7 @@ class NewMeetingController extends Controller
      * @return string
      */
     public function addMeeting(MeetingRequest $request) {
+        $user = $request->user();
         $data = $request->all();
 
         // 签退时间应大于会议时间
@@ -88,24 +89,27 @@ class NewMeetingController extends Controller
             }
         }
 
-        $data['user_id'] = $request->user()->id;
+        $data['user_id'] = $user->id;
         $data['school_id'] = $request->user()->getSchoolId();
-        $user = $data['user'];
+        $users = $data['user'];
         unset($data['user']);
         unset($data['file']);
         $file = $request->file('file');
         $dao = new NewMeetingDao();
 
-        array_push($user, $data['approve_userid']);
-        $user = array_unique($user);
+        array_push($users, $data['approve_userid']);
+        $users = array_unique($users);
 
-        $result = $dao->addMeeting($data, $user, $file);
+        $result = $dao->addMeeting($data, $users, $file, $user);
 
         if($result->isSuccess()) {
             $meetId = $result->getData()['meet_id'];
-            //通知负责人和成员
-            foreach ($user as $userid) {
-                event(new OaMeetingEvent($userid, $meetId));
+            // 自定义地点
+            if($data['type'] == NewMeeting::TYPE_CUSTOM_ROOM) {
+                //通知负责人和成员
+                foreach ($users as $userid) {
+                    event(new OaMeetingEvent($userid, $meetId));
+                }
             }
             return JsonBuilder::Success($result->getData());
         } else {

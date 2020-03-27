@@ -7,8 +7,12 @@
  */
 
 namespace App\BusinessLogic\Pipeline\Business\Impl;
+
+use App\Dao\OA\NewMeetingDao;
+use App\Events\SystemNotification\OaMeetingEvent;
 use App\User;
 use App\Utils\JsonBuilder;
+use App\Models\OA\NewMeeting;
 use App\Utils\ReturnData\MessageBag;
 
 class OaMeetingLogic
@@ -23,11 +27,22 @@ class OaMeetingLogic
     {
         $bag = new MessageBag(JsonBuilder::CODE_ERROR);
         try {
-            //@TODO 操作newMeeting
-            /*$options = [
-             *   'meet_id' => 1,
-             *   'pipeline_done' => 1, 1同意 2拒绝
-            ]*/
+            // 审核会议
+            $map = ['id'=>$options['meet_id']];
+            $save = ['status'=>$options['pipeline_done']];
+            NewMeeting::where($map)->update($save);
+
+            $dao = new NewMeetingDao();
+            $meet = $dao->meetDetails($options['meet_id']);
+            // 参会人员
+            $users = $meet->meetUsers;
+            array_push($users, $meet['approve_userid']);
+            $users = array_unique($users);
+            //通知负责人和成员
+            foreach ($users as $userid) {
+                event(new OaMeetingEvent($userid, $meet->id));
+            }
+
             $bag->setCode(JsonBuilder::CODE_SUCCESS);
         }catch (\Exception $exception) {
             $bag->setMessage( $exception->getMessage());
