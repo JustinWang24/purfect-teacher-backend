@@ -26,7 +26,7 @@ class OaMeetingLogic
 
     public function handle($options)
     {
-        Log::debug($options);
+        Log::debug(json_encode($options));
         $bag = new MessageBag(JsonBuilder::CODE_ERROR);
         try {
             // 审核会议
