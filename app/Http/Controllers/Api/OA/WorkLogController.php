@@ -55,7 +55,11 @@ class WorkLogController extends  Controller
         $result = [];
         foreach ($data as $key => $value) {
             $result[$key]['id'] = $value->id;
-            $result[$key]['avatar'] = $value->profile->avatar;
+            if ($type == WorkLog::TYPE_READ) {
+                $result[$key]['avatar'] = $value->sendUserProfile->avatar;
+            } else {
+                $result[$key]['avatar'] = $value->profile->avatar;
+            }
             $result[$key]['title'] = $value->title;
             $result[$key]['content'] = $value->content;
             $result[$key]['created_at'] = $value->created_at;
