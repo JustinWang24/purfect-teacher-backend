@@ -2,12 +2,12 @@
 @section('content')
 <div class="row" id="teacher-oa-index-app">
     <div class="col-sm-12 col-md-12 col-xl-12">
-        <div class="teacher_oa_card">
+        <div class="teacher_oa_card" v-cloak>
             <dl class="teacher_oa_card_body" v-for="item in iconList" :key="item.name">
 
                 <a :href="item.url">
                     <dt><img :src="item.icon" alt=""></dt>
-                    <dd v-cloak>@{{ item.name }}</dd>
+                    <dd>@{{ item.name }}</dd>
                 </a>
             </dl>
         </div>
@@ -17,12 +17,12 @@
                 <div v-for="item in myflows" :key="item.key" v-if="myflows">
                     <p class="name">
                         <span>@{{ item.name }}</span>
-                        <span @click="close(item.key)">@{{ state }}</span>
+                        <span @click="close(item.key)">展开</span>
                     </p>
                     <el-divider></el-divider>
                     <div class="showFlows" v-if="open === item.key">
                         <div v-for="i in item.flows" :key="i.id" class="itemFlows ddd" @click="goCreateFlow(i)">
-                            <img src="{{asset('assets/img/pipeline/addTo@2x.png')}}" alt="">
+                            <img :src="i.icon" alt="">
                             <p>@{{ i.name }}</p>
                         </div>
                     </div>
@@ -34,11 +34,11 @@
             </div>
             <div class="teacher_oa_approval_content_right" v-cloak>
                 <div class="teacher_oa_approval_content_right_tabs">
-                    <ul>
+                    <ul class="tab">
                         <li v-for="(item,index) in nav" :key="index" @click="list_click(index)" :class="{'bgred':show==index}">@{{item.tit}}</li>
                     </ul>
-                    <el-input placeholder="请输入审批类型/审批人">
-                        <el-button slot="append">搜索</el-button>
+                    <el-input placeholder="请输入审批类型/审批人" v-model="keyword">
+                        <el-button slot="append" @click="serach">搜索</el-button>
                     </el-input>
                     <div class="bottom-table" v-if="tableData.length > 0">
                         <div class="table-item" v-for="item in tableData" :key="item.id">
@@ -55,8 +55,9 @@
                                 @{{statusMap[item.done]}}</span>
                             <img src="{{ asset('assets/img/teacher_blade/eye.png') }}" class="icon-image">
                         </div>
+                        <el-pagination background layout="prev, pager, next" :total="total" @current-change="handleCurrentChange"></el-pagination>
                     </div>
-                    <div v-else style="color: #D5D7E0;text-align: center;padding-top: 20px;">暂无数据~</div>
+                    <div v-else style="color: #D5D7E0;text-align: center;padding-top: 20px;background: #fff;">暂无数据~</div>
                 </div>
             </div>
         </div>
