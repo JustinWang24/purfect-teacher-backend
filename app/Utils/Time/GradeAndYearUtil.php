@@ -208,7 +208,7 @@ class GradeAndYearUtil
 
         foreach ($timeSlots as $timeSlot) {
             if($timeSlot->to > $time->format('H:i:s')){
-                $slot[] = $timeSlot->toArray();
+                $slot[] = $timeSlot;
             }
         }
         return $slot;
