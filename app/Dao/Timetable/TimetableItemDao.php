@@ -940,16 +940,21 @@ class TimetableItemDao
 
 //                $timeSlotIds = array_column($currentTimeSlot, 'id');
 
-            $timeSlot = $currentTimeSlot[0];
+            foreach ($currentTimeSlot as $key => $val) {
                 $where = [
                     ['school_id','=',$school->id],
                     ['year','=',$year],
                     ['term','=',$term],
                     ['grade_id','=',$user->gradeUser->grade_id],
                     ['weekday_index','=',$weekdayIndex],
-                    ['time_slot_id','=',$timeSlot->id],
+                    ['time_slot_id','=',$val->id],
                 ];
-                return TimetableItem::where($where)->first();
+
+                $result = TimetableItem::where($where)->first();
+                if(!is_null($result)) {
+                    return $result; break;
+                }
+            }
         }
         return null;
     }

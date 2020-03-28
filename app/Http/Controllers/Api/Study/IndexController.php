@@ -80,7 +80,7 @@ class IndexController extends Controller
                 'time' => $item->timeSlot->from.'-'.$item->timeSlot->to,
                 'label' => $label,
                 'course' => $course->name,
-                'room' => $item->room->name,
+                'room' => $item->room->building->name.$item->room->name,
                 'teacher' => $item->teacher->name,
                 'week' => $week,
                 'item_id'=> $item->id,
