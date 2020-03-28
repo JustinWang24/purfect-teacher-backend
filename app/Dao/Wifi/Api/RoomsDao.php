@@ -73,10 +73,16 @@ class RoomsDao extends CommonDao
     */
    public static function getRoomsListMoreInfo( $campus_id = 0 )
    {
-      if ( ! intval ( $campus_id ) ) return [];
-      return Building::where('type',Building::TYPE_STUDENT_HOSTEL_BUILDING)
-                      ->where('campus_id',$campus_id)
-                      ->with('rooms')
-                      ->get();
+       if (!intval($campus_id)) return [];
+       $data = Building::whereNull('deleted_at')
+           ->where('campus_id', $campus_id)
+           ->with('rooms')
+           ->get();
+       if (!empty($data)) {
+           foreach ($data as $key => &$val) {
+               $val->name = $val->typeArr[$val->type] . '(' . $val->name . ')';
+           }
+       }
+       return $data;
    }
 }
