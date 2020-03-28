@@ -67,7 +67,7 @@ use App\Utils\UI\Button;
                             <label for="facility-name-input">类型</label>
                             <select required type="select" class="form-control" placeholder="类型" name="album[type]">
                                 <option value="{{ \App\Models\Contents\Album::TYPE_PHOTO }}">相册图片</option>
-                                <option value="{{ \App\Models\Contents\Album::TYPE_VIDEO }}">视频</option>
+                                <!--option value="{{ \App\Models\Contents\Album::TYPE_VIDEO }}">视频</option-->
                             </select>
                         </div>
 

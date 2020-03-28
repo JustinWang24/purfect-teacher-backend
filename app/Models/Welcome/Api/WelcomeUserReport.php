@@ -16,6 +16,8 @@ class WelcomeUserReport extends Model
         'flow_id',
         'school_id',
         'campus_id',
+        'user_name',
+        'user_number',
         'steps_1_str',
         'steps_1_date',
         'steps_2_str',

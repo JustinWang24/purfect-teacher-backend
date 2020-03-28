@@ -56,18 +56,16 @@ class PlansController extends Controller
 
             if(!empty($formData['id'])){
                 $plan = $dao->updatePlan($formData);
-                if($plan){
-                    return JsonBuilder::Success(['id'=>$formData['id']]);
-                }
-            }
-            else{
+                return JsonBuilder::Success(['id'=>$formData['id']]);
+            } else {
                 unset($formData['id']);
                 $plan = $dao->createPlan($formData);
                 if($plan){
                     return JsonBuilder::Success(['id'=>$plan->id]);
+                } else {
+                    return JsonBuilder::Error('操作失败, 请稍候再试');
                 }
             }
-            return JsonBuilder::Error('数据库操作失败, 请稍候再试');
         }
         return JsonBuilder::Error('没有指明具体学校, 无法操作!');
     }

@@ -109,4 +109,12 @@ class ApproveRegistrationEvent extends AbstractRegistrationEvent
         // TODO: 实现学生报名表被批准进入录取流程的事件发生时, 站内消息的 下一步 的真实内容
         return '';
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function getAction(): int
+    {
+        // TODO: Implement getAction() method.
+    }
 }

@@ -109,6 +109,7 @@ class RecruitmentFormsController extends Controller
         $this->dataForView['registration'] = $registrationDao->getInformaticsByUserIdAndPlanId($profile->user_id, $request->getPlanId());
         $this->dataForView['student'] = $profile->user;
 
+        $this->dataForView['is_show'] = 0; // TODO...招生等待无加入班级，不需要统计同学，专业课信息。
         $this->dataForView['pageTitle'] = $profile->user->name.'的报名表';
 
         return view('student.profile.view_by_teacher',$this->dataForView);

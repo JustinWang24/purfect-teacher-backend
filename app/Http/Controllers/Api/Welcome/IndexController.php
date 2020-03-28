@@ -257,6 +257,8 @@ class IndexController extends Controller
         $data['uuid'] = Uuid::uuid4()->toString();
         $data['school_id'] = $school_id;
         $data['campus_id'] = $campus_id;
+        $data['user_name'] = $steps_1_Arr['user_name'];
+        $data['user_number'] = $steps_1_Arr['id_number'];
         $data['steps_1_str'] = json_encode($steps_1_Arr);
         $data['steps_1_date'] = date('Y-m-d H:i:s');
         $data['steps_2_date'] = null;

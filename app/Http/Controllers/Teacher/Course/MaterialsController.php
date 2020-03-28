@@ -55,6 +55,30 @@ class MaterialsController extends Controller
         return view('teacher.course.materials.manager', $this->dataForView);
     }
 
+
+    /**
+     * @param MaterialRequest $request
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function manager_json(MaterialRequest $request){
+
+        $courseDao = new CourseDao();
+        $course = $courseDao->getCourseById($request->getCourseId());
+        $teacher = (new UserDao())->getUserById($request->getTeacherId());
+
+        // 当前课程的授课班级集合
+        $timetableItemDao = new TimetableItemDao();
+        $items = $timetableItemDao->getGradesByCourseAndTeacher($request->getCourseId(), $request->getTeacherId());
+        $grades = [];
+        foreach ($items as $item) {
+            $grades[] = [
+                'id'=>$item->grade->id,
+                'name'=>$item->grade->name,
+            ];
+        }
+        return JsonBuilder::Success(['course'=>$course,'teacher'=>$teacher,'grades'=>$grades]);
+    }
+
     /**
      * @param MaterialRequest $request
      * @return string
