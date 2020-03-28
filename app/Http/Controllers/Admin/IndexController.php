@@ -17,12 +17,36 @@ class IndexController extends Controller
     public function officeIcon()
     {
         $data = [
-            ['name' => '通知公告', 'icon' => asset('assets/img/teacher/ass-icon3.png')],
-            ['name' => '日志', 'icon' => asset('assets/img/teacher/ass-icon3.png')],
-            ['name' => '内部信', 'icon' => asset('assets/img/teacher/ass-icon3.png')],
-            ['name' => '会议', 'icon' => asset('assets/img/teacher/ass-icon3.png')],
-            ['name' => '公文', 'icon' => asset('assets/img/teacher/ass-icon3.png')],
-            ['name' => '任务', 'icon' => asset('assets/img/teacher/ass-icon3.png')],
+            [
+                'name' => '通知公告',
+                'icon' => asset('assets/img/teacher/ass-icon3.png'),
+                'url' => 'notices-center'
+            ],
+            [
+                'name' => '日志',
+                'icon' => asset('assets/img/teacher/ass-icon3.png'),
+                'url' => 'logs',
+            ],
+            [
+                'name' => '内部信',
+                'icon' => asset('assets/img/teacher/ass-icon3.png'),
+                'url' => 'internal-messages',
+            ],
+            [
+                'name' => '会议',
+                'icon' => asset('assets/img/teacher/ass-icon3.png'),
+                'url' => 'meetings',
+            ],
+            [
+                'name' => '公文',
+                'icon' => asset('assets/img/teacher/ass-icon3.png'),
+                'url' => 'applications',
+            ],
+            [
+                'name' => '任务',
+                'icon' => asset('assets/img/teacher/ass-icon3.png'),
+                'url' => 'tasks',
+            ],
         ];
 
         return JsonBuilder::Success($data);
