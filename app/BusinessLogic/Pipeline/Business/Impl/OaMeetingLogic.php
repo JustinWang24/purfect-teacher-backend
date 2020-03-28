@@ -40,18 +40,18 @@ class OaMeetingLogic
             NewMeeting::where($map)->update($save);
 
 
-//            if($status == NewMeeting::STATUS_PASS) {
-//                $dao = new NewMeetingDao();
-//                $meet = $dao->meetDetails($options['meet_id']);
-//                // 参会人员
-//                $users = $meet->meetUsers->pluck('user_id')->toArray();
-//                array_push($users, $meet['approve_userid']);
-//                $users = array_unique($users);
-//                //通知负责人和成员
-//                foreach ($users as $userid) {
-//                    event(new OaMeetingEvent($userid, $meet->id));
-//                }
-//            }
+            if($status == NewMeeting::STATUS_PASS) {
+                $dao = new NewMeetingDao();
+                $meet = $dao->meetDetails($options['meet_id']);
+                // 参会人员
+                $users = $meet->meetUsers->pluck('user_id')->toArray();
+                array_push($users, $meet['approve_userid']);
+                $users = array_unique($users);
+                //通知负责人和成员
+                foreach ($users as $userid) {
+                    event(new OaMeetingEvent($userid, $meet->id));
+                }
+            }
 
 
             $bag->setCode(JsonBuilder::CODE_SUCCESS);
