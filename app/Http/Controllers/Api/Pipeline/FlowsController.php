@@ -50,7 +50,7 @@ class FlowsController extends Controller
         $business = $request->get('business');
         $param = $request->get('param');
         $user = $request->user();
-        $dao = $dao = new FlowDao();
+        $dao = new FlowDao();
         $result =  $dao->getListByBusiness($user->getSchoolId(), $business);
         $retFlow = [];
 
@@ -369,6 +369,13 @@ class FlowsController extends Controller
                         break;
                     case IAction::RESULT_TERMINATE:
                         $event = new FlowRejected($request->user(),$action, $action->getNode()->prev, $action->getFlow());
+
+                        //Oa业务特殊事件
+                        $newAction = $dao->getActionByUserFlowAndUserId($action->transaction_id, $action->user_id);
+                        $flow = $newAction->getFlow();
+                        if ($flow->business && $flow->business == IFlow::BUSINESS_TYPE_MEETING) {
+                            event(new FlowBusiness($flow, $newAction->userFlow));
+                        }
                         break;
                     default:
                         $event = null;

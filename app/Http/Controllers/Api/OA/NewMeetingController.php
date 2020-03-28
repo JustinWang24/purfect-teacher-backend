@@ -68,31 +68,48 @@ class NewMeetingController extends Controller
      * @return string
      */
     public function addMeeting(MeetingRequest $request) {
+        $user = $request->user();
         $data = $request->all();
 
         // 签退时间应大于会议时间
-        if($data['signout_status'] == NewMeeting::SIGNOUT &&
-            $data['meet_end'] > $data['signout_end']) {
-            return JsonBuilder::Error('签退结束时间应大于会议结束时间');
+        if($data['signout_status'] == NewMeeting::SIGNOUT) {
+            // 签退开始时间判断
+            if ($data['signin_status'] == NewMeeting::SIGNIN) {
+                if ($data['signout_start'] < $data['signin_end']) {
+                    return JsonBuilder::Error('签退开始时间应大于会议签到结束时间');
+                }
+            } else {
+                if ($data['signout_start'] < $data['meet_start']) {
+                    return JsonBuilder::Error('签退开始时间应大于会议开始时间');
+                }
+            }
+            // 签退结束时间判断
+            if ($data['meet_end'] > $data['signout_end']) {
+                return JsonBuilder::Error('签退结束时间应大于会议结束时间');
+            }
         }
-        $data['user_id'] = $request->user()->id;
+
+        $data['user_id'] = $user->id;
         $data['school_id'] = $request->user()->getSchoolId();
-        $user = $data['user'];
+        $users = $data['user'];
         unset($data['user']);
         unset($data['file']);
         $file = $request->file('file');
         $dao = new NewMeetingDao();
 
-        array_push($user, $data['approve_userid']);
-        $user = array_unique($user);
+        array_push($users, $data['approve_userid']);
+        $users = array_unique($users);
 
-        $result = $dao->addMeeting($data, $user, $file);
+        $result = $dao->addMeeting($data, $users, $file, $user);
 
         if($result->isSuccess()) {
             $meetId = $result->getData()['meet_id'];
-            //通知负责人和成员
-            foreach ($user as $userid) {
-                event(new OaMeetingEvent($userid, $meetId));
+            // 自定义地点
+            if($data['type'] == NewMeeting::TYPE_CUSTOM_ROOM) {
+                //通知负责人和成员
+                foreach ($users as $userid) {
+                    event(new OaMeetingEvent($userid, $meetId));
+                }
             }
             return JsonBuilder::Success($result->getData());
         } else {
@@ -275,6 +292,7 @@ class NewMeetingController extends Controller
      */
     public function meetDetails(MeetingRequest $request) {
         $meetId = $request->getMeetId();
+        $userId = $request->user()->id;
         $dao = new NewMeetingDao();
         $info = $dao->meetDetails($meetId);
         if(is_null($info)) {
@@ -286,11 +304,37 @@ class NewMeetingController extends Controller
             $fields[] = $item->url;
         }
 
+        $status = 0;  // 隐藏
+        $meetUser = $info->meetUsers->where('user_id',$userId)->first();
+
+        if(!is_null($meetUser)) {
+            // 需要签到
+            if($info['signin_status'] == NewMeeting::SIGNIN) {
+                // 未签到
+                if($meetUser->signin_status == NewMeetingUser::UN_SIGNIN) {
+                    $status = 1; // 签到
+                } else {
+                    $status = 0; // 隐藏
+                }
+            }
+
+            // 需要签退&& 已签退
+            if($status == 0 && $info['signout_status'] == NewMeeting::SIGNOUT) {
+                if($meetUser->signout_status == NewMeetingUser::UN_SIGNOUT) {
+                    $status = 2; // 签退
+                } else {
+                    $status = 0; //隐藏
+                }
+            }
+        }
+
+
         $result = [
             'meet_id' => $info->id,
             'meet_title' => $info->meet_title,
             'room' => $info->room_id? $info->room->name : $info->room_text,
             'meet_time' => $info->getMeetTime(),
+            'approve_userid' => $info->approve_userid,
             'approve' => $info->approve->name,
             'user_num' => $info->meetUsers->count(),
             'signin_time' => '',
@@ -300,7 +344,9 @@ class NewMeetingController extends Controller
             'cause' => $info->cause,
             'signin_status' => $info->signin_status,
             'signout_status' => $info->signout_status,
+            'status' => $status,
         ];
+
         // 判断是否需要签到
         if($info['signin_status'] == NewMeeting::SIGNIN) {
             $result['signin_time'] = $info->getSignInTime();

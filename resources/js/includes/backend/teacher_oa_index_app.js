@@ -4,132 +4,86 @@
 import { Util } from "../../common/utils";
 import { startedByMe, waitingForMe, cancelApplicationByUser, waitingByMe, processedByMe, copyByMe } from "../../common/flow";
 import Axios from "axios";
+import FlowForm from './auto-flow/flow-form'
 
 if (document.getElementById('teacher-oa-index-app')) {
     new Vue({
         el: '#teacher-oa-index-app',
+        components: {
+            FlowForm
+        },
         data() {
             return {
-                schoolId: null,
-                userUuid: null,
-                url: {
-                    flowOpen: ''
-                },
                 isLoading: true,
-                iconList: [],
-                show: 0, // showtab
+                schoolId: null,
+                // position: 1,
+                iconList: [], // 上边icon
+                show: 0, // showtab tab切换
                 nav: [
                     { tit: "待审批" },
                     { tit: "已审批" },
                     { tit: "我发起的" },
                     { tit: "我抄送的" }
                 ],
-                myflows: [{
-                    "name": "学生专用",
-                    "key": 1000,
-                    "flows": [{
-                        "id": -1,
-                        "name": "招生",
-                        "icon": "http:\/\/t.ytx.com\/assets\/img\/pipeline\/icon1@2x.png"
-                    }, {
-                        "id": -2,
-                        "name": "迎新",
-                        "icon": "http:\/\/t.ytx.com\/assets\/img\/pipeline\/icon2@2x.png"
-                    }, {
-                        "id": -3,
-                        "name": "离校",
-                        "icon": "http:\/\/t.ytx.com\/assets\/img\/pipeline\/icon3@2x.png"
-                    }]
-                }, {
-                    "name": "日常申请",
-                    "key": 201,
-                    "flows": [{
-                        "id": 1,
-                        "name": "奖学金",
-                        "icon": "http:\/\/t.ytx.com\/assets\/img\/node-icon@2x.png",
-                        "type": 201
-                    }]
-                }, {
-                    "name": "校园助手",
-                    "key": 1000,
-                    "flows": [{
-                        "id": -4,
-                        "name": "通讯录",
-                        "icon": "http:\/\/t.ytx.com\/assets\/img\/pipeline\/icon13@2x.png"
-                    }]
-                }, {
-                    "name": "学生专用",
-                    "key": 1000,
-                    "flows": [{
-                        "id": -1,
-                        "name": "招生",
-                        "icon": "http:\/\/t.ytx.com\/assets\/img\/pipeline\/icon1@2x.png"
-                    }, {
-                        "id": -2,
-                        "name": "迎新",
-                        "icon": "http:\/\/t.ytx.com\/assets\/img\/pipeline\/icon2@2x.png"
-                    }, {
-                        "id": -3,
-                        "name": "离校",
-                        "icon": "http:\/\/t.ytx.com\/assets\/img\/pipeline\/icon3@2x.png"
-                    }]
-                }], // 我的审批
-                activeNames: [],
+                myflows:[],
+                url: '',
+                // myflows: [{
+                //     "name": "学生专用",
+                //     "key": 1000,
+                //     "flows": [{
+                //         "id": -1,
+                //         "name": "招生",
+                //         "icon": "http:\/\/t.ytx.com\/assets\/img\/pipeline\/icon1@2x.png"
+                //     }, {
+                //         "id": -2,
+                //         "name": "迎新",
+                //         "icon": "http:\/\/t.ytx.com\/assets\/img\/pipeline\/icon2@2x.png"
+                //     }, {
+                //         "id": -3,
+                //         "name": "离校",
+                //         "icon": "http:\/\/t.ytx.com\/assets\/img\/pipeline\/icon3@2x.png"
+                //     }]
+                // }, {
+                //     "name": "日常申请",
+                //     "key": 201,
+                //     "flows": [{
+                //         "id": 1,
+                //         "name": "奖学金",
+                //         "icon": "http:\/\/t.ytx.com\/assets\/img\/node-icon@2x.png",
+                //         "type": 201
+                //     }]
+                // }, {
+                //     "name": "校园助手",
+                //     "key": 1001,
+                //     "flows": [{
+                //         "id": -4,
+                //         "name": "通讯录",
+                //         "icon": "http:\/\/t.ytx.com\/assets\/img\/pipeline\/icon13@2x.png"
+                //     }]
+                // }], // 我的审批
+                open: -1, // 当前展开的我的审批
+                opened: 0,
+                state: '展开',
+
+                page: 1, // 当前页
+                size: 10, // 条数
+                keyword: '', // 关键字
                 statusMap: {
                     0: '未通过',
                     1: '已通过',
                     2: '待审批',
                     3: '已通过',
                     5: '已撤回'
-                },
-                tableData: [{
-                    iconState: 1,
-                    state: '',
-                    user_name: '申请人：',
-                    created_at: '申请日期：',
-                    done: '',
-                }]
-                // tableData: [{
-                //     iconState: 1,
-                //     state: '请假',
-                //     name: '申请人：'+'王小虎',
-                //     date: '申请日期：'+'2016-05-02 14:20',
-                //     done: 0,
-                // }, {
-                //     iconState: 0,
-                //     state: '休学',
-                //     name: '王小虎',
-                //     date: '2016-05-02',
-                //     done: 1,
-                // }, {
-                //     iconState: 0,
-                //     state: '休学',
-                //     name: '王小虎',
-                //     date: '2016-05-02',
-                //     done: 2,
-                // }, {
-                //     iconState: 1,
-                //     state: '请假',
-                //     name: '王小虎',
-                //     date: '2016-05-02',
-                //     done: 3,
-                // }, {
-                //     iconState: 1,
-                //     state: '请假',
-                //     name: '王小虎',
-                //     date: '2016-05-02',
-                //     done: 5,
-                // }]
+                }, // 审批状态
+                tableData: [], // 审批列表
             }
         },
         created() {
             const dom = document.getElementById('app-init-data-holder');
             this.schoolId = dom.dataset.school;
-            this.userUuid = dom.dataset.useruuid;
-            this.url.flowOpen = dom.dataset.flowopen;
             this.getofficeIcon();
             this.loadFlowsWaitingByMe();
-            // this.myFlows();
+            this.myFlows();
         },
         methods: {
             // 获取头部icon
@@ -142,10 +96,29 @@ if (document.getElementById('teacher-oa-index-app')) {
                     }
                 })
             },
+            // 获取--我的审批
+            myFlows() {
+                axios.post("/api/pipeline/flows/my").then(res => {
+                    this.myflows = res.data.data.types;
+                }).catch(err => {
+                    console.log(err)
+                })
+            },
+            // 展示--收起
+            close(id) {
+                this.open = id
+            },
+            // 每个申请的点击事件
+            goCreateFlow(flow){
+                this.$refs.flowForm.init(flow)
+            },
             // tab切换
             list_click(tab) {
                 this.show = tab;
-                if (tab === 1) {
+                this.keyword = ''
+                if (tab === 0) {
+                    this.loadFlowsWaitingByMe();
+                } else if (tab === 1) {
                     this.loadFlowsProcessedByMe();
                 } else if (tab === 2) {
                     this.loadFlowsStartedByMe();
@@ -153,13 +126,17 @@ if (document.getElementById('teacher-oa-index-app')) {
                     this.loadFlowsCopyByMe();
                 }
             },
-            // 获取--我的审批
-            myFlows() {
-                axios.post("/api/pipeline/flows/my").then(res => {
-                    this.myflows = res.data.data;
-                }).catch(err => {
-                    console.log(err)
-                })
+            // 搜索
+            serach() {
+                if (this.show === 0) {
+                    this.loadFlowsWaitingByMe();
+                } else if (this.show === 1) {
+                    this.loadFlowsProcessedByMe();
+                } else if (this.show === 2) {
+                    this.loadFlowsStartedByMe();
+                } else {
+                    this.loadFlowsCopyByMe();
+                }
             },
             // list展示
             // waiting_for_me=待我审批
@@ -202,20 +179,16 @@ if (document.getElementById('teacher-oa-index-app')) {
                     this.isLoading = false;
                 });
             },
-
-
-
-
-            startFlow: function (flowId) {
-                const url = this.url.flowOpen + '?flow=' + flowId + '&uuid=' + this.userUuid;
-                window.open(url, '_blank');
-            },
-            viewApplicationDetail: function (action) {
-                window.location.href = '/pipeline/flow/view-history?action_id=' + action.id;
-            },
-            reloadThisPage: function () {
-                Util.reloadCurrentPage(this);
-            }
+            // startFlow: function (flowId) {
+            //     const url = this.url.flowOpen + '?flow=' + flowId + '&uuid=' + this.userUuid;
+            //     window.open(url, '_blank');
+            // },
+            // viewApplicationDetail: function (action) {
+            //     window.location.href = '/pipeline/flow/view-history?action_id=' + action.id;
+            // },
+            // reloadThisPage: function () {
+            //     Util.reloadCurrentPage(this);
+            // }
         }
     });
 }

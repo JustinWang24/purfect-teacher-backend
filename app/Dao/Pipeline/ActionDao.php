@@ -8,6 +8,8 @@
 
 namespace App\Dao\Pipeline;
 use App\Dao\NetworkDisk\MediaDao;
+use App\Events\Pipeline\Flow\FlowStarted;
+use App\Models\OA\NewMeeting;
 use App\Models\Pipeline\Flow\Action;
 use App\Models\Pipeline\Flow\ActionAttachment;
 use App\Models\Pipeline\Flow\ActionOption;
@@ -30,6 +32,110 @@ use function foo\func;
 
 class ActionDao
 {
+    public function createMeetingFlow(User $user, $meetid){
+        $bag = new MessageBag(JsonBuilder::CODE_ERROR);
+        //获取meeting对应的flow
+        $dao = new FlowDao();
+        $result =  $dao->getListByBusiness($user->getSchoolId(), IFlow::BUSINESS_TYPE_MEETING);
+        $retFlow = [];
+        foreach ($result as $flow) {
+            if ($dao->checkPermissionByuser($flow, $user, 0)) {
+                $retFlow = $flow;
+                break;
+            }
+        }
+        if (empty($retFlow)) {
+            $bag->setMessage('用户权限不足');
+            return $bag;
+        }
+        $startNode = $retFlow->getHeadNode();
+
+        //获取meeting
+        $meet = NewMeeting::find($meetid);
+        //获取表单
+        $options = [];
+        foreach ($startNode->options as $option) {
+            if ($option->title == '会议id') {
+                $options[] = [
+                    'id' => $option->id,
+                    'value' => $meet->id
+                ];
+            }
+            if ($option->title == '会议主题') {
+                $options[] = [
+                    'id' => $option->id,
+                    'value' => $meet->meet_title
+                ];
+            }
+            if ($option->title == '参会人数') {
+                $users = $meet->meetUsers;
+                array_push($users, $meet['approve_userid']);
+                $users = array_unique($users);
+
+                $options[] = [
+                    'id' => $option->id,
+                    'value' => count($users)
+                ];
+            }
+            if ($option->title == '会议室名称') {
+                $options[] = [
+                    'id' => $option->id,
+                    'value' => $meet->room->name
+                ];
+            }
+            if ($option->title == '开始时间') {
+                $options[] = [
+                    'id' => $option->id,
+                    'value' => $meet->meet_start . ' ~ ' . $meet->meet_end
+                ];
+            }
+        }
+        $actionData = [
+            'flow_id' => $retFlow->id,
+            'content' => '',
+            'attachments' => [],
+            'urgent' => false,
+            'options' => $options
+        ];
+
+        $actionData['node_id'] = $startNode->id;
+        $actionData['user_id'] = $user->id;
+        $actionData['result'] = IAction::RESULT_PASS; // 启动工作没有审核, 直接就是 pass 的状态
+        //@TODO 不启用加急功能
+        $actionData['urgent'] = 0;
+        DB::beginTransaction();
+        try{
+            // 先为当前的用户创建一个用户流程
+            $userFlow = UserFlow::create([
+                'flow_id'=>$retFlow->id,
+                'user_id'=>$user->id,
+                'user_name'=>$user->getName(),
+                'done'=>IUserFlow::IN_PROGRESS,
+            ]);
+
+            // 用户流程创建之后, 创建该流程的第一个 action
+            $action = $this->create($actionData, $userFlow);
+
+            // 第一个 action 创建成功后, 找到流程的第二步, 然后针对第二步所依赖的审批人(handlers), 创建需要执行的 actions
+            // 生成下一步需要的操作
+            $handler = $startNode->getHandler();
+            if($handler){
+                // 根据当前提交 action 的用户和流程, 创建所有需要的下一步流程
+                $handler->handle($user, $action, $startNode->getNext());
+            }
+
+            // 发布流程启动成功事件
+            event(new FlowStarted($user,$action, $retFlow, $startNode));
+
+            $bag->setCode(JsonBuilder::CODE_SUCCESS);
+            DB::commit();
+        }catch (\Exception $exception){
+            $bag->setMessage($exception->getMessage().', line='.$exception->getLine());
+            DB::rollBack();
+        }
+
+        return $bag;
+    }
     /**
      * @param User $user
      * @param $userFlowId

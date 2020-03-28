@@ -30,4 +30,8 @@ class AppProposalImage extends Model
         }
         return '';
     }
+
+    public function getPathAttribute($value){
+        return asset($value);
+    }
 }

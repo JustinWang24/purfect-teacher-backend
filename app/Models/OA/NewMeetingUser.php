@@ -64,7 +64,7 @@ class NewMeetingUser extends Model
     public function getMeetTime() {
         $meet_start = Carbon::parse($this->meet_start);
         $meet_end = Carbon::parse($this->meet_end);
-        $time = $meet_start->format('H:i'). '––' .$meet_end->format('H:i');
+        $time = $meet_start->format('H:i'). '–' .$meet_end->format('H:i');
         return $meet_start->toDateString().' '. $time;
     }
 
@@ -76,7 +76,7 @@ class NewMeetingUser extends Model
     public function getSignInTime() {
         $signin_start = Carbon::parse($this->signin_start);
         $signin_end = Carbon::parse($this->signin_end);
-        $time = $signin_start->format('H:i'). '––' .$signin_end->format('H:i');
+        $time = $signin_start->format('H:i'). '–' .$signin_end->format('H:i');
         return $signin_start->toDateString().' '. $time;
     }
 
@@ -88,7 +88,7 @@ class NewMeetingUser extends Model
     public function getSignOutTime() {
         $signout_start = Carbon::parse($this->signout_start);
         $signout_end = Carbon::parse($this->signout_end);
-        $time = $signout_start->format('H:i'). '––' .$signout_end->format('H:i');
+        $time = $signout_start->format('H:i'). '–' .$signout_end->format('H:i');
         return $signout_start->toDateString().' '. $time;
     }
 }

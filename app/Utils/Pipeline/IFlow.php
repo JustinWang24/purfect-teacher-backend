@@ -25,11 +25,12 @@ interface IFlow extends IPersistent
     const BUSINESS_TYPE_LEAVE = 'attendance_leave';
     const BUSINESS_TYPE_AWAY = 'attendance_away';
     const BUSINESS_TYPE_TRAVEL = 'attendance_travel';
+    const BUSINESS_TYPE_MEETING = 'oa_meeting';
 
     //关联业务
     const BUSINESS_ATTENDANCE_MACADDRESS = [
         'business' => self::BUSINESS_TYPE_MACADDRESS,
-        'name' => '考勤修改Mac地址',
+        'name' => '考勤修改Mac',
         'options' => [
             ['name' => '单行输入框', 'type' => 'input', 'readonly' => true, 'required' => 1, 'extra' => ['text' => '考勤组id'], 'uri' => 'attendance_id', 'title' => '考勤组id', 'tips' => '考勤组id'],
             ['name' => '单行输入框', 'type' => 'input', 'readonly' => false, 'required' => 1, 'extra' => ['text' => '新Mac地址'], 'uri' => 'mac_address', 'title' => '新Mac地址','tips' => '新Mac地址'],
@@ -46,23 +47,34 @@ interface IFlow extends IPersistent
     ];
     const BUSINESS_ATTENDANCE_LEAVE = [
         'business' => self::BUSINESS_TYPE_LEAVE,
-        'name' => '请假',
+        'name' => '考勤请假',
         'options' => [
             ['name' => '日期区间', 'type' => 'date-date', 'readonly' => false, 'required' => 1, 'extra' => ['text' => null, 'dateType' => 1, 'showPickerS' => false, 'showPickerE' => false, 'title2' => '结束时间'], 'uri' => 'date_date', 'title' => '开始时间', 'tips' => '选择时间']
         ]
     ];
     const BUSINESS_ATTENDANCE_AWAY = [
         'business' => self::BUSINESS_TYPE_AWAY,
-        'name' => '外出',
+        'name' => '考勤外出',
         'options' => [
             ['name' => '日期区间', 'type' => 'date-date', 'readonly' => false, 'required' => 1, 'extra' => ['text' => null, 'dateType' => 1, 'showPickerS' => false, 'showPickerE' => false, 'title2' => '结束时间'], 'uri' => 'date_date', 'title' => '开始时间', 'tips' => '选择时间']
         ]
     ];
     const BUSINESS_ATTENDANCE_TRAVEL = [
         'business' => self::BUSINESS_TYPE_TRAVEL,
-        'name' => '出差',
+        'name' => '考勤出差',
         'options' => [
             ['name' => '日期区间', 'type' => 'date-date', 'readonly' => false, 'required' => 1, 'extra' => ['text' => null, 'dateType' => 1, 'showPickerS' => false, 'showPickerE' => false, 'title2' => '结束时间'], 'uri' => 'date_date', 'title' => '开始时间', 'tips' => '选择时间']
+        ]
+    ];
+    const BUSINESS_OA_MEETING = [
+        'business' => self::BUSINESS_TYPE_MEETING,
+        'name' => '会议审批',
+        'options' => [
+            ['name' => '单行输入框', 'type' => 'input', 'readonly' => true, 'required' => 1, 'extra' => ['text' => '会议id'], 'uri' => 'meet_id', 'title' => '会议id', 'tips' => '会议id'],
+            ['name' => '单行输入框', 'type' => 'input', 'readonly' => true, 'required' => 1, 'extra' => ['text' => '会议主题'], 'uri' => 'meet_title', 'title' => '会议主题', 'tips' => '会议主题'],
+            ['name' => '单行输入框', 'type' => 'input', 'readonly' => true, 'required' => 1, 'extra' => ['text' => '参会人数'], 'uri' => 'meet_usercount', 'title' => '参会人数', 'tips' => '参会人数'],
+            ['name' => '单行输入框', 'type' => 'input', 'readonly' => true, 'required' => 1, 'extra' => ['text' => '会议室名称'], 'uri' => 'meet_roomname', 'title' => '会议室名称', 'tips' => '会议室名称'],
+            ['name' => '日期区间', 'type' => 'date-date', 'readonly' => true, 'required' => 1, 'extra' => ['text' => null, 'dateType' => 1, 'showPickerS' => false, 'showPickerE' => false, 'title2' => '结束时间'], 'uri' => 'meet_date', 'title' => '开始时间', 'tips' => '选择时间']
         ]
     ];
 
