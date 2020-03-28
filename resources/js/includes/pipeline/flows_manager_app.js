@@ -145,7 +145,7 @@ if (document.getElementById('pipeline-flows-manager-app')) {
             }
         },
         methods: {
-            // 获取左边分类和侧边栏显示位置和侧边栏关联业务
+            // 获取左边分类和侧边栏显示位置
             getList(tab) {
                 // /school_manager/pipeline/flows/load-flows
                 const url = Util.buildUrl(Constants.API.FLOW.GETFLOWS);
@@ -155,7 +155,6 @@ if (document.getElementById('pipeline-flows-manager-app')) {
                     if (Util.isAjaxResOk(res)) {
                         this.typeList = res.data.data // 左边分类
                         this.posiType = tab // 侧边栏显示位置
-                        this.getbusinessList(); // 侧边栏关联业务
                     }
                 }).catch((err) => {
                     console.log(err)
@@ -175,6 +174,7 @@ if (document.getElementById('pipeline-flows-manager-app')) {
                     this.organization = 2
                 }
                 this.gettitlesList();
+                this.getbusinessList(); // 侧边栏关联业务
             },
             // 关闭侧边栏
             handleClose(done) {

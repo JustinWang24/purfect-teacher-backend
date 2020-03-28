@@ -8,6 +8,7 @@
     padding: 20px 20px 0;
     background: rgba(255, 255, 255, 1);
     .teacher_oa_card_body {
+      cursor: pointer;
       padding: 0 5%;
       border-right: 1px solid #eaedf2;
       img {
@@ -38,12 +39,12 @@
     display: flex;
     justify-content: space-between;
     flex-wrap: wrap;
+    height: 900px;
     .teacher_oa_approval_content_left {
       flex: 1;
-      min-height: 445px;
+      min-width: 465px;
       background: rgba(255, 255, 255, 1);
       border-radius: 4px;
-      margin-bottom: 10px;
       .el-collapse-item__header {
         font-size: 18px;
         color: #313b4c;
@@ -70,7 +71,8 @@
         justify-content: space-between;
         padding: 25px 35px;
         .itemFlows {
-          width: 60px;
+          width: 50px;
+          cursor: pointer;
           img {
             width: 50px;
             height: 50px;
@@ -106,10 +108,8 @@
     }
     .teacher_oa_approval_content_right {
       flex: 2;
-      height: 445px;
-      background: rgba(255, 255, 255, 1);
+      background-color: #fff;
       border-radius: 4px;
-      margin-bottom: 10px;
       margin-left: 20px;
       .teacher_oa_approval_content_right_tabs {
         width: 100%;
@@ -135,18 +135,17 @@
           color: #4ea5fe;
         }
         .bottom-table {
-          padding: 0 44px;
-          font-size: 14px;
-          .blade_listImage {
-            width: 28px;
-            height: 28px;
+          width: 100%;
+          min-height: 600px;
+          .table-item {
+            height: 55px;
+            padding: 0 44px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
           }
-          .el-table--striped .el-table__body tr.el-table__row--striped td {
-            background: #f5f6ff;
-          }
-          .icon-image {
-            width: 34px;
-            height: 24px;
+          .table-item:nth-child(even){
+            background-color: #F4F7FE;
           }
         }
       }
