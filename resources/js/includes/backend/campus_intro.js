@@ -22,8 +22,8 @@ if(document.getElementById('campus-intro-app')){
           saveFile(response) {
             let fileJson = eval(response);
             this.image_url = fileJson.data.path;
-			console.log(this.image_url);
-			 this.saveCampusVideInfo(this.image_url,3);
+            console.log(this.image_url);
+            this.saveCampusVideInfo(this.image_url,3);
           },
           handlePreview(file) {
           },
@@ -37,16 +37,16 @@ if(document.getElementById('campus-intro-app')){
             axios.get(Constants.API.CAMPUS_VIDEO.GET_CAMPUS_VIDEO, {}).then((res) => {
               if (Util.isAjaxResOk(res)) {
                 _that_.video = !Util.isAjaxResOk(res.data.data.videoInfo.url) ? res.data.data.videoInfo.url : "";
-			  if(!Util.isAjaxResOk(res.data.data.imageInfo.url)){
-                  let obj = {};
-                  obj.name = "";
-                  obj.url = res.data.data.imageInfo.url;
-                  _that_.fileList = [obj];
-			  }
+                if(!Util.isAjaxResOk(res.data.data.imageInfo.url)){
+                    let obj = {};
+                    obj.name = "";
+                    obj.url = res.data.data.imageInfo.url;
+                    _that_.fileList = [obj];
+                }
                 _that_.image_url = !Util.isAjaxResOk(res.data.data.imageInfo.url) ? res.data.data.imageInfo.url : "";
-				console.log("========================111");
+				        console.log("========================111");
                 console.log(res.data);
-				console.log("========================222");
+				        console.log("========================222");
               }
             });
           },
@@ -73,7 +73,7 @@ if(document.getElementById('campus-intro-app')){
           },
           handleResponse(response, file) {
             this.saveCampusVideInfo(response.data.path,2);
-			return window.location.protocol+"//"+window.location.host+'/'+response.data.path;
+			        return window.location.protocol+"//"+window.location.host+'/'+response.data.path;
           },
         },
       components: {
