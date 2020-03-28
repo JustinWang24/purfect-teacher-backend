@@ -44,7 +44,7 @@ class NewMeetingController extends Controller
             $result[$key] = [
                 'room_id'=>$item->id,
                 'img' => '',
-                'name' => $item->name,
+                'name' => $item->description,
                 'seats' => $item->seats,
                 'start' => '8:00',
                 'end' => '18:00',
