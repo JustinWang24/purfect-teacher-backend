@@ -245,7 +245,7 @@ class IndexController extends Controller
         $WelcomeUserReportDao = new WelcomeUserReportDao();
 
         // 验证是否有权限操作迎新
-        $checkUserIsWelcomeInfo = $WelcomeUserReportDao->checkUserIsWelcomeInfo( $campus_id, $user_id);
+        $checkUserIsWelcomeInfo = $WelcomeUserReportDao->checkUserIsWelcomeInfo( $school_id, $user_id);
         if($checkUserIsWelcomeInfo['status'] != true)
         {
             return JsonBuilder::Error($checkUserIsWelcomeInfo['message']);
