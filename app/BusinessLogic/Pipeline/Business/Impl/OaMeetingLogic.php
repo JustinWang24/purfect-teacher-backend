@@ -14,6 +14,7 @@ use App\User;
 use App\Utils\JsonBuilder;
 use App\Models\OA\NewMeeting;
 use App\Utils\ReturnData\MessageBag;
+use Illuminate\Support\Facades\Log;
 
 class OaMeetingLogic
 {
@@ -25,6 +26,7 @@ class OaMeetingLogic
 
     public function handle($options)
     {
+        Log::debug($options);
         $bag = new MessageBag(JsonBuilder::CODE_ERROR);
         try {
             // 审核会议
