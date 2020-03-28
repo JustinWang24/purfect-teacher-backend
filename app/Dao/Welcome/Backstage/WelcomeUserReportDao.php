@@ -214,18 +214,19 @@ class WelcomeUserReportDao extends \App\Dao\Welcome\CommonDao
      */
     public function updateUserReportCompleteInfo($user_id, $typeArr = [])
     {
-        if (!$user_id || empty($typeidArr)) return;
+        if (!$user_id || empty($typeArr)) return;
 
-        $typeInfo = WelcomeUserReportsProject::where('user_id', '=', $user_id)->get();
+        $data = WelcomeUserReportsProject::where('user_id', '=', $user_id)->get();
+
         $typeIdArr = !empty($data) ? $data->toArray() : [];
         if (empty($typeIdArr)) return;
+
         $typeIdArr = array_unique(array_filter(array_column($typeIdArr, 'typeid')));
 
         $intersection = array_diff($typeArr,$typeIdArr);
-
         if(empty($intersection))
         {
-             WelcomeUserReportsProject::where('user_id','=',$user_id)->update(
+             WelcomeUserReport::where('user_id','=',$user_id)->update(
                  ['complete_date'=>date('Y-m-d H:i:s'),'status'=>3]
              );
         }
