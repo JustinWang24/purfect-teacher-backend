@@ -14,6 +14,7 @@ use Carbon\Carbon;
 use Exception;
 use Illuminate\Database\Eloquent\Collection;
 use Ramsey\Uuid\Uuid;
+use App\Models\Users\GradeUser;
 use App\Models\Students\StudentProfile;
 use Illuminate\Support\Facades\DB;
 use App\Models\Acl\Role;
@@ -642,32 +643,40 @@ class RegistrationInformaticsDao
      */
     public function getRegistrationInformaticsStatusInfo($userId, $planInfo = [])
     {
-      $messageArr = [
-        0 => array('status'=>0,'message'=>'参数错误','message1'=>'报名'),
-        1 => array('status'=>1,'message'=>'您已申请，不能重复申请','message1'=>'已申请'),
-        2 => array('status'=>2,'message'=>'招生人数已满','message1'=>'人已满'),
-        3 => array('status'=>3,'message'=>'您申请的已通过，不能重复申请','message1'=>'已报名'),
-        5 => array('status'=>5,'message'=>'您申请的已通过，不能重复申请','message1'=>'已报名'),
-        6 => array('status'=>6,'message'=>'您申请的已通过，不能重复申请','message1'=>'已报名'),
-        100 => array('status'=>100,'message'=>'报名','message1'=>'报名'),
-      ];
+        $messageArr = [
+            0 => array('status' => 0, 'message' => '参数错误', 'message1' => '报名'),
+            1 => array('status' => 1, 'message' => '您已申请，不能重复申请', 'message1' => '已申请'),
+            2 => array('status' => 2, 'message' => '招生人数已满', 'message1' => '人已满'),
+            3 => array('status' => 3, 'message' => '您申请的已通过，不能重复申请', 'message1' => '已报名'),
+            5 => array('status' => 5, 'message' => '您申请的已通过，不能重复申请', 'message1' => '已报名'),
+            6 => array('status' => 6, 'message' => '您申请的已通过，不能重复申请', 'message1' => '已报名'),
+            7 => array('status' => 7, 'message' => '您已经是学校的学生，不能申请', 'message1' => '报名'),
+            100 => array('status' => 100, 'message' => '报名', 'message1' => '报名'),
+        ];
 
-      if (!intval($userId) || empty($planInfo)) return $messageArr[0];
+        if (!intval($userId) || empty($planInfo)) return $messageArr[0];
 
-      // 招生人数已满
-      if ($planInfo->enrolled_count < $planInfo->seats) {
-        return $messageArr[2];
-      }
+        // 获取改学生是否已申请专业
+        $condition[] = ['user_id', '=', $userId];
+        $condition[] = ['major_id', '>', 0];
+        $gradeUserCount = GradeUser::where($condition)->count();
+        if ($gradeUserCount > 0) {
+            return $messageArr[7];
+        }
 
-      // 如果已经报名过，并且审核中和通过，不能再次报名
-      $data = $this->getInformaticsByUserIdAndPlanId($userId, $planInfo->id);
+        // 招生人数已满
+        if ($planInfo->enrolled_count >= $planInfo->seats) {
+            return $messageArr[2];
+        }
 
-      // 状态 1待审核 2报名审核被拒绝 3报名审核已通过 4被拒绝录取 5被录取 6已报到
-      if (!empty($data) && in_array($data->status, [1, 3, 5, 6]))
-      {
-        return $messageArr[$data->status];
-      }
-      return $messageArr[100];
+        // 如果已经报名过，并且审核中和通过，不能再次报名
+        $data = $this->getInformaticsByUserIdAndPlanId($userId, $planInfo->id);
+
+        // 状态 1待审核 2报名审核被拒绝 3报名审核已通过 4被拒绝录取 5被录取 6已报到
+        if (!empty($data) && in_array($data->status, [1, 3, 5, 6])) {
+            return $messageArr[$data->status];
+        }
+        return $messageArr[100];
     }
 
 }

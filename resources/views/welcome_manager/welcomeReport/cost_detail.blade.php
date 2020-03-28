@@ -241,7 +241,6 @@ $routeArr = array(
                             </div>
                         @endif
                     @endif
-
                 </div>
             </div>
         </div>

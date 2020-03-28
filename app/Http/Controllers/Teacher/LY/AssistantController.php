@@ -30,9 +30,9 @@ class AssistantController extends Controller
         return view('teacher.ly.assistant.course',$this->dataForView);
     }
 
-
     public function material(Request $request){
-          return view('teacher.ly.assistant.material',$this->dataForView);
+        $this->dataForView['teacher'] = $request->user();
+        return view('teacher.ly.assistant.material', $this->dataForView);
     }
 
     public function check_in(Request $request){

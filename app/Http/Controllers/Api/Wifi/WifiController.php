@@ -34,7 +34,6 @@ class WifiController extends Controller
    {
       $user = $request->user ();
 
-
       $user_id   = $user->id;
       $campus_id = $user->gradeUserOneInfo->campus_id;
 

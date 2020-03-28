@@ -58,7 +58,7 @@ class WelcomeUserReportDao extends \App\Dao\Welcome\CommonDao
      *
      * @return array
      */
-    public function getWelcomeUserReportListInfo($school_id = 0, $status = [], $page = 1)
+    public function getWelcomeUserReportListInfo($school_id = 0, $status = [], $keywords = null , $page = 1)
     {
         if (!intval($school_id) || !intval($status) || !intval($page)) {
             return [];
@@ -66,6 +66,9 @@ class WelcomeUserReportDao extends \App\Dao\Welcome\CommonDao
 
         // 检索条件
         $condition[] = ['school_id', '=', (Int)$school_id];
+        if ($keywords) {
+            $condition[] = ['user_name', 'like', '%'.trim($keywords).'%'];
+        }
 
         return WelcomeUserReport::where($condition)
             ->whereIn('status', $status)
@@ -79,13 +82,14 @@ class WelcomeUserReportDao extends \App\Dao\Welcome\CommonDao
      *
      * @param['school_id']  是 Int 学校id
      * @param['status']  是 Int 报道中状态(1,3)
+     * @param['keywords']  否 String 姓名
      * @param['typeid']  是 Int 缴费类型id
      * @param['isfee'] 否 Int 显示(1:未交费,2:已缴费)
      * @param['page']  否 Int 分页id
      *
      * @return array
      */
-    public function getUserReportsOrProjectsListInfo($school_id = 0, $status = [], $typeid = 0, $isfee = 1, $page = 1)
+    public function getUserReportsOrProjectsListInfo($school_id = 0, $status = [], $keywords = '' , $typeid = 0, $isfee = 1, $page = 1)
     {
         if (!intval($school_id) || empty($status) || !intval($typeid) || !intval($page)) {
             return [];
@@ -93,6 +97,9 @@ class WelcomeUserReportDao extends \App\Dao\Welcome\CommonDao
 
         // 检索条件
         $condition[] = ['a.school_id', '=', (Int)$school_id];
+        if ($keywords) {
+            $condition[] = ['a.user_name', 'like', '%' . trim($keywords) . '%'];
+        }
 
         // 获取的字段
         $fieldArr = ['a.*',DB::raw("( select count(*) from welcome_user_reports_projects as b where a.user_id = b.user_id and b.typeid ='{$typeid}') count")];
