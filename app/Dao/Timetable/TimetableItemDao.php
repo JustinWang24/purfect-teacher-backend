@@ -938,16 +938,18 @@ class TimetableItemDao
 
             $term = $school->configuration->guessTerm($now->month);
 
-                $timeSlotIds = array_column($currentTimeSlot, 'id');
+//                $timeSlotIds = array_column($currentTimeSlot, 'id');
 
+            $timeSlot = $currentTimeSlot[0];
                 $where = [
                     ['school_id','=',$school->id],
                     ['year','=',$year],
                     ['term','=',$term],
                     ['grade_id','=',$user->gradeUser->grade_id],
                     ['weekday_index','=',$weekdayIndex],
+                    ['time_slot_id','=',$timeSlot->id],
                 ];
-                return TimetableItem::where($where)->whereIn('time_slot_id', $timeSlotIds)->get();
+                return TimetableItem::where($where)->first();
         }
         return null;
     }
