@@ -34,6 +34,10 @@ class WorkLog extends Model
         return $this->belongsTo(TeacherProfile::class,'user_id','user_id');
     }
 
+    public function sendUserProfile()
+    {
+        return $this->belongsTo(TeacherProfile::class,'send_user_id','user_id');
+    }
 
     public function getCreatedAtAttribute($value)
     {

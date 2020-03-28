@@ -33,19 +33,21 @@
             </li>
             @endif
         </ul>
-        <div class="row list-separated profile-stat">
-            <div class="col-md-4 col-sm-4 col-6">
-                <div class="uppercase profile-stat-title"> {{$student->gradeUser->grade->studentsCount()}} </div>
-                <div class="uppercase profile-stat-text"> 同学 </div>
+        @if($is_show == 1)
+            <div class="row list-separated profile-stat">
+                <div class="col-md-4 col-sm-4 col-6">
+                    <div class="uppercase profile-stat-title"> {{$student->gradeUser->grade->studentsCount()}} </div>
+                    <div class="uppercase profile-stat-text"> 同学 </div>
+                </div>
+                <div class="col-md-4 col-sm-4 col-6">
+                    <div class="uppercase profile-stat-title"> {{$student->gradeUser->grade->major->courseCount() }}</div>
+                    <div class="uppercase profile-stat-text"> 专业课 </div>
+                </div>
+                <div class="col-md-4 col-sm-4 col-6">
+                    <div class="uppercase profile-stat-title"> 0 </div>
+                    <div class="uppercase profile-stat-text"> 作业 </div>
+                </div>
             </div>
-            <div class="col-md-4 col-sm-4 col-6">
-                <div class="uppercase profile-stat-title"> {{$student->gradeUser->grade->major->courseCount() }}</div>
-                <div class="uppercase profile-stat-text"> 专业课 </div>
-            </div>
-            <div class="col-md-4 col-sm-4 col-6">
-                <div class="uppercase profile-stat-title"> 0 </div>
-                <div class="uppercase profile-stat-text"> 作业 </div>
-            </div>
-        </div>
+        @endif
     </div>
 </div>

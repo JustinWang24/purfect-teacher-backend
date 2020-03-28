@@ -67,7 +67,10 @@ class NewMeetingDao
             // 判断是否需要审批
             if($data['type'] == NewMeeting::TYPE_MEETING_ROOM) {
                 $actionDao = new ActionDao();
-                $actionDao->createMeetingFlow($createUser,$meeting->id);
+                $re = $actionDao->createMeetingFlow($createUser,$meeting->id);
+                if(!$re->isSuccess()) {
+                    throw new \Exception($re->getMessage());
+                }
             }
 
             foreach ($users as $key => $item) {
@@ -91,9 +94,6 @@ class NewMeetingDao
                     NewMeetingFile::create($meetFile);
                 }
             }
-
-
-
 
             DB::commit();
 

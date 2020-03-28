@@ -27,8 +27,8 @@
               <el-tag v-for="(item1,key1) in item.types">@{{ item1.name }}@{{ item1.num }}</el-tag>
             </div>
             <el-row class="button">
-              <el-button type="primary" icon="el-icon-edit" size="mini" class="button-edit" @click="changeMeans(3)"></el-button>
-              <el-button type="primary" size="mini" @click="changeMeans(4)">添加资料</el-button>
+              <el-button type="primary" icon="el-icon-edit" size="mini" class="button-edit" @click="changeMeans(3,item)"></el-button>
+              <el-button type="primary" size="mini" @click="changeMeans(4,item)">添加资料</el-button>
             </el-row>
           </div>
         </el-row>
@@ -120,9 +120,9 @@
         </div>
       </div>
 
-      <div  v-show="activeIndex === 4">
-        <material-lecture></material-lecture>
-      </div>
+    <div  v-show="activeIndex === 4 ">
+        <material :grades="grades" :lecture="lecture" v-if="lecture" :loading="loadingData" user-uuid="{{ $teacher->uuid }}"></material>
+    </div>
 
     </div>
   </div>
@@ -130,6 +130,7 @@
 
 <div id="app-init-data-holder"
      data-school="{{ session('school.id') }}"
+     data-teacher='{!! $teacher !!}'
 ></div>
 <style>
   .row {

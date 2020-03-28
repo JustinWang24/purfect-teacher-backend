@@ -78,10 +78,10 @@ if (document.getElementById('pipeline-flow-view-history-app')) {
                     }
                     axios.post('/api/pipeline/flow/process', { action: this.action1 }
                     ).then(res => {
-                        this.dialogVisible = false
-                        window.location.reload()
+                        this.dialogVisible = false;
+                        window.history.back();
                     }).catch(err => {
-                        console.log(err)
+                        console.log(err);
                     })
                 }
             },

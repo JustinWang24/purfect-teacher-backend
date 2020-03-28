@@ -12,6 +12,8 @@ export const Constants = {
         LOAD_BUILDINGS_BY_SCHOOL: '/api/school/load-buildings',
         LOAD_ROOMS_BY_BUILDING: '/api/school/load-building-rooms',
         LOAD_AVAILABLE_ROOMS_BY_BUILDING: '/api/school/load-building-available-rooms',
+        LOAD_INSTITUTES_BY_SCHOOL: '/api/school/load-institute',
+        LOAD_DEPARTMENTS_BY_SCHOOL: '/api/school/load-department',
         LOAD_MAJORS_BY_SCHOOL: '/api/school/load-majors',
         LOAD_GRADES_BY_MAJOR: '/api/school/load-major-grades',
         LOAD_COURSES_BY_MAJOR: '/api/school/load-major-courses',

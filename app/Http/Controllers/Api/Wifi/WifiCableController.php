@@ -83,9 +83,9 @@ class WifiCableController extends Controller
     */
    public function list_category_info ( WifiCableRequest $request )
    {
-      $user = $request->user ();
+      $user = $request->user();
 
-      $infos = RoomsDao::getRoomsListMoreInfo ( $user->gradeUserOneInfo->campus_id )->toArray();
+       $infos = RoomsDao::getRoomsListMoreInfo($user->gradeUserOneInfo->campus_id)->toArray();
 
       return JsonBuilder::Success ( $infos ,'宿舍楼地址列表');
    }

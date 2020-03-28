@@ -115,20 +115,20 @@ class WelcomeUserReportDao
      * Func 验证学校迎新配置
      * Desc 验证当前用户是否可以迎新
      *
-     * @param $campusId 校区ID
+     * @param $schoolId 校区ID
      * @param $userId 用户ID
      *
      * @return array
      */
-    public function checkUserIsWelcomeInfo($campusId = 0, $userId = 0)
+    public function checkUserIsWelcomeInfo($schoolId = 0, $userId = 0)
     {
-        if (!intval($campusId) || !intval($userId)) {
+        if (!intval($schoolId) || !intval($userId)) {
             return array('status' => 0, 'notice' => '','message' => '参数错误');
         }
 
         $fieldArr = ['config_sdata', 'config_edate', 'status'];
 
-        $getWelcomeConfigOneInfo = (new WelcomeConfigDao)->getWelcomeConfigOneInfo($campusId, $fieldArr);
+        $getWelcomeConfigOneInfo = (new WelcomeConfigDao)->getWelcomeConfigOneInfo($schoolId, $fieldArr);
 
         // 学校还未配置迎新
         if (empty($getWelcomeConfigOneInfo)) {

@@ -27,7 +27,7 @@ class BannerDao
       }
       return Banner::where('school_id', $schoolId)->where($condition)
         ->orderBy('app', 'asc')
-        ->orderBy('sort', 'asc')
+        ->orderBy('sort', 'desc')
         ->orderBy('id', 'desc')
         ->paginate(ConfigurationTool::DEFAULT_PAGE_SIZE);
     }

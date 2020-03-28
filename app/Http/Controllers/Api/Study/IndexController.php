@@ -62,10 +62,7 @@ class IndexController extends Controller
         ];
 
         $evaluateTeacher = false;
-//        if(!is_null($item)) {
-        if(!is_null($item) && count($item) >0) {
-
-            $item = $item[0];
+        if(!is_null($item)) {
 
             $weeks = $configuration->getScheduleWeek(Carbon::parse($date), null, $term);
             $week = $weeks->getScheduleWeekIndex();
@@ -83,7 +80,7 @@ class IndexController extends Controller
                 'time' => $item->timeSlot->from.'-'.$item->timeSlot->to,
                 'label' => $label,
                 'course' => $course->name,
-                'room' => $item->room->name,
+                'room' => $item->room->building->name.$item->room->name,
                 'teacher' => $item->teacher->name,
                 'week' => $week,
                 'item_id'=> $item->id,

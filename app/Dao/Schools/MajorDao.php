@@ -182,4 +182,14 @@ class MajorDao
         ];
         return Major::where($map)->first();
     }
+
+    /**
+     * 根据系ID获取专业
+     * @param $departmentId
+     * @return mixed
+     */
+    public function getMajorByDepartmentId($departmentId)
+    {
+        return Major::where('department_id', $departmentId)->get();
+    }
 }

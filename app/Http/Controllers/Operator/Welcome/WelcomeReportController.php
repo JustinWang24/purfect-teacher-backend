@@ -43,7 +43,7 @@
 
           // 列表
           $welcomeUserReportObj = new WelcomeUserReportDao();
-          $dataList = $welcomeUserReportObj->getWelcomeUserReportListInfo($school->id, [2], $page);
+          $dataList = $welcomeUserReportObj->getWelcomeUserReportListInfo($school->id, [2],$keywords, $page);
 
           $this->dataForView['dataList'] = $dataList;
 
@@ -73,7 +73,7 @@
            }
            // 列表
            $welcomeUserReportObj = new WelcomeUserReportDao();
-           $dataList = $welcomeUserReportObj->getWelcomeUserReportListInfo($school->id, [1], $page);
+           $dataList = $welcomeUserReportObj->getWelcomeUserReportListInfo($school->id, [1], $keywords, $page);
 
            $this->dataForView['dataList'] = $dataList;
 
@@ -104,7 +104,7 @@
 
            // 列表
            $welcomeUserReportObj = new WelcomeUserReportDao();
-           $dataList = $welcomeUserReportObj->getWelcomeUserReportListInfo($school->id, [3], $page);
+           $dataList = $welcomeUserReportObj->getWelcomeUserReportListInfo($school->id, [3],$keywords, $page);
 
            $this->dataForView['dataList'] = $dataList;
 
@@ -136,7 +136,7 @@
 
            // 列表
            $welcomeUserReportObj = new WelcomeUserReportDao();
-           $dataList = $welcomeUserReportObj->getUserReportsOrProjectsListInfo($school->id, [1, 3], 1, $index, $page);
+           $dataList = $welcomeUserReportObj->getUserReportsOrProjectsListInfo($school->id, [1, 3], $keywords,1, $index, $page);
 
            $this->dataForView['dataList'] = $dataList;
 
@@ -168,7 +168,7 @@
 
            // 列表
            $welcomeUserReportObj = new WelcomeUserReportDao();
-           $dataList = $welcomeUserReportObj->getUserReportsOrProjectsListInfo($school->id, [1, 3], 2, $index, $page);
+           $dataList = $welcomeUserReportObj->getUserReportsOrProjectsListInfo($school->id, [1, 3], $keywords,2, $index, $page);
 
            $this->dataForView['dataList'] = $dataList;
 
@@ -200,7 +200,7 @@
 
            // 列表
            $welcomeUserReportObj = new WelcomeUserReportDao();
-           $dataList = $welcomeUserReportObj->getUserReportsOrProjectsListInfo($school->id, [1, 3], 3, $index, $page);
+           $dataList = $welcomeUserReportObj->getUserReportsOrProjectsListInfo($school->id, [1, 3], $keywords,3, $index, $page);
 
            $this->dataForView['dataList'] = $dataList;
 
