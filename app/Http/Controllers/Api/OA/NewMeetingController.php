@@ -306,24 +306,31 @@ class NewMeetingController extends Controller
 
         $status = 0;  // 隐藏
         $meetUser = $info->meetUsers->where('user_id',$userId)->first();
-
+        $now = Carbon::now();
         if(!is_null($meetUser)) {
             // 需要签到
             if($info['signin_status'] == NewMeeting::SIGNIN) {
-                // 未签到
-                if($meetUser->signin_status == NewMeetingUser::UN_SIGNIN) {
-                    $status = 1; // 签到
-                } else {
-                    $status = 0; // 隐藏
+
+                if($now < $info->signin_end) {
+                    // 未签到
+                    if($meetUser->signin_status == NewMeetingUser::UN_SIGNIN) {
+                        $status = 1; // 签到
+                    } else {
+                        $status = 0; // 隐藏
+                    }
                 }
+
             }
 
             // 需要签退&& 已签退
             if($status == 0 && $info['signout_status'] == NewMeeting::SIGNOUT) {
-                if($meetUser->signout_status == NewMeetingUser::UN_SIGNOUT) {
-                    $status = 2; // 签退
-                } else {
-                    $status = 0; //隐藏
+                if($now < $info->signout_end) {
+                    if($meetUser->signout_status == NewMeetingUser::UN_SIGNOUT) {
+                        $status = 2; // 签退
+                    } else {
+                        $status = 0; //隐藏
+                    }
+
                 }
             }
         }
