@@ -310,7 +310,7 @@ class NewMeetingController extends Controller
         if(!is_null($meetUser)) {
             // 需要签到
             if($info['signin_status'] == NewMeeting::SIGNIN) {
-
+                // 当前时间小于签到的结束时间
                 if($now < $info->signin_end) {
                     // 未签到
                     if($meetUser->signin_status == NewMeetingUser::UN_SIGNIN) {
@@ -324,6 +324,7 @@ class NewMeetingController extends Controller
 
             // 需要签退&& 已签退
             if($status == 0 && $info['signout_status'] == NewMeeting::SIGNOUT) {
+                // 当前时间小于签退的结束时间
                 if($now < $info->signout_end) {
                     if($meetUser->signout_status == NewMeetingUser::UN_SIGNOUT) {
                         $status = 2; // 签退
