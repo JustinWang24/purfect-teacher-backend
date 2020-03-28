@@ -71,7 +71,7 @@ class FlowDao
     }
 
     public function getListByBusiness($schoolId, $business){
-        return Flow::where('school_id', $schoolId)->where('business', $business)->get();
+        return Flow::where('school_id', $schoolId)->where('business', $business)->where('closed', 0)->get();
     }
 
     public function transTitlesToUser($titles, $organizations, User $user) {
