@@ -185,7 +185,16 @@ class Flow extends Model implements IFlow
         if ($this->copy_uids) {
             //抄送人
             $uidArr = explode(';', $this->copy_uids);
-            $result['copy'] = GradeUser::whereIn('user_id', $uidArr)->select(['user_id', 'name'])->get();
+            $copyUsers = User::whereIn('id', $uidArr)->get();
+            if (!empty($copyUsers)) {
+                foreach ($copyUsers as $user) {
+                    $result['copy'][] = [
+                        'user_id' => $user->id,
+                        'name' => $user->name,
+                        'avatar' => $user->profile->avatar ?? ''
+                    ];
+                }
+            }
         }
         //表单
         if ($node->options) {
