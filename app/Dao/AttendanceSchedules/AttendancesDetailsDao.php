@@ -227,14 +227,15 @@ class AttendancesDetailsDao
                         'timetable_id' => $info['timetable_id'], 'student_id' => $item['user_id'],
                         'year' => $info['year'], 'term' => $info['term'], 'type' => AttendancesDetail::TYPE_MANUAL,
                         'week' => $info['week'], 'mold' => AttendancesDetail::MOLD_TRUANT, 'score'=>$item['score'],
-                        'weekday_index' => $info->timeTable->weekday_index
+                        'weekday_index' => $info->timeTable->weekday_index,
+                        'evaluate_status' => AttendancesDetail::EVALUATE_STATUS
                     ];
                     if(!empty($item['remark'])) {
                         $add['remark'] = $item['remark'];
                     }
                     AttendancesDetail::create($add);
                 } else {
-                    $save = ['score'=>$item['score']];
+                    $save = ['score'=>$item['score'],  'evaluate_status' => AttendancesDetail::EVALUATE_STATUS];
                     if(!empty($item['remark'])) {
                         $save['remark'] = $item['remark'];
                     }
