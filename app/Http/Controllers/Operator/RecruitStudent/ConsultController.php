@@ -7,6 +7,7 @@ use App\Utils\FlashMessageBuilder;
 use App\Dao\RecruitStudent\ConsultDao;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\RecruitStudent\ConsultRequest;
+use Illuminate\Support\Facades\Storage;
 
 class ConsultController extends Controller
 {
@@ -53,19 +54,30 @@ class ConsultController extends Controller
 
             // 招生简章
             if($request->has('config')){
+                $files = $request->file('file');
                 $configData = $request->get('config');
-                echo '<pre>';print_r($configData);exit;
+                if ($files) {
+                    $infos['name'] = $files->getClientOriginalName();
+                    $infos['type'] = $files->extension();
+                    $infos['size'] = getFileSize($files->getSize());
+                    $ext = $files->getClientOriginalExtension();
+                    $fileName = date('Y-m-d').'-'.rand(10000,99999).'.'.$ext;
+                    $uploadResult = Storage::disk('banner')->put($fileName, file_get_contents($files->getRealPath()));
+                    $config->recruitment_intro_pics =  '/storage/banner/'.$fileName;
+                }
+                // 请上传招封面图
+                if (empty($infos) && !isset($infos['path'])) {
+                    FlashMessageBuilder::Push($request, FlashMessageBuilder::DANGER, '请上传封面图');
+                }
                 $config->recruitment_intro = $configData['recruitment_intro'];
-                $config->recruitment_intro_pics = $configData['recruitment_intro_pics'];
                 if($config->save()){
                     FlashMessageBuilder::Push($request, 'success','招生简章已经成功保存!');
                 }
             }
         }
-
         $this->dataForView['note'] = $note;
         $this->dataForView['recruitment_intro'] = $config->recruitment_intro;
-        $this->dataForView['recruitment_intro_pics'] = $config->recruitment_intro_pcis;
+        $this->dataForView['recruitment_intro_pics'] = $config->recruitment_intro_pics;
         $this->dataForView['user'] = $user;
 
         return view('school_manager.recruitStudent.consult.note', $this->dataForView);
@@ -117,7 +129,6 @@ class ConsultController extends Controller
         $info = $consultDao->getConsultById($id);
         $this->dataForView['consult'] = $info;
         return view('school_manager.recruitStudent.consult.edit', $this->dataForView);
-
     }
 
     public function delete(ConsultRequest $request) {

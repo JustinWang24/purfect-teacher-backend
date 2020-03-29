@@ -37,7 +37,7 @@ class SchoolConfiguration extends Model
         'winter_start_date',
         'campus_intro',
         'recruitment_intro',
-        'recruitment_intro_pcis',
+        'recruitment_intro_pics',
         'open_for_uploading_qualification',
         'apply_status' // 选课状态 0关闭 1开启
     ];

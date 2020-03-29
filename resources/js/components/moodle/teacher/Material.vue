@@ -11,7 +11,7 @@
 
 
                             <el-form-item label="标题">
-                                <el-input placeholder="必填: 标题" v-model="course.id"></el-input>
+                                <el-input placeholder="必填: 标题" v-model="lectureModel.title"></el-input>
                             </el-form-item>
 
                             <el-form-item label="概要">
@@ -226,7 +226,7 @@
             }
         },
         created(){
-            console.log('zkkkkkkkkkkkkkkkkkkkkkkkkk'+course.id);
+            console.log('zkkkkkkkkkkkkkkkkkkkkkkkkk');
             this.getCourseGradeList(); // 获取 班级 和 课节
             this.materialTypes = Constants.COURSE_MATERIAL_TYPES_TEXT;
             this.lectureModel = this.lecture;

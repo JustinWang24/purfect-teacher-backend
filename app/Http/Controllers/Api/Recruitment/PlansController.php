@@ -38,7 +38,7 @@ class PlansController extends Controller
         $schoolConfiguration = (new SchoolConfiguration())->where('school_id', $schoolId)->first();
         return JsonBuilder::Success([
             'plans' => $plans,
-            'banner' => ['image' => isset($schoolConfiguration->recruitment_intro_pcis) ? $schoolConfiguration->recruitment_intro_pcis : ''],
+            'banner' => ['image' => !empty($schoolConfiguration->recruitment_intro_pics) ? asset($schoolConfiguration->recruitment_intro_pics) : ''],
             'school_id' => $schoolId
         ]);
     }
@@ -104,9 +104,6 @@ class PlansController extends Controller
         $dao = new RegistrationInformaticsDao();
         $info = $dao->getInformaticsByUserId($user->id);
         foreach ($info as $item) {
-            /**
-             * @var \App\Models\RecruitStudent\RegistrationInformatics $item
-             */
             $plans[] = [
                 'id'=>$item->id,
                 'name'=>$item->plan->major_name,
@@ -118,6 +115,7 @@ class PlansController extends Controller
                 'hot'=>$item->plan->hot,
                 'title'=>$item->plan->title,
                 'tease'=>$item->plan->tease,
+                'statusArr'=>$dao->getRegistrationInformaticsStatusInfo1($user->id, $item), // 获取我是否可以报名
             ];
         }
 
