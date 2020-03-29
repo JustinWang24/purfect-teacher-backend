@@ -30,7 +30,8 @@ if (document.getElementById('pipeline-flow-open-app')) {
         part: [],
         selectParts: [],
         flowType: null,
-        copys: []
+        copys: [],
+        handlers: []
       }
     },
     created(){
@@ -62,6 +63,8 @@ if (document.getElementById('pipeline-flow-open-app')) {
             let data = res.data.data;
             this.$set(this, 'flowType', data.flow.type)
             this.$set(this, 'copys', data.copys)
+            this.$set(this, 'handlers', data.handlers)
+
             // console.log(data)
             data.options.forEach((item, index) => {
               if (item.type == 'input' || item.type == 'textarea' || item.type == 'number') {

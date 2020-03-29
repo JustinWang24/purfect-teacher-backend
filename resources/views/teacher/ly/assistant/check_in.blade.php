@@ -54,6 +54,7 @@
                     </div>
                     <div class="card-body">
                         <el-table
+                                height="640"
                                 v-show="tableData.length > 0"
                                 :data="tableData">
                             <el-table-column

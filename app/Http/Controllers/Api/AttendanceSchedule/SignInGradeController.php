@@ -152,6 +152,7 @@ class SignInGradeController extends Controller
 
         $dao = new AttendancesDetailsDao();
         $list = $dao->getAttendDetailsByAttendanceId($attendanceId);
+        $status = array_column($list->toArray(),'evaluate_status','student_id');
         $molds = array_column($list->toArray(),'mold','student_id');
         $scores = array_column($list->toArray(),'score','student_id');
         $remarks = array_column($list->toArray(),'remark','student_id');
@@ -160,18 +161,14 @@ class SignInGradeController extends Controller
         foreach ($gradeUser as $key => $item) {
             $student[$key]['user_id'] = $item->user_id;
             $student[$key]['name'] = $item->name;
+            $student[$key]['mold'] = $molds[$item->user_id];
             $score[$key]['user_id'] = $item->user_id;
             $score[$key]['name'] = $item->name;
-            $score[$key]['name'] = $item->name;
+            $score[$key]['remark'] = $remarks[$item->user_id];
+            $score[$key]['score'] = $scores[$item->user_id];
 
-            if(array_key_exists($item->user_id,$molds)) {
-                $student[$key]['mold'] = $molds[$item->user_id];
-                $score[$key]['score'] = $scores[$item->user_id];
-                $score[$key]['remark'] = $remarks[$item->user_id];
-            } else {
-                $student[$key]['mold'] = 0;  // 未签到
+            if($status[$item->user_id] == 0) {
                 $score[$key]['score'] = 10;  // 默认10分
-                $score[$key]['remark'] = ''; // 备注
             }
         }
 
