@@ -303,7 +303,7 @@ class AttendancesDao
 
         $dao = new AttendancesDetailsDao();
         foreach ($gradeUser as $key => $val) {
-            $detail = $attendance->details->where(['student_id'=>$val->user_id])->first();
+            $detail = $attendance->details->where('student_id',$val->user_id)->first();
             // 为空再添加
             if(is_null($detail)) {
                 $details = [
