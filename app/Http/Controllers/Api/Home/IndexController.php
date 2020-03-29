@@ -473,6 +473,10 @@ class IndexController extends Controller
         $dao  = new AppProposalDao;
 
         $data   = $dao->getProposalByUserId($user->id);
+        foreach ($data as $val) {
+            $val->images;
+        }
+
         $result = pageReturn($data);
 
         return JsonBuilder::Success($result);

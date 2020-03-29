@@ -173,16 +173,18 @@ export default {
       immediate: true,
       handler(value) {
         setTimeout(() => {
-          if(!this.$refs.department){
-            return
+          if (!this.$refs.department) {
+            return;
           }
           this.$emit(
             "input",
-            this.$refs.department.presentTags
-              .map(tag => {
-                return tag.text;
-              })
-              .toString()
+            this.props.extra.depType === 2
+              ? this.$refs.department.presentTags
+                  .map(tag => {
+                    return tag.text;
+                  })
+                  .toString()
+              : this.$refs.department.presentText
           );
         });
       }
@@ -210,7 +212,7 @@ export default {
       end: "",
       orgProps: {
         lazy: true,
-        multiple: true,
+        multiple: this.props.extra.depType === 2 ? true : false,
         value: "id",
         label: "name",
         lazyLoad(node, resolve) {

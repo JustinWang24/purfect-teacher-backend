@@ -74,7 +74,7 @@ class SystemNotificationDao
     }
     if ($param['keywords']) {
       $condition[] = ['title', 'like', '%'.trim($param['keywords']).'%'];
-    }
+    } 
     return SystemNotification::where($condition)
       ->whereIn('to',$param['to'])
       ->orderBy('id', 'desc')

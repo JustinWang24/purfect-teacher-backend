@@ -13,6 +13,12 @@ class Building extends Model
     const TYPE_STUDENT_HOSTEL_BUILDING  = 2; // 宿舍楼
     const TYPE_HALL                     = 3; // 礼堂, 会堂
 
+    public $typeArr = [
+        self::TYPE_CLASSROOM_BUILDING =>'教学楼',
+        self::TYPE_STUDENT_HOSTEL_BUILDING =>'学生宿舍楼',
+        self::TYPE_HALL =>'会堂/食堂/会议室',
+    ];
+
     protected $fillable = [
         'school_id', 'name', 'campus_id','type','description'
     ];

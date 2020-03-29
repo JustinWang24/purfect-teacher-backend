@@ -55,7 +55,7 @@ class ProfilesController extends Controller
 
             $gGao = new GradeUserDao();
             $firstInstitute = (new InstituteDao())->getInstituteById($instituteId);
-            
+
             $gGao->create([
                 'user_id'=>$user->id,
                 'name'=>$user->name,

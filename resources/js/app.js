@@ -54,7 +54,7 @@ Vue.component('lecture', require('./components/moodle/teacher/Lecture').default)
 Vue.component('grade-table', require('./components/moodle/teacher/GradeTable').default); // 班级组件
 
 // 教师课件
-Vue.component('material-lecture', require('./components/moodle/teacher/MaterialLecture').default); // 课件组件
+Vue.component('material', require('./components/moodle/teacher/Material').default);
 
 require('./includes/backend/school_calendar_app'); // 后台: 校历的管理
 require('./includes/backend/notice_manager_app'); // 后台: Notice 的管理

@@ -20,9 +20,11 @@
           color: #6f7275;
         }
         p:nth-child(2) {
-          flex: 3;
+          flex: 2;
           color: #333333;
           text-align: right;
+          font-family: PingFangSC-Regular, PingFang SC;
+          font-weight: 400;
         }
       }
       .reason {
@@ -60,6 +62,11 @@
       }
       .el-timeline-item {
         padding-bottom: 10px;
+        .el-timeline-item__content {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+        }
       }
     }
     .el-dialog__header {

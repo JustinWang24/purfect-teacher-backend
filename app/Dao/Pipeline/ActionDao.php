@@ -68,7 +68,7 @@ class ActionDao
                 ];
             }
             if ($option->title == '参会人数') {
-                $users = $meet->meetUsers;
+                $users = $meet->meetUsers->pluck('user_id')->toArray();
                 array_push($users, $meet['approve_userid']);
                 $users = array_unique($users);
 

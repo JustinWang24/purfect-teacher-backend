@@ -14,6 +14,7 @@ use App\User;
 use App\Utils\JsonBuilder;
 use App\Models\OA\NewMeeting;
 use App\Utils\ReturnData\MessageBag;
+use Illuminate\Support\Facades\Log;
 
 class OaMeetingLogic
 {
@@ -25,6 +26,7 @@ class OaMeetingLogic
 
     public function handle($options)
     {
+        Log::debug(json_encode($options));
         $bag = new MessageBag(JsonBuilder::CODE_ERROR);
         try {
             // 审核会议
@@ -34,7 +36,7 @@ class OaMeetingLogic
             } else {
                 $status = NewMeeting::STATUS_REFUSE; // 拒绝
             }
-            $save = ['status'=>$options['pipeline_done']];
+            $save = ['status'=>$status];
             NewMeeting::where($map)->update($save);
 
 
@@ -42,7 +44,7 @@ class OaMeetingLogic
                 $dao = new NewMeetingDao();
                 $meet = $dao->meetDetails($options['meet_id']);
                 // 参会人员
-                $users = $meet->meetUsers;
+                $users = $meet->meetUsers->pluck('user_id')->toArray();
                 array_push($users, $meet['approve_userid']);
                 $users = array_unique($users);
                 //通知负责人和成员
