@@ -19,6 +19,8 @@ class StudentsController extends Controller
         $student = $dao->getUserByUuid($request->uuid());
         $this->dataForView['gradeManager'] = GradeManager::where('monitor_id',$student->id)->first();
         $this->dataForView['student'] = $student;
+        $grade = $student->gradeUser();
+        $this->dataForView['is_show'] = $grade?1:0;
         $this->dataForView['pageTitle'] = '档案管理';
         return view('student.edit', $this->dataForView);
     }
