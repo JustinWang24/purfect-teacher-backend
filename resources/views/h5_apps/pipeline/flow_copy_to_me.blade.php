@@ -8,6 +8,7 @@
         </p>
     </div>
     <div class="main p-15" v-cloak>
+        
         <div v-if="position !== '0'">
             <el-input placeholder="搜索标题、发起人关键字" v-model="keyword" style="margin-bottom: 10px;" @change="loadFlowsCopyByMe"></el-input>
         </div>
