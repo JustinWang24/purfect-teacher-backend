@@ -70,9 +70,7 @@ class FrontendLogic implements IPlansLoaderLogic
           $regDao = new RegistrationInformaticsDao();
             foreach ($rows as $row) {
               // 获取我是否可以报名
-              $statusMessageArr = $regDao->getRegistrationInformaticsStatusInfo($this->userId, $row);
-              $applied = $statusMessageArr['status'] == 100 ? false : $statusMessageArr['message1'];
-
+              $statusArr = $regDao->getRegistrationInformaticsStatusInfo($this->userId, $row);
                 // 返回数据
                 $plans[] = [
                     'id'=>$row->id,
@@ -82,7 +80,8 @@ class FrontendLogic implements IPlansLoaderLogic
                     'seats'=>$row->seats, // 招生人数
                     'applied_count'=>$row->applied_count, // 报名人数
                     'enrolled'=>$row->enrolled_count, // 已招生人数
-                    'applied'=>$applied,
+                    'applied'=>$statusArr['status'] == 100 ? false : $statusArr['message1'],
+                    'statusArr'=>$statusArr,
                     'hot'=>$row->hot,
                     'title'=>$row->title,
                     'tease'=>$row->tease,

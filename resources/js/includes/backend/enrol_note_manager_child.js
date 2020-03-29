@@ -1,6 +1,3 @@
-/**
- * 校园风光
- */
 import {} from "../../common/welcomes";
 import {Constants} from "../../common/constants";
 import {Util} from "../../common/utils";
