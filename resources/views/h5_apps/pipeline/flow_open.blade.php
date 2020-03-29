@@ -208,8 +208,20 @@
             </div>
         </div>
     </div>
-
-
+    <div v-if="flowType >= 100 && flowType <= 199 ">
+            <h5 style="background:white;margin:0;padding: 10px">审批流程</h5>
+            <el-timeline>
+                @foreach($flow->nodes as $key=>$n)
+                <el-timeline-item
+                        key="{{ $key }}">
+                    {{ $n->name }}
+                </el-timeline-item>
+                @endforeach
+                <el-timeline-item v-for="item in copys">
+                    <span v-text="'抄送人：'+ item.name"></span>
+                </el-timeline-item>
+            </el-timeline>
+    </div>
 
 
           <div style="width: 100%;background: white;text-align: center;margin-top:10px;padding-top:40px">
