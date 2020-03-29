@@ -59,12 +59,15 @@ if (document.getElementById('pipeline-flow-open-app')) {
           if (Util.isAjaxResOk(res)) {
             let data = res.data.data;
             // console.log(data)
-            this.formList = data.options;
-            this.formList.forEach((item, index) => {
+            data.options.forEach((item, index) => {
               if (item.type == 'input' || item.type == 'textarea' || item.type == 'number') {
-                this.$set(item, 'value', '')
+                if (!item.default) {
+                  this.$set(item, 'value', '')
+                }
               }
             });
+            this.$set(this, 'formList', data.options)
+            // this.formList = data.options;
             // console.log(this.formList)
           }
         }).catch((err) => {
