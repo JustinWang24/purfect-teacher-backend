@@ -186,7 +186,7 @@ class AfficheDao extends \App\Dao\Affiche\CommonDao
 
         $data = AffichePics::where($condition)
                 ->select(['picsid', 'pics_smallurl', 'pics_bigurl'])
-                ->orderBy('picsid', 'desc')
+                ->orderBy('picsid', 'asc')
                 ->get();
 
         return !empty($data->toArray()) ? $data->toArray() : [];
@@ -209,7 +209,7 @@ class AfficheDao extends \App\Dao\Affiche\CommonDao
 
         $data = AfficheVideo::where($condition)
             ->select(['video_url', 'cover_url', 'video_url'])
-            ->orderBy('videoid', 'desc')
+            ->orderBy('videoid', 'asc')
             ->get();
 
         return  !empty($data->toArray()) ? $data->toArray() : [];
