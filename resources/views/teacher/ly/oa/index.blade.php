@@ -4,7 +4,6 @@
     <div class="col-sm-12 col-md-12 col-xl-12">
         <div class="teacher_oa_card" v-cloak>
             <dl class="teacher_oa_card_body" v-for="item in iconList" :key="item.name">
-
                 <a :href="item.url">
                     <dt><img :src="item.icon" alt=""></dt>
                     <dd>@{{ item.name }}</dd>
