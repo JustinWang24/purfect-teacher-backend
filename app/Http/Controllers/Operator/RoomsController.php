@@ -36,6 +36,7 @@ class RoomsController extends Controller
     public function edit(RoomRequest $request){
         $dao = new RoomDao($request->user());
         $room = $dao->getRoomById($request->uuid());
+//        dd($room->url);
         $this->dataForView['room'] = $room;
         $this->dataForView['building'] = $room->building;
         return view('school_manager.room.edit', $this->dataForView);
@@ -59,28 +60,40 @@ class RoomsController extends Controller
     }
 
     /**
-     * 保存校区的方法
+     *
      * @param RoomRequest $request
      * @return \Illuminate\Http\RedirectResponse
      */
+
+
+    /**
+     * 保存房间的方法
+     * @param RoomRequest $request
+     * @return \Illuminate\Http\RedirectResponse
+     * @throws \Exception
+     */
     public function update(RoomRequest $request){
+        $user = $request->user();
         $roomData = $request->get('room');
+        $file = $request->getFile();
         $roomData['school_id'] = $request->session()->get('school.id');
         $roomDao = new RoomDao($request->user());
 
         if(isset($roomData['id'])){
-            $result = $roomDao->updateRoom($roomData);
+            $result = $roomDao->updateRoom($roomData,$user, $file);
         }
         else{
             // 新建房间
-            $result = $roomDao->createRoom($roomData);
+            $result = $roomDao->createRoom($roomData,$user, $file);
         }
 
-        if($result){
-            FlashMessageBuilder::Push($request, FlashMessageBuilder::SUCCESS,$roomData['name'].'房间保存成功');
+        $msg = $result->getMessage();
+        if($result->isSuccess()){
+            FlashMessageBuilder::Push($request, FlashMessageBuilder::SUCCESS,$msg);
+            return redirect()->route('school_manager.building.rooms',['uuid'=>$roomData['building_id']]);
         }else{
-            FlashMessageBuilder::Push($request, FlashMessageBuilder::DANGER,'无法保存房间'.$roomData['name']);
+            FlashMessageBuilder::Push($request, FlashMessageBuilder::DANGER,$msg);
+            return redirect()->route('school_manager.room.add',['uuid'=>$roomData['building_id']]);
         }
-        return redirect()->route('school_manager.building.rooms',['uuid'=>$roomData['building_id']]);
     }
 }
