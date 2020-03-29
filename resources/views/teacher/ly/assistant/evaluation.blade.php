@@ -54,6 +54,7 @@
                     </div>
                     <div class="card-body">
                         <el-table
+                                height="640"
                                 v-show="tableData.length > 0"
                                 :show-header="false"
                                 :data="tableData">
@@ -93,7 +94,7 @@
                             <span style="float: right" v-text="stuName"></span>
                         </header>
                     </div>
-                    <div class="card-body">
+                    <div class="card-body" style="overflow-y: auto;height: 644px;">
                         <div v-show="nodeData.length > 0" class="eva_note" v-for="(item, i) in nodeData">
                             <div class="eva_noteTitle" v-html="item.time + ' ' + item.timeSlot"></div>
                             <div class="eva_noteText" v-html="item.remark"></div>

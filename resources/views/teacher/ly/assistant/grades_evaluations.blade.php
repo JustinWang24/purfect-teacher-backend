@@ -29,6 +29,7 @@
                 </div>
                 <div class="card-body">
                     <el-table
+                            height="600"
                              v-show="data.length > 0"
                             :show-header="false"
                             :data="data">
@@ -70,6 +71,7 @@
                     </div>
                     <div class="card-body">
                         <el-table
+                                height="600"
                                  v-show="tableData.length > 0"
                                 :show-header="false"
                                 :data="tableData">
@@ -81,6 +83,16 @@
                                     align="right">
                             </el-table-column>
                         </el-table>
+                        <el-pagination
+                          background
+                          style="text-align: right;"
+                          v-if="detailPage"
+                          layout="prev, pager, next"
+                          :page-size="20"
+                          :current-page.sync="detailPage.currentPage"
+                          @current-change="detailChange"
+                          :total="detailPage.total">
+                        </el-pagination>
                         <div v-show="data.tableData == 0" class="no-data-img">
                             <img src="{{ asset('assets/img/teacher_blade/no-data.png') }}" alt="">
                             <p>当前列表暂时没有数据哦~</p>

@@ -232,7 +232,6 @@
             this.lectureModel = this.lecture;
         },
         methods: {
-            console.log(this._props,"props.......")
             getCourseGradeList: function(){
                 axios.post(
                     '/api/material/getCourseGradeList',
