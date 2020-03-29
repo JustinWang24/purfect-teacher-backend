@@ -299,7 +299,8 @@ class AttendancesDao
             // 创建签到总表
             $attendance = $this->createAttendanceData($timetable);
         }
-        $gradeUser = $attendance->gradeUser;
+        $gradeUser = $attendance->grade->gradeUser;
+
         $dao = new AttendancesDetailsDao();
         foreach ($gradeUser as $key => $val) {
             $details = [
