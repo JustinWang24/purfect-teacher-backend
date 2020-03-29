@@ -91,4 +91,15 @@ class NewMeetingUser extends Model
         $time = $signout_start->format('H:i'). '–' .$signout_end->format('H:i');
         return $signout_start->toDateString().' '. $time;
     }
+
+
+
+    public function getUserSignOutTime() {
+        return Carbon::parse($this->signout_time)->format('Y-m-d H:i');
+    }
+
+
+    public function getUserSignInTime() {
+        return Carbon::parse($this->signin_time)->format('Y-m-d H:i');
+    }
 }

@@ -228,7 +228,7 @@ class NewMeetingDao
                 $url = $item->storeAs($path, $uuid.'.'.$item->getClientOriginalExtension()); // 上传并返回路径
                 $summary = [
                     'meet_id' => $meetId,
-                    'meet_user_id' => $meetUser->id,
+                    'meet_user_id' => $meetUser->id??0,
                     'user_id' => $userId,
                     'url'     => NewMeetingSummary::ConvertUploadPathToUrl($url),
                     'file_name' => $item->getClientOriginalName(),
@@ -334,11 +334,11 @@ class NewMeetingDao
                 return $messageBag;
             }
 
-            if($now < $meet->meet_end ) {
-                $status = 2; // 早退
-            } else {
-                $status = 1; // 正常
-            }
+            $status = 1; // 正常
+
+//            if($now < $meet->signout_start ) {
+//                $status = 2; // 早退
+//            }
             $msg = '签退';
             $save = ['signout_status'=>$status, 'signout_time'=>$now];
         }
