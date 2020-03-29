@@ -197,6 +197,7 @@ class NewMeetingController extends Controller
         $result = pageReturn($return);
         $data = [];
         foreach ($result['list'] as $key => $item) {
+            $meetUser = $item->meetUsers->first();
             $data[] = [
                 'meet_id' => $item->id,
                 'meet_title' => $item->meet_title,
@@ -207,8 +208,8 @@ class NewMeetingController extends Controller
                 'signout_time' => '',
                 'is_signin' => 0,
                 'is_signout' => 0,
-                'signin_status' =>  $item->signin_status,
-                'signout_status' => $item->signout_status,
+                'signin_status' =>  $meetUser->signin_status,
+                'signout_status' => $meetUser->signout_status,
             ];
             // 判断是否需要签到
             if($item->signin_status == NewMeeting::SIGNIN) {
