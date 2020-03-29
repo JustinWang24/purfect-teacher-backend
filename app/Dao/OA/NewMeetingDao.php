@@ -228,7 +228,7 @@ class NewMeetingDao
                 $url = $item->storeAs($path, $uuid.'.'.$item->getClientOriginalExtension()); // 上传并返回路径
                 $summary = [
                     'meet_id' => $meetId,
-                    'meet_user_id' => $meetUser->id,
+                    'meet_user_id' => $meetUser->id??0,
                     'user_id' => $userId,
                     'url'     => NewMeetingSummary::ConvertUploadPathToUrl($url),
                     'file_name' => $item->getClientOriginalName(),
