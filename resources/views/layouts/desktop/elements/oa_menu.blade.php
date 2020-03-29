@@ -18,7 +18,7 @@
         <li class="nav-item">
             {{--teacher.conference.index--}}
             <a href="{{ route('school_manager.meeting.list',['uuid'=>session('school.uuid')]) }}" class="nav-link ">
-                <span class="title">会议管理1</span>
+                <span class="title">会议管理</span>
             </a>
         </li>
         <li class="nav-item">

@@ -26,6 +26,7 @@ class NewMeetingController extends Controller
         $schoolId = $request->getSchoolId();
         $dao = new NewMeetingDao();
         $list = $dao->getMeetingBySchoolId($schoolId);
+//        dd($list);
         $this->dataForView['list'] = $list;
         $this->dataForView['now'] = Carbon::now();
         return view('school_manager.meeting.list', $this->dataForView);
