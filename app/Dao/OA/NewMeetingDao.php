@@ -213,8 +213,9 @@ class NewMeetingDao
     public function saveMeetSummary($meetId,$userId,$summaries) {
         $messageBag = new MessageBag(JsonBuilder::CODE_ERROR);
         $map = ['meet_id'=>$meetId, 'user_id'=>$userId];
+        $meet = $this->getMeetByMeetId($meetId);
         $meetUser = NewMeetingUser::where($map)->first();
-        if(is_null($meetUser)) {
+        if(is_null($meetUser) && $meet->user_id != $userId && $meet->approve_userid != $userId) {
             $messageBag->setMessage('您不是该会议的成员');
             return $messageBag;
         }
