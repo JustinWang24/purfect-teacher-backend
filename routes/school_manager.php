@@ -604,7 +604,7 @@ Route::prefix('school_manager')->group(function () {
     // 会议
     Route::prefix('meeting')->group(function (){
         // 会议列表
-        Route::get('list','Oa\NewMeetingController@index')
+        Route::get('list','OA\NewMeetingController@index')
             ->name('school_manager.meeting.list');
     });
 
