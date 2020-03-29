@@ -24,8 +24,7 @@ use App\Utils\UI\Button;
                 :before-upload="handlePreview"
                 :file-list="fileList"
                 :limit="1"
-                list-type="picture"
-              >
+                list-type="picture">
               <div
                 style="height: 40px;
                       background-color: #fff;

@@ -35,9 +35,7 @@ class ConsultController extends Controller
         $note = RecruitNote::where('school_id', session('school.id'))->first();
         // 招生简章
         $config = SchoolConfiguration::where('school_id', session('school.id'))->first();
-        $recruitment_intro = $config->recruitment_intro;
 
-        // 由于需求太简单, 就不去使用 Dao 了, 而是直接操作 Model. 后期如果需求变复杂, 还是要回归 Dao 的方式
         if($request->isMethod('post')){
           //print_r($request->has('note'));exit;
             if($request->has('note')){
@@ -53,18 +51,21 @@ class ConsultController extends Controller
                 }
             }
 
-
             // 招生简章
             if($request->has('config')){
                 $configData = $request->get('config');
+                echo '<pre>';print_r($configData);exit;
                 $config->recruitment_intro = $configData['recruitment_intro'];
+                $config->recruitment_intro_pics = $configData['recruitment_intro_pics'];
                 if($config->save()){
                     FlashMessageBuilder::Push($request, 'success','招生简章已经成功保存!');
                 }
             }
         }
+
         $this->dataForView['note'] = $note;
-        $this->dataForView['recruitment_intro'] = $recruitment_intro;
+        $this->dataForView['recruitment_intro'] = $config->recruitment_intro;
+        $this->dataForView['recruitment_intro_pics'] = $config->recruitment_intro_pcis;
         $this->dataForView['user'] = $user;
 
         return view('school_manager.recruitStudent.consult.note', $this->dataForView);

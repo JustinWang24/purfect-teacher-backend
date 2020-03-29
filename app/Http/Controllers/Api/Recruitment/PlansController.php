@@ -10,6 +10,7 @@ use App\Dao\RecruitStudent\RegistrationInformaticsDao;
 use App\Dao\Schools\OrganizationDao;
 use App\Http\Requests\RecruitStudent\PlanRecruitRequest;
 use App\Models\Banner\Banner;
+use App\Models\Schools\SchoolConfiguration;
 use App\User;
 use App\Utils\JsonBuilder;
 use Illuminate\Http\Request;
@@ -22,26 +23,23 @@ class PlansController extends Controller
      * @return string
      */
     public function load_plans(PlanRecruitRequest $request){
+
         $logic = PlansLoader::GetInstance($request, $request->getYear());
         $plans = [];
         if($logic){
             $plans = $logic->getPlans();
         }
+
         $user = $request->user('api');
 
-        // 添加图片，招生资源位作为查询的依据
         $schoolId = $user ? $user->getSchoolId() : $request->getSchoolId();
-        $bannerImages = (new BannerDao())->getBannerBySchoolIdAndPosit($schoolId, Banner::POSIT_1);
-        $image = '';
-        if($bannerImages->count() > 0){
-            $banner = $bannerImages[0];
-            $image = $banner->image_url;
-        }
 
+        // 获取招生简章图片
+        $schoolConfiguration = (new SchoolConfiguration())->where('school_id', $schoolId)->first();
         return JsonBuilder::Success([
-            'plans'=>$plans,
-            'banner'=>['image'=>$image],
-            'school_id'=>$schoolId
+            'plans' => $plans,
+            'banner' => ['image' => isset($schoolConfiguration->recruitment_intro_pcis) ? $schoolConfiguration->recruitment_intro_pcis : ''],
+            'school_id' => $schoolId
         ]);
     }
 

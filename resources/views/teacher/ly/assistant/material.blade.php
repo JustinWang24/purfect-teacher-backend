@@ -121,7 +121,7 @@
       </div>
 
     <div  v-show="activeIndex === 4 ">
-        <material :grades="grades" :lecture="lecture" v-if="lecture" :loading="loadingData" user-uuid="{{ $teacher->uuid }}"></material>
+        <material :course="course" :grades="grades" :lecture="lecture" v-if="lecture" :loading="loadingData" user-uuid="{{ $teacher->uuid }}"></material>
     </div>
 
     </div>
