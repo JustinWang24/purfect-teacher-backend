@@ -334,11 +334,11 @@ class NewMeetingDao
                 return $messageBag;
             }
 
-            if($now < $meet->meet_end ) {
-                $status = 2; // 早退
-            } else {
-                $status = 1; // 正常
-            }
+            $status = 1; // 正常
+
+//            if($now < $meet->signout_start ) {
+//                $status = 2; // 早退
+//            }
             $msg = '签退';
             $save = ['signout_status'=>$status, 'signout_time'=>$now];
         }

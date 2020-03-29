@@ -518,9 +518,9 @@ class NewMeetingController extends Controller
         $return = $dao->getMeetUser($meetId, $userId);
         $result = [
             'signin_status' => $return->signin_status,
-            'signin_time' => $return->signin_time,
+            'signin_time' => $return->getUserSignInTime(),
             'signout_status' => $return->signout_status,
-            'signout_time' => $return->signout_time
+            'signout_time' => $return->getUserSignOutTime()
         ];
 
         return JsonBuilder::Success($result);
