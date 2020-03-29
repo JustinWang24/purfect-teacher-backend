@@ -16,8 +16,9 @@
             </a>
         </li>
         <li class="nav-item">
-            <a href="{{ route('teacher.conference.index',['uuid'=>session('school.uuid')]) }}" class="nav-link ">
-                <span class="title">会议管理</span>
+            {{--teacher.conference.index--}}
+            <a href="{{ route('school_manager.meeting.list',['uuid'=>session('school.uuid')]) }}" class="nav-link ">
+                <span class="title">会议管理1</span>
             </a>
         </li>
         <li class="nav-item">

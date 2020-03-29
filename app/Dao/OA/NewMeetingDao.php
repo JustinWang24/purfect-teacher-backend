@@ -354,6 +354,16 @@ class NewMeetingDao
     }
 
 
+    /**
+     * 获取学校会议列表
+     * @param $schoolId
+     * @return mixed
+     */
+    public function getMeetingBySchoolId($schoolId) {
+        return NewMeeting::where('school_id',$schoolId)
+            ->orderBy('created_at','desc')
+            ->paginate(ConfigurationTool::DEFAULT_PAGE_SIZE);
+    }
 
 
 }

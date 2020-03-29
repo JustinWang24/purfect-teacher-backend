@@ -601,6 +601,12 @@ Route::prefix('school_manager')->group(function () {
         Route::any('result/{id}', 'ImporterController@result')->name('school_manager.importer.result');
     });
 
+    // 会议
+    Route::prefix('meeting')->group(function (){
+        // 会议列表
+        Route::get('list','Oa\NewMeetingController@index')
+            ->name('school_manager.meeting.list');
+    });
 
 });
 
