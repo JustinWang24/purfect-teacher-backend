@@ -42,42 +42,38 @@ if (document.getElementById('student-homepage-app')) {
         methods: {
             // in_progress=我发起的
             loadFlowsStartedByMe: function () {
-                this.isLoading = true;
+                this.loading = false;
                 startedByMe(this.userUuid, this.keyword, this.position, this.page, this.size).then(res => {
                     if (Util.isAjaxResOk(res)) {
                         this.flowsStartedByMe = res.data.data.flows;
                     }
-                    this.isLoading = false;
                 });
             },
             // waiting_for_me=待我审批
             loadFlowsWaitingByMe: function () {
-                this.isLoading = true;
+                this.isLoading = false;
                 waitingByMe(this.userUuid, this.keyword, this.position, this.page, this.size).then(res => {
                     if (Util.isAjaxResOk(res)) {
                         this.waitingList = res.data.data.flows;
                     }
-                    this.isLoading = false;
                 });
             },
             // my_processed=我审批的
             loadFlowsProcessedByMe: function () {
-                this.isLoading = true;
+                this.isLoading = false;
                 processedByMe(this.userUuid, this.keyword, this.position, this.page, this.size).then(res => {
                     if (Util.isAjaxResOk(res)) {
                         this.processedList = res.data.data.flows;
                     }
-                    this.isLoading = false;
                 });
             },
             // copy_to_me=抄送我的
             loadFlowsCopyByMe: function () {
-                this.isLoading = true;
+                this.isLoading = false;
                 copyByMe(this.userUuid, this.keyword, this.position, this.page, this.size).then(res => {
                     if (Util.isAjaxResOk(res)) {
                         this.copyList = res.data.data.flows;
                     }
-                    this.isLoading = false;
                 });
             },
             into() {
