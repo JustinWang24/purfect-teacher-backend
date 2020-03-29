@@ -12,7 +12,7 @@ use App\Utils\UI\Button;
                     <header>在校区 (<a href="{{ route('school_manager.campus.buildings',['uuid'=>$building->campus->id]) }}">{{ $building->campus->name }}</a>) 的 <a href="{{ route('school_manager.building.rooms',['uuid'=>$building->id]) }}">{{ $building->name }}</a> 创建新房间</header>
                 </div>
                 <div class="card-body">
-                    <form action="{{ route('school_manager.room.update') }}" method="post"  id="add-room-form">
+                    <form action="{{ route('school_manager.room.update') }}" method="post"  id="add-room-form" enctype="multipart/form-data">
                         @csrf
                         <input type="hidden" id="room-campus-id" name="room[campus_id]" value="{{ $building->campus->id }}">
                         <input type="hidden" id="room-building-id" name="room[building_id]" value="{{ $building->id }}">
@@ -49,6 +49,10 @@ use App\Utils\UI\Button;
                         <div class="form-group">
                             <label for="room-desc-input">房间名称</label>
                             <input required class="form-control" name="room[description]" id="room-desc-input" value="{{ $room->description }}" cols="30" rows="10" placeholder="房间名称">
+                        </div>
+                        <div class="form-group">
+                            <label>房间图片</label>
+                            <input  type="file" class="form-control" name="file">
                         </div>
                         <?php
                         Button::Print(['id'=>'btn-create-room','text'=>trans('general.submit')], Button::TYPE_PRIMARY);

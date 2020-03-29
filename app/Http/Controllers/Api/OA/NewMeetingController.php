@@ -43,7 +43,7 @@ class NewMeetingController extends Controller
         foreach ($rooms as $key => $item) {
             $result[$key] = [
                 'room_id'=>$item->id,
-                'img' => '',
+                'img' => $item->url,
                 'name' => $item->description,
                 'seats' => $item->seats,
                 'start' => '8:00',

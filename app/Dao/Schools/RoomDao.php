@@ -9,7 +9,11 @@
 namespace App\Dao\Schools;
 use App\User;
 use App\Models\Schools\Room;
+use App\Utils\JsonBuilder;
+use App\Utils\ReturnData\MessageBag;
+use GuzzleHttp\Psr7\UploadedFile;
 use Illuminate\Support\Collection;
+use Ramsey\Uuid\Uuid;
 
 class RoomDao
 {
@@ -78,12 +82,59 @@ class RoomDao
 
 
     /**
+     * 添加房间
      * @param $data
-     * @return Room
+     * @param $user
+     * @param $file
+     * @return MessageBag
+     * @throws \Exception
      */
-    public function createRoom($data){
-        return Room::create($data);
+    public function createRoom($data, $user, $file){
+        $messageBag = new MessageBag(JsonBuilder::CODE_ERROR);
+        $info = $this->getRoomByCodeAndSchoolId($data['school_id'], $data['name']);
+        if(!is_null($info)) {
+            $messageBag->setMessage('该编号已存在');
+            return $messageBag;
+        }
+
+        $re = $this->upload($file,$user);
+        if(!is_null($re)) {
+            $data['url'] = $re['url'];
+            $data['file_name'] = $re['file_name'];
+        }
+
+        $result = Room::create($data);
+        if($result) {
+            $messageBag->setCode(JsonBuilder::CODE_SUCCESS);
+            $messageBag->setData(['room_id'=>$result['id']]);
+            $messageBag->setMessage('房间保存成功');
+        } else {
+            $messageBag->setMessage('房间保存失败');
+        }
+        return $messageBag;
     }
+
+
+    /**
+     * 上传文件
+     * @param $file
+     * @param $user
+     * @return array|null
+     * @throws \Exception
+     */
+    public function upload($file, $user) {
+        if(!is_null($file)) {
+            $path = Room::DEFAULT_UPLOAD_PATH_PREFIX.$user->id; // 上传路径
+            $uuid = Uuid::uuid4()->toString();
+            $url = $file->storeAs($path, $uuid.'.'.$file->getClientOriginalExtension()); // 上传并返回路径
+            $url = Room::ConvertUploadPathToUrl($url);
+            $fileName = $file->getClientOriginalName();
+            return ['url'=>$url,'file_name'=>$fileName];
+        }
+        return null;
+    }
+
+
 
     /**
      * 删除房间数据
@@ -94,20 +145,32 @@ class RoomDao
         return Room::where('id',$roomId)->delete();
     }
 
+
     /**
      * 更新 Room 数据
      * @param $data
-     * @param null $where
-     * @param null $whereValue
-     * @return mixed
+     * @param $user
+     * @param $file
+     * @return MessageBag
+     * @throws \Exception
      */
-    public function updateRoom($data, $where = null, $whereValue = null){
+    public function updateRoom($data,$user, $file){
         $id = $data['id'];
         unset($data['id']);
-        if($where && $whereValue){
-            return Room::where($where, $whereValue)->update($data);
+        $message = new MessageBag(JsonBuilder::CODE_ERROR);
+        $re = $this->upload($file,$user);
+        if(!is_null($re)) {
+            $data['url'] = $re['url'];
+            $data['file_name'] = $re['file_name'];
         }
-        return Room::where('id', $id)->update($data);
+        $result = Room::where('id', $id)->update($data);
+        if($result === false) {
+            $message->setMessage('更新失败');
+        } else {
+            $message->setMessage('更新成功');
+            $message->setCode(JsonBuilder::CODE_SUCCESS);
+        }
+        return $message;
     }
 
 
@@ -150,5 +213,17 @@ class RoomDao
         }
         return Room::select(['building_id','name','seats'])->where($where)->with('building:id,name')
             ->orderBy('building_id','asc')->get();
+    }
+
+
+    /**
+     * 根据编号查询房间
+     * @param $schoolId
+     * @param $code
+     * @return mixed
+     */
+    public function getRoomByCodeAndSchoolId($schoolId, $code) {
+        $map = ['school_id'=>$schoolId, 'name'=>$code];
+        return Room::where($map)->first();
     }
 }
