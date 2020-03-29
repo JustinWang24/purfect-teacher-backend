@@ -41,10 +41,17 @@ class PagesController extends Controller
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function school_enrolment_notes(Request $request){
-        $this->dataForView['pageTitle'] = ''; // 报名须知
-        $this->dataForView['api_token'] = Auth::user()->api_token ?? null;
+        $token = $request->get('api_token');
+        $school_id = 0;
+        if ($token) {
+            $getUserByApiToken = (new UserDao())->getUserByApiToken($token);
+            if (!empty($getUserByApiToken)) {
+                $gradeUserOneInfo = $getUserByApiToken->gradeUserOneInfo;
+                $school_id = isset($gradeUserOneInfo->school_id) ? $gradeUserOneInfo->school_id : $school_id;
+            }
+        }
 
-        $this->dataForView['note'] = RecruitNote::where('school_id',1)->first();
+        $this->dataForView['note'] = RecruitNote::where('school_id',$school_id)->first();
 
         return view('h5_apps.student.school_enrolment_notes', $this->dataForView);
     }
