@@ -23,7 +23,6 @@ use App\Utils\UI\Button;
                                     <img src="{{ $recruitment_intro_pics }}" class="img-responsive center-block">
                                 </div>
                                 <input type="hidden" name="config[school_id]" value="{{ session('school.id') }}">
-                                <input type="hidden" name="config[recruitment_intro_pics]" v-model="image_url">
                                 <div class="form-group">
                                     <Redactor v-model="recruitment_intro" placeholder="请输入招生简章" :config="configOptions" name="config[recruitment_intro]" />
                                     @{{ recruitment_intro }}
