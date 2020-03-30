@@ -72,4 +72,7 @@ use App\Utils\UI\Button;
             </div>
         </div>
     </div>
+<script>
+
+</script>
 @endsection

@@ -27,7 +27,9 @@ Route::prefix('statics')->group(function () {
     Route::get('management/system', 'Statics\PagesController@system')->name('static.management.system');
 });
 Route::prefix('static')->group(function () {
-    // 报名须知页面
+    // 校园简介
+    Route::get('/school/campus-intro', 'Statics\PagesController@school_campus_intro')->name('static.school.campus-intro');
+    // 招生报名须知页面
     Route::get('/school/enrolment-notes', 'Statics\PagesController@school_enrolment_notes')->name('static.school.enrolment-notes');
     // 招生简章页面
     Route::get('/school/recruitment-intro', 'Statics\PagesController@school_recruitment_intro')->name('static.school.recruitment-intro');

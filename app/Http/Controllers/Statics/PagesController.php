@@ -36,6 +36,26 @@ class PagesController extends Controller
     }
 
     /**
+     * 校园简介
+     * @param Request $request
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function school_campus_intro(Request $request){
+        $token = $request->get('api_token');
+        $school_id = 0;
+        if ($token) {
+            $getUserByApiToken = (new UserDao())->getUserByApiToken($token);
+            if (!empty($getUserByApiToken)) {
+                $gradeUserOneInfo = $getUserByApiToken->gradeUserOneInfo;
+                $school_id = isset($gradeUserOneInfo->school_id) ? $gradeUserOneInfo->school_id : $school_id;
+            }
+        }
+        $this->dataForView['config'] = SchoolConfiguration::where('school_id',$school_id)->first();
+
+        return view('h5_apps.student.school_campus_intro', $this->dataForView);
+    }
+    
+    /**
      * 报名须知页面
      * @param Request $request
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
@@ -75,6 +95,7 @@ class PagesController extends Controller
 
         return view('h5_apps.student.school_recruitment_intro', $this->dataForView);
     }
+
 
     /**
      * 学生点击后直接显示专用报名用的界面

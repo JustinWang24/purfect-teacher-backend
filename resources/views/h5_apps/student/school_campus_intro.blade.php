@@ -8,7 +8,7 @@ img{max-width: 100% !important;}
 </style>
 <div class="main">
 	<div class="intro-content">
-	{!! $note ? $note->content : '还没有添加报名须知' !!}
+	{!! $config ? $config->campus_intro : '还没有添加校园简介' !!}
 	</div>
 	</div>
 </div>
