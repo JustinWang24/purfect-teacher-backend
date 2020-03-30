@@ -8,6 +8,8 @@ use App\Dao\Timetable\TimeSlotDao;
 use App\Dao\Timetable\TimetableItemDao;
 use App\Dao\Users\GradeUserDao;
 use App\Jobs\Notifier\InternalMessage;
+use App\Models\AttendanceSchedules\Attendance;
+use App\Models\AttendanceSchedules\AttendancesDetail;
 use App\Models\Misc\SystemNotification;
 use App\Utils\Time\GradeAndYearUtil;
 use Carbon\Carbon;
@@ -81,18 +83,16 @@ class noticeStudentAttendanceSignin extends Command
                 $timetables = $timetableItemDao->getCourseListByCurrentTime($schoolId, $timeSlot->id);
                 foreach ($timetables as $timetable) {
                   // 班级学生
-                  $gradeUsers = $gradeUserDao->getGradeUserByGradeId($timetable->grade_id);
+                  // $gradeUsers = $gradeUserDao->getGradeUserByGradeId($timetable->grade_id);
                   // 签到主表数据
                   $attendanceData = $attendanceDao->isAttendanceByTimetableAndWeek($timetable, $week);
                   // 签到详情表数据
-                  $attendanceInfo = $attendanceData->details;
+                  $attendanceInfo = $attendanceData->details->where('mold', AttendancesDetail::MOLD_TRUANT);
                   // 取出签到详情所有user_id
-                  $userIds = $attendanceInfo->pluck('student_id')->toArray();
+                  // $userIds = $attendanceInfo->pluck('student_id')->toArray();
                   $notSignUser = [];
-                  foreach ($gradeUsers as $key => $val) {
-                    if(!in_array($val->user_id, $userIds)) {
+                  foreach ($attendanceInfo as $key => $val) {
                         $notSignUser[] = $val->user;
-                    }
                   }
                   $list[] = [
                             'time_table_id' => $timetable->id,
