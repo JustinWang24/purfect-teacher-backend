@@ -73,9 +73,10 @@ class WorkLogController extends  Controller
             if($result[$key]['is_read'] == false) {
                 $num ++;
             }
+        }
+        foreach ($result as $key => $val) {
             $result[$key]['num'] = $num;
         }
-        
         return JsonBuilder::Success($result);
     }
 
