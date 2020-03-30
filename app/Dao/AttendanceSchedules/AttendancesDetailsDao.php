@@ -223,11 +223,18 @@ class AttendancesDetailsDao
                 $re = AttendancesDetail::where($map)->first();
                 if(is_null($re)) {
                     // 添加
-                    $add = ['attendance_id' => $attendanceId, 'course_id' => $info['course_id'],
-                        'timetable_id' => $info['timetable_id'], 'student_id' => $item['user_id'],
-                        'year' => $info['year'], 'term' => $info['term'], 'type' => AttendancesDetail::TYPE_MANUAL,
-                        'week' => $info['week'], 'mold' => AttendancesDetail::MOLD_TRUANT, 'score'=>$item['score'],
-                        'weekday_index' => $info->timeTable->weekday_index
+                    $add = [
+                        'attendance_id' => $attendanceId,
+                        'course_id' => $info['course_id'],
+                        'timetable_id' => $info['timetable_id'],
+                        'student_id' => $item['user_id'],
+                        'year' => $info['year'],
+                        'term' => $info['term'],
+                        'type' => AttendancesDetail::TYPE_MANUAL,
+                        'week' => $info['week'],
+                        'mold' => AttendancesDetail::MOLD_TRUANT,
+                        'score'=>$item['score'],
+                        'weekday_index' => $info->timeTable->weekday_index,
                     ];
                     if(!empty($item['remark'])) {
                         $add['remark'] = $item['remark'];

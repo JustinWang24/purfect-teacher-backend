@@ -1,13 +1,10 @@
-/**
- * 校园风光
- */
 import {} from "../../common/welcomes";
 import {Constants} from "../../common/constants";
 import {Util} from "../../common/utils";
 import EleUploadVideo from 'vue-ele-upload-video'
-if(document.getElementById('campus-intro-app')){
+if(document.getElementById('enrol-note-manager-child')){
     new Vue({
-        el:'#campus-intro-app',
+        el:'#enrol-note-manager-child',
         data(){
             return {
 			  fileList: [],

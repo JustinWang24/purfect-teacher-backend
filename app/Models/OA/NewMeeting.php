@@ -3,9 +3,9 @@
 namespace App\Models\OA;
 
 
-use App\Models\Schools\Room;
 use App\User;
 use Carbon\Carbon;
+use App\Models\Schools\Room;
 use Illuminate\Database\Eloquent\Model;
 
 class NewMeeting extends Model
@@ -50,6 +50,15 @@ class NewMeeting extends Model
 
 
     /**
+     * 会议创建人
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function user() {
+        return $this->belongsTo(User::class, 'user_id');
+    }
+
+
+    /**
      * 参会人员
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
@@ -58,7 +67,19 @@ class NewMeeting extends Model
     }
 
 
+    public function getMeetStartAttribute($val) {
+        return Carbon::parse($val)->format('Y-m-d H:i');
+    }
 
+
+    public function getMeetEndAttribute($val) {
+        return Carbon::parse($val)->format('Y-m-d H:i');
+    }
+
+
+    public function getCreatedAtAttribute($val) {
+        return Carbon::parse($val)->format('Y-m-d H:i');
+    }
 
     /**
      * 会议时间

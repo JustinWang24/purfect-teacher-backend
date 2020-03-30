@@ -7,7 +7,7 @@ use App\Utils\UI\Button;
   <!--校园风光-->
     <div class="row" id="campus-intro-app" style="float:left;width:40%;height:450px;">
         <div class="col-12">
-		
+
             <div class="card">
                 <div class="card-head">
                   <header class="full-width">
@@ -24,8 +24,7 @@ use App\Utils\UI\Button;
                 :before-upload="handlePreview"
                 :file-list="fileList"
                 :limit="1"
-                list-type="picture"
-              >
+                list-type="picture">
               <div
                 style="height: 40px;
                       background-color: #fff;
@@ -44,7 +43,7 @@ use App\Utils\UI\Button;
               >点击上传封面图片</div>
               <div slot="tip" class="el-upload__tip" style="margin-bottom:20px;">图片格式为jpg/png，图片宽高比2:1</div>
               </el-upload>
-                  <ele-upload-video :data="{token: token}"
+                  <ele-upload-video
                     :file-size="50"
                     :height="250"
                     :width="420"

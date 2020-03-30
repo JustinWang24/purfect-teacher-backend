@@ -95,18 +95,16 @@ class CommonDao
         $userObj = new UserDao();
         $userInfo = $userObj->getUserById($user_id);
 
-        // TODO.... 下面没写完.....
         $data['user_id'] = $userInfo->id; // 用户id
-        $data['user_sex'] = '男'; // 性别
+        $data['user_sex'] = $userInfo->profile->gender == 1 ? '男': '女'; // 性别 1:男 2:女
         $data['user_signture'] = $userInfo->user_signture; // 签名
-        $data['user_pics'] = '/assets/img/dp.jpg'; // 头像
-        $data['user_nickname'] = $userInfo->nice_name; // 用户名
-        $data['school_name'] = '礼县职业中等专业学校'; // 学校名称
+        $data['user_pics'] = $userInfo->profile->avatar; // 头像
+        $data['user_nickname'] = !empty($userInfo->nice_name)?$userInfo->nice_name:'匿名'; // 用户名
+        $data['school_name'] = $userInfo->gradeUserOneInfo->school->name; // 学校名称
         $data['user_fans_number'] = $userInfo->user_fans_number; // 粉丝数量
         $data['user_focus_number'] = $userInfo->user_focus_number; // 关注数量
         $data['user_praise_number'] = $userInfo->user_praise_number; // 点赞数量
-
-         return $data;
+        return $data;
     }
 
     /**
@@ -154,11 +152,13 @@ class CommonDao
      */
     public function getAuthIno($user_id = 0)
     {
-        // TODO.... 下面没写完.....
-        $data['user_username'] = '109991';  //编号
-        $data['user_usercode'] = '张三';  //姓名
-        $data['user_cardno'] = '18127192837382893'; //身份证号码
+        $userObj = new UserDao();
+        $userInfo = $userObj->getUserById($user_id);
 
+        // TODO.... 下面没写完.....
+        $data['user_username'] = '100';  //编号
+        $data['user_usercode'] = $userInfo->nice_name;  //姓名
+        $data['user_cardno'] = $userInfo->profile->id_number; //身份证号码
         return $data;
     }
 

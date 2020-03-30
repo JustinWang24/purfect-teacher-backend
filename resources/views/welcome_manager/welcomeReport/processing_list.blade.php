@@ -18,7 +18,7 @@ use App\User;
                             <form action="{{ route('welcome_manager.welcomeReport.processing_list') }}" method="get"  id="add-building-form">
                                 <div class="pull-left col-3">
                                     <label>关键词</label>
-                                    <input type="text" class="el-input__inner col-10" value="{{ Request::get('keywords') }}" placeholder="姓名,身份证号码" name="keywords">
+                                    <input type="text" class="el-input__inner col-10" value="{{ Request::get('keywords') }}" placeholder="姓名" name="keywords">
 									<input type="hidden" name="uuid" value="{{ Request::get('uuid') }}"/>
 								</div>
                                 <button class="btn btn-primary">搜索</button>

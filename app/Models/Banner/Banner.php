@@ -52,7 +52,7 @@ class Banner extends Model
      */
     public static $appArr = [
       1 => '学生端',
-      2 => '老师端',
+      2 => '教师端',
     ];
 
     /**

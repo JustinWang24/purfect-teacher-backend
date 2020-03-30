@@ -106,10 +106,13 @@
             </h3>
             <div class="block" style="padding: 0 15px;">
                 <el-timeline>
-                    <el-timeline-item key="0" icon="{{ asset('assets/img/pipeline/success.png') }}" timestamp="{{ substr($startAction->created_at, 0, 16) }}">
+                    <el-timeline-item key="0" icon="{{ asset('assets/img/pipeline/success.png') }}">
                         <img src="{{ $startUser->profile->avatar }}" alt="" style="width: 40px; height: 40px;border-radius: 50%;vertical-align: middle;">
-                        {{ $startUser->name }}
-                        <span style="text-align: right;"> 发起审批 </span>
+                        <div style="flex: 1;margin-left: 20px;">
+                            <p style="margin: 0;">{{ $startUser->name }}</p>
+                            <p style="margin: 0;">{{ substr($startAction->created_at, 0, 16) }}</p>
+                        </div>
+                        <span style="text-align: right;font-size: 13px;color: #4FA8FE;"> 发起审批 </span>
                     </el-timeline-item>
                     @foreach($handlers as $key => $handler)
                     <el-timeline-item key="{{ $key+1 }}" icon="{{ asset('assets/img/pipeline/'. $handlersIcon[$key] .'.png') }}">
@@ -122,10 +125,10 @@
                             </div>
                             <span style="text-align: right;">
                                 @if (!empty($v->result))
-                                @if ($v->result->result == \App\Utils\Pipeline\IAction::RESULT_PENDING) 审批中 @endif
-                                @if ($v->result->result == \App\Utils\Pipeline\IAction::RESULT_PASS) {{ substr($v->result->updated_at, 5, 11) }} 已通过 @endif
-                                @if ($v->result->result == \App\Utils\Pipeline\IAction::RESULT_TERMINATE) {{ substr($v->result->updated_at, 5, 11) }} 被拒绝 @endif
-                                @if ($v->result->result == \App\Utils\Pipeline\IAction::RESULT_REJECT) {{ substr($v->result->updated_at, 5, 11) }} 被驳回 @endif
+                                @if ($v->result->result == \App\Utils\Pipeline\IAction::RESULT_PENDING) <span style="color: #FE7B1C;">审批中</span> @endif
+                                @if ($v->result->result == \App\Utils\Pipeline\IAction::RESULT_PASS) {{ substr($v->result->updated_at, 5, 11) }} <span style="color: #6DCC58;">已通过</span> @endif
+                                @if ($v->result->result == \App\Utils\Pipeline\IAction::RESULT_TERMINATE) {{ substr($v->result->updated_at, 5, 11) }} <span style="color: #FD1B1B;">未通过</span> @endif
+                                @if ($v->result->result == \App\Utils\Pipeline\IAction::RESULT_REJECT) {{ substr($v->result->updated_at, 5, 11) }} <span style="color: #FD1B1B;">未通过</span> @endif
                                 @endif
                             </span>
                         </div>

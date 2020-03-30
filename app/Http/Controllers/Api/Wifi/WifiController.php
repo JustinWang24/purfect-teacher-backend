@@ -34,7 +34,6 @@ class WifiController extends Controller
    {
       $user = $request->user ();
 
-
       $user_id   = $user->id;
       $campus_id = $user->gradeUserOneInfo->campus_id;
 
@@ -56,11 +55,11 @@ class WifiController extends Controller
 
       $contentsListArr = array_column($contentsList,'content','typeid');
 	  // 类型(1:校园网通知,2:用网须知,3:充值通知,4:套餐说明,5:网络协议)
-	  $infos['contentsList']['contents_1'] = (String)$contentsListArr[1];
-	  $infos['contentsList']['contents_2'] = (String)$contentsListArr[2];
-	  $infos['contentsList']['contents_3'] = (String)$contentsListArr[3];
-	  $infos['contentsList']['contents_4'] = (String)$contentsListArr[4];
-	  $infos['contentsList']['contents_5'] = (String)$contentsListArr[5];
+	  $infos['contentsList']['contents_1'] = isset($contentsListArr[1])?(String)$contentsListArr[1]:'';
+	  $infos['contentsList']['contents_2'] = isset($contentsListArr[2])?(String)$contentsListArr[2]:'';
+	  $infos['contentsList']['contents_3'] = isset($contentsListArr[3])?(String)$contentsListArr[3]:'';
+	  $infos['contentsList']['contents_4'] = isset($contentsListArr[4])?(String)$contentsListArr[4]:'';
+	  $infos['contentsList']['contents_5'] = isset($contentsListArr[5])?(String)$contentsListArr[5]:'';
 
       // 获取配置信息
       $condition1[] = [ 'campus_id' , '=' , $campus_id ];

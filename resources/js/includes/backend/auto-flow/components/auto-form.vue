@@ -12,7 +12,7 @@
               <span>{{form.name}}</span>
             </div>
             <div class="content">
-              <span class="node">{{form.title}}</span>
+              <span class="node"><pre>{{form.title}}</pre></span>
             </div>
           </div>
         </template>
@@ -56,7 +56,9 @@
           <div class="copy-item" v-for="(peo, index) in copys" :key="index">
             <div
               class="item"
+              v-if="!peo.avatar"
             >{{peo.name.length>2?peo.name.substring(peo.name.length-2,peo.name.length):peo.name}}</div>
+            <Avatar class="handler avatar" v-else :src="peo.avatar" />
             <span class="name">{{peo.name}}</span>
           </div>
         </div>
@@ -194,7 +196,7 @@ export default {
       }
       .content {
         flex: 1;
-        .node {
+        .node pre {
           color: #409eff;
         }
       }
@@ -240,6 +242,7 @@ export default {
           display: inline-flex;
           flex-direction: column;
           margin: 10px 10px 0px 0;
+          float: left;
           .item {
             border-radius: 50%;
             display: flex;

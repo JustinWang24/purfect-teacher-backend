@@ -15,10 +15,8 @@
           // 计划日志
           showEditor: false, // 是否显示富文本编辑器
           showMaterialForm: true, // 是否显示富文本编辑器
-          //course:null,
-          //teacher:null,
-          course:{id:35},
-          teacher:{id:171870},
+          course:null, // {id:134}
+          teacher:null, // {id:234}
           notes:{
             teacher_notes:''
           },
@@ -27,10 +25,8 @@
           types:[],
           courseMaterialModel:{
             id:null,
-            //teacher_id:null,
-            //course_id:null,
-            teacher_id:171870,
-            course_id:35,
+            teacher_id:null,
+            course_id:null,
             type: null,
             index: null,
             description: null,
@@ -67,18 +63,32 @@
       created() {
         const dom = document.getElementById('app-init-data-holder');
         this.schoolId = dom.dataset.school;
-        this.changeMeans(1);
-        this.getMyCourseListInfo();
-        this.getMyMaterialsListInfo();
+        this.teacher = JSON.parse(dom.dataset.teacher); // 老师信息
+        this.courseMaterialModel.teacher_id = this.teacher.id; // 老师id
+        this.changeMeans(1); // 默认选中我的课程
+        this.getMyCourseListInfo(); // 我的课程数据
+        this.getMyMaterialsListInfo(); // 教学资料数据
         this.myMaterialsListDataInfo(0); // 教学资料默认展示数据
       },
       methods: {
-        changeMeans: function (val) {
-          // 显示教学计划和教学日志数据
-          if (val == 3) {
-            this.loadTeacherNoteOrLogInfo();
-          }
-          this.activeIndex = val;
+        changeMeans: function (val,param= {}) {
+             /*
+               course_id: 35
+               course_name: "自习"
+               desc: "19级自习"
+               duration: 20
+             */
+            // 显示教学计划和教学日志数据页
+            if (val == 3) {
+                this.course = {id:param.course_id};
+                this.loadTeacherNoteOrLogInfo();
+            }
+            // 添加资料表单页
+            if (val == 4) {
+                this.course = {id:param.course_id};
+                this.loadTeacherMeansInfo();
+            }
+            this.activeIndex = val;
         },
         // 我的课程
         getMyCourseListInfo: function () {
@@ -195,10 +205,6 @@
           this.logs.splice(Util.GetItemIndexById(log.id, this.logs),1);
           // TODO....未调用接口
         },
-
-
-
-
         editMaterial: function (id) {
           loadMaterial(id).then(res => {
             if(Util.isAjaxResOk(res)){
@@ -238,7 +244,22 @@
         pickFileHandler: function(payload){
           this.selectedFile = payload.file;
           this.showFileManagerFlag = false;
-        }
+        },
+        //------------------------------添加资料------------------------------------------------------
+        // 获取资料信息，用于传递子组件使用
+        loadTeacherMeansInfo: function(){
+          let _that_ = this;
+          axios.post(
+              '/teacher/course/materials/manager-json',
+              {teacher: this.teacher.id, course_id: this.course.id}
+          ).then(res => {
+              if(Util.isAjaxResOk(res)){
+                  _that_.teacher =  res.data.data.teacher;
+                  _that_.course =  res.data.data.course;
+                  _that_.grades =  res.data.data.grades;
+              }
+          });
+        },
       }
     });
   }

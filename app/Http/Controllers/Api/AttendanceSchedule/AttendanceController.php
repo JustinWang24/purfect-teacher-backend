@@ -409,7 +409,7 @@ class AttendanceController extends Controller
         foreach ($data as $key => $val) {
             $result[$key]['avatar'] = $val->user->profile->avatar;
             $result[$key]['name']  = $val->teacher->name;
-            $result[$key]['major']  = $val->gradeUser->major->name ?? '';
+            $result[$key]['major']  = $val->gradeUser->institute->name ?? '暂无';
             $result[$key]['sign_status'] = '';
             $result[$key]['sign_time'] = '';
             if ($type == Attendance::TEACHER_SIGN) {

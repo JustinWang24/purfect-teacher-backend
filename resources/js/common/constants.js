@@ -283,10 +283,10 @@ export const Constants = {
         PENDING_TXT: '审核中',
         PENDING_CLASS: 'text-warning',
         DONE: 1,
-        DONE_TXT: '批准',
+        DONE_TXT: '已通过',
         DONE_CLASS: 'text-success',
         REJECTED: 2,
-        REJECTED_TXT: '驳回',
+        REJECTED_TXT: '未通过',
         REJECTED_CLASS: 'text-danger',
     },
     NODE_OPTION: {

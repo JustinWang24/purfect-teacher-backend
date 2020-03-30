@@ -176,12 +176,12 @@ class OpenMajorController extends Controller
                 $bag = $dao->approve($form['currentId'],$manager,$form['note']??null);
 
                 event(new ApproveOpenMajorEvent($bag->getData()));
-                event(new ApproveRegistrationEvent($bag->getData()));
+                // event(new ApproveRegistrationEvent($bag->getData()));
             }else{
                 $bag = $dao->refuse($form['currentId'],$manager,$form['note']??null);
 
                 event(new ApproveOpenMajorEvent($bag->getData()));
-                event(new RefuseRegistrationEvent($bag->getData()));
+                // event(new RefuseRegistrationEvent($bag->getData()));
             }
             if($bag->isSuccess()){
                 return JsonBuilder::Success($bag->getMessage());

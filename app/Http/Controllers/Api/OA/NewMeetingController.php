@@ -43,8 +43,8 @@ class NewMeetingController extends Controller
         foreach ($rooms as $key => $item) {
             $result[$key] = [
                 'room_id'=>$item->id,
-                'img' => '',
-                'name' => $item->name,
+                'img' => $item->url,
+                'name' => $item->description,
                 'seats' => $item->seats,
                 'start' => '8:00',
                 'end' => '18:00',
@@ -197,6 +197,7 @@ class NewMeetingController extends Controller
         $result = pageReturn($return);
         $data = [];
         foreach ($result['list'] as $key => $item) {
+            $meetUser = $item->meetUsers->first();
             $data[] = [
                 'meet_id' => $item->id,
                 'meet_title' => $item->meet_title,
@@ -207,8 +208,8 @@ class NewMeetingController extends Controller
                 'signout_time' => '',
                 'is_signin' => 0,
                 'is_signout' => 0,
-                'signin_status' =>  $item->signin_status,
-                'signout_status' => $item->signout_status,
+                'signin_status' =>  $meetUser->signin_status,
+                'signout_status' => $meetUser->signout_status,
             ];
             // 判断是否需要签到
             if($item->signin_status == NewMeeting::SIGNIN) {
@@ -306,24 +307,32 @@ class NewMeetingController extends Controller
 
         $status = 0;  // 隐藏
         $meetUser = $info->meetUsers->where('user_id',$userId)->first();
-
+        $now = Carbon::now();
         if(!is_null($meetUser)) {
             // 需要签到
             if($info['signin_status'] == NewMeeting::SIGNIN) {
-                // 未签到
-                if($meetUser->signin_status == NewMeetingUser::UN_SIGNIN) {
-                    $status = 1; // 签到
-                } else {
-                    $status = 0; // 隐藏
+                // 当前时间小于签到的结束时间
+                if($now < $info->signin_end) {
+                    // 未签到
+                    if($meetUser->signin_status == NewMeetingUser::UN_SIGNIN) {
+                        $status = 1; // 签到
+                    } else {
+                        $status = 0; // 隐藏
+                    }
                 }
+
             }
 
             // 需要签退&& 已签退
             if($status == 0 && $info['signout_status'] == NewMeeting::SIGNOUT) {
-                if($meetUser->signout_status == NewMeetingUser::UN_SIGNOUT) {
-                    $status = 2; // 签退
-                } else {
-                    $status = 0; //隐藏
+                // 当前时间小于签退的结束时间
+                if($now < $info->signout_end) {
+                    if($meetUser->signout_status == NewMeetingUser::UN_SIGNOUT) {
+                        $status = 2; // 签退
+                    } else {
+                        $status = 0; //隐藏
+                    }
+
                 }
             }
         }
@@ -509,9 +518,9 @@ class NewMeetingController extends Controller
         $return = $dao->getMeetUser($meetId, $userId);
         $result = [
             'signin_status' => $return->signin_status,
-            'signin_time' => $return->signin_time,
+            'signin_time' => $return->getUserSignInTime(),
             'signout_status' => $return->signout_status,
-            'signout_time' => $return->signout_time
+            'signout_time' => $return->getUserSignOutTime()
         ];
 
         return JsonBuilder::Success($result);

@@ -28,7 +28,10 @@ if (document.getElementById('pipeline-flow-open-app')) {
         provinceList: provinceList,
         canSubmit: true,
         part: [],
-        selectParts: []
+        selectParts: [],
+        flowType: null,
+        copys: [],
+        handlers: []
       }
     },
     created(){
@@ -58,13 +61,20 @@ if (document.getElementById('pipeline-flow-open-app')) {
         axios.post(url, params).then((res) => {
           if (Util.isAjaxResOk(res)) {
             let data = res.data.data;
+            this.$set(this, 'flowType', data.flow.type)
+            this.$set(this, 'copys', data.copys)
+            this.$set(this, 'handlers', data.handlers)
+
             // console.log(data)
-            this.formList = data.options;
-            this.formList.forEach((item, index) => {
+            data.options.forEach((item, index) => {
               if (item.type == 'input' || item.type == 'textarea' || item.type == 'number') {
-                this.$set(item, 'value', '')
+                if (!item.default) {
+                  this.$set(item, 'value', '')
+                }
               }
             });
+            this.$set(this, 'formList', data.options)
+            // this.formList = data.options;
             // console.log(this.formList)
           }
         }).catch((err) => {
@@ -77,12 +87,13 @@ if (document.getElementById('pipeline-flow-open-app')) {
       onSubmit() {
         // console.log(1)
         // console.log(this.formList)
+
         let options = [];
         let url = '/api/pipeline/flow/start'
         this.formList.forEach(function (item, index) {
           let option = {};
           option.id = item.id;
-          option.value = item.value ? item.value : '';
+          option.value = item.value ? item.value : '无';
           options.push(option)
         });
         let params = {
@@ -95,6 +106,7 @@ if (document.getElementById('pipeline-flow-open-app')) {
           options: options,
           is_app: true
         };
+
         if (this.canSubmit) {
           this.canSubmit = false;
           axios.post(url, params).then((res) => {

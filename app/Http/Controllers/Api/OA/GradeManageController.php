@@ -124,7 +124,9 @@ class GradeManageController extends Controller
             'code' => JsonBuilder::CODE_SUCCESS,
             'message' => "ok",
             'data' => $output,
-            'lastPage' => $data->lastPage()
+            'currentPage' => $data->currentPage(),
+            'lastPage'    => $data->lastPage(),
+            'total'       => $data->total(),
         ];
     }
 

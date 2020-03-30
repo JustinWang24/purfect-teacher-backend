@@ -209,7 +209,28 @@
         </div>
     </div>
 
-
+    <div v-if="flowType >= 100 && flowType <= 199 ">
+        <h5 style="background:white;margin:0;padding: 10px" v-if="handlers.length > 0">审批人</h5>
+        <el-timeline v-if="handlers.length > 0">
+            <el-timeline-item v-for="itemH in handlers">
+                <div v-for="(itemH1, key) in itemH">
+                    <div class="lineItem"  v-for="(itemH2, key2) in itemH1">
+                        <img class="lineImg" :src="itemH2.avatar">
+                        <span v-text="itemH2.name + '(' + key + ')'"></span>
+                    </div>
+                </div>
+            </el-timeline-item>
+        </el-timeline>
+        <h5 style="background:white;margin:0;padding: 10px">抄送人</h5>
+        <el-timeline v-if="copys.length > 0">
+            <el-timeline-item v-if="copys.length > 0">
+                <div class="lineItem" v-for="item in copys">
+                    <img class="lineImg" :src="item.avatar">
+                    <span v-text="item.name"></span>
+                </div>
+            </el-timeline-item>
+        </el-timeline>
+    </div>
 
 
           <div style="width: 100%;background: white;text-align: center;margin-top:10px;padding-top:40px">
