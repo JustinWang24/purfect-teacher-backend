@@ -99,6 +99,7 @@ class FrontendLogic implements IPlansLoaderLogic
         $plan = $dao->getPlan($planId);
 
         $courseDao = new CourseMajorDao();
+        $regDao = new RegistrationInformaticsDao();
         $courses = $courseDao->getCoursesByMajor($plan->major_id);
 
         return [
@@ -117,7 +118,10 @@ class FrontendLogic implements IPlansLoaderLogic
             'student_requirements'=>$plan->student_requirements,
             'target_students'=>$plan->target_students,
             'future'=>$plan->major->future,
-            'courses'=>$courses
+            'courses'=>$courses,
+            // 获取我是否可以报名
+            'statusArr'=>$regDao->getRegistrationInformaticsStatusInfo($this->userId, $plan)
+
         ];
     }
 }

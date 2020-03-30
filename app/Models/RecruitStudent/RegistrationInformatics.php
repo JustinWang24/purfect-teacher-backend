@@ -59,17 +59,17 @@ class RegistrationInformatics extends Model
         0 => array('status' => 0, 'message' => '参数错误', 'message1' => '报名', 'message2' => '状态错误'),
 
         // 后台审核通过了 1待审核 2报名审核被拒绝 3报名审核已通过 4被拒绝录取 5被录取 6已报到
-        1 => array('status' => 1, 'message' => '您已申请，不能重复申请', 'message1' => '已申请', 'message2' => '等待审核'),
+        1 => array('status' => 1, 'message' => '您已申请，不能重复申请', 'message1' => '已申请', 'message2' => '审核中'),
         2 => array('status' => 2, 'message' => '您提交的申请审核未通过', 'message1' => '未通过', 'message2' => '未通过'),
-        3 => array('status' => 3, 'message' => '您申请的已通过，不能重复申请', 'message1' => '已报名', 'message2' => '已录取'),
+        3 => array('status' => 3, 'message' => '您申请的已通过，不能重复申请', 'message1' => '已报名', 'message2' => '已通过'),
         4 => array('status' => 4, 'message' => '您提交的申请审核未通过', 'message1' => '未通过', 'message2' => '未通过'),
-        5 => array('status' => 5, 'message' => '您申请的已通过，不能重复申请', 'message1' => '已报名', 'message2' => '已录取'),
-        6 => array('status' => 6, 'message' => '您申请的已通过，不能重复申请', 'message1' => '已报名', 'message2' => '已录取'),
+        5 => array('status' => 5, 'message' => '您申请的已通过，不能重复申请', 'message1' => '已报名', 'message2' => '已通过'),
+        6 => array('status' => 6, 'message' => '您申请的已通过，不能重复申请', 'message1' => '已报名', 'message2' => '已通过'),
 
         // 根据后台设置的专业申请人数，已满
         10 => array('status' => 10, 'message' => '招生人数已满', 'message1' => '人已满', 'message2' => '人已满'),
         // 账号从后台添加，已经关联专业了，不能再次在app申请专业
-        11 => array('status' => 11, 'message' => '您已经是学校的学生，不能申请', 'message1' => '报名', 'message2' => '已录取'),
+        11 => array('status' => 11, 'message' => '您已经是学校的学生，不能申请', 'message1' => '报名', 'message2' => '已通过'),
 
         100 => array('status' => 100, 'message' => '报名', 'message1' => '报名', 'message2' => '报名'),
     ];
