@@ -149,25 +149,30 @@ class SignInGradeController extends Controller
 
         $gradeUser = $gradeDao->getGradeUserByGradeId($gradeId);
         $total = count($gradeUser);
+        $attendanceDao = new AttendancesDao();
+        $attendance = $attendanceDao->getAttendanceById($attendanceId);
 
-        $dao = new AttendancesDetailsDao();
-        $list = $dao->getAttendDetailsByAttendanceId($attendanceId);
-        $status = array_column($list->toArray(),'evaluate_status','student_id');
+        $list = $attendance->details;
+
         $molds = array_column($list->toArray(),'mold','student_id');
         $scores = array_column($list->toArray(),'score','student_id');
         $remarks = array_column($list->toArray(),'remark','student_id');
         $student = [];
         $score = [];  // 评分列表
         foreach ($gradeUser as $key => $item) {
-            $student[$key]['user_id'] = $item->user_id;
-            $student[$key]['name'] = $item->name;
-            $student[$key]['mold'] = $molds[$item->user_id];
-            $score[$key]['user_id'] = $item->user_id;
-            $score[$key]['name'] = $item->name;
-            $score[$key]['remark'] = $remarks[$item->user_id];
-            $score[$key]['score'] = $scores[$item->user_id];
+            $student[] = [
+                'user_id' => $item->user_id,
+                'name' => $item->name,
+                'mold' => $molds[$item->user_id],
+            ];
+            $scores[] = [
+                'user_id' => $item->user_id,
+                'name' => $item->name,
+                'remark' => $remarks[$item->user_id],
+                'score' => $scores[$item->user_id],
+            ];
 
-            if($status[$item->user_id] == 0) {
+            if($attendance->status == 0) {
                 $score[$key]['score'] = 10;  // 默认10分
             }
         }
@@ -181,7 +186,12 @@ class SignInGradeController extends Controller
         $leave = $count[AttendancesDetail::MOLD_LEAVE] ?? 0;
         $unSign = $total - $signin - $leave;
         $data = [
-            'stat' => ['total'=>$total, 'signin'=>$signin, 'leave'=>$leave, 'un_sign'=>$unSign],
+            'stat' => [
+                'total'=>$total,
+                'signin'=>$signin,
+                'leave'=>$leave,
+                'un_sign'=>$unSign
+            ],
             'signin' => $student,
             'score' => $score,
         ];
