@@ -147,8 +147,8 @@
             <div class="sendBox">
                 @foreach($copys as $copy)
                 <figure>
-                    <img src="{{asset($copy->user->profile->avatar)}}" width="50" height="50" />
-                    <p>{{ $copy->name }}</p>
+                    <img src="{{asset($copy['avatar'])}}" width="50" height="50" />
+                    <p>{{ $copy['name'] }}</p>
                 </figure>
                 @endforeach
             </div>
