@@ -165,6 +165,9 @@ class ActionDao
                 }
                 $userFlow->delete();
 
+                $userFlow->done = IUserFlow::REVOKE;
+                $userFlow->save();
+
                 DB::commit();
                 $bag->setCode(JsonBuilder::CODE_SUCCESS);
             }
