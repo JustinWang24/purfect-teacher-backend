@@ -115,6 +115,7 @@ class PlansController extends Controller
                 'hot'=>$item->plan->hot,
                 'title'=>$item->plan->title,
                 'tease'=>$item->plan->tease,
+                'created_at'=>$item->created_at,
                 'statusArr'=>$dao->getRegistrationInformaticsStatusInfo1($user->id, $item), // 获取我是否可以报名
             ];
         }
