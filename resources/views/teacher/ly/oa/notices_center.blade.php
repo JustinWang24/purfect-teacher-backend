@@ -7,7 +7,7 @@
             <p>通知公告</p>
             <p class="release">发布</p>
         </div>
-        <div class="teacher-oa-notices-app-one-body" v-for="item in oneList" :key="item.id" @click="oneDetail(item.id)">
+        <div class="teacher-oa-notices-app-one-body" v-for="item in oneList" :key="item.id" @click="oneDetail(item.id)" v-cloak>
             <div class="teacher-oa-notices-app-one-body-title">
                 <p>@{{ item.title }}</p>
                 <p>@{{ item.is_read == 0 ? '未读' : '已读' }}</p>
@@ -20,7 +20,7 @@
         <div class="notices-card-header">
             <p>公告</p>
         </div>
-        <div class="teacher-oa-notices-app-two-body" v-for="item in twoList" :key="item.id" @click="oneDetail(item.id)">
+        <div class="teacher-oa-notices-app-two-body" v-for="item in twoList" :key="item.id" @click="oneDetail(item.id)" v-cloak>
             <img :src="item.image" alt="">
             <div class="teacher-oa-notices-app-two-body-title">
                 <p>@{{ item.is_read == 0 ? '未读' : '已读' }}</p>
@@ -33,7 +33,7 @@
         <div class="notices-card-header">
             <p>检查</p>
         </div>
-        <div class="teacher-oa-notices-app-three-body" v-for="item in threeList" :key="item.id" @click="oneDetail(item.id)">
+        <div class="teacher-oa-notices-app-three-body" v-for="item in threeList" :key="item.id" @click="oneDetail(item.id)" v-cloak>
             <div class="teacher-oa-notices-app-three-body-title">
                 <p>@{{ item.title }}</p>
                 <p>@{{ item.is_read == 0 ? '未读' : '已读' }}</p>
@@ -45,7 +45,7 @@
             </div>
         </div>
     </div>
-    <el-drawer :title="titleName" :before-close="handleClose" :visible.sync="drawer" custom-class="demo-drawer">
+    <el-drawer :title="titleName" :before-close="handleClose" :visible.sync="drawer" custom-class="demo-drawer" v-cloak>
         <div class="demo-drawer__content">
             <p>@{{detail.title}}</p>
             <p>@{{detail.created_at}}</p>

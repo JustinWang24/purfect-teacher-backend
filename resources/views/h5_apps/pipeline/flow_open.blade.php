@@ -23,9 +23,10 @@
             </div>
             <div class="myRadio" v-if="item.type == 'radio'">
                 <div class="myTips" v-html="item.tips"></div>
-                <van-field :required="item.required?true:false" name="radio" :label="item.title">
+                <van-field :required="item.required?true:false" name="radio" :label="item.title"
+                :rules="item.required?[{ required: item.required, message: '请选择' }]:[]">
                     <template #input>
-                        <van-radio-group v-model="item.value">
+                        <van-radio-group v-model="item.value" :value="item.value">
                             <van-radio v-for="(item2, index2) in item.extra.itemList" :name="item2">@{{item2.itemText}}
                             </van-radio>
                         </van-radio-group>
@@ -34,7 +35,7 @@
             </div>
             <div class="myRadio" v-if="item.type == 'checkbox'">
                 <div class="myTips" v-html="item.tips"></div>
-                <van-field :required="item.required?true:false" name="checkboxGroup" :label="item.title">
+                <van-field :rules="item.required?[{ required: item.required, message: '请选择' }]:[]" :required="item.required?true:false" name="checkboxGroup" :label="item.title">
                     <template #input>
                         <van-checkbox-group v-model="item.value">
                             <van-checkbox v-for="(itemCB, indexCB) in item.extra.itemList" :name="itemCB" shape="square">
@@ -47,6 +48,7 @@
             <div v-if="item.type == 'date'">
                 <van-field
                         :required="item.required?true:false"
+                        :rules="item.required?[{ required: item.required, message: '请选择日期' }]:[]"
                         readonly
                         clickable
                         name="datetimePicker"
@@ -71,6 +73,7 @@
                 <div>
                     <van-field
                             :required="item.required?true:false"
+                            :rules="item.required?[{ required: item.required, message: '请选择日期' }]:[]"
                             readonly
                             clickable
                             name="datetimePicker"
@@ -94,6 +97,7 @@
                 <div>
                     <van-field
                             :required="item.required?true:false"
+                            :rules="item.required?[{ required: item.required, message: '请选择日期' }]:[]"
                             readonly
                             clickable
                             name="datetimePicker"
@@ -117,7 +121,9 @@
             </div>
             <div class="myRadio" v-if="item.type == 'image'">
                 <div class="myTips" v-html="item.tips"></div>
-                <van-field name="uploader" :required="item.required?true:false" :label="item.title">
+                <van-field name="uploader"
+                    :rules="item.required?[{ required: item.required, message: '请上传图片' }]:[]"
+                    :required="item.required?true:false" :label="item.title">
                     <template #input>
                         <van-uploader v-model="item.files" :max-count="9" :after-read="uploadImg"/>
                     </template>
@@ -126,16 +132,9 @@
             <div class="myRadio myFiles" v-if="item.type == 'files'">
                 <div class="myTips" v-html="item.tips"></div>
                 <van-field name="uploader" :required="item.required?true:false" :label="item.title">
-                    <template #input>
-                       <el-button style="background: none;border: none;color: #409EFF;padding: 5px;" type="primary" size="mini" icon="el-icon-paperclip" v-on:click="showFileManagerFlag=true">选择附件</el-button>
-                        <ul style="padding-left: 0;">
-                            <li v-for="(a, idx) in action.attachments" :key="idx">
-                                <p style="margin-bottom: 0;">
-                                    <span>@{{ a.file_name }}</span>&nbsp;<el-button v-on:click="dropAttachment(idx, a)" type="text" style="color: red">删除</el-button>
-                                </p>
-                            </li>
-                        </ul>
-                    </template>
+                   <template #input>
+                       <van-uploader v-model="item.files" :max-count="9" :after-read="uploadImg"/>
+                   </template>
                 </van-field>
             </div>
             <div v-if="item.type == 'money'">
@@ -155,6 +154,7 @@
                         clickable
                         name="area"
                         :required="item.required?true:false"
+                        :rules="item.required?[{ required: item.required, message: '请选择地点' }]:[]"
                         :value="item.value"
                         :label="item.title"
                         :placeholder="item.tips + '  >'"
@@ -182,6 +182,7 @@
                         clickable
                         name="area"
                         :required="item.required?true:false"
+                        :rules="item.required?[{ required: item.required, message: '请选择部门' }]:[]"
                         :value="item.value"
                         :label="item.title"
                         :placeholder="item.tips + '  >'"
@@ -203,7 +204,7 @@
                         </div>
                     </div>
                 </van-action-sheet>
-                <button v-show="item.extra.showPicker" type="button" class="van-action-sheet__cancel" @click="partNext(item)">@{{item.cancelText}}</button>
+                <button v-show="item.extra.showPicker" type="button" class="van-action-sheet__cancel" @click="partNext(item)" v-text="item.cancelText"></button>
             </div>
         </div>
     </div>

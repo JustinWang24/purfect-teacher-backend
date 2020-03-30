@@ -36,6 +36,7 @@ class StudentsController extends Controller
         // 列出学校所有专业
         $this->dataForView['majors'] = (new MajorDao())->getMajorsBySchool($request->getSchoolId());
         $this->dataForView['grades'] = (new GradeDao())->getAllBySchool($request->getSchoolId());
+
         return view('teacher.profile.add_new_student', $this->dataForView);
     }
 
@@ -52,7 +53,7 @@ class StudentsController extends Controller
     }
 
     public function update(StudentRequest $request){
-//dd($request->all());
+
         $userData = $request->get('user');
         $profileData = $request->get('profile');
         $majorData = $request->get('major');
@@ -78,7 +79,7 @@ class StudentsController extends Controller
                 'school_id'=>$request->getSchoolId(),
                 'campus_id'=>$major->campus_id,
                 'institute_id'=>$major->institute_id,
-                'department'=>$major->department_id,
+                'department_id'=>$major->department_id,
                 'major_id'=>$major->id,
                 'grade_id'=>$gradeData['id'],
                 'last_updated_by'=>$request->user()->id

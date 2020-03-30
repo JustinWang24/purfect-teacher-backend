@@ -27,7 +27,6 @@ class PlansController extends Controller
         if($logic){
             $plans = $logic->getPlans();
         }
-
         $user = $request->user('api');
 
         // 添加图片，招生资源位作为查询的依据
@@ -127,6 +126,22 @@ class PlansController extends Controller
         }
 
         return JsonBuilder::Success(['plans'=>$plans]);
+    }
+
+
+    /**
+     * Func 已报名详情
+     * @param Request $request
+     * @return string
+     */
+    public function my_enrolments_detail(Request $request)
+    {
+      $user = $request->user('api');
+      $id = $request->post('id'); // 参数id
+      $dao = new RegistrationInformaticsDao();
+      $infos = $dao->getOneDataInfoById(['*'], $id);
+      $infos = (!empty($infos) && $infos->user_id == $user->id) ? $infos : (object)null;
+      return JsonBuilder::Success($infos,'已报名详情');
     }
 
     /**

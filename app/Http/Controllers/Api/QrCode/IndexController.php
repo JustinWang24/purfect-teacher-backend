@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\QrCode;
 
 use App\Dao\Schools\SchoolDao;
 use App\Dao\Users\UserDao;
+use App\Models\Acl\Role;
 use App\Models\Users\UserCodeRecord;
 use App\Utils\JsonBuilder;
 use Endroid\QrCode\QrCode;
@@ -29,13 +30,11 @@ class IndexController extends Controller
         if (empty($school)) {
             return JsonBuilder::Error('未找到学校');
         }
+
         $user  = $request->user();
-        if (empty($user)) {
-            return JsonBuilder::Error('未找到用户');
-        }
         // 生成规则 : 识别标识+学校ID+用户ID+时间戳
         $codeStr = base64_encode(json_encode(['app' => UserCodeRecord::IDENTIFICATION_APP, 'school_id' => $school->id, 'user_id' => $user->id, 'time' => time()]));
-        $code = $this->generateQrCode($codeStr);
+        $code = $this->generateQrCode($codeStr, $user->type);
         if (!$code) {
             return  JsonBuilder::Error('生成二维码失败');
         }
@@ -57,9 +56,9 @@ class IndexController extends Controller
         if (is_null($item)) {
             return JsonBuilder::Error('未找到您正在上的课');
         }
-            
+
         $codeStr = base64_encode(json_encode(['app'=> 'cloud',  'itme_id' => $item[0]->id, 'year' => $item[0]->year, 'term' => $item[0]->term]));
-        $code = $this->generateQrCode($codeStr);
+        $code = $this->generateQrCode($codeStr, $user->type);
         if (!$code) {
             return  JsonBuilder::Error('生成二维码失败');
         }
@@ -70,14 +69,20 @@ class IndexController extends Controller
     /**
      * 生成二维码
      * @param $codeStr
+     * @param $edition
      * @return string
      * @throws InvalidPathException
      */
-    public function generateQrCode($codeStr)
+    public function generateQrCode($codeStr, $edition = Role::VERIFIED_USER_STUDENT)
     {
         $qrCode = new QrCode($codeStr);
         $qrCode->setSize(200);
-        $qrCode->setLogoPath(public_path('assets/img/logo.png'));
+        if ($edition == Role::TEACHER) {
+            $logo = public_path('assets/img/teacher_logo.png');
+        } else {
+            $logo = public_path('assets/img/logo.png');
+        }
+        $qrCode->setLogoPath($logo);
         $qrCode->setLogoSize(30, 30);
         $code = 'data:image/png;base64,' . base64_encode($qrCode->writeString());
         if (strlen($code) < 1) {

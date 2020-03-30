@@ -44,7 +44,7 @@
       </div>
       <div class="btn-box">
         <el-button
-          v-if="unfinished"
+          v-if="dispatchShow"
           class="dispatch"
           size="small"
           @click="()=>{dispathModal = true}"
@@ -63,7 +63,7 @@
         >确认完成</el-button>
         <el-button
           type="primary"
-          v-if="finished"
+          v-if="finished || isMyTask"
           size="small"
           @click="()=>{finishInfoModal = true}"
         >完成结果</el-button>
@@ -152,7 +152,11 @@
       :visible.sync="dispathModal"
       direction="rtl"
     >
-      <DispatchForm @submit="onFinish('dispatch')" :taskid="taskid" />
+      <DispatchForm
+        @submit="onFinish('dispatch')"
+        :taskid="taskid"
+        :disabledList="disabledDispatchList"
+      />
     </el-drawer>
     <el-drawer
       title="完成结果"
@@ -210,7 +214,7 @@ export default {
     },
     statusText() {
       if (this.isMyTask) {
-        return "我创建的";
+        return "我发起的";
       }
       return (TaskFinishStatus[this.task.status] || {}).text;
     },
@@ -238,12 +242,30 @@ export default {
         return this.task.member_status === 1;
       }
     },
+    dispatchShow() {
+      if (this.isMyTask) {
+        // 我的任务 未完成的 都可以指派
+        return this.task.status !== 3;
+      } else {
+        // 别人的任务 已接收 未完成才有指派
+        return !this.unreceive && !this.finished;
+      }
+    },
     pending() {
       if (this.isMyTask) {
         return this.task.status === 2;
       } else {
         return this.task.member_status === 2;
       }
+    },
+    disabledDispatchList() {
+      return [
+        this.task.create_userid,
+        this.task.leader_userid,
+        ...this.task.member_list.map(member => {
+          return member.userid;
+        })
+      ];
     }
   },
   methods: {

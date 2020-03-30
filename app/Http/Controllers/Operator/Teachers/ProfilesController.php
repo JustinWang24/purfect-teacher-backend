@@ -36,6 +36,7 @@ class ProfilesController extends Controller
         try{
             $teacherData = $request->get('teacher');
             $profileData = $request->get('profile');
+            $instituteId = $request->get('institute_id');
 
             $teacherData['uuid'] = Uuid::uuid4()->toString();
             $teacherData['api_token'] = Uuid::uuid4()->toString();
@@ -53,14 +54,14 @@ class ProfilesController extends Controller
             $profileDao->createProfile($profileData);
 
             $gGao = new GradeUserDao();
-            $firstCampus = (new CampusDao())->getCampusesBySchool(session('school.id'))[0];
-            $firstInstitute = (new InstituteDao())->getBySchool(session('school.id'))[0];
+            $firstInstitute = (new InstituteDao())->getInstituteById($instituteId);
+
             $gGao->create([
                 'user_id'=>$user->id,
                 'name'=>$user->name,
                 'user_type'=>Role::TEACHER,
                 'school_id'=>session('school.id'),
-                'campus_id'=>$firstCampus->id,
+                'campus_id'=>$firstInstitute->campus->id,
                 'institute_id'=>$firstInstitute->id,
                 'department_id'=>0,
                 'grade_id'=>0,

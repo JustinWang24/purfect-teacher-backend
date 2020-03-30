@@ -2,12 +2,16 @@
  * 教师办公 app
  */
 import { Util } from "../../common/utils";
-import { startedByMe, waitingForMe } from "../../common/flow";
+import { startedByMe, waitingForMe, cancelApplicationByUser, waitingByMe, processedByMe, copyByMe } from "../../common/flow";
 import Axios from "axios";
+import FlowForm from './auto-flow/flow-form'
 
 if (document.getElementById('teacher-oa-index-app')) {
     new Vue({
         el: '#teacher-oa-index-app',
+        components: {
+            FlowForm
+        },
         data() {
             return {
                 schoolId: null,
@@ -15,17 +19,66 @@ if (document.getElementById('teacher-oa-index-app')) {
                 url: {
                     flowOpen: ''
                 },
-                isLoading: false,
-                flowsStartedByMe: [],
-                flowsWaitingForMe: [],
+                isLoading: true,
                 iconList: [],
+                show: 0, // showtab
                 nav: [
                     { tit: "待审批" },
                     { tit: "已审批" },
                     { tit: "我发起的" },
                     { tit: "我抄送的" }
                 ],
-                show: 0
+                myflows: [{
+                    "name": "学生专用",
+                    "key": 1000,
+                    "flows": [{
+                        "id": -1,
+                        "name": "招生",
+                        "icon": "http:\/\/t.ytx.com\/assets\/img\/pipeline\/icon1@2x.png"
+                    }, {
+                        "id": -2,
+                        "name": "迎新",
+                        "icon": "http:\/\/t.ytx.com\/assets\/img\/pipeline\/icon2@2x.png"
+                    }, {
+                        "id": -3,
+                        "name": "离校",
+                        "icon": "http:\/\/t.ytx.com\/assets\/img\/pipeline\/icon3@2x.png"
+                    }]
+                }, {
+                    "name": "日常申请",
+                    "key": 201,
+                    "flows": [{
+                        "id": 1,
+                        "name": "奖学金",
+                        "icon": "http:\/\/t.ytx.com\/assets\/img\/node-icon@2x.png",
+                        "type": 201
+                    }]
+                }, {
+                    "name": "校园助手",
+                    "key": 1001,
+                    "flows": [{
+                        "id": -4,
+                        "name": "通讯录",
+                        "icon": "http:\/\/t.ytx.com\/assets\/img\/pipeline\/icon13@2x.png"
+                    }]
+                }], // 我的审批
+                open: false, // 当前展开的我的审批
+                opened: 0,
+                state: '展开',
+                statusMap: {
+                    0: '未通过',
+                    1: '已通过',
+                    2: '待审批',
+                    3: '已通过',
+                    5: '已撤回'
+                },
+                tableData: [{
+                    iconState: 1,
+                    state: '',
+                    user_name: '申请人：',
+                    created_at: '申请日期：',
+                    done: '',
+                }]
             }
         },
         created() {
@@ -33,10 +86,9 @@ if (document.getElementById('teacher-oa-index-app')) {
             this.schoolId = dom.dataset.school;
             this.userUuid = dom.dataset.useruuid;
             this.url.flowOpen = dom.dataset.flowopen;
-            this.loadFlowsStartedByMe();
-            this.loadFlowsWaitingForMe();
-
             this.getofficeIcon();
+            this.loadFlowsWaitingByMe();
+            this.myFlows();
         },
         methods: {
             // 获取头部icon
@@ -46,39 +98,85 @@ if (document.getElementById('teacher-oa-index-app')) {
                 ).then(res => {
                     if (Util.isAjaxResOk(res)) {
                         this.iconList = res.data.data;
-                        console.log(res)
                     }
                 })
             },
             // tab切换
             list_click(tab) {
                 this.show = tab;
+                if (tab === 1) {
+                    this.loadFlowsProcessedByMe();
+                } else if (tab === 2) {
+                    this.loadFlowsStartedByMe();
+                } else {
+                    this.loadFlowsCopyByMe();
+                }
             },
-            startFlow: function (flowId) {
-                const url = this.url.flowOpen + '?flow=' + flowId + '&uuid=' + this.userUuid;
-                window.open(url, '_blank');
+            // 获取--我的审批
+            myFlows() {
+                axios.post("/api/pipeline/flows/my").then(res => {
+                    this.myflows = res.data.data.types;
+                }).catch(err => {
+                    console.log(err)
+                })
             },
-            loadFlowsStartedByMe: function () {
+            // 展示--收起
+            close(id) {
+                this.open = id
+            },
+            // list展示
+            // waiting_for_me=待我审批
+            loadFlowsWaitingByMe: function () {
                 this.isLoading = true;
-                startedByMe(this.userUuid).then(res => {
+                waitingByMe(this.userUuid, this.keyword, this.position).then(res => {
                     if (Util.isAjaxResOk(res)) {
-                        this.flowsStartedByMe = res.data.data.actions;
+                        this.tableData = res.data.data.flows;
                     }
                     this.isLoading = false;
                 });
             },
-            loadFlowsWaitingForMe: function () {
-                waitingForMe(this.userUuid).then(res => {
+            // my_processed=我审批的
+            loadFlowsProcessedByMe: function () {
+                this.isLoading = true;
+                processedByMe(this.userUuid, this.keyword, this.position).then(res => {
                     if (Util.isAjaxResOk(res)) {
-                        this.flowsWaitingForMe = res.data.data.actions;
+                        this.tableData = res.data.data.flows;
                     }
+                    this.isLoading = false;
                 });
+            },
+            // in_progress=我发起的
+            loadFlowsStartedByMe: function () {
+                this.isLoading = true;
+                startedByMe(this.userUuid, this.keyword, this.position).then(res => {
+                    if (Util.isAjaxResOk(res)) {
+                        this.tableData = res.data.data.flows;
+                    }
+                    this.isLoading = false;
+                });
+            },
+            // copy_to_me=抄送我的
+            loadFlowsCopyByMe: function () {
+                this.isLoading = true;
+                copyByMe(this.userUuid, this.keyword, this.position).then(res => {
+                    if (Util.isAjaxResOk(res)) {
+                        this.tableData = res.data.data.flows;
+                    }
+                    this.isLoading = false;
+                });
+            },
+            startFlow: function (flowId) {
+                const url = this.url.flowOpen + '?flow=' + flowId + '&uuid=' + this.userUuid;
+                window.open(url, '_blank');
             },
             viewApplicationDetail: function (action) {
                 window.location.href = '/pipeline/flow/view-history?action_id=' + action.id;
             },
             reloadThisPage: function () {
                 Util.reloadCurrentPage(this);
+            },
+            goCreateFlow(flow){
+                this.$refs.flowForm.init(flow)
             }
         }
     });

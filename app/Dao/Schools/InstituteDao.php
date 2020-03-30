@@ -94,4 +94,14 @@ class InstituteDao
     public function getByName($name, $schoolId){
         return Institute::where('school_id',$schoolId)->where('name',$name)->first();
     }
+
+     /**
+     * 根据学校ID获取所有学院
+     * @param $schoolId
+     * @return mixed
+     */
+    public function getAllInstituteBySchoolId($schoolId)
+    {
+        return Institute::where('school_id', $schoolId)->get();
+    }
 }

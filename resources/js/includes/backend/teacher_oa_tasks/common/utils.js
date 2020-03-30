@@ -42,6 +42,9 @@ function debounce(func, wait, immediate) {
 }
 
 const searchMember = function (keyword, call) {
+  if (!keyword) {
+    return
+  }
   TaskApi.excute("getOrganization", {
     keyword: keyword,
     type: 2

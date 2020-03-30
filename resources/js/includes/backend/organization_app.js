@@ -21,6 +21,7 @@ if(document.getElementById('organization-app')){
                     address: '',
                 },
                 parents:[],
+                organizationLevels:[],
                 loading: false,
                 members:[], // 当前组织的成员
                 currentMember:{
@@ -46,13 +47,16 @@ if(document.getElementById('organization-app')){
             this.schoolId = dom.dataset.school;
             this.maxLevel = parseInt(dom.dataset.level);
             this.currentMember.school_id = this.schoolId;
+            this.loadParents();
         },
         methods: {
             editMember: function(member){
+              this.currentMember.title_id = member.title_id;
                 const keys = Object.keys(member);
                 keys.forEach(k => {
                     this.currentMember[k] = member[k];
                 });
+              console.log(this.currentMember);
             },
             // 把成员加入到当前的组织中
             addToOrg: function(){
@@ -139,6 +143,7 @@ if(document.getElementById('organization-app')){
                 ).then(res => {
                     if(Util.isAjaxResOk(res)){
                         this.parents = res.data.data.parents;
+                        this.organizationLevels = res.data.data.organizationLevels;
                     }
                 })
             },

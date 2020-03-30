@@ -55,7 +55,7 @@ export default {
   .btn-box {
     flex: none;
     padding: 12px;
-    text-align: right;
+    text-align: center;
   }
 }
 </style>

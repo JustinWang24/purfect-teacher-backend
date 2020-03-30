@@ -174,7 +174,17 @@ class Banner extends Model
         return $this->public ? '不需登录' : '需要登录';
     }
 
-    public function getImageUrlAttribute($value){;
+    public function getImageUrlAttribute($value){
        return asset($value);
     }
+
+  public function getExternalAttribute($value)
+  {
+    // 图文单独处理
+    if (in_array($this->type, [2, 12])) {
+      return asset(route('h5_apps.banner.page_info',['id'=>$this->id]));
+    } else {
+      return $value;
+    }
+  }
 }

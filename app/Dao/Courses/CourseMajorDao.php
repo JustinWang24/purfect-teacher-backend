@@ -8,6 +8,7 @@
 
 namespace App\Dao\Courses;
 
+use App\Models\Course;
 use App\Models\Courses\CourseMajor;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
@@ -68,14 +69,16 @@ class CourseMajorDao
      * 根据指定的专业Id和年级获取课程列表
      * @param $majorId
      * @param $year
+     * @param int $term
      * @param bool $simple
-     * @return Collection|array
+     * @return array|Collection
      */
-    public function getCoursesByMajorAndYear($majorId, $year, $simple = true){
+    public function getCoursesByMajorAndYear($majorId, $year, $term = Course::FIRST_TERM, $simple = true){
         $cms =  DB::table('course_majors')
-            ->join('courses', function ($join) use ($year) {
+            ->join('courses', function ($join) use ($year, $term) {
                 $join->on('courses.id', '=', 'course_majors.course_id')
-                    ->where('courses.year','=',$year);
+                    ->where('courses.year','=',$year)
+                    ->where('courses.term', '=', $term);
             })
             ->where('major_id',$majorId)
             ->orderBy('course_majors.course_name','asc')

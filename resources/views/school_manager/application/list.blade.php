@@ -73,7 +73,7 @@
                                     @endforeach
                                 </tbody>
                             </table>
-                             {{ $list->links() }}
+                             {{ $list->appends(['position' => $list_type])->links() }}
                         </div>
                     </div>
                 </div>

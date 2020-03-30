@@ -7,7 +7,8 @@ if (document.getElementById('teacher-assistant-grades-manager-app')) {
     data(){
       return {
         schoolId: null,
-        gradeList: []
+        gradeList: [],
+        grade_id: null
       }
     },
     created(){
@@ -30,18 +31,48 @@ if (document.getElementById('teacher-assistant-grades-manager-app')) {
 
         });
       },
-      upload: function (e,file) {
-        console.log(e, file)
-        let params  = {};
-        params.grade_id = 10;
-        params.file = file;
+      setId: function (id) {
+        console.log(id)
+        this.grade_id = id;
+      },
+      upload: function (file) {
+        let params = new FormData();
+        console.log(this.grade_id)
+        params.append("grade_id", this.grade_id);  //图片
+        params.append("file", file)
         const url = '/api/Oa/upload-grade-resources';
         axios.post(url, params).then((res) => {
           if (Util.isAjaxResOk(res)) {
-            console.log(res)
+            this.getGradeList()
+            this.$message({
+              message: '上传成功',
+              type: 'success'
+            });
           }
         }).catch((err) => {
-
+              this.$message({
+                message: '上传失败',
+                type: 'warning'
+              });
+        });
+        return false
+      },
+      remove (id) {
+        const url = '/api/Oa/del-grade-resources'
+        let params = {image_id: id};
+        axios.post(url, params).then((res) => {
+          if (Util.isAjaxResOk(res)) {
+            this.getGradeList()
+            this.$message({
+              message: '删除成功',
+              type: 'success'
+            });
+          }
+        }).catch((err) => {
+              this.$message({
+                message: '删除失败',
+                type: 'warning'
+              });
         });
       }
     }

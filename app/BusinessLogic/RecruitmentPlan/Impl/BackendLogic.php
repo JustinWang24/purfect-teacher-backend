@@ -46,7 +46,6 @@ class BackendLogic implements IPlansLoaderLogic
             $this->pageNumber,
             $this->pageSize
         );
-
         return $plans;
     }
 

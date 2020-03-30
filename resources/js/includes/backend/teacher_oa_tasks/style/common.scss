@@ -2,14 +2,17 @@
   *:focus {
     outline: none !important;
   }
+
   .page-header {
     font-size: 30px;
     color: #777f8d;
   }
+
   .el-drawer {
     min-width: 400px;
     max-width: 600px;
     width: 50% !important;
+
     .el-drawer__header {
       color: #333333;
       font-weight: bold;
@@ -17,6 +20,12 @@
       font-size: 18px;
       border-bottom: 1px solid #eaedf2;
       margin-bottom: 12px !important;
+    }
+
+    .el-drawer__body {
+      height: 100%;
+      overflow: auto;
+      overflow-x: hidden;
     }
   }
 }

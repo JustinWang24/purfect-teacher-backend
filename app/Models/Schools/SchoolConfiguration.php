@@ -15,8 +15,11 @@ class SchoolConfiguration extends Model
     const FAKE_YEAR = 1980;
     const FIRST_TERM_START_MONTH = 8; // 第一学期开学日期在 8 月份
     const SECOND_TERM_START_MONTH = 2; // 第二学期开学日期在 2 月份
+
     const LAST_TERM = 1;
     const NEXT_TERM = 2;
+    const LAST_TERM_TEXT = '秋季开学';
+    const NEXT_TER_TEXT = '春季开学';
 
 
     protected $fillable = [
@@ -35,7 +38,10 @@ class SchoolConfiguration extends Model
         'campus_intro',
         'recruitment_intro',
         'open_for_uploading_qualification',
+        'apply_status' // 选课状态 0关闭 1开启
     ];
+
+
 
     public $casts = [
         ConfigurationTool::KEY_SELF_STUDY_NEED_REGISTRATION => 'boolean',
@@ -48,7 +54,16 @@ class SchoolConfiguration extends Model
         'first_day_term_2'=>'datetime',
         'summer_start_date'=>'datetime',
         'winter_start_date'=>'datetime',
+        'apply_status' => 'boolean',
     ];
+
+
+    public function getAllTerm() {
+        return  [
+            self::LAST_TERM => self::LAST_TERM_TEXT,
+            self::NEXT_TERM => self::NEXT_TER_TEXT,
+        ];
+    }
 
     /**
      * 为学校创建默认的配置项
@@ -116,10 +131,13 @@ class SchoolConfiguration extends Model
 
     /**
      * 根据指定的月份猜测在第几个学期
-     * @param $month
+     * @param null $month
      * @return int
      */
-    public function guessTerm($month){
+    public function guessTerm($month = null){
+        if(is_null($month)) {
+            $month = Carbon::parse()->month;
+        }
         return ($month >= self::FIRST_TERM_START_MONTH || $month < self::SECOND_TERM_START_MONTH) ? 1 : 2;
     }
 
@@ -142,10 +160,11 @@ class SchoolConfiguration extends Model
             $weeks->push(
             new CalendarWeek(
                 '预备周',
-                $termStartDate->subWeek()->format('Y-m-d'),
-                $termStartDate->addDays(6)->format('Y-m-d')
+                $termStartDate->subWeek()->startOfWeek()->toDateString(),
+                $termStartDate->endOfWeek()->toDateString()
                 )
             );
+            $termStartDate = $termStartDate->addWeek();
         }
 
 
@@ -153,10 +172,11 @@ class SchoolConfiguration extends Model
         for ($i = 0; $i < $weeksNumber; $i++){
             $weeks->push(
                 new CalendarWeek('第' . ($i+1) . '周',
-                    $termStartDate->addDay()->format('Y-m-d'),
-                    $termStartDate->addDays(6)->format('Y-m-d')
+                    $termStartDate->startOfWeek()->toDateString(),
+                    $termStartDate->endOfWeek()->toDateString()
                 )
             );
+            $termStartDate = $termStartDate->addWeek();
         }
         return $weeks;
     }
@@ -241,4 +261,46 @@ class SchoolConfiguration extends Model
         $this->getScheduleWeek($date, $weeks, $term);
         return $this->isOddWeek ? GradeAndYearUtil::WEEK_EVEN : GradeAndYearUtil::WEEK_ODD;
     }
+
+
+    /**
+     * 返回自然年的所有周
+     * @param null $year
+     * @return Collection
+     */
+    public function getAllWeeksOfYear($year = null){
+        if(is_null($year)) {
+            $year = Carbon::now()->year;
+        }
+        // 预备周, 是开始日期的前一周
+        $weeks = new Collection();
+
+        $startDate = Carbon::parse($year.'-01-01');
+
+        $week = $startDate->weeksInYear;
+
+        // 工作周
+        for ($i = 1; $i <= $week; $i++){
+
+            $weeks->push(
+                new CalendarWeek('第' . $i . '周',
+                    $startDate->startOfWeek()->toDateString(),
+                    $startDate->endOfWeek()->toDateString()
+                )
+            );
+            $startDate = $startDate->addWeek();
+        }
+
+        $weeks->push(
+            new CalendarWeek('第' . 1 . '周',
+                $startDate->startOfWeek()->toDateString(),
+                $startDate->endOfWeek()->toDateString()
+            )
+        );
+
+
+        return $weeks;
+    }
+
+
 }
