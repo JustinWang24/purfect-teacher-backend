@@ -288,6 +288,9 @@ export const Constants = {
         REJECTED: 2,
         REJECTED_TXT: '未通过',
         REJECTED_CLASS: 'text-danger',
+        CANCEL: 3,
+        CANCEL_TXT: '已撤回',
+        CANCEL_CLASS: 'text-grey',
     },
     NODE_OPTION: {
         TEXT: '文本',
