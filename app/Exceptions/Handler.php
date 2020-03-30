@@ -58,10 +58,10 @@ class Handler extends ExceptionHandler
     protected function unauthenticated($request, AuthenticationException $exception)
     {
         if (strpos(Route::currentRouteName(), 'api.') === 0 ){
-            echo JsonBuilder::Error('Token错误, 请重新登录','-1');die;
+            echo JsonBuilder::Error('您的账号在其他设备登录，如非本人操作请立即修改密码','-1');die;
         } else {
             return $request->expectsJson()
-                    ? JsonBuilder::Error('Token错误, 请重新登录','-1')
+                    ? JsonBuilder::Error('您的账号在其他设备登录，如非本人操作请立即修改密码','-1')
                     : redirect()->guest($exception->redirectTo() ?? route('login'));
         }
 
