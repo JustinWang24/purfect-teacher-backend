@@ -96,6 +96,7 @@ class noticeStudentAttendanceSignin extends Command
                   }
                   $list[] = [
                             'time_table_id' => $timetable->id,
+                            'course_name' => $timetable->course->name,
                             'not_sign_user' => $notSignUser,
                   ];
                 }
