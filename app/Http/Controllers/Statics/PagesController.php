@@ -71,8 +71,6 @@ class PagesController extends Controller
                 $school_id = isset($gradeUserOneInfo->school_id) ? $gradeUserOneInfo->school_id : $school_id;
             }
         }
-        $this->dataForView['pageTitle'] = ''; // 招生简章
-        $this->dataForView['api_token'] = Auth::user()->api_token ?? null;
         $this->dataForView['config'] = SchoolConfiguration::where('school_id',$school_id)->first();
 
         return view('h5_apps.student.school_recruitment_intro', $this->dataForView);
