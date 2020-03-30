@@ -52,9 +52,10 @@
                                         <td>{{ $val->flow->name }}</td>
                                         <td>{{ $val->created_at }}</td>
                                         <td>
-                                            @if($val->done == \App\Utils\Pipeline\IUserFlow::IN_PROGRESS)审核中@endif
-                                            @if($val->done == \App\Utils\Pipeline\IUserFlow::DONE)已通过@endif
-                                            @if($val->done == \App\Utils\Pipeline\IUserFlow::TERMINATED)被拒绝@endif
+                                            @if($val->done == \App\Utils\Pipeline\IUserFlow::IN_PROGRESS)<span class="text-danger">审核中</span>@endif
+                                            @if($val->done == \App\Utils\Pipeline\IUserFlow::DONE)<span class="text-success">已通过</span>@endif
+                                            @if($val->done == \App\Utils\Pipeline\IUserFlow::TERMINATED)<span class="text-warning">被拒绝</span>@endif
+                                            @if($val->done == \App\Utils\Pipeline\IUserFlow::REVOKE)<span class="">已撤销</span>@endif
                                         </td>
                                         @endif
 
@@ -64,9 +65,10 @@
                                             <td>{{ $val->flow->name }}</td>
                                             <td>{{ $val->created_at }}</td>
                                             <td>
-                                                @if($val->done == \App\Utils\Pipeline\IUserFlow::IN_PROGRESS)审核中@endif
-                                                @if($val->done == \App\Utils\Pipeline\IUserFlow::DONE)已通过@endif
-                                                @if($val->done == \App\Utils\Pipeline\IUserFlow::TERMINATED)被拒绝@endif
+                                                @if($val->done == \App\Utils\Pipeline\IUserFlow::IN_PROGRESS)<span class="text-danger">审核中</span>@endif
+                                                @if($val->done == \App\Utils\Pipeline\IUserFlow::DONE)<span class="text-success">已通过</span>@endif
+                                                @if($val->done == \App\Utils\Pipeline\IUserFlow::TERMINATED)<span class="text-warning">被拒绝</span>@endif
+                                                @if($val->done == \App\Utils\Pipeline\IUserFlow::REVOKE)<span class="">已撤销</span>@endif
                                             </td>
                                         @endif
                                     </tr>

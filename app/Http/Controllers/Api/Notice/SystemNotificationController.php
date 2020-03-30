@@ -35,6 +35,7 @@ class SystemNotificationController extends Controller
                     'param2' => strval($extra['param2'])
                 ];
             }
+            $systemNotification['content'] = strip_tags($systemNotification['content']);
             $systemNotification['app_extra'] = $retExtra;
             $systemNotification['created_at'] = Carbon::parse($systemNotification['created_at'])->format('Y-m-d H:i');
         }
