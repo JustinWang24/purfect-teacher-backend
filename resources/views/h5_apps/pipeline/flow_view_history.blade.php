@@ -115,10 +115,22 @@
                         <span style="text-align: right;font-size: 13px;color: #4FA8FE;"> 发起审批 </span>
                     </el-timeline-item>
                     @foreach($handlers as $key => $handler)
-                    <el-timeline-item key="{{ $key+1 }}">
-                <!--<el-timeline-item key="0" icon="el-icon-circle-close" type='danger'> 未通过
-                    <el-timeline-item key="0" icon="el-icon-time" type='warning'> 审核中
-                    <el-timeline-item key="0" icon="el-icon-more"> -->
+                        @switch($handlerIcon)
+                            @case("success")
+                            <el-timeline-item key="{{ $key+1 }}" icon="el-icon-circle-check" type='success'>
+                                @break;
+                            @case("error")
+                            <el-timeline-item key="{{ $key+1 }}" icon="el-icon-circle-close" type='danger'>
+                                @break;
+                            @case("pending")
+                            <el-timeline-item key="{{ $key+1 }}" icon="el-icon-time" type='warning'>
+                                @break;
+                            @case("wait")
+                            <el-timeline-item key="{{ $key+1 }}" icon="el-icon-more">
+                                @break;
+                            @default
+                                <el-timeline-item key="{{ $key+1 }}">
+                        @endswitch
                         @foreach($handler as $k => $val)
                         @foreach ($val as $v)
                         <div style="margin-bottom: 10px;display: flex;justify-content: space-between;align-items: center;">
