@@ -115,7 +115,7 @@
                         <span style="text-align: right;font-size: 13px;color: #4FA8FE;"> 发起审批 </span>
                     </el-timeline-item>
                     @foreach($handlers as $key => $handler)
-                        @switch($handlerIcon)
+                        @switch($handlerIcon[$key])
                             @case("success")
                             <el-timeline-item key="{{ $key+1 }}" icon="el-icon-circle-check" type='success'>
                                 @break;
