@@ -133,7 +133,18 @@
                 <div class="myTips" v-html="item.tips"></div>
                 <van-field name="uploader" :required="item.required?true:false" :label="item.title">
                    <template #input>
-                       <van-uploader v-model="item.files" :max-count="9" :after-read="uploadImg"/>
+                       <el-button @click="item.extra.showPicker = true" icon="el-icon-paperclip" type="text">上传附件</el-button>
+                        <van-action-sheet
+                                v-model="item.extra.showPicker" :title="item.title">
+                            <div class="part-content">
+                                    <file-manager-mobile
+                                            user-uuid="uuid"
+                                            :pick-file="true"
+                                            :allow-file-types="[]"
+                                            v-on:pick-this-file="pickFile"
+                                    ></file-manager-mobile>
+                            </div>
+                        </van-action-sheet>
                    </template>
                 </van-field>
             </div>
@@ -193,7 +204,7 @@
                         v-model="item.extra.showPicker" :title="item.title">
                     <div class="part-content">
                         <div v-show="!item.partEnter" class="partGroup clearfix" v-for="itemParent in part">
-                            <div v-for="item2 in itemParent.organ" class="partItem"
+                            <div v-for="item2 in itemParent.organ" :id="item2.id" class="partItem"
                                  :class="{'part-active': item2.active}" @click="clickPart(item2, itemParent, item.extra.depType)"
                                  v-html="item2.name"></div>
                         </div>

@@ -27,7 +27,7 @@ if (document.getElementById('teacher-assistant-evaluation-app')) {
             const dom = document.getElementById('app-init-data-holder');
             this.schoolId = dom.dataset.school;
             this.getTimeScreen();
-            console.log('评分');
+            // console.log('评分');
         },
         methods: {
             searchList: function () {
@@ -46,7 +46,7 @@ if (document.getElementById('teacher-assistant-evaluation-app')) {
                 this.getNodeData(stuData);
             },
             showText: function (item) {
-              console.log(item)
+              // console.log(item)
               item.ifShow = !item.ifShow;
               if (item.ifShow) {
                 item.ifText = '收起'
@@ -87,7 +87,7 @@ if (document.getElementById('teacher-assistant-evaluation-app')) {
                                 });
                                 this.data.push(level1Item)
                             })
-                          console.log(this.data)
+                          // console.log(this.data)
                         } else {
                             this.data = [];
                             this.$message({
@@ -123,7 +123,7 @@ if (document.getElementById('teacher-assistant-evaluation-app')) {
                 params.course_id = data.parent.data.id;
                 params.grade_id = data.data.id;
                 this.course_id = data.parent.data.id;
-                console.log(params)
+                // console.log(params)
                 axios.post(url, params).then((res) => {
                     if (Util.isAjaxResOk(res)) {
                         let data = res.data.data;

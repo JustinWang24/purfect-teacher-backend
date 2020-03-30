@@ -26,7 +26,7 @@ if (document.getElementById('teacher-assistant-grades-evaluations-app')) {
       const dom = document.getElementById('app-init-data-holder');
       this.schoolId = dom.dataset.school;
       this.getGradeList();
-      console.log('班级评分');
+      // console.log('班级评分');
     },
     methods: {
       searchList: function () {
@@ -60,7 +60,7 @@ if (document.getElementById('teacher-assistant-grades-evaluations-app')) {
         });
       },
       getGradeTable: function (params) {
-        console.log(params)
+        // console.log(params)
         const url = Util.buildUrl(Constants.API.TEACHER_WEB.GRADE_TODAY_GRADE);
         axios.post(url, params).then((res) => {
           if (Util.isAjaxResOk(res)) {

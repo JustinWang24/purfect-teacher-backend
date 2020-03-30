@@ -53,18 +53,18 @@ if (document.getElementById('teacher-assistant-index-app')) {
             const dom = document.getElementById('app-init-data-holder');
             this.schoolId = dom.dataset.school;
             this.getBunnerData();
-            console.log('助手');
+            // console('助手');
         },
         methods: {
             handleClick: function (tab, event) {
-                console.log(tab)
-                console.log(event)
+                // console(tab)
+                // console(event)
             },
             getBunnerData: function () {
                 const url = Util.buildUrl(Constants.API.TEACHER_WEB.INDEX);
-                console.log(url)
+                // console(url)
                 axios.post(url).then((res) => {
-                    console.log(res)
+                    // console(res)
                     if (Util.isAjaxResOk(res)) {
                         this.bannerData = res.data.data;
                     }

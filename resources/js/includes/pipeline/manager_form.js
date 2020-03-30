@@ -210,7 +210,8 @@ if (document.getElementById('pipeline-flows-manager_form-app')) {
                         tips_holder: '',
                         extra: {
                             text: '',
-                            files:[]
+                            files:[],
+                            showPicker: false
                         },
                         required: 0,
                         icon: 'el-icon-paperclip'
@@ -282,21 +283,21 @@ if (document.getElementById('pipeline-flows-manager_form-app')) {
             },
             addRadioItem (item, index) {
                 let items = {itemText: '选项',};
-                console.log(item)
+                // console.log(item)
                 item.splice(index + 1, 0, items)
             },
             removeRadioItem (item, index) {
                 item.splice(index, 1)
             },
             save () {
-                console.log(this.formList)
+                // console.log(this.formList)
                 const url = '/school_manager/pipeline/flows/save-option';
                 let params = {};
                 params.flow_id = this.flow_id;
                 params.node_option = this.formList;
                 axios.post(url, params).then((res) => {
                     if (Util.isAjaxResOk(res)) {
-                        console.log(res)
+                        // console.log(res)
                         this.$message({
                             message: '保存成功',
                             type: 'success'
@@ -309,7 +310,7 @@ if (document.getElementById('pipeline-flows-manager_form-app')) {
                         });
                     }
                 }).catch((err) => {
-                    console.log(err)
+                    // console.log(err)
                     this.$message({
                         message: '保存失败',
                         type: 'warning'
@@ -326,7 +327,7 @@ if (document.getElementById('pipeline-flows-manager_form-app')) {
                         this.formList = data.nodes.options;
                     }
                 }).catch((err) => {
-                    console.log(err)
+                    // console.log(err)
                 });
             }
         }

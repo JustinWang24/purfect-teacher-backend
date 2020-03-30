@@ -23,7 +23,7 @@ if (document.getElementById('teacher-assistant-check-in-app')) {
             this.schoolId = dom.dataset.school;
             // 载入时间选择
             this.getTimeScreen();
-            console.log('签到');
+            // console.log('签到');
         },
         methods: {
             searchList: function () {
@@ -32,7 +32,7 @@ if (document.getElementById('teacher-assistant-check-in-app')) {
             showDetail: function (data) {
                 this.ifShow = true;
                 this.getDetailData(data);
-                console.log(data)
+                // console.log(data)
             },
             getTreeData: function () {
                 const url = Util.buildUrl(Constants.API.TEACHER_WEB.SIGN_IN_COURSES);
@@ -54,7 +54,7 @@ if (document.getElementById('teacher-assistant-check-in-app')) {
                                 message: '查询成功',
                                 type: 'success'
                             });
-                            console.log(data)
+                            // console.log(data)
                             data.forEach((item, index) => {
                                 let level1Item = {};
                                 level1Item.id = item.course_id;
@@ -67,8 +67,8 @@ if (document.getElementById('teacher-assistant-check-in-app')) {
                                     level1Item.children.push(level2Item)
                                 });
                                 this.data.push(level1Item)
-                                console.log(data)
-                                console.log(this.data)
+                                // console.log(data)
+                                // console.log(this.data)
                             })
                         } else {
                             this.data = [];

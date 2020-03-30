@@ -133,7 +133,7 @@ if (document.getElementById('teacher-assistant-students-manager-app')) {
       const dom = document.getElementById('app-init-data-holder');
       this.schoolId = dom.dataset.school;
       this.getClassData();
-      console.log('班级评分');
+      // console.log('班级评分');
     },
     methods: {
       showStu: function (data) {
@@ -153,8 +153,8 @@ if (document.getElementById('teacher-assistant-students-manager-app')) {
 
       },
       onSubmit: function () {
-        console.log(this.detailForm);
-        console.log('提交');
+        // console.log(this.detailForm);
+        // console.log('提交');
         let params = {};
         params.data = {};
         params.monitor = {};
@@ -199,7 +199,6 @@ if (document.getElementById('teacher-assistant-students-manager-app')) {
           if (Util.isAjaxResOk(res)) {
             this.stuData = res.data.data;
             this.$set(this,'detailPage',res.data)
-            console.log(this.detailPage)
           }
         }).catch((err) => {
 

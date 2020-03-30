@@ -29,6 +29,7 @@ if (document.getElementById('pipeline-flow-open-app')) {
         canSubmit: true,
         part: [],
         selectParts: [],
+        selectPartIDs: [],
         flowType: null,
         copys: [],
         handlers: []
@@ -65,7 +66,7 @@ if (document.getElementById('pipeline-flow-open-app')) {
             this.$set(this, 'copys', data.copys)
             this.$set(this, 'handlers', data.handlers)
 
-            // console.log(data)
+            // // console.log(data)
             data.options.forEach((item, index) => {
               if (item.type == 'input' || item.type == 'textarea' || item.type == 'number') {
                 if (!item.default) {
@@ -75,7 +76,7 @@ if (document.getElementById('pipeline-flow-open-app')) {
             });
             this.$set(this, 'formList', data.options)
             // this.formList = data.options;
-            // console.log(this.formList)
+            // // console.log(this.formList)
           }
         }).catch((err) => {
           this.$message({
@@ -85,8 +86,8 @@ if (document.getElementById('pipeline-flow-open-app')) {
         });
       },
       onSubmit() {
-        // console.log(1)
-        // console.log(this.formList)
+        // // console.log(1)
+        // // console.log(this.formList)
 
         let options = [];
         let url = '/api/pipeline/flow/start'
@@ -115,7 +116,7 @@ if (document.getElementById('pipeline-flow-open-app')) {
                 message: '提交成功',
                 type: 'success'
               });
-              // console.log(res)
+              // // console.log(res)
               setTimeout(() => {
                 window.location.href = res.data.data.url;
               }, 400)
@@ -149,8 +150,8 @@ if (document.getElementById('pipeline-flow-open-app')) {
         }
 
         item.value = item.valueS + (item.valueE ? ' ~ ' + item.valueE : '');
-        console.log(item.valueE ? item.valueE : '')
-        console.log(item, item.value)
+        // console.log(item.valueE ? item.valueE : '')
+        // console.log(item, item.value)
         item.extra.showPickerS = false;
       },
       onConfirmE(item) {
@@ -162,7 +163,7 @@ if (document.getElementById('pipeline-flow-open-app')) {
         }
 
         item.value = (item.valueS ? item.valueS + ' ~ ' : '') + item.valueE;
-        console.log(item, item.value)
+        // console.log(item, item.value)
         item.extra.showPickerE = false;
       },
       showPicker(item) {
@@ -208,7 +209,23 @@ if (document.getElementById('pipeline-flow-open-app')) {
       },
       uploadImg(img) {
         // console.log(img)
-
+        let params = new FormData();
+        params.append("file", img.content)
+        const url = '/api/Oa/message-upload-files';
+        axios.post(url, params).then((res) => {
+          if (Util.isAjaxResOk(res)) {
+            this.$message({
+              message: '上传成功',
+              type: 'success'
+            });
+          }
+        }).catch((err) => {
+          this.$message({
+            message: '上传失败',
+            type: 'warning'
+          });
+        });
+        return false
       },
       showDepart(item) {
         // if (this.part.length == 0 || item.value) {
@@ -237,6 +254,7 @@ if (document.getElementById('pipeline-flow-open-app')) {
         this.$forceUpdate();
       },
       clickPart(item, parentItem, type) {
+        // console.log(type)
         item.active = true;
         this.getPart(item, parentItem, type);
       },
@@ -245,59 +263,78 @@ if (document.getElementById('pipeline-flow-open-app')) {
           params = {}, level = 1;
         params.parent_id = 0;
         params.type = 1;
-        console.log(item)
         if (item) {
           level = item.level;
           params.parent_id = item.id;
         }
         axios.post(url, params).then((res) => {
           if (Util.isAjaxResOk(res)) {
-            // console.log(res)
             let data = res.data.data;
-            data.active = [];
+
             if (params.parent_id == 0) {
               this.part = [data]
+              this.selectPartIDs = [];
+              this.selectParts = [];
               return
             }
-            this.part.splice(level, this.part.length + level, data);
-            if (data.organ.length != 0) {
-              this.selectParts = [];
-              parentItem.organ.forEach((itemPart, index) => {
-                itemPart.active = false;
-              });
-              item.active = true;
-            } else if (data.organ.length == 0) {
-              if (type == 1) {
-                parentItem.organ.forEach((itemPart, index) => {
-                  itemPart.active = false;
-                });
-                item.active = true;
-                this.selectParts[0] = item;
-              } else if (type == 2) {
-                let noPart = true;
-                this.selectParts.forEach((part, index) => {
-                  if (part.id == item.id) {
-                    noPart = false;
-                    this.selectParts.splice(index, 1)
-                  }
-                });
-                if (noPart) {
-                  item.active = true;
-                  parentItem.active.push(item.id)
-                  this.selectParts.push(item)
+
+            if (data.organ.length == 0) {
+              // 当部门为多选时
+              if (type == 2) {
+                // // console.log(res)
+                if (this.selectPartIDs.indexOf(item.id) == -1) {
+                  this.selectPartIDs.push(item.id);
+                  this.selectParts.push(item);
+                } else {
+                  this.selectPartIDs.splice(this.selectPartIDs.indexOf(item.id), 1)
+                  this.selectParts.splice(this.selectPartIDs.indexOf(item.id), 1)
                 }
+                this.setActive(parentItem.organ)
+              } else if (type == 1) {
+                // 部门为单选时
+                this.selectPartIDs[0] = item.id;
+                this.selectParts[0] = item;
+                this.setActive(parentItem.organ)
+              }
+
+            } else {
+              if(type == 2) {
+                this.setActive(parentItem.organ);
+                item.active = true;
+                this.setActive(data.organ)
+              } else {
+                parentItem.organ.forEach((item, idx) => {
+                  item.active = false;
+                })
+                item.active = true;
               }
             }
+
+            // // console.log(this.selectPartIDs)
+            // // console.log(this.selectParts)
+
+            this.part.splice(level, this.part.length + level, data);
 
             this.$forceUpdate();
           }
         }).catch((err) => {
+
         });
       },
-      pickFileHandler: function(payload){
+      setActive(arr) {
+        arr.forEach((i, idx) => {
+          i.active = false;
+          this.selectPartIDs.forEach((is, idxs) => {
+            if (i.id == is) {
+              i.active = true;
+            }
+          })
+        })
+      },
+      pickFileHandler: function (payload) {
         this.showFileManagerFlag = false;
         const attachment = {
-          id:null,
+          id: null,
           action_id: null,
           media_id: payload.file.id,
           url: payload.file.url,
@@ -305,10 +342,13 @@ if (document.getElementById('pipeline-flow-open-app')) {
         };
         this.action.attachments.push(attachment);
       },
-      dropAttachment: function(idx, attachment){
+      dropAttachment: function (idx, attachment) {
         this.action.attachments.splice(idx, 1);
-        this.$message({type:'info', message: '移除文件: ' + attachment.file_name});
+        this.$message({type: 'info', message: '移除文件: ' + attachment.file_name});
       },
+      pickFile() {
+
+      }
     }
   });
 }
