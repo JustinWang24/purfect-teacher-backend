@@ -165,7 +165,8 @@ class SignInGradeController extends Controller
                 'name' => $item->name,
                 'mold' => $molds[$item->user_id],
             ];
-            $scores[] = [
+
+            $score[] = [
                 'user_id' => $item->user_id,
                 'name' => $item->name,
                 'remark' => $remarks[$item->user_id],
