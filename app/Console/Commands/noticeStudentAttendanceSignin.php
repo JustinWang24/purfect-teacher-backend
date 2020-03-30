@@ -12,6 +12,7 @@ use App\Models\Misc\SystemNotification;
 use App\Utils\Time\GradeAndYearUtil;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Log;
 
 class noticeStudentAttendanceSignin extends Command
 {
@@ -76,7 +77,7 @@ class noticeStudentAttendanceSignin extends Command
 
             // 获取当前时间是第几节课
             $timeSlot =  $timeSlotDao->getTimeSlotByCurrentTime($schoolId);
-            if($timeSlot->to == $time) {
+//            if($timeSlot->to == $time) {
                 $timetables = $timetableItemDao->getCourseListByCurrentTime($schoolId, $timeSlot->id);
                 foreach ($timetables as $timetable) {
                   // 班级学生
@@ -87,7 +88,7 @@ class noticeStudentAttendanceSignin extends Command
                   $attendanceInfo = $attendanceData->details;
                   // 取出签到详情所有user_id
                   $userIds = $attendanceInfo->pluck('student_id')->toArray();
-
+                  $notSignUser = [];
                   foreach ($gradeUsers as $key => $val) {
                     if(!in_array($val->user_id, $userIds)) {
                         $notSignUser[] = $val->user;
@@ -98,9 +99,9 @@ class noticeStudentAttendanceSignin extends Command
                             'not_sign_user' => $notSignUser,
                   ];
                 }
-            }
+//            }
         }
-
+        Log::info('定时器执行了', $list);
         /*
          * [
          *   {
