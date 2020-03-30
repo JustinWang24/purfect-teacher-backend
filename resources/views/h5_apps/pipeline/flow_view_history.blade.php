@@ -115,7 +115,7 @@
                         <span style="text-align: right;font-size: 13px;color: #4FA8FE;"> 发起审批 </span>
                     </el-timeline-item>
                     @foreach($handlers as $key => $handler)
-                    <el-timeline-item key="{{ $key+1 }}" icon="{{ asset('assets/img/pipeline/'. $handlersIcon[$key] .'.png') }}">
+                    <el-timeline-item key="{{ $key+1 }}" icon="{{ asset('assets/img/pipeline/'. $handlerIcon[$key] .'.png') }}">
                         @foreach($handler as $k => $val)
                         @foreach ($val as $v)
                         <div style="margin-bottom: 10px;display: flex;justify-content: space-between;align-items: center;">
