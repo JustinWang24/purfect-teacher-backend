@@ -342,7 +342,7 @@ class ActionDao
     public function getFlowsWhichMyProcessed($user, $position = 0, $keyword = '', $size = ConfigurationTool::DEFAULT_PAGE_SIZE){
         $return = UserFlow::whereHas('actions', function ($query) use ($user) {
             $query->where('user_id', $user->id)->where('result', '>', IAction::RESULT_PENDING);
-        });
+        })->where('user_id', '<>', $user->id);
         if ($position) {
             $typeArr = array_keys(Flow::getTypesByPosition($position));
             if ($position == 1) {
