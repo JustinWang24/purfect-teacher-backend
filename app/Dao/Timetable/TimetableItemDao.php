@@ -938,8 +938,6 @@ class TimetableItemDao
 
             $term = $school->configuration->guessTerm($now->month);
 
-//                $timeSlotIds = array_column($currentTimeSlot, 'id');
-
             foreach ($currentTimeSlot as $key => $val) {
                 $where = [
                     ['school_id','=',$school->id],
@@ -950,7 +948,7 @@ class TimetableItemDao
                     ['time_slot_id','=',$val->id],
                 ];
 
-                $result = TimetableItem::where($where)->first();
+                $result = TimetableItem::where($where)->orderBy('id', 'desc')->first();
                 if(!is_null($result)) {
                     return $result; break;
                 }

@@ -11,6 +11,7 @@ use App\BusinessLogic\Pipeline\Business\Impl\ClockinLogic;
 use App\BusinessLogic\Pipeline\Business\Impl\LeaveLogic;
 use App\BusinessLogic\Pipeline\Business\Impl\MacAddressLogic;
 use App\BusinessLogic\Pipeline\Business\Impl\OaMeetingLogic;
+use App\BusinessLogic\Pipeline\Business\Impl\StudentLeaveLogic;
 use App\Models\TeacherAttendance\Leave;
 use App\Utils\Pipeline\IFlow;
 
@@ -43,6 +44,9 @@ class BusinessFactory
                 break;
             case IFlow::BUSINESS_TYPE_MEETING:
                 $instance = new OaMeetingLogic($user);
+                break;
+            case IFlow::BUSINESS_TYPE_STUDENT_LEAVE:
+                $instance = new StudentLeaveLogic($user);
                 break;
             default:
                 break;

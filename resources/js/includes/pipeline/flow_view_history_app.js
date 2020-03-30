@@ -21,7 +21,6 @@ if (document.getElementById('pipeline-flow-view-history-app')) {
                     content: "dddd", //审批意见
                     urgent: false //是否加急
                 },
-
                 userUuid: null,
                 actionId: null,
                 userFlowId: null,
