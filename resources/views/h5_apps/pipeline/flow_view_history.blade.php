@@ -106,7 +106,7 @@
             </h3>
             <div class="block" style="padding: 0 15px;">
                 <el-timeline>
-                    <el-timeline-item key="0" icon="{{ asset('assets/img/pipeline/success.png') }}">
+                    <el-timeline-item key="0" icon="el-icon-circle-check" type='success'>
                         <img src="{{ $startUser->profile->avatar }}" alt="" style="width: 40px; height: 40px;border-radius: 50%;vertical-align: middle;">
                         <div style="flex: 1;margin-left: 20px;">
                             <p style="margin: 0;">{{ $startUser->name }}</p>
@@ -115,15 +115,19 @@
                         <span style="text-align: right;font-size: 13px;color: #4FA8FE;"> 发起审批 </span>
                     </el-timeline-item>
                     @foreach($handlers as $key => $handler)
-                    <el-timeline-item key="{{ $key+1 }}" icon="{{ asset('assets/img/pipeline/'. $handlerIcon[$key] .'.png') }}">
+                    <el-timeline-item key="{{ $key+1 }}">
+                <!--<el-timeline-item key="0" icon="el-icon-circle-close" type='danger'> 未通过
+                    <el-timeline-item key="0" icon="el-icon-time" type='warning'> 审核中
+                    <el-timeline-item key="0" icon="el-icon-more"> -->
                         @foreach($handler as $k => $val)
                         @foreach ($val as $v)
                         <div style="margin-bottom: 10px;display: flex;justify-content: space-between;align-items: center;">
-                            <div>
-                                <img src="{{ $v->profile->avatar }}" alt="" style="width: 40px; height: 40px;border-radius: 50%;vertical-align: middle;">
-                                {{ $v->name }}({{ $k }})
+                            <img src="{{ $v->profile->avatar }}" alt="" style="width: 40px; height: 40px;border-radius: 50%;vertical-align: middle;">
+                            <div style="flex: 1;margin-left: 20px;">
+                                <p style="margin: 0;">{{ $v->name }}({{ $k }})</p>
+                                <p style="margin: 0;">{{ substr($startAction->created_at, 0, 16) }}</p>
                             </div>
-                            <span style="text-align: right;">
+                            <span style="text-align: right;font-size: 13px;">
                                 @if (!empty($v->result))
                                 @if ($v->result->result == \App\Utils\Pipeline\IAction::RESULT_PENDING) <span style="color: #FE7B1C;">审批中</span> @endif
                                 @if ($v->result->result == \App\Utils\Pipeline\IAction::RESULT_PASS) {{ substr($v->result->updated_at, 5, 11) }} <span style="color: #6DCC58;">已通过</span> @endif
@@ -132,14 +136,22 @@
                                 @endif
                             </span>
                         </div>
-                        <!-- 审批意见 if条件-->
-                        <!-- <p>审批：</p> -->
-
                         @endforeach
                         @endforeach
                     </el-timeline-item>
                     @endforeach
                 </el-timeline>
+            </div>
+        </div>
+        <div class="information">
+            <h3>抄送人（{{ count($copys) }}人）</h3>
+            <div class="sendBox">
+                @foreach($copys as $copy)
+                <figure>
+                    <img src="{{asset($copy['avatar'])}}" width="50" height="50" />
+                    <p>{{ $copy['name'] }}</p>
+                </figure>
+                @endforeach
             </div>
         </div>
         <div class="information">
