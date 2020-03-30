@@ -288,7 +288,6 @@ class AfficheDao extends \App\Dao\Affiche\CommonDao
         if (!intval($user_id) || !intval($iche_id)) {
             return;
         }
-
         // 查询条件
         $condition[] = ['user_id', '=', $user_id];
         $condition[] = ['iche_id', '=', $iche_id];
