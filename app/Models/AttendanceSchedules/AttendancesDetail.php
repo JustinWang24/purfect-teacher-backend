@@ -22,9 +22,6 @@ class AttendancesDetail extends Model
     const  TYPE_MANUAL_TEXT = '手动签到';
     const  TYPE_SWEEP_CODE_TEXT = '扫码补签';
 
-    const UN_EVALUATE_STATUS = 0; // 未评
-    const EVALUATE_STATUS = 1; // 已评
-
 
     // 详情类型
     const MOLD_SIGN_IN = 1;  // 签到
