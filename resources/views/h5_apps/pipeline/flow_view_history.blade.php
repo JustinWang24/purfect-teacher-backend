@@ -106,7 +106,7 @@
             </h3>
             <div class="block" style="padding: 0 15px;">
                 <el-timeline>
-                    <el-timeline-item key="0">
+                    <el-timeline-item key="0" icon="{{ asset('assets/img/pipeline/success.png') }}">
                         <img src="{{ $startUser->profile->avatar }}" alt="" style="width: 40px; height: 40px;border-radius: 50%;vertical-align: middle;">
                         <div style="flex: 1;margin-left: 20px;">
                             <p style="margin: 0;">{{ $startUser->name }}</p>
@@ -115,7 +115,7 @@
                         <span style="text-align: right;font-size: 13px;color: #4FA8FE;"> 发起审批 </span>
                     </el-timeline-item>
                     @foreach($handlers as $key => $handler)
-                    <el-timeline-item key="{{ $key+1 }}" @if (!empty($v->result)) result="{{ $v->result->result }}" @if($v->result->result != \App\Utils\Pipeline\IAction::RESULT_PENDING) timestamp="{{ substr($v->result->updated_at, 0, 16) }}" @endif @endif>
+                    <el-timeline-item key="{{ $key+1 }}" icon="{{ asset('assets/img/pipeline/'. $handlersIcon[$key] .'.png') }}">
                         @foreach($handler as $k => $val)
                         @foreach ($val as $v)
                         <div style="margin-bottom: 10px;display: flex;justify-content: space-between;align-items: center;">
