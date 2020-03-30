@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\OA;
 
 use App\Dao\OA\WorkLogDao;
+use App\Dao\OA\WorkLogReadDao;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\MyStandardRequest;
 use App\Models\OA\WorkLog;
@@ -54,6 +55,7 @@ class WorkLogController extends  Controller
         $dao = new WorkLogDao;
         $data = $dao->getWorkLogsByTeacherId($user->id, $type, $keyword);
         $result = [];
+        $num = 0; // 红点数字
         foreach ($data as $key => $value) {
             $result[$key]['id'] = $value->id;
             if ($type == WorkLog::TYPE_READ) {
@@ -66,8 +68,14 @@ class WorkLogController extends  Controller
             $result[$key]['title'] = $value->title;
             $result[$key]['content'] = $value->content;
             $result[$key]['created_at'] = $value->created_at;
-        }
 
+            // 计算红点
+            if($result[$key]['is_read'] == false) {
+                $num ++;
+            }
+            $result[$key]['num'] = $num;
+        }
+        
         return JsonBuilder::Success($result);
     }
 
@@ -82,7 +90,8 @@ class WorkLogController extends  Controller
 
         $id = $request->get('id');
 
-        WorkLogRead::create(['work_id'=> $id, 'user_id' => $id]);
+        $readDao = new WorkLogReadDao;
+        $readDao->create($id, $user->id);
 
         $dao = new WorkLogDao;
         $data = $dao->getWorkLogsById($id);
