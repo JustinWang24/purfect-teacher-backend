@@ -4,6 +4,7 @@
 namespace App\Models\AttendanceSchedules;
 
 use App\Models\Timetable\TimetableItem;
+use App\User;
 use Illuminate\Database\Eloquent\Model;
 
 class AttendancesDetail extends Model
@@ -53,5 +54,10 @@ class AttendancesDetail extends Model
 
     public function timetable(){
         return $this->belongsTo(TimetableItem::class, 'timetable_id');
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'student_id');
     }
 }
