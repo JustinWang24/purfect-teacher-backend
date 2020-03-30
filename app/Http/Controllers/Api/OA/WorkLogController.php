@@ -6,6 +6,7 @@ use App\Dao\OA\WorkLogDao;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\MyStandardRequest;
 use App\Models\OA\WorkLog;
+use App\Models\OA\WorkLogRead;
 use App\Utils\JsonBuilder;
 use Carbon\Carbon;
 
@@ -60,6 +61,8 @@ class WorkLogController extends  Controller
             } else {
                 $result[$key]['avatar'] = $value->profile->avatar;
             }
+
+            $result[$key]['is_read'] = $value->read ? true : false;
             $result[$key]['title'] = $value->title;
             $result[$key]['content'] = $value->content;
             $result[$key]['created_at'] = $value->created_at;
@@ -75,10 +78,15 @@ class WorkLogController extends  Controller
      */
     public function workLogInfo(MyStandardRequest $request)
     {
+        $user = $request->user();
+
         $id = $request->get('id');
+
+        WorkLogRead::create(['work_id'=> $id, 'user_id' => $id]);
 
         $dao = new WorkLogDao;
         $data = $dao->getWorkLogsById($id);
+
         return JsonBuilder::Success($data);
     }
 

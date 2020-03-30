@@ -902,6 +902,7 @@ Route::prefix('Oa')->middleware('auth:api')->group(function () {
     // 更新
     Route::post('/update-work-log', 'Api\OA\WorkLogController@workLogUpdate')
         ->name('api.oa.work.log.send');
+    // 删除
     Route::post('/delete-work-log', 'Api\OA\WorkLogController@workLogDel')
         ->name('api.oa.work.log.send');
     /**
