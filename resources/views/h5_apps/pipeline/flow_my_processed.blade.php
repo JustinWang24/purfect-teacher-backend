@@ -8,7 +8,7 @@
         </p>
     </div>
     <div class="mian p-15" v-cloak>
-        <div v-if="position !== '0'">
+        <div>
             <el-input placeholder="搜索标题、发起人关键字" v-model="keyword" style="margin-bottom: 10px;" @change="loadFlowsProcessedByMe"></el-input>
         </div>
         <div v-if="processedList.length > 0">
