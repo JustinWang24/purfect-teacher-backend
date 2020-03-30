@@ -136,7 +136,7 @@ class FlowsController extends Controller
             //当前用户action
             $nowUserAction = $dao->getActionByUserFlowAndUserId($userFlowId, $user->id);
             $this->dataForView['showActionEditForm'] = !empty($nowUserAction)
-                && empty($request->get('readonly', '0')) 
+                && empty($request->get('readonly', '0'))
                 && $nowUserAction->result == IAction::RESULT_PENDING
                 && $startUserAction->userFlow->done == IUserFlow::IN_PROGRESS  ? true : false;
 

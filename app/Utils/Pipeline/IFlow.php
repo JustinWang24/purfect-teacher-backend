@@ -26,6 +26,7 @@ interface IFlow extends IPersistent
     const BUSINESS_TYPE_AWAY = 'attendance_away';
     const BUSINESS_TYPE_TRAVEL = 'attendance_travel';
     const BUSINESS_TYPE_MEETING = 'oa_meeting';
+    const BUSINESS_TYPE_STUDENT_LEAVE = 'student_leave';
 
     //关联业务
     const BUSINESS_ATTENDANCE_MACADDRESS = [
@@ -62,6 +63,13 @@ interface IFlow extends IPersistent
     const BUSINESS_ATTENDANCE_TRAVEL = [
         'business' => self::BUSINESS_TYPE_TRAVEL,
         'name' => '考勤出差',
+        'options' => [
+            ['name' => '日期区间', 'type' => 'date-date', 'readonly' => false, 'required' => 1, 'extra' => ['text' => null, 'dateType' => 1, 'showPickerS' => false, 'showPickerE' => false, 'title2' => '结束时间'], 'uri' => 'date_date', 'title' => '开始时间', 'tips' => '选择时间']
+        ]
+    ];
+    const BUSINESS_STUDENT_LEAVE = [
+        'business' => self::BUSINESS_TYPE_STUDENT_LEAVE,
+        'name' => '学生请假',
         'options' => [
             ['name' => '日期区间', 'type' => 'date-date', 'readonly' => false, 'required' => 1, 'extra' => ['text' => null, 'dateType' => 1, 'showPickerS' => false, 'showPickerE' => false, 'title2' => '结束时间'], 'uri' => 'date_date', 'title' => '开始时间', 'tips' => '选择时间']
         ]
