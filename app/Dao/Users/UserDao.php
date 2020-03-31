@@ -360,4 +360,16 @@ class UserDao
         return User::where('email', $email)->first();
     }
 
+
+    /**
+     * 更新用户的基本数据
+     * @param $userId
+     * @param $data
+     * @return mixed
+     */
+    public function updateUserInfo($userId, $data)
+    {
+        return User::where('id', $userId)->update($data);
+    }
+
 }
