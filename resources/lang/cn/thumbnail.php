@@ -161,6 +161,8 @@ return [
     'result' => '结果',
     'consult' => '招生咨询',
     'note' => '报名须知',
+    'evaluation-score-index'=>'评分管理',
+    'evaluation-details-list'=>'评分详情列表',
 
     // 课件
     'materials'=>'课件',

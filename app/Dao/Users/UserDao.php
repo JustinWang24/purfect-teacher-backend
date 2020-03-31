@@ -372,4 +372,5 @@ class UserDao
         return User::where('id', $userId)->update($data);
     }
 
+
 }

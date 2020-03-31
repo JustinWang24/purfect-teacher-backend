@@ -73,6 +73,11 @@ if (document.getElementById('pipeline-flow-open-app')) {
                   this.$set(item, 'value', '')
                 }
               }
+              console.log(item.type)
+              if (item.type == "files") {
+                console.log(1)
+                item.value = ''
+              }
             });
             this.$set(this, 'formList', data.options)
             // this.formList = data.options;
@@ -207,13 +212,48 @@ if (document.getElementById('pipeline-flow-open-app')) {
         item.value = val[0].name + '/' + val[1].name + '/' + val[2].name;
         item.extra.showPicker = false;
       },
-      uploadImg(img) {
+      deleteImg(img, item) {
         // console.log(img)
+        // console.log(item)
+        let index = '';
+        item.files.forEach((i, idx) => {
+          if(i.lastModified == img.file.lastModified) {
+            index = idx
+          }
+        });
+        item.files.splice(index, 1)
+        item.values.splice(index, 1);
+        item.value = '';
+        item.values.forEach((i, idx) => {
+          if(!item.value) {
+            item.value = i
+          } else {
+            item.value += ',' + i
+          }
+        })
+        // console.log(item.value)
+        return true
+      },
+      uploadImg(img, detail, item) {
         let params = new FormData();
-        params.append("file", img.content)
+        params.append("file[]", img.file)
         const url = '/api/Oa/message-upload-files';
         axios.post(url, params).then((res) => {
           if (Util.isAjaxResOk(res)) {
+            let data = res.data.data;
+            if (!item.values) {
+              item.values = [];
+              item.values.push(data.imgPath[0].path)
+            } else {
+              item.values.push(data.imgPath[0].path)
+            }
+
+            if (!item.value) {
+              item.value = data.imgPath[0].path
+            } else {
+              item.value += ',' + data.imgPath[0].path
+            }
+            // console.log(item.value)
             this.$message({
               message: '上传成功',
               type: 'success'
@@ -298,7 +338,7 @@ if (document.getElementById('pipeline-flow-open-app')) {
               }
 
             } else {
-              if(type == 2) {
+              if (type == 2) {
                 this.setActive(parentItem.organ);
                 item.active = true;
                 this.setActive(data.organ)
@@ -346,8 +386,30 @@ if (document.getElementById('pipeline-flow-open-app')) {
         this.action.attachments.splice(idx, 1);
         this.$message({type: 'info', message: '移除文件: ' + attachment.file_name});
       },
-      pickFile() {
-
+      pickFile(item, file) {
+        if (item.value) {
+          item.value += "," + file.file.id
+        } else {
+          item.value = file.file.id
+        }
+        item.extra.showPicker = false;
+        item.extra.files.push(file.file)
+      },
+      removeFile(item, file) {
+        let removeIdx = '';
+        item.value = ''
+        item.extra.files.forEach((i, idx) => {
+          if (i.id == file.id) {
+            removeIdx = idx
+          } else {
+            if (idx == 0) {
+              item.value = i.id
+            } else {
+              item.value += ',' + i.id
+            }
+          }
+        });
+        item.extra.files.splice(removeIdx, 1)
       }
     }
   });

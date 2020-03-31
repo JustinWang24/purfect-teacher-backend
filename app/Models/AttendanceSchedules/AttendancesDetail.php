@@ -3,8 +3,8 @@
 
 namespace App\Models\AttendanceSchedules;
 
-use App\Models\Timetable\TimetableItem;
 use App\User;
+use App\Models\Timetable\TimetableItem;
 use Illuminate\Database\Eloquent\Model;
 
 class AttendancesDetail extends Model
@@ -29,10 +29,10 @@ class AttendancesDetail extends Model
     const MOLD_LEAVE   = 2;  // 请假
     const MOLD_TRUANT  = 3;  // 旷课
 
-    // 请假状态
-    const STATUS_UNCHECKED = 0;  // 未审核
-    const STATUS_CONSENT   = 1;  // 同意
-    const STATUS_REFUSE    = 2;  // 拒绝
+
+    const MOLD_SIGN_IN_TEXT = '已签到';
+    const MOLD_LEAVE_TEXT   = '请假';
+    const MOLD_TRUANT_TEXT  = '旷课';
 
 
     protected $hidden = ['updated_at'];
@@ -59,5 +59,18 @@ class AttendancesDetail extends Model
     public function user()
     {
         return $this->belongsTo(User::class, 'student_id');
+    }
+
+    public function allMold() {
+        return [
+            self::MOLD_SIGN_IN => self::MOLD_SIGN_IN_TEXT,
+            self::MOLD_LEAVE => self::MOLD_LEAVE_TEXT,
+            self::MOLD_TRUANT => self::MOLD_TRUANT_TEXT,
+        ];
+    }
+
+    public function getMold() {
+        $allMold = $this->allMold();
+        return $allMold[$this->mold] ?? '';
     }
 }

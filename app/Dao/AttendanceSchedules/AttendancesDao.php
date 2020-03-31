@@ -3,7 +3,10 @@
 namespace App\Dao\AttendanceSchedules;
 
 
+use App\BusinessLogic\Attendances\Attendances;
+use App\Dao\Students\StudentLeaveDao;
 use App\User;
+use App\Utils\Misc\ConfigurationTool;
 use Carbon\Carbon;
 use App\Dao\Schools\SchoolDao;
 use Illuminate\Support\Facades\DB;
@@ -32,6 +35,7 @@ class AttendancesDao
      * @param $user User
      * @param $type
      * @return bool
+     * @throws \Exception
      */
     public function arrive($item, $user, $type)
     {
@@ -45,44 +49,8 @@ class AttendancesDao
         $weeks = $configuration->getScheduleWeek($now, null, $term);
         $week = $weeks->getScheduleWeekIndex();
 
-        $where = [
-            'timetable_id' => $item->id,
-            'week'  => $week
-        ];
-
-        $attendance = Attendance::where($where)->first();
-
-        DB::beginTransaction();
-        try{
-            if(empty($attendance)) {
-                $attendance = $this->createAttendanceData($item);
-            }
-
-            $data = [
-                'attendance_id' => $attendance->id,
-                'student_id'    => $user->id,
-                'timetable_id'  => $item->id,
-                'course_id'     => $item->course_id,
-                'type'          => $type,
-                'year'          => $item->year,
-                'term'          => $item->term,
-                'week'          => $week,
-                'weekday_index' => $item->weekday_index,
-                'mold'          => AttendancesDetail::MOLD_SIGN_IN,
-            ];
-
-            $detailsDao = new  AttendancesDetailsDao;
-            $detailsDao->add($data);
-
-            Attendance::where('id', $attendance->id)->decrement('missing_number'); // 未到人数 -1
-            Attendance::where('id', $attendance->id)->increment('actual_number');  // 实到人数 +1
-            DB::commit();
-            $result = true;
-        }catch (\Exception $e) {
-            $result = false;
-        }
-
-        return $result;
+        $attendance = $this->isAttendanceByTimetableAndWeek($item,$week,$type);
+        return $attendance;
 
     }
 
@@ -221,7 +189,8 @@ class AttendancesDao
             'grade_id'       => $item->grade_id,
             'teacher_id'     => $item->teacher_id,
             'week'           => $week,
-            'time_slot_id'   => $item->time_slot_id
+            'time_slot_id'   => $item->time_slot_id,
+            'school_id'      => $item->school_id
         ];
 
         return Attendance::create($attendanceData);
@@ -290,39 +259,25 @@ class AttendancesDao
      * 判断是否有签到主表
      * @param TimetableItem $timetable
      * @param $week
+     * @param null $type 签到类型
+     * @return mixed
+     * @throws \Exception
+     */
+    public function isAttendanceByTimetableAndWeek(TimetableItem $timetable, $week,$type = null ) {
+        return Attendances::getAttendance($timetable, $week, $type);
+    }
+
+
+    /**
+     * 查询签到评分
+     * @param $schoolId
      * @return mixed
      */
-    public function isAttendanceByTimetableAndWeek(TimetableItem $timetable, $week) {
-        $map = ['timetable_id'=>$timetable->id, 'week'=>$week];
-        $attendance = Attendance::where($map)->first();
-        if(is_null($attendance)) {
-            // 创建签到总表
-            $attendance = $this->createAttendanceData($timetable);
-        }
-        $gradeUser = $attendance->grade->gradeUser;
-
-        $dao = new AttendancesDetailsDao();
-        foreach ($gradeUser as $key => $val) {
-            $detail = $attendance->details->where('student_id',$val->user_id)->first();
-            // 为空再添加
-            if(is_null($detail)) {
-                $details = [
-                    'attendance_id' => $attendance->id,
-                    'course_id' => $attendance->course_id,
-                    'timetable_id' => $attendance->timetable_id,
-                    'student_id' => $val->user_id,
-                    'year'=> $attendance->year,
-                    'term' => $attendance->term,
-                    'week'=>$attendance->week,
-                    'mold'=> AttendancesDetail::MOLD_TRUANT,
-                    'weekday_index'=>$attendance->timeTable->weekday_index,
-                ];
-
-                $dao->add($details);
-            }
-
-        }
-        return $attendance;
+    public function getAttendanceBySchoolId($schoolId) {
+        return Attendance::where('school_id', $schoolId)
+            ->where('status',Attendance::STATUS_EVALUATE)
+            ->orderBy('id','desc')
+            ->paginate(ConfigurationTool::DEFAULT_PAGE_SIZE);
     }
 
 

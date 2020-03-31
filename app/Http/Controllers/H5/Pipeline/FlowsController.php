@@ -9,6 +9,7 @@ namespace App\Http\Controllers\H5\Pipeline;
 
 use App\Dao\Pipeline\FlowDao;
 use App\Http\Controllers\Controller;
+use App\Models\NetworkDisk\Media;
 use App\Models\Pipeline\Flow\ActionOption;
 use App\Models\Pipeline\Flow\UserFlow;
 use App\User;
@@ -173,7 +174,9 @@ class FlowsController extends Controller
                             }
                         }else {
                             //如果还没轮到 整个流程都是等待
-                            $icon = 'wait';
+                            if (empty($icon)) {
+                                $icon = 'wait';
+                            }
                             $im->result = [];
                         }
                     }
@@ -232,6 +235,11 @@ class FlowsController extends Controller
                     case 'image':
                         if ($optionRet) {
                             $value = explode(',', $optionRet);
+                        }
+                        break;
+                    case 'files':
+                        if ($optionRet) {
+                            $value = Media::whereIn('id', explode(',', $optionRet))->select(['file_name','url'])->get()->toArray();
                         }
                         break;
                     default:

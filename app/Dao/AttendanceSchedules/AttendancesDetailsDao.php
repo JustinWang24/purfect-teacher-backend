@@ -3,15 +3,15 @@
 namespace App\Dao\AttendanceSchedules;
 
 
-use App\Dao\Schools\SchoolDao;
-use App\Models\AttendanceSchedules\Attendance;
-use App\Models\AttendanceSchedules\AttendancesDetail;
+use Carbon\Carbon;
 use App\Utils\JsonBuilder;
-use App\Utils\Misc\ConfigurationTool;
+use App\Dao\Schools\SchoolDao;
+use Illuminate\Support\Facades\DB;
 use App\Utils\ReturnData\MessageBag;
 use App\Utils\Time\GradeAndYearUtil;
-use Carbon\Carbon;
-use Illuminate\Support\Facades\DB;
+use App\Utils\Misc\ConfigurationTool;
+use App\Models\AttendanceSchedules\Attendance;
+use App\Models\AttendanceSchedules\AttendancesDetail;
 
 class AttendancesDetailsDao
 {
@@ -41,9 +41,9 @@ class AttendancesDetailsDao
      * @return mixed
      */
     public function getLeaveCountByUser($userId, $year, $term, $courseId = null) {
-        $map = ['student_id'=>$userId, 'year'=>$year, 'term'=>$term,
-            'mold'=>AttendancesDetail::MOLD_LEAVE, 'status'=>AttendancesDetail::STATUS_CONSENT];
 
+        $map = ['student_id'=>$userId, 'year'=>$year, 'term'=>$term,
+            'mold'=>AttendancesDetail::MOLD_LEAVE];
         if(!is_null($courseId)) {
             $map['course_id'] = $courseId;
         }
@@ -108,6 +108,16 @@ class AttendancesDetailsDao
 
 
     /**
+     * 编辑签到详情
+     * @param $detailId
+     * @param $data
+     * @return mixed
+     */
+    public function update($detailId, $data) {
+        return AttendancesDetail::where('id', $detailId)->update($data);
+    }
+
+    /**
      * 课程签到列表
      * @param $year
      * @param $userId
@@ -116,7 +126,7 @@ class AttendancesDetailsDao
      * @return mixed
      */
     public function signInList($year, $userId, $courseId, $term) {
-        $field = ['timetable_id', 'mold', 'status', 'created_at'];
+        $field = ['timetable_id', 'mold', 'created_at'];
         $map = ['year'=>$year, 'student_id'=>$userId, 'course_id'=>$courseId, 'term'=>$term];
         return AttendancesDetail::where($map)
             ->orderBy('created_at')
@@ -141,6 +151,16 @@ class AttendancesDetailsDao
      */
     public function getAttendDetailsByAttendanceId($attendanceId) {
         return AttendancesDetail::where('attendance_id', $attendanceId)->get();
+    }
+
+
+    /**
+     * @param $attendanceId
+     * @return mixed
+     */
+    public function getDetailsPageByAttendanceId($attendanceId) {
+        return AttendancesDetail::where('attendance_id', $attendanceId)
+            ->paginate(ConfigurationTool::DEFAULT_PAGE_SIZE);
     }
 
 

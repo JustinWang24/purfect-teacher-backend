@@ -99,7 +99,7 @@ class GradeUserDao
      * @param $types
      * @return Collection
      */
-    public function getBySchool($schoolId,$types){
+    public function getBySchool($schoolId, $types){
         return GradeUser::where('school_id',$schoolId)->whereIn('user_type',$types)->paginate();
     }
 

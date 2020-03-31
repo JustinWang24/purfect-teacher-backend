@@ -124,8 +124,8 @@
                 <van-field name="uploader"
                     :rules="item.required?[{ required: item.required, message: '请上传图片' }]:[]"
                     :required="item.required?true:false" :label="item.title">
-                    <template #input>
-                        <van-uploader v-model="item.files" :max-count="9" :after-read="uploadImg"/>
+                    <template #input >
+                        <van-uploader v-model="item.files" :max-count="9" :before-delete="(($event) => {deleteImg($event, item)})" :after-read="(($event1, $event2) => {uploadImg($event1, $event2, item)})"/>
                     </template>
                 </van-field>
             </div>
@@ -141,10 +141,16 @@
                                             user-uuid="{{ $user->uuid }}"
                                             :pick-file="true"
                                             :allow-file-types="[]"
-                                            v-on:pick-this-file="pickFile"
+                                            v-on:pick-this-file="pickFile(item, $event)"
                                     ></file-manager-mobile>
                             </div>
                         </van-action-sheet>
+                        <ul>
+                            <li v-for="fileName in item.extra.files">
+                                <span v-text="fileName.file_name"></span>
+                                <span @click="removeFile(item, fileName)" style="float:right;cursor: pointer;" class="el-icon-close"></span>
+                            <li>
+                        </ul>
                    </template>
                 </van-field>
             </div>
