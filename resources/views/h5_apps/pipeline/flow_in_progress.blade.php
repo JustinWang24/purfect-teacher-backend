@@ -30,8 +30,8 @@
                 </div>
             </van-list>
         </div>
-        <div v-if="showStarted" style="display: flex;flex-direction: column;align-items: center;background-color: #fff;margin-top: 150px;">
-            <img src="{{asset('assets/img/pipeline/nothing@2x.png')}}" alt="" style="width: 170px;height: 120px;">
+        <div v-if="showStarted" style="display: flex;flex-direction: column;align-items: center;background-color: #fff;margin-top: 70px;">
+            <img src="{{asset('assets/img/pipeline/nothing@2x.png')}}" alt="" style="width: 150px;height: 110px;">
             <p style="color: #6F7275;text-align: center;font-size: 14px;font-family:PingFangSC-Regular,PingFang SC;">暂无数据哦~</p>
         </div>
     </div>

@@ -18,8 +18,8 @@ class SchoolConfiguration extends Model
 
     const LAST_TERM = 1;
     const NEXT_TERM = 2;
-    const LAST_TERM_TEXT = '秋季开学';
-    const NEXT_TER_TEXT = '春季开学';
+    const LAST_TERM_TEXT = '第一学期';
+    const NEXT_TER_TEXT = '第二学期';
 
 
     protected $fillable = [

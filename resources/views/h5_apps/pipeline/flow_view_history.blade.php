@@ -70,12 +70,19 @@
             <el-divider></el-divider>
             @foreach($options as $option)
             @if ($option['type'] == 'image' && !empty($option['value']))
-                    <h3>{{ $option['title'] }}</h3>
-                    <div class="imageBox">
+            <h3>{{ $option['title'] }}</h3>
+            <div class="imageBox">
                 @foreach($option['value'] as $img)
-                            <img src="{{ $img }}" alt="" class="image">
-                    @endforeach
-                    </div>
+                <img src="{{ $img }}" alt="" class="image">
+                @endforeach
+            </div>
+            @elseif ($option['type'] == 'files' && !empty($option['value']))
+             <h3>{{ $option['title'] }}</h3>
+            <div class="information" style="padding-bottom: 10px;">
+                @foreach($option['value'] as $file)
+                    <p class="reason" style="width: 87%;height: 40px;line-height: 50px;background:rgba(3,133,255,0.05);margin: 0 auto;margin-bottom: 10px;color: #333333;overflow: hidden;white-space: nowrap;text-overflow: ellipsis;" data-url="{{ $file['url'] }}">{{ $file['file_name'] }}</p>
+                @endforeach
+            </div>
             @else
             <h5>
                 <p>{{ $option['title'] }}</p>
@@ -88,25 +95,6 @@
         <!-- <div class="information">
             <h3>申请理由</h3>
             <p class="reason">{{ $startAction->content }}</p>
-        </div> -->
-        <!-- <div class="information">
-            <h3>证明材料</h3> 写表单的那个人呢 还没对接过
-            <div class="imageBox">
-                <img src="{{asset('assets/img/bg-02.jpg')}}" alt="" class="image">
-                <img src="{{asset('assets/img/bg-02.jpg')}}" alt="" class="image">
-                <img src="{{asset('assets/img/bg-02.jpg')}}" alt="" class="image">
-                <img src="{{asset('assets/img/bg-02.jpg')}}" alt="" class="image">
-                <img src="{{asset('assets/img/bg-02.jpg')}}" alt="" class="image">
-                <img src="{{asset('assets/img/bg-02.jpg')}}" alt="" class="image">
-            </div>
-        </div> -->
-        <!-- <div class="information">
-            <h3>部门</h3>
-            <span class="reason" style="display: inline-block" v-for="(item,index) in activities" :key="index">@{{ item }}</span>
-        </div> -->
-        <!-- <div class="information">
-            <h3>附件</h3>
-            <p class="reason" style="color: #0385FF;overflow: hidden;white-space: nowrap;text-overflow: ellipsis;" v-for="(item,index) in activities" :key="index">@{{ item }}</p>
         </div> -->
         <div class="information">
             <h3>
@@ -148,17 +136,20 @@
                                             <img src="{{ $v->profile->avatar }}" alt="" style="width: 40px; height: 40px;border-radius: 50%;vertical-align: middle;">
                                             <div style="flex: 1;margin-left: 20px;">
                                                 <p style="margin: 0;">{{ $v->name }}({{ $k }})</p>
-                                                <p style="margin: 0;">{{ substr($startAction->created_at, 0, 16) }}</p>
+                                                <p style="margin: 0;">@if (!empty($v->result) && $v->result->result != \App\Utils\Pipeline\IAction::RESULT_PENDING){{ substr($v->result->updated_at, 0, 16) }}@endif</p>
                                             </div>
                                             <span style="text-align: right;font-size: 13px;">
                                                 @if (!empty($v->result))
                                                 @if ($v->result->result == \App\Utils\Pipeline\IAction::RESULT_PENDING) <span style="color: #FE7B1C;">审批中</span> @endif
-                                                @if ($v->result->result == \App\Utils\Pipeline\IAction::RESULT_PASS) {{ substr($v->result->updated_at, 5, 11) }} <span style="color: #6DCC58;">已通过</span> @endif
-                                                @if ($v->result->result == \App\Utils\Pipeline\IAction::RESULT_TERMINATE) {{ substr($v->result->updated_at, 5, 11) }} <span style="color: #FD1B1B;">未通过</span> @endif
-                                                @if ($v->result->result == \App\Utils\Pipeline\IAction::RESULT_REJECT) {{ substr($v->result->updated_at, 5, 11) }} <span style="color: #FD1B1B;">未通过</span> @endif
+                                                @if ($v->result->result == \App\Utils\Pipeline\IAction::RESULT_PASS) <span style="color: #6DCC58;">已通过</span> @endif
+                                                @if ($v->result->result == \App\Utils\Pipeline\IAction::RESULT_TERMINATE) <span style="color: #FD1B1B;">未通过</span> @endif
+                                                @if ($v->result->result == \App\Utils\Pipeline\IAction::RESULT_REJECT) <span style="color: #FD1B1B;">未通过</span> @endif
                                                 @endif
                                             </span>
                                         </div>
+                                        @if (!empty($v->result) && ($v->result->result == \App\Utils\Pipeline\IAction::RESULT_TERMINATE || $v->result->result == \App\Utils\Pipeline\IAction::RESULT_REJECT))
+                                        <p style="color: #FD1B1B;">原因：{{ $v->result->content }}</p>
+                                        @endif
                                         @endforeach
                                         @endforeach
                                     </el-timeline-item>

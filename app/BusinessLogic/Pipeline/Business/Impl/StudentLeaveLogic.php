@@ -8,10 +8,11 @@
 
 namespace App\BusinessLogic\Pipeline\Business\Impl;
 use App\User;
-use App\Utils\JsonBuilder;
-use App\Utils\ReturnData\MessageBag;
 use Carbon\Carbon;
+use App\Utils\JsonBuilder;
 use Illuminate\Support\Facades\Log;
+use App\Utils\ReturnData\MessageBag;
+use App\Models\Students\StudentLeave;
 
 class StudentLeaveLogic
 {
@@ -23,6 +24,9 @@ class StudentLeaveLogic
 
     public function handle($options)
     {
+        Log::debug(json_encode($options));
+        Log::debug(json_encode( $this->user->toArray()));
+
         $bag = new MessageBag(JsonBuilder::CODE_ERROR);
         try {
             $dateArr = explode('~', $options['date_date']);
@@ -32,10 +36,21 @@ class StudentLeaveLogic
             /*$this->user 请假的学生 User
             $start 请假开始时间
             $end 请假结束时间*/
+            $leave = [
+                'school_id' => $this->user->getSchoolId(),
+                'grade_id' => $this->user->gradeUser->grade_id,
+                'user_id' => $this->user->id,
+                'start_time' => $start,
+                'end_time' => $end,
+            ];
+            Log::debug('学生请假数据'.json_encode($options));
+            StudentLeave::create($leave);
+
             Log::info('收到学生请假的业务通知', [$start, $end, $this->user]);
 
             $bag->setCode(JsonBuilder::CODE_SUCCESS);
         }catch (\Exception $exception) {
+            Log::debug($exception->getMessage());
             $bag->setMessage( $exception->getMessage());
         }
         return $bag;

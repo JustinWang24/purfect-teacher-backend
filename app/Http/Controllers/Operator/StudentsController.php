@@ -1,21 +1,16 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: justinwang
- * Date: 18/10/19
- * Time: 10:17 PM
- */
 
 namespace App\Http\Controllers\Operator;
+
 use App\Dao\Schools\GradeDao;
 use App\Dao\Schools\MajorDao;
-use App\Dao\Schools\SchoolDao;
 use App\Dao\Students\StudentProfileDao;
 use App\Dao\Users\GradeUserDao;
 use App\Dao\Users\UserDao;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\MyStandardRequest;
 use App\Http\Requests\User\StudentRequest;
+use App\Models\Acl\Role;
 use App\Utils\FlashMessageBuilder;
 use App\Utils\Time\GradeAndYearUtil;
 use Illuminate\Support\Facades\DB;
@@ -101,5 +96,24 @@ class StudentsController extends Controller
             FlashMessageBuilder::Push($request,'danger',$exception->getMessage());
         }
         return redirect()->route('school_manager.school.students');
+    }
+
+
+    /**
+     * 已注册用户
+     * @param StudentRequest $request
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function school_users(StudentRequest $request)
+    {
+        $dao = new GradeUserDao;
+        $data = $dao->getBySchool(session('school.id'), [Role::REGISTERED_USER]);
+        foreach ($data as $key => $val) {
+            $val->user;
+        }
+        $this->dataForView['students'] = $data;
+        $this->dataForView['pageTitle'] = '已注册用户管理';
+        return view('teacher.users.users', $this->dataForView);
+
     }
 }

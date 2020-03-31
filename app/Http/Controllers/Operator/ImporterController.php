@@ -52,14 +52,15 @@ class ImporterController extends Controller
         $data = [];
         $dao = new ImporterDao();
         $data = $request->get('task');
-        $data['config'] = json_encode(json_decode(strip_tags($data['config']),1));
+        if ($data['type'] == 1) {
+            $data['config'] = json_encode(json_decode(strip_tags($data['config']),1));
+        }
         $data['title']  = strip_tags($data['title']);
         $user = $request->user();
         $data['manager_id'] = $user->id;
 
 
         $fileCharater = $request->file('source');
-
         if (!empty($fileCharater) && $fileCharater->isValid()) {
             //获取文件的扩展名
             $ext = $fileCharater->getClientOriginalExtension();
@@ -69,8 +70,11 @@ class ImporterController extends Controller
                 FlashMessageBuilder::Push($request, FlashMessageBuilder::DANGER,'资源文件类型错误');
                 return redirect()->back()->withInput();
             }
-
-            $fileName = $schoolId.'/'.$fileCharater->getClientOriginalName();
+            if ($data['type'] == 0) {
+                $fileName = $schoolId.'/'.rand(1, 99).time().'/'.$fileCharater->getClientOriginalName();
+            } else {
+                $fileName = $schoolId.'/'.$fileCharater->getClientOriginalName();
+            }
             //获取文件的绝对路径
             $path = $fileCharater->getRealPath();
             //存储文件。disk里面的public。总的来说，就是调用disk模块里的public配置

@@ -50,6 +50,7 @@ class SignInGradeController extends Controller
         $data = [];
         for ($i = 0; $i<=1; $i++) {
             $year = $schoolYear - $i;
+            $next = $year + 1;
 
             for ($j = 1; $j<=2; $j++) {
                 $isCurrent = false;
@@ -58,7 +59,7 @@ class SignInGradeController extends Controller
                 }
 
                 $data[] = [
-                    'name' => $year.'学年'.$allTerm[$j],
+                    'name' => $year.'-' .$next .'学年'.$allTerm[$j],
                     'year' => $year,
                     'term' => $j,
                     'is_current' => $isCurrent,

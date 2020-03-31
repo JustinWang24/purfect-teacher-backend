@@ -32,5 +32,8 @@
         <a href="{{ route('school_manager.school.students') }}" class="btn btn-{{ $highlight==='student' ? 'primary' : 'default' }}">
             <span class="fa {{ $highlight==='student' ? 'fa-check-square' : null }}"></span> 学生管理
         </a>
+        <a href="{{ route('school_manager.school.users') }}" class="btn btn-{{ $highlight==='users' ? 'primary' : 'default' }}">
+            <span class="fa {{ $highlight==='users' ? 'fa-check-square' : null }}"></span> 注册用户管理
+        </a>
     </div>
 </div>

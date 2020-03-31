@@ -43,7 +43,7 @@ use App\Utils\UI\Button;
                                 @endif
                                 @foreach($tasks as $index=>$task)
                                     <tr>
-                                        <td>{{ $index+1 }}</td>
+                                        <td>{{ $task->id }}</td>
                                         <td>{{ $task->title }}</td>
                                         <td>{{ $task->status }}</td>
                                         <td><pre>{{ $task->file_path }} </pre></td>
