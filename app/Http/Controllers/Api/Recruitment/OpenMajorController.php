@@ -16,6 +16,7 @@ use App\Dao\RecruitStudent\RegistrationInformaticsDao;
 use App\Dao\Students\StudentProfileDao;
 use App\Utils\JsonBuilder;
 use App\Utils\Time\GradeAndYearUtil;
+use Illuminate\Support\Facades\Validator;
 
 
 class OpenMajorController extends Controller
@@ -117,11 +118,44 @@ class OpenMajorController extends Controller
     public function signUp(PlanRecruitRequest $request)
     {
         $formData = $request->getSignUpFormData();
-        $plan = $request->getPlan();
-
-        if ($plan->seats <= $plan->enrolled_count) {
-            return JsonBuilder::Error('该专业已招满,请选择其他专业');
+        //验证提交的数据
+        $rules = [
+            'name'=>'required|between:2,10', // 姓名
+            'id_number'=>'required', // 身份证号
+            'gender'=>'required|between:1,2', // 性别
+            'nation_name'=>'required|between:2,10', // 民族
+            'political_name'=>'required', // 政治面貌
+            'source_place'=>'required', // 生源地
+            'country'=>'required', // 籍贯
+            'mobile'=>'required|regex:/^1[34578]\d{9}$/', // 联系电话
+            'parent_name'=>'required|between:2,10', // 家长姓名
+            'parent_mobile'=>'required|regex:/^1[34578]\d{9}$/', // 家长电话
+        ];
+        $message = [
+            'name.required'=>'请填写姓名',
+            'name.between'=>'姓名在2-10位之间',
+            'id_number.required'=>'请填写身份证号',
+            'gender.required'=>'请选择性别',
+            'gender.between'=>'性别值错误',
+            'nation_name.required'=>'请填写名族',
+            'nation_name.between'=>'名族在2-10位之间',
+            'political_name.required'=>'请选择政治面貌',
+            'source_place.required'=>'请填写生源地',
+            'country.required'=>'请填写籍贯',
+            'mobile.required'=>'联系电话不能为空',
+            'mobile.regex'=>'联系电话格式不正确',
+            'parent_name.required'=>'家长姓名不能为空',
+            'parent_name.between'=>'家长姓名在2-10位之间',
+            'parent_mobile.required'=>'家长电话不能为空',
+            'parent_mobile.regex'=>'家长电话格式不正确',
+        ];
+        $validator = Validator::make($formData, $rules, $message);
+        if ($validator->fails()) {
+            return JsonBuilder::Error($validator->errors()->first());
         }
+
+        // 获取专业信息
+        $plan = $request->getPlan();
 
         $dao =  new RegistrationInformaticsDao;
         $profileDao = new StudentProfileDao();
@@ -142,7 +176,7 @@ class OpenMajorController extends Controller
         $regDao = new RegistrationInformaticsDao();
         $statusMessageArr = $regDao->getRegistrationInformaticsStatusInfo($user->getId(), $plan);
         if ($statusMessageArr['status'] != 100) {
-          return JsonBuilder::Error($statusMessageArr['message']);
+            return JsonBuilder::Error($statusMessageArr['message']);
         }
 
         /**

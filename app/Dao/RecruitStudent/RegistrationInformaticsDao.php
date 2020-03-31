@@ -190,10 +190,12 @@ class RegistrationInformaticsDao
             return RegistrationInformatics::select(['id','recruitment_plan_id','status','note'])
                 ->where('user_id', $userId)
                 ->where('recruitment_plan_id', $planId)
+                ->orderBy('id','desc')
                 ->first();
         }
         return RegistrationInformatics::where('user_id', $userId)
             ->where('recruitment_plan_id', $planId)
+            ->orderBy('id','desc')
             ->first();
     }
 
