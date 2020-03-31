@@ -237,7 +237,7 @@ class FlowsController extends Controller
                         break;
                     case 'files':
                         if ($optionRet) {
-                            $value = Media::whereIn('id', explode(',', $optionRet))->select(['file_name,url'])->get()->toArray();
+                            $value = Media::whereIn('id', explode(',', $optionRet))->select(['file_name','url'])->get()->toArray();
                         }
                         break;
                     default:
