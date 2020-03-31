@@ -149,29 +149,32 @@ class SignInGradeController extends Controller
 
         $gradeUser = $gradeDao->getGradeUserByGradeId($gradeId);
         $total = count($gradeUser);
+        $attendanceDao = new AttendancesDao();
+        $attendance = $attendanceDao->getAttendanceById($attendanceId);
 
-        $dao = new AttendancesDetailsDao();
-        $list = $dao->getAttendDetailsByAttendanceId($attendanceId);
+        $list = $attendance->details;
+
         $molds = array_column($list->toArray(),'mold','student_id');
         $scores = array_column($list->toArray(),'score','student_id');
         $remarks = array_column($list->toArray(),'remark','student_id');
         $student = [];
         $score = [];  // 评分列表
         foreach ($gradeUser as $key => $item) {
-            $student[$key]['user_id'] = $item->user_id;
-            $student[$key]['name'] = $item->name;
-            $score[$key]['user_id'] = $item->user_id;
-            $score[$key]['name'] = $item->name;
-            $score[$key]['name'] = $item->name;
+            $student[] = [
+                'user_id' => $item->user_id,
+                'name' => $item->name,
+                'mold' => $molds[$item->user_id],
+            ];
 
-            if(array_key_exists($item->user_id,$molds)) {
-                $student[$key]['mold'] = $molds[$item->user_id];
-                $score[$key]['score'] = $scores[$item->user_id];
-                $score[$key]['remark'] = $remarks[$item->user_id];
-            } else {
-                $student[$key]['mold'] = 0;  // 未签到
+            $score[] = [
+                'user_id' => $item->user_id,
+                'name' => $item->name,
+                'remark' => $remarks[$item->user_id],
+                'score' => $scores[$item->user_id],
+            ];
+
+            if($attendance->status == 0) {
                 $score[$key]['score'] = 10;  // 默认10分
-                $score[$key]['remark'] = ''; // 备注
             }
         }
 
@@ -184,7 +187,12 @@ class SignInGradeController extends Controller
         $leave = $count[AttendancesDetail::MOLD_LEAVE] ?? 0;
         $unSign = $total - $signin - $leave;
         $data = [
-            'stat' => ['total'=>$total, 'signin'=>$signin, 'leave'=>$leave, 'un_sign'=>$unSign],
+            'stat' => [
+                'total'=>$total,
+                'signin'=>$signin,
+                'leave'=>$leave,
+                'un_sign'=>$unSign
+            ],
             'signin' => $student,
             'score' => $score,
         ];

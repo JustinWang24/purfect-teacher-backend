@@ -157,7 +157,8 @@ class Flow extends Model implements IFlow
             IFlow::BUSINESS_ATTENDANCE_LEAVE,
             IFlow::BUSINESS_ATTENDANCE_AWAY,
             IFlow::BUSINESS_ATTENDANCE_TRAVEL,
-            IFlow::BUSINESS_OA_MEETING
+            IFlow::BUSINESS_OA_MEETING,
+            IFlow::BUSINESS_STUDENT_LEAVE,
         ];
         if ($businessid) {
             foreach ($list as $item) {
@@ -185,7 +186,16 @@ class Flow extends Model implements IFlow
         if ($this->copy_uids) {
             //抄送人
             $uidArr = explode(';', $this->copy_uids);
-            $result['copy'] = GradeUser::whereIn('user_id', $uidArr)->select(['user_id', 'name'])->get();
+            $copyUsers = User::whereIn('id', $uidArr)->get();
+            if (!empty($copyUsers)) {
+                foreach ($copyUsers as $user) {
+                    $result['copy'][] = [
+                        'user_id' => $user->id,
+                        'name' => $user->name,
+                        'avatar' => $user->profile->avatar ?? ''
+                    ];
+                }
+            }
         }
         //表单
         if ($node->options) {

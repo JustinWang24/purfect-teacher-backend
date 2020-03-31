@@ -12,4 +12,11 @@ use App\Http\Requests\MyStandardRequest;
 class RoomRequest extends MyStandardRequest
 {
 
+    /**
+     * 获取上传文件
+     * @return array|\Illuminate\Http\UploadedFile|\Illuminate\Http\UploadedFile[]|null
+     */
+    public function getFile() {
+        return $this->file('file',null);
+    }
 }

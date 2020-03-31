@@ -19,7 +19,7 @@
                             <img :src="img.path" alt="">
                             <i class="el-icon-error" @click="remove(img.image_id)"></i>
                         </div>
-                        <div class="uploaderWrap" @click="setId(item.grade_id)">
+                        <div class="uploaderWrap" v-show="item.image.length < 3" @click="setId(item.grade_id)">
                             <el-upload
                                     class="avatar-uploader"
                                     action="##"

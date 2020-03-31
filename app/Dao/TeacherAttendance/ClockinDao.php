@@ -304,8 +304,8 @@ class ClockinDao
             }
         }
         foreach ($groupDays['week'] as $groupDay) {
+            $week = Carbon::parse($groupDay)->englishDayOfWeek;
             if (isset($clockinList[$groupDay])) {
-                $week = Carbon::parse($groupDay)->englishDayOfWeek;
                 if ($clockinList[$groupDay]['morning']['status'] == Clockin::STATUS_NONE) {
                     $missList[] = ['day' => $groupDay, 'type' => 'morning', 'set_time' => substr($clocksets[$week]->morning, 0, 5)];
                 }
@@ -315,6 +315,13 @@ class ClockinDao
                 if ($clockinList[$groupDay]['evening'] == Clockin::STATUS_NONE) {
                     $missList[] = ['day' => $groupDay, 'type' => 'evening', 'set_time' => substr($clocksets[$week]->evening, 0, 5)];
                 }
+            }else {
+                //旷工也计算缺卡
+                $missList[] = ['day' => $groupDay, 'type' => 'morning', 'set_time' => substr($clocksets[$week]->morning, 0, 5)];
+                if ($attendance->using_afternoon) {
+                    $missList[] = ['day' => $groupDay, 'type' => 'afternoon', 'set_time' => substr($clocksets[$week]->afternoon, 0, 5)];
+                }
+                $missList[] = ['day' => $groupDay, 'type' => 'evening', 'set_time' => substr($clocksets[$week]->evening, 0, 5)];
             }
         }
 

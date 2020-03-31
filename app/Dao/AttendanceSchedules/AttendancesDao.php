@@ -299,6 +299,29 @@ class AttendancesDao
             // 创建签到总表
             $attendance = $this->createAttendanceData($timetable);
         }
+        $gradeUser = $attendance->grade->gradeUser;
+
+        $dao = new AttendancesDetailsDao();
+        foreach ($gradeUser as $key => $val) {
+            $detail = $attendance->details->where('student_id',$val->user_id)->first();
+            // 为空再添加
+            if(is_null($detail)) {
+                $details = [
+                    'attendance_id' => $attendance->id,
+                    'course_id' => $attendance->course_id,
+                    'timetable_id' => $attendance->timetable_id,
+                    'student_id' => $val->user_id,
+                    'year'=> $attendance->year,
+                    'term' => $attendance->term,
+                    'week'=>$attendance->week,
+                    'mold'=> AttendancesDetail::MOLD_TRUANT,
+                    'weekday_index'=>$attendance->timeTable->weekday_index,
+                ];
+
+                $dao->add($details);
+            }
+
+        }
         return $attendance;
     }
 

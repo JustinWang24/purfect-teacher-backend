@@ -99,7 +99,7 @@ class CommonDao
         $data['user_sex'] = $userInfo->profile->gender == 1 ? '男': '女'; // 性别 1:男 2:女
         $data['user_signture'] = $userInfo->user_signture; // 签名
         $data['user_pics'] = $userInfo->profile->avatar; // 头像
-        $data['user_nickname'] = $userInfo->nice_name; // 用户名
+        $data['user_nickname'] = !empty($userInfo->nice_name)?$userInfo->nice_name:'匿名'; // 用户名
         $data['school_name'] = $userInfo->gradeUserOneInfo->school->name; // 学校名称
         $data['user_fans_number'] = $userInfo->user_fans_number; // 粉丝数量
         $data['user_focus_number'] = $userInfo->user_focus_number; // 关注数量

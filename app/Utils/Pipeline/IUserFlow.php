@@ -10,6 +10,7 @@ interface IUserFlow extends IPersistent
     const IN_PROGRESS   = 0; // 处理中
     const DONE          = 1; // 通过
     const TERMINATED        = 2; // 否决了
+    const REVOKE = 3;//撤销
 
     public function getFlow(): IFlow;
 

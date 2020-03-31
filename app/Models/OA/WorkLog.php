@@ -43,4 +43,9 @@ class WorkLog extends Model
     {
         return Carbon::parse($value)->format('Y-m-d H:i');
     }
+
+    public function read()
+    {
+        return $this->hasOne(WorkLogRead::class,'work_id');
+    }
 }

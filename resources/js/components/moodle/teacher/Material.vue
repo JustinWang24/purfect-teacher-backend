@@ -4,18 +4,12 @@
             <div class="card">
                 <div class="card-body">
                     <h3>
-                        <i v-show="loading || loadingData" class="el-icon-loading"></i>
-                        第{{ lecture.idx }}节: {{ lectureModel.title.save-lecture>0 ? lectureModel.title : '未添加标题' }}
+                        添加资料
                     </h3>
                     <hr>
-                    <div v-show="!showLectureForm">
-                        <p>
-                            {{ lectureModel.summary.length > 0 ? lectureModel.summary :'为添加概要' }}
-                        </p>
-                        <el-button type="text" @click="showLectureSummaryEditForm">编辑课程概要</el-button>
-                    </div>
-                    <div v-show="showLectureForm">
                         <el-form :model="lectureModel" label-width="80px" class="course-form" style="margin-top: 20px;">
+
+
                             <el-form-item label="标题">
                                 <el-input placeholder="必填: 标题" v-model="lectureModel.title"></el-input>
                             </el-form-item>
@@ -24,9 +18,7 @@
                                 <el-input placeholder="必填: 概要" type="textarea" v-model="lectureModel.summary"></el-input>
                             </el-form-item>
                             <el-button style="margin-left: 10px;" size="small" type="success" @click="saveLecture">保存</el-button>
-                            <el-button style="margin-left: 10px;" size="small" @click="showLectureForm = false">关闭</el-button>
                         </el-form>
-                    </div>
                     <hr>
 
                     <el-timeline>
@@ -154,6 +146,10 @@
             FileManger,Homeworks
         },
         props:{
+            course:{
+                type: Array,
+                required: true
+            },
             lecture:{
                 required: true
             },
@@ -177,7 +173,6 @@
                     this.lectureModel.id = this.lecture.id;
                     this.lectureModel.title = this.lecture.title;
                     this.lectureModel.summary = this.lecture.summary;
-                    this.showLectureForm = false;
                     this.showMaterialForm = false;
                     this.loading = false;
 
@@ -197,6 +192,9 @@
         },
         data(){
             return {
+                grades:[], // 班级列表
+                durations:[], // 课节列表
+
                 materials:[],
                 materialTypes:[],
                 typeClasses:[
@@ -219,7 +217,6 @@
                     summary: null,
                 },
                 showMaterialForm: false,
-                showLectureForm: false,
                 showFileManagerFlag: false,
                 selectedFile:null,
                 loadingData: false,
@@ -229,12 +226,24 @@
             }
         },
         created(){
+            console.log('zkkkkkkkkkkkkkkkkkkkkkkkkk');
+            this.getCourseGradeList(); // 获取 班级 和 课节
             this.materialTypes = Constants.COURSE_MATERIAL_TYPES_TEXT;
-            console.log('-----------获取lecture----------------------')
-            console.log(this.lecture)
             this.lectureModel = this.lecture;
         },
         methods: {
+            getCourseGradeList: function(){
+                axios.post(
+                    '/api/material/getCourseGradeList',
+                    {course_id: 23}
+                ).then(res => {
+                    if(Util.isAjaxResOk(res)){
+                        this.grades = res.data.data.grades;
+                        this.durations = res.data.data.durations;
+                    }
+                });
+            },
+
             getLectureMaterials: function(){
                 this.loadingData = true;
                 loadLectureMaterials(this.lecture.id).then(res => {

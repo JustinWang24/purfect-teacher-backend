@@ -47,11 +47,13 @@ class CampusScenery
             'video_path'=>$this->videoPath,
             'video_image'=>$this->videoImage,
             'video_title'=>$this->videoTitle,
-            'school_introduce'=>[
+            'school_introduce'=>[ // 这个数组废弃
                 'content'=>$this->schoolContent,
                 'img_path'=>$this->schoolImagePath,
             ],
-            'school_album'=>$schoolAlbum
+            'school_album'=>$schoolAlbum,
+            'web_view_url'=>route('static.school.campus-intro')
+
         ];
 
         return $data;

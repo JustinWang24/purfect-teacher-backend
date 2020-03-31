@@ -13,7 +13,8 @@ if (document.getElementById('pipeline-flow-view-history-app')) {
         data() {
             return {
                 textarea: "", // 审批意见
-                dialogVisible: false, // 弹框
+                dialogVisible: false, // 审批
+                tips: false, // 撤回
                 activities: ['办公室', '校长室', '还有哪里'],
                 action1: {
                     id: null, //action.id
@@ -21,7 +22,6 @@ if (document.getElementById('pipeline-flow-view-history-app')) {
                     content: "dddd", //审批意见
                     urgent: false //是否加急
                 },
-
                 userUuid: null,
                 actionId: null,
                 userFlowId: null,
@@ -84,6 +84,16 @@ if (document.getElementById('pipeline-flow-view-history-app')) {
                         console.log(err);
                     })
                 }
+            },
+            // 撤销
+            cancelAction() {
+                axios.post('/api/pipeline/flow/cancel-action', { user_flow_id: this.userFlowId }
+                ).then(res => {
+                    this.tips = false;
+                    window.history.back();
+                }).catch(err => {
+                    console.log(err);
+                })
             },
             loadWholeFlow: function () {
                 this.isLoading = true;

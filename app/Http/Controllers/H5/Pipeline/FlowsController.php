@@ -136,6 +136,7 @@ class FlowsController extends Controller
             //当前用户action
             $nowUserAction = $dao->getActionByUserFlowAndUserId($userFlowId, $user->id);
             $this->dataForView['showActionEditForm'] = !empty($nowUserAction)
+                && empty($request->get('readonly', '0'))
                 && $nowUserAction->result == IAction::RESULT_PENDING
                 && $startUserAction->userFlow->done == IUserFlow::IN_PROGRESS  ? true : false;
 
@@ -150,14 +151,37 @@ class FlowsController extends Controller
             foreach ($actionResult as $actRet) {
                 $actionReList[$actRet->node_id . '_' .$actRet->user_id] = $actRet;
             }
+            $handlersIcon = [];
             //审批人与结果关联
             foreach ($flowInfo['handler'] as $handler) {
+                $icon = '';
                 $userList = $flowDao->transTitlesToUser($handler->titles, $handler->organizations, $startUserAction->userFlow->user);
                 foreach ($userList as $item) {
                     foreach ($item as $im) {
-                        $im->result = isset($actionReList[$handler->node_id.'_'.$im->id]) ? $actionReList[$handler->node_id.'_'.$im->id] : [];
+                        if (isset($actionReList[$handler->node_id.'_'.$im->id])) {
+                            $im->result = $actionReList[$handler->node_id.'_'.$im->id];
+                            //如果有人拒绝整个流程都是拒绝
+                            if ($im->result->result == IAction::RESULT_TERMINATE) {
+                                $icon = 'error';
+                            }
+                            if ($im->result->result == IAction::RESULT_REJECT) {
+                                $icon = 'error';
+                            }
+                            //如果有人等待 整个流程都是等待
+                            if (empty($icon) && $im->result->result == IAction::RESULT_PENDING) {
+                                $icon = 'pending';
+                            }
+                        }else {
+                            //如果还没轮到 整个流程都是等待
+                            $icon = 'wait';
+                            $im->result = [];
+                        }
                     }
                 }
+                if (empty($icon)) {
+                    $icon = 'success';
+                }
+                $handlersIcon[] = $icon;
                 $handlers[] = $userList;
             }
             //表单信息
@@ -225,6 +249,7 @@ class FlowsController extends Controller
             $this->dataForView['api_token'] = $user->api_token;
             $this->dataForView['appName'] = 'pipeline-flow-view-history';
             $this->dataForView['pageTitle'] = $flow->name;
+            $this->dataForView['handlerIcon'] = $handlersIcon;
 
             return view('h5_apps.pipeline.flow_view_history',$this->dataForView);
         }

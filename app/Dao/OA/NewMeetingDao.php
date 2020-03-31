@@ -9,19 +9,18 @@
 namespace App\Dao\OA;
 
 
-use App\Dao\Pipeline\ActionDao;
-use App\Models\OA\NewMeeting;
-use App\Models\OA\NewMeetingFile;
-use App\Models\OA\NewMeetingSummary;
-use App\Models\OA\NewMeetingUser;
 use App\User;
-use App\Utils\JsonBuilder;
-use App\Utils\Misc\ConfigurationTool;
-use App\Utils\ReturnData\MessageBag;
 use Carbon\Carbon;
-use Illuminate\Support\Facades\DB;
-use Psy\Util\Json;
 use Ramsey\Uuid\Uuid;
+use App\Utils\JsonBuilder;
+use App\Models\OA\NewMeeting;
+use App\Dao\Pipeline\ActionDao;
+use App\Models\OA\NewMeetingFile;
+use App\Models\OA\NewMeetingUser;
+use Illuminate\Support\Facades\DB;
+use App\Models\OA\NewMeetingSummary;
+use App\Utils\ReturnData\MessageBag;
+use App\Utils\Misc\ConfigurationTool;
 
 class NewMeetingDao
 {
@@ -214,8 +213,9 @@ class NewMeetingDao
     public function saveMeetSummary($meetId,$userId,$summaries) {
         $messageBag = new MessageBag(JsonBuilder::CODE_ERROR);
         $map = ['meet_id'=>$meetId, 'user_id'=>$userId];
+        $meet = $this->getMeetByMeetId($meetId);
         $meetUser = NewMeetingUser::where($map)->first();
-        if(is_null($meetUser)) {
+        if(is_null($meetUser) && $meet->user_id != $userId && $meet->approve_userid != $userId) {
             $messageBag->setMessage('您不是该会议的成员');
             return $messageBag;
         }
@@ -228,7 +228,7 @@ class NewMeetingDao
                 $url = $item->storeAs($path, $uuid.'.'.$item->getClientOriginalExtension()); // 上传并返回路径
                 $summary = [
                     'meet_id' => $meetId,
-                    'meet_user_id' => $meetUser->id,
+                    'meet_user_id' => $meetUser->id??0,
                     'user_id' => $userId,
                     'url'     => NewMeetingSummary::ConvertUploadPathToUrl($url),
                     'file_name' => $item->getClientOriginalName(),
@@ -334,11 +334,11 @@ class NewMeetingDao
                 return $messageBag;
             }
 
-            if($now < $meet->meet_end ) {
-                $status = 2; // 早退
-            } else {
-                $status = 1; // 正常
-            }
+            $status = 1; // 正常
+
+//            if($now < $meet->signout_start ) {
+//                $status = 2; // 早退
+//            }
             $msg = '签退';
             $save = ['signout_status'=>$status, 'signout_time'=>$now];
         }
@@ -354,6 +354,16 @@ class NewMeetingDao
     }
 
 
+    /**
+     * 获取学校会议列表
+     * @param $schoolId
+     * @return mixed
+     */
+    public function getMeetingBySchoolId($schoolId) {
+        return NewMeeting::where('school_id',$schoolId)
+            ->orderBy('created_at','desc')
+            ->paginate(ConfigurationTool::DEFAULT_PAGE_SIZE);
+    }
 
 
 }

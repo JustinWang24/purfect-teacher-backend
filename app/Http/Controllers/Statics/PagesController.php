@@ -36,15 +36,42 @@ class PagesController extends Controller
     }
 
     /**
+     * 校园简介
+     * @param Request $request
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function school_campus_intro(Request $request){
+        $token = $request->get('api_token');
+        $school_id = 0;
+        if ($token) {
+            $getUserByApiToken = (new UserDao())->getUserByApiToken($token);
+            if (!empty($getUserByApiToken)) {
+                $gradeUserOneInfo = $getUserByApiToken->gradeUserOneInfo;
+                $school_id = isset($gradeUserOneInfo->school_id) ? $gradeUserOneInfo->school_id : $school_id;
+            }
+        }
+        $this->dataForView['config'] = SchoolConfiguration::where('school_id',$school_id)->first();
+
+        return view('h5_apps.student.school_campus_intro', $this->dataForView);
+    }
+    
+    /**
      * 报名须知页面
      * @param Request $request
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function school_enrolment_notes(Request $request){
-        $this->dataForView['pageTitle'] = ''; // 报名须知
-        $this->dataForView['api_token'] = Auth::user()->api_token ?? null;
+        $token = $request->get('api_token');
+        $school_id = 0;
+        if ($token) {
+            $getUserByApiToken = (new UserDao())->getUserByApiToken($token);
+            if (!empty($getUserByApiToken)) {
+                $gradeUserOneInfo = $getUserByApiToken->gradeUserOneInfo;
+                $school_id = isset($gradeUserOneInfo->school_id) ? $gradeUserOneInfo->school_id : $school_id;
+            }
+        }
 
-        $this->dataForView['note'] = RecruitNote::where('school_id',1)->first();
+        $this->dataForView['note'] = RecruitNote::where('school_id',$school_id)->first();
 
         return view('h5_apps.student.school_enrolment_notes', $this->dataForView);
     }
@@ -64,12 +91,11 @@ class PagesController extends Controller
                 $school_id = isset($gradeUserOneInfo->school_id) ? $gradeUserOneInfo->school_id : $school_id;
             }
         }
-        $this->dataForView['pageTitle'] = ''; // 招生简章
-        $this->dataForView['api_token'] = Auth::user()->api_token ?? null;
         $this->dataForView['config'] = SchoolConfiguration::where('school_id',$school_id)->first();
 
         return view('h5_apps.student.school_recruitment_intro', $this->dataForView);
     }
+
 
     /**
      * 学生点击后直接显示专用报名用的界面

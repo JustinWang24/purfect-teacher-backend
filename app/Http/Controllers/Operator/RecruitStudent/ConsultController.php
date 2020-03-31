@@ -7,6 +7,7 @@ use App\Utils\FlashMessageBuilder;
 use App\Dao\RecruitStudent\ConsultDao;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\RecruitStudent\ConsultRequest;
+use Illuminate\Support\Facades\Storage;
 
 class ConsultController extends Controller
 {
@@ -35,9 +36,7 @@ class ConsultController extends Controller
         $note = RecruitNote::where('school_id', session('school.id'))->first();
         // 招生简章
         $config = SchoolConfiguration::where('school_id', session('school.id'))->first();
-        $recruitment_intro = $config->recruitment_intro;
 
-        // 由于需求太简单, 就不去使用 Dao 了, 而是直接操作 Model. 后期如果需求变复杂, 还是要回归 Dao 的方式
         if($request->isMethod('post')){
           //print_r($request->has('note'));exit;
             if($request->has('note')){
@@ -53,10 +52,23 @@ class ConsultController extends Controller
                 }
             }
 
-
             // 招生简章
             if($request->has('config')){
+                $files = $request->file('file');
                 $configData = $request->get('config');
+                if ($files) {
+                    $infos['name'] = $files->getClientOriginalName();
+                    $infos['type'] = $files->extension();
+                    $infos['size'] = getFileSize($files->getSize());
+                    $ext = $files->getClientOriginalExtension();
+                    $fileName = date('Y-m-d').'-'.rand(10000,99999).'.'.$ext;
+                    $uploadResult = Storage::disk('banner')->put($fileName, file_get_contents($files->getRealPath()));
+                    $config->recruitment_intro_pics =  '/storage/banner/'.$fileName;
+                }
+                // 请上传招封面图
+                if (empty($infos) && !isset($infos['path'])) {
+                    FlashMessageBuilder::Push($request, FlashMessageBuilder::DANGER, '请上传封面图');
+                }
                 $config->recruitment_intro = $configData['recruitment_intro'];
                 if($config->save()){
                     FlashMessageBuilder::Push($request, 'success','招生简章已经成功保存!');
@@ -64,7 +76,8 @@ class ConsultController extends Controller
             }
         }
         $this->dataForView['note'] = $note;
-        $this->dataForView['recruitment_intro'] = $recruitment_intro;
+        $this->dataForView['recruitment_intro'] = $config->recruitment_intro;
+        $this->dataForView['recruitment_intro_pics'] = $config->recruitment_intro_pics;
         $this->dataForView['user'] = $user;
 
         return view('school_manager.recruitStudent.consult.note', $this->dataForView);
@@ -116,7 +129,6 @@ class ConsultController extends Controller
         $info = $consultDao->getConsultById($id);
         $this->dataForView['consult'] = $info;
         return view('school_manager.recruitStudent.consult.edit', $this->dataForView);
-
     }
 
     public function delete(ConsultRequest $request) {

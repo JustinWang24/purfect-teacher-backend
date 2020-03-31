@@ -17,6 +17,8 @@ if (document.getElementById('teacher-assistant-grades-evaluations-app')) {
         },
         tableData: [],
         ifShow: false,
+        detailPage: {},
+        detailParams: {},
         teacherName: ''
       }
     },
@@ -24,7 +26,7 @@ if (document.getElementById('teacher-assistant-grades-evaluations-app')) {
       const dom = document.getElementById('app-init-data-holder');
       this.schoolId = dom.dataset.school;
       this.getGradeList();
-      console.log('班级评分');
+      // console.log('班级评分');
     },
     methods: {
       searchList: function () {
@@ -32,12 +34,12 @@ if (document.getElementById('teacher-assistant-grades-evaluations-app')) {
         if (this.date) {
           params.date = this.date.getFullYear() + '-' + (this.date.getMonth() + 1) + '-' + this.date.getDate();
         }
-        console.log(params.date)
         this.getGradeTable(params);
       },
       showDetail: function (data) {
-        console.log(data)
         this.ifShow = true;
+
+        this.detailParams = data;
         this.getGradeDetail(data)
       },
       getGradeList: function () {
@@ -58,7 +60,7 @@ if (document.getElementById('teacher-assistant-grades-evaluations-app')) {
         });
       },
       getGradeTable: function (params) {
-        console.log(params)
+        // console.log(params)
         const url = Util.buildUrl(Constants.API.TEACHER_WEB.GRADE_TODAY_GRADE);
         axios.post(url, params).then((res) => {
           if (Util.isAjaxResOk(res)) {
@@ -74,13 +76,17 @@ if (document.getElementById('teacher-assistant-grades-evaluations-app')) {
         axios.post(url, params).then((res) => {
           if (Util.isAjaxResOk(res)) {
             let data = res.data.data;
+            this.detailPage = data;
             this.tableData = data.data;
-            console.log(this.tableData)
             this.teacherName = '评分教师:' + data.teacher;
           }
         }).catch((err) => {
 
         });
+      },
+      detailChange: function (current) {
+        this.detailParams.page = current;
+        this.getGradeDetail( this.detailParams)
       }
     }
   });

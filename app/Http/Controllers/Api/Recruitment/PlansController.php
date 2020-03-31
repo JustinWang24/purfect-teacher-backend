@@ -10,6 +10,7 @@ use App\Dao\RecruitStudent\RegistrationInformaticsDao;
 use App\Dao\Schools\OrganizationDao;
 use App\Http\Requests\RecruitStudent\PlanRecruitRequest;
 use App\Models\Banner\Banner;
+use App\Models\Schools\SchoolConfiguration;
 use App\User;
 use App\Utils\JsonBuilder;
 use Illuminate\Http\Request;
@@ -22,26 +23,23 @@ class PlansController extends Controller
      * @return string
      */
     public function load_plans(PlanRecruitRequest $request){
+
         $logic = PlansLoader::GetInstance($request, $request->getYear());
         $plans = [];
         if($logic){
             $plans = $logic->getPlans();
         }
+
         $user = $request->user('api');
 
-        // 添加图片，招生资源位作为查询的依据
         $schoolId = $user ? $user->getSchoolId() : $request->getSchoolId();
-        $bannerImages = (new BannerDao())->getBannerBySchoolIdAndPosit($schoolId, Banner::POSIT_1);
-        $image = '';
-        if($bannerImages->count() > 0){
-            $banner = $bannerImages[0];
-            $image = $banner->image_url;
-        }
 
+        // 获取招生简章图片
+        $schoolConfiguration = (new SchoolConfiguration())->where('school_id', $schoolId)->first();
         return JsonBuilder::Success([
-            'plans'=>$plans,
-            'banner'=>['image'=>$image],
-            'school_id'=>$schoolId
+            'plans' => $plans,
+            'banner' => ['image' => !empty($schoolConfiguration->recruitment_intro_pics) ? asset($schoolConfiguration->recruitment_intro_pics) : ''],
+            'school_id' => $schoolId
         ]);
     }
 
@@ -106,9 +104,6 @@ class PlansController extends Controller
         $dao = new RegistrationInformaticsDao();
         $info = $dao->getInformaticsByUserId($user->id);
         foreach ($info as $item) {
-            /**
-             * @var \App\Models\RecruitStudent\RegistrationInformatics $item
-             */
             $plans[] = [
                 'id'=>$item->id,
                 'name'=>$item->plan->major_name,
@@ -120,6 +115,8 @@ class PlansController extends Controller
                 'hot'=>$item->plan->hot,
                 'title'=>$item->plan->title,
                 'tease'=>$item->plan->tease,
+                'created_at'=>$item->created_at,
+                'statusArr'=>$dao->getRegistrationInformaticsStatusInfo1($user->id, $item), // 获取我是否可以报名
             ];
         }
 
