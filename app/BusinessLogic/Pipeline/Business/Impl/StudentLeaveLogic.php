@@ -39,10 +39,10 @@ class StudentLeaveLogic
                 'school_id' => $this->user->getSchoolId(),
                 'grade_id' => $this->user->gradeUser()->id,
                 'user_id' => $this->user->id,
-                'start_time' => $start,
-                'end_time' => $end,
+                'start_time' => Carbon::parse($start)->toDateTimeString(),
+                'end_time' => Carbon::parse($end)->toDateTimeString(),
             ];
-
+            Log::debug('学生请假数据'.json_encode($options));
             StudentLeave::create($leave);
 
             Log::info('收到学生请假的业务通知', [$start, $end, $this->user]);
