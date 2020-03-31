@@ -157,9 +157,8 @@ class User extends Authenticatable implements HasMobilePhone, HasDeviceId, IUser
         if($roleSlug === Role::TEACHER_SLUG || $roleSlug === Role::EMPLOYEE_SLUG || $roleSlug === Role::ADMINISTRATOR_SLUG){
             // 教师或者职工
             return $this->hasOne(TeacherProfile::class,'user_id');
-        }
-        elseif (in_array($this->type, Role::GetStudentUserTypes())){
-            // 已认证学生
+        } elseif (in_array($this->type, Role::GetStudentUserTypes())){
+            // 已认证学生 或者 已注册未认证
             return $this->hasOne(StudentProfile::class,'user_id');
         }
         else{
@@ -266,13 +265,15 @@ class User extends Authenticatable implements HasMobilePhone, HasDeviceId, IUser
      * @return mixed
      */
     public function gradeUser(){
-        if($this->isStudent() || $this->isSchoolManager()){
 
+        if($this->isStudent() || $this->isSchoolManager()){
+            return $this->hasOne(GradeUser::class);
+        } elseif ($this->isTeacher() || $this->isEmployee()){
+            return $this->hasMany(GradeUser::class);
+        } else {
             return $this->hasOne(GradeUser::class);
         }
-        elseif($this->isTeacher() || $this->isEmployee()){
-            return $this->hasMany(GradeUser::class);
-        }
+
     }
 
     public function myCourses(){
