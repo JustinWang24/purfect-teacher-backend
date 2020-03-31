@@ -1142,3 +1142,11 @@ Route::prefix('material')->middleware('auth:api')->group(function(){
 });
 
 
+// 办公
+Route::prefix('work')->middleware('auth:api')->group(function(){
+    // 考核接口
+    Route::get('/assess', 'Api\OA\WorkController@assess')
+        ->name('api.work.assess');
+});
+
+
