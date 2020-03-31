@@ -153,9 +153,9 @@
                                             <img src="{{ $v->profile->avatar }}" alt="" style="width: 40px; height: 40px;border-radius: 50%;vertical-align: middle;">
                                             <div style="flex: 1;margin-left: 20px;">
                                                 <p style="margin: 0;">{{ $v->name }}({{ $k }})</p>
-                                                @if ($v->result->result == \App\Utils\Pipeline\IAction::RESULT_PASS) <p style="margin: 0;">{{ substr($v->result->updated_at, 5, 11) }} </p> @endif
-                                                @if ($v->result->result == \App\Utils\Pipeline\IAction::RESULT_TERMINATE) <p style="margin: 0;">{{ substr($v->result->updated_at, 5, 11) }} </p> @endif
-                                                @if ($v->result->result == \App\Utils\Pipeline\IAction::RESULT_REJECT) <p style="margin: 0;">{{ substr($v->result->updated_at, 5, 11) }} </p> @endif
+                                                @if ($v->result->result == \App\Utils\Pipeline\IAction::RESULT_PASS) <p style="margin: 0;">{{ substr($v->result->updated_at, 0, 16) }} </p> @endif
+                                                @if ($v->result->result == \App\Utils\Pipeline\IAction::RESULT_TERMINATE) <p style="margin: 0;">{{ substr($v->result->updated_at, 0, 16) }} </p> @endif
+                                                @if ($v->result->result == \App\Utils\Pipeline\IAction::RESULT_REJECT) <p style="margin: 0;">{{ substr($v->result->updated_at, 0, 16) }} </p> @endif
                                             </div>
                                             <span style="text-align: right;font-size: 13px;">
                                                 @if (!empty($v->result))
