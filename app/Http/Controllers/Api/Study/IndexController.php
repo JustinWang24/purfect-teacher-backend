@@ -121,6 +121,7 @@ class IndexController extends Controller
             'selectCourse' => $selectCourse, // 选课
             'timetable' => $timetable,  // 课程
             'studyData' => $studyData, // 学习资料
+            'electronicBook' => "https://bp.pep.com.cn/jc/", // 电子图书
             'signIn'=> $signIn, // 签到
             'evaluateTeacher' => $evaluateTeacher // 评教 true false
         ];
