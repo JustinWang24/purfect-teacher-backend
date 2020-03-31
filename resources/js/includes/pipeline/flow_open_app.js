@@ -212,14 +212,48 @@ if (document.getElementById('pipeline-flow-open-app')) {
         item.value = val[0].name + '/' + val[1].name + '/' + val[2].name;
         item.extra.showPicker = false;
       },
-      uploadImg(img) {
+      deleteImg(img, item) {
         // console.log(img)
+        // console.log(item)
+        let index = '';
+        item.files.forEach((i, idx) => {
+          if(i.lastModified == img.file.lastModified) {
+            index = idx
+          }
+        });
+        item.files.splice(index, 1)
+        item.values.splice(index, 1);
+        item.value = '';
+        item.values.forEach((i, idx) => {
+          if(!item.value) {
+            item.value = i
+          } else {
+            item.value += ',' + i
+          }
+        })
+        // console.log(item.value)
+        return true
+      },
+      uploadImg(img, detail, item) {
         let params = new FormData();
-        let fileArr = [img.file];
-        params.append("file", fileArr)
+        params.append("file[]", img.file)
         const url = '/api/Oa/message-upload-files';
         axios.post(url, params).then((res) => {
           if (Util.isAjaxResOk(res)) {
+            let data = res.data.data;
+            if (!item.values) {
+              item.values = [];
+              item.values.push(data.imgPath[0].path)
+            } else {
+              item.values.push(data.imgPath[0].path)
+            }
+
+            if (!item.value) {
+              item.value = data.imgPath[0].path
+            } else {
+              item.value += ',' + data.imgPath[0].path
+            }
+            // console.log(item.value)
             this.$message({
               message: '上传成功',
               type: 'success'

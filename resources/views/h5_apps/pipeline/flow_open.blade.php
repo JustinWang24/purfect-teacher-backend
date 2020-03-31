@@ -124,8 +124,8 @@
                 <van-field name="uploader"
                     :rules="item.required?[{ required: item.required, message: '请上传图片' }]:[]"
                     :required="item.required?true:false" :label="item.title">
-                    <template #input>
-                        <van-uploader v-model="item.files" :max-count="9" :after-read="uploadImg"/>
+                    <template #input >
+                        <van-uploader v-model="item.files" :max-count="9" :before-delete="(($event) => {deleteImg($event, item)})" :after-read="(($event1, $event2) => {uploadImg($event1, $event2, item)})"/>
                     </template>
                 </van-field>
             </div>
