@@ -83,7 +83,7 @@ class LoginController extends Controller
                 $userStatus = true;
             }
             if ($result) {
-                return JsonBuilder::Success(['token' => $token, 'status' => $userStatus, 'user_id' => $user->getId()]);
+                return JsonBuilder::Success(['token' => $token, 'status' => $userStatus, 'user_id' => $user->getId(), 'user_type' => $user->type]);
             } else {
                 return JsonBuilder::Error('系统错误,请稍后再试~');
             }
