@@ -90,10 +90,6 @@ class AttendanceController extends Controller
             $signInList[$key]['date'] = Carbon::parse($val->created_at)->format('Y-m-d');
             $signInList[$key]['time'] = '';
 
-            // 判断请假的
-            if ($val['mold'] == AttendancesDetail::MOLD_LEAVE) {
-                $signInList[$key]['mold'] = AttendancesDetail::MOLD_TRUANT;
-            }
             if($val['mold'] == AttendancesDetail::MOLD_SIGN_IN) {
                 $signInList[$key]['time'] = Carbon::parse($val->created_at)->format('H:i');
 
