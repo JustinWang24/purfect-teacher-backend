@@ -96,11 +96,6 @@
             <h3>申请理由</h3>
             <p class="reason">{{ $startAction->content }}</p>
         </div> -->
-        <<div class="information" style="padding-bottom: 10px;">
-            <h3>附件</h3>
-
-
-        <
         <div class="information">
             <h3>
                 <span>审批人</span>
