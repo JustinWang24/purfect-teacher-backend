@@ -15,12 +15,9 @@ use App\Utils\UI\Button;
                 <div class="card-body">
                     <div class="row">
                         <div class="table-padding col-12">
-
                                 <a href="{{ route('admin.importer.add') }}" class="btn btn-primary " id="btn-create-versions-from">
                                     创建导入任务 <i class="fa fa-plus"></i>
                                 </a>
-
-
                         </div>
                         <div class="table-responsive">
                             <table class="table table-striped table-bordered table-hover table-checkable order-column valign-middle">
@@ -38,7 +35,6 @@ use App\Utils\UI\Button;
                                 @if(count($tasks) == 0)
                                     <tr>
                                         <td colspan="6">还没有内容 </td>
-
                                     </tr>
                                 @endif
                                 @foreach($tasks as $index=>$task)

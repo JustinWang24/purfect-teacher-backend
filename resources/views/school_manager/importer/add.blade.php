@@ -5,7 +5,7 @@ use App\Utils\UI\Button;
 
 @extends('layouts.app')
 @section('content')
-    <div class="row">
+    <div id="school-importer-student"> <div class="row">
         <div class="col-sm-12 col-md-12 col-xl-12">
             <div class="card-box">
                 <div class="card-head">
@@ -15,10 +15,17 @@ use App\Utils\UI\Button;
                     <form action="{{ route('school_manager.importer.update') }}" method="post"  id="add-task-form" enctype="multipart/form-data">
                         @csrf
                         <div class="form-group">
+                          <label for="school-input" >导入方式</label>
+                          <select class="form-control" name="task[type]" required v-model="type">
+                            <option value="0">无专业班级数据</option>
+                            <option value="1">带专业班级</option>
+                          </select>
+                        </div>
+                        <div class="form-group">
                             <label for="task-title-input">任务名称</label>
                             <input required type="text" class="form-control" id="task-title-input" value="{{ old('task.title') }}" placeholder="任务名称" name="task[title]">
                         </div>
-                        <div class="form-group">
+                        <div class="form-group" v-if="type == 1">
                             <label for="task-config">配置文件</label>
                             <textarea required cols="30" rows="25" class="form-control" id="task-config-input"  placeholder="配置" name="task[config]">{{ old('task.config') }}</textarea>
                         </div>
@@ -37,4 +44,6 @@ use App\Utils\UI\Button;
             </div>
         </div>
     </div>
+    </div>
+
 @endsection
