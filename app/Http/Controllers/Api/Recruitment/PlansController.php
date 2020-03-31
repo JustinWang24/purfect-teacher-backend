@@ -19,6 +19,24 @@ use App\Http\Controllers\Controller;
 class PlansController extends Controller
 {
     /**
+     * Func 后台接口调用
+     * @param PlanRecruitRequest $request
+     * @return string
+     */
+    public function backend_load_plans(PlanRecruitRequest $request){
+
+        $logic = PlansLoader::GetInstance($request, $request->getYear());
+        $plans = [];
+        if($logic){
+            $plans = $logic->getPlans();
+        }
+        return JsonBuilder::Success([
+            'plans' => $plans
+        ]);
+    }
+
+    /**
+     * Func app接口调用
      * @param PlanRecruitRequest $request
      * @return string
      */

@@ -60,6 +60,7 @@
         },
         methods:{
             querySearchAsync: function (queryString, cb) {
+                console.log(queryString);
                 const _queryString = queryString.trim();
                 if(Util.isEmpty(_queryString)){
                     // 如果视图搜索空字符串, 那么不执行远程调用, 而是直接回调一个空数组
@@ -71,13 +72,14 @@
                         {query: _queryString, school: this.schoolId, scope: this.scope}
                     ).then(res => {
                         if(Util.isAjaxResOk(res)){
+                            console.log(res.data.data);
                             cb(res.data.data);
                         }
                     })
                 }
             },
             handleSelect: function (item) {
-                this.query =''
+                this.query = item.value;
                 // 把找到的发布出去
                 this.$emit('result-item-selected',{item: item})
             }

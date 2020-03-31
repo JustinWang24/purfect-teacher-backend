@@ -63,7 +63,7 @@ export const Constants = {
             DISTRICTS: '/api/location/get-districts',
         },
         RECRUITMENT: {
-            LOAD_PLANS: '/api/recruitment/load-plans',
+            LOAD_PLANS: '/api/recruitment/backend-load-plans',
             SAVE_PLAN: '/api/recruitment/save-plan',
             GET_PLAN: '/api/recruitment/get-plan',
             DELETE_PLAN: '/api/recruitment/delete-plan',

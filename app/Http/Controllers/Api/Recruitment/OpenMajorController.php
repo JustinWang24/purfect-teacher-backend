@@ -159,7 +159,7 @@ class OpenMajorController extends Controller
 
         $dao =  new RegistrationInformaticsDao;
         $profileDao = new StudentProfileDao();
-        $userId = $profileDao->getUserIdByIdNumberOrMobile($formData['id_number'], $formData['mobile']);
+        $userId = $profileDao->getUserIdByIdNumberOrMobile($formData['id_number']/*$formData['mobile']*/);
         if (!$userId) {
             $msgBag = $dao->addUser($formData, $plan);
             if ($msgBag->isSuccess()) {
