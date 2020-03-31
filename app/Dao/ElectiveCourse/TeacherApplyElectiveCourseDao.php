@@ -821,7 +821,7 @@ class TeacherApplyElectiveCourseDao
             $course = $courseDao->createCourse($data);
             if (!$course->isSuccess()) {
                 DB::rollBack();
-                $messageBag->setMessage($course->getData());
+                $messageBag->setMessage($course->getMessage());
             }
             //标记申请表为发布状态
             $this->publishedApply($applyId);
