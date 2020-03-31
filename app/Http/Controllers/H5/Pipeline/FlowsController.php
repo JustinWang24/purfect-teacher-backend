@@ -230,8 +230,9 @@ class FlowsController extends Controller
 
                     case 'image':
                         if ($optionRet) {
-                            $value = implode(',', $optionRet);
+                            $value = explode(',', $optionRet);
                         }
+                        break;
                     default:
                         $value = $optionRet;
                         break;
