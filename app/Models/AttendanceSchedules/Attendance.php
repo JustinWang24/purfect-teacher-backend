@@ -2,6 +2,7 @@
 
 namespace App\Models\AttendanceSchedules;
 
+use App\Models\Schools\SchoolConfiguration;
 use App\Models\Timetable\TimeSlot;
 use App\User;
 use Carbon\Carbon;
@@ -77,5 +78,12 @@ class Attendance extends Model
             return '';
         }
         return Carbon::parse($value)->format('Y-m-d H:i');
+    }
+
+
+    public function getTerm() {
+        $configuration = new SchoolConfiguration();
+        $term = $configuration->getAllTerm();
+        return $term[$this->term];
     }
 }

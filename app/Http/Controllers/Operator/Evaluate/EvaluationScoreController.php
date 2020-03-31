@@ -19,8 +19,7 @@ class EvaluationScoreController extends Controller
         $schoolId = $request->getSchoolId();
         $attendancesDao = new AttendancesDao();
         $return = $attendancesDao->getAttendanceBySchoolId($schoolId);
-//        dd($return);
-        $this->dataForView['list'] = [];
+        $this->dataForView['list'] = $return;
         return view('school_manager.evaluate.score.list',$this->dataForView);
     }
 
