@@ -12,7 +12,9 @@
               <span>{{form.name}}</span>
             </div>
             <div class="content">
-              <span class="node"><pre>{{form.title}}</pre></span>
+              <span class="node">
+                <pre>{{form.title}}</pre>
+              </span>
             </div>
           </div>
         </template>
@@ -42,7 +44,7 @@
                   v-if="!peo.avatar"
                 >{{peo.name.length>2?peo.name.substring(peo.name.length-2,peo.name.length):peo.name}}</div>
                 <Avatar class="handler avatar" v-else :src="peo.avatar" />
-                <span class="name">{{peo.name}}</span>
+                <span class="name">{{peo.name}}（{{peo.job}}）</span>
               </div>
             </timeline-item>
           </timeline>
@@ -113,8 +115,11 @@ export default {
             this.flow = data.flow;
             this.handlers = data.handlers.map(handleLevel => {
               let list = [];
-              Object.keys(handleLevel).forEach(levelKey => {
-                list = list.concat(handleLevel[levelKey]);
+              Object.keys(handleLevel).forEach(job => {
+                list = list.concat(handleLevel[job].map(peo=>{
+                  peo.job = job
+                  return peo
+                }));
               });
               return list;
             });
@@ -153,7 +158,7 @@ export default {
           })
           .then(res => {
             if (Util.isAjaxResOk(res)) {
-              this.$emit('created')
+              this.$emit("created");
             }
           });
       } catch (e) {
@@ -215,6 +220,7 @@ export default {
         margin-bottom: 12px;
         .name {
           margin-left: 12px;
+          color: #666666;
         }
       }
       .handler.item {
