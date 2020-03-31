@@ -70,6 +70,7 @@
             <el-divider></el-divider>
             @foreach($options as $option)
             @if ($option['type'] == 'image' && !empty($option['value']))
+                    <h3>{{ $option['title'] }}</h3>
                     <div class="imageBox">
                 @foreach($option['value'] as $img)
                             <img src="{{ $img }}" alt="" class="image">
