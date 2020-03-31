@@ -77,10 +77,10 @@
                 @endforeach
             </div>
             @elseif ($option['type'] == 'files' && !empty($option['value']))
-             <h3>{{ $option['title'] }}</h3>
+            <h3>{{ $option['title'] }}</h3>
             <div class="information" style="padding-bottom: 10px;">
                 @foreach($option['value'] as $file)
-                    <p class="reason" style="width: 87%;height: 40px;line-height: 50px;background:rgba(3,133,255,0.05);margin: 0 auto;margin-bottom: 10px;color: #333333;overflow: hidden;white-space: nowrap;text-overflow: ellipsis;" data-url="{{ $file['url'] }}">{{ $file['file_name'] }}</p>
+                <p class="reason option" data-url="{{ $file['url'] }}" ref="option" @click="options()">{{ $file['file_name'] }}</p>
                 @endforeach
             </div>
             @else
@@ -194,5 +194,9 @@
             </span>
         </el-dialog>
     </div>
+    @include(
+    'reusable_elements.section.file_manager_component_mobile',
+    ['pickFileHandler'=>'pickFileHandler']
+    )
 </div>
 @endsection
