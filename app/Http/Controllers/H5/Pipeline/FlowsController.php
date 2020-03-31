@@ -174,7 +174,9 @@ class FlowsController extends Controller
                             }
                         }else {
                             //如果还没轮到 整个流程都是等待
-                            $icon = 'wait';
+                            if (empty($icon)) {
+                                $icon = 'wait';
+                            }
                             $im->result = [];
                         }
                     }
