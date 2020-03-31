@@ -12,6 +12,7 @@ use App\BusinessLogic\Pipeline\Flow\Contracts\IFlowLogic;
 use App\BusinessLogic\Pipeline\Flow\FlowLogicFactory;
 use App\Dao\Misc\SystemNotificationDao;
 use App\Dao\Pipeline\UserFlowDao;
+use App\Models\Pipeline\Flow\Action;
 use App\Models\Pipeline\Flow\Copys;
 use App\Models\Pipeline\Flow\Node;
 use App\Models\Pipeline\Flow\UserFlow;
@@ -317,6 +318,9 @@ abstract class GeneralFlowsLogic implements IFlowLogic
                     // 将整个流程终止
                     $userFlowDao = new UserFlowDao();
                     $userFlowDao->terminate($action->getTransactionId());
+
+                    //删除同一级别的其他人
+                    Action::where(['transaction_id' => $action->getTransactionId(),'node_id' => $action->node_id, 'result' => Action::RESULT_PENDING])->delete();
 
                     DB::commit();
                     $messageBag->setCode(JsonBuilder::CODE_SUCCESS);

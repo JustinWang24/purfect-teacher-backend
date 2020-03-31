@@ -163,7 +163,6 @@ class ActionDao
                 foreach ($actions as $action) {
                     $this->delete($action->id);
                 }
-                $userFlow->delete();
 
                 $userFlow->done = IUserFlow::REVOKE;
                 $userFlow->save();

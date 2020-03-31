@@ -1,6 +1,6 @@
 @extends('layouts.h5_app')
 @section('content')
-<div id="app-init-data-holder" data-apitoken="{{ $api_token }}" data-flowid="{{ $flow->id }}" data-nodeid="{{ $node->id }}" data-school="{{ $user->getSchoolId() }}" data-nodeoptions="{{ $node->options }}" data-apprequest="1"></div>
+<div id="app-init-data-holder" data-apitoken="{{ $api_token }}" data-uuid="{{ $user->uuid }}" data-flowid="{{ $flow->id }}" data-nodeid="{{ $node->id }}" data-school="{{ $user->getSchoolId() }}" data-nodeoptions="{{ $node->options }}" data-apprequest="1"></div>
 <div id="{{ $appName }}" class="school-intro-container">
     <div class="main" style="overflow:hidden;">
         <van-form @submit="onSubmit">
@@ -138,7 +138,7 @@
                                 v-model="item.extra.showPicker" :title="item.title">
                             <div class="part-content">
                                     <file-manager-mobile
-                                            user-uuid="uuid"
+                                            user-uuid="{{ $user->uuid }}"
                                             :pick-file="true"
                                             :allow-file-types="[]"
                                             v-on:pick-this-file="pickFile(item, $event)"

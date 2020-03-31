@@ -291,26 +291,26 @@ class IndexController extends Controller
     public function updateUserInfo(HomeRequest $request)
     {
         $user   = $request->user();
-        $data   = $request->get('data');
+        $userInfo = $request->getUserInfo();
+        $userProfile = $request->getUserProfile();
+
         $avatar = $request->file('avatar');
         if ($avatar) {
-            $avatarImg      = $avatar->store('public/avatar');
-            $data['avatar'] = StudentProfile::avatarUploadPathToUrl($avatarImg);
+            $avatarImg  = $avatar->store('public/avatar');
+            $userProfile['avatar'] = StudentProfile::avatarUploadPathToUrl($avatarImg);
         }
+
+        $dao = new StudentProfileDao;
         $userDao = new UserDao;
-        if (isset($data['nice_name'])) {
-            $result = $userDao->updateUser($user->id, null,null,null,null, $data['nice_name'],null);
-        } else {
-            $dao        = new StudentProfileDao;
-            $teacherDao = new TeacherProfileDao;
-            if ($user->isStudent()) {
-                $result = $dao->updateStudentProfile($user->id, $data);
-            } elseif ($user->isTeacher()) {
-                $result = $teacherDao->updateTeacherProfile($user->id, $data);
-            }
+        $teacherDao = new TeacherProfileDao;
+        if ($user->isStudent()) {
+            $result = $dao->updateStudentProfile($user->id, $userProfile);
         }
-        if (isset($data['user_signture'])) {
-            $result = $userDao->updateUser($user->id, null,null,null,null, null, $data['user_signture']);
+        if ($user->isTeacher()) {
+            $result = $teacherDao->updateTeacherProfile($user->id, $userProfile);
+        }
+        if ($userInfo) {
+            $result = $userDao->updateUserInfo($user->id, $userInfo);
         }
 
         if ($result) {
