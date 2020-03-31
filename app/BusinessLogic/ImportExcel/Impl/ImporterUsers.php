@@ -54,6 +54,31 @@ class ImporterUsers extends AbstractImporter
                     $sex = 0;
                 }
 
+                // 临时这样写有时间再优化
+                if ($val[9] == '是') {
+                    $createFile = 1; // 是否建档
+                } else {
+                    $createFile = 0;
+                }
+
+                if ($val[10] == '是') {
+                    $specialSupport = 1; // 是否农村低保
+                } else {
+                    $specialSupport = 0;
+                }
+
+                if ($val[11] == '是') {
+                    $veryPoor = 1; // 是否农村特困
+                } else {
+                    $veryPoor = 0;
+                }
+
+                if ($val[12] == '是') {
+                    $disability = 1; // 是否残疾
+                }  else {
+                    $disability = 0;
+                }
+
                 $student = [
                     'uuid' => Uuid::uuid4()->toString(),
                     'name' => $val[0],
@@ -74,6 +99,10 @@ class ImporterUsers extends AbstractImporter
                     'address_line' => $val[6],
                     'birthday' => $this->getBirthday($val[3]),
                     'nation_name' => $val[2],
+                    'create_file' => $createFile,
+                    'special_support' => $specialSupport,
+                    'very_poor' => $veryPoor,
+                    'disability' => $disability
                 ];
 
                 // 手机号不能为空
@@ -171,7 +200,11 @@ class ImporterUsers extends AbstractImporter
             "户籍所在乡镇",
             "户籍所在村",
             "年级",
-            "学生电话"
+            "学生电话",
+            "是否建档立卡",
+            "是否农村低保",
+            "是否农村特困",
+            "是否残疾"
         ];
     }
 
