@@ -223,19 +223,25 @@ class AttendancesDetailsDao
                 $re = AttendancesDetail::where($map)->first();
                 if(is_null($re)) {
                     // 添加
-                    $add = ['attendance_id' => $attendanceId, 'course_id' => $info['course_id'],
-                        'timetable_id' => $info['timetable_id'], 'student_id' => $item['user_id'],
-                        'year' => $info['year'], 'term' => $info['term'], 'type' => AttendancesDetail::TYPE_MANUAL,
-                        'week' => $info['week'], 'mold' => AttendancesDetail::MOLD_TRUANT, 'score'=>$item['score'],
+                    $add = [
+                        'attendance_id' => $attendanceId,
+                        'course_id' => $info['course_id'],
+                        'timetable_id' => $info['timetable_id'],
+                        'student_id' => $item['user_id'],
+                        'year' => $info['year'],
+                        'term' => $info['term'],
+                        'type' => AttendancesDetail::TYPE_MANUAL,
+                        'week' => $info['week'],
+                        'mold' => AttendancesDetail::MOLD_TRUANT,
+                        'score'=>$item['score'],
                         'weekday_index' => $info->timeTable->weekday_index,
-                        'evaluate_status' => AttendancesDetail::EVALUATE_STATUS
                     ];
                     if(!empty($item['remark'])) {
                         $add['remark'] = $item['remark'];
                     }
                     AttendancesDetail::create($add);
                 } else {
-                    $save = ['score'=>$item['score'],  'evaluate_status' => AttendancesDetail::EVALUATE_STATUS];
+                    $save = ['score'=>$item['score']];
                     if(!empty($item['remark'])) {
                         $save['remark'] = $item['remark'];
                     }

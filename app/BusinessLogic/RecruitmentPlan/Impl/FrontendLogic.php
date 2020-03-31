@@ -70,9 +70,7 @@ class FrontendLogic implements IPlansLoaderLogic
           $regDao = new RegistrationInformaticsDao();
             foreach ($rows as $row) {
               // 获取我是否可以报名
-              $statusMessageArr = $regDao->getRegistrationInformaticsStatusInfo($this->userId, $row);
-              $applied = $statusMessageArr['status'] == 100 ? false : $statusMessageArr['message1'];
-
+              $statusArr = $regDao->getRegistrationInformaticsStatusInfo($this->userId, $row);
                 // 返回数据
                 $plans[] = [
                     'id'=>$row->id,
@@ -82,7 +80,8 @@ class FrontendLogic implements IPlansLoaderLogic
                     'seats'=>$row->seats, // 招生人数
                     'applied_count'=>$row->applied_count, // 报名人数
                     'enrolled'=>$row->enrolled_count, // 已招生人数
-                    'applied'=>$applied,
+                    'applied'=>$statusArr['status'] == 100 ? false : $statusArr['message1'],
+                    'statusArr'=>$statusArr,
                     'hot'=>$row->hot,
                     'title'=>$row->title,
                     'tease'=>$row->tease,
@@ -100,6 +99,7 @@ class FrontendLogic implements IPlansLoaderLogic
         $plan = $dao->getPlan($planId);
 
         $courseDao = new CourseMajorDao();
+        $regDao = new RegistrationInformaticsDao();
         $courses = $courseDao->getCoursesByMajor($plan->major_id);
 
         return [
@@ -118,7 +118,10 @@ class FrontendLogic implements IPlansLoaderLogic
             'student_requirements'=>$plan->student_requirements,
             'target_students'=>$plan->target_students,
             'future'=>$plan->major->future,
-            'courses'=>$courses
+            'courses'=>$courses,
+            // 获取我是否可以报名
+            'statusArr'=>$regDao->getRegistrationInformaticsStatusInfo($this->userId, $plan)
+
         ];
     }
 }

@@ -106,39 +106,54 @@
             </h3>
             <div class="block" style="padding: 0 15px;">
                 <el-timeline>
-                    <el-timeline-item key="0">
-                        <img src="{{ $startUser->profile->avatar }}" alt="" style="width: 40px; height: 40px;border-radius: 50%;vertical-align: middle;">
-                        <div style="flex: 1;margin-left: 20px;">
-                            <p style="margin: 0;">{{ $startUser->name }}</p>
-                            <p style="margin: 0;">{{ substr($startAction->created_at, 0, 16) }}</p>
+                    <el-timeline-item key="0" icon="el-icon-circle-check" type='success'>
+                        <div style="display: flex;justify-content: space-between;align-items: center;">
+                            <img src="@if ($startUser->profile){{ $startUser->profile->avatar }} @endif" alt="" style="width: 40px; height: 40px;border-radius: 50%;vertical-align: middle;">
+                            <div style="flex: 1;margin-left: 20px;">
+                                <p style="margin: 0;">{{ $startUser->name }}</p>
+                                <p style="margin: 0;">{{ substr($startAction->created_at, 0, 16) }}</p>
+                            </div>
+                            <span style="text-align: right;font-size: 13px;color: #4FA8FE;"> 发起审批 </span>
                         </div>
-                        <span style="text-align: right;font-size: 13px;"> 发起审批 </span>
                     </el-timeline-item>
                     @foreach($handlers as $key => $handler)
-                    <el-timeline-item key="{{ $key+1 }}" @if (!empty($v->result)) result="{{ $v->result->result }}" @if($v->result->result != \App\Utils\Pipeline\IAction::RESULT_PENDING) timestamp="{{ substr($v->result->updated_at, 0, 16) }}" @endif @endif>
-                        @foreach($handler as $k => $val)
-                        @foreach ($val as $v)
-                        <div style="margin-bottom: 10px;display: flex;justify-content: space-between;align-items: center;">
-                            <div>
-                                <img src="{{ $v->profile->avatar }}" alt="" style="width: 40px; height: 40px;border-radius: 50%;vertical-align: middle;">
-                                {{ $v->name }}({{ $k }})
-                            </div>
-                            <span style="text-align: right;">
-                                @if (!empty($v->result))
-                                @if ($v->result->result == \App\Utils\Pipeline\IAction::RESULT_PENDING) 审批中 @endif
-                                @if ($v->result->result == \App\Utils\Pipeline\IAction::RESULT_PASS) {{ substr($v->result->updated_at, 5, 11) }} 已通过 @endif
-                                @if ($v->result->result == \App\Utils\Pipeline\IAction::RESULT_TERMINATE) {{ substr($v->result->updated_at, 5, 11) }} 被拒绝 @endif
-                                @if ($v->result->result == \App\Utils\Pipeline\IAction::RESULT_REJECT) {{ substr($v->result->updated_at, 5, 11) }} 被驳回 @endif
-                                @endif
-                            </span>
-                        </div>
-                        <!-- 审批意见 if条件-->
-                        <!-- <p>审批：</p> -->
-
-                        @endforeach
-                        @endforeach
-                    </el-timeline-item>
-                    @endforeach
+                    @switch($handlerIcon[$key])
+                    @case("success")
+                    <el-timeline-item key="{{ $key+1 }}" icon="el-icon-circle-check" type='success'>
+                        @break;
+                        @case("error")
+                        <el-timeline-item key="{{ $key+1 }}" icon="el-icon-circle-close" type='danger'>
+                            @break;
+                            @case("pending")
+                            <el-timeline-item key="{{ $key+1 }}" icon="el-icon-time" type='warning'>
+                                @break;
+                                @case("wait")
+                                <el-timeline-item key="{{ $key+1 }}" icon="el-icon-more">
+                                    @break;
+                                    @default
+                                    <el-timeline-item key="{{ $key+1 }}">
+                                        @endswitch
+                                        @foreach($handler as $k => $val)
+                                        @foreach ($val as $v)
+                                        <div style="margin-bottom: 10px;display: flex;justify-content: space-between;align-items: center;">
+                                            <img src="{{ $v->profile->avatar }}" alt="" style="width: 40px; height: 40px;border-radius: 50%;vertical-align: middle;">
+                                            <div style="flex: 1;margin-left: 20px;">
+                                                <p style="margin: 0;">{{ $v->name }}({{ $k }})</p>
+                                                <p style="margin: 0;">{{ substr($startAction->created_at, 0, 16) }}</p>
+                                            </div>
+                                            <span style="text-align: right;font-size: 13px;">
+                                                @if (!empty($v->result))
+                                                @if ($v->result->result == \App\Utils\Pipeline\IAction::RESULT_PENDING) <span style="color: #FE7B1C;">审批中</span> @endif
+                                                @if ($v->result->result == \App\Utils\Pipeline\IAction::RESULT_PASS) {{ substr($v->result->updated_at, 5, 11) }} <span style="color: #6DCC58;">已通过</span> @endif
+                                                @if ($v->result->result == \App\Utils\Pipeline\IAction::RESULT_TERMINATE) {{ substr($v->result->updated_at, 5, 11) }} <span style="color: #FD1B1B;">未通过</span> @endif
+                                                @if ($v->result->result == \App\Utils\Pipeline\IAction::RESULT_REJECT) {{ substr($v->result->updated_at, 5, 11) }} <span style="color: #FD1B1B;">未通过</span> @endif
+                                                @endif
+                                            </span>
+                                        </div>
+                                        @endforeach
+                                        @endforeach
+                                    </el-timeline-item>
+                                    @endforeach
                 </el-timeline>
             </div>
         </div>
@@ -147,8 +162,8 @@
             <div class="sendBox">
                 @foreach($copys as $copy)
                 <figure>
-                    <img src="{{asset($copy->user->profile->avatar)}}" width="50" height="50" />
-                    <p>{{ $copy->name }}</p>
+                    <img src="{{asset($copy['avatar'])}}" width="50" height="50" />
+                    <p>{{ $copy['name'] }}</p>
                 </figure>
                 @endforeach
             </div>
@@ -158,12 +173,24 @@
             <el-button type="primary" style="width: 40%;border-radius: 50px;margin-bottom: 20px;" @click="dialogVisible = true">审批</el-button>
         </div>
         @endif
+
+        <div style="display: flex;justify-content: center;background-color: #fff;padding-top: 10px;">
+            <el-button type="primary" style="width: 40%;border-radius: 50px;margin-bottom: 20px;" @click="tips = true">撤销</el-button>
+        </div>
+        
         <el-dialog title="审批" :visible.sync="dialogVisible" width="90%" center>
             <el-input type="textarea" :rows="6" placeholder="请输入审批意见" v-model="textarea" maxlength="100"></el-input>
             <span style="position: relative;top: -18px;left: 85%;">@{{textarea.length}}/100</span>
             <span slot="footer" class="dialog-footer">
                 <el-button style="border-radius: 40px;width: 80px;" @click="button(5)">拒 绝</el-button>
                 <el-button style="border-radius: 40px;width: 80px;" type="primary" @click="button(3)">同 意</el-button>
+            </span>
+        </el-dialog>
+        <el-dialog title="提示" :visible.sync="tips" width="90%" center>
+            <span style="padding: 20px 0;display: inline-block;">您确认撤销此申请吗?</span>
+            <span slot="footer" class="dialog-footer">
+                <el-button @click="tips = false">取 消</el-button>
+                <el-button type="primary" @click="cancelAction">确 定</el-button>
             </span>
         </el-dialog>
     </div>

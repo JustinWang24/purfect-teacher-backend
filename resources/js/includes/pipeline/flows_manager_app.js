@@ -417,7 +417,7 @@ if (document.getElementById('pipeline-flows-manager-app')) {
                         type: 'error'
                     });
                 } else {
-                    this.node.titles.splice(0, 0, this.approval)
+                    this.node.titles.splice(0, this.node.titles.length, this.approval)
                     if (this.section.length !== 0) {
                         this.node.organizations.splice(0, 0, this.section)
                     }

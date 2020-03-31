@@ -152,7 +152,7 @@
                     border: 'none',textAlign:'right'
                 },
                 rules:{
-                    name: [
+                    /*name: [
                         { required: true, message: '请输入您的姓名', trigger: 'blur' },
                     ],
                     id_number: [
@@ -187,7 +187,7 @@
                     ],
                     parent_mobile: [
                         { required: true, message: '请输入家长的联系电话', trigger: 'blur' }
-                    ]
+                    ]*/
                 },
                 provinces:[],
                 cities:[],
@@ -221,21 +221,25 @@
         },
         methods: {
             save: function(){
-              this.$refs.ruleForm.validate(valid => {
-                if (!valid) {
-                  console.log("验证未通过----------------");
+            saveRegistrationForm(this.registrationForm, this.major.id, '/mock_expect_success.json')
+                .then(res => {
+                if(Util.isAjaxResOk(res)){
+                    // 保存成功
+                    /*this.$message({
+                        showClose: true,
+                        message: '报名成功，等待平台审核',
+                        type: 'success'
+                    });*/
+                    this.$emit('form-saved-success',{plan: this.major})
+                }else{
+                   /* this.$message({
+                        showClose: true,
+                        message: res.data.message,
+                        type: 'warning'
+                    });*/
+                     this.$emit('form-saved-failed',res.data.message)
                 }
-                saveRegistrationForm(this.registrationForm, this.major.id, '/mock_expect_success.json')
-                  .then(res => {
-                    if(Util.isAjaxResOk(res)){
-                      // 保存成功
-                      this.$emit('form-saved-success',{plan: this.major})
-                    }else{
-                      this.$emit('form-saved-failed',res.data.message)
-                    }
-                  });
-              })
-
+                });
             }
         }
     }

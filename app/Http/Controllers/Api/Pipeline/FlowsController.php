@@ -300,7 +300,7 @@ class FlowsController extends Controller
             return JsonBuilder::Success(
                 [
                     'id'=>$action->id,
-                    'url'=>$request->isAppRequest()?route('h5.flow.user.view-history',['user_flow_id' => $action->transaction_id,'api_token'=>$request->user()->api_token]):null
+                    'url'=>$request->isAppRequest()?route('h5.flow.user.view-history',['user_flow_id' => $action->transaction_id,'api_token'=>$request->user()->api_token, 'readonly' => 1]):null
                 ]
             );
         }

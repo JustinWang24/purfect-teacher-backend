@@ -48,7 +48,6 @@ use App\Utils\UI\Button;
                             <label for="version-title-input">版本名称</label>
                             <input required type="text" class="form-control" id="version-title-input" value="{{ old('version.version_name') }}" placeholder="例如：1.1.0" name="version[version_name]">
                         </div>
-
                         <div class="form-group" id="azfiels">
                             <label for="version-file-input">选择文件</label>
                             <input id="file" type="file" class="form-control" name="source">
@@ -73,4 +72,7 @@ use App\Utils\UI\Button;
             </div>
         </div>
     </div>
+<script>
+
+</script>
 @endsection

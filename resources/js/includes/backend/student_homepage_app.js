@@ -4,7 +4,6 @@
 import { Constants } from "../../common/constants";
 import { Util } from "../../common/utils";
 import { startedByMe, cancelApplicationByUser, waitingByMe, processedByMe, copyByMe } from "../../common/flow";
-
 if (document.getElementById('student-homepage-app')) {
     new Vue({
         el: '#student-homepage-app',
@@ -16,14 +15,37 @@ if (document.getElementById('student-homepage-app')) {
                     flowOpen: '',
                 },
                 isLoading: true,
-                page: 1,
+                showStarted: false,
+                flowsStartedByMe: [],
+                started: {
+                    page: 1,
+                    loading: false, // 加载中
+                    finished: false // 没有更多
+                },
+                showWaiting: false,
+                waitingList: [],
+                waiting: {
+                    page: 1,
+                    loading: false, // 加载中
+                    finished: false // 没有更多
+                },
+                showProcessed: false,
+                processedList: [],
+                processed: {
+                    page: 1,
+                    loading: false, // 加载中
+                    finished: false // 没有更多
+                },
+                showCopy: false,
+                copyList: [],
+                copy: {
+                    page: 1,
+                    loading: false, // 加载中
+                    finished: false // 没有更多
+                },
                 size: 20,
                 keyword: '',
                 position: '',
-                flowsStartedByMe: [],
-                waitingList: [],
-                processedList: [],
-                copyList: [],
                 apiToken: null,
             }
         },
@@ -41,38 +63,99 @@ if (document.getElementById('student-homepage-app')) {
         },
         methods: {
             // in_progress=我发起的
+            onLoad1() {
+                this.started.page++;
+                this.loadFlowsStartedByMe();
+            },
             loadFlowsStartedByMe: function () {
-                this.loading = false;
-                startedByMe(this.userUuid, this.keyword, this.position, this.page, this.size).then(res => {
+                startedByMe(this.userUuid, this.keyword, this.position, this.started.page, this.size).then(res => {
                     if (Util.isAjaxResOk(res)) {
-                        this.flowsStartedByMe = res.data.data.flows;
+                        this.isLoading = false;
+                        if (res.data.data.flows.length > 0) {
+                            this.flowsStartedByMe = this.flowsStartedByMe.concat(res.data.data.flows)
+                            this.showStarted = false;
+                            this.started.loading = false;
+                            if (this.flowsStartedByMe.length >= res.data.data.total) {
+                                this.started.finished = true;
+                            }
+                        } else {
+                            this.flowsStartedByMe = [];
+                            this.showStarted = true;
+                            this.started.finished = true;
+                        }
                     }
                 });
             },
             // waiting_for_me=待我审批
+            onLoad2() {
+                this.waiting.page++;
+                this.loadFlowsWaitingByMe();
+            },
+            // waiting_for_me=待我审批
             loadFlowsWaitingByMe: function () {
                 this.isLoading = false;
-                waitingByMe(this.userUuid, this.keyword, this.position, this.page, this.size).then(res => {
+                waitingByMe(this.userUuid, this.keyword, this.position, this.waiting.page, this.size).then(res => {
                     if (Util.isAjaxResOk(res)) {
-                        this.waitingList = res.data.data.flows;
+                        if (res.data.data.flows.length > 0) {
+                            this.waitingList = this.waitingList.concat(res.data.data.flows)
+                            this.showWaiting = false;
+                            this.waiting.loading = false;
+                            if (this.waitingList.length >= res.data.data.total) {
+                                this.waiting.finished = true;
+                            }
+                        } else {
+                            this.waitingList = [];
+                            this.showWaiting = true;
+                            this.waiting.finished = true;
+                        }
                     }
                 });
             },
             // my_processed=我审批的
+            onLoad3() {
+                this.processed.page++;
+                this.loadFlowsProcessedByMe();
+            },
             loadFlowsProcessedByMe: function () {
-                this.isLoading = false;
-                processedByMe(this.userUuid, this.keyword, this.position, this.page, this.size).then(res => {
+                processedByMe(this.userUuid, this.keyword, this.position, this.processed.page, this.size).then(res => {
                     if (Util.isAjaxResOk(res)) {
-                        this.processedList = res.data.data.flows;
+                        this.isLoading = false;
+                        if (res.data.data.flows.length > 0) {
+                            this.processedList = this.processedList.concat(res.data.data.flows)
+                            this.showProcessed = false;
+                            this.processed.loading = false;
+                            if (this.processedList.length >= res.data.data.total) {
+                                this.processed.finished = true;
+                            }
+                        } else {
+                            this.processedList = [];
+                            this.showProcessed = true;
+                            this.processed.loading = true;
+                        }
                     }
                 });
             },
             // copy_to_me=抄送我的
+            onLoad4() {
+                this.copy.page++;
+                tthis.loadFlowsCopyByMe();
+            },
             loadFlowsCopyByMe: function () {
-                this.isLoading = false;
-                copyByMe(this.userUuid, this.keyword, this.position, this.page, this.size).then(res => {
+                copyByMe(this.userUuid, this.keyword, this.position, this.copy.page, this.size).then(res => {
                     if (Util.isAjaxResOk(res)) {
-                        this.copyList = res.data.data.flows;
+                        this.isLoading = false;
+                        if (res.data.data.flows.length > 0) {
+                            this.copyList = this.copyList.concat(res.data.data.flows)
+                            this.showCopy = false;
+                            this.copy.loading = false;
+                            if (this.copyList.length >= res.data.data.total) {
+                                this.copy.finished = true;
+                            }
+                        } else {
+                            this.copyList = [];
+                            this.showCopy = true;
+                            this.copy.loading = true;
+                        }
                     }
                 });
             },
@@ -134,6 +217,9 @@ if (document.getElementById('student-homepage-app')) {
                 }
                 else if (done === Constants.FLOW_FINAL_RESULT.REJECTED) {
                     return Constants.FLOW_FINAL_RESULT.REJECTED_TXT;
+                } 
+                else if (done === Constants.FLOW_FINAL_RESULT.CANCEL) {
+                    return Constants.FLOW_FINAL_RESULT.CANCEL;
                 }
             },
             flowResultClass: function (done) {
@@ -145,6 +231,9 @@ if (document.getElementById('student-homepage-app')) {
                 }
                 else if (done === Constants.FLOW_FINAL_RESULT.REJECTED) {
                     return Constants.FLOW_FINAL_RESULT.REJECTED_CLASS;
+                }
+                else if (done === Constants.FLOW_FINAL_RESULT.CANCEL) {
+                    return Constants.FLOW_FINAL_RESULT.CANCEL_CLASS;
                 }
             }
         }

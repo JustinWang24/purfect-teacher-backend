@@ -3,9 +3,11 @@
 namespace App\Http\Controllers\Api\OA;
 
 use App\Dao\OA\WorkLogDao;
+use App\Dao\OA\WorkLogReadDao;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\MyStandardRequest;
 use App\Models\OA\WorkLog;
+use App\Models\OA\WorkLogRead;
 use App\Utils\JsonBuilder;
 use Carbon\Carbon;
 
@@ -53,6 +55,7 @@ class WorkLogController extends  Controller
         $dao = new WorkLogDao;
         $data = $dao->getWorkLogsByTeacherId($user->id, $type, $keyword);
         $result = [];
+        $num = 0; // 红点数字
         foreach ($data as $key => $value) {
             $result[$key]['id'] = $value->id;
             if ($type == WorkLog::TYPE_READ) {
@@ -60,11 +63,20 @@ class WorkLogController extends  Controller
             } else {
                 $result[$key]['avatar'] = $value->profile->avatar;
             }
+
+            $result[$key]['is_read'] = $value->read ? true : false;
             $result[$key]['title'] = $value->title;
             $result[$key]['content'] = $value->content;
             $result[$key]['created_at'] = $value->created_at;
-        }
 
+            // 计算红点
+            if($result[$key]['is_read'] == false) {
+                $num ++;
+            }
+        }
+        foreach ($result as $key => $val) {
+            $result[$key]['num'] = $num;
+        }
         return JsonBuilder::Success($result);
     }
 
@@ -75,10 +87,16 @@ class WorkLogController extends  Controller
      */
     public function workLogInfo(MyStandardRequest $request)
     {
+        $user = $request->user();
+
         $id = $request->get('id');
+
+        $readDao = new WorkLogReadDao;
+        $readDao->create($id, $user->id);
 
         $dao = new WorkLogDao;
         $data = $dao->getWorkLogsById($id);
+
         return JsonBuilder::Success($data);
     }
 

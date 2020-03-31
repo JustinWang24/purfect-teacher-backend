@@ -35,7 +35,8 @@ class CampusController extends Controller
                     body{margin-left:10px;margin-right:10px;}
                     img{max-width: 100% !important;}
                   </style>';
-            $scenery = new CampusScenery($album, $str . $school->configuration->campus_intro);
+            // 这里第二个参数废弃了，不用了,也不清楚之前为什么要那样写
+            $scenery = new CampusScenery($album, null);
             return JsonBuilder::Success($scenery->toArray());
           }
         return JsonBuilder::Error('无法定位用户所属学校');
