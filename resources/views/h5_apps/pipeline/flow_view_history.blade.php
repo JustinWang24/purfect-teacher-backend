@@ -104,7 +104,7 @@
             <h3>部门</h3>
 
             <span class="reason" style="display: inline-block" v-for="(item,index) in activities" :key="index">@{{ item }}</span>
-        
+
         </div>
         <div class="information" style="padding-bottom: 10px;">
             <h3>附件</h3>
@@ -152,7 +152,7 @@
                                             <img src="{{ $v->profile->avatar }}" alt="" style="width: 40px; height: 40px;border-radius: 50%;vertical-align: middle;">
                                             <div style="flex: 1;margin-left: 20px;">
                                                 <p style="margin: 0;">{{ $v->name }}({{ $k }})</p>
-                                                <p style="margin: 0;">{{ substr($startAction->created_at, 0, 16) }}</p>
+                                                <p style="margin: 0;">@if (!empty($v->result) && $v->result->result != \App\Utils\Pipeline\IAction::RESULT_PENDING){{ substr($startAction->created_at, 0, 16) }}@endif</p>
                                             </div>
                                             <span style="text-align: right;font-size: 13px;">
                                                 @if (!empty($v->result))
