@@ -76,6 +76,13 @@
                 <img src="{{ $img }}" alt="" class="image">
                 @endforeach
             </div>
+            @elseif ($option['type'] == 'files' && !empty($option['value']))
+             <h3>{{ $option['title'] }}</h3>
+            <div class="information" style="padding-bottom: 10px;">
+                @foreach($option['value'] as $file)
+                    <p class="reason" style="width: 87%;height: 40px;line-height: 50px;background:rgba(3,133,255,0.05);margin: 0 auto;margin-bottom: 10px;color: #333333;overflow: hidden;white-space: nowrap;text-overflow: ellipsis;" data-url="{{ $file['url'] }}">{{ $file['file_name'] }}</p>
+                @endforeach
+            </div>
             @else
             <h5>
                 <p>{{ $option['title'] }}</p>
@@ -89,29 +96,11 @@
             <h3>申请理由</h3>
             <p class="reason">{{ $startAction->content }}</p>
         </div> -->
-        <!-- <div class="information">
-            <h3>证明材料</h3> 写表单的那个人呢 还没对接过
-            <div class="imageBox">
-                <img src="{{asset('assets/img/bg-02.jpg')}}" alt="" class="image">
-                <img src="{{asset('assets/img/bg-02.jpg')}}" alt="" class="image">
-                <img src="{{asset('assets/img/bg-02.jpg')}}" alt="" class="image">
-                <img src="{{asset('assets/img/bg-02.jpg')}}" alt="" class="image">
-                <img src="{{asset('assets/img/bg-02.jpg')}}" alt="" class="image">
-                <img src="{{asset('assets/img/bg-02.jpg')}}" alt="" class="image">
-            </div>
-        </div> -->
-        <div class="information">
-            <h3>部门</h3>
-
-            <span class="reason" style="display: inline-block" v-for="(item,index) in activities" :key="index">@{{ item }}</span>
-
-        </div>
-        <div class="information" style="padding-bottom: 10px;">
+        <<div class="information" style="padding-bottom: 10px;">
             <h3>附件</h3>
 
-            <p class="reason" style="width: 87%;height: 40px;line-height: 50px;background:rgba(3,133,255,0.05);margin: 0 auto;margin-bottom: 10px;color: #333333;overflow: hidden;white-space: nowrap;text-overflow: ellipsis;" v-for="(item,index) in activities" :key="index">@{{ item }}</p>
 
-        </div>
+        <
         <div class="information">
             <h3>
                 <span>审批人</span>
@@ -153,7 +142,7 @@
                                             <img src="{{ $v->profile->avatar }}" alt="" style="width: 40px; height: 40px;border-radius: 50%;vertical-align: middle;">
                                             <div style="flex: 1;margin-left: 20px;">
                                                 <p style="margin: 0;">{{ $v->name }}({{ $k }})</p>
-                                                <p style="margin: 0;">@if (!empty($v->result) && $v->result->result != \App\Utils\Pipeline\IAction::RESULT_PENDING){{ substr($startAction->created_at, 0, 16) }}@endif</p>
+                                                <p style="margin: 0;">@if (!empty($v->result) && $v->result->result != \App\Utils\Pipeline\IAction::RESULT_PENDING){{ substr($startAction->updated_at, 0, 16) }}@endif</p>
                                             </div>
                                             <span style="text-align: right;font-size: 13px;">
                                                 @if (!empty($v->result))
@@ -164,7 +153,9 @@
                                                 @endif
                                             </span>
                                         </div>
-                                        <p style="color: #FD1B1B;">拒绝原因</p>
+                                        @if (!empty($v->result) && ($v->result->result == \App\Utils\Pipeline\IAction::RESULT_TERMINATE || $v->result->result == \App\Utils\Pipeline\IAction::RESULT_REJECT))
+                                        <p style="color: #FD1B1B;">$v->result->content</p>
+                                        @endif
                                         @endforeach
                                         @endforeach
                                     </el-timeline-item>
