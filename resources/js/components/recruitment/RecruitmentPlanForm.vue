@@ -1,8 +1,6 @@
 <template>
     <div class="plan-create-form">
         <el-form :model="form" :rules="rules" ref="planForm" label-width="100px" class="plan-form">
-
-
             <el-row>
                 <el-col :span="14">
                     <el-form-item label="招生标题" prop="title">

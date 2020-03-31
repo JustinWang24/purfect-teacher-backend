@@ -24,7 +24,8 @@ class RecruitmentFormsController extends Controller
         //查询专业信息
         $schoolId = $request->getSchoolId();
         $planRecruitDao = new PlanRecruitDao();
-        $list = $planRecruitDao->getPlanRecruitBySchoolId($schoolId);
+        $list = $planRecruitDao->getPlanRecruitBySchoolId(session('school.id'));
+
         $this->dataForView['major'] = $list;
 
         return view('school_manager.recruitStudent.planRecruit.management', $this->dataForView);

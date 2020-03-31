@@ -108,7 +108,10 @@ Route::prefix('enquiry')->middleware('auth:api')->group(function () {
 });
 
 Route::prefix('recruitment')->group(function () {
-    // 加载某个学校的招生计划
+    // 后台加载某个学校的招生计划
+    Route::any('/backend-load-plans','Api\Recruitment\PlansController@backend_load_plans')
+        ->name('api.recruitment.backend.load.plans');
+    // APP加载某个学校的招生计划
     Route::any('/load-plans','Api\Recruitment\PlansController@load_plans')
         ->name('api.recruitment.load.plans');
 
