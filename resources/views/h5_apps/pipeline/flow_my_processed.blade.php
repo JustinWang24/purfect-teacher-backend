@@ -9,7 +9,7 @@
     </div>
     <div class="mian p-15" v-cloak>
         <div>
-            <el-input placeholder="搜索标题、发起人关键字" v-model="keyword" style="margin-bottom: 10px;" @change="loadFlowsProcessedByMe"></el-input>
+            <el-input placeholder="搜索标题、发起人关键字" v-model="keyword" @change="loadFlowsStartedByMe" prefix-icon="el-icon-search" id="searchIcon"></el-input>
         </div>
         <div v-if="processedList.length > 0">
             <van-list v-model="processed.loading" :finished="processed.finished" finished-text="" @load="onLoad3">
@@ -36,4 +36,14 @@
         </div>
     </div>
 </div>
+<style>
+    .el-input {
+        font-size: 16px;
+        margin-bottom: 10px;
+    }
+
+    #searchIcon {
+        font-size: 14px;
+    }
+</style>
 @endsection
