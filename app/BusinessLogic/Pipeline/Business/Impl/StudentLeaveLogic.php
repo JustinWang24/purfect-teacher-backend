@@ -25,6 +25,7 @@ class StudentLeaveLogic
     public function handle($options)
     {
         Log::debug(json_encode($options));
+        Log::debug(json_encode( $this->user->toArray()));
 
         $bag = new MessageBag(JsonBuilder::CODE_ERROR);
         try {
@@ -39,8 +40,8 @@ class StudentLeaveLogic
                 'school_id' => $this->user->getSchoolId(),
                 'grade_id' => $this->user->gradeUser()->id,
                 'user_id' => $this->user->id,
-                'start_time' => Carbon::parse($start)->toDateTimeString(),
-                'end_time' => Carbon::parse($end)->toDateTimeString(),
+                'start_time' => $start,
+                'end_time' => $end,
             ];
             Log::debug('学生请假数据'.json_encode($options));
             StudentLeave::create($leave);
@@ -49,6 +50,7 @@ class StudentLeaveLogic
 
             $bag->setCode(JsonBuilder::CODE_SUCCESS);
         }catch (\Exception $exception) {
+            Log::debug($exception->getMessage());
             $bag->setMessage( $exception->getMessage());
         }
         return $bag;
