@@ -232,6 +232,7 @@ class FlowsController extends Controller
                         if ($optionRet) {
                             $value = explode(',', $optionRet);
                         }
+                        break;
                     default:
                         $value = $optionRet;
                         break;
