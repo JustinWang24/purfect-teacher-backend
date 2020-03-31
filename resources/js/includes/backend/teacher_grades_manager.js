@@ -37,7 +37,7 @@ if (document.getElementById('teacher-assistant-grades-manager-app')) {
       },
       upload: function (file) {
         let params = new FormData();
-        // console.log(this.grade_id)
+        // console.log(file)
         params.append("grade_id", this.grade_id);  //图片
         params.append("file", file)
         const url = '/api/Oa/upload-grade-resources';
