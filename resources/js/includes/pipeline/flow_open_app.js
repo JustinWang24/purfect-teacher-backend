@@ -215,7 +215,8 @@ if (document.getElementById('pipeline-flow-open-app')) {
       uploadImg(img) {
         // console.log(img)
         let params = new FormData();
-        params.append("file", img.file)
+        let fileArr = [img.file];
+        params.append("file", fileArr)
         const url = '/api/Oa/message-upload-files';
         axios.post(url, params).then((res) => {
           if (Util.isAjaxResOk(res)) {
