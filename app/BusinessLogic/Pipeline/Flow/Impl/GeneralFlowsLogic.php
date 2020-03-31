@@ -118,6 +118,7 @@ abstract class GeneralFlowsLogic implements IFlowLogic
             $actionData['result'] = IAction::RESULT_PASS; // 启动工作没有审核, 直接就是 pass 的状态
             //@TODO 不启用加急功能
             $actionData['urgent'] = 0;
+            $actionData['is_start'] = 1;
 
             $dao = new ActionDao();
             DB::beginTransaction();
