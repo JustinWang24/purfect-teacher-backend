@@ -155,12 +155,18 @@ class ActionDao
         }
 
         if($userFlow){
+            //获取发起人节点
+            $firstNode = $userFlow->flow()->getHeadNode();
             // 找到了 action, 那么就删除此 action 已经相关的操作
             DB::beginTransaction();
             try{
                 $actions = $userFlow->actions;
 
                 foreach ($actions as $action) {
+                    //保留发起人的节点
+                    if ($action->node_id == $firstNode->id) {
+                        continue;
+                    }
                     $this->delete($action->id);
                 }
 
