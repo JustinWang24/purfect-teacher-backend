@@ -156,7 +156,7 @@ class ActionDao
 
         if($userFlow){
             //获取发起人节点
-            $firstNode = $userFlow->flow()->getHeadNode();
+            $firstNode = $userFlow->flow->getHeadNode();
             // 找到了 action, 那么就删除此 action 已经相关的操作
             DB::beginTransaction();
             try{
