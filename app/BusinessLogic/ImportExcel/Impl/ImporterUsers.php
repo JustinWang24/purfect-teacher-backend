@@ -142,7 +142,7 @@ class ImporterUsers extends AbstractImporter
                     $gradeData = [
                         'user_id' => $user->id,
                         'name' => $student['name'],
-                        'user_type' => 1, // 学生
+                        'user_type' => Role::REGISTERED_USER, // 学生
                         'school_id' => $this->task['school_id']
 
                     ];

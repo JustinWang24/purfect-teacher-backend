@@ -67,7 +67,7 @@ class LoginController extends Controller
         $userDeviceDao = new UserDeviceDao;
         // 某个APP版本可登录角色
         $arr = [
-          6 => [Role::VERIFIED_USER_STUDENT], // 学生端
+          6 => [Role::VERIFIED_USER_STUDENT, Role::REGISTERED_USER], // 学生端
           9 => [Role::SCHOOL_MANAGER, Role::TEACHER, Role::EMPLOYEE] // 教师端
         ];
 
