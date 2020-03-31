@@ -112,7 +112,6 @@
                             </div>
                             <span style="text-align: right;font-size: 13px;color: #4FA8FE;"> 发起审批 </span>
                         </div>
-                        <p style="color: #FD1B1B;">拒绝原因</p>
                     </el-timeline-item>
                     @foreach($handlers as $key => $handler)
                     @switch($handlerIcon[$key])

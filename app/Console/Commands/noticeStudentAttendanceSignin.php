@@ -102,7 +102,6 @@ class noticeStudentAttendanceSignin extends Command
                 }
 //            }
         }
-        Log::info('定时器执行了', $list);
         /*
          * [
          *   {
