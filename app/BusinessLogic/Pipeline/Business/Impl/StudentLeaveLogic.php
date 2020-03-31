@@ -38,7 +38,7 @@ class StudentLeaveLogic
             $end 请假结束时间*/
             $leave = [
                 'school_id' => $this->user->getSchoolId(),
-                'grade_id' => $this->user->gradeUser()->id,
+                'grade_id' => $this->user->gradeUser->grade_id,
                 'user_id' => $this->user->id,
                 'start_time' => $start,
                 'end_time' => $end,
