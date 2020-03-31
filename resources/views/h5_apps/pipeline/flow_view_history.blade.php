@@ -69,10 +69,18 @@
             <h3>表单信息</h3>
             <el-divider></el-divider>
             @foreach($options as $option)
+            @if ($option['type'] == 'image' && !empty($option['value']))
+                    <div class="imageBox">
+                @foreach($option['value'] as $img)
+                            <img src="{{ $img }}" alt="" class="image">
+                    @endforeach
+                    </div>
+            @else
             <h5>
                 <p>{{ $option['title'] }}</p>
                 <p>{{ $option['value'] }}</p>
             </h5>
+            @endif
             <el-divider></el-divider>
             @endforeach
         </div>
