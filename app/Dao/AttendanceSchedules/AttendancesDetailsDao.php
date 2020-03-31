@@ -155,6 +155,16 @@ class AttendancesDetailsDao
 
 
     /**
+     * @param $attendanceId
+     * @return mixed
+     */
+    public function getDetailsPageByAttendanceId($attendanceId) {
+        return AttendancesDetail::where('attendance_id', $attendanceId)
+            ->paginate(ConfigurationTool::DEFAULT_PAGE_SIZE);
+    }
+
+
+    /**
      * 保存签到详情
      * @param $attendanceId
      * @param $details

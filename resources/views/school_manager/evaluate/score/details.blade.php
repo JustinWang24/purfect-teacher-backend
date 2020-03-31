@@ -26,19 +26,19 @@
                             </thead>
                             <tbody>
                             @foreach($list as $key => $val)
-                                <tr>
-                                    <td>{{ $key + 1 }}</td>
-                                    <td>{{ $val->teacher->name }}</td>
-                                    <td>{{ $val->year }}学年</td>
-                                    <td>{{ $val->getTerm() }}</td>
-                                    <td>{{ $val->course->name }}</td>
-                                    <td>{{ $val->grade->name }}</td>
+                                {{--<tr>--}}
+                                    {{--<td>{{ $key + 1 }}</td>--}}
+                                    {{--<td>{{ $val->teacher->name }}</td>--}}
+                                    {{--<td>{{ $val->year }}学年</td>--}}
+                                    {{--<td>{{ $val->getTerm() }}</td>--}}
+                                    {{--<td>{{ $val->course->name }}</td>--}}
+                                    {{--<td>{{ $val->grade->name }}</td>--}}
 
-                                    <td>{{ $val->created_at }}</td>
-                                    <td>
-                                        {{ \App\Utils\UI\Anchor::Print(['text'=>'查看','class'=>'btn-edit-facility','href'=>route('school_manager.students.evaluation-details-list',['attendance_id'=>$val['id']])], \App\Utils\UI\Button::TYPE_DEFAULT,'edit') }}
-                                    </td>
-                                </tr>
+                                    {{--<td>{{ $val->created_at }}</td>--}}
+                                    {{--<td>--}}
+                                        {{--{{ \App\Utils\UI\Anchor::Print(['text'=>'查看','class'=>'btn-edit-facility','href'=>route('school_manager.students.evaluation-details-list',['attendance_id'=>$val['id']])], \App\Utils\UI\Button::TYPE_DEFAULT,'edit') }}--}}
+                                    {{--</td>--}}
+                                {{--</tr>--}}
                             @endforeach
                             </tbody>
                         </table>

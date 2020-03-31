@@ -334,6 +334,9 @@ Route::prefix('school_manager')->group(function () {
         // 评分管理 evaluation-score
         Route::get('evaluation-score','Evaluate\EvaluationScoreController@index')
             ->name('school_manager.students.evaluation-score-index');
+        // 评分详情列表
+        Route::get('details-list','Evaluate\EvaluationScoreController@details')
+            ->name('school_manager.students.evaluation-details-list');
     });
 
     // 内容管理

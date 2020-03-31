@@ -6,6 +6,7 @@ namespace App\Dao\AttendanceSchedules;
 use App\BusinessLogic\Attendances\Attendances;
 use App\Dao\Students\StudentLeaveDao;
 use App\User;
+use App\Utils\Misc\ConfigurationTool;
 use Carbon\Carbon;
 use App\Dao\Schools\SchoolDao;
 use Illuminate\Support\Facades\DB;
@@ -274,8 +275,9 @@ class AttendancesDao
      */
     public function getAttendanceBySchoolId($schoolId) {
         return Attendance::where('school_id', $schoolId)
+            ->where('status',Attendance::STATUS_EVALUATE)
             ->orderBy('id','desc')
-            ->get();
+            ->paginate(ConfigurationTool::DEFAULT_PAGE_SIZE);
     }
 
 

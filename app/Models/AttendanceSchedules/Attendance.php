@@ -86,4 +86,10 @@ class Attendance extends Model
         $term = $configuration->getAllTerm();
         return $term[$this->term];
     }
+
+    public function getCreatedAtAttribute($value)
+    {
+        return Carbon::parse($value)->format('Y-m-d H:i');
+    }
+
 }
