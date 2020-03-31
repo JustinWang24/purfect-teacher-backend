@@ -126,7 +126,7 @@ class AttendancesDetailsDao
      * @return mixed
      */
     public function signInList($year, $userId, $courseId, $term) {
-        $field = ['timetable_id', 'mold', 'status', 'created_at'];
+        $field = ['timetable_id', 'mold', 'created_at'];
         $map = ['year'=>$year, 'student_id'=>$userId, 'course_id'=>$courseId, 'term'=>$term];
         return AttendancesDetail::where($map)
             ->orderBy('created_at')
