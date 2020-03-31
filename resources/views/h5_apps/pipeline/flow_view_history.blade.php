@@ -70,12 +70,12 @@
             <el-divider></el-divider>
             @foreach($options as $option)
             @if ($option['type'] == 'image' && !empty($option['value']))
-                    <h3>{{ $option['title'] }}</h3>
-                    <div class="imageBox">
+            <h3>{{ $option['title'] }}</h3>
+            <div class="imageBox">
                 @foreach($option['value'] as $img)
-                            <img src="{{ $img }}" alt="" class="image">
-                    @endforeach
-                    </div>
+                <img src="{{ $img }}" alt="" class="image">
+                @endforeach
+            </div>
             @else
             <h5>
                 <p>{{ $option['title'] }}</p>
@@ -100,14 +100,18 @@
                 <img src="{{asset('assets/img/bg-02.jpg')}}" alt="" class="image">
             </div>
         </div> -->
-        <!-- <div class="information">
+        <div class="information">
             <h3>部门</h3>
+
             <span class="reason" style="display: inline-block" v-for="(item,index) in activities" :key="index">@{{ item }}</span>
-        </div> -->
-        <!-- <div class="information">
+        
+        </div>
+        <div class="information" style="padding-bottom: 10px;">
             <h3>附件</h3>
-            <p class="reason" style="color: #0385FF;overflow: hidden;white-space: nowrap;text-overflow: ellipsis;" v-for="(item,index) in activities" :key="index">@{{ item }}</p>
-        </div> -->
+
+            <p class="reason" style="width: 87%;height: 40px;line-height: 50px;background:rgba(3,133,255,0.05);margin: 0 auto;margin-bottom: 10px;color: #333333;overflow: hidden;white-space: nowrap;text-overflow: ellipsis;" v-for="(item,index) in activities" :key="index">@{{ item }}</p>
+
+        </div>
         <div class="information">
             <h3>
                 <span>审批人</span>
