@@ -219,7 +219,7 @@ if (document.getElementById('student-homepage-app')) {
                     return Constants.FLOW_FINAL_RESULT.REJECTED_TXT;
                 } 
                 else if (done === Constants.FLOW_FINAL_RESULT.CANCEL) {
-                    return Constants.FLOW_FINAL_RESULT.CANCEL;
+                    return Constants.FLOW_FINAL_RESULT.CANCEL_TXT;
                 }
             },
             flowResultClass: function (done) {
