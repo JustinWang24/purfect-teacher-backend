@@ -92,9 +92,7 @@ class AttendanceController extends Controller
 
             // 判断请假的
             if ($val['mold'] == AttendancesDetail::MOLD_LEAVE) {
-                if ($val['status'] !== AttendancesDetail::STATUS_CONSENT) {
-                    $signInList[$key]['mold'] = AttendancesDetail::MOLD_TRUANT;
-                }
+                $signInList[$key]['mold'] = AttendancesDetail::MOLD_TRUANT;
             }
             if($val['mold'] == AttendancesDetail::MOLD_SIGN_IN) {
                 $signInList[$key]['time'] = Carbon::parse($val->created_at)->format('H:i');
