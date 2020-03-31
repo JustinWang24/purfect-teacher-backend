@@ -800,7 +800,7 @@ class TeacherApplyElectiveCourseDao
         $data['school_id'] = $apply->school_id;
         $data['teachers'][0] = $apply->teacher_id;
         $data['majors'] = $majorArrs;
-        $data['code'] = $apply->code;
+        $data['code'] = $apply->code == 'auto' ? ($apply->code . '_' . $applyId) : $apply->code;
         $data['name'] = $apply->name;
         $data['scores'] = $apply->scores;
         $data['optional'] = Course::ELECTIVE_COURSE;
