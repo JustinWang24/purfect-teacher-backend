@@ -15,7 +15,6 @@ if (document.getElementById('pipeline-flow-view-history-app')) {
                 textarea: "", // 审批意见
                 dialogVisible: false, // 审批
                 tips: false, // 撤回
-                activities: ['办公室', '校长室', '还有哪里'],
                 action1: {
                     id: null, //action.id
                     result: "3", //3=同意 5=驳回
@@ -63,6 +62,11 @@ if (document.getElementById('pipeline-flow-view-history-app')) {
             }
             // this.loadWholeFlow();
         },
+        computed: {
+            countLength() {
+                return this.textarea.length >= 100;
+            }
+        },
         methods: {
             // 审批按钮
             button(result) {
@@ -95,6 +99,16 @@ if (document.getElementById('pipeline-flow-view-history-app')) {
                     console.log(err);
                 })
             },
+            // 查看附件
+            options() {
+                let optionUrl = this.$refs.option.getAttribute("data-url");
+                // window.location.href = window.origin + optionUrl
+            },
+
+
+
+
+
             loadWholeFlow: function () {
                 this.isLoading = true;
                 viewApplicationByAction(this.actionId, this.userFlowId).then(res => {
@@ -162,11 +176,6 @@ if (document.getElementById('pipeline-flow-view-history-app')) {
                     color = '#F56C6C';
                 }
                 return color;
-            }
-        },
-        computed: {
-            countLength() {
-                return this.textarea.length >= 100;
             }
         }
     });

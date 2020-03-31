@@ -8,6 +8,7 @@ $colorWarning: #ffc107;
 $colorPrimary: #007bff;
 $colorDanger: #dc3545;
 $colorLight: #e8e8e8;
+$colorLightGrey: #ababab;
 $colorLightBlue: rgb(86, 153, 249); // 教师端的蓝色色标
 $colorDark: #6F7275; // 教师端的蓝色色标
 
@@ -73,6 +74,9 @@ p, h1, h2, h3, h4, h5, h6, li{
 }
 .text-grey{
   color: $colorLight !important;
+}
+.text-grey-cancel{
+  color: $colorLightGrey !important;
 }
 
 .row{
