@@ -328,9 +328,16 @@ Route::prefix('school_manager')->group(function () {
         // 签到管理
         Route::get('check-in-manager','ElectiveCoursesController@management')
             ->name('school_manager.students.check-in-manager');
-        // 评分管理
+        // 选修课审批
         Route::get('performances-manager','ElectiveCoursesController@management')
             ->name('school_manager.students.performances-manager');
+
+        // 评分管理 evaluation-score
+        Route::get('evaluation-score','Evaluate\EvaluationScoreController@index')
+            ->name('school_manager.students.evaluation-score-index');
+        // 评分详情列表
+        Route::get('details-list','Evaluate\EvaluationScoreController@details')
+            ->name('school_manager.students.evaluation-details-list');
     });
 
     // 内容管理

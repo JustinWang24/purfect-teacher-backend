@@ -2,6 +2,7 @@
 
 namespace App\Models\AttendanceSchedules;
 
+use App\Models\Schools\SchoolConfiguration;
 use App\Models\Timetable\TimeSlot;
 use App\User;
 use Carbon\Carbon;
@@ -16,7 +17,7 @@ class Attendance extends Model
     protected  $fillable = [
         'timetable_id', 'actual_number', 'leave_number', 'missing_number',
         'total_number', 'course_id', 'year', 'term', 'grade_id', 'teacher_id',
-        'week', 'time_slot_id','status',
+        'week', 'time_slot_id','status', 'school_id',
     ];
 
     protected $hidden = ['updated_at'];
@@ -78,4 +79,17 @@ class Attendance extends Model
         }
         return Carbon::parse($value)->format('Y-m-d H:i');
     }
+
+
+    public function getTerm() {
+        $configuration = new SchoolConfiguration();
+        $term = $configuration->getAllTerm();
+        return $term[$this->term];
+    }
+
+    public function getCreatedAtAttribute($value)
+    {
+        return Carbon::parse($value)->format('Y-m-d H:i');
+    }
+
 }

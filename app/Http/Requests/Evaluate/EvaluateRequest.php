@@ -21,4 +21,9 @@ class EvaluateRequest extends MyStandardRequest
         $data['school_id'] = $this->getSchoolId();
         return $data;
     }
+
+
+    public function getAttendanceId() {
+        return $this->get('attendance_id');
+    }
 }

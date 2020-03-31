@@ -30,6 +30,11 @@ class AttendancesDetail extends Model
     const MOLD_TRUANT  = 3;  // 旷课
 
 
+    const MOLD_SIGN_IN_TEXT = '已签到';
+    const MOLD_LEAVE_TEXT   = '请假';
+    const MOLD_TRUANT_TEXT  = '旷课';
+
+
     protected $hidden = ['updated_at'];
 
     public function allType()
@@ -54,5 +59,18 @@ class AttendancesDetail extends Model
     public function user()
     {
         return $this->belongsTo(User::class, 'student_id');
+    }
+
+    public function allMold() {
+        return [
+            self::MOLD_SIGN_IN => self::MOLD_SIGN_IN_TEXT,
+            self::MOLD_LEAVE => self::MOLD_LEAVE_TEXT,
+            self::MOLD_TRUANT => self::MOLD_TRUANT_TEXT,
+        ];
+    }
+
+    public function getMold() {
+        $allMold = $this->allMold();
+        return $allMold[$this->mold] ?? '';
     }
 }
