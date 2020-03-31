@@ -80,7 +80,7 @@
             <h3>{{ $option['title'] }}</h3>
             <div class="information" style="padding-bottom: 10px;">
                 @foreach($option['value'] as $file)
-                <p class="reason option" data-url="{{ $file['url'] }}" ref="option" @click="options()">{{ $file['file_name'] }}</p>
+                <p class="reason option" data-url="{{ $file['url'] }}" ref="option"><a style="color: #333333;" href="{{ $file['url'] }}">{{ $file['file_name'] }}</a></p>
                 @endforeach
             </div>
             @else
