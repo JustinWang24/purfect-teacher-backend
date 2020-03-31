@@ -70,6 +70,8 @@ if(document.getElementById('student_registration_app')){
         },
         methods: {
             formSavedSuccessHandler: function(payload){
+
+                console.log('=====================')
                 this.hideRegistrationForm();
                 // 当报名成功, 把用户提供的手机号和身份证进行保存
                 Util.setObjToLocalStorage(Constants.STUDENT_PROFILE,this.registrationForm);

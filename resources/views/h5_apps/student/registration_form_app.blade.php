@@ -6,7 +6,7 @@
         <h2 class="title">{{ $pageTitle }}</h2>
     </div>
     <div class="main">
-        <div class="majors-wrap" style="display: none;">
+        <!--div class="majors-wrap" style="display: none;">
             <div v-for="(major, idx) in majors" :key="idx">
                 <el-card shadow="always" v-if="major.hot === true">
                     <el-row>
@@ -96,19 +96,27 @@
                 <p class="md-desc">@{{ selectedMajor.future }}</p>
             </div>
         </el-drawer>
-
         <el-drawer
                 :title="'报名:' + (selectedMajor ? selectedMajor.name + '(' + selectedMajor.period +'年制)' : '')"
                 size="100%"
                 :visible.sync="showRegistrationFormFlag"
                 direction="rtl">
-            <major-registration-form
+
+                <major-registration-form
+                        :major="selectedMajor"
+                        :registration-form="registrationForm"
+                        v-on:form-saved-success="formSavedSuccessHandler"
+                        v-on:form-saved-failed="formSavedFailedHandler"
+                    ></major-registration-form>
+        </el-drawer-->
+
+        <major-registration-form
                 :major="selectedMajor"
                 :registration-form="registrationForm"
                 v-on:form-saved-success="formSavedSuccessHandler"
                 v-on:form-saved-failed="formSavedFailedHandler"
             ></major-registration-form>
-        </el-drawer>
+
     </div>
 </div>
 @endsection

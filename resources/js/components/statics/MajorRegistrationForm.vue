@@ -152,13 +152,13 @@
                     border: 'none',textAlign:'right'
                 },
                 rules:{
-                    /*name: [
+                    name: [
                         { required: true, message: '请输入您的姓名', trigger: 'blur' },
                     ],
                     id_number: [
                         {required: true, validator: checkId, trigger: 'blur' }
                     ],
-                    birthdayText: [
+                    /*birthdayText: [
                         {required: true, message: '生日为必填项', trigger: 'blur' }
                     ],
                     source_place: [
@@ -192,7 +192,7 @@
                 provinces:[],
                 cities:[],
                 districts:[],
-                birthdayText: ''
+                birthdayText: '',
             }
         },
         watch: {
@@ -225,19 +225,9 @@
                 .then(res => {
                 if(Util.isAjaxResOk(res)){
                     // 保存成功
-                    /*this.$message({
-                        showClose: true,
-                        message: '报名成功，等待平台审核',
-                        type: 'success'
-                    });*/
-                    this.$emit('form-saved-success',{plan: this.major})
+                    this.$emit('form-saved-success',{plan: this.major});
                 }else{
-                   /* this.$message({
-                        showClose: true,
-                        message: res.data.message,
-                        type: 'warning'
-                    });*/
-                     this.$emit('form-saved-failed',res.data.message)
+                    this.$emit('form-saved-failed',res.data.message)
                 }
                 });
             }
