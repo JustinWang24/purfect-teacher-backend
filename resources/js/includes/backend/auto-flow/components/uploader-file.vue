@@ -65,7 +65,7 @@ export default {
         this.$emit(
           "input",
           val.map(file => {
-            return file.url;
+            return file.id;
           }).toString()
         );
       }
@@ -99,7 +99,8 @@ export default {
         this.filelist.push({
           name: payload.file.file_name,
           size: payload.file.size,
-          url: payload.file.url
+          url: payload.file.url,
+          id: payload.file.id
         });
         this.files.push(payload.file);
       }
