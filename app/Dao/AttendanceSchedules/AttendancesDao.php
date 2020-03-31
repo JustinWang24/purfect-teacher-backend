@@ -188,7 +188,8 @@ class AttendancesDao
             'grade_id'       => $item->grade_id,
             'teacher_id'     => $item->teacher_id,
             'week'           => $week,
-            'time_slot_id'   => $item->time_slot_id
+            'time_slot_id'   => $item->time_slot_id,
+            'school_id'      => $item->school_id
         ];
 
         return Attendance::create($attendanceData);
@@ -263,77 +264,18 @@ class AttendancesDao
      */
     public function isAttendanceByTimetableAndWeek(TimetableItem $timetable, $week,$type = null ) {
         return Attendances::getAttendance($timetable, $week, $type);
-//        $map = ['timetable_id'=>$timetable->id, 'week'=>$week];
-//        $attendance = Attendance::where($map)->first();
-//        if(is_null($attendance)) {
-//            // 创建签到总表
-//            $attendance = $this->createAttendanceData($timetable);
-//        }
-//        $gradeUser = $attendance->grade->gradeUser;
-//
-//        $detailsDao = new AttendancesDetailsDao();
-//        $studentLeaveDao = new StudentLeaveDao();
-//        foreach ($gradeUser as $key => $val) {
-//            $detailInfo = $attendance->details->where('student_id',$val->user_id)->first();
-//            $leave = $studentLeaveDao->getStudentLeaveByTime($val->user_id);
-//            // 签到状态
-//            $mold = AttendancesDetail::MOLD_TRUANT;  // 旷课
-//            if(!is_null($leave)) {
-//                $mold = AttendancesDetail::MOLD_LEAVE; // 请假
-//            }
-//            // 为空再添加
-//            if(is_null($detailInfo)) {
-//                // 判断当前学生有没有请假
-//                $details = [
-//                    'attendance_id' => $attendance->id,
-//                    'course_id' => $attendance->course_id,
-//                    'timetable_id' => $attendance->timetable_id,
-//                    'student_id' => $val->user_id,
-//                    'year'=> $attendance->year,
-//                    'term' => $attendance->term,
-//                    'week'=>$attendance->week,
-//                    'mold'=> $mold,
-//                    'weekday_index'=>$attendance->timeTable->weekday_index,
-//                ];
-//                // 添加签到默认初始数据
-//                $detailsDao->add($details);
-//
-//
-//            // 判断当前学生签到记录是否是请假 && 当前学生是请假
-//
-//            } elseif($detailInfo->mold != AttendancesDetail::MOLD_LEAVE && $mold == AttendancesDetail::MOLD_LEAVE ) {
-//                // 修改签到详情
-//                $data = ['mold'=>AttendancesDetail::MOLD_LEAVE];
-//                $detailsDao->update($detailInfo->id,$data);
-//                // 修改签到总表
-//                $map = ['id'=>$attendance->id];
-//                Attendance::where($map)->increment('leave_number'); // 请假人数+1
-//                // 判断签到或旷课 -1
-//                if($detailInfo->mold == AttendancesDetail::MOLD_SIGN_IN) {
-//                    $field = 'actual_number'; // 实到人数
-//                } else {
-//                    $field = 'missing_number'; // 未到人数
-//                }
-//                Attendance::where($map)->decrement($field); // -1
-//            } else {
-//                // 修改签到详情
-//                $data = ['mold'=>AttendancesDetail::MOLD_SIGN_IN];
-//                $detailsDao->update($detailInfo->id,$data);
-//
-//                // 修改签到总表
-//                $map = ['id'=>$attendance->id];
-//                Attendance::where($map)->increment('actual_number'); // 签到人数 +1
-//                // 判断请假或旷课 -1
-//                if($detailInfo->mold == AttendancesDetail::MOLD_LEAVE) {
-//                    $field = 'leave_number'; // 请假人数
-//                } else {
-//                    $field = 'missing_number'; // 未到人数
-//                }
-//                Attendance::where($map)->decrement($field); // -1
-//
-//            }
-//        }
-//        return $attendance;
+    }
+
+
+    /**
+     * 查询签到评分
+     * @param $schoolId
+     * @return mixed
+     */
+    public function getAttendanceBySchoolId($schoolId) {
+        return Attendance::where('school_id', $schoolId)
+            ->orderBy('id','desc')
+            ->get();
     }
 
 

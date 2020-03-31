@@ -16,7 +16,7 @@ class Attendance extends Model
     protected  $fillable = [
         'timetable_id', 'actual_number', 'leave_number', 'missing_number',
         'total_number', 'course_id', 'year', 'term', 'grade_id', 'teacher_id',
-        'week', 'time_slot_id','status',
+        'week', 'time_slot_id','status', 'school_id',
     ];
 
     protected $hidden = ['updated_at'];

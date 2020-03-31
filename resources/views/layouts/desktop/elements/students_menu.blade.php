@@ -31,7 +31,7 @@
             </a>
         </li>
         <li class="nav-item">
-            <a href="{{ route('school_manager.students.performances-manager',['uuid'=>session('school.uuid')]) }}" class="nav-link ">
+            <a href="{{ route('school_manager.students.evaluation-score-index',['uuid'=>session('school.uuid')]) }}" class="nav-link ">
                 <span class="title">评分管理</span>
             </a>
         </li>
