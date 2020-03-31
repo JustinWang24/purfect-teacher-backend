@@ -15,7 +15,7 @@ if (document.getElementById('teacher-assistant-grades-manager-app')) {
       const dom = document.getElementById('app-init-data-holder');
       this.schoolId = dom.dataset.school;
       // 载入时间选择
-      console.log('1');
+      // console.log('1');
       this.getGradeList()
     },
     methods: {
@@ -24,7 +24,7 @@ if (document.getElementById('teacher-assistant-grades-manager-app')) {
         axios.post(url).then((res) => {
           if (Util.isAjaxResOk(res)) {
             let data = res.data.data;
-            // console.log(data)
+            // // console.log(data)
             this.gradeList = data;
           }
         }).catch((err) => {
@@ -32,12 +32,12 @@ if (document.getElementById('teacher-assistant-grades-manager-app')) {
         });
       },
       setId: function (id) {
-        console.log(id)
+        // console.log(id)
         this.grade_id = id;
       },
       upload: function (file) {
         let params = new FormData();
-        console.log(this.grade_id)
+        // console.log(this.grade_id)
         params.append("grade_id", this.grade_id);  //图片
         params.append("file", file)
         const url = '/api/Oa/upload-grade-resources';

@@ -22,8 +22,15 @@ import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
 Vue.use(ElementUI);
 
+// 引入Vant库
+import Vant from 'vant';
+import 'vant/lib/index.css';
+Vue.use(Vant);
+
 Vue.component('news-item', require('../components/content/NewsItem.vue').default);
 Vue.component('notice-item', require('../components/content/NoticeItem.vue').default);
+Vue.component('file-manager-mobile', require('../components/fileManager/FileManagerMobile.vue').default);
+Vue.component('file-manager', require('../components/fileManager/FileManager.vue').default);
 
 require('../includes/backend/contacts_list_manager');
 require('../includes/teacher/school_calendar_app');

@@ -30,7 +30,7 @@ if (document.getElementById('teacher-assistant-grades-check-in-app')) {
       const dom = document.getElementById('app-init-data-holder');
       this.schoolId = dom.dataset.school;
       this.getGradeList();
-      console.log('签到');
+      // console.log('签到');
     },
     methods: {
       searchList: function () {
@@ -46,7 +46,7 @@ if (document.getElementById('teacher-assistant-grades-check-in-app')) {
         var params = {};
         params.attendance_id = data.attendance_id;
         this.attendance_id = data.attendance_id;
-        console.log(this.attendance_id, data.attendance_id)
+        // console.log(this.attendance_id, data.attendance_id)
         this.getGradeDetail(params);
       },
       getGradeSignin: function (params) {
@@ -92,7 +92,7 @@ if (document.getElementById('teacher-assistant-grades-check-in-app')) {
       detailChange: function (current) {
         let params = {};
         params.attendance_id = this.attendance_id;
-        console.log(this.attendance_id)
+        // console.log(this.attendance_id)
         params.page = current;
         this.getGradeDetail(params)
       }

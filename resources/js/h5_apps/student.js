@@ -22,13 +22,13 @@ import 'element-ui/lib/theme-chalk/index.css';
 // 引入Vant库
 import Vant from 'vant';
 import 'vant/lib/index.css';
+Vue.use(Vant);
 
 import {
     Button, Card, Row, Col, Drawer, Image, Badge, Divider, Tag, Form, FormItem, Input,
     Select, Option, Switch, Alert, Message, MessageBox, DatePicker, Timeline, TimelineItem, TimePicker, Avatar
 } from 'element-ui';
 
-Vue.use(Vant);
 
 Vue.component(Button.name, Button);
 Vue.component(Card.name, Card);
@@ -62,6 +62,7 @@ Vue.component('major-cards', require('../components/statics/MajorCards.vue').def
 Vue.component('major-registration-form', require('../components/statics/MajorRegistrationForm.vue').default);
 Vue.component('file-manager-mobile', require('../components/fileManager/FileManagerMobile.vue').default);
 Vue.component('node-mobile', require('../components/pipeline/NodeMobile.vue').default);
+Vue.component('file-manager', require('../components/fileManager/FileManager.vue').default);
 
 require('../includes/frontend/student_registration_app');// 学生报名页面程序
 

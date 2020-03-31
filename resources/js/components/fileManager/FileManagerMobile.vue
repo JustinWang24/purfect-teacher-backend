@@ -116,6 +116,8 @@
     import {Util} from '../../common/utils';
     import {Constants} from '../../common/constants';
     import { createNewCategoryAction, recentFilesAction, networkDiskSizeAction, loadCategory, updateAsteriskAction, searchFileAction } from '../../common/file_manager';
+    import ElementUI from 'element-ui';
+    Vue.use(ElementUI);
 
     export default {
         name: "FileManagerMobile",
@@ -260,6 +262,7 @@
             },
             submitUpload: function(){
                 this.uploadFormData.category = this.selectedCategory.uuid;
+                console.log( this.$refs.uploadForm)
                 this.$refs.uploadForm.submit();
             },
             onBeforeUpload: function(file){

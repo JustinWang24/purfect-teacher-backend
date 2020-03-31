@@ -69,10 +69,19 @@
             <h3>表单信息</h3>
             <el-divider></el-divider>
             @foreach($options as $option)
+            @if ($option['type'] == 'image' && !empty($option['value']))
+                    <h3>{{ $option['title'] }}</h3>
+                    <div class="imageBox">
+                @foreach($option['value'] as $img)
+                            <img src="{{ $img }}" alt="" class="image">
+                    @endforeach
+                    </div>
+            @else
             <h5>
                 <p>{{ $option['title'] }}</p>
                 <p>{{ $option['value'] }}</p>
             </h5>
+            @endif
             <el-divider></el-divider>
             @endforeach
         </div>
@@ -173,11 +182,11 @@
             <el-button type="primary" style="width: 40%;border-radius: 50px;margin-bottom: 20px;" @click="dialogVisible = true">审批</el-button>
         </div>
         @endif
-
+        @if ($startAction->userFlow->done == \App\Utils\Pipeline\IUserFlow::IN_PROGRESS && $startUser->id == $user->id)
         <div style="display: flex;justify-content: center;background-color: #fff;padding-top: 10px;">
             <el-button type="primary" style="width: 40%;border-radius: 50px;margin-bottom: 20px;" @click="tips = true">撤销</el-button>
         </div>
-        
+        @endif
         <el-dialog title="审批" :visible.sync="dialogVisible" width="90%" center>
             <el-input type="textarea" :rows="6" placeholder="请输入审批意见" v-model="textarea" maxlength="100"></el-input>
             <span style="position: relative;top: -18px;left: 85%;">@{{textarea.length}}/100</span>
