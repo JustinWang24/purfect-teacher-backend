@@ -148,7 +148,7 @@
                                             </span>
                                         </div>
                                         @if (!empty($v->result) && ($v->result->result == \App\Utils\Pipeline\IAction::RESULT_TERMINATE || $v->result->result == \App\Utils\Pipeline\IAction::RESULT_REJECT))
-                                        <p style="color: #FD1B1B;">{{ $v->result->content }}</p>
+                                        <p style="color: #FD1B1B;">原因：{{ $v->result->content }}</p>
                                         @endif
                                         @endforeach
                                         @endforeach
