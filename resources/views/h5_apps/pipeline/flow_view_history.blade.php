@@ -136,7 +136,7 @@
                                             <img src="{{ $v->profile->avatar }}" alt="" style="width: 40px; height: 40px;border-radius: 50%;vertical-align: middle;">
                                             <div style="flex: 1;margin-left: 20px;">
                                                 <p style="margin: 0;">{{ $v->name }}({{ $k }})</p>
-                                                <p style="margin: 0;">@if (!empty($v->result) && $v->result->result != \App\Utils\Pipeline\IAction::RESULT_PENDING){{ substr($startAction->updated_at, 0, 16) }}@endif</p>
+                                                <p style="margin: 0;">@if (!empty($v->result) && $v->result->result != \App\Utils\Pipeline\IAction::RESULT_PENDING){{ substr($v->result->updated_at, 0, 16) }}@endif</p>
                                             </div>
                                             <span style="text-align: right;font-size: 13px;">
                                                 @if (!empty($v->result))
