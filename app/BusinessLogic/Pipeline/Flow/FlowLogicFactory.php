@@ -23,7 +23,7 @@ class FlowLogicFactory
         if($user->isTeacher()){
             $instance = new TeacherFlowsLogic($user);
         }
-        elseif ($user->isStudent()){
+        elseif ($user->isStudent() || $user->isRegisteredUsers()){
             $instance = new StudentFlowsLogic($user);
         }
         return $instance;

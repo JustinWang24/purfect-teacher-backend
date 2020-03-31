@@ -218,6 +218,14 @@ class User extends Authenticatable implements HasMobilePhone, HasDeviceId, IUser
     }
 
     /**
+     * 用户是否为注册用户(未认证学生)
+     */
+    public function isRegisteredUsers()
+    {
+        return $this->type === Role::REGISTERED_USER;
+    }
+
+    /**
      * 是否用户为学校管理员
      * @return bool
      */
