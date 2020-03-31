@@ -9,6 +9,7 @@
 namespace App\Http\Controllers\Api\Study;
 
 
+use App\Models\AttendanceSchedules\AttendancesDetail;
 use Carbon\Carbon;
 use App\Utils\JsonBuilder;
 use App\Dao\Schools\SchoolDao;
@@ -40,8 +41,10 @@ class IndexController extends Controller
         $timetableItemDao = new TimetableItemDao();
 //        $item = $timetableItemDao->getCurrentItemByUser($user, $date);  // 获取当前时间的课程
         $item = $timetableItemDao->getUnEndCoursesByUser($user, $date); // 获取今天未结束的课程
+//        dd($item);
         $teacherApplyElectiveDao = new TeacherApplyElectiveCourseDao();
         $electiveTime = $teacherApplyElectiveDao->getElectiveCourseStartAndEndTime($schoolId, $term);
+//        dd($electiveTime);
         $electiveStart = Carbon::parse($electiveTime[0]);
         $electiveEnd = Carbon::parse($electiveTime[1]);
         $selectCourse = [
@@ -52,16 +55,11 @@ class IndexController extends Controller
         ];
 
         $timetable = (object)[];
-        $attendancesDetailsDao = new AttendancesDetailsDao();
 
-        $signIn = [
-            'status' => 0,
-            'signIn_num' => $attendancesDetailsDao->getSignInCountByUser($user->id, $year, $term),
-            'leave_num' => $attendancesDetailsDao->getLeaveCountByUser($user->id, $year, $term),
-            'truant_num' => $attendancesDetailsDao->getTruantCountByUser($user->id, $year, $term),
-        ];
+
 
         $evaluateTeacher = false;
+        $status = 0;
         if(!is_null($item)) {
 
             $weeks = $configuration->getScheduleWeek(Carbon::parse($date), null, $term);
@@ -92,15 +90,28 @@ class IndexController extends Controller
             $attendancesDao = new AttendancesDao();
 
             $attendance = $attendancesDao->isAttendanceByTimetableAndWeek($item,$week);
+
             if(!is_null($attendance)) {
                 $detail = $attendance->details->where('student_id', $user->id)->first();
                 if(!is_null($detail)) {
-                    $signIn['status'] = $detail->mold;
+                    if($detail->mold == AttendancesDetail::MOLD_TRUANT) {
+                        $status = 0;
+                    } else {
+                        $status = $detail->mold;
+                    }
                 }
                 $evaluateTeacher = true;
             }
-
         }
+
+        $attendancesDetailsDao = new AttendancesDetailsDao();
+
+        $signIn = [
+            'status' => $status,
+            'signIn_num' => $attendancesDetailsDao->getSignInCountByUser($user->id, $year, $term),
+            'leave_num' => $attendancesDetailsDao->getLeaveCountByUser($user->id, $year, $term),
+            'truant_num' => $attendancesDetailsDao->getTruantCountByUser($user->id, $year, $term),
+        ];
 
         $gradeId = $user->gradeUser->grade_id;
         $dao = new LectureDao();

@@ -245,6 +245,7 @@ class CloudController extends Controller
      * 接收华三考勤数据
      * @param CloudRequest $request
      * @return string
+     * @throws \Exception
      */
     public function  distinguish(CloudRequest $request)
     {
@@ -313,6 +314,7 @@ class CloudController extends Controller
      * 手动扫云班牌码签到
      * @param Request $request
      * @return string
+     * @throws \Exception
      */
     public function manual(Request $request)
     {
