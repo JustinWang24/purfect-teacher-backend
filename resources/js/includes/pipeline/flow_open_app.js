@@ -73,6 +73,11 @@ if (document.getElementById('pipeline-flow-open-app')) {
                   this.$set(item, 'value', '')
                 }
               }
+              console.log(item.type)
+              if (item.type == "files") {
+                console.log(1)
+                item.value = ''
+              }
             });
             this.$set(this, 'formList', data.options)
             // this.formList = data.options;
@@ -298,7 +303,7 @@ if (document.getElementById('pipeline-flow-open-app')) {
               }
 
             } else {
-              if(type == 2) {
+              if (type == 2) {
                 this.setActive(parentItem.organ);
                 item.active = true;
                 this.setActive(data.organ)
@@ -346,8 +351,30 @@ if (document.getElementById('pipeline-flow-open-app')) {
         this.action.attachments.splice(idx, 1);
         this.$message({type: 'info', message: '移除文件: ' + attachment.file_name});
       },
-      pickFile() {
-
+      pickFile(item, file) {
+        if (item.value) {
+          item.value += "," + file.file.id
+        } else {
+          item.value = file.file.id
+        }
+        item.extra.showPicker = false;
+        item.extra.files.push(file.file)
+      },
+      removeFile(item, file) {
+        let removeIdx = '';
+        item.value = ''
+        item.extra.files.forEach((i, idx) => {
+          if (i.id == file.id) {
+            removeIdx = idx
+          } else {
+            if (idx == 0) {
+              item.value = i.id
+            } else {
+              item.value += ',' + i.id
+            }
+          }
+        });
+        item.extra.files.splice(removeIdx, 1)
       }
     }
   });

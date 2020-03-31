@@ -141,10 +141,16 @@
                                             user-uuid="uuid"
                                             :pick-file="true"
                                             :allow-file-types="[]"
-                                            v-on:pick-this-file="pickFile"
+                                            v-on:pick-this-file="pickFile(item, $event)"
                                     ></file-manager-mobile>
                             </div>
                         </van-action-sheet>
+                        <ul>
+                            <li v-for="fileName in item.extra.files">
+                                <span v-text="fileName.file_name"></span>
+                                <span @click="removeFile(item, fileName)" style="float:right;cursor: pointer;" class="el-icon-close"></span>
+                            <li>
+                        </ul>
                    </template>
                 </van-field>
             </div>
