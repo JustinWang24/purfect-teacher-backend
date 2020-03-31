@@ -227,12 +227,18 @@ class FlowsController extends Controller
                             }
                         }
                         break;
+
+                    case 'image':
+                        if ($optionRet) {
+                            $value = implode(',', $optionRet);
+                        }
                     default:
                         $value = $optionRet;
                         break;
                 }
 
                 $optionReList[] = [
+                    'type' => $option['type'],
                     'name' => $option['name'],
                     'title' => $option['title'],
                     'value' => $value
