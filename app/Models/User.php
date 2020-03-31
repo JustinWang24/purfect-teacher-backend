@@ -157,9 +157,8 @@ class User extends Authenticatable implements HasMobilePhone, HasDeviceId, IUser
         if($roleSlug === Role::TEACHER_SLUG || $roleSlug === Role::EMPLOYEE_SLUG || $roleSlug === Role::ADMINISTRATOR_SLUG){
             // 教师或者职工
             return $this->hasOne(TeacherProfile::class,'user_id');
-        }
-        elseif (in_array($this->type, Role::GetStudentUserTypes())){
-            // 已认证学生
+        } elseif (in_array($this->type, Role::GetStudentUserTypes())){
+            // 已认证学生 或者 已注册未认证
             return $this->hasOne(StudentProfile::class,'user_id');
         }
         else{
@@ -204,8 +203,9 @@ class User extends Authenticatable implements HasMobilePhone, HasDeviceId, IUser
             if(count($gus) > 0){
                 return $gus[0]->school_id;
             }
+        } else {
+             return $this->gradeUser->school_id;
         }
-        return 0;
     }
 
     /**
@@ -215,6 +215,14 @@ class User extends Authenticatable implements HasMobilePhone, HasDeviceId, IUser
     public function isStudent(){
         return in_array($this->getCurrentRoleSlug(),
             [Role::VERIFIED_USER_STUDENT_SLUG, Role::VERIFIED_USER_CLASS_LEADER_SLUG, Role::VERIFIED_USER_CLASS_SECRETARY_SLUG]);
+    }
+
+    /**
+     * 用户是否为注册用户(未认证学生)
+     */
+    public function isRegisteredUsers()
+    {
+        return $this->type === Role::REGISTERED_USER;
     }
 
     /**
@@ -266,13 +274,15 @@ class User extends Authenticatable implements HasMobilePhone, HasDeviceId, IUser
      * @return mixed
      */
     public function gradeUser(){
-        if($this->isStudent() || $this->isSchoolManager()){
 
+        if($this->isStudent() || $this->isSchoolManager()){
+            return $this->hasOne(GradeUser::class);
+        } elseif ($this->isTeacher() || $this->isEmployee()){
+            return $this->hasMany(GradeUser::class);
+        } else {
             return $this->hasOne(GradeUser::class);
         }
-        elseif($this->isTeacher() || $this->isEmployee()){
-            return $this->hasMany(GradeUser::class);
-        }
+
     }
 
     public function myCourses(){

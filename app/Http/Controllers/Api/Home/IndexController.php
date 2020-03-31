@@ -185,7 +185,6 @@ class IndexController extends Controller
 
         $profile = $user->profile;
         $gradeUser = $user->gradeUser;
-        $grade     = $user->gradeUser->grade;
 
         $data = [
             'mobile'         => $user->mobile,
@@ -201,12 +200,12 @@ class IndexController extends Controller
             'area'           => $profile->area,
             'student_number' => $profile->student_number,
             'id_number'      => $profile->id_number,
-            'school_name'    => $gradeUser->school->name,
-            'institute'      => $gradeUser->institute->name,
-            'department'     => $gradeUser->department->name,
-            'major'          => $gradeUser->major->name,
-            'year'           => $grade->year,
-            'grade_name'     => $grade->name
+            'school_name'    => $gradeUser->school->name ?? '',
+            'institute'      => $gradeUser->institute->name ?? '',
+            'department'     => $gradeUser->department->name ?? '',
+            'major'          => $gradeUser->major->name ?? '',
+            'year'           => $user->gradeUser->grade->year?? '',
+            'grade_name'     => $user->gradeUser->grade->name??''
         ];
         return JsonBuilder::Success($data);
     }
