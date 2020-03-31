@@ -128,6 +128,7 @@
                             </div>
                             <span style="text-align: right;font-size: 13px;color: #4FA8FE;"> 发起审批 </span>
                         </div>
+                        <p style="color: #FD1B1B;">拒绝原因</p>
                     </el-timeline-item>
                     @foreach($handlers as $key => $handler)
                     @switch($handlerIcon[$key])
@@ -157,12 +158,13 @@
                                             <span style="text-align: right;font-size: 13px;">
                                                 @if (!empty($v->result))
                                                 @if ($v->result->result == \App\Utils\Pipeline\IAction::RESULT_PENDING) <span style="color: #FE7B1C;">审批中</span> @endif
-                                                @if ($v->result->result == \App\Utils\Pipeline\IAction::RESULT_PASS) {{ substr($v->result->updated_at, 5, 11) }} <span style="color: #6DCC58;">已通过</span> @endif
-                                                @if ($v->result->result == \App\Utils\Pipeline\IAction::RESULT_TERMINATE) {{ substr($v->result->updated_at, 5, 11) }} <span style="color: #FD1B1B;">未通过</span> @endif
-                                                @if ($v->result->result == \App\Utils\Pipeline\IAction::RESULT_REJECT) {{ substr($v->result->updated_at, 5, 11) }} <span style="color: #FD1B1B;">未通过</span> @endif
+                                                @if ($v->result->result == \App\Utils\Pipeline\IAction::RESULT_PASS) <span style="color: #6DCC58;">已通过</span> @endif
+                                                @if ($v->result->result == \App\Utils\Pipeline\IAction::RESULT_TERMINATE) <span style="color: #FD1B1B;">未通过</span> @endif
+                                                @if ($v->result->result == \App\Utils\Pipeline\IAction::RESULT_REJECT) <span style="color: #FD1B1B;">未通过</span> @endif
                                                 @endif
                                             </span>
                                         </div>
+                                        <p style="color: #FD1B1B;">拒绝原因</p>
                                         @endforeach
                                         @endforeach
                                     </el-timeline-item>
