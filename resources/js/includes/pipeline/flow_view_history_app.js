@@ -99,16 +99,6 @@ if (document.getElementById('pipeline-flow-view-history-app')) {
                     console.log(err);
                 })
             },
-            // 查看附件
-            options() {
-                let optionUrl = this.$refs.option.getAttribute("data-url");
-                // window.location.href = window.origin + optionUrl
-            },
-
-
-
-
-
             loadWholeFlow: function () {
                 this.isLoading = true;
                 viewApplicationByAction(this.actionId, this.userFlowId).then(res => {
