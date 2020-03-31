@@ -9,7 +9,7 @@
     </div>
     <div class="main p-15" v-cloak>
         <div>
-            <el-input placeholder="搜索标题、发起人关键字" v-model="keyword" style="margin-bottom: 10px;" @change="loadFlowsCopyByMe"></el-input>
+            <el-input placeholder="搜索标题、发起人关键字" v-model="keyword" @change="loadFlowsStartedByMe" prefix-icon="el-icon-search" id="searchIcon"></el-input>
         </div>
         <div v-if="copyList.length > 0">
             <van-list v-model="copy.loading" :finished="copy.finished" finished-text="" @load="onLoad4">
@@ -33,4 +33,14 @@
         </div>
     </div>
 </div>
+<style>
+    .el-input {
+        font-size: 16px;
+        margin-bottom: 10px;
+    }
+
+    #searchIcon {
+        font-size: 14px;
+    }
+</style>
 @endsection
