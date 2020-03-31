@@ -30,11 +30,9 @@ class VersionController extends Controller
         // 验证登录
         $user_id = $school_id = 0;
         if ($token != '') {
-            $userInfo = DB::table('users')
-                ->where('api_token','=',$token)
-                ->orderBy('id')->first();
-            $user_id = $userInfo->id;
-            $school_id = 1;
+            $user = $request->user();
+            $user_id = $user->id;
+            $school_id = isset($user->gradeUserOneInfo->school_id) ? $user->gradeUserOneInfo->school_id : 1;
         }
 
         // 获取数据
@@ -53,10 +51,10 @@ class VersionController extends Controller
                 ->orderBy('version_id', 'desc')
                 ->first();
         }
-        // 组装下载url地址
-        $infos->version_downurl = $infos->typeid == 1 ? route('api.version.download',['sid'=>$infos->sid]) : $infos->version_downurl;
         if (isset($infos->sid))
         {
+           // 组装下载url地址
+           $infos->version_downurl = $infos->typeid == 1 ? route('api.version.download',['sid'=>$infos->sid]) : $infos->version_downurl;
            $infos->version_isshow = 0; // 不显示
             if ( $version_id < $infos->version_id )
             {

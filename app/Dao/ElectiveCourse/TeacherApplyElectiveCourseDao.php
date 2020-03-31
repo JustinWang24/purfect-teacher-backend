@@ -800,7 +800,7 @@ class TeacherApplyElectiveCourseDao
         $data['school_id'] = $apply->school_id;
         $data['teachers'][0] = $apply->teacher_id;
         $data['majors'] = $majorArrs;
-        $data['code'] = $apply->code;
+        $data['code'] = $apply->code == 'auto' ? ($apply->code . '_' . $applyId) : $apply->code;
         $data['name'] = $apply->name;
         $data['scores'] = $apply->scores;
         $data['optional'] = Course::ELECTIVE_COURSE;
@@ -819,6 +819,10 @@ class TeacherApplyElectiveCourseDao
             //创建课程
             $courseDao = new CourseDao();
             $course = $courseDao->createCourse($data);
+            if (!$course->isSuccess()) {
+                DB::rollBack();
+                $messageBag->setMessage($course->getMessage());
+            }
             //标记申请表为发布状态
             $this->publishedApply($applyId);
             //记录一下申请和课表对应id
