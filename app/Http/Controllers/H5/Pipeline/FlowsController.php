@@ -199,6 +199,7 @@ class FlowsController extends Controller
                             $value = $optionRet[0];
                             if (!empty($optionRet[1])) {
                                 $optionReList[] = [
+                                    'type' => $option['type'],
                                     'name' => $option['name'],
                                     'title' => $option['title'],
                                     'value' => $value
