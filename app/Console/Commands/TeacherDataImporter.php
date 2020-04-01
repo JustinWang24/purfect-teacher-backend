@@ -170,6 +170,7 @@ class TeacherDataImporter extends Command
 
                 $profile = TeacherProfile::where('user_id',$user->id)->first();
                 if(!$profile){
+                    $gradeUser = new GradeUser();
                     $profile = new TeacherProfile();
                     $profile->uuid = Uuid::uuid4()->toString();
                     $profile->school_id = 1;
@@ -197,6 +198,15 @@ class TeacherDataImporter extends Command
                 $profile->hired = $data[13]=='是'?true:false;
                 $profile->notes = $data[17]??null;
                 $profile->save();
+
+                $gradeUser->user_id = $user->id;
+                $gradeUser->name = $user->$data[0];
+                $gradeUser->user_type = 9;
+                $gradeUser->school_id = 1;
+                $gradeUser->campus_id = 1;
+
+                $gradeUser->save();
+
             }
             DB::commit();
             echo $user->name .' 账户创建'.PHP_EOL;
