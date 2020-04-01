@@ -102,8 +102,8 @@ class ApproveOpenMajorEvent implements CanSendSystemNotification
     public function getAppExtra(): string
     {
         $extra = [
-            'type' => 'web-view',
-            'param1' => route('static.school.enrolment-notes'),
+            'type' => 'enrolments-details',
+            'param1' => $this->RegistrationInformatics->id,
             'param2' => ''
         ];
         return json_encode($extra);
