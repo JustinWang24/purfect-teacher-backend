@@ -20,12 +20,11 @@ class Factory
     public static function GetStepLogic($leave, $currentUser, $userId) {
         // 判断当前状态是否为请假
         if(empty($leave)) {
-            if(!empty($currentUser) && $currentUser->id == $userId) {
+            if(!is_null($currentUser) && $currentUser->id == $userId) {
                 // 签到
                 $logic = new SignIn();
             } else {
-                // 旷课
-                $logic = new Truant();
+                return null ;
             }
 
         } else {

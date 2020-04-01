@@ -91,7 +91,9 @@ class Attendances
                 AttendancesDetail::create($details);
             } else {
                 $logic = Factory::GetStepLogic($leave, $currentUser,$val->user_id);
-                $logic->saveData($attendance, $detailInfo, $type);
+                if(!is_null($logic)) {
+                    $logic->saveData($attendance, $detailInfo, $type);
+                }
             }
 
         }
