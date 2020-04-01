@@ -263,11 +263,16 @@ class RegistrationInformaticsDao
     {
         if (empty($user)) return false;
 
-        // 修改字段信息
+        // 更新用户信息
+        $userSave['name'] = $data['name']; // 姓名
+        $userSave['email'] = $data['email']; // 邮箱
+        User::where('id',$user->id)->update($userSave);
+
+        // 更新基础信息
         $userProfile['uuid'] = Uuid::uuid4()->toString();
         $userProfile['user_id'] = $user->id;
         $userProfile['year'] = $plan->year; // 这个应该是从招生中的入学年级来
-        $userProfile['serial_number'] = 0;  // 学号还无法分配
+        // $userProfile['serial_number'] = 0;  // 学号还无法分配
         $userProfile['avatar'] = '/assets/img/dp.jpg'; // 用户默认的图片
         $userProfile['gender'] = $data['gender']; // 性别
         $userProfile['id_number'] = $data['id_number']; // 身份证号码
@@ -281,7 +286,6 @@ class RegistrationInformaticsDao
         $userProfile['birthday'] = $data['birthday']; // 出身年月
         $userProfile['qq'] = $data['qq']; // QQ
         $userProfile['wx'] = $data['wx']; // 微信
-        // $userProfile['email'] = $data['email']; // TODO...email student_profiles 原始表没有建字段
         $userProfile['parent_name'] = $data['parent_name']; // 家长姓名
         $userProfile['parent_mobile'] = $data['parent_mobile']; // 家长电话
         $userProfile['examination_score'] = $data['examination_score']; // 中考分数
