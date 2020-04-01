@@ -11,6 +11,8 @@ use App\Models\AttendanceSchedules\Attendance;
 use App\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Utils\Time\CalendarDay;
+
 
 class TimetableItem extends Model
 {
@@ -97,5 +99,10 @@ class TimetableItem extends Model
     public function attendance()
     {
         return $this->hasMany(Attendance::class,'timetable_id', 'id');
+    }
+
+
+    public function getWeekIndex() {
+        return CalendarDay::GetWeekDayIndex($this->weekday_index);
     }
 }
