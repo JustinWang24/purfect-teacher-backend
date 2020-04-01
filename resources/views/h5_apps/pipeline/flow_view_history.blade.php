@@ -117,7 +117,7 @@
                         </div>
                     </el-timeline-item>
                     @if ($startAction->userFlow->done == \App\Utils\Pipeline\IUserFlow::REVOKE)
-                        <el-timeline-item key="0" icon="el-icon-more">
+                        <el-timeline-item key="0" icon="el-icon-refresh-left">
                             <div style="display: flex;justify-content: space-between;align-items: center;">
                                 <img src="@if ($startUser->profile){{ $startUser->profile->avatar }} @endif" alt="" style="width: 40px; height: 40px;border-radius: 50%;vertical-align: middle;">
                                 <div style="flex: 1;margin-left: 20px;">
