@@ -268,7 +268,7 @@ class AttendanceController extends Controller
             return JsonBuilder::Error('未找到当前学生要上的的课程');
         }
 
-        $timetableItem = $timetableItemDao->getTimeTableItemById($code['item_id']);
+        $timetableItem = $timetableItemDao->getTimeTableItemById($code['itme_id']);
 
         $data = [
             'timetable_id' => $timetableItem->id,
