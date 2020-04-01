@@ -8,6 +8,7 @@ use App\Utils\Time\GradeAndYearUtil;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Models\Courses\CourseMajor;
+use App\Models\Schools\Grade;
 
 class RecruitmentPlan extends Model
 {
@@ -87,6 +88,14 @@ class RecruitmentPlan extends Model
         return $this->belongsTo(User::class,'manager_id');
     }
 
+    /**
+     * 获取专业关联的班级
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function grades(){
+        return $this->belongsTo(Grade::class,'major_id');
+    }
+	
     /**
      * 录取工作负责人
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
