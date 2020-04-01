@@ -60,38 +60,40 @@ class MajorsController extends Controller
     }
 
     /**
+     * 新增或编辑专业
      * @param MajorRequest $request
      * @return \Illuminate\Http\RedirectResponse
      */
     public function update(MajorRequest $request){
         $majorData = $request->getFormData();
         $dao = new MajorDao($request->user());
-        $uuid = $majorData['department_id'];
-        $result = $dao->getMajorByCategoryCode($majorData['id'], $majorData['category_code'], $majorData['school_id']);
 
-        if ($result){
-            FlashMessageBuilder::Push($request, FlashMessageBuilder::DANGER, $majorData['category_code'].'专业代码已经用了, 请重新添加');
-            return redirect()->route('school_manager.department.majors',['uuid'=>$majorData['department_id'],'by'=>'department']);
-        } else {
-            if(isset($majorData['id'])){
-                $major = $dao->getMajorById($majorData['id']);
-                // 更新专业的操作
-                if($dao->updateMajor($majorData)){
-                    FlashMessageBuilder::Push($request, FlashMessageBuilder::SUCCESS, $majorData['name'].'专业已经修改成功');
-                }else{
-                    FlashMessageBuilder::Push($request, FlashMessageBuilder::DANGER, $majorData['name'].'专业修改失败, 请重新试一下');
-                }
-            }else{
-                // 新增专业的操作
-                $major = $dao->createMajor($majorData);
-                if($major){
-                    FlashMessageBuilder::Push($request, FlashMessageBuilder::SUCCESS, $majorData['name'].'专业已经创建成功');
-                }else{
-                    FlashMessageBuilder::Push($request, FlashMessageBuilder::DANGER, $majorData['name'].'专业创建失败, 请重新试一下');
-                }
+        if(isset($majorData['id'])){
+
+            $result = $dao->getMajorByCategoryCode($majorData['id'], $majorData['category_code'], $majorData['school_id']);
+            if ($result){
+                FlashMessageBuilder::Push($request, FlashMessageBuilder::DANGER, $majorData['category_code'].'专业代码已经用了, 请重新添加');
+                return redirect()->route('school_manager.department.majors',['uuid'=>$majorData['department_id'],'by'=>'department']);
             }
-            return redirect()->route('school_manager.department.majors',['uuid'=>$major->department_id,'by'=>'department']);
+
+            $major = $dao->getMajorById($majorData['id']);
+            // 更新专业的操作
+            if($dao->updateMajor($majorData)){
+                FlashMessageBuilder::Push($request, FlashMessageBuilder::SUCCESS, $majorData['name'].'专业已经修改成功');
+            }else{
+                FlashMessageBuilder::Push($request, FlashMessageBuilder::DANGER, $majorData['name'].'专业修改失败, 请重新试一下');
+            }
+        }else{
+            // 新增专业的操作
+            $major = $dao->createMajor($majorData);
+            if($major){
+                FlashMessageBuilder::Push($request, FlashMessageBuilder::SUCCESS, $majorData['name'].'专业已经创建成功');
+            }else{
+                FlashMessageBuilder::Push($request, FlashMessageBuilder::DANGER, $majorData['name'].'专业创建失败, 请重新试一下');
+            }
         }
+            return redirect()->route('school_manager.department.majors',['uuid'=>$major->department_id,'by'=>'department']);
+
 
     }
 }
