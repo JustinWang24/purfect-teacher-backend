@@ -57,7 +57,7 @@ class BuildingsController extends Controller
     }
 
     /**
-     * 保存校区的方法
+     * 保存建筑的方法
      * @param BuildingRequest $request
      * @return \Illuminate\Http\RedirectResponse
      */
@@ -73,10 +73,11 @@ class BuildingsController extends Controller
             $result = $buildingDao->createBuilding($buildingData);
         }
 
-        if($result){
-            FlashMessageBuilder::Push($request, FlashMessageBuilder::SUCCESS,$buildingData['name'].'建筑物保存成功');
+        $msg = $result->getMessage();
+        if($result->isSuccess()){
+            FlashMessageBuilder::Push($request, FlashMessageBuilder::SUCCESS,$msg);
         }else{
-            FlashMessageBuilder::Push($request, FlashMessageBuilder::DANGER,'无法保存建筑物'.$buildingData['name']);
+            FlashMessageBuilder::Push($request, FlashMessageBuilder::DANGER,$msg);
         }
         return redirect()->route('school_manager.campus.buildings',['uuid'=>$buildingData['campus_id'],'type'=>$buildingData['type']]);
     }
