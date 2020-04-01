@@ -97,6 +97,8 @@ class IndexController extends Controller
 
         // 获取迎新配置信息
         $checkUserIsWelcomeInfo = $WelcomeUserReportDao->checkUserIsWelcomeInfo( $campus_id, $user_id);
+        // 获取学生是否有班级
+        $checkGradesInfo = $WelcomeUserReportDao->checkGradesInfo($user);
 
         // 获取配置信息
         $infos = [];
@@ -127,45 +129,41 @@ class IndexController extends Controller
             {
                 foreach($val['data'] as $k=>&$v)
                 {
-                    /*// 如果个人已经报到，按照个人报到信息展示
-                    if(empty($getWelcomeUserReportOneInfo->configid))
-                    {*/
-                        // 个人信息(A)
-                        if($v['letter'] == 'A')
-                        {
-                            $checkWelcomeUserReportOneInfo = $WelcomeUserReportDao->checkWelcomeUserReportOneInfo($getWelcomeUserReportOneInfo,'A');
+                    // 个人信息(A)
+                    if($v['letter'] == 'A')
+                    {
+                        $checkWelcomeUserReportOneInfo = $WelcomeUserReportDao->checkWelcomeUserReportOneInfo(
+                            $checkUserIsWelcomeInfo , $checkGradesInfo, $getWelcomeUserReportOneInfo,'A'
+                        );
 
-                            $v['notice'] = $checkWelcomeUserReportOneInfo['notice'];
-                            $v['status'] = $checkWelcomeUserReportOneInfo['status'];// 0：弹出message，1：表示已完成，2：为未完善信息
-                            $v['message'] = $checkWelcomeUserReportOneInfo['message'];
-                        }
+                        $v['notice'] = $checkWelcomeUserReportOneInfo['notice'];
+                        $v['status'] = $checkWelcomeUserReportOneInfo['status'];// 0：弹出message，1：表示已完成，2：为未完善信息
+                        $v['message'] = $checkWelcomeUserReportOneInfo['message'];
+                    }
 
-                        // 报到扫码(B)
-                        if($v['letter'] == 'B')
-                        {
-                            $checkWelcomeUserReportOneInfo = $WelcomeUserReportDao->checkWelcomeUserReportOneInfo($getWelcomeUserReportOneInfo,'B');
+                    // 报到扫码(B)
+                    if($v['letter'] == 'B')
+                    {
+                        $checkWelcomeUserReportOneInfo = $WelcomeUserReportDao->checkWelcomeUserReportOneInfo(
+                            $checkUserIsWelcomeInfo , $checkGradesInfo, $getWelcomeUserReportOneInfo,'B'
+                        );
 
-                            $v['notice'] = $checkWelcomeUserReportOneInfo['notice'];
-                            $v['status'] = $checkWelcomeUserReportOneInfo['status'];
-                            $v['message'] = $checkWelcomeUserReportOneInfo['message'];
-                        }
+                        $v['notice'] = $checkWelcomeUserReportOneInfo['notice'];
+                        $v['status'] = $checkWelcomeUserReportOneInfo['status'];
+                        $v['message'] = $checkWelcomeUserReportOneInfo['message'];
+                    }
 
-                        // 报到单(C)
-                        if($v['letter'] == 'C')
-                        {
-                            $checkWelcomeUserReportOneInfo = $WelcomeUserReportDao->checkWelcomeUserReportOneInfo($getWelcomeUserReportOneInfo,'C');
+                    // 报到单(C)
+                    if($v['letter'] == 'C')
+                    {
+                        $checkWelcomeUserReportOneInfo = $WelcomeUserReportDao->checkWelcomeUserReportOneInfo(
+                            $checkUserIsWelcomeInfo , $checkGradesInfo, $getWelcomeUserReportOneInfo,'C'
+                        );
 
-                            $v['notice'] = $checkWelcomeUserReportOneInfo['notice'];
-                            $v['status'] = $checkWelcomeUserReportOneInfo['status'];
-                            $v['message'] = $checkWelcomeUserReportOneInfo['message'];
-                        }
-
-                    /*} else {
-                        // 学校全局配置验收
-                        $v['notice'] = $checkUserIsWelcomeInfo['notice']; // 提示信息
-                        $v['status'] = $checkUserIsWelcomeInfo['status']; // 0：弹出message
-                        $v['message'] = $checkUserIsWelcomeInfo['message'];
-                    }*/
+                        $v['notice'] = $checkWelcomeUserReportOneInfo['notice'];
+                        $v['status'] = $checkWelcomeUserReportOneInfo['status'];
+                        $v['message'] = $checkWelcomeUserReportOneInfo['message'];
+                    }
                 }
             }
         }

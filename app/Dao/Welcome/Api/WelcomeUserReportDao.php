@@ -7,8 +7,10 @@
  */
 namespace App\Dao\Welcome\Api;
 
-use App\Models\Students\StudentProfile;
 use App\Dao\Welcome\Api\WelcomeConfigDao;
+use App\User;
+use App\Models\Users\GradeUser;
+use App\Models\Students\StudentProfile;
 use App\Models\Welcome\Api\WelcomeConfig;
 use App\Models\Welcome\Api\WelcomeUserReport;
 use App\Models\Welcome\WelcomeConfigStep;
@@ -149,13 +151,46 @@ class WelcomeUserReportDao
         if (time() > strtotime($getWelcomeConfigOneInfo->config_edate)) {
             return array('status' => 0, 'notice' => '','message' => '迎新已结束');
         }
-
         // 获取用户信息是否存在
         if (empty($this->getStudentProfilesInfo($userId))) {
             return array('status' => 0, 'notice' => '', 'message' => '未查找到您的信息');
         }
 
         // 学校配置验证通过
+        return array('status' => 1, 'notice' => '', 'message' => '');
+    }
+
+
+    /**
+     * Func 验证学生是否可以参加迎新
+     * Desc 学生不是新生不能参加迎新，没有专业不能参加迎新;
+     *
+     * @param $userId 用户ID
+     *
+     * @return array
+     */
+    public function checkGradesInfo($user)
+    {
+        // 获取班级
+        $gradeUserOneInfo = $user->gradeUserOneInfo;
+        // 如果为空，表示学生没有班级信息
+        if(empty($gradeUserOneInfo) || !isset($gradeUserOneInfo->grade_id)){
+            return array('status' => 0, 'notice' => '', 'message' => '您还不是学校的用户,不能参与迎新');
+        }
+        // 如果没有班级信息提示
+        $gradeInfo = $gradeUserOneInfo->grade;
+        if(empty($gradeInfo) || !isset($gradeInfo->year)){
+            return array('status' => 0, 'notice' => '', 'message' => '您还不是学校的用户,不能参与迎新');
+        }
+        // 如果是往届生不能参加因袭
+        if($gradeInfo->year != date('Y')){
+            return array('status' => 0, 'notice' => '', 'message' => '往届生不能参与迎新');
+        }
+        // 如果是新生，没有专业需要提示先报专业
+        if(!$gradeUserOneInfo->major_id){
+            return array('status' => 0, 'notice' => '', 'message' => '您还没有专业,不能参与迎新');
+        }
+        // 可以参加迎新
         return array('status' => 1, 'notice' => '', 'message' => '');
     }
 
@@ -166,52 +201,75 @@ class WelcomeUserReportDao
      *
      * @return true|false
      */
-    public function checkWelcomeUserReportOneInfo($reportOneInfo = [],$letter = null )
+    public function checkWelcomeUserReportOneInfo($checkSchoolConfig = [], $checkGradesInfo = [] , $reportOneInfo = [],$letter = null )
     {
         // 个人信息完善
         if($letter == 'A')
         {
-            if(empty($reportOneInfo->steps_2_date))
+            // 表示已完善第一步了
+            if(!empty($reportOneInfo->steps_2_date))
             {
-                return array('status' => 2 ,'notice' => '', 'message' => '请完善个人信息');
-            } else {
                 return array('status' => 1 ,'notice' => '已完成', 'message' => '');
+            } else {
+                // 如果学校关闭迎新,不能迎新了.
+                if($checkSchoolConfig['status'] != 1) {
+                    return array('status' => 0 ,'notice' => '', 'message' => $checkSchoolConfig['message']);
+                }
+                // 往届生,没有专业,没有班级,不能参加迎新
+                if($checkGradesInfo['status'] != 1) {
+                    return array('status' => 0 ,'notice' => '', 'message' => $checkGradesInfo['message']);
+                }
+                // 可以进入页面完善信息
+                return array('status' => 2 ,'notice' => '', 'message' => '请完善个人信息');
             }
         }
 
         // 扫码报到
         if($letter == 'B')
         {
-            if(empty($reportOneInfo->steps_2_date))
-            {
-                return array('status' => 0 ,'notice' => '', 'message' => '请完善个人信息');
-            }
-
-            // 是否报到
-            if(empty($reportOneInfo->complete_date))
-            {
-                return array('status' => 2, 'notice' => '', 'message' => '');
-            } else {
+            // 如果完善了第二步
+            if (!empty($reportOneInfo->complete_date)) {
                 return array('status' => 1, 'notice' => '已完成', 'message' => '');
+            }else {
+                // 如果学校关闭迎新,不能迎新了.
+                if($checkSchoolConfig['status'] != 1) {
+                    return array('status' => 0 ,'notice' => '', 'message' => $checkSchoolConfig['message']);
+                }
+                // 往届生,没有专业,没有班级,不能参加迎新
+                if($checkGradesInfo['status'] != 1) {
+                    return array('status' => 0 ,'notice' => '', 'message' => $checkGradesInfo['message']);
+                }
+                // 如果第一步未完善，提示完善
+                if(empty($reportOneInfo->steps_2_date)) {
+                    return array('status' => 0 ,'notice' => '', 'message' => '请完善个人信息');
+                }
+                // 可以进入页面完善信息
+                return array('status' => 2, 'notice' => '', 'message' => '');
             }
         }
 
         // 报到单
         if($letter == 'C')
         {
-            // 个人信息完善
-            if(empty($reportOneInfo->steps_2_date))
-            {
-                return array('status' => 0, 'notice' => '', 'message' => '请完善个人信息');
-            }
-
             // 是否报到
-            if(empty($reportOneInfo->complete_date))
+            if($reportOneInfo->complete_date)
             {
-                return array('status' => 0, 'notice' => '', 'message' => '您还没有报到');
+                return array('status' => 1, 'notice' => '已完成', 'message' => '');
+            } else {
+                // 如果学校关闭迎新,不能迎新了.
+                if($checkSchoolConfig['status'] != 1) {
+                    return array('status' => 0 ,'notice' => '', 'message' => $checkSchoolConfig['message']);
+                }
+                // 往届生,没有专业,没有班级,不能参加迎新
+                if($checkGradesInfo['status'] != 1) {
+                    return array('status' => 0 ,'notice' => '', 'message' => $checkGradesInfo['message']);
+                }
+                // 如果第一步未完善，提示完善
+                if(empty($reportOneInfo->steps_2_date)) {
+                    return array('status' => 0 ,'notice' => '', 'message' => '请完善个人信息');
+                }
             }
         }
-
         return array('status'=>1, 'notice' => '', 'message'=>'');
     }
 
