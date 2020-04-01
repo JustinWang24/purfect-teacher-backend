@@ -75,7 +75,7 @@
             </h5>
             <div class="imageBox">
                 @foreach($option['value'] as $img)
-                <img src="{{ $img }}" alt="" class="image">
+                <a href="#"><img src="{{ $img }}" alt="" class="image"></a>
                 @endforeach
             </div>
             @elseif ($option['type'] == 'files' && !empty($option['value']))
@@ -85,8 +85,8 @@
             <div class="information" style="padding-bottom: 10px;">
                 @foreach($option['value'] as $file)
                 <div class="reason option" data-url="{{ $file['url'] }}">
-                    <a style="color: #333333;" href="{{ $file['url'] }}">{{ $file['file_name'] }}</a>
-                    <span>预览</span>
+                    <span>{{ $file['file_name'] }}</span>
+                    <a style="color: #333333;" href="{{ $file['url'] }}">预览</a>
                 </div>
                 @endforeach
             </div>
