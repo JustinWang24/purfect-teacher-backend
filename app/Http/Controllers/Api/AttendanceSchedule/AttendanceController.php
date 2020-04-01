@@ -286,7 +286,7 @@ class AttendanceController extends Controller
         $week = $weeks->getScheduleWeekIndex();
         $detailsDao = new AttendancesDetailsDao();
         $detail = $detailsDao->getDetailByTimeTableIdAndWeekAndStudentId($timetableItem->id, $week, $user->id);
-        if(!empty($detail)) {
+        if(!empty($detail) && $detail->mold == AttendancesDetail::MOLD_SIGN_IN) {
             $data['arrive_time'] = $detail->signin_time;
             $data['arrive_type'] = $detail->typeText();
             $data['is_arrive'] = true;
