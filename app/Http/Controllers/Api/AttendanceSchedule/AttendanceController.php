@@ -259,12 +259,7 @@ class AttendanceController extends Controller
     public function studentSweepQrCode(MyStandardRequest $request)
     {
         $code = json_decode($request->get('code'), true);
-
         $user = $request->user();
-        $schoolId = $user->getSchoolId();
-        $dao = new SchoolDao();
-        $school = $dao->getSchoolById($schoolId);
-        $configuration = $school->configuration;
 
         $timetableItemDao = new TimetableItemDao;
         $item = $timetableItemDao->getCurrentItemByUser($user);
@@ -273,21 +268,29 @@ class AttendanceController extends Controller
             return JsonBuilder::Error('未找到当前学生要上的的课程');
         }
 
+        $timetableItem = $timetableItemDao->getTimeTableItemById($code['item_id']);
+
+        $data = [
+            'timetable_id' => $timetableItem->id,
+            'time_slot_name' => $timetableItem->timeSlot->name,
+            'course_name' => $timetableItem->course->name,
+            'room' => $timetableItem->room->name,
+            'is_arrive' => false,
+        ];
+        // 查询是否已签到
+        $schoolId = $user->getSchoolId();
+        $schoolDao = new SchoolDao();
+        $school = $schoolDao->getSchoolById($schoolId);
+        $configuration = $school->configuration;
         $weeks = $configuration->getScheduleWeek(Carbon::now(), null, $code['term']);
-
-        $week = $weeks->getScheduleWeekIndex() ?? '';
-
-        $type = AttendancesDetail::TYPE_SWEEP_CODE;
-        $attendance = Attendances::getAttendance($item,$week,$user, $type);
-        $detail = $attendance->details->where('student_id',$user->id)->first();
-
-        $data['timetable_id'] = $attendance->timetable_id;
-        $data['time_slot_name'] = $attendance->timeTable->timeSlot->name;
-        $data['course_name'] = $attendance->course->name;
-        $data['room'] = $attendance->timeTable->room->name;
-        $data['is_arrive'] = empty($isArrive) ? false: true;
-        $data['arrive_time'] = $detail->signin_time;
-        $data['arrive_type'] = $detail->typeText();
+        $week = $weeks->getScheduleWeekIndex();
+        $detailsDao = new AttendancesDetailsDao();
+        $detail = $detailsDao->getDetailByTimeTableIdAndWeekAndStudentId($timetableItem->id, $week, $user->id);
+        if(!empty($detail)) {
+            $data['arrive_time'] = $detail->signin_time;
+            $data['arrive_type'] = $detail->typeText();
+            $data['is_arrive'] = true;
+        }
 
         return  JsonBuilder::Success($data);
     }

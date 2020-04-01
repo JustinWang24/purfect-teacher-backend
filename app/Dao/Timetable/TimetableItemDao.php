@@ -995,4 +995,9 @@ class TimetableItemDao
     }
 
 
+    public function getTimeTableItemById($timeTableId) {
+        return TimetableItem::where('id',$timeTableId)->first();
+    }
+
+
 }
