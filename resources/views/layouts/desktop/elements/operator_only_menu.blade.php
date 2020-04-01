@@ -1,7 +1,7 @@
 <li class="nav-item">
     <a href="javascript:void(0);" class="nav-link nav-toggle">
-        <i class="material-icons">subtitles</i>
-        <span class="title">高级功能</span>
+        <i class="material-icons">settings</i>
+        <span class="title">系统设置</span>
         <span class="arrow"></span>
     </a>
     <ul class="sub-menu">
