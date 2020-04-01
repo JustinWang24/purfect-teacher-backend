@@ -20,7 +20,7 @@ class Factory
     public static function GetStepLogic($leave, $currentUser, $userId) {
         // 判断当前状态是否为请假
         if(empty($leave)) {
-            if($currentUser->id == $userId) {
+            if(!empty($currentUser) && $currentUser->id == $userId) {
                 // 签到
                 $logic = new SignIn();
             } else {
