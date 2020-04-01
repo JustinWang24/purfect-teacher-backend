@@ -22,6 +22,7 @@ class WorkController extends Controller
     public function assess() {
         $data = [
             'url' => '',
+            'image' => asset('/storage/users/171985/236795ca-9413-46bb-9812-316569e22b69.jpg'),
         ];
         return JsonBuilder::Success($data);
     }
