@@ -33,9 +33,14 @@ class Flow extends Model implements IFlow
             IFlow::TYPE_1_01 => IFlow::TYPE_1_01_TXT,
             IFlow::TYPE_1_02 => IFlow::TYPE_1_02_TXT,
             IFlow::TYPE_1_03 => IFlow::TYPE_1_03_TXT,
+            IFlow::TYPE_1_04 => IFlow::TYPE_1_04_TXT,
+            IFlow::TYPE_1_05 => IFlow::TYPE_1_05_TXT,
+            IFlow::TYPE_1_06 => IFlow::TYPE_1_06_TXT,
 
             IFlow::TYPE_2_01 => IFlow::TYPE_2_01_TXT,
             IFlow::TYPE_2_02 => IFlow::TYPE_2_02_TXT,
+            IFlow::TYPE_2_03 => IFlow::TYPE_2_03_TXT,
+            IFlow::TYPE_2_04 => IFlow::TYPE_2_04_TXT,
 
             IFlow::TYPE_3_01 => IFlow::TYPE_3_01_TXT,
             IFlow::TYPE_3_02 => IFlow::TYPE_3_02_TXT,
@@ -49,10 +54,15 @@ class Flow extends Model implements IFlow
             case IFlow::TYPE_1_01:
             case IFlow::TYPE_1_02:
             case IFlow::TYPE_1_03:
+            case IFlow::TYPE_1_04:
+            case IFlow::TYPE_1_05:
+            case IFlow::TYPE_1_06:
                 $position = IFlow::POSITION_1;
                 break;
             case IFlow::TYPE_2_01:
             case IFlow::TYPE_2_02:
+            case IFlow::TYPE_2_03:
+            case IFlow::TYPE_2_04:
                 $position = IFlow::POSITION_2;
                 break;
             case IFlow::TYPE_3_01:
@@ -71,12 +81,17 @@ class Flow extends Model implements IFlow
                 IFlow::TYPE_1_01 => IFlow::TYPE_1_01_TXT,
                 IFlow::TYPE_1_02 => IFlow::TYPE_1_02_TXT,
                 IFlow::TYPE_1_03 => IFlow::TYPE_1_03_TXT,
+                IFlow::TYPE_1_04 => IFlow::TYPE_1_04_TXT,
+                IFlow::TYPE_1_05 => IFlow::TYPE_1_05_TXT,
+                IFlow::TYPE_1_06 => IFlow::TYPE_1_06_TXT,
             ];
         }
         if ($position == IFlow::POSITION_2) {
             return [
                 IFlow::TYPE_2_01 => IFlow::TYPE_2_01_TXT,
                 IFlow::TYPE_2_02 => IFlow::TYPE_2_02_TXT,
+                IFlow::TYPE_2_03 => IFlow::TYPE_2_03_TXT,
+                IFlow::TYPE_2_04 => IFlow::TYPE_2_04_TXT,
             ];
         }
         if ($position == IFlow::POSITION_3) {
