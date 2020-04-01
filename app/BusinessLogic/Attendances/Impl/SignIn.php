@@ -8,6 +8,7 @@
 
 namespace App\BusinessLogic\Attendances\Impl;
 
+use Carbon\Carbon;
 use App\Models\AttendanceSchedules\AttendancesDetail;
 use App\Models\AttendanceSchedules\Attendance as AttendanceModel;
 
@@ -20,6 +21,7 @@ class SignIn
             $save = [
                 'mold'=>AttendancesDetail::MOLD_SIGN_IN,
                 'type'=>$type,
+                'signin_time' => Carbon::now(),
                 ];
             // 更新详情表状态
             $attendancesDetail->update($save);

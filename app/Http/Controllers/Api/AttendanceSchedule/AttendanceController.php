@@ -4,18 +4,16 @@
 namespace App\Http\Controllers\Api\AttendanceSchedule;
 
 
-use App\Dao\AttendanceSchedules\AttendanceCourseTeacherDao;
-use App\Dao\Schools\SchoolDao;
-use App\Dao\Timetable\TimeSlotDao;
-use App\Http\Requests\MyStandardRequest;
-use App\Models\AttendanceSchedules\Attendance;
-use App\Models\AttendanceSchedules\AttendanceCourseTeacher;
-use App\Utils\Time\GradeAndYearUtil;
 use Carbon\Carbon;
 use App\Utils\JsonBuilder;
+use App\Dao\Schools\SchoolDao;
+use App\Dao\Timetable\TimeSlotDao;
 use App\Dao\Courses\CourseMajorDao;
 use App\Http\Controllers\Controller;
 use App\Dao\Timetable\TimetableItemDao;
+use App\Http\Requests\MyStandardRequest;
+use App\Models\AttendanceSchedules\Attendance;
+use App\BusinessLogic\Attendances\Attendances;
 use App\Dao\AttendanceSchedules\AttendancesDao;
 use App\Models\AttendanceSchedules\AttendancesDetail;
 use App\Dao\AttendanceSchedules\AttendancesDetailsDao;
@@ -256,11 +254,17 @@ class AttendanceController extends Controller
      * 学生扫码云班牌
      * @param MyStandardRequest $request
      * @return string
+     * @throws \Exception
      */
     public function studentSweepQrCode(MyStandardRequest $request)
     {
         $code = json_decode($request->get('code'), true);
+
         $user = $request->user();
+        $schoolId = $user->getSchoolId();
+        $dao = new SchoolDao();
+        $school = $dao->getSchoolById($schoolId);
+        $configuration = $school->configuration;
 
         $timetableItemDao = new TimetableItemDao;
         $item = $timetableItemDao->getCurrentItemByUser($user);
@@ -269,20 +273,20 @@ class AttendanceController extends Controller
             return JsonBuilder::Error('未找到当前学生要上的的课程');
         }
 
-        $attendancesDetailsDao = new AttendancesDetailsDao;
-        $isArrive = $attendancesDetailsDao->getDetailByTimeTableIdAndStudentId($item, $user);
+        $weeks = $configuration->getScheduleWeek(Carbon::now(), null, $code['term']);
 
-        $data['timetable_id'] = $item->id;
-        $data['time_slot_name'] = $item->timeSlot->name;
-        $data['course_name'] = $item->course->name;
-        $data['room'] = $item->room->name;
+        $week = $weeks->getScheduleWeekIndex() ?? '';
+
+        $attendance = Attendances::getAttendance($item,$week,AttendancesDetail::TYPE_SWEEP_CODE);
+        $detail = $attendance->details->where('student_id',$user->id)->first();
+
+        $data['timetable_id'] = $attendance->timetable_id;
+        $data['time_slot_name'] = $attendance->timeTable->timeSlot->name;
+        $data['course_name'] = $attendance->course->name;
+        $data['room'] = $attendance->timeTable->room->name;
         $data['is_arrive'] = empty($isArrive) ? false: true;
-        $data['arrive_time'] = '';
-        $data['arrive_type'] = '';
-        if(!empty($isArrive)) {
-            $data['arrive_time'] = $isArrive->created_at->format('Y-m-d H:i');
-            $data['arrive_type'] = $isArrive->typeText();
-        }
+        $data['arrive_time'] = $detail->signin_time;
+        $data['arrive_type'] = $detail->typeText();
 
         return  JsonBuilder::Success($data);
     }
