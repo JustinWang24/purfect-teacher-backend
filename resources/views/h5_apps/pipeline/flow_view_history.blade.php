@@ -86,7 +86,7 @@
                 @foreach($option['value'] as $file)
                 <div class="reason option" data-url="{{ $file['url'] }}">
                     <span>{{ $file['file_name'] }}</span>
-                    <a style="color: #333333;" href="{{ $file['url'] }}">预览</a>
+                    <a href="{{ $file['url'] }}">预览</a>
                 </div>
                 @endforeach
             </div>
