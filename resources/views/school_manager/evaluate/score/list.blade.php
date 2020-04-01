@@ -4,7 +4,7 @@
     <div class="col-sm-12 col-md-12 col-xl-12">
         <div class="card">
             <div class="card-head">
-                <header>评分列表</header>
+                <header>签到评分</header>
             </div>
 
             <div class="card-body">
@@ -18,7 +18,9 @@
                                 <th>教师</th>
                                 <th>学年</th>
                                 <th>学期</th>
+                                <th>星期</th>
                                 <th>课程</th>
+                                <th>课节</th>
                                 <th>班级</th>
                                 <th>时间</th>
                                 <th>操作</th>
@@ -31,7 +33,9 @@
                                     <td>{{ $val->teacher->name }}</td>
                                     <td>{{ $val->year }}学年</td>
                                     <td>{{ $val->getTerm() }}</td>
+                                    <td>{{ $val->timeTable->getWeekIndex() }}</td>
                                     <td>{{ $val->course->name }}</td>
+                                    <td>{{ $val->timeTable->timeSlot->name }}</td>
                                     <td>{{ $val->grade->name }}</td>
 
                                     <td>{{ $val->created_at }}</td>

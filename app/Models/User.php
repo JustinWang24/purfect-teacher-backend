@@ -203,8 +203,8 @@ class User extends Authenticatable implements HasMobilePhone, HasDeviceId, IUser
             if(count($gus) > 0){
                 return $gus[0]->school_id;
             }
-        } else {
-             return $this->gradeUser->school_id;
+        }elseif ($this->isRegisteredUsers()) {
+            return $this->gradeUser->school_id;
         }
     }
 

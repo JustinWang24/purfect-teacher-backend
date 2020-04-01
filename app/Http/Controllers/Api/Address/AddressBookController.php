@@ -96,14 +96,12 @@ class AddressBookController extends Controller
          */
         $user = $request->user();
 
-
         if(!$user){
             $uuid = $request->uuid();
             $userDao = new UserDao;
             $user = $userDao->getUserByUuid($uuid);
         }
         $schoolId = $user ? $user->getSchoolId() : null;
-
         if (!$schoolId) {
             // 检查是否提交了学校的 uuid
             $dao = new SchoolDao();
