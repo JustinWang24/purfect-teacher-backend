@@ -253,7 +253,6 @@ class WelcomeUserReportDao
         {
             // 是否报到
 			if (!empty($reportOneInfo->complete_date)) {
-            {
                 return array('status' => 1, 'notice' => '已完成', 'message' => '');
             } else {
                 // 如果学校关闭迎新,不能迎新了.
