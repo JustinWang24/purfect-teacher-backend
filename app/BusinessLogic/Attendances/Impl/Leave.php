@@ -15,14 +15,10 @@ use App\Models\AttendanceSchedules\Attendance as AttendanceModel;
 class Leave
 {
 
-    public function saveData(AttendanceModel $attendance, AttendancesDetail $attendancesDetail) {
+    public function saveData(AttendanceModel $attendance, AttendancesDetail $attendancesDetail, $type) {
 
         // 当前状态不等于请假
         if($attendancesDetail->mold != AttendancesDetail::MOLD_LEAVE) {
-
-            // 更新详情状态
-            $save = ['mold'=>AttendancesDetail::MOLD_LEAVE];
-            $attendancesDetail->update($save);
 
             // 更新主表数据
             if($attendancesDetail->mold == AttendancesDetail::MOLD_SIGN_IN) {
@@ -30,6 +26,11 @@ class Leave
             } else {
                 $field = 'missing_number';
             }
+
+            // 更新详情状态
+            $save = ['mold'=>AttendancesDetail::MOLD_LEAVE];
+            $attendancesDetail->update($save);
+
 
             $attendance->increment('leave_number'); //请假人数 +1
             $attendance->decrement($field); // 签到或旷课人数 —1
