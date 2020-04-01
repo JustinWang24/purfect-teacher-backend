@@ -204,7 +204,9 @@ class ImporterUsers extends AbstractImporter
             "是否建档立卡",
             "是否农村低保",
             "是否农村特困",
-            "是否残疾"
+            "是否残疾",
+            "专业",
+            "班级"
         ];
     }
 
