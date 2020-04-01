@@ -92,19 +92,29 @@ interface IFlow extends IPersistent
     const TYPE_1_01 = 101;
     const TYPE_1_01_TXT = '财务管理';
     const TYPE_1_02 = 102;
-    const TYPE_1_02_TXT = '固定资产';
+    const TYPE_1_02_TXT = '资产管理';
     const TYPE_1_03 = 103;
     const TYPE_1_03_TXT = '行政管理';
+    const TYPE_1_04 = 104;
+    const TYPE_1_04_TXT = '考勤管理';
+    const TYPE_1_05 = 105;
+    const TYPE_1_05_TXT = '人事管理';
+    const TYPE_1_06 = 106;
+    const TYPE_1_06_TXT = '档案合同';
 
     const TYPE_2_01 = 201;
-    const TYPE_2_01_TXT = '日常申请';
+    const TYPE_2_01_TXT = '日常事务';
     const TYPE_2_02 = 202;
-    const TYPE_2_02_TXT = '资助中心';
+    const TYPE_2_02_TXT = '贫困补助';
+    const TYPE_2_03 = 203;
+    const TYPE_2_03_TXT = '评优评奖';
+    const TYPE_2_04 = 204;
+    const TYPE_2_04_TXT = '其他';
 
     const TYPE_3_01 = 301;
-    const TYPE_3_01_TXT = '考勤管理';
+    const TYPE_3_01_TXT = '考勤辅助';
     const TYPE_3_02 = 302;
-    const TYPE_3_02_TXT = '日常审批';
+    const TYPE_3_02_TXT = '设备使用';
 
 
     //@TODO pipeline待删除 以下随便定义了几个流程的分类
