@@ -7,7 +7,7 @@
     <ul class="sub-menu">
         <li class="nav-item">
             <a href="{{ route('school_manager.contents.news-manager',['uuid'=>session('school.uuid'),'type'=>\App\Models\Schools\News::TYPE_SCIENCE]) }}" class="nav-link">
-                <span class="title">科技成果</span>
+                <span class="title">科研成果</span>
             </a>
         </li>
         {{--<li class="nav-item">--}}
