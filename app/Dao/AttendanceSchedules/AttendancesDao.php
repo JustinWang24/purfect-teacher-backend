@@ -3,17 +3,14 @@
 namespace App\Dao\AttendanceSchedules;
 
 
-use App\BusinessLogic\Attendances\Attendances;
-use App\Dao\Students\StudentLeaveDao;
 use App\User;
-use App\Utils\Misc\ConfigurationTool;
 use Carbon\Carbon;
 use App\Dao\Schools\SchoolDao;
-use Illuminate\Support\Facades\DB;
+use App\Utils\Misc\ConfigurationTool;
 use App\Utils\Time\GradeAndYearUtil;
 use App\Models\Timetable\TimetableItem;
+use App\BusinessLogic\Attendances\Attendances;
 use App\Models\AttendanceSchedules\Attendance;
-use App\Models\AttendanceSchedules\AttendancesDetail;
 
 class AttendancesDao
 {
