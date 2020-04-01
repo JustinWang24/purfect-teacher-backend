@@ -3,17 +3,14 @@
 namespace App\Dao\AttendanceSchedules;
 
 
-use App\BusinessLogic\Attendances\Attendances;
-use App\Dao\Students\StudentLeaveDao;
 use App\User;
-use App\Utils\Misc\ConfigurationTool;
 use Carbon\Carbon;
 use App\Dao\Schools\SchoolDao;
-use Illuminate\Support\Facades\DB;
+use App\Utils\Misc\ConfigurationTool;
 use App\Utils\Time\GradeAndYearUtil;
 use App\Models\Timetable\TimetableItem;
+use App\BusinessLogic\Attendances\Attendances;
 use App\Models\AttendanceSchedules\Attendance;
-use App\Models\AttendanceSchedules\AttendancesDetail;
 
 class AttendancesDao
 {
@@ -49,7 +46,7 @@ class AttendancesDao
         $weeks = $configuration->getScheduleWeek($now, null, $term);
         $week = $weeks->getScheduleWeekIndex();
 
-        $attendance = $this->isAttendanceByTimetableAndWeek($item,$week,$type);
+        $attendance = $this->isAttendanceByTimetableAndWeek($item,$week,$user,$type);
         return $attendance;
 
     }
@@ -255,16 +252,17 @@ class AttendancesDao
         return Attendance::where($map)->whereIn('timetable_id', $timetableIds)->get();
     }
 
+
     /**
-     * 判断是否有签到主表
      * @param TimetableItem $timetable
      * @param $week
-     * @param null $type 签到类型
+     * @param User|null $user
+     * @param null $type
      * @return mixed
      * @throws \Exception
      */
-    public function isAttendanceByTimetableAndWeek(TimetableItem $timetable, $week,$type = null ) {
-        return Attendances::getAttendance($timetable, $week, $type);
+    public function isAttendanceByTimetableAndWeek(TimetableItem $timetable, $week,User $user = null, $type = null ) {
+        return Attendances::getAttendance($timetable, $week, $user,$type);
     }
 
 

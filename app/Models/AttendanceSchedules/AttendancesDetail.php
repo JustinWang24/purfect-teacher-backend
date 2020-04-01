@@ -4,6 +4,7 @@
 namespace App\Models\AttendanceSchedules;
 
 use App\User;
+use Carbon\Carbon;
 use App\Models\Timetable\TimetableItem;
 use Illuminate\Database\Eloquent\Model;
 
@@ -11,7 +12,7 @@ class AttendancesDetail extends Model
 {
     protected $fillable = ['attendance_id', 'course_id', 'timetable_id',
         'student_id', 'year', 'term', 'type', 'week', 'mold', 'status',
-        'reason', 'weekday_index', 'score', 'remark'
+        'reason', 'weekday_index', 'score', 'remark', 'signin_time'
     ];
 
     // 签到类型
@@ -72,5 +73,10 @@ class AttendancesDetail extends Model
     public function getMold() {
         $allMold = $this->allMold();
         return $allMold[$this->mold] ?? '';
+    }
+
+
+    public function getTeacherSignInTimeAttribute($value) {
+        return Carbon::parse($value)->format('Y-m-d H:i');
     }
 }

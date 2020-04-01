@@ -130,12 +130,26 @@
         .van-field__control {
             color: #4EA5FE !important;
         }
+        .van-cell__value {
+            padding: 0
+        }
+        pre {
+            margin: 0;
+        }
     }
     input.van-field__control {
         text-align: right;
     }
     .van-action-sheet {
         height: 80%;
+    }
+    .flowSub {
+        background-image: linear-gradient(to right, #66D9FF, #4EA5FE);
+        border: none;
+        height: 35px;
+        line-height: 35px;
+        width: 238px;
+        margin: 0 auto
     }
     //.picker-content {
     //  min-height: 100%;

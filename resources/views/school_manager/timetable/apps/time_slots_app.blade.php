@@ -114,7 +114,7 @@
                         <div class="clearfix"></div>
                     </div>
                     <div class="form-group mt-4">
-                        <label>本学年秋季开学时间</label>
+                        <label>本学年春季开学时间</label>
                         <div class="clearfix"></div>
                         <select class="form-control pull-left mr-2" name="term_start[term2][month]" style="width: 20%;">
                             @foreach($months as $month)

@@ -4,18 +4,16 @@
 namespace App\Http\Controllers\Api\AttendanceSchedule;
 
 
-use App\Dao\AttendanceSchedules\AttendanceCourseTeacherDao;
-use App\Dao\Schools\SchoolDao;
-use App\Dao\Timetable\TimeSlotDao;
-use App\Http\Requests\MyStandardRequest;
-use App\Models\AttendanceSchedules\Attendance;
-use App\Models\AttendanceSchedules\AttendanceCourseTeacher;
-use App\Utils\Time\GradeAndYearUtil;
 use Carbon\Carbon;
 use App\Utils\JsonBuilder;
+use App\Dao\Schools\SchoolDao;
+use App\Dao\Timetable\TimeSlotDao;
 use App\Dao\Courses\CourseMajorDao;
 use App\Http\Controllers\Controller;
 use App\Dao\Timetable\TimetableItemDao;
+use App\Http\Requests\MyStandardRequest;
+use App\Models\AttendanceSchedules\Attendance;
+use App\BusinessLogic\Attendances\Attendances;
 use App\Dao\AttendanceSchedules\AttendancesDao;
 use App\Models\AttendanceSchedules\AttendancesDetail;
 use App\Dao\AttendanceSchedules\AttendancesDetailsDao;
@@ -256,6 +254,7 @@ class AttendanceController extends Controller
      * 学生扫码云班牌
      * @param MyStandardRequest $request
      * @return string
+     * @throws \Exception
      */
     public function studentSweepQrCode(MyStandardRequest $request)
     {
@@ -269,19 +268,28 @@ class AttendanceController extends Controller
             return JsonBuilder::Error('未找到当前学生要上的的课程');
         }
 
-        $attendancesDetailsDao = new AttendancesDetailsDao;
-        $isArrive = $attendancesDetailsDao->getDetailByTimeTableIdAndStudentId($item, $user);
+        $timetableItem = $timetableItemDao->getTimeTableItemById($code['itme_id']);
 
-        $data['timetable_id'] = $item->id;
-        $data['time_slot_name'] = $item->timeSlot->name;
-        $data['course_name'] = $item->course->name;
-        $data['room'] = $item->room->name;
-        $data['is_arrive'] = empty($isArrive) ? false: true;
-        $data['arrive_time'] = '';
-        $data['arrive_type'] = '';
-        if(!empty($isArrive)) {
-            $data['arrive_time'] = $isArrive->created_at->format('Y-m-d H:i');
-            $data['arrive_type'] = $isArrive->typeText();
+        $data = [
+            'timetable_id' => $timetableItem->id,
+            'time_slot_name' => $timetableItem->timeSlot->name,
+            'course_name' => $timetableItem->course->name,
+            'room' => $timetableItem->room->name,
+            'is_arrive' => false,
+        ];
+        // 查询是否已签到
+        $schoolId = $user->getSchoolId();
+        $schoolDao = new SchoolDao();
+        $school = $schoolDao->getSchoolById($schoolId);
+        $configuration = $school->configuration;
+        $weeks = $configuration->getScheduleWeek(Carbon::now(), null, $code['term']);
+        $week = $weeks->getScheduleWeekIndex();
+        $detailsDao = new AttendancesDetailsDao();
+        $detail = $detailsDao->getDetailByTimeTableIdAndWeekAndStudentId($timetableItem->id, $week, $user->id);
+        if(!empty($detail) && $detail->mold == AttendancesDetail::MOLD_SIGN_IN) {
+            $data['arrive_time'] = $detail->signin_time;
+            $data['arrive_type'] = $detail->typeText();
+            $data['is_arrive'] = true;
         }
 
         return  JsonBuilder::Success($data);

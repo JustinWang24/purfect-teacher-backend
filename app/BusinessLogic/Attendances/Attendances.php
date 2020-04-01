@@ -9,6 +9,7 @@
 namespace App\BusinessLogic\Attendances;
 
 
+use App\User;
 use Illuminate\Support\Facades\DB;
 use App\Dao\Students\StudentLeaveDao;
 use App\Models\Timetable\TimetableItem;
@@ -20,15 +21,17 @@ use App\Models\AttendanceSchedules\Attendance as AttendanceModel;
 class Attendances
 {
 
+
     /**
      * 获取签到主表信息
      * @param TimetableItem $timetableItem
-     * @param int $week 学周
-     * @param null  $type 签到类型
+     * @param $week
+     * @param User|null $currentUser
+     * @param null $type
      * @return mixed
      * @throws \Exception
      */
-    public static function getAttendance(TimetableItem $timetableItem, $week, $type = null) {
+    public static function getAttendance(TimetableItem $timetableItem, $week, User  $currentUser = null,$type = null) {
         $map = ['timetable_id'=>$timetableItem->id, 'week'=>$week];
         $attendance = AttendanceModel::where($map)->first();
         try{
@@ -39,7 +42,7 @@ class Attendances
             }
 
             // 初始化签到详情表
-            self::createAttendancesDetail($attendance, $type);
+            self::createAttendancesDetail($attendance,$currentUser, $type);
             DB::commit();
             return $attendance;
         } catch (\Exception $e) {
@@ -51,12 +54,14 @@ class Attendances
     }
 
 
+
     /**
      * 初始化签到详情表
      * @param $attendance
+     * @param $currentUser
      * @param $type
      */
-    private static function createAttendancesDetail($attendance, $type) {
+    private static function createAttendancesDetail($attendance,$currentUser, $type) {
         $gradeUser = $attendance->grade->gradeUser;
         $studentLeaveDao = new StudentLeaveDao();
         foreach ($gradeUser as $key => $val) {
@@ -85,8 +90,10 @@ class Attendances
                 // 添加签到默认初始数据
                 AttendancesDetail::create($details);
             } else {
-                $logic = Factory::GetStepLogic($leave, $type);
-                $logic->saveData($attendance, $detailInfo, $type);
+                $logic = Factory::GetStepLogic($leave, $currentUser,$val->user_id);
+                if(!is_null($logic)) {
+                    $logic->saveData($attendance, $detailInfo, $type);
+                }
             }
 
         }

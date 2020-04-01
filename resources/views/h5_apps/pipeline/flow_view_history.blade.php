@@ -70,19 +70,23 @@
             <el-divider></el-divider>
             @foreach($options as $option)
             @if ($option['type'] == 'image' && !empty($option['value']))
-            <h3>{{ $option['title'] }}</h3>
+            <h5>
+                <p>{{ $option['title'] }}</p>
+            </h5>
             <div class="imageBox">
                 @foreach($option['value'] as $img)
-                <img src="{{ $img }}" alt="" class="image">
+                <a href="#"><img src="{{ $img }}" alt="" class="image"></a>
                 @endforeach
             </div>
             @elseif ($option['type'] == 'files' && !empty($option['value']))
-            <h3>{{ $option['title'] }}</h3>
+            <h5>
+                <p>{{ $option['title'] }}</p>
+            </h5>
             <div class="information" style="padding-bottom: 10px;">
                 @foreach($option['value'] as $file)
                 <div class="reason option" data-url="{{ $file['url'] }}">
-                    <a style="color: #333333;" href="{{ $file['url'] }}">{{ $file['file_name'] }}</a>
-                    <span>预览</span>
+                    <span>{{ $file['file_name'] }}</span>
+                    <a href="{{ $file['url'] }}">预览</a>
                 </div>
                 @endforeach
             </div>
@@ -117,16 +121,16 @@
                         </div>
                     </el-timeline-item>
                     @if ($startAction->userFlow->done == \App\Utils\Pipeline\IUserFlow::REVOKE)
-                        <el-timeline-item key="0" icon="el-icon-more">
-                            <div style="display: flex;justify-content: space-between;align-items: center;">
-                                <img src="@if ($startUser->profile){{ $startUser->profile->avatar }} @endif" alt="" style="width: 40px; height: 40px;border-radius: 50%;vertical-align: middle;">
-                                <div style="flex: 1;margin-left: 20px;">
-                                    <p style="margin: 0;">{{ $startUser->name }}</p>
-                                    <p style="margin: 0;">{{ substr($startAction->userFlow->updated_at, 0, 16) }}</p>
-                                </div>
-                                <span style="text-align: right;font-size: 13px;color: #4FA8FE;"> 已撤回 </span>
+                    <el-timeline-item key="0" icon="el-icon-refresh-left">
+                        <div style="display: flex;justify-content: space-between;align-items: center;">
+                            <img src="@if ($startUser->profile){{ $startUser->profile->avatar }} @endif" alt="" style="width: 40px; height: 40px;border-radius: 50%;vertical-align: middle;">
+                            <div style="flex: 1;margin-left: 20px;">
+                                <p style="margin: 0;">{{ $startUser->name }}</p>
+                                <p style="margin: 0;">{{ substr($startAction->userFlow->updated_at, 0, 16) }}</p>
                             </div>
-                        </el-timeline-item>
+                            <span style="text-align: right;font-size: 13px;color: #ababab;"> 已撤回 </span>
+                        </div>
+                    </el-timeline-item>
                     @endif
                     @foreach($handlers as $key => $handler)
                     @switch($handlerIcon[$key])
@@ -184,16 +188,16 @@
             </div>
         </div>
         @if ($showActionEditForm)
-        <div style="display: flex;justify-content: center;background-color: #fff;padding-top: 10px;">
-            <el-button type="primary" style="width: 40%;border-radius: 50px;margin-bottom: 20px;" @click="dialogVisible = true">审批</el-button>
+        <div class="information" style="padding-top: 30px">
+            <p class="btn" @click="dialogVisible = true">审批</p>
         </div>
         @endif
         @if ($startAction->userFlow->done == \App\Utils\Pipeline\IUserFlow::IN_PROGRESS && $startUser->id == $user->id)
-        <div style="display: flex;justify-content: center;background-color: #fff;padding-top: 10px;">
-            <el-button type="primary" style="width: 40%;border-radius: 50px;margin-bottom: 20px;" @click="tips = true">撤销</el-button>
+        <div class="information" style="padding-top: 30px">
+            <p class="btn" @click="tips = true">撤销</p>
         </div>
         @endif
-        <el-dialog title="审批" :visible.sync="dialogVisible" width="90%" center>
+        <el-dialog title="审批" :visible.sync="dialogVisible" width="90%" center v-cloak>
             <el-input type="textarea" :rows="6" placeholder="请输入审批意见" v-model="textarea" maxlength="100"></el-input>
             <span style="position: relative;top: -18px;left: 85%;">@{{textarea.length}}/100</span>
             <span slot="footer" class="dialog-footer">
@@ -201,7 +205,7 @@
                 <el-button style="border-radius: 40px;width: 80px;" type="primary" @click="button(3)">同 意</el-button>
             </span>
         </el-dialog>
-        <el-dialog title="提示" :visible.sync="tips" width="90%" center>
+        <el-dialog title="提示" :visible.sync="tips" width="90%" center v-cloak>
             <span style="padding: 20px 0;display: inline-block;">您确认撤销此申请吗?</span>
             <span slot="footer" class="dialog-footer">
                 <el-button @click="tips = false">取 消</el-button>
@@ -209,9 +213,19 @@
             </span>
         </el-dialog>
     </div>
-    @include(
-    'reusable_elements.section.file_manager_component_mobile',
-    ['pickFileHandler'=>'pickFileHandler']
-    )
 </div>
+<style>
+    .btn {
+        width: 60%;
+        height: 35px;
+        text-align: center;
+        line-height: 35px;
+        font-size: 14px;
+        color: #fff;
+        margin: 0 auto;
+        background-image: url("{{asset('assets/img/bgImg.png')}}");
+        background-size: 100%;
+        background-repeat: no-repeat;
+    }
+</style>
 @endsection

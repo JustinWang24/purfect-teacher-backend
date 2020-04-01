@@ -9,7 +9,6 @@
 namespace App\Http\Controllers\Api\Study;
 
 
-use App\Models\AttendanceSchedules\AttendancesDetail;
 use Carbon\Carbon;
 use App\Utils\JsonBuilder;
 use App\Dao\Schools\SchoolDao;
@@ -21,6 +20,7 @@ use App\Dao\Timetable\TimetableItemDao;
 use App\Dao\Courses\Lectures\LectureDao;
 use App\Http\Requests\MyStandardRequest;
 use App\Dao\AttendanceSchedules\AttendancesDao;
+use App\Models\AttendanceSchedules\AttendancesDetail;
 use App\Dao\AttendanceSchedules\AttendancesDetailsDao;
 use App\Dao\ElectiveCourses\TeacherApplyElectiveCourseDao;
 
@@ -39,24 +39,20 @@ class IndexController extends Controller
         $month = $date->month;
         $term = $configuration->guessTerm($month);
         $timetableItemDao = new TimetableItemDao();
-//        $item = $timetableItemDao->getCurrentItemByUser($user, $date);  // 获取当前时间的课程
-        $item = $timetableItemDao->getUnEndCoursesByUser($user, $date); // 获取今天未结束的课程
-//        dd($item);
+        // 获取今天未结束的课程
+        $item = $timetableItemDao->getUnEndCoursesByUser($user, $date);
         $teacherApplyElectiveDao = new TeacherApplyElectiveCourseDao();
         $electiveTime = $teacherApplyElectiveDao->getElectiveCourseStartAndEndTime($schoolId, $term);
-//        dd($electiveTime);
+
         $electiveStart = Carbon::parse($electiveTime[0]);
         $electiveEnd = Carbon::parse($electiveTime[1]);
         $selectCourse = [
-//            'status' => $electiveStart->timestamp < $date->timestamp && $electiveEnd->timestamp > $date->timestamp, // true 开启 false 关闭
             'status' => $configuration->apply_status, // true 开启 false 关闭
             'time' => $electiveStart->format('Y年m月d日') . '-' . $electiveEnd->format('Y年m月d日'),
             'msg' => '大家选课期间请看好选课程对应的学分',
         ];
 
         $timetable = (object)[];
-
-
 
         $evaluateTeacher = false;
         $status = 0;

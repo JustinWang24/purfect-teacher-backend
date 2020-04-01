@@ -43,15 +43,15 @@
         color: #333333;
         display: flex;
         justify-content: space-between;
-        a {
+        span {
           flex: 1;
           overflow: hidden;
           white-space: nowrap;
           text-overflow: ellipsis;
         }
-        span {
+        a {
           cursor: pointer;
-          color: #4EA5FE;
+          color: #4EA5FE !important;
         }
       }
       .el-divider--horizontal {

@@ -30,8 +30,8 @@ use App\User;
                                 <tr>
                                     <th>#</th>
                                     <th>所在校区</th>
+                                    <th style="width: 300px;">编号</th>
                                     <th>建筑物名称</th>
-                                    <th style="width: 300px;">简介</th>
                                     <th>房间数</th>
                                     <th></th>
                                 </tr>
@@ -43,8 +43,8 @@ use App\User;
                                         <td>
                                             {{ $parent->name }}
                                         </td>
-                                        <td>{{ $building->name }}</td>
                                         <td>{{ $building->description }}</td>
+                                        <td>{{ $building->name }}</td>
                                         <td class="text-center">
                                             <a class="anchor-rooms-counter" href="{{ route('school_manager.building.rooms',['uuid'=>$building->id,'by'=>'building']) }}">{{ count($building->rooms) }}</a>
                                         </td>

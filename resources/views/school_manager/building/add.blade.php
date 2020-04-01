@@ -17,13 +17,14 @@ use App\Utils\UI\Button;
                         <input type="hidden" id="building-campus-id" name="building[campus_id]" value="{{ $campus->id }}">
                         <input type="hidden" id="building-type" name="building[type]" value="{{ $type }}">
                         <div class="form-group">
+                            <label for="building-desc-input">建筑编号</label>
+                            <input required type="text" class="form-control" id="building-description-input" value="{{ $building->description }}" placeholder="建筑编号" name="building[description]">
+                        </div>
+                        <div class="form-group">
                             <label for="building-name-input">建筑名称</label>
                             <input required type="text" class="form-control" id="building-name-input" value="{{ $building->name }}" placeholder="建筑名称" name="building[name]">
                         </div>
-                        <div class="form-group">
-                            <label for="building-desc-input">简介</label>
-                            <textarea required class="form-control" name="building[description]" id="building-desc-input" cols="30" rows="10" placeholder="建筑简介">{{ $building->description }}</textarea>
-                        </div>
+
                         <?php
                         Button::Print(['id'=>'btn-create-building','text'=>trans('general.submit')], Button::TYPE_PRIMARY);
                         ?>&nbsp;

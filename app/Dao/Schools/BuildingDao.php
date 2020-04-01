@@ -10,6 +10,8 @@ namespace App\Dao\Schools;
 use App\Models\Schools\Building;
 use App\Models\Schools\Campus;
 use App\User;
+use App\Utils\JsonBuilder;
+use App\Utils\ReturnData\MessageBag;
 
 class BuildingDao
 {
@@ -30,28 +32,63 @@ class BuildingDao
         return Building::find($id);
     }
 
+
+    public function getBuildingByCode($schoolId, $code) {
+        return Building::where('school_id', $schoolId)
+            ->where('description', $code)
+            ->first();
+    }
+
+
     /**
      * @param $data
-     * @return Building
+     * @return MessageBag
      */
     public function createBuilding($data){
-        return Building::create($data);
+        $messageBag = new MessageBag(JsonBuilder::CODE_ERROR);
+        $building = $this->getBuildingByCode($data['school_id'], $data['description']);
+        if(!empty($building)) {
+            $messageBag->setMessage('建筑编号已存在');
+            return $messageBag;
+        }
+        $result = Building::create($data);
+        if($result) {
+            $messageBag->setCode(JsonBuilder::CODE_SUCCESS);
+            $messageBag->setMessage('创建成功');
+        } else {
+            $messageBag->setMessage('创建失败');
+        }
+        return $messageBag;
     }
 
     /**
      * 更新 building 数据
      * @param $data
-     * @param null $where
-     * @param null $whereValue
-     * @return mixed
+     * @return MessageBag
      */
-    public function updateBuilding($data, $where = null, $whereValue = null){
+    public function updateBuilding($data){
         $id = $data['id'];
         unset($data['id']);
-        if($where && $whereValue){
-            return Building::where($where, $whereValue)->update($data);
+        $map = [
+            ['school_id','=',$data['school_id']],
+            ['id', '<>', $id],
+            ['description','=',$data['description']]
+        ];
+        $info = Building::where($map)->first();
+        $messageBag = new MessageBag(JsonBuilder::CODE_ERROR);
+        if(!empty($info)) {
+            $messageBag->setMessage('建筑编号已存在');
+            return $messageBag;
         }
-        return Building::where('id', $id)->update($data);
+
+        $result = Building::where('id', $id)->update($data);
+        if($result !== false) {
+            $messageBag->setCode(JsonBuilder::CODE_SUCCESS);
+            $messageBag->setMessage('编辑成功');
+        } else {
+            $messageBag->setMessage('编辑失败');
+        }
+        return $messageBag;
     }
 
     /**

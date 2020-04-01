@@ -313,4 +313,22 @@ class AttendancesDetailsDao
             ->whereNotNull('remark')
             ->paginate(ConfigurationTool::DEFAULT_PAGE_SIZE);
     }
+
+
+    /**
+     * 根须课程表ID、学周、用户查询签到详情
+     * @param $timeTableId
+     * @param $week
+     * @param $studentId
+     * @return mixed
+     */
+    public function getDetailByTimeTableIdAndWeekAndStudentId($timeTableId, $week, $studentId) {
+        $map = [
+            'timetable_id'=>$timeTableId,
+            'week'=>$week,
+            'student_id'=>$studentId
+        ];
+
+        return AttendancesDetail::where($map)->first();
+    }
 }
