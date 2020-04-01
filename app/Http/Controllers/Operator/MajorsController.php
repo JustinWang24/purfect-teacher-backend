@@ -67,7 +67,7 @@ class MajorsController extends Controller
         $majorData = $request->getFormData();
         $dao = new MajorDao($request->user());
         $uuid = $majorData['department_id'];
-        $result = $dao->getMajorByCategoryCode($majorData['category_code'], $majorData['school_id']);
+        $result = $dao->getMajorByCategoryCode($majorData['id'], $majorData['category_code'], $majorData['school_id']);
 
         if ($result){
             FlashMessageBuilder::Push($request, FlashMessageBuilder::DANGER, $majorData['category_code'].'专业代码已经用了, 请重新添加');
