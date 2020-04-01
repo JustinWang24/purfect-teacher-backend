@@ -9,7 +9,7 @@
         <div class="wrap-login100" style="position: absolute; z-index: 9999; top: 20%; left: 36%;">
             <form class="login100-form validate-form" method="POST" action="{{ route('login') }}">
                 @csrf
-                <span class="login100-form-logo">
+                <span class="">
 						<img alt="" src="{{ asset('assets/img/logo-2.png') }}">
 					</span>
                 <span class="login100-form-title p-b-34 p-t-27">
