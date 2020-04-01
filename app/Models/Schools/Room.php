@@ -9,17 +9,26 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Room extends Model
 {
     use SoftDeletes;
-    const TYPE_CLASSROOM        = 1;                // 教室
-    const TYPE_INTELLIGENT_CLASSROOM = 2;    // 智慧教室
-    const TYPE_MEETING_ROOM     = 3;                // 会议室
-    const TYPE_OFFICE           = 4;                // 会议室
-    const TYPE_STUDENT_HOSTEL   = 5;                // 学生宿舍
+    const TYPE_CLASSROOM             = 1;                // 教室
+    const TYPE_INTELLIGENT_CLASSROOM = 2;                // 智慧教室
+    const TYPE_MEETING_ROOM          = 3;                // 智慧教室
+    const TYPE_OFFICE                = 4;                // 会议室
+    const TYPE_STUDENT_HOSTEL        = 5;                // 学生宿舍
+    const TYPE_WAREHOUSE             = 6;                // 仓库
+    const TYPE_ACCOUNTING_TRAINING   = 7;                // 实训实
+    const TYPE_COMPUTER              = 8;                // 微机室
+    const TYPE_REST                  = 9;                // 其他
 
-    const TYPE_CLASSROOM_TXT        = '教室';                //
-    const TYPE_INTELLIGENT_CLASSROOM_TXT = '智慧教室';    //
-    const TYPE_MEETING_ROOM_TXT     = '会议室';                //
-    const TYPE_OFFICE_TXT           = '教师办公室';                //
-    const TYPE_STUDENT_HOSTEL_TXT   = '学生宿舍';                //
+
+    const TYPE_CLASSROOM_TXT              = '教室';
+    const TYPE_INTELLIGENT_CLASSROOM_TXT  = '智慧教室';
+    const TYPE_MEETING_ROOM_TXT           = '会议室';
+    const TYPE_OFFICE_TXT                 = '教师办公室';
+    const TYPE_STUDENT_HOSTEL_TXT         = '学生宿舍';
+    const TYPE_WAREHOUSE_TEXT             = '仓库';
+    const TYPE_ACCOUNTING_TRAINING_TEXT   = '实训室';
+    const TYPE_COMPUTER_TEXT              = '微机室';
+    const TYPE_REST_TEXT                  = '其他';
 
 
 
@@ -59,6 +68,10 @@ class Room extends Model
             self::TYPE_MEETING_ROOM => self::TYPE_MEETING_ROOM_TXT,
             self::TYPE_OFFICE => self::TYPE_OFFICE_TXT,
             self::TYPE_STUDENT_HOSTEL => self::TYPE_STUDENT_HOSTEL_TXT,
+            self::TYPE_WAREHOUSE => self::TYPE_WAREHOUSE_TEXT,
+            self::TYPE_ACCOUNTING_TRAINING => self::TYPE_ACCOUNTING_TRAINING_TEXT,
+            self::TYPE_COMPUTER => self::TYPE_COMPUTER_TEXT,
+            self::TYPE_REST => self::TYPE_REST_TEXT
         ];
     }
 
