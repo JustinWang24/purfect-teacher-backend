@@ -116,6 +116,18 @@
                             <span style="text-align: right;font-size: 13px;color: #4FA8FE;"> 发起审批 </span>
                         </div>
                     </el-timeline-item>
+                    @if ($startAction->userFlow->done == \App\Utils\Pipeline\IUserFlow::REVOKE)
+                        <el-timeline-item key="0" icon="el-icon-more">
+                            <div style="display: flex;justify-content: space-between;align-items: center;">
+                                <img src="@if ($startUser->profile){{ $startUser->profile->avatar }} @endif" alt="" style="width: 40px; height: 40px;border-radius: 50%;vertical-align: middle;">
+                                <div style="flex: 1;margin-left: 20px;">
+                                    <p style="margin: 0;">{{ $startUser->name }}</p>
+                                    <p style="margin: 0;">{{ substr($startAction->userFlow->updated_at, 0, 16) }}</p>
+                                </div>
+                                <span style="text-align: right;font-size: 13px;color: #4FA8FE;"> 已撤回 </span>
+                            </div>
+                        </el-timeline-item>
+                    @endif
                     @foreach($handlers as $key => $handler)
                     @switch($handlerIcon[$key])
                     @case("success")
