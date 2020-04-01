@@ -265,7 +265,7 @@ class IndexController extends Controller
             'group_name'     => $profile->group_name,
             'gender'         => $profile->gender,
             'birthday'       => $profile->birthday,
-            'education'      => $profile->education,
+            'education'      => $profile->final_education,
             'degree'         => $profile->degree,
             'political_name' => $profile->political_name,
             'title'          => $profile->title,
