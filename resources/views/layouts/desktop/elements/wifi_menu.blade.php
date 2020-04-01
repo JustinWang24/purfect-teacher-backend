@@ -1,6 +1,6 @@
 <li class="nav-item">
     <a href="javascript:void(0);" class="nav-link nav-toggle">
-        <i class="material-icons">event_seat</i>
+        <i class="material-icons">wifi</i>
         <span class="title">WIFI</span>
         <span class="arrow"></span>
     </a>
