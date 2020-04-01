@@ -224,7 +224,6 @@ class RegistrationInformaticsDao
             $userProfile['uuid'] = $data['uuid'];
             $userProfile['api_token'] = $data['uuid'];
             $userProfile['user_id'] = $user->id;
-//            $userProfile['device']  = 0;
             $userProfile['year'] = $plan->year; // 这个应该是从招生中的入学年级来
             $userProfile['serial_number'] = 0;  // 学号还无法分配
             $userProfile['avatar'] = '/assets/img/dp.jpg'; // 用户默认的图片
@@ -248,6 +247,57 @@ class RegistrationInformaticsDao
             $bag->setCode(JsonBuilder::CODE_ERROR);
         }
         return $bag;
+    }
+
+
+
+    /**
+     * 修改报名基础信息
+     * @param $userId /用户id
+     * @param $data
+     * @param RecruitmentPlan $plan
+     * @throws Exception
+     * @return IMessageBag
+     */
+    public function eidtUser($user , $data, $plan)
+    {
+        if (empty($user)) return false;
+
+        // 修改字段信息
+        $userProfile['uuid'] = Uuid::uuid4()->toString();
+        $userProfile['user_id'] = $user->id;
+        $userProfile['year'] = $plan->year; // 这个应该是从招生中的入学年级来
+        $userProfile['serial_number'] = 0;  // 学号还无法分配
+        $userProfile['avatar'] = '/assets/img/dp.jpg'; // 用户默认的图片
+        $userProfile['gender'] = $data['gender']; // 性别
+        $userProfile['id_number'] = $data['id_number']; // 身份证号码
+        // $userProfile['nation_code'] = $data['nation_code']; // TODO...名族代码不知道传啥
+        $userProfile['nation_name'] = $data['nation_name']; // 名族名称
+        //$userProfile['political_code'] = $data['political_code']; // TODO...政治面貌code 不知道传啥
+        $userProfile['political_name'] = $data['political_name']; // 政治面貌名称
+        $userProfile['source_place'] = $data['source_place']; // 生源地
+        $userProfile['country'] = $data['country']; // 籍贯
+        $userProfile['contact_number'] = $data['mobile']; // 联系电话
+        $userProfile['birthday'] = $data['birthday']; // 出身年月
+        $userProfile['qq'] = $data['qq']; // QQ
+        $userProfile['wx'] = $data['wx']; // 微信
+        // $userProfile['email'] = $data['email']; // TODO...email student_profiles 原始表没有建字段
+        $userProfile['parent_name'] = $data['parent_name']; // 家长姓名
+        $userProfile['parent_mobile'] = $data['parent_mobile']; // 家长电话
+        $userProfile['examination_score'] = $data['examination_score']; // 中考分数
+        $userProfile['state'] = $data['province']; // 联系地址省份
+        $userProfile['city'] = $data['city']; // 联系地址市
+        $userProfile['area'] = $data['district']; // 联系地址区
+        $userProfile['address_line'] = $data['address']; // 详细地址
+        $profile = StudentProfile::where('user_id',$user->id)->update($userProfile);
+        if($profile){
+            return ['status'=>true,'message'=>'ok','data'=>[
+                'user'=>User::find($user->id),
+                'profile'=>$profile
+            ]];
+        }else {
+           return ['status'=>false,'message'=>'学生档案修改失败'];
+        }
     }
 
     /**

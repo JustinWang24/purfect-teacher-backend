@@ -117,6 +117,7 @@ class OpenMajorController extends Controller
      */
     public function signUp(PlanRecruitRequest $request)
     {
+        $user = $request->user();
         $formData = $request->getSignUpFormData();
         //验证提交的数据
         $rules = [
@@ -157,32 +158,41 @@ class OpenMajorController extends Controller
         // 获取专业信息
         $plan = $request->getPlan();
 
-        $dao =  new RegistrationInformaticsDao;
-        $profileDao = new StudentProfileDao();
-        $userId = $profileDao->getUserIdByIdNumberOrMobile($formData['id_number']/*$formData['mobile']*/);
-        if (!$userId) {
-            $msgBag = $dao->addUser($formData, $plan);
-            if ($msgBag->isSuccess()) {
-                $user = $msgBag->getData()['user'];
-            } else {
-                return JsonBuilder::Error($msgBag->getMessage());
-            }
-        } else {
-            $userDao = new UserDao();
-            $user = $userDao->getUserByIdOrUuid($userId);
-        }
-
         // 获取我是否可以报名
         $regDao = new RegistrationInformaticsDao();
-        $statusMessageArr = $regDao->getRegistrationInformaticsStatusInfo($user->getId(), $plan);
+        $statusMessageArr = $regDao->getRegistrationInformaticsStatusInfo($user->id, $plan);
         if ($statusMessageArr['status'] != 100) {
             return JsonBuilder::Error($statusMessageArr['message']);
         }
+
+        // 修改学生档案基础信息
+        $dao = new RegistrationInformaticsDao;
+        $returnData = $dao->eidtUser($user, $formData, $plan);
+        if ($returnData['status'] == true) {
+            $user = $returnData['data']['user'];
+        } else {
+            return JsonBuilder::Error($returnData['message']);
+        }
+        /*
+         $profileDao = new StudentProfileDao();
+            $userId = $profileDao->getUserIdByIdNumberOrMobile($formData['id_number'],$formData['mobile']);
+            if (!$userId) {
+                $msgBag = $dao->addUser($formData, $plan);
+                if ($msgBag->isSuccess()) {
+                    $user = $msgBag->getData()['user'];
+                } else {
+                    return JsonBuilder::Error($msgBag->getMessage());
+                }
+            } else {
+                $userDao = new UserDao();
+                $user = $userDao->getUserByIdOrUuid($userId);
+            }*/
 
         /**
          * signUp 中会执行包括报名总人数更新, 消息通知发布的功能
          */
         $result = $user ? $dao->signUp($formData, $user) : false;
+
           if ($result && $result->isSuccess()) {
             // 通知老师, 有个新报名的学生
             event(new ApplyRecruitmentPlanEvent($result->getData()));
