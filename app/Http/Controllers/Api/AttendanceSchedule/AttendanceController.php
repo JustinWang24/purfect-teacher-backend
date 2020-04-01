@@ -277,7 +277,8 @@ class AttendanceController extends Controller
 
         $week = $weeks->getScheduleWeekIndex() ?? '';
 
-        $attendance = Attendances::getAttendance($item,$week,AttendancesDetail::TYPE_SWEEP_CODE);
+        $type = AttendancesDetail::TYPE_SWEEP_CODE;
+        $attendance = Attendances::getAttendance($item,$week,$user, $type);
         $detail = $attendance->details->where('student_id',$user->id)->first();
 
         $data['timetable_id'] = $attendance->timetable_id;
