@@ -18,6 +18,14 @@ class SignIn
     public function saveData(AttendanceModel $attendance, AttendancesDetail $attendancesDetail, $type) {
         // 当前状态不等于签到
         if($attendancesDetail->mold != AttendancesDetail::MOLD_SIGN_IN) {
+
+            // 更新主表状态
+            if($attendancesDetail->mold == AttendancesDetail::MOLD_LEAVE) {
+                $field = 'leave_number'; // 请假人数
+            } else {
+                $field = 'missing_number'; // 旷课人数
+            }
+
             $save = [
                 'mold'=>AttendancesDetail::MOLD_SIGN_IN,
                 'type'=>$type,
@@ -25,12 +33,7 @@ class SignIn
                 ];
             // 更新详情表状态
             $attendancesDetail->update($save);
-            // 更新主表状态
-            if($attendancesDetail->mold == AttendancesDetail::MOLD_LEAVE) {
-                $field = 'leave_number'; // 请假人数
-            } else {
-                $field = 'missing_number'; // 旷课人数
-            }
+
             $attendance->increment('actual_number'); //签到人数 +1
             $attendance->decrement($field); // 请假或旷课人数 —1
         }

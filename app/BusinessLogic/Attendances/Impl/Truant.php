@@ -15,12 +15,9 @@ use App\Models\AttendanceSchedules\Attendance as AttendanceModel;
 class Truant
 {
 
-    public function saveData(AttendanceModel $attendance, AttendancesDetail $attendancesDetail) {
+    public function saveData(AttendanceModel $attendance, AttendancesDetail $attendancesDetail, $type) {
 
         if($attendancesDetail->mold != AttendancesDetail::MOLD_TRUANT) {
-            // 更新详情状态
-            $save = ['mold'=>AttendancesDetail::MOLD_TRUANT];
-            $attendancesDetail->update($save);
 
             // 更新主表数据
             if($attendancesDetail->mold == AttendancesDetail::MOLD_SIGN_IN) {
@@ -28,6 +25,12 @@ class Truant
             } else {
                 $field = 'leave_number';  // 请假人数
             }
+
+            // 更新详情状态
+            $save = ['mold'=>AttendancesDetail::MOLD_TRUANT];
+            $attendancesDetail->update($save);
+
+
             $attendance->increment('missing_number'); //旷课人数 +1
             $attendance->decrement($field); // 请假或签到人数 —1
 
