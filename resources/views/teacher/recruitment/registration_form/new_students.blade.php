@@ -71,15 +71,17 @@ use App\User;
                                         <td class="text-center">
                                             <div class="btn-group btn-group-solid">
                                                 <a href="{{ route('teacher.print.invitation',['uuid'=>$form->id]) }}" target="_blank" class="btn btn-default btn-xs">录取通知单</a>
-                                                <button type="button" class="btn btn-default btn-xs">分班</button>
+                                                @if(!$form->branchclass_at)
+                                                <button type="button" class="btn btn-default btn-xs" @click="btnClassFormFlag({{  $plan->id }}, {{ $form->id }} )">分班</button>
                                                 <a href="{{ route('teacher.cancel.enrolment',['uuid'=>$form->id]) }}" class="btn deepPink-bgcolor btn-xs btn-need-confirm">取消资格</a>
+                                                @endif
                                             </div>
                                         </td>
                                     </tr>
                                 @endforeach
                                 </tbody>
                             </table>
-                            <el-dialog title="决定录取" :visible.sync="showNoteFormFlag">
+                            <!--el-dialog title="决定录取" :visible.sync="showNoteFormFlag">
                                 <p>学生姓名: @{{ currentName }}</p>
                                 <p>报名专业: {{ $plan->title }} - {{ $plan->year }}年</p>
                                 <p class="text-info">一旦批准, 该学生将成为本校的正式学生.</p>
@@ -91,6 +93,31 @@ use App\User;
                                 <div slot="footer" class="dialog-footer">
                                     <el-button @click="showNoteFormFlag = false">取 消</el-button>
                                     <el-button type="primary" @click="submit">确 定</el-button>
+                                </div>
+                            </el-dialog-->
+
+                            <el-dialog title="分班操作" :visible.sync="showClassFormFlag">
+                                <p>学生姓名: @{{ currentName }}</p>
+                                <p>报名专业: {{ $plan->title }} - {{ $plan->year }}年</p>
+                                <p class="text-info" style="margin-bottom: 30px;">一旦批准, 该学生将成为本校的正式学生.</p>
+                                <el-form :model="form">
+                                    <el-form-item label="班级">
+                                        <el-select v-model="classForm.classId" placeholder="请选择" style="width:500px;">
+                                            <el-option
+                                                v-for="item in classOptionList"
+                                                :key="item.value"
+                                                :label="item.label"
+                                                :value="item.value">
+                                            </el-option>
+                                        </el-select>
+                                    </el-form-item>
+                                    <el-form-item label="备注信息">
+                                        <el-input type="textarea" v-model="classForm.note" placeholder="请填写备注信息" ></el-input>
+                                    </el-form-item>
+                                </el-form>
+                                <div slot="footer" class="dialog-footer">
+                                    <el-button @click="showClassFormFlag = false">取 消</el-button>
+                                    <el-button type="primary" @click="classSubmit">确 定</el-button>
                                 </div>
                             </el-dialog>
                         </div>

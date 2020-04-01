@@ -55,6 +55,8 @@ export const Constants = {
             ENROL_OR_REJECT: '/api/student-register/enrol-or-reject',
             ENROLMENT_MANAGER: '/teacher/registration-forms/enrol',
             REGISTRATION_MANAGER: '/teacher/registration-forms/manage',
+            GET_CLASS_LIST: '/api/student-register/get-class-list',
+            SAVE_CLASS_INFO: '/api/student-register/save-class-info',
         },
         // 获取省市列表的接口
         LOCATION: {

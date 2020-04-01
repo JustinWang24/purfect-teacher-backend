@@ -15,7 +15,7 @@ class RegistrationInformatics extends Model
     use SoftDeletes;
     protected $fillable = [
         'user_id', 'school_id', 'major_id', 'name', 'status',
-        'recruitment_plan_id', 'relocation_allowed', 'note',
+        'recruitment_plan_id', 'relocation_allowed', 'branchclass_at', 'note',
     ];
 
     const USELESS           = 0;    // 申请作废
