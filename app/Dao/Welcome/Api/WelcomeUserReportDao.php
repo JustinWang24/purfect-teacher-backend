@@ -252,7 +252,7 @@ class WelcomeUserReportDao
         if($letter == 'C')
         {
             // 是否报到
-            if($reportOneInfo->complete_date)
+			if (!empty($reportOneInfo->complete_date)) {
             {
                 return array('status' => 1, 'notice' => '已完成', 'message' => '');
             } else {
