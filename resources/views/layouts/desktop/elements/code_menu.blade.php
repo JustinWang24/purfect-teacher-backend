@@ -1,6 +1,6 @@
 <li class="nav-item">
     <a href="javascript:void(0);" class="nav-link nav-toggle">
-        <i class="material-icons">dvr</i>
+        <i class="material-icons"> nfc</i>
         <span class="title">二维码</span>
         <span class="arrow"></span>
     </a>

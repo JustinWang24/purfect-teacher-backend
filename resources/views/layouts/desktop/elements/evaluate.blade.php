@@ -1,6 +1,6 @@
 <li class="nav-item">
     <a href="javascript:void(0);" class="nav-link nav-toggle">
-        <i class="material-icons">dvr</i>
+        <i class="material-icons">account_circle</i>
         <span class="title">评教,评学</span>
         <span class="arrow"></span>
     </a>
