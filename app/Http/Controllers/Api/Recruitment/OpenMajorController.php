@@ -133,6 +133,11 @@ class OpenMajorController extends Controller
             'mobile'=>'required|regex:/^1[34578]\d{9}$/', // 联系电话
             'parent_name'=>'required|between:2,10', // 家长姓名
             'parent_mobile'=>'required|regex:/^1[34578]\d{9}$/', // 家长电话
+            'province'=>'required', // 省份
+            'city'=>'required', // 城市
+            'district'=>'required', // 地区
+            'address'=>'required', // 联系地址
+            'postcode'=>'required', // 邮编
         ];
         $message = [
             'name.required'=>'请填写姓名',
@@ -151,6 +156,11 @@ class OpenMajorController extends Controller
             'parent_name.between'=>'家长姓名在2-10位之间',
             'parent_mobile.required'=>'家长电话不能为空',
             'parent_mobile.regex'=>'家长电话格式不正确',
+            'province.required'=>'请选择省份',
+            'city.required'=>'请选择市',
+            'district.required'=>'请选择地区',
+            'address.required'=>'请填写联系地址',
+            'postcode.required'=>'请填写邮编',
         ];
         $validator = Validator::make($formData, $rules, $message);
         if ($validator->fails()) {
