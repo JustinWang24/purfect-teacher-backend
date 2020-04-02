@@ -15,7 +15,7 @@ use App\Utils\UI\Button;
                         <div class="col-3">
                             <div class="form-group">
                                 <label for="application-user-name">姓名：</label>
-                                {{ $dataOne->user->name }}
+                                {{isset($dataOne->user->name)?$dataOne->user->name:'--'}}
                             </div>
                         </div>
 
@@ -36,7 +36,7 @@ use App\Utils\UI\Button;
                         <div class="col-3">
                             <div class="form-group">
                                 <label for="application-user-name">学校：</label>
-                                {{ $dataOne->school->name }}
+                                {{isset($dataOne->school->name)?$dataOne->school->name:'--'}}
                             </div>
                         </div>
                     </div>
@@ -44,28 +44,28 @@ use App\Utils\UI\Button;
                         <div class="col-3">
                             <div class="form-group">
                                 <label for="application-user-name">学院：</label>
-                                {{ $dataOne->gradeUser->institute->name }}
+                                {{isset($dataOne->gradeUser->institute->name)?$dataOne->gradeUser->institute->name:'--'}}
                             </div>
                         </div>
 
                         <div class="col-3">
                             <div class="form-group">
                                 <label for="application-user-name">系：</label>
-                                {{ $dataOne->gradeUser->department->name }}
+                                {{isset($dataOne->gradeUser->department->name)?$dataOne->gradeUser->department->name:'--'}}
                             </div>
                         </div>
 
                         <div class="col-3">
                             <div class="form-group">
                                 <label for="application-user-name">专业：</label>
-                                {{ $dataOne->gradeUser->major->name }}
+                                {{isset($dataOne->gradeUser->major->name)?$dataOne->gradeUser->major->name:'--'}}
                             </div>
                         </div>
 
                         <div class="col-3">
                             <div class="form-group">
                                 <label for="application-user-name">班级：</label>
-                                {{ $dataOne->gradeUser->grade->name }}
+                                {{isset($dataOne->gradeUser->grade->name)?$dataOne->gradeUser->grade->name:'--'}}
                             </div>
                         </div>
                     </div>

@@ -58,7 +58,7 @@
                     <el-input size="mini" v-model="registrationForm.parent_name" placeholder="必填: 家长姓名"></el-input>
                 </el-form-item>
                 <el-form-item label="家长电话" prop="parent_mobile" class="no-border-bottom">
-                    <el-input size="mini" v-model="registrationForm.parent_mobile" placeholder="选填: 家长电话"></el-input>
+                    <el-input size="mini" v-model="registrationForm.parent_mobile" placeholder="必填: 家长电话"></el-input>
                 </el-form-item>
             </el-card>
 
@@ -130,8 +130,8 @@
                     return callback(new Error('请输入您的身份证号'));
                 }
                 if(value.length !== 18){
-                    this.birthdayText = '';
-                    return callback(new Error('身份证号必须为 18 为长的数字'));
+                   // this.birthdayText = '';
+                   // return callback(new Error('身份证号必须为 18 为长的数字'));
                 }
                 // 去服务器验证: 1 - 身份证是否已经存在于系统中; 2 - 是否格式正确
                 axios.post(
