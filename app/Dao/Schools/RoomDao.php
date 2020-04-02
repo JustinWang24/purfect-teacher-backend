@@ -191,7 +191,7 @@ class RoomDao
      */
     public function getRoomByBuildingId($buildingId) {
         $field = ['id', 'building_id', 'name', 'type','exam_seats', 'seats'];
-        $map = ['building_id'=>$buildingId, 'type'=>Room::TYPE_CLASSROOM];
+        $map = ['building_id'=>$buildingId];
         $result = $this->getRoomList($map,$field);
         return $result;
     }
