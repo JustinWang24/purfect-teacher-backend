@@ -255,7 +255,7 @@
 
 
           <div style="width: 100%;background: white;text-align: center;margin-top:10px;padding-top:40px">
-                    <van-button class="flowSub" round block type="info" native-type="submit">
+                    <van-button class="flowSub" style=" background-image: linear-gradient(to right, #66D9FF, #4EA5FE); border: none;height: 35px;line-height: 35px;width: 238px;margin: 0 auto" round block type="info" native-type="submit">
                          提交
                     </van-button>
           </div>
