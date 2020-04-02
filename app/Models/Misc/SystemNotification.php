@@ -97,6 +97,9 @@ class SystemNotification extends Model
                     case IFlow::TYPE_1_01:
                     case IFlow::TYPE_1_02:
                     case IFlow::TYPE_1_03:
+                    case IFlow::TYPE_1_04:
+                    case IFlow::TYPE_1_05:
+                    case IFlow::TYPE_1_06:
                     case IFlow::TYPE_3_01:
                     case IFlow::TYPE_3_02:
                         $category = self::STUDENT_CATEGORY_APPLY;
@@ -118,11 +121,16 @@ class SystemNotification extends Model
                 switch ($type) {
                     case IFlow::TYPE_2_01:
                     case IFlow::TYPE_2_02:
+                    case IFlow::TYPE_2_03:
+                    case IFlow::TYPE_2_04:
                         $category = self::TEACHER_CATEGORY_APPLY_STUDENT;
                         break;
                     case IFlow::TYPE_1_01:
                     case IFlow::TYPE_1_02:
                     case IFlow::TYPE_1_03:
+                    case IFlow::TYPE_1_04:
+                    case IFlow::TYPE_1_05:
+                    case IFlow::TYPE_1_06:
                     case IFlow::TYPE_3_01:
                     case IFlow::TYPE_3_02:
                         $category = self::TEACHER_CATEGORY_APPLY;

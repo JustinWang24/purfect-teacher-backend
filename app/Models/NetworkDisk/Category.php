@@ -91,7 +91,11 @@ class Category extends Model
      * @return bool
      */
     public function isOwnedByUser(User $user){
-        return $user->id === $this->owner_id;
+        if($user->id === $this->owner_id || $user->isSchoolAdminOrAbove()) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     /**
