@@ -81,7 +81,7 @@ class noticeStudentAttendanceSignin extends Command
             $timeSlot =  $timeSlotDao->getTimeSlotByCurrentTime($schoolId);
 
             //如果不是5分钟后下课 跳过
-            if (substr($timeSlot->to, 5) != $time) {
+            if (empty($timeSlot) || $timeSlot->to != $time) {
                 continue;
             }
 //            if($timeSlot->to == $time) {
