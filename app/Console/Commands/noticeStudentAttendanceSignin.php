@@ -79,6 +79,11 @@ class noticeStudentAttendanceSignin extends Command
 
             // 获取当前时间是第几节课
             $timeSlot =  $timeSlotDao->getTimeSlotByCurrentTime($schoolId);
+
+            //如果不是5分钟后下课 跳过
+            if (substr($timeSlot->to, 5) != $time) {
+                continue;
+            }
 //            if($timeSlot->to == $time) {
                 $timetables = $timetableItemDao->getCourseListByCurrentTime($schoolId, $timeSlot->id);
                 foreach ($timetables as $timetable) {
