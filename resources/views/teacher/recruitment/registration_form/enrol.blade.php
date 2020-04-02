@@ -128,6 +128,22 @@ use App\User;
                                     <el-button type="primary" @click="submit">确 定</el-button>
                                 </div>
                             </el-dialog>
+
+                            <el-dialog title="班级" :visible.sync="showClassFormFlag">
+                                <p>学生姓名: @{{ currentName }}</p>
+                                <p>报名专业: {{ $plan->title }} - {{ $plan->year }}年</p>
+                                <p class="text-info">一旦批准, 该学生将成为本校的正式学生.</p>
+                                <el-form :model="form">
+                                    <el-form-item label="备注">
+                                        <el-input type="textarea" v-model="form.note"></el-input>
+                                    </el-form-item>
+                                </el-form>
+                                <div slot="footer" class="dialog-footer">
+                                    <el-button @click="showNoteFormFlag = false">取 消</el-button>
+                                    <el-button type="primary" @click="submit">确 定</el-button>
+                                </div>
+                            </el-dialog>
+
                         </div>
                         <div class="row">
                             <div class="col-12">

@@ -169,16 +169,18 @@ class MajorDao
     }
 
     /**
-     * 根据学校ID和专业代码获取专业
+     * 判断专业代码获是否存在
+     * @param $majorId
      * @param $code
      * @param $schoolId
      * @return mixed
      */
-    public function getMajorByCategoryCode($code, $schoolId)
+    public function getMajorByCategoryCode($majorId, $code, $schoolId)
     {
         $map = [
-            'category_code' => $code,
-            'school_id' => $schoolId
+            ['id', '<>', $majorId],
+            ['category_code', '=', $code],
+            ['school_id', '=', $schoolId]
         ];
         return Major::where($map)->first();
     }

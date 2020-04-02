@@ -225,6 +225,14 @@ Route::prefix('student-register')->middleware('auth:api')->group(function () {
     // 录取学生 或 拒绝录取学生
     Route::post('/enrol-or-reject','Api\Recruitment\OpenMajorController@enrol_or_reject')
         ->name('api.major.enrol.or.reject');
+
+    // 分班获取班级列表
+    Route::post('/get-class-list','Api\Recruitment\OpenMajorController@get_class_list')
+        ->name('api.major.get.class.list');
+
+    // 分班保存
+    Route::post('/save-class-info','Api\Recruitment\OpenMajorController@save_class_info')
+        ->name('api.major.save.class.info');
 });
 
 // 录取API

@@ -12,10 +12,12 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\RecruitStudent\PlanRecruitRequest;
 use App\Dao\RecruitmentPlan\RecruitmentPlanDao;
 use App\Dao\Users\UserDao;
+use App\Dao\Schools\GradeDao;
 use App\Dao\RecruitStudent\RegistrationInformaticsDao;
 use App\Dao\Students\StudentProfileDao;
 use App\Utils\JsonBuilder;
 use App\Utils\Time\GradeAndYearUtil;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
 
@@ -281,6 +283,52 @@ class OpenMajorController extends Controller
         }else{
             return JsonBuilder::Error($bag->getMessage());
         }
+    }
+
+    /**
+     * Func 获取分班信息
+     * @param PlanRecruitRequest $request
+     * @return string
+     */
+    public function get_class_list(PlanRecruitRequest $request){
+        $uuid = $request->post('uuid');
+        $planId = (Int)$request->post('planId');
+
+        // 获取用专业对应的班级
+        $infos = [];
+        if ($planId) {
+            $recruitmentPlanObj = new RecruitmentPlanDao();
+            $getPlanOneInfo = $recruitmentPlanObj->getPlan($planId);
+            if (!empty($getPlanOneInfo) && $getPlanOneInfo->major_id) {
+                $infos = (new GradeDao)->getGradesByMajorAndYear($getPlanOneInfo->major_id,date('Y'),
+                    ['grades.id','grades.name',DB::raw("( select count(*) from grade_users where grades.id = grade_users.grade_id) count")]);
+            }
+        }
+        return JsonBuilder::Success($infos);
+    }
+
+    /**
+     * Func 保存分班信息
+     *
+     * @param PlanRecruitRequest $request
+     * @return string
+     */
+    public function save_class_info(PlanRecruitRequest $request){
+        $form = $request->getApprovalForm();
+        $userUuid = $request->uuid();
+        $userDao = new UserDao();
+        $manager = $userDao->getUserByUuid($userUuid);
+        if($manager && ($manager->isSchoolAdminOrAbove() || $manager->isTeacher())){
+            // 操作者至少应该是学校的员工
+            $dao = new RegistrationInformaticsDao();
+            // $form 数据格式：Array ( [note] => [planId] => 7 [formId] => 7 [classId] => 17 )
+            if ($dao->joinClass($form,$manager)) {
+                return JsonBuilder::Success('操作成功');
+            } else {
+                return JsonBuilder::Error('操作失败,请稍后重试');
+            }
+        }
+        return JsonBuilder::Error('无权执行此操作');
     }
 
 }

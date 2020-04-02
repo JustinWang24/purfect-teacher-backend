@@ -3,8 +3,11 @@
 
 namespace App\Dao\RecruitStudent;
 
+use App\Dao\Schools\GradeDao;
 use App\Dao\RecruitmentPlan\RecruitmentPlanDao;
+use App\Dao\Users\GradeUserDao;
 use App\Models\RecruitStudent\RegistrationInformatics;
+use App\Models\Schools\Grade;
 use App\Models\Schools\RecruitmentPlan;
 use App\Utils\JsonBuilder;
 use App\Utils\Misc\ConfigurationTool;
@@ -597,7 +600,94 @@ class RegistrationInformaticsDao
     }
 
     /**
+     * Func 管理员操作学生分班
+     * @param 否 $data ['planId'] 招生id
+     * @param 是 $data ['formId'] 学生申请id
+     * @param 是 $data ['classId'] 要加入的班级id
+     * @param 是 $data ['note'] 申请加入的描述
+     * @param 是 $manager 当前操作的人
+     * @return array
+     */
+    public function joinClass($data,$manager)
+    {
+        $bag = new MessageBag(JsonBuilder::CODE_ERROR,'你无权进行此操作');
 
+        // 参数为空
+        if (empty($data['formId']) || empty($data['classId']) || empty($manager)) {
+            return $bag->setMessage('参数错误');
+        }
+
+        // 获取数据信息
+        $dataInfo = null;
+        if ($manager->isSchoolAdminOrAbove() || $manager->isTeacher()) {
+            $dataInfo = RegistrationInformatics::find($data['formId']);
+        }
+        if (empty($dataInfo)) {
+            return $bag->setMessage('数据不存在');
+        }
+
+        // 获取班级信息
+        $gradeObj = new GradeDao();
+        $gradeInfo = $gradeObj->getGradeById($data['classId']);
+        if (empty($gradeInfo)) {
+            return $bag->setMessage('班级信息不存在');
+        }
+
+        // 必须确保用户和招生简章, 是同一个学校的
+        if($manager->isOperatorOrAbove() || $dataInfo->plan->school_id === $manager->getSchoolId()){
+            // 该申请是被批准
+            $dataInfo->last_updated_by = $manager->id;
+            $dataInfo->note .= $data['note'].'(批准人: '.$manager->name.')';
+            $dataInfo->branchclass_at = Carbon::now()->format('Y-m-d H:i:s');
+            DB::beginTransaction();
+            if($dataInfo->save()){
+                try{
+                    $gradeUserInfo = GradeUser::where('user_id',$dataInfo['user_id'])->orderBy('id','desc')->first();
+                    if(!empty($gradeUserInfo)){
+                        $saveData['user_id'] = $dataInfo->user_id; // 学生id
+                        $saveData['name'] = $dataInfo->name; // 姓名
+                        $saveData['user_type'] = 1; // 学生
+                        $saveData['grade_id'] = $gradeInfo->id; // 班级id
+                        $saveData['major_id'] = $gradeInfo->major->id; // 专业id
+                        $saveData['department_id'] = $gradeInfo->major->department->id; // 系
+                        $saveData['institute_id'] = $gradeInfo->major->institute->id; // 学院
+                        $saveData['campus_id'] = $gradeInfo->major->campus->id; // 校区ID
+                        $saveData['school_id'] = $gradeInfo->major->school->id; // 学校id
+                        $saveData['last_updated_by'] = $manager->id; // 最后更新的用户id
+                        $saveData['updated_at'] = Carbon::now()->format('Y-m-d H:i:s'); // 更新时间
+                        GradeUser::where('id',$gradeUserInfo['id'])->update($saveData);
+                    } else{
+                        $addData['user_id'] = $dataInfo->user_id; // 学生id
+                        $addData['name'] = $dataInfo->name; // 姓名
+                        $addData['user_type'] = 1; // 学生
+                        $addData['grade_id'] = $gradeInfo->id; // 班级id
+                        $addData['major_id'] = $gradeInfo->major->id; // 专业id
+                        $addData['department_id'] = $gradeInfo->major->department->id; // 系
+                        $addData['institute_id'] = $gradeInfo->major->institute->id; // 学院
+                        $addData['campus_id'] = $gradeInfo->major->campus->id; // 校区ID
+                        $addData['school_id'] = $gradeInfo->major->school->id; // 学校id
+                        $addData['last_updated_by'] = $manager->id; // 最后更新的用户id
+                        $addData['created_at'] = Carbon::now()->format('Y-m-d H:i:s'); // 添加时间
+                        GradeUser::insert($addData);
+                    }
+                    DB::commit();
+                    $bag->setMessage('操作成功');
+                    $bag->setCode(1000);
+                    $bag->setData([]);
+                }catch (\Exception $exception){
+                    $bag->setMessage($exception->getMessage());
+                    DB::rollBack();
+                }
+            }else{
+                $bag->setMessage('操作失败,请稍后重试');
+                DB::rollBack();
+            }
+        }
+        return $bag;
+    }
+
+
+    /**
      * 获取所有 已录取 未分配班级的人
      * @param $schoolId
      * @return
