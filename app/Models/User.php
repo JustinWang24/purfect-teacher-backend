@@ -63,6 +63,7 @@ class User extends Authenticatable implements HasMobilePhone, HasDeviceId, IUser
 
 
     const DEFAULT_USER_AVATAR = '/assets/img/dp.jpg';
+    const DEFAULT_USER_GIRL_AVATAR = '/assets/img/dp_girl.png';
 
     /**
      * The attributes that are mass assignable.
