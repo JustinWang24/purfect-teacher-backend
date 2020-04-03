@@ -95,11 +95,17 @@ class NewMeetingUser extends Model
 
 
     public function getUserSignOutTime() {
+        if(is_null($this->signout_time)) {
+            return null;
+        }
         return Carbon::parse($this->signout_time)->format('Y-m-d H:i');
     }
 
 
     public function getUserSignInTime() {
+        if(is_null($this->signin_time)) {
+            return null ;
+        }
         return Carbon::parse($this->signin_time)->format('Y-m-d H:i');
     }
 }
