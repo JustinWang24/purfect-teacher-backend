@@ -120,7 +120,11 @@ class StudentProfile extends Model
     }
 
     public function getAvatarAttribute($value){
-        return asset(empty($value) ? User::DEFAULT_USER_AVATAR : $value);
+        if ($this->gender == self::GENDER_MAN) {
+            return asset(empty($value) ? User::DEFAULT_USER_AVATAR : $value);
+        } else {
+            return asset(empty($value) ? User::DEFAULT_USER_GIRL_AVATAR : $value);
+        }
     }
 
     /**
