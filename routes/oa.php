@@ -62,6 +62,9 @@ Route::prefix('task')->middleware('auth:api')->group(function () {
     // 指派任务
     Route::post('/addOaTaskUser','Api\OA\TaskController@addTaskUser')
         ->name('Oa.task.addOaTaskUser');
+    // 获取待完成未读的任务数
+    Route::get('/getUnBeginUnRead','Api\OA\TaskController@getUnBeginUnRead')
+        ->name('Oa.task.getUnBeginUnRead');
 
     Route::any('/getOaTaskUserListInfo','Api\OA\ProjectsController@getOaTaskUserListInfo')
         ->name('Oa.task.getOaTaskUserListInfo');

@@ -467,4 +467,18 @@ class TaskController extends Controller
         return JsonBuilder::Success($result);
     }
 
+
+    /**
+     * 获取待完成未读的任务数
+     * @param ProjectRequest $request
+     * @return string
+     */
+    public function getUnBeginUnRead(ProjectRequest $request) {
+        $user = $request->user();
+        $dao = new TaskDao();
+        $num = $dao->getUnBeginUnRead($user);
+        $result = ['num'=>$num];
+        return JsonBuilder::Success($result);
+    }
+
 }
