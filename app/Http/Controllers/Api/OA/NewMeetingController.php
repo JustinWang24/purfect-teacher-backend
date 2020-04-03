@@ -197,7 +197,7 @@ class NewMeetingController extends Controller
         $result = pageReturn($return);
         $data = [];
         foreach ($result['list'] as $key => $item) {
-            $meetUser = $item->meetUsers->where(['user_id',$user->id])->first();
+            $meetUser = $item->meetUsers->where('user_id',$user->id)->first();
             $data[] = [
                 'meet_id' => $item->id,
                 'meet_title' => $item->meet_title,
