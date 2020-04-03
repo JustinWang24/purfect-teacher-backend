@@ -155,13 +155,12 @@ class NewMeetingDao
         }
         $schoolId = $user->getSchoolId();
         $meetIds = array_column($meetUser, 'meet_id');
-
         // 不需要签退
         $map = [
             ['meet_end', '<', $now],
             ['status', '=', NewMeeting::STATUS_PASS],
             ['signout_status', '=', NewMeeting::NOT_SIGNOUT],
-            ['school_id', '=', $schoolId]
+            ['school_id', '=', $schoolId],
         ];
         // 需要签退
         $where = [
@@ -171,8 +170,9 @@ class NewMeetingDao
             ['school_id', '=', $schoolId],
         ];
 
-        return NewMeeting::where($map)
-            ->orwhere($where)
+        return  NewMeeting::whereIn('id',$meetIds)
+            ->where($map)
+            ->orWhere($where)
             ->whereIn('id',$meetIds)
             ->orderBy('meet_start','desc')
             ->paginate(ConfigurationTool::DEFAULT_PAGE_SIZE);
