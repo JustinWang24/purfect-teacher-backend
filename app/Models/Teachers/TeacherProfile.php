@@ -3,6 +3,7 @@
 namespace App\Models\Teachers;
 
 use App\Models\Acl\Role;
+use App\Models\Students\StudentProfile;
 use App\User;
 use Illuminate\Database\Eloquent\Model;
 
@@ -71,6 +72,10 @@ class TeacherProfile extends Model
     }
 
     public function getAvatarAttribute($value){
-        return asset($value ?? User::DEFAULT_USER_AVATAR);
+       if ($this->gender == StudentProfile::GENDER_MAN) {
+            return asset(empty($value) ? User::DEFAULT_USER_AVATAR : $value);
+        } else {
+            return asset(empty($value) ? User::DEFAULT_USER_GIRL_AVATAR : $value);
+        }
     }
 }

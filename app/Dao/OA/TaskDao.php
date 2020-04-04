@@ -14,6 +14,7 @@ use App\Dao\Users\UserDao;
 use App\Models\OA\Project;
 use App\Models\OA\ProjectTaskDiscussion;
 use App\Models\OA\ProjectTaskPic;
+use App\User;
 use App\Utils\JsonBuilder;
 use App\Models\OA\ProjectTask;
 use App\Models\OA\ProjectTaskLog;
@@ -322,5 +323,19 @@ class TaskDao
 //            'finish'=>$finish,
             'my_create'=>$myCreate?true:false,
         ];
+    }
+
+
+    /**
+     * 获取未开始的未读数
+     * @param User $user
+     * @return mixed
+     */
+    public function getUnBeginUnRead(User $user) {
+        $map = [
+            'user_id'=>$user->id,
+            'not_begin'=>ProjectTaskMember::UN_READ
+        ];
+        return ProjectTaskMember::where($map)->count();
     }
 }
