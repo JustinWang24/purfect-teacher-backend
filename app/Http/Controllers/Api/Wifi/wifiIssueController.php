@@ -143,6 +143,7 @@ class wifiIssueController extends Controller
             } else {
                $val['status_str'] = WifiIssuesDao::$statusArr[$val[ 'status' ]];
             }
+            $val['created_at'] = date('Y-m-d H:i',strtotime($val['created_at']));
          }
       }
       return JsonBuilder::Success ( $infos , '我的报修列表' );

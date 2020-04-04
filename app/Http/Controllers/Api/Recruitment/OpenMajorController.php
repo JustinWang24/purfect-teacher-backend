@@ -131,6 +131,9 @@ class OpenMajorController extends Controller
             'source_place'=>'required', // 生源地
             'country'=>'required', // 籍贯
             'mobile'=>'required|regex:/^1[34578]\d{9}$/', // 联系电话
+            'qq'=>'required|numeric', // qq
+            'wx'=>'required', // 微信号
+            'email'=>'required|regex:/^([0-9A-Za-z\\-_\\.]+)@([0-9a-z]+\\.[a-z]{2,3}(\\.[a-z]{2})?)$/', // 邮箱
             'parent_name'=>'required|between:2,10', // 家长姓名
             'parent_mobile'=>'required|regex:/^1[34578]\d{9}$/', // 家长电话
             'province'=>'required', // 省份
@@ -138,6 +141,7 @@ class OpenMajorController extends Controller
             'district'=>'required', // 地区
             'address'=>'required', // 联系地址
             'postcode'=>'required', // 邮编
+            'examination_score'=>'required', // 高考分数
         ];
         $message = [
             'name.required'=>'请填写姓名',
@@ -145,13 +149,18 @@ class OpenMajorController extends Controller
             'id_number.required'=>'请填写身份证号',
             'gender.required'=>'请选择性别',
             'gender.between'=>'性别值错误',
-            'nation_name.required'=>'请填写名族',
-            'nation_name.between'=>'名族在2-10位之间',
+            'nation_name.required'=>'请填写民族',
+            'nation_name.between'=>'民族在2-10位之间',
             'political_name.required'=>'请选择政治面貌',
             'source_place.required'=>'请填写生源地',
             'country.required'=>'请填写籍贯',
             'mobile.required'=>'联系电话不能为空',
             'mobile.regex'=>'联系电话格式不正确',
+            'qq.required'=>'QQ号不能为空',
+            'qq.numeric'=>'QQ号必须为数字',
+            'wx.required'=>'微信号不能为空',
+            'email.required'=>'邮箱不能为空',
+            'email.regex'=>'邮箱格式错误',
             'parent_name.required'=>'家长姓名不能为空',
             'parent_name.between'=>'家长姓名在2-10位之间',
             'parent_mobile.required'=>'家长电话不能为空',
@@ -161,6 +170,7 @@ class OpenMajorController extends Controller
             'district.required'=>'请选择地区',
             'address.required'=>'请填写联系地址',
             'postcode.required'=>'请填写邮编',
+            'examination_score.required'=>'请填写高考分数',
         ];
         $validator = Validator::make($formData, $rules, $message);
         if ($validator->fails()) {
@@ -230,14 +240,12 @@ class OpenMajorController extends Controller
             $dao = new RegistrationInformaticsDao();
             if($request->isApprovedAction()){
                 $bag = $dao->approve($form['currentId'],$manager,$form['note']??null);
-
-                event(new ApproveOpenMajorEvent($bag->getData()));
-                // event(new ApproveRegistrationEvent($bag->getData()));
+                //event(new ApproveOpenMajorEvent($bag->getData()));
+                //event(new ApproveRegistrationEvent($bag->getData()));
             }else{
                 $bag = $dao->refuse($form['currentId'],$manager,$form['note']??null);
-
-                event(new ApproveOpenMajorEvent($bag->getData()));
-                // event(new RefuseRegistrationEvent($bag->getData()));
+                //event(new ApproveOpenMajorEvent($bag->getData()));
+                //event(new RefuseRegistrationEvent($bag->getData()));
             }
             if($bag->isSuccess()){
                 return JsonBuilder::Success($bag->getMessage());
@@ -265,10 +273,10 @@ class OpenMajorController extends Controller
             $dao = new RegistrationInformaticsDao();
             if($request->isEnrolAction()){
                 $bag = $dao->enrol($form['currentId'],$manager,$form['note']??null);
-                event(new EnrolRegistrationEvent($bag->getData()));
+                // event(new EnrolRegistrationEvent($bag->getData()));
             }else{
                 $bag = $dao->reject($form['currentId'],$manager,$form['note']??null);
-                event(new RejectRegistrationEvent($bag->getData()));
+                // event(new RejectRegistrationEvent($bag->getData()));
             }
             if($bag->isSuccess()){
                 return JsonBuilder::Success($bag->getMessage());

@@ -70,6 +70,11 @@ class RegistrationInformatics extends Model
         10 => array('status' => 10, 'message' => '招生人数已满', 'message1' => '人已满', 'message2' => '人已满'),
         // 账号从后台添加，已经关联专业了，不能再次在app申请专业
         11 => array('status' => 11, 'message' => '您已经是学校的学生，不能申请', 'message1' => '报名', 'message2' => '已通过'),
+        // 招生未开始
+        12 => array('status' => 12, 'message' => '招生未开始', 'message1' => '未开始', 'message2' => '未开始'),
+        // 招生已结束
+        13 => array('status' => 13, 'message' => '招生已结束', 'message1' => '已结束', 'message2' => '已结束'),
+
 
         100 => array('status' => 100, 'message' => '报名', 'message1' => '报名', 'message2' => '报名'),
     ];

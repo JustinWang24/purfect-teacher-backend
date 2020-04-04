@@ -85,7 +85,7 @@ class BannerDao
         }
        return Banner::where($where)
            ->select(['id', 'type', 'title', 'image_url','content','external'])
-           ->orderBy('sort', 'asc')
+           ->orderBy('sort', 'desc')
            ->orderBy('id', 'desc')
            ->limit(5)->get();
     }

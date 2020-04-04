@@ -71,7 +71,10 @@ class RecruitmentPlanDao
      * @return RecruitmentPlan[]
      */
     public function getPlansBySchool($schoolId, $userUuid = null, $year = null, $pageNumber = 0, $pageSize = 20){
-        $query =  RecruitmentPlan::select(['recruitment_plans.*','u1.name as manager_name','u2.name as enrol_manager_name'])
+        $query =  RecruitmentPlan::select(['recruitment_plans.*','u1.name as manager_name','u2.name as enrol_manager_name',
+            DB::raw("( select count(*) from registration_informatics as b where recruitment_plans.id = b.recruitment_plan_id and b.status = 1) count1"), // 等待
+            DB::raw("( select count(*) from registration_informatics as b where recruitment_plans.id = b.recruitment_plan_id and b.status = 3) count2") // 批准
+        ])
             ->where('school_id', $schoolId)
             ->leftJoin('users as u1',function($join){
                 $join->on('u1.id','=','recruitment_plans.manager_id');
@@ -97,6 +100,28 @@ class RecruitmentPlanDao
             $query->where('year',$year);
         }
         return $query->get();
+    }
+
+    /**
+     * 获取专业
+     *
+     * @param[hot] 否 是否热门专业(0:否,1:是,100获取全部)
+     * @param[school_id] 是 学校id
+     *
+     * @return RecruitmentPlan[]
+     */
+    public function getPlansBySchoolForList( $param = [] )
+    {
+        if (!intval($param['school_id'])) return array();
+
+        $condition[] = ['school_id', '=', $param['school_id']];
+
+        if ($param['hot'] == 1) {
+            $condition[] = ['hot', '=', $param['hot']];
+        }
+        return RecruitmentPlan::where($condition)
+            ->orderBy('id', 'asc')
+            ->get();
     }
 
     /**

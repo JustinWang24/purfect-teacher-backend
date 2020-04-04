@@ -43,7 +43,7 @@
     {{ $dataOne->notice_title }}
 </div>
 <!--滑动区域-->
-<div id="mescroll" class="mescroll">
+<div id="mescroll" style="width: 95%;margin: 0 auto 30px;">
     {{ $dataOne->notice_content }}
 </div>
 <script src="{{ asset('assets/js/wifinotice/jquery.min.js') }}"></script>
