@@ -23,6 +23,7 @@ class FrontendLogic implements IPlansLoaderLogic
     private $schoolUuId;
     private $schoolId;
     private $today;
+    private $hot; // 是否热门专业
     private $request;
     private $studentMobile;
     private $studentIdNumber;
@@ -30,6 +31,8 @@ class FrontendLogic implements IPlansLoaderLogic
     public function __construct(PlanRecruitRequest $request)
     {
         $this->userId = null;
+        // 是否热门专业
+        $this->hot = $request->post('hot')??0; // 0获取全部
         $this->schoolUuId = $request->getSchoolId();
         $this->schoolId = null;
 
@@ -61,7 +64,9 @@ class FrontendLogic implements IPlansLoaderLogic
         }
         $dao = new RecruitmentPlanDao($school->id);
 
-        $rows = $dao->getPlansBySchoolForToday($this->today, $school->id);
+        $param['hot'] = $this->hot; // 是否是热门专业
+        $param['school_id'] = $school->id; // 学校id
+        $rows = $dao->getPlansBySchoolForList($param);
         $plans = [];
 
         $profileDao = new StudentProfileDao();

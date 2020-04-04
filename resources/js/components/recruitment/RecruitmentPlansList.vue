@@ -54,15 +54,15 @@
                     <p>计划招收{{ scope.row.seats }}人 / {{ scope.row.grades_count }}个班</p>
                     <p>
 
-                        <el-button v-show="waitingsCount(scope.row) > 0" type="text" v-on:click="forWaitings(scope.row)">
-                            等待: {{ waitingsCount(scope.row) }}
+                        <el-button v-show="scope.row.count1 > 0" type="text" v-on:click="forWaitings(scope.row)">
+                            等待: {{ scope.row.count1 }}
                         </el-button>
-                        <span v-show="waitingsCount(scope.row) <= 0">等待: 0</span>
+                        <span v-show="scope.row.count1 <= 0">等待: 0</span>
                         /
-                        <el-button v-show="passedCount(scope.row) > 0" type="text" v-on:click="openEnrolmentManager(scope.row)">
-                            批准: {{ passedCount(scope.row) }}
+                        <el-button v-show="scope.row.count2 > 0" type="text" v-on:click="openEnrolmentManager(scope.row)">
+                            批准: {{ scope.row.count2 }}
                         </el-button>
-                        <span v-show="passedCount(scope.row) <= 0">批准: 0</span>
+                        <span v-show="scope.row.count2 <= 0">批准: 0</span>
                         /
                         <el-button v-show="scope.row.enrolled_count > 0" type="text" v-on:click="forApproved(scope.row)">
                             录取: {{ scope.row.enrolled_count }}

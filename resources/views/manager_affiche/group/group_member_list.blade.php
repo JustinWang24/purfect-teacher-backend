@@ -53,9 +53,9 @@ use App\User;
                                         <td>{{ $val->nice_name }}</td>
                                         <td>{{ $val->name }}</td>
                                         <td>{{ $val->mobile }}</td>
-                                        <td>{{ $val->gradeUser->institute->name }}</td>
-                                        <td>{{ $val->gradeUser->department->name }}</td>
-                                        <td>{{ $val->gradeUser->major->name }}</td>
+                                        <td>{{ $val->gradeUser->institute->name??"--" }}</td>
+                                        <td>{{ $val->gradeUser->department->name??"--" }}</td>
+                                        <td>{{ $val->gradeUser->major->name??"--" }}</td>
                                         <td>{{ $val->created_at }}</td>
                                         <td>{{ $GroupJoinTypeidArr[$val->join_typeid] }}</td>
                                         <td>{{ $groupStatusArr[$val->status] }}</td>
