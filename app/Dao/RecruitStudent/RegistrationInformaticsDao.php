@@ -645,43 +645,39 @@ class RegistrationInformaticsDao
             $dataInfo->branchclass_at = Carbon::now()->format('Y-m-d H:i:s');
             DB::beginTransaction();
             if($dataInfo->save()){
-                try{
-                    $gradeUserInfo = GradeUser::where('user_id',$dataInfo['user_id'])->orderBy('id','desc')->first();
-                    if(!empty($gradeUserInfo)){
-                        $saveData['user_id'] = $dataInfo->user_id; // 学生id
-                        $saveData['name'] = $dataInfo->name; // 姓名
-                        $saveData['user_type'] = 1; // 学生
-                        $saveData['grade_id'] = $gradeInfo->id; // 班级id
-                        $saveData['major_id'] = $gradeInfo->major->id; // 专业id
-                        $saveData['department_id'] = $gradeInfo->major->department->id; // 系
-                        $saveData['institute_id'] = $gradeInfo->major->institute->id; // 学院
-                        $saveData['campus_id'] = $gradeInfo->major->campus->id; // 校区ID
-                        $saveData['school_id'] = $gradeInfo->major->school->id; // 学校id
-                        $saveData['last_updated_by'] = $manager->id; // 最后更新的用户id
-                        $saveData['updated_at'] = Carbon::now()->format('Y-m-d H:i:s'); // 更新时间
-                        GradeUser::where('id',$gradeUserInfo['id'])->update($saveData);
-                    } else{
-                        $addData['user_id'] = $dataInfo->user_id; // 学生id
-                        $addData['name'] = $dataInfo->name; // 姓名
-                        $addData['user_type'] = 1; // 学生
-                        $addData['grade_id'] = $gradeInfo->id; // 班级id
-                        $addData['major_id'] = $gradeInfo->major->id; // 专业id
-                        $addData['department_id'] = $gradeInfo->major->department->id; // 系
-                        $addData['institute_id'] = $gradeInfo->major->institute->id; // 学院
-                        $addData['campus_id'] = $gradeInfo->major->campus->id; // 校区ID
-                        $addData['school_id'] = $gradeInfo->major->school->id; // 学校id
-                        $addData['last_updated_by'] = $manager->id; // 最后更新的用户id
-                        $addData['created_at'] = Carbon::now()->format('Y-m-d H:i:s'); // 添加时间
-                        GradeUser::insert($addData);
-                    }
-                    DB::commit();
-                    $bag->setMessage('操作成功');
-                    $bag->setCode(1000);
-                    $bag->setData([]);
-                }catch (\Exception $exception){
-                    $bag->setMessage($exception->getMessage());
-                    DB::rollBack();
+                $gradeUserInfo = GradeUser::where('user_id',$dataInfo['user_id'])->orderBy('id','desc')->first();
+                if(!empty($gradeUserInfo)){
+                    $saveData['user_id'] = $dataInfo->user_id; // 学生id
+                    $saveData['name'] = $dataInfo->name; // 姓名
+                    $saveData['user_type'] = 1; // 学生
+                    $saveData['grade_id'] = $gradeInfo->id??0; // 班级id
+                    $saveData['major_id'] = $gradeInfo->major->id??0; // 专业id
+                    $saveData['department_id'] = $gradeInfo->major->department->id??0; // 系
+                    $saveData['institute_id'] = $gradeInfo->major->institute->id??0; // 学院
+                    $saveData['campus_id'] = $gradeInfo->major->campus->id??0; // 校区ID
+                    $saveData['school_id'] = $gradeInfo->major->school->id??0; // 学校id
+                    $saveData['last_updated_by'] = $manager->id; // 最后更新的用户id
+                    $saveData['updated_at'] = Carbon::now()->format('Y-m-d H:i:s'); // 更新时间
+                    GradeUser::where('id',$gradeUserInfo['id'])->update($saveData);
+                } else{
+                    $addData['user_id'] = $dataInfo->user_id; // 学生id
+                    $addData['name'] = $dataInfo->name; // 姓名
+                    $addData['user_type'] = 1; // 学生
+                    $addData['grade_id'] = $gradeInfo->id??0; // 班级id
+                    $addData['major_id'] = $gradeInfo->major->id??0; // 专业id
+                    $addData['department_id'] = $gradeInfo->major->department->id??0; // 系
+                    $addData['institute_id'] = $gradeInfo->major->institute->id??0; // 学院
+                    $addData['campus_id'] = $gradeInfo->major->campus->id??0; // 校区ID
+                    $addData['school_id'] = $gradeInfo->major->school->id??0; // 学校id
+                    $addData['last_updated_by'] = $manager->id; // 最后更新的用户id
+                    $addData['created_at'] = Carbon::now()->format('Y-m-d H:i:s'); // 添加时间
+                    GradeUser::insert($addData);
                 }
+                DB::commit();
+                $bag->setMessage('操作成功');
+                $bag->setCode(1000);
+                $bag->setData([]);
+
             }else{
                 $bag->setMessage('操作失败,请稍后重试');
                 DB::rollBack();
