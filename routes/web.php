@@ -107,7 +107,7 @@ Route::get('/h5/banner/page-info', 'H5\Banner\IndexController@page_info')->name(
 // 后台消息页
 Route::get('/h5/banner/notification-info', 'H5\Banner\IndexController@notification_info')->name('h5_apps.banner.notification_info');
 // 扫码下载链接
-Route::get('/share/app-page', 'H5\Banner\IndexController@app_info')->name('h5_apps.share.app_info');
+Route::get('/share/app-page', 'H5\Banner\IndexController@app_info')->name('h5_apps.share.app_info'); 
 
 Auth::routes();
 

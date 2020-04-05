@@ -92,7 +92,7 @@ class IndexController extends Controller
     /**
      * 获取资源位 Banner 的接口
      * @param BannerRequest $request
-     * @return string
+     * @return string 
      */
     public function banner(BannerRequest $request)
     {
