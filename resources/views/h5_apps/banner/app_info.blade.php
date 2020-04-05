@@ -51,7 +51,7 @@
                 }
             } 
         }else{
-            pla == 0 ? window.location.href = "{{ route('api.version.download',['sid'=>$data->sid]) }}":window.location.href = "{{  $data->version_downurl }}";
+            pla == 0 ? window.location.href = "{{  $data->version_downurl }}":window.location.href = "{{ route('api.version.download',['sid'=>$data->sid]) }}";
         }
 
         /**
