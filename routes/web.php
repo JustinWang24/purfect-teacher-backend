@@ -11,7 +11,10 @@
 |
 */
 
-Route::get('/', 'HomeController@login')->name('login');
+Route::get('/', function () {
+    echo 123;die;
+//    return view('auth.login');
+});
 
 /**
  * 无须登录的前端页面路由
