@@ -49,7 +49,7 @@
                 close2.onclick = function() {
                     tip2.style.display = 'none';
                 }
-            }
+            } 
         }else{
             pla == 0 ? window.location.href = "{{ route('api.version.download',['sid'=>$data->sid]) }}":window.location.href = "{{  $data->version_downurl }}";
         }
