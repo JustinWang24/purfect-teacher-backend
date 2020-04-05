@@ -11,10 +11,12 @@
 |
 */
 
-Route::get('/', function () {
-    echo 123;die;
-//    return view('auth.login');
-});
+//Route::get('/', function () {
+////    return view('auth.login');
+//});
+
+// 登录
+Route::get('/', 'HomeController@login')->name('login');
 
 /**
  * 无须登录的前端页面路由
