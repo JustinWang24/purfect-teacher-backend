@@ -649,7 +649,7 @@ class RegistrationInformaticsDao
                 if(!empty($gradeUserInfo)){
                     $saveData['user_id'] = $dataInfo->user_id; // 学生id
                     $saveData['name'] = $dataInfo->name; // 姓名
-                    $saveData['user_type'] = 1; // 学生
+                    $saveData['user_type'] = 6; // 学生
                     $saveData['grade_id'] = $gradeInfo->id??0; // 班级id
                     $saveData['major_id'] = $gradeInfo->major->id??0; // 专业id
                     $saveData['department_id'] = $gradeInfo->major->department->id??0; // 系
@@ -662,7 +662,7 @@ class RegistrationInformaticsDao
                 } else{
                     $addData['user_id'] = $dataInfo->user_id; // 学生id
                     $addData['name'] = $dataInfo->name; // 姓名
-                    $addData['user_type'] = 1; // 学生
+                    $addData['user_type'] = 6; // 学生
                     $addData['grade_id'] = $gradeInfo->id??0; // 班级id
                     $addData['major_id'] = $gradeInfo->major->id??0; // 专业id
                     $addData['department_id'] = $gradeInfo->major->department->id??0; // 系
