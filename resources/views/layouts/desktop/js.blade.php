@@ -15,6 +15,7 @@
 <script src="{{ asset('assets/js/layout.js') }}"></script>
 <script src="{{ asset('assets/js/theme-color.js') }}"></script>
 <script src="{{ asset('assets/js/custom.js') }}"></script>
+<script src="{{ asset('assets/js/area.js') }}" charset="UTF-8"></script>
 <!-- material -->
 <!-- chart js -->
 @if($needChart??false)
@@ -52,7 +53,6 @@ $allPlugins = (new \App\Utils\UI\RedActor())->allPlugIns();
 <script src="{{ asset('redactor/vue-redactor.js') }}"></script>
 @endif
 
-<script src="{{ asset('assets/js/area.js') }}" charset="UTF-8"></script>
 @foreach($js as $j)
 @include($j)
 @endforeach
