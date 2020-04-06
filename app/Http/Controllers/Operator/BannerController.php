@@ -27,6 +27,12 @@ class BannerController extends Controller
         $dao = new BannerDao;
         $this->dataForView['data'] = $dao->getBannerBySchoolId($schoolId,$param);
 
+        $this->dataForView['redactor'] = true;
+        $this->dataForView['redactorWithVueJs'] = true;
+        $this->dataForView['js'] = [
+            'school_manager.recruitStudent.consult.note_js'
+        ];
+
         return view('school_manager.banner.index', $this->dataForView);
     }
 
