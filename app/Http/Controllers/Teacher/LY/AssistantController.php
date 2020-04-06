@@ -32,6 +32,8 @@ class AssistantController extends Controller
 
     public function material(Request $request){
         $this->dataForView['teacher'] = $request->user();
+        $this->dataForView['redactor'] = true;          // 让框架帮助你自动插入导入 redactor 的 css 和 js 语句
+        $this->dataForView['redactorWithVueJs'] = true; // 让框架帮助你自动插入导入 redactor 的组件的语句
         return view('teacher.ly.assistant.material', $this->dataForView);
     }
 
