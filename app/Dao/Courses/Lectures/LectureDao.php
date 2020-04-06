@@ -339,21 +339,23 @@ class LectureDao
             if(is_null($info)) {
                 $info = Lecture::create($lecture);
             }
+            foreach ($data['grade_id'] as $k => $val) {
+                foreach ($data['material'] as $key => $item) {
+                    $material = [
+                        'lecture_id' => $info->id,
+                        'teacher_id' => $data['user_id'],
+                        'course_id' => $data['course_id'],
+                        'media_id' => $item['media_id']??0,
+                        'type' => $item['type_id'],
+                        'description' => $item['desc'],
+                        'url' => $item['url'],
+                        'grade_id' => $val,
+                        'idx' => $data['idx'],
+                    ];
 
-            foreach ($data['material'] as $key => $item) {
-                $material = [
-                    'lecture_id' => $info->id,
-                    'teacher_id' => $data['user_id'],
-                    'course_id' => $data['course_id'],
-                    'media_id' => $item['media_id']??0,
-                    'type' => $item['type_id'],
-                    'description' => $item['desc'],
-                    'url' => $item['url'],
-                    'grade_id' => $data['grade_id'],
-                    'idx' => $data['idx'],
-                ];
+                    LectureMaterial::create($material);
+                }
 
-                LectureMaterial::create($material);
             }
             DB::commit();
             $messageBag->setMessage('上传成功');
