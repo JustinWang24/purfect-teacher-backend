@@ -66,21 +66,10 @@
         <div class="col-sm-12 col-md-6 col-lg-6 col-xl-6">
           <div class="card">
             <div class="card-body">
-              <h2>数学 (总计123课时)</h2>
+              <h2>教学计划</h2>
               <hr>
-              <h4>课程简介与教学计划:</h4>
-              <div v-if="notes && !showEditor">
-                <div v-html="notes.teacher_notes"></div>
-              </div>
-              <p class="mt-3">
-                <el-button type="text" @click="showNotesEditor">
-                  @{{ showEditor ? '' : '编辑课程简介与教学计划' }}
-                </el-button>
-              </p>
-              <div v-show="notes && showEditor">
-                <Redactor v-model="notes.teacher_notes" placeholder="请输入内容" :config="configOptions" />
-                @{{ notes.teacher_notes }}
-              </div>
+              <Redactor v-model="notes.teacher_notes" placeholder="请输入内容" :config="configOptions" />
+              @{{ notes.teacher_notes }}
               <div class="mt-3" v-show="showEditor">
                 <el-button type="primary" @click="saveNotes">保存/关闭</el-button>
               </div>

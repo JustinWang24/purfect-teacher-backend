@@ -21,17 +21,16 @@ class BannerController extends Controller
     public function index(BannerRequest $request)
     {
         $schoolId = $request->getSchoolId();
+
         $param['app'] = $request->input('app', '');
         $param['status'] = $request->input('status', '');
         $this->dataForView['pageTitle'] = '资源位管理';
+
         $dao = new BannerDao;
         $this->dataForView['data'] = $dao->getBannerBySchoolId($schoolId,$param);
 
         $this->dataForView['redactor'] = true;
         $this->dataForView['redactorWithVueJs'] = true;
-        $this->dataForView['js'] = [
-            'school_manager.recruitStudent.consult.note_js'
-        ];
 
         return view('school_manager.banner.index', $this->dataForView);
     }

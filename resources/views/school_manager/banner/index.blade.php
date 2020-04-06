@@ -128,11 +128,12 @@ use App\Utils\UI\Button;
             <el-form-item label="类型">
               <el-cascader style="width: 90%;" v-model="bannerFormInfo.type" :options="typeList" :props="{ checkStrictly: true }" @change="handlechange" clearable></el-cascader>
             </el-form-item>
-            <el-form-item :label="isshow1Lable" v-if="isshow1">
+            <el-form-item :label="isshow1Lable" v-show="isshow1">
               <el-input style="width: 90%;" v-model="bannerFormInfo.external" :placeholder="isshow1Placeholder"></el-input>
             </el-form-item>
-            <el-form-item label="内容" v-if="isshow2">
-              <textarea id="content" height="400" v-model="bannerFormInfo.content">adfasdfa</textarea>
+            <el-form-item label="内容" v-show="isshow2">
+              <!-- <textarea id="content" height="400" v-model="bannerFormInfo.content">adfasdfa</textarea> -->
+              <Redactor v-model="bannerFormInfo.content" placeholder="请输入内容" :config="configOptions" />
             </el-form-item>
 
             <el-form-item label="浏览权限">
@@ -153,6 +154,19 @@ use App\Utils\UI\Button;
     </div>
     <style>
       #school-campus-intro-app {height: 100%;}
+     .el-cascader-panel .el-radio {
+        left: -3px;
+        width: 100%;
+        height: 100%;
+        z-index: 10;
+        position: absolute;
+        top: 0px;
+        right: 10px;
+        padding: 10px 15px;
+      }
+      .el-cascader-panel .el-cascader-node__label{
+        margin-left:5px;
+      }
     </style>
     <div id="app-init-data-holder" data-school="{{ session('school.id') }}" data-newflow="1"></div>
     <script>

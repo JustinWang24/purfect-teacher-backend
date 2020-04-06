@@ -7,29 +7,39 @@
                         添加资料
                     </h3>
                     <hr>
-                        <el-form :model="lectureModel" label-width="80px" class="course-form" style="margin-top: 20px;">
-
+                        <el-form :model="formCourseInfo" label-width="80px" class="course-form" style="margin-top: 20px;">
 
                             <el-form-item label="标题">
-                                <el-input placeholder="必填: 标题" v-model="lectureModel.title"></el-input>
+                                <el-input placeholder="必填: 标题" v-model="formCourseInfo.title"></el-input>
+                            </el-form-item>
+                            <el-form-item label="课节">
+                                <el-select v-model="formCourseInfo.idx" placeholder="请选择" style="width: 100%">
+                                    <el-option
+                                        v-for="item in durations"
+                                        :key="item.idx"
+                                        :label="item.name"
+                                        :value="item.idx">
+                                    </el-option>
+                                </el-select>
                             </el-form-item>
 
-                            <el-form-item label="概要">
-                                <el-input placeholder="必填: 概要" type="textarea" v-model="lectureModel.summary"></el-input>
+                            <el-form-item label="班级">
+                                <el-checkbox-group v-model="formCourseInfo.grade_id">
+                                    <el-checkbox-button v-for="item in gradesClass" :label="item.grade_name" :key="item.grade_id">{{ item.grade_name }}</el-checkbox-button>
+                                </el-checkbox-group>
                             </el-form-item>
-                            <el-button style="margin-left: 10px;" size="small" type="success" @click="saveLecture">保存</el-button>
                         </el-form>
                     <hr>
 
                     <el-timeline>
-                        <el-timeline-item
-                                v-for="(type, typeIdx) in materialTypes"
-                                :key="typeIdx"
-                                :timestamp="type"
-                                placement="top"
-                                size="large"
-                                icon="el-icon-folder-opened"
-                        >
+                            <el-timeline-item
+                                    v-for="(val, key) in materialTypes"
+                                    :key="key"
+                                    :timestamp="val.name"
+                                    placement="top"
+                                    size="large"
+                                    icon="el-icon-folder-opened"
+                            >
                             <el-card>
                                 <div v-for="material in materials" :key="material.id">
                                     <div v-if="isTypeOf(material.type, typeIdx)">
@@ -56,11 +66,12 @@
                                     </div>
                                 </div>
                                 <p class="text-right">
-                                    <el-button icon="el-icon-upload" size="mini" @click="addMaterial(typeIdx)">添加{{ type }}</el-button>
+                                    <el-button icon="el-icon-upload" size="mini" @click="addMaterial(val)">添加{{ val.name }}</el-button>
                                 </p>
                             </el-card>
                         </el-timeline-item>
                     </el-timeline>
+                    <el-button style="margin-left: 10px;" size="small" type="success" @click="saveLecture">保存</el-button>
                 </div>
             </div>
         </div>
@@ -69,7 +80,7 @@
                 <div class="card-body">
                     <el-form :model="courseMaterialModel" label-width="120px" class="course-form" style="margin-top: 20px;">
                         <el-form-item label="当前类型">
-                            <p class="text-primary">{{ currentType }}</p>
+                            <p class="text-primary">{{ courseMaterialModel.typeName }}</p>
                         </el-form-item>
                         <el-form-item label="课件描述">
                             <el-input placeholder="选填: 课件的描述" type="textarea" v-model="courseMaterialModel.description"></el-input>
@@ -88,32 +99,15 @@
                                 <a :href="selectedFile.url">
                                     {{ selectedFile.description }}
                                 </a>
-                                &nbsp;
+                                &
                                 <el-button type="text" @click="selectedFile = null"><span class="text-danger">放弃</span></el-button>
                             </p>
                         </el-form-item>
+
                         <p class="text-danger text-right">注意: 课件只能是外部链接或者云盘文件中的一种</p>
-                        <el-button icon="el-icon-upload" style="margin-left: 10px;" size="small" type="success" @click="submitUpload">保存</el-button>
+                        <el-button icon="el-icon-upload" style="margin-left: 10px;" size="small" type="success" @click="saveInfo(courseMaterialModel.index)">确定</el-button>
                         <el-button icon="el-icon-close" style="margin-left: 10px;" size="small" @click="showMaterialForm = false">取消</el-button>
                     </el-form>
-                </div>
-            </div>
-
-            <div class="card">
-                <div class="card-body">
-                    <h3>
-                        <i v-show="loading || loadingData" class="el-icon-loading"></i>
-                        课后作业
-                        <el-button type="text" icon="el-icon-refresh-right" @click="refreshHomeworkItems">手动刷新</el-button>
-                    </h3>
-                    <hr>
-                    <p>
-                        <el-checkbox-group v-model="selectedGrades" size="medium" @change="onSelectedGradesChangedHandler">
-                            <el-checkbox-button v-for="g in grades" :label="g.id" :key="g.id">{{g.name}}</el-checkbox-button>
-                        </el-checkbox-group>
-                    </p>
-                    <hr>
-                    <homeworks :items="homeworkItems"></homeworks>
                 </div>
             </div>
         </div>
@@ -177,7 +171,7 @@
                     this.loading = false;
 
                     // 设置课节id
-                    this.courseMaterialModel.lecture_id = this.lecture.id;
+                    //this.courseMaterialModel.lecture_id = this.lecture.id;
                     this.courseMaterialModel.type = null;
                     // 设置选定的班级的默认id
                     this.selectedGrades = [];
@@ -187,29 +181,135 @@
         },
         computed:{
             currentType: function(){
-                return this.materialTypes[this.courseMaterialModel.type-1];
+               // return this.materialTypes[this.courseMaterialModel.type];
             }
         },
         data(){
             return {
-                grades:[], // 班级列表
-                durations:[], // 课节列表
+                gradesClass:[
+                    {
+                        "grade_id": 72,
+                        "grade_name": "世界史1班"
+                    },
+                    {
+                        "grade_id": 118,
+                        "grade_name": "网球教育1班"
+                    }
+                ], // 班级列表
+                durations:[
+                    {
+                        "idx": 1,
+                        "name": "第1节"
+                    },
+                    {
+                        "idx": 2,
+                        "name": "第2节"
+                    },
+                    {
+                        "idx": 3,
+                        "name": "第3节"
+                    },
+                    {
+                        "idx": 4,
+                        "name": "第4节"
+                    },
+                    {
+                        "idx": 5,
+                        "name": "第5节"
+                    },
+                    {
+                        "idx": 6,
+                        "name": "第6节"
+                    },
+                    {
+                        "idx": 7,
+                        "name": "第7节"
+                    },
+                    {
+                        "idx": 8,
+                        "name": "第8节"
+                    },
+                    {
+                        "idx": 9,
+                        "name": "第9节"
+                    },
+                    {
+                        "idx": 10,
+                        "name": "第10节"
+                    },
+                    {
+                        "idx": 11,
+                        "name": "第11节"
+                    },
+                    {
+                        "idx": 12,
+                        "name": "第12节"
+                    },
+                    {
+                        "idx": 13,
+                        "name": "第13节"
+                    },
+                    {
+                        "idx": 14,
+                        "name": "第14节"
+                    },
+                    {
+                        "idx": 15,
+                        "name": "第15节"
+                    },
+                    {
+                        "idx": 16,
+                        "name": "第16节"
+                    },
+                    {
+                        "idx": 17,
+                        "name": "第17节"
+                    },
+                    {
+                        "idx": 18,
+                        "name": "第18节"
+                    },
+                    {
+                        "idx": 19,
+                        "name": "第19节"
+                    },
+                    {
+                        "idx": 20,
+                        "name": "第20节"
+                    }
+                ], // 课节列表
 
                 materials:[],
-                materialTypes:[],
+                materialTypes:[], // 类型
                 typeClasses:[
                     '','success','info','warning','danger'
                 ],
-                courseMaterialModel:{
+                // 添加材料
+                formCourseInfo:{
                     id:null,
-                    teacher_id:null,
-                    course_id:null,
+                    title:null, // 标题
+                    teacher_id:null, // 老师id
+                    course_id:null, // 课程id
+                    idx:null, //课节
+                    grade_id:[], // 班级id
                     type: null,
                     index: null,
                     description: null,
                     url: null,
                     media_id: 0,
                     lecture_id: null,
+                    // 资料
+                    materialArr:[],
+                },
+
+                // 添加材料
+                courseMaterialModel:{
+                    index: null,
+                    type: null,
+                    typeName: "", // 分类名称
+                    description: null, // 描述
+                    url: null, // url 地址
+                    media_id: 0 // 资源id
                 },
                 lectureModel: {
                     id: null,
@@ -226,24 +326,38 @@
             }
         },
         created(){
-            console.log('zkkkkkkkkkkkkkkkkkkkkkkkkk');
+            this.getMaterialTypes(); // 获取类型
             this.getCourseGradeList(); // 获取 班级 和 课节
-            this.materialTypes = Constants.COURSE_MATERIAL_TYPES_TEXT;
             this.lectureModel = this.lecture;
         },
         methods: {
-            getCourseGradeList: function(){
+            // 获取类型
+            getMaterialTypes: function(){
+                let _that_ = this;
                 axios.post(
-                    '/api/material/getCourseGradeList',
-                    {course_id: 23}
+                    '/api/study/type-list',
+                    {}
                 ).then(res => {
                     if(Util.isAjaxResOk(res)){
-                        this.grades = res.data.data.grades;
-                        this.durations = res.data.data.durations;
+                        _that_.materialTypes = res.data.data;
                     }
                 });
             },
-
+            // 获取默认数据
+            getCourseGradeList: function(){
+                /*let _that_ = this;
+                axios.post(
+                    '/api/material/getCourseGradeList',
+                    {course_id: 123}
+                ).then(res => {
+                    if(Util.isAjaxResOk(res)){
+                        console.log(res.data.data.grades);
+                        console.log(res.data.data.durations);
+                        _that_.grades = res.data.data.grades;
+                        _that_.durations = res.data.data.durations;
+                    }
+                });*/
+            },
             getLectureMaterials: function(){
                 this.loadingData = true;
                 loadLectureMaterials(this.lecture.id).then(res => {
@@ -259,10 +373,16 @@
             isTypeOf: function(typeId, typeIdx){
                 return typeId === typeIdx+1;
             },
-            addMaterial: function(typeIdx){
-                // 添加新的课件
-                this.resetMaterialForm(typeIdx+1);
+
+            // 显示添加的课件信息
+            addMaterial: function(val){
+                this.courseMaterialModel.index = val.type_id;
+                this.courseMaterialModel.type = !Util.isEmpty(this.formCourseInfo.materialArr[val.type_id])?this.formCourseInfo.materialArr[val.type_id].type:0;
+                this.courseMaterialModel.description = !Util.isEmpty(this.formCourseInfo.materialArr[val.type_id])?this.formCourseInfo.materialArr[val.type_id].description:'';
+                this.courseMaterialModel.url = !Util.isEmpty(this.formCourseInfo.materialArr[val.type_id])?this.formCourseInfo.materialArr[val.type_id].url:'';
+                this.selectedFile = null;
                 this.showMaterialForm = true;
+                this.typeName = val.name; // 分类名称
             },
             deleteMaterial: function(material){
 
@@ -278,51 +398,9 @@
                     }
                 })
             },
-            submitUpload: function(){
-                if(Util.isEmpty(this.courseMaterialModel.index)){
-                    this.$message.error('请指定课件将用于第几节课');
-                    return false;
-                }
-                if(Util.isEmpty(this.courseMaterialModel.type)){
-                    this.$message.error('请指定课件的类型');
-                    return false;
-                }
-                if(Util.isEmpty(this.courseMaterialModel.description)){
-                    this.$message.error('请描述一下本课件的用途');
-                    return false;
-                }
-                if(Util.isEmpty(this.selectedFile)){
-                    this.$confirm('本课件没有关联任何文件, 是否继续?', '提示', {
-                        confirmButtonText: '确定. 不需要关联任何文件',
-                        cancelButtonText: '取消',
-                        type: 'warning'
-                    }).then(() => {
-                        // 继续上传即可
-                        this._startSaving();
-                    }).catch(() => {
-                        this.$message({
-                            type: 'info',
-                            message: '已取消保存操作'
-                        });
-                        return false;
-                    });
-                }
-                else{
-                    this.courseMaterialModel.url = this.selectedFile.url;
-                    this.courseMaterialModel.media_id = this.selectedFile.id;
-                    this._startSaving();
-                }
-            },
-            resetMaterialForm: function(type){
-                this.courseMaterialModel.id = null;
-                this.courseMaterialModel.index = this.lecture.idx;
-                this.courseMaterialModel.type = type;
-                this.courseMaterialModel.description = null;
-                this.courseMaterialModel.url = null;
-                this.courseMaterialModel.media_id = 0;
-                this.courseMaterialModel.teacher_id = this.lecture.teacher_id;
-                this.courseMaterialModel.course_id = this.lecture.course_id;
-                this.selectedFile = null;
+            // 确认保存到缓存中
+            saveInfo: function(index){
+                this.formCourseInfo.materialArr[index] = JSON.parse(JSON.stringify(this.courseMaterialModel));
             },
             _startSaving: function(){
                 saveMaterial(this.courseMaterialModel).then(res => {
@@ -346,16 +424,40 @@
                 this.showLectureForm = true;
                 this.lectureModel.id = this.lecture.id;
             },
+            // 添加数据
             saveLecture: function(){
-                saveLecture(this.lectureModel).then(res => {
+
+                if(Util.isEmpty(this.formCourseInfo.title)){
+                    this.$message.error('请填写标题');
+                    return false;
+                }
+                if(Util.isEmpty(this.formCourseInfo.idx)){
+                    this.$message.error('请选择课节');
+                    return false;
+                }
+                if(Util.isEmpty(this.formCourseInfo.grade_id)){
+                    this.$message.error('请选择班级');
+                    return false;
+                }
+
+                // 添加数据
+                let _that_ = this;
+                axios.post(
+                    '/api/material/addMaterial',
+                    {formData:this.formCourseInfo}
+                ).then(res => {
                     if(Util.isAjaxResOk(res)){
                         this.$message({
                             type:'success',
                             message: '保存成功'
                         })
+                    } else {
+                        this.$message({
+                            type: 'info',
+                            message: '操作失败,请稍后重试'
+                        });
                     }
-                    this.showLectureForm = false;
-                })
+                });
             },
             // 当云盘中的文件被选择
             pickFileHandler: function(payload){
