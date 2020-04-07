@@ -53,7 +53,7 @@
         </li>
         <li class="nav-item">
             <a href="javascript:;" class="nav-link nav-toggle">
-                <i class="fa fa-wo"></i>社群管理
+                <i class="fa fa-group"></i>社群管理
                 <span class="arrow"></span>
             </a>
             <ul class="sub-menu">
